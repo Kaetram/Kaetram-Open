@@ -1,0 +1,36 @@
+{
+  "name": "Kaetram",
+  "version": "1.0.6",
+  "description": "A modern HTML5 multiplayer adventure!",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "commander": "^2.20.0",
+    "connect": "^3.6.6",
+    "fs": "*",
+    "http": "0.0.0",
+    "log": "^1.4.0",
+    "memcache": "^0.3.0",
+    "mongodb": "^3.2.3",
+    "mysql": "^2.16.0",
+    "request": "^2.88.0",
+    "require": "*",
+    "sanitizer": "^0.1.3",
+    "serve-static": "^1.13.2",
+    "shutdown-hook": "^1.1.2",
+    "socket.io": "^2.2.0",
+    "underscore": "^1.9.1",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.4",
+    "morgan": "^1.9.1",
+    "uglifyjs-webpack-plugin": "^2.1.2"
+  },
+  "scripts": {
+    "start": "node server/js/main"
+  }
+}

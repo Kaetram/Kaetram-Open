@@ -1,0 +1,31 @@
+{
+  "name": "Kaetram",
+  "host": "0.0.0.0",
+  "port": 9001,
+
+  "offlineMode": false,
+  "devClient": true,
+  "development": false,
+  "overrideAuth": false,
+  "debug": false,
+  "useAPI": false,
+
+  "database": "mongodb",
+
+  "mongoHost": "127.0.0.1",
+  "mongoPort": "27017",
+  "mongoUser": "admin",
+  "mongoPassword": "password",
+  "mongoDatabase": "database",
+
+  "debugLevel": "info",
+  "localDebug": false,
+  "worlds": 1,
+  "maxPlayers": 200,
+  "gver": 1,
+  "updateTime": 200,
+
+  "forceCollisions": false,
+  "administrators": [],
+  "moderators": []
+}

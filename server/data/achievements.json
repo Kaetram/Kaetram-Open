@@ -1,0 +1,56 @@
+{
+  "0": {
+    "id": 0,
+    "name": "Rat Infestation",
+    "description": "Slay 25 rats.",
+    "type": 0,
+    "count": 26,
+    "npc": 2,
+    "mob": 128,
+    "rewardType": 1,
+    "reward": 115,
+    "text": [
+      "Hono dear adventurer!", "Yiss, plz help.",
+      "Rets r al 'round here.", "Plz kill, I hav gift en return."
+    ]
+  },
+
+  "1": {
+    "id": 1,
+    "name": "Lost Watermelon",
+    "description": "Find the lost watermelon for Bulk Bogan.",
+    "type": 1,
+    "count": 2,
+    "mob": -1,
+    "npc": 2,
+    "item": 250,
+    "itemCount": 1,
+    "rewardType": 2,
+    "reward": 400,
+    "text": [
+      "Hoho, hello agen.", "I ned favur, but this lst time.",
+      "I lst watrmln, could u plez find?", "I do'n't kno'w what do to."
+    ]
+  },
+
+  "2": {
+    "id": 2,
+    "name": "Crabs Pinch",
+    "description": "Hunt the crabs to extinction.",
+    "type": 0,
+    "count": 41,
+    "npc": 3,
+    "mob": 2,
+    "rewardType": 1,
+    "reward": 750,
+    "text": ["Ay!", "I need some help.", "I can't relax because of those darn crabs.",
+            "See, I know they respawn and stuff.", "But can you kill forty of them?"]
+  },
+
+
+  "3": {
+    "id": 3,
+    "name": "Dodgey Dodge",
+    "description": ""
+  }
+}

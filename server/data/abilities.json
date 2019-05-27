@@ -1,0 +1,22 @@
+{
+  "Fire Strike": {
+    "id": 1,
+    "type": "active",
+    "mana": [15, 25, 40, 65],
+    "cooldown": [9, 11, 13, 15]
+  },
+
+  "Ice Attack": {
+    "id": 2,
+    "type": "active",
+    "mana": [17, 34, 53, 74],
+    "cooldown": [10, 12, 14, 16]
+  },
+
+  "Run": {
+    "id": 3,
+    "type": "active",
+    "mana": [5, 10, 20, 35],
+    "cooldown": [7, 10, 13, 16]
+  }
+}

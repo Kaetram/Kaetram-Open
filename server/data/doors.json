@@ -1,0 +1,62 @@
+{
+  "0": {
+    "id": 0,
+    "status": "closed",
+    "requirement": "quest",
+    "questId": 0,
+    "closedIds": {
+      "336014": {
+        "data": 12684,
+        "isColliding": true
+      },
+      "336015": {
+        "data": 12684,
+        "isColliding": true
+      },
+      "336016": {
+        "data": 12684,
+        "isColliding": true
+      },
+      "336614": {
+        "data": 12704,
+        "isColliding": false
+      },
+      "336615": {
+        "data": 12704,
+        "isColliding": false
+      },
+      "336616": {
+        "data": 12704,
+        "isColliding": false
+      }
+    },
+    "openIds": {
+      "336014": {
+        "data": [12664, 12723],
+        "isColliding": true
+      },
+      "336015": {
+        "data": [12664, 12724],
+        "isColliding": false
+      },
+      "336016": {
+        "data": [12664, 12725],
+        "isColliding": true
+      },
+      "336614": {
+        "data": 12743,
+        "isColliding": true
+      },
+      "336615": {
+        "data": 12744,
+        "isColliding": true
+      },
+      "336616": {
+        "data": 12745,
+        "isColliding": true
+      }
+    },
+    "x": 22,
+    "y": 22
+  }
+}
