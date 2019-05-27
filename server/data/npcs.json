@@ -1,0 +1,227 @@
+{
+  "King": {
+    "id": 45,
+    "name": "King"
+  },
+
+  "VillageGirl": {
+    "name": "Village Girl",
+    "id": 1,
+    "text": ["Eventually, fire turns to ash.", "And all that remains is but that.",
+            "The ability to reignite...", "Though it never will."]
+  },
+
+  "Villager": {
+    "id": 2,
+    "name": "Bulk Bogan",
+    "text": ["Thank you kindly for the help, dear adventurer.", "I will ensure to contact you in the",
+          "nearby future regarding further adventures."]
+  },
+
+  "BeachNpc": {
+    "id": 3,
+    "name": "Bubba",
+    "text": ["Well, thanks for the help.", "Not really doing much but thanks regardless."]
+  },
+
+  "Agent": {
+    "id": 4,
+    "name": "Secret Agent"
+  },
+
+  "Nyan": {
+    "id": 5
+  },
+
+  "Rick": {
+    "id": 6
+  },
+
+  "Priest": {
+    "id": 7
+  },
+
+  "Guard": {
+    "id": 8
+  },
+
+  "Scientist": {
+    "id": 9
+  },
+
+  "DesertNpc": {
+    "id": 10,
+    "name": "Billey"
+  },
+
+  "LavaNpc": {
+    "id": 11,
+    "name": "Dying Man"
+  },
+
+  "Boxingman": {
+    "id": 12,
+    "name": "Mike Tyson",
+    "text": "Woosh."
+  },
+
+  "Vampire": {
+    "id": 13
+  },
+
+  "Doctor": {
+    "id": 14
+  },
+
+  "Oddeyecat": {
+    "id": 15,
+    "name": "Odd-Eyed Cat"
+  },
+
+  "Sorcerer": {
+    "id": 16,
+    "name": "Sorcerer"
+  },
+
+  "Coder": {
+    "id": 17,
+    "name": "Programmer",
+    "text": ["Oh.. This is awkward...", "You may be wondering why I'm here as well.", "Well just letting you know..",
+            "It's definitely not because we're running low on pixel art..", "Regardless.. If you want to join the community",
+            "Our Discord <a target=\"_blank\" href=\"https://discord.gg/8MPSFW4\">is available here!</a>"]
+  },
+
+  "ForestNpc": {
+    "id": 18
+  },
+
+  "Octocat": {
+    "id": 19,
+    "name": "Octocat",
+    "text": ["Hey there!", "I am the Octocat, the programmer and I", "are very well acquainted.", "Nonetheless, make sure that you <a target=\"_blank\" href=\"https://github.com/Tach-Yon/Tap-Tap-Adventure\">check out the source on GitHub!</a>"]
+  },
+
+  "Soldier": {
+    "id": 20,
+    "name": "Melee Instructor"
+  },
+
+  "Fisherman": {
+    "id": 21
+  },
+
+  "Octopus": {
+    "id": 22
+  },
+
+  "Mermaidnpc": {
+    "id": 23,
+    "name": "Mermaid"
+  },
+
+  "Sponge": {
+    "id": 24,
+    "name": "Picklebob"
+  },
+
+  "Fairynpc": {
+    "id": 25
+  },
+
+  "Shepherdboy": {
+    "id": 26,
+    "name": "Shepherd Boy"
+  },
+
+  "Zombiegf": {
+    "id": 27,
+    "name": "Zombie Girlfriend"
+  },
+
+  "Pirategirlnpc": {
+    "id": 28,
+    "name": "Pirate Girl",
+    "text": ["Hi"]
+  },
+
+  "Bluebikinigirlnpc": {
+    "id": 29,
+    "name": "Pretzel"
+  },
+
+  "Redbikinigirlnpc": {
+    "id": 30
+  },
+
+  "Iamverycoldnpc": {
+    "id": 31,
+    "name": "Babushka"
+  },
+
+  "Iceelfnpc": {
+    "id": 32,
+    "name": "Ice Elf"
+  },
+
+  "Elfnpc": {
+    "id": 33,
+    "name": "Elf"
+  },
+
+  "Snowshepherdboy": {
+    "id": 34,
+    "name": "Some Boy"
+  },
+
+  "Angelnpc": {
+    "id": 35,
+    "name": "Angel"
+  },
+
+  "Momangelnpc": {
+    "id": 36,
+    "name": "Archangel"
+  },
+
+  "Superiorangelnpc": {
+    "id": 37,
+    "name": "Mentor"
+  },
+
+  "Firstsonangelnpc": {
+    "id": 38,
+    "name": "Angel"
+  },
+
+  "Secondsonangelnpc": {
+    "id": 39,
+    "name": "Superior Angel"
+  },
+
+  "Mojojojonpc": {
+    "id": 40,
+    "name": "Monky"
+  },
+
+  "Ancientmanumentnpc": {
+    "id": 41,
+    "name": "Ancient Monument"
+  },
+
+  "Vendingmachine": {
+    "id": 42,
+    "name": "Enchantment Table",
+    "type": "echanter"
+  },
+
+  "Redstoremannpc": {
+    "id": 43,
+    "name": "Banker",
+    "type": "banker"
+  },
+
+  "Bluestoremannpc": {
+    "id": 44,
+    "name": "Clerk"
+  }
+}
