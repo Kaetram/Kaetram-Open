@@ -200,6 +200,7 @@ class Player extends Character {
 
         self.quests.onReady(function() {
             self.send(new Messages.Quest(Packets.QuestOpcode.Batch, self.quests.getData()));
+
             self.updateRegion();
         });
     }
@@ -404,8 +405,8 @@ class Player extends Character {
         self.sync();
     }
 
-    updateRegion() {
-        this.world.region.sendRegion(this, this.region);
+    updateRegion(force) {
+        this.world.region.sendRegion(this, this.region, force);
     }
 
     isInvisible(instance) {
@@ -460,8 +461,8 @@ class Player extends Character {
         self.setPosition(x, y);
         self.checkRegions();
 
+        self.updateRegion(true);
         self.world.cleanCombat(self);
-        self.world.region.sendRegion(self, self.region);
     }
 
     updatePVP(pvp) {
@@ -939,7 +940,7 @@ class Player extends Character {
         if (!self.quests)
             return true;
 
-        return true;
+        return self.quests.getQuest(0).isFinished();
     }
 
     checkRegions() {

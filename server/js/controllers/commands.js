@@ -94,8 +94,9 @@ class Commands {
                 introduction.update();
                 introduction.updatePointers();
 
-                self.player.updateRegion();
+                self.player.updateRegion(true);
                 self.player.save();
+
                 break;
 
         }

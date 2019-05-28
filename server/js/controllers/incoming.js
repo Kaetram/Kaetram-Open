@@ -217,7 +217,6 @@ class Incoming {
         self.player.loadQuests();
 
         self.player.save();
-        self.player.updateRegion();
 
         if (self.player.readyCallback)
             self.player.readyCallback();
