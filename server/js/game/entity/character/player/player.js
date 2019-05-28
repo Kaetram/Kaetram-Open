@@ -749,21 +749,13 @@ class Player extends Character {
         return true;
     }
 
-    getRandomName() {
-        let self = this,
-            randomNames = ['Conscience', 'Fragment', 'Spirit', 'Lost', 'One',
-                'Loneliness', 'Hated', 'Anxiety', 'Invisible', 'Memory'];
-
-        return randomNames[Utils.randomInt(0, randomNames.length - 1)];
-    }
-
     getState() {
         let self = this;
 
         return {
             type: self.type,
             id: self.instance,
-            name: self.getRandomName(),
+            name: self.username,
             x: self.x,
             y: self.y,
             rights: self.rights,

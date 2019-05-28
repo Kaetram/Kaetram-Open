@@ -43,7 +43,7 @@ class Container {
 
         self.load(data, data, data, data);
     }
-    
+
     add(id, count, ability, abilityLevel) {
         let self = this;
 
@@ -150,6 +150,9 @@ class Container {
 
         let self = this,
             slot = self.slots[index];
+
+        if (!slot)
+            return false;
 
         if (Items.isStackable(id)) {
             if (count >= slot.count)

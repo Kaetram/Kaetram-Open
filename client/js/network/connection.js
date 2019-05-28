@@ -194,7 +194,7 @@ define(function() {
                         if (forced)
                             entity.stop(true);
 
-                        self.moveCharacter(entity, x, y);
+                        self.game.moveCharacter(entity, x, y);
 
                         break;
 

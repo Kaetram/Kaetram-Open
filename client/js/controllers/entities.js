@@ -282,8 +282,6 @@ define(['../renderer/grids', '../entity/objects/chest',
                 if (self.entities[entity.id])
                     return;
 
-                log.info('Adding entity: ' + entity.id);
-
                 self.entities[entity.id] = entity;
                 self.registerPosition(entity);
 

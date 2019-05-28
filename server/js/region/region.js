@@ -30,10 +30,10 @@ class Region {
         self.loaded = false;
 
         self.onAdd(function(entity, regionId) {
-            if (!entity || !entity.name || typeof entity.name === undefined)
+            if (!entity || !entity.username)
                 return;
 
-            log.info('Entity - ' + entity.name + ' has entered region - ' + regionId);
+            log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
 
             if (entity instanceof Player)
                 self.sendRegion(entity, regionId);
@@ -46,10 +46,10 @@ class Region {
         });
 
         self.onIncoming(function(entity, regionId) {
-            if (!entity || !entity.name || typeof entity.name === undefined)
+            if (!entity || !entity.username)
                 return;
 
-            log.info('Entity - ' + entity.name + ' is incoming into region - ' + regionId);
+            log.info('Entity - ' + entity.username + ' is incoming into region - ' + regionId);
         });
 
         fs.watchFile(map, function() {
