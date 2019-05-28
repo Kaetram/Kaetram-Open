@@ -5,7 +5,8 @@ let _ = require('underscore'),
     Packets = require('../network/packets'),
     Player = require('../game/entity/character/player/player'),
     fs = require('fs'),
-    ClientMap = require('../../data/map/world_client.json');
+    ClientMap = require('../../data/map/world_client.json'),
+    map = 'server/data/map/world_client.json';
 
 class Region {
 
@@ -51,11 +52,18 @@ class Region {
             log.info('Entity - ' + entity.name + ' is incoming into region - ' + regionId);
         });
 
-        /*fs.watchFile(map, function() {
+        fs.watchFile(map, function() {
             log.info('Received Map Update -> Sending to Players...');
 
-            self.updateRegions();
-        });*/
+            fs.readFile(map, 'utf8', function(error, data) {
+                if (error) throw error;
+
+                ClientMap = JSON.parse(data);
+
+                self.updateRegions();
+            });
+
+        });
 
         self.load();
     }
@@ -156,28 +164,28 @@ class Region {
         self.world.forEachPlayer(function(player) {
             player.regionsLoaded = [];
 
-            self.sendRegion(player, player.region);
+            self.sendRegion(player, player.region, true);
         });
     }
 
-    sendRegion(player, region) {
+    sendRegion(player, region, force) {
         let self = this,
-            tileData = self.getRegionData(region, player),
+            tileData = self.getRegionData(region, player, force),
             dynamicTiles = player.doors.getAllTiles();
 
-        _.each(tileData, function(primaryTile) {
-            let index = dynamicTiles.indexes.indexOf(primaryTile.index);
+        for (let i = 0; i < tileData.length; i++) {
+            let primaryTile = tileData[i],
+                index = dynamicTiles.indexes.indexOf(primaryTile.index);
 
             if (index > -1) {
-                primaryTile.data = dynamicTiles.data[index];
-                primaryTile.isCollision = dynamicTiles.collisions[index];
+                tileData[i].data = dynamicTiles.data[index];
+                tileData[i].isCollision = dynamicTiles.collisions[index];
             }
-
-        });
+        }
 
         //No need to send empty data...
         if (tileData.length > 0)
-            player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData));
+            player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
     }
 
     sendSpawns(regionId) {
@@ -330,7 +338,7 @@ class Region {
         self.world.network.pushBroadcast(Region.getModify(index, newTile));
     }
 
-    getRegionData(region, player) {
+    getRegionData(region, player, force) {
         let self = this,
             data = [],
             regionLoaded = function(regionId) {
@@ -338,7 +346,7 @@ class Region {
             };
 
         self.mapRegions.forEachAdjacentRegion(region, function(regionId) {
-            if (!regionLoaded(regionId)) {
+            if (!regionLoaded(regionId) || force) {
                 if (player)
                     player.regionsLoaded.push(regionId);
 

@@ -5,15 +5,15 @@ let Quest = require('../quest'),
     Messages = require('../../../../../../network/messages');
 
 class Introduction extends Quest {
-    
+
     constructor(player, data) {
         super(player, data);
-        
+
         let self = this;
-        
+
         self.player = player;
         self.data = data;
-        
+
         self.lastNPC = null;
     }
 
@@ -105,7 +105,7 @@ class Introduction extends Quest {
             case 'talk':
 
                 if (self.stage === 2)
-                    self.player.updateRegion();
+                    self.player.updateRegion(true);
 
                 if (self.stage === 4)
                     self.player.inventory.add({
@@ -114,7 +114,6 @@ class Introduction extends Quest {
                         ability: -1,
                         abilityLevel: -1
                     });
-
 
                 break;
         }

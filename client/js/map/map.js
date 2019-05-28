@@ -150,11 +150,11 @@ define(['jquery'], function($) {
             _.each(self.collisions, function(index) {
                 var position = self.indexToGridPosition(index + 1);
 
-                if (position.x > 179)
-                    position.x = 179;
+                if (position.x > self.width - 1)
+                    position.x = self.width - 1;
 
-                if (position.y > 179)
-                    position.y = 179;
+                if (position.y > self.height - 1)
+                    position.y = self.height - 1;
 
                 self.grid[position.y][position.x] = 1;
             });

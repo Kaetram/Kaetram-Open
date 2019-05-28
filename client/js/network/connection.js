@@ -168,7 +168,7 @@ define(function() {
                 }
 
                 if (data.armour)
-                    entity.setSprite(self.getSprite(data.armour));
+                    entity.setSprite(self.game.getSprite(data.armour));
 
                 if (data.weapon)
                     entity.setEquipment(Modules.Equipment.Weapon, data.weapon);
@@ -307,7 +307,7 @@ define(function() {
 
                     entity.teleporting = true;
 
-                    entity.setSprite(self.getSprite('death'));
+                    entity.setSprite(self.game.getSprite('death'));
 
                     entity.animate('death', 240, 1, function() {
                         doTeleport();
@@ -352,7 +352,7 @@ define(function() {
 
                     case 'chest':
 
-                        entity.setSprite(self.getSprite('death'));
+                        entity.setSprite(self.game.getSprite('death'));
 
                         entity.setAnimation('death', 120, 1, function() {
                             self.entities.unregisterPosition(entity);
@@ -372,7 +372,7 @@ define(function() {
 
                 entity.hitPoints = 0;
 
-                entity.setSprite(self.getSprite('death'));
+                entity.setSprite(self.game.getSprite('death'));
 
                 entity.animate('death', 120, 1, function() {
                     self.entities.unregisterPosition(entity);
@@ -849,7 +849,7 @@ define(function() {
                 self.renderer.camera.centreOn(self.game.player);
 
                 self.game.player.currentAnimation = null;
-                self.game.player.setSprite(self.getSprite(self.game.player.getSpriteName()));
+                self.game.player.setSprite(self.game.getSprite(self.game.player.getSpriteName()));
                 self.game.player.idle();
 
                 self.game.player.dead = false;

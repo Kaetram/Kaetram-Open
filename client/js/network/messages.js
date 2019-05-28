@@ -447,10 +447,11 @@ define(function() {
         receiveRegion: function(data) {
             var self = this,
                 opcode = data.shift(),
-                info = data.shift();
+                info = data.shift(),
+                force = data.shift();
 
             if (self.regionCallback)
-                self.regionCallback(opcode, info);
+                self.regionCallback(opcode, info, force);
         },
 
         receiveOverlay: function(data) {

@@ -131,7 +131,6 @@ module.exports = function parse(json, options) {
 
                 _.each(tileset.tiles, function(tile) {
                     _.each(tile.properties, function(property) {
-                        console.log(property);
                         entities[parseInt(tile.id) + 1] = property.value;
                     });
                 });
