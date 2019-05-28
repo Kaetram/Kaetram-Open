@@ -51,11 +51,14 @@ class Inventory extends Container {
     remove(id, count, index) {
         let self = this;
 
+        if (!id || !count)
+            return false;
+
         if (!index)
             index = self.getIndex(id);
 
         if (!super.remove(index, id, count))
-            return;
+            return false;
 
         self.owner.send(new Messages.Inventory(Packets.InventoryOpcode.Remove, {
             index: parseInt(index),
@@ -63,6 +66,8 @@ class Inventory extends Container {
         }));
 
         self.owner.save();
+
+        return true;
     }
 
 }

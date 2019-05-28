@@ -79,8 +79,8 @@ define(['jquery', './camera', './tile',
             self.animateTiles = true;
             self.debugging = false;
             self.brightness = 100;
-            self.drawNames = false;
-            self.drawLevels = false;
+            self.drawNames = true;
+            self.drawLevels = true;
             self.forceRendering = false;
 
             self.load();
@@ -319,7 +319,7 @@ define(['jquery', './camera', './tile',
                 var factor = self.mobile ? 2 : 1;
 
                 self.textContext.save();
-                self.textContext.font = '24px AdvoCut';
+                self.textContext.font = '20px AdvoCut';
                 self.setCameraView(self.textContext);
                 self.textContext.globalAlpha = info.opacity;
                 self.drawText('' + info.text, Math.floor((info.x + 8) * factor), Math.floor(info.y * factor), true, info.fill, info.stroke);
@@ -457,6 +457,8 @@ define(['jquery', './camera', './tile',
 
             self.context.restore();
 
+            self.drawHealth(entity);
+            self.drawName(entity);
         },
 
         drawEntityBack: function(entity) {
@@ -512,12 +514,62 @@ define(['jquery', './camera', './tile',
                 healthHeight = 2 * self.superScaling;
 
             self.context.save();
+            self.setCameraView(self.context);
             self.context.strokeStyle = '#00000';
             self.context.lineWidth = 1;
             self.context.strokeRect(healthX, healthY, barLength * self.superScaling, healthHeight);
             self.context.fillStyle = '#FD0000';
             self.context.fillRect(healthX, healthY, healthWidth, healthHeight);
             self.context.restore();
+        },
+
+        drawName: function(entity) {
+            var self = this;
+
+            if (entity.hidden || (!self.drawNames && !self.drawLevels))
+                return;
+
+            var colour = entity.wanted ? 'red' : 'white',
+                factor = self.mobile ? 2 : 1;
+
+            if (entity.rights > 1)
+                colour = '#ba1414';
+            else if (entity.rights > 0)
+                colour = '#a59a9a';
+
+            if (entity.id === self.game.player.id)
+                colour = '#fcda5c';
+
+            self.textContext.save();
+            self.setCameraView(self.textContext);
+            self.textContext.font = '11px AdvoCut';
+
+            if (!entity.hasCounter) {
+
+                if (self.drawNames && (entity.type === 'mob' || entity.type === 'player'))
+                    self.drawText(entity.type === 'player' ? entity.username : entity.name, (entity.x + 8) * factor, (entity.y - (self.drawLevels ? 20 : 10)) * factor, true, colour, '#000');
+
+                if (self.drawLevels && (entity.type === 'mob' || entity.type === 'player'))
+                    self.drawText('Level ' + entity.level, (entity.x + 8) * factor, (entity.y - (entity.type === 'player' ? 12 : 10)) * factor, true, colour, '#000');
+
+                if (entity.type === 'item' && entity.count > 1)
+                    self.drawText(entity.count, (entity.x + 8) * factor, (entity.y - 10) * factor, true, colour);
+
+            } else {
+
+                if (self.game.time - entity.countdownTime > 1000) {
+                    entity.countdownTime = self.game.time;
+                    entity.counter--;
+                }
+
+                if (entity.counter <= 0)
+                    entity.hasCounter = false;
+
+                self.drawText(entity.counter, (entity.x + 8) * factor, (entity.y - 10) * factor, true, colour);
+            }
+
+
+            self.textContext.restore();
         },
 
         drawLighting: function(lighting) {
@@ -601,7 +653,7 @@ define(['jquery', './camera', './tile',
                 return;
 
             self.camera.forEachVisiblePosition(function(x, y) {
-                if (x < 0 || y < 0 || x > 179 || y > 179)
+                if (x < 0 || y < 0 || x > self.map.width - 1 || y > self.map.height - 1)
                     return;
 
                 if (pathingGrid[y][x] !== 0)
@@ -696,9 +748,9 @@ define(['jquery', './camera', './tile',
 
                 context.strokeStyle = strokeColour || '#373737';
                 context.lineWidth = strokeSize;
-                context.strokeText(text, x * self.scale, y * self.scale);
+                context.strokeText(text, x * self.superScaling, y * self.superScaling);
                 context.fillStyle = colour || 'white';
-                context.fillText(text, x * self.scale, y * self.scale);
+                context.fillText(text, x * self.superScaling, y * self.superScaling);
 
                 context.restore()
             }

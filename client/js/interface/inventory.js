@@ -73,7 +73,7 @@ define(['jquery', './container/container'], function($, Container) {
 
             self.clearSelection();
 
-            if (slot.string === null || slot.count === -1)
+            if (slot.string === null || slot.count === -1 || slot.string === 'null')
                 return;
 
             self.actions.reset();

@@ -574,9 +574,8 @@ class Incoming {
                 if (count > iSlot.count)
                     count = iSlot.count;
 
-                self.player.inventory.remove(id, count ? count : item.count, item.index);
-
-                self.world.dropItem(id, count ? count : 1, self.player.x, self.player.y);
+                if (self.player.inventory.remove(id, count ? count : item.count, item.index))
+                    self.world.dropItem(id, count ? count : 1, self.player.x, self.player.y);
 
                 break;
 
