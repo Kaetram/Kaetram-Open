@@ -1,8 +1,8 @@
-var Combat = require('../../js/game/entity/character/combat/combat'),
+let Combat = require('../../js/game/entity/character/combat/combat'),
     Utils = require('../../js/util/utils'),
     _ = require('underscore');
 
-module.exports = SkeletonKing = Combat.extend({
+class SkeletonKing extends Combat {
 
     /**
      * First of its kind, the Skeleton King will spawn 4 minions.
@@ -11,12 +11,11 @@ module.exports = SkeletonKing = Combat.extend({
      * And two death knights on (x + 1, y - 1) & (x - 1, y - 1)
      */
 
-    init: function(character) {
-        var self = this;
-
-        self._super(character);
-
+    constructor(character) {
         character.spawnDistance = 10;
+        super(character);
+
+        let self = this;
 
         self.lastSpawn = 0;
 
@@ -25,10 +24,9 @@ module.exports = SkeletonKing = Combat.extend({
         character.onDeath(function() {
             self.reset();
         });
+    }
 
-    },
-
-    reset: function() {
+    reset() {
         var self = this;
 
         self.lastSpawn = 0;
@@ -37,9 +35,9 @@ module.exports = SkeletonKing = Combat.extend({
 
         for (var i = 0; i < listCopy.length; i++)
             self.world.kill(listCopy[i]);
-    },
+    }
 
-    hit: function(character, target, hitInfo) {
+    hit(character, target, hitInfo) {
         var self = this;
 
         if (self.isAttacked())
@@ -49,9 +47,9 @@ module.exports = SkeletonKing = Combat.extend({
             self.spawnMinions();
 
         self._super(character, target, hitInfo);
-    },
+    }
 
-    spawnMinions: function() {
+    spawnMinions() {
         var self = this,
             x = self.character.x,
             y = self.character.y;
@@ -81,9 +79,9 @@ module.exports = SkeletonKing = Combat.extend({
             if (self.isAttacked())
                 self.beginMinionAttack();
         });
-    },
+    }
 
-    beginMinionAttack: function() {
+    beginMinionAttack() {
         var self = this;
 
         if (!self.hasMinions())
@@ -96,9 +94,9 @@ module.exports = SkeletonKing = Combat.extend({
                 minion.combat.begin(randomTarget);
 
         });
-    },
+    }
 
-    getRandomTarget: function() {
+    getRandomTarget() {
         var self = this;
 
         if (self.isAttacked()) {
@@ -113,18 +111,20 @@ module.exports = SkeletonKing = Combat.extend({
             return self.character.target;
 
         return null;
-    },
+    }
 
-    hasMinions: function() {
+    hasMinions() {
         return this.minions.length > 0;
-    },
+    }
 
-    isLast: function() {
+    isLast() {
         return this.minions.length === 1;
-    },
+    }
 
-    canSpawn: function() {
+    canSpawn() {
         return (new Date().getTime() - this.lastSpawn > 25000) && !this.hasMinions() && this.isAttacked();
     }
 
-});
+}
+
+module.exports = SkeletonKing;

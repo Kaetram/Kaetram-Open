@@ -1,36 +1,35 @@
-var Combat = require('../../js/game/entity/character/combat/combat'),
+let Combat = require('../../js/game/entity/character/combat/combat'),
     Modules = require('../../js/util/modules');
 
-module.exports = GreatSquid = Combat.extend({
+class GreatSquid extends Combat {
 
-    init: function(character) {
-        var self = this;
-
+    constructor(character) {
         character.spawnDistance = 15;
+        super(character);
 
-        self._super(character);
+        let self = this;
 
         self.character = character;
 
         self.lastTerror = new Date().getTime();
+    }
 
-    },
+    hit(character, target, hitInfo) {
+        let self = this;
 
-    hit: function(character, target, hitInfo) {
-        var self = this;
-
-        if (self.canUseTerror()) {
+        if (self.canUseTerror) {
             hitInfo.type = Modules.Hits.Stun;
 
             self.lastTerror = new Date().getTime();
         }
 
-        self._super(character, target, hitInfo);
-    },
+        super.hit(character, target, hitInfo);
+    }
 
-    canUseTerror: function() {
+    canUseTerror() {
         return new Date().getTime() - this.lastTerror > 15000;
     }
 
+}
 
-});
+module.exports = GreatSquid;
