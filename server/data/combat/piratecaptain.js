@@ -1,17 +1,17 @@
-var Combat = require('../../js/game/entity/character/combat/combat'),
+let Combat = require('../../js/game/entity/character/combat/combat'),
     Utils = require('../../js/util/utils'),
     Messages = require('../../js/network/messages'),
     Modules = require('../../js/util/modules');
 
-module.exports = PirateCaptain = Combat.extend({
+class PirateCaptain extends Combat {
 
-    init: function(character) {
-        var self = this;
-
-        self._super(character);
-        self.character = character;
-
+    constructor(character) {
         character.spawnDistance = 20;
+        super(character);
+
+        let self = this;
+
+        self.character = character;
 
         self.teleportLocations = [];
 
@@ -24,9 +24,9 @@ module.exports = PirateCaptain = Combat.extend({
         };
 
         self.load();
-    },
+    }
 
-    load: function() {
+    load() {
         var self = this,
             south = { x: 251, y: 574 },
             west = { x: 243, y: 569 },
@@ -34,17 +34,17 @@ module.exports = PirateCaptain = Combat.extend({
             north = { x: 251, y: 563 };
 
         self.teleportLocations.push(north, south, west, east);
-    },
+    }
 
-    hit: function(character, target, hitInfo) {
+    hit(character, target, hitInfo) {
         var self = this;
         if (self.canTeleport())
             self.teleport();
         else
             self._super(character, target, hitInfo);
-    },
+    }
 
-    teleport: function() {
+    teleport() {
         var self = this,
             position = self.getRandomPosition();
 
@@ -67,9 +67,9 @@ module.exports = PirateCaptain = Combat.extend({
 
         if (self.character.hasTarget())
             self.begin(self.character.target);
-    },
+    }
 
-    getRandomPosition: function() {
+    getRandomPosition() {
         var self = this,
             random = Utils.randomInt(0, self.teleportLocations.length - 1),
             position = self.teleportLocations[random];
@@ -82,16 +82,18 @@ module.exports = PirateCaptain = Combat.extend({
             y: position.y,
             index: random
         }
-    },
+    }
 
-    canTeleport: function() {
+    canTeleport() {
         //Just randomize the teleportation for shits and giggles.
         return new Date().getTime() - this.lastTeleport > 10000 && Utils.randomInt(0, 4) === 2;
-    },
+    }
 
-    getHealthPercentage: function() {
+    getHealthPercentage() {
         //Floor it to avoid random floats
         return Math.floor((this.character.hitPoints / self.character.maxHitPoints) * 100);
     }
 
-});
+}
+
+module.exports = PirateCaptain;

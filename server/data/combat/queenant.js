@@ -1,28 +1,25 @@
-var Combat = require('../../js/game/entity/character/combat/combat'),
+let Combat = require('../../js/game/entity/character/combat/combat'),
     Packets = require('../../js/network/packets'),
     Messages = require('../../js/network/messages'),
     Utils = require('../../js/util/utils'),
     _ = require('underscore');
 
-module.exports = QueenAnt = Combat.extend({
+class QueenAnt extends Combat {
 
-    /**
-     * This is where bosses start to get a bit more complex.
-     * The queen ant will do an AoE attack after staggering for five seconds,
-     * indicating to the players. If players are caught up in this, the terror
-     * explosion sprite is drawn above them.
+    /*
+     * The queen ant is a little more complex as it uses
+     * AoE attacks and has a stun timer.
      */
 
-    init: function(character) {
-        var self = this;
-
+    constructor(character) {
         character.spawnDistance = 18;
+        super(character);
 
-        self._super(character);
-
-        self.lastActionThreshold = 10000; //Due to the nature of the AoE attack
+        let self = this;
 
         self.character = character;
+
+        self.lastActionThreshold = 10000; //AoE Attack Threshold.
 
         self.aoeTimeout = null;
 
@@ -61,18 +58,17 @@ module.exports = QueenAnt = Combat.extend({
             clearTimeout(self.aoeTimeout);
             self.aoeTimeout = null;
         });
+    }
 
-    },
-
-    begin: function(attacker) {
+    begin(attacker) {
         var self = this;
 
         self.resetAoE();
 
         self._super(attacker);
-    },
+    }
 
-    hit: function(attacker, target, hitInfo) {
+    hit(attacker, target, hitInfo) {
         var self = this;
 
         if (self.frozen)
@@ -90,9 +86,9 @@ module.exports = QueenAnt = Combat.extend({
             self.beginMinionAttack();
 
         self._super(attacker, target, hitInfo);
-    },
+    }
 
-    doAoE: function() {
+    doAoE() {
         var self = this;
 
         /**
@@ -117,9 +113,9 @@ module.exports = QueenAnt = Combat.extend({
 
         }, 5000);
 
-    },
+    }
 
-    spawnMinions: function() {
+    spawnMinions() {
         var self = this;
 
         self.lastSpawn = new Date().getTime();
@@ -145,9 +141,9 @@ module.exports = QueenAnt = Combat.extend({
                 self.beginMinionAttack();
 
         });
-    },
+    }
 
-    beginMinionAttack: function() {
+    beginMinionAttack() {
         var self = this;
 
         if (!self.hasMinions())
@@ -161,13 +157,13 @@ module.exports = QueenAnt = Combat.extend({
                 minion.combat.begin(randomTarget);
 
         });
-    },
+    }
 
-    resetAoE: function() {
+    resetAoE() {
         this.lastAoE = new Date().getTime();
-    },
+    }
 
-    getRandomTarget: function() {
+    getRandomTarget() {
         var self = this;
 
         if (self.isAttacked()) {
@@ -182,45 +178,47 @@ module.exports = QueenAnt = Combat.extend({
             return self.character.target;
 
         return null;
-    },
+    }
 
-    pushFreeze: function(state) {
+    pushFreeze(state) {
         var self = this;
 
         self.character.frozen = state;
         self.character.stunned = state;
-    },
+    }
 
-    pushCountdown: function(count) {
+    pushCountdown(count) {
         var self = this;
 
         self.world.pushToAdjacentGroups(self.character.group, new Messages.NPC(Packets.NPCOpcode.Countdown, {
             id: self.character.instance,
             countdown: count
         }));
-    },
+    }
 
-    getMinions: function() {
+    getMinions() {
         var self = this,
             grids = self.world.getGrids();
 
 
-    },
+    }
 
-    isLast: function() {
+    isLast() {
         return this.minions.length === 1;
-    },
+    }
 
-    hasMinions: function() {
+    hasMinions() {
         return this.minions.length > 0;
-    },
+    }
 
-    canCastAoE: function() {
+    canCastAoE() {
         return new Date().getTime() - this.lastAoE > 30000;
-    },
+    }
 
-    canSpawn: function() {
+    canSpawn() {
         return new Date().getTime() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked();
     }
 
-});
+}
+
+module.exports = QueenAnt;

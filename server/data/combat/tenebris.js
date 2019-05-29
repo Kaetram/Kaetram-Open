@@ -1,16 +1,15 @@
-var Combat = require('../../js/game/entity/character/combat/combat'),
+let Combat = require('../../js/game/entity/character/combat/combat'),
     Messages = require('../../js/network/messages'),
     Packets = require('../../js/network/packets'),
     Utils = require('../../js/util/utils');
 
-module.exports = Tenebris = Combat.extend({
+class Tenebris extends Combat {
 
-    init: function(character) {
-        var self = this;
-
-        self._super(character);
-
+    constructor(character) {
         character.spawnDistance = 24;
+        super(character);
+
+        let self = this;
 
         self.illusions = [];
         self.firstIllusionKilled = false;
@@ -34,10 +33,9 @@ module.exports = Tenebris = Combat.extend({
 
         if (!self.isIllusion())
             self.forceTalk('Who dares summon Tenebris!');
+    }
 
-    },
-
-    reset: function() {
+    reset() {
         var self = this;
 
         self.illusions = [];
@@ -51,9 +49,9 @@ module.exports = Tenebris = Combat.extend({
 
         }, self.respawnDelay);
 
-    },
+    }
 
-    hit: function(attacker, target, hitInfo) {
+    hit(attacker, target, hitInfo) {
         var self = this;
 
         if (self.isAttacked())
@@ -63,15 +61,15 @@ module.exports = Tenebris = Combat.extend({
             self.spawnIllusions();
 
         self._super(attacker, target, hitInfo);
-    },
+    }
 
-    spawnTenbris: function() {
+    spawnTenbris() {
         var self = this;
 
         self.world.spawnMob(104, self.character.x, self.character.y);
-    },
+    }
 
-    spawnIllusions: function() {
+    spawnIllusions() {
         var self = this;
 
         self.illusions.push(self.world.spawnMob(105, self.character.x + 1, self.character.y + 1));
@@ -91,9 +89,9 @@ module.exports = Tenebris = Combat.extend({
 
         self.character.setPosition(62, 343);
         self.world.pushToGroup(self.character.group, new Messages.Teleport(self.character.instance, self.character.x, self.character.y, true));
-    },
+    }
 
-    removeIllusions: function() {
+    removeIllusions() {
         var self = this;
 
         self.lastIllusion = 0;
@@ -102,9 +100,9 @@ module.exports = Tenebris = Combat.extend({
 
         for (var i = 0; i < listCopy.length; i++)
             self.world.kill(listCopy[i]);
-    },
+    }
 
-    beginIllusionAttack: function() {
+    beginIllusionAttack() {
         var self = this;
 
         if (!self.hasIllusions())
@@ -117,9 +115,9 @@ module.exports = Tenebris = Combat.extend({
                 illusion.combat.begin(target);
 
         });
-    },
+    }
 
-    getRandomTarget: function() {
+    getRandomTarget() {
         var self = this;
 
         if (self.isAttacked()) {
@@ -134,9 +132,9 @@ module.exports = Tenebris = Combat.extend({
             return self.character.target;
 
         return null;
-    },
+    }
 
-    forceTalk: function(instance, message) {
+    forceTalk(instance, message) {
         var self = this;
 
         if (!self.world)
@@ -148,22 +146,24 @@ module.exports = Tenebris = Combat.extend({
             nonNPC: true
         }));
 
-    },
+    }
 
-    isLast: function() {
+    isLast() {
         return this.illusions.length === 1;
-    },
+    }
 
-    canSpawn: function() {
+    canSpawn() {
         return !this.isIllusion() && !this.hasIllusions && new Date().getTime() - this.lastIllusion === 45000 && Utils.randomInt(0, 4) === 2;
-    },
+    }
 
-    isIllusion: function() {
+    isIllusion() {
         return this.character.id === 105;
-    },
+    }
 
-    hasIllusions: function() {
+    hasIllusions() {
         return this.illusions.length > 0;
     }
 
-});
+}
+
+module.exports = Tenebris;
