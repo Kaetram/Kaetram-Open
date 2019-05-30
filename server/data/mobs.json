@@ -386,12 +386,13 @@
     "weapon": 1,
     "xp": 35,
     "level": 16,
-    "aggroRange": 1,
+    "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "spawnDelay": 35000,
+    "hiddenName": true
   },
 
   "Cat": {

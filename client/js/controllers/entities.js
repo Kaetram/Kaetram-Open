@@ -95,6 +95,7 @@ define(['../renderer/grids', '../entity/objects/chest',
 
                         mob.attackRange = info.attackRange;
                         mob.level = info.level;
+                        mob.hiddenName = info.hiddenName;
 
                         entity = mob;
 
