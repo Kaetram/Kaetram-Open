@@ -182,7 +182,8 @@ Packets.RegionOpcode  = {
     Render: 0,
     Modify: 1,
     Collision: 2,
-    Update: 3
+    Update: 3,
+    Reset: 4
 };
 
 Packets.OverlayOpcode = {

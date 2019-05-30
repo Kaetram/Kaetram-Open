@@ -20,10 +20,11 @@ define(['jquery'], function($) {
             self.tilesetsLoaded = false;
             self.mapLoaded = false;
 
+            self.preloadedData = false;
+
             self.load();
 
             self.ready();
-
         },
 
         ready: function() {
@@ -258,6 +259,8 @@ define(['jquery'], function($) {
 
             if (regionData.length < 1)
                 return;
+
+            self.preloadedData = true;
 
             self.data = regionData;
             self.collisions = collisions;
