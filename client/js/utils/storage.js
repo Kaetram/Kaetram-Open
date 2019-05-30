@@ -50,6 +50,11 @@ define(function() {
                     debug: false,
                     showNames: true,
                     showLevels: true
+                },
+
+                map: {
+                    regionData: [],
+                    collisions: []
                 }
             };
         },
@@ -100,12 +105,29 @@ define(function() {
             self.save();
         },
 
+        setRegionData: function(regionData, collisionData) {
+            var self = this;
+
+            self.data.map.regionData = regionData;
+            self.data.map.collisions = collisionData;
+
+            self.save();
+        },
+
         getPlayer: function() {
             return this.data.player;
         },
 
         getSettings: function() {
             return this.data ? this.data.settings : null;
+        },
+
+        getRegionData: function() {
+            return this.data.map.regionData;
+        },
+
+        getCollisions: function() {
+            return this.data.map.collisions;
         }
 
     });

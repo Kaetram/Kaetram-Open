@@ -221,7 +221,7 @@ class Incoming {
 
         self.player.save();
 
-        
+
 
         if (self.player.readyCallback)
             self.player.readyCallback();
@@ -367,7 +367,6 @@ class Incoming {
                     let destination = self.world.map.getDoorDestination(posX, posY);
 
                     self.player.teleport(destination.x, destination.y, true);
-
                 } else
                     self.player.setPosition(posX, posY);
 

@@ -350,6 +350,14 @@ class Commands {
                 }));
                 break;
 
+            case 'resetregions':
+                log.info('Resetting regions...');
+
+                self.player.regionsLoaded = [];
+                self.player.updateRegion(true);
+
+                break;
+
         }
     }
 

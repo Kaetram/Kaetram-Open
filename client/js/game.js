@@ -128,14 +128,14 @@ define(['./renderer/renderer', './utils/storage',
             var self = this,
                 hasWorker = self.app.hasWorker();
 
+            self.app.sendStatus('Loading local storage');
+
+            self.setStorage(new LocalStorage(self.app));
+
             self.app.sendStatus(hasWorker ? 'Loading maps - asynchronous' : null);
 
             if (hasWorker)
                 self.loadMap();
-
-            self.app.sendStatus('Loading local storage');
-
-            self.setStorage(new LocalStorage(self.app));
 
             self.app.sendStatus('Initializing network socket');
 
@@ -172,6 +172,7 @@ define(['./renderer/renderer', './utils/storage',
             self.overlays = new Overlay(self);
 
             self.map.onReady(function() {
+                self.map.loadRegionData();
 
                 self.app.sendStatus('Loading the pathfinder');
 

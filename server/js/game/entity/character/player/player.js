@@ -459,9 +459,8 @@ class Player extends Character {
         self.sendToAdjacentRegions(self.region, new Messages.Teleport(self.instance, x, y, animate));
 
         self.setPosition(x, y);
-        self.checkRegions();
+        //self.checkRegions();
 
-        self.updateRegion(true);
         self.world.cleanCombat(self);
     }
 
@@ -677,6 +676,10 @@ class Player extends Character {
             x: x,
             y: y
         }
+    }
+
+    loadRegion(regionId) {
+        this.regionsLoaded.push(regionId);
     }
 
     hasLoadedRegion(region) {
