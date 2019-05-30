@@ -216,7 +216,12 @@ class Incoming {
         self.player.loadBank();
         self.player.loadQuests();
 
+        if (self.world.map.isOutOfBounds(self.player.x, self.player.y))
+            self.player.setPosition(50, 89);
+
         self.player.save();
+
+        
 
         if (self.player.readyCallback)
             self.player.readyCallback();
@@ -541,8 +546,11 @@ class Incoming {
                 return;
             }
 
+            log.info(self.player.name);
+
             self.world.network.pushToRegion(self.player.region, new Messages.Chat({
                 id: self.player.instance,
+                name: self.player.username,
                 withBubble: true,
                 text: text,
                 duration: 7000

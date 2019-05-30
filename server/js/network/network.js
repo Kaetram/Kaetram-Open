@@ -65,7 +65,7 @@ class Network {
 
         if (!config.debug && timeDifference - self.differenceThreshold < 5000) {
             connection.sendUTF8('toofast');
-            connnection.close('Logging in too fast.');
+            connection.close('Logging in too fast.');
 
             return;
         }
