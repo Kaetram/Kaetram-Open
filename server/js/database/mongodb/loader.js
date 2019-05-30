@@ -90,26 +90,6 @@ class Loader {
         });
     }
 
-    getRegions(player, callback) {
-        let self = this;
-
-        self.database.getDatabase(function(database) {
-            let regions = database.collection('player_regions'),
-                cursor = regions.find({ username: player.username });
-
-            cursor.toArray().then(function(regions) {
-                let info = regions[0];
-
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice('[Loader] Mismatch in usernames whilst retrieving achievement data for: ' + player.username);
-
-                    callback(info.regions.split(','));
-                }
-            });
-        });
-    }
-
 }
 
 module.exports = Loader;
