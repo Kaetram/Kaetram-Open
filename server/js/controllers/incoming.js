@@ -424,7 +424,7 @@ class Incoming {
             case Packets.TargetOpcode.Talk:
                 let entity = self.world.getEntityByInstance(instance);
 
-                if (!entity)
+                if (!entity || !self.player.isAdjacent(entity))
                     return;
 
                 if (entity.type === 'chest') {

@@ -1,7 +1,8 @@
 /* global module */
 
 let Quest = require('../quest'),
-    Packets = require('../../../../../../network/packets');
+    Packets = require('../../../../../../network/packets'),
+    Messages = require('../../../../../../network/messages');
 
 class BulkySituation extends Quest {
     
