@@ -51,7 +51,8 @@ class Parser {
                 movementSpeed: value.movementSpeed ? value.movementSpeed : 200,
                 projectileName: value.projectileName ? value.projectileName : null,
                 spawnDelay: value.spawnDelay ? value.spawnDelay : 60000,
-                combatPlugin: value.combatPlugin ? value.combatPlugin : null
+                combatPlugin: value.combatPlugin ? value.combatPlugin : null,
+                hiddenName: value.hiddenName ? value.hiddenName: false
             };
 
             Mobs.Ids[value.id] = Mobs.Properties[key];

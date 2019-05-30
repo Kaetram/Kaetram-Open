@@ -12,6 +12,8 @@ define(['../character'], function(Character) {
             self.hitPoints = -1;
             self.maxHitPoints = -1;
 
+            self.hiddenName = false;
+
             self.type = 'mob';
         },
 
@@ -41,6 +43,14 @@ define(['../character'], function(Character) {
 
         setGridPosition: function(x, y) {
             this._super(x, y);
+        },
+
+        hasShadow: function() {
+            return !this.hiddenName;
+        },
+
+        drawNames: function() {
+            return !this.hiddenName;
         }
 
     });

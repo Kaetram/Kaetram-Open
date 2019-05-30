@@ -36,6 +36,7 @@ class Mob extends Character {
         self.dead = false;
         self.boss = false;
         self.static = false;
+        self.hiddenName = false;
 
         self.projectileName = self.getProjectileName();
     }
@@ -170,6 +171,7 @@ class Mob extends Character {
         base.maxHitPoints = self.maxHitPoints;
         base.attackRange = self.attackRange;
         base.level = self.level;
+        base.hiddenName = self.hiddenName;
 
         return base;
     }

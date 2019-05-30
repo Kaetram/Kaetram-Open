@@ -224,6 +224,10 @@ define(['./entityhandler'], function(EntityHandler) {
             return this.visible;
         },
 
+        drawNames: function() {
+            return true;
+        },
+
         hasShadow: function() {
             return false;
         },
