@@ -656,6 +656,11 @@ class Player extends Character {
         if (self.dead)
             return;
 
+        if (self.world.map.isOutOfBounds(x, y)) {
+            x = 50;
+            y = 89;
+        }
+
         super.setPosition(x, y);
 
         self.sendToAdjacentRegions(self.region, new Messages.Movement(Packets.MovementOpcode.Move, [self.instance, x, y, false, false]), self.instance);
@@ -786,7 +791,7 @@ class Player extends Character {
          * other special events and determine a spawn point.
          */
 
-        return { x: 10, y: 30 };
+        return self.finishedTutorial() ? { x: 324, y: 86 } : { x: 17, y: 557 };
     }
 
     getHit(target) {

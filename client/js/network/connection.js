@@ -294,10 +294,11 @@ define(function() {
                     self.socket.send(Packets.Request, [self.game.player.id]);
 
                     self.entities.registerPosition(entity);
+                    entity.frozen = false;
+                    
+                    /*self.renderer.transition(15, true, function() {
 
-                    self.renderer.transition(15, true, function() {
-                        entity.frozen = false;
-                    });
+                    });*/
 
                 };
 
@@ -322,14 +323,13 @@ define(function() {
                     });
 
                 } else
-                    self.renderer.transition(15, false, function() {
+                    doTeleport();
+                    /*self.renderer.transition(15, false, function() {
                         if (self.queueColour) {
                             self.renderer.updateDarkMask(self.queueColour);
                             self.queueColour = null;
                         }
-
-                        doTeleport();
-                    });
+                    });*/
 
             });
 
@@ -518,11 +518,11 @@ define(function() {
                     var entity = self.entities.get(info.id);
 
                     if (entity) {
+                        log.info(info);
+                        info.name = info.name.charAt(0).toUpperCase() + info.name.substr(1);
+
                         self.bubble.create(info.id, info.text, self.time, info.duration);
                         self.bubble.setTo(entity);
-
-                        if (entity === self.game.player)
-                            info.colour = '#5C0D0D';
 
                         self.audio.play(Modules.AudioTypes.SFX, 'npctalk');
                     }
@@ -531,7 +531,7 @@ define(function() {
                 if (info.isGlobal)
                     info.name = '[Global] ' + info.name;
 
-                self.input.chatHandler.add(info.text, info.colour);
+                self.input.chatHandler.add(info.name, info.text, info.colour);
 
             });
 
