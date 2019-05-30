@@ -340,15 +340,14 @@ class Region {
 
     getRegionData(region, player, force) {
         let self = this,
-            data = [],
-            regionLoaded = function(regionId) {
-                return player ? player.hasLoadedRegion(regionId) : true;
-            };
+            data = [];
+
+        if (!player)
+            return data;
 
         self.mapRegions.forEachAdjacentRegion(region, function(regionId) {
-            if (!regionLoaded(regionId) || force) {
-                if (player)
-                    player.regionsLoaded.push(regionId);
+            if (!player.hasLoadedRegion(regionId) || force) {
+                player.loadRegion(regionId);
 
                 let bounds = self.getRegionBounds(regionId);
 

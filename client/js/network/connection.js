@@ -295,7 +295,7 @@ define(function() {
 
                     self.entities.registerPosition(entity);
                     entity.frozen = false;
-                    
+
                     /*self.renderer.transition(15, true, function() {
 
                     });*/
@@ -979,24 +979,7 @@ define(function() {
                 switch(opcode) {
                     case Packets.RegionOpcode.Render:
 
-                        _.each(info, function(tile) {
-                            var collisionIndex = self.map.collisions.indexOf(tile.index);
-
-                            self.map.data[tile.index] = tile.data;
-
-                            if (tile.isCollision && collisionIndex < 0)
-                                self.map.collisions.push(tile.index);
-
-                            if (!tile.isCollision && collisionIndex > 0) {
-                                var position = self.map.indexToGridPosition(tile.index + 1);
-
-                                self.entities.grids.removeFromPathingGrid(position.x, position.y);
-                                self.entities.grids.removeFromMapGrid(position.x, position.y);
-
-                                self.map.collisions.splice(collisionIndex, 1);
-                            }
-
-                        });
+                        self.map.synchronize(info);
 
                         break;
 

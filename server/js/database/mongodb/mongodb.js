@@ -4,7 +4,8 @@ let MongoClient = require('mongodb').MongoClient,
     Loader = require('./loader'),
     Creator = require('./creator'),
     bcrypt = require('bcrypt'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    config = require('../../../config');
 
 class MongoDB {
 
@@ -48,25 +49,34 @@ class MongoDB {
 
         self.getDatabase(function(database) {
             let dataCursor = database.collection('player_data').find({ username: player.username }),
-                equipmentCursor = database.collection('player_equipment').find({ username: player.username });
+                equipmentCursor = database.collection('player_equipment').find({ username: player.username }),
+                regionsCursor = database.collection('player_regions').find({ username: player.username });
 
             dataCursor.toArray().then(function(playerData) {
                 equipmentCursor.toArray().then(function(equipmentData) {
-                    if (playerData.length === 0)
-                        self.register(player);
-                    else {
-                        let playerInfo = playerData[0],
-                            equipmentInfo = equipmentData[0];
+                    regionsCursor.toArray().then(function(regionData) {
 
-                        playerInfo['armour'] = equipmentInfo.armour;
-                        playerInfo['weapon'] = equipmentInfo.weapon;
-                        playerInfo['pendant'] = equipmentInfo.pendant;
-                        playerInfo['ring'] = equipmentInfo.ring;
-                        playerInfo['boots'] = equipmentInfo.boots;
+                        if (playerData.length === 0)
+                            self.register(player);
+                        else {
+                            let playerInfo = playerData[0],
+                                equipmentInfo = equipmentData[0],
+                                regions = regionData[0];
 
-                        player.load(playerInfo);
-                        player.intro();
-                    }
+                            playerInfo['armour'] = equipmentInfo.armour;
+                            playerInfo['weapon'] = equipmentInfo.weapon;
+                            playerInfo['pendant'] = equipmentInfo.pendant;
+                            playerInfo['ring'] = equipmentInfo.ring;
+                            playerInfo['boots'] = equipmentInfo.boots;
+
+                            if (regions.gameVersion === config.gver)
+                                player.regionsLoaded = regions.regions.split(',');
+
+                            player.load(playerInfo);
+                            player.intro();
+                        }
+
+                    });
                 });
             })
         });

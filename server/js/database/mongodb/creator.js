@@ -1,6 +1,7 @@
 /* global module */
 
-let bcrypt = require('bcrypt');
+let bcrypt = require('bcrypt'),
+    config = require('../../../config');
 
 class Creator {
 
@@ -17,6 +18,7 @@ class Creator {
                 playerQuests = database.collection('player_quests'),
                 playerAchievements = database.collection('player_achievements'),
                 playerBank = database.collection('player_bank'),
+                playerRegions = database.collection('player_regions'),
                 playerAbilities = database.collection('player_abilities'),
                 playerInventory = database.collection('player_inventory');
 
@@ -25,6 +27,7 @@ class Creator {
             self.savePlayerQuests(playerQuests, player);
             self.savePlayerAchievements(playerAchievements, player);
             self.savePlayerBank(playerBank, player);
+            self.savePlayerRegions(playerRegions, player);
             self.savePlayerAbilities(playerAbilities, player);
             self.savePlayerInventory(playerInventory, player, function() {
                 database.close();
@@ -103,6 +106,19 @@ class Creator {
 
             if (result)
                 log.debug('Player ' + player.username + ' bank data has been saved successfully.');
+        });
+    }
+
+    savePlayerRegions(collection, player) {
+        collection.updateOne({
+            username: player.username
+        }, { $set: { regions: player.regionsLoaded.toString(), gameVersion: config.gver } }, {
+            upsert: true
+        }, function(error, result) {
+            if (error) throw error;
+
+            if (result)
+                log.debug('Player ' + player.username + ' regions data has been saved successfully.');
         });
     }
 

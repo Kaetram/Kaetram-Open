@@ -230,7 +230,7 @@ define(['jquery', './camera', './tile',
 
             self.draw();
 
-            self.drawOverlays();
+            //self.drawOverlays();
 
             self.drawTargetCell();
 

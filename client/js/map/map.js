@@ -70,6 +70,26 @@ define(['jquery'], function($) {
             }
         },
 
+        synchronize: function(tileData) {
+            var self = this;
+            // Use traditional for-loop instead of _
+
+            for (var i = 0; i < tileData.length; i++) {
+                var tile = tileData[i],
+                    collisionIndex = self.collisions.indexOf(tile.index);
+
+                self.data[tile.index] = tile.data;
+
+                if (tile.isCollision && collisionIndex < 0) // Adding new collision tileIndex
+                    self.collisions.push(tile.index);
+
+                if (!tile.isCollision && collisionIndex > 0) // Removing existing collision tileIndex
+                    self.collisions.splice(collisionIndex, 1);
+            }
+
+            self.saveRegionData();
+        },
+
         loadTilesets: function() {
             var self = this;
 
@@ -223,6 +243,26 @@ define(['jquery'], function($) {
                     return self.tilesets[idx];
 
             return null;
+        },
+
+        saveRegionData() {
+            var self = this;
+
+            self.game.storage.setRegionData(self.data, self.collisions);
+        },
+
+        loadRegionData() {
+            var self = this,
+                regionData = self.game.storage.getRegionData(),
+                collisions = self.game.storage.getCollisions();
+
+            if (regionData.length < 1)
+                return;
+
+            self.data = regionData;
+            self.collisions = collisions;
+
+            self.updateCollisions();
         },
 
         onReady: function(callback) {
