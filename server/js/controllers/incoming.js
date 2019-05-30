@@ -201,10 +201,14 @@ class Incoming {
 
     handleReady(message) {
         let self = this,
-            isReady = message.shift();
+            isReady = message.shift(),
+            preloadedData = message.shift();
 
         if (!isReady)
             return;
+
+        if (self.player.regionsLoaded.length > 0 && !preloadedData)
+            self.player.regionsLoaded = [];
 
         self.player.ready = true;
 
@@ -220,8 +224,6 @@ class Incoming {
             self.player.setPosition(50, 89);
 
         self.player.save();
-
-
 
         if (self.player.readyCallback)
             self.player.readyCallback();

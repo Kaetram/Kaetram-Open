@@ -230,7 +230,7 @@ define(['./renderer/renderer', './utils/storage',
             self.player.setOrientation(self.storage.data.player.orientation);
             self.player.idle();
 
-            self.socket.send(Packets.Ready, [true]);
+            self.socket.send(Packets.Ready, [true, self.map.preloadedData]);
 
             self.playerHandler = new PlayerHandler(self, self.player);
 

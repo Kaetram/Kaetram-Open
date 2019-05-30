@@ -370,6 +370,9 @@ define(['jquery', './camera', './tile',
             self.context.save();
             self.setCameraView(self.context);
 
+            if (entity.id !== self.game.player.id)
+                self.context.globalCompositeOperation = 'destination-over';
+
             if (data.scale !== self.scale || data.sprite !== sprite) {
 
                 data.scale = self.scale;
