@@ -69,7 +69,7 @@ class MongoDB {
                             playerInfo['ring'] = equipmentInfo.ring;
                             playerInfo['boots'] = equipmentInfo.boots;
 
-                            if (regions.gameVersion === config.gver)
+                            if (regions && regions.gameVersion === config.gver)
                                 player.regionsLoaded = regions.regions.split(',');
 
                             player.load(playerInfo);
