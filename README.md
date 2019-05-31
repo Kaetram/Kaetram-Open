@@ -5,14 +5,15 @@ Kaetram is an open-source game-engine created to aid those interested in enterin
 
 ### Features:
 
-- Rendering Engine (includes dynamic lighting, overlays, animated tiles)
-- Implementation of Tiled Animated Tiles (simply create an animation in Tiled)
-- Multi-tilesheet Rendering
+- Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles)
+- Implementation of animated tiles using map editor (set your animated tiles in Tiled)
+- Multi-tilesheet rendering
 - Plugin system for bosses, quests, items, and more.
-- Quest and Achievement System w/ Interface
-- Advanced Combat System
+- Quest and achievement system w/ interface
+- Advanced combat system
 - Powerful dynamic region system (includes instancing, region caching using local-storage, and more)
-- Minigames Plugin System
+- Minigames plugin system
+- Updated camera system (clips to edges)
 
 #### Region Manager:
 
