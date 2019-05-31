@@ -32,6 +32,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
             self.cursors = {};
 
+            self.lastMousePosition = { x: 0, y: 0 };
+
             self.hovering = null;
 
             self.mouse = {

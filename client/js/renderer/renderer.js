@@ -200,8 +200,6 @@ define(['jquery', './camera', './tile',
                     if (self.game.interface)
                         self.game.interface.resize();
 
-                    self.renderedFrame[0] = -1;
-
                     self.stopRendering = false;
                     self.resizeTimeout = null;
 
@@ -218,6 +216,7 @@ define(['jquery', './camera', './tile',
                 return;
 
             self.clear();
+
             self.clearText();
 
             self.saveAll();
@@ -257,9 +256,6 @@ define(['jquery', './camera', './tile',
         draw: function() {
             var self = this;
 
-            self.overlayContext.save();
-            self.setCameraView(self.overlayContext);
-
             self.updateDrawingView();
 
             self.forEachVisibleTile(function(id, index) {
@@ -278,7 +274,6 @@ define(['jquery', './camera', './tile',
                     tile.loaded = true;
                 });
 
-            self.overlayContext.restore();
         },
 
         drawOverlays: function() {
@@ -602,7 +597,7 @@ define(['jquery', './camera', './tile',
         drawCursor: function() {
             var self = this;
 
-            if (self.tablet || self.mobile)
+            if (self.tablet || self.mobile || self.hasRenderedMouse())
                 return;
 
             var cursor = self.input.cursor,
@@ -622,6 +617,8 @@ define(['jquery', './camera', './tile',
             }
 
             self.cursorContext.restore();
+
+            self.saveMouse();
         },
 
         calculateFPS: function() {
@@ -1044,25 +1041,15 @@ define(['jquery', './camera', './tile',
             context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
         },
 
-        hasRenderedFrame: function() {
-            var self = this;
-
-            if (self.forceRendering)
-                return false;
-
-            if (!self.camera || self.stopRendering || !self.input)
-                return true;
-
-            return self.renderedFrame[0] === self.camera.x && self.renderedFrame[1] === self.camera.y;
+        hasRenderedMouse: function() {
+            return this.input.lastMousePosition.x === this.input.mouse.x && this.input.lastMousePosition.y === this.input.mouse.y;
         },
 
-        saveFrame: function() {
+        saveMouse: function() {
             var self = this;
 
-            self.renderedFrame[0] = self.camera.x;
-            self.renderedFrame[1] = self.camera.y;
-
-            self.forceRendering = false;
+            self.input.lastMousePosition.x = self.input.mouse.x;
+            self.input.lastMousePosition.y = self.input.mouse.y;
         },
 
         adjustBrightness: function(level) {
