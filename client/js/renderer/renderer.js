@@ -230,7 +230,7 @@ define(['jquery', './camera', './tile',
 
             self.draw();
 
-            //self.drawOverlays();
+            self.drawOverlays();
 
             self.drawTargetCell();
 
@@ -274,7 +274,7 @@ define(['jquery', './camera', './tile',
 
             if (self.animateTiles)
                 self.forEachAnimatedTile(function(tile) {
-                    self.drawTile(self.overlayContext, tile.id, self.map.width, tile.index);
+                    self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
                     tile.loaded = true;
                 });
 
@@ -410,9 +410,12 @@ define(['jquery', './camera', './tile',
             if (entity.angled)
                 self.context.rotate(data.angle);
 
-            if (entity.hasShadow())
+            if (entity.hasShadow()) {
+                self.context.globalCompositeOperation = 'source-over';
+
                 self.context.drawImage(self.shadowSprite.image, 0, 0, data.shadowWidth, data.shadowHeight,
                     0, data.shadowOffsetY, data.shadowWidth, data.shadowHeight);
+            }
 
             self.drawEntityBack(entity);
 
@@ -461,7 +464,9 @@ define(['jquery', './camera', './tile',
             self.context.restore();
 
             self.drawHealth(entity);
-            self.drawName(entity);
+
+            if (!self.game.overlays.getFog())
+                self.drawName(entity);
         },
 
         drawEntityBack: function(entity) {
