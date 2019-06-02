@@ -17,11 +17,11 @@ Messages.Handshake = class {
 Messages.Welcome = class {
 
     constructor(data) {
-        this.data = data; //array of info
+        this.info = data; //array of info
     }
 
     serialize() {
-        return [Packets.Welcome, this.data];
+        return [Packets.Welcome, this.info];
     }
 };
 
@@ -51,11 +51,11 @@ Messages.List = class {
 Messages.Sync = class {
 
     constructor(data) {
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Sync, this.data];
+        return [Packets.Sync, this.info];
     }
 
 };
@@ -116,11 +116,11 @@ Messages.Animation = class {
 
     constructor(id, data) {
         this.id = id;
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Animation, this.id, this.data];
+        return [Packets.Animation, this.id, this.info];
     }
 
 };
@@ -128,15 +128,13 @@ Messages.Animation = class {
 // TODO - Revise this when going over combat.
 Messages.Combat = class {
 
-    constructor(opcode, attackerId, targetId, hitData) {
+    constructor(opcode, info) {
         this.opcode = opcode;
-        this.attackerId = attackerId;
-        this.targetId = targetId;
-        this.hitData = hitData;
+        this.info = info;
     }
 
     serialize() {
-        return [Packets.Combat, [this.opcode, this.attackerId, this.targetId, this.hitData]];
+        return [Packets.Combat, this.opcode, this.info];
     }
 
 };
@@ -145,11 +143,11 @@ Messages.Projectile = class {
 
     constructor(opcode, data) {
         this.opcode = opcode;
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Projectile, this.opcode, this.data];
+        return [Packets.Projectile, this.opcode, this.info];
     }
 
 };
@@ -169,11 +167,11 @@ Messages.Population = class {
 Messages.Points = class {
 
     constructor(data) {
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Points, this.data];
+        return [Packets.Points, this.info];
     }
 
 };
@@ -192,11 +190,11 @@ Messages.Network = class {
 Messages.Chat = class {
 
     constructor(data) {
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Chat, this.data];
+        return [Packets.Chat, this.info];
     }
 
 };
@@ -204,11 +202,11 @@ Messages.Chat = class {
 Messages.Command = class {
 
     constructor(data) {
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Command, this.data];
+        return [Packets.Command, this.info];
     }
 
 };
@@ -222,11 +220,11 @@ Messages.Inventory = class {
 
     constructor(opcode, data) {
         this.opcode = opcode;
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Inventory, this.opcode, this.data];
+        return [Packets.Inventory, this.opcode, this.info];
     }
 
 };
@@ -235,11 +233,11 @@ Messages.Bank = class {
 
     constructor(opcode, data) {
         this.opcode = opcode;
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Bank, this.opcode, this.data];
+        return [Packets.Bank, this.opcode, this.info];
     }
 
 };
@@ -248,11 +246,11 @@ Messages.Ability = class {
 
     constructor(opcode, data) {
         this.opcode = opcode;
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Ability, this.opcode, this.data];
+        return [Packets.Ability, this.opcode, this.info];
     }
 
 };
@@ -261,11 +259,11 @@ Messages.Quest = class {
 
     constructor(opcode, data) {
         this.opcode = opcode;
-        this.data = data;
+        this.info = data;
     }
 
     serialize() {
-        return [Packets.Quest, this.opcode, this.data];
+        return [Packets.Quest, this.opcode, this.info];
     }
 
 };

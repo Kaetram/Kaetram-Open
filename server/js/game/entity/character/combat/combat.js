@@ -392,7 +392,12 @@ class Combat {
 
         } else {
 
-            self.world.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Hit, character.instance, target.instance, hitInfo));
+            self.world.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Hit, {
+                attackerId: character.instance,
+                targetId: target.instance,
+                hitInfo: hitInfo
+            }));
+
             self.world.handleDamage(character, target, hitInfo.damage);
 
         }
@@ -413,7 +418,10 @@ class Combat {
     }
 
     end() {
-        this.world.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Finish, this.character.instance, null));
+        this.world.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Finish, {
+            attackerId: this.character.instance,
+            targetId: null
+        }));
     }
 
     sendFollow() {

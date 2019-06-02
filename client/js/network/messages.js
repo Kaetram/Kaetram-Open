@@ -227,10 +227,11 @@ define(function() {
 
         receiveCombat: function(data) {
             var self = this,
-                combatData = data.shift();
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.combatCallback)
-                self.combatCallback(combatData);
+                self.combatCallback(opcode, info);
         },
 
         receiveAnimation: function(data) {
