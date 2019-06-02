@@ -13,7 +13,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
             self.container = $('#bubbles');
         },
 
-        create: function(id, message, time, duration) {
+        create: function(id, message, duration) {
             var self = this;
 
             if (self.bubbles[id]) {
@@ -24,7 +24,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
 
                 $(element).appendTo(self.container);
 
-                self.bubbles[id] = new Blob(id, time, element, duration);
+                self.bubbles[id] = new Blob(id, element, duration);
 
                 return self.bubbles[id];
             }
