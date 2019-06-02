@@ -78,8 +78,6 @@ define(function() {
 
                 self.game.player.load(data);
 
-                self.input.setPosition(self.game.player.getX(), self.game.player.getY());
-
                 self.game.start();
                 self.game.postLoad();
 
@@ -511,17 +509,13 @@ define(function() {
 
             self.messages.onChat(function(info) {
 
-                if (!info.duration)
-                    info.duration = 5000;
-
                 if (info.withBubble) {
                     var entity = self.entities.get(info.id);
 
                     if (entity) {
-                        log.info(info);
                         info.name = info.name.charAt(0).toUpperCase() + info.name.substr(1);
 
-                        self.bubble.create(info.id, info.text, self.time, info.duration);
+                        self.bubble.create(info.id, info.text, info.duration);
                         self.bubble.setTo(entity);
 
                         self.audio.play(Modules.AudioTypes.SFX, 'npctalk');
@@ -781,23 +775,12 @@ define(function() {
                         message = isNPC ? entity.talk(messages) : messages;
 
                         if (isNPC) {
-                            var bubble = self.bubble.create(info.id, message, self.time, 5000);
+                            var bubble = self.bubble.create(info.id, message);
 
                             self.bubble.setTo(entity);
 
                             if (self.renderer.mobile && self.renderer.autoCentre)
                                 self.renderer.camera.centreOn(self.game.player);
-
-                            if (bubble) {
-                                bubble.setClickable();
-
-                                bubble.element.click(function() {
-                                    var entity = self.entities.get(bubble.id);
-
-                                    if (entity)
-                                        self.input.click({x: entity.gridX, y: entity.gridY});
-                                });
-                            }
 
                         } else {
                             self.bubble.create(info.id, message, self.time, 5000);

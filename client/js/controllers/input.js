@@ -26,8 +26,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             self.newTargetColour = null;
             self.mobileTargetColour = 'rgba(51, 255, 0)';
 
-            self.keyMovement = false;
-            self.cursorMoved = true;
+            self.keyMovement = true;
+            self.cursorMoved = false;
 
             self.previousKey = {};
 
@@ -204,7 +204,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 return;
 
             var entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX && position.y === player.gridY));
-            
+
             if (entity && !player.disableAction) {
                 player.disableAction = true;
 
