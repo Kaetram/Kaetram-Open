@@ -241,7 +241,7 @@ class Combat {
 
         self.attackers[character.instance] = character;
     }
-    
+
     removeAttacker(character) {
         let self = this;
 
@@ -260,7 +260,13 @@ class Combat {
 
         self.character.return();
 
-        self.world.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Move, [self.character.instance, self.character.x, self.character.y, false, false]));
+        self.world.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Move, {
+            id: self.character.instance,
+            x: self.character.x,
+            y: self.character.y,
+            forced: false,
+            teleport: false
+        }));
 
     }
 
@@ -398,7 +404,12 @@ class Combat {
     }
 
     follow(character, target) {
-        this.world.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Follow, [character.instance, target.instance, character.isRanged(), character.attackRange]));
+        this.world.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Follow, {
+            attackerId: character.instance,
+            targetId: target.instance,
+            isRanged: character.isRanged,
+            attackRange: character.attackRange
+        }));
     }
 
     end() {
@@ -413,7 +424,10 @@ class Combat {
 
         let ignores = [self.character.instance, self.character.target.instance];
 
-        self.world.network.pushSelectively(new Messages.Movement(Packets.MovementOpcode.Follow, [self.character.instance, self.character.target.instance]), ignores);
+        self.world.network.pushSelectively(new Messages.Movement(Packets.MovementOpcode.Follow, {
+            attackerId: self.character.instance,
+            targetId: self.character.target.instance
+        }), ignores);
     }
 
     forEachAttacker(callback) {
