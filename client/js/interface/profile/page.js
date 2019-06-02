@@ -25,15 +25,15 @@ define(['jquery'], function($) {
         },
 
         load: function() {
-            log.info('Uninitialized.');
+            //log.info('Uninitialized.');
         },
 
         resize: function() {
-            log.info('Uninitialized.');
+            //log.info('Uninitialized.');
         },
 
         update: function() {
-            log.info('Uninitialized.');
+            //log.info('Uninitialized.');
         },
 
         getImageFormat: function(scale, name) {

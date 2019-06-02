@@ -85,11 +85,12 @@ define(function() {
 
             self.messages.onEquipment(function(opcode, info) {
 
+
                 switch (opcode) {
                     case Packets.EquipmentOpcode.Batch:
 
-                        _.each(info, function(equipmentInfo, key) {
-                            self.game.player.setEquipment(Modules.convertEquipmentKey(key), equipmentInfo);
+                        _.each(info, function(data) {
+                            self.game.player.setEquipment(data.type, data.name, data.string, data.count, data.ability, data.abilityLevel);
                         });
 
                         self.interface.loadProfile();
@@ -97,14 +98,8 @@ define(function() {
                         break;
 
                     case Packets.EquipmentOpcode.Equip:
-                        var equipmentType = info.shift(),
-                            name = info.shift(),
-                            string = info.shift(),
-                            count = info.shift(),
-                            ability = info.shift(),
-                            abilityLevel = info.shift();
 
-                        self.game.player.setEquipment(equipmentType, [name, string, count, ability, abilityLevel]);
+                        self.game.player.setEquipment(info.type, info.name, info.string, info.count, info.ability, info.abilityLevel);
 
                         self.interface.profile.update();
 

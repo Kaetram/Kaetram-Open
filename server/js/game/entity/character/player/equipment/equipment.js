@@ -38,8 +38,19 @@ class Equipment {
         return 1.00;
     }
 
+    getType() {
+        return -1;
+    }
+
     getData() {
-        return [Items.idToName(this.id), Items.idToString(this.id), this.count, this.ability, this.abilityLevel];
+        return {
+            type: this.getType(),
+            name: Items.idToName(this.id),
+            string: Items.idToString(this.id),
+            count: this.count,
+            ability: this.ability,
+            abilityLevel: this.abilityLevel
+        };
     }
 
     getString() {

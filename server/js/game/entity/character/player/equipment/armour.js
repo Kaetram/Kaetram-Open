@@ -1,7 +1,8 @@
 /* global module */
 
 let Equipment = require('./equipment'),
-    Items = require('../../../../../util/items');
+    Items = require('../../../../../util/items'),
+    Modules = require('../../../../../util/modules');
 
 class Armour extends Equipment {
 
@@ -18,9 +19,13 @@ class Armour extends Equipment {
     setDefense(defense) {
         this.defense = defense;
     }
-    
+
     getDefense() {
         return this.defense;
+    }
+
+    getType() {
+        return Modules.Equipment.Armour;
     }
 
 }

@@ -400,7 +400,14 @@ class Player extends Character {
                 break;
         }
 
-        self.send(new Messages.Equipment(Packets.EquipmentOpcode.Equip, [type, Items.idToName(id), string, count, ability, abilityLevel]));
+        self.send(new Messages.Equipment(Packets.EquipmentOpcode.Equip, {
+            type: type,
+            name: Items.idToName(id),
+            string: string,
+            count: count,
+            ability: ability,
+            abilityLevel: abilityLevel
+        }));
 
         self.sync();
     }

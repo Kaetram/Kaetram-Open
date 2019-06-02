@@ -181,13 +181,8 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.setMaxMana(maxMana);
         },
 
-        setEquipment: function(type, info) {
-            var self = this,
-                name = info.shift(),
-                string = info.shift(),
-                count = info.shift(),
-                ability = info.shift(),
-                abilityLevel = info.shift();
+        setEquipment: function(type, name, string, count, ability, abilityLevel) {
+            var self = this;
 
             switch (type) {
                 case Modules.Equipment.Armour:

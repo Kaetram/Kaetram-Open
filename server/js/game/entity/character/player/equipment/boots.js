@@ -1,7 +1,8 @@
 /* global module */
 
 let Equipment = require('./equipment'),
-    Items = require('../../../../../util/items');
+    Items = require('../../../../../util/items'),
+    Modules = require('../../../../../util/modules');
 
 class Boots extends Equipment {
 
@@ -13,6 +14,10 @@ class Boots extends Equipment {
 
     getBaseAmplifier() {
         return 1.00 + (this.bootsLevel / 200);
+    }
+
+    getType() {
+        return Modules.Equipment.Boots;
     }
 
 }
