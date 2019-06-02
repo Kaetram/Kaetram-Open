@@ -418,7 +418,13 @@ class World {
                 entity.return();
 
                 self.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Finish, null, entity.instance));
-                self.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Move, [entity.instance, entity.x, entity.y, false, false]));
+                self.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Move, {
+                    id: entity.instance,
+                    x: entity.x,
+                    y: entity.y,
+                    forced: false,
+                    teleport: false
+                }));
 
             }
 
@@ -430,7 +436,10 @@ class World {
 
             entity.onStunned(function(stun) {
 
-                self.network.pushToAdjacentRegions(entity.region, new Messages.Movement(Packets.MovementOpcode.Stunned, [entity.instance, stun]));
+                self.network.pushToAdjacentRegions(entity.region, new Messages.Movement(Packets.MovementOpcode.Stunned, {
+                    id: entity.instance,
+                    state: stun
+                }));
 
             });
 

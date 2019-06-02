@@ -669,7 +669,13 @@ class Player extends Character {
 
         super.setPosition(x, y);
 
-        self.sendToAdjacentRegions(self.region, new Messages.Movement(Packets.MovementOpcode.Move, [self.instance, x, y, false, false]), self.instance);
+        self.sendToAdjacentRegions(self.region, new Messages.Movement(Packets.MovementOpcode.Move, {
+            id: self.instance,
+            x: x,
+            y: y,
+            forced: false,
+            teleport: false
+        }), self.instance);
     }
 
     setFuturePosition(x, y) {

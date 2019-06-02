@@ -121,13 +121,3 @@ Modules = {
     }
 
 };
-
-Modules.convertEquipmentKey = function(equipmentKey) {
-    var keys = Object.keys(Modules.Equipment);
-
-    for (var i = 0; i < keys.length; i++)
-        if (equipmentKey === keys[i].toLowerCase())
-            return Modules.Equipment[keys[i]];
-
-    return -1;
-};

@@ -173,28 +173,22 @@ define(function() {
 
                 switch(opcode) {
                     case Packets.MovementOpcode.Move:
-
-                        var id = info.shift(),
-                            x = info.shift(),
-                            y = info.shift(),
-                            forced = info.shift(),
-                            teleport = info.shift(),
-                            entity = self.entities.get(id);
+                        var entity = self.entities.get(info.id);
 
                         if (!entity)
                             return;
 
-                        if (forced)
+                        if (info.forced)
                             entity.stop(true);
 
-                        self.game.moveCharacter(entity, x, y);
+                        self.game.moveCharacter(entity, info.x, info.y);
 
                         break;
 
                     case Packets.MovementOpcode.Follow:
 
-                        var follower = self.entities.get(info.shift()),
-                            followee = self.entities.get(info.shift());
+                        var follower = self.entities.get(info.attackerId),
+                            followee = self.entities.get(info.targetId);
 
                         if (!followee || !follower)
                             return;
@@ -205,7 +199,7 @@ define(function() {
 
                     case Packets.MovementOpcode.Stop:
 
-                        var sEntity = self.entities.get(info.instance),
+                        var sEntity = self.entities.get(info.id),
                             force = info.force;
 
                         if (!sEntity)
@@ -218,19 +212,18 @@ define(function() {
                     case Packets.MovementOpcode.Freeze:
                     case Packets.MovementOpcode.Stunned:
 
-                        var pEntity = self.entities.get(info.shift()),
-                            state = info.shift();
+                        var pEntity = self.entities.get(info.id);
 
                         if (!pEntity)
                             return;
 
-                        if (state)
+                        if (info.state)
                             pEntity.stop(false);
 
                         if (opcode === Packets.MovementOpcode.Stunned)
-                            pEntity.stunned = state;
+                            pEntity.stunned = info.state;
                         else if (opcode === Packets.MovementOpcode.Freeze)
-                            pEntity.frozen = state;
+                            pEntity.frozen = info.state;
 
                         break;
 

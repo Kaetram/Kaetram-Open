@@ -75,13 +75,13 @@ Messages.Equipment = class {
 
 Messages.Movement = class {
 
-    constructor(opcode, data) {
+    constructor(opcode, info) {
         this.opcode = opcode;
-        this.data = data;
+        this.info = info;
     }
 
     serialize() {
-        return [Packets.Movement, this.opcode, this.data];
+        return [Packets.Movement, this.opcode, this.info];
     }
 };
 
