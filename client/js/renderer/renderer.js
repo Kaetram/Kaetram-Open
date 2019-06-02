@@ -597,7 +597,7 @@ define(['jquery', './camera', './tile',
         drawCursor: function() {
             var self = this;
 
-            if (self.tablet || self.mobile || self.hasRenderedMouse())
+            if (self.tablet || self.mobile || self.hasRenderedMouse() || self.input.cursorMoved)
                 return;
 
             var cursor = self.input.cursor,
@@ -828,7 +828,7 @@ define(['jquery', './camera', './tile',
         drawTargetCell: function() {
             var self = this;
 
-            if (self.mobile || self.tablet || !self.input.targetVisible || !self.input || !self.camera || !self.map)
+            if (self.mobile || self.tablet || !self.input.targetVisible || !self.input || !self.camera || !self.map || self.input.keyMovement)
                 return;
 
             var location = self.input.getCoords();

@@ -27,6 +27,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             self.mobileTargetColour = 'rgba(51, 255, 0)';
 
             self.keyMovement = false;
+            self.cursorMoved = true;
 
             self.previousKey = {};
 
@@ -176,6 +177,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
             if (!player.hasPath()) {
                 self.keyMovement = true;
+                self.cursorMoved = false;
+
                 self.click(position);
             }
         },
@@ -201,8 +204,10 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 return;
 
             var entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX && position.y === player.gridY));
-
+            
             if (entity && !player.disableAction) {
+                player.disableAction = true;
+
                 self.setAttackTarget();
 
                 if (self.isTargetable(entity))
@@ -226,8 +231,6 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                     player.follow(entity);
                     return;
                 }
-
-                player.disableAction = true;
             } else
                 player.removeTarget();
 
@@ -305,6 +308,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 width = self.renderer.background.width,
                 height = self.renderer.background.height,
                 proportionality = self.renderer.drawingScale === 3 ? (2 / 3) : 1;
+
+            self.cursorMoved = false;
 
             self.mouse.x = Math.round((event.pageX - offset.left) / self.app.getZoom()) * proportionality;
             self.mouse.y = Math.round((event.pageY - offset.top) / self.app.getZoom()) * proportionality;
