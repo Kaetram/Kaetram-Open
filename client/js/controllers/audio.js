@@ -108,7 +108,7 @@ define(function() {
 
                     if (!song)
                         return;
-                    
+
                     song.volume = 0;
 
                     song.play();
@@ -142,8 +142,6 @@ define(function() {
 
             if (!self.isEnabled())
                 return;
-
-            log.info(self.songName);
 
             var song = self.getMusic(self.songName);
 

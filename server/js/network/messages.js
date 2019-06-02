@@ -62,13 +62,13 @@ Messages.Sync = class {
 
 Messages.Equipment = class {
 
-    constructor(opcode, equipmentData) {
+    constructor(opcode, info) {
         this.opcode = opcode;
-        this.equipmentData = equipmentData;
+        this.info = info;
     }
 
     serialize() {
-        return [Packets.Equipment, this.opcode, this.equipmentData];
+        return [Packets.Equipment, this.opcode, this.info];
     }
 
 };

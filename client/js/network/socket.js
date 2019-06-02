@@ -45,7 +45,6 @@ define(['./packets', './messages'], function(Packets, Messages) {
 
                 self.game.app.updateLoader('Preparing Handshake');
 
-		        log.info('Sending gVer: ' + self.config.version + ' cType: ' + 'HTML5');
                 self.connection.emit('client', {
                     gVer: self.config.version,
                     cType: 'HTML5'
