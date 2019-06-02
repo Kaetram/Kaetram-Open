@@ -2,7 +2,7 @@
   "The Knack Of": {
     "id": 0,
     "name": "A Great Start",
-    "description": "Teaching you the basics about Tap Tap Adventure!",
+    "description": "Teaching you the basics about Kaetram",
     "npcs": [17, 8],
     "stages": 5,
     "conversations": {

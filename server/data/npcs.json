@@ -98,7 +98,7 @@
   "Octocat": {
     "id": 19,
     "name": "Octocat",
-    "text": ["Hey there!", "I am the Octocat, the programmer and I", "are very well acquainted.", "Nonetheless, make sure that you <a target=\"_blank\" href=\"https://github.com/Tach-Yon/Tap-Tap-Adventure\">check out the source on GitHub!</a>"]
+    "text": ["Hey there!", "I am the Octocat, the programmer and I", "are very well acquainted.", "Nonetheless, make sure that you <a target=\"_blank\" href=\"https://github.com/Veradictus/Kaetram-Open\">check out the source on GitHub!</a>"]
   },
 
   "Soldier": {
