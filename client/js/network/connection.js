@@ -367,10 +367,12 @@ define(function() {
 
             });
 
-            self.messages.onCombat(function(data) {
-                var opcode = data.shift(),
-                    attacker = self.entities.get(data.shift()),
-                    target = self.entities.get(data.shift());
+            self.messages.onCombat(function(opcode, info) {
+                log.info(opcode);
+                log.info(info);
+
+                var attacker = self.entities.get(info.attackerId),
+                    target = self.entities.get(info.targetId);
 
                 if (!target || !attacker)
                     return;
@@ -388,7 +390,7 @@ define(function() {
 
                     case Packets.CombatOpcode.Hit:
 
-                        var hit = data.shift(),
+                        var hit = info.hitInfo,
                             isPlayer = target.id === self.game.player.id;
 
                         if (!hit.isAoE) {

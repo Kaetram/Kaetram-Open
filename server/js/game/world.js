@@ -165,7 +165,10 @@ class World {
 
             target.combat.forEachAttacker(function(attacker) {
                 attacker.removeTarget();
-                self.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Finish, [attacker.instance, target.instance]));
+                self.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Finish, {
+                    attackerId: attacker.instance,
+                    targetId: target.instance
+                }));
             });
 
             self.network.pushToAdjacentRegions(target.region, new Messages.Despawn(target.instance));
@@ -417,7 +420,11 @@ class World {
 
                 entity.return();
 
-                self.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Finish, null, entity.instance));
+                self.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Finish, {
+                    attackerId: null,
+                    targetId: entity.instance
+                }));
+
                 self.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Move, {
                     id: entity.instance,
                     x: entity.x,

@@ -447,7 +447,10 @@ class Incoming {
                 if (!target || target.dead || !self.canAttack(self.player, target))
                     return;
 
-                self.world.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Initiate, self.player.instance, target.instance));
+                self.world.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Initiate, {
+                    attackerId: self.player.instance,
+                    targetId: target.instance
+                }));
 
                 break;
 
