@@ -214,6 +214,9 @@ define(['jquery'], function($) {
             if (self.getScaleFactor() === 3)
                 zoomFactor -= 0.1;
 
+            if (self.getScaleFactor() === 1 && windowWidth > windowHeight)
+                zoomFactor -= 0.32;
+
             self.body.css({
                 'zoom': zoomFactor,
                 '-moz-transform': 'scale(' + zoomFactor + ')'
