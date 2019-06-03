@@ -463,7 +463,12 @@ class Player extends Character {
             return;
         }
 
-        self.sendToAdjacentRegions(self.region, new Messages.Teleport(self.instance, x, y, animate));
+        self.sendToAdjacentRegions(self.region, new Messages.Teleport({
+            id: self.instance,
+            x: x,
+            y: y,
+            withAnimation: animate
+        }));
 
         self.setPosition(x, y);
         //self.checkRegions();

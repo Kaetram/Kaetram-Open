@@ -217,10 +217,13 @@ class Commands {
             case 'teleport':
 
                 let x = parseInt(blocks.shift()),
-                    y = parseInt(blocks.shift());
+                    y = parseInt(blocks.shift()),
+                    withAnimation = parseInt(blocks.shift())
+
+                log.info(withAnimation ? true : false);
 
                 if (x && y)
-                    self.player.teleport(x, y);
+                    self.player.teleport(x, y, false, withAnimation ? true : false);
 
                 break;
 

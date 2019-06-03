@@ -87,15 +87,12 @@ Messages.Movement = class {
 
 Messages.Teleport = class {
 
-    constructor(id, x, y, withAnimation) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.withAnimation = withAnimation;
+    constructor(info) {
+        this.info = info;
     }
 
     serialize() {
-        return [Packets.Teleport, [this.id, this.x, this.y, this.withAnimation]];
+        return [Packets.Teleport, this.info];
     }
 
 };

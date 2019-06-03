@@ -204,8 +204,6 @@ define(['../character', './equipment/armour', './equipment/weapon',
                     else
                         self.weapon.update(name, string, count, ability, abilityLevel);
 
-                    self.weapon.ranged = string.includes('bow');
-
                     break;
 
                 case Modules.Equipment.Pendant:
