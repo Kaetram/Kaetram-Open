@@ -241,13 +241,9 @@ define(function() {
 
             });
 
-            self.messages.onTeleport(function(data) {
-                var id = data.shift(),
-                    x = data.shift(),
-                    y = data.shift(),
-                    withAnimation = data.shift(),
-                    isPlayer = id === self.game.player.id,
-                    entity = self.entities.get(id);
+            self.messages.onTeleport(function(info) {
+                var entity = self.entities.get(info.id),
+                    isPlayer = info.id === self.game.player.id;
 
                 if (!entity)
                     return;
@@ -263,7 +259,7 @@ define(function() {
                 var doTeleport = function() {
 
                     self.entities.unregisterPosition(entity);
-                    entity.setGridPosition(x, y);
+                    entity.setGridPosition(info.x, info.y);
 
                     if (isPlayer) {
 
@@ -288,7 +284,7 @@ define(function() {
 
                 };
 
-                if (withAnimation) {
+                if (info.withAnimation) {
 
                     var originalSprite = entity.sprite;
 

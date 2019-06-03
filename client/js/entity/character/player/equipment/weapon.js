@@ -9,7 +9,7 @@ define(['./equipment'], function(Equipment) {
 
             self.level = -1;
             self.damage = -1;
-            self.ranged = false;
+            self.ranged = string && string.includes('bow');
         },
 
         exists: function() {

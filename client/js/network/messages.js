@@ -211,10 +211,10 @@ define(function() {
 
         receiveTeleport: function(data) {
             var self = this,
-                teleportData = data.shift();
+                info = data.shift();
 
             if (self.teleportCallback)
-                self.teleportCallback(teleportData);
+                self.teleportCallback(info);
         },
 
         receiveDespawn: function(data) {

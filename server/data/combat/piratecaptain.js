@@ -59,7 +59,12 @@ class PirateCaptain extends Combat {
         self.character.setPosition(position.x, position.y);
 
         if (self.world)
-            self.world.pushToGroup(self.character.group, new Messages.Teleport(self.character.instance, self.character.x, self.character.y, true));
+            self.world.pushToGroup(self.character.group, new Messages.Teleport({
+                id: self.character.instance,
+                x: self.character.x,
+                y: self.character.y,
+                withAnimation: true
+            }));
 
         self.forEachAttacker(function(attacker) {
             attacker.removeTarget();
