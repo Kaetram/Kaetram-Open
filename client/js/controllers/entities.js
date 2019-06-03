@@ -171,7 +171,8 @@ define(['../renderer/grids', '../entity/objects/chest',
                         player.type = info.type;
 
                         var hitPointsData = info.hitPoints,
-                            manaData = info.mana;
+                            manaData = info.mana,
+                            equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
 
                         player.setHitPoints(hitPointsData[0]);
                         player.setMaxHitPoints(hitPointsData[1]);
@@ -179,14 +180,14 @@ define(['../renderer/grids', '../entity/objects/chest',
                         player.setMana(manaData[0]);
                         player.setMaxMana(manaData[1]);
 
-                        player.setSprite(self.getSprite(info.armour[1]));
+                        player.setSprite(self.getSprite(info.armour.string));
                         player.idle();
 
-                        player.setEquipment(Modules.Equipment.Armour, info.armour);
-                        player.setEquipment(Modules.Equipment.Weapon, info.weapon);
-                        player.setEquipment(Modules.Equipment.Pendant, info.pendant);
-                        player.setEquipment(Modules.Equipment.Ring, info.ring);
-                        player.setEquipment(Modules.Equipment.Boots, info.boots);
+                        _.each(equipments, function(equipment) {
+                            player.setEquipment(equipment.type, equipment.name,
+                                equipment.string, equipment.count, equipment.ability,
+                                equipment.abilityLevel);
+                        });
 
                         player.loadHandler(self.game);
 

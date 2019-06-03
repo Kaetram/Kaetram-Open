@@ -164,7 +164,9 @@ define(function() {
                     entity.setSprite(self.game.getSprite(data.armour));
 
                 if (data.weapon)
-                    entity.setEquipment(Modules.Equipment.Weapon, data.weapon);
+                    entity.setEquipment(data.weapon.type, data.weapon.name,
+                        data.weapon.string, data.weapon.count, data.weapon.ability,
+                        data.weapon.abilityLevel);
 
                 self.interface.profile.update();
             });
