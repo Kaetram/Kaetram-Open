@@ -366,9 +366,6 @@ define(function() {
             });
 
             self.messages.onCombat(function(opcode, info) {
-                log.info(opcode);
-                log.info(info);
-
                 var attacker = self.entities.get(info.attackerId),
                     target = self.entities.get(info.targetId);
 
