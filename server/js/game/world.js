@@ -165,11 +165,13 @@ class World {
 
             target.combat.forEachAttacker(function(attacker) {
                 attacker.removeTarget();
-                self.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Finish, {
-                    attackerId: attacker.instance,
-                    targetId: target.instance
-                }));
             });
+
+
+            self.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Finish, {
+                attackerId: attacker.instance,
+                targetId: target.instance
+            }));
 
             self.network.pushToAdjacentRegions(target.region, new Messages.Despawn(target.instance));
             self.handleDeath(target);
