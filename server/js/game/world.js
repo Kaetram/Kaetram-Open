@@ -153,20 +153,15 @@ class World {
 
         // If target has died...
         if (target.getHitPoints() < 1) {
+            if (target.type === 'mob')
+                attacker.addExperience(Mobs.getXp(target.id));
 
-            if (attacker.type === 'player' || target.type === 'player') {
-                if (target.type === 'mob')
-                    attacker.addExperience(Mobs.getXp(target.id));
-
-                if (attacker.type === 'player')
-                    attacker.killCharacter(target);
-            }
-
+            if (attacker.type === 'player')
+                attacker.killCharacter(target);
 
             target.combat.forEachAttacker(function(attacker) {
                 attacker.removeTarget();
             });
-
 
             self.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Finish, {
                 attackerId: attacker.instance,
@@ -174,6 +169,7 @@ class World {
             }));
 
             self.network.pushToAdjacentRegions(target.region, new Messages.Despawn(target.instance));
+
             self.handleDeath(target);
         }
     }
