@@ -102,6 +102,10 @@ class Character extends Entity {
             self.hitPoints = self.maxHitPoints;
     }
 
+    addExperience() {
+        //Unimplemented.
+    }
+
     isRanged() {
         return this.attackRange > 1;
     }
