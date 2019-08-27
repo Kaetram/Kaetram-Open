@@ -142,9 +142,9 @@ class Network {
      * Send a message to the region the player is currently in.
      */
 
-    pushToRegion(id, message, ignoreId) {
+    pushToRegion(regionId, message, ignoreId) {
         let self = this,
-            region = self.region.regions[id];
+            region = self.region.regions[regionId];
 
         if (!region) return;
 

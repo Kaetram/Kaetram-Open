@@ -260,13 +260,15 @@ class Combat {
 
         self.character.return();
 
-        self.world.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Move, {
-            id: self.character.instance,
-            x: self.character.x,
-            y: self.character.y,
-            forced: false,
-            teleport: false
-        }));
+        self.world.push(Packets.PushOpcode.Broadcast, {
+            message: new Messages.Movement(Packets.MovementOpcode.Move, {
+                id: self.character.instance,
+                x: self.character.x,
+                y: self.character.y,
+                forced: false,
+                teleport: false
+            })
+        });
 
     }
 
@@ -388,15 +390,20 @@ class Combat {
 
             let projectile = self.world.createProjectile([character, target], hitInfo);
 
-            self.world.network.pushToAdjacentRegions(character.region, new Messages.Projectile(Packets.ProjectileOpcode.Create, projectile.getData()));
+            self.world.push(Packets.PushOpcode.Regions, {
+                regionId: character.region,
+                message: new Messages.Projectile(Packets.ProjectileOpcode.Create, projectile.getData())
+            });
 
         } else {
 
-            self.world.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Hit, {
-                attackerId: character.instance,
-                targetId: target.instance,
-                hitInfo: hitInfo
-            }));
+            self.world.push(Packets.PushOpcode.Broadcast, {
+                message: new Messages.Combat(Packets.CombatOpcode.Hit, {
+                    attackerId: character.instance,
+                    targetId: target.instance,
+                    hitInfo: hitInfo
+                })
+            });
 
             self.world.handleDamage(character, target, hitInfo.damage);
 
@@ -409,19 +416,23 @@ class Combat {
     }
 
     follow(character, target) {
-        this.world.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Follow, {
-            attackerId: character.instance,
-            targetId: target.instance,
-            isRanged: character.isRanged,
-            attackRange: character.attackRange
-        }));
+        this.world.push(Packets.PushOpcode.Broadcast, {
+            message: new Messages.Movement(Packets.MovementOpcode.Follow, {
+                attackerId: character.instance,
+                targetId: target.instance,
+                isRanged: character.isRanged,
+                attackRange: character.attackRange
+            })
+        });
     }
 
     end() {
-        this.world.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Finish, {
-            attackerId: this.character.instance,
-            targetId: null
-        }));
+        this.world.push(Packets.PushOpcode.Broadcast, {
+            message: new Messages.Combat(Packets.CombatOpcode.Finish, {
+                attackerId: this.character.instance,
+                targetId: null
+            })
+        });
     }
 
     sendFollow() {
@@ -432,10 +443,14 @@ class Combat {
 
         let ignores = [self.character.instance, self.character.target.instance];
 
-        self.world.network.pushSelectively(new Messages.Movement(Packets.MovementOpcode.Follow, {
-            attackerId: self.character.instance,
-            targetId: self.character.target.instance
-        }), ignores);
+        self.world.push(Packets.PushOpcode.Selectively, {
+            message: new Messages.Movement(Packets.MovementOpcode.Follow, {
+                attackerId: self.character.instance,
+                targetId: self.character.target.instance
+            }),
+            ignores: ignores
+        });
+
     }
 
     forEachAttacker(callback) {

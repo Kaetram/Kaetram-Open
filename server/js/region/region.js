@@ -119,10 +119,14 @@ class Region {
         self.handle(player, true);
         self.push(player);
 
-        self.world.network.pushToOldRegions(player, new Messages.Region(Packets.RegionOpcode.Update, {
-            id: player.instance,
-            type: "remove"
-        }));
+        self.world.push(Packets.PushOpcode.OldRegions, {
+            player: player,
+            message: new Messages.Region(Packets.RegionOpcode.Update, {
+                id: player.instance,
+                type: "remove"
+            })
+        });
+
     }
 
     deleteInstance(player) {
@@ -198,7 +202,12 @@ class Region {
             if (!entity || !entity.instance || entity.instanced)
                 return;
 
-            self.world.network.pushToRegion(regionId, new Messages.Spawn(entity), entity.isPlayer() ? entity.instance : null);
+            self.world.push(Packets.PushOpcode.Region, {
+                regionId: regionId,
+                message: new Messages.Spawn(entity),
+                ignoreId: entity.isPlayer() ? entity.instance : null
+            })
+
         });
     }
 
@@ -335,7 +344,10 @@ class Region {
 
         ClientMap.data[index] = newTile;
 
-        self.world.network.pushBroadcast(Region.getModify(index, newTile));
+        self.world.push(Packets.PushOpcode.Broadcast, {
+            message: Region.getModify(index, newTile)
+        })
+
     }
 
     getRegionData(region, player, force) {

@@ -204,4 +204,15 @@ Packets.CameraOpcode = {
     Player: 3
 };
 
+Packets.PushOpcode = {
+    Broadcast: 0,
+    Selectively: 1,
+    Player: 2,
+    Players: 3,
+    Region: 4,
+    Regions: 5,
+    NameArray: 6,
+    OldRegions: 7
+};
+
 module.exports = Packets;

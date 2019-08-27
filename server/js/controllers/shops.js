@@ -15,7 +15,7 @@ class Shops {
 
         self.interval = 60000;
         self.shopInterval = null;
-        
+
         self.load();
     }
 
@@ -83,7 +83,9 @@ class Shops {
     refresh(shopId) {
         let self = this;
 
-        self.world.network.pushBroadcast(new Messages.Shop(Packets.ShopOpcode.Refresh, self.getShopData(shopId)));
+        self.world.push(Packets.PushOpcode.Broadcast, {
+            message: new Messages.Shop(Packets.ShopOpcode.Refresh, self.getShopData(shopId))
+        });
     }
 
     getCurrency(id) {
