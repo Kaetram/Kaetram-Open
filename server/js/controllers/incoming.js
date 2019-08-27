@@ -157,7 +157,7 @@ class Incoming {
 
             self.player.isNew = true;
 
-            Creator.getPlayerData(self.player, function(data) {
+            Creator.getFullData(self.player, function(data) {
                 self.player.load(data);
                 self.player.isNew = false;
                 self.player.intro();
@@ -396,7 +396,11 @@ class Incoming {
 
             case Packets.MovementOpcode.Orientate:
                 let orientation = message.shift();
-                self.world.network.pushToAdjacentRegions(self.player.region, new Messages.Movement(Packets.MovementOpcode.Orientate, [self.player.instance, orientation]) );
+
+                self.world.push(Packets.PushOpcode.Regions, {
+                    regionId: self.player.region,
+                    message: new Messages.Movement(Packets.MovementOpcode.Orientate, [self.player.instance, orientation])
+                });
 
                 break;
         }
@@ -447,10 +451,13 @@ class Incoming {
                 if (!target || target.dead || !self.canAttack(self.player, target))
                     return;
 
-                self.world.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Initiate, {
-                    attackerId: self.player.instance,
-                    targetId: target.instance
-                }));
+                self.world.push(Packets.PushOpcode.Regions, {
+                    regionId: target.region,
+                    message: new Messages.Combat(Packets.CombatOpcode.Initiate, {
+                        attackerId: self.player.instance,
+                        targetId: target.instance
+                    })
+                });
 
                 break;
 
@@ -550,15 +557,19 @@ class Incoming {
                 return;
             }
 
-            log.info(self.player.name);
+            log.info(`${self.player.name} - ${text}`);
 
-            self.world.network.pushToRegion(self.player.region, new Messages.Chat({
-                id: self.player.instance,
-                name: self.player.username,
-                withBubble: true,
-                text: text,
-                duration: 7000
-            }));
+            self.world.push(Packets.PushOpcode.Region, {
+                regionId: self.player.region,
+                message: new Messages.Chat({
+                    id: self.player.instance,
+                    name: self.player.username,
+                    withBubble: true,
+                    text: text,
+                    duration: 7000
+                })
+            });
+
         }
 
     }
@@ -667,7 +678,12 @@ class Incoming {
         self.player.dead = false;
         self.player.setPosition(spawn.x, spawn.y);
 
-        self.world.network.pushToAdjacentRegions(self.player.region, new Messages.Spawn(self.player), self.player.instance);
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.player.region,
+            message: new Messages.Spawn(self.player),
+            ignoreId: self.player.instance
+        })
+
         self.player.send(new Messages.Respawn(self.player.instance, self.player.x, self.player.y));
 
         self.player.revertPoints();

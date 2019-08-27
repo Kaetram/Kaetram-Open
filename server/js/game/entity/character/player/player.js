@@ -868,15 +868,25 @@ class Player extends Character {
      */
 
     send(message) {
-        this.world.network.pushToPlayer(this, message);
+        this.world.push(Packets.PushOpcode.Player, {
+            player: this,
+            message: message
+        });
     }
 
     sendToRegion(message) {
-        this.world.network.pushToRegion(this.region, message);
+        this.world.push(Packets.PushOpcode.Region, {
+            regionId: this.region,
+            message: message
+        });
     }
 
     sendToAdjacentRegions(regionId, message, ignoreId) {
-        this.world.network.pushToAdjacentRegions(regionId, message, ignoreId);
+        this.world.push(Packets.PushOpcode.Regions, {
+            regionId: regionId,
+            message: message,
+            ignoreId: ignoreId
+        });
     }
 
     sendEquipment() {

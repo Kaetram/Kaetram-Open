@@ -68,13 +68,15 @@ class Commands {
 
             case 'global':
 
-                self.world.network.pushBroadcast(new Messages.Chat({
-                    name: self.player.username,
-                    text: blocks.join(' '),
-                    isGlobal: true,
-                    withBubble: false,
-                    colour: 'rgba(191, 191, 63, 1.0)'
-                }));
+                self.world.push(Packets.PushOpcode.Broadcast, {
+                    message: new Messages.Chat({
+                        name: self.player.username,
+                        text: blocks.join(' '),
+                        isGlobal: true,
+                        withBubble: false,
+                        colour: 'rgba(191, 191, 63, 1.0)'
+                    })
+                });
 
                 break;
 
@@ -312,10 +314,13 @@ class Commands {
 
                 log.info('Sending Tile: ' + tileIndex);
 
-                self.world.network.pushToPlayer(self.player, new Messages.Region(Packets.RegionOpcode.Modify, {
-                    index: tileIndex,
-                    data: tileInfo
-                }));
+                self.world.push(Packets.PushOpcode.Player, {
+                    player: self.player,
+                    message: new Messages.Region(Packets.RegionOpcode.Modify, {
+                        index: tileIndex,
+                        data: tileInfo
+                    })
+                });
 
                 break;
 

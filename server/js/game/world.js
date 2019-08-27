@@ -108,6 +108,7 @@ class World {
             self.network.parsePackets();
             self.region.parseRegions();
 
+
         }, 1000 / self.updateTime);
     }
 
@@ -120,13 +121,17 @@ class World {
 
         entity.applyDamage(entity.hitPoints);
 
-        self.network.pushToAdjacentRegions(entity.region, new Messages.Points({
-            id: entity.instance,
-            hitPoints: entity.getHitPoints(),
-            mana: null
-        }));
-
-        self.network.pushToAdjacentRegions(entity.region, new Messages.Despawn(entity.instance));
+        self.push(Packets.PushOpcode.Regions, [{
+            regionId: entity.region,
+            message: new Messages.Points({
+                id: entity.instance,
+                hitPoints: entity.getHitPoints(),
+                mana: null
+            })
+        }, {
+            regionId: entity.region,
+            message: new Messages.Despawn(entity.instance)
+        }]);
 
         self.handleDeath(entity, true);
     }
@@ -145,11 +150,14 @@ class World {
         target.hit(attacker);
         target.applyDamage(damage);
 
-        self.network.pushToAdjacentRegions(target.region, new Messages.Points({
-            id: target.instance,
-            hitPoints: target.getHitPoints(),
-            mana: null
-        }));
+        self.push(Packets.PushOpcode.Regions, {
+            regionId: target.region,
+            message: new Messages.Points({
+                id: target.instance,
+                hitPoints: target.getHitPoints(),
+                mana: null
+            })
+        });
 
         // If target has died...
         if (target.getHitPoints() < 1) {
@@ -163,12 +171,16 @@ class World {
                 attacker.removeTarget();
             });
 
-            self.network.pushToAdjacentRegions(target.region, new Messages.Combat(Packets.CombatOpcode.Finish, {
-                attackerId: attacker.instance,
-                targetId: target.instance
-            }));
-
-            self.network.pushToAdjacentRegions(target.region, new Messages.Despawn(target.instance));
+            self.push(Packets.PushOpcode.Regions, [{
+                regionId: target.region,
+                message: new Messages.Combat(Packets.CombatOpcode.Finish, {
+                    attackerId: attacker.instance,
+                    targetId: target.instance
+                })
+            }, {
+                regionId: target.region,
+                message: new Messages.Despawn(target.instance)
+            }]);
 
             self.handleDeath(target);
         }
@@ -384,12 +396,80 @@ class World {
         item.despawn();
 
         item.onBlink(function() {
-            self.network.pushBroadcast(new Messages.Blink(item.instance));
+            self.push(Packets.PushOpcode.Broadcast, {
+                message: new Messages.Blink(item.intsance)
+            });
         });
 
         item.onDespawn(function() {
             self.removeItem(item);
         });
+    }
+
+    push(type, info) {
+        let self = this;
+
+        if (_.isArray(info)) {
+            _.each(info, (i) => { self.push(type, i); });
+            return;
+        }
+
+        if (!info.message) {
+            log.info('No message found whilst attempting to push.');
+            log.info(info);
+            return;
+        }
+
+        switch (type) {
+            case Packets.PushOpcode.Broadcast:
+
+                self.network.pushBroadcast(info.message);
+
+                break;
+
+            case Packets.PushOpcode.Selectively:
+
+                self.network.pushSelectively(info.message, info.ignores);
+
+                break;
+
+            case Packets.PushOpcode.Player:
+
+                self.network.pushToPlayer(info.player, info.message);
+
+                break;
+
+            case Packets.PushOpcode.Players:
+
+                self.network.pushToPlayers(info.players, info.message);
+
+                break;
+
+            case Packets.PushOpcode.Region:
+
+                self.network.pushToRegion(info.id, info.message, info.ignoreId);
+
+                break;
+
+            case Packets.PushOpcode.Regions:
+
+                self.network.pushToAdjacentRegions(info.regionId, info.message, info.ignoreId);
+
+                break;
+
+            case Packets.PushOpcode.NameArray:
+
+                self.network.pushToNameArray(info.names, info.message);
+
+                break;
+
+            case Packets.PushOpcode.OldRegions:
+
+                self.network.pushToOldRegions(info.player, info.message);
+
+                break;
+
+        }
     }
 
     addEntity(entity, region) {
@@ -418,18 +498,20 @@ class World {
 
                 entity.return();
 
-                self.network.pushBroadcast(new Messages.Combat(Packets.CombatOpcode.Finish, {
-                    attackerId: null,
-                    targetId: entity.instance
-                }));
-
-                self.network.pushBroadcast(new Messages.Movement(Packets.MovementOpcode.Move, {
-                    id: entity.instance,
-                    x: entity.x,
-                    y: entity.y,
-                    forced: false,
-                    teleport: false
-                }));
+                self.push(Packets.PushOpcode.Broadcast, [{
+                    message: new Messages.Combat(Packets.CombatOpcode.Finish, {
+                        attackerId: null,
+                        targetId: entity.instance
+                    })
+                }, {
+                    message: new Messages.Movement(Packets.MovementOpcode.Move, {
+                        id: entity.instance,
+                        x: entity.x,
+                        y: entity.y,
+                        forced: false,
+                        teleport: false
+                    })
+                }]);
 
             }
 
@@ -441,10 +523,13 @@ class World {
 
             entity.onStunned(function(stun) {
 
-                self.network.pushToAdjacentRegions(entity.region, new Messages.Movement(Packets.MovementOpcode.Stunned, {
-                    id: entity.instance,
-                    state: stun
-                }));
+                self.push(Packets.PushOpcode.Regions, {
+                    regionId: entity.region,
+                    message: new Messages.Movement(Packets.MovementOpcode.Stunned, {
+                        id: entity.instance,
+                        state: stun
+                    })
+                });
 
             });
 
@@ -544,7 +629,9 @@ class World {
         let self = this;
 
         self.removeEntity(item);
-        self.network.pushBroadcast(new Messages.Despawn(item.instance));
+        self.push(Packets.PushOpcode.Broadcast, {
+            message: new Messages.Despawn(item.instance)
+        });
 
         if (item.static)
             item.respawn();
@@ -553,7 +640,10 @@ class World {
     removePlayer(player) {
         let self = this;
 
-        self.network.pushToAdjacentRegions(player.region, new Messages.Despawn(player.instance));
+        self.push(Packets.PushOpcode.Regions, {
+            regionId: player.region,
+            message: new Messages.Despawn(player.instance)
+        });
 
         if (player.ready)
             player.save();
@@ -584,7 +674,9 @@ class World {
         let self = this;
 
         self.removeEntity(chest);
-        self.network.pushBroadcast(new Messages.Despawn(chest.instance));
+        self.push(Packets.PushOpcode.Broadcast, {
+            message: new Messages.Despawn(chest.instance)
+        });
 
         if (chest.static)
             chest.respawn();
