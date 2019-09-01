@@ -155,14 +155,9 @@ class Incoming {
         if (config.offlineMode) {
             let creator = new Creator(null);
 
-            self.player.isNew = true;
-
-            Creator.getFullData(self.player, function(data) {
-                self.player.load(data);
-                self.player.isNew = false;
-                self.player.intro();
-            });
-
+            self.player.load(Creator.getFullData(self.player));
+            self.player.intro();
+            
             return;
         }
 

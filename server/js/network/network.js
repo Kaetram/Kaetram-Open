@@ -151,7 +151,6 @@ class Network {
         _.each(region.players, function(playerInstance) {
             if (playerInstance !== ignoreId)
                 self.pushToPlayer(self.world.getEntityByInstance(playerInstance), message);
-
         });
     }
 

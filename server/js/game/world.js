@@ -108,7 +108,6 @@ class World {
             self.network.parsePackets();
             self.region.parseRegions();
 
-
         }, 1000 / self.updateTime);
     }
 
@@ -364,6 +363,9 @@ class World {
 
             self.removeChest(chest);
 
+            if (config.debug)
+                log.info(`Opening chest at x: ${chest.x}, y: ${chest.y}`);
+
             self.dropItem(Items.stringToId(chest.getItem()), 1, chest.x, chest.y);
 
         });
@@ -394,6 +396,11 @@ class World {
 
         self.addItem(item);
         item.despawn();
+
+        if (config.debug) {
+            log.info(`Item - ${id} has been dropped at x: ${x}, y: ${y}.`);
+            log.info(`Item Region - ${item.region}`);
+        }
 
         item.onBlink(function() {
             self.push(Packets.PushOpcode.Broadcast, {
@@ -446,7 +453,7 @@ class World {
                 break;
 
             case Packets.PushOpcode.Region:
-
+            
                 self.network.pushToRegion(info.id, info.message, info.ignoreId);
 
                 break;

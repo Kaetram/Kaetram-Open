@@ -43,7 +43,6 @@ class Player extends Character {
 
         self.incoming = new Incoming(self);
 
-        self.isNew = false;
         self.ready = false;
 
         self.moving = false;
@@ -257,8 +256,10 @@ class Player extends Character {
         if (config.moderators.indexOf(self.username.toLowerCase()) > -1)
             self.rights = 1;
 
-        if (config.administrators.indexOf(self.username.toLowerCase()) > -1)
+        if (config.administrators.indexOf(self.username.toLowerCase()) > -1 ||
+            config.offlineMode)
             self.rights = 2;
+
     }
 
     addExperience(exp) {
@@ -812,6 +813,7 @@ class Player extends Character {
          * other special events and determine a spawn point.
          */
 
+
         return self.finishedTutorial() ? { x: 324, y: 86 } : { x: 17, y: 557 };
     }
 
@@ -965,7 +967,7 @@ class Player extends Character {
     finishedTutorial() {
         let self = this;
 
-        if (!self.quests)
+        if (!self.quests || config.offlineMode)
             return true;
 
         return self.quests.getQuest(0).isFinished();

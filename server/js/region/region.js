@@ -6,6 +6,7 @@ let _ = require('underscore'),
     Player = require('../game/entity/character/player/player'),
     fs = require('fs'),
     ClientMap = require('../../data/map/world_client.json'),
+    config = require('../../config'),
     map = 'server/data/map/world_client.json';
 
 class Region {
@@ -33,7 +34,8 @@ class Region {
             if (!entity || !entity.username)
                 return;
 
-            log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
+            if (config.debug)
+                log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
 
             if (entity instanceof Player)
                 self.sendRegion(entity, regionId);
@@ -49,7 +51,9 @@ class Region {
             if (!entity || !entity.username)
                 return;
 
-            log.info('Entity - ' + entity.username + ' is incoming into region - ' + regionId);
+            if (config.debug)
+                log.info('Entity - ' + entity.username + ' is incoming into region - ' + regionId);
+
         });
 
         fs.watchFile(map, function() {
@@ -202,7 +206,7 @@ class Region {
             if (!entity || !entity.instance || entity.instanced)
                 return;
 
-            self.world.push(Packets.PushOpcode.Region, {
+            self.world.push(Packets.PushOpcode.Regions, {
                 regionId: regionId,
                 message: new Messages.Spawn(entity),
                 ignoreId: entity.isPlayer() ? entity.instance : null
@@ -272,13 +276,10 @@ class Region {
         if (!entity || !regionId)
             return;
 
-        self.mapRegions.forEachAdjacentRegion(regionId, function(id) {
-            let region = self.regions[id];
+        let region = self.regions[regionId];
 
-            if (region && !_.include(region.entities, entity.instance))
-                region.incoming.push(entity);
-
-        });
+        if (region && !_.include(region.entities, entity.instance))
+            region.incoming.push(entity);
 
         if (self.incomingCallback)
             self.incomingCallback(entity, regionId);
