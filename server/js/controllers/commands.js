@@ -3,7 +3,8 @@
 let _ = require('underscore'),
     Messages = require('../network/messages'),
     Packets = require('../network/packets'),
-    MapClient = require('../../data/map/world_client');
+    MapClient = require('../../data/map/world_client'),
+    config = require('../../config');
 
 class Commands {
 
@@ -27,9 +28,13 @@ class Commands {
 
         if (self.player.rights > 0)
             self.handleModeratorCommands(command, blocks);
+        else if (config.debug)
+            self.player.notify('You do not have the permissions to use that command.');
 
         if (self.player.rights > 1)
             self.handleAdminCommands(command, blocks);
+        else if (config.debug)
+            self.player.notify('You do not have the permissions to use that command.');
     }
 
     handlePlayerCommands(command, blocks) {
@@ -38,8 +43,10 @@ class Commands {
         switch(command) {
 
             case 'players':
+                let population = self.world.getPopulation(),
+                    singular = population === 1;
 
-                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'There are currently ' + self.world.getPopulation() + ' online.'));
+                self.player.notify(`There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`);
 
                 break;
 

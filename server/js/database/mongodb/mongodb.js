@@ -118,10 +118,7 @@ class MongoDB {
                 if (info.length === 0) {
                     log.info('No player data found for ' + player.username + '. Creating user.');
 
-                    player.isNew = true;
                     player.load(Creator.getFullData(player));
-
-                    player.isNew = false;
                     player.intro();
                 }
             });
