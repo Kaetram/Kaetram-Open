@@ -25,6 +25,8 @@ define(['../entity'], function(Entity) {
             self.speed = 200;
 
             self.angle = 0;
+
+            self.lighting = null;
         },
 
         getId: function() {

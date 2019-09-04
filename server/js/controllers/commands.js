@@ -365,6 +365,14 @@ class Commands {
                 }));
                 break;
 
+            case 'addexperience':
+                self.player.addExperience(parseInt(blocks.shift()));
+                break;
+
+            case 'attackrange':
+                log.info(self.player.attackRange);
+                break;
+
             case 'resetregions':
                 log.info('Resetting regions...');
 
