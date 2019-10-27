@@ -55,6 +55,9 @@ define(['jquery', './app', './game'], function($, App, Game) {
         app.onReady(function() {
             app.sendStatus('Loading game');
 
+            if (app.config.debug)
+                log.info('Loading the main application...');
+
             game = new Game(app);
             app.setGame(game);
         });

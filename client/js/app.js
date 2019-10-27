@@ -7,8 +7,6 @@ define(['jquery'], function($) {
         init: function() {
             var self = this;
 
-            log.info('Loading the main application...');
-
             self.config = null;
 
             self.body = $('body');

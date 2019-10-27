@@ -48,7 +48,8 @@ define(['jquery'], function($) {
             var self = this;
 
             if (self.supportsWorker) {
-                log.info('Parsing map with Web Workers...');
+                if (self.game.isDebug())
+                    log.info('Parsing map with Web Workers...');
 
                 var worker = new Worker('./js/map/mapworker.js');
                 worker.postMessage(1);
@@ -61,7 +62,8 @@ define(['jquery'], function($) {
                     self.mapLoaded = true;
                 }
             } else {
-                log.info('Parsing map with Ajax...');
+                if (self.game.isDebug())
+                    log.info('Parsing map with Ajax...');
 
                 $.get('data/maps/map.json', function(data) {
                     self.parseMap(data);

@@ -75,7 +75,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             self.newCursor = self.cursors['hand'];
             self.newTargetColour = 'rgba(255, 255, 255, 0.5)';
 
-            log.info('Loaded Cursors!');
+            if (self.game.isDebug())
+                log.info('Loaded Cursors!');
         },
 
         handle: function(inputType, data) {
@@ -125,7 +126,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                             self.chatHandler.toggle();
 
                             break;
-                            
+
                     }
 
                     break;
@@ -179,6 +180,12 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 self.keyMovement = true;
                 self.cursorMoved = false;
 
+                if (self.game.isDebug()) {
+                    log.info('--- keyMove ---');
+                    log.info(position);
+                    log.info('---------------');
+                }
+
                 self.click(position);
             }
         },
@@ -200,12 +207,12 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             if (self.renderer.mobile && self.chatHandler.input.is(':visible') && self.chatHandler.input.val() === '')
                 self.chatHandler.hideInput();
 
-            if ((self.game.zoning && self.game.zoning.direction))
+            if ((self.game.zoning && self.game.zoning.direction) || player.disableAction)
                 return;
 
             var entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX && position.y === player.gridY));
 
-            if (entity && !player.disableAction) {
+            if (entity) {
                 player.disableAction = true;
 
                 self.setAttackTarget();
