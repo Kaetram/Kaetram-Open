@@ -28,13 +28,9 @@ class Commands {
 
         if (self.player.rights > 0)
             self.handleModeratorCommands(command, blocks);
-        else if (config.debug)
-            self.player.notify('You do not have the permissions to use that command.');
 
         if (self.player.rights > 1)
             self.handleAdminCommands(command, blocks);
-        else if (config.debug)
-            self.player.notify('You do not have the permissions to use that command.');
     }
 
     handlePlayerCommands(command, blocks) {
@@ -48,19 +44,19 @@ class Commands {
 
                 self.player.notify(`There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`);
 
-                break;
+                return;
 
             case 'tutstage':
 
                 log.info(self.player.getTutorial().stage);
 
-                break;
+                return;
 
             case 'coords':
 
                 self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'x: ' + self.player.x + ' y: ' + self.player.y));
 
-                break;
+                return;
 
             case 'progress':
 
@@ -71,7 +67,7 @@ class Commands {
                     stage: tutorialQuest.stage
                 }));
 
-                break;
+                return;
 
             case 'global':
 
@@ -85,15 +81,15 @@ class Commands {
                     })
                 });
 
-                break;
+                return;
 
             case 'region':
                 log.info(self.player.region);
-                break;
+                return;
 
             case 'getintroduction':
                 log.info(self.player.quests.getQuest(0).getStage());
-                break;
+                return;
 
             case 'resetintro':
                 let introduction = self.player.quests.getQuest(0);
@@ -106,7 +102,7 @@ class Commands {
                 self.player.updateRegion(true);
                 self.player.save();
 
-                break;
+                return;
 
         }
     }
@@ -143,7 +139,7 @@ class Commands {
 
                 user.save();
 
-                break;
+                return;
 
             case 'unmute':
 
@@ -157,7 +153,7 @@ class Commands {
 
                 uUser.save();
 
-                break;
+                return;
 
         }
     }
@@ -190,7 +186,7 @@ class Commands {
 
                 self.player.notify('Max health is ' + self.player.hitPoints.getMaxHitPoints());
 
-                break;
+                return;
 
             case 'ipban':
 
@@ -221,7 +217,7 @@ class Commands {
 
                 self.player.notify('Hello!!!');
 
-                break;
+                return;
 
             case 'teleport':
 
@@ -234,7 +230,7 @@ class Commands {
                 if (x && y)
                     self.player.teleport(x, y, false, withAnimation ? true : false);
 
-                break;
+                return;
 
             case 'teletome':
 
@@ -244,7 +240,7 @@ class Commands {
                 if (player)
                     player.teleport(self.player.x, self.player.y);
 
-                break;
+                return;
 
             case 'nohit':
 
@@ -252,7 +248,7 @@ class Commands {
 
                 self.player.invincible = !self.player.invincible;
 
-                break;
+                return;
 
             case 'mob':
 
@@ -260,7 +256,7 @@ class Commands {
 
                 self.world.spawnMob(npcId, self.player.x, self.player.y);
 
-                break;
+                return;
 
             case 'pointer':
 
@@ -276,7 +272,7 @@ class Commands {
                     y: posY
                 }));
 
-                break;
+                return;
 
             case 'teleall':
 
@@ -284,7 +280,7 @@ class Commands {
                     player.teleport(self.player.x, self.player.y);
                 });
 
-                break;
+                return;
 
             case 'attackaoe':
 
@@ -295,7 +291,7 @@ class Commands {
 
                 self.player.combat.dealAoE(radius);
 
-                break;
+                return;
 
             case 'addexp':
 
@@ -306,7 +302,7 @@ class Commands {
 
                 self.player.addExperience(exp);
 
-                break;
+                return;
 
             case 'region':
 
@@ -329,7 +325,7 @@ class Commands {
                     })
                 });
 
-                break;
+                return;
 
             case 'gettile':
 
@@ -345,33 +341,33 @@ class Commands {
                 log.info('Tile Info: ' + MapClient.data[getTileIndex]);
                 log.info('Actual Index: ' + self.world.map.getActualTileIndex(getTileIndex));
 
-                break;
+                return;
 
             case 'instance':
                 self.world.region.createInstance(self.player, self.player.region);
-                break;
+                return;
 
             case 'checkregion':
                 self.player.notify('Current Region: ' + self.player.region);
-                break;
+                return;
 
             case 'deinstance':
                 self.world.region.deleteInstance(self.player);
-                break;
+                return;
 
             case 'debug':
                 self.player.send(new Messages.Command({
                     command: 'debug'
                 }));
-                break;
+                return;
 
             case 'addexperience':
                 self.player.addExperience(parseInt(blocks.shift()));
-                break;
+                return;
 
             case 'attackrange':
                 log.info(self.player.attackRange);
-                break;
+                return;
 
             case 'resetregions':
                 log.info('Resetting regions...');
@@ -379,7 +375,7 @@ class Commands {
                 self.player.regionsLoaded = [];
                 self.player.updateRegion(true);
 
-                break;
+                return;
 
         }
     }
