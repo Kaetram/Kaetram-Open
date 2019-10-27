@@ -26,8 +26,8 @@ define(['../lib/astar'], function(AStar) {
                 for (var j = 0; j < self.width; j++)
                     self.blankGrid[i][j] = 0;
             }
-
-            log.info('Sucessfully loaded the pathfinder!');
+            
+            //log.info('Successfully loaded the pathfinder!');
         },
 
         find: function(grid, entity, x, y, incomplete) {

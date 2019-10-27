@@ -22,13 +22,15 @@ define(function() {
         },
 
         loadOverlay: function(overlayName) {
-            var overlay = new Image();
+            var self = this,
+                overlay = new Image();
 
             overlay.crossOrigin = 'Anonymous';
             overlay.src = 'img/overlays/' + overlayName;
 
             overlay.onload = function() {
-                log.info('Loaded ' + overlayName);
+                if (self.game.isDebug())
+                    log.info('Loaded ' + overlayName);
             };
 
             return overlay;

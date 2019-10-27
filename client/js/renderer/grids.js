@@ -34,7 +34,8 @@ define(function() {
                 }
             }
 
-            log.info('Finished loading preliminary grids.');
+            if (self.map.game.isDebug())
+                log.info('Finished generating grids.');
         },
 
         checkPathingGrid: function(player, xRadius, yRadius) {

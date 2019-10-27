@@ -371,6 +371,10 @@ define(['./renderer/renderer', './utils/storage',
             this.player = new Player();
         },
 
+        isDebug: function() {
+            return this.app.config.debug;
+        },
+
         getScaleFactor: function() {
             return this.app.getScaleFactor();
         },

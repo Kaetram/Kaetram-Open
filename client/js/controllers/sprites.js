@@ -30,7 +30,8 @@ define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) 
                 self.sprites[sprite.id] = new Sprite(sprite, self.renderer.drawingScale);
             });
 
-            log.info('Finished loading sprite data...');
+            if (self.renderer.game.isDebug())
+                log.info('Finished loading sprite data...');
 
             if (self.loadedSpritesCallback)
                 self.loadedSpritesCallback();
@@ -50,7 +51,8 @@ define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) 
                 sprite.update(self.renderer.getDrawingScale());
             });
 
-            log.info('Updated sprites to: ' + self.renderer.getDrawingScale());
+            if (self.renderer.game.isDebug())
+                log.info('Updated sprites to scale: ' + self.renderer.getDrawingScale());
         },
 
         onLoadedSprites: function(callback) {

@@ -1,5 +1,6 @@
 {
   "ip": "127.0.0.1",
   "port": 9001,
-  "version": 1
+  "version": 1,
+  "debug": false
 }

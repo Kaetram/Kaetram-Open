@@ -3,3 +3,4 @@ package-lock.json
 config.json
 bin
 node_modules
+cordova
