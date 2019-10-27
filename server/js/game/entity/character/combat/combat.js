@@ -90,17 +90,7 @@ class Combat {
 
         self.followLoop = setInterval(function() { self.parseFollow(); }, 400);
 
-        self.checkLoop = setInterval(function() {
-
-            if (self.getTime() - self.lastAction > self.lastActionThreshold) {
-
-                self.stop();
-
-                self.forget();
-
-            }
-
-        }, 1000);
+        self.checkLoop = setInterval(function() { self.parseCheck(); }, 1000);
 
         self.started = true;
     }
@@ -170,6 +160,18 @@ class Combat {
                     self.follow(self.character, attacker);
 
             }
+        }
+    }
+
+    parseCheck() {
+        let self = this;
+
+        if (self.getTime() - self.lastAction > self.lastActionThreshold) {
+
+            self.stop();
+
+            self.forget();
+
         }
     }
 

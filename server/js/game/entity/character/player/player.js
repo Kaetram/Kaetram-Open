@@ -108,7 +108,7 @@ class Player extends Character {
         self.mana = new Mana(data.mana, Formulas.getMaxMana(self.level));
 
         if (data.invisibleIds)
-            self.invisiblesIds = data.invisibleIds.split(" ");
+            self.invisiblesIds = data.invisibleIds.split(' ');
 
         let armour = data.armour,
             weapon = data.weapon,
@@ -849,7 +849,7 @@ class Player extends Character {
 
         }
     }
-
+    
     isMuted() {
         let self = this,
             time = new Date().getTime();
