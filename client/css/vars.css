@@ -711,11 +711,11 @@ html [type="button"],
     #login:hover {
         background-position: -207px -58px;
     }
-    
+
     #login:active {
         background-position: -205px -116px;
     }
-    
+
     #login.disabled {
         background-position: -205px -174px;
     }
@@ -825,7 +825,7 @@ html [type="button"],
     .left-ornament, .right-ornament {
         background-size: 422px auto;
     }
-    
+
     .left-ornament {
         background-position: -354px 0;
     }
@@ -833,7 +833,7 @@ html [type="button"],
     .right-ornament {
         background-position: -385px 0;
     }
-    
+
     .left-ornament, .right-ornament {
         width: 31px;
         height: 12px;
@@ -973,15 +973,15 @@ html [type="button"],
     #continue {
         background-position: -414px 0;
     }
-    
+
     #continue:hover {
         background-position: -414px -29px;
     }
-    
+
     #continue:active {
         background-position: -414px -58px;
     }
-    
+
     #continue.disabled {
         background-position: -414px -87px;
     }
@@ -989,7 +989,7 @@ html [type="button"],
     #cancelButton {
         background-position: -311px 0;
     }
-    
+
     #cancelButton:hover {
         background-position: -311px -29px;;
     }
@@ -997,23 +997,23 @@ html [type="button"],
     #cancelButton:active {
         background-position: -311px -58px;
     }
-    
+
     #cancelButton.disabled {
         background-position: -311px -87px;
     }
-    
+
     #play {
         background-position: 0 0;
     }
-    
+
     #play:hover {
         background-position: 0 -29px;
     }
-    
+
     #play:active {
         background-position: 0 -58px;
     }
-    
+
     #play.disabled {
         background-position: 0 -87px;
     }

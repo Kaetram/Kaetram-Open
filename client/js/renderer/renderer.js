@@ -115,6 +115,7 @@ define(['jquery', './camera', './tile',
 
             self.forAllContexts(function(context) {
                 context.imageSmoothingQuality = 'low';
+
                 context.imageSmoothingEnabled = false;
                 context.webkitImageSmoothingEnabled = false;
                 context.mozImageSmoothingEnabled = false;

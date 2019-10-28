@@ -9,6 +9,7 @@ define(function() {
 
             self.renderer = renderer;
             self.map = renderer.map;
+            self.app = renderer.game.app;
 
             self.offset = 0.5;
             self.x = 0;
@@ -38,10 +39,17 @@ define(function() {
 
         update: function() {
             var self = this,
-                factor = self.renderer.getUpscale();
+                scale = self.renderer.getUpscale(),
+                borderWidth = self.app.border.width(),
+                borderHeight = self.app.border.height(),
+                factorWidth = Math.ceil(borderWidth / self.tileSize / scale),
+                factorHeight = Math.ceil(borderHeight / self.tileSize / scale);
 
-            self.gridWidth = 15 * factor;
-            self.gridHeight = 8 * factor;
+            if (scale === 1)
+                factorWidth /= 2, factorHeight /= 2;
+
+            self.gridWidth = factorWidth;
+            self.gridHeight = factorHeight;
 
             self.borderX = (self.map.width * self.tileSize) - self.gridWidth * self.tileSize;
             self.borderY = (self.map.height * self.tileSize) - self.gridHeight * self.tileSize;

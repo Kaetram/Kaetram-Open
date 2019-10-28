@@ -13,7 +13,6 @@ define(['jquery', './app', './game'], function($, App, Game) {
 
             addClasses();
             initGame();
-            addListeners();
         });
 
     };
@@ -30,24 +29,6 @@ define(['jquery', './app', './game'], function($, App, Game) {
         if (Detect.isFirefoxAndroid())
             chatInput.removeAttr('placeholder');
 
-    };
-
-    var addListeners = function() {
-        var self = this,
-            resizeCheck = $('#resizeCheck');
-
-        document.addEventListener('touchstart', function() {}, false);
-        document.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-        });
-
-        resizeCheck.bind('transitionend', app.resize.bind(app));
-        resizeCheck.bind('webkitTransitionEnd', app.resize.bind(app));
-        resizeCheck.bind('oTransitionEnd', app.resize.bind(app));
-
-        $(window).on('orientationchange', function(event) {
-            app.updateOrientation();
-        });
     };
 
     var initGame = function() {

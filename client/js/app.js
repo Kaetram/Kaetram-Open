@@ -40,14 +40,11 @@ define(['jquery'], function($) {
             self.registerFields = [];
 
             self.game = null;
-            self.zoomFactor = 1;
-
             self.parchmentAnimating = false;
             self.loggingIn = false;
 
             self.sendStatus('Initializing the main app');
 
-            self.zoom();
             self.updateOrientation();
             self.load();
 
@@ -121,7 +118,8 @@ define(['jquery'], function($) {
             window.scrollTo(0, 1);
 
             self.window.resize(function() {
-                self.zoom();
+                if (self.game)
+                    self.game.resize();
             });
 
             $.getJSON('data/config.json', function(json) {
@@ -195,34 +193,6 @@ define(['jquery'], function($) {
 
             self.toggleLogin(true);
             self.game.connect();
-        },
-
-        zoom: function() {
-            var self = this;
-
-            var containerWidth = self.container.width(),
-                containerHeight = self.container.height(),
-                windowWidth = self.window.width(),
-                windowHeight = self.window.height(),
-                zoomFactor = windowWidth / containerWidth;
-
-            if (containerHeight + 50 >= windowHeight)
-                zoomFactor = windowHeight / containerHeight;
-
-            if (self.getScaleFactor() === 3)
-                zoomFactor -= 0.1;
-
-            if (self.getScaleFactor() === 1 && windowWidth > windowHeight)
-                zoomFactor -= 0.32;
-
-            self.body.css({
-                'zoom': zoomFactor,
-                '-moz-transform': 'scale(' + zoomFactor + ')'
-            });
-
-            self.border.css('top', 0);
-
-            self.zoomFactor = zoomFactor;
         },
 
         fadeMenu: function() {
@@ -429,13 +399,6 @@ define(['jquery'], function($) {
             return this.guest.hasClass('active');
         },
 
-        resize: function() {
-            var self = this;
-
-            if (self.game)
-                self.game.resize();
-        },
-
         setGame: function(game) {
             this.game = game;
         },
@@ -524,10 +487,6 @@ define(['jquery'], function($) {
 
         getOrientation: function() {
             return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-        },
-
-        getZoom: function() {
-            return this.zoomFactor;
         },
 
         onReady: function(callback) {
