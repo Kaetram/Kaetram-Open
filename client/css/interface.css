@@ -1,6 +1,7 @@
 #buttons {
-    margin-top: 49%;
-    margin-left: 83%;
+    position: absolute;
+    top: 90%;
+    left: 84%;
     overflow-x: hidden;
     overflow-y: hidden;
     background-color: rgba(0, 0, 0, 0);
@@ -524,10 +525,6 @@
 
 @media only screen and (min-width: 1501px) {
 
-    #buttons {
-        width: 210px;
-        height: 45px;
-    }
 
     #chatButton {
         position: relative;
@@ -1071,11 +1068,6 @@
 }
 
 @media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
-
-    #buttons {
-        width: 140px;
-        height: 30px;
-    }
 
     #chatButton {
         position: relative;
@@ -1670,14 +1662,6 @@
 }
 
 @media only screen and (max-width: 1000px) {
-
-    #buttons {
-        width: 140px;
-        height: 30px;
-        transform: scale(0.80);
-        margin-left: 350px;
-        margin-top: 229px;
-    }
 
     #chatButton {
         position: relative;

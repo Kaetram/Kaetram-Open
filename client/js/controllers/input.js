@@ -318,8 +318,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
             self.cursorMoved = false;
 
-            self.mouse.x = Math.round((event.pageX - offset.left) / self.app.getZoom()) * proportionality;
-            self.mouse.y = Math.round((event.pageY - offset.top) / self.app.getZoom()) * proportionality;
+            self.mouse.x = Math.round((event.pageX - offset.left)) * proportionality;
+            self.mouse.y = Math.round((event.pageY - offset.top)) * proportionality;
 
             if (self.mouse.x >= width)
                 self.mouse.x = width - 1;

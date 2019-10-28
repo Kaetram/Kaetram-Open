@@ -77,27 +77,23 @@ body.game {
     opacity: 1;
 }
 
-.started #canvas {
-    cursor: none;
-}
-
 @media only screen and (min-width: 1501px) {
-    
+
     .game .parchment-middle {
         background-position: -633px -882px;
     }
-    
+
     .game.credits .parchment-middle, .game.death .parchment-middle, .game.ask .parchment-middle, .game.git .parchment-middle, .game.about .parchment-middle {
         width: 1038px;
         margin-left: -519px;
         background-position: -114px -882px;
     }
-    
+
 }
 
 @media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
 
-    
+
 }
 
 @media only screen and (max-width: 1000px) {
