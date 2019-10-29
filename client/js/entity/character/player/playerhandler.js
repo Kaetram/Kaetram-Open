@@ -70,7 +70,7 @@ define(function() {
 
                 var hasTarget = self.player.hasTarget();
 
-                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Stop, x, y, id, hasTarget, entity.orientation]);
+                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Stop, x, y, id, hasTarget, self.player.orientation]);
 
                 if (hasTarget) {
                     self.socket.send(Packets.Target, [self.isAttackable() ? Packets.TargetOpcode.Attack : Packets.TargetOpcode.Talk, self.player.target.id]);

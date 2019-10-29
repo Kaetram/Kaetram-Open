@@ -309,7 +309,8 @@ class Incoming {
 
     handleMovement(message) {
         let self = this,
-            opcode = message.shift();
+            opcode = message.shift(),
+            orientation;
 
         if (!self.player || self.player.dead)
             return;
@@ -355,8 +356,9 @@ class Incoming {
                     posY = message.shift(),
                     id = message.shift(),
                     hasTarget = message.shift(),
-                    orientation = message.shift(),
                     entity = self.world.getEntityByInstance(id);
+
+                orientation = message.shift();
 
                 if (entity && entity.type === 'item')
                     self.player.inventory.add(entity);
@@ -393,7 +395,7 @@ class Incoming {
                 break;
 
             case Packets.MovementOpcode.Orientate:
-                let orientation = message.shift();
+                orientation = message.shift();
 
                 self.world.push(Packets.PushOpcode.Regions, {
                     regionId: self.player.region,
