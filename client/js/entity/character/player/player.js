@@ -60,6 +60,8 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.pvpKills = data.pvpKills;
             self.pvpDeaths = data.pvpDeaths;
 
+            self.orientation = data.orienation;
+
             self.type = 'player';
         },
 
