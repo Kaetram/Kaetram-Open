@@ -801,6 +801,7 @@ class Player extends Character {
             pvp: self.pvp,
             pvpKills: self.pvpKills,
             pvpDeaths: self.pvpDeaths,
+            orientation: self.orientation,
             hitPoints: self.hitPoints.getData(),
             mana: self.mana.getData(),
             armour: self.armour.getData(),

@@ -168,6 +168,7 @@ define(['../renderer/grids', '../entity/objects/chest',
                         player.pvp = info.pvp;
                         player.pvpKills = info.pvpKills;
                         player.pvpDeaths = info.pvpDeaths;
+                        player.orientation = info.orientation ? info.orientation : 0;
                         player.type = info.type;
 
                         var hitPointsData = info.hitPoints,
