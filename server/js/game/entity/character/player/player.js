@@ -100,6 +100,7 @@ class Player extends Character {
         self.lastLogin = data.lastLogin;
         self.pvpKills = data.pvpKills;
         self.pvpDeaths = data.pvpDeaths;
+        self.orientation = data.orientation;
 
         self.warp.setLastWarp(data.lastWarp);
 
@@ -236,7 +237,8 @@ class Player extends Character {
             level: self.level,
             lastLogin: self.lastLogin,
             pvpKills: self.pvpKills,
-            pvpDeaths: self.pvpDeaths
+            pvpDeaths: self.pvpDeaths,
+            orientation: self.orientation
         };
 
         self.regionPosition = [self.x, self.y];
@@ -684,6 +686,15 @@ class Player extends Character {
         }), self.instance);
     }
 
+    setOrientation(orientation) {
+        let self = this;
+
+        self.orientation = orientation;
+
+        if (self.orientationCallback) // Will be necessary in the future.
+            self.orientationCallback;
+    }
+
     setFuturePosition(x, y) {
         /**
          * Most likely will be used for anti-cheating methods
@@ -849,7 +860,7 @@ class Player extends Character {
 
         }
     }
-    
+
     isMuted() {
         let self = this,
             time = new Date().getTime();
@@ -1035,6 +1046,10 @@ class Player extends Character {
 
     hasAggressionTimer() {
         return new Date().getTime() - this.lastRegionChange < 1200000; // 20 Minutes
+    }
+
+    onOrientation(callback) {
+        this.orientationCallback = callback;
     }
 
     onRegion(callback) {

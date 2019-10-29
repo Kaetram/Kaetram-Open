@@ -157,7 +157,7 @@ class Incoming {
 
             self.player.load(Creator.getFullData(self.player));
             self.player.intro();
-            
+
             return;
         }
 
@@ -355,6 +355,7 @@ class Incoming {
                     posY = message.shift(),
                     id = message.shift(),
                     hasTarget = message.shift(),
+                    orientation = message.shift(),
                     entity = self.world.getEntityByInstance(id);
 
                 if (entity && entity.type === 'item')
@@ -364,8 +365,10 @@ class Incoming {
                     let destination = self.world.map.getDoorDestination(posX, posY);
 
                     self.player.teleport(destination.x, destination.y, true);
-                } else
+                } else {
                     self.player.setPosition(posX, posY);
+                    self.player.setOrientation(orientation);
+                }
 
                 self.player.moving = false;
                 self.player.lastMovement = new Date().getTime();
