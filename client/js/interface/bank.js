@@ -48,7 +48,7 @@ define(['jquery', './container/container'], function($, Container) {
                     self.click('bank', event);
                 });
 
-                if (self.game.app.isMobile())
+                if (Detect.isMobile())
                     image.css('background-size', '600%');
 
                 slot.append(image);
@@ -85,7 +85,7 @@ define(['jquery', './container/container'], function($, Container) {
                     self.click('inventory', event);
                 });
 
-                if (self.game.app.isMobile())
+                if (Detect.isMobile())
                     slotImage.css('background-size', '600%');
 
                 iSlot.append(slotImage);
@@ -125,7 +125,7 @@ define(['jquery', './container/container'], function($, Container) {
                     'margin-left': '0'
                 });
 
-                if (self.game.app.isMobile())
+                if (Detect.isMobile())
                     image.css('background-size', '600%');
                 else
                     image.css('background-image', self.container.getImageFormat(self.getScale(), slot.string));
@@ -141,7 +141,7 @@ define(['jquery', './container/container'], function($, Container) {
                     'margin-bottom': (6 * self.getScale()) + 'px'
                 });
 
-                if (self.game.app.isMobile())
+                if (Detect.isMobile())
                     iImage.css('background-size', '600%');
                 else
                     iImage.css('background-image', self.container.getImageFormat(self.getScale(), iSlot.string));
@@ -176,7 +176,7 @@ define(['jquery', './container/container'], function($, Container) {
 
             cssSlot.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
 
-            if (self.game.app.isMobile())
+            if (Detect.isMobile())
                 cssSlot.css('background-size', '600%');
 
             if (slot.count > 1)
@@ -215,7 +215,7 @@ define(['jquery', './container/container'], function($, Container) {
 
             image.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
 
-            if (self.game.app.isMobile())
+            if (Detect.isMobile())
                 image.css('background-size', '600%');
 
             if (info.count > 1)

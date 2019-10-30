@@ -74,7 +74,7 @@ define(['jquery'], function($) {
 
                     self.selectedItem.css('background-image', image.css('background-image'));
 
-                    if (self.game.app.isMobile())
+                    if (Detect.isMobile())
                         self.selectedItem.css('background-size', '600%');
 
                     break;
@@ -83,7 +83,7 @@ define(['jquery'], function($) {
 
                     self.selectedShards.css('background-image', image.css('background-image'));
 
-                    if (self.game.app.isMobile())
+                    if (Detect.isMobile())
                         self.selectedShards.css('background-size', '600%');
 
                     var count = self.getItemSlot(index).count;
