@@ -151,7 +151,7 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         getScale: function() {
-            return this.game.renderer.getDrawingScale();
+            return this.game.renderer.getScale();
         },
 
         isVisible: function() {

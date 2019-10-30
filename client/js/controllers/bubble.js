@@ -38,7 +38,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
             if (!bubble || !entity)
                 return;
 
-            var scale = self.game.renderer.getDrawingScale(),
+            var scale = self.game.renderer.getScale(),
                 tileSize = 16 * scale,
                 x = (entity.x - self.game.getCamera().x) * scale,
                 width = parseInt(bubble.element.css('width')) + 24,

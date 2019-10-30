@@ -417,7 +417,7 @@ define(['jquery'], function($) {
              * rendering file.
              */
 
-            return width <= 1000 ? 1 : ((width <= 1500 || height <= 870) ? 2 : 3);
+            return 3;
         },
 
         revertLoader: function() {

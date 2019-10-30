@@ -190,7 +190,7 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
         },
 
         updateScale: function() {
-            this.scale = this.getDrawingScale();
+            this.scale = this.game.renderer.getScale();
         },
 
         updateCamera: function() {
@@ -199,10 +199,6 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
 
         getScale: function() {
             return this.game.getScaleFactor();
-        },
-
-        getDrawingScale: function() {
-            return this.game.renderer.getDrawingScale();
         }
 
     });

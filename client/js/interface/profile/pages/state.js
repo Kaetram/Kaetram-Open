@@ -98,7 +98,7 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         getScale: function() {
-            return this.game.renderer.getDrawingScale();
+            return this.game.renderer.getScale();
         }
 
     });
