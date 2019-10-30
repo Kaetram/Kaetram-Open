@@ -1,7 +1,7 @@
 #buttons {
     position: absolute;
-    top: 90%;
-    left: 84%;
+    bottom: 0;
+    right: 0;
     overflow-x: hidden;
     overflow-y: hidden;
     background-color: rgba(0, 0, 0, 0);
@@ -47,8 +47,8 @@
 #inventory {
     background-color: rgba(0, 0, 0, 0.3);
     position: absolute;
-    top: 50%;
-    left: 76%;
+    right: 20px;
+    bottom: 10%;
     display: none;
 }
 
@@ -151,17 +151,14 @@
 }
 
 #profileDialog, #settingsPage {
-    top: 11%;
+    bottom: 15px;
+
 
     display: none;
     position: absolute;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
-}
-
-#profileDialog {
-    left: 69%;
 }
 
 #settingsPage {
@@ -653,6 +650,11 @@
         height: 48px;
         border-radius: 9px;
         border: 3px solid #707070;
+    }
+
+    #profileDialog {
+        bottom: 40px;
+        right: 34px;
     }
 
     #profileDialog, .page {
@@ -1244,9 +1246,15 @@
         border: 2px solid #707070;
     }
 
+    #profileDialog {
+        bottom: 30px;
+        right: 22px;
+    }
+
     #profileDialog, .page {
         width: 248px;
         height: 434px;
+
         position: absolute;
     }
 
@@ -1678,21 +1686,6 @@
         background: url('../img/2/maintwo.png') no-repeat -448px -628px;
     }
 
-    #inventoryButton {
-        position: relative;
-        width: 28px;
-        height: 30px;
-        background: url('../img/2/main.png') no-repeat -392px -628px;
-    }
-
-    #inventoryButton:hover {
-        background: url('../img/2/main.png') no-repeat -420px -628px;
-    }
-
-    #inventoryButton.active {
-        background: url('../img/2/main.png') no-repeat -448px -628px;
-    }
-
     #profileButton {
         position: relative;
         width: 28px;
@@ -1790,41 +1783,6 @@
         background: url('../img/1/containers.png') -371px -65px;
     }
 
-    #inventory {
-        width: 96px;
-        height: 101px;
-        border: 1px solid #373737
-    }
-
-    .itemSlot {
-        width: 16px;
-        height: 16px;
-        margin-left: 1px;
-        margin-top: 1px;
-        margin-bottom: 7px;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        border-radius: 3px;
-        border: 1px solid #707070;
-    }
-
-    .itemSlot:hover {
-        border: 1px solid #eeeeee;
-    }
-
-    .itemSlot:active {
-        border: 1px solid #fcda5c;
-    }
-
-    .itemCount {
-        width: 16px;
-        height: 7px;
-        font-size: 6px;
-        text-align: center;
-        margin-left: 1px;
-        margin-top: -7px;
-    }
-
     #actionContainer {
         width: 64px;
         height: 32px;
@@ -1837,6 +1795,11 @@
         border: 1px solid #707070;
     }
 
+    #profileDialog {
+        bottom: 30px;
+        right: 60px;
+    }
+
     #profileDialog, .page {
         width: 124px;
         height: 217px;
@@ -1845,11 +1808,6 @@
 
     #settingsPage {
         left: 356px;
-        top: 24px;
-    }
-
-    #profileDialog {
-        left: 316px;
         top: 24px;
     }
 

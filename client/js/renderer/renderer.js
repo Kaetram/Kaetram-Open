@@ -818,7 +818,7 @@ define(['jquery', './camera', './tile',
         drawTargetCell: function() {
             var self = this;
 
-            if (!self.input.targetVisible || !self.input || !self.camera || !self.map || self.input.keyMovement)
+            if (self.mobile || self.table || !self.input.targetVisible || !self.input || !self.camera || !self.map || self.input.keyMovement)
                 return;
 
             var location = self.input.getCoords();
