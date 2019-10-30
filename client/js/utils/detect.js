@@ -44,12 +44,16 @@ Detect.userAgentContains = function(string) {
     return navigator.userAgent.indexOf(string) !== -1;
 };
 
-Detect.isTablet = function(screenWidth) {
+Detect.isTablet = function() {
     var userAgent = navigator.userAgent.toLowerCase(),
         isAppleTablet = /ipad/i.test(userAgent),
         isAndroidTablet = /android/i.test(userAgent);
 
-    return (isAppleTablet || isAndroidTablet) && screenWidth >= 640;
+    return (isAppleTablet || isAndroidTablet) && window.innerWidth >= 640;
+};
+
+Detect.isMobile = function() {
+    return window.innerWidth < 1000;
 };
 
 Detect.iOSVersion = function() {

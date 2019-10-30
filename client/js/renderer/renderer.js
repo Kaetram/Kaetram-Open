@@ -890,7 +890,7 @@ define(['jquery', './camera', './tile',
         getScale: function() {
             return this.game.getScaleFactor();
         },
-        
+
         getSuperScaling: function() {
             return 2;
         },
@@ -1103,8 +1103,8 @@ define(['jquery', './camera', './tile',
         checkDevice: function() {
             var self = this;
 
-            self.mobile = self.game.app.isMobile();
-            self.tablet = self.game.app.isTablet();
+            self.mobile = Detect.isMobile();
+            self.tablet = Detect.isTablet();
             self.firefox = Detect.isFirefox();
         },
 

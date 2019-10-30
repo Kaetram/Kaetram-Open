@@ -240,7 +240,7 @@ define(['jquery'], function($) {
                     self.parchment.toggleClass('animate').addClass(destination);
                     self.parchmentAnimating = false;
 
-                }, self.isTablet() ? 0 : 1000);
+                }, Detect.isTablet() ? 0 : 1000);
 
             } else
                 self.parchment.removeClass(origin).addClass(destination);
@@ -491,14 +491,6 @@ define(['jquery'], function($) {
 
         onReady: function(callback) {
             this.readyCallback = callback;
-        },
-
-        isMobile: function() {
-            return this.getScaleFactor() < 2;
-        },
-
-        isTablet: function() {
-            return Detect.isIpad() || (Detect.isAndroid() && this.getScaleFactor() > 1);
         }
 
     });
