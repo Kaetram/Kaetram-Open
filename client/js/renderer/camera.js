@@ -39,7 +39,7 @@ define(function() {
 
         update: function() {
             var self = this,
-                scale = self.renderer.getUpscale(),
+                scale = self.renderer.getScale(),
                 borderWidth = self.app.border.width(),
                 borderHeight = self.app.border.height(),
                 factorWidth = Math.ceil(borderWidth / self.tileSize / scale),

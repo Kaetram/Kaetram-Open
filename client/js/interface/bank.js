@@ -42,7 +42,7 @@ define(['jquery', './container/container'], function($, Container) {
                 var image = $('<div id="bankImage' + i + '" class="bankImage"></div>');
 
                 if (item.string)
-                    image.css('background-image', self.container.getImageFormat(self.getDrawingScale(), item.string));
+                    image.css('background-image', self.container.getImageFormat(self.getScale(), item.string));
 
                 slot.click(function(event) {
                     self.click('bank', event);
@@ -79,7 +79,7 @@ define(['jquery', './container/container'], function($, Container) {
                 var slotImage = $('<div id="inventoryImage' + j + '" class="bankImage"></div>');
 
                 if (iItem.string)
-                    slotImage.css('background-image', self.container.getImageFormat(self.getDrawingScale(), iItem.string));
+                    slotImage.css('background-image', self.container.getImageFormat(self.getScale(), iItem.string));
 
                 iSlot.click(function(event) {
                     self.click('inventory', event);
@@ -128,7 +128,7 @@ define(['jquery', './container/container'], function($, Container) {
                 if (self.game.app.isMobile())
                     image.css('background-size', '600%');
                 else
-                    image.css('background-image', self.container.getImageFormat(self.getDrawingScale(), slot.string));
+                    image.css('background-image', self.container.getImageFormat(self.getScale(), slot.string));
             }
 
             for (var j = 0; j < inventoryList.length; j++) {
@@ -144,7 +144,7 @@ define(['jquery', './container/container'], function($, Container) {
                 if (self.game.app.isMobile())
                     iImage.css('background-size', '600%');
                 else
-                    iImage.css('background-image', self.container.getImageFormat(self.getDrawingScale(), iSlot.string));
+                    iImage.css('background-image', self.container.getImageFormat(self.getScale(), iSlot.string));
             }
 
         },
@@ -161,7 +161,7 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 item = $(self.getBankList()[info.index]),
                 slot = self.container.slots[info.index];
-            
+
             if (!item || !slot)
                 return;
 
@@ -174,7 +174,7 @@ define(['jquery', './container/container'], function($, Container) {
                 cssSlot = bankSlot.find('#bankImage' + info.index),
                 count = bankSlot.find('#bankItemCount' + info.index);
 
-            cssSlot.css('background-image', self.container.getImageFormat(self.getDrawingScale(), info.string));
+            cssSlot.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
 
             if (self.game.app.isMobile())
                 cssSlot.css('background-size', '600%');
@@ -187,12 +187,12 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 item = $(self.getBankList()[info.index]),
                 slot = self.container.slots[info.index];
-            
+
             if (!item || !slot)
                 return;
-            
+
             slot.count -= info.count;
-            
+
             if (slot.count < 1) {
                 var divItem = item.find('#bankSlot' + info.index);
 
@@ -206,14 +206,14 @@ define(['jquery', './container/container'], function($, Container) {
         addInventory: function(info) {
             var self = this,
                 item = $(self.getInventoryList()[info.index]);
-            
+
             if (!item)
                 return;
-            
+
             var slot = item.find('#bankInventorySlot' + info.index),
                 image = slot.find('#inventoryImage' + info.index);
-            
-            image.css('background-image', self.container.getImageFormat(self.getDrawingScale(), info.string));
+
+            image.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
 
             if (self.game.app.isMobile())
                 image.css('background-size', '600%');
@@ -248,12 +248,8 @@ define(['jquery', './container/container'], function($, Container) {
             return this.body.css('display') === 'block';
         },
 
-        getDrawingScale: function() {
-            return this.game.renderer.getDrawingScale();
-        },
-
         getScale: function() {
-            return this.game.getScaleFactor();
+            return this.game.renderer.getScale();
         },
 
         getBankList: function() {

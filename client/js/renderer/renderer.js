@@ -52,7 +52,6 @@ define(['jquery', './camera', './tile',
 
             self.checkDevice();
 
-            self.scale = 1;
             self.tileSize = 16;
             self.fontSize = 10;
 
@@ -103,7 +102,6 @@ define(['jquery', './camera', './tile',
             var self = this;
 
             self.scale = self.getScale();
-            self.drawingScale = self.getDrawingScale();
             self.superScaling = self.getSuperScaling();
 
             self.loadLights();
@@ -184,7 +182,6 @@ define(['jquery', './camera', './tile',
                 self.resizeTimeout = setTimeout(function() {
 
                     self.scale = self.getScale();
-                    self.drawingScale = self.getDrawingScale();
                     self.clearScreen(self.cursorContext);
 
                     if (self.camera)
@@ -204,7 +201,6 @@ define(['jquery', './camera', './tile',
                     self.stopRendering = false;
                     self.resizeTimeout = null;
 
-                    self.handleScaling();
                     self.updateAnimatedTiles();
 
                 }, 500);
@@ -312,13 +308,11 @@ define(['jquery', './camera', './tile',
                 return;
 
             self.game.info.forEachInfo(function(info) {
-                var factor = self.mobile ? 2 : 1;
-
                 self.textContext.save();
                 self.textContext.font = '20px AdvoCut';
                 self.setCameraView(self.textContext);
                 self.textContext.globalAlpha = info.opacity;
-                self.drawText('' + info.text, Math.floor((info.x + 8) * factor), Math.floor(info.y * factor), true, info.fill, info.stroke);
+                self.drawText('' + info.text, Math.floor((info.x + 8)), Math.floor(info.y), true, info.fill, info.stroke);
                 self.textContext.restore();
             });
         },
@@ -533,8 +527,7 @@ define(['jquery', './camera', './tile',
             if (entity.hidden || (!self.drawNames && !self.drawLevels))
                 return;
 
-            var colour = entity.wanted ? 'red' : 'white',
-                factor = self.mobile ? 2 : 1;
+            var colour = entity.wanted ? 'red' : 'white';
 
             if (entity.rights > 1)
                 colour = '#ba1414';
@@ -552,13 +545,13 @@ define(['jquery', './camera', './tile',
                 if (!entity.hasCounter) {
 
                     if (self.drawNames && (entity.type === 'mob' || entity.type === 'player'))
-                        self.drawText(entity.type === 'player' ? entity.username : entity.name, (entity.x + 8) * factor, (entity.y - (self.drawLevels ? 20 : 10)) * factor, true, colour, '#000');
+                        self.drawText(entity.type === 'player' ? entity.username : entity.name, (entity.x + 8), (entity.y - (self.drawLevels ? 20 : 10)), true, colour, '#000');
 
                     if (self.drawLevels && (entity.type === 'mob' || entity.type === 'player'))
-                        self.drawText('Level ' + entity.level, (entity.x + 8) * factor, (entity.y - (entity.type === 'player' ? 12 : 10)) * factor, true, colour, '#000');
+                        self.drawText('Level ' + entity.level, (entity.x + 8), (entity.y - (entity.type === 'player' ? 12 : 10)), true, colour, '#000');
 
                     if (entity.type === 'item' && entity.count > 1)
-                        self.drawText(entity.count, (entity.x + 8) * factor, (entity.y - 10) * factor, true, colour);
+                        self.drawText(entity.count, (entity.x + 8), (entity.y - 10), true, colour);
 
                 } else {
 
@@ -570,7 +563,7 @@ define(['jquery', './camera', './tile',
                     if (entity.counter <= 0)
                         entity.hasCounter = false;
 
-                    self.drawText(entity.counter, (entity.x + 8) * factor, (entity.y - 10) * factor, true, colour);
+                    self.drawText(entity.counter, (entity.x + 8), (entity.y - 10), true, colour);
                 }
             }
 
@@ -675,22 +668,18 @@ define(['jquery', './camera', './tile',
                 return;
 
             var posX = self.input.selectedX,
-                posY = self.input.selectedY;
+                posY = self.input.selectedY,
+                tD = self.input.getTargetData(); // target data
 
-            if (self.mobile)
-                self.drawCellHighlight(posX, posY, self.input.mobileTargetColour);
-            else {
-                var tD = self.input.getTargetData();
+            if (tD) {
+                self.context.save();
+                self.setCameraView(self.context);
 
-                if (tD) {
-                    self.context.save();
-                    self.setCameraView(self.context);
+                self.context.drawImage(tD.sprite.image, tD.x, tD.y, tD.width, tD.height, tD.dx, tD.dy, tD.dw, tD.dh);
 
-                    self.context.drawImage(tD.sprite.image, tD.x, tD.y, tD.width, tD.height, tD.dx, tD.dy, tD.dw, tD.dh);
-
-                    self.context.restore();
-                }
+                self.context.restore();
             }
+
         },
 
         /**
@@ -829,7 +818,7 @@ define(['jquery', './camera', './tile',
         drawTargetCell: function() {
             var self = this;
 
-            if (self.mobile || self.tablet || !self.input.targetVisible || !self.input || !self.camera || !self.map || self.input.keyMovement)
+            if (!self.input.targetVisible || !self.input || !self.camera || !self.map || self.input.keyMovement)
                 return;
 
             var location = self.input.getCoords();
@@ -901,27 +890,7 @@ define(['jquery', './camera', './tile',
         getScale: function() {
             return this.game.getScaleFactor();
         },
-
-        getDrawingScale: function() {
-            var self = this,
-                scale = self.getScale();
-
-            if (self.mobile)
-                scale = 2;
-
-            return scale;
-        },
-
-        getUpscale: function() {
-            var self = this,
-                scale = self.getScale();
-
-            if (scale > 2)
-                scale = 2;
-
-            return scale;
-        },
-
+        
         getSuperScaling: function() {
             return 2;
         },
@@ -956,8 +925,17 @@ define(['jquery', './camera', './tile',
         handleScaling: function() {
             var self = this;
 
+            /**
+             * Using scale factors to zoom canvas may
+             * have some adverse performance effects.
+             * This is a temporary solution.
+             * Eventually, we will have to scale the sprites
+             * to 1.5 times their current size to obtain
+             * the same effect, with no performance hit. //hopefully
+             */
+
             self.canvas.style.transformOrigin = '0 0';
-            self.canvas.style.transform = self.drawingScale === 3 ? 'scale(1.5)' : 'scale(1)';
+            self.canvas.style.transform = 'scale(1.5)';
         },
 
         saveAll: function() {

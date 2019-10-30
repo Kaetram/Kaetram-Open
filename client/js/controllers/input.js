@@ -314,7 +314,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 offset = self.app.canvas.offset(),
                 width = self.renderer.background.width,
                 height = self.renderer.background.height,
-                proportionality = self.renderer.drawingScale === 3 ? (2 / 3) : 1;
+                proportionality = self.renderer.scale === 3 ? (2 / 3) : 1;
 
             self.cursorMoved = false;
 

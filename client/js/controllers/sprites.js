@@ -27,7 +27,7 @@ define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) 
             var self = this;
 
             _.each(spriteData, function(sprite) {
-                self.sprites[sprite.id] = new Sprite(sprite, self.renderer.drawingScale);
+                self.sprites[sprite.id] = new Sprite(sprite, self.renderer.scale);
             });
 
             if (self.renderer.game.isDebug())
@@ -48,11 +48,11 @@ define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) 
             var self = this;
 
             _.each(self.sprites, function(sprite) {
-                sprite.update(self.renderer.getDrawingScale());
+                sprite.update(self.renderer.getScale());
             });
 
             if (self.renderer.game.isDebug())
-                log.info('Updated sprites to scale: ' + self.renderer.getDrawingScale());
+                log.info('Updated sprites to scale: ' + self.renderer.getScale());
         },
 
         onLoadedSprites: function(callback) {
