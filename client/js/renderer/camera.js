@@ -45,9 +45,6 @@ define(function() {
                 factorWidth = Math.ceil(borderWidth / self.tileSize / scale),
                 factorHeight = Math.ceil(borderHeight / self.tileSize / scale);
 
-            if (scale === 1)
-                factorWidth /= 2, factorHeight /= 2;
-
             self.gridWidth = factorWidth;
             self.gridHeight = factorHeight;
 
