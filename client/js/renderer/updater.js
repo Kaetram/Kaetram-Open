@@ -214,7 +214,7 @@ define(['../entity/character/character'], function(Character) {
             var self = this,
                 target = self.input.targetAnimation;
 
-            if (target && self.input.selectedCellVisible && !self.renderer.mobile)
+            if (target && self.input.selectedCellVisible)
                 target.update(self.game.time);
 
             if (!self.sprites)

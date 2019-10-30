@@ -36,7 +36,7 @@ define(['jquery', './container/container'], function($, Container) {
                 if (item.string !== 'null')
                     itemSlot.css('background-image', self.container.getImageFormat(self.getScale(), item.string));
 
-                if (self.game.app.isMobile())
+                if (Detect.isMobile())
                     itemSlot.css('background-size', '600%');
 
                 itemSlot.dblclick(function(event) {
@@ -185,7 +185,7 @@ define(['jquery', './container/container'], function($, Container) {
 
             cssSlot.css('background-image', self.container.getImageFormat(self.getScale(), slot.string));
 
-            if (self.game.app.isMobile())
+            if (Detect.isMobile())
                 cssSlot.css('background-size', '600%');
 
             item.find('#itemCount' + info.index).text(slot.count > 1 ? slot.count : '');
@@ -221,7 +221,7 @@ define(['jquery', './container/container'], function($, Container) {
                 if (!slot)
                     continue;
 
-                if (self.game.app.isMobile())
+                if (Detect.isMobile())
                     item.css('background-size', '600%');
                 else
                     item.css('background-image', self.container.getImageFormat(self.getScale(), slot.string));
