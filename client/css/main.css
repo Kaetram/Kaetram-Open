@@ -88,6 +88,8 @@ footer div {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+
+    cursor: none;
 }
 
 #foreground, #background, #entities, #cursor, #overlay {
@@ -628,6 +630,10 @@ footer div {
 
     #respawn:active {
         background-position: -125px -476px;
+    }
+
+    #canvas, #foreground, #background, #textCanvas, #overlay, #container, #border, #footer, #cursor {
+        cursor: default;
     }
 }
 

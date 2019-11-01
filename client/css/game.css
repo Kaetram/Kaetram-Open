@@ -90,14 +90,3 @@ body.game {
     }
 
 }
-
-@media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
-
-
-}
-
-@media only screen and (max-width: 1000px) {
-    .started #canvas {
-        cursor: default;
-    }
-}

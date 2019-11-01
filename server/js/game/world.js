@@ -454,7 +454,7 @@ class World {
 
             case Packets.PushOpcode.Region:
             
-                self.network.pushToRegion(info.id, info.message, info.ignoreId);
+                self.network.pushToRegion(info.regionId, info.message, info.ignoreId);
 
                 break;
 

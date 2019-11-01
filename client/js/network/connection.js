@@ -494,6 +494,9 @@ define(function() {
 
             self.messages.onChat(function(info) {
 
+                if (self.game.isDebug())
+                    log.info(info);
+
                 if (info.withBubble) {
                     var entity = self.entities.get(info.id);
 

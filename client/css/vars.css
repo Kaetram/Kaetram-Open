@@ -162,7 +162,7 @@ body {
 }
 
 .bubble {
-    background: rgba(45, 45, 45, 0.7);
+    background: rgba(45, 45, 45, 0.9);
     padding: 3px 10px 0 10px;
     border-radius: 8px;
     color: rgba(255, 255, 255, 0.8);
