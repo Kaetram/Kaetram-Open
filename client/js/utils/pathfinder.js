@@ -10,6 +10,8 @@ define(['../lib/astar'], function(AStar) {
             self.width = width;
             self.height = height;
 
+            self.mode = 'DEFAULT';
+
             self.grid = null;
             self.blankGrid = [];
             self.ignores = [];
@@ -26,7 +28,7 @@ define(['../lib/astar'], function(AStar) {
                 for (var j = 0; j < self.width; j++)
                     self.blankGrid[i][j] = 0;
             }
-            
+
             //log.info('Successfully loaded the pathfinder!');
         },
 
@@ -38,7 +40,7 @@ define(['../lib/astar'], function(AStar) {
             self.grid = grid;
             self.applyIgnore(true);
 
-            path = AStar(self.grid, start, end);
+            path = AStar(self.grid, start, end, self.mode);
 
             if (path.length === 0 && incomplete)
                 path = self.findIncomplete(start, end);
@@ -51,14 +53,14 @@ define(['../lib/astar'], function(AStar) {
                 incomplete = [],
                 perfect, x, y;
 
-            perfect = AStar(self.blankGrid, start, end);
+            perfect = AStar(self.blankGrid, start, end, self.mode);
 
             for (var i = perfect.length - 1; i > 0; i--) {
                 x = perfect[i][0];
                 y = perfect[i][1];
 
                 if (self.grid[y][x] === 0) {
-                    incomplete = AStar(self.grid, start, [x. y]);
+                    incomplete = AStar(self.grid, start, [x. y], self.mode);
                     break;
                 }
             }
