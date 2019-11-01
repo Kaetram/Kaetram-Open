@@ -135,10 +135,6 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
 
             if (self.activePage)
                 self.activePage.hide();
-        },
-
-        getScale: function() {
-            return this.game.getScaleFactor();
         }
 
     });

@@ -200,6 +200,9 @@ body {
     display: none;
     position: absolute;
     pointer-events: none;
+
+    left: 35%;
+    bottom: 20%;
 }
 
 #chat p {
@@ -439,8 +442,6 @@ html [type="button"],
     #chat {
         width: 750px;
         height: 300px;
-        top: 405px;
-        left: 375px;
     }
 
     #chatLog {
@@ -661,8 +662,6 @@ html [type="button"],
     #chat {
         width: 500px;
         height: 200px;
-        top: 250px;
-        left: 250px;
     }
 
     #chatLog {
@@ -882,8 +881,6 @@ html [type="button"],
     #chat {
         width: 250px;
         height: 100px;
-        top: 135px;
-        left: 125px;
     }
 
     #chatLog {
@@ -992,9 +989,17 @@ html [type="button"],
     }
 
     #rememberMeText, #guestText {
-        width: 55px;
+        width: 70px;
         height: 8px;
         font-size: 8px;
+    }
+
+    #guest {
+        left: 65%;
+    }
+
+    #guestText {
+        left: 67%;
     }
 
     .validation-summary {
