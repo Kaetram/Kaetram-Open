@@ -19,8 +19,7 @@ define(['jquery'], function($) {
         },
 
         load: function() {
-            var self = this,
-                scale = self.getScale();
+            var self = this;
 
             self.warp.click(function() {
                 self.toggle();
@@ -56,10 +55,6 @@ define(['jquery'], function($) {
                 self.hide();
             else
                 self.display();
-        },
-
-        getScale: function() {
-            return this.game.getScaleFactor();
         },
 
         isVisible: function() {

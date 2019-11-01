@@ -78,8 +78,7 @@ define(['jquery', '../page'], function($, Page) {
             self.ringSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.ring.string));
             self.bootsSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.boots.string));
 
-            if (self.game.getScaleFactor() === 1)
-                self.forEachSlot(function(slot) { slot.css('background-size', '600%'); });
+            self.forEachSlot(function(slot) { slot.css('background-size', '600%'); });
         },
 
         update: function() {

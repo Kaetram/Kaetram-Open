@@ -161,10 +161,6 @@
     -moz-user-select: none;
 }
 
-#settingsPage {
-    left: 72%;
-}
-
 #navigator {
     position: absolute;
     top: 89%;
@@ -676,6 +672,9 @@
     #settingsPage {
         background: url('../img/3/characterdialogsheet.png') -744px 0;
         display: none;
+
+        right: 0;
+        bottom: 45px;
     }
 
     #questPage {
@@ -710,22 +709,22 @@
 
     #armourSlot {
         left: 312px;
-        top: 360px;
+        top: 356px;
     }
 
     #pendantSlot {
         left: 162px;
-        top: 234px;
+        top: 230px;
     }
 
     #ringSlot {
         left: 81px;
-        top: 516px;
+        top: 512px;
     }
 
     #bootsSlot {
         left: 246px;
-        top: 519px;
+        top: 516px;
     }
 
     #profileName {
@@ -1271,6 +1270,9 @@
     #settingsPage {
         background: url('../img/2/characterdialogsheet.png') -496px 0;
         display: none;
+
+        right: 0;
+        bottom: 30px;
     }
 
     #questPage {
@@ -1300,28 +1302,28 @@
 
     #weaponSlot {
         left: 8px;
-        top: 236px;
+        top: 238px;
         background-position: 0 -2px;
     }
 
     #armourSlot {
         left: 208px;
-        top: 240px;
+        top: 236px;
     }
 
     #pendantSlot {
         left: 108px;
-        top: 156px;
+        top: 154px;
     }
 
     #ringSlot {
         left: 54px;
-        top: 344px;
+        top: 342px;
     }
 
     #bootsSlot {
         left: 164px;
-        top: 346px;
+        top: 344px;
     }
 
     #profileName {
@@ -1806,11 +1808,6 @@
         position: absolute;
     }
 
-    #settingsPage {
-        left: 356px;
-        top: 24px;
-    }
-
     #statePage {
         background: url('../img/1/characterdialogsheet.png') 0 0;
         display: block;
@@ -1824,6 +1821,9 @@
     #settingsPage {
         background: url('../img/1/characterdialogsheet.png') -248px 0;
         display: none;
+
+        right: 4px;
+        bottom: 30px;
     }
 
     #questPage {
@@ -1853,12 +1853,12 @@
 
     #weaponSlot {
         left: 4px;
-        top: 118px;
+        top: 120px;
     }
 
     #armourSlot {
         left: 104px;
-        top: 120px;
+        top: 119px;
     }
 
     #pendantSlot {
@@ -1941,8 +1941,7 @@
 
     #checkMarks {
         width: 40px;
-        height: 70px;
-        top: 34%;
+        height: 120px;
     }
 
     #texts {
