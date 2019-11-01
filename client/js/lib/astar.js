@@ -109,7 +109,11 @@ define(function() {
                     break;
             }
             find || (find = diagonalSuccessorsFree);
+
             do {
+                if (length > 100) // Don't let it get too crazy.
+                    return [];
+
                 max = limit;
                 min = 0;
                 for(i = 0; i < length; ++i) {

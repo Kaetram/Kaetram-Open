@@ -327,8 +327,10 @@ define(['jquery', './camera', './tile',
 
             if (!self.mobile) {
                 self.drawPosition();
-                self.drawPathing();
+                self.drawCollisions();
             }
+
+            self.drawPathing();
         },
 
         drawEntities: function() {
@@ -645,7 +647,7 @@ define(['jquery', './camera', './tile',
             self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 31, false, 'white');
         },
 
-        drawPathing: function() {
+        drawCollisions: function() {
             var self = this,
                 pathingGrid = self.entities.grids.pathingGrid;
 
@@ -659,6 +661,18 @@ define(['jquery', './camera', './tile',
                 if (pathingGrid[y][x] !== 0)
                     self.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
             });
+        },
+
+        drawPathing: function() {
+            var self = this;
+
+            if (!self.game.player.hasPath())
+                return;
+
+            _.each(self.game.player.path, function(path) {
+                self.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
+            });
+
         },
 
         drawSelectedCell: function() {
