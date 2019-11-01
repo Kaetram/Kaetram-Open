@@ -5,6 +5,8 @@
     overflow-x: hidden;
     overflow-y: hidden;
     background-color: rgba(0, 0, 0, 0);
+
+    cursor: default;
 }
 
 #buttons ul {
@@ -50,6 +52,8 @@
     right: 20px;
     bottom: 10%;
     display: none;
+
+    cursor: default;
 }
 
 #inventory ul {
@@ -153,12 +157,13 @@
 #profileDialog, #settingsPage {
     bottom: 15px;
 
-
     display: none;
     position: absolute;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
+
+    cursor: default;
 }
 
 #navigator {
@@ -425,6 +430,8 @@
     background-repeat: no-repeat;
     pointer-events: auto;
     display: none;
+
+    cursor: default;
 }
 
 .mapButton {

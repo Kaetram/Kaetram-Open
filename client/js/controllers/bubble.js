@@ -17,7 +17,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
             var self = this;
 
             if (self.bubbles[id]) {
-                self.bubbles[id].reset(time);
+                self.bubbles[id].reset(self.game.time);
                 $('#' + id + ' p').html(message);
             } else {
                 var element = $('<div id=\''+id+'\' class=\'bubble\'><p>'+message+'</p><div class=\'bubbleTip\'></div></div>');
@@ -43,7 +43,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
                 x = (entity.x - self.game.getCamera().x) * scale,
                 width = parseInt(bubble.element.css('width')) + 24,
                 offset = (width / 2) - (tileSize / 2),
-                offsetY = 10, y;
+                offsetY = -20, y;
 
             y = ((entity.y - self.game.getCamera().y) * scale) - (tileSize * 2) - offsetY;
 

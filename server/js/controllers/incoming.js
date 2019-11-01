@@ -557,9 +557,10 @@ class Incoming {
                 return;
             }
 
-            log.info(`${self.player.name} - ${text}`);
+            if (config.debug)
+                log.info(`${self.player.username} - ${text}`);
 
-            self.world.push(Packets.PushOpcode.Region, {
+            self.world.push(Packets.PushOpcode.Regions, {
                 regionId: self.player.region,
                 message: new Messages.Chat({
                     id: self.player.instance,
