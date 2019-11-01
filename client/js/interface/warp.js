@@ -10,7 +10,7 @@ define(['jquery'], function($) {
             self.game = game;
 
             self.mapFrame = $('#mapFrame');
-            self.warp = $('#warpButton');
+            self.button = $('#warpButton');
             self.close = $('#closeMapFrame');
 
             self.warpCount = 0;
@@ -21,7 +21,9 @@ define(['jquery'], function($) {
         load: function() {
             var self = this;
 
-            self.warp.click(function() {
+            self.button.click(function() {
+                self.game.interface.hideAll();
+
                 self.toggle();
             });
 
@@ -63,10 +65,12 @@ define(['jquery'], function($) {
 
         display: function() {
             this.mapFrame.fadeIn('slow');
+            this.button.addClass('active');
         },
 
         hide: function() {
             this.mapFrame.fadeOut('fast');
+            this.button.removeClass('active');
         }
 
     });

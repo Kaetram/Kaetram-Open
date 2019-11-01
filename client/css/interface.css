@@ -862,7 +862,7 @@
     #attackInfo {
         width: 300px;
         height: 75px;
-        top: 12px;
+        top: 0;
         border-bottom-left-radius: 24px;
         border-bottom-right-radius: 24px;
         border: 6px solid #373737;
@@ -1461,7 +1461,7 @@
     #attackInfo {
         width: 200px;
         height: 50px;
-        top: 8px;
+        top: 0;
         border-bottom-left-radius: 16px;
         border-bottom-right-radius: 16px;
         border: 4px solid #373737;
@@ -2012,7 +2012,7 @@
     #attackInfo {
         width: 100px;
         height: 25px;
-        top: 4px;
+        top: 0;
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
         border: 2px solid #373737;
