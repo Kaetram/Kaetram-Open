@@ -227,7 +227,7 @@ define(['jquery'], function($) {
 
             self.cleanErrors();
 
-            if (!self.isMobile()) {
+            if (!Detect.isMobile()) {
                 if (self.parchmentAnimating)
                     return;
 
