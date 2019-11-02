@@ -1806,7 +1806,7 @@
 
     #profileDialog {
         bottom: 30px;
-        right: 60px;
+        right: 90px;
     }
 
     #profileDialog, .page {
@@ -1829,7 +1829,7 @@
         background: url('../img/1/characterdialogsheet.png') -248px 0;
         display: none;
 
-        right: 4px;
+        right: 34px;
         bottom: 30px;
     }
 
@@ -2237,6 +2237,14 @@
         padding-top: 4%;
         left: 65%;
         font-size: 6px;
+    }
+
+    #buttons {
+        right: 30px;
+    }
+
+    #inventory {
+        right: 40px;
     }
 
 }
