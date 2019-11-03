@@ -183,6 +183,23 @@ define(['jquery'], function($) {
             });
         },
 
+        isRegionNull: function(x, y) {
+            var self = this,
+                index = self.gridPositionToIndex(x, y),
+                isNull = true;
+
+            /*
+             * We verify the area surrounding the player for assurance.
+             */
+
+            for (var i = -1; i < 2; i++)
+                for (var j = -1; j < 2; j++)
+                    if (self.data[self.gridPositionToIndex(x + j, y + i)] !== 0)
+                        isNull = false;
+
+            return isNull;
+        },
+
         indexToGridPosition: function(index) {
             var self = this;
 
