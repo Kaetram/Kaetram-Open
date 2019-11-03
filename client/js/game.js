@@ -249,6 +249,8 @@ define(['./renderer/renderer', './utils/storage',
                 self.storage.save();
             }
 
+            if (self.map.isRegionNull(self.player.gridX, self.player.gridY))
+                self.socket.send(Packets.Region, [Packets.RegionOpcode.Reset]);
         },
 
         implementStorage: function() {

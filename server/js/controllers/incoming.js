@@ -115,6 +115,10 @@ class Incoming {
                     self.handleShop(message);
                     break;
 
+                case Packets.Region:
+                    self.handleRegion(message);
+                    break;
+
                 case Packets.Camera:
                     self.handleCamera(message);
                     break;
@@ -785,6 +789,19 @@ class Incoming {
                 log.info('Received Buy: ' + buyId + ' ' + amount);
 
                 //self.world.shops.buy(self.player, shopId, buyId, amount);
+
+                break;
+        }
+    }
+
+    handleRegion(message) {
+        let self = this,
+            opcode = message.shift();
+
+        switch (opcode) {
+            case Packets.RegionOpcode.Reset:
+
+                self.player.updateRegion(true);
 
                 break;
         }
