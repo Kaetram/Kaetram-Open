@@ -32,6 +32,9 @@ define(['../entity/character/character'], function(Character) {
             var self = this,
                 time = self.game.time;
 
+            if (!self.renderer.animateTiles)
+                return;
+
             self.renderer.forEachAnimatedTile(function(tile) {
                 tile.animate(time);
             });

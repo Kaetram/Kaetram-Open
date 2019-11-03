@@ -365,9 +365,8 @@ define(['jquery', './camera', './tile',
             if (entity.id !== self.game.player.id)
                 self.context.globalCompositeOperation = 'destination-over';
 
-            if (data.scale !== self.scale || data.sprite !== sprite) {
+            if (data.sprite !== sprite) {
 
-                data.scale = self.scale;
                 data.sprite = sprite;
 
                 data.width = sprite.width * self.superScaling;
@@ -413,44 +412,6 @@ define(['jquery', './camera', './tile',
 
             self.context.drawImage(sprite.image, x, y, data.width, data.height, data.ox, data.oy, data.width, data.height);
 
-            if (entity instanceof Character && !entity.dead && !entity.teleporting && entity.hasWeapon()) {
-                var weapon = self.entities.getSprite(entity.weapon.getString());
-
-                if (weapon) {
-                    if (!weapon.loaded)
-                        weapon.load();
-
-                    var weaponAnimationData = weapon.animationData[animation.name],
-                        index = frame.index < weaponAnimationData.length ? frame.index : frame.index % weaponAnimationData.length,
-                        weaponX = weapon.width * index * self.superScaling,
-                        weaponY = weapon.height * animation.row * self.superScaling,
-                        weaponWidth = weapon.width * self.superScaling,
-                        weaponHeight = weapon.height * self.superScaling;
-
-                    self.context.drawImage(weapon.image, weaponX, weaponY, weaponWidth, weaponHeight,
-                        weapon.offsetX * self.superScaling, weapon.offsetY * self.superScaling,
-                        weaponWidth, weaponHeight);
-                }
-            }
-
-            if (entity instanceof Item) {
-
-                var sparksAnimation = self.entities.sprites.sparksAnimation,
-                    sparksFrame = sparksAnimation.currentFrame;
-
-                if (data.scale !== self.scale) {
-
-                    data.sparksX = self.sparksSprite.width * sparksFrame.index * self.superScaling;
-                    data.sparksY = self.sparksSprite.height * sparksAnimation.row * self.superScaling;
-
-                    data.sparksWidth = self.sparksSprite.width * self.superScaling;
-                    data.sparksHeight = self.sparksSprite.height * self.superScaling;
-                }
-
-                self.context.drawImage(self.sparksSprite.image, data.sparksX, data.sparksY, data.sparksWidth, data.sparksHeight,
-                    0, 0, data.sparksWidth, data.sparksHeight);
-            }
-
             self.drawEntityFore(entity);
 
             self.context.restore();
@@ -479,25 +440,64 @@ define(['jquery', './camera', './tile',
              * having rendererd the entity
              */
 
-            if (entity.terror || entity.stunned || entity.critical || entity.explosion) {
-                var sprite = self.entities.getSprite(entity.getActiveEffect());
+             if (entity instanceof Character && !entity.dead && !entity.teleporting) {
+                 if (entity.hasWeapon()) {
+                     var weapon = self.entities.getSprite(entity.weapon.getString());
 
-                if (!sprite.loaded)
-                    sprite.load();
+                     if (weapon) {
+                         if (!weapon.loaded)
+                             weapon.load();
 
-                if (sprite) {
-                    var animation = entity.getEffectAnimation(),
-                        index = animation.currentFrame.index,
-                        x = sprite.width * index * self.superScaling,
-                        y = sprite.height * animation.row * self.superScaling,
-                        width = sprite.width * self.superScaling,
-                        height = sprite.height * self.superScaling,
-                        offsetX = sprite.offsetX * self.superScaling,
-                        offsetY = sprite.offsetY * self.superScaling;
+                         var animation = entity.currentAnimation,
+                             weaponAnimationData = weapon.animationData[animation.name],
+                             frame = entity.currentAnimation.currentFrame,
+                             index = frame.index < weaponAnimationData.length ? frame.index : frame.index % weaponAnimationData.length,
+                             weaponX = weapon.width * index * self.superScaling,
+                             weaponY = weapon.height * animation.row * self.superScaling,
+                             weaponWidth = weapon.width * self.superScaling,
+                             weaponHeight = weapon.height * self.superScaling;
 
-                    self.context.drawImage(sprite.image, x, y, width, height, offsetX, offsetY, width, height);
-                }
+                         self.context.drawImage(weapon.image, weaponX, weaponY, weaponWidth, weaponHeight,
+                             weapon.offsetX * self.superScaling, weapon.offsetY * self.superScaling,
+                             weaponWidth, weaponHeight);
+                     }
+                 }
+
+                 if (entity.terror || entity.stunned || entity.critical || entity.explosion) {
+                     var sprite = self.entities.getSprite(entity.getActiveEffect());
+
+                     if (!sprite.loaded)
+                         sprite.load();
+
+                     if (sprite) {
+                         var animation = entity.getEffectAnimation(),
+                             index = animation.currentFrame.index,
+                             x = sprite.width * index * self.superScaling,
+                             y = sprite.height * animation.row * self.superScaling,
+                             width = sprite.width * self.superScaling,
+                             height = sprite.height * self.superScaling,
+                             offsetX = sprite.offsetX * self.superScaling,
+                             offsetY = sprite.offsetY * self.superScaling;
+
+                         self.context.drawImage(sprite.image, x, y, width, height, offsetX, offsetY, width, height);
+                     }
+                 }
+
+             }
+
+            if (entity instanceof Item) {
+
+                var sparksAnimation = self.entities.sprites.sparksAnimation,
+                    sparksFrame = sparksAnimation.currentFrame,
+                    sparksX = self.sparksSprite.width * sparksFrame.index * self.superScaling,
+                    sparksY = self.sparksSprite.height * sparksAnimation.row * self.superScaling,
+                    sparksWidth = self.sparksSprite.width * self.superScaling,
+                    sparksHeight = self.sparksSprite.height * self.superScaling;
+
+                self.context.drawImage(self.sparksSprite.image, sparksX, sparksY, sparksWidth, sparksHeight,
+                    0, 0, sparksWidth, sparksHeight);
             }
+
 
         },
 
