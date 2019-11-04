@@ -760,13 +760,24 @@ class Incoming {
     handleClick(message) {
         let self = this,
             type = message.shift(),
-            isOpen = message.shift();
+            state = message.shift();
 
         switch (type) {
             case 'profile':
 
-                if (self.player.profileToggleCallback)
-                    self.player.profileToggleCallback(isOpen);
+                self.player.toggleProfile(state);
+
+                break;
+
+            case 'inventory':
+
+                self.player.toggleInventory(state);
+
+                break;
+
+            case 'warp':
+
+                self.player.toggleWarp(state);
 
                 break;
         }

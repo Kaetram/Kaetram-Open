@@ -99,7 +99,7 @@ class Commands {
                 introduction.update();
                 introduction.updatePointers();
 
-                self.player.updateRegion(true);
+                self.player.updateRegion();
                 self.player.save();
 
                 return;
@@ -373,7 +373,7 @@ class Commands {
                 log.info('Resetting regions...');
 
                 self.player.regionsLoaded = [];
-                self.player.updateRegion(true);
+                self.player.updateRegion();
 
                 return;
 

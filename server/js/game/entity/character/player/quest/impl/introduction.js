@@ -49,15 +49,16 @@ class Introduction extends Quest {
 
             self.lastNPC = npc;
 
-            npc.talk(conversation);
-
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
                 text: conversation
             }));
 
+            npc.talk(conversation);
+
             if (npc.talkIndex > conversation.length)
                 self.progress('talk');
+
         });
 
         self.player.onReady(function() {
@@ -87,6 +88,20 @@ class Introduction extends Quest {
 
         });
 
+        self.player.onInventory(function(isOpen) {
+
+            if (isOpen)
+                self.progress('click');
+
+        });
+
+        self.player.onWarp(function(isOpen) {
+
+            if (isOpen)
+                self.progress('click');
+
+        });
+
     }
 
     progress(type) {
@@ -104,22 +119,14 @@ class Introduction extends Quest {
         switch (type) {
             case 'talk':
 
-                if (self.stage === 2)
-                    self.player.updateRegion(true);
-
-                if (self.stage === 4)
-                    self.player.inventory.add({
-                        id: 248,
-                        count: 1,
-                        ability: -1,
-                        abilityLevel: -1
-                    });
+                if (self.stage === 6)
+                    self.player.updateRegion();
 
                 break;
         }
 
-
         self.stage++;
+
         self.clearPointers();
         self.resetTalkIndex(self.lastNPC);
 
@@ -161,7 +168,7 @@ class Introduction extends Quest {
 
         switch (door.id) {
             case 0:
-                return self.stage > 1;
+                return self.stage > 5;
         }
 
         return false;

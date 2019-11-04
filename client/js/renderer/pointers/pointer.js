@@ -35,7 +35,11 @@ define(function() {
             var self = this;
 
             clearInterval(self.blinkInterval);
-            self.element.remove();
+
+            if (self.type === Modules.Pointers.Button)
+                self.hide();
+            else
+                self.element.remove();
         },
 
         setPosition: function(x, y) {
@@ -46,11 +50,17 @@ define(function() {
         },
 
         show: function() {
-            this.element.css('display', 'block');
+            if (this.type === Modules.Pointers.Button)
+                this.element.addClass('active');
+            else
+                this.element.css('display', 'block');
         },
 
         hide: function() {
-            this.element.css('display', 'none');
+            if (this.type === Modules.Pointers.Button)
+                this.element.removeClass('active');
+            else
+                this.element.css('display', 'none');
         }
 
     });

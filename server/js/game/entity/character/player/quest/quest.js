@@ -85,15 +85,20 @@ class Quest {
         if (!pointer)
             return;
 
-        let opcode = pointer[0],
-            x = pointer[1],
-            y = pointer[2];
+        let opcode = pointer[0];
 
-        self.player.send(new Messages.Pointer(opcode, {
-            id: Utils.generateRandomId(),
-            x: x,
-            y: y
-        }));
+        if (opcode === 4)
+            self.player.send(new Messages.Pointer(opcode, {
+                id: Utils.generateRandomId(),
+                button: pointer[1]
+            }));
+        else
+            self.player.send(new Messages.Pointer(opcode, {
+                id: Utils.generateRandomId(),
+                x: pointer[1],
+                y: pointer[2]
+            }));
+
     }
 
     forceTalk(npc, message) {

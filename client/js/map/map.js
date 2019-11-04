@@ -86,8 +86,13 @@ define(['jquery'], function($) {
                 if (tile.isCollision && collisionIndex < 0) // Adding new collision tileIndex
                     self.collisions.push(tile.index);
 
-                if (!tile.isCollision && collisionIndex > 0) // Removing existing collision tileIndex
+                if (!tile.isCollision && collisionIndex > 0) { // Removing existing collision tileIndex
+                    var position = self.indexToGridPosition(tile.index + 1);
+
                     self.collisions.splice(collisionIndex, 1);
+
+                    self.grid[position.y][position.x] = 0;
+                }
             }
 
             self.saveRegionData();
