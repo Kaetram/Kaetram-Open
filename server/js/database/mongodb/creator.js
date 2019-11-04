@@ -182,7 +182,8 @@ class Creator {
                 lastLogin: player.lastLogin,
                 lastWarp: player.lastWarp,
                 guildName: player.guildName,
-                invisibleIds: player.formatInvisibles()
+                invisibleIds: player.formatInvisibles(),
+                userAgent: player.userAgent
             })
         });
     }

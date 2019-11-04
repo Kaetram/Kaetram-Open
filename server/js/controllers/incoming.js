@@ -201,7 +201,8 @@ class Incoming {
     handleReady(message) {
         let self = this,
             isReady = message.shift(),
-            preloadedData = message.shift();
+            preloadedData = message.shift(),
+            userAgent = message.shift();
 
         if (!isReady)
             return;
@@ -221,6 +222,14 @@ class Incoming {
 
         if (self.world.map.isOutOfBounds(self.player.x, self.player.y))
             self.player.setPosition(50, 89);
+
+        if (self.player.userAgent !== userAgent) {
+
+            self.player.userAgent = userAgent;
+
+            self.player.regionsLoaded = [];
+            self.player.updateRegion(true);
+        }
 
         self.player.save();
 
@@ -789,19 +798,6 @@ class Incoming {
                 log.info('Received Buy: ' + buyId + ' ' + amount);
 
                 //self.world.shops.buy(self.player, shopId, buyId, amount);
-
-                break;
-        }
-    }
-
-    handleRegion(message) {
-        let self = this,
-            opcode = message.shift();
-
-        switch (opcode) {
-            case Packets.RegionOpcode.Reset:
-
-                self.player.updateRegion(true);
 
                 break;
         }

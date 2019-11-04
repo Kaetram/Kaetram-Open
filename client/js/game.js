@@ -230,7 +230,7 @@ define(['./renderer/renderer', './utils/storage',
             self.player.setOrientation(self.storage.data.player.orientation);
             self.player.idle();
 
-            self.socket.send(Packets.Ready, [true, self.map.preloadedData]);
+            self.socket.send(Packets.Ready, [true, self.map.preloadedData, Detect.getUserAgent()]);
 
             self.playerHandler = new PlayerHandler(self, self.player);
 
@@ -249,8 +249,6 @@ define(['./renderer/renderer', './utils/storage',
                 self.storage.save();
             }
 
-            if (self.map.isRegionNull(self.player.gridX, self.player.gridY))
-                self.socket.send(Packets.Region, [Packets.RegionOpcode.Reset]);
         },
 
         implementStorage: function() {
