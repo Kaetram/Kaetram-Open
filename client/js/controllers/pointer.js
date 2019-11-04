@@ -13,19 +13,33 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
             self.container = $('#bubbles');
         },
 
-        create: function(id, type) {
+        create: function(id, type, name) {
             var self = this;
 
             if (id in self.pointers)
                 return;
 
-            var element = $('<div id="' + id +'" class="pointer"></div>');
+            switch (type) {
 
-            self.setSize(element);
+                case Modules.Pointers.Button:
 
-            self.container.append(element);
+                    self.pointers[id] = new Pointer(id, $('#' + name), type);
 
-            self.pointers[id] = new Pointer(id, element, type);
+                    break;
+
+                default:
+
+                    var element = $('<div id="' + id +'" class="pointer"></div>');
+
+                    self.setSize(element);
+
+                    self.container.append(element);
+
+                    self.pointers[id] = new Pointer(id, element, type);
+
+                    break;
+            }
+
         },
 
         resize: function() {

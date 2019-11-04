@@ -4,20 +4,23 @@
     "name": "A Great Start",
     "description": "Teaching you the basics about Kaetram",
     "npcs": [17, 8],
-    "stages": 5,
+    "stages": 25,
     "conversations": {
       "17": {
-        "0": ["Hello there!", "Welcome to Maearth.",
-              "I do not wish to keep you for too long",
-              "So let us proceed with a quick tutorial."],
-        "1": ["See that spooky arrow? You should click it.", "Trust me.. It's really the only way to progress...",
-              "Come on man.. Just do it please..", "I don't have a lot of time and there are other newbies here."],
+        "0": ["Hey there! Welcome to Kaetram.", "I am a fellow programmer, I make sure",
+            "this place runs accordingly.", "We are still under construction, so please be considerate of that.",
+            "First and foremost, let's get you accustomed to the interface."],
+        "1": ["Click the blinking button"],
+        "2": ["This is your inventory. As far as we know", "its size is limited.", "But who knows, there may be ways",
+              "of getting more space.."],
+        "3": ["Click the second blinking button"],
+        "4": ["This is your character menu.", "Here you can see information about your character.", "On the second page you can find",
+            "your completed achievements and quests.", "The third page shows your abilities and their levels."],
+        "5": ["Click the third blinking button"],
+        "6": ["This is the warp menu, here you can travel all", "across the realm.", "However, there is a level requirement for each warp.",
+            "I think that is all I can teach you for now adventurer.", "Please proceed through the exit below."],
+        "7": ["What, still here?"]
 
-        "2": ["Alright perfect, clearly you are capable of clicking things.", "This is the character menu.",
-              "It is pretty self explanatory so I do not want to drag this tutorial.",
-              "Please go to the next instructor to finish your quick tutorial."],
-
-        "3": ["Farewell Adventurer!"]
       },
 
       "8": {
@@ -32,15 +35,17 @@
 
     "pointers": {
       "0": [0, 14, 554],
-      "1": [2, 418, 228],
+      "1": [4, "inventoryButton"],
       "2": [0, 14, 554],
-      "3": [0, 15, 561],
-      "4": [0, 24, 18],
-      "5": [0, 20, 24]
+      "3": [4, "profileButton"],
+      "4": [0, 14, 554],
+      "5": [4, "warpButton"],
+      "6": [0, 14, 554],
+      "7": [0, 15, 561]
     },
 
     "doors": {
-      "3": [15, 560],
+      "7": [15, 560],
       "5": [20, 23]
     },
 
@@ -48,9 +53,11 @@
       "0": "talk",
       "1": "click",
       "2": "talk",
-      "3": "door",
+      "3": "click",
       "4": "talk",
-      "5": "door"
+      "5": "click",
+      "6": "talk",
+      "7": "door"
     }
   },
 

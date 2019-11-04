@@ -159,7 +159,8 @@ Packets.PointerOpcode = {
     Location: 0,
     NPC: 1,
     Relative: 2,
-    Remove: 3
+    Remove: 3,
+    Button: 4
 };
 
 Packets.ShopOpcode = {

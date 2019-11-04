@@ -61,6 +61,8 @@ define(['jquery', './container/container'], function($, Container) {
                     self.hide();
                 else
                     self.display();
+
+                self.game.socket.send(Packets.Click, ['inventory', self.button.hasClass('active')]);
             });
         },
 

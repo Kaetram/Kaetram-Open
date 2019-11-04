@@ -53,7 +53,7 @@ define(function() {
 
                     self.socket.send(Packets.Intro, [Packets.IntroOpcode.Register, username, password, email]);
                 } else if (self.app.isGuest()) {
-                    self.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n'])
+                    self.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
                 } else {
                     var loginInfo = self.app.loginFields,
                         name = loginInfo[0].val(),
@@ -252,6 +252,8 @@ define(function() {
 
                 entity.stop(true);
                 entity.frozen = true;
+
+                self.bubble.clean();
 
                 /**
                  * Teleporting an entity seems to cause a glitch with the
@@ -893,6 +895,12 @@ define(function() {
                     case Packets.PointerOpcode.Remove:
 
                         self.pointer.clean();
+
+                        break;
+
+                    case Packets.PointerOpcode.Button:
+
+                        self.pointer.create(info.id, Modules.Pointers.Button, info.button);
 
                         break;
                 }

@@ -203,9 +203,12 @@ class Player extends Character {
         });
 
         self.quests.onReady(function() {
+
             self.send(new Messages.Quest(Packets.QuestOpcode.Batch, self.quests.getData()));
 
+            /* Update region here because we receive quest info */
             self.updateRegion();
+
         });
     }
 
@@ -576,7 +579,25 @@ class Player extends Character {
         self.profileDialogOpen = state;
 
         if (self.profileToggleCallback)
-            self.profileToggleCallback();
+            self.profileToggleCallback(state);
+    }
+
+    toggleInventory(state) {
+        let self = this;
+
+        self.inventoryOpen = state;
+
+        if (self.inventoryToggleCallback)
+            self.inventoryToggleCallback(state);
+    }
+
+    toggleWarp(state) {
+        let self = this;
+
+        self.warpOpen = state;
+
+        if (self.warpToggleCallback)
+            self.warpToggleCallback(state);
     }
 
     getMana() {
@@ -1087,6 +1108,14 @@ class Player extends Character {
 
     onProfile(callback) {
         this.profileToggleCallback = callback;
+    }
+
+    onInventory(callback) {
+        this.inventoryToggleCallback = callback;
+    }
+
+    onWarp(callback) {
+        this.warpToggleCallback = callback;
     }
 
     onReady(callback) {

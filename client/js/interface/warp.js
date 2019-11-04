@@ -25,6 +25,8 @@ define(['jquery'], function($) {
                 self.game.interface.hideAll();
 
                 self.toggle();
+
+                self.game.socket.send(Packets.Click, ['warp', self.button.hasClass('active')]);
             });
 
             self.close.click(function() {

@@ -181,6 +181,8 @@ class Region {
             tileData = self.getRegionData(region, player, force),
             dynamicTiles = player.doors.getAllTiles();
 
+
+        // Send dynamic tiles alongside the region
         for (let i = 0; i < tileData.length; i++) {
             let primaryTile = tileData[i],
                 index = dynamicTiles.indexes.indexOf(primaryTile.index);
@@ -190,6 +192,16 @@ class Region {
                 tileData[i].isCollision = dynamicTiles.collisions[index];
             }
         }
+
+        // Send dynamic tiles independently
+        if (tileData.length < 1)
+            for (let i = 0; i < dynamicTiles.indexes.length; i++) {
+                tileData[i] = {};
+
+                tileData[i].index = dynamicTiles.indexes[i];
+                tileData[i].data = dynamicTiles.data[i];
+                tileData[i].isCollision = dynamicTiles.collisions[i];
+            }
 
         //No need to send empty data...
         if (tileData.length > 0)
