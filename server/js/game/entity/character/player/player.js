@@ -53,6 +53,7 @@ class Player extends Character {
         self.newRegion = false;
 
         self.team = null;
+        self.userAgent = null;
 
         self.disconnectTimeout = null;
         self.timeoutDuration = 1000 * 60 * 10; //10 minutes
@@ -84,6 +85,7 @@ class Player extends Character {
 
         self.instanced = false;
         self.visible = true;
+
         self.regionsLoaded = [];
         self.lightsLoaded = [];
     }
@@ -110,6 +112,8 @@ class Player extends Character {
 
         if (data.invisibleIds)
             self.invisiblesIds = data.invisibleIds.split(' ');
+
+        self.userAgent = data.userAgent;
 
         let armour = data.armour,
             weapon = data.weapon,
