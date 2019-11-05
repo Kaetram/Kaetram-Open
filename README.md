@@ -2,6 +2,8 @@
 
 Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.
 
+Discord - https://discord.gg/MmbGAaw
+
 ![Demo](https://i.imgur.com/M7N8RRp.png)
 
 ### Features:
