@@ -332,13 +332,13 @@ html [type="button"],
 }
 
 #about p {
-    width: 50%;
+    width: 80%;
     margin-left: 10%;
     margin-top: 5%;
 }
 
 #close-about {
-    margin-top: 20%;
+    margin-top: 10%;
 }
 
 @media only screen and (min-width: 1501px) {
@@ -1025,6 +1025,10 @@ html [type="button"],
         border-radius: 2px;
         height: 8px;
         width: 5px;
+    }
+
+    #about h1, #credits h1 {
+        font-size: 16px;
     }
 
 }

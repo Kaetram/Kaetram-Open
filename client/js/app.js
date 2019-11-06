@@ -34,7 +34,10 @@ define(['jquery'], function($) {
 
             self.about = $('#toggle-about');
             self.credits = $('#toggle-credits');
+            self.discord = $('#toggle-discord');
             self.git = $('#toggle-git');
+
+            self.footer = $('footer');
 
             self.loginFields = [];
             self.registerFields = [];
@@ -84,6 +87,10 @@ define(['jquery'], function($) {
 
             self.credits.click(function() {
                 self.displayScroll('credits');
+            });
+
+            self.discord.click(function() {
+                window.open('https://discord.gg/MmbGAaw');
             });
 
             self.git.click(function() {
@@ -203,7 +210,11 @@ define(['jquery'], function($) {
             setTimeout(function() {
                 self.body.addClass('game');
                 self.body.addClass('started');
+
                 self.body.removeClass('intro');
+
+                self.footer.hide();
+
             }, 500);
         },
 
@@ -213,6 +224,8 @@ define(['jquery'], function($) {
             self.body.removeClass('game');
             self.body.removeClass('started');
             self.body.addClass('intro');
+
+            self.footer.show();
         },
 
         showDeath: function() {
