@@ -17,7 +17,7 @@ class Quest {
         self.description = data.description;
 
         self.stage = 0;
-        self.subStage = {};
+        self.subStages = {};
     }
 
     finish() {
@@ -135,7 +135,7 @@ class Quest {
     }
 
     addSubStage(key, value) {
-        this.subStage[key] = value;
+        this.subStages[key] = value;
     }
 
 
@@ -192,7 +192,7 @@ class Quest {
     }
 
     getSubStage(key) {
-        return this.subStage[key];
+        return this.subStages[key];
     }
 
     getItemReward() {

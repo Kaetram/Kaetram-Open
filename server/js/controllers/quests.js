@@ -39,13 +39,14 @@ class Quests {
         });
     }
 
-    updateQuests(ids, stages) {
+    updateQuests(ids, stages, subStages) {
         let self = this;
 
         if (!ids || !stages) {
             _.each(self.quests, function(quest) {
                 quest.load(0);
             });
+
             return;
         }
 
@@ -77,17 +78,26 @@ class Quests {
     getQuests() {
         let self = this,
             ids = '',
-            stages = '';
+            stages = '',
+            subStages = '';
 
         for (let id = 0; id < self.getQuestSize(); id++) {
+            var quest = self.quests[id];
+
             ids += id + ' ';
-            stages += self.quests[id].stage + ' ';
+            stages += quest.stage + ' ';
+
+            _.each(quest.subStages, (value, key) => {
+                subStages += id + ':' + key + '-' + value + ' '
+            });
+
         }
 
         return {
             username: self.player.username,
             ids: ids,
-            stages: stages
+            stages: stages,
+            subStages: subStages
         }
     }
 

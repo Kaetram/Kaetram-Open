@@ -31,17 +31,17 @@ class Introduction extends Quest {
         else
             self.stage = stage;
 
-        self.loadCallbacks();
-    }
-
-    loadCallbacks() {
-        let self = this;
-
         if (self.stage >= 9999)
             return;
 
         self.updatePointers();
         self.toggleChat();
+
+        self.loadCallbacks();
+    }
+
+    loadCallbacks() {
+        let self = this;
 
         self.onNPCTalk(function(npc) {
 
