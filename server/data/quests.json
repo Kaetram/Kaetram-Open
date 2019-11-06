@@ -5,6 +5,9 @@
     "description": "Teaching you the basics about Kaetram",
     "npcs": [17, 8],
     "stages": 25,
+    "subStages": {
+        "8": "rat:5"
+    },
     "conversations": {
       "17": {
         "0": ["Hey there! Welcome to Kaetram.", "I am a fellow programmer, I make sure",
