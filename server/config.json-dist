@@ -27,5 +27,7 @@
 
   "forceCollisions": false,
   "administrators": [],
-  "moderators": []
+  "moderators": [],
+
+  "tutorialEnabled": false
 }
