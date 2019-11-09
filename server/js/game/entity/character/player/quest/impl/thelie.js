@@ -17,14 +17,7 @@ class Thelie extends Quest {
     load(stage) {
         let self = this;
 
-        if (stage)
-            self.update();
-        else
-            self.stage = stage;
-    }
-
-    update() {
-        this.player.save();
+        super.load(stage);
     }
 
 }

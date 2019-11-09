@@ -26,16 +26,13 @@ class Introduction extends Quest {
             return;
         }
 
-        if (!stage)
-            self.update();
-        else
-            self.stage = stage;
-
-        if (self.stage >= 9999)
-            return;
+        super.load(stage);
 
         self.updatePointers();
         self.toggleChat();
+
+        if (self.stage > 9998)
+            return;
 
         self.loadCallbacks();
     }
