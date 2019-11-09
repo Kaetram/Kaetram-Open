@@ -20,6 +20,16 @@ class Quest {
         self.subStages = {};
     }
 
+    load(stage) {
+        let self = this;
+
+        if (!stage)
+            self.update();
+        else
+            self.stage = stage;
+
+    }
+
     finish() {
         let self = this;
 

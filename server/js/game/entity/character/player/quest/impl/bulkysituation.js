@@ -5,34 +5,31 @@ let Quest = require('../quest'),
     Messages = require('../../../../../../network/messages');
 
 class BulkySituation extends Quest {
-    
+
     constructor(player, data) {
         super(player, data);
-        
+
         let self = this;
-        
+
         self.player = player;
         self.data = data;
-        
+
         self.lastNPC = null;
     }
 
     load(stage) {
         let self = this;
 
-        if (!stage)
-            self.update();
-        else
-            self.stage = stage;
+        super.load(stage);
+
+        if (self.stage > 9998)
+            return;
 
         self.loadCallbacks();
     }
 
     loadCallbacks() {
         let self = this;
-
-        if (self.stage > 9999)
-            return;
 
         self.onNPCTalk(function(npc) {
 
@@ -97,7 +94,7 @@ class BulkySituation extends Quest {
     hasRequirement() {
         return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());
     }
-    
+
 }
 
 module.exports = BulkySituation;
