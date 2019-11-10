@@ -1,20 +1,19 @@
 /* global module */
 
-let Item = require('../../js/game/entity/objects/item.js'),
-    Utils = require('../../js/util/utils'),
-    Items = require('../../js/util/items');
+let Items = require('../../js/util/items'),
+    Utils = require('../../js/util/utils');
 
-class Flask extends Item {
+class Flask {
 
-    constructor(id, instance, x, y) {
-        super(id, instance, x, y);
-
+    constructor() {
         let self = this;
+
+        self.id = 190;
 
         self.healAmount = 0;
         self.manaAmount = 0;
 
-        let customData = Items.getCustomData(id);
+        let customData = Items.getCustomData(self.id);
 
         if (customData) {
             self.healAmount = customData.healAmount ? customData.healAmount : 0;

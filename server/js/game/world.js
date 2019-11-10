@@ -376,14 +376,7 @@ class World {
     }
 
     createItem(id, instance, x, y) {
-        let item;
-
-        if (Items.hasPlugin(id))
-            item = new (Items.isNewPlugin(id))(id, instance, x, y);
-        else
-            item = new Item(id, instance, x, y);
-
-        return item;
+        return new Item(id, instance, x, y);;
     }
 
     dropItem(id, count, x, y) {
