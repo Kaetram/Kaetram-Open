@@ -99,6 +99,12 @@ class Introduction extends Quest {
 
         });
 
+        self.player.onKill((character) => {
+            if (self.data.kill[self.stage] === character.id)
+                self.progress('kill');
+
+        });
+
     }
 
     progress(type) {
@@ -120,6 +126,28 @@ class Introduction extends Quest {
                     self.player.updateRegion();
 
                 break;
+
+            case 'door':
+
+                if (self.stage === 7)
+                    self.player.inventory.add({
+                        id: 248,
+                        count: 1,
+                        ability: -1,
+                        abilityLevel: -1
+                    });
+
+                else if (self.stage === 15)
+                    self.player.inventory.add({
+                        id: 87,
+                        count: 1,
+                        ability: -1,
+                        abilityLevel: -1
+                    });
+
+                break;
+
+
         }
 
         self.stage++;

@@ -75,6 +75,11 @@ define(['jquery', '../interface/inventory',
              * has two containers. The bank and the inventory.
              */
 
+            if (!self.inventory) {
+                log.error('Inventory not initialized.');
+                return;
+            }
+
             self.bank = new Bank(self.game, self.inventory.container, size);
 
             self.bank.load(data);

@@ -39,7 +39,7 @@ class Quests {
         });
     }
 
-    updateQuests(ids, stages, subStages) {
+    updateQuests(ids, stages) {
         let self = this;
 
         if (!ids || !stages) {
@@ -53,6 +53,9 @@ class Quests {
         for (let id = 0; id < ids.length; id++)
             if (!isNaN(parseInt(ids[id])) && self.quests[id])
                 self.quests[id].load(stages[id]);
+
+        if (self.readyCallback)
+            self.readyCallback();
     }
 
     updateAchievements(ids, progress) {
@@ -61,9 +64,6 @@ class Quests {
         for (let id = 0; id < ids.length; id++)
             if (!isNaN(parseInt(ids[id])) && self.achievements[id])
                 self.achievements[id].setProgress(progress[id]);
-
-        if (self.readyCallback)
-            self.readyCallback();
     }
 
     getQuest(id) {
@@ -78,8 +78,7 @@ class Quests {
     getQuests() {
         let self = this,
             ids = '',
-            stages = '',
-            subStages = '';
+            stages = '';
 
         for (let id = 0; id < self.getQuestSize(); id++) {
             var quest = self.quests[id];
@@ -87,17 +86,12 @@ class Quests {
             ids += id + ' ';
             stages += quest.stage + ' ';
 
-            _.each(quest.subStages, (value, key) => {
-                subStages += id + ':' + key + '-' + value + ' '
-            });
-
         }
 
         return {
             username: self.player.username,
             ids: ids,
-            stages: stages,
-            subStages: subStages
+            stages: stages
         }
     }
 

@@ -2,7 +2,8 @@
 
 let Messages = require('../../../../../network/messages'),
     Packets = require('../../../../../network/packets'),
-    Utils = require('../../../../../util/utils');
+    Utils = require('../../../../../util/utils'),
+    _ = require('underscore');
 
 class Quest {
 
@@ -17,7 +18,6 @@ class Quest {
         self.description = data.description;
 
         self.stage = 0;
-        self.subStages = {};
     }
 
     load(stage) {
@@ -27,7 +27,6 @@ class Quest {
             self.update();
         else
             self.stage = stage;
-
     }
 
     finish() {
@@ -144,11 +143,6 @@ class Quest {
         }));
     }
 
-    addSubStage(key, value) {
-        this.subStages[key] = value;
-    }
-
-
     clearPointers() {
         this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}))
     }
@@ -199,10 +193,6 @@ class Quest {
 
     getStage() {
         return this.stage;
-    }
-
-    getSubStage(key) {
-        return this.subStages[key];
     }
 
     getItemReward() {

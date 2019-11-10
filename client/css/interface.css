@@ -432,6 +432,8 @@
     display: none;
 
     cursor: default;
+
+    z-index: 100;
 }
 
 .mapButton {
@@ -1315,7 +1317,7 @@
 
     #armourSlot {
         left: 208px;
-        top: 236px;
+        top: 238px;
     }
 
     #pendantSlot {
