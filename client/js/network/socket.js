@@ -35,7 +35,11 @@ define(['./packets', './messages'], function(Packets, Messages) {
                 self.listening = false;
 
                 self.game.app.toggleLogin(false);
-                self.game.app.sendError(null, 'Could not connect to the game server.');
+
+                if (self.game.isDebug())
+                    self.game.app.sendError(null, 'Couldn\'t connect to ' + self.config.ip + ':' + self.config.port);
+                else
+                    self.game.app.sendError(null, 'Could not connect to the game server.');
             });
 
             self.connection.on('connect', function() {
