@@ -19,7 +19,7 @@ class ChestAreas {
     load() {
         let self = this;
 
-        _.each(map.chestAreas, function(m) {
+        _.each(map.chestAreas, (m) => {
             let chestArea = new Area(m.id, m.x, m.y, m.width, m.height);
 
             chestArea.maxEntities = m.entities;
@@ -29,11 +29,11 @@ class ChestAreas {
 
             self.chestAreas.push(chestArea);
 
-            chestArea.onEmpty(function() {
+            chestArea.onEmpty(() => {
                 self.spawnChest(this);
             });
 
-            chestArea.onSpawn(function() {
+            chestArea.onSpawn(() => {
                 self.removeChest(this);
             });
 

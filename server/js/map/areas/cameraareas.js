@@ -18,7 +18,7 @@ class CameraAreas {
         let self = this,
             list = map.cameraAreas;
 
-        _.each(list, function(o) {
+        _.each(list, (o) => {
             let cameraArea = new Area(o.id, o.x, o.y, o.width, o.height);
 
             cameraArea.type = o.type;

@@ -66,7 +66,7 @@ class PirateCaptain extends Combat {
                 withAnimation: true
             }));
 
-        self.forEachAttacker(function(attacker) {
+        self.forEachAttacker((attacker) => {
             attacker.removeTarget();
         });
 

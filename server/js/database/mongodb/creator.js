@@ -12,7 +12,7 @@ class Creator {
     save(player) {
         let self = this;
 
-        self.database.getDatabase(function(database) {
+        self.database.getDatabase((database) => {
             let playerData = database.collection('player_data'),
                 playerEquipment = database.collection('player_equipment'),
                 playerQuests = database.collection('player_quests'),
@@ -29,19 +29,19 @@ class Creator {
             self.savePlayerBank(playerBank, player);
             self.savePlayerRegions(playerRegions, player);
             self.savePlayerAbilities(playerAbilities, player);
-            self.savePlayerInventory(playerInventory, player, function() {
+            self.savePlayerInventory(playerInventory, player, () => {
                 database.close();
             });
         });
     }
 
     savePlayerData(collection, player) {
-        Creator.getPlayerData(player, function(data) {
+        Creator.getPlayerData(player, (data) => {
             collection.updateOne({
                 username: player.username
             }, { $set: data }, {
                 upsert: true
-            }, function(error, result) {
+            }, (error, result) => {
                 if (error)
                     throw error;
 
@@ -56,7 +56,7 @@ class Creator {
             username: player.username
         }, { $set: Creator.getPlayerEquipment(player) }, {
             upsert: true
-        }, function(error, result) {
+        }, (error, result) => {
             if (error)
                 throw error;
 
@@ -70,7 +70,7 @@ class Creator {
             username: player.username
         }, { $set: player.quests.getQuests() }, {
             upsert: true
-        }, function(error, result) {
+        }, (error, result) => {
             if (error)
                 throw error;
 
@@ -85,7 +85,7 @@ class Creator {
             username: player.username
         }, { $set: player.quests.getAchievements() }, {
             upsert: true
-        }, function(error, result) {
+        }, (error, result) => {
             if (error)
                 throw error;
 
@@ -100,7 +100,7 @@ class Creator {
             username: player.username
         }, { $set: player.bank.getArray() }, {
             upsert: true
-        }, function(error, result) {
+        }, (error, result) => {
             if (error)
                 throw error;
 
@@ -114,7 +114,7 @@ class Creator {
             username: player.username
         }, { $set: { regions: player.regionsLoaded.toString(), gameVersion: config.gver } }, {
             upsert: true
-        }, function(error, result) {
+        }, (error, result) => {
             if (error) throw error;
 
             if (result)
@@ -127,7 +127,7 @@ class Creator {
             username: player.username
         }, { $set: player.abilities.getArray() }, {
             upsert: true
-        }, function(error, result) {
+        }, (error, result) => {
             if (error)
                 throw error;
 
@@ -141,7 +141,7 @@ class Creator {
             username: player.username
         }, { $set: player.inventory.getArray() }, {
             upsert: true
-        }, function(error, result) {
+        }, (error, result) => {
             if (error)
                 throw error;
 
@@ -151,7 +151,7 @@ class Creator {
     }
 
     static getPasswordHash(password, callback) {
-        bcrypt.hash(password, 10, function(error, hash) {
+        bcrypt.hash(password, 10, (error, hash) => {
             if (error) throw error;
 
             callback(hash);
@@ -159,7 +159,7 @@ class Creator {
     }
 
     static getPlayerData(player, callback) {
-        Creator.getPasswordHash(player.password, function(hash) {
+        Creator.getPasswordHash(player.password, (hash) => {
             callback({
                 username: player.username,
                 password: hash,

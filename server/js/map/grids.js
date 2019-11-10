@@ -64,7 +64,7 @@ class Grids {
                 let pos = self.entityGrid[entity.y + i][entity.x + j];
 
                 if (_.size(pos) > 0) {
-                    _.each(pos, function (pEntity) {
+                    _.each(pos,  (pEntity) => {
 
                         if (!include && pEntity.instance !== entity.instance)
                             entities.push(pEntity);

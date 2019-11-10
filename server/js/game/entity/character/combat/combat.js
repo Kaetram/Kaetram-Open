@@ -38,13 +38,13 @@ class Combat {
 
         self.cleanTimeout = null;
 
-        self.character.onSubAoE(function(radius, hasTerror) {
+        self.character.onSubAoE((radius, hasTerror) => {
 
             self.dealAoE(radius, hasTerror);
 
         });
 
-        self.character.onDamage(function(target, hitInfo) {
+        self.character.onDamage((target, hitInfo) => {
 
             if (self.isPlayer() && self.character.hasBreakableWeapon() && Formulas.getWeaponBreak(self.character, target))
                 self.character.breakWeapon();
@@ -56,7 +56,7 @@ class Combat {
                 if (target.stunTimeout)
                     clearTimeout(target.stunTimeout);
 
-                target.stunTimeout = setTimeout(function() {
+                target.stunTimeout = setTimeout(() => {
 
                     target.setStun(false);
 
@@ -86,11 +86,11 @@ class Combat {
 
         self.lastAction = new Date().getTime();
 
-        self.attackLoop = setInterval(function() { self.parseAttack(); }, self.character.attackRate);
+        self.attackLoop = setInterval(() => { self.parseAttack(); }, self.character.attackRate);
 
-        self.followLoop = setInterval(function() { self.parseFollow(); }, 400);
+        self.followLoop = setInterval(() => { self.parseFollow(); }, 400);
 
-        self.checkLoop = setInterval(function() { self.parseCheck(); }, 1000);
+        self.checkLoop = setInterval(() => { self.parseCheck(); }, 1000);
 
         self.started = true;
     }
@@ -202,7 +202,7 @@ class Combat {
 
         let entities = self.world.getGrids().getSurroundingEntities(self.character, radius);
 
-        _.each(entities, function(entity) {
+        _.each(entities, (entity) => {
 
             let hitData = new Hit(Modules.Hits.Damage, Formulas.getAoEDamage(self.character, entity)).getData();
 
@@ -341,7 +341,7 @@ class Combat {
             closest = null,
             lowestDistance = 100;
 
-        self.forEachAttacker(function(attacker) {
+        self.forEachAttacker((attacker) => {
             let distance = self.character.getDistance(attacker);
 
             if (distance < lowestDistance)
@@ -456,7 +456,7 @@ class Combat {
     }
 
     forEachAttacker(callback) {
-        _.each(this.attackers, function(attacker) {
+        _.each(this.attackers, (attacker) => {
             callback(attacker);
         });
     }

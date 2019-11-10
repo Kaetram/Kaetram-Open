@@ -67,7 +67,7 @@ class World {
          */
 
         self.map = new Map(self);
-        self.map.isReady(function() {
+        self.map.isReady(() => {
 
             log.info('The map has been successfully loaded!');
 
@@ -103,7 +103,7 @@ class World {
     tick() {
         let self = this;
 
-        setInterval(function() {
+        setInterval(() => {
 
             self.network.parsePackets();
             self.region.parseRegions();
@@ -166,7 +166,7 @@ class World {
             if (attacker.type === 'player')
                 attacker.killCharacter(target);
 
-            target.combat.forEachAttacker(function(attacker) {
+            target.combat.forEachAttacker((attacker) => {
                 attacker.removeTarget();
             });
 
@@ -256,7 +256,7 @@ class World {
         let self = this,
             entities = 0;
 
-        _.each(self.map.staticEntities, function(key, tileIndex) {
+        _.each(self.map.staticEntities, (key, tileIndex) => {
             let isMob = !!Mobs.Properties[key],
                 isNpc = !!NPCs.Properties[key],
                 isItem = !!Items.Data[key],
@@ -281,7 +281,7 @@ class World {
                 if (Mobs.Properties[key].hiddenName)
                     mob.hiddenName = Mobs.Properties[key].hiddenName;
 
-                mob.onRespawn(function() {
+                mob.onRespawn(() => {
 
                     mob.dead = false;
 
@@ -314,7 +314,7 @@ class World {
         let self = this,
             chests = 0;
 
-        _.each(self.map.chests, function(info) {
+        _.each(self.map.chests, (info) => {
 
             self.spawnChest(info.i, info.x, info.y, true);
 
@@ -353,7 +353,7 @@ class World {
 
         }
 
-        chest.onOpen(function() {
+        chest.onOpen(() => {
 
             /**
              * Pretty simple concept, detect when the player opens the chest
@@ -402,13 +402,13 @@ class World {
             log.info(`Item Region - ${item.region}`);
         }
 
-        item.onBlink(function() {
+        item.onBlink(() => {
             self.push(Packets.PushOpcode.Broadcast, {
                 message: new Messages.Blink(item.intsance)
             });
         });
 
-        item.onDespawn(function() {
+        item.onDespawn(() => {
             self.removeItem(item);
         });
     }
@@ -493,7 +493,7 @@ class World {
         if (entity.x > 0 && entity.y > 0)
             self.getGrids().addToEntityGrid(entity, entity.x, entity.y);
 
-        entity.onSetPosition(function() {
+        entity.onSetPosition(() => {
 
             self.getGrids().updateEntityPosition(entity);
 
@@ -528,7 +528,7 @@ class World {
 
             entity.getCombat().setWorld(self);
 
-            entity.onStunned(function(stun) {
+            entity.onStunned((stun) => {
 
                 self.push(Packets.PushOpcode.Regions, {
                     regionId: entity.region,
@@ -573,7 +573,7 @@ class World {
 
         mob.addToChestArea(self.getChestAreas());
 
-        mob.onHit(function(attacker) {
+        mob.onHit((attacker) => {
             if (mob.isDead() || mob.combat.started)
                 return;
 
@@ -625,7 +625,7 @@ class World {
     cleanCombat(entity) {
         let self = this;
 
-        _.each(this.entities, function(oEntity) {
+        _.each(this.entities, (oEntity) => {
             if (oEntity instanceof Character && oEntity.combat.hasAttacker(entity))
                 oEntity.combat.removeAttacker(entity);
 
@@ -723,7 +723,7 @@ class World {
     }
 
     forEachPlayer(callback) {
-        _.each(this.players, function(player) {
+        _.each(this.players, (player) => {
             callback(player);
         });
     }

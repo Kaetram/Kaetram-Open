@@ -44,11 +44,11 @@ class Item extends Entity {
     despawn() {
         let self = this;
 
-        self.blinkTimeout = setTimeout(function() {
+        self.blinkTimeout = setTimeout(() => {
             if (self.blinkCallback)
                 self.blinkCallback();
 
-            self.despawnTimeout = setTimeout(function() {
+            self.despawnTimeout = setTimeout(() => {
                 if (self.despawnCallback)
                     self.despawnCallback();
 
@@ -60,7 +60,7 @@ class Item extends Entity {
     respawn() {
         let self = this;
 
-        setTimeout(function() {
+        setTimeout(() => {
             if (self.respawnCallback)
                 self.respawnCallback();
 

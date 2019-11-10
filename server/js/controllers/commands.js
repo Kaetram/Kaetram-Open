@@ -276,7 +276,7 @@ class Commands {
 
             case 'teleall':
 
-                _.each(self.world.players, function(player) {
+                _.each(self.world.players, (player) => {
                     player.teleport(self.player.x, self.player.y);
                 });
 

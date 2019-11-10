@@ -24,7 +24,7 @@ class Quests {
         let self = this,
             questCount = 0;
 
-        _.each(QuestData, function(quest) {
+        _.each(QuestData, (quest) => {
 
             if (questCount === 0)
                 self.quests[quest.id] = new Introduction(self.player, quest);
@@ -34,7 +34,7 @@ class Quests {
             questCount++;
         });
 
-        _.each(AchievementData, function(achievement) {
+        _.each(AchievementData, (achievement) => {
             self.achievements[achievement.id] = new Achievement(achievement.id, self.player);
         });
     }
@@ -43,7 +43,7 @@ class Quests {
         let self = this;
 
         if (!ids || !stages) {
-            _.each(self.quests, function(quest) {
+            _.each(self.quests, (quest) => {
                 quest.load(0);
             });
 
@@ -123,11 +123,11 @@ class Quests {
             quests = [],
             achievements = [];
 
-        self.forEachQuest(function(quest) {
+        self.forEachQuest((quest) => {
             quests.push(quest.getInfo());
         });
 
-        self.forEachAchievement(function(achievement) {
+        self.forEachAchievement((achievement) => {
             achievements.push(achievement.getInfo());
         });
 
@@ -138,13 +138,13 @@ class Quests {
     }
 
     forEachQuest(callback) {
-        _.each(this.quests, function(quest) {
+        _.each(this.quests, (quest) => {
             callback(quest);
         });
     }
 
     forEachAchievement(callback) {
-        _.each(this.achievements, function(achievement) {
+        _.each(this.achievements, (achievement) => {
             callback(achievement);
         });
     }

@@ -5,7 +5,7 @@ let NPCs = {};
 NPCs.Properties = {};
 NPCs.Ids = {};
 
-NPCs.idToString = function(id) {
+NPCs.idToString = (id) => {
 
     if (id in NPCs.Ids)
         return NPCs.Ids[id].key;
@@ -13,7 +13,7 @@ NPCs.idToString = function(id) {
     return null;
 };
 
-NPCs.idToName = function(id) {
+NPCs.idToName = (id) => {
 
     if (id in NPCs.Ids)
         return NPCs.Ids[id].name;
@@ -21,7 +21,7 @@ NPCs.idToName = function(id) {
     return null;
 };
 
-NPCs.getText = function(id) {
+NPCs.getText = (id) => {
 
     if (id in NPCs.Ids)
         return NPCs.Ids[id].text;
@@ -29,7 +29,7 @@ NPCs.getText = function(id) {
     return null;
 };
 
-NPCs.getType = function(id) {
+NPCs.getType = (id) => {
 
     if (id in NPCs.Ids)
         return NPCs.Ids[id].type;

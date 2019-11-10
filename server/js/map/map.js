@@ -55,7 +55,7 @@ class Map {
 
         self.ready = true;
 
-        self.readyInterval = setInterval(function() {
+        self.readyInterval = setInterval(() => {
             if (!self.world.ready)
                 if (self.readyCallback)
                     self.readyCallback();
@@ -98,7 +98,7 @@ class Map {
 
         self.doors = {};
 
-        _.each(map.doors, function(door) {
+        _.each(map.doors, (door) => {
             let orientation;
 
             switch (door.o) {

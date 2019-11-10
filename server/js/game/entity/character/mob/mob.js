@@ -138,7 +138,7 @@ class Mob extends Character {
 
     addToChestArea(chestAreas) {
         let self = this,
-            area = _.find(chestAreas, function(area) { return area.contains(self.x, self.y); });
+            area = _.find(chestAreas, (area) => { return area.contains(self.x, self.y); });
 
         if (area)
             area.addEntity(self);
@@ -156,7 +156,7 @@ class Mob extends Character {
         if (!self.static || self.respawnDelay === -1)
             return;
 
-        setTimeout(function() {
+        setTimeout(() => {
             if (self.respawnCallback)
                 self.respawnCallback();
 

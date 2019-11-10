@@ -45,7 +45,7 @@ class Abilities {
     }
 
     hasAbility(ability) {
-        _.each(this.abilities, function(uAbility) {
+        _.each(this.abilities, (uAbility) => {
             if (uAbility.name === ability.name)
                 return true;
         });
@@ -63,7 +63,7 @@ class Abilities {
             abilityLevels = '',
             shortcuts = self.shortcuts.toString();
 
-        _.each(self.abilities, function(ability) {
+        _.each(self.abilities, (ability) => {
             abilities += ability.name;
             abilityLevels += ability.level;
         });
