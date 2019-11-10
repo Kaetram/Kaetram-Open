@@ -15,17 +15,24 @@ class Handler {
         self.world = player.world;
         self.map = player.world.map;
 
+        self.updateInterval = 400; //400 milliseconds
+
         self.load();
     }
 
     load() {
         let self = this;
 
+        self.player.updateInterval = setInterval(() => {
+
+            self.detectAggro();
+
+        }, 400);
+
         self.player.onMovement((x, y) => {
 
             self.player.checkRegions();
 
-            self.detectAggro();
             self.detectPVP(x, y);
             self.detectMusic(x, y);
             self.detectOverlay(x, y);
