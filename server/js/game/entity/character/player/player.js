@@ -343,11 +343,12 @@ class Player extends Character {
 
     eat(id) {
         let self = this,
-            type, amount;
+            item = Items.getPlugin(id);
 
-        if (Items.hasPlugin(id))
-            (new (Items.isNewPlugin(id))(id, -1, self.x,self.y)).onUse(self);
+        if (!item)
+            return;
 
+        new (item)().onUse(self);
     }
 
     equip(string, count, ability, abilityLevel) {

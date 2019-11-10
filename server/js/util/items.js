@@ -15,18 +15,23 @@ Items.getData = (name) => {
     return 'null';
 };
 
-Items.hasPlugin = (id) => {
-    if(id in Items.Ids)
-        if (Items.Ids[id].plugin in Items.Plugins)
-            return true;
+Items.hasPlugin = (string) => {
+    if (Number.isInteger(string))
+      string = Items.idToString(string);
+
+    if (string in Items.Plugins)
+      return true;
 
     return false;
 };
 
-Items.isNewPlugin = (id) => {
-    if (id in Items.Ids)
-        if (Items.Ids[id].plugin in Items.Plugins)
-            return Items.Plugins[Items.Ids[id].plugin];
+Items.getPlugin = (id) => {
+    let string = Items.idToString(id);
+
+    if (Items.hasPlugin(string))
+      return Items.Plugins[string];
+
+    return null;
 };
 
 Items.idToString = (id) => {
