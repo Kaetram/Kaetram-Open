@@ -93,9 +93,17 @@ class Mob extends Character {
     canAggro(player) {
         let self = this;
 
-        if (self.hasTarget() || !self.aggressive ||
-            Math.floor(self.level * 1.5) < player.level || !player.hasAggressionTimer())
-            return false;
+        if (self.hasTarget())
+          return false;
+
+        if (!self.aggressive)
+          return false;
+
+        if (Math.floor(self.level * 1.5) < player.level)
+          return false;
+
+        if (!player.hasAggressionTimer())
+          return false;
 
         return self.isNear(player, self.aggroRange);
     }
