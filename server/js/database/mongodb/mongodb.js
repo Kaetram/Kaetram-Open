@@ -26,8 +26,12 @@ class MongoDB {
 
     getDatabase(callback, type) {
         let self = this,
-            URL = 'mongodb://' + self.host + ':' + self.port + '/' + self.database,
-            client = new MongoClient(URL, { useNewUrlParser: true });
+            URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`,
+            client = new MongoClient(URL, {
+              useUnifiedTopology: true,
+              useNewUrlParser: true,
+              wtimeout: 5
+            });
 
         if (self.connection) {
             callback(self.connection);
