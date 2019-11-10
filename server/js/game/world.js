@@ -182,6 +182,7 @@ class World {
             }]);
 
             self.handleDeath(target);
+
         }
     }
 
@@ -446,7 +447,7 @@ class World {
                 break;
 
             case Packets.PushOpcode.Region:
-            
+
                 self.network.pushToRegion(info.regionId, info.message, info.ignoreId);
 
                 break;

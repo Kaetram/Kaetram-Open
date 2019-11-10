@@ -3,11 +3,8 @@
     "id": 0,
     "name": "A Great Start",
     "description": "Teaching you the basics about Kaetram",
-    "npcs": [17, 8],
-    "stages": 25,
-    "subStages": {
-        "8": "rat:5"
-    },
+    "npcs": [17, 16, 8],
+    "stages": 23,
     "conversations": {
       "17": {
         "0": ["Hey there! Welcome to Kaetram.", "I am a fellow programmer, I make sure",
@@ -27,11 +24,28 @@
       },
 
       "8": {
-        "4": ["Oh, another one. Here, take this sword and get outta here.",
-          "I would bother teaching you but", "It is more fun to let newbies figure it out."
-        ],
+        "8": ["Hello there. I'm a fellow guardian of this cave.", "I suppose you are interested in learning how to fight.",
+            "In your inventory you should find a sword.", "Equip it and kill five of those rats for me."],
+        "9": ["You still need to kill 5 rats."],
+        "10": ["You still need to kill 4 rats."],
+        "11": ["You still need to kill 3 rats."],
+        "12": ["You still need to kill 2 rats."],
+        "13": ["You still need to kill 1 rat."],
+        "14": ["Great job adventurer!", "You may continue your journey by going through the portal."],
+        "15": ["What, still here?"]
+      },
 
-        "5": ["Go through the portal there to get to the main land."]
+      "16": {
+          "16": ["Oh, what do we have here, another adventurer!", "My job is to teach you the use of ranged attacks.",
+            "In your inventory, you should have a bow.", "Equip it and kill 5 of those rats."],
+          "17": ["Kill 5 rats."],
+          "18": ["Kill 4 rats."],
+          "19": ["Kill 3 rats."],
+          "20": ["Kill 2 rats."],
+          "21": ["Kill 1 rats."],
+          "22": ["Well that did not take too long.", "I think you have what it takes to go on with your adventure.",
+              "You may progress by going through the portal."],
+          "23": ["What, still here?"]
       }
 
     },
@@ -44,12 +58,19 @@
       "4": [0, 14, 554],
       "5": [4, "warpButton"],
       "6": [0, 14, 554],
-      "7": [0, 15, 561]
+      "7": [0, 15, 561],
+      "8": [0, 36, 535],
+      "14": [0, 36, 535],
+      "15": [0, 28, 531],
+      "16": [0, 37, 497],
+      "22": [0, 37, 497],
+      "23": [0, 28, 497]
     },
 
     "doors": {
       "7": [15, 560],
-      "5": [20, 23]
+      "15": [28, 531],
+      "23": [28, 497]
     },
 
     "task": {
@@ -60,7 +81,36 @@
       "4": "talk",
       "5": "click",
       "6": "talk",
-      "7": "door"
+      "7": "door",
+      "8": "talk",
+      "9": "kill",
+      "10": "kill",
+      "11": "kill",
+      "12": "kill",
+      "13": "kill",
+      "14": "talk",
+      "15": "door",
+      "16": "talk",
+      "17": "kill",
+      "18": "kill",
+      "19": "kill",
+      "20": "kill",
+      "21": "kill",
+      "22": "talk",
+      "23": "door"
+    },
+
+    "kill": {
+        "9": 128,
+        "10": 128,
+        "11": 128,
+        "12": 128,
+        "13": 128,
+        "17": 128,
+        "18": 128,
+        "19": 128,
+        "20": 128,
+        "21": 128
     }
   },
 

@@ -145,6 +145,8 @@ class Player extends Character {
 
             self.inventory.load(ids, counts, skills, skillLevels);
             self.inventory.check();
+
+            self.loadBank();
         });
     }
 
@@ -171,8 +173,8 @@ class Player extends Character {
         if (config.offlineMode)
             return;
 
-        self.database.loader.getQuests(self, (ids, stages, subStages) => {
-            if (!ids || !stages || !subStages) {
+        self.database.loader.getQuests(self, (ids, stages) => {
+            if (!ids || !stages) {
                 self.quests.updateQuests(ids, stages);
                 return;
             }
@@ -181,7 +183,6 @@ class Player extends Character {
 
             ids.pop();
             stages.pop();
-            subStages.pop();
 
             if (self.quests.getQuestSize() !== ids.length) {
                 log.info('Mismatch in quest data.');
@@ -189,7 +190,7 @@ class Player extends Character {
                 self.save();
             }
 
-            self.quests.updateQuests(ids, stages, subStages);
+            self.quests.updateQuests(ids, stages);
         });
 
         self.database.loader.getAchievements(self, (ids, progress) => {
