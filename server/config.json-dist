@@ -17,6 +17,7 @@
   "mongoUser": "admin",
   "mongoPassword": "password",
   "mongoDatabase": "database",
+  "mongoAuth": false,
 
   "debugLevel": "info",
   "localDebug": false,
