@@ -5,31 +5,31 @@ let Utils = {},
 
 module.exports = Utils;
 
-Utils.random = function(range) {
+Utils.random = (range) => {
     return Math.floor(Math.random() * range);
 };
 
-Utils.randomRange = function(min, max) {
+Utils.randomRange = (min, max) => {
     return min + (Math.random() * (max - min));
 };
 
-Utils.randomInt = function(min, max) {
+Utils.randomInt = (min, max) => {
 
     return min + Math.floor(Math.random() * (max - min + 1));
 };
 
-Utils.getDistance = function(startX, startY, toX, toY) {
+Utils.getDistance = (startX, startY, toX, toY) => {
     let x = Math.abs(startX - toX),
         y = Math.abs(startY - toY);
 
     return x > y ? x : y;
 };
 
-Utils.getJSLogic = function() {
+Utils.getJSLogic = () => {
     return [[][[]]+[]][+[]][++[+[]][+[]]];
 };
 
-Utils.positionOffset = function(radius) {
+Utils.positionOffset = (radius) => {
     return {
         x: Utils.randomInt(0, radius),
         y: Utils.randomInt(0, radius)
@@ -40,19 +40,19 @@ Utils.positionOffset = function(radius) {
  * There is seriously no way two clients can end up with the same ID
  */
 
-Utils.generateClientId = function() {
+Utils.generateClientId = () => {
     return Utils.randomInt(0, 1000000) + Utils.randomInt(0, 40000) + Utils.randomInt(0, 9000);
 };
 
-Utils.generateInstance = function(randomizer, id, modulo, posY) {
+Utils.generateInstance = (randomizer, id, modulo, posY) => {
     return '' + randomizer + Utils.randomInt(0, id) + randomizer + Utils.randomInt(0, modulo) + (posY ? posY : 0);
 };
 
-Utils.generateRandomId = function() {
+Utils.generateRandomId = () => {
     return '' + 1 + Utils.random(0, 200) + Utils.random(0, 20) + 2
 };
 
-Utils.validPacket = function(packet) {
+Utils.validPacket = (packet) => {
     let keys = Object.keys(Packets),
         filtered = [];
 
@@ -63,6 +63,6 @@ Utils.validPacket = function(packet) {
     return packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1;
 };
 
-Utils.getCurrentEpoch = function() {
+Utils.getCurrentEpoch = () => {
     return (new Date).getTime();
 };

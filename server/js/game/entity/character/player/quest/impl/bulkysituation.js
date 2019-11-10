@@ -31,7 +31,7 @@ class BulkySituation extends Quest {
     loadCallbacks() {
         let self = this;
 
-        self.onNPCTalk(function(npc) {
+        self.onNPCTalk((npc) => {
 
             if (self.hasRequirement()) {
                 self.progress('item');

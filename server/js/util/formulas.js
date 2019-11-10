@@ -7,7 +7,7 @@ Formulas.LevelExp = [];
 
 module.exports = Formulas;
 
-Formulas.getDamage = function(attacker, target, special) {
+Formulas.getDamage = (attacker, target, special) => {
 
     let maxDamage = Formulas.getMaxDamage(attacker, target, special),
         accuracy = Utils.randomInt(0, attacker.level);
@@ -15,7 +15,7 @@ Formulas.getDamage = function(attacker, target, special) {
     return Utils.randomInt(accuracy, maxDamage);
 };
 
-Formulas.getMaxDamage = function(attacker, target, special) {
+Formulas.getMaxDamage = (attacker, target, special) => {
 
     if (!attacker || !target)
         return;
@@ -91,7 +91,7 @@ Formulas.getMaxDamage = function(attacker, target, special) {
 
 };
 
-Formulas.getCritical = function(attacker, target) {
+Formulas.getCritical = (attacker, target) => {
 
     if (!attacker || !target)
         return;
@@ -106,7 +106,7 @@ Formulas.getCritical = function(attacker, target) {
     return damage *= multiplier;
 };
 
-Formulas.getWeaponBreak = function(attacker, target) {
+Formulas.getWeaponBreak = (attacker, target) => {
 
     if (!attacker || !target)
         return;
@@ -123,7 +123,7 @@ Formulas.getWeaponBreak = function(attacker, target) {
 };
 
 
-Formulas.getAoEDamage = function(attacker, target) {
+Formulas.getAoEDamage = (attacker, target) => {
     /**
      * Preliminary setup until this function is expanded
      * and fits in the necessary algorithms.
@@ -132,7 +132,7 @@ Formulas.getAoEDamage = function(attacker, target) {
     return Formulas.getDamage(attacker, target);
 };
 
-Formulas.expToLevel = function(experience) {
+Formulas.expToLevel = (experience) => {
     if (experience < 0)
         return -1;
 
@@ -141,17 +141,17 @@ Formulas.expToLevel = function(experience) {
             return i;
 };
 
-Formulas.getRewardExperience = function(player) {
+Formulas.getRewardExperience = (player) => {
     if (!player)
         return;
 
     return (5 + player.level) * player.level;
 };
 
-Formulas.getMaxHitPoints = function(level) {
+Formulas.getMaxHitPoints = (level) => {
     return 100 + (level * 30);
 };
 
-Formulas.getMaxMana = function(level) {
+Formulas.getMaxMana = (level) => {
     return 10 + (level * 8);
 };

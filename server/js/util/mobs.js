@@ -6,7 +6,7 @@ Mobs.Properties = {};
 Mobs.Ids = {};
 Mobs.Plugins = {};
 
-Mobs.idToString = function(id) {
+Mobs.idToString = (id) => {
 
     if (id in Mobs.Ids)
         return Mobs.Ids[id].key;
@@ -14,14 +14,14 @@ Mobs.idToString = function(id) {
     return null;
 };
 
-Mobs.idToName = function(id) {
+Mobs.idToName = (id) => {
     if (id in Mobs.Ids)
         return Mobs.Ids[id].name;
 
     return null;
 };
 
-Mobs.getXp = function(id) {
+Mobs.getXp = (id) => {
 
     if (id in Mobs.Ids)
         return Mobs.Ids[id].xp;
@@ -29,16 +29,16 @@ Mobs.getXp = function(id) {
     return -1;
 };
 
-Mobs.exists = function(id) {
+Mobs.exists = (id) => {
 
     return id in Mobs.Ids;
 };
 
-Mobs.hasCombatPlugin = function(id) {
+Mobs.hasCombatPlugin = (id) => {
     return id in Mobs.Ids && Mobs.Ids[id].combatPlugin in Mobs.Plugins
 };
 
-Mobs.isNewCombatPlugin = function(id) {
+Mobs.isNewCombatPlugin = (id) => {
     if (id in Mobs.Ids && Mobs.Ids[id].combatPlugin in Mobs.Plugins)
         return Mobs.Plugins[Mobs.Ids[id].combatPlugin];
 };

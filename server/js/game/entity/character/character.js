@@ -62,7 +62,7 @@ class Character extends Entity {
     startHealing() {
         let self = this;
 
-        self.healingInterval = setInterval(function() {
+        self.healingInterval = setInterval(() => {
 
             if (!self.hasTarget() && !self.combat.isAttacked() && !self.dead)
                 self.heal(1);

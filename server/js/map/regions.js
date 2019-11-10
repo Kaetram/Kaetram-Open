@@ -28,7 +28,7 @@ class Regions {
         let self = this,
             doors = map.doors;
 
-        _.each(doors, function(door) {
+        _.each(doors, (door) => {
             let regionId = self.regionIdFromPosition(door.x, door.y),
                 linkedRegionId = self.regionIdFromPosition(door.tx, door.ty),
                 linkedRegionPosition = self.regionIdToPosition(linkedRegionId);
@@ -51,15 +51,15 @@ class Regions {
             for (let j = -1; j <= 1; j++)
                 list.push({ x: x + j, y: y + i });
 
-        _.each(self.linkedRegions[id], function(regionPosition) {
+        _.each(self.linkedRegions[id], (regionPosition) => {
 
-            if (!_.any(list, function(regionPosition) {
+            if (!_.any(list, (regionPosition) => {
                 return regionPosition.x === x && regionPosition.y === y;
             })) list.push(regionPosition);
 
         });
 
-        return _.reject(list, function(regionPosition) {
+        return _.reject(list, (regionPosition) => {
             let gX = regionPosition.x,
                 gY = regionPosition.y;
 
@@ -82,7 +82,7 @@ class Regions {
         if (!regionId)
             return;
 
-        _.each(self.getAdjacentRegions(regionId), function(position) {
+        _.each(self.getAdjacentRegions(regionId), (position) => {
             callback(position.x + '-' + position.y);
         });
     }

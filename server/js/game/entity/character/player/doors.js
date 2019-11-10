@@ -21,7 +21,7 @@ class Doors {
     load() {
         let self = this;
 
-        _.each(DoorData, function(door) {
+        _.each(DoorData, (door) => {
             self.doors[door.id] = {
                 id: door.id,
                 x: door.x,
@@ -61,7 +61,7 @@ class Doors {
             closed: door.closedIds
         };
 
-        _.each(doorState[status], function(value, key) {
+        _.each(doorState[status], (value, key) => {
             tiles.indexes.push(parseInt(key));
             tiles.data.push(value.data);
             tiles.collisions.push(value.isColliding);
@@ -78,7 +78,7 @@ class Doors {
                 collisions: []
             };
 
-        _.each(self.doors, function(door) {
+        _.each(self.doors, (door) => {
             let tiles = self.getTiles(door);
 
             allTiles.indexes.push.apply(allTiles.indexes, tiles.indexes);
@@ -98,19 +98,19 @@ class Doors {
         return index < 0 ? false : tiles.collisions[index];
     }
     getDoor(x, y, callback) {
-        this.forEachDoor(function(door) {
+        this.forEachDoor((door) => {
             callback((door.x === x && door.y === y) ? door : null);
         })
     }
 
     isDoor(x, y, callback) {
-        this.forEachDoor(function(door) {
+        this.forEachDoor((door) => {
             callback(door.x === x && door.y === y);
         });
     }
 
     forEachDoor(callback) {
-        _.each(this.doors, function(door) {
+        _.each(this.doors, (door) => {
             callback(door);
         })
     }

@@ -25,7 +25,7 @@ class OgreLord extends Combat {
         character.projectile = Modules.Projectiles.Boulder;
         character.projectileName = 'projectile-boulder';
 
-        character.onDeath(function() {
+        character.onDeath(() => {
             self.reset();
         });
     }
@@ -33,14 +33,14 @@ class OgreLord extends Combat {
     load() {
         var self = this;
 
-        self.talkingInterval = setInterval(function() {
+        self.talkingInterval = setInterval(() => {
 
             if (self.character.hasTarget())
                 self.forceTalk(self.getMessage());
 
         }, 9000);
 
-        self.updateInterval = setInterval(function() {
+        self.updateInterval = setInterval(() => {
 
             self.character.armourLevel = 50 + (self.minions.length * 15);
 
@@ -100,9 +100,9 @@ class OgreLord extends Combat {
         for (var i = 0; i < xs.length; i++)
             self.minions.push(self.world.spawnMob(12, xs[i], ys[i]));
 
-        _.each(self.minions, function(minion) {
+        _.each(self.minions, (minion) => {
 
-            minion.onDeath(function() {
+            minion.onDeath(() => {
 
                 if (self.isLast())
                     self.lastSpawn = new Date().getTime();
@@ -126,7 +126,7 @@ class OgreLord extends Combat {
         if (!self.hasMinions())
             return;
 
-        _.each(self.minions, function(minion) {
+        _.each(self.minions, (minion) => {
             var randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)

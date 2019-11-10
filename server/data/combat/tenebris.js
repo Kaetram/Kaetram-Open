@@ -17,7 +17,7 @@ class Tenebris extends Combat {
         self.lastIllusion = new Date().getTime();
         self.respawnDelay = 95000;
 
-        character.onDeath(function() {
+        character.onDeath(() => {
 
             if (self.isIllusion())
                 if (!self.firstIllusionKilled)
@@ -41,7 +41,7 @@ class Tenebris extends Combat {
         self.illusions = [];
         self.firstIllusionKilled = false;
 
-        setTimeout(function() {
+        setTimeout(() => {
 
             var offset = Utils.positionOffset(4);
 
@@ -75,8 +75,8 @@ class Tenebris extends Combat {
         self.illusions.push(self.world.spawnMob(105, self.character.x + 1, self.character.y + 1));
         self.illusions.push(self.world.spawnMob(105, self.character.x - 1, self.character.y + 1));
 
-        _.each(self.illusions, function(illusion) {
-            illusion.onDeath(function() {
+        _.each(self.illusions, (illusion) => {
+            illusion.onDeath(() => {
                 if (self.isLast())
                     self.lastIllusion = new Date().getTime();
 
@@ -114,7 +114,7 @@ class Tenebris extends Combat {
         if (!self.hasIllusions())
             return;
 
-        _.each(self.illusions, function(illusion) {
+        _.each(self.illusions, (illusion) => {
             var target = self.getRandomTarget();
 
             if (!illusion.hasTarget && target)

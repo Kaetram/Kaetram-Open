@@ -33,7 +33,7 @@ class QueenAnt extends Combat {
 
         self.frozen = false;
 
-        self.character.onDeath(function() {
+        self.character.onDeath(() => {
 
             /**
              * This is to prevent the boss from dealing
@@ -54,7 +54,7 @@ class QueenAnt extends Combat {
 
         });
 
-        self.character.onReturn(function() {
+        self.character.onReturn(() => {
             clearTimeout(self.aoeTimeout);
             self.aoeTimeout = null;
         });
@@ -105,7 +105,7 @@ class QueenAnt extends Combat {
 
         self.pushCountdown(self.aoeCountdown);
 
-        self.aoeTimeout = setTimeout(function() {
+        self.aoeTimeout = setTimeout(() => {
 
             self.dealAoE(self.aoeRadius, true);
 
@@ -123,12 +123,12 @@ class QueenAnt extends Combat {
         for (var i = 0; i < self.minionCount; i++)
             self.minions.push(self.world.spawnMob(13, self.character.x, self.character.y));
 
-        _.each(self.minions, function(minion) {
+        _.each(self.minions, (minion) => {
 
             minion.aggressive = true;
             minion.spawnDistance = 12;
 
-            minion.onDeath(function() {
+            minion.onDeath(() => {
 
                 if (self.isLast())
                     self.lastSpawn = new Date().getTime();
@@ -149,7 +149,7 @@ class QueenAnt extends Combat {
         if (!self.hasMinions())
             return;
 
-        _.each(self.minions, function(minion) {
+        _.each(self.minions, (minion) => {
 
             var randomTarget = self.getRandomTarget();
 

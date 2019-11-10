@@ -18,7 +18,7 @@ class PVPAreas {
         let self = this,
             list = map.pvpAreas;
 
-        _.each(list, function(p) {
+        _.each(list, (p) => {
             let pvpArea = new Area(p.id, p.x, p.y, p.width, p.height);
 
             self.pvpAreas.push(pvpArea);

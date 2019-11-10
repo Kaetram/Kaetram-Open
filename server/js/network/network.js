@@ -27,11 +27,11 @@ class Network {
     load() {
         let self = this;
 
-        self.world.onPlayerConnection(function(connection) {
+        self.world.onPlayerConnection((connection) => {
             self.handlePlayerConnection(connection);
         });
 
-        self.world.onPopulationChange(function() {
+        self.world.onPopulationChange(() => {
             self.handlePopulationChange();
         });
     }
@@ -99,7 +99,7 @@ class Network {
     pushBroadcast(message) {
         let self = this;
 
-        _.each(self.packets, function(packet) {
+        _.each(self.packets, (packet) => {
             packet.push(message.serialize());
         });
     }
@@ -111,7 +111,7 @@ class Network {
     pushSelectively(message, ignores) {
         let self = this;
 
-        _.each(self.packets, function(packet) {
+        _.each(self.packets, (packet) => {
             if (ignores.indexOf(packet.id) < 0)
                 packet.push(message.serialize());
         });
@@ -133,7 +133,7 @@ class Network {
     pushToPlayers(players, message) {
         let self = this;
 
-        _.each(players, function(playerInstance) {
+        _.each(players, (playerInstance) => {
             self.pushToPlayer(self.world.getPlayerByInstance(playerInstance), message);
         });
     }
@@ -148,7 +148,7 @@ class Network {
 
         if (!region) return;
 
-        _.each(region.players, function(playerInstance) {
+        _.each(region.players, (playerInstance) => {
             if (playerInstance !== ignoreId)
                 self.pushToPlayer(self.world.getEntityByInstance(playerInstance), message);
         });
@@ -164,7 +164,7 @@ class Network {
     pushToAdjacentRegions(regionId, message, ignoreId) {
         let self = this;
 
-        self.map.regions.forEachAdjacentRegion(regionId, function(id) {
+        self.map.regions.forEachAdjacentRegion(regionId, (id) => {
             self.pushToRegion(id, message, ignoreId);
         });
     }
@@ -176,7 +176,7 @@ class Network {
     pushToNameArray(names, message) {
         let self = this;
 
-        _.each(names, function(name) {
+        _.each(names, (name) => {
             let player = self.world.getPlayerByName(name);
 
             if (player)
@@ -191,7 +191,7 @@ class Network {
     pushToOldRegions(player, message) {
         let self = this;
 
-        _.each(player.recentRegions, function(id) {
+        _.each(player.recentRegions, (id) => {
             self.pushToRegion(id, message);
         });
 

@@ -26,7 +26,7 @@ class Chest extends Entity {
     respawn() {
         let self = this;
 
-        setTimeout(function() {
+        setTimeout(() => {
 
             if (self.respawnCallback)
                 self.respawnCallback();

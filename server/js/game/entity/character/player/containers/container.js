@@ -234,7 +234,7 @@ class Container {
     check() {
         let self = this;
 
-        _.each(self.slots, function(slot) {
+        _.each(self.slots, (slot) => {
             if (isNaN(slot.id))
                 slot.empty();
         });

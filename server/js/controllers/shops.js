@@ -22,9 +22,9 @@ class Shops {
     load() {
         let self = this;
 
-        self.shopInterval = setInterval(function() {
+        self.shopInterval = setInterval(() => {
 
-            _.each(ShopData.Data, function(info) {
+            _.each(ShopData.Data, (info) => {
 
                 for (let i = 0; i < info.count; i++)
                     if (info.count[i] < info.originalCount[i])

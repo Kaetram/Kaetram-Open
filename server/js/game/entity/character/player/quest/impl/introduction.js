@@ -40,7 +40,7 @@ class Introduction extends Quest {
     loadCallbacks() {
         let self = this;
 
-        self.onNPCTalk(function(npc) {
+        self.onNPCTalk((npc) => {
 
             let conversation = self.getConversation(npc.id);
 
@@ -58,13 +58,13 @@ class Introduction extends Quest {
 
         });
 
-        self.player.onReady(function() {
+        self.player.onReady(() => {
 
             self.updatePointers();
 
         });
 
-        self.player.onDoor(function(destX, destY) {
+        self.player.onDoor((destX, destY) => {
             if (self.getTask() !== 'door') {
                 self.player.notify('You cannot go through this door yet.');
                 return;
@@ -78,21 +78,21 @@ class Introduction extends Quest {
             }
         });
 
-        self.player.onProfile(function(isOpen) {
+        self.player.onProfile((isOpen) => {
 
             if (isOpen)
                 self.progress('click');
 
         });
 
-        self.player.onInventory(function(isOpen) {
+        self.player.onInventory((isOpen) => {
 
             if (isOpen)
                 self.progress('click');
 
         });
 
-        self.player.onWarp(function(isOpen) {
+        self.player.onWarp((isOpen) => {
 
             if (isOpen)
                 self.progress('click');

@@ -139,7 +139,7 @@ class Player extends Character {
             return;
         }
 
-        self.database.loader.getInventory(self, function(ids, counts, skills, skillLevels) {
+        self.database.loader.getInventory(self, (ids, counts, skills, skillLevels) => {
             if (ids.length !== self.inventory.size)
                 self.save();
 
@@ -156,7 +156,7 @@ class Player extends Character {
             return;
         }
 
-        self.database.loader.getBank(self, function(ids, counts, skills, skillLevels) {
+        self.database.loader.getBank(self, (ids, counts, skills, skillLevels) => {
             if (ids.length !== self.bank.size)
                 self.save();
 
@@ -171,7 +171,7 @@ class Player extends Character {
         if (config.offlineMode)
             return;
 
-        self.database.loader.getQuests(self, function(ids, stages, subStages) {
+        self.database.loader.getQuests(self, (ids, stages, subStages) => {
             if (!ids || !stages || !subStages) {
                 self.quests.updateQuests(ids, stages);
                 return;
@@ -192,7 +192,7 @@ class Player extends Character {
             self.quests.updateQuests(ids, stages, subStages);
         });
 
-        self.database.loader.getAchievements(self, function(ids, progress) {
+        self.database.loader.getAchievements(self, (ids, progress) => {
             ids.pop();
             progress.pop();
 
@@ -205,7 +205,7 @@ class Player extends Character {
             self.quests.updateAchievements(ids, progress);
         });
 
-        self.quests.onReady(function() {
+        self.quests.onReady(() => {
 
             self.send(new Messages.Quest(Packets.QuestOpcode.Batch, self.quests.getData()));
 
@@ -760,7 +760,7 @@ class Player extends Character {
 
         clearTimeout(self.disconnectTimeout);
 
-        self.disconnectTimeout = setTimeout(function() {
+        self.disconnectTimeout = setTimeout(() => {
 
             self.timeout();
 
@@ -1047,7 +1047,7 @@ class Player extends Character {
     walkRandomly() {
         let self = this;
 
-        setInterval(function() {
+        setInterval(() => {
             self.setPosition(self.x + Utils.randomInt(-5, 5), self.y + Utils.randomInt(-5, 5));
         }, 2000);
 

@@ -9,12 +9,12 @@ class Connection {
         self.socket = connection;
         self._server = server;
 
-        self.socket.on('message', function(message) {
+        self.socket.on('message', (message) => {
             if (self.listenCallback)
                 self.listenCallback(JSON.parse(message));
         });
 
-        self.socket.on('disconnect', function() {
+        self.socket.on('disconnect', () => {
             log.info('Closed socket: ' + self.socket.conn.remoteAddress);
 
             if (self.closeCallback)

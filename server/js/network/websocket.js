@@ -24,7 +24,7 @@ class WebSocket extends Socket {
         let app = connect();
         app.use(serve('client', {'index': ['index.html']}), null);
 
-        self.httpServer = http.createServer(app).listen(port, host, function serverEverythingListening() {
+        self.httpServer = http.createServer(app).listen(port, host, () => {
             log.info('Server is now listening on: ' + port);
 
             if (self.webSocketReadyCallback)
@@ -32,12 +32,12 @@ class WebSocket extends Socket {
         });
 
         self.io = new SocketIO(self.httpServer);
-        self.io.on('connection', function webSocketListener(socket) {
+        self.io.on('connection', (socket) => {
             log.info('Received connection from: ' + socket.conn.remoteAddress);
 
             let client = new Connection(self.createId(), socket, self);
 
-            socket.on('client', function(data) {
+            socket.on('client', (data) => {
                 if (data.gVer !== self.version) {
                     client.sendUTF8('updated');
                     client.close('Wrong client version - expected ' + self.version + ' received ' + data.gVer);

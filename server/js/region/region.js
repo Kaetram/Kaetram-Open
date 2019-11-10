@@ -30,7 +30,7 @@ class Region {
         self.regions = {};
         self.loaded = false;
 
-        self.onAdd(function(entity, regionId) {
+        self.onAdd((entity, regionId) => {
             if (!entity || !entity.username)
                 return;
 
@@ -42,12 +42,12 @@ class Region {
 
         });
 
-        self.onRemove(function(entity, oldRegions) {
+        self.onRemove((entity, oldRegions) => {
             if (!oldRegions || oldRegions.length < 1 || !entity || !entity.username)
                 return;
         });
 
-        self.onIncoming(function(entity, regionId) {
+        self.onIncoming((entity, regionId) => {
             if (!entity || !entity.username)
                 return;
 
@@ -56,10 +56,10 @@ class Region {
 
         });
 
-        fs.watchFile(map, function() {
+        fs.watchFile(map, () => {
             log.info('Received Map Update -> Sending to Players...');
 
-            fs.readFile(map, 'utf8', function(error, data) {
+            fs.readFile(map, 'utf8', (error, data) => {
                 if (error) throw error;
 
                 ClientMap = JSON.parse(data);
@@ -78,7 +78,7 @@ class Region {
         self.clientWidth = ClientMap.width;
         self.clientHeight = ClientMap.height;
 
-        self.mapRegions.forEachRegion(function(regionId) {
+        self.mapRegions.forEachRegion((regionId) => {
             self.regions[regionId] = {
                 entities: {},
                 players: [],
@@ -112,7 +112,7 @@ class Region {
 
         player.instanced = true;
 
-        self.mapRegions.forEachAdjacentRegion(regionId, function(region) {
+        self.mapRegions.forEachAdjacentRegion(regionId, (region) => {
             self.regions[Region.regionIdToInstance(player, region)] = {
                 entities: {},
                 players: [],
@@ -141,7 +141,7 @@ class Region {
         self.handle(player);
         self.push(player);
 
-        self.mapRegions.forEachAdjacentRegion(player.region, function(regionId) {
+        self.mapRegions.forEachAdjacentRegion(player.region, (regionId) => {
             let instancedRegion = Region.regionIdToInstance(player, regionId);
 
             if (instancedRegion in self.regions)
@@ -155,7 +155,7 @@ class Region {
         if (!self.loaded)
             return;
 
-        self.mapRegions.forEachRegion(function(regionId) {
+        self.mapRegions.forEachRegion((regionId) => {
 
             if (self.regions[regionId].incoming.length < 1)
                 return;
@@ -169,7 +169,7 @@ class Region {
     updateRegions() {
         let self = this;
 
-        self.world.forEachPlayer(function(player) {
+        self.world.forEachPlayer((player) => {
             player.regionsLoaded = [];
 
             self.sendRegion(player, player.region, true);
@@ -214,7 +214,7 @@ class Region {
         if (!regionId)
             return;
 
-        _.each(self.regions[regionId].incoming, function(entity) {
+        _.each(self.regions[regionId].incoming, (entity) => {
             if (!entity || !entity.instance || entity.instanced)
                 return;
 
@@ -232,7 +232,7 @@ class Region {
             newRegions = [];
 
         if (entity && regionId && (regionId in self.regions)) {
-            self.mapRegions.forEachAdjacentRegion(regionId, function(id) {
+            self.mapRegions.forEachAdjacentRegion(regionId, (id) => {
                 if (entity.instanced)
                     id = Region.regionIdToInstance(entity, id);
 
@@ -264,9 +264,9 @@ class Region {
             let region = self.regions[entity.region];
 
             if (entity instanceof Player)
-                region.players = _.reject(region.players, function(id) { return id === entity.instance; });
+                region.players = _.reject(region.players, (id) => { return id === entity.instance; });
 
-            self.mapRegions.forEachAdjacentRegion(entity.region, function(id) {
+            self.mapRegions.forEachAdjacentRegion(entity.region, (id) => {
                 if (self.regions[id] && entity.instance in self.regions[id].entities) {
                     delete self.regions[id].entities[entity.instance];
                     oldRegions.push(id);
@@ -333,11 +333,11 @@ class Region {
 
         entities = _.keys(self.regions[player.region].entities);
 
-        entities = _.reject(entities, function(instance) {
+        entities = _.reject(entities, (instance) => {
             return instance === player.instance; //TODO //|| player.isInvisible(instance);
         });
 
-        entities = _.map(entities, function(instance) {
+        entities = _.map(entities, (instance) => {
             return parseInt(instance);
         });
 
@@ -370,7 +370,7 @@ class Region {
         if (!player)
             return data;
 
-        self.mapRegions.forEachAdjacentRegion(region, function(regionId) {
+        self.mapRegions.forEachAdjacentRegion(region, (regionId) => {
             if (!player.hasLoadedRegion(regionId) || force) {
                 player.loadRegion(regionId);
 
