@@ -367,13 +367,21 @@
     position: absolute;
     top: 50%;
     left: 8%;
-    overflow: scroll;
+
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
 }
 
 #achievementList {
     position: absolute;
     top: 6%;
     left: 8%;
+
+    overflow: auto;
 }
 
 #abilityShortcut ul {

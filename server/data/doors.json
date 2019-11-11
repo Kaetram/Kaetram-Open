@@ -5,58 +5,49 @@
     "requirement": "quest",
     "questId": 0,
     "closedIds": {
-      "336014": {
-        "data": 12684,
-        "isColliding": true
-      },
-      "336015": {
-        "data": 12684,
-        "isColliding": true
-      },
-      "336016": {
-        "data": 12684,
-        "isColliding": true
-      },
-      "336614": {
-        "data": 12704,
-        "isColliding": false
-      },
-      "336615": {
-        "data": 12704,
-        "isColliding": false
-      },
-      "336616": {
-        "data": 12704,
-        "isColliding": false
-      }
+      "336014": { "data": 12684, "isColliding": true },
+      "336015": { "data": 12684, "isColliding": true },
+      "336016": { "data": 12684, "isColliding": true },
+      "336614": { "data": 12704, "isColliding": false },
+      "336615": { "data": 12704, "isColliding": false },
+      "336616": { "data": 12704, "isColliding": false }
     },
     "openIds": {
-      "336014": {
-        "data": [12664, 12723],
-        "isColliding": true
-      },
-      "336015": {
-        "data": [12664, 12724],
-        "isColliding": false
-      },
-      "336016": {
-        "data": [12664, 12725],
-        "isColliding": true
-      },
-      "336614": {
-        "data": 12743,
-        "isColliding": true
-      },
-      "336615": {
-        "data": 12744,
-        "isColliding": true
-      },
-      "336616": {
-        "data": 12745,
-        "isColliding": true
-      }
+      "336014": { "data": [12664, 12723], "isColliding": true },
+      "336015": { "data": [12664, 12724], "isColliding": false },
+      "336016": { "data": [12664, 12725], "isColliding": true },
+      "336614": { "data": 12743, "isColliding": true },
+      "336615": { "data": 12744, "isColliding": true },
+      "336616": { "data": 12745, "isColliding": true }
     },
     "x": 15,
     "y": 560
+  },
+
+  "1": {
+    "id": 1,
+    "status": "closed",
+    "requirement": "quest",
+    "questId": 1,
+
+    "closedIds": {
+        "55209": { "data": [175,2038], "isColliding": true },
+        "55808": { "data": [156,511,2057], "isColliding": true },
+        "55809": { "data": [155,2058], "isColliding": true },
+        "55810": { "data": [156,2059], "isColliding": true },
+        "56408": { "data": [176,551,2077], "isColliding": true },
+        "56409": { "data": [175,492,2078], "isColliding": true },
+        "56410": { "data": [176,493,2079], "isColliding": true }
+    },
+
+    "openIds": {
+        "55209": { "data": [175,1878], "isColliding": true },
+        "55808": { "data": [156,511,1897], "isColliding": true },
+        "55809": { "data": [155,1898], "isColliding": true },
+        "55810": { "data": [156,1899], "isColliding": true },
+        "56408": { "data": [176,551,1917], "isColliding": true },
+        "56409": { "data": [175,492,1918], "isColliding": false },
+        "56410": { "data": [176,493,1919], "isColliding": true }
+    }
   }
 }
