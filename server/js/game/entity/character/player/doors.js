@@ -43,6 +43,9 @@ class Doors {
             case "quest":
                 let quest = self.player.quests.getQuest(door.questId);
 
+                if (door.status === 'open')
+                    return door.status;
+
                 return (quest && quest.hasDoorUnlocked(door)) ? 'open' : 'closed';
         }
     }

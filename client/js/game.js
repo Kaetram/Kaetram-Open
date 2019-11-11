@@ -172,7 +172,8 @@ define(['./renderer/renderer', './utils/storage',
             self.overlays = new Overlay(self);
 
             self.map.onReady(function() {
-                self.map.loadRegionData();
+                if (!self.isDebug())
+                    self.map.loadRegionData();
 
                 self.app.sendStatus('Loading the pathfinder');
 
