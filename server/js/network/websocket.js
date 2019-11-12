@@ -7,6 +7,7 @@ let Socket = require('./socket'),
     request = require('request'),
     SocketIO = require('socket.io'),
     http = require('http'),
+    https = require('https'),
     Utils = require('../util/utils'),
     config = require('../../config');
 
