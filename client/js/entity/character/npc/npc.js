@@ -7,25 +7,7 @@ define(['../character'], function(Character) {
 
             self._super(id, kind);
 
-            self.talkIndex = 0;
-
             self.type = 'npc';
-        },
-
-        talk: function(messages) {
-            var self = this,
-                count = messages.length,
-                message;
-
-            if (self.talkIndex > count)
-                self.talkIndex = 0;
-
-            if (self.talkIndex < count)
-                message = messages[self.talkIndex];
-
-            self.talkIndex++;
-
-            return message;
         },
 
         idle: function() {

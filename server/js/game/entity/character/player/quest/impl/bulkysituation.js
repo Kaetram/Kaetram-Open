@@ -42,12 +42,10 @@ class BulkySituation extends Quest {
 
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: conversation
+                text: npc.talk(conversation)
             }));
 
             self.lastNPC = npc;
-
-            npc.talk(conversation);
 
             if (npc.talkIndex > conversation.length)
                 self.progress('talk');

@@ -48,11 +48,10 @@ class Achievement {
         if (self.isThreshold() || self.hasItem())
             self.finish(npc);
         else {
-            npc.talk(self.data.text);
 
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: self.data.text
+                text: npc.talk(self.data.text)
             }));
 
             if (!self.isStarted() && npc.talkIndex > self.data.text.length)

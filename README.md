@@ -54,5 +54,4 @@ Once you finish modifying your map in `tools/maps/data` you can parse the map da
 
 - Write documentation outlining the entirety of the source code.
 - Come up with a storyline.
-- Redo NPC talking system.
 - Adapt quest system to fit into the plugin system.
