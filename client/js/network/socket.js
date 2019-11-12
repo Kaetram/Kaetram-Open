@@ -19,7 +19,11 @@ define(['./packets', './messages'], function(Packets, Messages) {
         },
 
         connect: function() {
-            var self = this,
+            var self = this, url;
+
+            if (self.config.ssl)
+                url = 'wss://' + self.config.ip;
+            else
                 url = 'ws://' + self.config.ip + ':' + self.config.port;
 
             self.connection = null;
