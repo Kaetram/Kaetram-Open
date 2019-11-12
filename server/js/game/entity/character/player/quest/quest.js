@@ -136,11 +136,6 @@ class Quest {
             return;
 
         npc.talkIndex = 0;
-
-        self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-            id: npc.instance,
-            text: null
-        }));
     }
 
     clearPointers() {

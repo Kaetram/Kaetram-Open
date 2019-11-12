@@ -115,11 +115,9 @@ class Handler {
             if (!text)
                 return;
 
-            npc.talk(text);
-
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: text
+                text: npc.talk(text)
             }));
 
         });

@@ -750,27 +750,27 @@ define(function() {
                     case Packets.NPCOpcode.Talk:
 
                         var entity = self.entities.get(info.id),
-                            messages = info.text,
-                            isNPC = !info.nonNPC,
-                            message;
+                            message = info.text,
+                            isNPC = !info.nonNPC;
 
                         if (!entity)
                             return;
 
-                        if (!messages) {
-                            entity.talkIndex = 0;
-                            return;
-                        }
-
-                        message = isNPC ? entity.talk(messages) : messages;
-
                         if (isNPC) {
-                            var bubble = self.bubble.create(info.id, message);
 
-                            self.bubble.setTo(entity);
+                            if (!message) {
+                                sound = 'npc-end';
+                                self.bubble.destroy(info.id);
 
-                            if (self.renderer.mobile && self.renderer.autoCentre)
-                                self.renderer.camera.centreOn(self.game.player);
+                            } else {
+
+                                var bubble = self.bubble.create(info.id, message);
+
+                                self.bubble.setTo(entity);
+
+                                if (self.renderer.mobile && self.renderer.autoCentre)
+                                    self.renderer.camera.centreOn(self.game.player);
+                            }
 
                         } else {
                             self.bubble.create(info.id, message, self.time, 5000);
@@ -778,11 +778,6 @@ define(function() {
                         }
 
                         var sound = 'npc';
-
-                        if (!message && isNPC) {
-                            sound = 'npc-end';
-                            self.bubble.destroy(info.id);
-                        }
 
                         self.audio.play(Modules.AudioTypes.SFX, sound);
 
