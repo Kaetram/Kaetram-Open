@@ -30,7 +30,7 @@ class MongoDB {
 
             if (config.mongoAuth)
                 URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
-                
+
             let client = new MongoClient(URL, {
               useUnifiedTopology: true,
               useNewUrlParser: true,
@@ -175,6 +175,18 @@ class MongoDB {
                         log.info('Player ' + player.username + ' has been deleted.')
                 })
             });
+        });
+    }
+
+    registeredCount(callback) {
+
+        this.getDatabase((database) => {
+            let collection = database.collection('player_data');
+
+            collection.countDocuments().then((count) => {
+                callback(count);
+            });
+
         });
     }
 
