@@ -34,7 +34,7 @@ class WebSocket extends Socket {
         };
 
         if (config.ssl)
-            self.httpServer = https.createServer(app).listed(port, host, () => {
+            self.httpServer = https.createServer(app).listen(port, host, () => {
                 readyWebSocket(port);
             });
         else
