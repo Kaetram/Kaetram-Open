@@ -4,6 +4,7 @@ let World = require('./game/world'),
     Log = require('log'),
     Parser = require('./util/parser'),
     Database = require('./database/database'),
+    _ = require('underscore'),
     worlds = [], allowConnections = false,
     worldsCreated = 0;
 
@@ -13,7 +14,8 @@ function main() {
     log.info('Initializing ' + config.name + ' game engine...');
 
     let webSocket = new WebSocket(config.host, config.port, config.gver),
-        database = new Database(config.database);
+        database = new Database(config.database),
+        stdin = process.openStdin();
 
     webSocket.onConnect(function(connection) {
         if (allowConnections) {
@@ -54,6 +56,43 @@ function main() {
 
         initializeWorlds();
 
+    });
+
+    stdin.addListener('data', (data) => {
+        let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+            type = message.charAt(0);
+
+        if (type !== '/')
+            return;
+
+        let blocks = message.substring(1).split(' '),
+            command = blocks.shift();
+
+        if (!command)
+            return;
+
+        switch (command) {
+
+            case 'players':
+                let total = 0;
+
+                _.each(worlds, (world) => {
+                    total += world.playerCount;
+                });
+
+                log.info(`There are ${total} player(s) in ${worlds.length} world(s).`);
+
+                break;
+
+            case 'registered':
+
+                worlds[0].database.registeredCount((count) => {
+                    log.info(`There are ${count} users registered.`);
+                });
+
+                break;
+
+        }
     });
 
 }
