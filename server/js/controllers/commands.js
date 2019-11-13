@@ -260,17 +260,28 @@ class Commands {
 
             case 'pointer':
 
-                let posX = parseInt(blocks.shift()),
-                    posY = parseInt(blocks.shift());
+                if (blocks.length > 1) {
+                    let posX = parseInt(blocks.shift()),
+                        posY = parseInt(blocks.shift());
 
-                if (!posX || !posY)
-                    return;
+                    if (!posX || !posY)
+                        return;
 
-                self.player.send(new Messages.Pointer(Packets.PointerOpcode.Location, {
-                    id: self.player.instance,
-                    x: posX,
-                    y: posY
-                }));
+                    self.player.send(new Messages.Pointer(Packets.PointerOpcode.Location, {
+                        id: self.player.instance,
+                        x: posX,
+                        y: posY
+                    }));
+                } else {
+                    let instance = blocks.shift();
+
+                    if (!instance)
+                        return;
+
+                    self.player.send(new Messages.Pointer(Packets.PointerOpcode.NPC, {
+                        id: instance
+                    }));
+                }
 
                 return;
 
