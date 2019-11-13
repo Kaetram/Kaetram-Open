@@ -139,7 +139,14 @@ class Player extends Character {
             return;
         }
 
+        log.info('loading inventory');
+
         self.database.loader.getInventory(self, (ids, counts, skills, skillLevels) => {
+            if (ids === null && counts === null) {
+                self.inventory.loadEmpty();
+                return;
+            }
+
             if (ids.length !== self.inventory.size)
                 self.save();
 
@@ -1077,8 +1084,10 @@ class Player extends Character {
     save() {
         let self = this;
 
-        if (config.offlineMode || self.isGuest || !self.questsLoaded ||
-            !self.achievementsLoaded)
+        if (config.offlineMode || self.isGuest)
+            return;
+
+        if ((!self.questsLoaded || !self.achievementsLoaded) && !self.new)
             return;
 
         self.database.creator.save(self);

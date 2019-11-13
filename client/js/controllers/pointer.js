@@ -57,11 +57,6 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
                             offsetX = 0,
                             offsetY = 0;
 
-                        if (scale === 1) {
-                            offsetX = pointer.element.width() / 2 + 5;
-                            offsetY = pointer.element.height() / 2 - 4;
-                        }
-
                         pointer.element.css('left', (x * scale) - offsetX + 'px');
                         pointer.element.css('top', (y * scale) - offsetY + 'px');
 
@@ -73,8 +68,6 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
 
         setSize: function(element) {
             var self = this;
-
-            self.updateScale();
 
             element.css({
                 'width': (16 + 16 * self.scale) + 'px',
@@ -104,18 +97,61 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
         set: function(pointer, posX, posY) {
             var self = this;
 
-            self.updateScale();
             self.updateCamera();
 
-            var tileSize = 16 * self.scale,
+            var tileSize = 48, //16 * self.scale
                 x = ((posX - self.camera.x) * self.scale),
                 width = parseInt(pointer.element.css('width') + 24),
-                offset = (width / 2) - (tileSize / 2), y;
+                offset = (width / 2) - (tileSize / 2), y, outX, outY;
 
             y = ((posY - self.camera.y) * self.scale) - tileSize;
 
-            pointer.element.css('left', (x - offset) + 'px');
-            pointer.element.css('top' , y + 'px');
+            outX = x / self.game.renderer.canvasWidth;
+            outY = y / self.game.renderer.canvasHeight;
+
+            if (outX >= 1.5) { // right
+                pointer.element.css('left', '');
+                pointer.element.css('right', '0');
+                pointer.element.css('top', '50%');
+                pointer.element.css('bottom', '');
+
+                pointer.element.css('transform', 'rotate(-90deg)');
+            } else if (outY >= 1.5) { // bottom
+
+                pointer.element.css('left', '50%');
+                pointer.element.css('right', '');
+                pointer.element.css('top', '');
+                pointer.element.css('bottom', '0');
+
+                pointer.element.css('transform', '');
+
+            } else if (outX <= 0) { // left
+
+                pointer.element.css('left', '0');
+                pointer.element.css('right', '');
+                pointer.element.css('top', '50%');
+                pointer.element.css('bottom', '');
+
+                pointer.element.css('transform', 'rotate(90deg)');
+
+            } else if (outY <= 0) { // top
+
+                pointer.element.css('left', '');
+                pointer.element.css('right', '50%');
+                pointer.element.css('top', '0');
+                pointer.element.css('bottom', '');
+
+                pointer.element.css('transform', 'rotate(180deg)');
+
+            } else {
+                pointer.element.css('left', (x - offset) + 'px');
+                pointer.element.css('right', '');
+                pointer.element.css('top' , y + 'px');
+                pointer.element.css('bottom', '');
+
+                pointer.element.css('transform', '');
+            }
+
         },
 
         setToEntity: function(entity) {
@@ -150,15 +186,6 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
             var scale = self.getScale(),
                 offsetX = 0,
                 offsetY = 0;
-
-            /**
-             * Must be set in accordance to the lowest scale.
-             */
-
-            if (scale === 1) {
-                offsetX = pointer.element.width() / 2 + 5;
-                offsetY = pointer.element.height() / 2 - 4;
-            }
 
             pointer.setPosition(x, y);
 
@@ -203,16 +230,12 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
             return null;
         },
 
-        updateScale: function() {
-            this.scale = this.game.renderer.getScale();
-        },
-
         updateCamera: function() {
             this.camera = this.game.renderer.camera;
         },
 
         getScale: function() {
-            return this.game.getScaleFactor();
+            return this.game.getScaleFactor(); //always 3
         }
 
     });
