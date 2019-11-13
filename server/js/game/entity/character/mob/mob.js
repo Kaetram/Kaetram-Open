@@ -42,7 +42,7 @@ class Mob extends Character {
         self.hiddenName = false;
 
         self.roaming = false;
-        self.maxRoamingDistance = 4;
+        self.maxRoamingDistance = 3;
 
         self.projectileName = self.getProjectileName();
 
