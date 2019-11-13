@@ -44,6 +44,9 @@ class WebSocket extends Socket {
 
         self.io = new SocketIO(self.httpServer);
         self.io.on('connection', (socket) => {
+            if (socket.handshake.headers['cf-connecting-ip'])
+                socket.conn.remoteAddress = socket.handshake.headers['cf-connecting-ip'];
+
             log.info('Received connection from: ' + socket.conn.remoteAddress);
 
             let client = new Connection(self.createId(), socket, self);
