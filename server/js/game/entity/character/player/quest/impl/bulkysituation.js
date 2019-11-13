@@ -40,14 +40,14 @@ class BulkySituation extends Quest {
 
             let conversation = self.getConversation(npc.id);
 
+            self.lastNPC = npc;
+
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
                 text: npc.talk(conversation)
             }));
 
-            self.lastNPC = npc;
-
-            if (npc.talkIndex > conversation.length)
+            if (npc.talkIndex === 0)
                 self.progress('talk');
 
         });
@@ -90,6 +90,8 @@ class BulkySituation extends Quest {
     }
 
     hasRequirement() {
+        log.info(this.stage);
+        log.info(this.getItem());
         return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());
     }
 

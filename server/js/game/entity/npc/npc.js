@@ -14,10 +14,10 @@ class NPC extends Entity {
         let self = this,
             message = messages[self.talkIndex];
 
-        if (self.talkIndex > messages.length)
+        if (self.talkIndex > messages.length - 1)
             self.talkIndex = 0;
-
-        self.talkIndex++;
+        else
+            self.talkIndex++;
 
         return message;
     }

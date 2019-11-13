@@ -163,7 +163,7 @@ class Quest {
     }
 
     hasDoorUnlocked(door) {
-        return false;
+        return this.stage > 9998;
     }
 
     isFinished() {

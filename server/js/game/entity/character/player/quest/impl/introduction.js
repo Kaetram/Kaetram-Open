@@ -51,7 +51,7 @@ class Introduction extends Quest {
                 text: npc.talk(conversation)
             }));
 
-            if (npc.talkIndex > conversation.length)
+            if (npc.talkIndex === 0)
                 self.progress('talk');
 
         });

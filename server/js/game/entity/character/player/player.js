@@ -173,6 +173,22 @@ class Player extends Character {
         if (config.offlineMode)
             return;
 
+        self.database.loader.getAchievements(self, (ids, progress) => {
+            ids.pop();
+            progress.pop();
+
+            log.info(ids);
+            log.info(progress);
+
+            if (self.quests.getAchievementSize() !== ids.length) {
+                log.info('Mismatch in achievements data.');
+
+                self.save();
+            }
+
+            self.quests.updateAchievements(ids, progress);
+        });
+
         self.database.loader.getQuests(self, (ids, stages) => {
             if (!ids || !stages) {
                 self.quests.updateQuests(ids, stages);
@@ -191,19 +207,6 @@ class Player extends Character {
             }
 
             self.quests.updateQuests(ids, stages);
-        });
-
-        self.database.loader.getAchievements(self, (ids, progress) => {
-            ids.pop();
-            progress.pop();
-
-            if (self.quests.getAchievementSize() !== ids.length) {
-                log.info('Mismatch in achievements data.');
-
-                self.save();
-            }
-
-            self.quests.updateAchievements(ids, progress);
         });
 
         self.quests.onReady(() => {

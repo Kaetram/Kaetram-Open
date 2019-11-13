@@ -54,7 +54,7 @@ class Achievement {
                 text: npc.talk(self.data.text)
             }));
 
-            if (!self.isStarted() && npc.talkIndex > self.data.text.length)
+            if (!self.isStarted() && npc.talkIndex === 0)
                 self.step();
         }
     }
