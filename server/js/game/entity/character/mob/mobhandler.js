@@ -28,8 +28,8 @@ class MobHandler {
         self.roamingInterval = setInterval(() => {
 
             if (!self.mob.dead) {
-                let newX = self.mob.x + Utils.randomInt(-4, self.maxRoamingDistance),
-                    newY = self.mob.y + Utils.randomInt(-4, self.maxRoamingDistance),
+                let newX = self.mob.x + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
+                    newY = self.mob.y + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
                     distance = Utils.getDistance(self.spawnLocation[0], self.spawnLocation[1], newX, newY);
 
                 if (self.map.isColliding(newX, newY))
