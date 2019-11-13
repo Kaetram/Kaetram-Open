@@ -206,9 +206,18 @@ class Player extends Character {
             self.quests.updateQuests(ids, stages);
         });
 
-        self.quests.onReady(() => {
+        self.quests.onQuestsReady(() => {
 
-            self.send(new Messages.Quest(Packets.QuestOpcode.Batch, self.quests.getData()));
+            self.send(new Messages.Quest(Packets.QuestOpcode.QuestBatch, self.quests.getQuestData()));
+
+            /* Update region here because we receive quest info */
+            self.updateRegion();
+
+        });
+
+        self.quests.onAchievementsReady(() => {
+
+            self.send(new Messages.Quest(Packets.QuestOpcode.AchievementBatch, self.quests.getAchievementData()));
 
             /* Update region here because we receive quest info */
             self.updateRegion();

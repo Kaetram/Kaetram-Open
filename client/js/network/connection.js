@@ -619,9 +619,15 @@ define(function() {
             self.messages.onQuest(function(opcode, info) {
 
                 switch (opcode) {
-                    case Packets.QuestOpcode.Batch:
+                    case Packets.QuestOpcode.AchievementBatch:
 
-                        self.interface.getQuestPage().load(info.quests, info.achievements);
+                        self.interface.getQuestPage().loadAchievements(info.achievements);
+
+                        break;
+
+                    case Packets.QuestOpcode.QuestBatch:
+
+                        self.interface.getQuestPage().loadQuests(info.quests);
 
                         break;
 

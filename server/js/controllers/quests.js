@@ -54,8 +54,8 @@ class Quests {
             if (!isNaN(parseInt(ids[id])) && self.quests[id])
                 self.quests[id].load(stages[id]);
 
-        if (self.readyCallback)
-            self.readyCallback();
+        if (self.questsReadyCallback)
+            self.questsReadyCallback();
     }
 
     updateAchievements(ids, progress) {
@@ -64,6 +64,9 @@ class Quests {
         for (let id = 0; id < ids.length; id++)
             if (!isNaN(parseInt(ids[id])) && self.achievements[id])
                 self.achievements[id].setProgress(progress[id]);
+
+        if (self.achievementsReadyCallback)
+            self.achievementsReadyCallback();
     }
 
     getQuest(id) {
@@ -112,23 +115,30 @@ class Quests {
         }
     }
 
-    getData() {
+    getAchievementData() {
         let self = this,
-            quests = [],
             achievements = [];
-
-        self.forEachQuest((quest) => {
-            quests.push(quest.getInfo());
-        });
 
         self.forEachAchievement((achievement) => {
             achievements.push(achievement.getInfo());
         });
 
         return {
-            quests: quests,
             achievements: achievements
-        };
+        }
+    }
+
+    getQuestData() {
+        let self = this,
+            quests = [];
+
+        self.forEachQuest((quest) => {
+            quests.push(quest.getInfo());
+        });
+
+        return {
+            quests: quests
+        }
     }
 
     forEachQuest(callback) {
@@ -266,8 +276,12 @@ class Quests {
         return false;
     }
 
-    onReady(callback) {
-        this.readyCallback = callback;
+    onAchievementsReady(callback) {
+        this.achievementsReadyCallback = callback;
+    }
+
+    onQuestsReady(callback) {
+        this.questsReadyCallback = callback;
     }
 
 }
