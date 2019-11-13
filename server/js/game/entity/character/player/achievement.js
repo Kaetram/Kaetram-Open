@@ -36,7 +36,7 @@ class Achievement {
         self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
             id: self.id,
             name: self.name,
-            progress: self.progress - 1,
+            progress: self.progress,
             count: self.data.count,
             isQuest: false
         }));
@@ -119,7 +119,7 @@ class Achievement {
     }
 
     setProgress(progress) {
-        this.progress = progress;
+        this.progress = parseInt(progress);
     }
 
     isStarted() {

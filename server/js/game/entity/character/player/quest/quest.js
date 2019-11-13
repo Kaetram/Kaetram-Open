@@ -26,7 +26,7 @@ class Quest {
         if (!stage)
             self.update();
         else
-            self.stage = stage;
+            self.stage = parseInt(stage);
     }
 
     finish() {

@@ -101,6 +101,8 @@ define(['jquery', '../page'], function($, Page) {
 
             if (!info.isQuest && info.count > 2)
                 name.text(info.name + ' ' + info.progress + '/' + (info.count - 1));
+            else
+                name.text(info.name);
 
             name.css('background', 'rgba(255, 255, 10, 0.4)');
         },
