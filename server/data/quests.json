@@ -1,7 +1,7 @@
 {
-  "The Knack Of": {
+  "Introduction": {
     "id": 0,
-    "name": "A Great Start",
+    "name": "Introduction",
     "description": "Teaching you the basics about Kaetram",
     "npcs": [17, 16, 8],
     "stages": 23,
