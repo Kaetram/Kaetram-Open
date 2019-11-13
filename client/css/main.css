@@ -529,6 +529,11 @@ footer div {
 
 @media only screen and (max-width: 1000px) {
 
+    .loader {
+        position: relative;
+        margin-top: 34%;
+    }
+
     #credits, #about, #death, #git {
         width: 422px;
         height: 182px;
