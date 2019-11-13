@@ -377,6 +377,12 @@ class Commands {
 
                 return;
 
+            case 'finishQuest':
+
+                self.player.quests.getQuest(1).finish();
+
+                break;
+
         }
     }
 

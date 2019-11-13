@@ -266,6 +266,18 @@ class Map {
         return self.collisions.indexOf(tileIndex) > -1;
     }
 
+    /* For preventing NPCs from roaming in null areas. */
+    isEmpty(x, y) {
+        let self = this;
+
+        if (self.isOutOfBounds(x, y))
+            return true;
+
+        let tileIndex = self.gridPositionToIndex(x - 1, y);
+
+        return ClientMap.data[tileIndex] === 0;
+    }
+
     getActualTileIndex(tileIndex) {
         let self = this,
             tileset = self.getTileset(tileIndex);
