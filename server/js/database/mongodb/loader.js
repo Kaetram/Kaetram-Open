@@ -62,6 +62,9 @@ class Loader {
                     if (info.username !== player.username)
                         log.notice('[Loader] Mismatch in usernames whilst retrieving quest data for: ' + player.username);
 
+                    log.info(info.ids);
+                    log.info(info.stages);
+
                     callback(info.ids.split(' '), info.stages.split(' '));
                 } else
                     callback(null, null);

@@ -53,6 +53,8 @@ class Quest {
             id: self.id,
             isQuest: true
         }));
+
+        self.update();
     }
 
     setStage(stage) {

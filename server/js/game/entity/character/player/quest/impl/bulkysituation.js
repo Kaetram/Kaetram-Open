@@ -83,6 +83,8 @@ class BulkySituation extends Quest {
             stage: self.stage,
             isQuest: true
         }));
+
+        self.update();
     }
 
     finish() {
@@ -90,8 +92,6 @@ class BulkySituation extends Quest {
     }
 
     hasRequirement() {
-        log.info(this.stage);
-        log.info(this.getItem());
         return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());
     }
 

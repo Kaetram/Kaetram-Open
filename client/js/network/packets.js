@@ -112,9 +112,10 @@ Packets.BankOpcode = {
 };
 
 Packets.QuestOpcode = {
-    Batch: 0,
-    Progress: 1,
-    Finish: 2
+    QuestBatch: 0,
+    AchievementBatch: 1,
+    Progress: 2,
+    Finish: 3
 };
 
 Packets.NotificationOpcode = {
