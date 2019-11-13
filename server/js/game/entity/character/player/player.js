@@ -177,9 +177,6 @@ class Player extends Character {
             ids.pop();
             progress.pop();
 
-            log.info(ids);
-            log.info(progress);
-
             if (self.quests.getAchievementSize() !== ids.length) {
                 log.info('Mismatch in achievements data.');
 
