@@ -206,15 +206,6 @@ class Player extends Character {
             self.quests.updateQuests(ids, stages);
         });
 
-        self.quests.onQuestsReady(() => {
-
-            self.send(new Messages.Quest(Packets.QuestOpcode.QuestBatch, self.quests.getQuestData()));
-
-            /* Update region here because we receive quest info */
-            self.updateRegion();
-
-        });
-
         self.quests.onAchievementsReady(() => {
 
             self.send(new Messages.Quest(Packets.QuestOpcode.AchievementBatch, self.quests.getAchievementData()));
@@ -222,7 +213,19 @@ class Player extends Character {
             /* Update region here because we receive quest info */
             self.updateRegion();
 
+            self.achievementsLoaded = true;
         });
+
+        self.quests.onQuestsReady(() => {
+
+            self.send(new Messages.Quest(Packets.QuestOpcode.QuestBatch, self.quests.getQuestData()));
+
+            /* Update region here because we receive quest info */
+            self.updateRegion();
+
+            self.questsLoaded = true;
+        });
+
     }
 
     intro() {
@@ -1074,7 +1077,8 @@ class Player extends Character {
     save() {
         let self = this;
 
-        if (config.offlineMode || self.isGuest)
+        if (config.offlineMode || self.isGuest || !self.questsLoaded ||
+            !self.achievementsLoaded)
             return;
 
         self.database.creator.save(self);

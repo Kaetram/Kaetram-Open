@@ -383,6 +383,18 @@ class Commands {
 
                 break;
 
+            case 'finishAchievement':
+
+                self.player.quests.achievements[0].finish();
+
+                break;
+
+            case 'resetAchievement':
+
+                self.player.quests.achievements[1].setProgress(0);
+
+                break;
+
         }
     }
 
