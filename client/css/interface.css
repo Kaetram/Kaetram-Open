@@ -433,8 +433,8 @@
 
 #mapFrame {
     position: absolute;
-    top: 15%;
-    left: 22%;
+    top: 20%;
+    left: 28%;
     background-repeat: no-repeat;
     pointer-events: auto;
     display: none;
@@ -726,7 +726,7 @@
 
     #armourSlot {
         left: 312px;
-        top: 356px;
+        top: 358px;
     }
 
     #pendantSlot {
@@ -2100,13 +2100,6 @@
         width: 16px;
     }
 
-    .close {
-        width: 16px;
-        height: 16px;
-
-        background: url('../img/1/containers.png') -32px -166px;
-    }
-
     .close.active {
         background-position: -48px -166px;
     }
@@ -2145,9 +2138,8 @@
     }
 
     #mapFrame {
-        width: 270px;
-        height: 180px;
-        background: url('../img/1/mapframe.png');;
+        top: 15%;
+        left: 18%;
     }
 
     .mapButton {
