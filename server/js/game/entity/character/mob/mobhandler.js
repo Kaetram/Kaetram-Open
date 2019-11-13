@@ -32,21 +32,31 @@ class MobHandler {
                     newY = self.mob.y + Utils.randomInt(-4, self.maxRoamingDistance),
                     distance = Utils.getDistance(self.spawnLocation[0], self.spawnLocation[1], newX, newY);
 
-                if (!self.map.isColliding(newX, newY) &&
-                    distance < self.mob.maxRoamingDistance &&
-                    !self.mob.combat.started) {
+                if (self.map.isColliding(newX, newY))
+                    return;
 
-                    self.mob.setPosition(newX, newY);
+                if (self.map.isEmpty(newX, newY))
+                    return;
 
-                    self.world.push(Packets.PushOpcode.Regions, {
-                        regionId: self.mob.region,
-                        message: new Messages.Movement(Packets.MovementOpcode.Move, {
-                            id: self.mob.instance,
-                            x: newX,
-                            y: newY
-                        })
-                    });
-                }
+                if (self.map.isDoor(newX, newY))
+                    return;
+
+                if (distance < self.mob.maxRoamingDistance)
+                    return;
+
+                if (self.mob.combat.started)
+                    return;
+
+                self.mob.setPosition(newX, newY);
+
+                self.world.push(Packets.PushOpcode.Regions, {
+                    regionId: self.mob.region,
+                    message: new Messages.Movement(Packets.MovementOpcode.Move, {
+                        id: self.mob.instance,
+                        x: newX,
+                        y: newY
+                    })
+                });
 
             }
 
