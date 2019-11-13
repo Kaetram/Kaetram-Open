@@ -21,7 +21,8 @@ class Loader {
                         log.notice('[Loader] Mismatch in usernames whilst retrieving inventory data for: ' + player.username);
 
                     callback(info.ids.split(' '), info.counts.split(' '), info.abilities.split(' '), info.abilityLevels.split(' '));
-                }
+                } else
+                    callback(null, null, null, null);
 
             });
         });

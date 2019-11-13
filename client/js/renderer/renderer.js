@@ -133,12 +133,12 @@ define(['jquery', './camera', './tile',
             self.screenWidth = self.camera.gridWidth * self.tileSize;
             self.screenHeight = self.camera.gridHeight * self.tileSize;
 
-            var width = self.screenWidth * self.superScaling,
-                height = self.screenHeight * self.superScaling;
+            self.canvasWidth = self.screenWidth * self.superScaling;
+            self.canvasHeight = self.screenHeight * self.superScaling;
 
             self.forEachCanvas(function(canvas) {
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = self.canvasWidth;
+                canvas.height = self.canvasHeight;
             });
         },
 
