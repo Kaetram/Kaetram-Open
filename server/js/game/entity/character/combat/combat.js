@@ -378,7 +378,7 @@ class Combat {
         if (character.type !== 'mob')
             return;
 
-        character.move(x, y);
+        character.setPosition(x, y);
     }
 
     hit(character, target, hitInfo) {
