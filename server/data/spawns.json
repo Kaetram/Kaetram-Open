@@ -1,0 +1,38 @@
+[
+  { "type": "mob", "string": "rat", "x": 23, "y": 85, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 19, "y": 98, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 35, "y": 100, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 45, "y": 85, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 77, "y": 80, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 100, "y": 77, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 95, "y": 82, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 80, "y": 99, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 89, "y": 111, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 27, "y": 100, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 55, "y": 95, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 41, "y": 113, "roaming": true },
+
+  { "type": "mob", "string": "goblin", "x": 53, "y": 108, "roaming": true },
+  { "type": "mob", "string": "goblin", "x": 60, "y": 108, "roaming": true },
+  { "type": "mob", "string": "goblin", "x": 92, "y": 96, "roaming": true },
+  { "type": "mob", "string": "goblin", "x": 92, "y": 93, "roaming": true },
+  { "type": "mob", "string": "goblin", "x": 97, "y": 92, "roaming": true },
+  { "type": "mob", "string": "goblin", "x": 103, "y": 116, "roaming": true },
+  { "type": "mob", "string": "goblin", "x": 98, "y": 121, "roaming": true },
+
+  { "type": "mob", "string": "bat", "x": 51, "y": 90, "roaming": true },
+  { "type": "mob", "string": "bat", "x": 106, "y": 79, "roaming": true },
+  { "type": "mob", "string": "bat", "x": 105, "y": 93, "roaming": true },
+  { "type": "mob", "string": "bat", "x": 70, "y": 108, "roaming": true },
+  { "type": "mob", "string": "bat", "x": 77, "y": 89, "roaming": true },
+
+
+  { "type": "mob", "string": "rat", "x": 23, "y": 465, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 29, "y": 468, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 29, "y": 463, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 33, "y": 470, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 32, "y": 460, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 37, "y": 464, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 31, "y": 468, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 33, "y": 466, "roaming": true }
+]

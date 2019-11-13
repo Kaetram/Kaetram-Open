@@ -109,6 +109,7 @@ class World {
             self.region.parseRegions();
 
         }, 1000 / self.updateTime);
+
     }
 
     /****************************
@@ -257,12 +258,13 @@ class World {
         let self = this,
             entities = 0;
 
-        _.each(self.map.staticEntities, (key, tileIndex) => {
-            let isMob = !!Mobs.Properties[key],
+        _.each(self.map.staticEntities, (data) => {
+            let key = data.string,
+                isMob = !!Mobs.Properties[key],
                 isNpc = !!NPCs.Properties[key],
                 isItem = !!Items.Data[key],
                 info = isMob ? Mobs.Properties[key] : (isNpc ? NPCs.Properties[key] : isItem ? Items.getData(key) : null),
-                position = self.map.indexToGridPosition(tileIndex);
+                position = self.map.indexToGridPosition(data.tileIndex);
 
             position.x++;
 
@@ -275,12 +277,17 @@ class World {
             let instance = Utils.generateInstance(isMob ? 2 : (isNpc ? 3 : 4), info.id + entities, position.x + entities, position.y);
 
             if (isMob) {
-                let mob = new Mob(info.id, instance, position.x, position.y);
+                let mob = new Mob(info.id, instance, position.x, position.y, self);
 
                 mob.static = true;
 
+                if (data.roaming)
+                    mob.roaming = true;
+
                 if (Mobs.Properties[key].hiddenName)
                     mob.hiddenName = Mobs.Properties[key].hiddenName;
+
+                mob.load();
 
                 mob.onRespawn(() => {
 
