@@ -36,6 +36,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             self.lastMousePosition = { x: 0, y: 0 };
 
             self.hovering = null;
+            self.hoveringInstance = null; // for debugging
 
             self.mouse = {
                 x: 0,
@@ -282,6 +283,9 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 self.setCursor(self.cursors['hand']);
                 self.hovering = null;
             } else {
+                if (self.renderer.debugging)
+                    self.hoveringInstance = entity.id;
+
                 switch (entity.type) {
                     case 'item':
                     case 'chest':

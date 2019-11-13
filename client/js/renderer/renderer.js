@@ -645,7 +645,7 @@ define(['jquery', './camera', './tile',
                 player = self.game.player;
 
             self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 31, false, 'white');
-            self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y, 10, 51, false, 'white');
+            self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringInstance, 10, 51, false, 'white');
         },
 
         drawCollisions: function() {
