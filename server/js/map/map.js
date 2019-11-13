@@ -10,8 +10,10 @@ let _ = require('underscore'),
     MusicAreas = require('./areas/musicareas'),
     ChestAreas = require('./areas/chestareas'),
     map = require('../../data/map/world_server'),
+    Spawns = require('../../data/spawns'),
     OverlayAreas = require('./areas/overlayareas'),
     CameraAreas = require('./areas/cameraareas'),
+    Mobs = require('../util/mobs'),
     ClientMap = require('../../data/map/world_client');
 
 class Map {
@@ -38,7 +40,9 @@ class Map {
         self.roamingAreas = map.roamingAreas;
         self.chestAreas = map.chestAreas;
         self.chests = map.chests;
-        self.staticEntities = map.staticEntities;
+
+        self.loadStaticEntities();
+
         self.tilesets = map.tilesets;
         self.lights = map.lights;
 
@@ -132,6 +136,44 @@ class Map {
         });
 
 
+    }
+
+    loadStaticEntities() {
+        let self = this;
+
+        self.staticEntities = [];
+
+        // Legacy static entities (from Tiled);
+        _.each(map.staticEntities, (string, tileIndex) => {
+
+            self.staticEntities.push({
+                tileIndex: tileIndex,
+                string: string
+            });
+
+        });
+
+        _.each(Spawns, (data) => {
+            let tileIndex;
+
+
+            switch (data.type) {
+
+                case 'mob':
+
+                    tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
+
+                    self.staticEntities.push({
+                        tileIndex: tileIndex,
+                        string: data.string,
+                        roaming: data.roaming
+                    });
+
+                    break;
+
+            }
+
+        });
     }
 
     indexToGridPosition(tileIndex) {
