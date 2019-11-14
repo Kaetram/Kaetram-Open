@@ -146,11 +146,14 @@ class Tenebris extends Combat {
         if (!self.world)
             return;
 
-        self.world.pushToAdjacentGroups(self.character.target.group, new Messages.NPC(Packets.NPCOpcode.Talk, {
-            id: instance,
-            text: message,
-            nonNPC: true
-        }));
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
+            message: new Messages.NPC(Packets.NPCOpcode.Talk, {
+                id: instance,
+                text: message,
+                nonNPC: true
+            })
+        });
 
     }
 

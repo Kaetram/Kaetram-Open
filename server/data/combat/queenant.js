@@ -190,10 +190,14 @@ class QueenAnt extends Combat {
     pushCountdown(count) {
         var self = this;
 
-        self.world.pushToAdjacentGroups(self.character.group, new Messages.NPC(Packets.NPCOpcode.Countdown, {
-            id: self.character.instance,
-            countdown: count
-        }));
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
+            message: new Messages.NPC(Packets.NPCOpcode.Countdown, {
+                id: self.character.instance,
+                countdown: count
+            })
+        });
+
     }
 
     getMinions() {
