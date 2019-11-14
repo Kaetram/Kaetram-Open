@@ -46,7 +46,7 @@ class SkeletonKing extends Combat {
         if (self.canSpawn())
             self.spawnMinions();
 
-        self._super(character, target, hitInfo);
+        super.hit(character, target, hitInfo);
     }
 
     spawnMinions() {

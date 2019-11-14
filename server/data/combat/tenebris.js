@@ -60,7 +60,7 @@ class Tenebris extends Combat {
         if (self.canSpawn())
             self.spawnIllusions();
 
-        self._super(attacker, target, hitInfo);
+        super.hit(attacker, target, hitInfo);
     }
 
     spawnTenbris() {

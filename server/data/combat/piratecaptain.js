@@ -41,7 +41,7 @@ class PirateCaptain extends Combat {
         if (self.canTeleport())
             self.teleport();
         else
-            self._super(character, target, hitInfo);
+            super.hit(character, target, hitInfo);
     }
 
     teleport() {

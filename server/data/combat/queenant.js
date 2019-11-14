@@ -65,7 +65,7 @@ class QueenAnt extends Combat {
 
         self.resetAoE();
 
-        self._super(attacker);
+        super.begin(attacker);
     }
 
     hit(attacker, target, hitInfo) {
@@ -85,7 +85,7 @@ class QueenAnt extends Combat {
         if (self.isAttacked())
             self.beginMinionAttack();
 
-        self._super(attacker, target, hitInfo);
+        super.hit(attacker, target, hitInfo);
     }
 
     doAoE() {
@@ -94,7 +94,7 @@ class QueenAnt extends Combat {
         /**
          * The reason this function does not use its superclass
          * representation is because of the setTimeout function
-         * which does not allow us to call _super().
+         * which does not allow us to call super().
          */
 
         self.resetAoE();
