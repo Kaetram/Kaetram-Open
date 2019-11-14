@@ -82,7 +82,7 @@ class OgreLord extends Combat {
                 id: self.character.instance,
                 text: message,
                 nonNPC: true
-            });
+            })
         });
 
     }
