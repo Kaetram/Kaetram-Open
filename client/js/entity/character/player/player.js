@@ -20,6 +20,7 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.rights = 0;
             self.wanted = false;
             self.experience = -1;
+            self.nextExperience = -1;
             self.level = -1;
             self.pvpKills = -1;
             self.pvpDeaths = -1;
@@ -54,6 +55,7 @@ define(['../character', './equipment/armour', './equipment/weapon',
 
             self.username = data.username;
             self.experience = data.experience;
+            self.nextExperience = data.nextExperience;
             self.level = data.level;
 
             self.lastLogin = data.lastLogin;
