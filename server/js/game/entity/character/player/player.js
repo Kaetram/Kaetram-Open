@@ -107,6 +107,7 @@ class Player extends Character {
         self.warp.setLastWarp(data.lastWarp);
 
         self.level = Formulas.expToLevel(self.experience);
+        self.nextExperience = Formulas.nextExp(self.experience);
         self.hitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(self.level));
         self.mana = new Mana(data.mana, Formulas.getMaxMana(self.level));
 
@@ -262,6 +263,7 @@ class Player extends Character {
             hitPoints: self.hitPoints.getData(),
             mana: self.mana.getData(),
             experience: self.experience,
+            nextExperience: self.nextExperience,
             level: self.level,
             lastLogin: self.lastLogin,
             pvpKills: self.pvpKills,
@@ -300,16 +302,28 @@ class Player extends Character {
         let oldLevel = self.level;
 
         self.level = Formulas.expToLevel(self.experience);
+        self.nextExperience = Formulas.nextExp(self.experience);
 
         if (oldLevel !== self.level)
             self.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(self.level));
 
-        self.sendToAdjacentRegions(self.region, new Messages.Experience({
+        let data = {
             id: self.instance,
-            amount: exp,
-            experience: self.experience,
             level: self.level
-        }));
+        };
+
+        /**
+         * Sending two sets of data as other users do not need to
+         * know the experience of another player.. (yet).
+         */
+
+        self.sendToAdjacentRegions(self.region, new Messages.Experience(data), self.instance);
+
+        data.amount = exp;
+        data.experience = self.experience;
+        data.nextExperience = self.nextExperience;
+
+        self.send(new Messages.Experience(data));
     }
 
     heal(amount) {

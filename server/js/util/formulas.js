@@ -132,6 +132,15 @@ Formulas.getAoEDamage = (attacker, target) => {
     return Formulas.getDamage(attacker, target);
 };
 
+Formulas.nextExp = (experience) => {
+    if (experience < 0)
+        return -1;
+
+    for (let i = 1; i < Formulas.LevelExp.length; i++)
+        if (experience < Formulas.LevelExp[i])
+            return Formulas.LevelExp[i];
+};
+
 Formulas.expToLevel = (experience) => {
     if (experience < 0)
         return -1;

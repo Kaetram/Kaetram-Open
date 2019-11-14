@@ -713,13 +713,20 @@ define(function() {
                 if (!entity || entity.type !== 'player')
                     return;
 
-                entity.experience = info.experience;
-
                 if (entity.level !== info.level) {
                     entity.level = info.level;
                     self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
-                } else if (entity.id === self.game.player.id)
+                } else if (entity.id === self.game.player.id) {
+
+                    if (info.id === self.game.player.id) {
+                        entity.experience = info.experience;
+                        entity.nextExperience = info.nextExperience;
+                    }
+
                     self.info.create(Modules.Hits.Experience, [info.amount], entity.x, entity.y);
+                }
+
+
 
                 self.interface.profile.update();
 
