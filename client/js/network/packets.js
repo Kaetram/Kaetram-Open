@@ -81,7 +81,8 @@ Packets.TargetOpcode = {
 Packets.CombatOpcode = {
     Initiate: 0,
     Hit: 1,
-    Finish: 2
+    Finish: 2,
+    Sync: 3
 };
 
 Packets.ProjectileOpcode = {

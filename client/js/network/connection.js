@@ -435,6 +435,13 @@ define(function() {
                             attacker.removeTarget();
 
                         break;
+
+                    case Packets.CombatOpcode.Sync:
+
+                        if (target.x !== info.x || target.y !== info.y)
+                            self.game.moveCharacter(target, info.x, info.y);
+
+                        break;
                 }
             });
 
