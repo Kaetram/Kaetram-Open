@@ -71,7 +71,7 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.itemCount {
+.itemCount, .inventoryItemCount {
     font-family: 'AdvoCut', sans-serif;
     color: rgba(255, 255, 255, 1);
 }
@@ -246,8 +246,8 @@
 #bank {
     display: none;
     position: absolute;
-    top: 10%;
-    left: 10%;
+    top: 20%;
+    left: 25%;
 }
 
 #bankContainer {
@@ -266,6 +266,10 @@
 .inventorySlots {
     position: absolute;
     top: 13%;
+    left: 6%;
+}
+
+#shopInventorySlots {
     left: 14%;
 }
 
@@ -464,6 +468,8 @@
     display: none;
     top: 17%;
     left: 50%;
+
+    cursor: default;
 }
 
 #shopInventoryContainer {
@@ -644,7 +650,7 @@
         border: 3px solid #fcda5c;
     }
 
-    .itemCount {
+    .itemCount, .inventoryItemCount {
         width: 48px;
         height: 21px;
         font-size: 18px;
@@ -1236,7 +1242,7 @@
         border: 2px solid #fcda5c;
     }
 
-    .itemCount {
+    .itemCount, .inventoryItemCount {
         width: 32px;
         height: 14px;
         font-size: 12px;
@@ -2247,6 +2253,15 @@
 
     #inventory {
         right: 40px;
+    }
+
+    .itemCount {
+        width: 16px;
+        height: 7px;
+        font-size: 7px;
+        text-align: center;
+        margin-left: 1px;
+        margin-top: -7px;
     }
 
 }

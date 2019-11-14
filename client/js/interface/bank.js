@@ -51,8 +51,17 @@ define(['jquery', './container/container'], function($, Container) {
                 if (Detect.isMobile())
                     image.css('background-size', '600%');
 
+                var count = item.count;
+
+                if (count > 999999)
+                    count = count.toString().substring(0, count.toString().length - 6) + 'M';
+                else if (count > 9999)
+                    count = count.toString().substring(0, 2) + 'K';
+                else if (count === 1)
+                    count = '';
+
                 slot.append(image);
-                slot.append('<div id="bankItemCount' + i + '" class="itemCount">' + (item.count > 1 ? item.count : '') + '</div>');
+                slot.append('<div id="bankItemCount' + i + '" class="itemCount">' + count + '</div>');
 
                 slot.find('#bankItemCount' + i).css({
                     'font-size': (4 * self.getScale()) + 'px',
@@ -88,8 +97,17 @@ define(['jquery', './container/container'], function($, Container) {
                 if (Detect.isMobile())
                     slotImage.css('background-size', '600%');
 
+                var count = iItem.count;
+
+                if (count > 999999)
+                    count = count.toString().substring(0, count.toString().length - 6) + 'M';
+                else if (count > 9999)
+                    count = count.toString().substring(0, 2) + 'K';
+                else if (count === 1)
+                    count = '';
+
                 iSlot.append(slotImage);
-                iSlot.append('<div id="inventoryItemCount' + j + '" class="itemCount">' + (iItem.count > 1 ? iItem.count : '') + '</div>');
+                iSlot.append('<div id="inventoryItemCount' + j + '" class="itemCount">' + count + '</div>');
 
                 iSlot.find('#inventoryItemCount' + j).css({
                     'margin-top': '0',
@@ -249,7 +267,7 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         getScale: function() {
-            return this.game.renderer.getScale();
+            return this.game.app.getUIScale();
         },
 
         getBankList: function() {

@@ -22,6 +22,13 @@ define(['jquery', './container/container'], function($, Container) {
             self.items = [];
             self.counts = [];
 
+            self.close = $('#closeShop');
+
+            self.close.css('left', '97%');
+            self.close.click(function() {
+                self.hide();
+            });
+
         },
 
         buy: function(event) {
@@ -84,7 +91,7 @@ define(['jquery', './container/container'], function($, Container) {
                 itemName = $('<div id="shopItemName' + i + '" class="shopItemName"></div>');
                 itemBuy = $('<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>');
 
-                itemImage.css('background-image', self.container.getImageFormat(self.getScale(), string));
+                itemImage.css('background-image', self.container.getImageFormat(1, string));
                 itemCount.html(count);
                 itemName.html(name);
                 itemBuy.html('Purchase');
