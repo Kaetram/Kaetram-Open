@@ -421,16 +421,14 @@ define(['jquery'], function($) {
         },
 
         getScaleFactor: function() {
+            return 3;
+        },
+
+        getUIScale: function() {
             var width = window.innerWidth,
                 height = window.innerHeight;
 
-            /**
-             * These are raw scales, we can adjust
-             * for up-scaled rendering in the actual
-             * rendering file.
-             */
-
-            return 3;
+            return width <= 1000 ? 1 : ((width <= 1500 || height <= 870) ? 2 : 3);
         },
 
         revertLoader: function() {
