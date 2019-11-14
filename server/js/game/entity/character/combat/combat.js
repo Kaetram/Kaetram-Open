@@ -149,11 +149,11 @@ class Combat {
             if (self.isAttacked() || self.character.hasTarget())
                 self.lastAction = self.getTime();
 
-            if (self.onSameTile()) {
-                let newPosition = self.getNewPosition();
+            //if (self.onSameTile()) {
+            //    let newPosition = self.getNewPosition();
 
-                self.move(self.character, newPosition.x, newPosition.y);
-            }
+            //    self.move(self.character, newPosition.x, newPosition.y);
+            //}
 
             if (self.character.hasTarget() && !self.inProximity()) {
                 let attacker = self.getClosestAttacker();

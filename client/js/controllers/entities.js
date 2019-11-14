@@ -315,8 +315,8 @@ define(['../renderer/grids', '../entity/objects/chest',
 
                     self.grids.addToEntityGrid(entity, entity.gridX, entity.gridY);
 
-                    if (entity.type !== 'player' || entity.nonPathable)
-                        self.grids.addToPathingGrid(entity.gridX, entity.gridY);
+                    /*if (entity.type !== 'player' || entity.nonPathable)
+                          self.grids.addToPathingGrid(entity.gridX, entity.gridY);*/
                 }
 
                 if (entity.type === 'item')
@@ -338,8 +338,8 @@ define(['../renderer/grids', '../entity/objects/chest',
                 if (entity.nextGridX > -1 && entity.nextGridY > -1) {
                     self.grids.entityGrid[entity.nextGridY][entity.nextGridX][entity.id] = entity;
 
-                    if (!(entity instanceof Player))
-                        self.grids.pathingGrid[entity.nextGridY][entity.nextGridX] = 1;
+                    /*if (!(entity instanceof Player))
+                        self.grids.pathingGrid[entity.nextGridY][entity.nextGridX] = 1;*/
                 }
             },
 
