@@ -139,8 +139,6 @@ class Player extends Character {
             return;
         }
 
-        log.info('loading inventory');
-
         self.database.loader.getInventory(self, (ids, counts, skills, skillLevels) => {
             if (ids === null && counts === null) {
                 self.inventory.loadEmpty();

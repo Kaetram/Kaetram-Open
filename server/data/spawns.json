@@ -1,7 +1,7 @@
 [
   { "type": "mob", "string": "rat", "x": 23, "y": 85, "roaming": true },
   { "type": "mob", "string": "rat", "x": 19, "y": 98, "roaming": true },
-  { "type": "mob", "string": "rat", "x": 35, "y": 100, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 35, "y": 97, "roaming": true },
   { "type": "mob", "string": "rat", "x": 45, "y": 85, "roaming": true },
   { "type": "mob", "string": "rat", "x": 77, "y": 80, "roaming": true },
   { "type": "mob", "string": "rat", "x": 100, "y": 77, "roaming": true },
