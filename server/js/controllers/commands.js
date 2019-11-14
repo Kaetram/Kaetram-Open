@@ -159,7 +159,8 @@ class Commands {
     }
 
     handleAdminCommands(command, blocks) {
-        let self = this;
+        let self = this,
+            username, player;
 
         switch (command) {
 
@@ -234,11 +235,21 @@ class Commands {
 
             case 'teletome':
 
-                let username = blocks.join(' '),
-                    player = self.world.getPlayerByName(username);
+                username = blocks.join(' ');
+                player = self.world.getPlayerByName(username);
 
                 if (player)
                     player.teleport(self.player.x, self.player.y);
+
+                return;
+
+            case 'teleto':
+
+                username = blocks.join(' ');
+                player = self.world.getPlayerByName(username);
+
+                if (player)
+                    self.player.teleport(player.x, player.y);
 
                 return;
 
