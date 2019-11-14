@@ -126,6 +126,8 @@ class Combat {
             if (self.character.target && !self.character.target.isDead())
                 self.attack(self.character.target);
 
+            self.sync();
+
             self.lastAction = self.getTime();
 
         } else
@@ -188,6 +190,23 @@ class Combat {
             return;
 
         self.queue.add(hit);
+    }
+
+    sync() {
+        let self = this;
+
+        if (self.character.type !== 'mob')
+            return;
+
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
+            message: new Messages.Combat(Packets.CombatOpcode.Sync, {
+                attackerId: self.character.instance, //irrelevant
+                targetId: self.character.instance, //can be the same since we're acting on an entity.
+                x: self.character.x,
+                y: self.character.y
+            })
+        })
     }
 
     dealAoE(radius, hasTerror) {
