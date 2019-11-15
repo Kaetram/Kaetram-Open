@@ -386,7 +386,7 @@ class Region {
                     }
                 }
             }
-        });
+        }, 2);
 
         return data;
     }
