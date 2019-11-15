@@ -341,6 +341,43 @@ html [type="button"],
     margin-top: 10%;
 }
 
+@-moz-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
+@-webkit-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
+@-o-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
+@-ms-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
+
+@-moz-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
+@-webkit-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
+@-o-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
+@-ms-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
+
+#health, #healthBar {
+    cursor: default;
+}
+
+#health {
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, #FF8888, #FF0000);
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, #FF8888, #FF0000);
+}
+
+#health.white {
+    -moz-animation:flash 0.5s linear 1;
+    -webkit-animation:flash 0.5s linear 1;
+    -o-animation:flash 0.5s linear 1;
+    -ms-animation:flash 0.5s linear 1;
+    animation:flash 0.5s linear 1;
+}
+
+#health.green {
+    -moz-animation:flash-green 0.5s linear 1;
+    -webkit-animation:flash-green 0.5s linear 1;
+    -o-animation:flash-green 0.5s linear 1;
+    -ms-animation:flash-green 0.5s linear 1;
+    animation:flash-green 0.5s linear 1;
+}
+
 @media only screen and (min-width: 1501px) {
 
     #parchment h1, #loadCharacter h1, #about h1 {

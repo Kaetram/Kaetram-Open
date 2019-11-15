@@ -567,7 +567,12 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         setMaxHitPoints: function (maxHitPoints) {
-            this.maxHitPoints = maxHitPoints;
+            var self = this;
+
+            self.maxHitPoints = maxHitPoints;
+
+            if (self.maxHitPointsCallback)
+                self.maxHitPointsCallback(self.maxHitPoints);
         },
 
         setOrientation: function(orientation) {
@@ -608,6 +613,10 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
         onHitPoints: function(callback) {
             this.hitPointsCallback = callback;
+        },
+
+        onMaxHitPoints: function(callback) {
+            this.maxHitPointsCallback = callback;
         }
 
     });

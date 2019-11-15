@@ -135,6 +135,7 @@ define(function() {
             self.player.onUpdateArmour(function(armourName) {
                 self.player.setSprite(self.game.getSprite(armourName));
             });
+
         },
 
         isAttackable: function() {
