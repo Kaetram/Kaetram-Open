@@ -133,6 +133,8 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 action = event.currentTarget ? event.currentTarget.id : event;
 
+            log.info(action);
+
             if (!self.selectedSlot || !self.selectedItem)
                 return;
 
@@ -148,9 +150,13 @@ define(['jquery', './container/container'], function($, Container) {
                 case 'drop':
                     var item = self.selectedItem;
 
-                    if (item.count > 1)
+                    if (item.count > 1) {
+                        if (Detect.isMobile())
+                            self.hide(true);
+
                         self.actions.displayDrop('inventory');
-                    else {
+
+                    } else {
                         self.game.socket.send(Packets.Inventory, [Packets.InventoryOpcode.Remove, item]);
                         self.clearSelection();
                     }
@@ -272,14 +278,16 @@ define(['jquery', './container/container'], function($, Container) {
             self.button.addClass('active');
         },
 
-        hide: function() {
+        hide: function(keepSelection) {
             var self = this;
 
             self.button.removeClass('active');
 
             self.body.fadeOut('slow');
             self.button.removeClass('active');
-            self.clearSelection();
+
+            if (!keepSelection)
+                self.clearSelection();
         },
 
         getScale: function() {
