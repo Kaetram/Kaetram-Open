@@ -89,12 +89,16 @@ class Tenebris extends Combat {
 
         self.character.setPosition(62, 343);
 
-        self.world.pushToGroup(self.character.group, new Messages.Teleport({
-            id: self.character.instance,
-            x: self.character.x,
-            y: self.character.y,
-            withAnimation: true
-        }));
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
+            message: new Messages.Teleport({
+                id: self.character.instance,
+                x: self.character.x,
+                y: self.character.y,
+                withAnimation: true
+            })
+        });
+        
     }
 
     removeIllusions() {
