@@ -115,13 +115,13 @@
 
 #dropDialog {
     font-family: 'AdvoCut', sans-serif;
-    font-size: 9px;
+    font-size: 16px;
     color: #e3e3e3;
     position: absolute;
     left: 50%;
     top: 50%;
-    margin-left: -76px;
-    margin-top: -23px;
+    margin-left: -100px;
+    margin-right: -28px;
     padding: 5px;
     background: rgba(45, 45, 45, 0.8);
     border-radius: 6px 6px 6px 6px;
@@ -138,11 +138,14 @@
 
 #dropTitle {
     text-align: center;
+    margin-bottom: 10px;
 }
 
 #dropAccept, #dropCancel {
     background: rgba(120, 120, 120, 0.3);
     cursor: pointer;
+
+    font-size: 18px;
 }
 
 #dropAccept:hover, #dropCancel:hover {
@@ -437,8 +440,8 @@
 
 #mapFrame {
     position: absolute;
-    top: 20%;
-    left: 28%;
+    top: 50%;
+    left: 50%;
     background-repeat: no-repeat;
     pointer-events: auto;
     display: none;
@@ -1011,7 +1014,10 @@
     #mapFrame {
         width: 810px;
         height: 540px;
-        background: url('../img/3/mapframe.png');;
+        background: url('../img/3/mapframe.png');
+
+        margin-left: -405px;
+        margin-top: -270px;
     }
 
     .mapButton {
@@ -1624,7 +1630,10 @@
     #mapFrame {
         width: 540px;
         height: 360px;
-        background: url('../img/2/mapframe.png');;
+        background: url('../img/2/mapframe.png');
+
+        margin-left: -270px;
+        margin-top: -180px;
     }
 
     .mapButton {
@@ -1814,10 +1823,12 @@
     }
 
     .actionButton {
-        width: 64px;
-        height: 16px;
+        width: 128px;
+        height: 32px;
         border-radius: 3px;
         border: 1px solid #707070;
+
+        font-size: 20px;
     }
 
     #profileDialog {
@@ -2106,14 +2117,6 @@
         width: 16px;
     }
 
-    .close.active {
-        background-position: -48px -166px;
-    }
-
-    .close:hover {
-        background-position: -64px -166px;
-    }
-
     #message {
         width: 120px;
         height: 23px;
@@ -2144,8 +2147,17 @@
     }
 
     #mapFrame {
-        top: 15%;
-        left: 18%;
+        width: 270px;
+        height: 180px;
+        background: url('../img/1/mapframe.png');
+
+        margin-left: -135px;
+        margin-top: -90px;
+    }
+
+    #closeMapFrame {
+        top: -6px;
+        left: 90%;
     }
 
     .mapButton {
