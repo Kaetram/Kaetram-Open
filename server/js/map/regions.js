@@ -40,16 +40,23 @@ class Regions {
         });
     }
 
-    getAdjacentRegions(id) {
+    // y y x y y
+    // y y x y y
+    // y x x x y
+    // y y x y x
+    // y y x y y
+
+    getAdjacentRegions(id, offset = 1) {
         let self = this,
             position = self.regionIdToPosition(id),
             x = position.x, y = position.y;
 
         let list = [];
 
-        for (let i = -1; i <= 1; i++)
-            for (let j = -1; j <= 1; j++)
-                list.push({ x: x + j, y: y + i });
+        for (let i = -offset; i <= offset; i++) // y
+            for (let j = -1; j <= 1; j++) // x
+                if (i > -2 || i < 2)
+                    list.push({ x: x + j, y: y + i });
 
         _.each(self.linkedRegions[id], (regionPosition) => {
 
@@ -76,13 +83,13 @@ class Regions {
                 callback(x + '-' + y)
     }
 
-    forEachAdjacentRegion(regionId, callback) {
+    forEachAdjacentRegion(regionId, callback, offset) {
         let self = this;
 
         if (!regionId)
             return;
 
-        _.each(self.getAdjacentRegions(regionId), (position) => {
+        _.each(self.getAdjacentRegions(regionId, offset), (position) => {
             callback(position.x + '-' + position.y);
         });
     }
