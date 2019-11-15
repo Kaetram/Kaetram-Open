@@ -34,5 +34,7 @@
   { "type": "mob", "string": "rat", "x": 32, "y": 460, "roaming": true },
   { "type": "mob", "string": "rat", "x": 37, "y": 464, "roaming": true },
   { "type": "mob", "string": "rat", "x": 31, "y": 468, "roaming": true },
-  { "type": "mob", "string": "rat", "x": 33, "y": 466, "roaming": true }
+  { "type": "mob", "string": "rat", "x": 33, "y": 466, "roaming": true },
+
+  { "type": "item", "string": "watermelon", "x": 66, "y": 137 }
 ]

@@ -154,24 +154,13 @@ class Map {
         });
 
         _.each(Spawns, (data) => {
-            let tileIndex;
+            let tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
 
-
-            switch (data.type) {
-
-                case 'mob':
-
-                    tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
-
-                    self.staticEntities.push({
-                        tileIndex: tileIndex,
-                        string: data.string,
-                        roaming: data.roaming
-                    });
-
-                    break;
-
-            }
+            self.staticEntities.push({
+                tileIndex: tileIndex,
+                string: data.string,
+                roaming: data.roaming
+            });
 
         });
     }

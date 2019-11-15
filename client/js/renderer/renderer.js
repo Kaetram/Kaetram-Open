@@ -65,7 +65,7 @@ define(['jquery', './camera', './tile',
             self.renderedFrame = [0, 0];
             self.lastTarget = [0, 0];
 
-            self.animatedTiles = [];
+            self.animatedTiles = {};
             self.drawnTiles = [];
 
             self.resizeTimeout = null;
@@ -773,8 +773,6 @@ define(['jquery', './camera', './tile',
             if (!self.animateTiles)
                 return;
 
-            var newTiles = [];
-
             self.forEachVisibleTile(function(id, index) {
                 /**
                  * We don't want to reinitialize animated tiles that already exist
@@ -789,22 +787,17 @@ define(['jquery', './camera', './tile',
                  * Push the pre-existing tiles.
                  */
 
-                var tileIndex = self.animatedTiles.indexOf(id);
+                 if (!(index in self.animatedTiles)) {
+                     var tile = new Tile(id, index, self.map),
+                        position = self.map.indexToGridPosition(tile.index);
 
-                if (tileIndex > -1) {
-                    newTiles.push(self.animatedTiles[tileIndex]);
-                    return;
-                }
+                    tile.setPosition(position);
 
-                var tile = new Tile(id, index, self.map),
-                    position = self.map.indexToGridPosition(tile.index);
+                    self.animatedTiles[index] = tile;
+                 }
 
-                tile.setPosition(position);
-
-                newTiles.push(tile);
             }, 2);
 
-            self.animatedTiles = newTiles;
         },
 
         drawCellRect: function(x, y, colour) {
