@@ -178,11 +178,11 @@ define(['../character', './equipment/armour', './equipment/weapon',
                 mana = manaData.shift(),
                 maxMana = manaData.shift();
 
-            self.setHitPoints(hitPoints);
-            self.setMana(mana);
-
             self.setMaxHitPoints(maxHitPoints);
             self.setMaxMana(maxMana);
+
+            self.setHitPoints(hitPoints);
+            self.setMana(mana);
         },
 
         setEquipment: function(type, name, string, count, ability, abilityLevel) {

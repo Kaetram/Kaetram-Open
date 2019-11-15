@@ -76,6 +76,8 @@ define(function() {
 
             self.messages.onWelcome(function(data) {
 
+                self.interface.loadHeader();
+
                 self.game.player.load(data);
 
                 self.game.start();
@@ -146,8 +148,8 @@ define(function() {
                     return;
 
                 if (data.hitPoints) {
-                    entity.hitPoints = data.hitPoints;
-                    entity.maxHitPoints = data.maxHitPoints;
+                    entity.setHitPoints(data.hitPoints);
+                    entity.setMaxHitPoints(data.maxHitPoints);
                 }
 
                 if (data.mana) {
@@ -491,6 +493,7 @@ define(function() {
 
                     if (self.game.player.hasTarget() && self.game.player.target.id === entity.id && self.input.overlay.updateCallback)
                         self.input.overlay.updateCallback(entity.id, data.hitPoints);
+
                 }
 
                 if (data.mana)

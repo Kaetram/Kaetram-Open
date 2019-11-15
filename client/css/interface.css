@@ -542,8 +542,14 @@
     cursor: pointer;
 }
 
-@media only screen and (min-width: 1501px) {
+#playerInfo {
+    position: absolute;
 
+    top: 10px;
+    left: 10px;
+}
+
+@media only screen and (min-width: 1501px) {
 
     #chatButton {
         position: relative;
@@ -1093,6 +1099,39 @@
 
     .shopItemBuy {
         font-size: 16px;
+    }
+
+    #health {
+        position: absolute;
+        top: 4.5px;
+        left: 30px;
+        width: 230px;
+        height: 26px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        -moz-transition:.5s width ease;
+        -webkit-transition:.5s width ease;
+        -o-transition:.5s width ease;
+        -ms-transition:.5s width ease;
+        transition:.5s width ease;
+    }
+
+    #healthBar {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 264px;
+        height: 39px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        color: white;
+
+        background-image: url('../img/3/main.png' );
+        background-position: 0px -834px;
     }
 
 }
@@ -1699,6 +1738,39 @@
         width: 258px;
         height: 310px;
         background: url("../img/2/containers.png") 0 0;;
+    }
+
+    #health {
+        position: absolute;
+        top: 3px;
+        left: 20px;
+        width: 154px;
+        height: 20px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        -moz-transition:.5s width ease;
+        -webkit-transition:.5s width ease;
+        -o-transition:.5s width ease;
+        -ms-transition:.5s width ease;
+        transition:.5s width ease;
+    }
+
+    #healthBar {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 176px;
+        height: 26px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        color: white;
+
+        background-image: url('../img/2/main.png' );
+        background-position: 0px -556px;
     }
 
 }
