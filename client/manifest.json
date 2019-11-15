@@ -1,0 +1,66 @@
+{
+    "dir": "ltr",
+    "lang": "en-US",
+    "default_locale": "en",
+    "name": "Kaetram",
+    "short_name": "Kaetram",
+    "version": "1.0.8",
+    "description": "A modern HTML5 multiplayer adventure!",
+    "developer": {
+        "name": "Veradictus",
+        "url": "https://github.com/Veradictus/"
+    },
+    "scope": "/",
+    "start_url": "/?utm_source=a2hs",
+    "display": "fullscreen",
+    "orientation": "landscape",
+    "theme_color": "#000000",
+    "background_color": "#000000",
+    "serviceworker": {
+        "src": "sw.js",
+        "scope": "./",
+        "type": "",
+        "update_via_cache": "none"
+    },
+    "prefer_related_applications": false,
+    "screenshots": [
+        {
+            "src": "img/screenshots/screenshot.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "categories": ["games"],
+    "icons": [
+        {
+            "src": "img/icons/icon-48x48.png",
+            "type": "image/png",
+            "sizes": "48x48"
+        },
+        {
+            "src": "img/icons/icon-72x72.png",
+            "type": "image/png",
+            "sizes": "72x72"
+        },
+        {
+            "src": "img/icons/icon-96x96.png",
+            "type": "image/png",
+            "sizes": "96x96"
+        },
+        {
+            "src": "img/icons/icon-144x144.png",
+            "type": "image/png",
+            "sizes": "144x144"
+        },
+        {
+            "src": "img/icons/icon-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "img/icons/icon-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}

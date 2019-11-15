@@ -1,356 +1,558 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="msapplication-starturl" content="/?utm_source=a2hs" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge;chrome=1" />
+        <link rel="manifest" href="./manifest.json" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"
+        />
 
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+        <!-- Open Graph -->
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:url" content="http://kaetram.com/" />
+        <meta property="og:type" content="game" />
+        <meta property="og:title" content="Kaetram" />
+        <meta property="og:site_name" content="Kaetram" />
+        <meta
+            property="og:description"
+            content="A modern HTML5 multiplayer adventure!"
+        />
+        <meta property="og:image" content="./img/favicon.png" />
 
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <meta property="og:title" content="Kaetram">
-    <meta property="og:type" content="game">
-    <meta property="og:url" content="">
-    <meta property="og:site_name" content="Kaetram">
-    <meta property="og:description" content="Description.">
+        <!-- Meta -->
+        <meta
+            name="description"
+            content="A modern HTML5 multiplayer adventure!"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="Veradictus" />
+        <meta name="image" content="./img/favicon.png" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="language" content="English" />
 
-    <link rel="icon" type="image/png" href="img/favicon.png">
+        <!-- Google -->
+        <meta itemprop="name" content="Kaetram" />
+        <meta
+            itemprop="description"
+            content="A modern HTML5 multiplayer adventure!"
+        />
+        <meta itemprop="image" content="./img/favicon.png" />
 
-    <link rel="stylesheet" type="text/css" href="css/animations.css">
-    <link rel="stylesheet" type="text/css" href="css/game.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link rel="stylesheet" type="text/css" href="css/vars.css">
-    <link rel="stylesheet" type="text/css" href="css/interface.css">
+        <!-- Mobile -->
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="Kaetram" />
+        <meta name="apple-mobile-web-app-title" content="Kaetram" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <link rel="apple-touch-icon" href="./img/icons/icon-192x192.png" />
 
-    <script src="js/lib/modernizr.js" type="text/javascript"></script>
+        <!-- Theme Colors -->
+        <meta name="theme-color" content="#000000" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-navbutton-color" content="#000000" />
 
-    <title>Kaetram</title>
+        <!-- JSON-LD -->
+        <script type="application/ld+json">
+            {
+                "@context": "http://www.schema.org",
+                "@type": "Game",
+                "name": "Kaetram",
+                "alternateName": "Kaetram",
+                "url": "http://kaetram.com/"
+            }
+        </script>
 
-</head>
-<body class="intro">
+        <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+        <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 
-    <noscript>
+        <title>Kaetram</title>
 
-        <div class="alert">
-            You must enable JavaScript to play Kaetram.
+        <link rel="stylesheet" type="text/css" href="./css/animations.css" />
+        <link rel="stylesheet" type="text/css" href="./css/game.css" />
+        <link rel="stylesheet" type="text/css" href="./css/main.css" />
+        <link rel="stylesheet" type="text/css" href="./css/vars.css" />
+        <link rel="stylesheet" type="text/css" href="./css/interface.css" />
+
+        <script src="./js/lib/modernizr.js" type="text/javascript"></script>
+    </head>
+    <body class="intro">
+        <noscript>
+            <div class="alert">
+                <strong>You must enable JavaScript to play Kaetram.</strong>
+            </div>
+        </noscript>
+
+        <div id="intro">
+            <h1 id="logo"></h1>
+
+            <section id="parchment" class="loadCharacter">
+                <div class="parchment-left"></div>
+                <div class="parchment-middle">
+                    <article id="loadCharacter">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            Kaetram
+                            <span class="right-ornament"></span>
+                        </h1>
+
+                        <form
+                            method="get"
+                            accept-charset="utf-8"
+                            action="javascript: void 0;"
+                        >
+                            <label for="loginNameInput">
+                                <input
+                                    type="text"
+                                    id="loginNameInput"
+                                    class="stroke"
+                                    name="player-name"
+                                    title="Username"
+                                    placeholder="Username"
+                                    maxlength="32"
+                                    autocomplete="off"
+                                    readonly
+                                    autofocus
+                                />
+                            </label>
+                            <label for="loginPasswordInput">
+                                <input
+                                    for="loginPasswordInput"
+                                    type="password"
+                                    id="loginPasswordInput"
+                                    class="stroke"
+                                    name="player-password"
+                                    title="Password"
+                                    placeholder="Password"
+                                    maxlength="64"
+                                    readonly
+                                    autocomplete="off"
+                                />
+                            </label>
+                        </form>
+
+                        <div id="guest" class="check"></div>
+                        <div id="guestText">Play as a guest</div>
+
+                        <div id="rememberMe" class="check"></div>
+                        <div id="rememberMeText">Remember Me</div>
+
+                        <div id="login"></div>
+                        <div id="newCharacter"></div>
+
+                        <div class="validation-summary"></div>
+                    </article>
+
+                    <article id="createCharacter">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            New Character
+                            <span class="right-ornament"></span>
+                        </h1>
+
+                        <form method="get" accept-charset="utf-8">
+                            <label for="registerNameInput">
+                                <input
+                                    type="text"
+                                    id="registerNameInput"
+                                    class="stroke"
+                                    name="player-name"
+                                    title="Username"
+                                    placeholder="Username"
+                                    maxlength="32"
+                                    autocomplete="off"
+                                />
+                            </label>
+                            <label for="registerPasswordInput">
+                                <input
+                                    type="password"
+                                    id="registerPasswordInput"
+                                    class="stroke"
+                                    name="player-password"
+                                    title="Password"
+                                    placeholder="Password"
+                                    maxlength="64"
+                                    autocomplete="off"
+                                />
+                            </label>
+                            <label for="registerPasswordConfirmationInput">
+                                <input
+                                    type="password"
+                                    id="registerPasswordConfirmationInput"
+                                    class="stroke"
+                                    name="player-password2"
+                                    title="Confirm Password"
+                                    placeholder="Confirm Password"
+                                    maxlength="64"
+                                    autocomplete="off"
+                                />
+                            </label>
+                            <label for="registerEmailInput">
+                                <input
+                                    type="email"
+                                    id="registerEmailInput"
+                                    class="stroke"
+                                    name="player-email"
+                                    title="Email Address"
+                                    placeholder="Email Address"
+                                    maxlength="64"
+                                    autocomplete="off"
+                                />
+                            </label>
+                        </form>
+
+                        <div id="play"></div>
+
+                        <p></p>
+
+                        <div id="cancelButton"></div>
+
+                        <div class="validation-summary"></div>
+                    </article>
+
+                    <article id="credits">
+                        <h1>
+                            <span class="left-ornament"></span>
+
+                            <span class="title">Credits</span>
+
+                            <span class="right-ornament"></span>
+                        </h1>
+
+                        <p id="cDescription">
+                            <br /><br />
+                            Special thanks to Little Workshop for the pixel art.
+                        </p>
+
+                        <div id="close-about">
+                            <span>-- Click anywhere to close --</span>
+                        </div>
+                    </article>
+
+                    <article id="about">
+                        <h1>
+                            <span class="left-ornament"></span>
+
+                            <span class="title">
+                                About
+                            </span>
+
+                            <span class="right-ornament"></span>
+                        </h1>
+
+                        <p id="aDescription">
+                            Kaetram is a 2D open-source experiment. The game is
+                            still very early in development, so please be wary
+                            of that. If you would like to check out the source
+                            code, visit our
+                            <a href="https://github.com/Veradictus/Kaetram-Open"
+                                >GitHub Repository </a
+                            >.
+                        </p>
+
+                        <div id="close-about">
+                            <span>-- Click anywhere to close --</span>
+                        </div>
+                    </article>
+
+                    <article id="git">
+                        Structure this later
+                    </article>
+
+                    <article id="death">
+                        <p>You have died...</p>
+                        <div id="respawn" class="button"></div>
+                    </article>
+                </div>
+                <div class="parchment-right"></div>
+                <div class="loader" hidden>
+                    Connecting<span class="loader__dot">.</span
+                    ><span class="loader__dot">.</span
+                    ><span class="loader__dot">.</span>
+                </div>
+            </section>
         </div>
 
-    </noscript>
+        <div id="container">
+            <div id="border">
+                <div id="canvas">
+                    <canvas id="background"></canvas>
+                    <canvas id="entities"></canvas>
+                    <canvas id="foreground"></canvas>
+                    <canvas id="cursor"></canvas>
+                    <canvas id="overlay"></canvas>
+                    <canvas id="textCanvas"></canvas>
+                </div>
+                <div id="buttons">
+                    <ul>
+                        <li><div id="inventoryButton"></div></li>
+                        <li><div id="profileButton"></div></li>
+                        <li><div id="warpButton"></div></li>
+                        <li><div id="chatButton"></div></li>
+                        <li><div id="settingsButton"></div></li>
+                    </ul>
+                </div>
+                <div id="actionContainer">
+                    <ul>
+                        <li><div id="drop" class="actionButton">Drop</div></li>
+                    </ul>
+                </div>
+                <div id="pActions">
+                    <ul>
+                        <li>
+                            <div id="follow" class="actionButton">Follow</div>
+                            <div id="tradeAction" class="actionButton">
+                                Trade
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="dropDialog">
+                    <div id="dropTitle">Input drop count.</div>
+                    <div align="center">
+                        <input
+                            title="Drop Count"
+                            type="text"
+                            id="dropCount"
+                            size="6"
+                            maxlength="11"
+                        />
+                        <span id="dropAccept">&nbsp;Accept&nbsp;</span>
+                        <span id="dropCancel">&nbsp;Cancel&nbsp;</span>
+                    </div>
+                </div>
+                <div id="profileDialog">
+                    <div id="statePage" class="page">
+                        <div id="profileName" class="profileInfo"></div>
+                        <div id="profileLevel" class="profileInfo"></div>
+                        <div id="profileExperience" class="profileInfo"></div>
 
-    <div id="intro">
-
-        <!-- <h1 id="logo"></h1> -->
-
-        <section id="parchment" class="loadCharacter">
-
-            <div class="parchment-left"></div>
-            <div class="parchment-middle">
-                <article id="loadCharacter">
-                    <h1>
-                        <span class="left-ornament"></span>
-                        Kaetram
-                        <span class="right-ornament"></span>
-                    </h1>
-
-                    <form method="get" accept-charset="utf-8">
-                        <input type="text" id="loginNameInput" class="stroke" name="player-name" placeholder="Username" maxlength="32" autocomplete="off" readonly autofocus>
-                        <input type="password" id="loginPasswordInput" class="stroke" name="player-password" placeholder="Password" maxlength="64" readonly autocomplete="off">
-                    </form>
-
-                    <div id="guest" class="check"></div>
-                    <div id="guestText">Play as a guest</div>
-
-                    <div id="rememberMe" class="check"></div>
-                    <div id="rememberMeText">Remember Me</div>
-
-                    <div id="login"></div>
-                    <div id="newCharacter"></div>
-
-                    <div class="validation-summary"></div>
-
-                </article>
-
-                <article id="createCharacter">
-                    <h1>
-                        <span class="left-ornament"></span>
-                        New Character
-                        <span class="right-ornament"></span>
-                    </h1>
-
-
-                    <form method="get" accept-charset="utf-8">
-                        <input type="text" id="registerNameInput" class="stroke" name="player-name" placeholder="Username" maxlength="32" autocomplete="off">
-                        <input type="password" id="registerPasswordInput" class="stroke" name="player-password" placeholder="Password" maxlength="64" autocomplete="off">
-                        <input type="password" id="registerPasswordConfirmationInput" class="stroke" name="player-password2" placeholder="Confirm Password" maxlength="64" autocomplete="off">
-                        <input type="email" id="registerEmailInput" class="stroke" name="player-email" placeholder="Email Address" maxlength="64" autocomplete="off">
-                    </form>
-
-                    <div id="play"></div>
-
-                    <p></p>
-
-                    <div id="cancelButton"></div>
-
-                    <div class="validation-summary"></div>
-
-                </article>
-
-                <article id="credits">
-
-                    <h1>
-                        <span class="left-ornament"></span>
-
-                        <span class="title">Credits</span>
-
-                        <span class="right-ornament"></span>
-
-                    </h1>
-
-                    <p id="cDescription">
-                        <br>
-                        There is no one to thank.
-                    </p>
-
-                </article>
-
-                <article id="about">
-                    <h1>
-                        <span class="left-ornament"></span>
-
-                        <span class="title">
-                        About
-                        </span>
-
-                        <span class="right-ornament"></span>
-                    </h1>
-
-                    <p id="aDescription">
-                        Welcome to Kaetram.
-                    </p>
-
-
-                    <div id="close-about">
-                        <span>-- Click anywhere to close --</span>
+                        <div id="weaponSlot" class="profileSlot"></div>
+                        <div id="armourSlot" class="profileSlot"></div>
+                        <div id="pendantSlot" class="profileSlot"></div>
+                        <div id="ringSlot" class="profileSlot"></div>
+                        <div id="bootsSlot" class="profileSlot"></div>
                     </div>
 
-                </article>
+                    <div id="questPage" class="page">
+                        <div id="achievementCount" class="stroke"></div>
+                        <div id="achievementList"><ul></ul></div>
 
-                <article id="git">
-                    Structure this later
-                </article>
+                        <div id="questCount" class="stroke"></div>
+                        <div id="questList"><ul></ul></div>
+                    </div>
+                    <div id="skillPage" class="page"></div>
 
-                <article id="death">
-                    <p>You have died...</p>
-                    <div id="respawn" class="button"></div>
-                </article>
-
-            </div>
-            <div class="parchment-right"></div>
-            <div class="loader" hidden>
-                Connecting<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span></div>
-
-        </section>
-
-    </div>
-
-    <div id="container">
-        <div id="border">
-            <div id="canvas">
-                <canvas id="background"></canvas>
-                <canvas id="entities"></canvas>
-                <canvas id="foreground"></canvas>
-                <canvas id="cursor"></canvas>
-                <canvas id="overlay"></canvas>
-                <canvas id="textCanvas"></canvas>
-            </div>
-            <div id="buttons">
-                <ul>
-                    <li><div id="inventoryButton"></div></li>
-                    <li><div id="profileButton"></div></li>
-                    <li><div id="warpButton"></div></li>
-                    <li><div id="chatButton"></div></li>
-                    <li><div id="settingsButton"></div></li>
-                </ul>
-            </div>
-            <div id="actionContainer">
-                <ul>
-                    <li><div id="drop" class="actionButton">Drop</div></li>
-                </ul>
-            </div>
-            <div id="pActions">
-                <ul>
-                    <li>
-                        <div id="follow" class="actionButton">Follow</div>
-                        <div id="tradeAction" class="actionButton">Trade</div>
-                    </li>
-                </ul>
-            </div>
-            <div id="dropDialog">
-                <div id="dropTitle">Input drop count.</div>
-                <div align="center">
-                    <input title="dropCount" type="text" id="dropCount" size="6" maxlength="11">
-                    <span id="dropAccept">&nbsp;Accept&nbsp;</span>
-                    <span id="dropCancel">&nbsp;Cancel&nbsp;</span>
+                    <div id="navigator">
+                        <div id="previous"></div>
+                        <div id="next"></div>
+                    </div>
                 </div>
-            </div>
-            <div id="profileDialog">
-                <div id="statePage" class="page">
-                    <div id="profileName" class="profileInfo"></div>
-                    <div id="profileLevel" class="profileInfo"></div>
-                    <div id="profileExperience" class="profileInfo"></div>
+                <div id="settingsPage" class="page">
+                    <div id="sliders">
+                        <input
+                            title="Volume"
+                            id="volume"
+                            class="input"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="100"
+                        />
+                        <input
+                            title="SFX"
+                            id="sfx"
+                            class="input"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="100"
+                        />
+                        <input
+                            title="Brightness"
+                            id="brightness"
+                            class="input"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="100"
+                        />
+                    </div>
 
-                    <div id="weaponSlot" class="profileSlot"></div>
-                    <div id="armourSlot" class="profileSlot"></div>
-                    <div id="pendantSlot" class="profileSlot"></div>
-                    <div id="ringSlot" class="profileSlot"></div>
-                    <div id="bootsSlot" class="profileSlot"></div>
+                    <div id="texts">
+                        <p>Volume</p>
+                        <p>SFX</p>
+                        <p>Brightness</p>
+                        <p>Sound</p>
+                        <p>Centred Camera</p>
+                        <p>Debugging</p>
+                        <p>Auto Centre</p>
+                        <p>Names</p>
+                        <p>Levels</p>
+                    </div>
 
+                    <div id="info"></div>
+                    <div id="checkMarks">
+                        <div id="soundCheck" class="check"></div>
+                        <div id="cameraCheck" class="check"></div>
+                        <div id="debugCheck" class="check"></div>
+                        <div id="centreCheck" class="check"></div>
+                        <div id="nameCheck" class="check"></div>
+                        <div id="levelCheck" class="check"></div>
+                    </div>
                 </div>
-
-                <div id="questPage" class="page">
-                    <div id="achievementCount" class="stroke"></div>
-                    <div id="achievementList"><ul></ul></div>
-
-                    <div id="questCount" class="stroke"></div>
-                    <div id="questList"><ul></ul></div>
+                <div id="attackInfo">
+                    <div class="name"></div>
+                    <div class="details"></div>
+                    <div class="health"></div>
                 </div>
-                <div id="skillPage" class="page"></div>
+                <div id="mapFrame">
+                    <div id="warp1" class="mapButton"></div>
+                    <div id="warp2" class="mapButton"></div>
+                    <div id="warp3" class="mapButton"></div>
+                    <div id="warp4" class="mapButton"></div>
+                    <div id="warp5" class="mapButton"></div>
+                    <div id="warp6" class="mapButton"></div>
 
-                <div id="navigator">
-                    <div id="previous"></div>
-                    <div id="next"></div>
+                    <div id="closeMapFrame" class="close"></div>
                 </div>
-            </div>
-            <div id="settingsPage" class="page">
-                <div id="sliders">
-                    <input title="Volume" id="volume" class="input" type="range" min="0" max="100" value="100">
-                    <input title="SFX" id="sfx" class="input" type="range" min="0" max="100" value="100">
-                    <input title="Brightness" id="brightness" class="input" type="range" min="0" max="100" value="100">
+                <div id="inventory"><ul></ul></div>
+                <div id="bank">
+                    <div id="closeBank" class="close"></div>
+
+                    <div id="bankContainer">
+                        <div id="bankSlots"><ul></ul></div>
+                    </div>
+                    <div id="bankInventoryContainer">
+                        <div id="bankInventorySlots" class="inventorySlots">
+                            <ul></ul>
+                        </div>
+                    </div>
                 </div>
+                <div id="trade">
+                    <div id="closeTrade" class="close"></div>
 
-                <div id="texts">
-                    <p>Volume</p>
-                    <p>SFX</p>
-                    <p>Brightness</p>
-                    <p>Sound</p>
-                    <p>Centred Camera</p>
-                    <p>Debugging</p>
-                    <p>Auto Centre</p>
-                    <p>Names</p>
-                    <p>Levels</p>
+                    <div id="tradePlayerContainer"></div>
+                    <div id="tradeOPlayerContainer"></div>
                 </div>
+                <div id="enchant">
+                    <div id="closeEnchant" class="close"></div>
+                    <div id="confirmEnchant" class="ok"></div>
 
-                <div id="info"></div>
-                <div id="checkMarks">
-                    <div id="soundCheck" class="check"></div>
-                    <div id="cameraCheck" class="check"></div>
-                    <div id="debugCheck" class="check"></div>
-                    <div id="centreCheck" class="check"></div>
-                    <div id="nameCheck" class="check"></div>
-                    <div id="levelCheck" class="check"></div>
+                    <div id="enchantContainer">
+                        <div id="enchantInventorySlots" class="inventorySlots">
+                            <ul></ul>
+                        </div>
+                    </div>
+
+                    <div id="enchantSelectedItem"></div>
+                    <div id="enchantShards">
+                        <div id="shardsCount"></div>
+                    </div>
                 </div>
-            </div>
-            <div id="attackInfo">
-                <div class="name"></div>
-                <div class="details"></div>
-                <div class="health"></div>
-            </div>
-            <div id="mapFrame">
-                <div id="warp1" class="mapButton"></div>
-                <div id="warp2" class="mapButton"></div>
-                <div id="warp3" class="mapButton"></div>
-                <div id="warp4" class="mapButton"></div>
-                <div id="warp5" class="mapButton"></div>
-                <div id="warp6" class="mapButton"></div>
+                <div id="shop">
+                    <div id="closeShop" class="close"></div>
 
-                <div id="closeMapFrame" class="close"></div>
-            </div>
-            <div id="inventory"><ul></ul></div>
-            <div id="bank">
-                <div id="closeBank" class="close"></div>
-
-                <div id="bankContainer">
-                    <div id="bankSlots"><ul></ul></div>
+                    <div id="shopContainer"><ul></ul></div>
+                    <div id="shopInventoryContainer">
+                        <div id="shopInventorySlots" class="inventorySlots">
+                            <ul></ul>
+                        </div>
+                    </div>
                 </div>
-                <div id="bankInventoryContainer">
-                    <div id="bankInventorySlots" class="inventorySlots"><ul></ul></div>
+                <div id="bubbles"></div>
+                <div id="notifications">
+                    <div id="notifyFade" class="fade"></div>
+
+                    <div id="notify">
+                        <div id="exclamation"></div>
+                        <div id="notifyDone" class="done"></div>
+                    </div>
+
+                    <div id="confirm">
+                        <div id="question"></div>
+
+                        <div id="confirmDone" class="done"></div>
+                        <div id="cancel"></div>
+                    </div>
+
+                    <div id="message"></div>
                 </div>
-            </div>
-            <div id="trade">
-                <div id="closeTrade" class="close"></div>
-
-                <div id="tradePlayerCotainer"></div>
-                <div id="tradeOPlayerContainer"></div>
-            </div>
-            <div id="enchant">
-                <div id="closeEnchant" class="close"></div>
-                <div id="confirmEnchant" class="ok"></div>
-
-                <div id="enchantContainer">
-                    <div id="enchantInventorySlots" class="inventorySlots"><ul></ul></div>
-                </div>
-
-                <div id="enchantSelectedItem"></div>
-                <div id="enchantShards">
-                    <div id="shardsCount"></div>
-                </div>
-
-            </div>
-            <div id="shop">
-                <div id="shopContainer"><ul></ul></div>
-                <div id="shopInventoryContainer">
-                    <div id="shopInventorySlots" class="inventorySlots"><ul></ul></div>
-                </div>
-            </div>
-            <div id="bubbles"></div>
-            <div id="notifications">
-                <div id="notifyFade" class="fade"></div>
-
-                <div id="notify">
-                    <div id="exclamation"></div>
-                    <div id="notifyDone" class="done"></div>
+                <div id="chat">
+                    <div id="talk">
+                        <form method="get" accept-charset="utf-8">
+                            <label for="chatInput">
+                                <input
+                                    title="Enter your message!"
+                                    id="chatInput"
+                                    class="chatInputData"
+                                    type="text"
+                                    maxlength="256"
+                                />
+                            </label>
+                        </form>
+                    </div>
+                    <div id="chatLog"></div>
                 </div>
 
-                <div id="confirm">
-                    <div id="question"></div>
-
-                    <div id="confirmDone" class="done"></div>
-                    <div id="cancel"></div>
+                <div id="playerInfo">
+                    <div id="health"></div>
+                    <div id="healthBar">
+                        <div id="healthBarText"></div>
+                    </div>
                 </div>
-
-                <div id="message"></div>
-            </div>
-            <div id="chat">
-                <div id="talk">
-                    <form method="get" accept-charset="utf-8">
-                        <input title="Enter your message!" id="chatInput" class="chatInputData" type="text" maxlength="256">
-                    </form>
-                </div>
-                <div id="chatLog"></div>
             </div>
         </div>
-    </div>
 
-    <footer>
-        <!--<div id="about-link" class="clickable">
-            <span id="toggle-about">About</span>
-        </div>
+        <footer>
+            <div id="about-link" class="clickable">
+                <span id="toggle-about">About</span>
+            </div>
 
-        <div id="credits-link" class="clickable">
-            <span class="dash">&ndash;</span>
-            <span id="toggle-credits">Credits</span>
-        </div>--->
+            <div id="credits-link" class="clickable">
+                <span class="dash">&ndash;</span>
+                <span id="toggle-credits">Credits</span>
+            </div>
+        </footer>
 
-    </footer>
+        <div id="resizeCheck"></div>
 
-    <div id="resizeCheck"></div>
+        <script src="lib/illuminated.js"></script>
 
-    <script src="lib/illuminated.js"></script>
+        <script src="js/utils/detect.js" type="text/javascript"></script>
+        <script src="js/lib/log.js"></script>
+        <script src="lib/socket.io.js"></script>
+        <script src="js/lib/jquery.js"></script>
+        <script data-main="js/lib/home" src="js/lib/require.js"></script>
+        <script>
+            // This is the service worker with the Advanced caching
 
-    <script src="js/utils/detect.js" type="text/javascript"></script>
-    <script src="js/lib/log.js"></script>
-    <script src="lib/socket.io.js"></script>
-    <script src="js/lib/jquery.js"></script>
-    <script data-main="js/lib/home" src="js/lib/require.js"></script>
-
-</body>
+            // Check compatibility for the browser we're running this in
+            if ('serviceWorker' in navigator) {
+                if (navigator.serviceWorker.controller) {
+                    console.log(
+                        '[PWA Builder] active service worker found, no need to register'
+                    );
+                } else {
+                    // Register the service worker
+                    navigator.serviceWorker
+                        .register('sw.js', {
+                            scope: './'
+                        })
+                        .then(function(reg) {
+                            console.log(
+                                '[PWA Builder] Service worker has been registered for scope: ' +
+                                    reg.scope
+                            );
+                        });
+                }
+            }
+        </script>
+    </body>
 </html>
