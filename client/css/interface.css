@@ -549,6 +549,12 @@
     left: 10px;
 }
 
+#healthBarText {
+    vertical-align: middle;
+    text-align: center;
+    font-family: 'AdvoCut', sans-serif;
+}
+
 @media only screen and (min-width: 1501px) {
 
     #chatButton {
@@ -1132,6 +1138,11 @@
 
         background-image: url('../img/3/main.png' );
         background-position: 0px -834px;
+    }
+
+    #healthBarText {
+        margin: 10px 0 0 30px;
+        font-size: 18px;
     }
 
 }
@@ -1771,6 +1782,10 @@
 
         background-image: url('../img/2/main.png' );
         background-position: 0px -556px;
+    }
+
+    #healthBarText {
+        margin: 5px 0 0 20px;
     }
 
 }
