@@ -20,6 +20,7 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.rights = 0;
             self.wanted = false;
             self.experience = -1;
+            self.nextExperience = -1;
             self.level = -1;
             self.pvpKills = -1;
             self.pvpDeaths = -1;
@@ -54,6 +55,7 @@ define(['../character', './equipment/armour', './equipment/weapon',
 
             self.username = data.username;
             self.experience = data.experience;
+            self.nextExperience = data.nextExperience;
             self.level = data.level;
 
             self.lastLogin = data.lastLogin;
@@ -176,11 +178,11 @@ define(['../character', './equipment/armour', './equipment/weapon',
                 mana = manaData.shift(),
                 maxMana = manaData.shift();
 
-            self.setHitPoints(hitPoints);
-            self.setMana(mana);
-
             self.setMaxHitPoints(maxHitPoints);
             self.setMaxMana(maxMana);
+
+            self.setHitPoints(hitPoints);
+            self.setMana(mana);
         },
 
         setEquipment: function(type, name, string, count, ability, abilityLevel) {

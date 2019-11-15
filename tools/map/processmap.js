@@ -28,7 +28,6 @@ module.exports = function parse(json, options) {
 
             map.lights = [];
             map.high = [];
-            map.blocking = [];
             map.animated = {};
             map.tilesets = [];
             map.animations = {};
@@ -40,7 +39,6 @@ module.exports = function parse(json, options) {
             map.lights = [];
             map.data = [];
             map.high = [];
-            map.blocking = [];
 
             map.animated = {};
 
@@ -398,7 +396,7 @@ let parseLayer = function(layer) {
             let bGid = tiles[j];
 
             if (bGid && bGid > 0)
-                map.blocking.push(j);
+                map.collisions.push(j);
         }
     } else if (type === 'tilelayer' && layer.visible !== 0 && name !== 'entities') {
 

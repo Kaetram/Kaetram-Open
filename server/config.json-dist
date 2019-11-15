@@ -2,6 +2,7 @@
   "name": "Kaetram",
   "host": "0.0.0.0",
   "port": 9001,
+  "ssl": false,
 
   "offlineMode": false,
   "devClient": true,
@@ -17,6 +18,7 @@
   "mongoUser": "admin",
   "mongoPassword": "password",
   "mongoDatabase": "database",
+  "mongoAuth": false,
 
   "debugLevel": "info",
   "localDebug": false,
@@ -27,5 +29,7 @@
 
   "forceCollisions": false,
   "administrators": [],
-  "moderators": []
+  "moderators": [],
+
+  "tutorialEnabled": false
 }

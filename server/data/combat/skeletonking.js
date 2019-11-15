@@ -21,7 +21,7 @@ class SkeletonKing extends Combat {
 
         self.minions = [];
 
-        character.onDeath(function() {
+        character.onDeath(() => {
             self.reset();
         });
     }
@@ -46,7 +46,7 @@ class SkeletonKing extends Combat {
         if (self.canSpawn())
             self.spawnMinions();
 
-        self._super(character, target, hitInfo);
+        super.hit(character, target, hitInfo);
     }
 
     spawnMinions() {
@@ -68,8 +68,8 @@ class SkeletonKing extends Combat {
         if (!self.colliding(x - 1, y + 1))
             self.minions.push(self.world.spawnMob(11, x - 1, y - 1));
 
-        _.each(self.minions, function(minion) {
-            minion.onDeath(function() {
+        _.each(self.minions, (minion) => {
+            minion.onDeath(() => {
                 if (self.isLast())
                     self.lastSpawn = new Date().getTime();
 
@@ -87,7 +87,7 @@ class SkeletonKing extends Combat {
         if (!self.hasMinions())
             return;
 
-        _.each(self.minions, function(minion) {
+        _.each(self.minions, (minion) => {
             var randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)

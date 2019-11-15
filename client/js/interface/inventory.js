@@ -46,10 +46,18 @@ define(['jquery', './container/container'], function($, Container) {
                     self.click(event);
                 });
 
-                var itemSlotList = $('<li></li>');
+                var itemSlotList = $('<li></li>'),
+                    count = item.count;
+
+                if (count > 999999)
+                    count = count.toString().substring(0, count.toString().length - 6) + 'M';
+                else if (count > 9999)
+                    count = count.toString().substring(0, 2) + 'K';
+                else if (count === 1)
+                    count = '';
 
                 itemSlotList.append(itemSlot);
-                itemSlotList.append('<div id="itemCount' + i + '" class="itemCount">' + (item.count > 1 ? item.count : '') + '</div>');
+                itemSlotList.append('<div id="itemCount' + i + '" class="inventoryItemCount">' + count + '</div>');
 
                 list.append(itemSlotList);
             }
@@ -84,6 +92,8 @@ define(['jquery', './container/container'], function($, Container) {
                 self.actions.add($('<div id="eat" class="actionButton">Eat</div>'));
             else if (slot.equippable)
                 self.actions.add($('<div id="wield" class="actionButton">Wield</div>'));
+            else if (slot.count > 999999)
+                self.actions.add($('<div id="itemInfo" class="actionButton">Info</div>'));
 
             if (!self.actions.isVisible())
                 self.actions.show();
@@ -123,6 +133,8 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 action = event.currentTarget ? event.currentTarget.id : event;
 
+            log.info(action);
+
             if (!self.selectedSlot || !self.selectedItem)
                 return;
 
@@ -138,9 +150,13 @@ define(['jquery', './container/container'], function($, Container) {
                 case 'drop':
                     var item = self.selectedItem;
 
-                    if (item.count > 1)
+                    if (item.count > 1) {
+                        if (Detect.isMobile())
+                            self.hide(true);
+
                         self.actions.displayDrop('inventory');
-                    else {
+
+                    } else {
                         self.game.socket.send(Packets.Inventory, [Packets.InventoryOpcode.Remove, item]);
                         self.clearSelection();
                     }
@@ -166,6 +182,12 @@ define(['jquery', './container/container'], function($, Container) {
                     self.clearSelection();
 
                     break;
+
+                case 'itemInfo':
+
+                    self.game.input.chatHandler.add('WORLD', 'You have ' + self.selectedItem.count + ' coins.');
+
+                    break;
             }
 
             self.actions.hide();
@@ -188,7 +210,16 @@ define(['jquery', './container/container'], function($, Container) {
 
             cssSlot.css('background-size', '600%');
 
-            item.find('#itemCount' + info.index).text(slot.count > 1 ? slot.count : '');
+            var count = slot.count;
+
+            if (count > 999999)
+                count = count.toString().substring(0, count.toString().length - 6) + 'M';
+            else if (count > 9999)
+                count = count.toString().substring(0, 2) + 'K';
+            else if (count === 1)
+                count = '';
+
+            item.find('#itemCount' + info.index).text(count);
         },
 
         remove: function(info) {
@@ -247,14 +278,16 @@ define(['jquery', './container/container'], function($, Container) {
             self.button.addClass('active');
         },
 
-        hide: function() {
+        hide: function(keepSelection) {
             var self = this;
 
             self.button.removeClass('active');
 
             self.body.fadeOut('slow');
             self.button.removeClass('active');
-            self.clearSelection();
+
+            if (!keepSelection)
+                self.clearSelection();
         },
 
         getScale: function() {

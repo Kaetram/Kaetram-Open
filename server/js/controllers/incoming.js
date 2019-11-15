@@ -22,7 +22,7 @@ class Incoming {
         self.database = self.player.database;
         self.commands = new Commands(self.player);
 
-        self.connection.listen(function(data) {
+        self.connection.listen((data) => {
 
             let packet = data.shift(),
                 message = data[0];
@@ -168,7 +168,7 @@ class Incoming {
         self.introduced = true;
 
         if (isRegistering) {
-            self.database.exists(self.player, function(result) {
+            self.database.exists(self.player, (result) => {
                 if (result.exists) {
                     self.connection.sendUTF8(result.type + 'exists');
                     self.connection.close(result.type + ' is not available.');
@@ -186,7 +186,7 @@ class Incoming {
             self.database.login(self.player);
 
         } else
-            self.database.verify(self.player, function(result) {
+            self.database.verify(self.player, (result) => {
                 if (result.status === 'success')
                     self.database.login(self.player);
                 else {
@@ -217,7 +217,6 @@ class Incoming {
 
         self.player.sendEquipment();
         self.player.loadInventory();
-        self.player.loadBank();
         self.player.loadQuests();
 
         if (self.world.map.isOutOfBounds(self.player.x, self.player.y))
@@ -240,7 +239,7 @@ class Incoming {
     handleWho(message) {
         let self = this;
 
-        _.each(message.shift(), function(id) {
+        _.each(message.shift(), (id) => {
             let entity = self.world.getEntityByInstance(id);
 
             if (entity && entity.id)

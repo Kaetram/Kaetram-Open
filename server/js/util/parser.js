@@ -30,7 +30,7 @@ class Parser {
     loadMobData() {
         let mobCounter = 0;
 
-        _.each(MobData, function(value, key) {
+        _.each(MobData, (value, key) => {
             key = key.toLowerCase();
 
             Mobs.Properties[key] = {
@@ -69,7 +69,7 @@ class Parser {
     loadNPCData() {
         let npcCounter = 0;
 
-        _.each(NPCData, function(value, key) {
+        _.each(NPCData, (value, key) => {
             key = key.toLowerCase();
 
             NPCs.Properties[key] = {
@@ -91,7 +91,7 @@ class Parser {
     loadItemData() {
         let itemCounter = 0;
 
-        _.each(ItemData, function(value, key) {
+        _.each(ItemData, (value, key) => {
             key = key.toLowerCase();
 
             Items.Data[key] = {
@@ -131,7 +131,7 @@ class Parser {
     loadAbilityData() {
         let skillCounter = 0;
 
-        _.each(AbilityData, function(value, key) {
+        _.each(AbilityData, (value, key) => {
             key = key.toLowerCase();
 
             Abilities.Data[key] = {
@@ -153,7 +153,7 @@ class Parser {
     loadShops() {
         let shopCounter = 0;
 
-        _.each(ShopsData, function(value, key) {
+        _.each(ShopsData, (value, key) => {
             key = key.toLowerCase();
 
             Shops.Data[key] = {

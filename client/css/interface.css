@@ -71,7 +71,7 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.itemCount {
+.itemCount, .inventoryItemCount {
     font-family: 'AdvoCut', sans-serif;
     color: rgba(255, 255, 255, 1);
 }
@@ -115,13 +115,13 @@
 
 #dropDialog {
     font-family: 'AdvoCut', sans-serif;
-    font-size: 9px;
+    font-size: 16px;
     color: #e3e3e3;
     position: absolute;
     left: 50%;
     top: 50%;
-    margin-left: -76px;
-    margin-top: -23px;
+    margin-left: -100px;
+    margin-right: -28px;
     padding: 5px;
     background: rgba(45, 45, 45, 0.8);
     border-radius: 6px 6px 6px 6px;
@@ -138,11 +138,14 @@
 
 #dropTitle {
     text-align: center;
+    margin-bottom: 10px;
 }
 
 #dropAccept, #dropCancel {
     background: rgba(120, 120, 120, 0.3);
     cursor: pointer;
+
+    font-size: 18px;
 }
 
 #dropAccept:hover, #dropCancel:hover {
@@ -246,8 +249,8 @@
 #bank {
     display: none;
     position: absolute;
-    top: 10%;
-    left: 10%;
+    top: 20%;
+    left: 25%;
 }
 
 #bankContainer {
@@ -266,6 +269,10 @@
 .inventorySlots {
     position: absolute;
     top: 13%;
+    left: 6%;
+}
+
+#shopInventorySlots {
     left: 14%;
 }
 
@@ -367,13 +374,21 @@
     position: absolute;
     top: 50%;
     left: 8%;
-    overflow: scroll;
+
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
 }
 
 #achievementList {
     position: absolute;
     top: 6%;
     left: 8%;
+
+    overflow: auto;
 }
 
 #abilityShortcut ul {
@@ -425,13 +440,15 @@
 
 #mapFrame {
     position: absolute;
-    top: 15%;
-    left: 22%;
+    top: 50%;
+    left: 50%;
     background-repeat: no-repeat;
     pointer-events: auto;
     display: none;
 
     cursor: default;
+
+    z-index: 100;
 }
 
 .mapButton {
@@ -454,6 +471,8 @@
     display: none;
     top: 17%;
     left: 50%;
+
+    cursor: default;
 }
 
 #shopInventoryContainer {
@@ -523,8 +542,20 @@
     cursor: pointer;
 }
 
-@media only screen and (min-width: 1501px) {
+#playerInfo {
+    position: absolute;
 
+    top: 10px;
+    left: 10px;
+}
+
+#healthBarText {
+    vertical-align: middle;
+    text-align: center;
+    font-family: 'AdvoCut', sans-serif;
+}
+
+@media only screen and (min-width: 1501px) {
 
     #chatButton {
         position: relative;
@@ -634,7 +665,7 @@
         border: 3px solid #fcda5c;
     }
 
-    .itemCount {
+    .itemCount, .inventoryItemCount {
         width: 48px;
         height: 21px;
         font-size: 18px;
@@ -716,7 +747,7 @@
 
     #armourSlot {
         left: 312px;
-        top: 356px;
+        top: 358px;
     }
 
     #pendantSlot {
@@ -995,7 +1026,10 @@
     #mapFrame {
         width: 810px;
         height: 540px;
-        background: url('../img/3/mapframe.png');;
+        background: url('../img/3/mapframe.png');
+
+        margin-left: -405px;
+        margin-top: -270px;
     }
 
     .mapButton {
@@ -1071,6 +1105,44 @@
 
     .shopItemBuy {
         font-size: 16px;
+    }
+
+    #health {
+        position: absolute;
+        top: 4.5px;
+        left: 30px;
+        width: 230px;
+        height: 26px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        -moz-transition:.5s width ease;
+        -webkit-transition:.5s width ease;
+        -o-transition:.5s width ease;
+        -ms-transition:.5s width ease;
+        transition:.5s width ease;
+    }
+
+    #healthBar {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 264px;
+        height: 39px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        color: white;
+
+        background-image: url('../img/3/main.png' );
+        background-position: 0px -834px;
+    }
+
+    #healthBarText {
+        margin: 10px 0 0 30px;
+        font-size: 18px;
     }
 
 }
@@ -1226,7 +1298,7 @@
         border: 2px solid #fcda5c;
     }
 
-    .itemCount {
+    .itemCount, .inventoryItemCount {
         width: 32px;
         height: 14px;
         font-size: 12px;
@@ -1315,7 +1387,7 @@
 
     #armourSlot {
         left: 208px;
-        top: 236px;
+        top: 238px;
     }
 
     #pendantSlot {
@@ -1608,7 +1680,10 @@
     #mapFrame {
         width: 540px;
         height: 360px;
-        background: url('../img/2/mapframe.png');;
+        background: url('../img/2/mapframe.png');
+
+        margin-left: -270px;
+        margin-top: -180px;
     }
 
     .mapButton {
@@ -1674,6 +1749,43 @@
         width: 258px;
         height: 310px;
         background: url("../img/2/containers.png") 0 0;;
+    }
+
+    #health {
+        position: absolute;
+        top: 3px;
+        left: 20px;
+        width: 154px;
+        height: 20px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        -moz-transition:.5s width ease;
+        -webkit-transition:.5s width ease;
+        -o-transition:.5s width ease;
+        -ms-transition:.5s width ease;
+        transition:.5s width ease;
+    }
+
+    #healthBar {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 176px;
+        height: 26px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+        text-align: center;
+        color: white;
+
+        background-image: url('../img/2/main.png' );
+        background-position: 0px -556px;
+    }
+
+    #healthBarText {
+        margin: 5px 0 0 20px;
     }
 
 }
@@ -1798,10 +1910,12 @@
     }
 
     .actionButton {
-        width: 64px;
-        height: 16px;
+        width: 128px;
+        height: 32px;
         border-radius: 3px;
         border: 1px solid #707070;
+
+        font-size: 20px;
     }
 
     #profileDialog {
@@ -2090,21 +2204,6 @@
         width: 16px;
     }
 
-    .close {
-        width: 16px;
-        height: 16px;
-
-        background: url('../img/1/containers.png') -32px -166px;
-    }
-
-    .close.active {
-        background-position: -48px -166px;
-    }
-
-    .close:hover {
-        background-position: -64px -166px;
-    }
-
     #message {
         width: 120px;
         height: 23px;
@@ -2137,7 +2236,15 @@
     #mapFrame {
         width: 270px;
         height: 180px;
-        background: url('../img/1/mapframe.png');;
+        background: url('../img/1/mapframe.png');
+
+        margin-left: -135px;
+        margin-top: -90px;
+    }
+
+    #closeMapFrame {
+        top: -6px;
+        left: 90%;
     }
 
     .mapButton {
@@ -2245,6 +2352,15 @@
 
     #inventory {
         right: 40px;
+    }
+
+    .itemCount {
+        width: 16px;
+        height: 7px;
+        font-size: 7px;
+        text-align: center;
+        margin-left: 1px;
+        margin-top: -7px;
     }
 
 }

@@ -6,19 +6,19 @@ let Shops = {},
 Shops.Data = {};
 Shops.Ids = {};
 
-Shops.isShopNPC = function(npcId) {
+Shops.isShopNPC = (npcId) => {
     return npcId in Shops.Ids;
 };
 
-Shops.getItems = function(id) {
+Shops.getItems = (id) => {
     return Shops.Ids[id].items;
 };
 
-Shops.getItemCount = function(id) {
+Shops.getItemCount = (id) => {
     return Shops.getItems(id).length;
 };
 
-Shops.increment = function(shopId, itemId, count) {
+Shops.increment = (shopId, itemId, count) => {
     let shop = Shops.Ids[shopId],
         index = shop.items.indexOf(itemId);
 
@@ -31,7 +31,7 @@ Shops.increment = function(shopId, itemId, count) {
 
 };
 
-Shops.decrement = function(shopId, itemId, count) {
+Shops.decrement = (shopId, itemId, count) => {
     let shop = Shops.Ids[shopId],
         index = shop.items.indexOf(itemId);
 
@@ -51,7 +51,7 @@ Shops.decrement = function(shopId, itemId, count) {
         shopData.count[index] = 0;
 };
 
-Shops.getCost = function(shopId, itemId, count) {
+Shops.getCost = (shopId, itemId, count) => {
     /**
      * Reason for the shopId variable is because some shops
      * may have different prices for the same item. A way to
@@ -67,7 +67,7 @@ Shops.getCost = function(shopId, itemId, count) {
     return shop.prices[index] * count;
 };
 
-Shops.getStock = function(shopId, itemId) {
+Shops.getStock = (shopId, itemId) => {
 
     let shop = Shops.Ids[shopId],
         index = shop.items.indexOf(itemId);
@@ -78,7 +78,7 @@ Shops.getStock = function(shopId, itemId) {
     return shop.count[index];
 };
 
-Shops.getOriginalStock = function(shopId, itemId) {
+Shops.getOriginalStock = (shopId, itemId) => {
 
     let shop = Shops.Ids[shopId],
         index = shop.index.indexOf(itemId);
@@ -89,7 +89,7 @@ Shops.getOriginalStock = function(shopId, itemId) {
     return shop.originalCount[index];
 };
 
-Shops.getCount = function(id) {
+Shops.getCount = (id) => {
     let count = Shops.Ids[id].count,
         counts = [];
 

@@ -4,17 +4,20 @@ let _ = require('underscore'),
     Character = require('../character'),
     Mobs = require('../../../../util/mobs'),
     Utils = require('../../../../util/utils'),
-    Items = require('../../../../util/items');
+    Items = require('../../../../util/items'),
+    MobHandler = require('./mobhandler');
 
 class Mob extends Character {
 
-    constructor(id, instance, x, y) {
+    constructor(id, instance, x, y, world) {
         super(id, 'mob', instance, x, y);
 
         let self = this;
 
         if (!Mobs.exists(id))
             return;
+
+        self.world = world;
 
         self.data = Mobs.Ids[self.id];
         self.hitPoints = self.data.hitPoints;
@@ -38,7 +41,17 @@ class Mob extends Character {
         self.static = false;
         self.hiddenName = false;
 
+        self.roaming = false;
+        self.maxRoamingDistance = 3;
+
         self.projectileName = self.getProjectileName();
+
+    }
+
+    load() {
+        let self = this;
+
+        self.handler = new MobHandler(self, self.world);
     }
 
     refresh() {
@@ -93,9 +106,17 @@ class Mob extends Character {
     canAggro(player) {
         let self = this;
 
-        if (self.hasTarget() || !self.aggressive ||
-            Math.floor(self.level * 1.5) < player.level || !player.hasAggressionTimer())
-            return false;
+        if (self.hasTarget())
+          return false;
+
+        if (!self.aggressive)
+          return false;
+
+        if (Math.floor(self.level * 1.5) < player.level)
+          return false;
+
+        if (!player.hasAggressionTimer())
+          return false;
 
         return self.isNear(player, self.aggroRange);
     }
@@ -117,7 +138,7 @@ class Mob extends Character {
 
         self.clearTarget();
         self.resetPosition();
-        self.move(self.x, self.y);
+        self.setPosition(self.x, self.y);
     }
 
     isRanged() {
@@ -138,7 +159,7 @@ class Mob extends Character {
 
     addToChestArea(chestAreas) {
         let self = this,
-            area = _.find(chestAreas, function(area) { return area.contains(self.x, self.y); });
+            area = _.find(chestAreas, (area) => { return area.contains(self.x, self.y); });
 
         if (area)
             area.addEntity(self);
@@ -156,7 +177,7 @@ class Mob extends Character {
         if (!self.static || self.respawnDelay === -1)
             return;
 
-        setTimeout(function() {
+        setTimeout(() => {
             if (self.respawnCallback)
                 self.respawnCallback();
 
@@ -186,10 +207,6 @@ class Mob extends Character {
         this.respawnCallback = callback;
     }
 
-    onMove(callback) {
-        this.moveCallback = callback;
-    }
-
     onReturn(callback) {
         this.returnCallback = callback;
     }
@@ -200,15 +217,6 @@ class Mob extends Character {
 
     onDeath(callback) {
         this.deathCallback = callback;
-    }
-
-    move(x, y) {
-        let self = this;
-
-        self.setPosition(x, y);
-
-        if (self.moveCallback)
-            self.moveCallback(self);
     }
 
 }

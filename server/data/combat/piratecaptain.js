@@ -41,7 +41,7 @@ class PirateCaptain extends Combat {
         if (self.canTeleport())
             self.teleport();
         else
-            self._super(character, target, hitInfo);
+            super.hit(character, target, hitInfo);
     }
 
     teleport() {
@@ -59,14 +59,17 @@ class PirateCaptain extends Combat {
         self.character.setPosition(position.x, position.y);
 
         if (self.world)
-            self.world.pushToGroup(self.character.group, new Messages.Teleport({
-                id: self.character.instance,
-                x: self.character.x,
-                y: self.character.y,
-                withAnimation: true
-            }));
+            self.world.push(Packets.PushOpcode.Regions, {
+                regionId: self.character.region,
+                message: new Messages.Teleport({
+                    id: self.character.instance,
+                    x: self.character.x,
+                    y: self.character.y,
+                    withAnimation: true
+                })
+            });
 
-        self.forEachAttacker(function(attacker) {
+        self.forEachAttacker((attacker) => {
             attacker.removeTarget();
         });
 

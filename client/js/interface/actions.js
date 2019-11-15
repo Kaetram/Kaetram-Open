@@ -27,7 +27,7 @@ define(['jquery'], function($) {
         load: function() {
             var self = this,
                 dropAccept = $('#dropAccept'),
-                dropCancel = $('#dropcancel');
+                dropCancel = $('#dropCancel');
 
             dropAccept.click(function(event) {
                 if (self.activeClass === 'inventory')

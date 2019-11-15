@@ -7,25 +7,32 @@ let _ = require('underscore'),
     Shops = require('../../../../util/shops');
 
 class Handler {
-    
+
     constructor(player) {
         let self = this;
-        
+
         self.player = player;
         self.world = player.world;
         self.map = player.world.map;
-        
+
+        self.updateInterval = 400; //400 milliseconds
+
         self.load();
     }
 
     load() {
         let self = this;
 
-        self.player.onMovement(function(x, y) {
+        self.player.updateInterval = setInterval(() => {
+
+            self.detectAggro();
+
+        }, 400);
+
+        self.player.onMovement((x, y) => {
 
             self.player.checkRegions();
 
-            self.detectAggro();
             self.detectPVP(x, y);
             self.detectMusic(x, y);
             self.detectOverlay(x, y);
@@ -34,12 +41,12 @@ class Handler {
 
         });
 
-        self.player.onDeath(function() {
+        self.player.onDeath(() => {
 
 
         });
 
-        self.player.onHit(function(attacker, damage) {
+        self.player.onHit((attacker, damage) => {
 
             /**
              * Handles actions whenever the player
@@ -51,7 +58,7 @@ class Handler {
 
         });
 
-        self.player.onKill(function(character) {
+        self.player.onKill((character) => {
 
             if (self.player.quests.isAchievementMob(character)) {
                 let achievement = self.player.quests.getAchievementByMob(character);
@@ -61,20 +68,20 @@ class Handler {
             }
         });
 
-        self.player.onRegion(function() {
+        self.player.onRegion(() => {
             self.player.lastRegionChange = new Date().getTime();
 
             self.world.region.handle(self.player);
             self.world.region.push(self.player);
         });
 
-        self.player.connection.onClose(function() {
+        self.player.connection.onClose(() => {
             self.player.stopHealing();
 
             self.world.removePlayer(self.player);
         });
 
-        self.player.onTalkToNPC(function(npc) {
+        self.player.onTalkToNPC((npc) => {
 
             if (self.player.quests.isQuestNPC(npc)) {
                 self.player.quests.getQuestByNPC(npc).triggerTalk(npc);
@@ -108,11 +115,9 @@ class Handler {
             if (!text)
                 return;
 
-            npc.talk(text);
-
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: text
+                text: npc.talk(text)
             }));
 
         });
@@ -125,7 +130,7 @@ class Handler {
         if (!region)
             return;
 
-        _.each(region.entities, function(entity) {
+        _.each(region.entities, (entity) => {
             if (entity && entity.type === 'mob' && self.canEntitySee(entity)) {
                 let aggro = entity.canAggro(self.player);
 
@@ -137,7 +142,7 @@ class Handler {
 
     detectMusic(x, y) {
         let self = this,
-            musicArea = _.find(self.world.getMusicAreas(), function(area) { return area.contains(x, y); });
+            musicArea = _.find(self.world.getMusicAreas(), (area) => { return area.contains(x, y); });
 
         if (musicArea && self.player.currentSong !== musicArea.id)
             self.player.updateMusic(musicArea.id);
@@ -145,14 +150,14 @@ class Handler {
 
     detectPVP(x, y) {
         let self = this,
-            pvpArea = _.find(self.world.getPVPAreas(), function(area) { return area.contains(x, y); });
+            pvpArea = _.find(self.world.getPVPAreas(), (area) => { return area.contains(x, y); });
 
         self.player.updatePVP(!!pvpArea);
     }
 
     detectOverlay(x, y) {
         let self = this,
-            overlayArea = _.find(self.world.getOverlayAreas(), function(area) {
+            overlayArea = _.find(self.world.getOverlayAreas(), (area) => {
                 return area.contains(x, y);
             });
 
@@ -161,7 +166,7 @@ class Handler {
 
     detectCamera(x, y) {
         let self = this,
-            cameraArea = _.find(self.world.getCameraAreas(), function(area) {
+            cameraArea = _.find(self.world.getCameraAreas(), (area) => {
                 return area.contains(x, y);
             });
 
@@ -171,7 +176,7 @@ class Handler {
     detectLights(x, y) {
         let self = this;
 
-        _.each(self.map.lights, function(light) {
+        _.each(self.map.lights, (light) => {
             if (self.map.nearLight(light, x, y) && !self.player.hasLoadedLight(light)) {
 
                 self.player.lightsLoaded.push(light);
@@ -183,7 +188,7 @@ class Handler {
     canEntitySee(entity) {
         return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
     }
-    
+
 }
 
 module.exports = Handler;

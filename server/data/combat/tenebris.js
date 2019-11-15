@@ -17,7 +17,7 @@ class Tenebris extends Combat {
         self.lastIllusion = new Date().getTime();
         self.respawnDelay = 95000;
 
-        character.onDeath(function() {
+        character.onDeath(() => {
 
             if (self.isIllusion())
                 if (!self.firstIllusionKilled)
@@ -41,7 +41,7 @@ class Tenebris extends Combat {
         self.illusions = [];
         self.firstIllusionKilled = false;
 
-        setTimeout(function() {
+        setTimeout(() => {
 
             var offset = Utils.positionOffset(4);
 
@@ -60,7 +60,7 @@ class Tenebris extends Combat {
         if (self.canSpawn())
             self.spawnIllusions();
 
-        self._super(attacker, target, hitInfo);
+        super.hit(attacker, target, hitInfo);
     }
 
     spawnTenbris() {
@@ -75,8 +75,8 @@ class Tenebris extends Combat {
         self.illusions.push(self.world.spawnMob(105, self.character.x + 1, self.character.y + 1));
         self.illusions.push(self.world.spawnMob(105, self.character.x - 1, self.character.y + 1));
 
-        _.each(self.illusions, function(illusion) {
-            illusion.onDeath(function() {
+        _.each(self.illusions, (illusion) => {
+            illusion.onDeath(() => {
                 if (self.isLast())
                     self.lastIllusion = new Date().getTime();
 
@@ -89,12 +89,16 @@ class Tenebris extends Combat {
 
         self.character.setPosition(62, 343);
 
-        self.world.pushToGroup(self.character.group, new Messages.Teleport({
-            id: self.character.instance,
-            x: self.character.x,
-            y: self.character.y,
-            withAnimation: true
-        }));
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
+            message: new Messages.Teleport({
+                id: self.character.instance,
+                x: self.character.x,
+                y: self.character.y,
+                withAnimation: true
+            })
+        });
+        
     }
 
     removeIllusions() {
@@ -114,7 +118,7 @@ class Tenebris extends Combat {
         if (!self.hasIllusions())
             return;
 
-        _.each(self.illusions, function(illusion) {
+        _.each(self.illusions, (illusion) => {
             var target = self.getRandomTarget();
 
             if (!illusion.hasTarget && target)
@@ -146,11 +150,14 @@ class Tenebris extends Combat {
         if (!self.world)
             return;
 
-        self.world.pushToAdjacentGroups(self.character.target.group, new Messages.NPC(Packets.NPCOpcode.Talk, {
-            id: instance,
-            text: message,
-            nonNPC: true
-        }));
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
+            message: new Messages.NPC(Packets.NPCOpcode.Talk, {
+                id: instance,
+                text: message,
+                nonNPC: true
+            })
+        });
 
     }
 

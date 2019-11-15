@@ -63,7 +63,7 @@ footer {
     color: #d83939;
 }
 
-#about-link span:hover, #credits-link span:hover, #git-link span:hover, #forums-link span:hover, .sub-forum-link:hover {
+#about-link span:hover, #credits-link span:hover, #discord-link span:hover, .sub-forum-link:hover {
     color: #fcda5c;
     cursor: pointer;
 }
@@ -528,6 +528,11 @@ footer div {
 }
 
 @media only screen and (max-width: 1000px) {
+
+    .loader {
+        position: relative;
+        margin-top: 34%;
+    }
 
     #credits, #about, #death, #git {
         width: 422px;

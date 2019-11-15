@@ -26,15 +26,23 @@ class MongoDB {
 
     getDatabase(callback, type) {
         let self = this,
-            URL = 'mongodb://' + self.host + ':' + self.port + '/' + self.database,
-            client = new MongoClient(URL, { useNewUrlParser: true });
+            URL= `mongodb://${self.host}:${self.port}/${self.database}`;
+
+            if (config.mongoAuth)
+                URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
+
+            let client = new MongoClient(URL, {
+              useUnifiedTopology: true,
+              useNewUrlParser: true,
+              wtimeout: 5
+            });
 
         if (self.connection) {
             callback(self.connection);
             return;
         }
 
-        client.connect(function(error, newClient) {
+        client.connect((error, newClient) => {
             if (error) throw error;
 
             self.connection = newClient.db(self.database);
@@ -47,14 +55,14 @@ class MongoDB {
     login(player) {
         let self = this;
 
-        self.getDatabase(function(database) {
+        self.getDatabase((database) => {
             let dataCursor = database.collection('player_data').find({ username: player.username }),
                 equipmentCursor = database.collection('player_equipment').find({ username: player.username }),
                 regionsCursor = database.collection('player_regions').find({ username: player.username });
 
-            dataCursor.toArray().then(function(playerData) {
-                equipmentCursor.toArray().then(function(equipmentData) {
-                    regionsCursor.toArray().then(function(regionData) {
+            dataCursor.toArray().then((playerData) => {
+                equipmentCursor.toArray().then((equipmentData) => {
+                    regionsCursor.toArray().then((regionData) => {
 
                         if (playerData.length === 0)
                             self.register(player);
@@ -85,16 +93,16 @@ class MongoDB {
     verify(player, callback) {
         let self = this;
 
-        self.getDatabase(function(database) {
+        self.getDatabase((database) => {
             let dataCursor = database.collection('player_data').find({ username: player.username });
 
-            dataCursor.toArray().then(function(data) {
+            dataCursor.toArray().then((data) => {
                 if (data.length === 0)
                     callback({ status: 'error' });
                 else {
                     let info = data[0];
 
-                    bcrypt.compare(player.password, info.password, function(error, result) {
+                    bcrypt.compare(player.password, info.password, (error, result) => {
                         if (error) throw error;
 
                         if (result)
@@ -110,13 +118,15 @@ class MongoDB {
     register(player) {
         let self = this;
 
-        self.getDatabase(function(database) {
+        self.getDatabase((database) => {
             let playerData = database.collection('player_data'),
                 cursor = playerData.find({ username: player.username });
 
-            cursor.toArray().then(function(info) {
+            cursor.toArray().then((info) => {
                 if (info.length === 0) {
                     log.info('No player data found for ' + player.username + '. Creating user.');
+
+                    player.new = true;
 
                     player.load(Creator.getFullData(player));
                     player.intro();
@@ -128,16 +138,16 @@ class MongoDB {
     exists(player, callback) {
         let self = this;
 
-        self.getDatabase(function(database) {
+        self.getDatabase((database) => {
             let playerData = database.collection('player_data'),
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
             log.info('Looking for - ' + player.email +' or ' + player.username);
 
-            emailCursor.toArray().then(function(emailArray) {
+            emailCursor.toArray().then((emailArray) => {
                 if (emailArray.length === 0) {
-                    usernameCursor.toArray().then(function(usernameArray) {
+                    usernameCursor.toArray().then((usernameArray) => {
                         if (usernameArray.length === 0)
                             callback({ exists: false });
                         else
@@ -152,21 +162,33 @@ class MongoDB {
     delete(player) {
         let self = this;
 
-        self.getDatabase(function(database) {
+        self.getDatabase((database) => {
             let collections = ['player_data', 'player_equipment', 'player_inventory', 'player_abilities', 'player_bank', 'player_quests', 'player_achievements'];
 
-            _.each(collections, function(col) {
+            _.each(collections, (col) => {
                 let collection = database.collection(col);
 
                 collection.deleteOne({
                     username: player.username
-                }, function(error, result) {
+                }, (error, result) => {
                     if (error) throw error;
 
                     if (result)
                         log.info('Player ' + player.username + ' has been deleted.')
                 })
             });
+        });
+    }
+
+    registeredCount(callback) {
+
+        this.getDatabase((database) => {
+            let collection = database.collection('player_data');
+
+            collection.countDocuments().then((count) => {
+                callback(count);
+            });
+
         });
     }
 

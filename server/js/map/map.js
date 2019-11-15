@@ -10,8 +10,10 @@ let _ = require('underscore'),
     MusicAreas = require('./areas/musicareas'),
     ChestAreas = require('./areas/chestareas'),
     map = require('../../data/map/world_server'),
+    Spawns = require('../../data/spawns'),
     OverlayAreas = require('./areas/overlayareas'),
     CameraAreas = require('./areas/cameraareas'),
+    Mobs = require('../util/mobs'),
     ClientMap = require('../../data/map/world_client');
 
 class Map {
@@ -38,7 +40,9 @@ class Map {
         self.roamingAreas = map.roamingAreas;
         self.chestAreas = map.chestAreas;
         self.chests = map.chests;
-        self.staticEntities = map.staticEntities;
+
+        self.loadStaticEntities();
+
         self.tilesets = map.tilesets;
         self.lights = map.lights;
 
@@ -55,7 +59,7 @@ class Map {
 
         self.ready = true;
 
-        self.readyInterval = setInterval(function() {
+        self.readyInterval = setInterval(() => {
             if (!self.world.ready)
                 if (self.readyCallback)
                     self.readyCallback();
@@ -98,7 +102,7 @@ class Map {
 
         self.doors = {};
 
-        _.each(map.doors, function(door) {
+        _.each(map.doors, (door) => {
             let orientation;
 
             switch (door.o) {
@@ -132,6 +136,33 @@ class Map {
         });
 
 
+    }
+
+    loadStaticEntities() {
+        let self = this;
+
+        self.staticEntities = [];
+
+        // Legacy static entities (from Tiled);
+        _.each(map.staticEntities, (string, tileIndex) => {
+
+            self.staticEntities.push({
+                tileIndex: tileIndex,
+                string: string
+            });
+
+        });
+
+        _.each(Spawns, (data) => {
+            let tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
+
+            self.staticEntities.push({
+                tileIndex: tileIndex,
+                string: data.string,
+                roaming: data.roaming
+            });
+
+        });
     }
 
     indexToGridPosition(tileIndex) {
@@ -181,7 +212,9 @@ class Map {
         if (entity.x === -1 || entity.y === -1)
             return true;
 
-        return this.inArea(entity.x, entity.y, 13, 553, 7, 7) || this.inArea(entity.x, entity.y, 15, 13, 11, 12);
+        return this.inArea(entity.x, entity.y, 11, 551, 10, 10) ||
+                this.inArea(entity.x, entity.y, 12, 514, 35, 35) ||
+                this.inArea(entity.x, entity.y, 22, 489, 25, 25);
     }
 
     nearLight(light, x, y) {
@@ -220,6 +253,18 @@ class Map {
         let tileIndex = self.gridPositionToIndex(x - 1, y);
 
         return self.collisions.indexOf(tileIndex) > -1;
+    }
+
+    /* For preventing NPCs from roaming in null areas. */
+    isEmpty(x, y) {
+        let self = this;
+
+        if (self.isOutOfBounds(x, y))
+            return true;
+
+        let tileIndex = self.gridPositionToIndex(x - 1, y);
+
+        return ClientMap.data[tileIndex] === 0;
     }
 
     getActualTileIndex(tileIndex) {

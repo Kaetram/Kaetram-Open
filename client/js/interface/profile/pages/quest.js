@@ -18,10 +18,9 @@ define(['jquery', '../page'], function($, Page) {
 
         },
 
-        load: function(quests, achievements) {
+        loadAchievements: function(achievements) {
             var self = this,
-                finishedAchievements = 0,
-                finishedQuests = 0;
+                finishedAchievements = 0;
 
             _.each(achievements, function(achievement) {
                 var item = self.getItem(false, achievement.id),
@@ -53,6 +52,13 @@ define(['jquery', '../page'], function($, Page) {
                 self.achievementsList.append(listItem);
             });
 
+            self.achievementsCount.html(finishedAchievements + '/' + achievements.length);
+        },
+
+        loadQuests(quests) {
+            var self = this,
+                finishedQuests = 0;
+
             _.each(quests, function(quest) {
                 var item = self.getItem(true, quest.id),
                     name = self.getName(true, quest.id);
@@ -78,9 +84,7 @@ define(['jquery', '../page'], function($, Page) {
                 self.questList.append(listItem);
             });
 
-            self.achievementsCount.html(finishedAchievements + '/' + achievements.length);
             self.questCount.html(finishedQuests + '/' + quests.length);
-
         },
 
         progress: function(info) {
@@ -97,6 +101,8 @@ define(['jquery', '../page'], function($, Page) {
 
             if (!info.isQuest && info.count > 2)
                 name.text(info.name + ' ' + info.progress + '/' + (info.count - 1));
+            else
+                name.text(info.name);
 
             name.css('background', 'rgba(255, 255, 10, 0.4)');
         },

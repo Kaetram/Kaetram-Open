@@ -26,10 +26,13 @@ class Introduction extends Quest {
             return;
         }
 
-        if (!stage)
-            self.update();
-        else
-            self.stage = stage;
+        super.load(stage);
+
+        self.updatePointers();
+        self.toggleChat();
+
+        if (self.stage > 9998)
+            return;
 
         self.loadCallbacks();
     }
@@ -37,13 +40,7 @@ class Introduction extends Quest {
     loadCallbacks() {
         let self = this;
 
-        if (self.stage >= 9999)
-            return;
-
-        self.updatePointers();
-        self.toggleChat();
-
-        self.onNPCTalk(function(npc) {
+        self.onNPCTalk((npc) => {
 
             let conversation = self.getConversation(npc.id);
 
@@ -51,23 +48,21 @@ class Introduction extends Quest {
 
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: conversation
+                text: npc.talk(conversation)
             }));
 
-            npc.talk(conversation);
-
-            if (npc.talkIndex > conversation.length)
+            if (npc.talkIndex === 0)
                 self.progress('talk');
 
         });
 
-        self.player.onReady(function() {
+        self.player.onReady(() => {
 
             self.updatePointers();
 
         });
 
-        self.player.onDoor(function(destX, destY) {
+        self.player.onDoor((destX, destY) => {
             if (self.getTask() !== 'door') {
                 self.player.notify('You cannot go through this door yet.');
                 return;
@@ -81,24 +76,30 @@ class Introduction extends Quest {
             }
         });
 
-        self.player.onProfile(function(isOpen) {
+        self.player.onProfile((isOpen) => {
 
             if (isOpen)
                 self.progress('click');
 
         });
 
-        self.player.onInventory(function(isOpen) {
+        self.player.onInventory((isOpen) => {
 
             if (isOpen)
                 self.progress('click');
 
         });
 
-        self.player.onWarp(function(isOpen) {
+        self.player.onWarp((isOpen) => {
 
             if (isOpen)
                 self.progress('click');
+
+        });
+
+        self.player.onKill((character) => {
+            if (self.data.kill[self.stage] === character.id)
+                self.progress('kill');
 
         });
 
@@ -123,6 +124,28 @@ class Introduction extends Quest {
                     self.player.updateRegion();
 
                 break;
+
+            case 'door':
+
+                if (self.stage === 7)
+                    self.player.inventory.add({
+                        id: 248,
+                        count: 1,
+                        ability: -1,
+                        abilityLevel: -1
+                    });
+
+                else if (self.stage === 15)
+                    self.player.inventory.add({
+                        id: 87,
+                        count: 1,
+                        ability: -1,
+                        abilityLevel: -1
+                    });
+
+                break;
+
+
         }
 
         self.stage++;

@@ -12,7 +12,7 @@ module.exports = function requireItems(directory) {
         modules = {},
         resolve = identity;
 
-    files.forEach(function(file) {
+    files.forEach((file) => {
         let match = file.match(Filter);
 
         if (match)

@@ -11,12 +11,15 @@ class NPC extends Entity {
     }
 
     talk(messages) {
-        let self = this;
+        let self = this,
+            message = messages[self.talkIndex];
 
-        if (self.talkIndex > messages.length)
+        if (self.talkIndex > messages.length - 1)
             self.talkIndex = 0;
+        else
+            self.talkIndex++;
 
-        self.talkIndex++;
+        return message;
     }
 
 }

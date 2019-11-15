@@ -2,8 +2,9 @@
 
 define(['jquery', '../interface/inventory',
         '../interface/profile/profile', '../interface/actions',
-        '../interface/bank', '../interface/enchant', '../interface/warp', '../interface/shop'],
-    function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop) {
+        '../interface/bank', '../interface/enchant', '../interface/warp',
+        '../interface/shop', '../interface/header'],
+    function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
 
     return Class.extend({
 
@@ -23,6 +24,7 @@ define(['jquery', '../interface/inventory',
             self.actions = null;
             self.enchant = null;
             self.shop = null;
+            self.header = null;
 
             self.loadNotifications();
             self.loadActions();
@@ -52,6 +54,9 @@ define(['jquery', '../interface/inventory',
             if (self.shop && self.shop.isVisible())
                 self.shop.resize();
 
+            if (self.header)
+                self.header.resize();
+
         },
 
         loadInventory: function(size, data) {
@@ -74,6 +79,11 @@ define(['jquery', '../interface/inventory',
              * Similar structure as the inventory, just that it
              * has two containers. The bank and the inventory.
              */
+
+            if (!self.inventory) {
+                log.error('Inventory not initialized.');
+                return;
+            }
 
             self.bank = new Bank(self.game, self.inventory.container, size);
 
@@ -115,6 +125,13 @@ define(['jquery', '../interface/inventory',
 
             if (!self.shop)
                 self.shop = new Shop(self.game, self);
+        },
+
+        loadHeader: function() {
+            var self = this;
+
+            if (!self.header)
+                self.header = new Header(self.game, self);
         },
 
         loadNotifications: function() {

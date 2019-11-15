@@ -380,8 +380,8 @@
   "Cactus": {
     "name": "Cactus",
     "id": 21,
-    "drops": {"gold": 600, "cactusaxe": 400},
-    "hitPoints": 45,
+    "drops": {"gold": 600, "cactusaxe": 100},
+    "hitPoints": 115,
     "armour": 4,
     "weapon": 1,
     "xp": 35,

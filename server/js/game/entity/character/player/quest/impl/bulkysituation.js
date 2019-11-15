@@ -5,25 +5,25 @@ let Quest = require('../quest'),
     Messages = require('../../../../../../network/messages');
 
 class BulkySituation extends Quest {
-    
+
     constructor(player, data) {
         super(player, data);
-        
+
         let self = this;
-        
+
         self.player = player;
         self.data = data;
-        
+
         self.lastNPC = null;
     }
 
     load(stage) {
         let self = this;
 
-        if (!stage)
-            self.update();
-        else
-            self.stage = stage;
+        super.load(stage);
+
+        if (self.stage > 9998)
+            return;
 
         self.loadCallbacks();
     }
@@ -31,10 +31,7 @@ class BulkySituation extends Quest {
     loadCallbacks() {
         let self = this;
 
-        if (self.stage > 9999)
-            return;
-
-        self.onNPCTalk(function(npc) {
+        self.onNPCTalk((npc) => {
 
             if (self.hasRequirement()) {
                 self.progress('item');
@@ -43,16 +40,14 @@ class BulkySituation extends Quest {
 
             let conversation = self.getConversation(npc.id);
 
-            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-                id: npc.instance,
-                text: conversation
-            }));
-
             self.lastNPC = npc;
 
-            npc.talk(conversation);
+            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
+                id: npc.instance,
+                text: npc.talk(conversation)
+            }));
 
-            if (npc.talkIndex > conversation.length)
+            if (npc.talkIndex === 0)
                 self.progress('talk');
 
         });
@@ -88,6 +83,8 @@ class BulkySituation extends Quest {
             stage: self.stage,
             isQuest: true
         }));
+
+        self.update();
     }
 
     finish() {
@@ -97,7 +94,7 @@ class BulkySituation extends Quest {
     hasRequirement() {
         return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());
     }
-    
+
 }
 
 module.exports = BulkySituation;

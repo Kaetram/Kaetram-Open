@@ -2,7 +2,8 @@
 
 let Messages = require('../../../../../network/messages'),
     Packets = require('../../../../../network/packets'),
-    Utils = require('../../../../../util/utils');
+    Utils = require('../../../../../util/utils'),
+    _ = require('underscore');
 
 class Quest {
 
@@ -17,7 +18,15 @@ class Quest {
         self.description = data.description;
 
         self.stage = 0;
-        self.subStage = {};
+    }
+
+    load(stage) {
+        let self = this;
+
+        if (!stage)
+            self.update();
+        else
+            self.stage = parseInt(stage);
     }
 
     finish() {
@@ -44,6 +53,8 @@ class Quest {
             id: self.id,
             isQuest: true
         }));
+
+        self.update();
     }
 
     setStage(stage) {
@@ -127,17 +138,7 @@ class Quest {
             return;
 
         npc.talkIndex = 0;
-
-        self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-            id: npc.instance,
-            text: null
-        }));
     }
-
-    addSubStage(key, value) {
-        this.subStage[key] = value;
-    }
-
 
     clearPointers() {
         this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}))
@@ -164,7 +165,7 @@ class Quest {
     }
 
     hasDoorUnlocked(door) {
-        return false;
+        return this.stage > 9998;
     }
 
     isFinished() {
@@ -189,10 +190,6 @@ class Quest {
 
     getStage() {
         return this.stage;
-    }
-
-    getSubStage(key) {
-        return this.subStage[key];
     }
 
     getItemReward() {

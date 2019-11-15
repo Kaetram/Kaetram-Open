@@ -65,7 +65,7 @@ define(['jquery', './camera', './tile',
             self.renderedFrame = [0, 0];
             self.lastTarget = [0, 0];
 
-            self.animatedTiles = [];
+            self.animatedTiles = {};
             self.drawnTiles = [];
 
             self.resizeTimeout = null;
@@ -133,12 +133,12 @@ define(['jquery', './camera', './tile',
             self.screenWidth = self.camera.gridWidth * self.tileSize;
             self.screenHeight = self.camera.gridHeight * self.tileSize;
 
-            var width = self.screenWidth * self.superScaling,
-                height = self.screenHeight * self.superScaling;
+            self.canvasWidth = self.screenWidth * self.superScaling;
+            self.canvasHeight = self.screenHeight * self.superScaling;
 
             self.forEachCanvas(function(canvas) {
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = self.canvasWidth;
+                canvas.height = self.canvasHeight;
             });
         },
 
@@ -645,6 +645,7 @@ define(['jquery', './camera', './tile',
                 player = self.game.player;
 
             self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 31, false, 'white');
+            self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringInstance, 10, 51, false, 'white');
         },
 
         drawCollisions: function() {
@@ -772,8 +773,6 @@ define(['jquery', './camera', './tile',
             if (!self.animateTiles)
                 return;
 
-            var newTiles = [];
-
             self.forEachVisibleTile(function(id, index) {
                 /**
                  * We don't want to reinitialize animated tiles that already exist
@@ -788,22 +787,17 @@ define(['jquery', './camera', './tile',
                  * Push the pre-existing tiles.
                  */
 
-                var tileIndex = self.animatedTiles.indexOf(id);
+                 if (!(index in self.animatedTiles)) {
+                     var tile = new Tile(id, index, self.map),
+                        position = self.map.indexToGridPosition(tile.index);
 
-                if (tileIndex > -1) {
-                    newTiles.push(self.animatedTiles[tileIndex]);
-                    return;
-                }
+                    tile.setPosition(position);
 
-                var tile = new Tile(id, index, self.map),
-                    position = self.map.indexToGridPosition(tile.index);
+                    self.animatedTiles[index] = tile;
+                 }
 
-                tile.setPosition(position);
-
-                newTiles.push(tile);
             }, 2);
 
-            self.animatedTiles = newTiles;
         },
 
         drawCellRect: function(x, y, colour) {

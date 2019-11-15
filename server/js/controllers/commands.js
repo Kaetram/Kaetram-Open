@@ -159,7 +159,8 @@ class Commands {
     }
 
     handleAdminCommands(command, blocks) {
-        let self = this;
+        let self = this,
+            username, player;
 
         switch (command) {
 
@@ -234,11 +235,21 @@ class Commands {
 
             case 'teletome':
 
-                let username = blocks.join(' '),
-                    player = self.world.getPlayerByName(username);
+                username = blocks.join(' ');
+                player = self.world.getPlayerByName(username);
 
                 if (player)
                     player.teleport(self.player.x, self.player.y);
+
+                return;
+
+            case 'teleto':
+
+                username = blocks.join(' ');
+                player = self.world.getPlayerByName(username);
+
+                if (player)
+                    self.player.teleport(player.x, player.y);
 
                 return;
 
@@ -260,23 +271,34 @@ class Commands {
 
             case 'pointer':
 
-                let posX = parseInt(blocks.shift()),
-                    posY = parseInt(blocks.shift());
+                if (blocks.length > 1) {
+                    let posX = parseInt(blocks.shift()),
+                        posY = parseInt(blocks.shift());
 
-                if (!posX || !posY)
-                    return;
+                    if (!posX || !posY)
+                        return;
 
-                self.player.send(new Messages.Pointer(Packets.PointerOpcode.Location, {
-                    id: self.player.instance,
-                    x: posX,
-                    y: posY
-                }));
+                    self.player.send(new Messages.Pointer(Packets.PointerOpcode.Location, {
+                        id: self.player.instance,
+                        x: posX,
+                        y: posY
+                    }));
+                } else {
+                    let instance = blocks.shift();
+
+                    if (!instance)
+                        return;
+
+                    self.player.send(new Messages.Pointer(Packets.PointerOpcode.NPC, {
+                        id: instance
+                    }));
+                }
 
                 return;
 
             case 'teleall':
 
-                _.each(self.world.players, function(player) {
+                _.each(self.world.players, (player) => {
                     player.teleport(self.player.x, self.player.y);
                 });
 
@@ -376,6 +398,24 @@ class Commands {
                 self.player.updateRegion();
 
                 return;
+
+            case 'finishQuest':
+
+                self.player.quests.getQuest(1).finish();
+
+                break;
+
+            case 'finishAchievement':
+
+                self.player.quests.achievements[0].finish();
+
+                break;
+
+            case 'resetAchievement':
+
+                self.player.quests.achievements[1].setProgress(0);
+
+                break;
 
         }
     }

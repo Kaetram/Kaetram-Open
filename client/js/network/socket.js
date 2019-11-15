@@ -19,7 +19,11 @@ define(['./packets', './messages'], function(Packets, Messages) {
         },
 
         connect: function() {
-            var self = this,
+            var self = this, url;
+
+            if (self.config.ssl)
+                url = 'wss://' + self.config.ip;
+            else
                 url = 'ws://' + self.config.ip + ':' + self.config.port;
 
             self.connection = null;
@@ -35,7 +39,11 @@ define(['./packets', './messages'], function(Packets, Messages) {
                 self.listening = false;
 
                 self.game.app.toggleLogin(false);
-                self.game.app.sendError(null, 'Could not connect to the game server.');
+
+                if (self.game.isDebug())
+                    self.game.app.sendError(null, 'Couldn\'t connect to ' + self.config.ip + ':' + self.config.port);
+                else
+                    self.game.app.sendError(null, 'Could not connect to the game server.');
             });
 
             self.connection.on('connect', function() {

@@ -107,6 +107,7 @@ class Player extends Character {
         self.warp.setLastWarp(data.lastWarp);
 
         self.level = Formulas.expToLevel(self.experience);
+        self.nextExperience = Formulas.nextExp(self.experience);
         self.hitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(self.level));
         self.mana = new Mana(data.mana, Formulas.getMaxMana(self.level));
 
@@ -139,12 +140,19 @@ class Player extends Character {
             return;
         }
 
-        self.database.loader.getInventory(self, function(ids, counts, skills, skillLevels) {
+        self.database.loader.getInventory(self, (ids, counts, skills, skillLevels) => {
+            if (ids === null && counts === null) {
+                self.inventory.loadEmpty();
+                return;
+            }
+
             if (ids.length !== self.inventory.size)
                 self.save();
 
             self.inventory.load(ids, counts, skills, skillLevels);
             self.inventory.check();
+
+            self.loadBank();
         });
     }
 
@@ -156,7 +164,7 @@ class Player extends Character {
             return;
         }
 
-        self.database.loader.getBank(self, function(ids, counts, skills, skillLevels) {
+        self.database.loader.getBank(self, (ids, counts, skills, skillLevels) => {
             if (ids.length !== self.bank.size)
                 self.save();
 
@@ -171,11 +179,26 @@ class Player extends Character {
         if (config.offlineMode)
             return;
 
-        self.database.loader.getQuests(self, function(ids, stages) {
+        self.database.loader.getAchievements(self, (ids, progress) => {
+            ids.pop();
+            progress.pop();
+
+            if (self.quests.getAchievementSize() !== ids.length) {
+                log.info('Mismatch in achievements data.');
+
+                self.save();
+            }
+
+            self.quests.updateAchievements(ids, progress);
+        });
+
+        self.database.loader.getQuests(self, (ids, stages) => {
             if (!ids || !stages) {
                 self.quests.updateQuests(ids, stages);
                 return;
             }
+
+            /* Removes the empty space created by the loader */
 
             ids.pop();
             stages.pop();
@@ -189,27 +212,26 @@ class Player extends Character {
             self.quests.updateQuests(ids, stages);
         });
 
-        self.database.loader.getAchievements(self, function(ids, progress) {
-            ids.pop();
-            progress.pop();
+        self.quests.onAchievementsReady(() => {
 
-            if (self.quests.getAchievementSize() !== ids.length) {
-                log.info('Mismatch in achievements data.');
-
-                self.save();
-            }
-
-            self.quests.updateAchievements(ids, progress);
-        });
-
-        self.quests.onReady(function() {
-
-            self.send(new Messages.Quest(Packets.QuestOpcode.Batch, self.quests.getData()));
+            self.send(new Messages.Quest(Packets.QuestOpcode.AchievementBatch, self.quests.getAchievementData()));
 
             /* Update region here because we receive quest info */
             self.updateRegion();
 
+            self.achievementsLoaded = true;
         });
+
+        self.quests.onQuestsReady(() => {
+
+            self.send(new Messages.Quest(Packets.QuestOpcode.QuestBatch, self.quests.getQuestData()));
+
+            /* Update region here because we receive quest info */
+            self.updateRegion();
+
+            self.questsLoaded = true;
+        });
+
     }
 
     intro() {
@@ -241,6 +263,7 @@ class Player extends Character {
             hitPoints: self.hitPoints.getData(),
             mana: self.mana.getData(),
             experience: self.experience,
+            nextExperience: self.nextExperience,
             level: self.level,
             lastLogin: self.lastLogin,
             pvpKills: self.pvpKills,
@@ -279,16 +302,28 @@ class Player extends Character {
         let oldLevel = self.level;
 
         self.level = Formulas.expToLevel(self.experience);
+        self.nextExperience = Formulas.nextExp(self.experience);
 
         if (oldLevel !== self.level)
             self.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(self.level));
 
-        self.sendToAdjacentRegions(self.region, new Messages.Experience({
+        let data = {
             id: self.instance,
-            amount: exp,
-            experience: self.experience,
             level: self.level
-        }));
+        };
+
+        /**
+         * Sending two sets of data as other users do not need to
+         * know the experience of another player.. (yet).
+         */
+
+        self.sendToAdjacentRegions(self.region, new Messages.Experience(data), self.instance);
+
+        data.amount = exp;
+        data.experience = self.experience;
+        data.nextExperience = self.nextExperience;
+
+        self.send(new Messages.Experience(data));
     }
 
     heal(amount) {
@@ -340,11 +375,12 @@ class Player extends Character {
 
     eat(id) {
         let self = this,
-            type, amount;
+            item = Items.getPlugin(id);
 
-        if (Items.hasPlugin(id))
-            (new (Items.isNewPlugin(id))(id, -1, self.x,self.y)).onUse(self);
+        if (!item)
+            return;
 
+        new (item)().onUse(self);
     }
 
     equip(string, count, ability, abilityLevel) {
@@ -757,7 +793,7 @@ class Player extends Character {
 
         clearTimeout(self.disconnectTimeout);
 
-        self.disconnectTimeout = setTimeout(function() {
+        self.disconnectTimeout = setTimeout(() => {
 
             self.timeout();
 
@@ -1007,7 +1043,7 @@ class Player extends Character {
         if (!self.quests || config.offlineMode)
             return true;
 
-        return self.quests.getQuest(0).isFinished();
+        return self.quests.getQuest(0).isFinished() || !config.tutorialEnabled;
     }
 
     checkRegions() {
@@ -1044,7 +1080,7 @@ class Player extends Character {
     walkRandomly() {
         let self = this;
 
-        setInterval(function() {
+        setInterval(() => {
             self.setPosition(self.x + Utils.randomInt(-5, 5), self.y + Utils.randomInt(-5, 5));
         }, 2000);
 
@@ -1061,6 +1097,9 @@ class Player extends Character {
         let self = this;
 
         if (config.offlineMode || self.isGuest)
+            return;
+
+        if ((!self.questsLoaded || !self.achievementsLoaded) && !self.new)
             return;
 
         self.database.creator.save(self);

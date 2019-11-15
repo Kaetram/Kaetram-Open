@@ -76,6 +76,8 @@ define(function() {
 
             self.messages.onWelcome(function(data) {
 
+                self.interface.loadHeader();
+
                 self.game.player.load(data);
 
                 self.game.start();
@@ -146,8 +148,8 @@ define(function() {
                     return;
 
                 if (data.hitPoints) {
-                    entity.hitPoints = data.hitPoints;
-                    entity.maxHitPoints = data.maxHitPoints;
+                    entity.setHitPoints(data.hitPoints);
+                    entity.setMaxHitPoints(data.maxHitPoints);
                 }
 
                 if (data.mana) {
@@ -435,6 +437,13 @@ define(function() {
                             attacker.removeTarget();
 
                         break;
+
+                    case Packets.CombatOpcode.Sync:
+
+                        if (target.x !== info.x || target.y !== info.y)
+                            self.game.moveCharacter(target, info.x, info.y);
+
+                        break;
                 }
             });
 
@@ -484,6 +493,7 @@ define(function() {
 
                     if (self.game.player.hasTarget() && self.game.player.target.id === entity.id && self.input.overlay.updateCallback)
                         self.input.overlay.updateCallback(entity.id, data.hitPoints);
+
                 }
 
                 if (data.mana)
@@ -619,9 +629,15 @@ define(function() {
             self.messages.onQuest(function(opcode, info) {
 
                 switch (opcode) {
-                    case Packets.QuestOpcode.Batch:
+                    case Packets.QuestOpcode.AchievementBatch:
 
-                        self.interface.getQuestPage().load(info.quests, info.achievements);
+                        self.interface.getQuestPage().loadAchievements(info.achievements);
+
+                        break;
+
+                    case Packets.QuestOpcode.QuestBatch:
+
+                        self.interface.getQuestPage().loadQuests(info.quests);
 
                         break;
 
@@ -707,13 +723,20 @@ define(function() {
                 if (!entity || entity.type !== 'player')
                     return;
 
-                entity.experience = info.experience;
-
                 if (entity.level !== info.level) {
                     entity.level = info.level;
                     self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
-                } else if (entity.id === self.game.player.id)
+                } else if (entity.id === self.game.player.id) {
+
+                    if (info.id === self.game.player.id) {
+                        entity.experience = info.experience;
+                        entity.nextExperience = info.nextExperience;
+                    }
+
                     self.info.create(Modules.Hits.Experience, [info.amount], entity.x, entity.y);
+                }
+
+
 
                 self.interface.profile.update();
 
@@ -750,27 +773,27 @@ define(function() {
                     case Packets.NPCOpcode.Talk:
 
                         var entity = self.entities.get(info.id),
-                            messages = info.text,
-                            isNPC = !info.nonNPC,
-                            message;
+                            message = info.text,
+                            isNPC = !info.nonNPC;
 
                         if (!entity)
                             return;
 
-                        if (!messages) {
-                            entity.talkIndex = 0;
-                            return;
-                        }
-
-                        message = isNPC ? entity.talk(messages) : messages;
-
                         if (isNPC) {
-                            var bubble = self.bubble.create(info.id, message);
 
-                            self.bubble.setTo(entity);
+                            if (!message) {
+                                sound = 'npc-end';
+                                self.bubble.destroy(info.id);
 
-                            if (self.renderer.mobile && self.renderer.autoCentre)
-                                self.renderer.camera.centreOn(self.game.player);
+                            } else {
+
+                                var bubble = self.bubble.create(info.id, message);
+
+                                self.bubble.setTo(entity);
+
+                                if (self.renderer.mobile && self.renderer.autoCentre)
+                                    self.renderer.camera.centreOn(self.game.player);
+                            }
 
                         } else {
                             self.bubble.create(info.id, message, self.time, 5000);
@@ -778,11 +801,6 @@ define(function() {
                         }
 
                         var sound = 'npc';
-
-                        if (!message && isNPC) {
-                            sound = 'npc-end';
-                            self.bubble.destroy(info.id);
-                        }
 
                         self.audio.play(Modules.AudioTypes.SFX, sound);
 

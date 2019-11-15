@@ -36,7 +36,7 @@ class Achievement {
         self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
             id: self.id,
             name: self.name,
-            progress: self.progress - 1,
+            progress: self.progress,
             count: self.data.count,
             isQuest: false
         }));
@@ -48,14 +48,13 @@ class Achievement {
         if (self.isThreshold() || self.hasItem())
             self.finish(npc);
         else {
-            npc.talk(self.data.text);
 
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: self.data.text
+                text: npc.talk(self.data.text)
             }));
 
-            if (!self.isStarted() && npc.talkIndex > self.data.text.length)
+            if (!self.isStarted() && npc.talkIndex === 0)
                 self.step();
         }
     }
@@ -120,7 +119,7 @@ class Achievement {
     }
 
     setProgress(progress) {
-        this.progress = progress;
+        this.progress = parseInt(progress);
     }
 
     isStarted() {

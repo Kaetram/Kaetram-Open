@@ -38,13 +38,13 @@ class Combat {
 
         self.cleanTimeout = null;
 
-        self.character.onSubAoE(function(radius, hasTerror) {
+        self.character.onSubAoE((radius, hasTerror) => {
 
             self.dealAoE(radius, hasTerror);
 
         });
 
-        self.character.onDamage(function(target, hitInfo) {
+        self.character.onDamage((target, hitInfo) => {
 
             if (self.isPlayer() && self.character.hasBreakableWeapon() && Formulas.getWeaponBreak(self.character, target))
                 self.character.breakWeapon();
@@ -56,7 +56,7 @@ class Combat {
                 if (target.stunTimeout)
                     clearTimeout(target.stunTimeout);
 
-                target.stunTimeout = setTimeout(function() {
+                target.stunTimeout = setTimeout(() => {
 
                     target.setStun(false);
 
@@ -86,11 +86,11 @@ class Combat {
 
         self.lastAction = new Date().getTime();
 
-        self.attackLoop = setInterval(function() { self.parseAttack(); }, self.character.attackRate);
+        self.attackLoop = setInterval(() => { self.parseAttack(); }, self.character.attackRate);
 
-        self.followLoop = setInterval(function() { self.parseFollow(); }, 400);
+        self.followLoop = setInterval(() => { self.parseFollow(); }, 400);
 
-        self.checkLoop = setInterval(function() { self.parseCheck(); }, 1000);
+        self.checkLoop = setInterval(() => { self.parseCheck(); }, 1000);
 
         self.started = true;
     }
@@ -125,6 +125,8 @@ class Combat {
 
             if (self.character.target && !self.character.target.isDead())
                 self.attack(self.character.target);
+
+            self.sync();
 
             self.lastAction = self.getTime();
 
@@ -190,6 +192,23 @@ class Combat {
         self.queue.add(hit);
     }
 
+    sync() {
+        let self = this;
+
+        if (self.character.type !== 'mob')
+            return;
+
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
+            message: new Messages.Combat(Packets.CombatOpcode.Sync, {
+                attackerId: self.character.instance, //irrelevant
+                targetId: self.character.instance, //can be the same since we're acting on an entity.
+                x: self.character.x,
+                y: self.character.y
+            })
+        })
+    }
+
     dealAoE(radius, hasTerror) {
         let self = this;
 
@@ -202,7 +221,7 @@ class Combat {
 
         let entities = self.world.getGrids().getSurroundingEntities(self.character, radius);
 
-        _.each(entities, function(entity) {
+        _.each(entities, (entity) => {
 
             let hitData = new Hit(Modules.Hits.Damage, Formulas.getAoEDamage(self.character, entity)).getData();
 
@@ -262,7 +281,8 @@ class Combat {
 
         self.character.return();
 
-        self.world.push(Packets.PushOpcode.Broadcast, {
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
             message: new Messages.Movement(Packets.MovementOpcode.Move, {
                 id: self.character.instance,
                 x: self.character.x,
@@ -341,7 +361,7 @@ class Combat {
             closest = null,
             lowestDistance = 100;
 
-        self.forEachAttacker(function(attacker) {
+        self.forEachAttacker((attacker) => {
             let distance = self.character.getDistance(attacker);
 
             if (distance < lowestDistance)
@@ -378,7 +398,7 @@ class Combat {
         if (character.type !== 'mob')
             return;
 
-        character.move(x, y);
+        character.setPosition(x, y);
     }
 
     hit(character, target, hitInfo) {
@@ -399,7 +419,8 @@ class Combat {
 
         } else {
 
-            self.world.push(Packets.PushOpcode.Broadcast, {
+            self.world.push(Packets.PushOpcode.Regions, {
+                regionId: character.region,
                 message: new Messages.Combat(Packets.CombatOpcode.Hit, {
                     attackerId: character.instance,
                     targetId: target.instance,
@@ -418,7 +439,8 @@ class Combat {
     }
 
     follow(character, target) {
-        this.world.push(Packets.PushOpcode.Broadcast, {
+        this.world.push(Packets.PushOpcode.Regions, {
+            regionId: character.region,
             message: new Messages.Movement(Packets.MovementOpcode.Follow, {
                 attackerId: character.instance,
                 targetId: target.instance,
@@ -429,7 +451,8 @@ class Combat {
     }
 
     end() {
-        this.world.push(Packets.PushOpcode.Broadcast, {
+        this.world.push(Packets.PushOpcode.Regions, {
+            regionId: this.character.region,
             message: new Messages.Combat(Packets.CombatOpcode.Finish, {
                 attackerId: this.character.instance,
                 targetId: null
@@ -456,7 +479,7 @@ class Combat {
     }
 
     forEachAttacker(callback) {
-        _.each(this.attackers, function(attacker) {
+        _.each(this.attackers, (attacker) => {
             callback(attacker);
         });
     }
