@@ -149,11 +149,11 @@ class Combat {
             if (self.isAttacked() || self.character.hasTarget())
                 self.lastAction = self.getTime();
 
-            //if (self.onSameTile()) {
-            //    let newPosition = self.getNewPosition();
+            if (self.onSameTile()) {
+                let newPosition = self.getNewPosition();
 
-            //    self.move(self.character, newPosition.x, newPosition.y);
-            //}
+                self.move(self.character, newPosition.x, newPosition.y);
+            }
 
             if (self.character.hasTarget() && !self.inProximity()) {
                 let attacker = self.getClosestAttacker();
@@ -281,7 +281,8 @@ class Combat {
 
         self.character.return();
 
-        self.world.push(Packets.PushOpcode.Broadcast, {
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
             message: new Messages.Movement(Packets.MovementOpcode.Move, {
                 id: self.character.instance,
                 x: self.character.x,
@@ -418,7 +419,8 @@ class Combat {
 
         } else {
 
-            self.world.push(Packets.PushOpcode.Broadcast, {
+            self.world.push(Packets.PushOpcode.Regions, {
+                regionId: character.region,
                 message: new Messages.Combat(Packets.CombatOpcode.Hit, {
                     attackerId: character.instance,
                     targetId: target.instance,
@@ -437,7 +439,8 @@ class Combat {
     }
 
     follow(character, target) {
-        this.world.push(Packets.PushOpcode.Broadcast, {
+        this.world.push(Packets.PushOpcode.Regions, {
+            regionId: character.region,
             message: new Messages.Movement(Packets.MovementOpcode.Follow, {
                 attackerId: character.instance,
                 targetId: target.instance,
@@ -448,7 +451,8 @@ class Combat {
     }
 
     end() {
-        this.world.push(Packets.PushOpcode.Broadcast, {
+        this.world.push(Packets.PushOpcode.Regions, {
+            regionId: this.character.region,
             message: new Messages.Combat(Packets.CombatOpcode.Finish, {
                 attackerId: this.character.instance,
                 targetId: null
