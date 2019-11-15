@@ -103,6 +103,9 @@ define(['./entityhandler'], function(EntityHandler) {
             if (!sprite || (self.sprite && self.sprite.name === sprite.name))
                 return;
 
+            if (self.type === 'player')
+                sprite.loadHurt = true;
+
             if (!sprite.loaded)
                 sprite.load();
 
@@ -111,8 +114,15 @@ define(['./entityhandler'], function(EntityHandler) {
             self.sprite = sprite;
 
             self.normalSprite = self.sprite;
-            self.hurtSprite = sprite.getHurtSprite();
             self.animations = sprite.createAnimations();
+
+            sprite.onLoad(function() {
+
+                if (sprite.loadHurt)
+                    self.hurtSprite = sprite.hurtSprite;
+
+            });
+
             self.spriteLoaded = true;
 
             if (self.readyCallback)

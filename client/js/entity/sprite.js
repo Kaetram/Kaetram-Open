@@ -13,12 +13,14 @@ define(['./animation'], function(Animation) {
             self.id = sprite.id;
 
             self.loaded = false;
+            self.loadHurt = false;
+            self.loadSilhouette = true;
 
             self.offsetX = 0;
             self.offsetY = 0;
             self.offsetAngle = 0;
 
-            self.whiteSprite = {
+            self.hurtSprite = {
                 loaded: false
             };
 
@@ -35,8 +37,11 @@ define(['./animation'], function(Animation) {
             self.image.onload = function() {
                 self.loaded = true;
 
-                if (self.onLoadCallback)
-                    self.onLoadCallback();
+                if (self.loadHurt)
+                    self.createHurtSprite();
+
+                if (self.loadCallback)
+                    self.loadCallback();
             };
         },
 
@@ -91,7 +96,7 @@ define(['./animation'], function(Animation) {
             if (!self.loaded)
                 self.load();
 
-            if (self.whiteSprite.loaded)
+            if (self.hurtSprite.loaded)
                 return;
 
             var canvas = document.createElement('canvas'),
@@ -101,13 +106,13 @@ define(['./animation'], function(Animation) {
             canvas.width = self.image.width;
             canvas.height = self.image.height;
 
-            context.drawImage(self.image, 0, 0, self.image.width, self.image.height);
-
             try {
+                context.drawImage(self.image, 0, 0, self.image.width, self.image.height);
+
                 spriteData = context.getImageData(0, 0, self.image.width, self.image.height);
                 data = spriteData.data;
 
-                for (var i = 0; i < data.length; i+= 4) {
+                for (var i = 0; i < data.length; i += 4) {
                     data[i] = 255;
                     data[i + 1] = data[i + 2] = 75;
                 }
@@ -116,33 +121,24 @@ define(['./animation'], function(Animation) {
 
                 context.putImageData(spriteData, 0, 0);
 
-                self.whiteSprite = {
+                self.hurtSprite = {
                     image: canvas,
                     loaded: true,
                     offsetX: self.offsetX,
                     offsetY: self.offsetY,
                     width: self.width,
-                    height: self.height
+                    height: self.height,
+                    type: 'hurt'
                 }
 
-            } catch (e) {}
-        },
-
-        getHurtSprite: function() {
-            var self = this;
-
-            try {
-                if (!self.loaded)
-                    self.load();
-
-                self.createHurtSprite();
-
-                return self.whiteSprite;
-            } catch (e) {}
+            } catch (e) {
+                log.error('Could not load hurt sprite.');
+                log.error(e);
+            }
         },
 
         onLoad: function(callback) {
-            this.onLoadCallback = callback;
+            this.loadCallback = callback;
         }
 
     });

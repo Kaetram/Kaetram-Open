@@ -418,6 +418,11 @@ define(function() {
 
                         self.info.create(hit.type, [hit.damage, isPlayer], target.x, target.y);
 
+                        if (target.hurtSprite) {
+                            target.sprite = target.hurtSprite;
+                            setTimeout(function() { target.sprite = target.normalSprite; }, 75);
+                        }
+                        
                         attacker.triggerHealthBar();
                         target.triggerHealthBar();
 
