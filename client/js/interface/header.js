@@ -10,6 +10,7 @@ define(['jquery', './container/container'], function($, Container) {
 
             self.health = $('#health');
             self.healthBar = $('#healthBar');
+            self.healthBarText = $('#healthBarText');
 
             self.load();
         },
@@ -55,6 +56,7 @@ define(['jquery', './container/container'], function($, Container) {
             }
 
             self.health.css('width', diff + 'px');
+            self.healthBarText.text(self.player.hitPoints + '/' + self.player.maxHitPoints);
         },
 
         resize: function() {
