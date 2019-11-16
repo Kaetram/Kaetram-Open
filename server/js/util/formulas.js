@@ -1,7 +1,8 @@
 /* global module */
 
 let Formulas = {},
-    Utils = require('./utils');
+    Utils = require('./utils'),
+    Constants = require('./constants');
 
 Formulas.LevelExp = [];
 
@@ -138,6 +139,15 @@ Formulas.nextExp = (experience) => {
 
     for (let i = 1; i < Formulas.LevelExp.length; i++)
         if (experience < Formulas.LevelExp[i])
+            return Formulas.LevelExp[i];
+};
+
+Formulas.prevExp = (experience) => {
+    if (experience < 0)
+        return -1;
+
+    for (let i = Constants.MAX_LEVEL; i > 0; i--)
+        if (experience > Formulas.LevelExp[i])
             return Formulas.LevelExp[i];
 };
 
