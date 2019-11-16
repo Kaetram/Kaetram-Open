@@ -307,8 +307,11 @@ class Player extends Character {
         self.nextExperience = Formulas.nextExp(self.experience);
         self.prevExperience = Formulas.prevExp(self.experience);
 
-        if (oldLevel !== self.level)
+        if (oldLevel !== self.level) {
             self.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(self.level));
+
+            self.updateRegion();
+        }
 
         let data = {
             id: self.instance,
