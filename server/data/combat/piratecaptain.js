@@ -1,6 +1,7 @@
 let Combat = require('../../js/game/entity/character/combat/combat'),
     Utils = require('../../js/util/utils'),
     Messages = require('../../js/network/messages'),
+    Packets = require('../../js/network/packets'),
     Modules = require('../../js/util/modules');
 
 class PirateCaptain extends Combat {
