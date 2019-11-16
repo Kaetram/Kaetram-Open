@@ -49,5 +49,31 @@
         "56409": { "data": [175,492,1918], "isColliding": false },
         "56410": { "data": [176,493,1919], "isColliding": true }
     }
+  },
+
+  "2": {
+      "id": 2,
+      "status": "closed",
+      "requirement": "level",
+      "level": 10,
+
+      "closedIds": {
+          "52834": { "data": [346], "isColliding": true },
+          "52835": { "data": [347], "isColliding": true },
+          "52836": { "data": [348], "isColliding": true },
+          "53434": { "data": [511,366], "isColliding": true },
+          "53435": { "data": [367], "isColliding": true },
+          "53436": { "data": [512,368], "isColliding": true }
+      },
+
+      "openIds": {
+          "52834": { "data": [1661], "isColliding": true },
+          "52835": { "data": [1662], "isColliding": true },
+          "52836": { "data": [1663], "isColliding": true },
+          "53434": { "data": [511,1681], "isColliding": true },
+          "53435": { "data": [1682], "isColliding": false },
+          "53436": { "data": [512,1683], "isColliding": true }
+      }
   }
+
 }

@@ -28,6 +28,7 @@ class Doors {
                 y: door.y,
                 status: door.status,
                 requirement: door.requirement,
+                level: door.level,
                 questId: door.questId,
                 closedIds: door.closedIds,
                 openIds: door.openIds
@@ -40,13 +41,18 @@ class Doors {
         let self = this;
 
         switch(door.requirement) {
-            case "quest":
+
+            case 'quest':
                 let quest = self.player.quests.getQuest(door.questId);
 
                 if (door.status === 'open')
                     return door.status;
 
                 return (quest && quest.hasDoorUnlocked(door)) ? 'open' : 'closed';
+
+            case 'level':
+                return self.player.level >= door.level ? 'open' : 'closed';
+
         }
     }
 
