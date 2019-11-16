@@ -12,6 +12,9 @@ define(['jquery', './container/container'], function($, Container) {
             self.healthBar = $('#healthBar');
             self.healthBarText = $('#healthBarText');
 
+            self.exp = $('#exp');
+            self.expBar = $('#expBar');
+
             self.load();
         },
 
@@ -26,6 +29,9 @@ define(['jquery', './container/container'], function($, Container) {
                 self.calculateHealthBar();
             });
 
+            self.player.onExperience(function() {
+                self.calculateExpBar();
+            });
 
         },
 
@@ -59,8 +65,27 @@ define(['jquery', './container/container'], function($, Container) {
             self.healthBarText.text(self.player.hitPoints + '/' + self.player.maxHitPoints);
         },
 
+        calculateExpBar: function() {
+            var self = this,
+                scale = self.getScale(),
+                width = self.expBar.width();
+
+            if (scale < 2)
+                scale = 2;
+
+            var experience = self.player.experience - self.player.prevExperience,
+                nextExperience = self.player.nextExperience - self.player.prevExperience;
+
+            var diff = Math.floor(width * (experience / nextExperience));
+
+            self.exp.css('width', diff + 'px');
+        },
+
         resize: function() {
-            this.calculateHealthBar();
+            var self = this;
+
+            self.calculateHealthBar();
+            self.calculateExpBar();
         },
 
         getScale: function() {
