@@ -1,50 +1,39 @@
 /* global log, Detect */
 
-define(['jquery', './app', './game'], function($, App, Game) {
+define(["jquery", "./app", "./game"], function($, App, Game) {
+  let app; var body; var chatInput; var game;
 
-    var app, body, chatInput, game;
+  let load = function() {
+    $(document).ready(function() {
+      app = new App();
+      body = $("body");
+      chatInput = $("#chatInput");
 
-    var load = function() {
+      addClasses();
+      initGame();
+    });
+  };
 
-        $(document).ready(function() {
-            app = new App();
-            body = $('body');
-            chatInput = $('#chatInput');
+  var addClasses = function() {
+    let self = this;
 
-            addClasses();
-            initGame();
-        });
+    if (Detect.isWindows()) body.addClass("windows");
 
-    };
+    if (Detect.isOpera()) body.addClass("opera");
 
-    var addClasses = function() {
-        var self = this;
+    if (Detect.isFirefoxAndroid()) chatInput.removeAttr("placeholder");
+  };
 
-        if (Detect.isWindows())
-            body.addClass('windows');
+  var initGame = function() {
+    app.onReady(function() {
+      app.sendStatus("Loading game");
 
-        if (Detect.isOpera())
-            body.addClass('opera');
+      if (app.config.debug) log.info("Loading the main application...");
 
-        if (Detect.isFirefoxAndroid())
-            chatInput.removeAttr('placeholder');
+      game = new Game(app);
+      app.setGame(game);
+    });
+  };
 
-    };
-
-    var initGame = function() {
-
-        app.onReady(function() {
-            app.sendStatus('Loading game');
-
-            if (app.config.debug)
-                log.info('Loading the main application...');
-
-            game = new Game(app);
-            app.setGame(game);
-        });
-
-    };
-
-
-    load();
+  load();
 });
