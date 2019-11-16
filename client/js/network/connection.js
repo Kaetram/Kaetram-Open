@@ -422,7 +422,7 @@ define(function() {
                             target.sprite = target.hurtSprite;
                             setTimeout(function() { target.sprite = target.normalSprite; }, 75);
                         }
-                        
+
                         attacker.triggerHealthBar();
                         target.triggerHealthBar();
 
@@ -729,19 +729,17 @@ define(function() {
                     return;
 
                 if (entity.level !== info.level) {
+
                     entity.level = info.level;
                     self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
+
                 } else if (entity.id === self.game.player.id) {
 
-                    if (info.id === self.game.player.id) {
-                        entity.experience = info.experience;
-                        entity.nextExperience = info.nextExperience;
-                    }
+                    if (info.id === self.game.player.id)
+                        self.game.player.setExperience(info.experience, info.nextExperience, info.prevExperience);
 
                     self.info.create(Modules.Hits.Experience, [info.amount], entity.x, entity.y);
                 }
-
-
 
                 self.interface.profile.update();
 

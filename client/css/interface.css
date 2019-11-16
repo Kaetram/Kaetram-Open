@@ -1117,11 +1117,6 @@
         margin: 0px;
         padding: 0px;
         text-align: center;
-        -moz-transition:.5s width ease;
-        -webkit-transition:.5s width ease;
-        -o-transition:.5s width ease;
-        -ms-transition:.5s width ease;
-        transition:.5s width ease;
     }
 
     #healthBar {
@@ -1138,6 +1133,30 @@
 
         background-image: url('../img/3/main.png' );
         background-position: 0px -834px;
+    }
+
+    #exp {
+        position: absolute;
+        top: 30px;
+        left: 36px;
+        width: 228px;
+        height: 15px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #expBar {
+        position: absolute;
+        width: 228px;
+        height: 15px;
+
+        background-image: url('../img/3/main.png' );
+        background-position: 0px -873px;
+        color: rgba(255, 255, 255, 1);
+
+        top: 30px;
+        left: 36px;
     }
 
     #healthBarText {
@@ -1761,11 +1780,6 @@
         margin: 0px;
         padding: 0px;
         text-align: center;
-        -moz-transition:.5s width ease;
-        -webkit-transition:.5s width ease;
-        -o-transition:.5s width ease;
-        -ms-transition:.5s width ease;
-        transition:.5s width ease;
     }
 
     #healthBar {
@@ -1786,6 +1800,30 @@
 
     #healthBarText {
         margin: 5px 0 0 20px;
+    }
+
+    #exp {
+        position: absolute;
+        top: 20px;
+        left: 24px;
+        width: 152px;
+        height: 9px;
+        border: 0px;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #expBar {
+        position: absolute;
+        width: 152px;
+        height: 9px;
+
+        background-image: url('../img/2/main.png' );
+        background-position: 0px -582px;
+        color: rgba(255, 255, 255, 1);
+
+        top: 20px;
+        left: 24px;
     }
 
 }

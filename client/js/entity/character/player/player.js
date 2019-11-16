@@ -21,6 +21,7 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.wanted = false;
             self.experience = -1;
             self.nextExperience = -1;
+            self.prevExperience = -1;
             self.level = -1;
             self.pvpKills = -1;
             self.pvpDeaths = -1;
@@ -52,10 +53,9 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.setId(data.instance);
             self.setGridPosition(data.x, data.y);
             self.setPointsData(data.hitPoints, data.mana);
+            self.setExperience(data.experience, data.nextExperience, data.prevExperience);
 
             self.username = data.username;
-            self.experience = data.experience;
-            self.nextExperience = data.nextExperience;
             self.level = data.level;
 
             self.lastLogin = data.lastLogin;
@@ -171,6 +171,17 @@ define(['../character', './equipment/armour', './equipment/weapon',
             return this.gridY;
         },
 
+        setExperience: function(experience, nextExperience, prevExperience) {
+            var self = this;
+
+            self.experience = experience;
+            self.nextExperience = nextExperience;
+            self.prevExperience = prevExperience;
+
+            if (self.experienceCallback)
+                self.experienceCallback();
+        },
+
         setPointsData: function(hitPointsData, manaData) {
             var self = this,
                 hitPoints = hitPointsData.shift(),
@@ -283,6 +294,10 @@ define(['../character', './equipment/armour', './equipment/weapon',
 
         onUpdateArmour: function(callback) {
             this.updateArmourCallback = callback;
+        },
+
+        onExperience: function(callback) {
+            this.experienceCallback = callback;
         }
 
     });
