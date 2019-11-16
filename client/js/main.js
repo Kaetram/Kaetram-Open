@@ -7,11 +7,11 @@ define(['jquery', './app', './game'], function($, App, Game) {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(function(choiceResult) {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('Your PWA has been installed');
-                } else {
-                    console.log('User chose to not install your PWA');
-                }
+
+                if (choiceResult.outcome === 'accepted')
+                    log.info('Your PWA has been installed');
+                else
+                    log.info('User chose to not install your PWA');
 
                 deferredPrompt = null;
             });
@@ -26,27 +26,21 @@ define(['jquery', './app', './game'], function($, App, Game) {
             addClasses();
             initGame();
         });
+
         // This is the "Offline page" service worker
 
         // Add this below content to your HTML page, or add the js file to your page at the very top to register service worker
 
         // Check compatibility for the browser we're running this in
         if ('serviceWorker' in navigator) {
-            if (navigator.serviceWorker.controller) {
-                console.log(
-                    '[PWA Builder] active service worker found, no need to register'
-                );
-            } else {
+            if (navigator.serviceWorker.controller)
+                log.info('[PWA Builder] active service worker found, no need to register');
+            else {
                 // Register the service worker
-                navigator.serviceWorker
-                    .register('sw.js', {
+                navigator.serviceWorker.register('sw.js', {
                         scope: '../'
-                    })
-                    .then(function(reg) {
-                        console.log(
-                            '[PWA Builder] Service worker has been registered for scope: ' +
-                                reg.scope
-                        );
+                    }).then(function(reg) {
+                        log.info('[PWA Builder] Service worker has been registered for scope: ' + reg.scope);
                     });
             }
         }
