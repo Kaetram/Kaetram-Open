@@ -360,6 +360,26 @@ html [type="button"],
     background: -webkit-linear-gradient(top, #FF8888, #FF0000);
     /* Firefox 3.6+ */
     background: -moz-linear-gradient(top, #FF8888, #FF0000);
+
+    -moz-transition:.5s width ease;
+    -webkit-transition:.5s width ease;
+    -o-transition:.5s width ease;
+    -ms-transition:.5s width ease;
+    transition:.5s width ease;
+}
+
+#exp {
+
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(top, #44FF44, #008800);
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(top, #44FF44, #008800);
+
+    -moz-transition:.5s width ease;
+    -webkit-transition:.5s width ease;
+    -o-transition:.5s width ease;
+    -ms-transition:.5s width ease;
+    transition:.5s width ease;
 }
 
 #health.white {

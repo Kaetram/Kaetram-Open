@@ -108,6 +108,7 @@ class Player extends Character {
 
         self.level = Formulas.expToLevel(self.experience);
         self.nextExperience = Formulas.nextExp(self.experience);
+        self.prevExperience = Formulas.prevExp(self.experience);
         self.hitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(self.level));
         self.mana = new Mana(data.mana, Formulas.getMaxMana(self.level));
 
@@ -264,6 +265,7 @@ class Player extends Character {
             mana: self.mana.getData(),
             experience: self.experience,
             nextExperience: self.nextExperience,
+            prevExperience: self.prevExperience,
             level: self.level,
             lastLogin: self.lastLogin,
             pvpKills: self.pvpKills,
@@ -303,6 +305,7 @@ class Player extends Character {
 
         self.level = Formulas.expToLevel(self.experience);
         self.nextExperience = Formulas.nextExp(self.experience);
+        self.prevExperience = Formulas.prevExp(self.experience);
 
         if (oldLevel !== self.level)
             self.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(self.level));
@@ -322,6 +325,7 @@ class Player extends Character {
         data.amount = exp;
         data.experience = self.experience;
         data.nextExperience = self.nextExperience;
+        data.prevExperience = self.prevExperience;
 
         self.send(new Messages.Experience(data));
     }
