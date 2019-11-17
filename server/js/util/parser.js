@@ -158,7 +158,7 @@ class Parser {
 
             Shops.Data[key] = {
                 key: key,
-                id: value.npcId,
+                npcId: value.npcId,
                 items: value.items,
                 count: value.count,
                 originalCount: value.count,

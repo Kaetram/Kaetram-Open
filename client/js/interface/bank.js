@@ -248,10 +248,18 @@ define(['jquery', './container/container'], function($, Container) {
             if (!item)
                 return;
 
-            var slot = item.find('#bankInventorySlot' + info.index);
+            var itemContainer = self.inventoryContainer.slots[info.index],
+                slot = item.find('#bankInventorySlot' + info.index),
+                diff = itemContainer.count - info.count;
 
-            slot.find('#inventoryImage' + info.index).css('background-image', '');
-            slot.find('#inventoryItemCount' + info.index).text('');
+            if (diff > 1)
+                slot.find('#inventoryItemCount' + info.index).text(diff);
+            else if (diff === 1)
+                slot.find('#inventoryItemCount' + info.index).text('');
+            else {
+                slot.find('#inventoryImage' + info.index).css('background-image', '');
+                slot.find('#inventoryItemCount' + info.index).text('');
+            }
         },
 
         display: function() {

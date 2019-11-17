@@ -801,13 +801,13 @@ class Incoming {
                     amount = message.shift();
 
                 if (!buyId || !amount) {
-                    self.player.notify('Incorrect purchase relay.');
+                    self.player.notify('Incorrect purchase packets.');
                     return;
                 }
 
-                log.info('Received Buy: ' + buyId + ' ' + amount);
+                log.debug('Received Buy: ' + shopId + ' ' + buyId + ' ' + amount);
 
-                //self.world.shops.buy(self.player, shopId, buyId, amount);
+                self.world.shops.buy(self.player, shopId, buyId, amount);
 
                 break;
         }

@@ -35,22 +35,27 @@ class Shops {
         }, self.interval);
     }
 
-    open(player, shopId) {
+    open(player, npcId) {
         let self = this;
 
         player.send(new Messages.Shop(Packets.ShopOpcode.Open, {
             instance: player.instance,
-            npcId: shopId,
-            shopData: self.getShopData(shopId)
+            npcId: npcId,
+            shopData: self.getShopData(npcId)
         }));
 
     }
 
-    buy(player, shopId, itemId, count) {
+    buy(player, npcId, buyId, count) {
         let self = this,
-            cost = ShopData.getCost(shopId, itemId, count),
-            currency = self.getCurrency(shopId),
-            stock = ShopData.getStock(shopId, itemId);
+            cost = ShopData.getCost(npcId, buyId, count),
+            currency = self.getCurrency(npcId),
+            stock = ShopData.getStock(npcId, buyId);
+
+        if (!cost || !currency || !stock) {
+            log.info('Invalid shop data.');
+            return;
+        }
 
         //TODO: Make it so that when you have the exact coin count, it removes coins and replaces it with the item purchased.
 
@@ -73,34 +78,40 @@ class Shops {
             count = stock;
 
         player.inventory.remove(currency, cost);
-        player.inventory.add(itemId, count);
+        player.inventory.add({
+            id: ShopData.getItem(npcId, buyId),
+            count: count,
+            ability: -1,
+            abilityLevel: -1
+        });
 
-        ShopData.decrement(shopId, itemId, count);
+        ShopData.decrement(npcId, buyId, count);
 
-        self.refresh();
+        self.refresh(npcId);
     }
 
-    refresh(shopId) {
+    refresh(shop) {
         let self = this;
 
         self.world.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Shop(Packets.ShopOpcode.Refresh, self.getShopData(shopId))
+            message: new Messages.Shop(Packets.ShopOpcode.Refresh, self.getShopData(shop))
         });
     }
 
-    getCurrency(id) {
-        return ShopData.Ids[id].currency;
+    getCurrency(npcId) {
+        let shop = ShopData.Ids[npcId];
+
+        if (!shop)
+            return null;
+
+        return shop.currency;
     }
 
-    getShopData(id) {
-        let self = this;
-
-        if (!ShopData.isShopNPC(id))
-            return;
-
-        let items = ShopData.getItems(id),
+    getShopData(npcId) {
+        let self = this,
             strings = [],
-            names = [];
+            names = [],
+            items = ShopData.getItems(npcId);
 
         for (let i = 0; i < items.length; i++) {
             strings.push(Items.idToString(items[i]));
@@ -108,10 +119,10 @@ class Shops {
         }
 
         return {
-            id: id,
+            id: npcId,
             strings: strings,
             names: names,
-            counts: ShopData.getCount(id)
+            counts: ShopData.getCount(npcId)
         }
     }
 

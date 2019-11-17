@@ -240,6 +240,13 @@ class Container {
         });
     }
 
+    forEachSlot(callback) {
+        let self = this;
+
+        for (let i = 0; i < self.slots.length; i++)
+            callback(self.slots[i]);
+    }
+
     getArray() {
         let self = this,
             ids = '',

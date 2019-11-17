@@ -10,8 +10,12 @@ Shops.isShopNPC = (npcId) => {
     return npcId in Shops.Ids;
 };
 
-Shops.getItems = (id) => {
-    return Shops.Ids[id].items;
+Shops.getItems = (npcId) => {
+    return Shops.Ids[npcId].items;
+};
+
+Shops.shopIdToNPC = (shopId) => {
+    return Shops.Data[shopId].npcId;
 };
 
 Shops.getItemCount = (id) => {
@@ -31,75 +35,69 @@ Shops.increment = (shopId, itemId, count) => {
 
 };
 
-Shops.decrement = (shopId, itemId, count) => {
-    let shop = Shops.Ids[shopId],
-        index = shop.items.indexOf(itemId);
+Shops.decrement = (npcId, buyId, count) => {
+    let shop = Shops.Ids[npcId];
 
-    if (index < 0)
+    if (!buyId || buyId < 0)
         return;
 
-    /**
-     * Before y'all start complaining about why I didn't simplify this,
-     * remember.... Pointersssssssss
-     */
+    shop.count[buyId] -= count;
 
-    let shopData = Shops.Data[shop.key];
-
-    shopData.count[index] -= count;
-
-    if (shopData.count[index] < 0)
-        shopData.count[index] = 0;
+    if (shop.count[buyId] < 0)
+        shop.count[buyId] = 0;
 };
 
-Shops.getCost = (shopId, itemId, count) => {
+Shops.getCost = (npcId, buyId, count) => {
     /**
      * Reason for the shopId variable is because some shops
      * may have different prices for the same item. A way to
      * spice up the game.
      */
 
-    let shop = Shops.Ids[shopId],
-        index = shop.items.indexOf(itemId);
+    let shop = Shops.Ids[npcId];
 
-    if (index < 0)
+    if (!shop || !buyId || buyId < 0)
         return;
 
-    return shop.prices[index] * count;
+    return shop.prices[buyId] * count;
 };
 
-Shops.getStock = (shopId, itemId) => {
+Shops.getStock = (npcId, buyId) => {
+    let shop = Shops.Ids[npcId];
 
-    let shop = Shops.Ids[shopId],
-        index = shop.items.indexOf(itemId);
+    if (!shop || !buyId || buyId < 0)
+        return null;
 
-    if (index < 0)
+    return shop.count[buyId];
+};
+
+Shops.getOriginalStock = (shopId, buyId) => {
+    let shop = Shops.Ids[shopId];
+
+    if (!buyId || buyId < 0)
         return;
 
-    return shop.count[index];
+    return shop.originalCount[buyId];
 };
 
-Shops.getOriginalStock = (shopId, itemId) => {
-
-    let shop = Shops.Ids[shopId],
-        index = shop.index.indexOf(itemId);
-
-    if (index < 0)
-        return;
-
-    return shop.originalCount[index];
-};
-
-Shops.getCount = (id) => {
-    let count = Shops.Ids[id].count,
+Shops.getCount = (npcId) => {
+    let count = Shops.Ids[npcId].count,
         counts = [];
 
     if (_.isArray(count))
         return count;
 
-    for (let i = 0; i < Shops.getItemCount(id); i++)
+    for (let i = 0; i < Shops.getItemCount(npcId); i++)
         counts.push(count);
 
     return counts;
+};
+
+Shops.getItem = (npcId, buyId) => {
+    if (!buyId || buyId < 0)
+        return;
+
+    return Shops.Ids[npcId].items[buyId];
 };
 
 module.exports = Shops;

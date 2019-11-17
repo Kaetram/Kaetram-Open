@@ -576,7 +576,7 @@ define(function() {
                         if (!self.interface.bank)
                             return;
 
-                        self.interface.bank.addInventory(info);
+                        self.interface.addInventory(info);
 
                         break;
 
@@ -590,7 +590,7 @@ define(function() {
                         if (!self.interface.bank)
                             return;
 
-                        self.interface.bank.removeInventory(info);
+                        self.interface.removeInventory(info);
 
                         break;
                 }

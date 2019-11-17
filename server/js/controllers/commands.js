@@ -417,6 +417,16 @@ class Commands {
 
                 break;
 
+            case 'clear':
+
+                self.player.inventory.forEachSlot((slot) => {
+                    if (slot !== -1) {
+                        self.player.inventory.remove(slot.id, slot.count);
+                    }
+                });
+
+                break;
+
         }
     }
 
