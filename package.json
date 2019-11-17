@@ -26,11 +26,19 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "grunt": "^1.0.4",
     "morgan": "^1.9.1",
     "uglifyjs-webpack-plugin": "^2.2.0"
   },
   "scripts": {
     "start": "node server/js/main"
+  },
+  "esdoc": {
+    "source": "./",
+    "destination": "./docs",
+    "excludes": ["node_modules", "cordova", "map.js", "lib/*", "mapworker.js"],
+    "plugins": [{"name": "esdoc-standard-plugin"}]
   }
 }

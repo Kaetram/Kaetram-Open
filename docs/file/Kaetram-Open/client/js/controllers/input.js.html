@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/controllers/input.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/controllers/input.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global Modules, log, _, Detect, Packets */
+
+define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;, &apos;./overlay&apos;], function($, Animation, Chat, Overlay) {
+
+    return Class.extend({
+
+        init: function(game) {
+            var self = this;
+
+            self.game = game;
+            self.app = game.app;
+            self.renderer = game.renderer;
+
+            self.selectedCellVisible = false;
+            self.previousClick = {};
+            self.cursorVisible = true;
+            self.targetVisible = true;
+            self.selectedX = -1;
+            self.selectedY = -1;
+
+            self.cursor = null;
+            self.newCursor = null;
+
+            self.targetData = null;
+            self.targetColour = null;
+            self.newTargetColour = null;
+            self.mobileTargetColour = &apos;rgba(51, 255, 0)&apos;;
+
+            self.keyMovement = true;
+            self.cursorMoved = false;
+
+            self.previousKey = {};
+
+            self.cursors = {};
+
+            self.lastMousePosition = { x: 0, y: 0 };
+
+            self.hovering = null;
+            self.hoveringInstance = null; // for debugging
+
+            self.mouse = {
+                x: 0,
+                y: 0
+            };
+
+            self.load();
+        },
+
+        load: function() {
+            var self = this;
+
+            /**
+             * This is the animation for the target
+             * cell spinner sprite (only on desktop)
+             */
+
+            self.targetAnimation = new Animation(&apos;move&apos;, 4, 0, 16, 16);
+            self.targetAnimation.setSpeed(50);
+
+            self.chatHandler = new Chat(self.game);
+            self.overlay = new Overlay(self);
+        },
+
+        loadCursors: function() {
+            var self = this;
+
+            self.cursors[&apos;hand&apos;] = self.game.getSprite(&apos;hand&apos;);
+            self.cursors[&apos;sword&apos;] = self.game.getSprite(&apos;sword&apos;);
+            self.cursors[&apos;loot&apos;] = self.game.getSprite(&apos;loot&apos;);
+            self.cursors[&apos;target&apos;] = self.game.getSprite(&apos;target&apos;);
+            self.cursors[&apos;arrow&apos;] = self.game.getSprite(&apos;arrow&apos;);
+            self.cursors[&apos;talk&apos;] = self.game.getSprite(&apos;talk&apos;);
+            self.cursors[&apos;spell&apos;] = self.game.getSprite(&apos;spell&apos;);
+            self.cursors[&apos;bow&apos;] = self.game.getSprite(&apos;bow&apos;);
+
+            self.newCursor = self.cursors[&apos;hand&apos;];
+            self.newTargetColour = &apos;rgba(255, 255, 255, 0.5)&apos;;
+
+            if (self.game.isDebug())
+                log.info(&apos;Loaded Cursors!&apos;);
+        },
+
+        handle: function(inputType, data) {
+            var self = this,
+                player = self.getPlayer();
+
+            switch(inputType) {
+                case Modules.InputType.Key:
+
+                    if (self.chatHandler.isActive()) {
+                        self.chatHandler.key(data);
+                        return;
+                    }
+
+                    switch(data) {
+
+                        case Modules.Keys.W:
+                        case Modules.Keys.Up:
+
+                            self.getPlayer().moveUp = true;
+
+                            break;
+
+                        case Modules.Keys.A:
+                        case Modules.Keys.Left:
+
+                            self.getPlayer().moveLeft = true;
+
+                            break;
+
+                        case Modules.Keys.S:
+                        case Modules.Keys.Down:
+
+                            self.getPlayer().moveDown = true;
+
+                            break;
+
+                        case Modules.Keys.D:
+                        case Modules.Keys.Right:
+
+                            self.getPlayer().moveRight = true;
+
+                            break;
+
+                        case Modules.Keys.Enter:
+
+                            self.chatHandler.toggle();
+
+                            break;
+
+                    }
+
+                    break;
+
+                    case Modules.InputType.LeftClick:
+
+                        player.disableAction = false;
+                        self.keyMovement = false;
+
+                        self.setCoords(data);
+                        self.click(self.getCoords());
+
+                        break;
+            }
+        },
+
+        keyUp: function(key) {
+            var self = this,
+                player = self.getPlayer();
+
+            switch(key) {
+                case Modules.Keys.W:
+                case Modules.Keys.Up:
+                    player.moveUp = false;
+                    break;
+
+                case Modules.Keys.A:
+                case Modules.Keys.Left:
+                    player.moveLeft = false;
+                    break;
+
+                case Modules.Keys.S:
+                case Modules.Keys.Down:
+                    player.moveDown = false;
+                    break;
+
+                case Modules.Keys.D:
+                case Modules.Keys.Right:
+                    player.moveRight = false;
+                    break;
+            }
+
+            player.disableAction = false;
+        },
+
+        keyMove: function(position) {
+            var self = this,
+                player = self.getPlayer();
+
+            if (!player.hasPath()) {
+                self.keyMovement = true;
+                self.cursorMoved = false;
+
+                if (self.game.isDebug()) {
+                    log.info(&apos;--- keyMove ---&apos;);
+                    log.info(position);
+                    log.info(&apos;---------------&apos;);
+                }
+
+                self.click(position);
+            }
+        },
+
+        click: function(position) {
+            var self = this,
+                player = self.getPlayer();
+
+            if (player.stunned)
+                return;
+
+            self.setPassiveTarget();
+
+            /**
+             * It can be really annoying having the chat open
+             * on mobile, and it is far harder to control.
+             */
+
+            if (self.renderer.mobile &amp;&amp; self.chatHandler.input.is(&apos;:visible&apos;) &amp;&amp; self.chatHandler.input.val() === &apos;&apos;)
+                self.chatHandler.hideInput();
+
+            if ((self.game.zoning &amp;&amp; self.game.zoning.direction) || player.disableAction)
+                return;
+
+            var entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX &amp;&amp; position.y === player.gridY));
+
+            if (entity) {
+                player.disableAction = true;
+
+                self.setAttackTarget();
+
+                if (self.isTargetable(entity))
+                    player.setTarget(entity);
+
+                if (player.getDistance(entity) &lt; 7 &amp;&amp; player.isRanged() &amp;&amp; self.isAttackable(entity)) {
+                    self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
+                    player.lookAt(entity);
+                    return;
+                }
+
+                if (entity.gridX === player.gridX &amp;&amp; entity.gridY === player.gridY)
+                    self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
+
+                /*if (entity.type === &apos;player&apos;) {
+                    self.getActions().showPlayerActions(entity, self.mouse.x, self.mouse.y);
+                    return;
+                }*/
+
+                if (self.isTargetable(entity)) {
+                    player.follow(entity);
+                    return;
+                }
+            } else
+                player.removeTarget();
+
+
+            self.getActions().hidePlayerActions();
+
+            player.go(position.x, position.y);
+
+            if (self.game.interface)
+                self.game.interface.hideAll();
+
+            if (!self.game.audio.song &amp;&amp; Detect.isSafari())
+                self.game.audio.update();
+        },
+
+        updateCursor: function() {
+            var self = this;
+
+            if (!self.cursorVisible)
+                return;
+
+            if (self.newCursor !== self.cursor)
+                self.cursor = self.newCursor;
+
+            if (self.newTargetColour !== self.targetColour)
+                self.targetColour = self.newTargetColour;
+        },
+
+        moveCursor: function() {
+            var self = this;
+
+            if (!self.renderer || self.renderer.mobile || !self.renderer.camera)
+                return;
+
+            var position = self.getCoords(),
+                player = self.getPlayer(),
+                entity = self.game.getEntityAt(position.x, position.y, player.gridX === position.x &amp;&amp; player.gridY === position.y);
+
+            self.overlay.update(entity);
+
+            if (!entity || (entity.id === player.id) || entity.type === &apos;player&apos;) {
+                self.setCursor(self.cursors[&apos;hand&apos;]);
+                self.hovering = null;
+            } else {
+                if (self.renderer.debugging)
+                    self.hoveringInstance = entity.id;
+
+                switch (entity.type) {
+                    case &apos;item&apos;:
+                    case &apos;chest&apos;:
+                        self.setCursor(self.cursors[&apos;loot&apos;]);
+                        self.hovering = Modules.Hovering.Item;
+                        break;
+
+                    case &apos;mob&apos;:
+                        self.setCursor(self.getAttackCursor());
+                        self.hovering = Modules.Hovering.Mob;
+                        break;
+
+                    case &apos;npc&apos;:
+                        self.setCursor(self.cursors[&apos;talk&apos;]);
+                        self.hovering = Modules.Hovering.NPC;
+                        break;
+                }
+            }
+        },
+
+        setPosition: function(x, y) {
+            var self = this;
+
+            self.selectedX = x;
+            self.selectedY = y;
+        },
+
+        setCoords: function(event) {
+            var self = this,
+                offset = self.app.canvas.offset(),
+                width = self.renderer.background.width,
+                height = self.renderer.background.height,
+                proportionality = self.renderer.scale === 3 ? (2 / 3) : 1;
+
+            self.cursorMoved = false;
+
+            self.mouse.x = Math.round((event.pageX - offset.left)) * proportionality;
+            self.mouse.y = Math.round((event.pageY - offset.top)) * proportionality;
+
+            if (self.mouse.x &gt;= width)
+                self.mouse.x = width - 1;
+            else if (self.mouse.x &lt;= 0)
+                self.mouse.x = 0;
+
+            if (self.mouse.y &gt;= height)
+                self.mouse.y = height - 1;
+            else if (self.mouse.y &lt;= 0)
+                self.mouse.y = 0;
+        },
+
+        setCursor: function(cursor) {
+            var self = this;
+
+            if (cursor)
+                self.newCursor = cursor;
+            else
+                log.error(&apos;Cursor: &apos; + cursor + &apos; could not be found.&apos;);
+        },
+
+        setAttackTarget: function() {
+            var self = this;
+
+            self.targetAnimation.setRow(1);
+            self.mobileTargetColour = &apos;rgb(255, 51, 0)&apos;;
+        },
+
+        setPassiveTarget: function() {
+            var self = this;
+
+            self.targetAnimation.setRow(0);
+            self.mobileTargetColour = &apos;rgb(51, 255, 0)&apos;;
+        },
+
+        getAttackCursor: function() {
+            return this.cursors[this.getPlayer().isRanged() ? &apos;bow&apos; : &apos;sword&apos;]
+        },
+
+        getCoords: function() {
+            var self = this;
+
+            if (!self.renderer || !self.renderer.camera)
+                return;
+
+            var tileScale = self.renderer.tileSize * self.renderer.getSuperScaling(),
+                offsetX = self.mouse.x % tileScale,
+                offsetY = self.mouse.y % tileScale,
+                x = ((self.mouse.x - offsetX) / tileScale) + self.game.getCamera().gridX,
+                y = ((self.mouse.y - offsetY) / tileScale) + self.game.getCamera().gridY;
+
+            return {
+                x: x,
+                y: y
+            }
+        },
+
+        getTargetData: function() {
+            var self = this,
+                frame = self.targetAnimation.currentFrame,
+                superScale = self.renderer.getSuperScaling(),
+                sprite = self.game.getSprite(&apos;target&apos;);
+
+            if (!sprite.loaded)
+                sprite.load();
+
+            return self.targetData = {
+                sprite: sprite,
+                x: frame.x * superScale,
+                y: frame.y * superScale,
+                width: sprite.width * superScale,
+                height: sprite.height * superScale,
+                dx: self.selectedX * 16 * superScale,
+                dy: self.selectedY * 16 * superScale,
+                dw: sprite.width * superScale,
+                dh: sprite.height * superScale
+            }
+        },
+
+        isTargetable: function(entity) {
+            return this.isAttackable(entity) || entity.type === &apos;npc&apos; || entity.type === &apos;chest&apos;;
+        },
+
+        isAttackable: function(entity) {
+            return entity.type === &apos;mob&apos; || (entity.type === &apos;player&apos; &amp;&amp; entity.pvp &amp;&amp; this.game.pvp);
+        },
+
+        getPlayer: function() {
+            return this.game.player;
+        },
+
+        getActions: function() {
+            return this.game.interface.actions;
+        }
+
+    });
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

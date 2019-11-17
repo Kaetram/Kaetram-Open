@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/entity.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/entity.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
+
+let Mobs = require(&apos;../../util/mobs&apos;),
+    Items = require(&apos;../../util/items&apos;),
+    NPCs = require(&apos;../../util/npcs&apos;);
+
+class Entity {
+
+    constructor(id, type, instance, x, y) {
+        let self = this;
+
+        self.id = id;
+        self.type = type;
+        self.instance = instance;
+
+        self.x = x;
+        self.y = y;
+
+        self.oldX = x;
+        self.oldY = y;
+
+        self.combat = null;
+
+        self.dead = false;
+        self.recentRegions = [];
+
+        self.invisibles = {}; // For Entity Instances
+        self.invisiblesIds = []; // For Entity IDs
+    }
+
+    talk() {
+        return null;
+    }
+
+    getCombat() {
+        return null;
+    }
+
+    getDistance(entity) {
+        let self = this,
+            x = Math.abs(self.x - entity.x),
+            y = Math.abs(self.y - entity.y);
+
+        return x &gt; y ? x : y;
+    }
+
+    getCoordDistance(toX, toY) {
+        let self = this,
+            x = Math.abs(self.x - toX),
+            y = Math.abs(self.y - toY);
+
+        return x &gt; y ? x : y;
+    }
+
+    setPosition(x, y) {
+        let self = this;
+
+        self.x = x;
+        self.y = y;
+
+        if (self.setPositionCallback)
+            self.setPositionCallback();
+    }
+
+    updatePosition() {
+        let self = this;
+
+        self.oldX = self.x;
+        self.oldY = self.y;
+    }
+
+    /**
+     * Used for determining whether an entity is
+     * within a given range to another entity.
+     * Especially useful for ranged attacks and whatnot.
+     */
+
+    isNear(entity, distance) {
+        let self = this,
+            dx = Math.abs(self.x - entity.x),
+            dy = Math.abs(self.y - entity.y);
+
+        return dx &lt;= distance &amp;&amp; dy &lt;= distance;
+    }
+
+    isAdjacent(entity) {
+        return entity &amp;&amp; this.getDistance(entity) &lt; 2;
+    }
+
+    isNonDiagonal(entity) {
+        return this.isAdjacent(entity) &amp;&amp; !(entity.x !== this.x &amp;&amp; entity.y !== this.y);
+    }
+
+    hasSpecialAttack() {
+        return false;
+    }
+
+    isMob() {
+        return this.type === &apos;mob&apos;;
+    }
+
+    isNPC() {
+        return this.type === &apos;npc&apos;;
+    }
+
+    isItem() {
+        return this.type === &apos;item&apos;;
+    }
+
+    isPlayer() {
+        return this.type === &apos;player&apos;;
+    }
+
+    onSetPosition(callback) {
+        this.setPositionCallback = callback;
+    }
+
+    addInvisible(entity) {
+        this.invisibles[entity.instance] = entity;
+    }
+
+    addInvisibleId(entityId) {
+        this.invisiblesIds.push(entityId);
+    }
+
+    removeInvisible(entity) {
+        delete this.invisibles[entity.instance];
+    }
+
+    removeInvisibleId(entityId) {
+        let self = this,
+            index = self.invisiblesIds.indexOf(entityId);
+
+        if (index &gt; -1)
+            self.invisiblesIds.splice(index, 1);
+    }
+
+    hasInvisible(entity) {
+        return entity.instance in this.invisibles;
+    }
+
+    hasInvisibleId(entityId) {
+        return this.invisiblesIds.indexOf(entityId) &gt; -1;
+    }
+
+    hasInvisibleInstance(instance) {
+        return instance in this.invisibles;
+    }
+
+    getState() {
+        let self = this,
+            string = self.isMob() ? Mobs.idToString(self.id) : (self.isNPC() ? NPCs.idToString(self.id) : Items.idToString(self.id)),
+            name = self.isMob() ? Mobs.idToName(self.id) : (self.isNPC() ? NPCs.idToName(self.id) : Items.idToName(self.id));
+
+        return {
+            type: self.type,
+            id: self.instance,
+            string: string,
+            name: name,
+            x: self.x,
+            y: self.y
+        }
+    }
+
+}
+
+module.exports = Entity;</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

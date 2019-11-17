@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/interface/profile/pages/state.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/profile/pages/state.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global log, _ */
+
+define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
+
+    return Page.extend({
+
+        init: function(game) {
+            var self = this;
+
+            self._super(&apos;#statePage&apos;);
+
+            self.game = game;
+            self.player = game.player;
+
+            self.name = $(&apos;#profileName&apos;);
+            self.level = $(&apos;#profileLevel&apos;);
+            self.experience = $(&apos;#profileExperience&apos;);
+
+            self.weaponSlot = $(&apos;#weaponSlot&apos;);
+            self.armourSlot = $(&apos;#armourSlot&apos;);
+            self.pendantSlot = $(&apos;#pendantSlot&apos;);
+            self.ringSlot = $(&apos;#ringSlot&apos;);
+            self.bootsSlot = $(&apos;#bootsSlot&apos;);
+
+            self.slots = [self.weaponSlot, self.armourSlot, self.pendantSlot, self.ringSlot, self.bootsSlot];
+
+            self.loaded = false;
+
+            self.load();
+        },
+
+        resize: function() {
+            this.loadSlots();
+        },
+
+        load: function() {
+            var self = this;
+
+            if (!self.game.player.armour)
+                return;
+
+            self.name.text(self.player.username);
+            self.level.text(self.player.level);
+            self.experience.text(self.player.experience);
+
+            self.loadSlots();
+
+            self.loaded = true;
+
+            self.weaponSlot.click(function() {
+                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, &apos;weapon&apos;]);
+            });
+
+            self.armourSlot.click(function() {
+                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, &apos;armour&apos;]);
+            });
+
+            self.pendantSlot.click(function() {
+                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, &apos;pendant&apos;]);
+            });
+
+            self.ringSlot.click(function() {
+                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, &apos;ring&apos;]);
+            });
+
+            self.bootsSlot.click(function() {
+                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, &apos;boots&apos;]);
+            });
+
+        },
+
+        loadSlots: function() {
+            var self = this;
+
+            self.weaponSlot.css(&apos;background-image&apos;, self.getImageFormat(self.getScale(), self.player.weapon.string));
+            self.armourSlot.css(&apos;background-image&apos;, self.getImageFormat(self.getScale(), self.player.armour.string));
+            self.pendantSlot.css(&apos;background-image&apos;, self.getImageFormat(self.getScale(), self.player.pendant.string));
+            self.ringSlot.css(&apos;background-image&apos;, self.getImageFormat(self.getScale(), self.player.ring.string));
+            self.bootsSlot.css(&apos;background-image&apos;, self.getImageFormat(self.getScale(), self.player.boots.string));
+
+            self.forEachSlot(function(slot) { slot.css(&apos;background-size&apos;, &apos;600%&apos;); });
+        },
+
+        update: function() {
+            var self = this;
+
+            self.level.text(self.player.level);
+            self.experience.text(self.player.experience);
+
+            self.loadSlots();
+        },
+
+        forEachSlot: function(callback) {
+            _.each(this.slots, function(slot) {
+                callback(slot);
+            });
+        },
+
+        getScale: function() {
+            return this.game.renderer.getScale();
+        }
+
+    });
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

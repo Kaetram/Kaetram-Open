@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/renderer/camera.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/renderer/camera.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global Modules, log */
+
+define(function() {
+
+    return Class.extend({
+
+        init: function(renderer) {
+            var self = this;
+
+            self.renderer = renderer;
+            self.map = renderer.map;
+            self.app = renderer.game.app;
+
+            self.offset = 0.5;
+            self.x = 0;
+            self.y = 0;
+
+            self.dX = 0;
+            self.dY = 0;
+
+            self.gridX = 0;
+            self.gridY = 0;
+
+            self.prevGridX = 0;
+            self.prevGridY = 0;
+
+            self.tileSize = self.renderer.tileSize;
+
+            self.speed = 1;
+            self.panning = false;
+            self.centered = true;
+            self.player = null;
+
+            self.lockX = false;
+            self.lockY = false;
+
+            self.update();
+        },
+
+        update: function() {
+            var self = this,
+                scale = self.renderer.getScale(),
+                borderWidth = self.app.border.width(),
+                borderHeight = self.app.border.height(),
+                factorWidth = Math.ceil(borderWidth / self.tileSize / scale),
+                factorHeight = Math.ceil(borderHeight / self.tileSize / scale);
+
+            self.gridWidth = factorWidth;
+            self.gridHeight = factorHeight;
+
+            self.borderX = (self.map.width * self.tileSize) - self.gridWidth * self.tileSize;
+            self.borderY = (self.map.height * self.tileSize) - self.gridHeight * self.tileSize;
+        },
+
+        setPosition: function(x, y) {
+            var self = this;
+
+            self.x = x;
+            self.y = y;
+
+            self.prevGridX = self.gridX;
+            self.prevGridY = self.gridY;
+
+            self.gridX = Math.floor(x / 16);
+            self.gridY = Math.floor(y / 16);
+        },
+
+        clip: function() {
+            this.setGridPosition(Math.round(this.x / 16), Math.round(this.y / 16));
+        },
+
+        center: function() {
+            var self = this;
+
+            if (self.centered)
+                return;
+
+            self.centered = true;
+            self.centreOn(self.player);
+
+            self.renderer.verifyCentration();
+        },
+
+        decenter: function() {
+            var self = this;
+
+            if (!self.centered)
+                return;
+
+            self.clip();
+            self.centered = false;
+
+            self.renderer.verifyCentration();
+        },
+
+        setGridPosition: function(x, y) {
+            var self = this;
+
+            self.prevGridX = self.gridX;
+            self.prevGridY = self.gridY;
+
+            self.gridX = x;
+            self.gridY = y;
+
+            self.x = self.gridX * 16;
+            self.y = self.gridY * 16;
+        },
+
+        setPlayer: function(player) {
+            var self = this;
+
+            self.player = player;
+
+
+            self.centreOn(self.player);
+        },
+
+        handlePanning: function(direction) {
+            var self = this;
+
+            if (!self.panning)
+                return;
+
+            switch (direction) {
+                case Modules.Keys.Up:
+                    self.setPosition(self.x, self.y - 1);
+                    break;
+
+                case Modules.Keys.Down:
+                    self.setPosition(self.x, self.y + 1);
+                    break;
+
+                case Modules.Keys.Left:
+                    self.setPosition(self.x - 1, self.y);
+                    break;
+
+                case Modules.Keys.Right:
+                    self.setPosition(self.x + 1, self.y);
+                    break;
+            }
+        },
+
+        centreOn: function(entity) {
+            var self = this;
+
+            if (!entity)
+                return;
+
+            var width = Math.floor(self.gridWidth / 2),
+                height = Math.floor(self.gridHeight / 2),
+                nextX = entity.x - (width * self.tileSize),
+                nextY = entity.y - (height * self.tileSize);
+
+            if (nextX &gt;= 0 &amp;&amp; nextX &lt;= self.borderX &amp;&amp; !self.lockX) {
+                self.x = nextX;
+                self.gridX = Math.round(entity.x / 16) - width;
+            } else
+                self.offsetX(nextX);
+
+            if (nextY &gt;= 0 &amp;&amp; nextY &lt;= self.borderY &amp;&amp; !self.lockY) {
+                self.y = nextY;
+                self.gridY = Math.round(entity.y / 16) - height;
+            } else
+                self.offsetY(nextY);
+
+        },
+
+        forceCentre: function(entity) {
+            var self = this;
+
+            if (!entity)
+                return;
+
+            var width = Math.floor(self.gridWidth / 2),
+                height = Math.floor(self.gridHeight / 2);
+
+            self.x = entity.x - (width * self.tileSize);
+            self.gridX = Math.round(entity.x / 16) - width;
+
+            self.y = entity.y - (height * self.tileSize);
+            self.gridY = Math.round(entity.y / 16) - height;
+        },
+
+        offsetX: function(nextX) {
+            var self = this;
+
+            if (nextX &lt;= 16) {
+                self.x = 0;
+                self.gridX = 0;
+            } else if (nextX &gt;= self.borderX) {
+                self.x = self.borderX;
+                self.gridX = Math.round(self.borderX / 16);
+            }
+        },
+
+        offsetY: function(nextY) {
+            var self = this;
+
+            if (nextY &lt;= 16) {
+                self.y = 0;
+                self.gridY = 0;
+            } else if (nextY &gt;= self.borderY) {
+                self.y = self.borderY;
+                self.gridY = Math.round(self.borderY / 16);
+            }
+        },
+
+        zone: function(direction) {
+            var self = this;
+
+            switch (direction) {
+                case Modules.Orientation.Up:
+
+                    self.setGridPosition(self.gridX, self.gridY - self.gridHeight + 2);
+
+                    break;
+
+                case Modules.Orientation.Down:
+
+                    self.setGridPosition(self.gridX, self.gridY + self.gridHeight - 2);
+
+                    break;
+
+                case Modules.Orientation.Right:
+
+                    self.setGridPosition(self.gridX + self.gridWidth - 2, self.gridY);
+
+                    break;
+
+                case Modules.Orientation.Left:
+
+                    self.setGridPosition(self.gridX - self.gridWidth + 2, self.gridY);
+
+                    break;
+            }
+        },
+
+        forEachVisiblePosition: function(callback, offset) {
+            var self = this;
+
+            if (!offset)
+                offset = 1;
+
+            for(var y = self.gridY - offset, maxY = y + self.gridHeight + (offset * 2); y &lt; maxY; y++)
+                for(var x = self.gridX - offset, maxX = x + self.gridWidth + (offset * 2); x &lt; maxX; x++)
+                    callback(x, y);
+        }
+    });
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

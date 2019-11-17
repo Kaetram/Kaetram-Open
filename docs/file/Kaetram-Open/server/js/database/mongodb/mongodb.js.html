@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/database/mongodb/mongodb.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/database/mongodb/mongodb.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
+
+let MongoClient = require(&apos;mongodb&apos;).MongoClient,
+    Loader = require(&apos;./loader&apos;),
+    Creator = require(&apos;./creator&apos;),
+    bcrypt = require(&apos;bcrypt&apos;),
+    _ = require(&apos;underscore&apos;),
+    config = require(&apos;../../../config&apos;);
+
+class MongoDB {
+
+    constructor(host, port, user, password, database) {
+        let self = this;
+
+        self.host = host;
+        self.port = port;
+        self.user = user;
+        self.password = password;
+        self.database = database;
+
+        self.loader = new Loader(self);
+        self.creator = new Creator(self);
+
+        self.connection = null;
+    }
+
+    getDatabase(callback, type) {
+        let self = this,
+            URL= `mongodb://${self.host}:${self.port}/${self.database}`;
+
+            if (config.mongoAuth)
+                URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
+
+            let client = new MongoClient(URL, {
+              useUnifiedTopology: true,
+              useNewUrlParser: true,
+              wtimeout: 5
+            });
+
+        if (self.connection) {
+            callback(self.connection);
+            return;
+        }
+
+        client.connect((error, newClient) =&gt; {
+            if (error) throw error;
+
+            self.connection = newClient.db(self.database);
+
+            callback(self.connection);
+        });
+
+    }
+
+    login(player) {
+        let self = this;
+
+        self.getDatabase((database) =&gt; {
+            let dataCursor = database.collection(&apos;player_data&apos;).find({ username: player.username }),
+                equipmentCursor = database.collection(&apos;player_equipment&apos;).find({ username: player.username }),
+                regionsCursor = database.collection(&apos;player_regions&apos;).find({ username: player.username });
+
+            dataCursor.toArray().then((playerData) =&gt; {
+                equipmentCursor.toArray().then((equipmentData) =&gt; {
+                    regionsCursor.toArray().then((regionData) =&gt; {
+
+                        if (playerData.length === 0)
+                            self.register(player);
+                        else {
+                            let playerInfo = playerData[0],
+                                equipmentInfo = equipmentData[0],
+                                regions = regionData[0];
+
+                            playerInfo[&apos;armour&apos;] = equipmentInfo.armour;
+                            playerInfo[&apos;weapon&apos;] = equipmentInfo.weapon;
+                            playerInfo[&apos;pendant&apos;] = equipmentInfo.pendant;
+                            playerInfo[&apos;ring&apos;] = equipmentInfo.ring;
+                            playerInfo[&apos;boots&apos;] = equipmentInfo.boots;
+
+                            if (regions &amp;&amp; regions.gameVersion === config.gver)
+                                player.regionsLoaded = regions.regions.split(&apos;,&apos;);
+
+                            player.load(playerInfo);
+                            player.intro();
+                        }
+
+                    });
+                });
+            })
+        });
+    }
+
+    verify(player, callback) {
+        let self = this;
+
+        self.getDatabase((database) =&gt; {
+            let dataCursor = database.collection(&apos;player_data&apos;).find({ username: player.username });
+
+            dataCursor.toArray().then((data) =&gt; {
+                if (data.length === 0)
+                    callback({ status: &apos;error&apos; });
+                else {
+                    let info = data[0];
+
+                    bcrypt.compare(player.password, info.password, (error, result) =&gt; {
+                        if (error) throw error;
+
+                        if (result)
+                            callback({ status: &apos;success&apos; });
+                        else
+                            callback({ status: &apos;error&apos; });
+                    });
+                }
+            })
+        });
+    }
+
+    register(player) {
+        let self = this;
+
+        self.getDatabase((database) =&gt; {
+            let playerData = database.collection(&apos;player_data&apos;),
+                cursor = playerData.find({ username: player.username });
+
+            cursor.toArray().then((info) =&gt; {
+                if (info.length === 0) {
+                    log.info(&apos;No player data found for &apos; + player.username + &apos;. Creating user.&apos;);
+
+                    player.new = true;
+
+                    player.load(Creator.getFullData(player));
+                    player.intro();
+                }
+            });
+        });
+    }
+
+    exists(player, callback) {
+        let self = this;
+
+        self.getDatabase((database) =&gt; {
+            let playerData = database.collection(&apos;player_data&apos;),
+                emailCursor = playerData.find({ email: player.email }),
+                usernameCursor = playerData.find({ username: player.username });
+
+            log.info(&apos;Looking for - &apos; + player.email +&apos; or &apos; + player.username);
+
+            emailCursor.toArray().then((emailArray) =&gt; {
+                if (emailArray.length === 0) {
+                    usernameCursor.toArray().then((usernameArray) =&gt; {
+                        if (usernameArray.length === 0)
+                            callback({ exists: false });
+                        else
+                            callback({ exists: true, type: &apos;user&apos; });
+                    });
+                } else
+                    callback({ exists: true, type: &apos;email&apos; });
+            });
+        });
+    }
+
+    delete(player) {
+        let self = this;
+
+        self.getDatabase((database) =&gt; {
+            let collections = [&apos;player_data&apos;, &apos;player_equipment&apos;, &apos;player_inventory&apos;, &apos;player_abilities&apos;, &apos;player_bank&apos;, &apos;player_quests&apos;, &apos;player_achievements&apos;];
+
+            _.each(collections, (col) =&gt; {
+                let collection = database.collection(col);
+
+                collection.deleteOne({
+                    username: player.username
+                }, (error, result) =&gt; {
+                    if (error) throw error;
+
+                    if (result)
+                        log.info(&apos;Player &apos; + player.username + &apos; has been deleted.&apos;)
+                })
+            });
+        });
+    }
+
+    registeredCount(callback) {
+
+        this.getDatabase((database) =&gt; {
+            let collection = database.collection(&apos;player_data&apos;);
+
+            collection.countDocuments().then((count) =&gt; {
+                callback(count);
+            });
+
+        });
+    }
+
+}
+
+module.exports = MongoDB;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

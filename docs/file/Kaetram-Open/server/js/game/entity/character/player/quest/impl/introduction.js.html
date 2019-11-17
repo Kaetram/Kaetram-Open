@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/introduction.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/introduction.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
+
+let Quest = require(&apos;../quest&apos;),
+    Packets = require(&apos;../../../../../../network/packets&apos;),
+    Messages = require(&apos;../../../../../../network/messages&apos;);
+
+class Introduction extends Quest {
+
+    constructor(player, data) {
+        super(player, data);
+
+        let self = this;
+
+        self.player = player;
+        self.data = data;
+
+        self.lastNPC = null;
+    }
+
+    load(stage) {
+        let self = this;
+
+        if (!self.player.inTutorial()) {
+            self.setStage(9999);
+            self.update();
+            return;
+        }
+
+        super.load(stage);
+
+        self.updatePointers();
+        self.toggleChat();
+
+        if (self.stage &gt; 9998)
+            return;
+
+        self.loadCallbacks();
+    }
+
+    loadCallbacks() {
+        let self = this;
+
+        self.onNPCTalk((npc) =&gt; {
+
+            let conversation = self.getConversation(npc.id);
+
+            self.lastNPC = npc;
+
+            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
+                id: npc.instance,
+                text: npc.talk(conversation)
+            }));
+
+            if (npc.talkIndex === 0)
+                self.progress(&apos;talk&apos;);
+
+        });
+
+        self.player.onReady(() =&gt; {
+
+            self.updatePointers();
+
+        });
+
+        self.player.onDoor((destX, destY) =&gt; {
+            if (self.getTask() !== &apos;door&apos;) {
+                self.player.notify(&apos;You cannot go through this door yet.&apos;);
+                return;
+            }
+
+            if (!self.verifyDoor(self.player.x, self.player.y))
+                self.player.notify(&apos;You are not supposed to go through here.&apos;);
+            else {
+                self.progress(&apos;door&apos;);
+                self.player.teleport(destX, destY, false);
+            }
+        });
+
+        self.player.onProfile((isOpen) =&gt; {
+
+            if (isOpen)
+                self.progress(&apos;click&apos;);
+
+        });
+
+        self.player.onInventory((isOpen) =&gt; {
+
+            if (isOpen)
+                self.progress(&apos;click&apos;);
+
+        });
+
+        self.player.onWarp((isOpen) =&gt; {
+
+            if (isOpen)
+                self.progress(&apos;click&apos;);
+
+        });
+
+        self.player.onKill((character) =&gt; {
+            if (self.data.kill[self.stage] === character.id)
+                self.progress(&apos;kill&apos;);
+
+        });
+
+    }
+
+    progress(type) {
+        let self = this,
+            task = self.data.task[self.stage];
+
+        if (!task || task !== type)
+            return;
+
+        if (self.stage === self.data.stages) {
+            self.finish();
+            return;
+        }
+
+        switch (type) {
+            case &apos;talk&apos;:
+
+                if (self.stage === 6)
+                    self.player.updateRegion();
+
+                break;
+
+            case &apos;door&apos;:
+
+                if (self.stage === 7)
+                    self.player.inventory.add({
+                        id: 248,
+                        count: 1,
+                        ability: -1,
+                        abilityLevel: -1
+                    });
+
+                else if (self.stage === 15)
+                    self.player.inventory.add({
+                        id: 87,
+                        count: 1,
+                        ability: -1,
+                        abilityLevel: -1
+                    });
+
+                break;
+
+
+        }
+
+        self.stage++;
+
+        self.clearPointers();
+        self.resetTalkIndex(self.lastNPC);
+
+        self.update();
+        self.updatePointers();
+
+        self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
+            id: self.id,
+            stage: self.stage,
+            isQuest: true
+        }));
+    }
+
+    isFinished() {
+        return super.isFinished() || !this.player.inTutorial();
+    }
+
+    toggleChat() {
+        this.player.canTalk = !this.player.canTalk;
+    }
+
+    setStage(stage) {
+        let self = this;
+
+        super.setStage(stage);
+
+        self.clearPointers();
+    }
+
+    finish() {
+        let self = this;
+
+        self.toggleChat();
+        super.finish();
+    }
+
+    hasDoorUnlocked(door) {
+        let self = this;
+
+        switch (door.id) {
+            case 0:
+                return self.stage &gt; 5;
+        }
+
+        return false;
+    }
+
+    verifyDoor(destX, destY) {
+        let self = this,
+            doorData = self.data.doors[self.stage];
+
+        if (!doorData)
+            return;
+
+        return doorData[0] === destX &amp;&amp; doorData[1] === destY;
+    }
+
+    onFinishedLoading(callback) {
+        this.finishedCallback = callback;
+    }
+}
+
+module.exports = Introduction;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

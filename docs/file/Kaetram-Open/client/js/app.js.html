@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/app.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/app.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global log, Class, Detect, Modules */
+
+define([&apos;jquery&apos;], function($) {
+
+    return Class.extend({
+
+        init: function() {
+            var self = this;
+
+            self.config = null;
+
+            self.body = $(&apos;body&apos;);
+            self.parchment = $(&apos;#parchment&apos;);
+            self.container = $(&apos;#container&apos;);
+            self.window = $(window);
+            self.canvas = $(&apos;#canvas&apos;);
+            self.border = $(&apos;#border&apos;);
+
+            self.intro = $(&apos;#intro&apos;);
+
+            self.loginButton = $(&apos;#login&apos;);
+            self.createButton = $(&apos;#play&apos;);
+            self.registerButton = $(&apos;#newCharacter&apos;);
+            self.helpButton = $(&apos;#helpButton&apos;);
+            self.cancelButton = $(&apos;#cancelButton&apos;);
+            self.yes = $(&apos;#yes&apos;);
+            self.no = $(&apos;#no&apos;);
+            self.loading = $(&apos;.loader&apos;);
+
+            self.respawn = $(&apos;#respawn&apos;);
+
+            self.rememberMe = $(&apos;#rememberMe&apos;);
+            self.guest = $(&apos;#guest&apos;);
+
+            self.about = $(&apos;#toggle-about&apos;);
+            self.credits = $(&apos;#toggle-credits&apos;);
+            self.discord = $(&apos;#toggle-discord&apos;);
+            self.git = $(&apos;#toggle-git&apos;);
+
+            self.footer = $(&apos;footer&apos;);
+
+            self.loginFields = [];
+            self.registerFields = [];
+
+            self.game = null;
+            self.parchmentAnimating = false;
+            self.loggingIn = false;
+
+            self.sendStatus(&apos;Initializing the main app&apos;);
+
+            self.updateOrientation();
+            self.load();
+
+        },
+
+        load: function() {
+            var self = this;
+
+            self.loginButton.click(function() {
+                self.login();
+            });
+
+            self.createButton.click(function() {
+                self.login();
+            });
+
+            self.registerButton.click(function() {
+                self.openScroll(&apos;loadCharacter&apos;, &apos;createCharacter&apos;);
+            });
+
+            self.cancelButton.click(function() {
+                self.openScroll(&apos;createCharacter&apos;, &apos;loadCharacter&apos;);
+            });
+
+            self.parchment.click(function() {
+                if (self.parchment.hasClass(&apos;about&apos;) || self.parchment.hasClass(&apos;credits&apos;) || self.parchment.hasClass(&apos;git&apos;)) {
+
+                    self.parchment.removeClass(&apos;about credits git&apos;);
+                    self.displayScroll(&apos;loadCharacter&apos;);
+
+                }
+            });
+
+            self.about.click(function() {
+                self.displayScroll(&apos;about&apos;);
+            });
+
+            self.credits.click(function() {
+                self.displayScroll(&apos;credits&apos;);
+            });
+
+            self.discord.click(function() {
+                window.open(&apos;https://discord.gg/MmbGAaw&apos;);
+            });
+
+            self.git.click(function() {
+                self.displayScroll(&apos;git&apos;);
+            });
+
+            self.rememberMe.click(function() {
+                if (!self.game || !self.game.storage)
+                    return;
+
+                var active = self.rememberMe.hasClass(&apos;active&apos;);
+
+                self.rememberMe.toggleClass(&apos;active&apos;);
+
+                self.game.storage.toggleRemember(!active);
+            });
+
+            self.guest.click(function() {
+                if (!self.game)
+                    return;
+
+                self.guest.toggleClass(&apos;active&apos;);
+            });
+
+            self.respawn.click(function() {
+                if (!self.game || !self.game.player || !self.game.player.dead)
+                    return;
+
+                self.game.respawn();
+            });
+
+            window.scrollTo(0, 1);
+
+            self.window.resize(function() {
+                if (self.game)
+                    self.game.resize();
+            });
+
+            $.getJSON(&apos;data/config.json&apos;, function(json) {
+                self.config = json;
+
+                if (self.readyCallback)
+                    self.readyCallback();
+            });
+
+            $(document).bind(&apos;keydown&apos;, function(e) {
+                if (e.which === Modules.Keys.Enter)
+                    return false;
+            });
+
+            $(document).keydown(function(e) {
+                var key = e.which;
+
+                if (!self.game)
+                    return;
+
+                self.body.focus();
+
+                if (key === Modules.Keys.Enter &amp;&amp; !self.game.started) {
+                    self.login();
+                    return;
+                }
+
+                if (self.game.started)
+                    self.game.handleInput(Modules.InputType.Key, key);
+
+            });
+
+            $(document).keyup(function(e) {
+                var key = e.which;
+
+                if (!self.game || !self.game.started)
+                    return;
+
+                self.game.input.keyUp(key);
+            });
+
+            $(document).mousemove(function(event) {
+                if (!self.game || !self.game.input || !self.game.started || event.target.id !== &apos;textCanvas&apos;)
+                    return;
+
+                self.game.input.setCoords(event);
+                self.game.input.moveCursor();
+            });
+
+            self.canvas.click(function(event) {
+                if (!self.game || !self.game.started || event.button !== 0)
+                    return;
+
+                window.scrollTo(0, 1);
+
+                self.game.input.handle(Modules.InputType.LeftClick, event);
+
+            });
+
+            $(&apos;input[type=&quot;range&quot;]&apos;).on(&apos;input&apos;, function() {
+                self.updateRange($(this));
+            });
+
+        },
+
+        login: function() {
+            var self = this;
+
+            if (self.loggingIn || !self.game || !self.game.loaded || self.statusMessage || !self.verifyForm())
+                return;
+
+            self.toggleLogin(true);
+            self.game.connect();
+        },
+
+        fadeMenu: function() {
+            var self = this;
+
+            self.updateLoader(null);
+
+            setTimeout(function() {
+                self.body.addClass(&apos;game&apos;);
+                self.body.addClass(&apos;started&apos;);
+
+                self.body.removeClass(&apos;intro&apos;);
+
+                self.footer.hide();
+
+            }, 500);
+        },
+
+        showMenu: function() {
+            var self = this;
+
+            self.body.removeClass(&apos;game&apos;);
+            self.body.removeClass(&apos;started&apos;);
+            self.body.addClass(&apos;intro&apos;);
+
+            self.footer.show();
+        },
+
+        showDeath: function() {
+
+        },
+
+        openScroll: function(origin, destination) {
+            var self = this;
+
+            if (!destination || self.loggingIn)
+                return;
+
+            self.cleanErrors();
+
+            if (!Detect.isMobile()) {
+                if (self.parchmentAnimating)
+                    return;
+
+                self.parchmentAnimating = true;
+
+                self.parchment.toggleClass(&apos;animate&apos;).removeClass(origin);
+
+                setTimeout(function() {
+
+                    self.parchment.toggleClass(&apos;animate&apos;).addClass(destination);
+                    self.parchmentAnimating = false;
+
+                }, Detect.isTablet() ? 0 : 1000);
+
+            } else
+                self.parchment.removeClass(origin).addClass(destination);
+        },
+
+        displayScroll: function(content) {
+            var self = this,
+                state = self.parchment.attr(&apos;class&apos;);
+
+            if (self.game.started) {
+
+                self.parchment.removeClass().addClass(content);
+
+                self.body.removeClass(&apos;credits legal about&apos;).toggleClass(content);
+
+                if (self.game.player)
+                    self.body.toggleClass(&apos;death&apos;);
+
+                if (content !== &apos;about&apos;)
+                    self.helpButton.removeClass(&apos;active&apos;);
+
+            } else if (state !== &apos;animate&apos;)
+                self.openScroll(state, state === content ? &apos;loadCharacter&apos; : content);
+
+        },
+
+        verifyForm: function() {
+            var self = this,
+                activeForm = self.getActiveForm();
+
+            if (activeForm === &apos;null&apos;)
+                return;
+
+            switch (activeForm) {
+
+                case &apos;loadCharacter&apos;:
+
+                    var nameInput = $(&apos;#loginNameInput&apos;),
+                        passwordInput = $(&apos;#loginPasswordInput&apos;);
+
+                    if (self.loginFields.length === 0)
+                        self.loginFields = [nameInput, passwordInput];
+
+                    if (!nameInput.val() &amp;&amp; !self.isGuest()) {
+                        self.sendError(nameInput, &apos;Please enter a username.&apos;);
+                        return false;
+                    }
+
+                    if (!passwordInput.val() &amp;&amp; !self.isGuest()) {
+                        self.sendError(passwordInput, &apos;Please enter a password.&apos;);
+                        return false;
+                    }
+
+                    break;
+
+                case &apos;createCharacter&apos;:
+
+                    var characterName = $(&apos;#registerNameInput&apos;),
+                        registerPassword = $(&apos;#registerPasswordInput&apos;),
+                        registerPasswordConfirmation = $(&apos;#registerPasswordConfirmationInput&apos;),
+                        email = $(&apos;#registerEmailInput&apos;);
+
+                    if (self.registerFields.length === 0)
+                        self.registerFields = [characterName, registerPassword, registerPasswordConfirmation, email];
+
+                    if (!characterName.val()) {
+                        self.sendError(characterName, &apos;A username is necessary you silly.&apos;);
+                        return false;
+                    }
+
+                    if (!registerPassword.val()) {
+                        self.sendError(registerPassword, &apos;You must enter a password.&apos;);
+                        return false;
+                    }
+
+                    if (registerPasswordConfirmation.val() !== registerPassword.val()) {
+                        self.sendError(registerPasswordConfirmation, &apos;The passwords do not match!&apos;);
+                        return false;
+                    }
+
+                    if (!email.val() || !self.verifyEmail(email.val())) {
+                        self.sendError(email, &apos;An email is required!&apos;);
+                        return false;
+                    }
+
+                    break;
+            }
+
+            return true;
+        },
+
+        verifyEmail: function(email) {
+            return /^(([^&lt;&gt;()[\]\\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
+        },
+
+        sendStatus: function(message) {
+            var self = this;
+
+            self.cleanErrors();
+
+            self.statusMessage = message;
+
+            if (!message)
+                return;
+
+            $(&apos;&lt;span&gt;&lt;/span&gt;&apos;, {
+                &apos;class&apos;: &apos;status blink&apos;,
+                text: message
+            }).appendTo(&apos;.validation-summary&apos;);
+
+            $(&apos;.status&apos;).append(&apos;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&apos;);
+        },
+
+        sendError: function(field, error) {
+            this.cleanErrors();
+
+            $(&apos;&lt;span&gt;&lt;/span&gt;&apos;, {
+                &apos;class&apos;: &apos;validation-error blink&apos;,
+                text: error
+            }).appendTo(&apos;.validation-summary&apos;);
+
+            if (!field)
+                return;
+
+            field.addClass(&apos;field-error&apos;).select();
+            field.bind(&apos;keypress&apos;, function(event) {
+                field.removeClass(&apos;field-error&apos;);
+
+                $(&apos;.validation-error&apos;).remove();
+
+                $(this).unbind(event);
+            });
+        },
+
+        cleanErrors: function() {
+            var self = this,
+                activeForm = self.getActiveForm(),
+                fields = activeForm === &apos;loadCharacter&apos; ? self.loginFields : self.registerFields;
+
+            for (var i = 0; i &lt; fields.length; i++)
+                fields[i].removeClass(&apos;field-error&apos;);
+
+            $(&apos;.validation-error&apos;).remove();
+            $(&apos;.status&apos;).remove();
+        },
+
+        getActiveForm: function() {
+            return this.parchment[0].className;
+        },
+
+        isRegistering: function() {
+            return this.getActiveForm() === &apos;createCharacter&apos;;
+        },
+
+        isGuest: function() {
+            return this.guest.hasClass(&apos;active&apos;);
+        },
+
+        setGame: function(game) {
+            this.game = game;
+        },
+
+        hasWorker: function() {
+            return !!window.Worker;
+        },
+
+        getScaleFactor: function() {
+            return 3;
+        },
+
+        getUIScale: function() {
+            var width = window.innerWidth,
+                height = window.innerHeight;
+
+            return width &lt;= 1000 ? 1 : ((width &lt;= 1500 || height &lt;= 870) ? 2 : 3);
+        },
+
+        revertLoader: function() {
+            this.updateLoader(&apos;Connecting&apos;);
+        },
+
+        updateLoader: function(message) {
+            var self = this;
+
+            if (!message) {
+                self.loading.html(&apos;&apos;);
+                return;
+            }
+
+            var dots = &apos;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&apos;;
+            self.loading.html(message + dots);
+        },
+
+        toggleLogin: function(toggle) {
+            var self = this;
+
+            self.revertLoader();
+
+            self.toggleTyping(toggle);
+
+            self.loggingIn = toggle;
+
+            if (toggle) {
+                self.loading.removeAttr(&apos;hidden&apos;);
+
+                self.loginButton.addClass(&apos;disabled&apos;);
+                self.registerButton.addClass(&apos;disabled&apos;);
+
+            } else {
+                self.loading.attr(&apos;hidden&apos;, true);
+
+                self.loginButton.removeClass(&apos;disabled&apos;);
+                self.registerButton.removeClass(&apos;disabled&apos;);
+            }
+        },
+
+        toggleTyping: function(state) {
+            var self = this;
+
+            if (self.loginFields)
+                _.each(self.loginFields, function(field) { field.prop(&apos;readonly&apos;, state); });
+
+            if (self.registerFields)
+                _.each(self.registerFields, function(field) { field.prop(&apos;readOnly&apos;, state); })
+        },
+
+        updateRange: function(obj) {
+            var self = this,
+                val = (obj.val() - obj.attr(&apos;min&apos;)) / (obj.attr(&apos;max&apos;) - obj.attr(&apos;min&apos;));
+
+            obj.css(&apos;background-image&apos;,
+                &apos;-webkit-gradient(linear, left top, right top, &apos;
+                + &apos;color-stop(&apos; + val + &apos;, #4d4d4d), &apos;
+                + &apos;color-stop(&apos; + val + &apos;, #C5C5C5)&apos;
+                + &apos;)&apos;
+            );
+        },
+
+        updateOrientation: function() {
+            this.orientation = this.getOrientation();
+        },
+
+        getOrientation: function() {
+            return window.innerHeight &gt; window.innerWidth ? &apos;portrait&apos; : &apos;landscape&apos;;
+        },
+
+        onReady: function(callback) {
+            this.readyCallback = callback;
+        }
+
+    });
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
