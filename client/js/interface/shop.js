@@ -35,7 +35,7 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 id = event.currentTarget.id.substring(11);
 
-            self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, id, 1, 1]);
+            self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
         },
 
         sell: function() {

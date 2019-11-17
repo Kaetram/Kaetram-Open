@@ -194,6 +194,18 @@ define(['jquery', '../interface/inventory',
                 self.shop.hide();
         },
 
+        addInventory: function(info) {
+            var self = this;
+
+            self.bank.addInventory(info);
+        },
+
+        removeInventory: function(info) {
+            var self = this;
+
+            self.bank.removeInventory(info);
+        },
+
         displayNotify: function(message) {
             var self = this;
 
