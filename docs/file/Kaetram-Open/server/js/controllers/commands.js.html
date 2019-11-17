@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/controllers/commands.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/controllers/commands.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
+
+let _ = require(&apos;underscore&apos;),
+    Messages = require(&apos;../network/messages&apos;),
+    Packets = require(&apos;../network/packets&apos;),
+    MapClient = require(&apos;../../data/map/world_client&apos;),
+    config = require(&apos;../../config&apos;);
+
+class Commands {
+
+    constructor(player) {
+        let self = this;
+
+        self.player = player;
+        self.world = player.world;
+    }
+
+    parse(rawText) {
+        let self = this,
+            blocks = rawText.substring(1).split(&apos; &apos;);
+
+        if (blocks.length &lt; 1)
+            return;
+
+        let command = blocks.shift();
+
+        self.handlePlayerCommands(command, blocks);
+
+        if (self.player.rights &gt; 0)
+            self.handleModeratorCommands(command, blocks);
+
+        if (self.player.rights &gt; 1)
+            self.handleAdminCommands(command, blocks);
+    }
+
+    handlePlayerCommands(command, blocks) {
+        let self = this;
+
+        switch(command) {
+
+            case &apos;players&apos;:
+                let population = self.world.getPopulation(),
+                    singular = population === 1;
+
+                self.player.notify(`There ${singular ? &apos;is&apos; : &apos;are&apos;} currently ${population} ${singular ? &apos;person&apos; : &apos;people&apos;} online.`);
+
+                return;
+
+            case &apos;tutstage&apos;:
+
+                log.info(self.player.getTutorial().stage);
+
+                return;
+
+            case &apos;coords&apos;:
+
+                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, &apos;x: &apos; + self.player.x + &apos; y: &apos; + self.player.y));
+
+                return;
+
+            case &apos;progress&apos;:
+
+                let tutorialQuest = self.player.getTutorial();
+
+                self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
+                    id: tutorialQuest.id,
+                    stage: tutorialQuest.stage
+                }));
+
+                return;
+
+            case &apos;global&apos;:
+
+                self.world.push(Packets.PushOpcode.Broadcast, {
+                    message: new Messages.Chat({
+                        name: self.player.username,
+                        text: blocks.join(&apos; &apos;),
+                        isGlobal: true,
+                        withBubble: false,
+                        colour: &apos;rgba(191, 191, 63, 1.0)&apos;
+                    })
+                });
+
+                return;
+
+            case &apos;region&apos;:
+                log.info(self.player.region);
+                return;
+
+            case &apos;getintroduction&apos;:
+                log.info(self.player.quests.getQuest(0).getStage());
+                return;
+
+            case &apos;resetintro&apos;:
+                let introduction = self.player.quests.getQuest(0);
+
+                introduction.setStage(0);
+                introduction.clearPointers();
+                introduction.update();
+                introduction.updatePointers();
+
+                self.player.updateRegion();
+                self.player.save();
+
+                return;
+
+        }
+    }
+
+    handleModeratorCommands(command, blocks) {
+        let self = this;
+
+        switch (command) {
+
+            case &apos;mute&apos;:
+            case &apos;ban&apos;:
+
+                let duration = blocks.shift(),
+                    targetName = blocks.join(&apos; &apos;),
+                    user = self.world.getPlayerByName(targetName);
+
+                if (!user)
+                    return;
+
+                if (!duration)
+                    duration = 24;
+
+                let timeFrame = new Date().getTime() + duration * 60 * 60;
+
+                if (command === &apos;mute&apos;)
+                    user.mute = timeFrame;
+                else if (command === &apos;ban&apos;) {
+                    user.ban = timeFrame;
+                    user.save();
+
+                    user.sendUTF8(&apos;ban&apos;);
+                    user.connection.close(&apos;banned&apos;);
+                }
+
+                user.save();
+
+                return;
+
+            case &apos;unmute&apos;:
+
+                let uTargetName = blocks.join(&apos; &apos;),
+                    uUser = self.world.getPlayerByName(uTargetName);
+
+                if (!uTargetName)
+                    return;
+
+                uUser.mute = new Date().getTime() - 3600;
+
+                uUser.save();
+
+                return;
+
+        }
+    }
+
+    handleAdminCommands(command, blocks) {
+        let self = this,
+            username, player;
+
+        switch (command) {
+
+            case &apos;spawn&apos;:
+
+                let spawnId = parseInt(blocks.shift()),
+                    count = parseInt(blocks.shift()),
+                    ability = parseInt(blocks.shift()),
+                    abilityLevel = parseInt(blocks.shift());
+
+                if (!spawnId || !count)
+                    return;
+
+                self.player.inventory.add({
+                    id: spawnId,
+                    count: count,
+                    ability: ability ? ability : -1,
+                    abilityLevel: abilityLevel ? abilityLevel : -1
+                });
+
+                return;
+
+            case &apos;maxhealth&apos;:
+
+                self.player.notify(&apos;Max health is &apos; + self.player.hitPoints.getMaxHitPoints());
+
+                return;
+
+            case &apos;ipban&apos;:
+
+                return;
+
+            case &apos;drop&apos;:
+
+                let id = parseInt(blocks.shift()),
+                    dCount = parseInt(blocks.shift());
+
+                if (!id)
+                    return;
+
+                if (!dCount)
+                    dCount = 1;
+
+                self.world.dropItem(id, dCount, self.player.x, self.player.y);
+
+                return;
+
+            case &apos;ghost&apos;:
+
+                self.player.equip(&apos;ghost&apos;, 1, -1, -1);
+
+                return;
+
+            case &apos;notify&apos;:
+
+                self.player.notify(&apos;Hello!!!&apos;);
+
+                return;
+
+            case &apos;teleport&apos;:
+
+                let x = parseInt(blocks.shift()),
+                    y = parseInt(blocks.shift()),
+                    withAnimation = parseInt(blocks.shift())
+
+                log.info(withAnimation ? true : false);
+
+                if (x &amp;&amp; y)
+                    self.player.teleport(x, y, false, withAnimation ? true : false);
+
+                return;
+
+            case &apos;teletome&apos;:
+
+                username = blocks.join(&apos; &apos;);
+                player = self.world.getPlayerByName(username);
+
+                if (player)
+                    player.teleport(self.player.x, self.player.y);
+
+                return;
+
+            case &apos;teleto&apos;:
+
+                username = blocks.join(&apos; &apos;);
+                player = self.world.getPlayerByName(username);
+
+                if (player)
+                    self.player.teleport(player.x, player.y);
+
+                return;
+
+            case &apos;nohit&apos;:
+
+                log.info(&apos;invincinil&apos;);
+
+                self.player.invincible = !self.player.invincible;
+
+                return;
+
+            case &apos;mob&apos;:
+
+                let npcId = parseInt(blocks.shift());
+
+                self.world.spawnMob(npcId, self.player.x, self.player.y);
+
+                return;
+
+            case &apos;pointer&apos;:
+
+                if (blocks.length &gt; 1) {
+                    let posX = parseInt(blocks.shift()),
+                        posY = parseInt(blocks.shift());
+
+                    if (!posX || !posY)
+                        return;
+
+                    self.player.send(new Messages.Pointer(Packets.PointerOpcode.Location, {
+                        id: self.player.instance,
+                        x: posX,
+                        y: posY
+                    }));
+                } else {
+                    let instance = blocks.shift();
+
+                    if (!instance)
+                        return;
+
+                    self.player.send(new Messages.Pointer(Packets.PointerOpcode.NPC, {
+                        id: instance
+                    }));
+                }
+
+                return;
+
+            case &apos;teleall&apos;:
+
+                _.each(self.world.players, (player) =&gt; {
+                    player.teleport(self.player.x, self.player.y);
+                });
+
+                return;
+
+            case &apos;attackaoe&apos;:
+
+                let radius = parseInt(blocks.shift());
+
+                if (!radius)
+                    radius = 1;
+
+                self.player.combat.dealAoE(radius);
+
+                return;
+
+            case &apos;addexp&apos;:
+
+                let exp = parseInt(blocks.shift());
+
+                if (!exp)
+                    return;
+
+                self.player.addExperience(exp);
+
+                return;
+
+            case &apos;region&apos;:
+
+                let tileX = parseInt(blocks.shift()),
+                    tileY = parseInt(blocks.shift()),
+                    tileInfo = parseInt(blocks.shift());
+
+                if (!tileX || !tileY)
+                    return;
+
+                let tileIndex = self.world.region.gridPositionToIndex(tileX - 1, tileY);
+
+                log.info(&apos;Sending Tile: &apos; + tileIndex);
+
+                self.world.push(Packets.PushOpcode.Player, {
+                    player: self.player,
+                    message: new Messages.Region(Packets.RegionOpcode.Modify, {
+                        index: tileIndex,
+                        data: tileInfo
+                    })
+                });
+
+                return;
+
+            case &apos;gettile&apos;:
+
+                let getTileX = parseInt(blocks.shift()),
+                    getTileY = parseInt(blocks.shift());
+
+                if (!getTileX || !getTileY)
+                    return;
+
+                let getTileIndex = self.world.region.gridPositionToIndex(getTileX - 1, getTileY);
+
+                log.info(&apos;Tile Index: &apos; + getTileIndex);
+                log.info(&apos;Tile Info: &apos; + MapClient.data[getTileIndex]);
+                log.info(&apos;Actual Index: &apos; + self.world.map.getActualTileIndex(getTileIndex));
+
+                return;
+
+            case &apos;instance&apos;:
+                self.world.region.createInstance(self.player, self.player.region);
+                return;
+
+            case &apos;checkregion&apos;:
+                self.player.notify(&apos;Current Region: &apos; + self.player.region);
+                return;
+
+            case &apos;deinstance&apos;:
+                self.world.region.deleteInstance(self.player);
+                return;
+
+            case &apos;debug&apos;:
+                self.player.send(new Messages.Command({
+                    command: &apos;debug&apos;
+                }));
+                return;
+
+            case &apos;addexperience&apos;:
+                self.player.addExperience(parseInt(blocks.shift()));
+                return;
+
+            case &apos;attackrange&apos;:
+                log.info(self.player.attackRange);
+                return;
+
+            case &apos;resetregions&apos;:
+                log.info(&apos;Resetting regions...&apos;);
+
+                self.player.regionsLoaded = [];
+                self.player.updateRegion();
+
+                return;
+
+            case &apos;finishQuest&apos;:
+
+                self.player.quests.getQuest(1).finish();
+
+                break;
+
+            case &apos;finishAchievement&apos;:
+
+                self.player.quests.achievements[0].finish();
+
+                break;
+
+            case &apos;resetAchievement&apos;:
+
+                self.player.quests.achievements[1].setProgress(0);
+
+                break;
+
+            case &apos;clear&apos;:
+
+                self.player.inventory.forEachSlot((slot) =&gt; {
+                    if (slot !== -1) {
+                        self.player.inventory.remove(slot.id, slot.count);
+                    }
+                });
+
+                break;
+
+        }
+    }
+
+}
+
+module.exports = Commands;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

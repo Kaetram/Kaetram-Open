@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/character.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/character.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
+
+let Entity = require(&apos;../entity&apos;),
+    Modules = require(&apos;../../../util/modules&apos;),
+    Mobs = require(&apos;../../../util/mobs&apos;),
+    Combat = require(&apos;./combat/combat&apos;);
+
+class Character extends Entity {
+
+    constructor(id, type, instance, x, y) {
+        super(id, type, instance, x, y);
+
+        let self = this;
+
+        self.level = -1;
+
+        self.movementSpeed = 150;
+        self.attackRange = 1;
+        self.attackRate = 1000;
+        self.healingRate = 7000;
+
+        self.spawnDistance = 7;
+
+        self.previousX = -1;
+        self.previousY = -1;
+
+        self.hitPoints = -1;
+        self.maxHitPoints = -1;
+
+        self.dead = false;
+        self.aggressive = false;
+        self.aggroRange = 2;
+
+        self.target = null;
+        self.potentialTarget = null;
+
+        self.stunTimeout = null;
+
+        self.projectile = Modules.Projectiles.Arrow;
+        self.projectileName = &apos;projectile-pinearrow&apos;;
+
+        self.healingInterval = null;
+
+        self.loadCombat();
+        self.startHealing();
+    }
+
+    loadCombat() {
+        let self = this;
+
+        /**
+         * Ternary could be used here, but readability
+         * would become nonexistent.
+         */
+
+        if (Mobs.hasCombatPlugin(self.id))
+            self.combat = new (Mobs.isNewCombatPlugin(self.id))(self);
+        else
+            self.combat = new Combat(self);
+    }
+
+    startHealing() {
+        let self = this;
+
+        self.healingInterval = setInterval(() =&gt; {
+
+            if (!self.hasTarget() &amp;&amp; !self.combat.isAttacked() &amp;&amp; !self.dead)
+                self.heal(1);
+
+        }, 5000);
+    }
+
+    stopHealing() {
+        let self = this;
+
+        clearInterval(self.healingInterval);
+        self.healingInterval = null;
+    }
+
+    setStun(stun) {
+        let self = this;
+
+        self.stunned = stun;
+
+        if (self.stunCallback)
+            self.stunCallback(stun);
+    }
+
+    hit(attacker) {
+        let self = this;
+
+        if (self.hitCallback)
+            self.hitCallback(attacker);
+    }
+
+    heal(amount) {
+        let self = this;
+
+        self.setHitPoints(self.hitPoints + amount);
+
+        if (self.hitPoints &gt;= self.maxHitPoints)
+            self.hitPoints = self.maxHitPoints;
+    }
+
+    addExperience() {
+        //Unimplemented.
+    }
+
+    isRanged() {
+        return this.attackRange &gt; 1;
+    }
+
+    applyDamage(damage) {
+        this.hitPoints -= damage;
+    }
+
+    isDead() {
+        return this.hitPoints &lt; 1 || this.dead;
+    }
+
+    getCombat() {
+        return this.combat;
+    }
+
+    getHitPoints() {
+        return this.hitPoints;
+    }
+
+    getMaxHitPoints() {
+        return this.maxHitPoints;
+    }
+
+    setPosition(x, y) {
+        let self = this;
+
+        self.previousX = self.x;
+        self.previousY = self.y;
+
+        super.setPosition(x, y);
+
+        if (self.movementCallback)
+            self.movementCallback(x, y);
+    }
+
+    setTarget(target) {
+        let self = this;
+
+        self.target = target;
+
+        if (self.targetCallback)
+            self.targetCallback(target);
+    }
+
+    setPotentialTarget(potentialTarget) {
+        this.potentialTarget = potentialTarget;
+    }
+
+    setHitPoints(hitPoints) {
+        let self = this;
+
+        self.hitPoints = hitPoints;
+
+        if (self.hitPointsCallback)
+            self.hitPointsCallback();
+    }
+
+    getProjectile() {
+        return this.projectile;
+    }
+
+    getProjectileName() {
+        return this.projectileName;
+    }
+
+    getDrop() {
+        return null;
+    }
+
+    hasMaxHitPoitns() {
+        return this.hitPoints &gt;= this.maxHitPoints;
+    }
+
+    removeTarget() {
+        let self = this;
+
+        if (self.removeTargetCallback)
+            self.removeTargetCallback();
+
+        self.clearTarget();
+    }
+
+    hasTarget() {
+        return !(this.target === null);
+    }
+
+    hasPotentialTarget(potentialTarget) {
+        return this.potentialTarget === potentialTarget;
+    }
+
+    clearTarget() {
+        this.target = null;
+    }
+
+    onTarget(callback) {
+        this.targetCallback = callback;
+    }
+
+    onRemoveTarget(callback) {
+        this.removeTargetCallback = callback;
+    }
+
+    onMovement(callback) {
+        this.movementCallback = callback;
+    }
+
+    onHit(callback) {
+        this.hitCallback = callback;
+    }
+
+    onHealthChange(callback) {
+        this.healthChangeCallback = callback;
+    }
+
+    onDamage(callback) {
+        this.damageCallback = callback;
+    }
+
+    onStunned(callback) {
+        this.stunCallback = callback;
+    }
+
+    onSubAoE(callback) {
+        this.subAoECallback = callback;
+    }
+}
+
+module.exports = Character;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

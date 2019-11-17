@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/controllers/chat.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/controllers/chat.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global Packets, Modules, log */
+
+define([&apos;jquery&apos;], function($) {
+
+    return Class.extend({
+
+        init: function(game) {
+            var self = this;
+
+            self.game = game;
+
+            self.chat = $(&apos;#chat&apos;);
+            self.log = $(&apos;#chatLog&apos;);
+            self.input = $(&apos;#chatInput&apos;);
+            self.button = $(&apos;#chatButton&apos;);
+
+            self.visible = false;
+
+            self.fadingDuration = 5000;
+            self.fadingTimeout = null;
+
+            self.button.click(function() {
+
+                self.button.blur();
+
+                if (self.input.is(&apos;:visible&apos;))
+                    self.hideInput();
+                else
+                    self.toggle();
+
+            });
+        },
+
+        add: function(source, text, colour) {
+            var self = this,
+                element = $(&apos;&lt;p&gt;&apos; + source + &apos;: &apos; + text + &apos;&lt;/p&gt;&apos;);
+
+            self.showChat();
+
+            if (!self.isActive())
+                self.hideInput();
+
+            self.hideChat();
+
+            element.css(&apos;color&apos;, colour ? colour : &apos;white&apos;);
+
+            self.log.append(element);
+            self.log.scrollTop(99999);
+        },
+
+        key: function(data) {
+            var self = this;
+
+            switch(data) {
+                case Modules.Keys.Enter:
+
+                    if (self.input.val() === &apos;&apos;)
+                        self.toggle();
+                    else
+                        self.send();
+
+                    break;
+            }
+        },
+
+        send: function() {
+            var self = this;
+
+            self.game.socket.send(Packets.Chat, [self.input.val()]);
+            self.toggle();
+        },
+
+        toggle: function() {
+            var self = this;
+
+            self.clean();
+
+            if (self.visible &amp;&amp; !self.isActive())
+                self.showInput();
+            else if (self.visible) {
+                self.hideInput();
+                self.hideChat();
+            } else {
+                self.showChat();
+                self.showInput();
+            }
+
+        },
+
+        showChat: function() {
+            var self = this;
+
+            self.chat.fadeIn(&apos;fast&apos;);
+
+            self.visible = true;
+        },
+
+        showInput: function() {
+            var self = this;
+
+            self.button.addClass(&apos;active&apos;);
+
+            self.input.fadeIn(&apos;fast&apos;);
+            self.input.val(&apos;&apos;);
+            self.input.focus();
+
+            self.clean();
+        },
+
+        hideChat: function() {
+            var self = this;
+
+            if (self.fadingTimeout) {
+                clearTimeout(self.fadingTimeout);
+                self.fadingTimeout = null;
+            }
+
+            self.fadingTimeout = setTimeout(function() {
+
+                if (!self.isActive()) {
+                    self.chat.fadeOut(&apos;slow&apos;);
+
+                    self.visible = false;
+                }
+
+            }, self.fadingDuration);
+        },
+
+        hideInput: function() {
+            var self = this;
+
+            self.button.removeClass(&apos;active&apos;);
+
+            self.input.val(&apos;&apos;);
+            self.input.fadeOut(&apos;fast&apos;);
+            self.input.blur();
+
+            self.hideChat();
+        },
+
+        clean: function() {
+            var self = this;
+
+            clearTimeout(self.fadingTimeout);
+            self.fadingTimeout = null;
+        },
+
+        isActive: function() {
+            return this.input.is(&apos;:focus&apos;);
+        }
+    });
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

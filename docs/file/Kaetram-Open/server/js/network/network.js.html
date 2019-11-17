@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/network/network.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/network/network.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">let World = require(&apos;../game/world&apos;),
+    Messages = require(&apos;./messages&apos;),
+    Packets = require(&apos;./packets&apos;),
+    Player = require(&apos;../game/entity/character/player/player&apos;),
+    Utils = require(&apos;../util/utils&apos;),
+    config = require(&apos;../../config&apos;),
+    _ = require(&apos;underscore&apos;);
+
+class Network {
+
+    constructor(world) {
+        let self = this;
+
+        self.world = world;
+        self.database = world.database;
+        self.socket = world.socket;
+        self.region = world.region;
+        self.map = world.map;
+
+        self.packets = {};
+
+        self.differenceThreshold = 4000;
+
+        self.load();
+    }
+
+    load() {
+        let self = this;
+
+        self.world.onPlayerConnection((connection) =&gt; {
+            self.handlePlayerConnection(connection);
+        });
+
+        self.world.onPopulationChange(() =&gt; {
+            self.handlePopulationChange();
+        });
+    }
+
+    parsePackets() {
+        let self = this;
+
+        /**
+         * This parses through the packet pool and sends them
+         */
+
+        for (let id in self.packets) {
+            if (self.packets[id].length &gt; 0 &amp;&amp; self.packets.hasOwnProperty(id)) {
+                let conn = self.socket.getConnection(id);
+
+                if (conn) {
+                    conn.send(self.packets[id]);
+                    self.packets[id] = [];
+                    self.packets[id].id = id;
+                } else
+                    delete self.socket.getConnection(id);
+            }
+        }
+    }
+
+    handlePlayerConnection(connection) {
+        let self = this,
+            clientId = Utils.generateClientId(),
+            player = new Player(self.world, self.database, connection, clientId),
+            timeDifference = new Date().getTime() - self.getSocketTime(connection);
+
+        if (!config.debug &amp;&amp; timeDifference - self.differenceThreshold &lt; 5000) {
+            connection.sendUTF8(&apos;toofast&apos;);
+            connection.close(&apos;Logging in too fast.&apos;);
+
+            return;
+        }
+
+        self.socket.ips[connection.socket.conn.remoteAddress] = new Date().getTime();
+
+        self.addToPackets(player);
+
+        self.pushToPlayer(player, new Messages.Handshake({
+            id: clientId,
+            development: config.devClient
+        }));
+    }
+
+    handlePopulationChange() {
+        this.pushBroadcast(new Messages.Population(this.world.getPopulation()));
+    }
+
+    addToPackets(player) {
+        this.packets[player.instance] = [];
+    }
+
+    /*****************************************
+     * Broadcasting and Socket Communication *
+     *****************************************/
+
+    /**
+     * Broadcast a message to everyone in the world.
+     */
+
+    pushBroadcast(message) {
+        let self = this;
+
+        _.each(self.packets, (packet) =&gt; {
+            packet.push(message.serialize());
+        });
+    }
+
+    /**
+     * Broadcast a message to everyone with exceptions.
+     */
+
+    pushSelectively(message, ignores) {
+        let self = this;
+
+        _.each(self.packets, (packet) =&gt; {
+            if (ignores.indexOf(packet.id) &lt; 0)
+                packet.push(message.serialize());
+        });
+    }
+
+    /**
+     * Push a message to a single player.
+     */
+
+    pushToPlayer(player, message) {
+        if (player &amp;&amp; player.instance in this.packets)
+            this.packets[player.instance].push(message.serialize());
+    }
+
+    /**
+     * Specify an array of player instances to send message to
+     */
+
+    pushToPlayers(players, message) {
+        let self = this;
+
+        _.each(players, (playerInstance) =&gt; {
+            self.pushToPlayer(self.world.getPlayerByInstance(playerInstance), message);
+        });
+    }
+
+    /**
+     * Send a message to the region the player is currently in.
+     */
+
+    pushToRegion(regionId, message, ignoreId) {
+        let self = this,
+            region = self.region.regions[regionId];
+
+        if (!region) return;
+
+        _.each(region.players, (playerInstance) =&gt; {
+            if (playerInstance !== ignoreId)
+                self.pushToPlayer(self.world.getEntityByInstance(playerInstance), message);
+        });
+    }
+
+    /**
+     * Sends a message to all the surrounding regions of the player.
+     * G  G  G
+     * G  P  G
+     * G  G  G
+     */
+
+    pushToAdjacentRegions(regionId, message, ignoreId) {
+        let self = this;
+
+        self.map.regions.forEachAdjacentRegion(regionId, (id) =&gt; {
+            self.pushToRegion(id, message, ignoreId);
+        });
+    }
+
+    /**
+     * Sends a message to an array of player names
+     */
+
+    pushToNameArray(names, message) {
+        let self = this;
+
+        _.each(names, (name) =&gt; {
+            let player = self.world.getPlayerByName(name);
+
+            if (player)
+                self.pushToPlayer(player, message);
+        });
+    }
+
+    /**
+     * Sends a message to the region the player just left from
+     */
+
+    pushToOldRegions(player, message) {
+        let self = this;
+
+        _.each(player.recentRegions, (id) =&gt; {
+            self.pushToRegion(id, message);
+        });
+
+        player.recentRegions = [];
+    }
+
+    getSocketTime(connection) {
+        return this.socket.ips[connection.socket.conn.remoteAddress];
+    }
+
+}
+
+module.exports = Network;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
