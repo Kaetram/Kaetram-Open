@@ -25,6 +25,10 @@ canvas {
     image-rendering: optimizeSpeed;
 }
 
+html {
+    background: #000000;
+}
+
 #background, #textCanvas, #foreground, #cursor, #overlay {
     margin: 0;
     padding: 0;
