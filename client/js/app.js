@@ -155,7 +155,7 @@ define(['jquery'], function($) {
                 }
 
                 if (self.game.started)
-                    self.game.onInput(Modules.InputType.Key, key);
+                    self.game.handleInput(Modules.InputType.Key, key);
 
             });
 
