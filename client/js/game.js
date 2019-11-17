@@ -157,7 +157,7 @@ define(['./renderer/renderer', './utils/storage',
 
             self.setInterface(new Interface(self));
 
-            self.implementStorage();
+            self.loadStorage();
 
             if (!hasWorker) {
                 self.app.sendStatus(null);
@@ -221,8 +221,6 @@ define(['./renderer/renderer', './utils/storage',
 
             self.getCamera().setPlayer(self.player);
 
-            self.renderer.renderedFrame[0] = -1;
-
             self.entities.addEntity(self.player);
 
             var defaultSprite = self.getSprite(self.player.getSpriteName());
@@ -243,8 +241,6 @@ define(['./renderer/renderer', './utils/storage',
 
             self.renderer.verifyCentration();
 
-            self.renderer.addLight(0, 0, 12, 0.1, 'rgba(0,0,0,0.4)', true);
-
             if (self.storage.data.new) {
                 self.storage.data.new = false;
                 self.storage.save();
@@ -252,7 +248,7 @@ define(['./renderer/renderer', './utils/storage',
 
         },
 
-        implementStorage: function() {
+        loadStorage: function() {
             var self = this,
                 loginName = $('#loginNameInput'),
                 loginPassword = $('#loginPasswordInput');
@@ -270,21 +266,6 @@ define(['./renderer/renderer', './utils/storage',
                 loginPassword.val(self.getStoragePassword());
 
             $('#rememberMe').addClass('active');
-        },
-
-        setPlayerMovement: function(direction) {
-            this.player.direction = direction;
-        },
-
-        movePlayer: function(x, y) {
-            this.moveCharacter(this.player, x, y);
-        },
-
-        moveCharacter: function(character, x, y) {
-            if (!character)
-                return;
-
-            character.go(x, y);
         },
 
         findPath: function(character, x, y, ignores) {
@@ -306,7 +287,7 @@ define(['./renderer/renderer', './utils/storage',
             return path;
         },
 
-        onInput: function(inputType, data) {
+        handleInput: function(inputType, data) {
             this.input.handle(inputType, data);
         },
 

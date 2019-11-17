@@ -185,7 +185,7 @@ define(function() {
                         if (info.forced)
                             entity.stop(true);
 
-                        self.game.moveCharacter(entity, info.x, info.y);
+                        entity.go(info.x, info.y);
 
                         break;
 
@@ -446,7 +446,7 @@ define(function() {
                     case Packets.CombatOpcode.Sync:
 
                         if (target.x !== info.x || target.y !== info.y)
-                            self.game.moveCharacter(target, info.x, info.y);
+                            target.go(info.x, info.y);
 
                         break;
                 }
