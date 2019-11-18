@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/character.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/character.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,17 +36,16 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/character.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Entity = require(&apos;../entity&apos;),
+const Entity = require(&apos;../entity&apos;),
     Modules = require(&apos;../../../util/modules&apos;),
     Mobs = require(&apos;../../../util/mobs&apos;),
     Combat = require(&apos;./combat/combat&apos;);
 
 class Character extends Entity {
-
     constructor(id, type, instance, x, y) {
         super(id, type, instance, x, y);
 
-        let self = this;
+        const self = this;
 
         self.level = -1;
 
@@ -82,7 +81,7 @@ class Character extends Entity {
     }
 
     loadCombat() {
-        let self = this;
+        const self = this;
 
         /**
          * Ternary could be used here, but readability
@@ -96,25 +95,23 @@ class Character extends Entity {
     }
 
     startHealing() {
-        let self = this;
+        const self = this;
 
         self.healingInterval = setInterval(() =&gt; {
-
             if (!self.hasTarget() &amp;&amp; !self.combat.isAttacked() &amp;&amp; !self.dead)
                 self.heal(1);
-
         }, 5000);
     }
 
     stopHealing() {
-        let self = this;
+        const self = this;
 
         clearInterval(self.healingInterval);
         self.healingInterval = null;
     }
 
     setStun(stun) {
-        let self = this;
+        const self = this;
 
         self.stunned = stun;
 
@@ -123,14 +120,14 @@ class Character extends Entity {
     }
 
     hit(attacker) {
-        let self = this;
+        const self = this;
 
         if (self.hitCallback)
             self.hitCallback(attacker);
     }
 
     heal(amount) {
-        let self = this;
+        const self = this;
 
         self.setHitPoints(self.hitPoints + amount);
 
@@ -139,7 +136,7 @@ class Character extends Entity {
     }
 
     addExperience() {
-        //Unimplemented.
+        // Unimplemented.
     }
 
     isRanged() {
@@ -167,7 +164,7 @@ class Character extends Entity {
     }
 
     setPosition(x, y) {
-        let self = this;
+        const self = this;
 
         self.previousX = self.x;
         self.previousY = self.y;
@@ -179,7 +176,7 @@ class Character extends Entity {
     }
 
     setTarget(target) {
-        let self = this;
+        const self = this;
 
         self.target = target;
 
@@ -192,7 +189,7 @@ class Character extends Entity {
     }
 
     setHitPoints(hitPoints) {
-        let self = this;
+        const self = this;
 
         self.hitPoints = hitPoints;
 
@@ -217,7 +214,7 @@ class Character extends Entity {
     }
 
     removeTarget() {
-        let self = this;
+        const self = this;
 
         if (self.removeTargetCallback)
             self.removeTargetCallback();

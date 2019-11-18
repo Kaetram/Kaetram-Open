@@ -1,6 +1,6 @@
 /* global module */
 
-let _ = require('underscore'),
+const _ = require('underscore'),
     Grids = require('./grids'),
     Regions = require('./regions'),
     Utils = require('../util/utils'),
@@ -17,9 +17,8 @@ let _ = require('underscore'),
     ClientMap = require('../../data/map/world_client');
 
 class Map {
-
     constructor(world) {
-        let self = this;
+        const self = this;
 
         self.world = world;
 
@@ -32,7 +31,7 @@ class Map {
     }
 
     load() {
-        let self = this;
+        const self = this;
 
         self.width = map.width;
         self.height = map.height;
@@ -60,19 +59,19 @@ class Map {
         self.ready = true;
 
         self.readyInterval = setInterval(() => {
-            if (!self.world.ready)
+            if (!self.world.ready) {
                 if (self.readyCallback)
                     self.readyCallback();
-            else {
-                clearInterval(self.readyInterval);
-                self.readyInterval = null;
+                else {
+                    clearInterval(self.readyInterval);
+                    self.readyInterval = null;
+                }
             }
-
         }, 50);
     }
 
     loadAreas() {
-        let self = this;
+        const self = this;
 
         /**
          * The structure for the new self.areas is as follows:
@@ -90,19 +89,19 @@ class Map {
          * }
          */
 
-        self.areas['PVP'] = new PVPAreas();
-        self.areas['Music'] = new MusicAreas();
-        self.areas['Chests'] = new ChestAreas(self.world);
-        self.areas['Overlays'] = new OverlayAreas();
-        self.areas['Cameras'] = new CameraAreas();
+        self.areas.PVP = new PVPAreas();
+        self.areas.Music = new MusicAreas();
+        self.areas.Chests = new ChestAreas(self.world);
+        self.areas.Overlays = new OverlayAreas();
+        self.areas.Cameras = new CameraAreas();
     }
 
     loadDoors() {
-        let self = this;
+        const self = this;
 
         self.doors = {};
 
-        _.each(map.doors, (door) => {
+        _.each(map.doors, door => {
             let orientation;
 
             switch (door.o) {
@@ -131,52 +130,46 @@ class Map {
                 level: door.l,
                 achievement: door.a,
                 rank: door.r
-            }
-
+            };
         });
-
-
     }
 
     loadStaticEntities() {
-        let self = this;
+        const self = this;
 
         self.staticEntities = [];
 
         // Legacy static entities (from Tiled);
         _.each(map.staticEntities, (string, tileIndex) => {
-
             self.staticEntities.push({
                 tileIndex: tileIndex,
                 string: string
             });
-
         });
 
-        _.each(Spawns, (data) => {
-            let tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
+        _.each(Spawns, data => {
+            const tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
 
             self.staticEntities.push({
                 tileIndex: tileIndex,
                 string: data.string,
                 roaming: data.roaming
             });
-
         });
     }
 
     indexToGridPosition(tileIndex) {
-        let self = this;
+        const self = this;
 
         tileIndex -= 1;
 
-        let x = self.getX(tileIndex + 1, self.width),
+        const x = self.getX(tileIndex + 1, self.width),
             y = Math.floor(tileIndex / self.width);
 
         return {
             x: x,
             y: y
-        }
+        };
     }
 
     gridPositionToIndex(x, y) {
@@ -218,7 +211,7 @@ class Map {
     }
 
     nearLight(light, x, y) {
-        let self = this,
+        const self = this,
             diff = Math.round(light.distance / 16),
             startX = light.x - self.zoneWidth - diff,
             startY = light.y - self.zoneHeight - diff,
@@ -245,30 +238,30 @@ class Map {
     }
 
     isColliding(x, y) {
-        let self = this;
+        const self = this;
 
         if (self.isOutOfBounds(x, y))
             return false;
 
-        let tileIndex = self.gridPositionToIndex(x - 1, y);
+        const tileIndex = self.gridPositionToIndex(x - 1, y);
 
         return self.collisions.indexOf(tileIndex) > -1;
     }
 
     /* For preventing NPCs from roaming in null areas. */
     isEmpty(x, y) {
-        let self = this;
+        const self = this;
 
         if (self.isOutOfBounds(x, y))
             return true;
 
-        let tileIndex = self.gridPositionToIndex(x - 1, y);
+        const tileIndex = self.gridPositionToIndex(x - 1, y);
 
         return ClientMap.data[tileIndex] === 0;
     }
 
     getActualTileIndex(tileIndex) {
-        let self = this,
+        const self = this,
             tileset = self.getTileset(tileIndex);
 
         if (!tileset)
@@ -278,18 +271,20 @@ class Map {
     }
 
     getTileset(tileIndex) {
-        let self = this;
+        const self = this;
         /**
          * if (id > self.tilesets[idx].firstGID - 1 &&
          id < self.tilesets[idx].lastGID + 1)
          return self.tilesets[idx];
          */
 
-        for (let id in self.tilesets)
-            if (self.tilesets.hasOwnProperty(id))
+        for (const id in self.tilesets) {
+            if (self.tilesets.hasOwnProperty(id)) {
                 if (tileIndex > self.tilesets[id].firstGID - 1 &&
                     tileIndex < self.tilesets[id].lastGID + 1)
                     return self.tilesets[id];
+            }
+        }
 
         return null;
     }
@@ -297,7 +292,6 @@ class Map {
     isReady(callback) {
         this.readyCallback = callback;
     }
-
 }
 
 module.exports = Map;

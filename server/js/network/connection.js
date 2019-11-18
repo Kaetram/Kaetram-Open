@@ -1,15 +1,14 @@
 /* global module */
 
 class Connection {
-
     constructor(id, connection, server) {
-        let self = this;
+        const self = this;
 
         self.id = id;
         self.socket = connection;
         self._server = server;
 
-        self.socket.on('message', (message) => {
+        self.socket.on('message', message => {
             if (self.listenCallback)
                 self.listenCallback(JSON.parse(message));
         });
@@ -46,7 +45,6 @@ class Connection {
 
         this.socket.conn.close();
     }
-
 }
 
 module.exports = Connection;

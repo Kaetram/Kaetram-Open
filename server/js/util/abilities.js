@@ -1,6 +1,6 @@
 /* global module */
 
-let Abilities = {};
+const Abilities = {};
 
 Abilities.Data = {};
 Abilities.Ids = {};

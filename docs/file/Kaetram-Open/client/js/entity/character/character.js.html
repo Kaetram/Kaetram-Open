@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/entity/character/character.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/entity/character/character.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -37,7 +37,6 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global _, Modules, log */
 
 define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../animation&apos;], function(Entity, Transition, Animation) {
-
     return Entity.extend({
 
         init: function(id, kind) {
@@ -121,7 +120,6 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
                 self.explosionAnimation.reset();
                 self.explosionAnimation.count = 1;
             });
-
         },
 
         animate: function(animation, speed, count, onEndCount) {
@@ -214,7 +212,7 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
 
             self.setOrientation(orientation);
 
-            switch(action) {
+            switch (action) {
                 case Modules.Actions.Idle:
                     self.animate(&apos;idle&apos;, self.idleSpeed);
                     break;
@@ -235,7 +233,7 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
 
         idle: function(o) {
             var self = this,
-                orientation = o ? o : self.orientation;
+                orientation = o || self.orientation;
 
             self.performAction(orientation, Modules.Actions.Idle);
         },
@@ -243,7 +241,7 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
         orientationToString: function(o) {
             var oM = Modules.Orientation;
 
-            switch(o) {
+            switch (o) {
                 case oM.Left:
                     return &apos;left&apos;;
 
@@ -276,7 +274,7 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
             this.newDestination = {
                 x: x,
                 y: y
-            }
+            };
         },
 
         /**
@@ -331,13 +329,11 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
                         stop = true;
                     else
                         self.followPath(path);
-
                 } else if (self.hasNextStep()) {
                     self.step++;
                     self.updateMovement();
                 } else
                     stop = true;
-
             } else {
                 stop = true;
                 self.interrupted = false;
@@ -417,14 +413,12 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
             if (!force)
                 self.interrupted = true;
             else if (self.hasPath()) {
-
                 self.path = null;
                 self.newDestination = null;
                 self.movement = new Transition();
                 self.performAction(self.orientation, Modules.Actions.Idle);
                 self.nextGridX = self.gridX;
                 self.nextGridY = self.gridY;
-
             }
         },
 
@@ -602,7 +596,7 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
             this._super(idleSpeed);
         },
 
-        setMaxHitPoints: function (maxHitPoints) {
+        setMaxHitPoints: function(maxHitPoints) {
             var self = this;
 
             self.maxHitPoints = maxHitPoints;
@@ -656,7 +650,6 @@ define([&apos;../entity&apos;, &apos;../../utils/transition&apos;, &apos;../anim
         }
 
     });
-
 });
 </code></pre>
 

@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/enchant.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/enchant.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,13 +36,12 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/enchant.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Items = require(&apos;../../../../util/items&apos;),
+const Items = require(&apos;../../../../util/items&apos;),
     Messages = require(&apos;../../../../network/messages&apos;),
     Packets = require(&apos;../../../../network/packets&apos;),
     Utils = require(&apos;../../../../util/utils&apos;);
 
 class Enchant {
-
     /**
      * Tier 1 - Damage/Armour boost (1-5%)
      * Tier 2 - Damage boost (1-10% &amp; 10% for special ability or special ability level up)
@@ -53,7 +52,7 @@ class Enchant {
 
 
     constructor(player) {
-        let self = this;
+        const self = this;
 
         self.player = player;
 
@@ -62,7 +61,7 @@ class Enchant {
     }
 
     add(type, item) {
-        let self = this,
+        const self = this,
             isItem = item === &apos;item&apos;;
 
         if (isItem &amp;&amp; !Items.isEnchantable(item.id))
@@ -73,9 +72,7 @@ class Enchant {
                 self.remove(&apos;item&apos;);
 
             self.selectedItem = item;
-
         } else if (type === &apos;shards&apos;) {
-
             if (self.selectedShards)
                 self.remove(&apos;shards&apos;);
 
@@ -93,13 +90,10 @@ class Enchant {
             index;
 
         if (type === &apos;item&apos; &amp;&amp; self.selectedItem) {
-
             index = self.selectedItem.index;
 
             self.selectedItem = null;
-
         } else if (type === &apos;shards&apos; &amp;&amp; self.selectedShards) {
-
             index = self.selectedShards.index;
 
 
@@ -113,12 +107,12 @@ class Enchant {
     }
 
     convert(shard) {
-        let self = this;
+        const self = this;
 
         if (!Items.isShard(shard.id) || !self.player.inventory.hasSpace())
             return;
 
-        let tier = Items.getShardTier(shard.id);
+        const tier = Items.getShardTier(shard.id);
 
         if (shard.count &lt; 11 &amp;&amp; tier &gt; 5)
             return;
@@ -136,7 +130,7 @@ class Enchant {
     }
 
     enchant() {
-        let self = this;
+        const self = this;
 
         if (!self.selectedItem) {
             self.player.notify(&apos;You have not selected an item to enchant.&apos;);
@@ -163,25 +157,26 @@ class Enchant {
          * and reason them out.
          */
 
-        let tier = self.selectedItem.tier;
+        const tier = self.selectedItem.tier;
 
         self.selectedItem.count = Utils.randomInt(1, tier === 5 ? 40 : 5 * tier);
 
         if (tier &lt; 2)
             return;
 
-        if (self.hasAbility(self.selectedItem))
+        if (self.hasAbility(self.selectedItem)) {
             if (self.selectedItem.abilityLevel &lt; 5)
                 self.selectedItem.abilityLevel++;
             else
                 self.generateAbility();
+        }
 
         self.player.inventory.remove(self.selectedShards.id, 10, self.selectedShards.index);
         self.player.sync();
     }
 
     generateAbility() {
-        let self = this,
+        const self = this,
             type = Items.getType(self.selectedItem.id),
             probability = Utils.randomInt(0, 100);
 
@@ -220,7 +215,6 @@ class Enchant {
             case &apos;boots&apos;:
 
                 break;
-
         }
     }
 
@@ -231,10 +225,10 @@ class Enchant {
     hasAbility(item) {
         return item.ability !== -1;
     }
-
 }
 
-module.exports = Enchant;</code></pre>
+module.exports = Enchant;
+</code></pre>
 
 </div>
 

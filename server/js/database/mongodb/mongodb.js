@@ -1,6 +1,6 @@
 /* global module */
 
-let MongoClient = require('mongodb').MongoClient,
+const MongoClient = require('mongodb').MongoClient,
     Loader = require('./loader'),
     Creator = require('./creator'),
     bcrypt = require('bcrypt'),
@@ -8,9 +8,8 @@ let MongoClient = require('mongodb').MongoClient,
     config = require('../../../config');
 
 class MongoDB {
-
     constructor(host, port, user, password, database) {
-        let self = this;
+        const self = this;
 
         self.host = host;
         self.port = port;
@@ -26,16 +25,16 @@ class MongoDB {
 
     getDatabase(callback, type) {
         let self = this,
-            URL= `mongodb://${self.host}:${self.port}/${self.database}`;
+            URL = `mongodb://${self.host}:${self.port}/${self.database}`;
 
-            if (config.mongoAuth)
-                URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
+        if (config.mongoAuth)
+            URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
 
-            let client = new MongoClient(URL, {
-              useUnifiedTopology: true,
-              useNewUrlParser: true,
-              wtimeout: 5
-            });
+        const client = new MongoClient(URL, {
+            useUnifiedTopology: true,
+            useNewUrlParser: true,
+            wtimeout: 5
+        });
 
         if (self.connection) {
             callback(self.connection);
@@ -49,33 +48,31 @@ class MongoDB {
 
             callback(self.connection);
         });
-
     }
 
     login(player) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) => {
-            let dataCursor = database.collection('player_data').find({ username: player.username }),
+        self.getDatabase(database => {
+            const dataCursor = database.collection('player_data').find({ username: player.username }),
                 equipmentCursor = database.collection('player_equipment').find({ username: player.username }),
                 regionsCursor = database.collection('player_regions').find({ username: player.username });
 
-            dataCursor.toArray().then((playerData) => {
-                equipmentCursor.toArray().then((equipmentData) => {
-                    regionsCursor.toArray().then((regionData) => {
-
+            dataCursor.toArray().then(playerData => {
+                equipmentCursor.toArray().then(equipmentData => {
+                    regionsCursor.toArray().then(regionData => {
                         if (playerData.length === 0)
                             self.register(player);
                         else {
-                            let playerInfo = playerData[0],
+                            const playerInfo = playerData[0],
                                 equipmentInfo = equipmentData[0],
                                 regions = regionData[0];
 
-                            playerInfo['armour'] = equipmentInfo.armour;
-                            playerInfo['weapon'] = equipmentInfo.weapon;
-                            playerInfo['pendant'] = equipmentInfo.pendant;
-                            playerInfo['ring'] = equipmentInfo.ring;
-                            playerInfo['boots'] = equipmentInfo.boots;
+                            playerInfo.armour = equipmentInfo.armour;
+                            playerInfo.weapon = equipmentInfo.weapon;
+                            playerInfo.pendant = equipmentInfo.pendant;
+                            playerInfo.ring = equipmentInfo.ring;
+                            playerInfo.boots = equipmentInfo.boots;
 
                             if (regions && regions.gameVersion === config.gver)
                                 player.regionsLoaded = regions.regions.split(',');
@@ -83,24 +80,23 @@ class MongoDB {
                             player.load(playerInfo);
                             player.intro();
                         }
-
                     });
                 });
-            })
+            });
         });
     }
 
     verify(player, callback) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) => {
-            let dataCursor = database.collection('player_data').find({ username: player.username });
+        self.getDatabase(database => {
+            const dataCursor = database.collection('player_data').find({ username: player.username });
 
-            dataCursor.toArray().then((data) => {
+            dataCursor.toArray().then(data => {
                 if (data.length === 0)
                     callback({ status: 'error' });
                 else {
-                    let info = data[0];
+                    const info = data[0];
 
                     bcrypt.compare(player.password, info.password, (error, result) => {
                         if (error) throw error;
@@ -111,18 +107,18 @@ class MongoDB {
                             callback({ status: 'error' });
                     });
                 }
-            })
+            });
         });
     }
 
     register(player) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) => {
-            let playerData = database.collection('player_data'),
+        self.getDatabase(database => {
+            const playerData = database.collection('player_data'),
                 cursor = playerData.find({ username: player.username });
 
-            cursor.toArray().then((info) => {
+            cursor.toArray().then(info => {
                 if (info.length === 0) {
                     log.info('No player data found for ' + player.username + '. Creating user.');
 
@@ -136,18 +132,18 @@ class MongoDB {
     }
 
     exists(player, callback) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) => {
-            let playerData = database.collection('player_data'),
+        self.getDatabase(database => {
+            const playerData = database.collection('player_data'),
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
-            log.info('Looking for - ' + player.email +' or ' + player.username);
+            log.info('Looking for - ' + player.email + ' or ' + player.username);
 
-            emailCursor.toArray().then((emailArray) => {
+            emailCursor.toArray().then(emailArray => {
                 if (emailArray.length === 0) {
-                    usernameCursor.toArray().then((usernameArray) => {
+                    usernameCursor.toArray().then(usernameArray => {
                         if (usernameArray.length === 0)
                             callback({ exists: false });
                         else
@@ -160,13 +156,13 @@ class MongoDB {
     }
 
     delete(player) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) => {
-            let collections = ['player_data', 'player_equipment', 'player_inventory', 'player_abilities', 'player_bank', 'player_quests', 'player_achievements'];
+        self.getDatabase(database => {
+            const collections = ['player_data', 'player_equipment', 'player_inventory', 'player_abilities', 'player_bank', 'player_quests', 'player_achievements'];
 
-            _.each(collections, (col) => {
-                let collection = database.collection(col);
+            _.each(collections, col => {
+                const collection = database.collection(col);
 
                 collection.deleteOne({
                     username: player.username
@@ -174,24 +170,21 @@ class MongoDB {
                     if (error) throw error;
 
                     if (result)
-                        log.info('Player ' + player.username + ' has been deleted.')
-                })
+                        log.info('Player ' + player.username + ' has been deleted.');
+                });
             });
         });
     }
 
     registeredCount(callback) {
+        this.getDatabase(database => {
+            const collection = database.collection('player_data');
 
-        this.getDatabase((database) => {
-            let collection = database.collection('player_data');
-
-            collection.countDocuments().then((count) => {
+            collection.countDocuments().then(count => {
                 callback(count);
             });
-
         });
     }
-
 }
 
 module.exports = MongoDB;

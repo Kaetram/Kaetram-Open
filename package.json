@@ -1,14 +1,17 @@
 {
     "name": "kaetram",
     "version": "1.1.2",
+    "private": false,
     "author": "Veradictus",
     "main": "./server/js/main.js",
-    "description": "A modern HTML5 multiplayer adventure!",
+    "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
+    "homepage": "https://kaetram.com/",
     "scripts": {
         "start": "node ./server/js/main.js",
         "format": "prettier --write \"**/*.js\"",
         "lint:client": "eslint -c ./.eslintrc-client.js \"./client/**/*.js\"",
         "lint:server": "eslint -c ./.eslintrc-server.js \"./server/**/*.js\"",
+        "docs": "esdoc",
         "build": "webpack"
     },
     "dependencies": {
@@ -30,6 +33,8 @@
         "workbox-webpack-plugin": "^4.3.1"
     },
     "devDependencies": {
+        "esdoc": "^1.1.0",
+        "esdoc-standard-plugin": "^1.0.0",
         "eslint": "^6.6.0",
         "eslint-config-google": "^0.14.0",
         "eslint-config-standard": "^14.1.0",
@@ -43,7 +48,35 @@
         "webpack": "^4.41.2",
         "webpack-cli": "^3.3.10"
     },
-    "repository": "https://github.com/Veradictus/Kaetram-Open.git",
+    "esdoc": {
+        "source": "./",
+        "destination": "./docs",
+        "excludes": [
+            "node_modules",
+            "cordova",
+            "map.js",
+            "lib/*",
+            "mapworker.js"
+        ],
+        "plugins": [
+            {
+                "name": "esdoc-standard-plugin"
+            }
+        ]
+    },
+    "eslintConfig": {},
+    "prettier": {
+        "tabWidth": 4,
+        "useTabs": false,
+        "singleQuote": true
+    },
+    "directories": {
+        "doc": "docs"
+    },
+    "repository": "git+https://github.com/Veradictus/Kaetram-Open.git",
+    "bugs": {
+        "url": "https://github.com/Veradictus/Kaetram-Open/issues"
+    },
     "keywords": [
         "html5",
         "2d",

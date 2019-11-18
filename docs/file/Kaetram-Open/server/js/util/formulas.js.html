@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/util/formulas.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/util/formulas.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/formulas.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Formulas = {},
+const Formulas = {},
     Utils = require(&apos;./utils&apos;),
     Constants = require(&apos;./constants&apos;);
 
@@ -45,15 +45,13 @@ Formulas.LevelExp = [];
 module.exports = Formulas;
 
 Formulas.getDamage = (attacker, target, special) =&gt; {
-
-    let maxDamage = Formulas.getMaxDamage(attacker, target, special),
+    const maxDamage = Formulas.getMaxDamage(attacker, target, special),
         accuracy = Utils.randomInt(0, attacker.level);
 
     return Utils.randomInt(accuracy, maxDamage);
 };
 
 Formulas.getMaxDamage = (attacker, target, special) =&gt; {
-
     if (!attacker || !target)
         return;
 
@@ -125,11 +123,9 @@ Formulas.getMaxDamage = (attacker, target, special) =&gt; {
         damage = 0;
 
     return damage;
-
 };
 
 Formulas.getCritical = (attacker, target) =&gt; {
-
     if (!attacker || !target)
         return;
 
@@ -144,17 +140,16 @@ Formulas.getCritical = (attacker, target) =&gt; {
 };
 
 Formulas.getWeaponBreak = (attacker, target) =&gt; {
-
     if (!attacker || !target)
         return;
 
-    let targetArmour = target.getArmourLevel();
+    const targetArmour = target.getArmourLevel();
 
     /**
      * The chance a weapon will break ....
      */
 
-    let breakChance = Utils.randomRange(1, 100);
+    const breakChance = Utils.randomRange(1, 100);
 
     return breakChance &gt; 75;
 };
@@ -169,45 +164,48 @@ Formulas.getAoEDamage = (attacker, target) =&gt; {
     return Formulas.getDamage(attacker, target);
 };
 
-Formulas.nextExp = (experience) =&gt; {
+Formulas.nextExp = experience =&gt; {
     if (experience &lt; 0)
         return -1;
 
-    for (let i = 1; i &lt; Formulas.LevelExp.length; i++)
+    for (let i = 1; i &lt; Formulas.LevelExp.length; i++) {
         if (experience &lt; Formulas.LevelExp[i])
             return Formulas.LevelExp[i];
+    }
 };
 
-Formulas.prevExp = (experience) =&gt; {
+Formulas.prevExp = experience =&gt; {
     if (experience &lt; 0)
         return -1;
 
-    for (let i = Constants.MAX_LEVEL; i &gt; 0; i--)
+    for (let i = Constants.MAX_LEVEL; i &gt; 0; i--) {
         if (experience &gt; Formulas.LevelExp[i])
             return Formulas.LevelExp[i];
+    }
 };
 
-Formulas.expToLevel = (experience) =&gt; {
+Formulas.expToLevel = experience =&gt; {
     if (experience &lt; 0)
         return -1;
 
-    for (let i = 1; i &lt; Formulas.LevelExp.length; i++)
+    for (let i = 1; i &lt; Formulas.LevelExp.length; i++) {
         if (experience &lt; Formulas.LevelExp[i])
             return i;
+    }
 };
 
-Formulas.getRewardExperience = (player) =&gt; {
+Formulas.getRewardExperience = player =&gt; {
     if (!player)
         return;
 
     return (5 + player.level) * player.level;
 };
 
-Formulas.getMaxHitPoints = (level) =&gt; {
+Formulas.getMaxHitPoints = level =&gt; {
     return 100 + (level * 30);
 };
 
-Formulas.getMaxMana = (level) =&gt; {
+Formulas.getMaxMana = level =&gt; {
     return 10 + (level * 8);
 };
 </code></pre>

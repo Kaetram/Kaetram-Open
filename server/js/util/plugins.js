@@ -1,6 +1,6 @@
 /* global module */
 
-let fs = require('fs'),
+const fs = require('fs'),
     Filter = /^([^\\.].*)\.js$/;
 
 function identity(val) {
@@ -8,16 +8,15 @@ function identity(val) {
 }
 
 module.exports = function requireItems(directory) {
-    let files = fs.readdirSync(directory),
+    const files = fs.readdirSync(directory),
         modules = {},
         resolve = identity;
 
-    files.forEach((file) => {
-        let match = file.match(Filter);
+    files.forEach(file => {
+        const match = file.match(Filter);
 
         if (match)
             modules[match[1]] = resolve(require(directory + file));
-
     });
 
     return modules;

@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/map/regions.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/map/regions.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,13 +36,12 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/map/regions.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let _ = require(&apos;underscore&apos;),
+const _ = require(&apos;underscore&apos;),
     map = require(&apos;../../data/map/world_server&apos;);
 
 class Regions {
-
     constructor(map) {
-        let self = this;
+        const self = this;
 
         self.map = map;
 
@@ -61,11 +60,11 @@ class Regions {
     }
 
     loadDoors() {
-        let self = this,
+        const self = this,
             doors = map.doors;
 
-        _.each(doors, (door) =&gt; {
-            let regionId = self.regionIdFromPosition(door.x, door.y),
+        _.each(doors, door =&gt; {
+            const regionId = self.regionIdFromPosition(door.x, door.y),
                 linkedRegionId = self.regionIdFromPosition(door.tx, door.ty),
                 linkedRegionPosition = self.regionIdToPosition(linkedRegionId);
 
@@ -83,49 +82,51 @@ class Regions {
     // y y x y y
 
     getAdjacentRegions(id, offset = 1) {
-        let self = this,
+        const self = this,
             position = self.regionIdToPosition(id),
             x = position.x, y = position.y;
 
-        let list = [];
+        const list = [];
 
         for (let i = -offset; i &lt;= offset; i++) // y
+        {
             for (let j = -1; j &lt;= 1; j++) // x
+            {
                 if (i &gt; -2 || i &lt; 2)
                     list.push({ x: x + j, y: y + i });
+            }
+        }
 
-        _.each(self.linkedRegions[id], (regionPosition) =&gt; {
-
-            if (!_.any(list, (regionPosition) =&gt; {
+        _.each(self.linkedRegions[id], regionPosition =&gt; {
+            if (!_.any(list, regionPosition =&gt; {
                 return regionPosition.x === x &amp;&amp; regionPosition.y === y;
             })) list.push(regionPosition);
-
         });
 
-        return _.reject(list, (regionPosition) =&gt; {
-            let gX = regionPosition.x,
+        return _.reject(list, regionPosition =&gt; {
+            const gX = regionPosition.x,
                 gY = regionPosition.y;
 
             return gX &lt; 0 || gY &lt; 0 || gX &gt;= self.regionWidth || gY &gt;= self.regionHeight;
         });
-
     }
 
     forEachRegion(callback) {
-        let self = this;
+        const self = this;
 
-        for (let x = 0; x &lt; self.regionWidth; x++)
+        for (let x = 0; x &lt; self.regionWidth; x++) {
             for (let y = 0; y &lt; self.regionHeight; y++)
-                callback(x + &apos;-&apos; + y)
+                callback(x + &apos;-&apos; + y);
+        }
     }
 
     forEachAdjacentRegion(regionId, callback, offset) {
-        let self = this;
+        const self = this;
 
         if (!regionId)
             return;
 
-        _.each(self.getAdjacentRegions(regionId, offset), (position) =&gt; {
+        _.each(self.getAdjacentRegions(regionId, offset), position =&gt; {
             callback(position.x + &apos;-&apos; + position.y);
         });
     }
@@ -135,22 +136,22 @@ class Regions {
     }
 
     regionIdToPosition(id) {
-        let position = id.split(&apos;-&apos;);
+        const position = id.split(&apos;-&apos;);
 
         return {
             x: parseInt(position[0], 10),
             y: parseInt(position[1], 10)
-        }
+        };
     }
 
     regionIdToCoordinates(id) {
-        let self = this,
+        const self = this,
             position = id.split(&apos;-&apos;);
 
         return {
             x: parseInt(position[0]) * self.zoneWidth,
             y: parseInt(position[1]) * self.zoneHeight
-        }
+        };
     }
 }
 

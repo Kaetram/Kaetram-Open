@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/thelie.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/thelie.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,26 +36,24 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/thelie.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Quest = require(&apos;../quest&apos;),
+const Quest = require(&apos;../quest&apos;),
     Packets = require(&apos;../../../../../network/packets&apos;);
 
 class Thelie extends Quest {
-
     constructor(player, data) {
         super(player, data);
 
-        let self = this;
+        const self = this;
 
         self.player = player;
         self.data = data;
     }
 
     load(stage) {
-        let self = this;
+        const self = this;
 
         super.load(stage);
     }
-
 }
 
 module.exports = Thelie;

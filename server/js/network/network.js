@@ -1,4 +1,4 @@
-let World = require('../game/world'),
+const World = require('../game/world'),
     Messages = require('./messages'),
     Packets = require('./packets'),
     Player = require('../game/entity/character/player/player'),
@@ -7,9 +7,8 @@ let World = require('../game/world'),
     _ = require('underscore');
 
 class Network {
-
     constructor(world) {
-        let self = this;
+        const self = this;
 
         self.world = world;
         self.database = world.database;
@@ -25,9 +24,9 @@ class Network {
     }
 
     load() {
-        let self = this;
+        const self = this;
 
-        self.world.onPlayerConnection((connection) => {
+        self.world.onPlayerConnection(connection => {
             self.handlePlayerConnection(connection);
         });
 
@@ -37,15 +36,15 @@ class Network {
     }
 
     parsePackets() {
-        let self = this;
+        const self = this;
 
         /**
          * This parses through the packet pool and sends them
          */
 
-        for (let id in self.packets) {
+        for (const id in self.packets) {
             if (self.packets[id].length > 0 && self.packets.hasOwnProperty(id)) {
-                let conn = self.socket.getConnection(id);
+                const conn = self.socket.getConnection(id);
 
                 if (conn) {
                     conn.send(self.packets[id]);
@@ -58,7 +57,7 @@ class Network {
     }
 
     handlePlayerConnection(connection) {
-        let self = this,
+        const self = this,
             clientId = Utils.generateClientId(),
             player = new Player(self.world, self.database, connection, clientId),
             timeDifference = new Date().getTime() - self.getSocketTime(connection);
@@ -88,7 +87,7 @@ class Network {
         this.packets[player.instance] = [];
     }
 
-    /*****************************************
+    /** ***************************************
      * Broadcasting and Socket Communication *
      *****************************************/
 
@@ -97,9 +96,9 @@ class Network {
      */
 
     pushBroadcast(message) {
-        let self = this;
+        const self = this;
 
-        _.each(self.packets, (packet) => {
+        _.each(self.packets, packet => {
             packet.push(message.serialize());
         });
     }
@@ -109,9 +108,9 @@ class Network {
      */
 
     pushSelectively(message, ignores) {
-        let self = this;
+        const self = this;
 
-        _.each(self.packets, (packet) => {
+        _.each(self.packets, packet => {
             if (ignores.indexOf(packet.id) < 0)
                 packet.push(message.serialize());
         });
@@ -131,9 +130,9 @@ class Network {
      */
 
     pushToPlayers(players, message) {
-        let self = this;
+        const self = this;
 
-        _.each(players, (playerInstance) => {
+        _.each(players, playerInstance => {
             self.pushToPlayer(self.world.getPlayerByInstance(playerInstance), message);
         });
     }
@@ -143,12 +142,12 @@ class Network {
      */
 
     pushToRegion(regionId, message, ignoreId) {
-        let self = this,
+        const self = this,
             region = self.region.regions[regionId];
 
         if (!region) return;
 
-        _.each(region.players, (playerInstance) => {
+        _.each(region.players, playerInstance => {
             if (playerInstance !== ignoreId)
                 self.pushToPlayer(self.world.getEntityByInstance(playerInstance), message);
         });
@@ -162,9 +161,9 @@ class Network {
      */
 
     pushToAdjacentRegions(regionId, message, ignoreId) {
-        let self = this;
+        const self = this;
 
-        self.map.regions.forEachAdjacentRegion(regionId, (id) => {
+        self.map.regions.forEachAdjacentRegion(regionId, id => {
             self.pushToRegion(id, message, ignoreId);
         });
     }
@@ -174,10 +173,10 @@ class Network {
      */
 
     pushToNameArray(names, message) {
-        let self = this;
+        const self = this;
 
-        _.each(names, (name) => {
-            let player = self.world.getPlayerByName(name);
+        _.each(names, name => {
+            const player = self.world.getPlayerByName(name);
 
             if (player)
                 self.pushToPlayer(player, message);
@@ -189,9 +188,9 @@ class Network {
      */
 
     pushToOldRegions(player, message) {
-        let self = this;
+        const self = this;
 
-        _.each(player.recentRegions, (id) => {
+        _.each(player.recentRegions, id => {
             self.pushToRegion(id, message);
         });
 
@@ -201,7 +200,6 @@ class Network {
     getSocketTime(connection) {
         return this.socket.ips[connection.socket.conn.remoteAddress];
     }
-
 }
 
 module.exports = Network;

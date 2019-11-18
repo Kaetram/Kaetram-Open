@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/trade.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/trade.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,34 +36,33 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/trade.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Modules = require(&apos;../../../../util/modules&apos;);
+const Modules = require(&apos;../../../../util/modules&apos;);
 
 class Trade {
-    
     constructor(player) {
-        let self = this;
-        
+        const self = this;
+
         self.player = player;
         self.oPlayer = null;
-        
+
         self.requestee = null;
-        
+
         self.state = null;
         self.subState = null;
-        
+
         self.playerItems = [];
         self.oPlayerItems = [];
     }
 
     start() {
-        let self = this;
+        const self = this;
 
         self.oPlayer = self.requestee;
         self.state = Modules.Trade.Started;
     }
 
     stop() {
-        let self = this;
+        const self = this;
 
         self.oPlayer = null;
         self.state = null;
@@ -75,13 +74,13 @@ class Trade {
     }
 
     finalize() {
-        let self = this;
+        const self = this;
 
         if (!self.player.inventory.containsSpaces(self.oPlayerItems.length))
             return;
 
-        for (let i in self.oPlayerItems) {
-            let item = self.oPlayerItems[i];
+        for (const i in self.oPlayerItems) {
+            const item = self.oPlayerItems[i];
 
             if (!item || item.id === -1)
                 continue;
@@ -92,7 +91,7 @@ class Trade {
     }
 
     select(slot) {
-        let self = this,
+        const self = this,
             item = self.player.inventory.slots[slot];
 
         if (!item || item.id === -1 || self.playerItems.indexOf(item) &lt; 0)
@@ -102,18 +101,16 @@ class Trade {
     }
 
     request(oPlayer) {
-        let self = this;
+        const self = this;
 
         self.requestee = oPlayer;
 
         if (oPlayer.trade.getRequestee() === self.player.instance)
             self.start();
-
-
     }
 
     accept() {
-        let self = this;
+        const self = this;
 
         self.subState = Modules.Trade.Accepted;
 
@@ -124,7 +121,7 @@ class Trade {
     }
 
     getRequestee() {
-        let self = this;
+        const self = this;
 
         if (!self.requestee)
             return null;
@@ -139,10 +136,10 @@ class Trade {
     isStarted() {
         return this.state !== null;
     }
-    
 }
 
-module.exports = Trade;</code></pre>
+module.exports = Trade;
+</code></pre>
 
 </div>
 

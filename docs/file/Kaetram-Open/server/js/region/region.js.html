@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/region/region.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/region/region.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -46,7 +46,6 @@ let _ = require(&apos;underscore&apos;),
     map = &apos;server/data/map/world_client.json&apos;;
 
 class Region {
-
     /**
      * Region Generation.
      * This is used in order to send the client data about the new region
@@ -56,7 +55,7 @@ class Region {
      */
 
     constructor(world) {
-        let self = this;
+        const self = this;
 
         self.map = world.map;
         self.mapRegions = world.map.regions;
@@ -75,7 +74,6 @@ class Region {
 
             if (entity instanceof Player)
                 self.sendRegion(entity, regionId);
-
         });
 
         self.onRemove((entity, oldRegions) =&gt; {
@@ -89,7 +87,6 @@ class Region {
 
             if (config.debug)
                 log.info(&apos;Entity - &apos; + entity.username + &apos; is incoming into region - &apos; + regionId);
-
         });
 
         fs.watchFile(map, () =&gt; {
@@ -102,19 +99,18 @@ class Region {
 
                 self.updateRegions();
             });
-
         });
 
         self.load();
     }
 
     load() {
-        let self = this;
+        const self = this;
 
         self.clientWidth = ClientMap.width;
         self.clientHeight = ClientMap.height;
 
-        self.mapRegions.forEachRegion((regionId) =&gt; {
+        self.mapRegions.forEachRegion(regionId =&gt; {
             self.regions[regionId] = {
                 entities: {},
                 players: [],
@@ -128,7 +124,7 @@ class Region {
     }
 
     addEntityToInstance(entity, player) {
-        let self = this;
+        const self = this;
 
         if (!entity)
             return;
@@ -139,7 +135,7 @@ class Region {
     }
 
     createInstance(player, regionId) {
-        let self = this;
+        const self = this;
 
         /**
          * We create an instance at the player&apos;s current surrounding
@@ -148,7 +144,7 @@ class Region {
 
         player.instanced = true;
 
-        self.mapRegions.forEachAdjacentRegion(regionId, (region) =&gt; {
+        self.mapRegions.forEachAdjacentRegion(regionId, region =&gt; {
             self.regions[Region.regionIdToInstance(player, region)] = {
                 entities: {},
                 players: [],
@@ -163,22 +159,21 @@ class Region {
             player: player,
             message: new Messages.Region(Packets.RegionOpcode.Update, {
                 id: player.instance,
-                type: &quot;remove&quot;
+                type: &apos;remove&apos;
             })
         });
-
     }
 
     deleteInstance(player) {
-        let self = this;
+        const self = this;
 
         player.instanced = false;
 
         self.handle(player);
         self.push(player);
 
-        self.mapRegions.forEachAdjacentRegion(player.region, (regionId) =&gt; {
-            let instancedRegion = Region.regionIdToInstance(player, regionId);
+        self.mapRegions.forEachAdjacentRegion(player.region, regionId =&gt; {
+            const instancedRegion = Region.regionIdToInstance(player, regionId);
 
             if (instancedRegion in self.regions)
                 delete self.regions[instancedRegion];
@@ -186,13 +181,12 @@ class Region {
     }
 
     parseRegions() {
-        let self = this;
+        const self = this;
 
         if (!self.loaded)
             return;
 
-        self.mapRegions.forEachRegion((regionId) =&gt; {
-
+        self.mapRegions.forEachRegion(regionId =&gt; {
             if (self.regions[regionId].incoming.length &lt; 1)
                 return;
 
@@ -203,9 +197,9 @@ class Region {
     }
 
     updateRegions() {
-        let self = this;
+        const self = this;
 
-        self.world.forEachPlayer((player) =&gt; {
+        self.world.forEachPlayer(player =&gt; {
             player.regionsLoaded = [];
 
             self.sendRegion(player, player.region, true);
@@ -213,14 +207,14 @@ class Region {
     }
 
     sendRegion(player, region, force) {
-        let self = this,
+        const self = this,
             tileData = self.getRegionData(region, player, force),
             dynamicTiles = player.doors.getAllTiles();
 
 
         // Send dynamic tiles alongside the region
         for (let i = 0; i &lt; tileData.length; i++) {
-            let primaryTile = tileData[i],
+            const primaryTile = tileData[i],
                 index = dynamicTiles.indexes.indexOf(primaryTile.index);
 
             if (index &gt; -1) {
@@ -230,7 +224,7 @@ class Region {
         }
 
         // Send dynamic tiles independently
-        if (tileData.length &lt; 1)
+        if (tileData.length &lt; 1) {
             for (let i = 0; i &lt; dynamicTiles.indexes.length; i++) {
                 tileData[i] = {};
 
@@ -238,19 +232,20 @@ class Region {
                 tileData[i].data = dynamicTiles.data[i];
                 tileData[i].isCollision = dynamicTiles.collisions[i];
             }
+        }
 
-        //No need to send empty data...
+        // No need to send empty data...
         if (tileData.length &gt; 0)
             player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
     }
 
     sendSpawns(regionId) {
-        let self = this;
+        const self = this;
 
         if (!regionId)
             return;
 
-        _.each(self.regions[regionId].incoming, (entity) =&gt; {
+        _.each(self.regions[regionId].incoming, entity =&gt; {
             if (!entity || !entity.instance || entity.instanced)
                 return;
 
@@ -258,21 +253,20 @@ class Region {
                 regionId: regionId,
                 message: new Messages.Spawn(entity),
                 ignoreId: entity.isPlayer() ? entity.instance : null
-            })
-
+            });
         });
     }
 
     add(entity, regionId) {
-        let self = this,
+        const self = this,
             newRegions = [];
 
         if (entity &amp;&amp; regionId &amp;&amp; (regionId in self.regions)) {
-            self.mapRegions.forEachAdjacentRegion(regionId, (id) =&gt; {
+            self.mapRegions.forEachAdjacentRegion(regionId, id =&gt; {
                 if (entity.instanced)
                     id = Region.regionIdToInstance(entity, id);
 
-                let region = self.regions[id];
+                const region = self.regions[id];
 
                 if (region &amp;&amp; region.entities) {
                     region.entities[entity.instance] = entity;
@@ -293,16 +287,16 @@ class Region {
     }
 
     remove(entity) {
-        let self = this,
+        const self = this,
             oldRegions = [];
 
         if (entity &amp;&amp; entity.region) {
-            let region = self.regions[entity.region];
+            const region = self.regions[entity.region];
 
             if (entity instanceof Player)
-                region.players = _.reject(region.players, (id) =&gt; { return id === entity.instance; });
+                region.players = _.reject(region.players, id =&gt; { return id === entity.instance; });
 
-            self.mapRegions.forEachAdjacentRegion(entity.region, (id) =&gt; {
+            self.mapRegions.forEachAdjacentRegion(entity.region, id =&gt; {
                 if (self.regions[id] &amp;&amp; entity.instance in self.regions[id].entities) {
                     delete self.regions[id].entities[entity.instance];
                     oldRegions.push(id);
@@ -319,12 +313,12 @@ class Region {
     }
 
     incoming(entity, regionId) {
-        let self = this;
+        const self = this;
 
         if (!entity || !regionId)
             return;
 
-        let region = self.regions[regionId];
+        const region = self.regions[regionId];
 
         if (region &amp;&amp; !_.include(region.entities, entity.instance))
             region.incoming.push(entity);
@@ -340,7 +334,7 @@ class Region {
         if (!entity)
             return regionsChanged;
 
-        let regionId = region ? region : self.mapRegions.regionIdFromPosition(entity.x, entity.y);
+        let regionId = region || self.mapRegions.regionIdFromPosition(entity.x, entity.y);
 
         if (entity.instanced)
             regionId = Region.regionIdToInstance(entity, regionId);
@@ -350,7 +344,7 @@ class Region {
 
             self.incoming(entity, regionId);
 
-            let oldRegions = self.remove(entity),
+            const oldRegions = self.remove(entity),
                 newRegions = self.add(entity, regionId);
 
             if (_.size(oldRegions) &gt; 0)
@@ -369,11 +363,11 @@ class Region {
 
         entities = _.keys(self.regions[player.region].entities);
 
-        entities = _.reject(entities, (instance) =&gt; {
-            return instance === player.instance; //TODO //|| player.isInvisible(instance);
+        entities = _.reject(entities, instance =&gt; {
+            return instance === player.instance; // TODO //|| player.isInvisible(instance);
         });
 
-        entities = _.map(entities, (instance) =&gt; {
+        entities = _.map(entities, instance =&gt; {
             return parseInt(instance);
         });
 
@@ -381,7 +375,7 @@ class Region {
     }
 
     changeTileAt(player, newTile, x, y) {
-        let self = this,
+        const self = this,
             index = self.gridPositionToIndex(x, y);
 
         player.send(Region.getModify(index, newTile));
@@ -395,8 +389,7 @@ class Region {
 
         self.world.push(Packets.PushOpcode.Broadcast, {
             message: Region.getModify(index, newTile)
-        })
-
+        });
     }
 
     getRegionData(region, player, force) {
@@ -406,19 +399,19 @@ class Region {
         if (!player)
             return data;
 
-        self.mapRegions.forEachAdjacentRegion(region, (regionId) =&gt; {
+        self.mapRegions.forEachAdjacentRegion(region, regionId =&gt; {
             if (!player.hasLoadedRegion(regionId) || force) {
                 player.loadRegion(regionId);
 
-                let bounds = self.getRegionBounds(regionId);
+                const bounds = self.getRegionBounds(regionId);
 
                 for (let i = 0, y = bounds.startY; y &lt;= bounds.endY; y++, i++) {
                     for (let x = bounds.startX; x &lt; bounds.endX; x++) {
-                        let index = self.gridPositionToIndex(x - 1, y),
+                        const index = self.gridPositionToIndex(x - 1, y),
                             tileData = ClientMap.data[index],
                             isCollision = ClientMap.collisions.indexOf(index) &gt; -1 || !tileData;
 
-                        data.push({index: index, data: tileData, isCollision: isCollision});
+                        data.push({ index: index, data: tileData, isCollision: isCollision });
                     }
                 }
             }
@@ -428,7 +421,7 @@ class Region {
     }
 
     getRegionBounds(regionId) {
-        let self = this,
+        const self = this,
             regionCoordinates = self.mapRegions.regionIdToCoordinates(regionId);
 
         return {
@@ -436,18 +429,18 @@ class Region {
             startY: regionCoordinates.y,
             endX: regionCoordinates.x + self.mapRegions.zoneWidth,
             endY: regionCoordinates.y + self.mapRegions.zoneHeight
-        }
+        };
     }
 
     static getModify(index, newTile) {
         return new Messages.Region(Packets.RegionOpcode.Modify, {
-           index: index,
-           newTile: newTile
+            index: index,
+            newTile: newTile
         });
     }
 
     static instanceToRegionId(instancedRegionId) {
-        let region = instancedRegionId.split(&apos;-&apos;);
+        const region = instancedRegionId.split(&apos;-&apos;);
 
         return region[0] + &apos;-&apos; + region[1];
     }

@@ -1,6 +1,6 @@
 /* global module */
 
-let _ = require('underscore'),
+const _ = require('underscore'),
     Container = require('../container'),
     Messages = require('../../../../../../network/messages'),
     Packets = require('../../../../../../network/packets'),
@@ -8,7 +8,6 @@ let _ = require('underscore'),
     Items = require('../../../../../../util/items');
 
 class Inventory extends Container {
-
     constructor(owner, size) {
         super('Inventory', owner, size);
     }
@@ -20,12 +19,12 @@ class Inventory extends Container {
     }
 
     add(item, count) {
-        let self = this;
+        const self = this;
 
         if (!count)
             count = -1;
 
-        if (count === -1)  //default to moving whole stack
+        if (count === -1) // default to moving whole stack
             count = parseInt(item.count);
 
         if (!self.canHold(item.id, count)) {
@@ -33,7 +32,7 @@ class Inventory extends Container {
             return false;
         }
 
-        let slot = super.add(item.id, count, item.ability, item.abilityLevel);
+        const slot = super.add(item.id, count, item.ability, item.abilityLevel);
 
         if (!slot)
             return false;
@@ -49,7 +48,7 @@ class Inventory extends Container {
     }
 
     remove(id, count, index) {
-        let self = this;
+        const self = this;
 
         if (!id || !count)
             return false;
@@ -69,7 +68,6 @@ class Inventory extends Container {
 
         return true;
     }
-
 }
 
 module.exports = Inventory;

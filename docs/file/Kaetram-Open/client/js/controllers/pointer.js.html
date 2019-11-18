@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/controllers/pointer.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/controllers/pointer.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -35,7 +35,6 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/controllers/pointer.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;, &apos;../renderer/pointers/pointer&apos;], function($, Pointer) {
-
     return Class.extend({
 
         init: function(game) {
@@ -56,7 +55,6 @@
                 return;
 
             switch (type) {
-
                 case Modules.Pointers.Button:
 
                     self.pointers[id] = new Pointer(id, $(&apos;#&apos; + name), type);
@@ -65,7 +63,7 @@
 
                 default:
 
-                    var element = $(&apos;&lt;div id=&quot;&apos; + id +&apos;&quot; class=&quot;pointer&quot;&gt;&lt;/div&gt;&apos;);
+                    var element = $(&apos;&lt;div id=&quot;&apos; + id + &apos;&quot; class=&quot;pointer&quot;&gt;&lt;/div&gt;&apos;);
 
                     self.setSize(element);
 
@@ -75,16 +73,13 @@
 
                     break;
             }
-
         },
 
         resize: function() {
             var self = this;
 
             _.each(self.pointers, function(pointer) {
-
                 switch (pointer.type) {
-
                     case Modules.Pointers.Relative:
 
                         var scale = self.getScale(),
@@ -98,7 +93,6 @@
 
                         break;
                 }
-
             });
         },
 
@@ -135,7 +129,7 @@
 
             self.updateCamera();
 
-            var tileSize = 48, //16 * self.scale
+            var tileSize = 48, // 16 * self.scale
                 x = ((posX - self.camera.x) * self.scale),
                 width = parseInt(pointer.element.css(&apos;width&apos;) + 24),
                 offset = (width / 2) - (tileSize / 2), y, outX, outY;
@@ -153,41 +147,34 @@
 
                 pointer.element.css(&apos;transform&apos;, &apos;rotate(-90deg)&apos;);
             } else if (outY &gt;= 1.5) { // bottom
-
                 pointer.element.css(&apos;left&apos;, &apos;50%&apos;);
                 pointer.element.css(&apos;right&apos;, &apos;&apos;);
                 pointer.element.css(&apos;top&apos;, &apos;&apos;);
                 pointer.element.css(&apos;bottom&apos;, &apos;0&apos;);
 
                 pointer.element.css(&apos;transform&apos;, &apos;&apos;);
-
             } else if (outX &lt;= 0) { // left
-
                 pointer.element.css(&apos;left&apos;, &apos;0&apos;);
                 pointer.element.css(&apos;right&apos;, &apos;&apos;);
                 pointer.element.css(&apos;top&apos;, &apos;50%&apos;);
                 pointer.element.css(&apos;bottom&apos;, &apos;&apos;);
 
                 pointer.element.css(&apos;transform&apos;, &apos;rotate(90deg)&apos;);
-
             } else if (outY &lt;= 0) { // top
-
                 pointer.element.css(&apos;left&apos;, &apos;&apos;);
                 pointer.element.css(&apos;right&apos;, &apos;50%&apos;);
                 pointer.element.css(&apos;top&apos;, &apos;0&apos;);
                 pointer.element.css(&apos;bottom&apos;, &apos;&apos;);
 
                 pointer.element.css(&apos;transform&apos;, &apos;rotate(180deg)&apos;);
-
             } else {
                 pointer.element.css(&apos;left&apos;, (x - offset) + &apos;px&apos;);
                 pointer.element.css(&apos;right&apos;, &apos;&apos;);
-                pointer.element.css(&apos;top&apos; , y + &apos;px&apos;);
+                pointer.element.css(&apos;top&apos;, y + &apos;px&apos;);
                 pointer.element.css(&apos;bottom&apos;, &apos;&apos;);
 
                 pointer.element.css(&apos;transform&apos;, &apos;&apos;);
             }
-
         },
 
         setToEntity: function(entity) {
@@ -233,7 +220,6 @@
             var self = this;
 
             _.each(self.pointers, function(pointer) {
-
                 switch (pointer.type) {
                     case Modules.Pointers.Entity:
 
@@ -253,7 +239,6 @@
 
                         break;
                 }
-
             });
         },
 
@@ -271,11 +256,10 @@
         },
 
         getScale: function() {
-            return this.game.getScaleFactor(); //always 3
+            return this.game.getScaleFactor(); // always 3
         }
 
     });
-
 });
 </code></pre>
 

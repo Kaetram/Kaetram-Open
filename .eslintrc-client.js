@@ -33,6 +33,17 @@ module.exports = {
         'no-useless-constructor': 0,
 
         // Remove this if you want to add documentation to all files
-        'require-jsdoc': 0
+        'require-jsdoc': [
+            'error',
+            {
+                require: {
+                    FunctionDeclaration: false,
+                    MethodDefinition: false,
+                    ClassDeclaration: false,
+                    ArrowFunctionExpression: false,
+                    FunctionExpression: false
+                }
+            }
+        ]
     }
 };

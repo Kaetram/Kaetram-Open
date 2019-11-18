@@ -1,15 +1,14 @@
 /* global module */
 
-let Points = require('./points');
+const Points = require('./points');
 
 class HitPoints extends Points {
-
     constructor(hitPoints, maxHitPoints) {
         super(hitPoints, maxHitPoints);
     }
 
     setHitPoints(hitPoints) {
-        let self = this;
+        const self = this;
 
         super.setPoints(hitPoints);
 
@@ -18,7 +17,7 @@ class HitPoints extends Points {
     }
 
     setMaxHitPoints(maxHitPoints) {
-        let self = this;
+        const self = this;
 
         super.setMaxPoints(maxHitPoints);
 
@@ -41,7 +40,6 @@ class HitPoints extends Points {
     onMaxHitPoints(callback) {
         return this.maxHitPointsCallback = callback;
     }
-
 }
 
 module.exports = HitPoints;

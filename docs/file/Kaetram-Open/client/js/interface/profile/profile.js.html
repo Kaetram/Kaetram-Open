@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/interface/profile/profile.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/interface/profile/profile.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -37,7 +37,6 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global log, _, Packets */
 
 define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apos;, &apos;./pages/settings&apos;, &apos;./pages/quest&apos;], function($, State, Ability, Settings, Quest) {
-
     return Class.extend({
 
         init: function(game) {
@@ -62,14 +61,12 @@ define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apo
             var self = this;
 
             self.button.click(function() {
-
                 self.game.interface.hideAll();
                 self.settings.hide();
 
                 if (self.isVisible()) {
                     self.hide();
                     self.button.removeClass(&apos;active&apos;);
-
                 } else {
                     self.show();
                     self.button.addClass(&apos;active&apos;);
@@ -79,7 +76,6 @@ define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apo
                     self.activePage.load();
 
                 self.game.socket.send(Packets.Click, [&apos;profile&apos;, self.button.hasClass(&apos;active&apos;)]);
-
             });
 
             self.next.click(function() {
@@ -174,7 +170,6 @@ define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apo
         }
 
     });
-
 });
 </code></pre>
 

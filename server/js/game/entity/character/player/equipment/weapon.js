@@ -1,15 +1,14 @@
 /* global module */
 
-let Equipment = require('./equipment'),
+const Equipment = require('./equipment'),
     Items = require('../../../../../util/items'),
     Modules = require('../../../../../util/modules');
 
 class Weapon extends Equipment {
-
     constructor(name, id, count, ability, abilityLevel) {
         super(name, id, count, ability, abilityLevel);
 
-        let self = this;
+        const self = this;
 
         self.level = Items.getWeaponLevel(name);
         self.ranged = Items.isArcherWeapon(name);
@@ -30,7 +29,7 @@ class Weapon extends Equipment {
     }
 
     isRanged() {
-        return this.ranged
+        return this.ranged;
     }
 
     setLevel(level) {
@@ -44,7 +43,6 @@ class Weapon extends Equipment {
     getType() {
         return Modules.Equipment.Weapon;
     }
-
 }
 
 module.exports = Weapon;

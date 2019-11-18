@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/util/parser.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/util/parser.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/parser.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let _ = require(&apos;underscore&apos;),
+const _ = require(&apos;underscore&apos;),
     NPCData = require(&apos;../../data/npcs&apos;),
     ItemData = require(&apos;../../data/items&apos;),
     MobData = require(&apos;../../data/mobs&apos;),
@@ -51,9 +51,8 @@ let _ = require(&apos;underscore&apos;),
     Constants = require(&apos;./constants&apos;);
 
 class Parser {
-
     constructor() {
-        let self = this;
+        const self = this;
 
         self.loadMobData();
         self.loadNPCData();
@@ -88,7 +87,7 @@ class Parser {
                 projectileName: value.projectileName ? value.projectileName : null,
                 spawnDelay: value.spawnDelay ? value.spawnDelay : 60000,
                 combatPlugin: value.combatPlugin ? value.combatPlugin : null,
-                hiddenName: value.hiddenName ? value.hiddenName: false
+                hiddenName: value.hiddenName ? value.hiddenName : false
             };
 
             Mobs.Ids[value.id] = Mobs.Properties[key];
@@ -96,7 +95,7 @@ class Parser {
             mobCounter++;
         });
 
-        Mobs.Plugins = require (&apos;../util/plugins&apos;)(__dirname + &apos;/../../data/combat/&apos;);
+        Mobs.Plugins = require(&apos;../util/plugins&apos;)(__dirname + &apos;/../../data/combat/&apos;);
 
         log.info(&apos;Finished loading &apos; + mobCounter + &apos; mobs.&apos;);
         log.info(&apos;Loaded &apos; + Object.keys(Mobs.Plugins).length + &apos; combat plugins.&apos;);
@@ -158,7 +157,7 @@ class Parser {
         });
 
 
-        Items.Plugins = require (&apos;../util/plugins&apos;)(__dirname + &apos;/../../data/items/&apos;);
+        Items.Plugins = require(&apos;../util/plugins&apos;)(__dirname + &apos;/../../data/items/&apos;);
 
         log.info(&apos;Finished loading &apos; + itemCounter + &apos; items.&apos;);
         log.info(&apos;Loaded &apos; + Object.keys(Items.Plugins).length + &apos; item plugins.&apos;);
@@ -183,7 +182,7 @@ class Parser {
             skillCounter++;
         });
 
-        log.info(&apos;Finished loading &apos; + skillCounter + &apos; skills.&apos;)
+        log.info(&apos;Finished loading &apos; + skillCounter + &apos; skills.&apos;);
     }
 
     loadShops() {
@@ -215,7 +214,7 @@ class Parser {
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i &lt; Constants.MAX_LEVEL; i++) {
-            let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
+            const points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
     }

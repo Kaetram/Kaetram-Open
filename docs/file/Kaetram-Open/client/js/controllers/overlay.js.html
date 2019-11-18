@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/controllers/overlay.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/controllers/overlay.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -35,7 +35,6 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/controllers/overlay.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;], function($) {
-
     return Class.extend({
 
         init: function(input) {
@@ -72,24 +71,18 @@
             self.name.html(entity.type === &apos;player&apos; ? entity.username : entity.name);
 
             if (self.hasHealth()) {
-
                 self.health.css({
                     &apos;display&apos;: &apos;block&apos;,
                     &apos;width&apos;: Math.ceil(entity.hitPoints / entity.maxHitPoints * 100) - 10 + &apos;%&apos;
                 });
 
                 self.details.html(entity.hitPoints + &apos; / &apos; + entity.maxHitPoints);
-
             } else {
-
                 self.health.css(&apos;display&apos;, &apos;none&apos;);
                 self.details.html(&apos;&apos;);
-
             }
 
             self.onUpdate(function(entityId, hitPoints) {
-
-
                 if (self.hovering &amp;&amp; self.hovering.id === entityId &amp;&amp; self.hovering.type !== &apos;npc&apos; &amp;&amp; self.hovering.type !== &apos;item&apos;) {
                     if (hitPoints &lt; 1)
                         self.hide();
@@ -97,10 +90,8 @@
                         self.health.css(&apos;width&apos;, Math.ceil(hitPoints / self.hovering.maxHitPoints * 100) - 10 + &apos;%&apos;);
                         self.details.html(hitPoints + &apos; / &apos; + self.hovering.maxHitPoints);
                     }
-
                 }
             });
-
         },
 
         validEntity: function(entity) {
@@ -122,7 +113,7 @@
             this.attackInfo.fadeIn(&apos;fast&apos;);
         },
 
-        hide: function(){
+        hide: function() {
             this.attackInfo.fadeOut(&apos;fast&apos;);
         },
 
@@ -139,8 +130,8 @@
         }
 
     });
-
-});</code></pre>
+});
+</code></pre>
 
 </div>
 

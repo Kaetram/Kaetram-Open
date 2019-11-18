@@ -1,13 +1,12 @@
 /* global module */
 
-let Mobs = require('../../util/mobs'),
+const Mobs = require('../../util/mobs'),
     Items = require('../../util/items'),
     NPCs = require('../../util/npcs');
 
 class Entity {
-
     constructor(id, type, instance, x, y) {
-        let self = this;
+        const self = this;
 
         self.id = id;
         self.type = type;
@@ -37,7 +36,7 @@ class Entity {
     }
 
     getDistance(entity) {
-        let self = this,
+        const self = this,
             x = Math.abs(self.x - entity.x),
             y = Math.abs(self.y - entity.y);
 
@@ -45,7 +44,7 @@ class Entity {
     }
 
     getCoordDistance(toX, toY) {
-        let self = this,
+        const self = this,
             x = Math.abs(self.x - toX),
             y = Math.abs(self.y - toY);
 
@@ -53,7 +52,7 @@ class Entity {
     }
 
     setPosition(x, y) {
-        let self = this;
+        const self = this;
 
         self.x = x;
         self.y = y;
@@ -63,7 +62,7 @@ class Entity {
     }
 
     updatePosition() {
-        let self = this;
+        const self = this;
 
         self.oldX = self.x;
         self.oldY = self.y;
@@ -76,7 +75,7 @@ class Entity {
      */
 
     isNear(entity, distance) {
-        let self = this,
+        const self = this,
             dx = Math.abs(self.x - entity.x),
             dy = Math.abs(self.y - entity.y);
 
@@ -128,7 +127,7 @@ class Entity {
     }
 
     removeInvisibleId(entityId) {
-        let self = this,
+        const self = this,
             index = self.invisiblesIds.indexOf(entityId);
 
         if (index > -1)
@@ -148,7 +147,7 @@ class Entity {
     }
 
     getState() {
-        let self = this,
+        const self = this,
             string = self.isMob() ? Mobs.idToString(self.id) : (self.isNPC() ? NPCs.idToString(self.id) : Items.idToString(self.id)),
             name = self.isMob() ? Mobs.idToName(self.id) : (self.isNPC() ? NPCs.idToName(self.id) : Items.idToName(self.id));
 
@@ -159,9 +158,8 @@ class Entity {
             name: name,
             x: self.x,
             y: self.y
-        }
+        };
     }
-
 }
 
 module.exports = Entity;

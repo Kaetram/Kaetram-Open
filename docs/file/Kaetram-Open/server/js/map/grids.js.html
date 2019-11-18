@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/map/grids.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/map/grids.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,12 +36,11 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/map/grids.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let _ = require(&apos;underscore&apos;);
+const _ = require(&apos;underscore&apos;);
 
 class Grids {
-
     constructor(map) {
-        let self = this;
+        const self = this;
 
         self.map = map;
 
@@ -51,7 +50,7 @@ class Grids {
     }
 
     load() {
-        let self = this;
+        const self = this;
 
         for (let i = 0; i &lt; self.map.height; i++) {
             self.entityGrid[i] = [];
@@ -62,7 +61,7 @@ class Grids {
     }
 
     updateEntityPosition(entity) {
-        let self = this;
+        const self = this;
 
         if (entity &amp;&amp; entity.oldX === entity.x &amp;&amp; entity.oldY === entity.y)
             return;
@@ -74,39 +73,36 @@ class Grids {
     }
 
     addToEntityGrid(entity, x, y) {
-        let self = this;
+        const self = this;
 
         if (entity &amp;&amp; x &gt; 0 &amp;&amp; y &gt; 0 &amp;&amp; x &lt; self.map.width &amp;&amp; x &lt; self.map.height &amp;&amp; self.entityGrid[y][x])
             self.entityGrid[y][x][entity.instance] = entity;
     }
 
     removeFromEntityGrid(entity, x, y) {
-        let self = this;
+        const self = this;
 
         if (entity &amp;&amp; x &gt; 0 &amp;&amp; y &gt; 0 &amp;&amp; x &lt; self.map.width &amp;&amp; y &lt; self.map.height &amp;&amp; self.entityGrid[y][x] &amp;&amp; entity.instance in self.entityGrid[y][x])
             delete self.entityGrid[y][x][entity.instance];
     }
 
     getSurroundingEntities(entity, radius, include) {
-        let self = this,
+        const self = this,
             entities = [];
 
         if (!self.checkBounds(entity.x, entity.y, radius))
             return;
 
         for (let i = -radius; i &lt; radius + 1; i++) {
-
             for (let j = -radius; j &lt; radius + 1; j++) {
-                let pos = self.entityGrid[entity.y + i][entity.x + j];
+                const pos = self.entityGrid[entity.y + i][entity.x + j];
 
                 if (_.size(pos) &gt; 0) {
-                    _.each(pos,  (pEntity) =&gt; {
-
+                    _.each(pos, pEntity =&gt; {
                         if (!include &amp;&amp; pEntity.instance !== entity.instance)
                             entities.push(pEntity);
                     });
                 }
-
             }
         }
 
@@ -116,10 +112,10 @@ class Grids {
     checkBounds(x, y, radius) {
         return x + radius &lt; this.map.width &amp;&amp; x - radius &gt; 0 &amp;&amp; y + radius &lt; this.map.height &amp;&amp; y - radius &gt; 0;
     }
-
 }
 
-module.exports = Grids;</code></pre>
+module.exports = Grids;
+</code></pre>
 
 </div>
 

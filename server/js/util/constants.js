@@ -1,6 +1,6 @@
 /* global module */
 
-let Constants = {
+const Constants = {
     MAX_STACK: 2147483646,
     MAX_LEVEL: 135
 };

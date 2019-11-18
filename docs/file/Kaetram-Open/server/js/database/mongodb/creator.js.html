@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/database/mongodb/creator.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/database/mongodb/creator.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,20 +36,19 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/database/mongodb/creator.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let bcrypt = require(&apos;bcrypt&apos;),
+const bcrypt = require(&apos;bcrypt&apos;),
     config = require(&apos;../../../config&apos;);
 
 class Creator {
-
     constructor(database) {
         this.database = database;
     }
 
     save(player) {
-        let self = this;
+        const self = this;
 
-        self.database.getDatabase((database) =&gt; {
-            let playerData = database.collection(&apos;player_data&apos;),
+        self.database.getDatabase(database =&gt; {
+            const playerData = database.collection(&apos;player_data&apos;),
                 playerEquipment = database.collection(&apos;player_equipment&apos;),
                 playerQuests = database.collection(&apos;player_quests&apos;),
                 playerAchievements = database.collection(&apos;player_achievements&apos;),
@@ -72,7 +71,7 @@ class Creator {
     }
 
     savePlayerData(collection, player) {
-        Creator.getPlayerData(player, (data) =&gt; {
+        Creator.getPlayerData(player, data =&gt; {
             collection.updateOne({
                 username: player.username
             }, { $set: data }, {
@@ -113,7 +112,6 @@ class Creator {
             if (result)
                 log.debug(&apos;Player &apos; + player.username + &apos; quest data has been saved successfully.&apos;);
         });
-
     }
 
     savePlayerAchievements(collection, player) {
@@ -128,7 +126,6 @@ class Creator {
             if (result)
                 log.debug(&apos;Player &apos; + player.username + &apos; achievement data has been saved successfully.&apos;);
         });
-
     }
 
     savePlayerBank(collection, player) {
@@ -191,11 +188,11 @@ class Creator {
             if (error) throw error;
 
             callback(hash);
-        })
+        });
     }
 
     static getPlayerData(player, callback) {
-        Creator.getPasswordHash(player.password, (hash) =&gt; {
+        Creator.getPasswordHash(player.password, hash =&gt; {
             callback({
                 username: player.username,
                 password: hash,
@@ -220,7 +217,7 @@ class Creator {
                 guildName: player.guildName,
                 invisibleIds: player.formatInvisibles(),
                 userAgent: player.userAgent
-            })
+            });
         });
     }
 
@@ -232,7 +229,7 @@ class Creator {
             pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : 0, player.pendant ? player.pendant.getAbility() : 0, player.pendant ? player.pendant.getAbilityLevel() : 0],
             ring: [player.ring ? player.ring.getId() : -1, player.ring ? player.ring.getCount() : 0, player.ring ? player.ring.getAbility() : 0, player.ring ? player.ring.getAbilityLevel() : 0],
             boots: [player.boots ? player.boots.getId() : -1, player.boots ? player.boots.getCount() : 0, player.boots ? player.boots.getAbility() : 0, player.boots ? player.boots.getAbilityLevel() : 0]
-        }
+        };
     }
 
     /**
@@ -242,7 +239,7 @@ class Creator {
      */
 
     static getFullData(player) {
-        let position = player.getSpawn();
+        const position = player.getSpawn();
 
         return {
             username: player.username,
@@ -270,9 +267,8 @@ class Creator {
             pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : 0, player.pendant ? player.pendant.getAbility() : 0, player.pendant ? player.pendant.getAbilityLevel() : 0],
             ring: [player.ring ? player.ring.getId() : -1, player.ring ? player.ring.getCount() : 0, player.ring ? player.ring.getAbility() : 0, player.ring ? player.ring.getAbilityLevel() : 0],
             boots: [player.boots ? player.boots.getId() : -1, player.boots ? player.boots.getCount() : 0, player.boots ? player.boots.getAbility() : 0, player.boots ? player.boots.getAbilityLevel() : 0]
-        }
+        };
     }
-
 }
 
 module.exports = Creator;

@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/util/shops.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/util/shops.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,43 +36,42 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/shops.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Shops = {},
+const Shops = {},
     _ = require(&apos;underscore&apos;);
 
 Shops.Data = {};
 Shops.Ids = {};
 
-Shops.isShopNPC = (npcId) =&gt; {
+Shops.isShopNPC = npcId =&gt; {
     return npcId in Shops.Ids;
 };
 
-Shops.getItems = (npcId) =&gt; {
+Shops.getItems = npcId =&gt; {
     return Shops.Ids[npcId].items;
 };
 
-Shops.shopIdToNPC = (shopId) =&gt; {
+Shops.shopIdToNPC = shopId =&gt; {
     return Shops.Data[shopId].npcId;
 };
 
-Shops.getItemCount = (id) =&gt; {
+Shops.getItemCount = id =&gt; {
     return Shops.getItems(id).length;
 };
 
 Shops.increment = (shopId, itemId, count) =&gt; {
-    let shop = Shops.Ids[shopId],
+    const shop = Shops.Ids[shopId],
         index = shop.items.indexOf(itemId);
 
     if (index &lt; 0)
         return;
 
-    let shopData = Shops.Data[shop.key];
+    const shopData = Shops.Data[shop.key];
 
     shopData.count[index] += count;
-
 };
 
 Shops.decrement = (npcId, buyId, count) =&gt; {
-    let shop = Shops.Ids[npcId];
+    const shop = Shops.Ids[npcId];
 
     if (!buyId || buyId &lt; 0)
         return;
@@ -90,7 +89,7 @@ Shops.getCost = (npcId, buyId, count) =&gt; {
      * spice up the game.
      */
 
-    let shop = Shops.Ids[npcId];
+    const shop = Shops.Ids[npcId];
 
     if (!shop || !buyId || buyId &lt; 0)
         return;
@@ -99,7 +98,7 @@ Shops.getCost = (npcId, buyId, count) =&gt; {
 };
 
 Shops.getStock = (npcId, buyId) =&gt; {
-    let shop = Shops.Ids[npcId];
+    const shop = Shops.Ids[npcId];
 
     if (!shop || !buyId || buyId &lt; 0)
         return null;
@@ -108,7 +107,7 @@ Shops.getStock = (npcId, buyId) =&gt; {
 };
 
 Shops.getOriginalStock = (shopId, buyId) =&gt; {
-    let shop = Shops.Ids[shopId];
+    const shop = Shops.Ids[shopId];
 
     if (!buyId || buyId &lt; 0)
         return;
@@ -116,8 +115,8 @@ Shops.getOriginalStock = (shopId, buyId) =&gt; {
     return shop.originalCount[buyId];
 };
 
-Shops.getCount = (npcId) =&gt; {
-    let count = Shops.Ids[npcId].count,
+Shops.getCount = npcId =&gt; {
+    const count = Shops.Ids[npcId].count,
         counts = [];
 
     if (_.isArray(count))

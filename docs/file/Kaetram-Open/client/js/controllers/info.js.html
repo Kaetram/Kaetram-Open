@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/controllers/info.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/controllers/info.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -37,7 +37,6 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global _, Modules */
 
 define([&apos;../utils/queue&apos;, &apos;../renderer/infos/splat&apos;], function(Queue, Splat) {
-
     return Class.extend({
 
         init: function(game) {
@@ -75,28 +74,28 @@ define([&apos;../utils/queue&apos;, &apos;../renderer/infos/splat&apos;], functi
                 case Modules.Hits.Heal:
                 case Modules.Hits.Mana:
                 case Modules.Hits.Experience:
-                        var amount = data.shift(),
-                            id = self.generateId(self.game.time, amount, x, y),
-                            text = &apos;+&apos;, colour;
+                    var amount = data.shift(),
+                        id = self.generateId(self.game.time, amount, x, y),
+                        text = &apos;+&apos;, colour;
 
-                        if (amount &lt; 1 || !isInt(amount))
-                            return;
+                    if (amount &lt; 1 || !isInt(amount))
+                        return;
 
-                        if (type !== Modules.Hits.Experience)
-                            text = &apos;++&apos;;
+                    if (type !== Modules.Hits.Experience)
+                        text = &apos;++&apos;;
 
-                        var splat = new Splat(id, type, text + amount, x, y, false);
+                    var splat = new Splat(id, type, text + amount, x, y, false);
 
-                        if (type === Modules.Hits.Heal)
-                            colour = Modules.DamageColours.healed;
-                        else if (type === Modules.Hits.Mana)
-                            colour = Modules.DamageColours.mana;
-                        else if (type === Modules.Hits.Experience)
-                            colour = Modules.DamageColours.exp;
+                    if (type === Modules.Hits.Heal)
+                        colour = Modules.DamageColours.healed;
+                    else if (type === Modules.Hits.Mana)
+                        colour = Modules.DamageColours.mana;
+                    else if (type === Modules.Hits.Experience)
+                        colour = Modules.DamageColours.exp;
 
-                        splat.setColours(colour.fill, colour.stroke);
+                    splat.setColours(colour.fill, colour.stroke);
 
-                        self.addInfo(splat);
+                    self.addInfo(splat);
 
                     break;
 
@@ -110,7 +109,6 @@ define([&apos;../utils/queue&apos;, &apos;../renderer/infos/splat&apos;], functi
                     self.addInfo(levelSplat);
 
                     break;
-
             }
         },
 
@@ -153,8 +151,8 @@ define([&apos;../utils/queue&apos;, &apos;../renderer/infos/splat&apos;], functi
         }
 
     });
-
-});</code></pre>
+});
+</code></pre>
 
 </div>
 

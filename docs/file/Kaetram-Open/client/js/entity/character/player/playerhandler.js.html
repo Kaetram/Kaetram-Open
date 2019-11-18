@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/entity/character/player/playerhandler.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/entity/character/player/playerhandler.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -37,7 +37,6 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global log, Packets, Modules */
 
 define(function() {
-
     /**
      * This is a player handler, responsible for all the callbacks
      * without having to clutter up the entire game file.
@@ -117,7 +116,6 @@ define(function() {
                 self.input.setPassiveTarget();
 
                 self.game.storage.setOrientation(self.player.orientation);
-
             });
 
             self.player.onBeforeStep(function() {
@@ -143,7 +141,6 @@ define(function() {
                     self.checkBounds();
 
                 self.player.forEachAttacker(function(attacker) {
-
                     if (!attacker.stunned)
                         attacker.follow(self.player);
                 });
@@ -165,13 +162,11 @@ define(function() {
 
                 if (self.player.hasTarget())
                     self.player.follow(self.player.target);
-
             });
 
             self.player.onUpdateArmour(function(armourName) {
                 self.player.setSprite(self.game.getSprite(armourName));
             });
-
         },
 
         isAttackable: function() {
@@ -203,11 +198,9 @@ define(function() {
                 self.camera.zone(self.game.zoning.getDirection());
                 self.game.zoning.reset();
             }
-
         }
 
     });
-
 });
 </code></pre>
 

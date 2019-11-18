@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/interface/actions.js | kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/actions.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global _, log */
+
+define([&apos;jquery&apos;], function($) {
+    return Class.extend({
+
+        init: function(intrfce) {
+            var self = this;
+
+            self.interface = intrfce;
+
+            self.body = $(&apos;#actionContainer&apos;);
+            self.drop = $(&apos;#dropDialog&apos;);
+            self.dropInput = $(&apos;#dropCount&apos;);
+
+            self.pBody = $(&apos;#pActions&apos;);
+            self.follow = $(&apos;#follow&apos;);
+            self.trade = $(&apos;#tradeAction&apos;);
+
+            self.activeClass = null;
+
+            self.miscButton = null;
+
+            self.load();
+        },
+
+        load: function() {
+            var self = this,
+                dropAccept = $(&apos;#dropAccept&apos;),
+                dropCancel = $(&apos;#dropCancel&apos;);
+
+            dropAccept.click(function(event) {
+                if (self.activeClass === &apos;inventory&apos;)
+                    self.interface.inventory.clickAction(event);
+            });
+
+            dropCancel.click(function(event) {
+                if (self.activeClass === &apos;inventory&apos;)
+                    self.interface.inventory.clickAction(event);
+            });
+        },
+
+        loadDefaults: function(activeClass) {
+            var self = this;
+
+            self.activeClass = activeClass;
+
+            switch (self.activeClass) {
+                case &apos;inventory&apos;:
+                    var dropButton = $(&apos;&lt;div id=&quot;drop&quot; class=&quot;actionButton&quot;&gt;Drop&lt;/div&gt;&apos;);
+
+                    self.add(dropButton);
+
+                    break;
+
+                case &apos;profile&apos;:
+
+                    break;
+            }
+        },
+
+        add: function(button, misc) {
+            var self = this;
+
+            self.body.find(&apos;ul&apos;).prepend($(&apos;&lt;li&gt;&lt;/li&gt;&apos;).append(button));
+
+            button.click(function(event) {
+                if (self.activeClass === &apos;inventory&apos;)
+                    self.interface.inventory.clickAction(event);
+            });
+
+            if (misc)
+                self.miscButton = button;
+        },
+
+        removeMisc: function() {
+            var self = this;
+
+            self.miscButton.remove();
+            self.miscButton = null;
+        },
+
+        reset: function() {
+            var self = this,
+                buttons = self.getButtons();
+
+            for (var i = 0; i &lt; buttons.length; i++)
+                $(buttons[i]).remove();
+        },
+
+        show: function() {
+            this.body.fadeIn(&apos;fast&apos;);
+        },
+
+        showPlayerActions: function(player, mouseX, mouseY) {
+            var self = this;
+
+            if (!player)
+                return;
+
+            self.pBody.fadeIn(&apos;fast&apos;);
+            self.pBody.css({
+                &apos;left&apos;: mouseX - (self.pBody.width() / 2) + &apos;px&apos;,
+                &apos;top&apos;: mouseY + (self.pBody.height() / 2) + &apos;px&apos;
+            });
+
+            self.follow.click(function() {
+                self.getPlayer().follow(player);
+
+                self.hidePlayerActions();
+            });
+
+            self.trade.click(function() {
+                self.getGame().tradeWith(player);
+
+                self.hidePlayerActions();
+            });
+        },
+
+        hide: function() {
+            this.body.fadeOut(&apos;slow&apos;);
+        },
+
+        hidePlayerActions: function() {
+            this.pBody.fadeOut(&apos;fast&apos;);
+        },
+
+        displayDrop: function(activeClass) {
+            var self = this;
+
+            self.activeClass = activeClass;
+
+            self.drop.fadeIn(&apos;fast&apos;);
+
+            self.dropInput.focus();
+            self.dropInput.select();
+        },
+
+        hideDrop: function() {
+            var self = this;
+
+            self.drop.fadeOut(&apos;slow&apos;);
+
+            self.dropInput.blur();
+            self.dropInput.val(&apos;&apos;);
+        },
+
+        getButtons: function() {
+            return this.body.find(&apos;ul&apos;).find(&apos;li&apos;);
+        },
+
+        getGame: function() {
+            return this.interface.game;
+        },
+
+        getPlayer: function() {
+            return this.interface.game.player;
+        },
+
+        isVisible: function() {
+            return this.body.css(&apos;display&apos;) === &apos;block&apos;;
+        }
+
+    });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

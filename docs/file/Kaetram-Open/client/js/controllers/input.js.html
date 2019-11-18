@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/controllers/input.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/controllers/input.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -37,7 +37,6 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global Modules, log, _, Detect, Packets */
 
 define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;, &apos;./overlay&apos;], function($, Animation, Chat, Overlay) {
-
     return Class.extend({
 
         init: function(game) {
@@ -100,16 +99,16 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
         loadCursors: function() {
             var self = this;
 
-            self.cursors[&apos;hand&apos;] = self.game.getSprite(&apos;hand&apos;);
-            self.cursors[&apos;sword&apos;] = self.game.getSprite(&apos;sword&apos;);
-            self.cursors[&apos;loot&apos;] = self.game.getSprite(&apos;loot&apos;);
-            self.cursors[&apos;target&apos;] = self.game.getSprite(&apos;target&apos;);
-            self.cursors[&apos;arrow&apos;] = self.game.getSprite(&apos;arrow&apos;);
-            self.cursors[&apos;talk&apos;] = self.game.getSprite(&apos;talk&apos;);
-            self.cursors[&apos;spell&apos;] = self.game.getSprite(&apos;spell&apos;);
-            self.cursors[&apos;bow&apos;] = self.game.getSprite(&apos;bow&apos;);
+            self.cursors.hand = self.game.getSprite(&apos;hand&apos;);
+            self.cursors.sword = self.game.getSprite(&apos;sword&apos;);
+            self.cursors.loot = self.game.getSprite(&apos;loot&apos;);
+            self.cursors.target = self.game.getSprite(&apos;target&apos;);
+            self.cursors.arrow = self.game.getSprite(&apos;arrow&apos;);
+            self.cursors.talk = self.game.getSprite(&apos;talk&apos;);
+            self.cursors.spell = self.game.getSprite(&apos;spell&apos;);
+            self.cursors.bow = self.game.getSprite(&apos;bow&apos;);
 
-            self.newCursor = self.cursors[&apos;hand&apos;];
+            self.newCursor = self.cursors.hand;
             self.newTargetColour = &apos;rgba(255, 255, 255, 0.5)&apos;;
 
             if (self.game.isDebug())
@@ -120,7 +119,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
             var self = this,
                 player = self.getPlayer();
 
-            switch(inputType) {
+            switch (inputType) {
                 case Modules.InputType.Key:
 
                     if (self.chatHandler.isActive()) {
@@ -128,8 +127,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                         return;
                     }
 
-                    switch(data) {
-
+                    switch (data) {
                         case Modules.Keys.W:
                         case Modules.Keys.Up:
 
@@ -163,20 +161,19 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                             self.chatHandler.toggle();
 
                             break;
-
                     }
 
                     break;
 
-                    case Modules.InputType.LeftClick:
+                case Modules.InputType.LeftClick:
 
-                        player.disableAction = false;
-                        self.keyMovement = false;
+                    player.disableAction = false;
+                    self.keyMovement = false;
 
-                        self.setCoords(data);
-                        self.click(self.getCoords());
+                    self.setCoords(data);
+                    self.click(self.getCoords());
 
-                        break;
+                    break;
             }
         },
 
@@ -184,7 +181,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
             var self = this,
                 player = self.getPlayer();
 
-            switch(key) {
+            switch (key) {
                 case Modules.Keys.W:
                 case Modules.Keys.Up:
                     player.moveUp = false;
@@ -266,7 +263,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                 if (entity.gridX === player.gridX &amp;&amp; entity.gridY === player.gridY)
                     self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
 
-                /*if (entity.type === &apos;player&apos;) {
+                /* if (entity.type === &apos;player&apos;) {
                     self.getActions().showPlayerActions(entity, self.mouse.x, self.mouse.y);
                     return;
                 }*/
@@ -316,7 +313,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
             self.overlay.update(entity);
 
             if (!entity || (entity.id === player.id) || entity.type === &apos;player&apos;) {
-                self.setCursor(self.cursors[&apos;hand&apos;]);
+                self.setCursor(self.cursors.hand);
                 self.hovering = null;
             } else {
                 if (self.renderer.debugging)
@@ -325,7 +322,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                 switch (entity.type) {
                     case &apos;item&apos;:
                     case &apos;chest&apos;:
-                        self.setCursor(self.cursors[&apos;loot&apos;]);
+                        self.setCursor(self.cursors.loot);
                         self.hovering = Modules.Hovering.Item;
                         break;
 
@@ -335,7 +332,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                         break;
 
                     case &apos;npc&apos;:
-                        self.setCursor(self.cursors[&apos;talk&apos;]);
+                        self.setCursor(self.cursors.talk);
                         self.hovering = Modules.Hovering.NPC;
                         break;
                 }
@@ -396,7 +393,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
         },
 
         getAttackCursor: function() {
-            return this.cursors[this.getPlayer().isRanged() ? &apos;bow&apos; : &apos;sword&apos;]
+            return this.cursors[this.getPlayer().isRanged() ? &apos;bow&apos; : &apos;sword&apos;];
         },
 
         getCoords: function() {
@@ -414,7 +411,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
             return {
                 x: x,
                 y: y
-            }
+            };
         },
 
         getTargetData: function() {
@@ -436,7 +433,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                 dy: self.selectedY * 16 * superScale,
                 dw: sprite.width * superScale,
                 dh: sprite.height * superScale
-            }
+            };
         },
 
         isTargetable: function(entity) {
@@ -456,7 +453,6 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
         }
 
     });
-
 });
 </code></pre>
 

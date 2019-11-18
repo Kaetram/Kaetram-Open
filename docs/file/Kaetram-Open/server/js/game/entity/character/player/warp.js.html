@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/warp.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/warp.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,34 +36,33 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/warp.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Modules = require(&apos;../../../../util/modules&apos;),
+const Modules = require(&apos;../../../../util/modules&apos;),
     Utils = require(&apos;../../../../util/utils&apos;);
 
 class Warp {
-    
     constructor(player) {
-        let self = this;
-        
+        const self = this;
+
         self.player = player;
-        
+
         self.lastWarp = 0;
         self.warpTimeout = 30000;
     }
 
     warp(id) {
-        let self = this;
+        const self = this;
 
         if (!self.isCooldown()) {
             self.player.notify(&apos;You must wait another &apos; + self.getDuration() + &apos; to warp.&apos;);
             return;
         }
 
-        let data = Modules.Warps[id];
+        const data = Modules.Warps[id];
 
         if (!data)
             return;
 
-        let name = data[0],
+        const name = data[0],
             x = data[3] ? data[1] + Utils.randomInt(0, 1) : data[1],
             y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2],
             levelRequirement = data[4];
@@ -83,14 +82,13 @@ class Warp {
     }
 
     setLastWarp(lastWarp) {
-        let self = this;
+        const self = this;
 
         if (isNaN(lastWarp)) {
             self.lastWarp = 0;
             self.player.save();
         } else
             self.lastWarp = lastWarp;
-
     }
 
     isCooldown() {
@@ -102,7 +100,7 @@ class Warp {
     }
 
     getDuration() {
-        let self = this,
+        const self = this,
             difference = this.warpTimeout - self.getDifference();
 
         if (!difference)
@@ -114,10 +112,10 @@ class Warp {
     getDifference() {
         return new Date().getTime() - this.lastWarp;
     }
-    
 }
 
-module.exports = Warp;</code></pre>
+module.exports = Warp;
+</code></pre>
 
 </div>
 

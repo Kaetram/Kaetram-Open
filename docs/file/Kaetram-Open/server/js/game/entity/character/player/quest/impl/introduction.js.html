@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/introduction.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/introduction.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,16 +36,15 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/introduction.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Quest = require(&apos;../quest&apos;),
+const Quest = require(&apos;../quest&apos;),
     Packets = require(&apos;../../../../../../network/packets&apos;),
     Messages = require(&apos;../../../../../../network/messages&apos;);
 
 class Introduction extends Quest {
-
     constructor(player, data) {
         super(player, data);
 
-        let self = this;
+        const self = this;
 
         self.player = player;
         self.data = data;
@@ -54,7 +53,7 @@ class Introduction extends Quest {
     }
 
     load(stage) {
-        let self = this;
+        const self = this;
 
         if (!self.player.inTutorial()) {
             self.setStage(9999);
@@ -74,11 +73,10 @@ class Introduction extends Quest {
     }
 
     loadCallbacks() {
-        let self = this;
+        const self = this;
 
-        self.onNPCTalk((npc) =&gt; {
-
-            let conversation = self.getConversation(npc.id);
+        self.onNPCTalk(npc =&gt; {
+            const conversation = self.getConversation(npc.id);
 
             self.lastNPC = npc;
 
@@ -89,13 +87,10 @@ class Introduction extends Quest {
 
             if (npc.talkIndex === 0)
                 self.progress(&apos;talk&apos;);
-
         });
 
         self.player.onReady(() =&gt; {
-
             self.updatePointers();
-
         });
 
         self.player.onDoor((destX, destY) =&gt; {
@@ -112,37 +107,29 @@ class Introduction extends Quest {
             }
         });
 
-        self.player.onProfile((isOpen) =&gt; {
-
+        self.player.onProfile(isOpen =&gt; {
             if (isOpen)
                 self.progress(&apos;click&apos;);
-
         });
 
-        self.player.onInventory((isOpen) =&gt; {
-
+        self.player.onInventory(isOpen =&gt; {
             if (isOpen)
                 self.progress(&apos;click&apos;);
-
         });
 
-        self.player.onWarp((isOpen) =&gt; {
-
+        self.player.onWarp(isOpen =&gt; {
             if (isOpen)
                 self.progress(&apos;click&apos;);
-
         });
 
-        self.player.onKill((character) =&gt; {
+        self.player.onKill(character =&gt; {
             if (self.data.kill[self.stage] === character.id)
                 self.progress(&apos;kill&apos;);
-
         });
-
     }
 
     progress(type) {
-        let self = this,
+        const self = this,
             task = self.data.task[self.stage];
 
         if (!task || task !== type)
@@ -163,25 +150,23 @@ class Introduction extends Quest {
 
             case &apos;door&apos;:
 
-                if (self.stage === 7)
+                if (self.stage === 7) {
                     self.player.inventory.add({
                         id: 248,
                         count: 1,
                         ability: -1,
                         abilityLevel: -1
                     });
-
-                else if (self.stage === 15)
+                } else if (self.stage === 15) {
                     self.player.inventory.add({
                         id: 87,
                         count: 1,
                         ability: -1,
                         abilityLevel: -1
                     });
+                }
 
                 break;
-
-
         }
 
         self.stage++;
@@ -208,7 +193,7 @@ class Introduction extends Quest {
     }
 
     setStage(stage) {
-        let self = this;
+        const self = this;
 
         super.setStage(stage);
 
@@ -216,14 +201,14 @@ class Introduction extends Quest {
     }
 
     finish() {
-        let self = this;
+        const self = this;
 
         self.toggleChat();
         super.finish();
     }
 
     hasDoorUnlocked(door) {
-        let self = this;
+        const self = this;
 
         switch (door.id) {
             case 0:
@@ -234,7 +219,7 @@ class Introduction extends Quest {
     }
 
     verifyDoor(destX, destY) {
-        let self = this,
+        const self = this,
             doorData = self.data.doors[self.stage];
 
         if (!doorData)

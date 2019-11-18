@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/controllers/shops.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/controllers/shops.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,16 +36,15 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/controllers/shops.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let _ = require(&apos;underscore&apos;),
+const _ = require(&apos;underscore&apos;),
     ShopData = require(&apos;../util/shops&apos;),
     Items = require(&apos;../util/items&apos;),
     Messages = require(&apos;../network/messages&apos;),
     Packets = require(&apos;../network/packets&apos;);
 
 class Shops {
-
     constructor(world) {
-        let self = this;
+        const self = this;
 
         self.world = world;
 
@@ -56,34 +55,30 @@ class Shops {
     }
 
     load() {
-        let self = this;
+        const self = this;
 
         self.shopInterval = setInterval(() =&gt; {
-
-            _.each(ShopData.Data, (info) =&gt; {
-
-                for (let i = 0; i &lt; info.count; i++)
+            _.each(ShopData.Data, info =&gt; {
+                for (let i = 0; i &lt; info.count; i++) {
                     if (info.count[i] &lt; info.originalCount[i])
                         ShopData.increment(info.id, info.items[i], 1);
-
+                }
             });
-
         }, self.interval);
     }
 
     open(player, npcId) {
-        let self = this;
+        const self = this;
 
         player.send(new Messages.Shop(Packets.ShopOpcode.Open, {
             instance: player.instance,
             npcId: npcId,
             shopData: self.getShopData(npcId)
         }));
-
     }
 
     buy(player, npcId, buyId, count) {
-        let self = this,
+        const self = this,
             cost = ShopData.getCost(npcId, buyId, count),
             currency = self.getCurrency(npcId),
             stock = ShopData.getStock(npcId, buyId);
@@ -93,7 +88,7 @@ class Shops {
             return;
         }
 
-        //TODO: Make it so that when you have the exact coin count, it removes coins and replaces it with the item purchased.
+        // TODO: Make it so that when you have the exact coin count, it removes coins and replaces it with the item purchased.
 
         if (stock === 0) {
             player.notify(&apos;This item is currently out of stock.&apos;);
@@ -127,7 +122,7 @@ class Shops {
     }
 
     refresh(shop) {
-        let self = this;
+        const self = this;
 
         self.world.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Shop(Packets.ShopOpcode.Refresh, self.getShopData(shop))
@@ -135,7 +130,7 @@ class Shops {
     }
 
     getCurrency(npcId) {
-        let shop = ShopData.Ids[npcId];
+        const shop = ShopData.Ids[npcId];
 
         if (!shop)
             return null;
@@ -144,7 +139,7 @@ class Shops {
     }
 
     getShopData(npcId) {
-        let self = this,
+        const self = this,
             strings = [],
             names = [],
             items = ShopData.getItems(npcId);
@@ -159,9 +154,8 @@ class Shops {
             strings: strings,
             names: names,
             counts: ShopData.getCount(npcId)
-        }
+        };
     }
-
 }
 
 module.exports = Shops;

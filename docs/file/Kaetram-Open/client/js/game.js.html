@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/game.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/game.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -37,16 +37,15 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global Class, log, Packets, Modules, Detect, _ */
 
 define([&apos;./renderer/renderer&apos;, &apos;./utils/storage&apos;,
-        &apos;./map/map&apos;, &apos;./network/socket&apos;, &apos;./entity/character/player/player&apos;,
-        &apos;./renderer/updater&apos;, &apos;./controllers/entities&apos;, &apos;./controllers/input&apos;,
-        &apos;./entity/character/player/playerhandler&apos;, &apos;./utils/pathfinder&apos;,
-        &apos;./controllers/zoning&apos;, &apos;./controllers/info&apos;, &apos;./controllers/bubble&apos;,
-        &apos;./controllers/interface&apos;, &apos;./controllers/audio&apos;, &apos;./controllers/pointer&apos;,
-        &apos;./renderer/overlay&apos;, &apos;./network/connection&apos;, &apos;./utils/modules&apos;, &apos;./network/packets&apos;],
-        function(Renderer, LocalStorage, Map, Socket, Player, Updater,
-                 Entities, Input, PlayerHandler, Pathfinder, Zoning, Info,
-                 Bubble, Interface, Audio, Pointer, Overlay, Connection) {
-
+    &apos;./map/map&apos;, &apos;./network/socket&apos;, &apos;./entity/character/player/player&apos;,
+    &apos;./renderer/updater&apos;, &apos;./controllers/entities&apos;, &apos;./controllers/input&apos;,
+    &apos;./entity/character/player/playerhandler&apos;, &apos;./utils/pathfinder&apos;,
+    &apos;./controllers/zoning&apos;, &apos;./controllers/info&apos;, &apos;./controllers/bubble&apos;,
+    &apos;./controllers/interface&apos;, &apos;./controllers/audio&apos;, &apos;./controllers/pointer&apos;,
+    &apos;./renderer/overlay&apos;, &apos;./network/connection&apos;, &apos;./utils/modules&apos;, &apos;./network/packets&apos;],
+function(Renderer, LocalStorage, Map, Socket, Player, Updater,
+    Entities, Input, PlayerHandler, Pathfinder, Zoning, Info,
+    Bubble, Interface, Audio, Pointer, Overlay, Connection) {
     return Class.extend({
 
         init: function(app) {
@@ -113,7 +112,6 @@ define([&apos;./renderer/renderer&apos;, &apos;./utils/storage&apos;,
             var self = this;
 
             if (self.ready) {
-
                 self.time = new Date().getTime();
 
                 self.renderer.render();
@@ -242,7 +240,6 @@ define([&apos;./renderer/renderer&apos;, &apos;./utils/storage&apos;,
             }, 1000);
 
             self.connectionHandler = new Connection(self);
-
         },
 
         postLoad: function() {
@@ -281,7 +278,6 @@ define([&apos;./renderer/renderer&apos;, &apos;./utils/storage&apos;,
                 self.storage.data.new = false;
                 self.storage.save();
             }
-
         },
 
         loadStorage: function() {
@@ -510,7 +506,6 @@ define([&apos;./renderer/renderer&apos;, &apos;./utils/storage&apos;,
         }
 
     });
-
 });
 </code></pre>
 

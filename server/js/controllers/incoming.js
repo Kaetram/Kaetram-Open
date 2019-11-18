@@ -1,6 +1,6 @@
 /* global module */
 
-let Packets = require('../network/packets'),
+const Packets = require('../network/packets'),
     Request = require('request'),
     config = require('../../config.json'),
     _ = require('underscore'),
@@ -12,9 +12,8 @@ let Packets = require('../network/packets'),
     Utils = require('../util/utils');
 
 class Incoming {
-
     constructor(player) {
-        let self = this;
+        const self = this;
 
         self.player = player;
         self.connection = self.player.connection;
@@ -22,13 +21,11 @@ class Incoming {
         self.database = self.player.database;
         self.commands = new Commands(self.player);
 
-        self.connection.listen((data) => {
-
-            let packet = data.shift(),
+        self.connection.listen(data => {
+            const packet = data.shift(),
                 message = data[0];
 
             if (!Utils.validPacket(packet)) {
-
                 log.error('Non-existent packet received: ' + packet + ' data: ');
                 log.error(message);
 
@@ -37,8 +34,7 @@ class Incoming {
 
             self.player.refreshTimeout();
 
-            switch(packet) {
-
+            switch (packet) {
                 case Packets.Intro:
                     self.handleIntro(message);
                     break;
@@ -122,14 +118,12 @@ class Incoming {
                 case Packets.Camera:
                     self.handleCamera(message);
                     break;
-
             }
-
         });
     }
 
     handleIntro(message) {
-        let self = this,
+        const self = this,
             loginType = message.shift(),
             username = message.shift().toLowerCase(),
             password = message.shift(),
@@ -157,7 +151,7 @@ class Incoming {
         }
 
         if (config.offlineMode) {
-            let creator = new Creator(null);
+            const creator = new Creator(null);
 
             self.player.load(Creator.getFullData(self.player));
             self.player.intro();
@@ -168,25 +162,22 @@ class Incoming {
         self.introduced = true;
 
         if (isRegistering) {
-            self.database.exists(self.player, (result) => {
+            self.database.exists(self.player, result => {
                 if (result.exists) {
                     self.connection.sendUTF8(result.type + 'exists');
                     self.connection.close(result.type + ' is not available.');
                 } else
                     self.database.register(self.player);
             });
-
         } else if (isGuest) {
-
             self.player.username = 'Guest' + Utils.randomInt(0, 2000000);
             self.player.password = null;
             self.player.email = null;
             self.player.isGuest = true;
 
             self.database.login(self.player);
-
-        } else
-            self.database.verify(self.player, (result) => {
+        } else {
+            self.database.verify(self.player, result => {
                 if (result.status === 'success')
                     self.database.login(self.player);
                 else {
@@ -194,12 +185,11 @@ class Incoming {
                     self.connection.close('Wrong password entered for: ' + self.player.username);
                 }
             });
-
-
+        }
     }
 
     handleReady(message) {
-        let self = this,
+        const self = this,
             isReady = message.shift(),
             preloadedData = message.shift(),
             userAgent = message.shift();
@@ -223,7 +213,6 @@ class Incoming {
             self.player.setPosition(50, 89);
 
         if (self.player.userAgent !== userAgent) {
-
             self.player.userAgent = userAgent;
 
             self.player.regionsLoaded = [];
@@ -237,10 +226,10 @@ class Incoming {
     }
 
     handleWho(message) {
-        let self = this;
+        const self = this;
 
-        _.each(message.shift(), (id) => {
-            let entity = self.world.getEntityByInstance(id);
+        _.each(message.shift(), id => {
+            const entity = self.world.getEntityByInstance(id);
 
             if (entity && entity.id)
                 self.player.send(new Messages.Spawn(entity));
@@ -248,13 +237,12 @@ class Incoming {
     }
 
     handleEquipment(message) {
-        let self = this,
+        const self = this,
             opcode = message.shift();
 
         switch (opcode) {
-
             case Packets.EquipmentOpcode.Unequip:
-                let type = message.shift();
+                const type = message.shift();
 
                 if (!self.player.inventory.hasSpace()) {
                     self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'You do not have enough space in your inventory.'));
@@ -329,7 +317,7 @@ class Incoming {
 
         switch (opcode) {
             case Packets.MovementOpcode.Request:
-                let requestX = message.shift(),
+                const requestX = message.shift(),
                     requestY = message.shift(),
                     playerX = message.shift(),
                     playerY = message.shift();
@@ -340,7 +328,7 @@ class Incoming {
                 break;
 
             case Packets.Movement.Started:
-                let selectedX = message.shift(),
+                const selectedX = message.shift(),
                     selectedY = message.shift(),
                     pX = message.shift(),
                     pY = message.shift();
@@ -353,7 +341,7 @@ class Incoming {
                 break;
 
             case Packets.MovementOpcode.Step:
-                let x = message.shift(),
+                const x = message.shift(),
                     y = message.shift();
 
                 if (self.player.stunned || !self.preventNoClip(x, y))
@@ -364,7 +352,7 @@ class Incoming {
                 break;
 
             case Packets.MovementOpcode.Stop:
-                let posX = message.shift(),
+                const posX = message.shift(),
                     posY = message.shift(),
                     id = message.shift(),
                     hasTarget = message.shift(),
@@ -376,7 +364,7 @@ class Incoming {
                     self.player.inventory.add(entity);
 
                 if (self.world.map.isDoor(posX, posY) && !hasTarget) {
-                    let destination = self.world.map.getDoorDestination(posX, posY);
+                    const destination = self.world.map.getDoorDestination(posX, posY);
 
                     self.player.teleport(destination.x, destination.y, true);
                 } else {
@@ -391,7 +379,7 @@ class Incoming {
 
             case Packets.MovementOpcode.Entity:
 
-                let instance = message.shift(),
+                const instance = message.shift(),
                     entityX = message.shift(),
                     entityY = message.shift(),
                     oEntity = self.world.getEntityByInstance(instance);
@@ -419,7 +407,7 @@ class Incoming {
     }
 
     handleRequest(message) {
-        let self = this,
+        const self = this,
             id = message.shift();
 
         if (id !== self.player.instance)
@@ -429,16 +417,15 @@ class Incoming {
     }
 
     handleTarget(message) {
-        let self = this,
+        const self = this,
             opcode = message.shift(),
             instance = message.shift();
 
         log.debug('Targeted: ' + instance);
 
         switch (opcode) {
-
             case Packets.TargetOpcode.Talk:
-                let entity = self.world.getEntityByInstance(instance);
+                const entity = self.world.getEntityByInstance(instance);
 
                 if (!entity || !self.player.isAdjacent(entity))
                     return;
@@ -458,7 +445,7 @@ class Incoming {
 
             case Packets.TargetOpcode.Attack:
 
-                let target = self.world.getEntityByInstance(instance);
+                const target = self.world.getEntityByInstance(instance);
 
                 if (!target || target.dead || !self.canAttack(self.player, target))
                     return;
@@ -483,12 +470,12 @@ class Incoming {
     }
 
     handleCombat(message) {
-        let self = this,
+        const self = this,
             opcode = message.shift();
 
         switch (opcode) {
             case Packets.CombatOpcode.Initiate:
-                let attacker = self.world.getEntityByInstance(message.shift()),
+                const attacker = self.world.getEntityByInstance(message.shift()),
                     target = self.world.getEntityByInstance(message.shift());
 
                 if (!target || target.dead || !attacker || attacker.dead || !self.canAttack(attacker, target))
@@ -499,11 +486,9 @@ class Incoming {
                 if (!attacker.combat.started)
                     attacker.combat.forceAttack();
                 else {
-
                     attacker.combat.start();
 
                     attacker.combat.attack(target);
-
                 }
 
                 if (target.combat)
@@ -514,12 +499,12 @@ class Incoming {
     }
 
     handleProjectile(message) {
-        let self = this,
+        const self = this,
             type = message.shift();
 
         switch (type) {
             case Packets.ProjectileOpcode.Impact:
-                let projectile = self.world.getEntityByInstance(message.shift()),
+                const projectile = self.world.getEntityByInstance(message.shift()),
                     target = self.world.getEntityByInstance(message.shift());
 
                 if (!target || target.dead || !projectile)
@@ -538,7 +523,7 @@ class Incoming {
     }
 
     handleNetwork(message) {
-        let self = this,
+        const self = this,
             opcode = message.shift();
 
         switch (opcode) {
@@ -558,7 +543,6 @@ class Incoming {
         if (text.charAt(0) === '/' || text.charAt(0) === ';')
             self.commands.parse(text);
         else {
-
             if (self.player.isMuted()) {
                 self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'You are currently muted.'));
                 return;
@@ -582,9 +566,7 @@ class Incoming {
                     duration: 7000
                 })
             });
-
         }
-
     }
 
     handleInventory(message) {
@@ -605,18 +587,18 @@ class Incoming {
 
                 id = Items.stringToId(item.string);
 
-                let iSlot = self.player.inventory.slots[item.index];
+                const iSlot = self.player.inventory.slots[item.index];
 
                 if (count > iSlot.count)
                     count = iSlot.count;
 
-                if (self.player.inventory.remove(id, count ? count : item.count, item.index))
-                    self.world.dropItem(id, count ? count : 1, self.player.x, self.player.y);
+                if (self.player.inventory.remove(id, count || item.count, item.index))
+                    self.world.dropItem(id, count || 1, self.player.x, self.player.y);
 
                 break;
 
             case Packets.InventoryOpcode.Select:
-                let index = message.shift(),
+                const index = message.shift(),
                     slot = self.player.inventory.slots[index],
                     string = slot.string,
                     sCount = slot.count,
@@ -629,20 +611,16 @@ class Incoming {
                 id = Items.stringToId(slot.string);
 
                 if (slot.equippable) {
-
                     if (!self.player.canEquip(string))
                         return;
 
                     self.player.inventory.remove(id, slot.count, slot.index);
 
                     self.player.equip(string, sCount, ability, abilityLevel);
-
                 } else if (slot.edible) {
-
                     self.player.inventory.remove(id, 1, slot.index);
 
                     self.player.eat(id);
-
                 }
 
                 break;
@@ -650,26 +628,25 @@ class Incoming {
     }
 
     handleBank(message) {
-        let self = this,
+        const self = this,
             opcode = message.shift();
 
         switch (opcode) {
             case Packets.BankOpcode.Select:
-                let type = message.shift(),
+                const type = message.shift(),
                     index = message.shift(),
                     isBank = type === 'bank';
 
                 if (isBank) {
-                    let bankSlot = self.player.bank.slots[index];
+                    const bankSlot = self.player.bank.slots[index];
 
-                    //Infinite stacks move all at onces, otherwise move one by one.
-                    let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
+                    // Infinite stacks move all at onces, otherwise move one by one.
+                    const moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
 
-                    if (self.player.inventory.add(bankSlot,moveAmount))
+                    if (self.player.inventory.add(bankSlot, moveAmount))
                         self.player.bank.remove(bankSlot.id, moveAmount, index);
-
                 } else {
-                    let inventorySlot = self.player.inventory.slots[index];
+                    const inventorySlot = self.player.inventory.slots[index];
 
                     if (self.player.bank.add(inventorySlot.id, inventorySlot.count, inventorySlot.ability, inventorySlot.abilityLevel))
                         self.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
@@ -680,13 +657,13 @@ class Incoming {
     }
 
     handleRespawn(message) {
-        let self = this,
+        const self = this,
             instance = message.shift();
 
         if (self.player.instance !== instance)
             return;
 
-        let spawn = self.player.getSpawn();
+        const spawn = self.player.getSpawn();
 
         self.player.dead = false;
         self.player.setPosition(spawn.x, spawn.y);
@@ -695,7 +672,7 @@ class Incoming {
             regionId: self.player.region,
             message: new Messages.Spawn(self.player),
             ignoreId: self.player.instance
-        })
+        });
 
         self.player.send(new Messages.Respawn(self.player.instance, self.player.x, self.player.y));
 
@@ -703,7 +680,7 @@ class Incoming {
     }
 
     handleTrade(message) {
-        let self = this,
+        const self = this,
             opcode = message.shift(),
             oPlayer = self.world.getEntityByInstance(message.shift());
 
@@ -726,7 +703,7 @@ class Incoming {
     }
 
     handleEnchant(message) {
-        let self = this,
+        const self = this,
             opcode = message.shift();
 
         switch (opcode) {
@@ -757,7 +734,7 @@ class Incoming {
     }
 
     handleClick(message) {
-        let self = this,
+        const self = this,
             type = message.shift(),
             state = message.shift();
 
@@ -783,7 +760,7 @@ class Incoming {
     }
 
     handleWarp(message) {
-        let self = this,
+        const self = this,
             id = parseInt(message.shift()) - 1;
 
         if (self.player.warp)
@@ -791,13 +768,13 @@ class Incoming {
     }
 
     handleShop(message) {
-        let self = this,
+        const self = this,
             opcode = message.shift(),
             shopId = message.shift();
 
         switch (opcode) {
             case Packets.ShopOpcode.Buy:
-                let buyId = message.shift(),
+                const buyId = message.shift(),
                     amount = message.shift();
 
                 if (!buyId || !amount) {
@@ -814,7 +791,7 @@ class Incoming {
     }
 
     handleCamera(message) {
-        let self = this;
+        const self = this;
 
         log.info(self.player.x + ' ' + self.player.y);
 
@@ -823,7 +800,6 @@ class Incoming {
     }
 
     canAttack(attacker, target) {
-
         /**
          * Used to prevent client-sided manipulation. The client will send the packet to start combat
          * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
@@ -836,7 +812,7 @@ class Incoming {
     }
 
     preventNoClip(x, y) {
-        let self = this,
+        const self = this,
             isMapColliding = self.world.map.isColliding(x, y),
             isInstanceColliding = self.player.doors.hasCollision(x, y);
 
@@ -844,7 +820,7 @@ class Incoming {
             self.player.stopMovement(true);
             self.player.notify('We have detected no-clipping in your client. Please submit a bug report.');
 
-            let x = self.player.previousX < 0 ? self.player.x : self.player.previousX,
+            const x = self.player.previousX < 0 ? self.player.x : self.player.previousX,
                 y = self.player.previousY < 0 ? self.player.y : self.player.previousY;
 
             self.player.teleport(x, y, false, true);
@@ -853,7 +829,6 @@ class Incoming {
 
         return true;
     }
-
 }
 
 module.exports = Incoming;

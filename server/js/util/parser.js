@@ -1,6 +1,6 @@
 /* global module */
 
-let _ = require('underscore'),
+const _ = require('underscore'),
     NPCData = require('../../data/npcs'),
     ItemData = require('../../data/items'),
     MobData = require('../../data/mobs'),
@@ -15,9 +15,8 @@ let _ = require('underscore'),
     Constants = require('./constants');
 
 class Parser {
-
     constructor() {
-        let self = this;
+        const self = this;
 
         self.loadMobData();
         self.loadNPCData();
@@ -52,7 +51,7 @@ class Parser {
                 projectileName: value.projectileName ? value.projectileName : null,
                 spawnDelay: value.spawnDelay ? value.spawnDelay : 60000,
                 combatPlugin: value.combatPlugin ? value.combatPlugin : null,
-                hiddenName: value.hiddenName ? value.hiddenName: false
+                hiddenName: value.hiddenName ? value.hiddenName : false
             };
 
             Mobs.Ids[value.id] = Mobs.Properties[key];
@@ -60,7 +59,7 @@ class Parser {
             mobCounter++;
         });
 
-        Mobs.Plugins = require ('../util/plugins')(__dirname + '/../../data/combat/');
+        Mobs.Plugins = require('../util/plugins')(__dirname + '/../../data/combat/');
 
         log.info('Finished loading ' + mobCounter + ' mobs.');
         log.info('Loaded ' + Object.keys(Mobs.Plugins).length + ' combat plugins.');
@@ -122,7 +121,7 @@ class Parser {
         });
 
 
-        Items.Plugins = require ('../util/plugins')(__dirname + '/../../data/items/');
+        Items.Plugins = require('../util/plugins')(__dirname + '/../../data/items/');
 
         log.info('Finished loading ' + itemCounter + ' items.');
         log.info('Loaded ' + Object.keys(Items.Plugins).length + ' item plugins.');
@@ -147,7 +146,7 @@ class Parser {
             skillCounter++;
         });
 
-        log.info('Finished loading ' + skillCounter + ' skills.')
+        log.info('Finished loading ' + skillCounter + ' skills.');
     }
 
     loadShops() {
@@ -179,7 +178,7 @@ class Parser {
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
-            let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
+            const points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
     }

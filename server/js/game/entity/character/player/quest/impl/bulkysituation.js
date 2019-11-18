@@ -1,15 +1,14 @@
 /* global module */
 
-let Quest = require('../quest'),
+const Quest = require('../quest'),
     Packets = require('../../../../../../network/packets'),
     Messages = require('../../../../../../network/messages');
 
 class BulkySituation extends Quest {
-
     constructor(player, data) {
         super(player, data);
 
-        let self = this;
+        const self = this;
 
         self.player = player;
         self.data = data;
@@ -18,7 +17,7 @@ class BulkySituation extends Quest {
     }
 
     load(stage) {
-        let self = this;
+        const self = this;
 
         super.load(stage);
 
@@ -29,16 +28,15 @@ class BulkySituation extends Quest {
     }
 
     loadCallbacks() {
-        let self = this;
+        const self = this;
 
-        self.onNPCTalk((npc) => {
-
+        self.onNPCTalk(npc => {
             if (self.hasRequirement()) {
                 self.progress('item');
                 return;
             }
 
-            let conversation = self.getConversation(npc.id);
+            const conversation = self.getConversation(npc.id);
 
             self.lastNPC = npc;
 
@@ -49,13 +47,11 @@ class BulkySituation extends Quest {
 
             if (npc.talkIndex === 0)
                 self.progress('talk');
-
         });
-
     }
 
     progress(type) {
-        let self = this,
+        const self = this,
             task = self.data.task[self.stage];
 
         if (!task || task !== type)
@@ -94,7 +90,6 @@ class BulkySituation extends Quest {
     hasRequirement() {
         return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());
     }
-
 }
 
 module.exports = BulkySituation;

@@ -1,20 +1,19 @@
 /* global module */
 
 class Loader {
-
     constructor(database) {
         this.database = database;
     }
 
     getInventory(player, callback) {
-        let self = this;
+        const self = this;
 
-        self.database.getDatabase((database) => {
-            let inventory = database.collection('player_inventory'),
+        self.database.getDatabase(database => {
+            const inventory = database.collection('player_inventory'),
                 cursor = inventory.find({ username: player.username });
 
-            cursor.toArray().then((inventoryArray) => {
-                let info = inventoryArray[0];
+            cursor.toArray().then(inventoryArray => {
+                const info = inventoryArray[0];
 
                 if (info) {
                     if (info.username !== player.username)
@@ -23,20 +22,19 @@ class Loader {
                     callback(info.ids.split(' '), info.counts.split(' '), info.abilities.split(' '), info.abilityLevels.split(' '));
                 } else
                     callback(null, null, null, null);
-
             });
         });
     }
 
     getBank(player, callback) {
-        let self = this;
+        const self = this;
 
-        self.database.getDatabase((database) => {
-            let bank = database.collection('player_bank'),
+        self.database.getDatabase(database => {
+            const bank = database.collection('player_bank'),
                 cursor = bank.find({ username: player.username });
 
-            cursor.toArray().then((bankArray) => {
-                let info = bankArray[0];
+            cursor.toArray().then(bankArray => {
+                const info = bankArray[0];
 
                 if (info) {
                     if (info.username !== player.username)
@@ -44,20 +42,19 @@ class Loader {
 
                     callback(info.ids.split(' '), info.counts.split(' '), info.abilities.split(' '), info.abilityLevels.split(' '));
                 }
-
             });
         });
     }
 
     getQuests(player, callback) {
-        let self = this;
+        const self = this;
 
-        self.database.getDatabase((database) => {
-            let quests = database.collection('player_quests'),
+        self.database.getDatabase(database => {
+            const quests = database.collection('player_quests'),
                 cursor = quests.find({ username: player.username });
 
-            cursor.toArray().then((questArray) => {
-                let info = questArray[0];
+            cursor.toArray().then(questArray => {
+                const info = questArray[0];
 
                 if (info) {
                     if (info.username !== player.username)
@@ -71,14 +68,14 @@ class Loader {
     }
 
     getAchievements(player, callback) {
-        let self = this;
+        const self = this;
 
-        self.database.getDatabase((database) => {
-            let achievements = database.collection('player_achievements'),
+        self.database.getDatabase(database => {
+            const achievements = database.collection('player_achievements'),
                 cursor = achievements.find({ username: player.username });
 
-            cursor.toArray().then((achievementsArray) => {
-                let info = achievementsArray[0];
+            cursor.toArray().then(achievementsArray => {
+                const info = achievementsArray[0];
 
                 if (info) {
                     if (info.username !== player.username)
@@ -86,11 +83,9 @@ class Loader {
 
                     callback(info.ids.split(' '), info.progress.split(' '));
                 }
-
             });
         });
     }
-
 }
 
 module.exports = Loader;

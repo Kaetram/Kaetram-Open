@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/game/entity/objects/projectile.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/objects/projectile.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,14 +36,13 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/objects/projectile.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Entity = require(&apos;../entity&apos;);
+const Entity = require(&apos;../entity&apos;);
 
 class Projectile extends Entity {
-
     constructor(id, instance) {
         super(id, &apos;projectile&apos;, instance);
 
-        let self = this;
+        const self = this;
 
         self.startX = -1;
         self.startY = -1;
@@ -61,7 +60,7 @@ class Projectile extends Entity {
     }
 
     setStart(x, y) {
-        let self = this;
+        const self = this;
 
         self.x = x;
         self.y = y;
@@ -72,7 +71,7 @@ class Projectile extends Entity {
      */
 
     setTarget(target) {
-        let self = this;
+        const self = this;
 
         self.target = target;
 
@@ -81,7 +80,7 @@ class Projectile extends Entity {
     }
 
     setStaticTarget(x, y) {
-        let self = this;
+        const self = this;
 
         self.static = true;
 
@@ -90,7 +89,7 @@ class Projectile extends Entity {
     }
 
     getData() {
-        let self = this;
+        const self = this;
 
         /**
          * Refrain from creating a projectile unless
@@ -109,11 +108,12 @@ class Projectile extends Entity {
             special: self.special,
             hitType: self.hitType,
             type: self.type
-        }
+        };
     }
 }
 
-module.exports = Projectile;</code></pre>
+module.exports = Projectile;
+</code></pre>
 
 </div>
 

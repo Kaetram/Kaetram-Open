@@ -1,19 +1,18 @@
 /* global module */
 
-let _ = require('underscore'),
+const _ = require('underscore'),
     AbilityInfo = require('../../../../../util/abilities');
 
 class Abilities {
-    
     constructor(player) {
-        let self = this;
-        
+        const self = this;
+
         self.player = player;
-        
+
         self.abilities = {};
-        
+
         self.shortcuts = [];
-        
+
         self.shortcutSize = 5;
     }
 
@@ -22,7 +21,7 @@ class Abilities {
     }
 
     addShortcut(ability) {
-        let self = this;
+        const self = this;
 
         if (self.shortcutSize >= 5)
             return;
@@ -31,7 +30,7 @@ class Abilities {
     }
 
     removeAbility(ability) {
-        let self = this;
+        const self = this;
 
         if (self.isShortcut(ability))
             self.removeShortcut(self.shortcuts.indexOf(ability.name));
@@ -45,7 +44,7 @@ class Abilities {
     }
 
     hasAbility(ability) {
-        _.each(this.abilities, (uAbility) => {
+        _.each(this.abilities, uAbility => {
             if (uAbility.name === ability.name)
                 return true;
         });
@@ -63,7 +62,7 @@ class Abilities {
             abilityLevels = '',
             shortcuts = self.shortcuts.toString();
 
-        _.each(self.abilities, (ability) => {
+        _.each(self.abilities, ability => {
             abilities += ability.name;
             abilityLevels += ability.level;
         });
@@ -73,9 +72,8 @@ class Abilities {
             abilities: abilities,
             abilityLevels: abilityLevels,
             shortcuts: shortcuts
-        }
+        };
     }
-    
 }
 
 module.exports = Abilities;

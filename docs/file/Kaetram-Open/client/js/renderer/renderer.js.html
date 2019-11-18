@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/renderer/renderer.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/renderer/renderer.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -44,7 +44,6 @@ var DarkMask = illuminated.DarkMask,
 define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
     &apos;../entity/character/player/player&apos;, &apos;../entity/character/character&apos;,
     &apos;../entity/objects/item&apos;], function($, Camera, Tile, Player, Character, Item) {
-
     return Class.extend({
 
         init: function(background, entities, foreground, overlay, textCanvas, cursor, game) {
@@ -131,7 +130,7 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
             self.forEachContext(function(context) {
                 context.fillStyle = &apos;#12100D&apos;;
                 context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-            })
+            });
         },
 
         load: function() {
@@ -214,9 +213,8 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
 
             self.checkDevice();
 
-            if (!self.resizeTimeout)
+            if (!self.resizeTimeout) {
                 self.resizeTimeout = setTimeout(function() {
-
                     self.scale = self.getScale();
                     self.clearScreen(self.cursorContext);
 
@@ -238,8 +236,8 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                     self.resizeTimeout = null;
 
                     self.updateAnimatedTiles();
-
                 }, 500);
+            }
         },
 
         render: function() {
@@ -279,7 +277,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
             self.calculateFPS();
 
             self.restoreAll();
-
         },
 
         /**
@@ -301,12 +298,12 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                     self.drawTile(context, id, self.map.width, index);
             });
 
-            if (self.animateTiles)
+            if (self.animateTiles) {
                 self.forEachAnimatedTile(function(tile) {
                     self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
                     tile.loaded = true;
                 });
-
+            }
         },
 
         drawOverlays: function() {
@@ -317,7 +314,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                 self.overlayContext.save();
 
                 if (overlay !== &apos;empty&apos;) {
-
                     self.overlayContext.fillStyle = self.overlayContext.createPattern(overlay, &apos;repeat&apos;);
                     self.overlayContext.fillRect(0, 0, self.screenWidth * self.superScaling, self.screenHeight * self.superScaling);
                     self.overlayContext.fill();
@@ -402,7 +398,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                 self.context.globalCompositeOperation = &apos;destination-over&apos;;
 
             if (data.sprite !== sprite) {
-
                 data.sprite = sprite;
 
                 data.width = sprite.width * self.superScaling;
@@ -419,7 +414,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
 
                     data.shadowOffsetY = entity.shadowOffsetY * self.superScaling;
                 }
-
             }
 
             if (entity.fading)
@@ -465,7 +459,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
              * Function used to draw special effects prior
              * to rendering the entity.
              */
-
         },
 
         drawEntityFore: function(entity) {
@@ -476,53 +469,51 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
              * having rendererd the entity
              */
 
-             if (entity instanceof Character &amp;&amp; !entity.dead &amp;&amp; !entity.teleporting) {
-                 if (entity.hasWeapon()) {
-                     var weapon = self.entities.getSprite(entity.weapon.getString());
+            if (entity instanceof Character &amp;&amp; !entity.dead &amp;&amp; !entity.teleporting) {
+                if (entity.hasWeapon()) {
+                    var weapon = self.entities.getSprite(entity.weapon.getString());
 
-                     if (weapon) {
-                         if (!weapon.loaded)
-                             weapon.load();
+                    if (weapon) {
+                        if (!weapon.loaded)
+                            weapon.load();
 
-                         var animation = entity.currentAnimation,
-                             weaponAnimationData = weapon.animationData[animation.name],
-                             frame = entity.currentAnimation.currentFrame,
-                             index = frame.index &lt; weaponAnimationData.length ? frame.index : frame.index % weaponAnimationData.length,
-                             weaponX = weapon.width * index * self.superScaling,
-                             weaponY = weapon.height * animation.row * self.superScaling,
-                             weaponWidth = weapon.width * self.superScaling,
-                             weaponHeight = weapon.height * self.superScaling;
+                        var animation = entity.currentAnimation,
+                            weaponAnimationData = weapon.animationData[animation.name],
+                            frame = entity.currentAnimation.currentFrame,
+                            index = frame.index &lt; weaponAnimationData.length ? frame.index : frame.index % weaponAnimationData.length,
+                            weaponX = weapon.width * index * self.superScaling,
+                            weaponY = weapon.height * animation.row * self.superScaling,
+                            weaponWidth = weapon.width * self.superScaling,
+                            weaponHeight = weapon.height * self.superScaling;
 
-                         self.context.drawImage(weapon.image, weaponX, weaponY, weaponWidth, weaponHeight,
-                             weapon.offsetX * self.superScaling, weapon.offsetY * self.superScaling,
-                             weaponWidth, weaponHeight);
-                     }
-                 }
+                        self.context.drawImage(weapon.image, weaponX, weaponY, weaponWidth, weaponHeight,
+                            weapon.offsetX * self.superScaling, weapon.offsetY * self.superScaling,
+                            weaponWidth, weaponHeight);
+                    }
+                }
 
-                 if (entity.terror || entity.stunned || entity.critical || entity.explosion) {
-                     var sprite = self.entities.getSprite(entity.getActiveEffect());
+                if (entity.terror || entity.stunned || entity.critical || entity.explosion) {
+                    var sprite = self.entities.getSprite(entity.getActiveEffect());
 
-                     if (!sprite.loaded)
-                         sprite.load();
+                    if (!sprite.loaded)
+                        sprite.load();
 
-                     if (sprite) {
-                         var animation = entity.getEffectAnimation(),
-                             index = animation.currentFrame.index,
-                             x = sprite.width * index * self.superScaling,
-                             y = sprite.height * animation.row * self.superScaling,
-                             width = sprite.width * self.superScaling,
-                             height = sprite.height * self.superScaling,
-                             offsetX = sprite.offsetX * self.superScaling,
-                             offsetY = sprite.offsetY * self.superScaling;
+                    if (sprite) {
+                        var animation = entity.getEffectAnimation(),
+                            index = animation.currentFrame.index,
+                            x = sprite.width * index * self.superScaling,
+                            y = sprite.height * animation.row * self.superScaling,
+                            width = sprite.width * self.superScaling,
+                            height = sprite.height * self.superScaling,
+                            offsetX = sprite.offsetX * self.superScaling,
+                            offsetY = sprite.offsetY * self.superScaling;
 
-                         self.context.drawImage(sprite.image, x, y, width, height, offsetX, offsetY, width, height);
-                     }
-                 }
-
-             }
+                        self.context.drawImage(sprite.image, x, y, width, height, offsetX, offsetY, width, height);
+                    }
+                }
+            }
 
             if (entity instanceof Item) {
-
                 var sparksAnimation = self.entities.sprites.sparksAnimation,
                     sparksFrame = sparksAnimation.currentFrame,
                     sparksX = self.sparksSprite.width * sparksFrame.index * self.superScaling,
@@ -533,8 +524,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                 self.context.drawImage(self.sparksSprite.image, sparksX, sparksY, sparksWidth, sparksHeight,
                     0, 0, sparksWidth, sparksHeight);
             }
-
-
         },
 
         drawHealth: function(entity) {
@@ -581,7 +570,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
 
             if (entity.drawNames()) {
                 if (!entity.hasCounter) {
-
                     if (self.drawNames &amp;&amp; (entity.type === &apos;mob&apos; || entity.type === &apos;player&apos;))
                         self.drawText(entity.type === &apos;player&apos; ? entity.username : entity.name, (entity.x + 8), (entity.y - (self.drawLevels ? 20 : 10)), true, colour, &apos;#000&apos;);
 
@@ -590,9 +578,7 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
 
                     if (entity.type === &apos;item&apos; &amp;&amp; entity.count &gt; 1)
                         self.drawText(entity.count, (entity.x + 8), (entity.y - 10), true, colour);
-
                 } else {
-
                     if (self.game.time - entity.countdownTime &gt; 1000) {
                         entity.countdownTime = self.game.time;
                         entity.counter--;
@@ -642,10 +628,11 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                 if (!cursor.loaded)
                     cursor.load();
 
-                if (cursor.loaded)
+                if (cursor.loaded) {
                     self.cursorContext.drawImage(cursor.image, 0, 0, scaling, scaling,
                         self.input.mouse.x, self.input.mouse.y,
                         scaling, scaling);
+                }
             }
 
             self.cursorContext.restore();
@@ -709,7 +696,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
             _.each(self.game.player.path, function(path) {
                 self.drawCellHighlight(path[0], path[1], &apos;rgba(50, 255, 50, 0.5)&apos;);
             });
-
         },
 
         drawSelectedCell: function() {
@@ -730,7 +716,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
 
                 self.context.restore();
             }
-
         },
 
         /**
@@ -799,7 +784,7 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                 context.fillStyle = colour || &apos;white&apos;;
                 context.fillText(text, x * self.superScaling, y * self.superScaling);
 
-                context.restore()
+                context.restore();
             }
         },
 
@@ -823,17 +808,15 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                  * Push the pre-existing tiles.
                  */
 
-                 if (!(index in self.animatedTiles)) {
-                     var tile = new Tile(id, index, self.map),
+                if (!(index in self.animatedTiles)) {
+                    var tile = new Tile(id, index, self.map),
                         position = self.map.indexToGridPosition(tile.index);
 
                     tile.setPosition(position);
 
                     self.animatedTiles[index] = tile;
-                 }
-
+                }
             }, 2);
-
         },
 
         drawCellRect: function(x, y, colour) {
@@ -897,10 +880,9 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                 var indexData = self.map.data[index];
 
                 if (Array.isArray(indexData))
-                    _.each(indexData, function(id) { callback(id - 1, index) });
+                    _.each(indexData, function(id) { callback(id - 1, index); });
                 else if (!(isNaN(self.map.data[index] - 1)))
                     callback(self.map.data[index] - 1, index);
-
             }, offset);
         },
 
@@ -919,16 +901,17 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
             var grids = self.entities.grids;
 
             self.camera.forEachVisiblePosition(function(x, y) {
-                if (!self.map.isOutOfBounds(x, y) &amp;&amp; grids.renderingGrid[y][x])
+                if (!self.map.isOutOfBounds(x, y) &amp;&amp; grids.renderingGrid[y][x]) {
                     _.each(grids.renderingGrid[y][x], function(entity) {
                         callback(entity);
                     });
+                }
             });
         },
 
         isVisiblePosition: function(x, y) {
             return y &gt;= this.camera.gridY &amp;&amp; y &lt; this.camera.gridY + this.camera.gridHeight &amp;&amp;
-                x &gt;= this.camera.gridX &amp;&amp; x &lt; this.camera.gridX + this.camera.gridWidth
+                x &gt;= this.camera.gridX &amp;&amp; x &lt; this.camera.gridX + this.camera.gridWidth;
         },
 
         getScale: function() {
@@ -1027,7 +1010,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                     callback();
                 }
             }, duration);
-
         },
 
 
@@ -1226,7 +1208,7 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                 samples: 2,
                 roughness: 0,
                 angle: 0
-            }
+            };
         },
 
         hasLighting: function(lighting) {
@@ -1252,7 +1234,7 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
                 };
 
             return position.x &gt; self.camera.gridX - position.diff &amp;&amp;
-                position.x &lt; self.camera.gridX + self.camera.gridWidth  + position.diff &amp;&amp;
+                position.x &lt; self.camera.gridX + self.camera.gridWidth + position.diff &amp;&amp;
                 position.y &gt; self.camera.gridY - position.diff &amp;&amp;
                 position.y &lt; self.camera.gridY + self.camera.gridHeight + position.diff;
         },
@@ -1261,7 +1243,7 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
             return {
                 x: this.overlay.width / 2,
                 y: this.overlay.height / 2
-            }
+            };
         },
 
         /**
@@ -1311,7 +1293,6 @@ define([&apos;jquery&apos;, &apos;./camera&apos;, &apos;./tile&apos;,
         }
 
     });
-
 });
 </code></pre>
 

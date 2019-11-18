@@ -1,6 +1,6 @@
 /* global module */
 
-let Socket = require('./socket'),
+const Socket = require('./socket'),
     Connection = require('./connection'),
     connect = require('connect'),
     serve = require('serve-static'),
@@ -12,46 +12,46 @@ let Socket = require('./socket'),
     config = require('../../config');
 
 class WebSocket extends Socket {
-
     constructor(host, port, version) {
         super(port);
 
-        let self = this;
+        const self = this;
 
         self.host = host;
         self.version = version;
 
         self.ips = {};
 
-        let app = connect();
-        app.use(serve('client', {'index': ['index.html']}), null);
+        const app = connect();
+        app.use(serve('client', { 'index': ['index.html'] }), null);
 
-        let readyWebSocket = function(port) {
+        const readyWebSocket = function(port) {
             log.info('Server is now listening on: ' + port);
 
             if (self.webSocketReadyCallback)
                 self.webSocketReadyCallback();
         };
 
-        if (config.ssl)
+        if (config.ssl) {
             self.httpServer = https.createServer(app).listen(port, host, () => {
                 readyWebSocket(port);
             });
-        else
+        } else {
             self.httpServer = http.createServer(app).listen(port, host, () => {
                 readyWebSocket(port);
             });
+        }
 
         self.io = new SocketIO(self.httpServer);
-        self.io.on('connection', (socket) => {
+        self.io.on('connection', socket => {
             if (socket.handshake.headers['cf-connecting-ip'])
                 socket.conn.remoteAddress = socket.handshake.headers['cf-connecting-ip'];
 
             log.info('Received connection from: ' + socket.conn.remoteAddress);
 
-            let client = new Connection(self.createId(), socket, self);
+            const client = new Connection(self.createId(), socket, self);
 
-            socket.on('client', (data) => {
+            socket.on('client', data => {
                 if (data.gVer !== self.version) {
                     client.sendUTF8('updated');
                     client.close('Wrong client version - expected ' + self.version + ' received ' + data.gVer);

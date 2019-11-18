@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/quest.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/quest.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,15 +36,14 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/quest.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let Messages = require(&apos;../../../../../network/messages&apos;),
+const Messages = require(&apos;../../../../../network/messages&apos;),
     Packets = require(&apos;../../../../../network/packets&apos;),
     Utils = require(&apos;../../../../../util/utils&apos;),
     _ = require(&apos;underscore&apos;);
 
 class Quest {
-
     constructor(player, data) {
-        let self = this;
+        const self = this;
 
         self.player = player;
         self.data = data;
@@ -57,7 +56,7 @@ class Quest {
     }
 
     load(stage) {
-        let self = this;
+        const self = this;
 
         if (!stage)
             self.update();
@@ -66,10 +65,10 @@ class Quest {
     }
 
     finish() {
-        let self = this;
+        const self = this;
 
         if (self.hasItemReward()) {
-            let item = self.getItemReward();
+            const item = self.getItemReward();
 
             if (item) {
                 if (self.hasInventorySpace(item.id, item.count))
@@ -94,14 +93,14 @@ class Quest {
     }
 
     setStage(stage) {
-        let self = this;
+        const self = this;
 
         self.stage = stage;
         self.update();
     }
 
     triggerTalk(npc) {
-        let self = this;
+        const self = this;
 
         if (self.npcTalkCallback)
             self.npcTalkCallback(npc);
@@ -112,7 +111,7 @@ class Quest {
     }
 
     getConversation(id) {
-        let self = this,
+        const self = this,
             conversation = self.data.conversations[id];
 
         if (!conversation || !conversation[self.stage])
@@ -122,34 +121,34 @@ class Quest {
     }
 
     updatePointers() {
-        let self = this;
+        const self = this;
 
         if (!self.data.pointers)
             return;
 
-        let pointer = self.data.pointers[self.stage];
+        const pointer = self.data.pointers[self.stage];
 
         if (!pointer)
             return;
 
-        let opcode = pointer[0];
+        const opcode = pointer[0];
 
-        if (opcode === 4)
+        if (opcode === 4) {
             self.player.send(new Messages.Pointer(opcode, {
                 id: Utils.generateRandomId(),
                 button: pointer[1]
             }));
-        else
+        } else {
             self.player.send(new Messages.Pointer(opcode, {
                 id: Utils.generateRandomId(),
                 x: pointer[1],
                 y: pointer[2]
             }));
-
+        }
     }
 
     forceTalk(npc, message) {
-        let self = this;
+        const self = this;
 
         if (!npc)
             return;
@@ -163,21 +162,21 @@ class Quest {
     }
 
     resetTalkIndex(npc) {
-        let self = this;
+        const self = this;
 
         /**
          * Ensures that an NPC does not go off the conversation
          * index and is resetted in order to start a new chat
          */
 
-        if(!npc)
+        if (!npc)
             return;
 
         npc.talkIndex = 0;
     }
 
     clearPointers() {
-        this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}))
+        this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}));
     }
 
     onNPCTalk(callback) {
@@ -245,7 +244,6 @@ class Quest {
             finished: this.isFinished()
         };
     }
-
 }
 
 module.exports = Quest;

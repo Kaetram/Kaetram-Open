@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/data/combat/piratecaptain.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/data/combat/piratecaptain.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -34,19 +34,18 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/data/combat/piratecaptain.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">let Combat = require(&apos;../../js/game/entity/character/combat/combat&apos;),
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Combat = require(&apos;../../js/game/entity/character/combat/combat&apos;),
     Utils = require(&apos;../../js/util/utils&apos;),
     Messages = require(&apos;../../js/network/messages&apos;),
     Packets = require(&apos;../../js/network/packets&apos;),
     Modules = require(&apos;../../js/util/modules&apos;);
 
 class PirateCaptain extends Combat {
-
     constructor(character) {
         character.spawnDistance = 20;
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.character = character;
 
@@ -64,7 +63,7 @@ class PirateCaptain extends Combat {
     }
 
     load() {
-        var self = this,
+        const self = this,
             south = { x: 251, y: 574 },
             west = { x: 243, y: 569 },
             east = { x: 258, y: 568 },
@@ -74,7 +73,7 @@ class PirateCaptain extends Combat {
     }
 
     hit(character, target, hitInfo) {
-        var self = this;
+        const self = this;
         if (self.canTeleport())
             self.teleport();
         else
@@ -82,7 +81,7 @@ class PirateCaptain extends Combat {
     }
 
     teleport() {
-        var self = this,
+        const self = this,
             position = self.getRandomPosition();
 
         if (!position)
@@ -95,7 +94,7 @@ class PirateCaptain extends Combat {
 
         self.character.setPosition(position.x, position.y);
 
-        if (self.world)
+        if (self.world) {
             self.world.push(Packets.PushOpcode.Regions, {
                 regionId: self.character.region,
                 message: new Messages.Teleport({
@@ -105,8 +104,9 @@ class PirateCaptain extends Combat {
                     withAnimation: true
                 })
             });
+        }
 
-        self.forEachAttacker((attacker) =&gt; {
+        self.forEachAttacker(attacker =&gt; {
             attacker.removeTarget();
         });
 
@@ -115,7 +115,7 @@ class PirateCaptain extends Combat {
     }
 
     getRandomPosition() {
-        var self = this,
+        const self = this,
             random = Utils.randomInt(0, self.teleportLocations.length - 1),
             position = self.teleportLocations[random];
 
@@ -126,19 +126,18 @@ class PirateCaptain extends Combat {
             x: position.x,
             y: position.y,
             index: random
-        }
+        };
     }
 
     canTeleport() {
-        //Just randomize the teleportation for shits and giggles.
+        // Just randomize the teleportation for shits and giggles.
         return new Date().getTime() - this.lastTeleport &gt; 10000 &amp;&amp; Utils.randomInt(0, 4) === 2;
     }
 
     getHealthPercentage() {
-        //Floor it to avoid random floats
+        // Floor it to avoid random floats
         return Math.floor((this.character.hitPoints / self.character.maxHitPoints) * 100);
     }
-
 }
 
 module.exports = PirateCaptain;

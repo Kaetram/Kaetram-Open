@@ -1,7 +1,7 @@
 {
   "type": "File",
   "start": 0,
-  "end": 139,
+  "end": 132,
   "loc": {
     "start": {
       "line": 1,
@@ -15,7 +15,7 @@
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 139,
+    "end": 132,
     "loc": {
       "start": {
         "line": 1,
@@ -30,7 +30,7 @@
     "body": [
       {
         "type": "VariableDeclaration",
-        "start": 23,
+        "start": 21,
         "end": 61,
         "loc": {
           "start": {
@@ -39,7 +39,7 @@
           },
           "end": {
             "line": 3,
-            "column": 38
+            "column": 40
           }
         },
         "declarations": [
@@ -50,11 +50,11 @@
             "loc": {
               "start": {
                 "line": 3,
-                "column": 4
+                "column": 6
               },
               "end": {
                 "line": 3,
-                "column": 37
+                "column": 39
               }
             },
             "id": {
@@ -64,11 +64,11 @@
               "loc": {
                 "start": {
                   "line": 3,
-                  "column": 4
+                  "column": 6
                 },
                 "end": {
                   "line": 3,
-                  "column": 12
+                  "column": 14
                 },
                 "identifierName": "Minigame"
               },
@@ -82,11 +82,11 @@
               "loc": {
                 "start": {
                   "line": 3,
-                  "column": 15
+                  "column": 17
                 },
                 "end": {
                   "line": 3,
-                  "column": 37
+                  "column": 39
                 }
               },
               "callee": {
@@ -96,11 +96,11 @@
                 "loc": {
                   "start": {
                     "line": 3,
-                    "column": 15
+                    "column": 17
                   },
                   "end": {
                     "line": 3,
-                    "column": 22
+                    "column": 24
                   },
                   "identifierName": "require"
                 },
@@ -114,11 +114,11 @@
                   "loc": {
                     "start": {
                       "line": 3,
-                      "column": 23
+                      "column": 25
                     },
                     "end": {
                       "line": 3,
-                      "column": 36
+                      "column": 38
                     }
                   },
                   "extra": {
@@ -132,7 +132,7 @@
             "leadingComments": null
           }
         ],
-        "kind": "let",
+        "kind": "const",
         "leadingComments": [
           {
             "type": "CommentBlock",
@@ -154,8 +154,8 @@
       },
       {
         "type": "ClassDeclaration",
-        "start": 65,
-        "end": 105,
+        "start": 63,
+        "end": 101,
         "loc": {
           "start": {
             "line": 5,
@@ -168,8 +168,8 @@
         },
         "id": {
           "type": "Identifier",
-          "start": 71,
-          "end": 81,
+          "start": 69,
+          "end": 79,
           "loc": {
             "start": {
               "line": 5,
@@ -185,8 +185,8 @@
         },
         "superClass": {
           "type": "Identifier",
-          "start": 90,
-          "end": 98,
+          "start": 88,
+          "end": 96,
           "loc": {
             "start": {
               "line": 5,
@@ -202,8 +202,8 @@
         },
         "body": {
           "type": "ClassBody",
-          "start": 99,
-          "end": 105,
+          "start": 97,
+          "end": 101,
           "loc": {
             "start": {
               "line": 5,
@@ -219,8 +219,8 @@
       },
       {
         "type": "ExpressionStatement",
-        "start": 109,
-        "end": 137,
+        "start": 103,
+        "end": 131,
         "loc": {
           "start": {
             "line": 9,
@@ -233,8 +233,8 @@
         },
         "expression": {
           "type": "AssignmentExpression",
-          "start": 109,
-          "end": 136,
+          "start": 103,
+          "end": 130,
           "loc": {
             "start": {
               "line": 9,
@@ -248,8 +248,8 @@
           "operator": "=",
           "left": {
             "type": "MemberExpression",
-            "start": 109,
-            "end": 123,
+            "start": 103,
+            "end": 117,
             "loc": {
               "start": {
                 "line": 9,
@@ -262,8 +262,8 @@
             },
             "object": {
               "type": "Identifier",
-              "start": 109,
-              "end": 115,
+              "start": 103,
+              "end": 109,
               "loc": {
                 "start": {
                   "line": 9,
@@ -279,8 +279,8 @@
             },
             "property": {
               "type": "Identifier",
-              "start": 116,
-              "end": 123,
+              "start": 110,
+              "end": 117,
               "loc": {
                 "start": {
                   "line": 9,
@@ -298,8 +298,8 @@
           },
           "right": {
             "type": "Identifier",
-            "start": 126,
-            "end": 136,
+            "start": 120,
+            "end": 130,
             "loc": {
               "start": {
                 "line": 9,
@@ -355,8 +355,8 @@
     },
     {
       "type": {
-        "label": "let",
-        "keyword": "let",
+        "label": "const",
+        "keyword": "const",
         "beforeExpr": false,
         "startsExpr": false,
         "rightAssociative": false,
@@ -367,8 +367,8 @@
         "binop": null,
         "updateContext": null
       },
-      "value": "let",
-      "start": 23,
+      "value": "const",
+      "start": 21,
       "end": 26,
       "loc": {
         "start": {
@@ -377,7 +377,7 @@
         },
         "end": {
           "line": 3,
-          "column": 3
+          "column": 5
         }
       }
     },
@@ -399,11 +399,11 @@
       "loc": {
         "start": {
           "line": 3,
-          "column": 4
+          "column": 6
         },
         "end": {
           "line": 3,
-          "column": 12
+          "column": 14
         }
       }
     },
@@ -426,11 +426,11 @@
       "loc": {
         "start": {
           "line": 3,
-          "column": 13
+          "column": 15
         },
         "end": {
           "line": 3,
-          "column": 14
+          "column": 16
         }
       }
     },
@@ -452,11 +452,11 @@
       "loc": {
         "start": {
           "line": 3,
-          "column": 15
+          "column": 17
         },
         "end": {
           "line": 3,
-          "column": 22
+          "column": 24
         }
       }
     },
@@ -477,11 +477,11 @@
       "loc": {
         "start": {
           "line": 3,
-          "column": 22
+          "column": 24
         },
         "end": {
           "line": 3,
-          "column": 23
+          "column": 25
         }
       }
     },
@@ -504,11 +504,11 @@
       "loc": {
         "start": {
           "line": 3,
-          "column": 23
+          "column": 25
         },
         "end": {
           "line": 3,
-          "column": 36
+          "column": 38
         }
       }
     },
@@ -529,11 +529,11 @@
       "loc": {
         "start": {
           "line": 3,
-          "column": 36
+          "column": 38
         },
         "end": {
           "line": 3,
-          "column": 37
+          "column": 39
         }
       }
     },
@@ -555,11 +555,11 @@
       "loc": {
         "start": {
           "line": 3,
-          "column": 37
+          "column": 39
         },
         "end": {
           "line": 3,
-          "column": 38
+          "column": 40
         }
       }
     },
@@ -578,8 +578,8 @@
         "updateContext": null
       },
       "value": "class",
-      "start": 65,
-      "end": 70,
+      "start": 63,
+      "end": 68,
       "loc": {
         "start": {
           "line": 5,
@@ -604,8 +604,8 @@
         "binop": null
       },
       "value": "DreamWorld",
-      "start": 71,
-      "end": 81,
+      "start": 69,
+      "end": 79,
       "loc": {
         "start": {
           "line": 5,
@@ -632,8 +632,8 @@
         "updateContext": null
       },
       "value": "extends",
-      "start": 82,
-      "end": 89,
+      "start": 80,
+      "end": 87,
       "loc": {
         "start": {
           "line": 5,
@@ -658,8 +658,8 @@
         "binop": null
       },
       "value": "Minigame",
-      "start": 90,
-      "end": 98,
+      "start": 88,
+      "end": 96,
       "loc": {
         "start": {
           "line": 5,
@@ -683,8 +683,8 @@
         "postfix": false,
         "binop": null
       },
-      "start": 99,
-      "end": 100,
+      "start": 97,
+      "end": 98,
       "loc": {
         "start": {
           "line": 5,
@@ -708,8 +708,8 @@
         "postfix": false,
         "binop": null
       },
-      "start": 104,
-      "end": 105,
+      "start": 100,
+      "end": 101,
       "loc": {
         "start": {
           "line": 7,
@@ -734,8 +734,8 @@
         "binop": null
       },
       "value": "module",
-      "start": 109,
-      "end": 115,
+      "start": 103,
+      "end": 109,
       "loc": {
         "start": {
           "line": 9,
@@ -760,8 +760,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 115,
-      "end": 116,
+      "start": 109,
+      "end": 110,
       "loc": {
         "start": {
           "line": 9,
@@ -786,8 +786,8 @@
         "binop": null
       },
       "value": "exports",
-      "start": 116,
-      "end": 123,
+      "start": 110,
+      "end": 117,
       "loc": {
         "start": {
           "line": 9,
@@ -813,8 +813,8 @@
         "updateContext": null
       },
       "value": "=",
-      "start": 124,
-      "end": 125,
+      "start": 118,
+      "end": 119,
       "loc": {
         "start": {
           "line": 9,
@@ -839,8 +839,8 @@
         "binop": null
       },
       "value": "DreamWorld",
-      "start": 126,
-      "end": 136,
+      "start": 120,
+      "end": 130,
       "loc": {
         "start": {
           "line": 9,
@@ -865,8 +865,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 136,
-      "end": 137,
+      "start": 130,
+      "end": 131,
       "loc": {
         "start": {
           "line": 9,
@@ -891,8 +891,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 139,
-      "end": 139,
+      "start": 132,
+      "end": 132,
       "loc": {
         "start": {
           "line": 10,

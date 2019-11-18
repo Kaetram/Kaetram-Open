@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../">
-  <title data-ice="title">Kaetram-Open/server/js/database/mongodb/mongodb.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/js/database/mongodb/mongodb.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/database/mongodb/mongodb.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-let MongoClient = require(&apos;mongodb&apos;).MongoClient,
+const MongoClient = require(&apos;mongodb&apos;).MongoClient,
     Loader = require(&apos;./loader&apos;),
     Creator = require(&apos;./creator&apos;),
     bcrypt = require(&apos;bcrypt&apos;),
@@ -44,9 +44,8 @@ let MongoClient = require(&apos;mongodb&apos;).MongoClient,
     config = require(&apos;../../../config&apos;);
 
 class MongoDB {
-
     constructor(host, port, user, password, database) {
-        let self = this;
+        const self = this;
 
         self.host = host;
         self.port = port;
@@ -62,16 +61,16 @@ class MongoDB {
 
     getDatabase(callback, type) {
         let self = this,
-            URL= `mongodb://${self.host}:${self.port}/${self.database}`;
+            URL = `mongodb://${self.host}:${self.port}/${self.database}`;
 
-            if (config.mongoAuth)
-                URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
+        if (config.mongoAuth)
+            URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
 
-            let client = new MongoClient(URL, {
-              useUnifiedTopology: true,
-              useNewUrlParser: true,
-              wtimeout: 5
-            });
+        const client = new MongoClient(URL, {
+            useUnifiedTopology: true,
+            useNewUrlParser: true,
+            wtimeout: 5
+        });
 
         if (self.connection) {
             callback(self.connection);
@@ -85,33 +84,31 @@ class MongoDB {
 
             callback(self.connection);
         });
-
     }
 
     login(player) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) =&gt; {
-            let dataCursor = database.collection(&apos;player_data&apos;).find({ username: player.username }),
+        self.getDatabase(database =&gt; {
+            const dataCursor = database.collection(&apos;player_data&apos;).find({ username: player.username }),
                 equipmentCursor = database.collection(&apos;player_equipment&apos;).find({ username: player.username }),
                 regionsCursor = database.collection(&apos;player_regions&apos;).find({ username: player.username });
 
-            dataCursor.toArray().then((playerData) =&gt; {
-                equipmentCursor.toArray().then((equipmentData) =&gt; {
-                    regionsCursor.toArray().then((regionData) =&gt; {
-
+            dataCursor.toArray().then(playerData =&gt; {
+                equipmentCursor.toArray().then(equipmentData =&gt; {
+                    regionsCursor.toArray().then(regionData =&gt; {
                         if (playerData.length === 0)
                             self.register(player);
                         else {
-                            let playerInfo = playerData[0],
+                            const playerInfo = playerData[0],
                                 equipmentInfo = equipmentData[0],
                                 regions = regionData[0];
 
-                            playerInfo[&apos;armour&apos;] = equipmentInfo.armour;
-                            playerInfo[&apos;weapon&apos;] = equipmentInfo.weapon;
-                            playerInfo[&apos;pendant&apos;] = equipmentInfo.pendant;
-                            playerInfo[&apos;ring&apos;] = equipmentInfo.ring;
-                            playerInfo[&apos;boots&apos;] = equipmentInfo.boots;
+                            playerInfo.armour = equipmentInfo.armour;
+                            playerInfo.weapon = equipmentInfo.weapon;
+                            playerInfo.pendant = equipmentInfo.pendant;
+                            playerInfo.ring = equipmentInfo.ring;
+                            playerInfo.boots = equipmentInfo.boots;
 
                             if (regions &amp;&amp; regions.gameVersion === config.gver)
                                 player.regionsLoaded = regions.regions.split(&apos;,&apos;);
@@ -119,24 +116,23 @@ class MongoDB {
                             player.load(playerInfo);
                             player.intro();
                         }
-
                     });
                 });
-            })
+            });
         });
     }
 
     verify(player, callback) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) =&gt; {
-            let dataCursor = database.collection(&apos;player_data&apos;).find({ username: player.username });
+        self.getDatabase(database =&gt; {
+            const dataCursor = database.collection(&apos;player_data&apos;).find({ username: player.username });
 
-            dataCursor.toArray().then((data) =&gt; {
+            dataCursor.toArray().then(data =&gt; {
                 if (data.length === 0)
                     callback({ status: &apos;error&apos; });
                 else {
-                    let info = data[0];
+                    const info = data[0];
 
                     bcrypt.compare(player.password, info.password, (error, result) =&gt; {
                         if (error) throw error;
@@ -147,18 +143,18 @@ class MongoDB {
                             callback({ status: &apos;error&apos; });
                     });
                 }
-            })
+            });
         });
     }
 
     register(player) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) =&gt; {
-            let playerData = database.collection(&apos;player_data&apos;),
+        self.getDatabase(database =&gt; {
+            const playerData = database.collection(&apos;player_data&apos;),
                 cursor = playerData.find({ username: player.username });
 
-            cursor.toArray().then((info) =&gt; {
+            cursor.toArray().then(info =&gt; {
                 if (info.length === 0) {
                     log.info(&apos;No player data found for &apos; + player.username + &apos;. Creating user.&apos;);
 
@@ -172,18 +168,18 @@ class MongoDB {
     }
 
     exists(player, callback) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) =&gt; {
-            let playerData = database.collection(&apos;player_data&apos;),
+        self.getDatabase(database =&gt; {
+            const playerData = database.collection(&apos;player_data&apos;),
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
-            log.info(&apos;Looking for - &apos; + player.email +&apos; or &apos; + player.username);
+            log.info(&apos;Looking for - &apos; + player.email + &apos; or &apos; + player.username);
 
-            emailCursor.toArray().then((emailArray) =&gt; {
+            emailCursor.toArray().then(emailArray =&gt; {
                 if (emailArray.length === 0) {
-                    usernameCursor.toArray().then((usernameArray) =&gt; {
+                    usernameCursor.toArray().then(usernameArray =&gt; {
                         if (usernameArray.length === 0)
                             callback({ exists: false });
                         else
@@ -196,13 +192,13 @@ class MongoDB {
     }
 
     delete(player) {
-        let self = this;
+        const self = this;
 
-        self.getDatabase((database) =&gt; {
-            let collections = [&apos;player_data&apos;, &apos;player_equipment&apos;, &apos;player_inventory&apos;, &apos;player_abilities&apos;, &apos;player_bank&apos;, &apos;player_quests&apos;, &apos;player_achievements&apos;];
+        self.getDatabase(database =&gt; {
+            const collections = [&apos;player_data&apos;, &apos;player_equipment&apos;, &apos;player_inventory&apos;, &apos;player_abilities&apos;, &apos;player_bank&apos;, &apos;player_quests&apos;, &apos;player_achievements&apos;];
 
-            _.each(collections, (col) =&gt; {
-                let collection = database.collection(col);
+            _.each(collections, col =&gt; {
+                const collection = database.collection(col);
 
                 collection.deleteOne({
                     username: player.username
@@ -210,24 +206,21 @@ class MongoDB {
                     if (error) throw error;
 
                     if (result)
-                        log.info(&apos;Player &apos; + player.username + &apos; has been deleted.&apos;)
-                })
+                        log.info(&apos;Player &apos; + player.username + &apos; has been deleted.&apos;);
+                });
             });
         });
     }
 
     registeredCount(callback) {
+        this.getDatabase(database =&gt; {
+            const collection = database.collection(&apos;player_data&apos;);
 
-        this.getDatabase((database) =&gt; {
-            let collection = database.collection(&apos;player_data&apos;);
-
-            collection.countDocuments().then((count) =&gt; {
+            collection.countDocuments().then(count =&gt; {
                 callback(count);
             });
-
         });
     }
-
 }
 
 module.exports = MongoDB;

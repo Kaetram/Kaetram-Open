@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/app.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/app.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -37,7 +37,6 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global log, Class, Detect, Modules */
 
 define([&apos;jquery&apos;], function($) {
-
     return Class.extend({
 
         init: function() {
@@ -86,7 +85,6 @@ define([&apos;jquery&apos;], function($) {
 
             self.updateOrientation();
             self.load();
-
         },
 
         load: function() {
@@ -110,10 +108,8 @@ define([&apos;jquery&apos;], function($) {
 
             self.parchment.click(function() {
                 if (self.parchment.hasClass(&apos;about&apos;) || self.parchment.hasClass(&apos;credits&apos;) || self.parchment.hasClass(&apos;git&apos;)) {
-
                     self.parchment.removeClass(&apos;about credits git&apos;);
                     self.displayScroll(&apos;loadCharacter&apos;);
-
                 }
             });
 
@@ -192,7 +188,6 @@ define([&apos;jquery&apos;], function($) {
 
                 if (self.game.started)
                     self.game.handleInput(Modules.InputType.Key, key);
-
             });
 
             $(document).keyup(function(e) {
@@ -219,13 +214,11 @@ define([&apos;jquery&apos;], function($) {
                 window.scrollTo(0, 1);
 
                 self.game.input.handle(Modules.InputType.LeftClick, event);
-
             });
 
             $(&apos;input[type=&quot;range&quot;]&apos;).on(&apos;input&apos;, function() {
                 self.updateRange($(this));
             });
-
         },
 
         login: function() {
@@ -250,7 +243,6 @@ define([&apos;jquery&apos;], function($) {
                 self.body.removeClass(&apos;intro&apos;);
 
                 self.footer.hide();
-
             }, 500);
         },
 
@@ -285,12 +277,9 @@ define([&apos;jquery&apos;], function($) {
                 self.parchment.toggleClass(&apos;animate&apos;).removeClass(origin);
 
                 setTimeout(function() {
-
                     self.parchment.toggleClass(&apos;animate&apos;).addClass(destination);
                     self.parchmentAnimating = false;
-
                 }, Detect.isTablet() ? 0 : 1000);
-
             } else
                 self.parchment.removeClass(origin).addClass(destination);
         },
@@ -300,7 +289,6 @@ define([&apos;jquery&apos;], function($) {
                 state = self.parchment.attr(&apos;class&apos;);
 
             if (self.game.started) {
-
                 self.parchment.removeClass().addClass(content);
 
                 self.body.removeClass(&apos;credits legal about&apos;).toggleClass(content);
@@ -310,10 +298,8 @@ define([&apos;jquery&apos;], function($) {
 
                 if (content !== &apos;about&apos;)
                     self.helpButton.removeClass(&apos;active&apos;);
-
             } else if (state !== &apos;animate&apos;)
                 self.openScroll(state, state === content ? &apos;loadCharacter&apos; : content);
-
         },
 
         verifyForm: function() {
@@ -324,7 +310,6 @@ define([&apos;jquery&apos;], function($) {
                 return;
 
             switch (activeForm) {
-
                 case &apos;loadCharacter&apos;:
 
                     var nameInput = $(&apos;#loginNameInput&apos;),
@@ -397,7 +382,7 @@ define([&apos;jquery&apos;], function($) {
 
             $(&apos;&lt;span&gt;&lt;/span&gt;&apos;, {
                 &apos;class&apos;: &apos;status blink&apos;,
-                text: message
+                &apos;text&apos;: message
             }).appendTo(&apos;.validation-summary&apos;);
 
             $(&apos;.status&apos;).append(&apos;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&apos;);
@@ -408,7 +393,7 @@ define([&apos;jquery&apos;], function($) {
 
             $(&apos;&lt;span&gt;&lt;/span&gt;&apos;, {
                 &apos;class&apos;: &apos;validation-error blink&apos;,
-                text: error
+                &apos;text&apos;: error
             }).appendTo(&apos;.validation-summary&apos;);
 
             if (!field)
@@ -497,7 +482,6 @@ define([&apos;jquery&apos;], function($) {
 
                 self.loginButton.addClass(&apos;disabled&apos;);
                 self.registerButton.addClass(&apos;disabled&apos;);
-
             } else {
                 self.loading.attr(&apos;hidden&apos;, true);
 
@@ -513,7 +497,7 @@ define([&apos;jquery&apos;], function($) {
                 _.each(self.loginFields, function(field) { field.prop(&apos;readonly&apos;, state); });
 
             if (self.registerFields)
-                _.each(self.registerFields, function(field) { field.prop(&apos;readOnly&apos;, state); })
+                _.each(self.registerFields, function(field) { field.prop(&apos;readOnly&apos;, state); });
         },
 
         updateRange: function(obj) {
@@ -541,7 +525,6 @@ define([&apos;jquery&apos;], function($) {
         }
 
     });
-
 });
 </code></pre>
 

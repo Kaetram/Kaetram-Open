@@ -1,6 +1,6 @@
 /* global module */
 
-let config = require('../../config.json'),
+const config = require('../../config.json'),
     Player = require('./entity/character/player/player'),
     Map = require('../map/map'),
     _ = require('underscore'),
@@ -23,9 +23,8 @@ let config = require('../../config.json'),
     Network = require('../network/network');
 
 class World {
-
     constructor(id, socket, database) {
-        let self = this;
+        const self = this;
 
         self.id = id;
         self.socket = socket;
@@ -51,11 +50,10 @@ class World {
         self.ready = false;
 
         self.malformTimeout = null;
-
     }
 
     load(onWorldLoad) {
-        let self = this;
+        const self = this;
 
         log.info('************ World ' + self.id + ' ***********');
 
@@ -68,7 +66,6 @@ class World {
 
         self.map = new Map(self);
         self.map.isReady(() => {
-
             log.info('The map has been successfully loaded!');
 
             self.loaded();
@@ -77,13 +74,11 @@ class World {
             self.spawnEntities();
 
             onWorldLoad();
-
         });
-
     }
 
     loaded() {
-        let self = this;
+        const self = this;
         /**
          * Similar to Kaetram engine here, but it's loaded upon initialization
          * rather than being called from elsewhere.
@@ -101,23 +96,20 @@ class World {
     }
 
     tick() {
-        let self = this;
+        const self = this;
 
         setInterval(() => {
-
             self.network.parsePackets();
             self.region.parseRegions();
-
         }, 1000 / self.updateTime);
-
     }
 
-    /****************************
+    /** **************************
      * Entity related functions *
      ****************************/
 
     kill(entity) {
-        let self = this;
+        const self = this;
 
         entity.applyDamage(entity.hitPoints);
 
@@ -137,7 +129,7 @@ class World {
     }
 
     handleDamage(attacker, target, damage) {
-        let self = this;
+        const self = this;
 
         if (!attacker || !target || isNaN(damage) || target.invincible)
             return;
@@ -145,7 +137,7 @@ class World {
         if (target.type === 'player' && target.hitCallback)
             target.hitCallback(attacker, damage);
 
-        //Stop screwing with this - it's so the target retaliates.
+        // Stop screwing with this - it's so the target retaliates.
 
         target.hit(attacker);
         target.applyDamage(damage);
@@ -167,7 +159,7 @@ class World {
             if (attacker.type === 'player')
                 attacker.killCharacter(target);
 
-            target.combat.forEachAttacker((attacker) => {
+            target.combat.forEachAttacker(attacker => {
                 attacker.removeTarget();
             });
 
@@ -183,18 +175,17 @@ class World {
             }]);
 
             self.handleDeath(target);
-
         }
     }
 
     handleDeath(character, ignoreDrops) {
-        let self = this;
+        const self = this;
 
         if (!character)
             return;
 
         if (character.type === 'mob') {
-            let deathX = character.x,
+            const deathX = character.x,
                 deathY = character.y;
 
             if (character.deathCallback)
@@ -209,18 +200,17 @@ class World {
             character.combat.stop();
 
             if (!ignoreDrops) {
-                let drop = character.getDrop();
+                const drop = character.getDrop();
 
                 if (drop)
                     self.dropItem(drop.id, drop.count, deathX, deathY);
             }
-
         } else if (character.type === 'player')
             character.die();
     }
 
     createProjectile(info) {
-        let self = this,
+        const self = this,
             attacker = info.shift(),
             target = info.shift();
 
@@ -258,8 +248,8 @@ class World {
         let self = this,
             entities = 0;
 
-        _.each(self.map.staticEntities, (data) => {
-            let key = data.string,
+        _.each(self.map.staticEntities, data => {
+            const key = data.string,
                 isMob = !!Mobs.Properties[key],
                 isNpc = !!NPCs.Properties[key],
                 isItem = !!Items.Data[key],
@@ -274,10 +264,10 @@ class World {
                 return;
             }
 
-            let instance = Utils.generateInstance(isMob ? 2 : (isNpc ? 3 : 4), info.id + entities, position.x + entities, position.y);
+            const instance = Utils.generateInstance(isMob ? 2 : (isNpc ? 3 : 4), info.id + entities, position.x + entities, position.y);
 
             if (isMob) {
-                let mob = new Mob(info.id, instance, position.x, position.y, self);
+                const mob = new Mob(info.id, instance, position.x, position.y, self);
 
                 mob.static = true;
 
@@ -290,13 +280,11 @@ class World {
                 mob.load();
 
                 mob.onRespawn(() => {
-
                     mob.dead = false;
 
                     mob.refresh();
 
                     self.addMob(mob);
-
                 });
 
                 self.addMob(mob);
@@ -306,7 +294,7 @@ class World {
                 self.addNPC(new NPC(info.id, instance, position.x, position.y));
 
             if (isItem) {
-                let item = self.createItem(info.id, instance, position.x, position.y);
+                const item = self.createItem(info.id, instance, position.x, position.y);
                 item.static = true;
                 self.addItem(item);
             }
@@ -319,11 +307,10 @@ class World {
     }
 
     spawnChests() {
-        let self = this,
+        const self = this,
             chests = 0;
 
-        _.each(self.map.chests, (info) => {
-
+        _.each(self.map.chests, info => {
             self.spawnChest(info.i, info.x, info.y, true);
 
             chests++;
@@ -333,7 +320,7 @@ class World {
     }
 
     spawnMob(id, x, y) {
-        let self = this,
+        const self = this,
             instance = Utils.generateInstance(2, id, x + id, y),
             mob = new Mob(id, instance, x, y);
 
@@ -346,7 +333,7 @@ class World {
     }
 
     spawnChest(items, x, y, staticChest) {
-        let self = this,
+        const self = this,
             chestCount = Object.keys(self.chests).length,
             instance = Utils.generateInstance(5, 194, chestCount, x, y),
             chest = new Chest(194, instance, x, y);
@@ -354,15 +341,12 @@ class World {
         chest.items = items;
 
         if (staticChest) {
-
             chest.static = staticChest;
 
             chest.onRespawn(self.addChest.bind(self, chest));
-
         }
 
         chest.onOpen(() => {
-
             /**
              * Pretty simple concept, detect when the player opens the chest
              * then remove it and drop an item instead. Give it a 25 second
@@ -375,7 +359,6 @@ class World {
                 log.info(`Opening chest at x: ${chest.x}, y: ${chest.y}`);
 
             self.dropItem(Items.stringToId(chest.getItem()), 1, chest.x, chest.y);
-
         });
 
         self.addChest(chest);
@@ -384,11 +367,11 @@ class World {
     }
 
     createItem(id, instance, x, y) {
-        return new Item(id, instance, x, y);;
+        return new Item(id, instance, x, y);
     }
 
     dropItem(id, count, x, y) {
-        let self = this,
+        const self = this,
             instance = Utils.generateInstance(4, id + (Object.keys(self.entities)).length, x, y),
             item = self.createItem(id, instance, x, y);
 
@@ -415,10 +398,10 @@ class World {
     }
 
     push(type, info) {
-        let self = this;
+        const self = this;
 
         if (_.isArray(info)) {
-            _.each(info, (i) => { self.push(type, i); });
+            _.each(info, i => { self.push(type, i); });
             return;
         }
 
@@ -476,12 +459,11 @@ class World {
                 self.network.pushToOldRegions(info.player, info.message);
 
                 break;
-
         }
     }
 
     addEntity(entity, region) {
-        let self = this;
+        const self = this;
 
         if (entity.instance in self.entities)
             log.info('Entity ' + entity.instance + ' already exists.');
@@ -495,11 +477,9 @@ class World {
             self.getGrids().addToEntityGrid(entity, entity.x, entity.y);
 
         entity.onSetPosition(() => {
-
             self.getGrids().updateEntityPosition(entity);
 
             if (entity.isMob() && entity.isOutsideSpawn()) {
-
                 entity.removeTarget();
                 entity.combat.forget();
                 entity.combat.stop();
@@ -520,17 +500,13 @@ class World {
                         teleport: false
                     })
                 }]);
-
             }
-
         });
 
         if (entity instanceof Character) {
-
             entity.getCombat().setWorld(self);
 
-            entity.onStunned((stun) => {
-
+            entity.onStunned(stun => {
                 self.push(Packets.PushOpcode.Regions, {
                     regionId: entity.region,
                     message: new Messages.Movement(Packets.MovementOpcode.Stunned, {
@@ -538,14 +514,12 @@ class World {
                         state: stun
                     })
                 });
-
             });
-
         }
     }
 
     addPlayer(player) {
-        let self = this;
+        const self = this;
 
         self.addEntity(player);
         self.players[player.instance] = player;
@@ -555,14 +529,14 @@ class World {
     }
 
     addNPC(npc, region) {
-        let self = this;
+        const self = this;
 
         self.addEntity(npc, region);
         self.npcs[npc.instance] = npc;
     }
 
     addMob(mob, region) {
-        let self = this;
+        const self = this;
 
         if (!Mobs.exists(mob.id)) {
             log.error('Cannot spawn mob. ' + mob.id + ' does not exist.');
@@ -574,7 +548,7 @@ class World {
 
         mob.addToChestArea(self.getChestAreas());
 
-        mob.onHit((attacker) => {
+        mob.onHit(attacker => {
             if (mob.isDead() || mob.combat.started)
                 return;
 
@@ -583,7 +557,7 @@ class World {
     }
 
     addItem(item, region) {
-        let self = this;
+        const self = this;
 
         if (item.static)
             item.onRespawn(self.addItem.bind(self, item));
@@ -593,21 +567,21 @@ class World {
     }
 
     addProjectile(projectile, region) {
-        let self = this;
+        const self = this;
 
         self.addEntity(projectile, region);
         self.projectiles[projectile.instance] = projectile;
     }
 
     addChest(chest, region) {
-        let self = this;
+        const self = this;
 
         self.addEntity(chest, region);
         self.chests[chest.instance] = chest;
     }
 
     removeEntity(entity) {
-        let self = this;
+        const self = this;
 
         if (entity.instance in self.entities)
             delete self.entities[entity.instance];
@@ -624,17 +598,16 @@ class World {
     }
 
     cleanCombat(entity) {
-        let self = this;
+        const self = this;
 
-        _.each(this.entities, (oEntity) => {
+        _.each(this.entities, oEntity => {
             if (oEntity instanceof Character && oEntity.combat.hasAttacker(entity))
                 oEntity.combat.removeAttacker(entity);
-
         });
     }
 
     removeItem(item) {
-        let self = this;
+        const self = this;
 
         self.removeEntity(item);
         self.push(Packets.PushOpcode.Broadcast, {
@@ -646,7 +619,7 @@ class World {
     }
 
     removePlayer(player) {
-        let self = this;
+        const self = this;
 
         self.push(Packets.PushOpcode.Regions, {
             regionId: player.region,
@@ -671,7 +644,7 @@ class World {
     }
 
     removeProjectile(projectile) {
-        let self = this;
+        const self = this;
 
         self.removeEntity(projectile);
 
@@ -679,7 +652,7 @@ class World {
     }
 
     removeChest(chest) {
-        let self = this;
+        const self = this;
 
         self.removeEntity(chest);
         self.push(Packets.PushOpcode.Broadcast, {
@@ -693,29 +666,33 @@ class World {
     }
 
     playerInWorld(username) {
-        let self = this;
+        const self = this;
 
-        for (let id in self.players)
-            if (self.players.hasOwnProperty(id))
+        for (const id in self.players) {
+            if (self.players.hasOwnProperty(id)) {
                 if (self.players[id].username.toLowerCase() === username.toLowerCase())
                     return true;
+            }
+        }
 
         return false;
     }
 
     getPlayerByName(name) {
-        let self = this;
+        const self = this;
 
-        for (let id in self.players)
-            if (self.players.hasOwnProperty(id))
+        for (const id in self.players) {
+            if (self.players.hasOwnProperty(id)) {
                 if (self.players[id].username.toLowerCase() === name.toLowerCase())
                     return self.players[id];
+            }
+        }
 
         return null;
     }
 
     getPlayerByInstance(instance) {
-        let self = this;
+        const self = this;
 
         if (instance in self.players)
             return self.players[instance];
@@ -724,29 +701,29 @@ class World {
     }
 
     forEachPlayer(callback) {
-        _.each(this.players, (player) => {
+        _.each(this.players, player => {
             callback(player);
         });
     }
 
     getPVPAreas() {
-        return this.map.areas['PVP'].pvpAreas;
+        return this.map.areas.PVP.pvpAreas;
     }
 
     getMusicAreas() {
-        return this.map.areas['Music'].musicAreas;
+        return this.map.areas.Music.musicAreas;
     }
 
     getChestAreas() {
-        return this.map.areas['Chests'].chestAreas;
+        return this.map.areas.Chests.chestAreas;
     }
 
     getOverlayAreas() {
-        return this.map.areas['Overlays'].overlayAreas;
+        return this.map.areas.Overlays.overlayAreas;
     }
 
     getCameraAreas() {
-        return this.map.areas['Cameras'].cameraAreas;
+        return this.map.areas.Cameras.cameraAreas;
     }
 
     getGrids() {
@@ -764,7 +741,6 @@ class World {
     onPopulationChange(callback) {
         this.populationCallback = callback;
     }
-
 }
 
 module.exports = World;

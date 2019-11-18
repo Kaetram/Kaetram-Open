@@ -1,15 +1,14 @@
-let Combat = require('../../js/game/entity/character/combat/combat'),
+const Combat = require('../../js/game/entity/character/combat/combat'),
     Messages = require('../../js/network/messages'),
     Packets = require('../../js/network/packets'),
     Utils = require('../../js/util/utils');
 
 class Tenebris extends Combat {
-
     constructor(character) {
         character.spawnDistance = 24;
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.illusions = [];
         self.firstIllusionKilled = false;
@@ -18,16 +17,14 @@ class Tenebris extends Combat {
         self.respawnDelay = 95000;
 
         character.onDeath(() => {
-
-            if (self.isIllusion())
+            if (self.isIllusion()) {
                 if (!self.firstIllusionKilled)
                     self.spawnTenbris();
-            else {
+                else {
+                    self.removeIllusions();
 
-                self.removeIllusions();
-
-                self.reset();
-
+                    self.reset();
+                }
             }
         });
 
@@ -36,23 +33,20 @@ class Tenebris extends Combat {
     }
 
     reset() {
-        var self = this;
+        const self = this;
 
         self.illusions = [];
         self.firstIllusionKilled = false;
 
         setTimeout(() => {
-
-            var offset = Utils.positionOffset(4);
+            const offset = Utils.positionOffset(4);
 
             self.world.spawnMob(105, 48 + offset.x, 338 + offset.y);
-
         }, self.respawnDelay);
-
     }
 
     hit(attacker, target, hitInfo) {
-        var self = this;
+        const self = this;
 
         if (self.isAttacked())
             self.beginIllusionAttack();
@@ -64,18 +58,18 @@ class Tenebris extends Combat {
     }
 
     spawnTenbris() {
-        var self = this;
+        const self = this;
 
         self.world.spawnMob(104, self.character.x, self.character.y);
     }
 
     spawnIllusions() {
-        var self = this;
+        const self = this;
 
         self.illusions.push(self.world.spawnMob(105, self.character.x + 1, self.character.y + 1));
         self.illusions.push(self.world.spawnMob(105, self.character.x - 1, self.character.y + 1));
 
-        _.each(self.illusions, (illusion) => {
+        _.each(self.illusions, illusion => {
             illusion.onDeath(() => {
                 if (self.isLast())
                     self.lastIllusion = new Date().getTime();
@@ -98,40 +92,38 @@ class Tenebris extends Combat {
                 withAnimation: true
             })
         });
-        
     }
 
     removeIllusions() {
-        var self = this;
+        const self = this;
 
         self.lastIllusion = 0;
 
-        var listCopy = self.illusions.slice();
+        const listCopy = self.illusions.slice();
 
-        for (var i = 0; i < listCopy.length; i++)
+        for (let i = 0; i < listCopy.length; i++)
             self.world.kill(listCopy[i]);
     }
 
     beginIllusionAttack() {
-        var self = this;
+        const self = this;
 
         if (!self.hasIllusions())
             return;
 
-        _.each(self.illusions, (illusion) => {
-            var target = self.getRandomTarget();
+        _.each(self.illusions, illusion => {
+            const target = self.getRandomTarget();
 
             if (!illusion.hasTarget && target)
                 illusion.combat.begin(target);
-
         });
     }
 
     getRandomTarget() {
-        var self = this;
+        const self = this;
 
         if (self.isAttacked()) {
-            var keys = Object.keys(self.attackers),
+            const keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker)
@@ -145,7 +137,7 @@ class Tenebris extends Combat {
     }
 
     forceTalk(instance, message) {
-        var self = this;
+        const self = this;
 
         if (!self.world)
             return;
@@ -158,7 +150,6 @@ class Tenebris extends Combat {
                 nonNPC: true
             })
         });
-
     }
 
     isLast() {
@@ -176,7 +167,6 @@ class Tenebris extends Combat {
     hasIllusions() {
         return this.illusions.length > 0;
     }
-
 }
 
 module.exports = Tenebris;

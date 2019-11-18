@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../../../">
-  <title data-ice="title">Kaetram-Open/client/js/interface/profile/pages/quest.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/client/js/interface/profile/pages/quest.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -35,7 +35,6 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/profile/pages/quest.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
-
     return Page.extend({
 
         init: function() {
@@ -51,7 +50,6 @@
 
             self.achievementsList = self.achievements.find(&apos;ul&apos;);
             self.questList = self.quests.find(&apos;ul&apos;);
-
         },
 
         loadAchievements: function(achievements) {
@@ -70,7 +68,6 @@
                     name.css(&apos;background&apos;, &apos;rgba(255, 255, 10, 0.4)&apos;);
 
                     name.text(achievement.name + (achievement.count &gt; 2 ? &apos; &apos; + (achievement.progress - 1) + &apos;/&apos; + (achievement.count - 1) : &apos;&apos;));
-
                 } else if (achievement.progress &gt; 9998) {
                     name.text(achievement.name);
                     name.css(&apos;background&apos;, &apos;rgba(10, 255, 10, 0.3)&apos;);
@@ -159,7 +156,6 @@
                 name.text(info.name);
 
             name.css(&apos;background&apos;, &apos;rgba(10, 255, 10, 0.3)&apos;);
-
         },
 
         getQuest: function(id) {
@@ -181,11 +177,10 @@
         },
 
         getName: function(isQuest, id) {
-            return $(&apos;&lt;div id=&quot;&apos; + (isQuest ? &apos;quest&apos; : &apos;achievement&apos;) + id + &apos;name&quot; class=&quot;questName&quot;&gt;&lt;/div&gt;&apos;)
+            return $(&apos;&lt;div id=&quot;&apos; + (isQuest ? &apos;quest&apos; : &apos;achievement&apos;) + id + &apos;name&quot; class=&quot;questName&quot;&gt;&lt;/div&gt;&apos;);
         }
 
     });
-
 });
 </code></pre>
 

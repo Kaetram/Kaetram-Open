@@ -1,6 +1,6 @@
 /* global module */
 
-let Formulas = {},
+const Formulas = {},
     Utils = require('./utils'),
     Constants = require('./constants');
 
@@ -9,15 +9,13 @@ Formulas.LevelExp = [];
 module.exports = Formulas;
 
 Formulas.getDamage = (attacker, target, special) => {
-
-    let maxDamage = Formulas.getMaxDamage(attacker, target, special),
+    const maxDamage = Formulas.getMaxDamage(attacker, target, special),
         accuracy = Utils.randomInt(0, attacker.level);
 
     return Utils.randomInt(accuracy, maxDamage);
 };
 
 Formulas.getMaxDamage = (attacker, target, special) => {
-
     if (!attacker || !target)
         return;
 
@@ -89,11 +87,9 @@ Formulas.getMaxDamage = (attacker, target, special) => {
         damage = 0;
 
     return damage;
-
 };
 
 Formulas.getCritical = (attacker, target) => {
-
     if (!attacker || !target)
         return;
 
@@ -108,17 +104,16 @@ Formulas.getCritical = (attacker, target) => {
 };
 
 Formulas.getWeaponBreak = (attacker, target) => {
-
     if (!attacker || !target)
         return;
 
-    let targetArmour = target.getArmourLevel();
+    const targetArmour = target.getArmourLevel();
 
     /**
      * The chance a weapon will break ....
      */
 
-    let breakChance = Utils.randomRange(1, 100);
+    const breakChance = Utils.randomRange(1, 100);
 
     return breakChance > 75;
 };
@@ -133,44 +128,47 @@ Formulas.getAoEDamage = (attacker, target) => {
     return Formulas.getDamage(attacker, target);
 };
 
-Formulas.nextExp = (experience) => {
+Formulas.nextExp = experience => {
     if (experience < 0)
         return -1;
 
-    for (let i = 1; i < Formulas.LevelExp.length; i++)
+    for (let i = 1; i < Formulas.LevelExp.length; i++) {
         if (experience < Formulas.LevelExp[i])
             return Formulas.LevelExp[i];
+    }
 };
 
-Formulas.prevExp = (experience) => {
+Formulas.prevExp = experience => {
     if (experience < 0)
         return -1;
 
-    for (let i = Constants.MAX_LEVEL; i > 0; i--)
+    for (let i = Constants.MAX_LEVEL; i > 0; i--) {
         if (experience > Formulas.LevelExp[i])
             return Formulas.LevelExp[i];
+    }
 };
 
-Formulas.expToLevel = (experience) => {
+Formulas.expToLevel = experience => {
     if (experience < 0)
         return -1;
 
-    for (let i = 1; i < Formulas.LevelExp.length; i++)
+    for (let i = 1; i < Formulas.LevelExp.length; i++) {
         if (experience < Formulas.LevelExp[i])
             return i;
+    }
 };
 
-Formulas.getRewardExperience = (player) => {
+Formulas.getRewardExperience = player => {
     if (!player)
         return;
 
     return (5 + player.level) * player.level;
 };
 
-Formulas.getMaxHitPoints = (level) => {
+Formulas.getMaxHitPoints = level => {
     return 100 + (level * 30);
 };
 
-Formulas.getMaxMana = (level) => {
+Formulas.getMaxMana = level => {
     return 10 + (level * 8);
 };

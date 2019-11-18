@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">Kaetram-Open/server/data/combat/ogrelord.js | Kaetram</title>
+  <title data-ice="title">Kaetram-Open/server/data/combat/ogrelord.js | kaetram</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-</header>
+<a style="position:relative; top:3px;" href="https://github.com/Veradictus/Kaetram-Open"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -34,7 +34,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/data/combat/ogrelord.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">let Combat = require(&apos;../../js/game/entity/character/combat/combat&apos;),
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Combat = require(&apos;../../js/game/entity/character/combat/combat&apos;),
     Messages = require(&apos;../../js/network/messages&apos;),
     Packets = require(&apos;../../js/network/packets&apos;),
     Modules = require(&apos;../../js/util/modules&apos;),
@@ -42,11 +42,10 @@
     _ = require(&apos;underscore&apos;);
 
 class OgreLord extends Combat {
-
     constructor(character) {
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.character = character;
 
@@ -67,32 +66,28 @@ class OgreLord extends Combat {
     }
 
     load() {
-        var self = this;
+        const self = this;
 
         self.talkingInterval = setInterval(() =&gt; {
-
             if (self.character.hasTarget())
                 self.forceTalk(self.getMessage());
-
         }, 9000);
 
         self.updateInterval = setInterval(() =&gt; {
-
             self.character.armourLevel = 50 + (self.minions.length * 15);
-
         }, 2000);
 
         self.loaded = true;
     }
 
     hit(character, target, hitInfo) {
-        var self = this;
+        const self = this;
 
         if (self.isAttacked())
             self.beginMinionAttack();
 
         if (!character.isNonDiagonal(target)) {
-            var distance = character.getDistance(target);
+            const distance = character.getDistance(target);
 
             if (distance &lt; 7) {
                 hitInfo.isRanged = true;
@@ -107,7 +102,7 @@ class OgreLord extends Combat {
     }
 
     forceTalk(message) {
-        var self = this;
+        const self = this;
 
         if (!self.world)
             return;
@@ -120,7 +115,6 @@ class OgreLord extends Combat {
                 nonNPC: true
             })
         });
-
     }
 
     getMessage() {
@@ -128,7 +122,7 @@ class OgreLord extends Combat {
     }
 
     spawnMinions() {
-        var self = this,
+        const self = this,
             xs = [414, 430, 415, 420, 429],
             ys = [172, 173, 183, 185, 180];
 
@@ -136,23 +130,19 @@ class OgreLord extends Combat {
 
         self.forceTalk(&apos;Now you shall see my true power!&apos;);
 
-        for (var i = 0; i &lt; xs.length; i++)
+        for (let i = 0; i &lt; xs.length; i++)
             self.minions.push(self.world.spawnMob(12, xs[i], ys[i]));
 
-        _.each(self.minions, (minion) =&gt; {
-
+        _.each(self.minions, minion =&gt; {
             minion.onDeath(() =&gt; {
-
                 if (self.isLast())
                     self.lastSpawn = new Date().getTime();
 
                 self.minions.splice(self.minions.indexOf(minion), 1);
-
             });
 
             if (self.isAttacked())
                 self.beginMinionAttack();
-
         });
 
         if (!self.loaded)
@@ -160,28 +150,27 @@ class OgreLord extends Combat {
     }
 
     beginMinionAttack() {
-        var self = this;
+        const self = this;
 
         if (!self.hasMinions())
             return;
 
-        _.each(self.minions, (minion) =&gt; {
-            var randomTarget = self.getRandomTarget();
+        _.each(self.minions, minion =&gt; {
+            const randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() &amp;&amp; randomTarget)
                 minion.combat.begin(randomTarget);
-
         });
     }
 
     reset() {
-        var self = this;
+        const self = this;
 
         self.lastSpawn = 0;
 
-        var listCopy = self.minions.slice();
+        const listCopy = self.minions.slice();
 
-        for (var i = 0; i &lt; listCopy.length; i++)
+        for (let i = 0; i &lt; listCopy.length; i++)
             self.world.kill(listCopy[i]);
 
         clearInterval(self.talkingInterval);
@@ -194,10 +183,10 @@ class OgreLord extends Combat {
     }
 
     getRandomTarget() {
-        var self = this;
+        const self = this;
 
         if (self.isAttacked()) {
-            var keys = Object.keys(self.attackers),
+            const keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker)
@@ -221,7 +210,6 @@ class OgreLord extends Combat {
     canSpawn() {
         return (new Date().getTime() - this.lastSpawn &gt; 50000) &amp;&amp; !this.hasMinions() &amp;&amp; this.isAttacked();
     }
-
 }
 
 module.exports = OgreLord;

@@ -13,7 +13,7 @@ log = new Log(config.worlds > 1 ? 'notice' : config.debugLevel, config.localDebu
 function main() {
     log.info('Initializing ' + config.name + ' game engine...');
 
-    let webSocket = new WebSocket(config.host, config.port, config.gver),
+    const webSocket = new WebSocket(config.host, config.port, config.gver),
         database = new Database(config.database),
         stdin = process.openStdin();
 
@@ -21,11 +21,12 @@ function main() {
         if (allowConnections) {
             let world;
 
-            for (let i = 0; i < worlds.length; i++)
+            for (let i = 0; i < worlds.length; i++) {
                 if (worlds[i].playerCount < worlds[i].maxPlayers) {
                     world = worlds[i];
                     break;
                 }
+            }
 
             if (world)
                 world.playerConnectCallback(connection);
@@ -35,12 +36,10 @@ function main() {
                 connection.sendUTF8('full');
                 connection.close();
             }
-
         } else {
             connection.sendUTF8('disallowed');
             connection.close();
         }
-
     });
 
 
@@ -55,28 +54,26 @@ function main() {
             worlds.push(new World(i + 1, webSocket, database.getDatabase()));
 
         initializeWorlds();
-
     });
 
-    stdin.addListener('data', (data) => {
-        let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+    stdin.addListener('data', data => {
+        const message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
             type = message.charAt(0);
 
         if (type !== '/')
             return;
 
-        let blocks = message.substring(1).split(' '),
+        const blocks = message.substring(1).split(' '),
             command = blocks.shift();
 
         if (!command)
             return;
 
         switch (command) {
-
             case 'players':
                 let total = 0;
 
-                _.each(worlds, (world) => {
+                _.each(worlds, world => {
                     total += world.playerCount;
                 });
 
@@ -86,15 +83,13 @@ function main() {
 
             case 'registered':
 
-                worlds[0].database.registeredCount((count) => {
+                worlds[0].database.registeredCount(count => {
                     log.info(`There are ${count} users registered.`);
                 });
 
                 break;
-
         }
     });
-
 }
 
 function onWorldLoad() {
@@ -107,7 +102,7 @@ function allWorldsCreated() {
     log.notice('Finished creating ' + worlds.length + ' world' + (worlds.length > 1 ? 's' : '') + '!');
     allowConnections = true;
 
-    var host = config.host === '0.0.0.0' ? 'localhost' : config.host;
+    const host = config.host === '0.0.0.0' ? 'localhost' : config.host;
     log.notice('Connect locally via http://' + host + ':' + config.port);
 }
 
@@ -116,17 +111,19 @@ function loadParser() {
 }
 
 function initializeWorlds() {
-    for (var worldId in worlds)
+    for (const worldId in worlds) {
         if (worlds.hasOwnProperty(worldId))
             worlds[worldId].load(onWorldLoad);
+    }
 }
 
 function getPopulations() {
-    var counts = [];
+    const counts = [];
 
-    for (var index in worlds)
+    for (const index in worlds) {
         if (worlds.hasOwnProperty(index))
             counts.push(worlds[index].getPopulation());
+    }
 
     return counts;
 }
@@ -136,20 +133,20 @@ function saveAll() {
         world.saveAll();
     });
 
-    var plural = worlds.length > 1;
+    const plural = worlds.length > 1;
 
     log.notice('Saved players for ' + worlds.length + ' world' + (plural ? 's' : '') + '.');
 }
 
-if ( typeof String.prototype.startsWith !== 'function' ) {
+if (typeof String.prototype.startsWith !== 'function') {
     String.prototype.startsWith = function(str) {
-        return str.length > 0 && this.substring( 0, str.length ) === str;
+        return str.length > 0 && this.substring(0, str.length) === str;
     };
 }
 
-if ( typeof String.prototype.endsWith !== 'function' ) {
+if (typeof String.prototype.endsWith !== 'function') {
     String.prototype.endsWith = function(str) {
-        return str.length > 0 && this.substring( this.length - str.length, this.length ) === str;
+        return str.length > 0 && this.substring(this.length - str.length, this.length) === str;
     };
 }
 

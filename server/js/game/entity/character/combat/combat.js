@@ -1,6 +1,6 @@
 /* global module */
 
-let _ = require('underscore'),
+const _ = require('underscore'),
     Hit = require('./hit'),
     CombatQueue = require('./combatqueue'),
     Utils = require('../../../../util/utils'),
@@ -10,9 +10,8 @@ let _ = require('underscore'),
     Packets = require('../../../../network/packets');
 
 class Combat {
-
     constructor(character) {
-        let self = this;
+        const self = this;
 
         self.character = character;
         self.world = null;
@@ -39,47 +38,41 @@ class Combat {
         self.cleanTimeout = null;
 
         self.character.onSubAoE((radius, hasTerror) => {
-
             self.dealAoE(radius, hasTerror);
-
         });
 
         self.character.onDamage((target, hitInfo) => {
-
             if (self.isPlayer() && self.character.hasBreakableWeapon() && Formulas.getWeaponBreak(self.character, target))
                 self.character.breakWeapon();
 
             if (hitInfo.type === Modules.Hits.Stun) {
-
                 target.setStun(true);
 
                 if (target.stunTimeout)
                     clearTimeout(target.stunTimeout);
 
                 target.stunTimeout = setTimeout(() => {
-
                     target.setStun(false);
-
                 }, 3000);
             }
         });
     }
 
     begin(attacker) {
-        let self = this;
+        const self = this;
 
         self.start();
 
         self.character.setTarget(attacker);
         self.addAttacker(attacker);
 
-        attacker.combat.addAttacker(self.character); //For mobs attacking players..
+        attacker.combat.addAttacker(self.character); // For mobs attacking players..
 
         self.attack(attacker);
     }
 
     start() {
-        let self = this;
+        const self = this;
 
         if (self.started)
             return;
@@ -96,7 +89,7 @@ class Combat {
     }
 
     stop() {
-        let self = this;
+        const self = this;
 
         if (!self.started)
             return;
@@ -113,13 +106,12 @@ class Combat {
     }
 
     parseAttack() {
-        let self = this;
+        const self = this;
 
         if (!self.world || !self.queue || self.character.stunned)
             return;
 
         if (self.character.hasTarget() && self.inProximity()) {
-
             if (self.queue.hasQueue())
                 self.hit(self.character, self.character.target, self.queue.getHit());
 
@@ -129,20 +121,17 @@ class Combat {
             self.sync();
 
             self.lastAction = self.getTime();
-
         } else
             self.queue.clear();
-
     }
 
     parseFollow() {
-        let self = this;
+        const self = this;
 
         if (self.character.frozen || self.character.stunned)
             return;
 
         if (self.isMob()) {
-
             if (!self.character.isRanged())
                 self.sendFollow();
 
@@ -150,30 +139,27 @@ class Combat {
                 self.lastAction = self.getTime();
 
             if (self.onSameTile()) {
-                let newPosition = self.getNewPosition();
+                const newPosition = self.getNewPosition();
 
                 self.move(self.character, newPosition.x, newPosition.y);
             }
 
             if (self.character.hasTarget() && !self.inProximity()) {
-                let attacker = self.getClosestAttacker();
+                const attacker = self.getClosestAttacker();
 
                 if (attacker)
                     self.follow(self.character, attacker);
-
             }
         }
     }
 
     parseCheck() {
-        let self = this;
+        const self = this;
 
         if (self.getTime() - self.lastAction > self.lastActionThreshold) {
-
             self.stop();
 
             self.forget();
-
         }
     }
 
@@ -193,7 +179,7 @@ class Combat {
     }
 
     sync() {
-        let self = this;
+        const self = this;
 
         if (self.character.type !== 'mob')
             return;
@@ -201,16 +187,16 @@ class Combat {
         self.world.push(Packets.PushOpcode.Regions, {
             regionId: self.character.region,
             message: new Messages.Combat(Packets.CombatOpcode.Sync, {
-                attackerId: self.character.instance, //irrelevant
-                targetId: self.character.instance, //can be the same since we're acting on an entity.
+                attackerId: self.character.instance, // irrelevant
+                targetId: self.character.instance, // can be the same since we're acting on an entity.
                 x: self.character.x,
                 y: self.character.y
             })
-        })
+        });
     }
 
     dealAoE(radius, hasTerror) {
-        let self = this;
+        const self = this;
 
         /**
          * TODO - Find a way to implement special effects without hardcoding them.
@@ -219,23 +205,20 @@ class Combat {
         if (!self.world)
             return;
 
-        let entities = self.world.getGrids().getSurroundingEntities(self.character, radius);
+        const entities = self.world.getGrids().getSurroundingEntities(self.character, radius);
 
-        _.each(entities, (entity) => {
-
-            let hitData = new Hit(Modules.Hits.Damage, Formulas.getAoEDamage(self.character, entity)).getData();
+        _.each(entities, entity => {
+            const hitData = new Hit(Modules.Hits.Damage, Formulas.getAoEDamage(self.character, entity)).getData();
 
             hitData.isAoE = true;
             hitData.hasTerror = hasTerror;
 
             self.hit(self.character, entity, hitData);
-
         });
-
     }
 
     forceAttack() {
-        let self = this;
+        const self = this;
 
         if (!self.character.target || !self.inProximity())
             return;
@@ -248,14 +231,14 @@ class Combat {
     }
 
     attackCount(count, target) {
-        let self = this;
+        const self = this;
 
         for (let i = 0; i < count; i++)
             self.attack(target);
     }
 
     addAttacker(character) {
-        let self = this;
+        const self = this;
 
         if (self.hasAttacker(character))
             return;
@@ -264,7 +247,7 @@ class Combat {
     }
 
     removeAttacker(character) {
-        let self = this;
+        const self = this;
 
         if (self.hasAttacker(character))
             delete self.attackers[character.instance];
@@ -274,7 +257,7 @@ class Combat {
     }
 
     sendToSpawn() {
-        let self = this;
+        const self = this;
 
         if (!self.isMob())
             return;
@@ -291,11 +274,10 @@ class Combat {
                 teleport: false
             })
         });
-
     }
 
     hasAttacker(character) {
-        let self = this;
+        const self = this;
 
         if (!self.isAttacked())
             return;
@@ -304,7 +286,7 @@ class Combat {
     }
 
     onSameTile() {
-        let self = this;
+        const self = this;
 
         if (!self.character.target || self.character.type !== 'mob')
             return;
@@ -317,13 +299,13 @@ class Combat {
     }
 
     getNewPosition() {
-        let self = this,
+        const self = this,
             position = {
                 x: self.character.x,
                 y: self.character.y
             };
 
-        let random = Utils.randomInt(0, 3);
+        const random = Utils.randomInt(0, 3);
 
         if (random === 0)
             position.x++;
@@ -342,12 +324,12 @@ class Combat {
     }
 
     inProximity() {
-        let self = this;
+        const self = this;
 
         if (!self.character.target)
             return;
 
-        let targetDistance = self.character.getDistance(self.character.target),
+        const targetDistance = self.character.getDistance(self.character.target),
             range = self.character.attackRange;
 
         if (self.character.isRanged())
@@ -357,12 +339,12 @@ class Combat {
     }
 
     getClosestAttacker() {
-        let self = this,
+        const self = this,
             closest = null,
             lowestDistance = 100;
 
-        self.forEachAttacker((attacker) => {
-            let distance = self.character.getDistance(attacker);
+        self.forEachAttacker(attacker => {
+            const distance = self.character.getDistance(attacker);
 
             if (distance < lowestDistance)
                 closest = attacker;
@@ -372,14 +354,14 @@ class Combat {
     }
 
     setWorld(world) {
-        let self = this;
+        const self = this;
 
         if (!self.world)
             self.world = world;
     }
 
     forget() {
-        let self = this;
+        const self = this;
 
         self.attackers = {};
         self.character.removeTarget();
@@ -389,7 +371,7 @@ class Combat {
     }
 
     move(character, x, y) {
-        let self = this;
+        const self = this;
 
         /**
          * The server and mob types can parse the mob movement
@@ -402,23 +384,20 @@ class Combat {
     }
 
     hit(character, target, hitInfo) {
-        let self = this,
+        const self = this,
             time = self.getTime();
 
         if (time - self.lastHit < self.character.attackRate && !hitInfo.isAoE)
             return;
 
         if (character.isRanged() || hitInfo.isRanged) {
-
-            let projectile = self.world.createProjectile([character, target], hitInfo);
+            const projectile = self.world.createProjectile([character, target], hitInfo);
 
             self.world.push(Packets.PushOpcode.Regions, {
                 regionId: character.region,
                 message: new Messages.Projectile(Packets.ProjectileOpcode.Create, projectile.getData())
             });
-
         } else {
-
             self.world.push(Packets.PushOpcode.Regions, {
                 regionId: character.region,
                 message: new Messages.Combat(Packets.CombatOpcode.Hit, {
@@ -429,7 +408,6 @@ class Combat {
             });
 
             self.world.handleDamage(character, target, hitInfo.damage);
-
         }
 
         if (character.damageCallback)
@@ -461,12 +439,12 @@ class Combat {
     }
 
     sendFollow() {
-        let self = this;
+        const self = this;
 
         if (!self.character.hasTarget() || self.character.target.isDead())
             return;
 
-        let ignores = [self.character.instance, self.character.target.instance];
+        const ignores = [self.character.instance, self.character.target.instance];
 
         self.world.push(Packets.PushOpcode.Selectively, {
             message: new Messages.Movement(Packets.MovementOpcode.Follow, {
@@ -475,11 +453,10 @@ class Combat {
             }),
             ignores: ignores
         });
-
     }
 
     forEachAttacker(callback) {
-        _.each(this.attackers, (attacker) => {
+        _.each(this.attackers, attacker => {
             callback(attacker);
         });
     }
@@ -489,12 +466,12 @@ class Combat {
     }
 
     targetOutOfBounds() {
-        let self = this;
+        const self = this;
 
         if (!self.character.hasTarget() || !self.isMob())
             return;
 
-        let spawnPoint = self.character.spawnLocation,
+        const spawnPoint = self.character.spawnLocation,
             target = self.character.target;
 
         return Utils.getDistance(spawnPoint[0], spawnPoint[1], target.x, target.y) > self.character.spawnDistance;
@@ -509,7 +486,7 @@ class Combat {
     }
 
     isPlayer() {
-        return this.character.type === 'player'
+        return this.character.type === 'player';
     }
 
     isMob() {
@@ -523,8 +500,6 @@ class Combat {
     canAttackAoE(target) {
         return this.isMob() || target.type === 'mob' || (this.isPlayer() && target.type === 'player' && target.pvp && this.character.pvp);
     }
-
-
 }
 
 module.exports = Combat;
