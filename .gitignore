@@ -4,6 +4,7 @@ node_modules/
 yarn.lock
 package-lock.json
 bin/
+\.prettierrc
 **/config.json
 cordova
 release

@@ -497,9 +497,7 @@ class Player extends Character {
             requirement = Items.getLevelRequirement(string);
 
         if (requirement > self.level) {
-            self.notify(
-                'You must be at least level ' + requirement + ' to equip this.'
-            );
+            self.notify('You must be at least level ' + requirement + ' to equip this.');
             return false;
         }
 

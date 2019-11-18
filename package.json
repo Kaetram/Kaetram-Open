@@ -93,11 +93,6 @@
             "operator-linebreak": 0
         }
     },
-    "prettier": {
-        "tabWidth": 4,
-        "useTabs": false,
-        "singleQuote": true
-    },
     "directories": {
         "doc": "docs"
     },
