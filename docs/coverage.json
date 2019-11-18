@@ -1,6 +1,6 @@
 {
   "coverage": "1.68%",
-  "expectCount": 1185,
+  "expectCount": 1186,
   "actualCount": 20,
   "files": {
     "Kaetram-Open/client/js/renderer/renderer.js": {
@@ -1736,6 +1736,13 @@
         40,
         44,
         61
+      ]
+    },
+    "Kaetram-Open/webpack.config.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
       ]
     }
   }

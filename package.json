@@ -4,7 +4,7 @@
     "private": false,
     "author": "Veradictus",
     "main": "./server/js/main.js",
-    "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
+    "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
     "homepage": "https://kaetram.com/",
     "scripts": {
         "start": "node ./server/js/main.js",
@@ -15,8 +15,8 @@
         "build": "webpack"
     },
     "dependencies": {
-        "bcrypt": "^3.0.6",
-        "commander": "^2.20.3",
+        "bcrypt": "^3.0.7",
+        "commander": "^4.0.1",
         "connect": "^3.7.0",
         "http": "0.0.0",
         "log": "^1.4.0",
@@ -54,8 +54,9 @@
         "excludes": [
             "node_modules",
             "cordova",
-            "map.js",
             "lib/*",
+            "map.js",
+            "bundle.js",
             "mapworker.js"
         ],
         "plugins": [
@@ -64,7 +65,34 @@
             }
         ]
     },
-    "eslintConfig": {},
+    "eslintConfig": {
+        "rules": {
+            "curly": [
+                "error",
+                "multi-or-nest"
+            ],
+            "indent": [
+                "warn",
+                4,
+                {
+                    "SwitchCase": 1
+                }
+            ],
+            "linebreak-style": [
+                "error",
+                "unix"
+            ],
+            "quotes": [
+                "error",
+                "single"
+            ],
+            "semi": [
+                "error",
+                "always"
+            ],
+            "operator-linebreak": 0
+        }
+    },
     "prettier": {
         "tabWidth": 4,
         "useTabs": false,

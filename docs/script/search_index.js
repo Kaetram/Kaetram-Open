@@ -1282,5 +1282,11 @@ window.esdocSearchIndex = [
     "file/Kaetram-Open/tools/map/helper.js.html",
     "Kaetram-Open/tools/map/helper.js",
     "file"
+  ],
+  [
+    "kaetram-open/webpack.config.js",
+    "file/Kaetram-Open/webpack.config.js.html",
+    "Kaetram-Open/webpack.config.js",
+    "file"
   ]
 ]

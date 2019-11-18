@@ -8,7 +8,7 @@
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
+<meta name="description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="kaetram"><meta property="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based off Little Workshop&apos;s demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -39,18 +39,6 @@
 define([&apos;jquery&apos;, &apos;./app&apos;, &apos;./game&apos;], function($, App, Game) {
     var app, body, chatInput, game;
 
-    var install = function() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(function(choiceResult) {
-                if (choiceResult.outcome === &apos;accepted&apos;)
-                    log.info(&apos;Your PWA has been installed&apos;);
-                else log.info(&apos;User chose to not install your PWA&apos;);
-
-                deferredPrompt = null;
-            });
-        }
-    };
     var load = function() {
         $(document).ready(function() {
             app = new App();
@@ -59,41 +47,6 @@ define([&apos;jquery&apos;, &apos;./app&apos;, &apos;./game&apos;], function($, 
 
             addClasses();
             initGame();
-        });
-
-        // This is the &quot;Offline page&quot; service worker
-
-        // Add this below content to your HTML page, or add the js file to your page at the very top to register service worker
-
-        // Check compatibility for the browser we&apos;re running this in
-        if (&apos;serviceWorker&apos; in navigator) {
-            if (navigator.serviceWorker.controller) {
-                log.info(
-                    &apos;[PWA Builder] active service worker found, no need to register&apos;
-                );
-            } else {
-                // Register the service worker
-                navigator.serviceWorker
-                    .register(&apos;sw.js&apos;, {
-                        scope: &apos;../&apos;
-                    })
-                    .then(function(reg) {
-                        log.info(
-                            &apos;[PWA Builder] Service worker has been registered for scope: &apos; +
-                                reg.scope
-                        );
-                    });
-            }
-        }
-
-        window.addEventListener(&apos;beforeinstallprompt&apos;, function(e) {
-            // Prevent Chrome 67 and earlier from automatically showing the prompt
-            e.preventDefault();
-
-            // Stash the event so it can be triggered later.
-            deferredPrompt = e;
-
-            install();
         });
     };
 
