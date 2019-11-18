@@ -1,9 +1,10 @@
 /* global module */
 
-const Packets = require('./packets');
-const Messages = {};
+let Packets = require('./packets'),
+    Messages = {};
 
 Messages.Handshake = class {
+
     constructor(info) {
         this.info = info;
     }
@@ -14,8 +15,9 @@ Messages.Handshake = class {
 };
 
 Messages.Welcome = class {
+
     constructor(data) {
-        this.info = data; // array of info
+        this.info = data; //array of info
     }
 
     serialize() {
@@ -24,6 +26,7 @@ Messages.Welcome = class {
 };
 
 Messages.Spawn = class {
+
     constructor(entity) {
         this.entity = entity;
     }
@@ -31,9 +34,11 @@ Messages.Spawn = class {
     serialize() {
         return [Packets.Spawn, this.entity.getState()];
     }
+
 };
 
 Messages.List = class {
+
     constructor(list) {
         this.list = list;
     }
@@ -44,6 +49,7 @@ Messages.List = class {
 };
 
 Messages.Sync = class {
+
     constructor(data) {
         this.info = data;
     }
@@ -51,9 +57,11 @@ Messages.Sync = class {
     serialize() {
         return [Packets.Sync, this.info];
     }
+
 };
 
 Messages.Equipment = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -62,9 +70,11 @@ Messages.Equipment = class {
     serialize() {
         return [Packets.Equipment, this.opcode, this.info];
     }
+
 };
 
 Messages.Movement = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -76,6 +86,7 @@ Messages.Movement = class {
 };
 
 Messages.Teleport = class {
+
     constructor(info) {
         this.info = info;
     }
@@ -83,9 +94,11 @@ Messages.Teleport = class {
     serialize() {
         return [Packets.Teleport, this.info];
     }
+
 };
 
 Messages.Despawn = class {
+
     constructor(id) {
         this.id = id;
     }
@@ -93,9 +106,11 @@ Messages.Despawn = class {
     serialize() {
         return [Packets.Despawn, this.id];
     }
+
 };
 
 Messages.Animation = class {
+
     constructor(id, data) {
         this.id = id;
         this.info = data;
@@ -104,10 +119,12 @@ Messages.Animation = class {
     serialize() {
         return [Packets.Animation, this.id, this.info];
     }
+
 };
 
 // TODO - Revise this when going over combat.
 Messages.Combat = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -116,9 +133,11 @@ Messages.Combat = class {
     serialize() {
         return [Packets.Combat, this.opcode, this.info];
     }
+
 };
 
 Messages.Projectile = class {
+
     constructor(opcode, data) {
         this.opcode = opcode;
         this.info = data;
@@ -127,19 +146,23 @@ Messages.Projectile = class {
     serialize() {
         return [Packets.Projectile, this.opcode, this.info];
     }
+
 };
 
 Messages.Population = class {
+
     constructor(playerCount) {
-        this.playerCount = playerCount;
+        this.playerCount = playerCount
     }
 
     serialize() {
         return [Packets.Population, this.playerCount];
     }
+
 };
 
 Messages.Points = class {
+
     constructor(data) {
         this.info = data;
     }
@@ -147,9 +170,11 @@ Messages.Points = class {
     serialize() {
         return [Packets.Points, this.info];
     }
+
 };
 
 Messages.Network = class {
+
     constructor(opcode) {
         this.opcode = opcode;
     }
@@ -160,6 +185,7 @@ Messages.Network = class {
 };
 
 Messages.Chat = class {
+
     constructor(data) {
         this.info = data;
     }
@@ -167,9 +193,11 @@ Messages.Chat = class {
     serialize() {
         return [Packets.Chat, this.info];
     }
+
 };
 
 Messages.Command = class {
+
     constructor(data) {
         this.info = data;
     }
@@ -177,6 +205,7 @@ Messages.Command = class {
     serialize() {
         return [Packets.Command, this.info];
     }
+
 };
 
 /**
@@ -185,6 +214,7 @@ Messages.Command = class {
  */
 
 Messages.Inventory = class {
+
     constructor(opcode, data) {
         this.opcode = opcode;
         this.info = data;
@@ -193,9 +223,11 @@ Messages.Inventory = class {
     serialize() {
         return [Packets.Inventory, this.opcode, this.info];
     }
+
 };
 
 Messages.Bank = class {
+
     constructor(opcode, data) {
         this.opcode = opcode;
         this.info = data;
@@ -204,9 +236,11 @@ Messages.Bank = class {
     serialize() {
         return [Packets.Bank, this.opcode, this.info];
     }
+
 };
 
 Messages.Ability = class {
+
     constructor(opcode, data) {
         this.opcode = opcode;
         this.info = data;
@@ -215,9 +249,11 @@ Messages.Ability = class {
     serialize() {
         return [Packets.Ability, this.opcode, this.info];
     }
+
 };
 
 Messages.Quest = class {
+
     constructor(opcode, data) {
         this.opcode = opcode;
         this.info = data;
@@ -226,9 +262,11 @@ Messages.Quest = class {
     serialize() {
         return [Packets.Quest, this.opcode, this.info];
     }
+
 };
 
 Messages.Notification = class {
+
     constructor(opcode, message) {
         this.opcode = opcode;
         this.message = message;
@@ -237,19 +275,23 @@ Messages.Notification = class {
     serialize() {
         return [Packets.Notification, this.opcode, this.message];
     }
+
 };
 
 Messages.Blink = class {
+
     constructor(instance) {
         this.instance = instance;
     }
 
-    serialize() {
+    serialize () {
         return [Packets.Blink, this.instance];
     }
+
 };
 
 Messages.Heal = class {
+
     constructor(info) {
         this.info = info;
     }
@@ -257,9 +299,11 @@ Messages.Heal = class {
     serialize() {
         return [Packets.Heal, this.info];
     }
+
 };
 
 Messages.Experience = class {
+
     constructor(info) {
         this.info = info;
     }
@@ -267,9 +311,11 @@ Messages.Experience = class {
     serialize() {
         return [Packets.Experience, this.info];
     }
+
 };
 
 Messages.Death = class {
+
     constructor(id) {
         this.id = id;
     }
@@ -277,9 +323,11 @@ Messages.Death = class {
     serialize() {
         return [Packets.Death, this.id];
     }
+
 };
 
 Messages.Audio = class {
+
     constructor(song) {
         this.song = song;
     }
@@ -287,9 +335,11 @@ Messages.Audio = class {
     serialize() {
         return [Packets.Audio, this.song];
     }
+
 };
 
 Messages.NPC = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -298,9 +348,11 @@ Messages.NPC = class {
     serialize() {
         return [Packets.NPC, this.opcode, this.info];
     }
+
 };
 
 Messages.Respawn = class {
+
     constructor(instance, x, y) {
         this.instance = instance;
         this.x = x;
@@ -310,9 +362,11 @@ Messages.Respawn = class {
     serialize() {
         return [Packets.Respawn, this.instance, this.x, this.y];
     }
+
 };
 
 Messages.Enchant = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -321,9 +375,11 @@ Messages.Enchant = class {
     serialize() {
         return [Packets.Enchant, this.opcode, this.info];
     }
+
 };
 
 Messages.Guild = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -332,9 +388,11 @@ Messages.Guild = class {
     serialize() {
         return [Packets.Guild, this.opcode, this.info];
     }
+
 };
 
 Messages.Pointer = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -343,9 +401,11 @@ Messages.Pointer = class {
     serialize() {
         return [Packets.Pointer, this.opcode, this.info];
     }
+
 };
 
 Messages.PVP = class {
+
     constructor(id, pvp) {
         this.id = id;
         this.pvp = pvp;
@@ -354,9 +414,11 @@ Messages.PVP = class {
     serialize() {
         return [Packets.PVP, this.id, this.pvp];
     }
+
 };
 
 Messages.Shop = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -365,9 +427,11 @@ Messages.Shop = class {
     serialize() {
         return [Packets.Shop, this.opcode, this.info];
     }
+
 };
 
 Messages.Minigame = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -376,9 +440,11 @@ Messages.Minigame = class {
     serialize() {
         return [Packets.Shop, this.opcode, this.info];
     }
+
 };
 
 Messages.Region = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -390,6 +456,7 @@ Messages.Region = class {
 };
 
 Messages.Overlay = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -398,9 +465,11 @@ Messages.Overlay = class {
     serialize() {
         return [Packets.Overlay, this.opcode, this.info];
     }
+
 };
 
 Messages.Camera = class {
+
     constructor(opcode, info) {
         this.opcode = opcode;
         this.info = info;
@@ -409,6 +478,7 @@ Messages.Camera = class {
     serialize() {
         return [Packets.Camera, this.opcode, this.info];
     }
+
 };
 
 module.exports = Messages;

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/interface/shop.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/shop.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;, &apos;./container/container&apos;], function($, Container) {
+
+    return Class.extend({
+
+        init: function(game, intrface) {
+            var self = this;
+
+            self.game = game;
+
+            self.body = $(&apos;#shop&apos;);
+            self.shop = $(&apos;#shopContainer&apos;);
+            self.inventory = $(&apos;#shopInventorySlots&apos;);
+
+            self.player = game.player;
+            self.interface = intrface;
+
+            self.container = null;
+            self.data = null;
+
+            self.openShop = -1;
+
+            self.items = [];
+            self.counts = [];
+
+            self.close = $(&apos;#closeShop&apos;);
+
+            self.close.css(&apos;left&apos;, &apos;97%&apos;);
+            self.close.click(function() {
+                self.hide();
+            });
+
+        },
+
+        buy: function(event) {
+            var self = this,
+                id = event.currentTarget.id.substring(11);
+
+            self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
+        },
+
+        sell: function() {
+            var self = this;
+
+
+        },
+
+        /**
+         * The shop file is already built to support full de-initialization of objects when
+         * we receive an update about the stocks. So we just use that whenever we want to resize.
+         * This is just a temporary fix, in reality, we do not want anyone to actually see the shop
+         * do a full refresh when they buy an item or someone else buys an item.
+         */
+
+        resize: function() {
+            var self = this;
+
+            self.getInventoryList().empty();
+            self.getShopList().empty();
+
+            self.update(self.data);
+        },
+
+        update: function(data) {
+            var self = this;
+
+            self.reset();
+
+            self.container = new Container(data.strings.length);
+
+            //Update the global data to current revision
+            self.data = data;
+
+            self.load();
+        },
+
+        load: function() {
+            var self = this;
+
+            for (var i = 0; i &lt; self.container.size; i++) {
+                var shopItem = $(&apos;&lt;div id=&quot;shopItem&apos; + i + &apos;&quot; class=&quot;shopItem&quot;&gt;&lt;/div&gt;&apos;),
+                    string = self.data.strings[i],
+                    name = self.data.names[i],
+                    count = self.data.counts[i],
+                    itemImage, itemCount, itemName, itemBuy;
+
+                if (!string || !name || !count)
+                    continue;
+
+                itemImage = $(&apos;&lt;div id=&quot;shopItemImage&apos; + i + &apos;&quot; class=&quot;shopItemImage&quot;&gt;&lt;/div&gt;&apos;);
+                itemCount = $(&apos;&lt;div id=&quot;shopItemCount&apos; + i + &apos;&quot; class=&quot;shopItemCount&quot;&gt;&lt;/div&gt;&apos;);
+                itemName = $(&apos;&lt;div id=&quot;shopItemName&apos; + i + &apos;&quot; class=&quot;shopItemName&quot;&gt;&lt;/div&gt;&apos;);
+                itemBuy = $(&apos;&lt;div id=&quot;shopItemBuy&apos; + i + &apos;&quot; class=&quot;shopItemBuy&quot;&gt;&lt;/div&gt;&apos;);
+
+                itemImage.css(&apos;background-image&apos;, self.container.getImageFormat(1, string));
+                itemCount.html(count);
+                itemName.html(name);
+                itemBuy.html(&apos;Purchase&apos;);
+
+                self.container.setSlot(i, {
+                    string: string,
+                    count: count
+                });
+
+                // Bind the itemBuy to the local buy function.
+                itemBuy.click(function(event) {
+                    self.buy(event);
+                });
+
+                var listItem = $(&apos;&lt;li&gt;&lt;/li&gt;&apos;);
+
+                shopItem.append(itemImage, itemCount, itemName, itemBuy);
+
+                listItem.append(shopItem);
+
+                self.getShopList().append(listItem);
+            }
+
+            var inventoryItems = self.interface.bank.getInventoryList(),
+                inventorySize = self.interface.inventory.getSize();
+
+            for (var j = 0; j &lt; inventorySize; j++) {
+                var item = $(inventoryItems[j]).clone(),
+                    slot = item.find(&apos;#bankInventorySlot&apos; + j);
+
+                self.getInventoryList().append(slot);
+            }
+        },
+
+        reset: function() {
+            var self = this;
+
+            self.items = [];
+            self.counts = [];
+
+            self.container = null;
+
+            self.getShopList().empty();
+            self.getInventoryList().empty();
+        },
+
+        open: function(id) {
+            var self = this;
+
+            if (!id)
+                return;
+
+            self.openShop = id;
+
+            self.body.fadeIn(&apos;slow&apos;);
+        },
+
+        hide: function() {
+            var self = this;
+
+            self.openShop = -1;
+
+            self.body.fadeOut(&apos;fast&apos;);
+        },
+
+        getScale: function() {
+            return this.game.renderer.getScale();
+        },
+
+        isVisible: function() {
+            return this.body.css(&apos;display&apos;) === &apos;block&apos;;
+        },
+
+        isShopOpen: function(shopId) {
+            return this.isVisible() &amp;&amp; this.openShop === shopId;
+        },
+
+        getShopList: function() {
+            return this.shop.find(&apos;ul&apos;);
+        },
+
+        getInventoryList: function() {
+            return this.inventory.find(&apos;ul&apos;);
+        }
+
+    });
+
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

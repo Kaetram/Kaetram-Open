@@ -30,8 +30,8 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         buy: function(event) {
-            var self = this;
-            var id = event.currentTarget.id.substring(11);
+            var self = this,
+                id = event.currentTarget.id.substring(11);
 
             self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
         },
@@ -73,11 +73,11 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this;
 
             for (var i = 0; i < self.container.size; i++) {
-                var shopItem = $('<div id="shopItem' + i + '" class="shopItem"></div>');
-                var string = self.data.strings[i];
-                var name = self.data.names[i];
-                var count = self.data.counts[i];
-                var itemImage; var itemCount; var itemName; var itemBuy;
+                var shopItem = $('<div id="shopItem' + i + '" class="shopItem"></div>'),
+                    string = self.data.strings[i],
+                    name = self.data.names[i],
+                    count = self.data.counts[i],
+                    itemImage, itemCount, itemName, itemBuy;
 
                 if (!string || !name || !count)
                     continue;
@@ -111,12 +111,12 @@ define(['jquery', './container/container'], function($, Container) {
                 self.getShopList().append(listItem);
             }
 
-            var inventoryItems = self.interface.bank.getInventoryList();
-            var inventorySize = self.interface.inventory.getSize();
+            var inventoryItems = self.interface.bank.getInventoryList(),
+                inventorySize = self.interface.inventory.getSize();
 
             for (var j = 0; j < inventorySize; j++) {
-                var item = $(inventoryItems[j]).clone();
-                var slot = item.find('#bankInventorySlot' + j);
+                var item = $(inventoryItems[j]).clone(),
+                    slot = item.find('#bankInventorySlot' + j);
 
                 self.getInventoryList().append(slot);
             }

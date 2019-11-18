@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/game.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/game.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global Class, log, Packets, Modules, Detect, _ */
+
+define([&apos;./renderer/renderer&apos;, &apos;./utils/storage&apos;,
+        &apos;./map/map&apos;, &apos;./network/socket&apos;, &apos;./entity/character/player/player&apos;,
+        &apos;./renderer/updater&apos;, &apos;./controllers/entities&apos;, &apos;./controllers/input&apos;,
+        &apos;./entity/character/player/playerhandler&apos;, &apos;./utils/pathfinder&apos;,
+        &apos;./controllers/zoning&apos;, &apos;./controllers/info&apos;, &apos;./controllers/bubble&apos;,
+        &apos;./controllers/interface&apos;, &apos;./controllers/audio&apos;, &apos;./controllers/pointer&apos;,
+        &apos;./renderer/overlay&apos;, &apos;./network/connection&apos;, &apos;./utils/modules&apos;, &apos;./network/packets&apos;],
+        function(Renderer, LocalStorage, Map, Socket, Player, Updater,
+                 Entities, Input, PlayerHandler, Pathfinder, Zoning, Info,
+                 Bubble, Interface, Audio, Pointer, Overlay, Connection) {
+
+    return Class.extend({
+
+        init: function(app) {
+            var self = this;
+
+            self.app = app;
+
+            self.id = -1;
+
+            self.socket = null;
+            self.messages = null;
+            self.renderer = null;
+            self.updater = null;
+            self.storage = null;
+            self.entities = null;
+            self.input = null;
+            self.map = null;
+            self.playerHandler = null;
+            self.pathfinder = null;
+            self.zoning = null;
+            self.info = null;
+            self.interface = null;
+            self.audio = null;
+
+            self.player = null;
+
+            self.stopped = false;
+            self.started = false;
+            self.ready = false;
+            self.loaded = false;
+
+            self.time = new Date();
+
+            self.pvp = false;
+            self.population = -1;
+
+            self.lastTime = new Date().getTime();
+
+            self.loadRenderer();
+            self.loadControllers();
+        },
+
+        start: function() {
+            var self = this;
+
+            if (self.started)
+                return;
+
+            self.app.fadeMenu();
+            self.tick();
+
+            self.started = true;
+        },
+
+        stop: function() {
+            var self = this;
+
+            self.stopped = false;
+            self.started = false;
+            self.ready = false;
+        },
+
+        tick: function() {
+            var self = this;
+
+            if (self.ready) {
+
+                self.time = new Date().getTime();
+
+                self.renderer.render();
+                self.updater.update();
+
+                if (!self.stopped)
+                    requestAnimationFrame(self.tick.bind(self));
+            }
+        },
+
+        unload: function() {
+            var self = this;
+
+            self.socket = null;
+            self.messages = null;
+            self.renderer = null;
+            self.updater = null;
+            self.storage = null;
+            self.entities = null;
+            self.input = null;
+            self.map = null;
+            self.playerHandler = null;
+            self.player = null;
+            self.pathfinder = null;
+            self.zoning = null;
+            self.info = null;
+            self.interface = null;
+
+            self.audio.stop();
+            self.audio = null;
+        },
+
+        loadRenderer: function() {
+            var self = this,
+                background = document.getElementById(&apos;background&apos;),
+                foreground = document.getElementById(&apos;foreground&apos;),
+                overlay = document.getElementById(&apos;overlay&apos;),
+                textCanvas = document.getElementById(&apos;textCanvas&apos;),
+                entities = document.getElementById(&apos;entities&apos;),
+                cursor = document.getElementById(&apos;cursor&apos;);
+
+            self.app.sendStatus(&apos;Initializing render engine&apos;);
+
+            self.setRenderer(new Renderer(background, entities, foreground, overlay, textCanvas, cursor, self));
+        },
+
+        loadControllers: function() {
+            var self = this,
+                hasWorker = self.app.hasWorker();
+
+            self.app.sendStatus(&apos;Loading local storage&apos;);
+
+            self.setStorage(new LocalStorage(self.app));
+
+            self.app.sendStatus(hasWorker ? &apos;Loading maps - asynchronous&apos; : null);
+
+            if (hasWorker)
+                self.loadMap();
+
+            self.app.sendStatus(&apos;Initializing network socket&apos;);
+
+            self.setSocket(new Socket(self));
+            self.setMessages(self.socket.messages);
+            self.setInput(new Input(self));
+
+            self.app.sendStatus(&apos;Loading controllers&apos;);
+
+            self.setEntityController(new Entities(self));
+
+            self.setInfo(new Info(self));
+
+            self.setBubble(new Bubble(self));
+
+            self.setPointer(new Pointer(self));
+
+            self.setAudio(new Audio(self));
+
+            self.setInterface(new Interface(self));
+
+            self.loadStorage();
+
+            if (!hasWorker) {
+                self.app.sendStatus(null);
+                self.loaded = true;
+            }
+        },
+
+        loadMap: function() {
+            var self = this;
+
+            self.map = new Map(self);
+            self.overlays = new Overlay(self);
+
+            self.map.onReady(function() {
+                if (!self.isDebug())
+                    self.map.loadRegionData();
+
+                self.app.sendStatus(&apos;Loading the pathfinder&apos;);
+
+                self.setPathfinder(new Pathfinder(self.map.width, self.map.height));
+
+                self.renderer.setMap(self.map);
+                self.renderer.loadCamera();
+
+                self.app.sendStatus(&apos;Loading updater&apos;);
+
+                self.setUpdater(new Updater(self));
+
+                self.entities.load();
+
+                self.renderer.setEntities(self.entities);
+
+                self.app.sendStatus(null);
+
+                self.loaded = true;
+            });
+        },
+
+        connect: function() {
+            var self = this;
+
+            self.app.cleanErrors();
+
+            setTimeout(function() {
+                self.socket.connect();
+            }, 1000);
+
+            self.connectionHandler = new Connection(self);
+
+        },
+
+        postLoad: function() {
+            var self = this;
+
+            /**
+             * Call this after the player has been welcomed
+             * by the server and the client received the connection.
+             */
+
+            self.renderer.loadStaticSprites();
+
+            self.getCamera().setPlayer(self.player);
+
+            self.entities.addEntity(self.player);
+
+            var defaultSprite = self.getSprite(self.player.getSpriteName());
+
+            self.player.setSprite(defaultSprite);
+            self.player.setOrientation(self.storage.data.player.orientation);
+            self.player.idle();
+
+            self.socket.send(Packets.Ready, [true, self.map.preloadedData, Detect.getUserAgent()]);
+
+            self.playerHandler = new PlayerHandler(self, self.player);
+
+            self.renderer.updateAnimatedTiles();
+
+            self.zoning = new Zoning(self);
+
+            self.updater.setSprites(self.entities.sprites);
+
+            self.renderer.verifyCentration();
+
+            if (self.storage.data.new) {
+                self.storage.data.new = false;
+                self.storage.save();
+            }
+
+        },
+
+        loadStorage: function() {
+            var self = this,
+                loginName = $(&apos;#loginNameInput&apos;),
+                loginPassword = $(&apos;#loginPasswordInput&apos;);
+
+            loginName.prop(&apos;readonly&apos;, false);
+            loginPassword.prop(&apos;readonly&apos;, false);
+
+            if (!self.hasRemember())
+                return;
+
+            if (self.getStorageUsername() !== &apos;&apos;)
+                loginName.val(self.getStorageUsername());
+
+            if (self.getStoragePassword() !== &apos;&apos;)
+                loginPassword.val(self.getStoragePassword());
+
+            $(&apos;#rememberMe&apos;).addClass(&apos;active&apos;);
+        },
+
+        findPath: function(character, x, y, ignores) {
+            var self = this,
+                grid = self.entities.grids.pathingGrid,
+                path = [];
+
+            if (self.map.isColliding(x, y) || !self.pathfinder || !character)
+                return path;
+
+            if (ignores)
+                _.each(ignores, function(entity) { self.pathfinder.ignoreEntity(entity); });
+
+            path = self.pathfinder.find(grid, character, x, y, false);
+
+            if (ignores)
+                self.pathfinder.clearIgnores();
+
+            return path;
+        },
+
+        handleInput: function(inputType, data) {
+            this.input.handle(inputType, data);
+        },
+
+        handleDisconnection: function(noError) {
+            var self = this;
+
+            /**
+             * This function is responsible for handling sudden
+             * disconnects of a player whilst in the game, not
+             * menu-based errors.
+             */
+
+            if (!self.started)
+                return;
+
+            self.stop();
+            self.renderer.stop();
+
+            self.unload();
+
+            self.app.showMenu();
+
+            if (noError) {
+                self.app.sendError(null, &apos;You have been disconnected from the server&apos;);
+                self.app.statusMessage = null;
+            }
+
+            self.loadRenderer();
+            self.loadControllers();
+
+            self.app.toggleLogin(false);
+            self.app.updateLoader(&apos;&apos;);
+        },
+
+        respawn: function() {
+            var self = this;
+
+            self.audio.play(Modules.AudioTypes.SFX, &apos;revive&apos;);
+            self.app.body.removeClass(&apos;death&apos;);
+
+            self.socket.send(Packets.Respawn, [self.player.id]);
+        },
+
+        tradeWith: function(player) {
+            var self = this;
+
+            if (!player || player.id === self.player.id)
+                return;
+
+            self.socket.send(Packets.Trade, [Packets.TradeOpcode.Request, player.id]);
+        },
+
+        resize: function() {
+            var self = this;
+
+            self.renderer.resize();
+
+            if (self.pointer)
+                self.pointer.resize();
+        },
+
+        createPlayer: function() {
+            this.player = new Player();
+        },
+
+        isDebug: function() {
+            return this.app.config.debug;
+        },
+
+        getScaleFactor: function() {
+            return this.app.getScaleFactor();
+        },
+
+        getStorage: function() {
+            return this.storage;
+        },
+
+        getCamera: function() {
+            return this.renderer.camera;
+        },
+
+        getSprite: function(spriteName) {
+            return this.entities.getSprite(spriteName);
+        },
+
+        getEntityAt: function(x, y, ignoreSelf) {
+            var self = this,
+                entities = self.entities.grids.renderingGrid[y][x];
+
+            if (_.size(entities) &gt; 0)
+                return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
+
+            var items = self.entities.grids.itemGrid[y][x];
+
+            if (_.size(items) &gt; 0) {
+                _.each(items, function(item) {
+                    if (item.stackable)
+                        return item;
+                });
+
+                return items[_.keys(items)[0]];
+            }
+        },
+
+        getStorageUsername: function() {
+            return this.storage.data.player.username;
+        },
+
+        getStoragePassword: function() {
+            return this.storage.data.player.password;
+        },
+
+        hasRemember: function() {
+            return this.storage.data.player.rememberMe;
+        },
+
+        setRenderer: function(renderer) {
+            if (!this.renderer)
+                this.renderer = renderer;
+        },
+
+        setStorage: function(storage) {
+            if (!this.storage)
+                this.storage = storage;
+        },
+
+        setSocket: function(socket) {
+            if (!this.socket)
+                this.socket = socket;
+        },
+
+        setMessages: function(messages) {
+            if (!this.messages)
+                this.messages = messages;
+        },
+
+        setUpdater: function(updater) {
+            if (!this.updater)
+                this.updater = updater;
+        },
+
+        setEntityController: function(entities) {
+            if (!this.entities)
+                this.entities = entities;
+        },
+
+        setInput: function(input) {
+            var self = this;
+
+            if (!self.input) {
+                self.input = input;
+                self.renderer.setInput(self.input);
+            }
+        },
+
+        setPathfinder: function(pathfinder) {
+            if (!this.pathfinder)
+                this.pathfinder = pathfinder;
+        },
+
+        setInfo: function(info) {
+            if (!this.info)
+                this.info = info;
+        },
+
+        setBubble: function(bubble) {
+            if (!this.bubble)
+                this.bubble = bubble;
+        },
+
+        setPointer: function(pointer) {
+            if (!this.pointer)
+                this.pointer = pointer;
+        },
+
+        setInterface: function(intrface) {
+            if (!this.interface)
+                this.interface = intrface;
+        },
+
+        setAudio: function(audio) {
+            if (!this.audio)
+                this.audio = audio;
+        }
+
+    });
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

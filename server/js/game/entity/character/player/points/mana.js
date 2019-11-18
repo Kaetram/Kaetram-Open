@@ -1,14 +1,15 @@
 /* global module */
 
-const Points = require('./points');
+let Points = require('./points');
 
 class Mana extends Points {
+
     constructor(mana, maxMana) {
         super(mana, maxMana);
     }
 
     setMana(mana) {
-        const self = this;
+        let self = this;
 
         self.points = mana;
 
@@ -17,7 +18,7 @@ class Mana extends Points {
     }
 
     setMaxMana(maxMana) {
-        const self = this;
+        let self = this;
 
         self.maxPoints = maxMana;
 
@@ -40,6 +41,7 @@ class Mana extends Points {
     onMaxMana(callback) {
         this.maxManaCallback = callback;
     }
+
 }
 
 module.exports = Mana;

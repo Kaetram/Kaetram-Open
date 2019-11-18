@@ -1,13 +1,14 @@
 /* global module */
 
-const Messages = require('../../../../../network/messages');
-const Packets = require('../../../../../network/packets');
-const Utils = require('../../../../../util/utils');
-const _ = require('underscore');
+let Messages = require('../../../../../network/messages'),
+    Packets = require('../../../../../network/packets'),
+    Utils = require('../../../../../util/utils'),
+    _ = require('underscore');
 
 class Quest {
+
     constructor(player, data) {
-        const self = this;
+        let self = this;
 
         self.player = player;
         self.data = data;
@@ -20,7 +21,7 @@ class Quest {
     }
 
     load(stage) {
-        const self = this;
+        let self = this;
 
         if (!stage)
             self.update();
@@ -29,12 +30,12 @@ class Quest {
     }
 
     finish() {
-        const self = this;
+        let self = this;
 
         if (self.hasItemReward()) {
-            const item = self.getItemReward();
+            let item = self.getItemReward();
 
-            if (item)
+            if (item) {
                 if (self.hasInventorySpace(item.id, item.count))
                     self.player.inventory.add(item.id, item.count);
                 else {
@@ -43,6 +44,7 @@ class Quest {
 
                     return;
                 }
+            }
         }
 
         self.setStage(9999);
@@ -56,14 +58,14 @@ class Quest {
     }
 
     setStage(stage) {
-        const self = this;
+        let self = this;
 
         self.stage = stage;
         self.update();
     }
 
     triggerTalk(npc) {
-        const self = this;
+        let self = this;
 
         if (self.npcTalkCallback)
             self.npcTalkCallback(npc);
@@ -74,8 +76,8 @@ class Quest {
     }
 
     getConversation(id) {
-        const self = this;
-        const conversation = self.data.conversations[id];
+        let self = this,
+            conversation = self.data.conversations[id];
 
         if (!conversation || !conversation[self.stage])
             return [''];
@@ -84,17 +86,17 @@ class Quest {
     }
 
     updatePointers() {
-        const self = this;
+        let self = this;
 
         if (!self.data.pointers)
             return;
 
-        const pointer = self.data.pointers[self.stage];
+        let pointer = self.data.pointers[self.stage];
 
         if (!pointer)
             return;
 
-        const opcode = pointer[0];
+        let opcode = pointer[0];
 
         if (opcode === 4)
             self.player.send(new Messages.Pointer(opcode, {
@@ -107,10 +109,11 @@ class Quest {
                 x: pointer[1],
                 y: pointer[2]
             }));
+
     }
 
     forceTalk(npc, message) {
-        const self = this;
+        let self = this;
 
         if (!npc)
             return;
@@ -124,21 +127,21 @@ class Quest {
     }
 
     resetTalkIndex(npc) {
-        const self = this;
+        let self = this;
 
         /**
          * Ensures that an NPC does not go off the conversation
          * index and is resetted in order to start a new chat
          */
 
-        if (!npc)
+        if(!npc)
             return;
 
         npc.talkIndex = 0;
     }
 
     clearPointers() {
-        this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}));
+        this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}))
     }
 
     onNPCTalk(callback) {
@@ -206,6 +209,7 @@ class Quest {
             finished: this.isFinished()
         };
     }
+
 }
 
 module.exports = Quest;

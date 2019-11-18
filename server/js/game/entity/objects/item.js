@@ -1,12 +1,13 @@
 /* global module */
 
-const Entity = require('../entity');
+let Entity = require('../entity');
 
 class Item extends Entity {
+
     constructor(id, instance, x, y) {
         super(id, 'item', instance, x, y);
 
-        const self = this;
+        let self = this;
 
         self.static = false;
         self.dropped = false;
@@ -27,7 +28,7 @@ class Item extends Entity {
     }
 
     destroy() {
-        const self = this;
+        let self = this;
 
         if (self.blinkTimeout)
             clearTimeout(self.blinkTimeout);
@@ -37,10 +38,11 @@ class Item extends Entity {
 
         if (self.static)
             self.respawn();
+
     }
 
     despawn() {
-        const self = this;
+        let self = this;
 
         self.blinkTimeout = setTimeout(() => {
             if (self.blinkCallback)
@@ -49,16 +51,19 @@ class Item extends Entity {
             self.despawnTimeout = setTimeout(() => {
                 if (self.despawnCallback)
                     self.despawnCallback();
+
             }, self.despawnDuration);
+
         }, self.blinkDelay);
     }
 
     respawn() {
-        const self = this;
+        let self = this;
 
         setTimeout(() => {
             if (self.respawnCallback)
                 self.respawnCallback();
+
         }, self.respawnTime);
     }
 
@@ -67,8 +72,8 @@ class Item extends Entity {
     }
 
     getState() {
-        const self = this;
-        const state = super.getState();
+        let self = this,
+            state = super.getState();
 
         state.count = self.count;
         state.ability = self.ability;
@@ -100,6 +105,7 @@ class Item extends Entity {
     onDespawn(callback) {
         this.despawnCallback = callback;
     }
+
 }
 
 module.exports = Item;

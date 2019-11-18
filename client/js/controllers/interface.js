@@ -133,10 +133,10 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
         },
 
         loadNotifications: function() {
-            var self = this;
-            var ok = $('#ok');
-            var cancel = $('#cancel');
-            var done = $('#done');
+            var self = this,
+                ok = $('#ok'),
+                cancel = $('#cancel'),
+                done = $('#done');
 
             /**
              * Simple warning dialogue

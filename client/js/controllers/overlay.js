@@ -47,13 +47,14 @@ define(['jquery'], function($) {
             }
 
             self.onUpdate(function(entityId, hitPoints) {
-                if (self.hovering && self.hovering.id === entityId && self.hovering.type !== 'npc' && self.hovering.type !== 'item')
+                if (self.hovering && self.hovering.id === entityId && self.hovering.type !== 'npc' && self.hovering.type !== 'item') {
                     if (hitPoints < 1)
                         self.hide();
                     else {
                         self.health.css('width', Math.ceil(hitPoints / self.hovering.maxHitPoints * 100) - 10 + '%');
                         self.details.html(hitPoints + ' / ' + self.hovering.maxHitPoints);
                     }
+                }
             });
         },
 

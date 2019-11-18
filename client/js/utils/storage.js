@@ -1,6 +1,6 @@
 define(function() {
-    var storage = window.localStorage;
-    var name = 'data';
+    var storage = window.localStorage,
+        name = 'data';
 
     return Class.extend({
 
@@ -77,8 +77,8 @@ define(function() {
         },
 
         setOrientation: function(orientation) {
-            var self = this;
-            var player = self.getPlayer();
+            var self = this,
+                player = self.getPlayer();
 
             player.orientation = orientation;
 
@@ -86,8 +86,8 @@ define(function() {
         },
 
         setPlayer: function(option, value) {
-            var self = this;
-            var pData = self.getPlayer();
+            var self = this,
+                pData = self.getPlayer();
 
             if (pData.hasOwnProperty(option))
                 pData[option] = value;
@@ -96,8 +96,8 @@ define(function() {
         },
 
         setSettings: function(option, value) {
-            var self = this;
-            var sData = self.getSettings();
+            var self = this,
+                sData = self.getSettings();
 
             if (sData.hasOwnProperty(option))
                 sData[option] = value;

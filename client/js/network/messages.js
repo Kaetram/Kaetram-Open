@@ -62,8 +62,8 @@ define(function() {
         },
 
         handleData: function(data) {
-            var self = this;
-            var packet = data.shift();
+            var self = this,
+                packet = data.shift();
 
             if (self.messages[packet] && _.isFunction(self.messages[packet]))
                 self.messages[packet].call(self, data);
@@ -151,16 +151,16 @@ define(function() {
          */
 
         receiveHandshake: function(data) {
-            var self = this;
-            var info = data.shift();
+            var self = this,
+                info = data.shift();
 
             if (self.handshakeCallback)
                 self.handshakeCallback(info);
         },
 
         receiveWelcome: function(data) {
-            var self = this;
-            var playerData = data.shift();
+            var self = this,
+                playerData = data.shift();
 
             if (self.welcomeCallback)
                 self.welcomeCallback(playerData);
@@ -174,9 +174,9 @@ define(function() {
         },
 
         receiveEquipment: function(data) {
-            var self = this;
-            var equipType = data.shift();
-            var equipInfo = data.shift();
+            var self = this,
+                equipType = data.shift(),
+                equipInfo = data.shift();
 
             if (self.equipmentCallback)
                 self.equipmentCallback(equipType, equipInfo);
@@ -197,52 +197,52 @@ define(function() {
         },
 
         receiveMovement: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.movementCallback)
                 self.movementCallback(opcode, info);
         },
 
         receiveTeleport: function(data) {
-            var self = this;
-            var info = data.shift();
+            var self = this,
+                info = data.shift();
 
             if (self.teleportCallback)
                 self.teleportCallback(info);
         },
 
         receiveDespawn: function(data) {
-            var self = this;
-            var id = data.shift();
+            var self = this,
+                id = data.shift();
 
             if (self.despawnCallback)
                 self.despawnCallback(id);
         },
 
         receiveCombat: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.combatCallback)
                 self.combatCallback(opcode, info);
         },
 
         receiveAnimation: function(data) {
-            var self = this;
-            var id = data.shift();
-            var info = data.shift();
+            var self = this,
+                id = data.shift(),
+                info = data.shift();
 
             if (self.animationCallback)
                 self.animationCallback(id, info);
         },
 
         receiveProjectile: function(data) {
-            var self = this;
-            var type = data.shift();
-            var info = data.shift();
+            var self = this,
+                type = data.shift(),
+                info = data.shift();
 
             if (self.projectileCallback)
                 self.projectileCallback(type, info);
@@ -256,85 +256,85 @@ define(function() {
         },
 
         receivePoints: function(data) {
-            var self = this;
-            var pointsData = data.shift();
+            var self = this,
+                pointsData = data.shift();
 
             if (self.pointsCallback)
                 self.pointsCallback(pointsData);
         },
 
         receiveNetwork: function(data) {
-            var self = this;
-            var opcode = data.shift();
+            var self = this,
+                opcode = data.shift();
 
             if (self.networkCallback)
                 self.networkCallback(opcode);
         },
 
         receiveChat: function(data) {
-            var self = this;
-            var info = data.shift();
+            var self = this,
+                info = data.shift();
 
             if (self.chatCallback)
                 self.chatCallback(info);
         },
 
         receiveCommand: function(data) {
-            var self = this;
-            var info = data.shift();
+            var self = this,
+                info = data.shift();
 
             if (self.commandCallback)
                 self.commandCallback(info);
         },
 
         receiveInventory: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.inventoryCallback)
                 self.inventoryCallback(opcode, info);
         },
 
         receiveBank: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.bankCallback)
                 self.bankCallback(opcode, info);
         },
 
         receiveAbility: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.abilityCallback)
                 self.abilityCallback(opcode, info);
         },
 
         receiveQuest: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.questCallback)
                 self.questCallback(opcode, info);
         },
 
         receiveNotification: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var message = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                message = data.shift();
 
             if (self.notificationCallback)
                 self.notificationCallback(opcode, message);
         },
 
         receiveBlink: function(data) {
-            var self = this;
-            var instance = data.shift();
+            var self = this,
+                instance = data.shift();
 
             if (self.blinkCallback)
                 self.blinkCallback(instance);
@@ -369,101 +369,101 @@ define(function() {
         },
 
         receiveNPC: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.npcCallback)
                 self.npcCallback(opcode, info);
         },
 
         receiveRespawn: function(data) {
-            var self = this;
-            var id = data.shift();
-            var x = data.shift();
-            var y = data.shift();
+            var self = this,
+                id = data.shift(),
+                x = data.shift(),
+                y = data.shift();
 
             if (self.respawnCallback)
                 self.respawnCallback(id, x, y);
         },
 
         receiveEnchant: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.enchantCallback)
                 self.enchantCallback(opcode, info);
         },
 
         receiveGuild: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.guildCallback)
                 self.guildCallback(opcode, info);
         },
 
         receivePointer: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.pointerCallback)
                 self.pointerCallback(opcode, info);
         },
 
         receivePVP: function(data) {
-            var self = this;
-            var id = data.shift();
-            var pvp = data.shift();
+            var self = this,
+                id = data.shift(),
+                pvp = data.shift();
 
             if (self.pvpCallback)
                 self.pvpCallback(id, pvp);
         },
 
         receiveShop: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.shopCallback)
                 self.shopCallback(opcode, info);
         },
 
         receiveMinigame: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.minigameCallback)
                 self.minigameCallback(opcode, info);
         },
 
         receiveRegion: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
-            var force = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift(),
+                force = data.shift();
 
             if (self.regionCallback)
                 self.regionCallback(opcode, info, force);
         },
 
         receiveOverlay: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.overlayCallback)
                 self.overlayCallback(opcode, info);
         },
 
         receiveCamera: function(data) {
-            var self = this;
-            var opcode = data.shift();
-            var info = data.shift();
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.cameraCallback)
                 self.cameraCallback(opcode, info);

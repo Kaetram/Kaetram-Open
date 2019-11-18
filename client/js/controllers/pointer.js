@@ -46,11 +46,11 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
                 switch (pointer.type) {
                     case Modules.Pointers.Relative:
 
-                        var scale = self.getScale();
-                        var x = pointer.x;
-                        var y = pointer.y;
-                        var offsetX = 0;
-                        var offsetY = 0;
+                        var scale = self.getScale(),
+                            x = pointer.x,
+                            y = pointer.y,
+                            offsetX = 0,
+                            offsetY = 0;
 
                         pointer.element.css('left', (x * scale) - offsetX + 'px');
                         pointer.element.css('top', (y * scale) - offsetY + 'px');
@@ -76,7 +76,7 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
         clean: function() {
             var self = this;
 
-            _.each(self.pointers, function(pointer) {pointer.destroy();});
+            _.each(self.pointers, function(pointer) { pointer.destroy(); });
 
             self.pointers = {};
         },
@@ -93,10 +93,10 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
 
             self.updateCamera();
 
-            var tileSize = 48; // 16 * self.scale
-            var x = ((posX - self.camera.x) * self.scale);
-            var width = parseInt(pointer.element.css('width') + 24);
-            var offset = (width / 2) - (tileSize / 2); var y; var outX; var outY;
+            var tileSize = 48, // 16 * self.scale
+                x = ((posX - self.camera.x) * self.scale),
+                width = parseInt(pointer.element.css('width') + 24),
+                offset = (width / 2) - (tileSize / 2), y, outX, outY;
 
             y = ((posY - self.camera.y) * self.scale) - tileSize;
 
@@ -142,8 +142,8 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
         },
 
         setToEntity: function(entity) {
-            var self = this;
-            var pointer = self.get(entity.id);
+            var self = this,
+                pointer = self.get(entity.id);
 
             if (!pointer)
                 return;
@@ -152,8 +152,8 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
         },
 
         setToPosition: function(id, x, y) {
-            var self = this;
-            var pointer = self.get(id);
+            var self = this,
+                pointer = self.get(id);
 
             if (!pointer)
                 return;
@@ -164,15 +164,15 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
         },
 
         setRelative: function(id, x, y) {
-            var self = this;
-            var pointer = self.get(id);
+            var self = this,
+                pointer = self.get(id);
 
             if (!pointer)
                 return;
 
-            var scale = self.getScale();
-            var offsetX = 0;
-            var offsetY = 0;
+            var scale = self.getScale(),
+                offsetX = 0,
+                offsetY = 0;
 
             pointer.setPosition(x, y);
 

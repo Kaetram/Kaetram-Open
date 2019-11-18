@@ -1,6 +1,6 @@
 /* global module */
 
-const Items = {};
+let Items = {};
 
 Items.Data = {};
 Items.Ids = {};
@@ -8,47 +8,48 @@ Items.onCreate = {};
 
 Items.Plugins = {};
 
-Items.getData = name => {
+Items.getData = (name) => {
     if (name in Items.Data)
         return Items.Data[name];
 
     return 'null';
 };
 
-Items.hasPlugin = string => {
+Items.hasPlugin = (string) => {
     if (Number.isInteger(string))
-        string = Items.idToString(string);
+      string = Items.idToString(string);
 
     if (string in Items.Plugins)
-        return true;
+      return true;
 
     return false;
 };
 
-Items.getPlugin = id => {
-    const string = Items.idToString(id);
+Items.getPlugin = (id) => {
+    let string = Items.idToString(id);
 
     if (Items.hasPlugin(string))
-        return Items.Plugins[string];
+      return Items.Plugins[string];
 
     return null;
 };
 
-Items.idToString = id => {
+Items.idToString = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].key;
 
     return 'null';
 };
 
-Items.idToName = id => {
+Items.idToName = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].name;
 
     return 'null';
 };
 
-Items.stringToId = name => {
+Items.stringToId = (name) => {
+
     if (name in Items.Data)
         return Items.Data[name].id;
     else
@@ -57,9 +58,9 @@ Items.stringToId = name => {
     return 'null';
 };
 
-Items.getLevelRequirement = name => {
-    let level = 1;
-    const item = Items.Data[name];
+Items.getLevelRequirement = (name) => {
+    var level = 1,
+        item = Items.Data[name];
 
     if (item && item.requirement)
         return item.requirement;
@@ -78,112 +79,112 @@ Items.getLevelRequirement = name => {
     return level * 2;
 };
 
-Items.getWeaponLevel = weaponName => {
+Items.getWeaponLevel = (weaponName) => {
     if (Items.isWeapon(weaponName))
         return Items.Data[weaponName].attack;
 
     return -1;
 };
 
-Items.getArmourLevel = armourName => {
+Items.getArmourLevel = (armourName) => {
     if (Items.isArmour(armourName))
         return Items.Data[armourName].defense;
 
     return -1;
 };
 
-Items.getPendantLevel = pendantName => {
+Items.getPendantLevel = (pendantName) => {
     if (Items.isPendant(pendantName))
         return Items.Data[pendantName].pendantLevel;
 
     return -1;
 };
 
-Items.getRingLevel = ringName => {
+Items.getRingLevel = (ringName) => {
     if (Items.isRing(ringName))
         return Items.Data[ringName].ringLevel;
 
     return -1;
 };
 
-Items.getBootsLevel = bootsName => {
+Items.getBootsLevel = (bootsName) => {
     if (Items.isBoots(bootsName))
         return Items.Data[bootsName].bootsLevel;
 
     return -1;
 };
 
-Items.isArcherWeapon = string => {
+Items.isArcherWeapon = (string) => {
     if (string in Items.Data)
         return Items.Data[string].type === 'weaponarcher';
 
     return false;
 };
 
-Items.isWeapon = string => {
+Items.isWeapon = (string) => {
     if (string in Items.Data)
         return Items.Data[string].type === 'weapon' || Items.Data[string].type === 'weaponarcher';
 
     return false;
 };
 
-Items.isArmour = string => {
+Items.isArmour = (string) => {
     if (string in Items.Data)
         return Items.Data[string].type === 'armor' || Items.Data[string].type === 'armorarcher';
 
     return false;
 };
 
-Items.isPendant = string => {
+Items.isPendant = (string) => {
     if (string in Items.Data)
         return Items.Data[string].type === 'pendant';
 
     return false;
 };
 
-Items.isRing = string => {
+Items.isRing = (string) => {
     if (string in Items.Data)
         return Items.Data[string].type === 'ring';
 
     return false;
 };
 
-Items.isBoots = string => {
+Items.isBoots = (string) => {
     if (string in Items.Data)
         return Items.Data[string].type === 'boots';
 
     return false;
 };
 
-Items.getType = id => {
+Items.getType = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].type;
 
     return null;
 };
 
-Items.isStackable = id => {
+Items.isStackable = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].stackable;
 
     return false;
 };
 
-Items.isEdible = id => {
+Items.isEdible = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].edible;
 
     return false;
 };
 
-Items.getCustomData = id => {
+Items.getCustomData = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].customData;
 
     return null;
 };
 
-Items.maxStackSize = id => {
+Items.maxStackSize = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].maxStackSize;
 
@@ -191,15 +192,15 @@ Items.maxStackSize = id => {
 };
 
 
-Items.isShard = id => {
+Items.isShard = (id) => {
     return id === 253 || id === 254 || id === 255 || id === 256 || id === 257;
 };
 
-Items.isEnchantable = id => {
+Items.isEnchantable = (id) => {
     return Items.getType(id) !== 'object' && Items.getType(id) !== 'craft';
 };
 
-Items.getShardTier = id => {
+Items.getShardTier = (id) => {
     if (id === 253)
         return 1;
     else if (id === 254)
@@ -212,11 +213,11 @@ Items.getShardTier = id => {
         return 5;
 };
 
-Items.isEquippable = string => {
+Items.isEquippable = (string) => {
     return Items.isArmour(string) || Items.isWeapon(string) || Items.isPendant(string) || Items.isRing(string) || Items.isBoots(string);
 };
 
-Items.healsHealth = id => {
+Items.healsHealth = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].healsHealth > 0;
 
@@ -224,19 +225,19 @@ Items.healsHealth = id => {
 };
 
 
-Items.healsMana = id => {
+Items.healsMana = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].healsMana > 0;
 };
 
-Items.getHealingFactor = id => {
+Items.getHealingFactor = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].healsHealth;
 
     return 0;
 };
 
-Items.getManaFactor = id => {
+Items.getManaFactor = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].healsMana;
     return 0;

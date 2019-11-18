@@ -1,13 +1,14 @@
 /* global module */
 
-const _ = require('underscore');
-const Container = require('../container');
-const Messages = require('../../../../../../network/messages');
-const Packets = require('../../../../../../network/packets');
-const Constants = require('./constants');
-const Items = require('../../../../../../util/items');
+let _ = require('underscore'),
+    Container = require('../container'),
+    Messages = require('../../../../../../network/messages'),
+    Packets = require('../../../../../../network/packets'),
+    Constants = require('./constants'),
+    Items = require('../../../../../../util/items');
 
 class Inventory extends Container {
+
     constructor(owner, size) {
         super('Inventory', owner, size);
     }
@@ -19,12 +20,12 @@ class Inventory extends Container {
     }
 
     add(item, count) {
-        const self = this;
+        let self = this;
 
         if (!count)
             count = -1;
 
-        if (count === -1) // default to moving whole stack
+        if (count === -1)  //default to moving whole stack
             count = parseInt(item.count);
 
         if (!self.canHold(item.id, count)) {
@@ -32,7 +33,7 @@ class Inventory extends Container {
             return false;
         }
 
-        const slot = super.add(item.id, count, item.ability, item.abilityLevel);
+        let slot = super.add(item.id, count, item.ability, item.abilityLevel);
 
         if (!slot)
             return false;
@@ -48,7 +49,7 @@ class Inventory extends Container {
     }
 
     remove(id, count, index) {
-        const self = this;
+        let self = this;
 
         if (!id || !count)
             return false;
@@ -68,6 +69,7 @@ class Inventory extends Container {
 
         return true;
     }
+
 }
 
 module.exports = Inventory;

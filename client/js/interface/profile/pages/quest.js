@@ -17,12 +17,12 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         loadAchievements: function(achievements) {
-            var self = this;
-            var finishedAchievements = 0;
+            var self = this,
+                finishedAchievements = 0;
 
             _.each(achievements, function(achievement) {
-                var item = self.getItem(false, achievement.id);
-                var name = self.getName(false, achievement.id);
+                var item = self.getItem(false, achievement.id),
+                    name = self.getName(false, achievement.id);
 
                 name.text('????????');
 
@@ -53,12 +53,12 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         loadQuests(quests) {
-            var self = this;
-            var finishedQuests = 0;
+            var self = this,
+                finishedQuests = 0;
 
             _.each(quests, function(quest) {
-                var item = self.getItem(true, quest.id);
-                var name = self.getName(true, quest.id);
+                var item = self.getItem(true, quest.id),
+                    name = self.getName(true, quest.id);
 
                 name.text(quest.name);
 
@@ -85,8 +85,8 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         progress: function(info) {
-            var self = this;
-            var item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
+            var self = this,
+                item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
 
             if (!item)
                 return;
@@ -105,8 +105,8 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         finish: function(info) {
-            var self = this;
-            var item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
+            var self = this,
+                item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
 
             if (!item)
                 return;

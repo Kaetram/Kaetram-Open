@@ -1,15 +1,16 @@
 /* global module */
 
 class Points {
+
     constructor(points, maxPoints) {
-        const self = this;
+        let self = this;
 
         self.points = points;
         self.maxPoints = maxPoints;
     }
 
     heal(amount) {
-        const self = this;
+        let self = this;
 
         self.setPoints(self.points + amount);
 
@@ -26,7 +27,7 @@ class Points {
     }
 
     setPoints(points) {
-        const self = this;
+        let self = this;
 
         self.points = points;
 
@@ -45,6 +46,7 @@ class Points {
     onHeal(callback) {
         this.healCallback = callback;
     }
+
 }
 
 module.exports = Points;

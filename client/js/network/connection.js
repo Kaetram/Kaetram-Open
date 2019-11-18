@@ -44,18 +44,18 @@ define(function() {
                 self.app.updateLoader('Logging in');
 
                 if (self.app.isRegistering()) {
-                    var registerInfo = self.app.registerFields;
-                    var username = registerInfo[0].val();
-                    var password = registerInfo[1].val();
-                    var email = registerInfo[3].val();
+                    var registerInfo = self.app.registerFields,
+                        username = registerInfo[0].val(),
+                        password = registerInfo[1].val(),
+                        email = registerInfo[3].val();
 
                     self.socket.send(Packets.Intro, [Packets.IntroOpcode.Register, username, password, email]);
                 } else if (self.app.isGuest())
                     self.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
                 else {
-                    var loginInfo = self.app.loginFields;
-                    var name = loginInfo[0].val();
-                    var pass = loginInfo[1].val();
+                    var loginInfo = self.app.loginFields,
+                        name = loginInfo[0].val(),
+                        pass = loginInfo[1].val();
 
                     self.socket.send(Packets.Intro, [Packets.IntroOpcode.Login, name, pass]);
 
@@ -120,9 +120,9 @@ define(function() {
             });
 
             self.messages.onEntityList(function(data) {
-                var ids = _.pluck(self.entities.getAll(), 'id');
-                var known = _.intersection(ids, data);
-                var newIds = _.difference(data, known);
+                var ids = _.pluck(self.entities.getAll(), 'id'),
+                    known = _.intersection(ids, data),
+                    newIds = _.difference(data, known);
 
                 self.entities.decrepit = _.reject(self.entities.getAll(), function(entity) {
                     return _.include(known, entity.id) || entity.id === self.game.player.id;
@@ -157,10 +157,11 @@ define(function() {
                 if (data.armour)
                     entity.setSprite(self.game.getSprite(data.armour));
 
-                if (data.weapon)
+                if (data.weapon) {
                     entity.setEquipment(data.weapon.type, data.weapon.name,
                         data.weapon.string, data.weapon.count, data.weapon.ability,
                         data.weapon.abilityLevel);
+                }
 
                 self.interface.profile.update();
             });
@@ -182,8 +183,8 @@ define(function() {
 
                     case Packets.MovementOpcode.Follow:
 
-                        var follower = self.entities.get(info.attackerId);
-                        var followee = self.entities.get(info.targetId);
+                        var follower = self.entities.get(info.attackerId),
+                            followee = self.entities.get(info.targetId);
 
                         if (!followee || !follower)
                             return;
@@ -194,8 +195,8 @@ define(function() {
 
                     case Packets.MovementOpcode.Stop:
 
-                        var sEntity = self.entities.get(info.id);
-                        var force = info.force;
+                        var sEntity = self.entities.get(info.id),
+                            force = info.force;
 
                         if (!sEntity)
                             return;
@@ -224,9 +225,9 @@ define(function() {
 
 
                     case Packets.MovementOpcode.Orientate:
-                        var player = info.shift();
-                        var orientation = info.shift();
-                        var entity = self.entities.get(player);
+                        var player = info.shift(),
+                            orientation = info.shift(),
+                            entity = self.entities.get(player);
 
                         // entity.stop();
                         entity.performAction(orientation, Modules.Actions.Orientate);
@@ -236,8 +237,8 @@ define(function() {
             });
 
             self.messages.onTeleport(function(info) {
-                var entity = self.entities.get(info.id);
-                var isPlayer = info.id === self.game.player.id;
+                var entity = self.entities.get(info.id),
+                    isPlayer = info.id === self.game.player.id;
 
                 if (!entity)
                     return;
@@ -351,8 +352,8 @@ define(function() {
             });
 
             self.messages.onCombat(function(opcode, info) {
-                var attacker = self.entities.get(info.attackerId);
-                var target = self.entities.get(info.targetId);
+                var attacker = self.entities.get(info.attackerId),
+                    target = self.entities.get(info.targetId);
 
                 if (!target || !attacker)
                     return;
@@ -370,8 +371,8 @@ define(function() {
 
                     case Packets.CombatOpcode.Hit:
 
-                        var hit = info.hitInfo;
-                        var isPlayer = target.id === self.game.player.id;
+                        var hit = info.hitInfo,
+                            isPlayer = target.id === self.game.player.id;
 
                         if (!hit.isAoE) {
                             attacker.lookAt(target);
@@ -399,7 +400,7 @@ define(function() {
 
                         if (target.hurtSprite) {
                             target.sprite = target.hurtSprite;
-                            setTimeout(function() {target.sprite = target.normalSprite;}, 75);
+                            setTimeout(function() { target.sprite = target.normalSprite; }, 75);
                         }
 
                         attacker.triggerHealthBar();
@@ -432,10 +433,10 @@ define(function() {
             });
 
             self.messages.onAnimation(function(id, info) {
-                var entity = self.entities.get(id);
-                var animation = info.shift();
-                var speed = info.shift();
-                var count = info.shift();
+                var entity = self.entities.get(id),
+                    animation = info.shift(),
+                    speed = info.shift(),
+                    count = info.shift();
 
                 if (!entity)
                     return;
@@ -526,8 +527,8 @@ define(function() {
                 switch (opcode) {
                     case Packets.InventoryOpcode.Batch:
 
-                        var inventorySize = info.shift();
-                        var data = info.shift();
+                        var inventorySize = info.shift(),
+                            data = info.shift();
 
                         self.interface.loadInventory(inventorySize, data);
 
@@ -567,8 +568,8 @@ define(function() {
                 switch (opcode) {
                     case Packets.BankOpcode.Batch:
 
-                        var bankSize = info.shift();
-                        var data = info.shift();
+                        var bankSize = info.shift(),
+                            data = info.shift();
 
                         self.interface.loadBank(bankSize, data);
 
@@ -730,15 +731,14 @@ define(function() {
                 switch (opcode) {
                     case Packets.NPCOpcode.Talk:
 
-                        var entity = self.entities.get(info.id);
-                        var message = info.text;
-                        var isNPC = !info.nonNPC;
+                        var entity = self.entities.get(info.id),
+                            message = info.text,
+                            isNPC = !info.nonNPC;
 
                         if (!entity)
                             return;
 
-                        if (isNPC)
-
+                        if (isNPC) {
                             if (!message) {
                                 sound = 'npc-end';
                                 self.bubble.destroy(info.id);
@@ -750,8 +750,7 @@ define(function() {
                                 if (self.renderer.mobile && self.renderer.autoCentre)
                                     self.renderer.camera.centreOn(self.game.player);
                             }
-
-                        else {
+                        } else {
                             self.bubble.create(info.id, message, self.time, 5000);
                             self.bubble.setTo(entity);
                         }
@@ -774,8 +773,8 @@ define(function() {
 
                     case Packets.NPCOpcode.Countdown:
 
-                        var cEntity = self.entities.get(info.id);
-                        var countdown = info.countdown;
+                        var cEntity = self.entities.get(info.id),
+                            countdown = info.countdown;
 
                         if (cEntity)
                             cEntity.setCountdown(countdown);
@@ -802,8 +801,8 @@ define(function() {
             });
 
             self.messages.onEnchant(function(opcode, info) {
-                var type = info.type;
-                var index = info.index;
+                var type = info.type,
+                    index = info.index;
 
                 switch (opcode) {
                     case Packets.EnchantOpcode.Select:

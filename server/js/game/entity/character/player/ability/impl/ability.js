@@ -1,10 +1,11 @@
 /* global module */
 
-const Abilities = require('../../../../../../util/abilities');
+let Abilities = require('../../../../../../util/abilities');
 
 class Ability {
+
     constructor(name, type) {
-        const self = this;
+        let self = this;
 
         self.name = name;
         self.type = type;
@@ -13,6 +14,7 @@ class Ability {
 
         self.data = Abilities.Data[name];
     }
+
 }
 
 module.exports = Ability;

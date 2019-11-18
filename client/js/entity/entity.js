@@ -188,17 +188,17 @@ define(['./entityhandler'], function(EntityHandler) {
         },
 
         getDistance: function(entity) {
-            var self = this;
-            var x = Math.abs(self.gridX - entity.gridX);
-            var y = Math.abs(self.gridY - entity.gridY);
+            var self = this,
+                x = Math.abs(self.gridX - entity.gridX),
+                y = Math.abs(self.gridY - entity.gridY);
 
             return x > y ? x : y;
         },
 
         getCoordDistance: function(toX, toY) {
-            var self = this;
-            var x = Math.abs(self.gridX - toX);
-            var y = Math.abs(self.gridY - toY);
+            var self = this,
+                x = Math.abs(self.gridX - toX),
+                y = Math.abs(self.gridY - toY);
 
             return x > y ? x : y;
         },

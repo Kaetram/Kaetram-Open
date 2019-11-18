@@ -249,8 +249,8 @@ define(['jquery'], function($) {
         },
 
         displayScroll: function(content) {
-            var self = this;
-            var state = self.parchment.attr('class');
+            var self = this,
+                state = self.parchment.attr('class');
 
             if (self.game.started) {
                 self.parchment.removeClass().addClass(content);
@@ -267,8 +267,8 @@ define(['jquery'], function($) {
         },
 
         verifyForm: function() {
-            var self = this;
-            var activeForm = self.getActiveForm();
+            var self = this,
+                activeForm = self.getActiveForm();
 
             if (activeForm === 'null')
                 return;
@@ -276,8 +276,8 @@ define(['jquery'], function($) {
             switch (activeForm) {
                 case 'loadCharacter':
 
-                    var nameInput = $('#loginNameInput');
-                    var passwordInput = $('#loginPasswordInput');
+                    var nameInput = $('#loginNameInput'),
+                        passwordInput = $('#loginPasswordInput');
 
                     if (self.loginFields.length === 0)
                         self.loginFields = [nameInput, passwordInput];
@@ -296,10 +296,10 @@ define(['jquery'], function($) {
 
                 case 'createCharacter':
 
-                    var characterName = $('#registerNameInput');
-                    var registerPassword = $('#registerPasswordInput');
-                    var registerPasswordConfirmation = $('#registerPasswordConfirmationInput');
-                    var email = $('#registerEmailInput');
+                    var characterName = $('#registerNameInput'),
+                        registerPassword = $('#registerPasswordInput'),
+                        registerPasswordConfirmation = $('#registerPasswordConfirmationInput'),
+                        email = $('#registerEmailInput');
 
                     if (self.registerFields.length === 0)
                         self.registerFields = [characterName, registerPassword, registerPasswordConfirmation, email];
@@ -374,9 +374,9 @@ define(['jquery'], function($) {
         },
 
         cleanErrors: function() {
-            var self = this;
-            var activeForm = self.getActiveForm();
-            var fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
+            var self = this,
+                activeForm = self.getActiveForm(),
+                fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
 
             for (var i = 0; i < fields.length; i++)
                 fields[i].removeClass('field-error');
@@ -410,8 +410,8 @@ define(['jquery'], function($) {
         },
 
         getUIScale: function() {
-            var width = window.innerWidth;
-            var height = window.innerHeight;
+            var width = window.innerWidth,
+                height = window.innerHeight;
 
             return width <= 1000 ? 1 : ((width <= 1500 || height <= 870) ? 2 : 3);
         },
@@ -458,15 +458,15 @@ define(['jquery'], function($) {
             var self = this;
 
             if (self.loginFields)
-                _.each(self.loginFields, function(field) {field.prop('readonly', state);});
+                _.each(self.loginFields, function(field) { field.prop('readonly', state); });
 
             if (self.registerFields)
-                _.each(self.registerFields, function(field) {field.prop('readOnly', state);});
+                _.each(self.registerFields, function(field) { field.prop('readOnly', state); });
         },
 
         updateRange: function(obj) {
-            var self = this;
-            var val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
+            var self = this,
+                val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
 
             obj.css('background-image',
                 '-webkit-gradient(linear, left top, right top, '

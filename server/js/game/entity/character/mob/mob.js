@@ -1,17 +1,18 @@
 /* global module */
 
-const _ = require('underscore');
-const Character = require('../character');
-const Mobs = require('../../../../util/mobs');
-const Utils = require('../../../../util/utils');
-const Items = require('../../../../util/items');
-const MobHandler = require('./mobhandler');
+let _ = require('underscore'),
+    Character = require('../character'),
+    Mobs = require('../../../../util/mobs'),
+    Utils = require('../../../../util/utils'),
+    Items = require('../../../../util/items'),
+    MobHandler = require('./mobhandler');
 
 class Mob extends Character {
+
     constructor(id, instance, x, y, world) {
         super(id, 'mob', instance, x, y);
 
-        const self = this;
+        let self = this;
 
         if (!Mobs.exists(id))
             return;
@@ -44,38 +45,40 @@ class Mob extends Character {
         self.maxRoamingDistance = 3;
 
         self.projectileName = self.getProjectileName();
+
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         self.handler = new MobHandler(self, self.world);
     }
 
     refresh() {
-        const self = this;
+        let self = this;
 
         self.hitPoints = self.data.hitPoints;
         self.maxHitPoints = self.data.hitPoints;
 
         if (self.refreshCallback)
             self.refreshCallback();
+
     }
 
     getDrop() {
-        const self = this;
+        let self = this;
 
         if (!self.drops)
             return null;
 
-        let min = 0;
-        let percent = 0;
-        const random = Utils.randomInt(0, 1000);
+        let min = 0,
+            percent = 0,
+            random = Utils.randomInt(0, 1000);
 
 
-        for (const drop in self.drops)
+        for (let drop in self.drops)
             if (self.drops.hasOwnProperty(drop)) {
-                const chance = self.drops[drop];
+                let chance = self.drops[drop];
 
                 min = percent;
                 percent += chance;
@@ -89,7 +92,7 @@ class Mob extends Character {
                     return {
                         id: Items.stringToId(drop),
                         count: count
-                    };
+                    }
                 }
             }
 
@@ -101,25 +104,25 @@ class Mob extends Character {
     }
 
     canAggro(player) {
-        const self = this;
+        let self = this;
 
         if (self.hasTarget())
-            return false;
+          return false;
 
         if (!self.aggressive)
-            return false;
+          return false;
 
         if (Math.floor(self.level * 1.5) < player.level)
-            return false;
+          return false;
 
         if (!player.hasAggressionTimer())
-            return false;
+          return false;
 
         return self.isNear(player, self.aggroRange);
     }
 
     destroy() {
-        const self = this;
+        let self = this;
 
         self.dead = true;
         self.clearTarget();
@@ -131,7 +134,7 @@ class Mob extends Character {
     }
 
     return() {
-        const self = this;
+        let self = this;
 
         self.clearTarget();
         self.resetPosition();
@@ -155,15 +158,15 @@ class Mob extends Character {
     }
 
     addToChestArea(chestAreas) {
-        const self = this;
-        const area = _.find(chestAreas, area => {return area.contains(self.x, self.y);});
+        let self = this,
+            area = _.find(chestAreas, (area) => { return area.contains(self.x, self.y); });
 
         if (area)
             area.addEntity(self);
     }
 
     respawn() {
-        const self = this;
+        let self = this;
 
         /**
          * Some entities are static (only spawned once during an event)
@@ -177,12 +180,13 @@ class Mob extends Character {
         setTimeout(() => {
             if (self.respawnCallback)
                 self.respawnCallback();
+
         }, self.respawnDelay);
     }
 
     getState() {
-        const self = this;
-        const base = super.getState();
+        let self = this,
+            base = super.getState();
 
         base.hitPoints = self.hitPoints;
         base.maxHitPoints = self.maxHitPoints;
@@ -194,7 +198,7 @@ class Mob extends Character {
     }
 
     resetPosition() {
-        const self = this;
+        let self = this;
 
         self.setPosition(self.spawnLocation[0], self.spawnLocation[1]);
     }
@@ -214,6 +218,7 @@ class Mob extends Character {
     onDeath(callback) {
         this.deathCallback = callback;
     }
+
 }
 
 module.exports = Mob;

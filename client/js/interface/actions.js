@@ -24,9 +24,9 @@ define(['jquery'], function($) {
         },
 
         load: function() {
-            var self = this;
-            var dropAccept = $('#dropAccept');
-            var dropCancel = $('#dropCancel');
+            var self = this,
+                dropAccept = $('#dropAccept'),
+                dropCancel = $('#dropCancel');
 
             dropAccept.click(function(event) {
                 if (self.activeClass === 'inventory')
@@ -80,8 +80,8 @@ define(['jquery'], function($) {
         },
 
         reset: function() {
-            var self = this;
-            var buttons = self.getButtons();
+            var self = this,
+                buttons = self.getButtons();
 
             for (var i = 0; i < buttons.length; i++)
                 $(buttons[i]).remove();

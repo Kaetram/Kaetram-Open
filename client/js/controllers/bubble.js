@@ -37,12 +37,12 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
             if (!bubble || !entity)
                 return;
 
-            var scale = self.game.renderer.getScale();
-            var tileSize = 16 * scale;
-            var x = (entity.x - self.game.getCamera().x) * scale;
-            var width = parseInt(bubble.element.css('width')) + 24;
-            var offset = (width / 2) - (tileSize / 2);
-            var offsetY = -20; var y;
+            var scale = self.game.renderer.getScale(),
+                tileSize = 16 * scale,
+                x = (entity.x - self.game.getCamera().x) * scale,
+                width = parseInt(bubble.element.css('width')) + 24,
+                offset = (width / 2) - (tileSize / 2),
+                offsetY = -20, y;
 
             y = ((entity.y - self.game.getCamera().y) * scale) - (tileSize * 2) - offsetY;
 
@@ -86,8 +86,8 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
         },
 
         destroy: function(id) {
-            var self = this;
-            var bubble = self.get(id);
+            var self = this,
+                bubble = self.get(id);
 
             if (!bubble)
                 return;

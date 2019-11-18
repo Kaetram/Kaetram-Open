@@ -1,8 +1,9 @@
 /* global module */
 
-const Entity = require('../entity');
+let Entity = require('../entity');
 
 class NPC extends Entity {
+
     constructor(id, instance, x, y) {
         super(id, 'npc', instance, x, y);
 
@@ -10,8 +11,8 @@ class NPC extends Entity {
     }
 
     talk(messages) {
-        const self = this;
-        const message = messages[self.talkIndex];
+        let self = this,
+            message = messages[self.talkIndex];
 
         if (self.talkIndex > messages.length - 1)
             self.talkIndex = 0;
@@ -20,6 +21,7 @@ class NPC extends Entity {
 
         return message;
     }
+
 }
 
 module.exports = NPC;

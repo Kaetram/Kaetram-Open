@@ -1,11 +1,11 @@
 /* global module */
 
-const Utils = {};
-const Packets = require('../network/packets');
+let Utils = {},
+    Packets = require('../network/packets');
 
 module.exports = Utils;
 
-Utils.random = range => {
+Utils.random = (range) => {
     return Math.floor(Math.random() * range);
 };
 
@@ -14,25 +14,26 @@ Utils.randomRange = (min, max) => {
 };
 
 Utils.randomInt = (min, max) => {
+
     return min + Math.floor(Math.random() * (max - min + 1));
 };
 
 Utils.getDistance = (startX, startY, toX, toY) => {
-    const x = Math.abs(startX - toX);
-    const y = Math.abs(startY - toY);
+    let x = Math.abs(startX - toX),
+        y = Math.abs(startY - toY);
 
     return x > y ? x : y;
 };
 
 Utils.getJSLogic = () => {
-    return [[][[]] + []][+[]][++[+[]][+[]]];
+    return [[][[]]+[]][+[]][++[+[]][+[]]];
 };
 
-Utils.positionOffset = radius => {
+Utils.positionOffset = (radius) => {
     return {
         x: Utils.randomInt(0, radius),
         y: Utils.randomInt(0, radius)
-    };
+    }
 };
 
 /**
@@ -44,16 +45,16 @@ Utils.generateClientId = () => {
 };
 
 Utils.generateInstance = (randomizer, id, modulo, posY) => {
-    return '' + randomizer + Utils.randomInt(0, id) + randomizer + Utils.randomInt(0, modulo) + (posY || 0);
+    return '' + randomizer + Utils.randomInt(0, id) + randomizer + Utils.randomInt(0, modulo) + (posY ? posY : 0);
 };
 
 Utils.generateRandomId = () => {
-    return '' + 1 + Utils.random(0, 200) + Utils.random(0, 20) + 2;
+    return '' + 1 + Utils.random(0, 200) + Utils.random(0, 20) + 2
 };
 
-Utils.validPacket = packet => {
-    const keys = Object.keys(Packets);
-    const filtered = [];
+Utils.validPacket = (packet) => {
+    let keys = Object.keys(Packets),
+        filtered = [];
 
     for (let i = 0; i < keys.length; i++)
         if (!keys[i].endsWith('Opcode'))
@@ -63,5 +64,5 @@ Utils.validPacket = packet => {
 };
 
 Utils.getCurrentEpoch = () => {
-    return (new Date()).getTime();
+    return (new Date).getTime();
 };

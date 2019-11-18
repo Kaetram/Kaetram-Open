@@ -29,8 +29,8 @@ define(['jquery'], function($) {
         },
 
         add: function(source, text, colour) {
-            var self = this;
-            var element = $('<p>' + source + ': ' + text + '</p>');
+            var self = this,
+                element = $('<p>' + source + ': ' + text + '</p>');
 
             self.showChat();
 

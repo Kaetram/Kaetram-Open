@@ -53,9 +53,9 @@ define(function() {
         },
 
         parse: function(path, name, channels, callback) {
-            var self = this;
-            var fullPath = path + name + '.' + self.format;
-            var sound = document.createElement('audio');
+            var self = this,
+                fullPath = path + name + '.' + self.format,
+                sound = document.createElement('audio');
 
             sound.addEventListener('canplaythrough', function(e) {
                 this.removeEventListener('canplaythrough', arguments.callee, false);
@@ -160,12 +160,12 @@ define(function() {
                 }
 
                 self.play(Modules.AudioTypes.Music, song.name);
-            } else
-
-            if (self.game.renderer.mobile)
-                self.reset(self.song);
-            else
-                self.fadeSongOut();
+            } else {
+                if (self.game.renderer.mobile)
+                    self.reset(self.song);
+                else
+                    self.fadeSongOut();
+            }
         },
 
         fadeIn: function(song) {
@@ -214,7 +214,7 @@ define(function() {
             if (!self.song)
                 return;
 
-            self.fadeOut(self.song, function(song) {self.reset(song);});
+            self.fadeOut(self.song, function(song) { self.reset(song); });
 
             self.song = null;
         },

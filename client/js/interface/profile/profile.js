@@ -72,18 +72,18 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
         update: function() {
             var self = this;
 
-            _.each(self.pages, function(page) {page.update();});
+            _.each(self.pages, function(page) { page.update(); });
         },
 
         resize: function() {
             var self = this;
 
-            _.each(self.pages, function(page) {page.resize();});
+            _.each(self.pages, function(page) { page.resize(); });
         },
 
         setPage: function(index) {
-            var self = this;
-            var page = self.pages[index];
+            var self = this,
+                page = self.pages[index];
 
             self.clear();
 

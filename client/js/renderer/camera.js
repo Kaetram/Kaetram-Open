@@ -37,12 +37,12 @@ define(function() {
         },
 
         update: function() {
-            var self = this;
-            var scale = self.renderer.getScale();
-            var borderWidth = self.app.border.width();
-            var borderHeight = self.app.border.height();
-            var factorWidth = Math.ceil(borderWidth / self.tileSize / scale);
-            var factorHeight = Math.ceil(borderHeight / self.tileSize / scale);
+            var self = this,
+                scale = self.renderer.getScale(),
+                borderWidth = self.app.border.width(),
+                borderHeight = self.app.border.height(),
+                factorWidth = Math.ceil(borderWidth / self.tileSize / scale),
+                factorHeight = Math.ceil(borderHeight / self.tileSize / scale);
 
             self.gridWidth = factorWidth;
             self.gridHeight = factorHeight;
@@ -145,10 +145,10 @@ define(function() {
             if (!entity)
                 return;
 
-            var width = Math.floor(self.gridWidth / 2);
-            var height = Math.floor(self.gridHeight / 2);
-            var nextX = entity.x - (width * self.tileSize);
-            var nextY = entity.y - (height * self.tileSize);
+            var width = Math.floor(self.gridWidth / 2),
+                height = Math.floor(self.gridHeight / 2),
+                nextX = entity.x - (width * self.tileSize),
+                nextY = entity.y - (height * self.tileSize);
 
             if (nextX >= 0 && nextX <= self.borderX && !self.lockX) {
                 self.x = nextX;
@@ -169,8 +169,8 @@ define(function() {
             if (!entity)
                 return;
 
-            var width = Math.floor(self.gridWidth / 2);
-            var height = Math.floor(self.gridHeight / 2);
+            var width = Math.floor(self.gridWidth / 2),
+                height = Math.floor(self.gridHeight / 2);
 
             self.x = entity.x - (width * self.tileSize);
             self.gridX = Math.round(entity.x / 16) - width;
@@ -239,9 +239,10 @@ define(function() {
             if (!offset)
                 offset = 1;
 
-            for (var y = self.gridY - offset, maxY = y + self.gridHeight + (offset * 2); y < maxY; y++)
+            for (var y = self.gridY - offset, maxY = y + self.gridHeight + (offset * 2); y < maxY; y++) {
                 for (var x = self.gridX - offset, maxX = x + self.gridWidth + (offset * 2); x < maxX; x++)
                     callback(x, y);
+            }
         }
     });
 });

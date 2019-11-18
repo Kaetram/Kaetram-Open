@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/handler.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/handler.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
+
+let _ = require(&apos;underscore&apos;),
+    Messages = require(&apos;../../../../network/messages&apos;),
+    Packets = require(&apos;../../../../network/packets&apos;),
+    Npcs = require(&apos;../../../../util/npcs&apos;),
+    Shops = require(&apos;../../../../util/shops&apos;);
+
+class Handler {
+
+    constructor(player) {
+        let self = this;
+
+        self.player = player;
+        self.world = player.world;
+        self.map = player.world.map;
+
+        self.updateInterval = 400; //400 milliseconds
+
+        self.load();
+    }
+
+    load() {
+        let self = this;
+
+        self.player.updateInterval = setInterval(() =&gt; {
+
+            self.detectAggro();
+
+        }, 400);
+
+        self.player.onMovement((x, y) =&gt; {
+
+            self.player.checkRegions();
+
+            self.detectPVP(x, y);
+            self.detectMusic(x, y);
+            self.detectOverlay(x, y);
+            self.detectCamera(x, y);
+            self.detectLights(x, y);
+
+        });
+
+        self.player.onDeath(() =&gt; {
+
+
+        });
+
+        self.player.onHit((attacker, damage) =&gt; {
+
+            /**
+             * Handles actions whenever the player
+             * instance is hit by &apos;damage&apos; amount
+             */
+
+            if (self.player.combat.isRetaliating())
+                self.player.combat.begin(attacker);
+
+        });
+
+        self.player.onKill((character) =&gt; {
+
+            if (self.player.quests.isAchievementMob(character)) {
+                let achievement = self.player.quests.getAchievementByMob(character);
+
+                if (achievement &amp;&amp; achievement.isStarted())
+                    self.player.quests.getAchievementByMob(character).step();
+            }
+        });
+
+        self.player.onRegion(() =&gt; {
+            self.player.lastRegionChange = new Date().getTime();
+
+            self.world.region.handle(self.player);
+            self.world.region.push(self.player);
+        });
+
+        self.player.connection.onClose(() =&gt; {
+            self.player.stopHealing();
+
+            self.world.removePlayer(self.player);
+        });
+
+        self.player.onTalkToNPC((npc) =&gt; {
+
+            if (self.player.quests.isQuestNPC(npc)) {
+                self.player.quests.getQuestByNPC(npc).triggerTalk(npc);
+
+                return;
+            }
+
+            if (self.player.quests.isAchievementNPC(npc)) {
+                self.player.quests.getAchievementByNPC(npc).converse(npc);
+
+                return;
+            }
+
+            if (Shops.isShopNPC(npc.id)) {
+                self.world.shops.open(self.player, npc.id);
+                return;
+            }
+
+            switch(Npcs.getType(npc.id)) {
+                case &apos;banker&apos;:
+                    self.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
+                    return;
+
+                case &apos;enchanter&apos;:
+                    self.player.send(new Messages.NPC(Packets.NPCOpcode.Enchant, {}));
+                    break;
+            }
+
+            let text = Npcs.getText(npc.id);
+
+            if (!text)
+                return;
+
+            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
+                id: npc.instance,
+                text: npc.talk(text)
+            }));
+
+        });
+    }
+
+    detectAggro() {
+        let self = this,
+            region = self.world.region.regions[self.player.region];
+
+        if (!region)
+            return;
+
+        _.each(region.entities, (entity) =&gt; {
+            if (entity &amp;&amp; entity.type === &apos;mob&apos; &amp;&amp; self.canEntitySee(entity)) {
+                let aggro = entity.canAggro(self.player);
+
+                if (aggro)
+                    entity.combat.begin(self.player);
+            }
+        });
+    }
+
+    detectMusic(x, y) {
+        let self = this,
+            musicArea = _.find(self.world.getMusicAreas(), (area) =&gt; { return area.contains(x, y); });
+
+        if (musicArea &amp;&amp; self.player.currentSong !== musicArea.id)
+            self.player.updateMusic(musicArea.id);
+    }
+
+    detectPVP(x, y) {
+        let self = this,
+            pvpArea = _.find(self.world.getPVPAreas(), (area) =&gt; { return area.contains(x, y); });
+
+        self.player.updatePVP(!!pvpArea);
+    }
+
+    detectOverlay(x, y) {
+        let self = this,
+            overlayArea = _.find(self.world.getOverlayAreas(), (area) =&gt; {
+                return area.contains(x, y);
+            });
+
+        self.player.updateOverlay(overlayArea);
+    }
+
+    detectCamera(x, y) {
+        let self = this,
+            cameraArea = _.find(self.world.getCameraAreas(), (area) =&gt; {
+                return area.contains(x, y);
+            });
+
+        self.player.updateCamera(cameraArea);
+    }
+
+    detectLights(x, y) {
+        let self = this;
+
+        _.each(self.map.lights, (light) =&gt; {
+            if (self.map.nearLight(light, x, y) &amp;&amp; !self.player.hasLoadedLight(light)) {
+
+                self.player.lightsLoaded.push(light);
+                self.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
+            }
+        });
+    }
+
+    canEntitySee(entity) {
+        return !this.player.hasInvisible(entity) &amp;&amp; !this.player.hasInvisibleId(entity.id);
+    }
+
+}
+
+module.exports = Handler;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

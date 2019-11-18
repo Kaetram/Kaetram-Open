@@ -47,8 +47,8 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
         },
 
         create: function(info) {
-            var self = this;
-            var entity;
+            var self = this,
+                entity;
 
             if (self.isPlayer(info.id))
                 return;
@@ -100,8 +100,8 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     break;
 
                 case 'projectile':
-                    var attacker = self.get(info.characterId);
-                    var target = self.get(info.targetId);
+                    var attacker = self.get(info.characterId),
+                        target = self.get(info.targetId);
 
                     if (!attacker || !target)
                         return;
@@ -168,9 +168,9 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     player.orientation = info.orientation ? info.orientation : 0;
                     player.type = info.type;
 
-                    var hitPointsData = info.hitPoints;
-                    var manaData = info.mana;
-                    var equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
+                    var hitPointsData = info.hitPoints,
+                        manaData = info.mana,
+                        equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
 
                     player.setHitPoints(hitPointsData[0]);
                     player.setMaxHitPoints(hitPointsData[1]);
@@ -355,13 +355,13 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
         },
 
         forEachEntity: function(callback) {
-            _.each(this.entities, function(entity) {callback(entity);});
+            _.each(this.entities, function(entity) { callback(entity); });
         },
 
         forEachEntityAround: function(x, y, radius, callback) {
             var self = this;
 
-            for (var i = x - radius, max_i = x + radius; i <= max_i; i++)
+            for (var i = x - radius, max_i = x + radius; i <= max_i; i++) {
                 for (var j = y - radius, max_j = y + radius; j <= max_j; j++) {
                     if (self.map.isOutOfBounds(i, j))
                         continue;
@@ -370,6 +370,7 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                         callback(entity);
                     });
                 }
+            }
         }
 
     });

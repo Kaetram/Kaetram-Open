@@ -87,9 +87,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         animate: function(animation, speed, count, onEndCount) {
-            var self = this;
-            var o = ['atk', 'walk', 'idle'];
-            var orientation = self.orientation;
+            var self = this,
+                o = ['atk', 'walk', 'idle'],
+                orientation = self.orientation;
 
             if (self.currentAnimation && self.currentAnimation.name === 'death')
                 return;
@@ -196,8 +196,8 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         idle: function(o) {
-            var self = this;
-            var orientation = o || self.orientation;
+            var self = this,
+                orientation = o || self.orientation;
 
             self.performAction(orientation, Modules.Actions.Idle);
         },
@@ -251,9 +251,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
          */
 
         nextStep: function() {
-            var self = this;
-            var stop = false;
-            var x; var y; var path;
+            var self = this,
+                stop = false,
+                x, y, path;
 
             if (self.step % 2 === 0 && self.secondStepCallback)
                 self.secondStepCallback();
@@ -316,8 +316,8 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         updateMovement: function() {
-            var self = this;
-            var step = self.step;
+            var self = this,
+                step = self.step;
 
             if (self.path[step][0] < self.path[step - 1][0])
                 self.performAction(Modules.Orientation.Left, Modules.Actions.Walk);

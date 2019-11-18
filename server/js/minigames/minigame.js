@@ -1,8 +1,9 @@
 /* global module */
 
 class Minigame {
+
     constructor(id, name) {
-        const self = this;
+        let self = this;
 
         self.id = id;
         self.name = name;

@@ -49,9 +49,9 @@ Detect.getUserAgent = function() {
 };
 
 Detect.isTablet = function() {
-    var userAgent = navigator.userAgent.toLowerCase();
-    var isAppleTablet = /ipad/i.test(userAgent);
-    var isAndroidTablet = /android/i.test(userAgent);
+    var userAgent = navigator.userAgent.toLowerCase(),
+        isAppleTablet = /ipad/i.test(userAgent),
+        isAndroidTablet = /android/i.test(userAgent);
 
     return (isAppleTablet || isAndroidTablet) && window.innerWidth >= 640;
 };
@@ -61,13 +61,13 @@ Detect.isMobile = function() {
 };
 
 Detect.iOSVersion = function() {
-    if (window.MSStream)
+    if (window.MSStream) {
         // There is some iOS in Windows Phone...
         // https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
         return '';
-
-    var match = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
-    var version;
+    }
+    var match = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/),
+        version;
 
     if (match !== undefined && match !== null) {
         version = [
@@ -82,7 +82,7 @@ Detect.iOSVersion = function() {
 };
 
 Detect.androidVersion = function() {
-    var userAgent = navigator.userAgent.split('Android'); var version;
+    var userAgent = navigator.userAgent.split('Android'), version;
 
     if (userAgent.length > 1)
         version = userAgent[1].split(';')[0];
@@ -104,10 +104,12 @@ Detect.isAppleDevice = function() {
         'iPod'
     ];
 
-    if (navigator.platform)
-        while (devices.length)
+    if (navigator.platform) {
+        while (devices.length) {
             if (navigator.platform = devices.pop())
                 return true;
+        }
+    }
 
     return false;
 };

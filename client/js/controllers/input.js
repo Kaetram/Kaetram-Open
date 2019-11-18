@@ -80,8 +80,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
         },
 
         handle: function(inputType, data) {
-            var self = this;
-            var player = self.getPlayer();
+            var self = this,
+                player = self.getPlayer();
 
             switch (inputType) {
                 case Modules.InputType.Key:
@@ -142,8 +142,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
         },
 
         keyUp: function(key) {
-            var self = this;
-            var player = self.getPlayer();
+            var self = this,
+                player = self.getPlayer();
 
             switch (key) {
                 case Modules.Keys.W:
@@ -171,8 +171,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
         },
 
         keyMove: function(position) {
-            var self = this;
-            var player = self.getPlayer();
+            var self = this,
+                player = self.getPlayer();
 
             if (!player.hasPath()) {
                 self.keyMovement = true;
@@ -189,8 +189,8 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
         },
 
         click: function(position) {
-            var self = this;
-            var player = self.getPlayer();
+            var self = this,
+                player = self.getPlayer();
 
             if (player.stunned)
                 return;
@@ -270,9 +270,9 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             if (!self.renderer || self.renderer.mobile || !self.renderer.camera)
                 return;
 
-            var position = self.getCoords();
-            var player = self.getPlayer();
-            var entity = self.game.getEntityAt(position.x, position.y, player.gridX === position.x && player.gridY === position.y);
+            var position = self.getCoords(),
+                player = self.getPlayer(),
+                entity = self.game.getEntityAt(position.x, position.y, player.gridX === position.x && player.gridY === position.y);
 
             self.overlay.update(entity);
 
@@ -311,11 +311,11 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
         },
 
         setCoords: function(event) {
-            var self = this;
-            var offset = self.app.canvas.offset();
-            var width = self.renderer.background.width;
-            var height = self.renderer.background.height;
-            var proportionality = self.renderer.scale === 3 ? (2 / 3) : 1;
+            var self = this,
+                offset = self.app.canvas.offset(),
+                width = self.renderer.background.width,
+                height = self.renderer.background.height,
+                proportionality = self.renderer.scale === 3 ? (2 / 3) : 1;
 
             self.cursorMoved = false;
 
@@ -366,11 +366,11 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             if (!self.renderer || !self.renderer.camera)
                 return;
 
-            var tileScale = self.renderer.tileSize * self.renderer.getSuperScaling();
-            var offsetX = self.mouse.x % tileScale;
-            var offsetY = self.mouse.y % tileScale;
-            var x = ((self.mouse.x - offsetX) / tileScale) + self.game.getCamera().gridX;
-            var y = ((self.mouse.y - offsetY) / tileScale) + self.game.getCamera().gridY;
+            var tileScale = self.renderer.tileSize * self.renderer.getSuperScaling(),
+                offsetX = self.mouse.x % tileScale,
+                offsetY = self.mouse.y % tileScale,
+                x = ((self.mouse.x - offsetX) / tileScale) + self.game.getCamera().gridX,
+                y = ((self.mouse.y - offsetY) / tileScale) + self.game.getCamera().gridY;
 
             return {
                 x: x,
@@ -379,10 +379,10 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
         },
 
         getTargetData: function() {
-            var self = this;
-            var frame = self.targetAnimation.currentFrame;
-            var superScale = self.renderer.getSuperScaling();
-            var sprite = self.game.getSprite('target');
+            var self = this,
+                frame = self.targetAnimation.currentFrame,
+                superScale = self.renderer.getSuperScaling(),
+                sprite = self.game.getSprite('target');
 
             if (!sprite.loaded)
                 sprite.load();

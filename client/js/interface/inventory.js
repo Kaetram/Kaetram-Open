@@ -22,8 +22,8 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         load: function(data) {
-            var self = this;
-            var list = $('#inventory').find('ul');
+            var self = this,
+                list = $('#inventory').find('ul');
 
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
@@ -45,8 +45,8 @@ define(['jquery', './container/container'], function($, Container) {
                     self.click(event);
                 });
 
-                var itemSlotList = $('<li></li>');
-                var count = item.count;
+                var itemSlotList = $('<li></li>'),
+                    count = item.count;
 
                 if (count > 999999)
                     count = count.toString().substring(0, count.toString().length - 6) + 'M';
@@ -74,10 +74,10 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         click: function(event) {
-            var self = this;
-            var index = event.currentTarget.id.substring(4);
-            var slot = self.container.slots[index];
-            var item = $(self.getList()[index]);
+            var self = this,
+                index = event.currentTarget.id.substring(4),
+                slot = self.container.slots[index],
+                item = $(self.getList()[index]);
 
             self.clearSelection();
 
@@ -108,15 +108,15 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         clickDouble: function(event) {
-            var self = this;
-            var index = event.currentTarget.id.substring(4);
-            var slot = self.container.slots[index];
+            var self = this,
+                index = event.currentTarget.id.substring(4),
+                slot = self.container.slots[index];
 
             if (!slot.edible && !slot.equippable)
                 return;
 
-            var item = $(self.getList()[index]);
-            var sSlot = item.find('#slot' + index);
+            var item = $(self.getList()[index]),
+                sSlot = item.find('#slot' + index);
 
             self.clearSelection();
 
@@ -129,8 +129,8 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         clickAction: function(event, dAction) {
-            var self = this;
-            var action = event.currentTarget ? event.currentTarget.id : event;
+            var self = this,
+                action = event.currentTarget ? event.currentTarget.id : event;
 
             log.info(action);
 
@@ -192,9 +192,9 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         add: function(info) {
-            var self = this;
-            var item = $(self.getList()[info.index]);
-            var slot = self.container.slots[info.index];
+            var self = this,
+                item = $(self.getList()[info.index]),
+                slot = self.container.slots[info.index];
 
             if (!item || !slot)
                 return;
@@ -221,9 +221,9 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         remove: function(info) {
-            var self = this;
-            var item = $(self.getList()[info.index]);
-            var slot = self.container.slots[info.index];
+            var self = this,
+                item = $(self.getList()[info.index]),
+                slot = self.container.slots[info.index];
 
             if (!item || !slot)
                 return;
@@ -240,12 +240,12 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         resize: function() {
-            var self = this;
-            var list = self.getList();
+            var self = this,
+                list = self.getList();
 
             for (var i = 0; i < list.length; i++) {
-                var item = $(list[i]).find('#slot' + i);
-                var slot = self.container.slots[i];
+                var item = $(list[i]).find('#slot' + i),
+                    slot = self.container.slots[i];
 
                 if (!slot)
                     continue;

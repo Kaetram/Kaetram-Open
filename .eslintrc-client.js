@@ -12,17 +12,19 @@ module.exports = {
         SharedArrayBuffer: 'readonly'
     },
     rules: {
-        curly: ['error', 'multi'],
+        curly: ['error', 'multi-or-nest'],
         indent: ['warn', 4, { SwitchCase: 1 }],
         'linebreak-style': ['error', 'unix'],
         quotes: ['error', 'single'],
         semi: ['error', 'always'],
         'operator-linebreak': 0,
         'no-var': 0,
+        'one-var': 0,
         'prefer-const': 0,
+        'block-spacing': ['error', 'always'],
         'comma-dangle': ['error', 'never'],
         'arrow-parens': 0,
-        // "no-undef": 0,
+        'no-undef': 0,
 
         'no-unused-vars': 0,
         'max-len': 0,

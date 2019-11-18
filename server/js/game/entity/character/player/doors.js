@@ -1,13 +1,14 @@
 /* global module */
 
-const _ = require('underscore');
-const DoorData = require('../../../../../data/doors');
-const Messages = require('../../../../network/messages');
-const Packets = require('../../../../network/packets');
+let _ = require('underscore'),
+    DoorData = require('../../../../../data/doors'),
+    Messages = require('../../../../network/messages'),
+    Packets = require('../../../../network/packets');
 
 class Doors {
+
     constructor(player) {
-        const self = this;
+        let self = this;
 
         self.world = player.world;
         self.player = player;
@@ -18,9 +19,9 @@ class Doors {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
-        _.each(DoorData, door => {
+        _.each(DoorData, (door) => {
             self.doors[door.id] = {
                 id: door.id,
                 x: door.x,
@@ -31,16 +32,18 @@ class Doors {
                 questId: door.questId,
                 closedIds: door.closedIds,
                 openIds: door.openIds
-            };
+            }
         });
+
     }
 
     getStatus(door) {
-        const self = this;
+        let self = this;
 
-        switch (door.requirement) {
+        switch(door.requirement) {
+
             case 'quest':
-                const quest = self.player.quests.getQuest(door.questId);
+                let quest = self.player.quests.getQuest(door.questId);
 
                 if (door.status === 'open')
                     return door.status;
@@ -49,19 +52,20 @@ class Doors {
 
             case 'level':
                 return self.player.level >= door.level ? 'open' : 'closed';
+
         }
     }
 
     getTiles(door) {
-        const self = this;
-        const tiles = {
-            indexes: [],
-            data: [],
-            collisions: []
-        };
+        let self = this,
+            tiles = {
+                indexes: [],
+                data: [],
+                collisions: []
+            };
 
-        const status = self.getStatus(door);
-        const doorState = {
+        let status = self.getStatus(door),
+            doorState = {
             open: door.openIds,
             closed: door.closedIds
         };
@@ -76,50 +80,50 @@ class Doors {
     }
 
     getAllTiles() {
-        const self = this;
-        const allTiles = {
-            indexes: [],
-            data: [],
-            collisions: []
-        };
+        let self = this,
+            allTiles = {
+                indexes: [],
+                data: [],
+                collisions: []
+            };
 
-        _.each(self.doors, door => {
-            const tiles = self.getTiles(door);
+        _.each(self.doors, (door) => {
+            let tiles = self.getTiles(door);
 
             allTiles.indexes.push.apply(allTiles.indexes, tiles.indexes);
             allTiles.data.push.apply(allTiles.data, tiles.data);
-            allTiles.collisions.push.apply(allTiles.collisions, tiles.collisions);
+            allTiles.collisions.push.apply(allTiles.collisions, tiles.collisions)
         });
 
         return allTiles;
     }
 
     hasCollision(x, y) {
-        const self = this;
-        const tiles = self.getAllTiles();
-        const tileIndex = self.world.map.gridPositionToIndex(x, y);
-        const index = tiles.indexes.indexOf(tileIndex) - 1;
+        let self = this,
+            tiles = self.getAllTiles(),
+            tileIndex = self.world.map.gridPositionToIndex(x, y),
+            index = tiles.indexes.indexOf(tileIndex) - 1 ;
 
         return index < 0 ? false : tiles.collisions[index];
     }
-
     getDoor(x, y, callback) {
-        this.forEachDoor(door => {
+        this.forEachDoor((door) => {
             callback((door.x === x && door.y === y) ? door : null);
-        });
+        })
     }
 
     isDoor(x, y, callback) {
-        this.forEachDoor(door => {
+        this.forEachDoor((door) => {
             callback(door.x === x && door.y === y);
         });
     }
 
     forEachDoor(callback) {
-        _.each(this.doors, door => {
+        _.each(this.doors, (door) => {
             callback(door);
-        });
+        })
     }
+
 }
 
 module.exports = Doors;

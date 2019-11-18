@@ -1,32 +1,33 @@
 /* global module */
 
-const Modules = require('../../../../util/modules');
+let Modules = require('../../../../util/modules');
 
 class Trade {
+    
     constructor(player) {
-        const self = this;
-
+        let self = this;
+        
         self.player = player;
         self.oPlayer = null;
-
+        
         self.requestee = null;
-
+        
         self.state = null;
         self.subState = null;
-
+        
         self.playerItems = [];
         self.oPlayerItems = [];
     }
 
     start() {
-        const self = this;
+        let self = this;
 
         self.oPlayer = self.requestee;
         self.state = Modules.Trade.Started;
     }
 
     stop() {
-        const self = this;
+        let self = this;
 
         self.oPlayer = null;
         self.state = null;
@@ -38,13 +39,13 @@ class Trade {
     }
 
     finalize() {
-        const self = this;
+        let self = this;
 
         if (!self.player.inventory.containsSpaces(self.oPlayerItems.length))
             return;
 
-        for (const i in self.oPlayerItems) {
-            const item = self.oPlayerItems[i];
+        for (let i in self.oPlayerItems) {
+            let item = self.oPlayerItems[i];
 
             if (!item || item.id === -1)
                 continue;
@@ -55,8 +56,8 @@ class Trade {
     }
 
     select(slot) {
-        const self = this;
-        const item = self.player.inventory.slots[slot];
+        let self = this,
+            item = self.player.inventory.slots[slot];
 
         if (!item || item.id === -1 || self.playerItems.indexOf(item) < 0)
             return;
@@ -65,16 +66,18 @@ class Trade {
     }
 
     request(oPlayer) {
-        const self = this;
+        let self = this;
 
         self.requestee = oPlayer;
 
         if (oPlayer.trade.getRequestee() === self.player.instance)
             self.start();
+
+
     }
 
     accept() {
-        const self = this;
+        let self = this;
 
         self.subState = Modules.Trade.Accepted;
 
@@ -85,7 +88,7 @@ class Trade {
     }
 
     getRequestee() {
-        const self = this;
+        let self = this;
 
         if (!self.requestee)
             return null;
@@ -100,6 +103,7 @@ class Trade {
     isStarted() {
         return this.state !== null;
     }
+    
 }
 
 module.exports = Trade;

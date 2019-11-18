@@ -1,10 +1,11 @@
 /* global module */
 
-const Items = require('../../../../../util/items');
+let Items = require('../../../../../util/items');
 
 class Slot {
+
     constructor(index) {
-        const self = this;
+        let self = this;
 
         self.index = index;
 
@@ -17,7 +18,7 @@ class Slot {
     }
 
     load(id, count, ability, abilityLevel) {
-        const self = this;
+        let self = this;
 
         self.id = parseInt(id);
         self.count = parseInt(count);
@@ -32,7 +33,7 @@ class Slot {
     }
 
     empty() {
-        const self = this;
+        let self = this;
 
         self.id = -1;
         self.count = -1;
@@ -43,7 +44,7 @@ class Slot {
     }
 
     increment(amount) {
-        const self = this;
+        let self = this;
 
         self.count += parseInt(amount);
 
@@ -51,7 +52,7 @@ class Slot {
     }
 
     decrement(amount) {
-        const self = this;
+        let self = this;
 
         self.count -= parseInt(amount);
 
@@ -62,7 +63,7 @@ class Slot {
     }
 
     verify() {
-        const self = this;
+        let self = this;
 
         if (isNaN(self.count) || self.count < 1)
             self.count = 1;
@@ -75,8 +76,9 @@ class Slot {
             count: this.count,
             ability: this.ability,
             abilityLevel: this.abilityLevel
-        };
+        }
     }
+
 }
 
 module.exports = Slot;

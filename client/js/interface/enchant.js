@@ -37,15 +37,15 @@ define(['jquery'], function($) {
         },
 
         load: function() {
-            var self = this;
-            var list = self.getSlots();
-            var inventoryList = self.interface.bank.getInventoryList();
+            var self = this,
+                list = self.getSlots(),
+                inventoryList = self.interface.bank.getInventoryList();
 
             list.empty();
 
             for (var i = 0; i < self.getInventorySize(); i++) {
-                var item = $(inventoryList[i]).clone();
-                var slot = item.find('#bankInventorySlot' + i);
+                var item = $(inventoryList[i]).clone(),
+                    slot = item.find('#bankInventorySlot' + i);
 
                 slot.click(function(event) {
                     self.select(event);
@@ -64,8 +64,8 @@ define(['jquery'], function($) {
         },
 
         add: function(type, index) {
-            var self = this;
-            var image = self.getSlot(index).find('#inventoryImage' + index);
+            var self = this,
+                image = self.getSlot(index).find('#inventoryImage' + index);
 
             switch (type) {
                 case 'item':
@@ -98,10 +98,10 @@ define(['jquery'], function($) {
         },
 
         moveBack: function(type, index) {
-            var self = this;
-            var image = self.getSlot(index).find('#inventoryImage' + index);
-            var itemCount = self.getSlot(index).find('#inventoryItemCount' + index);
-            var count = self.getItemSlot(index).count;
+            var self = this,
+                image = self.getSlot(index).find('#inventoryImage' + index),
+                itemCount = self.getSlot(index).find('#inventoryItemCount' + index),
+                count = self.getItemSlot(index).count;
 
             switch (type) {
                 case 'item':

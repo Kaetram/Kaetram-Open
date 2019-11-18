@@ -18,8 +18,8 @@ define(function() {
         },
 
         tick: function() {
-            var self = this;
-            var i = self.currentFrame.index;
+            var self = this,
+                i = self.currentFrame.index;
 
             i = (i < self.length - 1) ? i + 1 : 0;
 

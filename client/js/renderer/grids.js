@@ -40,10 +40,12 @@ define(function() {
         checkPathingGrid: function(player, xRadius, yRadius) {
             var self = this;
 
-            for (var y = player.gridY - yRadius; y < player.gridY + yRadius; y++)
-                for (var x = player.gridX - xRadius; x < player.gridX + xRadius; x++)
+            for (var y = player.gridY - yRadius; y < player.gridY + yRadius; y++) {
+                for (var x = player.gridX - xRadius; x < player.gridX + xRadius; x++) {
                     if (!self.map.isColliding(x, y) && _.size(self.entityGrid[y][x] === 0))
                         self.removeFromPathingGrid(x, y);
+                }
+            }
         },
 
         resetPathingGrid: function() {

@@ -1,12 +1,13 @@
 /* global module */
 
-const _ = require('underscore');
-const Container = require('../container');
-const Messages = require('../../../../../../network/messages');
-const Packets = require('../../../../../../network/packets');
-const Items = require('../../../../../../util/items');
+let _ = require('underscore'),
+    Container = require('../container'),
+    Messages = require('../../../../../../network/messages'),
+    Packets = require('../../../../../../network/packets'),
+    Items = require('../../../../../../util/items');
 
 class Bank extends Container {
+
     constructor(owner, size) {
         super('Bank', owner, size);
 
@@ -20,14 +21,14 @@ class Bank extends Container {
     }
 
     add(id, count, ability, abilityLevel) {
-        const self = this;
+        let self = this;
 
         if (!self.canHold(id, count)) {
             self.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'You do not have enough space in your bank.'));
             return false;
         }
 
-        const slot = super.add(id, parseInt(count), ability, abilityLevel);
+        let slot = super.add(id, parseInt(count), ability, abilityLevel);
 
         self.owner.send(new Messages.Bank(Packets.BankOpcode.Add, slot));
         self.owner.save();
@@ -36,7 +37,7 @@ class Bank extends Container {
     }
 
     remove(id, count, index) {
-        const self = this;
+        let self = this;
 
         if (!super.remove(index, id, count))
             return;
@@ -48,6 +49,7 @@ class Bank extends Container {
 
         self.owner.save();
     }
+
 }
 
 module.exports = Bank;

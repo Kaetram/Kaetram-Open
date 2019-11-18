@@ -9,8 +9,8 @@ define(function() {
         },
 
         isOver: function(time) {
-            var self = this;
-            var over = false;
+            var self = this,
+                over = false;
 
             if (time - self.time > self.duration) {
                 over = true;

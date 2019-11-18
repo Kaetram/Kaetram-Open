@@ -38,8 +38,8 @@ define(function() {
                 if (elapsed > self.duration)
                     elapsed = self.duration;
 
-                var diff = self.endValue - self.startValue;
-                var interval = Math.round(self.startValue + ((diff / self.duration) * elapsed));
+                var diff = self.endValue - self.startValue,
+                    interval = Math.round(self.startValue + ((diff / self.duration) * elapsed));
 
                 if (elapsed === self.duration || interval === self.endValue) {
                     self.stop();

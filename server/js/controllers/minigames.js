@@ -1,10 +1,11 @@
 /* global module */
 
-const TeamWar = require('../minigames/impl/teamwar');
+let TeamWar = require('../minigames/impl/teamwar');
 
 class Minigames {
+
     constructor(world) {
-        const self = this;
+        let self = this;
 
         self.world = world;
 
@@ -14,13 +15,13 @@ class Minigames {
     }
 
     load() {
-        const self = this;
-
-        self.minigames.TeamWar = new TeamWar();
+        let self = this;
+        
+        self.minigames['TeamWar'] = new TeamWar();
     }
 
     getTeamWar() {
-        return this.minigames.TeamWar;
+        return this.minigames['TeamWar'];
     }
 }
 

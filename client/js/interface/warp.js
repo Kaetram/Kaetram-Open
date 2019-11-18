@@ -35,12 +35,13 @@ define(['jquery'], function($) {
             for (var i = 1; i < 7; i++) {
                 var warp = self.mapFrame.find('#warp' + i);
 
-                if (warp)
+                if (warp) {
                     warp.click(function(event) {
                         self.hide();
 
                         self.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);
                     });
+                }
             }
         },
 

@@ -181,11 +181,11 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
         },
 
         setPointsData: function(hitPointsData, manaData) {
-            var self = this;
-            var hitPoints = hitPointsData.shift();
-            var maxHitPoints = hitPointsData.shift();
-            var mana = manaData.shift();
-            var maxMana = manaData.shift();
+            var self = this,
+                hitPoints = hitPointsData.shift(),
+                maxHitPoints = hitPointsData.shift(),
+                mana = manaData.shift(),
+                maxMana = manaData.shift();
 
             self.setMaxHitPoints(maxHitPoints);
             self.setMaxMana(maxMana);
@@ -282,7 +282,7 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
             self.blink(90);
 
             if (!self.tempBlinkTimeout)
-                self.tempBlinkTimeout = setTimeout(function() {self.stopBlinking();}, 500);
+                self.tempBlinkTimeout = setTimeout(function() { self.stopBlinking(); }, 500);
         },
 
         getDistance: function(entity) {

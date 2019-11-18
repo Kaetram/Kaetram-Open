@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/client/js/controllers/interface.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/controllers/interface.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global log */
+
+define([&apos;jquery&apos;, &apos;../interface/inventory&apos;,
+        &apos;../interface/profile/profile&apos;, &apos;../interface/actions&apos;,
+        &apos;../interface/bank&apos;, &apos;../interface/enchant&apos;, &apos;../interface/warp&apos;,
+        &apos;../interface/shop&apos;, &apos;../interface/header&apos;],
+    function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
+
+    return Class.extend({
+
+        init: function(game) {
+            var self = this;
+
+            self.game = game;
+
+            self.notify = $(&apos;#notify&apos;);
+            self.confirm = $(&apos;#confirm&apos;);
+            self.message = $(&apos;#message&apos;);
+            self.fade = $(&apos;#notifyFade&apos;);
+            self.done = $(&apos;#notifyDone&apos;);
+
+            self.inventory = null;
+            self.profile = null;
+            self.actions = null;
+            self.enchant = null;
+            self.shop = null;
+            self.header = null;
+
+            self.loadNotifications();
+            self.loadActions();
+            self.loadWarp();
+            self.loadShop();
+
+            self.done.click(function() {
+                self.hideNotify();
+            });
+        },
+
+        resize: function() {
+            var self = this;
+
+            if (self.inventory)
+                self.inventory.resize();
+
+            if (self.profile)
+                self.profile.resize();
+
+            if (self.bank)
+                self.bank.resize();
+
+            if (self.enchant)
+                self.enchant.resize();
+
+            if (self.shop &amp;&amp; self.shop.isVisible())
+                self.shop.resize();
+
+            if (self.header)
+                self.header.resize();
+
+        },
+
+        loadInventory: function(size, data) {
+            var self = this;
+
+            /**
+             * This can be called multiple times and can be used
+             * to completely refresh the inventory.
+             */
+
+            self.inventory = new Inventory(self.game, size);
+
+            self.inventory.load(data);
+        },
+
+        loadBank: function(size, data) {
+            var self = this;
+
+            /**
+             * Similar structure as the inventory, just that it
+             * has two containers. The bank and the inventory.
+             */
+
+            if (!self.inventory) {
+                log.error(&apos;Inventory not initialized.&apos;);
+                return;
+            }
+
+            self.bank = new Bank(self.game, self.inventory.container, size);
+
+            self.bank.load(data);
+
+            self.loadEnchant();
+        },
+
+        loadProfile: function() {
+            var self = this;
+
+            if (!self.profile)
+                self.profile = new Profile(self.game);
+        },
+
+        loadActions: function() {
+            var self = this;
+
+            if (!self.actions)
+                self.actions = new Actions(self);
+        },
+
+        loadEnchant: function() {
+            var self = this;
+
+            if (!self.enchant)
+                self.enchant = new Enchant(self.game, self);
+        },
+
+        loadWarp: function() {
+            var self = this;
+
+            if (!self.warp)
+                self.warp = new Warp(self.game, self);
+        },
+
+        loadShop: function() {
+            var self = this;
+
+            if (!self.shop)
+                self.shop = new Shop(self.game, self);
+        },
+
+        loadHeader: function() {
+            var self = this;
+
+            if (!self.header)
+                self.header = new Header(self.game, self);
+        },
+
+        loadNotifications: function() {
+            var self = this,
+                ok = $(&apos;#ok&apos;),
+                cancel = $(&apos;#cancel&apos;),
+                done = $(&apos;#done&apos;);
+
+            /**
+             * Simple warning dialogue
+             */
+
+            ok.click(function() {
+
+                self.hideNotify();
+            });
+
+            /**
+             * Callbacks responsible for
+             * Confirmation dialogues
+             */
+
+            cancel.click(function() {
+
+                self.hideConfirm();
+            });
+
+            done.click(function() {
+                log.info(self.confirm.className);
+
+                self.hideConfirm();
+            });
+        },
+
+        hideAll: function() {
+            var self = this;
+
+            if (self.inventory &amp;&amp; self.inventory.isVisible())
+                self.inventory.hide();
+
+            if (self.actions &amp;&amp; self.actions.isVisible())
+                self.actions.hide();
+
+            if (self.profile &amp;&amp; (self.profile.isVisible() || self.profile.settings.isVisible()))
+                self.profile.hide();
+
+            if (self.game.input &amp;&amp; self.game.input.chatHandler &amp;&amp; self.game.input.chatHandler.input.is(&apos;:visible&apos;))
+                self.game.input.chatHandler.hideInput();
+
+            if (self.bank &amp;&amp; self.bank.isVisible())
+                self.bank.hide();
+
+            if (self.enchant &amp;&amp; self.enchant.isVisible())
+                self.enchant.hide();
+
+            if (self.warp &amp;&amp; self.warp.isVisible())
+                self.warp.hide();
+
+            if (self.shop &amp;&amp; self.shop.isVisible())
+                self.shop.hide();
+        },
+
+        addInventory: function(info) {
+            var self = this;
+
+            self.bank.addInventory(info);
+        },
+
+        removeInventory: function(info) {
+            var self = this;
+
+            self.bank.removeInventory(info);
+        },
+
+        displayNotify: function(message) {
+            var self = this;
+
+            if (self.isNotifyVisible())
+                return;
+
+            self.notify.css(&apos;display&apos;, &apos;block&apos;);
+            self.fade.css(&apos;display&apos;, &apos;block&apos;);
+            self.message.css(&apos;display&apos;, &apos;block&apos;);
+
+            self.message.text(message);
+        },
+
+        displayConfirm: function(message) {
+            var self = this;
+
+            if (self.isConfirmVisible())
+                return;
+
+            self.confirm.css(&apos;display&apos;, &apos;block&apos;);
+            self.confirm.text(message);
+        },
+
+        hideNotify: function() {
+            var self = this;
+
+            self.fade.css(&apos;display&apos;, &apos;none&apos;);
+            self.notify.css(&apos;display&apos;, &apos;none&apos;);
+            self.message.css(&apos;display&apos;, &apos;none&apos;);
+        },
+
+        hideConfirm: function() {
+            this.confirm.css(&apos;display&apos;, &apos;none&apos;);
+        },
+
+        getQuestPage: function() {
+            return this.profile.quests;
+        },
+
+        isNotifyVisible: function() {
+            return this.notify.css(&apos;display&apos;) === &apos;block&apos;;
+        },
+
+        isConfirmVisible: function() {
+            return this.confirm.css(&apos;display&apos;) === &apos;block&apos;;
+        }
+
+    });
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

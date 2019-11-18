@@ -23,13 +23,13 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         load: function(data) {
-            var self = this;
-            var bankList = self.bankSlots.find('ul');
-            var inventoryList = self.bankInventorySlots.find('ul');
+            var self = this,
+                bankList = self.bankSlots.find('ul'),
+                inventoryList = self.bankInventorySlots.find('ul');
 
             for (var i = 0; i < data.length; i++) {
-                var item = data[i];
-                var slot = $('<div id="bankSlot' + i + '" class="bankSlot"></div>');
+                var item = data[i],
+                    slot = $('<div id="bankSlot' + i + '" class="bankSlot"></div>');
 
                 self.container.setSlot(i, item);
 
@@ -76,8 +76,8 @@ define(['jquery', './container/container'], function($, Container) {
             }
 
             for (var j = 0; j < self.inventoryContainer.size; j++) {
-                var iItem = self.inventoryContainer.slots[j];
-                var iSlot = $('<div id="bankInventorySlot' + j + '" class="bankSlot"></div>');
+                var iItem = self.inventoryContainer.slots[j],
+                    iSlot = $('<div id="bankInventorySlot' + j + '" class="bankSlot"></div>');
 
                 iSlot.css({
                     'margin-right': (3 * self.getScale()) + 'px',
@@ -122,14 +122,14 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         resize: function() {
-            var self = this;
-            var bankList = self.getBankList();
-            var inventoryList = self.getInventoryList();
+            var self = this,
+                bankList = self.getBankList(),
+                inventoryList = self.getInventoryList();
 
             for (var i = 0; i < bankList.length; i++) {
-                var bankSlot = $(bankList[i]).find('#bankSlot' + i);
-                var image = bankSlot.find('#bankImage' + i);
-                var slot = self.container.slots[i];
+                var bankSlot = $(bankList[i]).find('#bankSlot' + i),
+                    image = bankSlot.find('#bankImage' + i),
+                    slot = self.container.slots[i];
 
                 bankSlot.css({
                     'margin-right': (2 * self.getScale()) + 'px',
@@ -149,9 +149,9 @@ define(['jquery', './container/container'], function($, Container) {
             }
 
             for (var j = 0; j < inventoryList.length; j++) {
-                var inventorySlot = $(inventoryList[j]).find('#bankInventorySlot' + j);
-                var iImage = inventorySlot.find('#inventoryImage' + j);
-                var iSlot = self.inventoryContainer.slots[j];
+                var inventorySlot = $(inventoryList[j]).find('#bankInventorySlot' + j),
+                    iImage = inventorySlot.find('#inventoryImage' + j),
+                    iSlot = self.inventoryContainer.slots[j];
 
                 inventorySlot.css({
                     'margin-right': (3 * self.getScale()) + 'px',
@@ -166,17 +166,17 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         click: function(type, event) {
-            var self = this;
-            var isBank = type === 'bank';
-            var index = event.currentTarget.id.substring(isBank ? 8 : 17);
+            var self = this,
+                isBank = type === 'bank',
+                index = event.currentTarget.id.substring(isBank ? 8 : 17);
 
             self.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
         },
 
         add: function(info) {
-            var self = this;
-            var item = $(self.getBankList()[info.index]);
-            var slot = self.container.slots[info.index];
+            var self = this,
+                item = $(self.getBankList()[info.index]),
+                slot = self.container.slots[info.index];
 
             if (!item || !slot)
                 return;
@@ -186,9 +186,9 @@ define(['jquery', './container/container'], function($, Container) {
 
             slot.setCount(info.count);
 
-            var bankSlot = item.find('#bankSlot' + info.index);
-            var cssSlot = bankSlot.find('#bankImage' + info.index);
-            var count = bankSlot.find('#bankItemCount' + info.index);
+            var bankSlot = item.find('#bankSlot' + info.index),
+                cssSlot = bankSlot.find('#bankImage' + info.index),
+                count = bankSlot.find('#bankItemCount' + info.index);
 
             cssSlot.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
 
@@ -200,9 +200,9 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         remove: function(info) {
-            var self = this;
-            var item = $(self.getBankList()[info.index]);
-            var slot = self.container.slots[info.index];
+            var self = this,
+                item = $(self.getBankList()[info.index]),
+                slot = self.container.slots[info.index];
 
             if (!item || !slot)
                 return;
@@ -220,14 +220,14 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         addInventory: function(info) {
-            var self = this;
-            var item = $(self.getInventoryList()[info.index]);
+            var self = this,
+                item = $(self.getInventoryList()[info.index]);
 
             if (!item)
                 return;
 
-            var slot = item.find('#bankInventorySlot' + info.index);
-            var image = slot.find('#inventoryImage' + info.index);
+            var slot = item.find('#bankInventorySlot' + info.index),
+                image = slot.find('#inventoryImage' + info.index);
 
             image.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
 
@@ -239,15 +239,15 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         removeInventory: function(info) {
-            var self = this;
-            var item = $(self.getInventoryList()[info.index]);
+            var self = this,
+                item = $(self.getInventoryList()[info.index]);
 
             if (!item)
                 return;
 
-            var itemContainer = self.inventoryContainer.slots[info.index];
-            var slot = item.find('#bankInventorySlot' + info.index);
-            var diff = itemContainer.count - info.count;
+            var itemContainer = self.inventoryContainer.slots[info.index],
+                slot = item.find('#bankInventorySlot' + info.index),
+                diff = itemContainer.count - info.count;
 
             if (diff > 1)
                 slot.find('#inventoryItemCount' + info.index).text(diff);

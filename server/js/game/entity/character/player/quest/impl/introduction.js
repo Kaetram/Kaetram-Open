@@ -1,14 +1,15 @@
 /* global module */
 
-const Quest = require('../quest');
-const Packets = require('../../../../../../network/packets');
-const Messages = require('../../../../../../network/messages');
+let Quest = require('../quest'),
+    Packets = require('../../../../../../network/packets'),
+    Messages = require('../../../../../../network/messages');
 
 class Introduction extends Quest {
+
     constructor(player, data) {
         super(player, data);
 
-        const self = this;
+        let self = this;
 
         self.player = player;
         self.data = data;
@@ -17,7 +18,7 @@ class Introduction extends Quest {
     }
 
     load(stage) {
-        const self = this;
+        let self = this;
 
         if (!self.player.inTutorial()) {
             self.setStage(9999);
@@ -37,10 +38,11 @@ class Introduction extends Quest {
     }
 
     loadCallbacks() {
-        const self = this;
+        let self = this;
 
-        self.onNPCTalk(npc => {
-            const conversation = self.getConversation(npc.id);
+        self.onNPCTalk((npc) => {
+
+            let conversation = self.getConversation(npc.id);
 
             self.lastNPC = npc;
 
@@ -51,10 +53,13 @@ class Introduction extends Quest {
 
             if (npc.talkIndex === 0)
                 self.progress('talk');
+
         });
 
         self.player.onReady(() => {
+
             self.updatePointers();
+
         });
 
         self.player.onDoor((destX, destY) => {
@@ -71,30 +76,38 @@ class Introduction extends Quest {
             }
         });
 
-        self.player.onProfile(isOpen => {
+        self.player.onProfile((isOpen) => {
+
             if (isOpen)
                 self.progress('click');
+
         });
 
-        self.player.onInventory(isOpen => {
+        self.player.onInventory((isOpen) => {
+
             if (isOpen)
                 self.progress('click');
+
         });
 
-        self.player.onWarp(isOpen => {
+        self.player.onWarp((isOpen) => {
+
             if (isOpen)
                 self.progress('click');
+
         });
 
-        self.player.onKill(character => {
+        self.player.onKill((character) => {
             if (self.data.kill[self.stage] === character.id)
                 self.progress('kill');
+
         });
+
     }
 
     progress(type) {
-        const self = this;
-        const task = self.data.task[self.stage];
+        let self = this,
+            task = self.data.task[self.stage];
 
         if (!task || task !== type)
             return;
@@ -131,6 +144,8 @@ class Introduction extends Quest {
                     });
 
                 break;
+
+
         }
 
         self.stage++;
@@ -157,7 +172,7 @@ class Introduction extends Quest {
     }
 
     setStage(stage) {
-        const self = this;
+        let self = this;
 
         super.setStage(stage);
 
@@ -165,14 +180,14 @@ class Introduction extends Quest {
     }
 
     finish() {
-        const self = this;
+        let self = this;
 
         self.toggleChat();
         super.finish();
     }
 
     hasDoorUnlocked(door) {
-        const self = this;
+        let self = this;
 
         switch (door.id) {
             case 0:
@@ -183,8 +198,8 @@ class Introduction extends Quest {
     }
 
     verifyDoor(destX, destY) {
-        const self = this;
-        const doorData = self.data.doors[self.stage];
+        let self = this,
+            doorData = self.data.doors[self.stage];
 
         if (!doorData)
             return;

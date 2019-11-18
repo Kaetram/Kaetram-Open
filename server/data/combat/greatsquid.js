@@ -1,12 +1,13 @@
-const Combat = require('../../js/game/entity/character/combat/combat');
-const Modules = require('../../js/util/modules');
+let Combat = require('../../js/game/entity/character/combat/combat'),
+    Modules = require('../../js/util/modules');
 
 class GreatSquid extends Combat {
+
     constructor(character) {
         character.spawnDistance = 15;
         super(character);
 
-        const self = this;
+        let self = this;
 
         self.character = character;
 
@@ -14,7 +15,7 @@ class GreatSquid extends Combat {
     }
 
     hit(character, target, hitInfo) {
-        const self = this;
+        let self = this;
 
         if (self.canUseTerror) {
             hitInfo.type = Modules.Hits.Stun;
@@ -28,6 +29,7 @@ class GreatSquid extends Combat {
     canUseTerror() {
         return new Date().getTime() - this.lastTerror > 15000;
     }
+
 }
 
 module.exports = GreatSquid;

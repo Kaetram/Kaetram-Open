@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/util/items.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/items.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
+
+let Items = {};
+
+Items.Data = {};
+Items.Ids = {};
+Items.onCreate = {};
+
+Items.Plugins = {};
+
+Items.getData = (name) =&gt; {
+    if (name in Items.Data)
+        return Items.Data[name];
+
+    return &apos;null&apos;;
+};
+
+Items.hasPlugin = (string) =&gt; {
+    if (Number.isInteger(string))
+      string = Items.idToString(string);
+
+    if (string in Items.Plugins)
+      return true;
+
+    return false;
+};
+
+Items.getPlugin = (id) =&gt; {
+    let string = Items.idToString(id);
+
+    if (Items.hasPlugin(string))
+      return Items.Plugins[string];
+
+    return null;
+};
+
+Items.idToString = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].key;
+
+    return &apos;null&apos;;
+};
+
+Items.idToName = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].name;
+
+    return &apos;null&apos;;
+};
+
+Items.stringToId = (name) =&gt; {
+
+    if (name in Items.Data)
+        return Items.Data[name].id;
+    else
+        log.error(&apos;Item: &apos; + name + &apos; not found in the database.&apos;);
+
+    return &apos;null&apos;;
+};
+
+Items.getLevelRequirement = (name) =&gt; {
+    var level = 1,
+        item = Items.Data[name];
+
+    if (item &amp;&amp; item.requirement)
+        return item.requirement;
+
+    if (Items.isWeapon(name))
+        level = Items.Data[name].attack;
+    else if (Items.isArmour(name))
+        level = Items.Data[name].defense;
+    else if (Items.isPendant(name))
+        level = Items.Data[name].pendantLevel;
+    else if (Items.isRing(name))
+        level = Items.Data[name].ringLevel;
+    else if (Items.isBoots(name))
+        level = Items.Data[name].bootsLevel;
+
+    return level * 2;
+};
+
+Items.getWeaponLevel = (weaponName) =&gt; {
+    if (Items.isWeapon(weaponName))
+        return Items.Data[weaponName].attack;
+
+    return -1;
+};
+
+Items.getArmourLevel = (armourName) =&gt; {
+    if (Items.isArmour(armourName))
+        return Items.Data[armourName].defense;
+
+    return -1;
+};
+
+Items.getPendantLevel = (pendantName) =&gt; {
+    if (Items.isPendant(pendantName))
+        return Items.Data[pendantName].pendantLevel;
+
+    return -1;
+};
+
+Items.getRingLevel = (ringName) =&gt; {
+    if (Items.isRing(ringName))
+        return Items.Data[ringName].ringLevel;
+
+    return -1;
+};
+
+Items.getBootsLevel = (bootsName) =&gt; {
+    if (Items.isBoots(bootsName))
+        return Items.Data[bootsName].bootsLevel;
+
+    return -1;
+};
+
+Items.isArcherWeapon = (string) =&gt; {
+    if (string in Items.Data)
+        return Items.Data[string].type === &apos;weaponarcher&apos;;
+
+    return false;
+};
+
+Items.isWeapon = (string) =&gt; {
+    if (string in Items.Data)
+        return Items.Data[string].type === &apos;weapon&apos; || Items.Data[string].type === &apos;weaponarcher&apos;;
+
+    return false;
+};
+
+Items.isArmour = (string) =&gt; {
+    if (string in Items.Data)
+        return Items.Data[string].type === &apos;armor&apos; || Items.Data[string].type === &apos;armorarcher&apos;;
+
+    return false;
+};
+
+Items.isPendant = (string) =&gt; {
+    if (string in Items.Data)
+        return Items.Data[string].type === &apos;pendant&apos;;
+
+    return false;
+};
+
+Items.isRing = (string) =&gt; {
+    if (string in Items.Data)
+        return Items.Data[string].type === &apos;ring&apos;;
+
+    return false;
+};
+
+Items.isBoots = (string) =&gt; {
+    if (string in Items.Data)
+        return Items.Data[string].type === &apos;boots&apos;;
+
+    return false;
+};
+
+Items.getType = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].type;
+
+    return null;
+};
+
+Items.isStackable = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].stackable;
+
+    return false;
+};
+
+Items.isEdible = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].edible;
+
+    return false;
+};
+
+Items.getCustomData = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].customData;
+
+    return null;
+};
+
+Items.maxStackSize = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].maxStackSize;
+
+    return false;
+};
+
+
+Items.isShard = (id) =&gt; {
+    return id === 253 || id === 254 || id === 255 || id === 256 || id === 257;
+};
+
+Items.isEnchantable = (id) =&gt; {
+    return Items.getType(id) !== &apos;object&apos; &amp;&amp; Items.getType(id) !== &apos;craft&apos;;
+};
+
+Items.getShardTier = (id) =&gt; {
+    if (id === 253)
+        return 1;
+    else if (id === 254)
+        return 2;
+    else if (id === 255)
+        return 3;
+    else if (id === 256)
+        return 4;
+    else if (id === 257)
+        return 5;
+};
+
+Items.isEquippable = (string) =&gt; {
+    return Items.isArmour(string) || Items.isWeapon(string) || Items.isPendant(string) || Items.isRing(string) || Items.isBoots(string);
+};
+
+Items.healsHealth = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].healsHealth &gt; 0;
+
+    return false;
+};
+
+
+Items.healsMana = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].healsMana &gt; 0;
+};
+
+Items.getHealingFactor = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].healsHealth;
+
+    return 0;
+};
+
+Items.getManaFactor = (id) =&gt; {
+    if (id in Items.Ids)
+        return Items.Ids[id].healsMana;
+    return 0;
+};
+
+module.exports = Items;</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

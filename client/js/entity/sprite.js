@@ -45,8 +45,8 @@ define(['./animation'], function(Animation) {
         },
 
         loadSprite: function() {
-            var self = this;
-            var sprite = self.sprite;
+            var self = this,
+                sprite = self.sprite;
 
             self.filepath = 'img/sprites/' + self.id + '.png';
             self.animationData = sprite.animations;
@@ -71,16 +71,16 @@ define(['./animation'], function(Animation) {
         },
 
         createAnimations: function() {
-            var self = this;
-            var animations = {};
+            var self = this,
+                animations = {};
 
-            for (var name in self.animationData)
+            for (var name in self.animationData) {
                 if (self.animationData.hasOwnProperty(name)) {
                     var a = self.animationData[name];
 
                     animations[name] = new Animation(name, a.length, a.row, self.width, self.height);
                 }
-
+            }
 
             return animations;
         },
@@ -98,9 +98,9 @@ define(['./animation'], function(Animation) {
             if (self.hurtSprite.loaded)
                 return;
 
-            var canvas = document.createElement('canvas');
-            var context = canvas.getContext('2d');
-            var spriteData; var data;
+            var canvas = document.createElement('canvas'),
+                context = canvas.getContext('2d'),
+                spriteData, data;
 
             canvas.width = self.image.width;
             canvas.height = self.image.height;

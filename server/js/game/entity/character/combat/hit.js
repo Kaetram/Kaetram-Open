@@ -1,8 +1,9 @@
 /* global module */
 
 class Hit {
+
     constructor(type, damage) {
-        const self = this;
+        let self = this;
 
         self.type = type;
         self.damage = damage;
@@ -31,8 +32,9 @@ class Hit {
             isRanged: this.isRanged(),
             isAoE: this.isAoE(),
             hasTerror: this.terror
-        };
+        }
     }
+
 }
 
 module.exports = Hit;

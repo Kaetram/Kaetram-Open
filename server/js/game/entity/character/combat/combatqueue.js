@@ -1,6 +1,7 @@
 /* global module */
 
 class CombatQueue {
+
     constructor() {
         this.hitQueue = [];
     }
@@ -18,13 +19,14 @@ class CombatQueue {
     }
 
     getHit() {
-        const self = this;
+        let self = this;
 
         if (self.hitQueue.length < 1)
             return;
 
         return self.hitQueue.shift().getData();
     }
+
 }
 
 module.exports = CombatQueue;

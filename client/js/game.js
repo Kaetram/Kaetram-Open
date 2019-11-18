@@ -109,13 +109,13 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         },
 
         loadRenderer: function() {
-            var self = this;
-            var background = document.getElementById('background');
-            var foreground = document.getElementById('foreground');
-            var overlay = document.getElementById('overlay');
-            var textCanvas = document.getElementById('textCanvas');
-            var entities = document.getElementById('entities');
-            var cursor = document.getElementById('cursor');
+            var self = this,
+                background = document.getElementById('background'),
+                foreground = document.getElementById('foreground'),
+                overlay = document.getElementById('overlay'),
+                textCanvas = document.getElementById('textCanvas'),
+                entities = document.getElementById('entities'),
+                cursor = document.getElementById('cursor');
 
             self.app.sendStatus('Initializing render engine');
 
@@ -123,8 +123,8 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         },
 
         loadControllers: function() {
-            var self = this;
-            var hasWorker = self.app.hasWorker();
+            var self = this,
+                hasWorker = self.app.hasWorker();
 
             self.app.sendStatus('Loading local storage');
 
@@ -245,9 +245,9 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         },
 
         loadStorage: function() {
-            var self = this;
-            var loginName = $('#loginNameInput');
-            var loginPassword = $('#loginPasswordInput');
+            var self = this,
+                loginName = $('#loginNameInput'),
+                loginPassword = $('#loginPasswordInput');
 
             loginName.prop('readonly', false);
             loginPassword.prop('readonly', false);
@@ -265,15 +265,15 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         },
 
         findPath: function(character, x, y, ignores) {
-            var self = this;
-            var grid = self.entities.grids.pathingGrid;
-            var path = [];
+            var self = this,
+                grid = self.entities.grids.pathingGrid,
+                path = [];
 
             if (self.map.isColliding(x, y) || !self.pathfinder || !character)
                 return path;
 
             if (ignores)
-                _.each(ignores, function(entity) {self.pathfinder.ignoreEntity(entity);});
+                _.each(ignores, function(entity) { self.pathfinder.ignoreEntity(entity); });
 
             path = self.pathfinder.find(grid, character, x, y, false);
 
@@ -370,8 +370,8 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         },
 
         getEntityAt: function(x, y, ignoreSelf) {
-            var self = this;
-            var entities = self.entities.grids.renderingGrid[y][x];
+            var self = this,
+                entities = self.entities.grids.renderingGrid[y][x];
 
             if (_.size(entities) > 0)
                 return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];

@@ -1,10 +1,11 @@
 /* global module */
 
-const Equipment = require('./equipment');
-const Items = require('../../../../../util/items');
-const Modules = require('../../../../../util/modules');
+let Equipment = require('./equipment'),
+    Items = require('../../../../../util/items'),
+    Modules = require('../../../../../util/modules');
 
 class Pendant extends Equipment {
+
     constructor(name, id, count, ability, abilityLevel) {
         super(name, id, count, ability, abilityLevel);
 

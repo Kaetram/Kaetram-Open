@@ -61,8 +61,8 @@ define(function() {
 
                 self.camera.clip();
 
-                var id = null;
-                var entity = self.game.getEntityAt(x, y, true);
+                var id = null,
+                    entity = self.game.getEntityAt(x, y, true);
 
                 if (entity)
                     id = entity.id;
@@ -134,8 +134,8 @@ define(function() {
         },
 
         isAttackable: function() {
-            var self = this;
-            var target = self.player.target;
+            var self = this,
+                target = self.player.target;
 
             if (!target)
                 return;
@@ -144,10 +144,10 @@ define(function() {
         },
 
         checkBounds: function() {
-            var self = this;
-            var x = self.player.gridX - self.camera.gridX;
-            var y = self.player.gridY - self.camera.gridY;
-            var isBorder = false;
+            var self = this,
+                x = self.player.gridX - self.camera.gridX,
+                y = self.player.gridY - self.camera.gridY,
+                isBorder = false;
 
             if (x === 0)
                 self.game.zoning.setLeft();

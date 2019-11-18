@@ -1,25 +1,26 @@
 /* global module */
 
-const bcrypt = require('bcrypt');
-const config = require('../../../config');
+let bcrypt = require('bcrypt'),
+    config = require('../../../config');
 
 class Creator {
+
     constructor(database) {
         this.database = database;
     }
 
     save(player) {
-        const self = this;
+        let self = this;
 
-        self.database.getDatabase(database => {
-            const playerData = database.collection('player_data');
-            const playerEquipment = database.collection('player_equipment');
-            const playerQuests = database.collection('player_quests');
-            const playerAchievements = database.collection('player_achievements');
-            const playerBank = database.collection('player_bank');
-            const playerRegions = database.collection('player_regions');
-            const playerAbilities = database.collection('player_abilities');
-            const playerInventory = database.collection('player_inventory');
+        self.database.getDatabase((database) => {
+            let playerData = database.collection('player_data'),
+                playerEquipment = database.collection('player_equipment'),
+                playerQuests = database.collection('player_quests'),
+                playerAchievements = database.collection('player_achievements'),
+                playerBank = database.collection('player_bank'),
+                playerRegions = database.collection('player_regions'),
+                playerAbilities = database.collection('player_abilities'),
+                playerInventory = database.collection('player_inventory');
 
             self.savePlayerData(playerData, player);
             self.savePlayerEquipment(playerEquipment, player);
@@ -35,7 +36,7 @@ class Creator {
     }
 
     savePlayerData(collection, player) {
-        Creator.getPlayerData(player, data => {
+        Creator.getPlayerData(player, (data) => {
             collection.updateOne({
                 username: player.username
             }, { $set: data }, {
@@ -76,6 +77,7 @@ class Creator {
             if (result)
                 log.debug('Player ' + player.username + ' quest data has been saved successfully.');
         });
+
     }
 
     savePlayerAchievements(collection, player) {
@@ -90,6 +92,7 @@ class Creator {
             if (result)
                 log.debug('Player ' + player.username + ' achievement data has been saved successfully.');
         });
+
     }
 
     savePlayerBank(collection, player) {
@@ -152,11 +155,11 @@ class Creator {
             if (error) throw error;
 
             callback(hash);
-        });
+        })
     }
 
     static getPlayerData(player, callback) {
-        Creator.getPasswordHash(player.password, hash => {
+        Creator.getPasswordHash(player.password, (hash) => {
             callback({
                 username: player.username,
                 password: hash,
@@ -181,7 +184,7 @@ class Creator {
                 guildName: player.guildName,
                 invisibleIds: player.formatInvisibles(),
                 userAgent: player.userAgent
-            });
+            })
         });
     }
 
@@ -193,7 +196,7 @@ class Creator {
             pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : 0, player.pendant ? player.pendant.getAbility() : 0, player.pendant ? player.pendant.getAbilityLevel() : 0],
             ring: [player.ring ? player.ring.getId() : -1, player.ring ? player.ring.getCount() : 0, player.ring ? player.ring.getAbility() : 0, player.ring ? player.ring.getAbilityLevel() : 0],
             boots: [player.boots ? player.boots.getId() : -1, player.boots ? player.boots.getCount() : 0, player.boots ? player.boots.getAbility() : 0, player.boots ? player.boots.getAbilityLevel() : 0]
-        };
+        }
     }
 
     /**
@@ -203,7 +206,7 @@ class Creator {
      */
 
     static getFullData(player) {
-        const position = player.getSpawn();
+        let position = player.getSpawn();
 
         return {
             username: player.username,
@@ -231,8 +234,9 @@ class Creator {
             pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : 0, player.pendant ? player.pendant.getAbility() : 0, player.pendant ? player.pendant.getAbilityLevel() : 0],
             ring: [player.ring ? player.ring.getId() : -1, player.ring ? player.ring.getCount() : 0, player.ring ? player.ring.getAbility() : 0, player.ring ? player.ring.getAbilityLevel() : 0],
             boots: [player.boots ? player.boots.getId() : -1, player.boots ? player.boots.getCount() : 0, player.boots ? player.boots.getAbility() : 0, player.boots ? player.boots.getAbilityLevel() : 0]
-        };
+        }
     }
+
 }
 
 module.exports = Creator;

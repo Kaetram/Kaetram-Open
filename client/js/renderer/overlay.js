@@ -21,8 +21,8 @@ define(function() {
         },
 
         loadOverlay: function(overlayName) {
-            var self = this;
-            var overlay = new Image();
+            var self = this,
+                overlay = new Image();
 
             overlay.crossOrigin = 'Anonymous';
             overlay.src = 'img/overlays/' + overlayName;

@@ -1,10 +1,11 @@
-const Utils = require('../../../../util/utils');
-const Messages = require('../../../../network/messages');
-const Packets = require('../../../../network/packets');
+let Utils = require('../../../../util/utils'),
+    Messages = require('../../../../network/messages'),
+    Packets = require('../../../../network/packets');
 
 class MobHandler {
+
     constructor(mob, world) {
-        const self = this;
+        let self = this;
 
         self.mob = mob;
         self.world = world;
@@ -19,16 +20,17 @@ class MobHandler {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         if (!self.mob.roaming)
             return;
 
         self.roamingInterval = setInterval(() => {
+
             if (!self.mob.dead) {
-                const newX = self.mob.x + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance);
-                const newY = self.mob.y + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance);
-                const distance = Utils.getDistance(self.spawnLocation[0], self.spawnLocation[1], newX, newY);
+                let newX = self.mob.x + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
+                    newY = self.mob.y + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
+                    distance = Utils.getDistance(self.spawnLocation[0], self.spawnLocation[1], newX, newY);
 
                 if (self.map.isColliding(newX, newY))
                     return;
@@ -55,19 +57,22 @@ class MobHandler {
                         y: newY
                     })
                 });
+
             }
+
         }, 5000);
     }
 
     loadCallbacks() {
-        const self = this;
+        let self = this;
 
-        /* self.mob.onMovement((x, y) => {
+        /*self.mob.onMovement((x, y) => {
 
 
             console.trace(`x: ${x}, y: ${y}`);
         });*/
     }
+
 }
 
 module.exports = MobHandler;

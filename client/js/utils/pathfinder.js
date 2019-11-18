@@ -32,9 +32,9 @@ define(['../lib/astar'], function(AStar) {
         },
 
         find: function(grid, entity, x, y, incomplete) {
-            var self = this;
-            var start = [entity.gridX, entity.gridY];
-            var end = [x, y]; var path;
+            var self = this,
+                start = [entity.gridX, entity.gridY],
+                end = [x, y], path;
 
             self.grid = grid;
             self.applyIgnore(true);
@@ -48,9 +48,9 @@ define(['../lib/astar'], function(AStar) {
         },
 
         findIncomplete: function(start, end) {
-            var self = this;
-            var incomplete = [];
-            var perfect; var x; var y;
+            var self = this,
+                incomplete = [],
+                perfect, x, y;
 
             perfect = AStar(self.blankGrid, start, end, self.mode);
 
@@ -68,8 +68,8 @@ define(['../lib/astar'], function(AStar) {
         },
 
         applyIgnore: function(ignored) {
-            var self = this;
-            var x; var y; var g;
+            var self = this,
+                x, y, g;
 
             _.each(self.ignores, function(entity) {
                 x = entity.hasPath() ? entity.nextGridX : entity.gridX;

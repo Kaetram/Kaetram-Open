@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../../../../">
+  <title data-ice="title">Kaetram-Open/server/js/game/entity/character/player/enchant.js | Kaetram</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A modern HTML5 multiplayer adventure!"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="Kaetram"><meta property="twitter:description" content="A modern HTML5 multiplayer adventure!"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/enchant.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
+
+let Items = require(&apos;../../../../util/items&apos;),
+    Messages = require(&apos;../../../../network/messages&apos;),
+    Packets = require(&apos;../../../../network/packets&apos;),
+    Utils = require(&apos;../../../../util/utils&apos;);
+
+class Enchant {
+
+    /**
+     * Tier 1 - Damage/Armour boost (1-5%)
+     * Tier 2 - Damage boost (1-10% &amp; 10% for special ability or special ability level up)
+     * Tier 3 - Damage boost (1-15% &amp; 15% for special ability or special ability level up)
+     * Tier 4 - Damage boost (1-20% &amp; 20% for special ability or special ability level up)
+     * Tier 5 - Damage boost (1-40% &amp; 25% for special ability or special ability level up)
+     */
+
+
+    constructor(player) {
+        let self = this;
+
+        self.player = player;
+
+        self.selectedItem = null;
+        self.selectedShards = null;
+    }
+
+    add(type, item) {
+        let self = this,
+            isItem = item === &apos;item&apos;;
+
+        if (isItem &amp;&amp; !Items.isEnchantable(item.id))
+            return;
+
+        if (type === &apos;item&apos;) {
+            if (self.selectedItem)
+                self.remove(&apos;item&apos;);
+
+            self.selectedItem = item;
+
+        } else if (type === &apos;shards&apos;) {
+
+            if (self.selectedShards)
+                self.remove(&apos;shards&apos;);
+
+            self.selectedShards = item;
+        }
+
+        self.player.send(new Messages.Enchant(Packets.EnchantOpcode.Select, {
+            type: type,
+            index: item.index
+        }));
+    }
+
+    remove(type) {
+        let self = this,
+            index;
+
+        if (type === &apos;item&apos; &amp;&amp; self.selectedItem) {
+
+            index = self.selectedItem.index;
+
+            self.selectedItem = null;
+
+        } else if (type === &apos;shards&apos; &amp;&amp; self.selectedShards) {
+
+            index = self.selectedShards.index;
+
+
+            self.selectedShards = null;
+        }
+
+        self.player.send(new Messages.Enchant(Packets.EnchantOpcode.Remove, {
+            type: type,
+            index: index
+        }));
+    }
+
+    convert(shard) {
+        let self = this;
+
+        if (!Items.isShard(shard.id) || !self.player.inventory.hasSpace())
+            return;
+
+        let tier = Items.getShardTier(shard.id);
+
+        if (shard.count &lt; 11 &amp;&amp; tier &gt; 5)
+            return;
+
+        for (let i = 0; i &lt; shard.count; i += 10) {
+            self.player.inventory.remove(shard.id, 10, shard.index);
+
+            self.player.inventory.add({
+                id: shard.id + 1,
+                count: 1,
+                ability: -1,
+                abilityLevel: -1
+            });
+        }
+    }
+
+    enchant() {
+        let self = this;
+
+        if (!self.selectedItem) {
+            self.player.notify(&apos;You have not selected an item to enchant.&apos;);
+            return;
+        }
+
+        if (!self.selectedShards) {
+            self.player.notify(&apos;You have to select shards to infuse.&apos;);
+            return;
+        }
+
+        if (!self.verify()) {
+            self.player.notify(&apos;This item cannot be enchanted.&apos;);
+            return;
+        }
+
+        if (self.selectedShards.count &lt; 10) {
+            self.player.notify(&apos;You must have a minimum of 10 shards to enchant.&apos;);
+            return;
+        }
+
+        /**
+         * Implement probabilities here based on the number of shards
+         * and reason them out.
+         */
+
+        let tier = self.selectedItem.tier;
+
+        self.selectedItem.count = Utils.randomInt(1, tier === 5 ? 40 : 5 * tier);
+
+        if (tier &lt; 2)
+            return;
+
+        if (self.hasAbility(self.selectedItem))
+            if (self.selectedItem.abilityLevel &lt; 5)
+                self.selectedItem.abilityLevel++;
+            else
+                self.generateAbility();
+
+        self.player.inventory.remove(self.selectedShards.id, 10, self.selectedShards.index);
+        self.player.sync();
+    }
+
+    generateAbility() {
+        let self = this,
+            type = Items.getType(self.selectedItem.id),
+            probability = Utils.randomInt(0, 100);
+
+        if (probability &gt; 5 + (5 * self.selectedShards.tier))
+            return;
+
+        switch (type) {
+            case &apos;armor&apos;:
+            case &apos;armorarcher&apos;:
+
+                self.selectedItem.ability = Utils.randomInt(2, 3);
+
+
+                break;
+
+            case &apos;weapon&apos;:
+
+                self.selectedItem.ability = Utils.randomInt(0, 1);
+
+                break;
+
+            case &apos;weaponarcher&apos;:
+
+                self.selectedItem.ability = Utils.randomInt(4, 5);
+
+                break;
+
+            case &apos;pendant&apos;:
+
+                break;
+
+            case &apos;ring&apos;:
+
+                break;
+
+            case &apos;boots&apos;:
+
+                break;
+
+        }
+    }
+
+    verify() {
+        return Items.isEnchantable(this.selectedItem.id) &amp;&amp; Items.isShard(this.selectedShards.id);
+    }
+
+    hasAbility(item) {
+        return item.ability !== -1;
+    }
+
+}
+
+module.exports = Enchant;</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
