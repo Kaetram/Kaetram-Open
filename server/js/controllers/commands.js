@@ -1,28 +1,27 @@
 /* global module */
 
-let _ = require('underscore'),
-    Messages = require('../network/messages'),
-    Packets = require('../network/packets'),
-    MapClient = require('../../data/map/world_client'),
-    config = require('../../config');
+const _ = require('underscore');
+const Messages = require('../network/messages');
+const Packets = require('../network/packets');
+const MapClient = require('../../data/map/world_client');
+const config = require('../../config');
 
 class Commands {
-
     constructor(player) {
-        let self = this;
+        const self = this;
 
         self.player = player;
         self.world = player.world;
     }
 
     parse(rawText) {
-        let self = this,
-            blocks = rawText.substring(1).split(' ');
+        const self = this;
+        const blocks = rawText.substring(1).split(' ');
 
         if (blocks.length < 1)
             return;
 
-        let command = blocks.shift();
+        const command = blocks.shift();
 
         self.handlePlayerCommands(command, blocks);
 
@@ -34,13 +33,12 @@ class Commands {
     }
 
     handlePlayerCommands(command, blocks) {
-        let self = this;
+        const self = this;
 
-        switch(command) {
-
+        switch (command) {
             case 'players':
-                let population = self.world.getPopulation(),
-                    singular = population === 1;
+                const population = self.world.getPopulation();
+                const singular = population === 1;
 
                 self.player.notify(`There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`);
 
@@ -60,7 +58,7 @@ class Commands {
 
             case 'progress':
 
-                let tutorialQuest = self.player.getTutorial();
+                const tutorialQuest = self.player.getTutorial();
 
                 self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
                     id: tutorialQuest.id,
@@ -92,7 +90,7 @@ class Commands {
                 return;
 
             case 'resetintro':
-                let introduction = self.player.quests.getQuest(0);
+                const introduction = self.player.quests.getQuest(0);
 
                 introduction.setStage(0);
                 introduction.clearPointers();
@@ -101,23 +99,19 @@ class Commands {
 
                 self.player.updateRegion();
                 self.player.save();
-
-                return;
-
         }
     }
 
     handleModeratorCommands(command, blocks) {
-        let self = this;
+        const self = this;
 
         switch (command) {
-
             case 'mute':
             case 'ban':
 
-                let duration = blocks.shift(),
-                    targetName = blocks.join(' '),
-                    user = self.world.getPlayerByName(targetName);
+                let duration = blocks.shift();
+                const targetName = blocks.join(' ');
+                const user = self.world.getPlayerByName(targetName);
 
                 if (!user)
                     return;
@@ -125,7 +119,7 @@ class Commands {
                 if (!duration)
                     duration = 24;
 
-                let timeFrame = new Date().getTime() + duration * 60 * 60;
+                const timeFrame = new Date().getTime() + duration * 60 * 60;
 
                 if (command === 'mute')
                     user.mute = timeFrame;
@@ -143,8 +137,8 @@ class Commands {
 
             case 'unmute':
 
-                let uTargetName = blocks.join(' '),
-                    uUser = self.world.getPlayerByName(uTargetName);
+                const uTargetName = blocks.join(' ');
+                const uUser = self.world.getPlayerByName(uTargetName);
 
                 if (!uTargetName)
                     return;
@@ -152,24 +146,20 @@ class Commands {
                 uUser.mute = new Date().getTime() - 3600;
 
                 uUser.save();
-
-                return;
-
         }
     }
 
     handleAdminCommands(command, blocks) {
-        let self = this,
-            username, player;
+        const self = this;
+        let username; let player;
 
         switch (command) {
-
             case 'spawn':
 
-                let spawnId = parseInt(blocks.shift()),
-                    count = parseInt(blocks.shift()),
-                    ability = parseInt(blocks.shift()),
-                    abilityLevel = parseInt(blocks.shift());
+                const spawnId = parseInt(blocks.shift());
+                const count = parseInt(blocks.shift());
+                const ability = parseInt(blocks.shift());
+                const abilityLevel = parseInt(blocks.shift());
 
                 if (!spawnId || !count)
                     return;
@@ -177,8 +167,8 @@ class Commands {
                 self.player.inventory.add({
                     id: spawnId,
                     count: count,
-                    ability: ability ? ability : -1,
-                    abilityLevel: abilityLevel ? abilityLevel : -1
+                    ability: ability || -1,
+                    abilityLevel: abilityLevel || -1
                 });
 
                 return;
@@ -195,8 +185,8 @@ class Commands {
 
             case 'drop':
 
-                let id = parseInt(blocks.shift()),
-                    dCount = parseInt(blocks.shift());
+                const id = parseInt(blocks.shift());
+                let dCount = parseInt(blocks.shift());
 
                 if (!id)
                     return;
@@ -222,14 +212,14 @@ class Commands {
 
             case 'teleport':
 
-                let x = parseInt(blocks.shift()),
-                    y = parseInt(blocks.shift()),
-                    withAnimation = parseInt(blocks.shift())
+                const x = parseInt(blocks.shift());
+                const y = parseInt(blocks.shift());
+                const withAnimation = parseInt(blocks.shift());
 
-                log.info(withAnimation ? true : false);
+                log.info(!!withAnimation);
 
                 if (x && y)
-                    self.player.teleport(x, y, false, withAnimation ? true : false);
+                    self.player.teleport(x, y, false, !!withAnimation);
 
                 return;
 
@@ -263,7 +253,7 @@ class Commands {
 
             case 'mob':
 
-                let npcId = parseInt(blocks.shift());
+                const npcId = parseInt(blocks.shift());
 
                 self.world.spawnMob(npcId, self.player.x, self.player.y);
 
@@ -272,8 +262,8 @@ class Commands {
             case 'pointer':
 
                 if (blocks.length > 1) {
-                    let posX = parseInt(blocks.shift()),
-                        posY = parseInt(blocks.shift());
+                    const posX = parseInt(blocks.shift());
+                    const posY = parseInt(blocks.shift());
 
                     if (!posX || !posY)
                         return;
@@ -284,7 +274,7 @@ class Commands {
                         y: posY
                     }));
                 } else {
-                    let instance = blocks.shift();
+                    const instance = blocks.shift();
 
                     if (!instance)
                         return;
@@ -298,7 +288,7 @@ class Commands {
 
             case 'teleall':
 
-                _.each(self.world.players, (player) => {
+                _.each(self.world.players, player => {
                     player.teleport(self.player.x, self.player.y);
                 });
 
@@ -317,7 +307,7 @@ class Commands {
 
             case 'addexp':
 
-                let exp = parseInt(blocks.shift());
+                const exp = parseInt(blocks.shift());
 
                 if (!exp)
                     return;
@@ -328,14 +318,14 @@ class Commands {
 
             case 'region':
 
-                let tileX = parseInt(blocks.shift()),
-                    tileY = parseInt(blocks.shift()),
-                    tileInfo = parseInt(blocks.shift());
+                const tileX = parseInt(blocks.shift());
+                const tileY = parseInt(blocks.shift());
+                const tileInfo = parseInt(blocks.shift());
 
                 if (!tileX || !tileY)
                     return;
 
-                let tileIndex = self.world.region.gridPositionToIndex(tileX - 1, tileY);
+                const tileIndex = self.world.region.gridPositionToIndex(tileX - 1, tileY);
 
                 log.info('Sending Tile: ' + tileIndex);
 
@@ -351,13 +341,13 @@ class Commands {
 
             case 'gettile':
 
-                let getTileX = parseInt(blocks.shift()),
-                    getTileY = parseInt(blocks.shift());
+                const getTileX = parseInt(blocks.shift());
+                const getTileY = parseInt(blocks.shift());
 
                 if (!getTileX || !getTileY)
                     return;
 
-                let getTileIndex = self.world.region.gridPositionToIndex(getTileX - 1, getTileY);
+                const getTileIndex = self.world.region.gridPositionToIndex(getTileX - 1, getTileY);
 
                 log.info('Tile Index: ' + getTileIndex);
                 log.info('Tile Info: ' + MapClient.data[getTileIndex]);
@@ -419,17 +409,14 @@ class Commands {
 
             case 'clear':
 
-                self.player.inventory.forEachSlot((slot) => {
-                    if (slot !== -1) {
+                self.player.inventory.forEachSlot(slot => {
+                    if (slot !== -1)
                         self.player.inventory.remove(slot.id, slot.count);
-                    }
                 });
 
                 break;
-
         }
     }
-
 }
 
 module.exports = Commands;

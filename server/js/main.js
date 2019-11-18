@@ -1,21 +1,21 @@
-let World = require('./game/world'),
-    WebSocket = require('./network/websocket'),
-    config = require('../config'),
-    Log = require('log'),
-    Parser = require('./util/parser'),
-    Database = require('./database/database'),
-    _ = require('underscore'),
-    worlds = [], allowConnections = false,
-    worldsCreated = 0;
+const World = require('./game/world');
+const WebSocket = require('./network/websocket');
+const config = require('../config');
+const Log = require('log');
+const Parser = require('./util/parser');
+const Database = require('./database/database');
+const _ = require('underscore');
+const worlds = []; let allowConnections = false;
+let worldsCreated = 0;
 
 log = new Log(config.worlds > 1 ? 'notice' : config.debugLevel, config.localDebug ? fs.createWriteStream('runtime.log') : null);
 
 function main() {
     log.info('Initializing ' + config.name + ' game engine...');
 
-    let webSocket = new WebSocket(config.host, config.port, config.gver),
-        database = new Database(config.database),
-        stdin = process.openStdin();
+    const webSocket = new WebSocket(config.host, config.port, config.gver);
+    const database = new Database(config.database);
+    const stdin = process.openStdin();
 
     webSocket.onConnect(function(connection) {
         if (allowConnections) {
@@ -35,12 +35,10 @@ function main() {
                 connection.sendUTF8('full');
                 connection.close();
             }
-
         } else {
             connection.sendUTF8('disallowed');
             connection.close();
         }
-
     });
 
 
@@ -55,28 +53,26 @@ function main() {
             worlds.push(new World(i + 1, webSocket, database.getDatabase()));
 
         initializeWorlds();
-
     });
 
-    stdin.addListener('data', (data) => {
-        let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
-            type = message.charAt(0);
+    stdin.addListener('data', data => {
+        const message = data.toString().replace(/(\r\n|\n|\r)/gm, '');
+        const type = message.charAt(0);
 
         if (type !== '/')
             return;
 
-        let blocks = message.substring(1).split(' '),
-            command = blocks.shift();
+        const blocks = message.substring(1).split(' ');
+        const command = blocks.shift();
 
         if (!command)
             return;
 
         switch (command) {
-
             case 'players':
                 let total = 0;
 
-                _.each(worlds, (world) => {
+                _.each(worlds, world => {
                     total += world.playerCount;
                 });
 
@@ -86,15 +82,13 @@ function main() {
 
             case 'registered':
 
-                worlds[0].database.registeredCount((count) => {
+                worlds[0].database.registeredCount(count => {
                     log.info(`There are ${count} users registered.`);
                 });
 
                 break;
-
         }
     });
-
 }
 
 function onWorldLoad() {
@@ -107,7 +101,7 @@ function allWorldsCreated() {
     log.notice('Finished creating ' + worlds.length + ' world' + (worlds.length > 1 ? 's' : '') + '!');
     allowConnections = true;
 
-    let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
+    const host = config.host === '0.0.0.0' ? 'localhost' : config.host;
     log.notice('Connect locally via http://' + host + ':' + config.port);
 }
 
@@ -116,15 +110,15 @@ function loadParser() {
 }
 
 function initializeWorlds() {
-    for (let worldId in worlds)
+    for (const worldId in worlds)
         if (worlds.hasOwnProperty(worldId))
             worlds[worldId].load(onWorldLoad);
 }
 
 function getPopulations() {
-    let counts = [];
+    const counts = [];
 
-    for (let index in worlds)
+    for (const index in worlds)
         if (worlds.hasOwnProperty(index))
             counts.push(worlds[index].getPopulation());
 
@@ -136,21 +130,21 @@ function saveAll() {
         world.saveAll();
     });
 
-    let plural = worlds.length > 1;
+    const plural = worlds.length > 1;
 
     log.notice('Saved players for ' + worlds.length + ' world' + (plural ? 's' : '') + '.');
 }
 
-if ( typeof String.prototype.startsWith !== 'function' ) {
+if (typeof String.prototype.startsWith !== 'function')
     String.prototype.startsWith = function(str) {
-        return str.length > 0 && this.substring( 0, str.length ) === str;
+        return str.length > 0 && this.substring(0, str.length) === str;
     };
-}
 
-if ( typeof String.prototype.endsWith !== 'function' ) {
+
+if (typeof String.prototype.endsWith !== 'function')
     String.prototype.endsWith = function(str) {
-        return str.length > 0 && this.substring( this.length - str.length, this.length ) === str;
+        return str.length > 0 && this.substring(this.length - str.length, this.length) === str;
     };
-}
+
 
 main();

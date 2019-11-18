@@ -1,5 +1,4 @@
 define(function() {
-
     return Class.extend({
 
         init: function(id, element, type) {
@@ -64,5 +63,4 @@ define(function() {
         }
 
     });
-
 });

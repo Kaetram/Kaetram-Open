@@ -1,14 +1,13 @@
 /* global _, m4, log, Detect */
 
-var DarkMask = illuminated.DarkMask,
-    Lamp = illuminated.Lamp,
-    Lighting = illuminated.Lighting,
-    Vec2 = illuminated.Vec2;
+var DarkMask = illuminated.DarkMask;
+var Lamp = illuminated.Lamp;
+var Lighting = illuminated.Lighting;
+var Vec2 = illuminated.Vec2;
 
 define(['jquery', './camera', './tile',
     '../entity/character/player/player', '../entity/character/character',
     '../entity/objects/item'], function($, Camera, Tile, Player, Character, Item) {
-
     return Class.extend({
 
         init: function(background, entities, foreground, overlay, textCanvas, cursor, game) {
@@ -95,7 +94,7 @@ define(['jquery', './camera', './tile',
             self.forEachContext(function(context) {
                 context.fillStyle = '#12100D';
                 context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-            })
+            });
         },
 
         load: function() {
@@ -143,8 +142,8 @@ define(['jquery', './camera', './tile',
         },
 
         loadCamera: function() {
-            var self = this,
-                storage = self.game.storage;
+            var self = this;
+            var storage = self.game.storage;
 
             self.camera = new Camera(this);
 
@@ -180,7 +179,6 @@ define(['jquery', './camera', './tile',
 
             if (!self.resizeTimeout)
                 self.resizeTimeout = setTimeout(function() {
-
                     self.scale = self.getScale();
                     self.clearScreen(self.cursorContext);
 
@@ -202,7 +200,6 @@ define(['jquery', './camera', './tile',
                     self.resizeTimeout = null;
 
                     self.updateAnimatedTiles();
-
                 }, 500);
         },
 
@@ -243,7 +240,6 @@ define(['jquery', './camera', './tile',
             self.calculateFPS();
 
             self.restoreAll();
-
         },
 
         /**
@@ -256,10 +252,10 @@ define(['jquery', './camera', './tile',
             self.updateDrawingView();
 
             self.forEachVisibleTile(function(id, index) {
-                var isHighTile = self.map.isHighTile(id),
-                    isLightTile = self.map.isLightTile(id),
-                    context = isLightTile ? self.overlayContext :
-                        (isHighTile ? self.foreContext : self.backContext);
+                var isHighTile = self.map.isHighTile(id);
+                var isLightTile = self.map.isLightTile(id);
+                var context = isLightTile ? self.overlayContext :
+                    (isHighTile ? self.foreContext : self.backContext);
 
                 if (!self.map.isAnimatedTile(id) || !self.animateTiles)
                     self.drawTile(context, id, self.map.width, index);
@@ -270,18 +266,16 @@ define(['jquery', './camera', './tile',
                     self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
                     tile.loaded = true;
                 });
-
         },
 
         drawOverlays: function() {
-            var self = this,
-                overlay = self.game.overlays.getFog();
+            var self = this;
+            var overlay = self.game.overlays.getFog();
 
             if (overlay) {
                 self.overlayContext.save();
 
                 if (overlay !== 'empty') {
-
                     self.overlayContext.fillStyle = self.overlayContext.createPattern(overlay, 'repeat');
                     self.overlayContext.fillRect(0, 0, self.screenWidth * self.superScaling, self.screenHeight * self.superScaling);
                     self.overlayContext.fill();
@@ -343,21 +337,21 @@ define(['jquery', './camera', './tile',
         },
 
         drawEntity: function(entity) {
-            var self = this,
-                sprite = entity.sprite,
-                animation = entity.currentAnimation,
-                data = entity.renderingData;
+            var self = this;
+            var sprite = entity.sprite;
+            var animation = entity.currentAnimation;
+            var data = entity.renderingData;
 
             if (!sprite || !animation || !entity.isVisible())
                 return;
 
-            var frame = animation.currentFrame,
-                x = frame.x * self.superScaling,
-                y = frame.y * self.superScaling,
-                dx = entity.x * self.superScaling,
-                dy = entity.y * self.superScaling,
-                flipX = dx + self.tileSize * self.superScaling,
-                flipY = dy + data.height;
+            var frame = animation.currentFrame;
+            var x = frame.x * self.superScaling;
+            var y = frame.y * self.superScaling;
+            var dx = entity.x * self.superScaling;
+            var dy = entity.y * self.superScaling;
+            var flipX = dx + self.tileSize * self.superScaling;
+            var flipY = dy + data.height;
 
             self.context.save();
             self.setCameraView(self.context);
@@ -366,7 +360,6 @@ define(['jquery', './camera', './tile',
                 self.context.globalCompositeOperation = 'destination-over';
 
             if (data.sprite !== sprite) {
-
                 data.sprite = sprite;
 
                 data.width = sprite.width * self.superScaling;
@@ -383,7 +376,6 @@ define(['jquery', './camera', './tile',
 
                     data.shadowOffsetY = entity.shadowOffsetY * self.superScaling;
                 }
-
             }
 
             if (entity.fading)
@@ -429,7 +421,6 @@ define(['jquery', './camera', './tile',
              * Function used to draw special effects prior
              * to rendering the entity.
              */
-
         },
 
         drawEntityFore: function(entity) {
@@ -440,65 +431,61 @@ define(['jquery', './camera', './tile',
              * having rendererd the entity
              */
 
-             if (entity instanceof Character && !entity.dead && !entity.teleporting) {
-                 if (entity.hasWeapon()) {
-                     var weapon = self.entities.getSprite(entity.weapon.getString());
+            if (entity instanceof Character && !entity.dead && !entity.teleporting) {
+                if (entity.hasWeapon()) {
+                    var weapon = self.entities.getSprite(entity.weapon.getString());
 
-                     if (weapon) {
-                         if (!weapon.loaded)
-                             weapon.load();
+                    if (weapon) {
+                        if (!weapon.loaded)
+                            weapon.load();
 
-                         var animation = entity.currentAnimation,
-                             weaponAnimationData = weapon.animationData[animation.name],
-                             frame = entity.currentAnimation.currentFrame,
-                             index = frame.index < weaponAnimationData.length ? frame.index : frame.index % weaponAnimationData.length,
-                             weaponX = weapon.width * index * self.superScaling,
-                             weaponY = weapon.height * animation.row * self.superScaling,
-                             weaponWidth = weapon.width * self.superScaling,
-                             weaponHeight = weapon.height * self.superScaling;
+                        var animation = entity.currentAnimation;
+                        var weaponAnimationData = weapon.animationData[animation.name];
+                        var frame = entity.currentAnimation.currentFrame;
+                        var index = frame.index < weaponAnimationData.length ? frame.index : frame.index % weaponAnimationData.length;
+                        var weaponX = weapon.width * index * self.superScaling;
+                        var weaponY = weapon.height * animation.row * self.superScaling;
+                        var weaponWidth = weapon.width * self.superScaling;
+                        var weaponHeight = weapon.height * self.superScaling;
 
-                         self.context.drawImage(weapon.image, weaponX, weaponY, weaponWidth, weaponHeight,
-                             weapon.offsetX * self.superScaling, weapon.offsetY * self.superScaling,
-                             weaponWidth, weaponHeight);
-                     }
-                 }
+                        self.context.drawImage(weapon.image, weaponX, weaponY, weaponWidth, weaponHeight,
+                            weapon.offsetX * self.superScaling, weapon.offsetY * self.superScaling,
+                            weaponWidth, weaponHeight);
+                    }
+                }
 
-                 if (entity.terror || entity.stunned || entity.critical || entity.explosion) {
-                     var sprite = self.entities.getSprite(entity.getActiveEffect());
+                if (entity.terror || entity.stunned || entity.critical || entity.explosion) {
+                    var sprite = self.entities.getSprite(entity.getActiveEffect());
 
-                     if (!sprite.loaded)
-                         sprite.load();
+                    if (!sprite.loaded)
+                        sprite.load();
 
-                     if (sprite) {
-                         var animation = entity.getEffectAnimation(),
-                             index = animation.currentFrame.index,
-                             x = sprite.width * index * self.superScaling,
-                             y = sprite.height * animation.row * self.superScaling,
-                             width = sprite.width * self.superScaling,
-                             height = sprite.height * self.superScaling,
-                             offsetX = sprite.offsetX * self.superScaling,
-                             offsetY = sprite.offsetY * self.superScaling;
+                    if (sprite) {
+                        var animation = entity.getEffectAnimation();
+                        var index = animation.currentFrame.index;
+                        var x = sprite.width * index * self.superScaling;
+                        var y = sprite.height * animation.row * self.superScaling;
+                        var width = sprite.width * self.superScaling;
+                        var height = sprite.height * self.superScaling;
+                        var offsetX = sprite.offsetX * self.superScaling;
+                        var offsetY = sprite.offsetY * self.superScaling;
 
-                         self.context.drawImage(sprite.image, x, y, width, height, offsetX, offsetY, width, height);
-                     }
-                 }
-
-             }
+                        self.context.drawImage(sprite.image, x, y, width, height, offsetX, offsetY, width, height);
+                    }
+                }
+            }
 
             if (entity instanceof Item) {
-
-                var sparksAnimation = self.entities.sprites.sparksAnimation,
-                    sparksFrame = sparksAnimation.currentFrame,
-                    sparksX = self.sparksSprite.width * sparksFrame.index * self.superScaling,
-                    sparksY = self.sparksSprite.height * sparksAnimation.row * self.superScaling,
-                    sparksWidth = self.sparksSprite.width * self.superScaling,
-                    sparksHeight = self.sparksSprite.height * self.superScaling;
+                var sparksAnimation = self.entities.sprites.sparksAnimation;
+                var sparksFrame = sparksAnimation.currentFrame;
+                var sparksX = self.sparksSprite.width * sparksFrame.index * self.superScaling;
+                var sparksY = self.sparksSprite.height * sparksAnimation.row * self.superScaling;
+                var sparksWidth = self.sparksSprite.width * self.superScaling;
+                var sparksHeight = self.sparksSprite.height * self.superScaling;
 
                 self.context.drawImage(self.sparksSprite.image, sparksX, sparksY, sparksWidth, sparksHeight,
                     0, 0, sparksWidth, sparksHeight);
             }
-
-
         },
 
         drawHealth: function(entity) {
@@ -507,11 +494,11 @@ define(['jquery', './camera', './tile',
             if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible)
                 return;
 
-            var barLength = 16,
-                healthX = entity.x * self.superScaling - barLength / 2 + 8,
-                healthY = (entity.y - 9) * self.superScaling,
-                healthWidth = Math.round(entity.hitPoints / entity.maxHitPoints * barLength * self.superScaling),
-                healthHeight = 2 * self.superScaling;
+            var barLength = 16;
+            var healthX = entity.x * self.superScaling - barLength / 2 + 8;
+            var healthY = (entity.y - 9) * self.superScaling;
+            var healthWidth = Math.round(entity.hitPoints / entity.maxHitPoints * barLength * self.superScaling);
+            var healthHeight = 2 * self.superScaling;
 
             self.context.save();
             self.setCameraView(self.context);
@@ -543,9 +530,8 @@ define(['jquery', './camera', './tile',
             self.setCameraView(self.textContext);
             self.textContext.font = '11px AdvoCut';
 
-            if (entity.drawNames()) {
+            if (entity.drawNames())
                 if (!entity.hasCounter) {
-
                     if (self.drawNames && (entity.type === 'mob' || entity.type === 'player'))
                         self.drawText(entity.type === 'player' ? entity.username : entity.name, (entity.x + 8), (entity.y - (self.drawLevels ? 20 : 10)), true, colour, '#000');
 
@@ -554,9 +540,7 @@ define(['jquery', './camera', './tile',
 
                     if (entity.type === 'item' && entity.count > 1)
                         self.drawText(entity.count, (entity.x + 8), (entity.y - 10), true, colour);
-
                 } else {
-
                     if (self.game.time - entity.countdownTime > 1000) {
                         entity.countdownTime = self.game.time;
                         entity.counter--;
@@ -567,7 +551,7 @@ define(['jquery', './camera', './tile',
 
                     self.drawText(entity.counter, (entity.x + 8), (entity.y - 10), true, colour);
                 }
-            }
+
 
             self.textContext.restore();
         },
@@ -576,8 +560,8 @@ define(['jquery', './camera', './tile',
             var self = this;
 
             if (lighting.relative) {
-                var lightX = (lighting.light.origX - (self.camera.x / 16)) * self.lightTileSize,
-                    lightY = (lighting.light.origY - (self.camera.y / 16)) * self.lightTileSize;
+                var lightX = (lighting.light.origX - (self.camera.x / 16)) * self.lightTileSize;
+                var lightY = (lighting.light.origY - (self.camera.y / 16)) * self.lightTileSize;
 
                 lighting.light.position = new Vec2(lightX, lightY);
                 lighting.compute(self.overlay.width, self.overlay.height);
@@ -596,8 +580,8 @@ define(['jquery', './camera', './tile',
             if (self.tablet || self.mobile || self.hasRenderedMouse() || self.input.cursorMoved)
                 return;
 
-            var cursor = self.input.cursor,
-                scaling = 14 * self.superScaling;
+            var cursor = self.input.cursor;
+            var scaling = 14 * self.superScaling;
 
             self.clearScreen(self.cursorContext);
             self.cursorContext.save();
@@ -623,8 +607,8 @@ define(['jquery', './camera', './tile',
             if (!self.debugging)
                 return;
 
-            var currentTime = new Date(),
-                timeDiff = currentTime - self.time;
+            var currentTime = new Date();
+            var timeDiff = currentTime - self.time;
 
             if (timeDiff >= 1000) {
                 self.realFPS = self.frameCount;
@@ -641,16 +625,16 @@ define(['jquery', './camera', './tile',
         },
 
         drawPosition: function() {
-            var self = this,
-                player = self.game.player;
+            var self = this;
+            var player = self.game.player;
 
             self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 31, false, 'white');
             self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringInstance, 10, 51, false, 'white');
         },
 
         drawCollisions: function() {
-            var self = this,
-                pathingGrid = self.entities.grids.pathingGrid;
+            var self = this;
+            var pathingGrid = self.entities.grids.pathingGrid;
 
             if (!pathingGrid)
                 return;
@@ -673,7 +657,6 @@ define(['jquery', './camera', './tile',
             _.each(self.game.player.path, function(path) {
                 self.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
             });
-
         },
 
         drawSelectedCell: function() {
@@ -682,9 +665,9 @@ define(['jquery', './camera', './tile',
             if (!self.input.selectedCellVisible || self.input.keyMovement)
                 return;
 
-            var posX = self.input.selectedX,
-                posY = self.input.selectedY,
-                tD = self.input.getTargetData(); // target data
+            var posX = self.input.selectedX;
+            var posY = self.input.selectedY;
+            var tD = self.input.getTargetData(); // target data
 
             if (tD) {
                 self.context.save();
@@ -694,7 +677,6 @@ define(['jquery', './camera', './tile',
 
                 self.context.restore();
             }
-
         },
 
         /**
@@ -725,9 +707,9 @@ define(['jquery', './camera', './tile',
         },
 
         drawScaledImage: function(context, image, x, y, width, height, dx, dy) {
-            var self = this,
-                tilesetScale = image.scale,
-                scale = self.superScaling;
+            var self = this;
+            var tilesetScale = image.scale;
+            var scale = self.superScaling;
 
             if (!context)
                 return;
@@ -744,9 +726,9 @@ define(['jquery', './camera', './tile',
         },
 
         drawText: function(text, x, y, centered, colour, strokeColour) {
-            var self = this,
-                strokeSize = 1,
-                context = self.textContext;
+            var self = this;
+            var strokeSize = 1;
+            var context = self.textContext;
 
             if (self.scale > 2)
                 strokeSize = 3;
@@ -763,7 +745,7 @@ define(['jquery', './camera', './tile',
                 context.fillStyle = colour || 'white';
                 context.fillText(text, x * self.superScaling, y * self.superScaling);
 
-                context.restore()
+                context.restore();
             }
         },
 
@@ -787,22 +769,20 @@ define(['jquery', './camera', './tile',
                  * Push the pre-existing tiles.
                  */
 
-                 if (!(index in self.animatedTiles)) {
-                     var tile = new Tile(id, index, self.map),
-                        position = self.map.indexToGridPosition(tile.index);
+                if (!(index in self.animatedTiles)) {
+                    var tile = new Tile(id, index, self.map);
+                    var position = self.map.indexToGridPosition(tile.index);
 
                     tile.setPosition(position);
 
                     self.animatedTiles[index] = tile;
-                 }
-
+                }
             }, 2);
-
         },
 
         drawCellRect: function(x, y, colour) {
-            var self = this,
-                multiplier = self.tileSize * self.superScaling;
+            var self = this;
+            var multiplier = self.tileSize * self.superScaling;
 
             self.context.save();
             self.setCameraView(self.context);
@@ -861,10 +841,9 @@ define(['jquery', './camera', './tile',
                 var indexData = self.map.data[index];
 
                 if (Array.isArray(indexData))
-                    _.each(indexData, function(id) { callback(id - 1, index) });
+                    _.each(indexData, function(id) {callback(id - 1, index);});
                 else if (!(isNaN(self.map.data[index] - 1)))
                     callback(self.map.data[index] - 1, index);
-
             }, offset);
         },
 
@@ -892,7 +871,7 @@ define(['jquery', './camera', './tile',
 
         isVisiblePosition: function(x, y) {
             return y >= this.camera.gridY && y < this.camera.gridY + this.camera.gridHeight &&
-                x >= this.camera.gridX && x < this.camera.gridX + this.camera.gridWidth
+                x >= this.camera.gridX && x < this.camera.gridX + this.camera.gridWidth;
         },
 
         getScale: function() {
@@ -969,11 +948,11 @@ define(['jquery', './camera', './tile',
         },
 
         transition: function(duration, forward, callback) {
-            var self = this,
-                textCanvas = $('#textCanvas'),
-                hasThreshold = function() {
-                    return forward ? self.brightness > 99 : self.brightness < 1;
-                };
+            var self = this;
+            var textCanvas = $('#textCanvas');
+            var hasThreshold = function() {
+                return forward ? self.brightness > 99 : self.brightness < 1;
+            };
 
             self.transitioning = true;
 
@@ -991,7 +970,6 @@ define(['jquery', './camera', './tile',
                     callback();
                 }
             }, duration);
-
         },
 
 
@@ -1132,13 +1110,13 @@ define(['jquery', './camera', './tile',
         },
 
         addLight: function(x, y, distance, diffuse, color, relative) {
-            var self = this,
-                light = new Lamp(self.getLightData(x, y, distance, diffuse, color)),
-                lighting = new Lighting({
-                    light: light,
-                    objects: [],
-                    diffuse: light.diffuse
-                });
+            var self = this;
+            var light = new Lamp(self.getLightData(x, y, distance, diffuse, color));
+            var lighting = new Lighting({
+                light: light,
+                objects: [],
+                diffuse: light.diffuse
+            });
 
             light.origX = light.position.x;
             light.origY = light.position.y;
@@ -1190,7 +1168,7 @@ define(['jquery', './camera', './tile',
                 samples: 2,
                 roughness: 0,
                 angle: 0
-            }
+            };
         },
 
         hasLighting: function(lighting) {
@@ -1208,15 +1186,15 @@ define(['jquery', './camera', './tile',
         },
 
         inRadius: function(lighting) {
-            var self = this,
-                position = {
-                    x: lighting.light.origX,
-                    y: lighting.light.origY,
-                    diff: lighting.light.diff
-                };
+            var self = this;
+            var position = {
+                x: lighting.light.origX,
+                y: lighting.light.origY,
+                diff: lighting.light.diff
+            };
 
             return position.x > self.camera.gridX - position.diff &&
-                position.x < self.camera.gridX + self.camera.gridWidth  + position.diff &&
+                position.x < self.camera.gridX + self.camera.gridWidth + position.diff &&
                 position.y > self.camera.gridY - position.diff &&
                 position.y < self.camera.gridY + self.camera.gridHeight + position.diff;
         },
@@ -1225,7 +1203,7 @@ define(['jquery', './camera', './tile',
             return {
                 x: this.overlay.width / 2,
                 y: this.overlay.height / 2
-            }
+            };
         },
 
         /**
@@ -1253,10 +1231,10 @@ define(['jquery', './camera', './tile',
          */
 
         getTargetBounds: function(x, y) {
-            var self = this,
-                bounds = {},
-                tx = x || self.input.selectedX,
-                ty = y || self.input.selectedY;
+            var self = this;
+            var bounds = {};
+            var tx = x || self.input.selectedX;
+            var ty = y || self.input.selectedY;
 
             bounds.x = ((tx * self.tileSize) - self.camera.x) * self.superScaling;
             bounds.y = ((ty * self.tileSize) - self.camera.y) * self.superScaling;
@@ -1275,5 +1253,4 @@ define(['jquery', './camera', './tile',
         }
 
     });
-
 });

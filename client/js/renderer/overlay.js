@@ -1,7 +1,6 @@
 /* global log */
 
 define(function() {
-
     return Class.extend({
 
         init: function(game) {
@@ -22,8 +21,8 @@ define(function() {
         },
 
         loadOverlay: function(overlayName) {
-            var self = this,
-                overlay = new Image();
+            var self = this;
+            var overlay = new Image();
 
             overlay.crossOrigin = 'Anonymous';
             overlay.src = 'img/overlays/' + overlayName;
@@ -50,5 +49,4 @@ define(function() {
         }
 
     });
-
 });

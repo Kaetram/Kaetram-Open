@@ -1,42 +1,41 @@
 /* global module */
 
-let Shops = {},
-    _ = require('underscore');
+const Shops = {};
+const _ = require('underscore');
 
 Shops.Data = {};
 Shops.Ids = {};
 
-Shops.isShopNPC = (npcId) => {
+Shops.isShopNPC = npcId => {
     return npcId in Shops.Ids;
 };
 
-Shops.getItems = (npcId) => {
+Shops.getItems = npcId => {
     return Shops.Ids[npcId].items;
 };
 
-Shops.shopIdToNPC = (shopId) => {
+Shops.shopIdToNPC = shopId => {
     return Shops.Data[shopId].npcId;
 };
 
-Shops.getItemCount = (id) => {
+Shops.getItemCount = id => {
     return Shops.getItems(id).length;
 };
 
 Shops.increment = (shopId, itemId, count) => {
-    let shop = Shops.Ids[shopId],
-        index = shop.items.indexOf(itemId);
+    const shop = Shops.Ids[shopId];
+    const index = shop.items.indexOf(itemId);
 
     if (index < 0)
         return;
 
-    let shopData = Shops.Data[shop.key];
+    const shopData = Shops.Data[shop.key];
 
     shopData.count[index] += count;
-
 };
 
 Shops.decrement = (npcId, buyId, count) => {
-    let shop = Shops.Ids[npcId];
+    const shop = Shops.Ids[npcId];
 
     if (!buyId || buyId < 0)
         return;
@@ -54,7 +53,7 @@ Shops.getCost = (npcId, buyId, count) => {
      * spice up the game.
      */
 
-    let shop = Shops.Ids[npcId];
+    const shop = Shops.Ids[npcId];
 
     if (!shop || !buyId || buyId < 0)
         return;
@@ -63,7 +62,7 @@ Shops.getCost = (npcId, buyId, count) => {
 };
 
 Shops.getStock = (npcId, buyId) => {
-    let shop = Shops.Ids[npcId];
+    const shop = Shops.Ids[npcId];
 
     if (!shop || !buyId || buyId < 0)
         return null;
@@ -72,7 +71,7 @@ Shops.getStock = (npcId, buyId) => {
 };
 
 Shops.getOriginalStock = (shopId, buyId) => {
-    let shop = Shops.Ids[shopId];
+    const shop = Shops.Ids[shopId];
 
     if (!buyId || buyId < 0)
         return;
@@ -80,9 +79,9 @@ Shops.getOriginalStock = (shopId, buyId) => {
     return shop.originalCount[buyId];
 };
 
-Shops.getCount = (npcId) => {
-    let count = Shops.Ids[npcId].count,
-        counts = [];
+Shops.getCount = npcId => {
+    const count = Shops.Ids[npcId].count;
+    const counts = [];
 
     if (_.isArray(count))
         return count;

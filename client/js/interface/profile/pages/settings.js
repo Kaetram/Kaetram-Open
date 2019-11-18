@@ -1,10 +1,9 @@
 /* global log, Detect */
 
 define(['jquery', '../page'], function($, Page) {
-
     return Class.extend({
 
-        //TODO - Hide crpyto mining option on mobiles and completely disable it.
+        // TODO - Hide crpyto mining option on mobiles and completely disable it.
 
         init: function(game) {
             var self = this;
@@ -297,5 +296,4 @@ define(['jquery', '../page'], function($, Page) {
         }
 
     });
-
 });

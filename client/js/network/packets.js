@@ -181,7 +181,7 @@ Packets.MinigameOpcode = {
     }
 };
 
-Packets.RegionOpcode  = {
+Packets.RegionOpcode = {
     Render: 0,
     Modify: 1,
     Collision: 2,

@@ -1,7 +1,6 @@
 /* global log */
 
 define(['./packets', './messages'], function(Packets, Messages) {
-
     return Class.extend({
 
         init: function(game) {
@@ -19,7 +18,7 @@ define(['./packets', './messages'], function(Packets, Messages) {
         },
 
         connect: function() {
-            var self = this, url;
+            var self = this; var url;
 
             if (self.config.ssl)
                 url = 'wss://' + self.config.ip;
@@ -83,20 +82,17 @@ define(['./packets', './messages'], function(Packets, Messages) {
                     self.messages.handleBulkData(data);
                 else
                     self.messages.handleData(JSON.parse(message).shift());
-
             } else
                 self.messages.handleUTF8(message);
-
         },
 
         send: function(packet, data) {
-            var self = this,
-                json = JSON.stringify([packet, data]);
+            var self = this;
+            var json = JSON.stringify([packet, data]);
 
             if (self.connection && self.connection.connected)
                 self.connection.send(json);
         }
 
     });
-
 });

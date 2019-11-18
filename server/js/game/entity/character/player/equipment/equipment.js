@@ -1,17 +1,16 @@
 /* global module */
 
-let Items = require('../../../../../util/items');
+const Items = require('../../../../../util/items');
 
 class Equipment {
-
     constructor(name, id, count, ability, abilityLevel) {
-        let self = this;
+        const self = this;
 
         self.name = name;
         self.id = id;
-        self.count = count ? count : 0;
-        self.ability = ability ? ability : 0;
-        self.abilityLevel = abilityLevel ? abilityLevel : 0;
+        self.count = count || 0;
+        self.ability = ability || 0;
+        self.abilityLevel = abilityLevel || 0;
     }
 
     getName() {
@@ -65,7 +64,7 @@ class Equipment {
             count: this.count,
             ability: this.ability,
             abilityLevel: this.abilityLevel
-        }
+        };
     }
 }
 

@@ -1,7 +1,6 @@
 /* global log, _ */
 
 define(['jquery'], function($) {
-
     return Class.extend({
 
         init: function(game) {
@@ -28,11 +27,11 @@ define(['jquery'], function($) {
         },
 
         ready: function() {
-            var self = this,
-                rC = function() {
-                    if (self.readyCallback)
-                        self.readyCallback();
-                };
+            var self = this;
+            var rC = function() {
+                if (self.readyCallback)
+                    self.readyCallback();
+            };
 
             if (self.mapLoaded && self.tilesetsLoaded)
                 rC();
@@ -41,7 +40,6 @@ define(['jquery'], function($) {
                     self.loadTilesets();
                     self.ready();
                 }, 50);
-
         },
 
         load: function() {
@@ -60,7 +58,7 @@ define(['jquery'], function($) {
                     self.parseMap(map);
                     self.grid = map.grid;
                     self.mapLoaded = true;
-                }
+                };
             } else {
                 if (self.game.isDebug())
                     log.info('Parsing map with Ajax...');
@@ -78,8 +76,8 @@ define(['jquery'], function($) {
             // Use traditional for-loop instead of _
 
             for (var i = 0; i < tileData.length; i++) {
-                var tile = tileData[i],
-                    collisionIndex = self.collisions.indexOf(tile.index);
+                var tile = tileData[i];
+                var collisionIndex = self.collisions.indexOf(tile.index);
 
                 self.data[tile.index] = tile.data;
 
@@ -112,8 +110,8 @@ define(['jquery'], function($) {
         },
 
         loadTileset: function(path, rawTileset) {
-            var self = this,
-                tileset = new Image();
+            var self = this;
+            var tileset = new Image();
 
             tileset.crossOrigin = 'Anonymous';
             tileset.src = path;
@@ -193,13 +191,13 @@ define(['jquery'], function($) {
 
             index -= 1;
 
-            var x = self.getX(index + 1, self.width),
-                y = Math.floor(index / self.width);
+            var x = self.getX(index + 1, self.width);
+            var y = Math.floor(index / self.width);
 
             return {
                 x: x,
                 y: y
-            }
+            };
         },
 
         gridPositionToIndex: function(x, y) {
@@ -260,9 +258,9 @@ define(['jquery'], function($) {
         },
 
         loadRegionData() {
-            var self = this,
-                regionData = self.game.storage.getRegionData(),
-                collisions = self.game.storage.getCollisions();
+            var self = this;
+            var regionData = self.game.storage.getRegionData();
+            var collisions = self.game.storage.getCollisions();
 
             if (regionData.length < 1)
                 return;
@@ -280,5 +278,4 @@ define(['jquery'], function($) {
         }
 
     });
-
 });

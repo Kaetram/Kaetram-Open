@@ -2,7 +2,7 @@
 
 class Socket {
     constructor(port) {
-        let self = this;
+        const self = this;
 
         self.port = port;
 
@@ -21,7 +21,6 @@ class Socket {
     getConnection(id) {
         return this._connections[id];
     }
-
 }
 
 module.exports = Socket;

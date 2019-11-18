@@ -1,7 +1,6 @@
 /* global log, Packets, Modules */
 
 define(function() {
-
     /**
      * This is a player handler, responsible for all the callbacks
      * without having to clutter up the entire game file.
@@ -62,8 +61,8 @@ define(function() {
 
                 self.camera.clip();
 
-                var id = null,
-                    entity = self.game.getEntityAt(x, y, true);
+                var id = null;
+                var entity = self.game.getEntityAt(x, y, true);
 
                 if (entity)
                     id = entity.id;
@@ -81,7 +80,6 @@ define(function() {
                 self.input.setPassiveTarget();
 
                 self.game.storage.setOrientation(self.player.orientation);
-
             });
 
             self.player.onBeforeStep(function() {
@@ -107,7 +105,6 @@ define(function() {
                     self.checkBounds();
 
                 self.player.forEachAttacker(function(attacker) {
-
                     if (!attacker.stunned)
                         attacker.follow(self.player);
                 });
@@ -129,18 +126,16 @@ define(function() {
 
                 if (self.player.hasTarget())
                     self.player.follow(self.player.target);
-
             });
 
             self.player.onUpdateArmour(function(armourName) {
                 self.player.setSprite(self.game.getSprite(armourName));
             });
-
         },
 
         isAttackable: function() {
-            var self = this,
-                target = self.player.target;
+            var self = this;
+            var target = self.player.target;
 
             if (!target)
                 return;
@@ -149,10 +144,10 @@ define(function() {
         },
 
         checkBounds: function() {
-            var self = this,
-                x = self.player.gridX - self.camera.gridX,
-                y = self.player.gridY - self.camera.gridY,
-                isBorder = false;
+            var self = this;
+            var x = self.player.gridX - self.camera.gridX;
+            var y = self.player.gridY - self.camera.gridY;
+            var isBorder = false;
 
             if (x === 0)
                 self.game.zoning.setLeft();
@@ -167,9 +162,7 @@ define(function() {
                 self.camera.zone(self.game.zoning.getDirection());
                 self.game.zoning.reset();
             }
-
         }
 
     });
-
 });

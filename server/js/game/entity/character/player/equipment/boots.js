@@ -1,11 +1,10 @@
 /* global module */
 
-let Equipment = require('./equipment'),
-    Items = require('../../../../../util/items'),
-    Modules = require('../../../../../util/modules');
+const Equipment = require('./equipment');
+const Items = require('../../../../../util/items');
+const Modules = require('../../../../../util/modules');
 
 class Boots extends Equipment {
-
     constructor(name, id, count, ability, abilityLevel) {
         super(name, id, count, ability, abilityLevel);
 
@@ -19,7 +18,6 @@ class Boots extends Equipment {
     getType() {
         return Modules.Equipment.Boots;
     }
-
 }
 
 module.exports = Boots;

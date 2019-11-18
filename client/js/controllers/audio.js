@@ -1,7 +1,6 @@
 /* global log, _, Detect, Modules */
 
 define(function() {
-
     return Class.extend({
 
         init: function(game) {
@@ -51,20 +50,18 @@ define(function() {
                 'npc': false,
                 'npc-end': false
             };
-
         },
 
         parse: function(path, name, channels, callback) {
-            var self = this,
-                fullPath = path + name + '.' + self.format,
-                sound = document.createElement('audio');
+            var self = this;
+            var fullPath = path + name + '.' + self.format;
+            var sound = document.createElement('audio');
 
             sound.addEventListener('canplaythrough', function(e) {
                 this.removeEventListener('canplaythrough', arguments.callee, false);
 
                 if (callback)
                     callback();
-
             }, false);
 
             sound.addEventListener('error', function() {
@@ -97,7 +94,7 @@ define(function() {
             if (!self.isEnabled() || !self.fileExists(name))
                 return;
 
-            switch(type) {
+            switch (type) {
                 case Modules.AudioTypes.Music:
 
                     self.fadeOut(self.song, function() {
@@ -163,15 +160,12 @@ define(function() {
                 }
 
                 self.play(Modules.AudioTypes.Music, song.name);
+            } else
 
-            } else {
-
-                if (self.game.renderer.mobile)
-                    self.reset(self.song);
-                else
-                    self.fadeSongOut();
-            }
-
+            if (self.game.renderer.mobile)
+                self.reset(self.song);
+            else
+                self.fadeSongOut();
         },
 
         fadeIn: function(song) {
@@ -189,7 +183,6 @@ define(function() {
                     song.volume = self.getMusicVolume();
                     self.clearFadeIn(song);
                 }
-
             }, 100);
         },
 
@@ -202,7 +195,6 @@ define(function() {
             self.clearFadeIn(song);
 
             song.fadingOut = setInterval(function() {
-
                 song.volume -= 0.08;
 
                 if (song.volume <= 0.08) {
@@ -213,7 +205,6 @@ define(function() {
 
                     clearInterval(song.fadingOut);
                 }
-
             }, 100);
         },
 
@@ -223,7 +214,7 @@ define(function() {
             if (!self.song)
                 return;
 
-            self.fadeOut(self.song, function(song) { self.reset(song); });
+            self.fadeOut(self.song, function(song) {self.reset(song);});
 
             self.song = null;
         },
@@ -288,7 +279,7 @@ define(function() {
             return {
                 sound: this.get(name),
                 name: name
-            }
+            };
         },
 
         setSongVolume: function(volume) {
@@ -308,5 +299,4 @@ define(function() {
         }
 
     });
-
 });

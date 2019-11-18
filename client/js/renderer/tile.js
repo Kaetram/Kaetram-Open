@@ -1,5 +1,4 @@
 define(function() {
-
     return Class.extend({
 
         init: function(id, index, map) {
@@ -38,7 +37,6 @@ define(function() {
                 else
                     self.animationIndex++;
             }
-
         },
 
         getPosition: function() {
@@ -46,5 +44,4 @@ define(function() {
         }
 
     });
-
 });

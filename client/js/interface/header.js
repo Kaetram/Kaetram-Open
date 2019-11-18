@@ -1,5 +1,4 @@
 define(['jquery', './container/container'], function($, Container) {
-
     return Class.extend({
 
         init: function(game, intrface) {
@@ -32,20 +31,19 @@ define(['jquery', './container/container'], function($, Container) {
             self.player.onExperience(function() {
                 self.calculateExpBar();
             });
-
         },
 
         calculateHealthBar: function() {
-            var self = this,
-                scale = self.getScale(),
-                width = self.healthBar.width();
+            var self = this;
+            var scale = self.getScale();
+            var width = self.healthBar.width();
 
             if (scale < 2)
                 scale = 2;
 
-            //11 is due to the offset of the #health in the #healthBar
-            var diff = Math.floor(width * (self.player.hitPoints / self.player.maxHitPoints) - (11 * scale)),
-                prevWidth = self.health.width();
+            // 11 is due to the offset of the #health in the #healthBar
+            var diff = Math.floor(width * (self.player.hitPoints / self.player.maxHitPoints) - (11 * scale));
+            var prevWidth = self.health.width();
 
             if (prevWidth > diff) {
                 self.health.addClass('white');
@@ -66,15 +64,15 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         calculateExpBar: function() {
-            var self = this,
-                scale = self.getScale(),
-                width = self.expBar.width();
+            var self = this;
+            var scale = self.getScale();
+            var width = self.expBar.width();
 
             if (scale < 2)
                 scale = 2;
 
-            var experience = self.player.experience - self.player.prevExperience,
-                nextExperience = self.player.nextExperience - self.player.prevExperience;
+            var experience = self.player.experience - self.player.prevExperience;
+            var nextExperience = self.player.nextExperience - self.player.prevExperience;
 
             var diff = Math.floor(width * (experience / nextExperience));
 
@@ -93,5 +91,4 @@ define(['jquery', './container/container'], function($, Container) {
         }
 
     });
-
 });

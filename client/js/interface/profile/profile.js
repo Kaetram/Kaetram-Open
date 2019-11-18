@@ -1,7 +1,6 @@
 /* global log, _, Packets */
 
 define(['jquery', './pages/state', './pages/ability', './pages/settings', './pages/quest'], function($, State, Ability, Settings, Quest) {
-
     return Class.extend({
 
         init: function(game) {
@@ -26,14 +25,12 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
             var self = this;
 
             self.button.click(function() {
-
                 self.game.interface.hideAll();
                 self.settings.hide();
 
                 if (self.isVisible()) {
                     self.hide();
                     self.button.removeClass('active');
-
                 } else {
                     self.show();
                     self.button.addClass('active');
@@ -43,7 +40,6 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
                     self.activePage.load();
 
                 self.game.socket.send(Packets.Click, ['profile', self.button.hasClass('active')]);
-
             });
 
             self.next.click(function() {
@@ -76,18 +72,18 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
         update: function() {
             var self = this;
 
-            _.each(self.pages, function(page) { page.update(); });
+            _.each(self.pages, function(page) {page.update();});
         },
 
         resize: function() {
             var self = this;
 
-            _.each(self.pages, function(page) { page.resize(); });
+            _.each(self.pages, function(page) {page.resize();});
         },
 
         setPage: function(index) {
-            var self = this,
-                page = self.pages[index];
+            var self = this;
+            var page = self.pages[index];
 
             self.clear();
 
@@ -138,5 +134,4 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
         }
 
     });
-
 });

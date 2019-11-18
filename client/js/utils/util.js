@@ -4,26 +4,26 @@
 
 if (!Function.prototype.bind)
     Function.prototype.bind = function(oThis) {
-        if (typeof this !== 'function') {
+        if (typeof this !== 'function')
             // closest thing possible to the ECMAScript 5
             // internal IsCallable function
             throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
-        }
 
-        var aArgs   = Array.prototype.slice.call(arguments, 1),
-            fToBind = this,
-            fNOP    = function() {},
-            fBound  = function() {
-                return fToBind.apply(this instanceof fNOP
-                    ? this
-                    : oThis,
-                    aArgs.concat(Array.prototype.slice.call(arguments)));
-            };
 
-        if (this.prototype) {
+        var aArgs = Array.prototype.slice.call(arguments, 1);
+        var fToBind = this;
+        var fNOP = function() {};
+        var fBound = function() {
+            return fToBind.apply(this instanceof fNOP
+                ? this
+                : oThis,
+            aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+        if (this.prototype)
             // Function.prototype doesn't have a prototype property
             fNOP.prototype = this.prototype;
-        }
+
         fBound.prototype = new fNOP();
 
         return fBound;
@@ -36,60 +36,53 @@ var isInt = function(n) {
 var TRANSITIONEND = 'transitionend webkitTransitionEnd oTransitionEnd';
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-if ( !window.requestAnimationFrame ) {
+if (!window.requestAnimationFrame)
 
-    window.requestAnimationFrame = ( function() {
-
+    window.requestAnimationFrame = (function() {
         return window.webkitRequestAnimationFrame ||
             window.mozRequestAnimationFrame || // comment out if FF4 is slow (it caps framerate at ~30fps: https://bugzilla.mozilla.org/show_bug.cgi?id=630127)
             window.oRequestAnimationFrame ||
             window.msRequestAnimationFrame ||
-            function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
-
-                window.setTimeout( callback, 17 );
-
+            function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+                window.setTimeout(callback, 17);
             };
+    })();
 
-    } )();
 
-}
-
-if (!String.prototype.startsWith) {
-    String.prototype.startsWith = function(searchString, position){
+if (!String.prototype.startsWith)
+    String.prototype.startsWith = function(searchString, position) {
         position = position || 0;
         return this.substr(position, searchString.length) === searchString;
     };
-}
 
-if (!String.prototype.includes) {
+
+if (!String.prototype.includes)
     String.prototype.includes = function(search, start) {
         'use strict';
-        if (typeof start !== 'number') {
+        if (typeof start !== 'number')
             start = 0;
-        }
 
-        if (start + search.length > this.length) {
+
+        if (start + search.length > this.length)
             return false;
-        } else {
+        else
             return this.indexOf(search, start) !== -1;
-        }
     };
-}
 
-if (!Array.isArray) {
+
+if (!Array.isArray)
     Array.isArray = function(arg) {
         return Object.prototype.toString.call(arg) === '[object Array]';
     };
-}
 
-if (!Array.prototype.includes) {
+
+if (!Array.prototype.includes)
     Object.defineProperty(Array.prototype, 'includes', {
         value: function(searchElement, fromIndex) {
-
             // 1. Let O be ? ToObject(this value).
-            if (this == null) {
+            if (this == null)
                 throw new TypeError('"this" is null or not defined');
-            }
+
 
             var o = Object(this);
 
@@ -97,9 +90,9 @@ if (!Array.prototype.includes) {
             var len = o.length >>> 0;
 
             // 3. If len is 0, return false.
-            if (len === 0) {
+            if (len === 0)
                 return false;
-            }
+
 
             // 4. Let n be ? ToInteger(fromIndex).
             //    (If fromIndex is undefined, this step produces the value 0.)
@@ -121,9 +114,9 @@ if (!Array.prototype.includes) {
                 // a. Let elementK be the result of ? Get(O, ! ToString(k)).
                 // b. If SameValueZero(searchElement, elementK) is true, return true.
                 // c. Increase k by 1.
-                if (sameValueZero(o[k], searchElement)) {
+                if (sameValueZero(o[k], searchElement))
                     return true;
-                }
+
                 k++;
             }
 
@@ -131,4 +124,4 @@ if (!Array.prototype.includes) {
             return false;
         }
     });
-}
+

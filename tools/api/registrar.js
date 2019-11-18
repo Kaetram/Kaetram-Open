@@ -5,13 +5,10 @@ var cls = require('../../server/js/lib/class'),
 function load() {
     var registrar = new Registrar();
 
-    registrar.onReady(function() {
-
-    });
+    registrar.onReady(function() {});
 }
 
 module.exports = Registrar = cls.Class.extend({
-
     init: function() {
         var self = this;
 
@@ -25,7 +22,6 @@ module.exports = Registrar = cls.Class.extend({
     onReady: function(callback) {
         this.readyCallback = callback;
     }
-
 });
 
 load();

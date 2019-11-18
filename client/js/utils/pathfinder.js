@@ -1,7 +1,6 @@
 /* global _, log */
 
 define(['../lib/astar'], function(AStar) {
-
     return Class.extend({
 
         init: function(width, height) {
@@ -29,13 +28,13 @@ define(['../lib/astar'], function(AStar) {
                     self.blankGrid[i][j] = 0;
             }
 
-            //log.info('Successfully loaded the pathfinder!');
+            // log.info('Successfully loaded the pathfinder!');
         },
 
         find: function(grid, entity, x, y, incomplete) {
-            var self = this,
-                start = [entity.gridX, entity.gridY],
-                end = [x, y], path;
+            var self = this;
+            var start = [entity.gridX, entity.gridY];
+            var end = [x, y]; var path;
 
             self.grid = grid;
             self.applyIgnore(true);
@@ -49,9 +48,9 @@ define(['../lib/astar'], function(AStar) {
         },
 
         findIncomplete: function(start, end) {
-            var self = this,
-                incomplete = [],
-                perfect, x, y;
+            var self = this;
+            var incomplete = [];
+            var perfect; var x; var y;
 
             perfect = AStar(self.blankGrid, start, end, self.mode);
 
@@ -60,7 +59,7 @@ define(['../lib/astar'], function(AStar) {
                 y = perfect[i][1];
 
                 if (self.grid[y][x] === 0) {
-                    incomplete = AStar(self.grid, start, [x. y], self.mode);
+                    incomplete = AStar(self.grid, start, [x.y], self.mode);
                     break;
                 }
             }
@@ -69,15 +68,15 @@ define(['../lib/astar'], function(AStar) {
         },
 
         applyIgnore: function(ignored) {
-            var self = this,
-                x, y, g;
+            var self = this;
+            var x; var y; var g;
 
             _.each(self.ignores, function(entity) {
                 x = entity.hasPath() ? entity.nextGridX : entity.gridX;
                 y = entity.hasPath() ? entity.nextGridY : entity.gridY;
 
                 if (x >= 0 && y >= 0)
-                    self.grid[y][x] = ignored ? 0 : 1
+                    self.grid[y][x] = ignored ? 0 : 1;
             });
         },
 
@@ -98,5 +97,4 @@ define(['../lib/astar'], function(AStar) {
         }
 
     });
-
 });

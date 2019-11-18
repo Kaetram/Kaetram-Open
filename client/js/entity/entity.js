@@ -1,7 +1,6 @@
 /* global Modules, log, _ */
 
 define(['./entityhandler'], function(EntityHandler) {
-
     return Class.extend({
 
         init: function(id, kind) {
@@ -117,10 +116,8 @@ define(['./entityhandler'], function(EntityHandler) {
             self.animations = sprite.createAnimations();
 
             sprite.onLoad(function() {
-
                 if (sprite.loadHurt)
                     self.hurtSprite = sprite.hurtSprite;
-
             });
 
             self.spriteLoaded = true;
@@ -163,7 +160,7 @@ define(['./entityhandler'], function(EntityHandler) {
 
             self.currentAnimation.setSpeed(speed);
 
-            self.currentAnimation.setCount(count ? count : 0, onEndCount || function() {
+            self.currentAnimation.setCount(count || 0, onEndCount || function() {
                 self.idle();
             });
         },
@@ -176,11 +173,10 @@ define(['./entityhandler'], function(EntityHandler) {
             self.countdownTime = new Date().getTime();
 
             self.hasCounter = true;
-
         },
 
         setVisible: function(visible) {
-            this.visible = visible
+            this.visible = visible;
         },
 
         setIdleSpeed: function(idleSpeed) {
@@ -192,17 +188,17 @@ define(['./entityhandler'], function(EntityHandler) {
         },
 
         getDistance: function(entity) {
-            var self = this,
-                x = Math.abs(self.gridX - entity.gridX),
-                y = Math.abs(self.gridY - entity.gridY);
+            var self = this;
+            var x = Math.abs(self.gridX - entity.gridX);
+            var y = Math.abs(self.gridY - entity.gridY);
 
             return x > y ? x : y;
         },
 
         getCoordDistance: function(toX, toY) {
-            var self = this,
-                x = Math.abs(self.gridX - toX),
-                y = Math.abs(self.gridY - toY);
+            var self = this;
+            var x = Math.abs(self.gridX - toX);
+            var y = Math.abs(self.gridY - toY);
 
             return x > y ? x : y;
         },
@@ -255,5 +251,4 @@ define(['./entityhandler'], function(EntityHandler) {
         }
 
     });
-
 });

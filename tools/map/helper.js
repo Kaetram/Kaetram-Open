@@ -6,7 +6,6 @@ let Log = require('log'),
     worldServer = require('../../server/data/map/world_server');
 
 class Helper {
-
     constructor() {
         let self = this;
 
@@ -32,12 +31,14 @@ class Helper {
         let self = this,
             index = self.gridPositionToIndex(x, y);
 
-        console.log(`"${index}": { "data": [${worldClient.data[index]}], "isColliding": true },`);
+        console.log(
+            `"${index}": { "data": [${worldClient.data[index]}], "isColliding": true },`
+        );
         //log.info(index + ' -- ' + worldClient.data[index]);
     }
 
     gridPositionToIndex(x, y) {
-        return (y * this.width) + x;
+        return y * this.width + x;
     }
 
     indexToGridPosition(tileIndex) {
@@ -51,9 +52,8 @@ class Helper {
         return {
             x: x,
             y: y
-        }
+        };
     }
-
 }
 
 module.exports = Helper;

@@ -1,7 +1,6 @@
 /* global log, _ */
 
 define(['./animation'], function(Animation) {
-
     return Class.extend({
 
         init: function(sprite, scale) {
@@ -46,8 +45,8 @@ define(['./animation'], function(Animation) {
         },
 
         loadSprite: function() {
-            var self = this,
-                sprite = self.sprite;
+            var self = this;
+            var sprite = self.sprite;
 
             self.filepath = 'img/sprites/' + self.id + '.png';
             self.animationData = sprite.animations;
@@ -72,16 +71,16 @@ define(['./animation'], function(Animation) {
         },
 
         createAnimations: function() {
-            var self = this,
-                animations = {};
+            var self = this;
+            var animations = {};
 
-            for (var name in self.animationData) {
+            for (var name in self.animationData)
                 if (self.animationData.hasOwnProperty(name)) {
                     var a = self.animationData[name];
 
                     animations[name] = new Animation(name, a.length, a.row, self.width, self.height);
                 }
-            }
+
 
             return animations;
         },
@@ -99,9 +98,9 @@ define(['./animation'], function(Animation) {
             if (self.hurtSprite.loaded)
                 return;
 
-            var canvas = document.createElement('canvas'),
-                context = canvas.getContext('2d'),
-                spriteData, data;
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            var spriteData; var data;
 
             canvas.width = self.image.width;
             canvas.height = self.image.height;
@@ -129,8 +128,7 @@ define(['./animation'], function(Animation) {
                     width: self.width,
                     height: self.height,
                     type: 'hurt'
-                }
-
+                };
             } catch (e) {
                 log.error('Could not load hurt sprite.');
                 log.error(e);
@@ -142,5 +140,4 @@ define(['./animation'], function(Animation) {
         }
 
     });
-
 });

@@ -1,7 +1,6 @@
 /* global Modules */
 
 define(function() {
-
     return Class.extend({
 
         init: function(id, type, text, x, y, statique) {
@@ -64,5 +63,4 @@ define(function() {
         }
 
     });
-
 });

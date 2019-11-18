@@ -27,9 +27,8 @@ self.addEventListener('fetch', function(event) {
             if (
                 event.request.destination !== 'document' ||
                 event.request.mode !== 'navigate'
-            ) {
+            )
                 return;
-            }
 
             console.error(
                 '[PWA Builder] Network request Failed. Serving offline page ' +

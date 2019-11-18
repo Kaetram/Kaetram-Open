@@ -1,7 +1,6 @@
 /* global log, Modules */
 
 define(['../entity/character/character'], function(Character) {
-
     return Class.extend({
 
         init: function(game) {
@@ -29,8 +28,8 @@ define(['../entity/character/character'], function(Character) {
         },
 
         animateTiles: function() {
-            var self = this,
-                time = self.game.time;
+            var self = this;
+            var time = self.game.time;
 
             if (!self.renderer.animateTiles)
                 return;
@@ -44,7 +43,6 @@ define(['../entity/character/character'], function(Character) {
             var self = this;
 
             self.game.entities.forEachEntity(function(entity) {
-
                 if (entity.spriteLoaded) {
                     self.updateFading(entity);
 
@@ -54,8 +52,6 @@ define(['../entity/character/character'], function(Character) {
                         animation.update(self.game.time);
 
                     if (entity instanceof Character) {
-
-
                         if (entity.critical && entity.criticalAnimation)
                             entity.criticalAnimation.update(self.game.time);
 
@@ -148,13 +144,12 @@ define(['../entity/character/character'], function(Character) {
                                     break;
                             }
                         }
-
                     } else if (entity.type === 'projectile') {
-                        var mDistance = entity.speed * self.timeDifferential,
-                            dx = entity.destX - entity.x,
-                            dy = entity.destY - entity.y,
-                            tDistance = Math.sqrt(dx * dx + dy * dy),
-                            amount = mDistance / tDistance;
+                        var mDistance = entity.speed * self.timeDifferential;
+                        var dx = entity.destX - entity.x;
+                        var dy = entity.destY - entity.y;
+                        var tDistance = Math.sqrt(dx * dx + dy * dy);
+                        var amount = mDistance / tDistance;
 
                         if (amount > 1)
                             amount = 1;
@@ -164,11 +159,9 @@ define(['../entity/character/character'], function(Character) {
 
                         if (tDistance < 5)
                             entity.impact();
-
                     }
                 }
             });
-
         },
 
         updateFading: function(entity) {
@@ -177,9 +170,9 @@ define(['../entity/character/character'], function(Character) {
             if (!entity || !entity.fading)
                 return;
 
-            var duration = 1000,
-                time = self.game.time,
-                dt = time - entity.fadingTime;
+            var duration = 1000;
+            var time = self.game.time;
+            var dt = time - entity.fadingTime;
 
             if (dt > duration) {
                 entity.isFading = false;
@@ -189,12 +182,12 @@ define(['../entity/character/character'], function(Character) {
         },
 
         updateKeyboard: function() {
-            var self = this,
-                player = self.game.player,
-                position = {
-                    x: player.gridX,
-                    y: player.gridY
-                };
+            var self = this;
+            var player = self.game.player;
+            var position = {
+                x: player.gridX,
+                y: player.gridY
+            };
 
             if (player.frozen)
                 return;
@@ -210,12 +203,11 @@ define(['../entity/character/character'], function(Character) {
 
             if (player.hasKeyboardMovement())
                 self.input.keyMove(position);
-
         },
 
         updateAnimations: function() {
-            var self = this,
-                target = self.input.targetAnimation;
+            var self = this;
+            var target = self.input.targetAnimation;
 
             if (target && self.input.selectedCellVisible)
                 target.update(self.game.time);
@@ -247,5 +239,4 @@ define(['../entity/character/character'], function(Character) {
         }
 
     });
-
 });

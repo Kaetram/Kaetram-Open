@@ -1,5 +1,4 @@
 define(['../../utils/timer'], function(Timer) {
-
     return Class.extend({
 
         init: function(id, element, duration) {
@@ -26,5 +25,4 @@ define(['../../utils/timer'], function(Timer) {
         }
 
     });
-
 });

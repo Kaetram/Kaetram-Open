@@ -1,5 +1,4 @@
 define(['./equipment'], function(Equipment) {
-
     return Equipment.extend({
 
         init: function(name, string, count, ability, abilityLevel) {
@@ -13,5 +12,4 @@ define(['./equipment'], function(Equipment) {
         }
 
     });
-
 });

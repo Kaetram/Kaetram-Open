@@ -1,12 +1,11 @@
 /* global module */
 
-let Items = require('../../../../util/items'),
-    Messages = require('../../../../network/messages'),
-    Packets = require('../../../../network/packets'),
-    Utils = require('../../../../util/utils');
+const Items = require('../../../../util/items');
+const Messages = require('../../../../network/messages');
+const Packets = require('../../../../network/packets');
+const Utils = require('../../../../util/utils');
 
 class Enchant {
-
     /**
      * Tier 1 - Damage/Armour boost (1-5%)
      * Tier 2 - Damage boost (1-10% & 10% for special ability or special ability level up)
@@ -17,7 +16,7 @@ class Enchant {
 
 
     constructor(player) {
-        let self = this;
+        const self = this;
 
         self.player = player;
 
@@ -26,8 +25,8 @@ class Enchant {
     }
 
     add(type, item) {
-        let self = this,
-            isItem = item === 'item';
+        const self = this;
+        const isItem = item === 'item';
 
         if (isItem && !Items.isEnchantable(item.id))
             return;
@@ -37,9 +36,7 @@ class Enchant {
                 self.remove('item');
 
             self.selectedItem = item;
-
         } else if (type === 'shards') {
-
             if (self.selectedShards)
                 self.remove('shards');
 
@@ -53,17 +50,14 @@ class Enchant {
     }
 
     remove(type) {
-        let self = this,
-            index;
+        const self = this;
+        let index;
 
         if (type === 'item' && self.selectedItem) {
-
             index = self.selectedItem.index;
 
             self.selectedItem = null;
-
         } else if (type === 'shards' && self.selectedShards) {
-
             index = self.selectedShards.index;
 
 
@@ -77,12 +71,12 @@ class Enchant {
     }
 
     convert(shard) {
-        let self = this;
+        const self = this;
 
         if (!Items.isShard(shard.id) || !self.player.inventory.hasSpace())
             return;
 
-        let tier = Items.getShardTier(shard.id);
+        const tier = Items.getShardTier(shard.id);
 
         if (shard.count < 11 && tier > 5)
             return;
@@ -100,7 +94,7 @@ class Enchant {
     }
 
     enchant() {
-        let self = this;
+        const self = this;
 
         if (!self.selectedItem) {
             self.player.notify('You have not selected an item to enchant.');
@@ -127,7 +121,7 @@ class Enchant {
          * and reason them out.
          */
 
-        let tier = self.selectedItem.tier;
+        const tier = self.selectedItem.tier;
 
         self.selectedItem.count = Utils.randomInt(1, tier === 5 ? 40 : 5 * tier);
 
@@ -145,9 +139,9 @@ class Enchant {
     }
 
     generateAbility() {
-        let self = this,
-            type = Items.getType(self.selectedItem.id),
-            probability = Utils.randomInt(0, 100);
+        const self = this;
+        const type = Items.getType(self.selectedItem.id);
+        const probability = Utils.randomInt(0, 100);
 
         if (probability > 5 + (5 * self.selectedShards.tier))
             return;
@@ -184,7 +178,6 @@ class Enchant {
             case 'boots':
 
                 break;
-
         }
     }
 
@@ -195,7 +188,6 @@ class Enchant {
     hasAbility(item) {
         return item.ability !== -1;
     }
-
 }
 
 module.exports = Enchant;

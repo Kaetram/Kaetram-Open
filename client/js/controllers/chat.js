@@ -1,7 +1,6 @@
 /* global Packets, Modules, log */
 
 define(['jquery'], function($) {
-
     return Class.extend({
 
         init: function(game) {
@@ -20,20 +19,18 @@ define(['jquery'], function($) {
             self.fadingTimeout = null;
 
             self.button.click(function() {
-
                 self.button.blur();
 
                 if (self.input.is(':visible'))
                     self.hideInput();
                 else
                     self.toggle();
-
             });
         },
 
         add: function(source, text, colour) {
-            var self = this,
-                element = $('<p>' + source + ': ' + text + '</p>');
+            var self = this;
+            var element = $('<p>' + source + ': ' + text + '</p>');
 
             self.showChat();
 
@@ -42,7 +39,7 @@ define(['jquery'], function($) {
 
             self.hideChat();
 
-            element.css('color', colour ? colour : 'white');
+            element.css('color', colour || 'white');
 
             self.log.append(element);
             self.log.scrollTop(99999);
@@ -51,7 +48,7 @@ define(['jquery'], function($) {
         key: function(data) {
             var self = this;
 
-            switch(data) {
+            switch (data) {
                 case Modules.Keys.Enter:
 
                     if (self.input.val() === '')
@@ -84,7 +81,6 @@ define(['jquery'], function($) {
                 self.showChat();
                 self.showInput();
             }
-
         },
 
         showChat: function() {
@@ -116,13 +112,11 @@ define(['jquery'], function($) {
             }
 
             self.fadingTimeout = setTimeout(function() {
-
                 if (!self.isActive()) {
                     self.chat.fadeOut('slow');
 
                     self.visible = false;
                 }
-
             }, self.fadingDuration);
         },
 
@@ -149,5 +143,4 @@ define(['jquery'], function($) {
             return this.input.is(':focus');
         }
     });
-
 });

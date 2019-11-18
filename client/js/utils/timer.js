@@ -1,5 +1,4 @@
 define(function() {
-
     return Class.extend({
 
         init: function(start, duration) {
@@ -10,8 +9,8 @@ define(function() {
         },
 
         isOver: function(time) {
-            var self = this,
-                over = false;
+            var self = this;
+            var over = false;
 
             if (time - self.time > self.duration) {
                 over = true;
@@ -22,5 +21,4 @@ define(function() {
         }
 
     });
-
 });

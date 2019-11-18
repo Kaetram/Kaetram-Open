@@ -1,11 +1,10 @@
 /* global log */
 
 define(['jquery', '../interface/inventory',
-        '../interface/profile/profile', '../interface/actions',
-        '../interface/bank', '../interface/enchant', '../interface/warp',
-        '../interface/shop', '../interface/header'],
-    function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
-
+    '../interface/profile/profile', '../interface/actions',
+    '../interface/bank', '../interface/enchant', '../interface/warp',
+    '../interface/shop', '../interface/header'],
+function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
     return Class.extend({
 
         init: function(game) {
@@ -56,7 +55,6 @@ define(['jquery', '../interface/inventory',
 
             if (self.header)
                 self.header.resize();
-
         },
 
         loadInventory: function(size, data) {
@@ -135,17 +133,16 @@ define(['jquery', '../interface/inventory',
         },
 
         loadNotifications: function() {
-            var self = this,
-                ok = $('#ok'),
-                cancel = $('#cancel'),
-                done = $('#done');
+            var self = this;
+            var ok = $('#ok');
+            var cancel = $('#cancel');
+            var done = $('#done');
 
             /**
              * Simple warning dialogue
              */
 
             ok.click(function() {
-
                 self.hideNotify();
             });
 
@@ -155,7 +152,6 @@ define(['jquery', '../interface/inventory',
              */
 
             cancel.click(function() {
-
                 self.hideConfirm();
             });
 
@@ -254,5 +250,4 @@ define(['jquery', '../interface/inventory',
         }
 
     });
-
 });

@@ -1,9 +1,8 @@
 /* global Modules, log, _ */
 
 define(['../character', './equipment/armour', './equipment/weapon',
-        './equipment/pendant', './equipment/boots', './equipment/ring'],
-        function(Character, Armour, Weapon, Pendant, Boots, Ring) {
-
+    './equipment/pendant', './equipment/boots', './equipment/ring'],
+function(Character, Armour, Weapon, Pendant, Boots, Ring) {
     return Character.extend({
 
         init: function() {
@@ -44,7 +43,6 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.disableAction = false;
 
             self.loadEquipment();
-
         },
 
         load: function(data) {
@@ -183,11 +181,11 @@ define(['../character', './equipment/armour', './equipment/weapon',
         },
 
         setPointsData: function(hitPointsData, manaData) {
-            var self = this,
-                hitPoints = hitPointsData.shift(),
-                maxHitPoints = hitPointsData.shift(),
-                mana = manaData.shift(),
-                maxMana = manaData.shift();
+            var self = this;
+            var hitPoints = hitPointsData.shift();
+            var maxHitPoints = hitPointsData.shift();
+            var mana = manaData.shift();
+            var maxMana = manaData.shift();
 
             self.setMaxHitPoints(maxHitPoints);
             self.setMaxMana(maxMana);
@@ -249,7 +247,6 @@ define(['../character', './equipment/armour', './equipment/weapon',
                         self.boots.update(name, string, count, ability, abilityLevel);
 
                     break;
-
             }
         },
 
@@ -285,7 +282,7 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.blink(90);
 
             if (!self.tempBlinkTimeout)
-                self.tempBlinkTimeout = setTimeout(function() { self.stopBlinking(); }, 500);
+                self.tempBlinkTimeout = setTimeout(function() {self.stopBlinking();}, 500);
         },
 
         getDistance: function(entity) {
@@ -301,5 +298,4 @@ define(['../character', './equipment/armour', './equipment/weapon',
         }
 
     });
-
 });

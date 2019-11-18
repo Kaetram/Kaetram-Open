@@ -1,13 +1,12 @@
 /* global _, log */
 
 define(['jquery'], function($) {
-
     return Class.extend({
 
-        init: function(interface) {
+        init: function(intrfce) {
             var self = this;
 
-            self.interface = interface;
+            self.interface = intrfce;
 
             self.body = $('#actionContainer');
             self.drop = $('#dropDialog');
@@ -25,9 +24,9 @@ define(['jquery'], function($) {
         },
 
         load: function() {
-            var self = this,
-                dropAccept = $('#dropAccept'),
-                dropCancel = $('#dropCancel');
+            var self = this;
+            var dropAccept = $('#dropAccept');
+            var dropCancel = $('#dropCancel');
 
             dropAccept.click(function(event) {
                 if (self.activeClass === 'inventory')
@@ -67,7 +66,6 @@ define(['jquery'], function($) {
             button.click(function(event) {
                 if (self.activeClass === 'inventory')
                     self.interface.inventory.clickAction(event);
-
             });
 
             if (misc)
@@ -82,8 +80,8 @@ define(['jquery'], function($) {
         },
 
         reset: function() {
-            var self = this,
-                buttons = self.getButtons();
+            var self = this;
+            var buttons = self.getButtons();
 
             for (var i = 0; i < buttons.length; i++)
                 $(buttons[i]).remove();
@@ -163,5 +161,4 @@ define(['jquery'], function($) {
         }
 
     });
-
 });

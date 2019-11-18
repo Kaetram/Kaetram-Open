@@ -1,11 +1,10 @@
 /* global log, _ */
 
 define(function() {
-
     return Class.extend({
 
         init: function(game) {
-            var self = this;
+            let self = this;
 
             self.game = game;
             self.app = game.app;
@@ -28,10 +27,9 @@ define(function() {
         },
 
         load: function() {
-            var self = this;
+            let self = this;
 
             self.messages.onHandshake(function(data) {
-
                 self.game.id = data.id;
                 self.game.development = data.development;
 
@@ -46,18 +44,18 @@ define(function() {
                 self.app.updateLoader('Logging in');
 
                 if (self.app.isRegistering()) {
-                    var registerInfo = self.app.registerFields,
-                        username = registerInfo[0].val(),
-                        password = registerInfo[1].val(),
-                        email = registerInfo[3].val();
+                    var registerInfo = self.app.registerFields;
+                    var username = registerInfo[0].val();
+                    var password = registerInfo[1].val();
+                    var email = registerInfo[3].val();
 
                     self.socket.send(Packets.Intro, [Packets.IntroOpcode.Register, username, password, email]);
-                } else if (self.app.isGuest()) {
+                } else if (self.app.isGuest())
                     self.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
-                } else {
-                    var loginInfo = self.app.loginFields,
-                        name = loginInfo[0].val(),
-                        pass = loginInfo[1].val();
+                else {
+                    var loginInfo = self.app.loginFields;
+                    var name = loginInfo[0].val();
+                    var pass = loginInfo[1].val();
 
                     self.socket.send(Packets.Intro, [Packets.IntroOpcode.Login, name, pass]);
 
@@ -71,23 +69,18 @@ define(function() {
 
                     self.storage.save();
                 }
-
             });
 
             self.messages.onWelcome(function(data) {
-
                 self.interface.loadHeader();
 
                 self.game.player.load(data);
 
                 self.game.start();
                 self.game.postLoad();
-
             });
 
             self.messages.onEquipment(function(opcode, info) {
-
-
                 switch (opcode) {
                     case Packets.EquipmentOpcode.Batch:
 
@@ -120,7 +113,6 @@ define(function() {
 
                         break;
                 }
-
             });
 
             self.messages.onSpawn(function(data) {
@@ -128,9 +120,9 @@ define(function() {
             });
 
             self.messages.onEntityList(function(data) {
-                var ids = _.pluck(self.entities.getAll(), 'id'),
-                    known = _.intersection(ids, data),
-                    newIds = _.difference(data, known);
+                var ids = _.pluck(self.entities.getAll(), 'id');
+                var known = _.intersection(ids, data);
+                var newIds = _.difference(data, known);
 
                 self.entities.decrepit = _.reject(self.entities.getAll(), function(entity) {
                     return _.include(known, entity.id) || entity.id === self.game.player.id;
@@ -174,8 +166,7 @@ define(function() {
             });
 
             self.messages.onMovement(function(opcode, info) {
-
-                switch(opcode) {
+                switch (opcode) {
                     case Packets.MovementOpcode.Move:
                         var entity = self.entities.get(info.id);
 
@@ -191,8 +182,8 @@ define(function() {
 
                     case Packets.MovementOpcode.Follow:
 
-                        var follower = self.entities.get(info.attackerId),
-                            followee = self.entities.get(info.targetId);
+                        var follower = self.entities.get(info.attackerId);
+                        var followee = self.entities.get(info.targetId);
 
                         if (!followee || !follower)
                             return;
@@ -203,8 +194,8 @@ define(function() {
 
                     case Packets.MovementOpcode.Stop:
 
-                        var sEntity = self.entities.get(info.id),
-                            force = info.force;
+                        var sEntity = self.entities.get(info.id);
+                        var force = info.force;
 
                         if (!sEntity)
                             return;
@@ -232,22 +223,21 @@ define(function() {
                         break;
 
 
-                        case Packets.MovementOpcode.Orientate:
-                            var player = info.shift(),
-                                orientation = info.shift(),
-                                entity = self.entities.get(player);
+                    case Packets.MovementOpcode.Orientate:
+                        var player = info.shift();
+                        var orientation = info.shift();
+                        var entity = self.entities.get(player);
 
-                            // entity.stop();
-                            entity.performAction(orientation, Modules.Actions.Orientate);
+                        // entity.stop();
+                        entity.performAction(orientation, Modules.Actions.Orientate);
 
                         break;
                 }
-
             });
 
             self.messages.onTeleport(function(info) {
-                var entity = self.entities.get(info.id),
-                    isPlayer = info.id === self.game.player.id;
+                var entity = self.entities.get(info.id);
+                var isPlayer = info.id === self.game.player.id;
 
                 if (!entity)
                     return;
@@ -263,17 +253,14 @@ define(function() {
                  */
 
                 var doTeleport = function() {
-
                     self.entities.unregisterPosition(entity);
                     entity.setGridPosition(info.x, info.y);
 
                     if (isPlayer) {
-
                         self.entities.clearPlayers(self.game.player);
                         self.game.player.clearHealthBar();
                         self.renderer.camera.centreOn(entity);
                         self.renderer.updateAnimatedTiles();
-
                     } else if (entity.type === 'player') {
                         delete self.entities.entities[entity.id];
                         return;
@@ -284,14 +271,12 @@ define(function() {
                     self.entities.registerPosition(entity);
                     entity.frozen = false;
 
-                    /*self.renderer.transition(15, true, function() {
+                    /* self.renderer.transition(15, true, function() {
 
                     });*/
-
                 };
 
                 if (info.withAnimation) {
-
                     var originalSprite = entity.sprite;
 
                     entity.teleporting = true;
@@ -307,18 +292,15 @@ define(function() {
                         entity.idle();
 
                         entity.teleporting = false;
-
                     });
-
                 } else
                     doTeleport();
-                    /*self.renderer.transition(15, false, function() {
+                    /* self.renderer.transition(15, false, function() {
                         if (self.queueColour) {
                             self.renderer.updateDarkMask(self.queueColour);
                             self.queueColour = null;
                         }
                     });*/
-
             });
 
             self.messages.onDespawn(function(id) {
@@ -366,12 +348,11 @@ define(function() {
                     self.entities.unregisterPosition(entity);
                     delete self.entities.entities[entity.id];
                 });
-
             });
 
             self.messages.onCombat(function(opcode, info) {
-                var attacker = self.entities.get(info.attackerId),
-                    target = self.entities.get(info.targetId);
+                var attacker = self.entities.get(info.attackerId);
+                var target = self.entities.get(info.targetId);
 
                 if (!target || !attacker)
                     return;
@@ -389,19 +370,17 @@ define(function() {
 
                     case Packets.CombatOpcode.Hit:
 
-                        var hit = info.hitInfo,
-                            isPlayer = target.id === self.game.player.id;
+                        var hit = info.hitInfo;
+                        var isPlayer = target.id === self.game.player.id;
 
                         if (!hit.isAoE) {
                             attacker.lookAt(target);
                             attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-
                         } else
-                            if (hit.hasTerror)
-                                target.terror = true;
+                        if (hit.hasTerror)
+                            target.terror = true;
 
                         switch (hit.type) {
-
                             case Modules.Hits.Critical:
 
                                 target.critical = true;
@@ -420,7 +399,7 @@ define(function() {
 
                         if (target.hurtSprite) {
                             target.sprite = target.hurtSprite;
-                            setTimeout(function() { target.sprite = target.normalSprite; }, 75);
+                            setTimeout(function() {target.sprite = target.normalSprite;}, 75);
                         }
 
                         attacker.triggerHealthBar();
@@ -453,10 +432,10 @@ define(function() {
             });
 
             self.messages.onAnimation(function(id, info) {
-                var entity = self.entities.get(id),
-                    animation = info.shift(),
-                    speed = info.shift(),
-                    count = info.shift();
+                var entity = self.entities.get(id);
+                var animation = info.shift();
+                var speed = info.shift();
+                var count = info.shift();
 
                 if (!entity)
                     return;
@@ -465,16 +444,13 @@ define(function() {
             });
 
             self.messages.onProjectile(function(opcode, info) {
-
                 switch (opcode) {
-
                     case Packets.ProjectileOpcode.Create:
 
                         self.entities.create(info);
 
                         break;
                 }
-
             });
 
             self.messages.onPopulation(function(population) {
@@ -482,10 +458,9 @@ define(function() {
             });
 
             self.messages.onPoints(function(data) {
-
                 var entity = self.entities.get(data.id);
 
-                //var id = data.shift(),
+                // var id = data.shift(),
                 //    hitPoints = data.shift(),
                 //    mana = data.shift(),
                 //    entity = self.entities.get(id);
@@ -498,7 +473,6 @@ define(function() {
 
                     if (self.game.player.hasTarget() && self.game.player.target.id === entity.id && self.input.overlay.updateCallback)
                         self.input.overlay.updateCallback(entity.id, data.hitPoints);
-
                 }
 
                 if (data.mana)
@@ -510,7 +484,6 @@ define(function() {
             });
 
             self.messages.onChat(function(info) {
-
                 if (self.game.isDebug())
                     log.info(info);
 
@@ -531,11 +504,9 @@ define(function() {
                     info.name = '[Global] ' + info.name;
 
                 self.input.chatHandler.add(info.name, info.text, info.colour);
-
             });
 
             self.messages.onCommand(function(info) {
-
                 /**
                  * This is for random miscellaneous commands that require
                  * a specific action done by the client as opposed to
@@ -545,22 +516,18 @@ define(function() {
                 log.info(info);
 
                 switch (info.command) {
-
                     case 'debug':
                         self.renderer.debugging = !self.renderer.debugging;
                         break;
-
                 }
-
             });
 
             self.messages.onInventory(function(opcode, info) {
-
                 switch (opcode) {
                     case Packets.InventoryOpcode.Batch:
 
-                        var inventorySize = info.shift(),
-                            data = info.shift();
+                        var inventorySize = info.shift();
+                        var data = info.shift();
 
                         self.interface.loadInventory(inventorySize, data);
 
@@ -594,16 +561,14 @@ define(function() {
 
                         break;
                 }
-
             });
 
             self.messages.onBank(function(opcode, info) {
-                switch(opcode) {
-
+                switch (opcode) {
                     case Packets.BankOpcode.Batch:
 
-                        var bankSize = info.shift(),
-                            data = info.shift();
+                        var bankSize = info.shift();
+                        var data = info.shift();
 
                         self.interface.loadBank(bankSize, data);
 
@@ -632,7 +597,6 @@ define(function() {
             });
 
             self.messages.onQuest(function(opcode, info) {
-
                 switch (opcode) {
                     case Packets.QuestOpcode.AchievementBatch:
 
@@ -658,11 +622,9 @@ define(function() {
 
                         break;
                 }
-
             });
 
             self.messages.onNotification(function(opcode, message) {
-
                 switch (opcode) {
                     case Packets.NotificationOpcode.Ok:
 
@@ -682,7 +644,6 @@ define(function() {
 
                         break;
                 }
-
             });
 
             self.messages.onBlink(function(instance) {
@@ -729,12 +690,9 @@ define(function() {
                     return;
 
                 if (entity.level !== info.level) {
-
                     entity.level = info.level;
                     self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
-
                 } else if (entity.id === self.game.player.id) {
-
                     if (info.id === self.game.player.id)
                         self.game.player.setExperience(info.experience, info.nextExperience, info.prevExperience);
 
@@ -742,7 +700,6 @@ define(function() {
                 }
 
                 self.interface.profile.update();
-
             });
 
             self.messages.onDeath(function(id) {
@@ -770,26 +727,22 @@ define(function() {
             });
 
             self.messages.onNPC(function(opcode, info) {
-
-                switch(opcode) {
-
+                switch (opcode) {
                     case Packets.NPCOpcode.Talk:
 
-                        var entity = self.entities.get(info.id),
-                            message = info.text,
-                            isNPC = !info.nonNPC;
+                        var entity = self.entities.get(info.id);
+                        var message = info.text;
+                        var isNPC = !info.nonNPC;
 
                         if (!entity)
                             return;
 
-                        if (isNPC) {
+                        if (isNPC)
 
                             if (!message) {
                                 sound = 'npc-end';
                                 self.bubble.destroy(info.id);
-
                             } else {
-
                                 var bubble = self.bubble.create(info.id, message);
 
                                 self.bubble.setTo(entity);
@@ -798,7 +751,7 @@ define(function() {
                                     self.renderer.camera.centreOn(self.game.player);
                             }
 
-                        } else {
+                        else {
                             self.bubble.create(info.id, message, self.time, 5000);
                             self.bubble.setTo(entity);
                         }
@@ -821,15 +774,14 @@ define(function() {
 
                     case Packets.NPCOpcode.Countdown:
 
-                        var cEntity = self.entities.get(info.id),
-                            countdown = info.countdown;
+                        var cEntity = self.entities.get(info.id);
+                        var countdown = info.countdown;
 
                         if (cEntity)
                             cEntity.setCountdown(countdown);
 
                         break;
                 }
-
             });
 
             self.messages.onRespawn(function(id, x, y) {
@@ -850,8 +802,8 @@ define(function() {
             });
 
             self.messages.onEnchant(function(opcode, info) {
-                var type = info.type,
-                    index = info.index;
+                var type = info.type;
+                var index = info.index;
 
                 switch (opcode) {
                     case Packets.EnchantOpcode.Select:
@@ -865,15 +817,11 @@ define(function() {
                         self.interface.enchant.moveBack(type, index);
 
                         break;
-
                 }
-
             });
 
             self.messages.onGuild(function(opcode, info) {
-
                 switch (opcode) {
-
                     case Packets.GuildOpcode.Create:
 
                         break;
@@ -882,11 +830,9 @@ define(function() {
 
                         break;
                 }
-
             });
 
             self.messages.onPointer(function(opcode, info) {
-
                 switch (opcode) {
                     case Packets.PointerOpcode.NPC:
                         var entity = self.entities.get(info.id);
@@ -925,11 +871,9 @@ define(function() {
 
                         break;
                 }
-
             });
 
             self.messages.onPVP(function(id, pvp) {
-
                 if (self.game.player.id === id)
                     self.pvp = pvp;
                 else {
@@ -938,7 +882,6 @@ define(function() {
                     if (entity)
                         entity.pvp = pvp;
                 }
-
             });
 
             self.messages.onShop(function(opcode, info) {
@@ -967,7 +910,6 @@ define(function() {
 
                         break;
                 }
-
             });
 
             self.messages.onMinigame(function(opcode, info) {
@@ -975,8 +917,7 @@ define(function() {
             });
 
             self.messages.onRegion(function(opcode, info) {
-
-                switch(opcode) {
+                switch (opcode) {
                     case Packets.RegionOpcode.Render:
 
                         self.map.synchronize(info);
@@ -1005,12 +946,10 @@ define(function() {
 
                 self.renderer.forceRendering = true;
                 self.renderer.updateAnimatedTiles();
-
             });
 
             self.messages.onOverlay(function(opcode, info) {
-
-                switch(opcode) {
+                switch (opcode) {
                     case Packets.OverlayOpcode.Set:
 
                         self.overlays.updateOverlay(info.image);
@@ -1046,13 +985,10 @@ define(function() {
                         self.renderer.updateDarkMask(info.colour);
 
                         break;
-
                 }
-
             });
 
             self.messages.onCamera(function(opcode, info) {
-
                 if (self.game.player.x === 0 || self.game.player.y === 0) {
                     self.socket.send(Packets.Camera);
                     return;
@@ -1064,7 +1000,7 @@ define(function() {
                 self.renderer.camera.forceCentre(self.game.player);
                 self.renderer.forceRendering = true;
 
-                switch(opcode) {
+                switch (opcode) {
                     case Packets.CameraOpcode.LockX:
                         self.renderer.camera.lockX = true;
                         break;
@@ -1088,10 +1024,8 @@ define(function() {
 
                         break;
                 }
-
             });
         }
 
     });
-
 });

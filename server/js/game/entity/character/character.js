@@ -1,16 +1,15 @@
 /* global module */
 
-let Entity = require('../entity'),
-    Modules = require('../../../util/modules'),
-    Mobs = require('../../../util/mobs'),
-    Combat = require('./combat/combat');
+const Entity = require('../entity');
+const Modules = require('../../../util/modules');
+const Mobs = require('../../../util/mobs');
+const Combat = require('./combat/combat');
 
 class Character extends Entity {
-
     constructor(id, type, instance, x, y) {
         super(id, type, instance, x, y);
 
-        let self = this;
+        const self = this;
 
         self.level = -1;
 
@@ -46,7 +45,7 @@ class Character extends Entity {
     }
 
     loadCombat() {
-        let self = this;
+        const self = this;
 
         /**
          * Ternary could be used here, but readability
@@ -60,25 +59,23 @@ class Character extends Entity {
     }
 
     startHealing() {
-        let self = this;
+        const self = this;
 
         self.healingInterval = setInterval(() => {
-
             if (!self.hasTarget() && !self.combat.isAttacked() && !self.dead)
                 self.heal(1);
-
         }, 5000);
     }
 
     stopHealing() {
-        let self = this;
+        const self = this;
 
         clearInterval(self.healingInterval);
         self.healingInterval = null;
     }
 
     setStun(stun) {
-        let self = this;
+        const self = this;
 
         self.stunned = stun;
 
@@ -87,14 +84,14 @@ class Character extends Entity {
     }
 
     hit(attacker) {
-        let self = this;
+        const self = this;
 
         if (self.hitCallback)
             self.hitCallback(attacker);
     }
 
     heal(amount) {
-        let self = this;
+        const self = this;
 
         self.setHitPoints(self.hitPoints + amount);
 
@@ -103,7 +100,7 @@ class Character extends Entity {
     }
 
     addExperience() {
-        //Unimplemented.
+        // Unimplemented.
     }
 
     isRanged() {
@@ -131,7 +128,7 @@ class Character extends Entity {
     }
 
     setPosition(x, y) {
-        let self = this;
+        const self = this;
 
         self.previousX = self.x;
         self.previousY = self.y;
@@ -143,7 +140,7 @@ class Character extends Entity {
     }
 
     setTarget(target) {
-        let self = this;
+        const self = this;
 
         self.target = target;
 
@@ -156,7 +153,7 @@ class Character extends Entity {
     }
 
     setHitPoints(hitPoints) {
-        let self = this;
+        const self = this;
 
         self.hitPoints = hitPoints;
 
@@ -181,7 +178,7 @@ class Character extends Entity {
     }
 
     removeTarget() {
-        let self = this;
+        const self = this;
 
         if (self.removeTargetCallback)
             self.removeTargetCallback();

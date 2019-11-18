@@ -1,7 +1,6 @@
 /* global log, Packets */
 
 define(['./character/character'], function(Character) {
-
     return Class.extend({
 
         init: function(entity) {
@@ -19,11 +18,10 @@ define(['./character/character'], function(Character) {
                 return;
 
             if (self.isCharacter()) {
-
                 self.entity.onRequestPath(function(x, y) {
                     var ignored = [self.entity];
 
-                    return self.game.findPath(self.entity, x, y, ignored)
+                    return self.game.findPath(self.entity, x, y, ignored);
                 });
 
                 self.entity.onBeforeStep(function() {
@@ -43,7 +41,6 @@ define(['./character/character'], function(Character) {
 
                     if (self.entity.attackRange > 1 && self.entity.hasTarget() && self.entity.getDistance(self.entity.target) <= self.entity.attackRange)
                         self.entity.stop(false);
-
                 });
 
                 self.entity.onStopPathing(function() {
@@ -51,7 +48,6 @@ define(['./character/character'], function(Character) {
 
                     self.entities.unregisterPosition(self.entity);
                     self.entities.registerPosition(self.entity);
-
                 });
             }
         },
@@ -77,5 +73,4 @@ define(['./character/character'], function(Character) {
         }
 
     });
-
 });

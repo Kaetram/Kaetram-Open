@@ -1,7 +1,6 @@
 /* global log */
 
 define(function() {
-
     return Class.extend({
 
         init: function(map) {
@@ -57,7 +56,6 @@ define(function() {
 
                 for (var j = 0; j < self.map.width; j++)
                     self.pathingGrid[i][j] = self.map.grid[i][j];
-
             }
         },
 
@@ -131,5 +129,4 @@ define(function() {
         }
 
     });
-
 });

@@ -1,7 +1,6 @@
 /* global _ */
 
 define(function() {
-
     /**
      * Very useful file used for queuing various objects,
      * most notably used in the info controller to queue
@@ -35,5 +34,4 @@ define(function() {
         }
 
     });
-
 });

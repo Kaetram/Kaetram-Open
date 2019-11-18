@@ -1,16 +1,15 @@
-let Combat = require('../../js/game/entity/character/combat/combat'),
-    Utils = require('../../js/util/utils'),
-    Messages = require('../../js/network/messages'),
-    Packets = require('../../js/network/packets'),
-    Modules = require('../../js/util/modules');
+const Combat = require('../../js/game/entity/character/combat/combat');
+const Utils = require('../../js/util/utils');
+const Messages = require('../../js/network/messages');
+const Packets = require('../../js/network/packets');
+const Modules = require('../../js/util/modules');
 
 class PirateCaptain extends Combat {
-
     constructor(character) {
         character.spawnDistance = 20;
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.character = character;
 
@@ -28,17 +27,17 @@ class PirateCaptain extends Combat {
     }
 
     load() {
-        let self = this,
-            south = { x: 251, y: 574 },
-            west = { x: 243, y: 569 },
-            east = { x: 258, y: 568 },
-            north = { x: 251, y: 563 };
+        const self = this;
+        const south = { x: 251, y: 574 };
+        const west = { x: 243, y: 569 };
+        const east = { x: 258, y: 568 };
+        const north = { x: 251, y: 563 };
 
         self.teleportLocations.push(north, south, west, east);
     }
 
     hit(character, target, hitInfo) {
-        let self = this;
+        const self = this;
         if (self.canTeleport())
             self.teleport();
         else
@@ -46,8 +45,8 @@ class PirateCaptain extends Combat {
     }
 
     teleport() {
-        let self = this,
-            position = self.getRandomPosition();
+        const self = this;
+        const position = self.getRandomPosition();
 
         if (!position)
             return;
@@ -70,7 +69,7 @@ class PirateCaptain extends Combat {
                 })
             });
 
-        self.forEachAttacker((attacker) => {
+        self.forEachAttacker(attacker => {
             attacker.removeTarget();
         });
 
@@ -79,9 +78,9 @@ class PirateCaptain extends Combat {
     }
 
     getRandomPosition() {
-        let self = this,
-            random = Utils.randomInt(0, self.teleportLocations.length - 1),
-            position = self.teleportLocations[random];
+        const self = this;
+        const random = Utils.randomInt(0, self.teleportLocations.length - 1);
+        const position = self.teleportLocations[random];
 
         if (!position || random === self.lastTeleportIndex)
             return null;
@@ -90,19 +89,18 @@ class PirateCaptain extends Combat {
             x: position.x,
             y: position.y,
             index: random
-        }
+        };
     }
 
     canTeleport() {
-        //Just randomize the teleportation for shits and giggles.
+        // Just randomize the teleportation for shits and giggles.
         return new Date().getTime() - this.lastTeleport > 10000 && Utils.randomInt(0, 4) === 2;
     }
 
     getHealthPercentage() {
-        //Floor it to avoid random floats
+        // Floor it to avoid random floats
         return Math.floor((this.character.hitPoints / self.character.maxHitPoints) * 100);
     }
-
 }
 
 module.exports = PirateCaptain;

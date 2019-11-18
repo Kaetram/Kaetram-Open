@@ -1,7 +1,6 @@
 /* global log, Class, Detect, Modules */
 
 define(['jquery'], function($) {
-
     return Class.extend({
 
         init: function() {
@@ -50,7 +49,6 @@ define(['jquery'], function($) {
 
             self.updateOrientation();
             self.load();
-
         },
 
         load: function() {
@@ -74,10 +72,8 @@ define(['jquery'], function($) {
 
             self.parchment.click(function() {
                 if (self.parchment.hasClass('about') || self.parchment.hasClass('credits') || self.parchment.hasClass('git')) {
-
                     self.parchment.removeClass('about credits git');
                     self.displayScroll('loadCharacter');
-
                 }
             });
 
@@ -156,7 +152,6 @@ define(['jquery'], function($) {
 
                 if (self.game.started)
                     self.game.handleInput(Modules.InputType.Key, key);
-
             });
 
             $(document).keyup(function(e) {
@@ -183,13 +178,11 @@ define(['jquery'], function($) {
                 window.scrollTo(0, 1);
 
                 self.game.input.handle(Modules.InputType.LeftClick, event);
-
             });
 
             $('input[type="range"]').on('input', function() {
                 self.updateRange($(this));
             });
-
         },
 
         login: function() {
@@ -214,7 +207,6 @@ define(['jquery'], function($) {
                 self.body.removeClass('intro');
 
                 self.footer.hide();
-
             }, 500);
         },
 
@@ -249,22 +241,18 @@ define(['jquery'], function($) {
                 self.parchment.toggleClass('animate').removeClass(origin);
 
                 setTimeout(function() {
-
                     self.parchment.toggleClass('animate').addClass(destination);
                     self.parchmentAnimating = false;
-
                 }, Detect.isTablet() ? 0 : 1000);
-
             } else
                 self.parchment.removeClass(origin).addClass(destination);
         },
 
         displayScroll: function(content) {
-            var self = this,
-                state = self.parchment.attr('class');
+            var self = this;
+            var state = self.parchment.attr('class');
 
             if (self.game.started) {
-
                 self.parchment.removeClass().addClass(content);
 
                 self.body.removeClass('credits legal about').toggleClass(content);
@@ -274,25 +262,22 @@ define(['jquery'], function($) {
 
                 if (content !== 'about')
                     self.helpButton.removeClass('active');
-
             } else if (state !== 'animate')
                 self.openScroll(state, state === content ? 'loadCharacter' : content);
-
         },
 
         verifyForm: function() {
-            var self = this,
-                activeForm = self.getActiveForm();
+            var self = this;
+            var activeForm = self.getActiveForm();
 
             if (activeForm === 'null')
                 return;
 
             switch (activeForm) {
-
                 case 'loadCharacter':
 
-                    var nameInput = $('#loginNameInput'),
-                        passwordInput = $('#loginPasswordInput');
+                    var nameInput = $('#loginNameInput');
+                    var passwordInput = $('#loginPasswordInput');
 
                     if (self.loginFields.length === 0)
                         self.loginFields = [nameInput, passwordInput];
@@ -311,10 +296,10 @@ define(['jquery'], function($) {
 
                 case 'createCharacter':
 
-                    var characterName = $('#registerNameInput'),
-                        registerPassword = $('#registerPasswordInput'),
-                        registerPasswordConfirmation = $('#registerPasswordConfirmationInput'),
-                        email = $('#registerEmailInput');
+                    var characterName = $('#registerNameInput');
+                    var registerPassword = $('#registerPasswordInput');
+                    var registerPasswordConfirmation = $('#registerPasswordConfirmationInput');
+                    var email = $('#registerEmailInput');
 
                     if (self.registerFields.length === 0)
                         self.registerFields = [characterName, registerPassword, registerPasswordConfirmation, email];
@@ -361,7 +346,7 @@ define(['jquery'], function($) {
 
             $('<span></span>', {
                 'class': 'status blink',
-                text: message
+                'text': message
             }).appendTo('.validation-summary');
 
             $('.status').append('<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>');
@@ -372,7 +357,7 @@ define(['jquery'], function($) {
 
             $('<span></span>', {
                 'class': 'validation-error blink',
-                text: error
+                'text': error
             }).appendTo('.validation-summary');
 
             if (!field)
@@ -389,9 +374,9 @@ define(['jquery'], function($) {
         },
 
         cleanErrors: function() {
-            var self = this,
-                activeForm = self.getActiveForm(),
-                fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
+            var self = this;
+            var activeForm = self.getActiveForm();
+            var fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
 
             for (var i = 0; i < fields.length; i++)
                 fields[i].removeClass('field-error');
@@ -425,8 +410,8 @@ define(['jquery'], function($) {
         },
 
         getUIScale: function() {
-            var width = window.innerWidth,
-                height = window.innerHeight;
+            var width = window.innerWidth;
+            var height = window.innerHeight;
 
             return width <= 1000 ? 1 : ((width <= 1500 || height <= 870) ? 2 : 3);
         },
@@ -461,7 +446,6 @@ define(['jquery'], function($) {
 
                 self.loginButton.addClass('disabled');
                 self.registerButton.addClass('disabled');
-
             } else {
                 self.loading.attr('hidden', true);
 
@@ -474,15 +458,15 @@ define(['jquery'], function($) {
             var self = this;
 
             if (self.loginFields)
-                _.each(self.loginFields, function(field) { field.prop('readonly', state); });
+                _.each(self.loginFields, function(field) {field.prop('readonly', state);});
 
             if (self.registerFields)
-                _.each(self.registerFields, function(field) { field.prop('readOnly', state); })
+                _.each(self.registerFields, function(field) {field.prop('readOnly', state);});
         },
 
         updateRange: function(obj) {
-            var self = this,
-                val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
+            var self = this;
+            var val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
 
             obj.css('background-image',
                 '-webkit-gradient(linear, left top, right top, '
@@ -505,5 +489,4 @@ define(['jquery'], function($) {
         }
 
     });
-
 });

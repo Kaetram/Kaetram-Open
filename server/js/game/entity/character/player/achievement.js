@@ -1,14 +1,13 @@
 /* global module */
 
-let Data = require('../../../../../data/achievements'),
-    Messages = require('../../../../network/messages'),
-    Packets = require('../../../../network/packets'),
-    Modules = require('../../../../util/modules');
+const Data = require('../../../../../data/achievements');
+const Messages = require('../../../../network/messages');
+const Packets = require('../../../../network/packets');
+const Modules = require('../../../../util/modules');
 
 class Achievement {
-
     constructor(id, player) {
-        let self = this;
+        const self = this;
 
         self.id = id;
         self.player = player;
@@ -24,7 +23,7 @@ class Achievement {
     }
 
     step() {
-        let self = this;
+        const self = this;
 
         if (self.isThreshold())
             return;
@@ -43,12 +42,11 @@ class Achievement {
     }
 
     converse(npc) {
-        let self = this;
+        const self = this;
 
         if (self.isThreshold() || self.hasItem())
             self.finish(npc);
         else {
-
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
                 text: npc.talk(self.data.text)
@@ -60,8 +58,8 @@ class Achievement {
     }
 
     finish(npc) {
-        let self = this,
-            rewardType = self.data.rewardType;
+        const self = this;
+        const rewardType = self.data.rewardType;
 
         switch (rewardType) {
             case Modules.Achievements.Rewards.Item:
@@ -107,7 +105,7 @@ class Achievement {
     }
 
     hasItem() {
-        let self = this;
+        const self = this;
 
         if (self.data.type === Modules.Achievements.Type.Scavenge && self.player.inventory.contains(self.data.item)) {
             self.player.inventory.remove(self.data.item, self.data.itemCount);
@@ -115,7 +113,7 @@ class Achievement {
             return true;
         }
 
-        return false
+        return false;
     }
 
     setProgress(progress) {
@@ -139,9 +137,8 @@ class Achievement {
             count: this.data.count ? this.data.count : 1,
             progress: this.progress,
             finished: this.isFinished()
-        }
+        };
     }
-
 }
 
 module.exports = Achievement;

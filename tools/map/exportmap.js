@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 
 let Log = require('log'),
-    fs = require("fs"),
+    fs = require('fs'),
     file = require('../file'),
     processMap = require('./processmap'),
     log = new Log(Log.DEBUG),
     source = process.argv[2];
 
 function getMap() {
-    if (!source)
-        source = 'data/world.json';
+    if (!source) source = 'data/world.json';
 
     file.exists(source, function(exists) {
         if (!exists) {
@@ -30,53 +29,49 @@ function onMap(data) {
 }
 
 function parseClient(data, destination) {
-    let map = JSON.stringify(processMap(data, {
-        mode: 'client'
-    }));
+    let map = JSON.stringify(
+        processMap(data, {
+            mode: 'client'
+        })
+    );
 
     fs.writeFile(destination + '.json', map, function(err, file) {
-        if (err)
-            log.error(JSON.stringify(err));
-        else
-            log.info('[Client] Map saved at: ' + destination + '.json');
+        if (err) log.error(JSON.stringify(err));
+        else log.info('[Client] Map saved at: ' + destination + '.json');
     });
-
 }
 
 function parseServer(data, destination) {
-    let map = JSON.stringify(processMap(data, {
-        mode: 'server'
-    }));
+    let map = JSON.stringify(
+        processMap(data, {
+            mode: 'server'
+        })
+    );
 
     fs.writeFile(destination + '.json', map, function(err, file) {
-        if (err)
-            log.error(JSON.stringify(err));
-        else
-            log.info('[Server] Map saved at: ' + destination + '.json');
+        if (err) log.error(JSON.stringify(err));
+        else log.info('[Server] Map saved at: ' + destination + '.json');
     });
 }
 
 function parseInfo(data, destination) {
-    let map = JSON.stringify(processMap(data, {
-        mode: 'info'
-    }));
+    let map = JSON.stringify(
+        processMap(data, {
+            mode: 'info'
+        })
+    );
 
     fs.writeFile(destination + '.json', map, function(err, file) {
-        if (err)
-            log.error(JSON.stringify(err));
-        else
-            log.info('[Client] Map saved at: ' + destination + '.json');
+        if (err) log.error(JSON.stringify(err));
+        else log.info('[Client] Map saved at: ' + destination + '.json');
     });
 
     map = 'let mapData = ' + map;
 
     fs.writeFile(destination + '.js', map, function(err, file) {
-        if (err)
-            log.error(JSON.stringify(err));
-        else
-            log.info('[Client] Map saved at: ' + destination + '.js');
+        if (err) log.error(JSON.stringify(err));
+        else log.info('[Client] Map saved at: ' + destination + '.js');
     });
 }
-
 
 getMap();

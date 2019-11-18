@@ -1,6 +1,6 @@
 /* global module */
 
-let Minigame = require('../minigame');
+const Minigame = require('../minigame');
 
 class DreamWorld extends Minigame {
 

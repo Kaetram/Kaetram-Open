@@ -1,7 +1,6 @@
 /* global _, Modules, log */
 
 define(['../entity', '../../utils/transition', '../animation'], function(Entity, Transition, Animation) {
-
     return Entity.extend({
 
         init: function(id, kind) {
@@ -85,13 +84,12 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
                 self.explosionAnimation.reset();
                 self.explosionAnimation.count = 1;
             });
-
         },
 
         animate: function(animation, speed, count, onEndCount) {
-            var self = this,
-                o = ['atk', 'walk', 'idle'],
-                orientation = self.orientation;
+            var self = this;
+            var o = ['atk', 'walk', 'idle'];
+            var orientation = self.orientation;
 
             if (self.currentAnimation && self.currentAnimation.name === 'death')
                 return;
@@ -178,7 +176,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             self.setOrientation(orientation);
 
-            switch(action) {
+            switch (action) {
                 case Modules.Actions.Idle:
                     self.animate('idle', self.idleSpeed);
                     break;
@@ -198,8 +196,8 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         idle: function(o) {
-            var self = this,
-                orientation = o ? o : self.orientation;
+            var self = this;
+            var orientation = o || self.orientation;
 
             self.performAction(orientation, Modules.Actions.Idle);
         },
@@ -207,7 +205,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         orientationToString: function(o) {
             var oM = Modules.Orientation;
 
-            switch(o) {
+            switch (o) {
                 case oM.Left:
                     return 'left';
 
@@ -240,7 +238,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             this.newDestination = {
                 x: x,
                 y: y
-            }
+            };
         },
 
         /**
@@ -253,9 +251,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
          */
 
         nextStep: function() {
-            var self = this,
-                stop = false,
-                x, y, path;
+            var self = this;
+            var stop = false;
+            var x; var y; var path;
 
             if (self.step % 2 === 0 && self.secondStepCallback)
                 self.secondStepCallback();
@@ -295,13 +293,11 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
                         stop = true;
                     else
                         self.followPath(path);
-
                 } else if (self.hasNextStep()) {
                     self.step++;
                     self.updateMovement();
                 } else
                     stop = true;
-
             } else {
                 stop = true;
                 self.interrupted = false;
@@ -320,8 +316,8 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         updateMovement: function() {
-            var self = this,
-                step = self.step;
+            var self = this;
+            var step = self.step;
 
             if (self.path[step][0] < self.path[step - 1][0])
                 self.performAction(Modules.Orientation.Left, Modules.Actions.Walk);
@@ -381,14 +377,12 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             if (!force)
                 self.interrupted = true;
             else if (self.hasPath()) {
-
                 self.path = null;
                 self.newDestination = null;
                 self.movement = new Transition();
                 self.performAction(self.orientation, Modules.Actions.Idle);
                 self.nextGridX = self.gridX;
                 self.nextGridY = self.gridY;
-
             }
         },
 
@@ -566,7 +560,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             this._super(idleSpeed);
         },
 
-        setMaxHitPoints: function (maxHitPoints) {
+        setMaxHitPoints: function(maxHitPoints) {
             var self = this;
 
             self.maxHitPoints = maxHitPoints;
@@ -620,5 +614,4 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         }
 
     });
-
 });

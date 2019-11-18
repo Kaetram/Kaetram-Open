@@ -1,16 +1,15 @@
 /* global Class, log, Packets, Modules, Detect, _ */
 
 define(['./renderer/renderer', './utils/storage',
-        './map/map', './network/socket', './entity/character/player/player',
-        './renderer/updater', './controllers/entities', './controllers/input',
-        './entity/character/player/playerhandler', './utils/pathfinder',
-        './controllers/zoning', './controllers/info', './controllers/bubble',
-        './controllers/interface', './controllers/audio', './controllers/pointer',
-        './renderer/overlay', './network/connection', './utils/modules', './network/packets'],
-        function(Renderer, LocalStorage, Map, Socket, Player, Updater,
-                 Entities, Input, PlayerHandler, Pathfinder, Zoning, Info,
-                 Bubble, Interface, Audio, Pointer, Overlay, Connection) {
-
+    './map/map', './network/socket', './entity/character/player/player',
+    './renderer/updater', './controllers/entities', './controllers/input',
+    './entity/character/player/playerhandler', './utils/pathfinder',
+    './controllers/zoning', './controllers/info', './controllers/bubble',
+    './controllers/interface', './controllers/audio', './controllers/pointer',
+    './renderer/overlay', './network/connection', './utils/modules', './network/packets'],
+function(Renderer, LocalStorage, Map, Socket, Player, Updater,
+    Entities, Input, PlayerHandler, Pathfinder, Zoning, Info,
+    Bubble, Interface, Audio, Pointer, Overlay, Connection) {
     return Class.extend({
 
         init: function(app) {
@@ -77,7 +76,6 @@ define(['./renderer/renderer', './utils/storage',
             var self = this;
 
             if (self.ready) {
-
                 self.time = new Date().getTime();
 
                 self.renderer.render();
@@ -111,13 +109,13 @@ define(['./renderer/renderer', './utils/storage',
         },
 
         loadRenderer: function() {
-            var self = this,
-                background = document.getElementById('background'),
-                foreground = document.getElementById('foreground'),
-                overlay = document.getElementById('overlay'),
-                textCanvas = document.getElementById('textCanvas'),
-                entities = document.getElementById('entities'),
-                cursor = document.getElementById('cursor');
+            var self = this;
+            var background = document.getElementById('background');
+            var foreground = document.getElementById('foreground');
+            var overlay = document.getElementById('overlay');
+            var textCanvas = document.getElementById('textCanvas');
+            var entities = document.getElementById('entities');
+            var cursor = document.getElementById('cursor');
 
             self.app.sendStatus('Initializing render engine');
 
@@ -125,8 +123,8 @@ define(['./renderer/renderer', './utils/storage',
         },
 
         loadControllers: function() {
-            var self = this,
-                hasWorker = self.app.hasWorker();
+            var self = this;
+            var hasWorker = self.app.hasWorker();
 
             self.app.sendStatus('Loading local storage');
 
@@ -206,7 +204,6 @@ define(['./renderer/renderer', './utils/storage',
             }, 1000);
 
             self.connectionHandler = new Connection(self);
-
         },
 
         postLoad: function() {
@@ -245,13 +242,12 @@ define(['./renderer/renderer', './utils/storage',
                 self.storage.data.new = false;
                 self.storage.save();
             }
-
         },
 
         loadStorage: function() {
-            var self = this,
-                loginName = $('#loginNameInput'),
-                loginPassword = $('#loginPasswordInput');
+            var self = this;
+            var loginName = $('#loginNameInput');
+            var loginPassword = $('#loginPasswordInput');
 
             loginName.prop('readonly', false);
             loginPassword.prop('readonly', false);
@@ -269,15 +265,15 @@ define(['./renderer/renderer', './utils/storage',
         },
 
         findPath: function(character, x, y, ignores) {
-            var self = this,
-                grid = self.entities.grids.pathingGrid,
-                path = [];
+            var self = this;
+            var grid = self.entities.grids.pathingGrid;
+            var path = [];
 
             if (self.map.isColliding(x, y) || !self.pathfinder || !character)
                 return path;
 
             if (ignores)
-                _.each(ignores, function(entity) { self.pathfinder.ignoreEntity(entity); });
+                _.each(ignores, function(entity) {self.pathfinder.ignoreEntity(entity);});
 
             path = self.pathfinder.find(grid, character, x, y, false);
 
@@ -374,8 +370,8 @@ define(['./renderer/renderer', './utils/storage',
         },
 
         getEntityAt: function(x, y, ignoreSelf) {
-            var self = this,
-                entities = self.entities.grids.renderingGrid[y][x];
+            var self = this;
+            var entities = self.entities.grids.renderingGrid[y][x];
 
             if (_.size(entities) > 0)
                 return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
@@ -474,5 +470,4 @@ define(['./renderer/renderer', './utils/storage',
         }
 
     });
-
 });

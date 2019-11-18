@@ -1,5 +1,4 @@
 define(['jquery'], function($) {
-
     return Class.extend({
 
         init: function(game) {
@@ -14,5 +13,4 @@ define(['jquery'], function($) {
             return this.shortcuts.find('ul');
         }
     });
-
 });

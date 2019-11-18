@@ -1,5 +1,4 @@
 define(['./slot'], function(Slot) {
-
     return Class.extend({
 
         init: function(size) {
@@ -43,5 +42,4 @@ define(['./slot'], function(Slot) {
         }
 
     });
-
 });

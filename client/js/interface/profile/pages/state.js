@@ -1,7 +1,6 @@
 /* global log, _ */
 
 define(['jquery', '../page'], function($, Page) {
-
     return Page.extend({
 
         init: function(game) {
@@ -66,7 +65,6 @@ define(['jquery', '../page'], function($, Page) {
             self.bootsSlot.click(function() {
                 self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'boots']);
             });
-
         },
 
         loadSlots: function() {
@@ -78,7 +76,7 @@ define(['jquery', '../page'], function($, Page) {
             self.ringSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.ring.string));
             self.bootsSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.boots.string));
 
-            self.forEachSlot(function(slot) { slot.css('background-size', '600%'); });
+            self.forEachSlot(function(slot) {slot.css('background-size', '600%');});
         },
 
         update: function() {
@@ -101,5 +99,4 @@ define(['jquery', '../page'], function($, Page) {
         }
 
     });
-
 });

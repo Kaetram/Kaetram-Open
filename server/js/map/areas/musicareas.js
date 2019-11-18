@@ -1,13 +1,12 @@
 /* global module */
 
-let _ = require('underscore'),
-    Area = require('../area'),
-    map = require('../../../data/map/world_server');
+const _ = require('underscore');
+const Area = require('../area');
+const map = require('../../../data/map/world_server');
 
 class MusicAreas {
-
     constructor() {
-        let self = this;
+        const self = this;
 
         self.musicAreas = [];
 
@@ -15,17 +14,16 @@ class MusicAreas {
     }
 
     load() {
-        let self = this;
+        const self = this;
 
-        _.each(map.musicAreas, (m) => {
-            let musicArea = new Area(m.id, m.x, m.y, m.width, m.height);
+        _.each(map.musicAreas, m => {
+            const musicArea = new Area(m.id, m.x, m.y, m.width, m.height);
 
             self.musicAreas.push(musicArea);
         });
 
         log.info('Loaded ' + self.musicAreas.length + ' music areas.');
     }
-
 }
 
 module.exports = MusicAreas;

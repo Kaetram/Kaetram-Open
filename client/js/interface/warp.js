@@ -1,7 +1,6 @@
 /* global _, Modules */
 
 define(['jquery'], function($) {
-
     return Class.extend({
 
         init: function(game) {
@@ -38,14 +37,11 @@ define(['jquery'], function($) {
 
                 if (warp)
                     warp.click(function(event) {
-
                         self.hide();
 
                         self.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);
-
-                    })
+                    });
             }
-
         },
 
         toggle: function() {
@@ -76,5 +72,4 @@ define(['jquery'], function($) {
         }
 
     });
-
 });

@@ -7,7 +7,8 @@ let _ = require('underscore');
 let collisions = {},
     entities = {},
     mobsFirstGid = -1,
-    map, mode;
+    map,
+    mode;
 
 module.exports = function parse(json, options) {
     let self = this;
@@ -25,7 +26,6 @@ module.exports = function parse(json, options) {
 
     switch (mode) {
         case 'info':
-
             map.lights = [];
             map.high = [];
             map.animated = {};
@@ -35,7 +35,6 @@ module.exports = function parse(json, options) {
             break;
 
         case 'client':
-
             map.lights = [];
             map.data = [];
             map.high = [];
@@ -45,7 +44,6 @@ module.exports = function parse(json, options) {
             break;
 
         case 'server':
-
             map.tilesets = [];
             map.roamingAreas = [];
             map.pvpAreas = [];
@@ -71,26 +69,21 @@ module.exports = function parse(json, options) {
     map.tilesize = self.json.tilewidth;
 
     let handleProperty = function(property, value, id) {
-        if (property === 'c')
-            collisions[id] = true;
+        if (property === 'c') collisions[id] = true;
 
         if (mode === 'client' || mode === 'info') {
-            if (property === 'v')
-                map.high.push(id);
+            if (property === 'v') map.high.push(id);
 
-            if (property === 'l')
-                map.lights.push(id);
+            if (property === 'l') map.lights.push(id);
 
             if (property === 'length') {
-                if (!map.animated[id])
-                    map.animated[id] = {};
+                if (!map.animated[id]) map.animated[id] = {};
 
                 map.animated[id].l = value;
             }
 
             if (property === 'delay') {
-                if (!map.animated[id])
-                    map.animated[id] = {};
+                if (!map.animated[id]) map.animated[id] = {};
 
                 map.animated[id].d = value;
             }
@@ -104,7 +97,7 @@ module.exports = function parse(json, options) {
             animationData.push({
                 duration: animation.duration,
                 tileID: parseInt(firstGID) + parseInt(animation.tileid)
-            })
+            });
         });
 
         map.animations[id] = animationData;
@@ -120,7 +113,9 @@ module.exports = function parse(json, options) {
                         name: tileset.name,
                         firstGID: tileset.firstgid,
                         lastGID: tileset.firstgid + tileset.tilecount - 1,
-                        imageName: tileset.image.includes('/') ? tileset.image.split('/')[2] : tileset.image,
+                        imageName: tileset.image.includes('/')
+                            ? tileset.image.split('/')[2]
+                            : tileset.image,
                         scale: tileset.name === 'tilesheet' ? 2 : 1
                     });
 
@@ -141,8 +136,13 @@ module.exports = function parse(json, options) {
                     handleAnimation(id, tileset.firstgid, tile);
                 else
                     _.each(tile.properties, function(data) {
-                        handleProperty(data.name, (isValid(parseInt(data.value, 10))) ?
-                            parseInt(data.value, 10) : data.value, id);
+                        handleProperty(
+                            data.name,
+                            isValid(parseInt(data.value, 10))
+                                ? parseInt(data.value, 10)
+                                : data.value,
+                            id
+                        );
                     });
             });
         });
@@ -153,9 +153,7 @@ module.exports = function parse(json, options) {
 
         if (mode === 'server')
             switch (name) {
-
                 case 'doors':
-
                     let doors = layer.objects;
 
                     _.each(doors, function(door) {
@@ -173,7 +171,6 @@ module.exports = function parse(json, options) {
                     break;
 
                 case 'roaming':
-
                     let areas = layer.objects;
 
                     for (let a = 0; a < areas.length; a++) {
@@ -190,14 +187,12 @@ module.exports = function parse(json, options) {
                             height: areas[a].height / map.tilesize,
                             type: areas[a].type,
                             count: count
-                        }
-
+                        };
                     }
 
                     break;
 
                 case 'chestareas':
-
                     let cAreas = layer.objects;
 
                     _.each(cAreas, function(area) {
@@ -208,13 +203,20 @@ module.exports = function parse(json, options) {
                             height: area.height / map.tilesize
                         };
 
-                        chestArea['i'] = _.map(area.properties[0].value.split(','), function(name) {
-                            return name;
-                        });
+                        chestArea['i'] = _.map(
+                            area.properties[0].value.split(','),
+                            function(name) {
+                                return name;
+                            }
+                        );
 
                         _.each(area.properties, function(value, name) {
                             if (name !== 'items')
-                                chestArea['t' + name] = isValid(parseInt(value, 10)) ? parseInt(value, 10) : value;
+                                chestArea['t' + name] = isValid(
+                                    parseInt(value, 10)
+                                )
+                                    ? parseInt(value, 10)
+                                    : value;
                         });
 
                         map.chestAreas.push(chestArea);
@@ -223,7 +225,6 @@ module.exports = function parse(json, options) {
                     break;
 
                 case 'chests':
-
                     let chests = layer.objects;
 
                     _.each(chests, function(chest) {
@@ -232,9 +233,12 @@ module.exports = function parse(json, options) {
                             y: chest.y / map.tilesize
                         };
 
-                        oChest['i'] = _.map(chest.properties[0].value.split(','), function(name) {
-                            return name;
-                        });
+                        oChest['i'] = _.map(
+                            chest.properties[0].value.split(','),
+                            function(name) {
+                                return name;
+                            }
+                        );
 
                         map.chests.push(oChest);
                     });
@@ -242,7 +246,6 @@ module.exports = function parse(json, options) {
                     break;
 
                 case 'lights':
-
                     let lights = layer.objects;
 
                     _.each(lights, function(lightObject) {
@@ -261,7 +264,6 @@ module.exports = function parse(json, options) {
                     break;
 
                 case 'music':
-
                     let mAreas = layer.objects;
 
                     _.each(mAreas, function(area) {
@@ -279,7 +281,6 @@ module.exports = function parse(json, options) {
                     break;
 
                 case 'pvp':
-
                     let pAreas = layer.objects;
 
                     _.each(pAreas, function(area) {
@@ -296,11 +297,9 @@ module.exports = function parse(json, options) {
                     break;
 
                 case 'overlays':
-
                     let overlayAreas = layer.objects;
 
                     _.each(overlayAreas, function(area) {
-
                         let oArea = {
                             id: area.id,
                             x: area.x / map.tilesize,
@@ -310,7 +309,9 @@ module.exports = function parse(json, options) {
                         };
 
                         _.each(area.properties, function(property) {
-                            oArea[property.name] = isNaN(property.value) ? property.value : parseFloat(property.value);
+                            oArea[property.name] = isNaN(property.value)
+                                ? property.value
+                                : parseFloat(property.value);
                         });
 
                         map.overlayAreas.push(oArea);
@@ -319,7 +320,6 @@ module.exports = function parse(json, options) {
                     break;
 
                 case 'camera':
-
                     let cameraAreas = layer.objects;
 
                     _.each(cameraAreas, function(area) {
@@ -338,7 +338,6 @@ module.exports = function parse(json, options) {
                     break;
 
                 case 'games':
-
                     let gAreas = layer.objects;
 
                     _.each(gAreas, function(area) {
@@ -361,17 +360,21 @@ module.exports = function parse(json, options) {
 
     if (mode === 'client')
         for (let i = 0, max = map.data.length; i < max; i++)
-            if (!map.data[i])
-                map.data[i] = 0;
+            if (!map.data[i]) map.data[i] = 0;
 
-    if (mode === 'info')
-        map.collisions = [];
+    if (mode === 'info') map.collisions = [];
 
     return map;
 };
 
 let isValid = function(number) {
-    return number && !isNaN(number - 0) && number !== null && number !== '' && number !== false;
+    return (
+        number &&
+        !isNaN(number - 0) &&
+        number !== null &&
+        number !== '' &&
+        number !== false
+    );
 };
 
 let parseLayer = function(layer) {
@@ -384,8 +387,7 @@ let parseLayer = function(layer) {
         for (let i = 0; i < tiles.length; i++) {
             let gid = tiles[i] - mobsFirstGid + 1;
 
-            if (gid && gid > 0)
-                map.staticEntities[i] = entities[gid];
+            if (gid && gid > 0) map.staticEntities[i] = entities[gid];
         }
     }
 
@@ -395,29 +397,26 @@ let parseLayer = function(layer) {
         for (let j = 0; j < tiles.length; j++) {
             let bGid = tiles[j];
 
-            if (bGid && bGid > 0)
-                map.collisions.push(j);
+            if (bGid && bGid > 0) map.collisions.push(j);
         }
-    } else if (type === 'tilelayer' && layer.visible !== 0 && name !== 'entities') {
-
+    } else if (
+        type === 'tilelayer' &&
+        layer.visible !== 0 &&
+        name !== 'entities'
+    ) {
         for (let k = 0; k < tiles.length; k++) {
             let tGid = tiles[k];
 
             if (mode === 'client') {
                 if (tGid > 0) {
-                    if (map.data[k] === undefined)
-                        map.data[k] = tGid;
+                    if (map.data[k] === undefined) map.data[k] = tGid;
                     else if (map.data[k] instanceof Array)
                         map.data[k].unshift(tGid);
-                    else
-                        map.data[k] = [tGid, map.data[k]];
+                    else map.data[k] = [tGid, map.data[k]];
                 }
             }
 
-            if (tGid in collisions)
-                map.collisions.push(k);
+            if (tGid in collisions) map.collisions.push(k);
         }
-
     }
-
 };

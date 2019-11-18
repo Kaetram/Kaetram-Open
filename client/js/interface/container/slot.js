@@ -1,5 +1,4 @@
 define(function() {
-
     return Class.extend({
 
         init: function(index) {
@@ -49,9 +48,8 @@ define(function() {
         },
 
         setString: function(string) {
-            this.string = string
+            this.string = string;
         }
 
     });
-
 });

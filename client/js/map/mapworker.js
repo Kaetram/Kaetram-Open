@@ -1,7 +1,6 @@
 importScripts('../../data/maps/map.js', '../lib/underscore.min.js');
 
 onmessage = function(event) {
-
     loadCollisionGrid();
 
     postMessage(mapData);
@@ -32,7 +31,7 @@ function loadCollisionGrid() {
 }
 
 function indexToGridPosition(index) {
-    var x = 0, y = 0;
+    var x = 0; var y = 0;
 
     index -= 1;
 
@@ -42,7 +41,7 @@ function indexToGridPosition(index) {
     return {
         x: x,
         y: y
-    }
+    };
 }
 
 function getX(index, width) {

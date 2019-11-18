@@ -60,5 +60,4 @@ define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) 
         }
 
     });
-
 });

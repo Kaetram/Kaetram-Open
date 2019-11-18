@@ -1,15 +1,14 @@
 /* global module */
 
-let _ = require('underscore'),
-    ShopData = require('../util/shops'),
-    Items = require('../util/items'),
-    Messages = require('../network/messages'),
-    Packets = require('../network/packets');
+const _ = require('underscore');
+const ShopData = require('../util/shops');
+const Items = require('../util/items');
+const Messages = require('../network/messages');
+const Packets = require('../network/packets');
 
 class Shops {
-
     constructor(world) {
-        let self = this;
+        const self = this;
 
         self.world = world;
 
@@ -20,44 +19,39 @@ class Shops {
     }
 
     load() {
-        let self = this;
+        const self = this;
 
         self.shopInterval = setInterval(() => {
-
-            _.each(ShopData.Data, (info) => {
-
+            _.each(ShopData.Data, info => {
                 for (let i = 0; i < info.count; i++)
                     if (info.count[i] < info.originalCount[i])
                         ShopData.increment(info.id, info.items[i], 1);
-
             });
-
         }, self.interval);
     }
 
     open(player, npcId) {
-        let self = this;
+        const self = this;
 
         player.send(new Messages.Shop(Packets.ShopOpcode.Open, {
             instance: player.instance,
             npcId: npcId,
             shopData: self.getShopData(npcId)
         }));
-
     }
 
     buy(player, npcId, buyId, count) {
-        let self = this,
-            cost = ShopData.getCost(npcId, buyId, count),
-            currency = self.getCurrency(npcId),
-            stock = ShopData.getStock(npcId, buyId);
+        const self = this;
+        const cost = ShopData.getCost(npcId, buyId, count);
+        const currency = self.getCurrency(npcId);
+        const stock = ShopData.getStock(npcId, buyId);
 
         if (!cost || !currency || !stock) {
             log.info('Invalid shop data.');
             return;
         }
 
-        //TODO: Make it so that when you have the exact coin count, it removes coins and replaces it with the item purchased.
+        // TODO: Make it so that when you have the exact coin count, it removes coins and replaces it with the item purchased.
 
         if (stock === 0) {
             player.notify('This item is currently out of stock.');
@@ -91,7 +85,7 @@ class Shops {
     }
 
     refresh(shop) {
-        let self = this;
+        const self = this;
 
         self.world.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Shop(Packets.ShopOpcode.Refresh, self.getShopData(shop))
@@ -99,7 +93,7 @@ class Shops {
     }
 
     getCurrency(npcId) {
-        let shop = ShopData.Ids[npcId];
+        const shop = ShopData.Ids[npcId];
 
         if (!shop)
             return null;
@@ -108,10 +102,10 @@ class Shops {
     }
 
     getShopData(npcId) {
-        let self = this,
-            strings = [],
-            names = [],
-            items = ShopData.getItems(npcId);
+        const self = this;
+        const strings = [];
+        const names = [];
+        const items = ShopData.getItems(npcId);
 
         for (let i = 0; i < items.length; i++) {
             strings.push(Items.idToString(items[i]));
@@ -123,9 +117,8 @@ class Shops {
             strings: strings,
             names: names,
             counts: ShopData.getCount(npcId)
-        }
+        };
     }
-
 }
 
 module.exports = Shops;

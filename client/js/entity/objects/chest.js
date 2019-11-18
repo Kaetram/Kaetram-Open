@@ -1,5 +1,4 @@
 define(['../entity'], function(Entity) {
-
     return Entity.extend({
 
         init: function(id, kind) {
@@ -31,5 +30,4 @@ define(['../entity'], function(Entity) {
         }
 
     });
-
 });

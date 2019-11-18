@@ -1,32 +1,31 @@
 /* global module */
 
-let Socket = require('./socket'),
-    Connection = require('./connection'),
-    connect = require('connect'),
-    serve = require('serve-static'),
-    request = require('request'),
-    SocketIO = require('socket.io'),
-    http = require('http'),
-    https = require('https'),
-    Utils = require('../util/utils'),
-    config = require('../../config');
+const Socket = require('./socket');
+const Connection = require('./connection');
+const connect = require('connect');
+const serve = require('serve-static');
+const request = require('request');
+const SocketIO = require('socket.io');
+const http = require('http');
+const https = require('https');
+const Utils = require('../util/utils');
+const config = require('../../config');
 
 class WebSocket extends Socket {
-
     constructor(host, port, version) {
         super(port);
 
-        let self = this;
+        const self = this;
 
         self.host = host;
         self.version = version;
 
         self.ips = {};
 
-        let app = connect();
-        app.use(serve('client', {'index': ['index.html']}), null);
+        const app = connect();
+        app.use(serve('client', { 'index': ['index.html'] }), null);
 
-        let readyWebSocket = function(port) {
+        const readyWebSocket = function(port) {
             log.info('Server is now listening on: ' + port);
 
             if (self.webSocketReadyCallback)
@@ -43,15 +42,15 @@ class WebSocket extends Socket {
             });
 
         self.io = new SocketIO(self.httpServer);
-        self.io.on('connection', (socket) => {
+        self.io.on('connection', socket => {
             if (socket.handshake.headers['cf-connecting-ip'])
                 socket.conn.remoteAddress = socket.handshake.headers['cf-connecting-ip'];
 
             log.info('Received connection from: ' + socket.conn.remoteAddress);
 
-            let client = new Connection(self.createId(), socket, self);
+            const client = new Connection(self.createId(), socket, self);
 
-            socket.on('client', (data) => {
+            socket.on('client', data => {
                 if (data.gVer !== self.version) {
                     client.sendUTF8('updated');
                     client.close('Wrong client version - expected ' + self.version + ' received ' + data.gVer);

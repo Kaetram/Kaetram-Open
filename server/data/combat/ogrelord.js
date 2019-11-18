@@ -1,16 +1,15 @@
-let Combat = require('../../js/game/entity/character/combat/combat'),
-    Messages = require('../../js/network/messages'),
-    Packets = require('../../js/network/packets'),
-    Modules = require('../../js/util/modules'),
-    Utils = require('../../js/util/utils'),
-    _ = require('underscore');
+const Combat = require('../../js/game/entity/character/combat/combat');
+const Messages = require('../../js/network/messages');
+const Packets = require('../../js/network/packets');
+const Modules = require('../../js/util/modules');
+const Utils = require('../../js/util/utils');
+const _ = require('underscore');
 
 class OgreLord extends Combat {
-
     constructor(character) {
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.character = character;
 
@@ -31,32 +30,28 @@ class OgreLord extends Combat {
     }
 
     load() {
-        let self = this;
+        const self = this;
 
         self.talkingInterval = setInterval(() => {
-
             if (self.character.hasTarget())
                 self.forceTalk(self.getMessage());
-
         }, 9000);
 
         self.updateInterval = setInterval(() => {
-
             self.character.armourLevel = 50 + (self.minions.length * 15);
-
         }, 2000);
 
         self.loaded = true;
     }
 
     hit(character, target, hitInfo) {
-        let self = this;
+        const self = this;
 
         if (self.isAttacked())
             self.beginMinionAttack();
 
         if (!character.isNonDiagonal(target)) {
-            let distance = character.getDistance(target);
+            const distance = character.getDistance(target);
 
             if (distance < 7) {
                 hitInfo.isRanged = true;
@@ -71,7 +66,7 @@ class OgreLord extends Combat {
     }
 
     forceTalk(message) {
-        let self = this;
+        const self = this;
 
         if (!self.world)
             return;
@@ -84,7 +79,6 @@ class OgreLord extends Combat {
                 nonNPC: true
             })
         });
-
     }
 
     getMessage() {
@@ -92,9 +86,9 @@ class OgreLord extends Combat {
     }
 
     spawnMinions() {
-        let self = this,
-            xs = [414, 430, 415, 420, 429],
-            ys = [172, 173, 183, 185, 180];
+        const self = this;
+        const xs = [414, 430, 415, 420, 429];
+        const ys = [172, 173, 183, 185, 180];
 
         self.lastSpawn = new Date().getTime();
 
@@ -103,20 +97,16 @@ class OgreLord extends Combat {
         for (let i = 0; i < xs.length; i++)
             self.minions.push(self.world.spawnMob(12, xs[i], ys[i]));
 
-        _.each(self.minions, (minion) => {
-
+        _.each(self.minions, minion => {
             minion.onDeath(() => {
-
                 if (self.isLast())
                     self.lastSpawn = new Date().getTime();
 
                 self.minions.splice(self.minions.indexOf(minion), 1);
-
             });
 
             if (self.isAttacked())
                 self.beginMinionAttack();
-
         });
 
         if (!self.loaded)
@@ -124,26 +114,25 @@ class OgreLord extends Combat {
     }
 
     beginMinionAttack() {
-        let self = this;
+        const self = this;
 
         if (!self.hasMinions())
             return;
 
-        _.each(self.minions, (minion) => {
-            let randomTarget = self.getRandomTarget();
+        _.each(self.minions, minion => {
+            const randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)
                 minion.combat.begin(randomTarget);
-
         });
     }
 
     reset() {
-        let self = this;
+        const self = this;
 
         self.lastSpawn = 0;
 
-        let listCopy = self.minions.slice();
+        const listCopy = self.minions.slice();
 
         for (let i = 0; i < listCopy.length; i++)
             self.world.kill(listCopy[i]);
@@ -158,11 +147,11 @@ class OgreLord extends Combat {
     }
 
     getRandomTarget() {
-        let self = this;
+        const self = this;
 
         if (self.isAttacked()) {
-            let keys = Object.keys(self.attackers),
-                randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
+            const keys = Object.keys(self.attackers);
+            const randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker)
                 return randomAttacker;
@@ -185,7 +174,6 @@ class OgreLord extends Combat {
     canSpawn() {
         return (new Date().getTime() - this.lastSpawn > 50000) && !this.hasMinions() && this.isAttacked();
     }
-
 }
 
 module.exports = OgreLord;

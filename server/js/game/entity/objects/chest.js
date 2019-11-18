@@ -1,14 +1,13 @@
 /* global module */
 
-let Entity = require('../entity'),
-    Utils = require('../../../util/utils');
+const Entity = require('../entity');
+const Utils = require('../../../util/utils');
 
 class Chest extends Entity {
-
     constructor(id, instance, x, y) {
         super(id, 'chest', instance, x, y);
 
-        let self = this;
+        const self = this;
 
         self.respawnDuration = 25000;
         self.static = false;
@@ -17,27 +16,25 @@ class Chest extends Entity {
     }
 
     openChest() {
-        let self = this;
+        const self = this;
 
         if (self.openCallback)
             self.openCallback();
     }
 
     respawn() {
-        let self = this;
+        const self = this;
 
         setTimeout(() => {
-
             if (self.respawnCallback)
                 self.respawnCallback();
-
         }, self.respawnDuration);
     }
 
     getItem() {
-        let self = this,
-            random = Utils.randomInt(0, self.items.length - 1),
-            item = self.items[random];
+        const self = this;
+        const random = Utils.randomInt(0, self.items.length - 1);
+        const item = self.items[random];
 
         /**
          * We must ensure an item is always present in order

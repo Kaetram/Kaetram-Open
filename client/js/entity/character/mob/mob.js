@@ -1,5 +1,4 @@
 define(['../character'], function(Character) {
-
     return Character.extend({
 
         init: function(id, kind) {
@@ -54,5 +53,4 @@ define(['../character'], function(Character) {
         }
 
     });
-
 });

@@ -1,13 +1,12 @@
 /* global module */
 
-let Mobs = require('../../util/mobs'),
-    Items = require('../../util/items'),
-    NPCs = require('../../util/npcs');
+const Mobs = require('../../util/mobs');
+const Items = require('../../util/items');
+const NPCs = require('../../util/npcs');
 
 class Entity {
-
     constructor(id, type, instance, x, y) {
-        let self = this;
+        const self = this;
 
         self.id = id;
         self.type = type;
@@ -37,23 +36,23 @@ class Entity {
     }
 
     getDistance(entity) {
-        let self = this,
-            x = Math.abs(self.x - entity.x),
-            y = Math.abs(self.y - entity.y);
+        const self = this;
+        const x = Math.abs(self.x - entity.x);
+        const y = Math.abs(self.y - entity.y);
 
         return x > y ? x : y;
     }
 
     getCoordDistance(toX, toY) {
-        let self = this,
-            x = Math.abs(self.x - toX),
-            y = Math.abs(self.y - toY);
+        const self = this;
+        const x = Math.abs(self.x - toX);
+        const y = Math.abs(self.y - toY);
 
         return x > y ? x : y;
     }
 
     setPosition(x, y) {
-        let self = this;
+        const self = this;
 
         self.x = x;
         self.y = y;
@@ -63,7 +62,7 @@ class Entity {
     }
 
     updatePosition() {
-        let self = this;
+        const self = this;
 
         self.oldX = self.x;
         self.oldY = self.y;
@@ -76,9 +75,9 @@ class Entity {
      */
 
     isNear(entity, distance) {
-        let self = this,
-            dx = Math.abs(self.x - entity.x),
-            dy = Math.abs(self.y - entity.y);
+        const self = this;
+        const dx = Math.abs(self.x - entity.x);
+        const dy = Math.abs(self.y - entity.y);
 
         return dx <= distance && dy <= distance;
     }
@@ -128,8 +127,8 @@ class Entity {
     }
 
     removeInvisibleId(entityId) {
-        let self = this,
-            index = self.invisiblesIds.indexOf(entityId);
+        const self = this;
+        const index = self.invisiblesIds.indexOf(entityId);
 
         if (index > -1)
             self.invisiblesIds.splice(index, 1);
@@ -148,9 +147,9 @@ class Entity {
     }
 
     getState() {
-        let self = this,
-            string = self.isMob() ? Mobs.idToString(self.id) : (self.isNPC() ? NPCs.idToString(self.id) : Items.idToString(self.id)),
-            name = self.isMob() ? Mobs.idToName(self.id) : (self.isNPC() ? NPCs.idToName(self.id) : Items.idToName(self.id));
+        const self = this;
+        const string = self.isMob() ? Mobs.idToString(self.id) : (self.isNPC() ? NPCs.idToString(self.id) : Items.idToString(self.id));
+        const name = self.isMob() ? Mobs.idToName(self.id) : (self.isNPC() ? NPCs.idToName(self.id) : Items.idToName(self.id));
 
         return {
             type: self.type,
@@ -159,9 +158,8 @@ class Entity {
             name: name,
             x: self.x,
             y: self.y
-        }
+        };
     }
-
 }
 
 module.exports = Entity;

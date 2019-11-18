@@ -1,17 +1,16 @@
 /* global module */
 
-let MongoDB = require('./mongodb/mongodb'),
-    config = require('../../config');
+const MongoDB = require('./mongodb/mongodb');
+const config = require('../../config');
 
 class Database {
-
     constructor(databaseType) {
-        let self = this;
+        const self = this;
 
         self.database = null;
         self.databaseType = databaseType;
 
-        switch(self.databaseType) {
+        switch (self.databaseType) {
             case 'mongo':
             case 'mongodb':
                 self.database = new MongoDB(config.mongoHost, config.mongoPort, config.mongoUser,
@@ -25,14 +24,13 @@ class Database {
     }
 
     getDatabase() {
-        let self = this;
+        const self = this;
 
         if (!self.database)
             log.error('[Database] No database is currently present. It is advised against proceeding in this state.');
 
         return self.database;
     }
-
 }
 
 module.exports = Database;

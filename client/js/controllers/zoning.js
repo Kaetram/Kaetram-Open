@@ -1,7 +1,6 @@
 /* global Modules */
 
 define(function() {
-
     return Class.extend({
 
         init: function(game) {
@@ -40,5 +39,4 @@ define(function() {
         }
 
     });
-
 });

@@ -1,7 +1,6 @@
 /* global _, Modules */
 
 define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
-
     return Class.extend({
 
         init: function(game) {
@@ -20,15 +19,15 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
                 case Modules.Hits.Damage:
                 case Modules.Hits.Stun:
                 case Modules.Hits.Critical:
-                    var damage = data.shift(),
-                        isTarget = data.shift(),
-                        dId = self.generateId(self.game.time, damage, x, y);
+                    var damage = data.shift();
+                    var isTarget = data.shift();
+                    var dId = self.generateId(self.game.time, damage, x, y);
 
                     if (damage < 1 || !isInt(damage))
                         damage = 'MISS';
 
-                    var hitSplat = new Splat(dId, type, damage, x, y, false),
-                        dColour = isTarget ? Modules.DamageColours.received : Modules.DamageColours.inflicted;
+                    var hitSplat = new Splat(dId, type, damage, x, y, false);
+                    var dColour = isTarget ? Modules.DamageColours.received : Modules.DamageColours.inflicted;
 
                     hitSplat.setColours(dColour.fill, dColour.stroke);
 
@@ -39,42 +38,41 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
                 case Modules.Hits.Heal:
                 case Modules.Hits.Mana:
                 case Modules.Hits.Experience:
-                        var amount = data.shift(),
-                            id = self.generateId(self.game.time, amount, x, y),
-                            text = '+', colour;
+                    var amount = data.shift();
+                    var id = self.generateId(self.game.time, amount, x, y);
+                    var text = '+'; var colour;
 
-                        if (amount < 1 || !isInt(amount))
-                            return;
+                    if (amount < 1 || !isInt(amount))
+                        return;
 
-                        if (type !== Modules.Hits.Experience)
-                            text = '++';
+                    if (type !== Modules.Hits.Experience)
+                        text = '++';
 
-                        var splat = new Splat(id, type, text + amount, x, y, false);
+                    var splat = new Splat(id, type, text + amount, x, y, false);
 
-                        if (type === Modules.Hits.Heal)
-                            colour = Modules.DamageColours.healed;
-                        else if (type === Modules.Hits.Mana)
-                            colour = Modules.DamageColours.mana;
-                        else if (type === Modules.Hits.Experience)
-                            colour = Modules.DamageColours.exp;
+                    if (type === Modules.Hits.Heal)
+                        colour = Modules.DamageColours.healed;
+                    else if (type === Modules.Hits.Mana)
+                        colour = Modules.DamageColours.mana;
+                    else if (type === Modules.Hits.Experience)
+                        colour = Modules.DamageColours.exp;
 
-                        splat.setColours(colour.fill, colour.stroke);
+                    splat.setColours(colour.fill, colour.stroke);
 
-                        self.addInfo(splat);
+                    self.addInfo(splat);
 
                     break;
 
                 case Modules.Hits.LevelUp:
-                    var lId = self.generateId(self.game.time, '-1', x, y),
-                        levelSplat = new Splat(lId, type, 'Level Up!', x, y, false),
-                        lColour = Modules.DamageColours.exp;
+                    var lId = self.generateId(self.game.time, '-1', x, y);
+                    var levelSplat = new Splat(lId, type, 'Level Up!', x, y, false);
+                    var lColour = Modules.DamageColours.exp;
 
                     levelSplat.setColours(lColour.fill, lColour.stroke);
 
                     self.addInfo(levelSplat);
 
                     break;
-
             }
         },
 
@@ -117,5 +115,4 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
         }
 
     });
-
 });

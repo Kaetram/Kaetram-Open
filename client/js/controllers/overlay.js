@@ -1,5 +1,4 @@
 define(['jquery'], function($) {
-
     return Class.extend({
 
         init: function(input) {
@@ -36,35 +35,26 @@ define(['jquery'], function($) {
             self.name.html(entity.type === 'player' ? entity.username : entity.name);
 
             if (self.hasHealth()) {
-
                 self.health.css({
                     'display': 'block',
                     'width': Math.ceil(entity.hitPoints / entity.maxHitPoints * 100) - 10 + '%'
                 });
 
                 self.details.html(entity.hitPoints + ' / ' + entity.maxHitPoints);
-
             } else {
-
                 self.health.css('display', 'none');
                 self.details.html('');
-
             }
 
             self.onUpdate(function(entityId, hitPoints) {
-
-
-                if (self.hovering && self.hovering.id === entityId && self.hovering.type !== 'npc' && self.hovering.type !== 'item') {
+                if (self.hovering && self.hovering.id === entityId && self.hovering.type !== 'npc' && self.hovering.type !== 'item')
                     if (hitPoints < 1)
                         self.hide();
                     else {
                         self.health.css('width', Math.ceil(hitPoints / self.hovering.maxHitPoints * 100) - 10 + '%');
                         self.details.html(hitPoints + ' / ' + self.hovering.maxHitPoints);
                     }
-
-                }
             });
-
         },
 
         validEntity: function(entity) {
@@ -86,7 +76,7 @@ define(['jquery'], function($) {
             this.attackInfo.fadeIn('fast');
         },
 
-        hide: function(){
+        hide: function() {
             this.attackInfo.fadeOut('fast');
         },
 
@@ -103,5 +93,4 @@ define(['jquery'], function($) {
         }
 
     });
-
 });

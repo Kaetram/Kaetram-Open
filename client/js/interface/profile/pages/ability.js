@@ -1,5 +1,4 @@
 define(['jquery', '../page'], function($, Page) {
-
     return Page.extend({
 
         init: function(game) {
@@ -11,5 +10,4 @@ define(['jquery', '../page'], function($, Page) {
         }
 
     });
-
 });
