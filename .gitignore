@@ -1,7 +1,9 @@
+.vscode/
 .DS_Store
+node_modules/
+yarn.lock
 package-lock.json
-config.json
-bin
-node_modules
+bin/
+**/config.json
 cordova
 release

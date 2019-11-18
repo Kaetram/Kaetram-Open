@@ -28,7 +28,7 @@ class PirateCaptain extends Combat {
     }
 
     load() {
-        var self = this,
+        let self = this,
             south = { x: 251, y: 574 },
             west = { x: 243, y: 569 },
             east = { x: 258, y: 568 },
@@ -38,7 +38,7 @@ class PirateCaptain extends Combat {
     }
 
     hit(character, target, hitInfo) {
-        var self = this;
+        let self = this;
         if (self.canTeleport())
             self.teleport();
         else
@@ -46,7 +46,7 @@ class PirateCaptain extends Combat {
     }
 
     teleport() {
-        var self = this,
+        let self = this,
             position = self.getRandomPosition();
 
         if (!position)
@@ -79,7 +79,7 @@ class PirateCaptain extends Combat {
     }
 
     getRandomPosition() {
-        var self = this,
+        let self = this,
             random = Utils.randomInt(0, self.teleportLocations.length - 1),
             position = self.teleportLocations[random];
 

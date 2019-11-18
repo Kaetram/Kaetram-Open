@@ -84,7 +84,7 @@ class Quests {
             stages = '';
 
         for (let id = 0; id < self.getQuestSize(); id++) {
-            var quest = self.quests[id];
+            let quest = self.quests[id];
 
             ids += id + ' ';
             stages += quest.stage + ' ';

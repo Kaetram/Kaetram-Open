@@ -59,7 +59,7 @@ Items.stringToId = (name) => {
 };
 
 Items.getLevelRequirement = (name) => {
-    var level = 1,
+    let level = 1,
         item = Items.Data[name];
 
     if (item && item.requirement)

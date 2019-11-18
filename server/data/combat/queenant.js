@@ -47,9 +47,9 @@ class QueenAnt extends Combat {
                 self.aoeTimeout = null;
             }
 
-            var listCopy = self.minions.slice();
+            let listCopy = self.minions.slice();
 
-            for (var i = 0; i < listCopy.length; i++)
+            for (let i = 0; i < listCopy.length; i++)
                 self.world.kill(listCopy[i]);
 
         });
@@ -61,7 +61,7 @@ class QueenAnt extends Combat {
     }
 
     begin(attacker) {
-        var self = this;
+        let self = this;
 
         self.resetAoE();
 
@@ -69,7 +69,7 @@ class QueenAnt extends Combat {
     }
 
     hit(attacker, target, hitInfo) {
-        var self = this;
+        let self = this;
 
         if (self.frozen)
             return;
@@ -89,7 +89,7 @@ class QueenAnt extends Combat {
     }
 
     doAoE() {
-        var self = this;
+        let self = this;
 
         /**
          * The reason this function does not use its superclass
@@ -116,11 +116,11 @@ class QueenAnt extends Combat {
     }
 
     spawnMinions() {
-        var self = this;
+        let self = this;
 
         self.lastSpawn = new Date().getTime();
 
-        for (var i = 0; i < self.minionCount; i++)
+        for (let i = 0; i < self.minionCount; i++)
             self.minions.push(self.world.spawnMob(13, self.character.x, self.character.y));
 
         _.each(self.minions, (minion) => {
@@ -144,14 +144,14 @@ class QueenAnt extends Combat {
     }
 
     beginMinionAttack() {
-        var self = this;
+        let self = this;
 
         if (!self.hasMinions())
             return;
 
         _.each(self.minions, (minion) => {
 
-            var randomTarget = self.getRandomTarget();
+            let randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)
                 minion.combat.begin(randomTarget);
@@ -164,10 +164,10 @@ class QueenAnt extends Combat {
     }
 
     getRandomTarget() {
-        var self = this;
+        let self = this;
 
         if (self.isAttacked()) {
-            var keys = Object.keys(self.attackers),
+            let keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker)
@@ -181,14 +181,14 @@ class QueenAnt extends Combat {
     }
 
     pushFreeze(state) {
-        var self = this;
+        let self = this;
 
         self.character.frozen = state;
         self.character.stunned = state;
     }
 
     pushCountdown(count) {
-        var self = this;
+        let self = this;
 
         self.world.push(Packets.PushOpcode.Regions, {
             regionId: self.character.region,
@@ -201,7 +201,7 @@ class QueenAnt extends Combat {
     }
 
     getMinions() {
-        var self = this,
+        let self = this,
             grids = self.world.getGrids();
 
 

@@ -27,18 +27,18 @@ class SkeletonKing extends Combat {
     }
 
     reset() {
-        var self = this;
+        let self = this;
 
         self.lastSpawn = 0;
 
-        var listCopy = self.minions.slice();
+        let listCopy = self.minions.slice();
 
-        for (var i = 0; i < listCopy.length; i++)
+        for (let i = 0; i < listCopy.length; i++)
             self.world.kill(listCopy[i]);
     }
 
     hit(character, target, hitInfo) {
-        var self = this;
+        let self = this;
 
         if (self.isAttacked())
             self.beginMinionAttack();
@@ -50,7 +50,7 @@ class SkeletonKing extends Combat {
     }
 
     spawnMinions() {
-        var self = this,
+        let self = this,
             x = self.character.x,
             y = self.character.y;
 
@@ -82,13 +82,13 @@ class SkeletonKing extends Combat {
     }
 
     beginMinionAttack() {
-        var self = this;
+        let self = this;
 
         if (!self.hasMinions())
             return;
 
         _.each(self.minions, (minion) => {
-            var randomTarget = self.getRandomTarget();
+            let randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)
                 minion.combat.begin(randomTarget);
@@ -97,10 +97,10 @@ class SkeletonKing extends Combat {
     }
 
     getRandomTarget() {
-        var self = this;
+        let self = this;
 
         if (self.isAttacked()) {
-            var keys = Object.keys(self.attackers),
+            let keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker)

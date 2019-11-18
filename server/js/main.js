@@ -107,7 +107,7 @@ function allWorldsCreated() {
     log.notice('Finished creating ' + worlds.length + ' world' + (worlds.length > 1 ? 's' : '') + '!');
     allowConnections = true;
 
-    var host = config.host === '0.0.0.0' ? 'localhost' : config.host;
+    let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
     log.notice('Connect locally via http://' + host + ':' + config.port);
 }
 
@@ -116,15 +116,15 @@ function loadParser() {
 }
 
 function initializeWorlds() {
-    for (var worldId in worlds)
+    for (let worldId in worlds)
         if (worlds.hasOwnProperty(worldId))
             worlds[worldId].load(onWorldLoad);
 }
 
 function getPopulations() {
-    var counts = [];
+    let counts = [];
 
-    for (var index in worlds)
+    for (let index in worlds)
         if (worlds.hasOwnProperty(index))
             counts.push(worlds[index].getPopulation());
 
@@ -136,7 +136,7 @@ function saveAll() {
         world.saveAll();
     });
 
-    var plural = worlds.length > 1;
+    let plural = worlds.length > 1;
 
     log.notice('Saved players for ' + worlds.length + ' world' + (plural ? 's' : '') + '.');
 }

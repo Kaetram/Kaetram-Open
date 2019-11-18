@@ -36,14 +36,14 @@ class Tenebris extends Combat {
     }
 
     reset() {
-        var self = this;
+        let self = this;
 
         self.illusions = [];
         self.firstIllusionKilled = false;
 
         setTimeout(() => {
 
-            var offset = Utils.positionOffset(4);
+            let offset = Utils.positionOffset(4);
 
             self.world.spawnMob(105, 48 + offset.x, 338 + offset.y);
 
@@ -52,7 +52,7 @@ class Tenebris extends Combat {
     }
 
     hit(attacker, target, hitInfo) {
-        var self = this;
+        let self = this;
 
         if (self.isAttacked())
             self.beginIllusionAttack();
@@ -64,13 +64,13 @@ class Tenebris extends Combat {
     }
 
     spawnTenbris() {
-        var self = this;
+        let self = this;
 
         self.world.spawnMob(104, self.character.x, self.character.y);
     }
 
     spawnIllusions() {
-        var self = this;
+        let self = this;
 
         self.illusions.push(self.world.spawnMob(105, self.character.x + 1, self.character.y + 1));
         self.illusions.push(self.world.spawnMob(105, self.character.x - 1, self.character.y + 1));
@@ -102,24 +102,24 @@ class Tenebris extends Combat {
     }
 
     removeIllusions() {
-        var self = this;
+        let self = this;
 
         self.lastIllusion = 0;
 
-        var listCopy = self.illusions.slice();
+        let listCopy = self.illusions.slice();
 
-        for (var i = 0; i < listCopy.length; i++)
+        for (let i = 0; i < listCopy.length; i++)
             self.world.kill(listCopy[i]);
     }
 
     beginIllusionAttack() {
-        var self = this;
+        let self = this;
 
         if (!self.hasIllusions())
             return;
 
         _.each(self.illusions, (illusion) => {
-            var target = self.getRandomTarget();
+            let target = self.getRandomTarget();
 
             if (!illusion.hasTarget && target)
                 illusion.combat.begin(target);
@@ -128,10 +128,10 @@ class Tenebris extends Combat {
     }
 
     getRandomTarget() {
-        var self = this;
+        let self = this;
 
         if (self.isAttacked()) {
-            var keys = Object.keys(self.attackers),
+            let keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker)
@@ -145,7 +145,7 @@ class Tenebris extends Combat {
     }
 
     forceTalk(instance, message) {
-        var self = this;
+        let self = this;
 
         if (!self.world)
             return;

@@ -5,7 +5,7 @@ define(function() {
     return Class.extend({
 
         init: function(game) {
-            let self = this;
+            var self = this;
 
             self.game = game;
             self.app = game.app;
@@ -28,7 +28,7 @@ define(function() {
         },
 
         load: function() {
-            let self = this;
+            var self = this;
 
             self.messages.onHandshake(function(data) {
 
