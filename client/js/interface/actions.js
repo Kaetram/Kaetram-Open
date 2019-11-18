@@ -4,10 +4,10 @@ define(['jquery'], function($) {
 
     return Class.extend({
 
-        init: function(interface) {
+        init: function(intrfce) {
             var self = this;
 
-            self.interface = interface;
+            self.interface = intrfce;
 
             self.body = $('#actionContainer');
             self.drop = $('#dropDialog');
