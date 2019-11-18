@@ -38,7 +38,6 @@
 
 define([&apos;jquery&apos;], function($) {
     return Class.extend({
-
         init: function() {
             var self = this;
 
@@ -107,7 +106,11 @@ define([&apos;jquery&apos;], function($) {
             });
 
             self.parchment.click(function() {
-                if (self.parchment.hasClass(&apos;about&apos;) || self.parchment.hasClass(&apos;credits&apos;) || self.parchment.hasClass(&apos;git&apos;)) {
+                if (
+                    self.parchment.hasClass(&apos;about&apos;) ||
+                    self.parchment.hasClass(&apos;credits&apos;) ||
+                    self.parchment.hasClass(&apos;git&apos;)
+                ) {
                     self.parchment.removeClass(&apos;about credits git&apos;);
                     self.displayScroll(&apos;loadCharacter&apos;);
                 }
@@ -130,8 +133,7 @@ define([&apos;jquery&apos;], function($) {
             });
 
             self.rememberMe.click(function() {
-                if (!self.game || !self.game.storage)
-                    return;
+                if (!self.game || !self.game.storage) return;
 
                 var active = self.rememberMe.hasClass(&apos;active&apos;);
 
@@ -141,8 +143,7 @@ define([&apos;jquery&apos;], function($) {
             });
 
             self.guest.click(function() {
-                if (!self.game)
-                    return;
+                if (!self.game) return;
 
                 self.guest.toggleClass(&apos;active&apos;);
             });
@@ -157,27 +158,23 @@ define([&apos;jquery&apos;], function($) {
             window.scrollTo(0, 1);
 
             self.window.resize(function() {
-                if (self.game)
-                    self.game.resize();
+                if (self.game) self.game.resize();
             });
 
             $.getJSON(&apos;data/config.json&apos;, function(json) {
                 self.config = json;
 
-                if (self.readyCallback)
-                    self.readyCallback();
+                if (self.readyCallback) self.readyCallback();
             });
 
             $(document).bind(&apos;keydown&apos;, function(e) {
-                if (e.which === Modules.Keys.Enter)
-                    return false;
+                if (e.which === Modules.Keys.Enter) return false;
             });
 
             $(document).keydown(function(e) {
                 var key = e.which;
 
-                if (!self.game)
-                    return;
+                if (!self.game) return;
 
                 self.body.focus();
 
@@ -193,14 +190,18 @@ define([&apos;jquery&apos;], function($) {
             $(document).keyup(function(e) {
                 var key = e.which;
 
-                if (!self.game || !self.game.started)
-                    return;
+                if (!self.game || !self.game.started) return;
 
                 self.game.input.keyUp(key);
             });
 
             $(document).mousemove(function(event) {
-                if (!self.game || !self.game.input || !self.game.started || event.target.id !== &apos;textCanvas&apos;)
+                if (
+                    !self.game ||
+                    !self.game.input ||
+                    !self.game.started ||
+                    event.target.id !== &apos;textCanvas&apos;
+                )
                     return;
 
                 self.game.input.setCoords(event);
@@ -224,7 +225,13 @@ define([&apos;jquery&apos;], function($) {
         login: function() {
             var self = this;
 
-            if (self.loggingIn || !self.game || !self.game.loaded || self.statusMessage || !self.verifyForm())
+            if (
+                self.loggingIn ||
+                !self.game ||
+                !self.game.loaded ||
+                self.statusMessage ||
+                !self.verifyForm()
+            )
                 return;
 
             self.toggleLogin(true);
@@ -256,32 +263,32 @@ define([&apos;jquery&apos;], function($) {
             self.footer.show();
         },
 
-        showDeath: function() {
-
-        },
+        showDeath: function() {},
 
         openScroll: function(origin, destination) {
             var self = this;
 
-            if (!destination || self.loggingIn)
-                return;
+            if (!destination || self.loggingIn) return;
 
             self.cleanErrors();
 
             if (!Detect.isMobile()) {
-                if (self.parchmentAnimating)
-                    return;
+                if (self.parchmentAnimating) return;
 
                 self.parchmentAnimating = true;
 
                 self.parchment.toggleClass(&apos;animate&apos;).removeClass(origin);
 
-                setTimeout(function() {
-                    self.parchment.toggleClass(&apos;animate&apos;).addClass(destination);
-                    self.parchmentAnimating = false;
-                }, Detect.isTablet() ? 0 : 1000);
-            } else
-                self.parchment.removeClass(origin).addClass(destination);
+                setTimeout(
+                    function() {
+                        self.parchment
+                            .toggleClass(&apos;animate&apos;)
+                            .addClass(destination);
+                        self.parchmentAnimating = false;
+                    },
+                    Detect.isTablet() ? 0 : 1000
+                );
+            } else self.parchment.removeClass(origin).addClass(destination);
         },
 
         displayScroll: function(content) {
@@ -291,27 +298,29 @@ define([&apos;jquery&apos;], function($) {
             if (self.game.started) {
                 self.parchment.removeClass().addClass(content);
 
-                self.body.removeClass(&apos;credits legal about&apos;).toggleClass(content);
+                self.body
+                    .removeClass(&apos;credits legal about&apos;)
+                    .toggleClass(content);
 
-                if (self.game.player)
-                    self.body.toggleClass(&apos;death&apos;);
+                if (self.game.player) self.body.toggleClass(&apos;death&apos;);
 
-                if (content !== &apos;about&apos;)
-                    self.helpButton.removeClass(&apos;active&apos;);
-            } else if (state !== &apos;animate&apos;)
-                self.openScroll(state, state === content ? &apos;loadCharacter&apos; : content);
+                if (content !== &apos;about&apos;) self.helpButton.removeClass(&apos;active&apos;);
+            } else if (state !== &apos;animate&apos;) {
+                self.openScroll(
+                    state,
+                    state === content ? &apos;loadCharacter&apos; : content
+                );
+            }
         },
 
         verifyForm: function() {
             var self = this,
                 activeForm = self.getActiveForm();
 
-            if (activeForm === &apos;null&apos;)
-                return;
+            if (activeForm === &apos;null&apos;) return;
 
             switch (activeForm) {
                 case &apos;loadCharacter&apos;:
-
                     var nameInput = $(&apos;#loginNameInput&apos;),
                         passwordInput = $(&apos;#loginPasswordInput&apos;);
 
@@ -324,34 +333,56 @@ define([&apos;jquery&apos;], function($) {
                     }
 
                     if (!passwordInput.val() &amp;&amp; !self.isGuest()) {
-                        self.sendError(passwordInput, &apos;Please enter a password.&apos;);
+                        self.sendError(
+                            passwordInput,
+                            &apos;Please enter a password.&apos;
+                        );
                         return false;
                     }
 
                     break;
 
                 case &apos;createCharacter&apos;:
-
                     var characterName = $(&apos;#registerNameInput&apos;),
                         registerPassword = $(&apos;#registerPasswordInput&apos;),
-                        registerPasswordConfirmation = $(&apos;#registerPasswordConfirmationInput&apos;),
+                        registerPasswordConfirmation = $(
+                            &apos;#registerPasswordConfirmationInput&apos;
+                        ),
                         email = $(&apos;#registerEmailInput&apos;);
 
-                    if (self.registerFields.length === 0)
-                        self.registerFields = [characterName, registerPassword, registerPasswordConfirmation, email];
+                    if (self.registerFields.length === 0) {
+                        self.registerFields = [
+                            characterName,
+                            registerPassword,
+                            registerPasswordConfirmation,
+                            email
+                        ];
+                    }
 
                     if (!characterName.val()) {
-                        self.sendError(characterName, &apos;A username is necessary you silly.&apos;);
+                        self.sendError(
+                            characterName,
+                            &apos;A username is necessary you silly.&apos;
+                        );
                         return false;
                     }
 
                     if (!registerPassword.val()) {
-                        self.sendError(registerPassword, &apos;You must enter a password.&apos;);
+                        self.sendError(
+                            registerPassword,
+                            &apos;You must enter a password.&apos;
+                        );
                         return false;
                     }
 
-                    if (registerPasswordConfirmation.val() !== registerPassword.val()) {
-                        self.sendError(registerPasswordConfirmation, &apos;The passwords do not match!&apos;);
+                    if (
+                        registerPasswordConfirmation.val() !==
+                        registerPassword.val()
+                    ) {
+                        self.sendError(
+                            registerPasswordConfirmation,
+                            &apos;The passwords do not match!&apos;
+                        );
                         return false;
                     }
 
@@ -367,7 +398,9 @@ define([&apos;jquery&apos;], function($) {
         },
 
         verifyEmail: function(email) {
-            return /^(([^&lt;&gt;()[\]\\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
+            return /^(([^&lt;&gt;()[\]\\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+                email
+            );
         },
 
         sendStatus: function(message) {
@@ -377,27 +410,27 @@ define([&apos;jquery&apos;], function($) {
 
             self.statusMessage = message;
 
-            if (!message)
-                return;
+            if (!message) return;
 
             $(&apos;&lt;span&gt;&lt;/span&gt;&apos;, {
-                &apos;class&apos;: &apos;status blink&apos;,
-                &apos;text&apos;: message
+                class: &apos;status blink&apos;,
+                text: message
             }).appendTo(&apos;.validation-summary&apos;);
 
-            $(&apos;.status&apos;).append(&apos;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&apos;);
+            $(&apos;.status&apos;).append(
+                &apos;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&apos;
+            );
         },
 
         sendError: function(field, error) {
             this.cleanErrors();
 
             $(&apos;&lt;span&gt;&lt;/span&gt;&apos;, {
-                &apos;class&apos;: &apos;validation-error blink&apos;,
-                &apos;text&apos;: error
+                class: &apos;validation-error blink&apos;,
+                text: error
             }).appendTo(&apos;.validation-summary&apos;);
 
-            if (!field)
-                return;
+            if (!field) return;
 
             field.addClass(&apos;field-error&apos;).select();
             field.bind(&apos;keypress&apos;, function(event) {
@@ -412,7 +445,10 @@ define([&apos;jquery&apos;], function($) {
         cleanErrors: function() {
             var self = this,
                 activeForm = self.getActiveForm(),
-                fields = activeForm === &apos;loadCharacter&apos; ? self.loginFields : self.registerFields;
+                fields =
+                    activeForm === &apos;loadCharacter&apos;
+                        ? self.loginFields
+                        : self.registerFields;
 
             for (var i = 0; i &lt; fields.length; i++)
                 fields[i].removeClass(&apos;field-error&apos;);
@@ -449,7 +485,7 @@ define([&apos;jquery&apos;], function($) {
             var width = window.innerWidth,
                 height = window.innerHeight;
 
-            return width &lt;= 1000 ? 1 : ((width &lt;= 1500 || height &lt;= 870) ? 2 : 3);
+            return width &lt;= 1000 ? 1 : width &lt;= 1500 || height &lt;= 870 ? 2 : 3;
         },
 
         revertLoader: function() {
@@ -464,7 +500,8 @@ define([&apos;jquery&apos;], function($) {
                 return;
             }
 
-            var dots = &apos;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&apos;;
+            var dots =
+                &apos;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;loader__dot&quot;&gt;.&lt;/span&gt;&apos;;
             self.loading.html(message + dots);
         },
 
@@ -493,22 +530,35 @@ define([&apos;jquery&apos;], function($) {
         toggleTyping: function(state) {
             var self = this;
 
-            if (self.loginFields)
-                _.each(self.loginFields, function(field) { field.prop(&apos;readonly&apos;, state); });
+            if (self.loginFields) {
+                _.each(self.loginFields, function(field) {
+                    field.prop(&apos;readonly&apos;, state);
+                });
+            }
 
-            if (self.registerFields)
-                _.each(self.registerFields, function(field) { field.prop(&apos;readOnly&apos;, state); });
+            if (self.registerFields) {
+                _.each(self.registerFields, function(field) {
+                    field.prop(&apos;readOnly&apos;, state);
+                });
+            }
         },
 
         updateRange: function(obj) {
             var self = this,
-                val = (obj.val() - obj.attr(&apos;min&apos;)) / (obj.attr(&apos;max&apos;) - obj.attr(&apos;min&apos;));
+                val =
+                    (obj.val() - obj.attr(&apos;min&apos;)) /
+                    (obj.attr(&apos;max&apos;) - obj.attr(&apos;min&apos;));
 
-            obj.css(&apos;background-image&apos;,
-                &apos;-webkit-gradient(linear, left top, right top, &apos;
-                + &apos;color-stop(&apos; + val + &apos;, #4d4d4d), &apos;
-                + &apos;color-stop(&apos; + val + &apos;, #C5C5C5)&apos;
-                + &apos;)&apos;
+            obj.css(
+                &apos;background-image&apos;,
+                &apos;-webkit-gradient(linear, left top, right top, &apos; +
+                    &apos;color-stop(&apos; +
+                    val +
+                    &apos;, #4d4d4d), &apos; +
+                    &apos;color-stop(&apos; +
+                    val +
+                    &apos;, #C5C5C5)&apos; +
+                    &apos;)&apos;
             );
         },
 
@@ -517,13 +567,14 @@ define([&apos;jquery&apos;], function($) {
         },
 
         getOrientation: function() {
-            return window.innerHeight &gt; window.innerWidth ? &apos;portrait&apos; : &apos;landscape&apos;;
+            return window.innerHeight &gt; window.innerWidth
+                ? &apos;portrait&apos;
+                : &apos;landscape&apos;;
         },
 
         onReady: function(callback) {
             this.readyCallback = callback;
         }
-
     });
 });
 </code></pre>

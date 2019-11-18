@@ -1,6 +1,5 @@
 define(['jquery', '../page'], function($, Page) {
     return Page.extend({
-
         init: function() {
             var self = this;
 
@@ -31,14 +30,21 @@ define(['jquery', '../page'], function($, Page) {
                 if (achievement.progress > 0 && achievement.progress < 9999) {
                     name.css('background', 'rgba(255, 255, 10, 0.4)');
 
-                    name.text(achievement.name + (achievement.count > 2 ? ' ' + (achievement.progress - 1) + '/' + (achievement.count - 1) : ''));
+                    name.text(
+                        achievement.name +
+                            (achievement.count > 2
+                                ? ' ' +
+                                  (achievement.progress - 1) +
+                                  '/' +
+                                  (achievement.count - 1)
+                                : '')
+                    );
                 } else if (achievement.progress > 9998) {
                     name.text(achievement.name);
                     name.css('background', 'rgba(10, 255, 10, 0.3)');
                 }
 
-                if (achievement.finished)
-                    finishedAchievements++;
+                if (achievement.finished) finishedAchievements++;
 
                 item.append(name);
 
@@ -49,7 +55,9 @@ define(['jquery', '../page'], function($, Page) {
                 self.achievementsList.append(listItem);
             });
 
-            self.achievementsCount.html(finishedAchievements + '/' + achievements.length);
+            self.achievementsCount.html(
+                finishedAchievements + '/' + achievements.length
+            );
         },
 
         loadQuests(quests) {
@@ -69,8 +77,7 @@ define(['jquery', '../page'], function($, Page) {
                 else if (quest.stage > 9998)
                     name.css('background', 'rgba(10, 255, 10, 0.3)');
 
-                if (quest.finished)
-                    finishedQuests++;
+                if (quest.finished) finishedQuests++;
 
                 item.append(name);
 
@@ -86,38 +93,48 @@ define(['jquery', '../page'], function($, Page) {
 
         progress: function(info) {
             var self = this,
-                item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
+                item = info.isQuest
+                    ? self.getQuest(info.id)
+                    : self.getAchievement(info.id);
 
-            if (!item)
-                return;
+            if (!item) return;
 
-            var name = item.find('' + (info.isQuest ? '#quest' : '#achievement') + info.id + 'name');
+            var name = item.find(
+                '' +
+                    (info.isQuest ? '#quest' : '#achievement') +
+                    info.id +
+                    'name'
+            );
 
-            if (!name)
-                return;
+            if (!name) return;
 
-            if (!info.isQuest && info.count > 2)
-                name.text(info.name + ' ' + info.progress + '/' + (info.count - 1));
-            else
-                name.text(info.name);
+            if (!info.isQuest && info.count > 2) {
+                name.text(
+                    info.name + ' ' + info.progress + '/' + (info.count - 1)
+                );
+            } else name.text(info.name);
 
             name.css('background', 'rgba(255, 255, 10, 0.4)');
         },
 
         finish: function(info) {
             var self = this,
-                item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
+                item = info.isQuest
+                    ? self.getQuest(info.id)
+                    : self.getAchievement(info.id);
 
-            if (!item)
-                return;
+            if (!item) return;
 
-            var name = item.find('' + (info.isQuest ? '#quest' : '#achievement') + info.id + 'name');
+            var name = item.find(
+                '' +
+                    (info.isQuest ? '#quest' : '#achievement') +
+                    info.id +
+                    'name'
+            );
 
-            if (!name)
-                return;
+            if (!name) return;
 
-            if (!info.isQuest)
-                name.text(info.name);
+            if (!info.isQuest) name.text(info.name);
 
             name.css('background', 'rgba(10, 255, 10, 0.3)');
         },
@@ -127,9 +144,10 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         getAchievement: function(id) {
-            return $(this.achievementsList.find('li')[id]).find('#achievement' + id);
+            return $(this.achievementsList.find('li')[id]).find(
+                '#achievement' + id
+            );
         },
-
 
         /**
          * Might as well properly organize them based
@@ -137,12 +155,21 @@ define(['jquery', '../page'], function($, Page) {
          */
 
         getItem: function(isQuest, id) {
-            return $('<div id="' + (isQuest ? 'quest' : 'achievement') + id + '" class="questItem"></div>');
+            return $(
+                '<div id="' +
+                    (isQuest ? 'quest' : 'achievement') +
+                    id +
+                    '" class="questItem"></div>'
+            );
         },
 
         getName: function(isQuest, id) {
-            return $('<div id="' + (isQuest ? 'quest' : 'achievement') + id + 'name" class="questName"></div>');
+            return $(
+                '<div id="' +
+                    (isQuest ? 'quest' : 'achievement') +
+                    id +
+                    'name" class="questName"></div>'
+            );
         }
-
     });
 });

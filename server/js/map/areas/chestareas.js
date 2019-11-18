@@ -1,12 +1,12 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     Area = require('../area'),
     map = require('../../../data/map/world_server');
 
 class ChestAreas {
     constructor(world) {
-        const self = this;
+        let self = this;
 
         self.world = world;
 
@@ -16,10 +16,10 @@ class ChestAreas {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         _.each(map.chestAreas, m => {
-            const chestArea = new Area(m.id, m.x, m.y, m.width, m.height);
+            let chestArea = new Area(m.id, m.x, m.y, m.width, m.height);
 
             chestArea.maxEntities = m.entities;
             chestArea.items = m.i;
@@ -41,14 +41,18 @@ class ChestAreas {
     }
 
     spawnChest(chestArea) {
-        chestArea.chest = this.world.spawnChest(chestArea.items, chestArea.cX, chestArea.cY, false);
+        chestArea.chest = this.world.spawnChest(
+            chestArea.items,
+            chestArea.cX,
+            chestArea.cY,
+            false
+        );
     }
 
     removeChest(chestArea) {
-        const self = this;
+        let self = this;
 
-        if (!chestArea.chest)
-            return;
+        if (!chestArea.chest) return;
 
         self.world.removeChest(chestArea.chest);
 

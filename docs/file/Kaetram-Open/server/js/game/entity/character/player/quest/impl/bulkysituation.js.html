@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/bulkysituation.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Quest = require(&apos;../quest&apos;),
+let Quest = require(&apos;../quest&apos;),
     Packets = require(&apos;../../../../../../network/packets&apos;),
     Messages = require(&apos;../../../../../../network/messages&apos;);
 
@@ -44,7 +44,7 @@ class BulkySituation extends Quest {
     constructor(player, data) {
         super(player, data);
 
-        const self = this;
+        let self = this;
 
         self.player = player;
         self.data = data;
@@ -53,18 +53,17 @@ class BulkySituation extends Quest {
     }
 
     load(stage) {
-        const self = this;
+        let self = this;
 
         super.load(stage);
 
-        if (self.stage &gt; 9998)
-            return;
+        if (self.stage &gt; 9998) return;
 
         self.loadCallbacks();
     }
 
     loadCallbacks() {
-        const self = this;
+        let self = this;
 
         self.onNPCTalk(npc =&gt; {
             if (self.hasRequirement()) {
@@ -72,26 +71,26 @@ class BulkySituation extends Quest {
                 return;
             }
 
-            const conversation = self.getConversation(npc.id);
+            let conversation = self.getConversation(npc.id);
 
             self.lastNPC = npc;
 
-            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-                id: npc.instance,
-                text: npc.talk(conversation)
-            }));
+            self.player.send(
+                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                    id: npc.instance,
+                    text: npc.talk(conversation)
+                })
+            );
 
-            if (npc.talkIndex === 0)
-                self.progress(&apos;talk&apos;);
+            if (npc.talkIndex === 0) self.progress(&apos;talk&apos;);
         });
     }
 
     progress(type) {
-        const self = this,
+        let self = this,
             task = self.data.task[self.stage];
 
-        if (!task || task !== type)
-            return;
+        if (!task || task !== type) return;
 
         if (self.stage === self.data.stages) {
             self.finish();
@@ -100,7 +99,6 @@ class BulkySituation extends Quest {
 
         switch (type) {
             case &apos;item&apos;:
-
                 self.player.inventory.remove(self.getItem(), 1);
 
                 break;
@@ -110,11 +108,13 @@ class BulkySituation extends Quest {
 
         self.stage++;
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
-            id: self.id,
-            stage: self.stage,
-            isQuest: true
-        }));
+        self.player.send(
+            new Messages.Quest(Packets.QuestOpcode.Progress, {
+                id: self.id,
+                stage: self.stage,
+                isQuest: true
+            })
+        );
 
         self.update();
     }
@@ -124,7 +124,10 @@ class BulkySituation extends Quest {
     }
 
     hasRequirement() {
-        return this.getTask() === &apos;item&apos; &amp;&amp; this.player.inventory.contains(this.getItem());
+        return (
+            this.getTask() === &apos;item&apos; &amp;&amp;
+            this.player.inventory.contains(this.getItem())
+        );
     }
 }
 

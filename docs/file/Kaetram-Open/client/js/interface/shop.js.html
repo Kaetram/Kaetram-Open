@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/shop.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;, &apos;./container/container&apos;], function($, Container) {
     return Class.extend({
-
         init: function(game, intrface) {
             var self = this;
 
@@ -69,7 +68,12 @@
             var self = this,
                 id = event.currentTarget.id.substring(11);
 
-            self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
+            self.game.socket.send(Packets.Shop, [
+                Packets.ShopOpcode.Buy,
+                self.openShop,
+                id,
+                1
+            ]);
         },
 
         sell: function() {
@@ -109,21 +113,42 @@
             var self = this;
 
             for (var i = 0; i &lt; self.container.size; i++) {
-                var shopItem = $(&apos;&lt;div id=&quot;shopItem&apos; + i + &apos;&quot; class=&quot;shopItem&quot;&gt;&lt;/div&gt;&apos;),
+                var shopItem = $(
+                        &apos;&lt;div id=&quot;shopItem&apos; + i + &apos;&quot; class=&quot;shopItem&quot;&gt;&lt;/div&gt;&apos;
+                    ),
                     string = self.data.strings[i],
                     name = self.data.names[i],
                     count = self.data.counts[i],
-                    itemImage, itemCount, itemName, itemBuy;
+                    itemImage,
+                    itemCount,
+                    itemName,
+                    itemBuy;
 
-                if (!string || !name || !count)
-                    continue;
+                if (!string || !name || !count) continue;
 
-                itemImage = $(&apos;&lt;div id=&quot;shopItemImage&apos; + i + &apos;&quot; class=&quot;shopItemImage&quot;&gt;&lt;/div&gt;&apos;);
-                itemCount = $(&apos;&lt;div id=&quot;shopItemCount&apos; + i + &apos;&quot; class=&quot;shopItemCount&quot;&gt;&lt;/div&gt;&apos;);
-                itemName = $(&apos;&lt;div id=&quot;shopItemName&apos; + i + &apos;&quot; class=&quot;shopItemName&quot;&gt;&lt;/div&gt;&apos;);
-                itemBuy = $(&apos;&lt;div id=&quot;shopItemBuy&apos; + i + &apos;&quot; class=&quot;shopItemBuy&quot;&gt;&lt;/div&gt;&apos;);
+                itemImage = $(
+                    &apos;&lt;div id=&quot;shopItemImage&apos; +
+                        i +
+                        &apos;&quot; class=&quot;shopItemImage&quot;&gt;&lt;/div&gt;&apos;
+                );
+                itemCount = $(
+                    &apos;&lt;div id=&quot;shopItemCount&apos; +
+                        i +
+                        &apos;&quot; class=&quot;shopItemCount&quot;&gt;&lt;/div&gt;&apos;
+                );
+                itemName = $(
+                    &apos;&lt;div id=&quot;shopItemName&apos; +
+                        i +
+                        &apos;&quot; class=&quot;shopItemName&quot;&gt;&lt;/div&gt;&apos;
+                );
+                itemBuy = $(
+                    &apos;&lt;div id=&quot;shopItemBuy&apos; + i + &apos;&quot; class=&quot;shopItemBuy&quot;&gt;&lt;/div&gt;&apos;
+                );
 
-                itemImage.css(&apos;background-image&apos;, self.container.getImageFormat(1, string));
+                itemImage.css(
+                    &apos;background-image&apos;,
+                    self.container.getImageFormat(1, string)
+                );
                 itemCount.html(count);
                 itemName.html(name);
                 itemBuy.html(&apos;Purchase&apos;);
@@ -173,8 +198,7 @@
         open: function(id) {
             var self = this;
 
-            if (!id)
-                return;
+            if (!id) return;
 
             self.openShop = id;
 
@@ -208,7 +232,6 @@
         getInventoryList: function() {
             return this.inventory.find(&apos;ul&apos;);
         }
-
     });
 });
 </code></pre>

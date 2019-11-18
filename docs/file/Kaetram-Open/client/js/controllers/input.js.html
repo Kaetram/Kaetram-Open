@@ -36,9 +36,13 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/controllers/input.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global Modules, log, _, Detect, Packets */
 
-define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;, &apos;./overlay&apos;], function($, Animation, Chat, Overlay) {
+define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;, &apos;./overlay&apos;], function(
+    $,
+    Animation,
+    Chat,
+    Overlay
+) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -111,8 +115,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
             self.newCursor = self.cursors.hand;
             self.newTargetColour = &apos;rgba(255, 255, 255, 0.5)&apos;;
 
-            if (self.game.isDebug())
-                log.info(&apos;Loaded Cursors!&apos;);
+            if (self.game.isDebug()) log.info(&apos;Loaded Cursors!&apos;);
         },
 
         handle: function(inputType, data) {
@@ -121,7 +124,6 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
 
             switch (inputType) {
                 case Modules.InputType.Key:
-
                     if (self.chatHandler.isActive()) {
                         self.chatHandler.key(data);
                         return;
@@ -130,34 +132,29 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                     switch (data) {
                         case Modules.Keys.W:
                         case Modules.Keys.Up:
-
                             self.getPlayer().moveUp = true;
 
                             break;
 
                         case Modules.Keys.A:
                         case Modules.Keys.Left:
-
                             self.getPlayer().moveLeft = true;
 
                             break;
 
                         case Modules.Keys.S:
                         case Modules.Keys.Down:
-
                             self.getPlayer().moveDown = true;
 
                             break;
 
                         case Modules.Keys.D:
                         case Modules.Keys.Right:
-
                             self.getPlayer().moveRight = true;
 
                             break;
 
                         case Modules.Keys.Enter:
-
                             self.chatHandler.toggle();
 
                             break;
@@ -166,7 +163,6 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                     break;
 
                 case Modules.InputType.LeftClick:
-
                     player.disableAction = false;
                     self.keyMovement = false;
 
@@ -228,8 +224,7 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
             var self = this,
                 player = self.getPlayer();
 
-            if (player.stunned)
-                return;
+            if (player.stunned) return;
 
             self.setPassiveTarget();
 
@@ -238,30 +233,54 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
              * on mobile, and it is far harder to control.
              */
 
-            if (self.renderer.mobile &amp;&amp; self.chatHandler.input.is(&apos;:visible&apos;) &amp;&amp; self.chatHandler.input.val() === &apos;&apos;)
+            if (
+                self.renderer.mobile &amp;&amp;
+                self.chatHandler.input.is(&apos;:visible&apos;) &amp;&amp;
+                self.chatHandler.input.val() === &apos;&apos;
+            )
                 self.chatHandler.hideInput();
 
-            if ((self.game.zoning &amp;&amp; self.game.zoning.direction) || player.disableAction)
+            if (
+                (self.game.zoning &amp;&amp; self.game.zoning.direction) ||
+                player.disableAction
+            )
                 return;
 
-            var entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX &amp;&amp; position.y === player.gridY));
+            var entity = self.game.getEntityAt(
+                position.x,
+                position.y,
+                position.x === player.gridX &amp;&amp; position.y === player.gridY
+            );
 
             if (entity) {
                 player.disableAction = true;
 
                 self.setAttackTarget();
 
-                if (self.isTargetable(entity))
-                    player.setTarget(entity);
+                if (self.isTargetable(entity)) player.setTarget(entity);
 
-                if (player.getDistance(entity) &lt; 7 &amp;&amp; player.isRanged() &amp;&amp; self.isAttackable(entity)) {
-                    self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
+                if (
+                    player.getDistance(entity) &lt; 7 &amp;&amp;
+                    player.isRanged() &amp;&amp;
+                    self.isAttackable(entity)
+                ) {
+                    self.game.socket.send(Packets.Target, [
+                        Packets.TargetOpcode.Attack,
+                        entity.id
+                    ]);
                     player.lookAt(entity);
                     return;
                 }
 
-                if (entity.gridX === player.gridX &amp;&amp; entity.gridY === player.gridY)
-                    self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
+                if (
+                    entity.gridX === player.gridX &amp;&amp;
+                    entity.gridY === player.gridY
+                ) {
+                    self.game.socket.send(Packets.Target, [
+                        Packets.TargetOpcode.Attack,
+                        entity.id
+                    ]);
+                }
 
                 /* if (entity.type === &apos;player&apos;) {
                     self.getActions().showPlayerActions(entity, self.mouse.x, self.mouse.y);
@@ -272,16 +291,13 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                     player.follow(entity);
                     return;
                 }
-            } else
-                player.removeTarget();
-
+            } else player.removeTarget();
 
             self.getActions().hidePlayerActions();
 
             player.go(position.x, position.y);
 
-            if (self.game.interface)
-                self.game.interface.hideAll();
+            if (self.game.interface) self.game.interface.hideAll();
 
             if (!self.game.audio.song &amp;&amp; Detect.isSafari())
                 self.game.audio.update();
@@ -290,11 +306,9 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
         updateCursor: function() {
             var self = this;
 
-            if (!self.cursorVisible)
-                return;
+            if (!self.cursorVisible) return;
 
-            if (self.newCursor !== self.cursor)
-                self.cursor = self.newCursor;
+            if (self.newCursor !== self.cursor) self.cursor = self.newCursor;
 
             if (self.newTargetColour !== self.targetColour)
                 self.targetColour = self.newTargetColour;
@@ -308,16 +322,23 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
 
             var position = self.getCoords(),
                 player = self.getPlayer(),
-                entity = self.game.getEntityAt(position.x, position.y, player.gridX === position.x &amp;&amp; player.gridY === position.y);
+                entity = self.game.getEntityAt(
+                    position.x,
+                    position.y,
+                    player.gridX === position.x &amp;&amp; player.gridY === position.y
+                );
 
             self.overlay.update(entity);
 
-            if (!entity || (entity.id === player.id) || entity.type === &apos;player&apos;) {
+            if (
+                !entity ||
+                entity.id === player.id ||
+                entity.type === &apos;player&apos;
+            ) {
                 self.setCursor(self.cursors.hand);
                 self.hovering = null;
             } else {
-                if (self.renderer.debugging)
-                    self.hoveringInstance = entity.id;
+                if (self.renderer.debugging) self.hoveringInstance = entity.id;
 
                 switch (entity.type) {
                     case &apos;item&apos;:
@@ -351,31 +372,27 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                 offset = self.app.canvas.offset(),
                 width = self.renderer.background.width,
                 height = self.renderer.background.height,
-                proportionality = self.renderer.scale === 3 ? (2 / 3) : 1;
+                proportionality = self.renderer.scale === 3 ? 2 / 3 : 1;
 
             self.cursorMoved = false;
 
-            self.mouse.x = Math.round((event.pageX - offset.left)) * proportionality;
-            self.mouse.y = Math.round((event.pageY - offset.top)) * proportionality;
+            self.mouse.x =
+                Math.round(event.pageX - offset.left) * proportionality;
+            self.mouse.y =
+                Math.round(event.pageY - offset.top) * proportionality;
 
-            if (self.mouse.x &gt;= width)
-                self.mouse.x = width - 1;
-            else if (self.mouse.x &lt;= 0)
-                self.mouse.x = 0;
+            if (self.mouse.x &gt;= width) self.mouse.x = width - 1;
+            else if (self.mouse.x &lt;= 0) self.mouse.x = 0;
 
-            if (self.mouse.y &gt;= height)
-                self.mouse.y = height - 1;
-            else if (self.mouse.y &lt;= 0)
-                self.mouse.y = 0;
+            if (self.mouse.y &gt;= height) self.mouse.y = height - 1;
+            else if (self.mouse.y &lt;= 0) self.mouse.y = 0;
         },
 
         setCursor: function(cursor) {
             var self = this;
 
-            if (cursor)
-                self.newCursor = cursor;
-            else
-                log.error(&apos;Cursor: &apos; + cursor + &apos; could not be found.&apos;);
+            if (cursor) self.newCursor = cursor;
+            else log.error(&apos;Cursor: &apos; + cursor + &apos; could not be found.&apos;);
         },
 
         setAttackTarget: function() {
@@ -399,14 +416,18 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
         getCoords: function() {
             var self = this;
 
-            if (!self.renderer || !self.renderer.camera)
-                return;
+            if (!self.renderer || !self.renderer.camera) return;
 
-            var tileScale = self.renderer.tileSize * self.renderer.getSuperScaling(),
+            var tileScale =
+                    self.renderer.tileSize * self.renderer.getSuperScaling(),
                 offsetX = self.mouse.x % tileScale,
                 offsetY = self.mouse.y % tileScale,
-                x = ((self.mouse.x - offsetX) / tileScale) + self.game.getCamera().gridX,
-                y = ((self.mouse.y - offsetY) / tileScale) + self.game.getCamera().gridY;
+                x =
+                    (self.mouse.x - offsetX) / tileScale +
+                    self.game.getCamera().gridX,
+                y =
+                    (self.mouse.y - offsetY) / tileScale +
+                    self.game.getCamera().gridY;
 
             return {
                 x: x,
@@ -420,10 +441,9 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                 superScale = self.renderer.getSuperScaling(),
                 sprite = self.game.getSprite(&apos;target&apos;);
 
-            if (!sprite.loaded)
-                sprite.load();
+            if (!sprite.loaded) sprite.load();
 
-            return self.targetData = {
+            return (self.targetData = {
                 sprite: sprite,
                 x: frame.x * superScale,
                 y: frame.y * superScale,
@@ -433,15 +453,22 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
                 dy: self.selectedY * 16 * superScale,
                 dw: sprite.width * superScale,
                 dh: sprite.height * superScale
-            };
+            });
         },
 
         isTargetable: function(entity) {
-            return this.isAttackable(entity) || entity.type === &apos;npc&apos; || entity.type === &apos;chest&apos;;
+            return (
+                this.isAttackable(entity) ||
+                entity.type === &apos;npc&apos; ||
+                entity.type === &apos;chest&apos;
+            );
         },
 
         isAttackable: function(entity) {
-            return entity.type === &apos;mob&apos; || (entity.type === &apos;player&apos; &amp;&amp; entity.pvp &amp;&amp; this.game.pvp);
+            return (
+                entity.type === &apos;mob&apos; ||
+                (entity.type === &apos;player&apos; &amp;&amp; entity.pvp &amp;&amp; this.game.pvp)
+            );
         },
 
         getPlayer: function() {
@@ -451,7 +478,6 @@ define([&apos;jquery&apos;, &apos;../entity/animation&apos;, &apos;./chat&apos;,
         getActions: function() {
             return this.game.interface.actions;
         }
-
     });
 });
 </code></pre>

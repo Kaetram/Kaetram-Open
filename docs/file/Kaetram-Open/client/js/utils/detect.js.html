@@ -49,15 +49,23 @@ Detect.isWindows = function() {
 };
 
 Detect.isChromeOnWindows = function() {
-    return Detect.userAgentContains(&apos;Chrome&apos;) &amp;&amp; Detect.userAgentContains(&apos;Windows&apos;);
+    return (
+        Detect.userAgentContains(&apos;Chrome&apos;) &amp;&amp;
+        Detect.userAgentContains(&apos;Windows&apos;)
+    );
 };
 
 Detect.isCanaryOnWindows = function() {
-    return Detect.userAgentContains(&apos;Chrome/52&apos;) &amp;&amp; Detect.userAgentContains(&apos;Windows&apos;);
+    return (
+        Detect.userAgentContains(&apos;Chrome/52&apos;) &amp;&amp;
+        Detect.userAgentContains(&apos;Windows&apos;)
+    );
 };
 
 Detect.isEdgeOnWindows = function() {
-    return Detect.userAgentContains(&apos;Edge&apos;) &amp;&amp; Detect.userAgentContains(&apos;Windows&apos;);
+    return (
+        Detect.userAgentContains(&apos;Edge&apos;) &amp;&amp; Detect.userAgentContains(&apos;Windows&apos;)
+    );
 };
 
 Detect.isFirefox = function() {
@@ -65,7 +73,10 @@ Detect.isFirefox = function() {
 };
 
 Detect.isSafari = function() {
-    return Detect.userAgentContains(&apos;Safari&apos;) &amp;&amp; !Detect.userAgentContains(&apos;Chrome&apos;);
+    return (
+        Detect.userAgentContains(&apos;Safari&apos;) &amp;&amp;
+        !Detect.userAgentContains(&apos;Chrome&apos;)
+    );
 };
 
 Detect.isOpera = function() {
@@ -73,7 +84,10 @@ Detect.isOpera = function() {
 };
 
 Detect.isFirefoxAndroid = function() {
-    return Detect.userAgentContains(&apos;Android&apos;) &amp;&amp; Detect.userAgentContains(&apos;Firefox&apos;);
+    return (
+        Detect.userAgentContains(&apos;Android&apos;) &amp;&amp;
+        Detect.userAgentContains(&apos;Firefox&apos;)
+    );
 };
 
 Detect.userAgentContains = function(string) {
@@ -102,7 +116,7 @@ Detect.iOSVersion = function() {
         // https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
         return &apos;&apos;;
     }
-    var match = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/),
+    var match = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/),
         version;
 
     if (match !== undefined &amp;&amp; match !== null) {
@@ -118,10 +132,10 @@ Detect.iOSVersion = function() {
 };
 
 Detect.androidVersion = function() {
-    var userAgent = navigator.userAgent.split(&apos;Android&apos;), version;
+    var userAgent = navigator.userAgent.split(&apos;Android&apos;),
+        version;
 
-    if (userAgent.length &gt; 1)
-        version = userAgent[1].split(&apos;;&apos;)[0];
+    if (userAgent.length &gt; 1) version = userAgent[1].split(&apos;;&apos;)[0];
 
     return version;
 };
@@ -141,10 +155,8 @@ Detect.isAppleDevice = function() {
     ];
 
     if (navigator.platform) {
-        while (devices.length) {
-            if (navigator.platform = devices.pop())
-                return true;
-        }
+        while (devices.length)
+            if ((navigator.platform = devices.pop())) return true;
     }
 
     return false;

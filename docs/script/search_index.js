@@ -726,60 +726,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "kaetram-open/docs/script/inherited-summary.js",
-    "file/Kaetram-Open/docs/script/inherited-summary.js.html",
-    "Kaetram-Open/docs/script/inherited-summary.js",
-    "file"
-  ],
-  [
-    "kaetram-open/docs/script/inner-link.js",
-    "file/Kaetram-Open/docs/script/inner-link.js.html",
-    "Kaetram-Open/docs/script/inner-link.js",
-    "file"
-  ],
-  [
-    "kaetram-open/docs/script/manual.js",
-    "file/Kaetram-Open/docs/script/manual.js.html",
-    "Kaetram-Open/docs/script/manual.js",
-    "file"
-  ],
-  [
-    "kaetram-open/docs/script/patch-for-local.js",
-    "file/Kaetram-Open/docs/script/patch-for-local.js.html",
-    "Kaetram-Open/docs/script/patch-for-local.js",
-    "file"
-  ],
-  [
-    "kaetram-open/docs/script/prettify/prettify.js",
-    "file/Kaetram-Open/docs/script/prettify/prettify.js.html",
-    "Kaetram-Open/docs/script/prettify/prettify.js",
-    "file"
-  ],
-  [
-    "kaetram-open/docs/script/pretty-print.js",
-    "file/Kaetram-Open/docs/script/pretty-print.js.html",
-    "Kaetram-Open/docs/script/pretty-print.js",
-    "file"
-  ],
-  [
-    "kaetram-open/docs/script/search.js",
-    "file/Kaetram-Open/docs/script/search.js.html",
-    "Kaetram-Open/docs/script/search.js",
-    "file"
-  ],
-  [
-    "kaetram-open/docs/script/search_index.js",
-    "file/Kaetram-Open/docs/script/search_index.js.html",
-    "Kaetram-Open/docs/script/search_index.js",
-    "file"
-  ],
-  [
-    "kaetram-open/docs/script/test-summary.js",
-    "file/Kaetram-Open/docs/script/test-summary.js.html",
-    "Kaetram-Open/docs/script/test-summary.js",
-    "file"
-  ],
-  [
     "kaetram-open/server/data/combat/default.js",
     "file/Kaetram-Open/server/data/combat/default.js.html",
     "Kaetram-Open/server/data/combat/default.js",

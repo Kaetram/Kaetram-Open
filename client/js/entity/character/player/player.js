@@ -1,10 +1,14 @@
 /* global Modules, log, _ */
 
-define(['../character', './equipment/armour', './equipment/weapon',
-    './equipment/pendant', './equipment/boots', './equipment/ring'],
-function(Character, Armour, Weapon, Pendant, Boots, Ring) {
+define([
+    '../character',
+    './equipment/armour',
+    './equipment/weapon',
+    './equipment/pendant',
+    './equipment/boots',
+    './equipment/ring'
+], function(Character, Armour, Weapon, Pendant, Boots, Ring) {
     return Character.extend({
-
         init: function() {
             var self = this;
 
@@ -51,7 +55,11 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
             self.setId(data.instance);
             self.setGridPosition(data.x, data.y);
             self.setPointsData(data.hitPoints, data.mana);
-            self.setExperience(data.experience, data.nextExperience, data.prevExperience);
+            self.setExperience(
+                data.experience,
+                data.nextExperience,
+                data.prevExperience
+            );
 
             self.username = data.username;
             self.level = data.level;
@@ -77,7 +85,9 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
         },
 
         hasKeyboardMovement: function() {
-            return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
+            return (
+                this.moveLeft || this.moveRight || this.moveUp || this.moveDown
+            );
         },
 
         stop: function(force) {
@@ -176,8 +186,7 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
             self.nextExperience = nextExperience;
             self.prevExperience = prevExperience;
 
-            if (self.experienceCallback)
-                self.experienceCallback();
+            if (self.experienceCallback) self.experienceCallback();
         },
 
         setPointsData: function(hitPointsData, manaData) {
@@ -194,16 +203,35 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
             self.setMana(mana);
         },
 
-        setEquipment: function(type, name, string, count, ability, abilityLevel) {
+        setEquipment: function(
+            type,
+            name,
+            string,
+            count,
+            ability,
+            abilityLevel
+        ) {
             var self = this;
 
             switch (type) {
                 case Modules.Equipment.Armour:
-
-                    if (!self.armour)
-                        self.armour = new Armour(name, string, count, ability, abilityLevel);
-                    else
-                        self.armour.update(name, string, count, ability, abilityLevel);
+                    if (!self.armour) {
+                        self.armour = new Armour(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    } else {
+                        self.armour.update(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    }
 
                     if (self.updateArmourCallback)
                         self.updateArmourCallback(string);
@@ -211,40 +239,88 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
                     break;
 
                 case Modules.Equipment.Weapon:
-
-                    if (!self.weapon)
-                        self.weapon = new Weapon(name, string, count, ability, abilityLevel);
-                    else
-                        self.weapon.update(name, string, count, ability, abilityLevel);
+                    if (!self.weapon) {
+                        self.weapon = new Weapon(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    } else {
+                        self.weapon.update(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    }
 
                     self.weapon.ranged = string.includes('bow');
 
                     break;
 
                 case Modules.Equipment.Pendant:
-
-                    if (!self.pendant)
-                        self.pendant = new Pendant(name, string, count, ability, abilityLevel);
-                    else
-                        self.pendant.update(name, string, count, ability, abilityLevel);
+                    if (!self.pendant) {
+                        self.pendant = new Pendant(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    } else {
+                        self.pendant.update(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    }
 
                     break;
 
                 case Modules.Equipment.Ring:
-
-                    if (!self.ring)
-                        self.ring = new Ring(name, string, count, ability, abilityLevel);
-                    else
-                        self.ring.update(name, string, count, ability, abilityLevel);
+                    if (!self.ring) {
+                        self.ring = new Ring(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    } else {
+                        self.ring.update(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    }
 
                     break;
 
                 case Modules.Equipment.Boots:
-
-                    if (!self.boots)
-                        self.boots = new Boots(name, string, count, ability, abilityLevel);
-                    else
-                        self.boots.update(name, string, count, ability, abilityLevel);
+                    if (!self.boots) {
+                        self.boots = new Boots(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    } else {
+                        self.boots.update(
+                            name,
+                            string,
+                            count,
+                            ability,
+                            abilityLevel
+                        );
+                    }
 
                     break;
             }
@@ -281,8 +357,11 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
 
             self.blink(90);
 
-            if (!self.tempBlinkTimeout)
-                self.tempBlinkTimeout = setTimeout(function() { self.stopBlinking(); }, 500);
+            if (!self.tempBlinkTimeout) {
+                self.tempBlinkTimeout = setTimeout(function() {
+                    self.stopBlinking();
+                }, 500);
+            }
         },
 
         getDistance: function(entity) {
@@ -296,6 +375,5 @@ function(Character, Armour, Weapon, Pendant, Boots, Ring) {
         onExperience: function(callback) {
             this.experienceCallback = callback;
         }
-
     });
 });

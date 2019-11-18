@@ -1,13 +1,13 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     DoorData = require('../../../../../data/doors'),
     Messages = require('../../../../network/messages'),
     Packets = require('../../../../network/packets');
 
 class Doors {
     constructor(player) {
-        const self = this;
+        let self = this;
 
         self.world = player.world;
         self.player = player;
@@ -18,7 +18,7 @@ class Doors {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         _.each(DoorData, door => {
             self.doors[door.id] = {
@@ -36,16 +36,15 @@ class Doors {
     }
 
     getStatus(door) {
-        const self = this;
+        let self = this;
 
         switch (door.requirement) {
             case 'quest':
-                const quest = self.player.quests.getQuest(door.questId);
+                let quest = self.player.quests.getQuest(door.questId);
 
-                if (door.status === 'open')
-                    return door.status;
+                if (door.status === 'open') return door.status;
 
-                return (quest && quest.hasDoorUnlocked(door)) ? 'open' : 'closed';
+                return quest && quest.hasDoorUnlocked(door) ? 'open' : 'closed';
 
             case 'level':
                 return self.player.level >= door.level ? 'open' : 'closed';
@@ -53,14 +52,14 @@ class Doors {
     }
 
     getTiles(door) {
-        const self = this,
+        let self = this,
             tiles = {
                 indexes: [],
                 data: [],
                 collisions: []
             };
 
-        const status = self.getStatus(door),
+        let status = self.getStatus(door),
             doorState = {
                 open: door.openIds,
                 closed: door.closedIds
@@ -76,7 +75,7 @@ class Doors {
     }
 
     getAllTiles() {
-        const self = this,
+        let self = this,
             allTiles = {
                 indexes: [],
                 data: [],
@@ -84,18 +83,21 @@ class Doors {
             };
 
         _.each(self.doors, door => {
-            const tiles = self.getTiles(door);
+            let tiles = self.getTiles(door);
 
             allTiles.indexes.push.apply(allTiles.indexes, tiles.indexes);
             allTiles.data.push.apply(allTiles.data, tiles.data);
-            allTiles.collisions.push.apply(allTiles.collisions, tiles.collisions);
+            allTiles.collisions.push.apply(
+                allTiles.collisions,
+                tiles.collisions
+            );
         });
 
         return allTiles;
     }
 
     hasCollision(x, y) {
-        const self = this,
+        let self = this,
             tiles = self.getAllTiles(),
             tileIndex = self.world.map.gridPositionToIndex(x, y),
             index = tiles.indexes.indexOf(tileIndex) - 1;
@@ -105,7 +107,7 @@ class Doors {
 
     getDoor(x, y, callback) {
         this.forEachDoor(door => {
-            callback((door.x === x && door.y === y) ? door : null);
+            callback(door.x === x && door.y === y ? door : null);
         });
     }
 

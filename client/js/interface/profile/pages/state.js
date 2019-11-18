@@ -2,7 +2,6 @@
 
 define(['jquery', '../page'], function($, Page) {
     return Page.extend({
-
         init: function(game) {
             var self = this;
 
@@ -21,7 +20,13 @@ define(['jquery', '../page'], function($, Page) {
             self.ringSlot = $('#ringSlot');
             self.bootsSlot = $('#bootsSlot');
 
-            self.slots = [self.weaponSlot, self.armourSlot, self.pendantSlot, self.ringSlot, self.bootsSlot];
+            self.slots = [
+                self.weaponSlot,
+                self.armourSlot,
+                self.pendantSlot,
+                self.ringSlot,
+                self.bootsSlot
+            ];
 
             self.loaded = false;
 
@@ -35,8 +40,7 @@ define(['jquery', '../page'], function($, Page) {
         load: function() {
             var self = this;
 
-            if (!self.game.player.armour)
-                return;
+            if (!self.game.player.armour) return;
 
             self.name.text(self.player.username);
             self.level.text(self.player.level);
@@ -47,36 +51,68 @@ define(['jquery', '../page'], function($, Page) {
             self.loaded = true;
 
             self.weaponSlot.click(function() {
-                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'weapon']);
+                self.game.socket.send(Packets.Equipment, [
+                    Packets.EquipmentOpcode.Unequip,
+                    'weapon'
+                ]);
             });
 
             self.armourSlot.click(function() {
-                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'armour']);
+                self.game.socket.send(Packets.Equipment, [
+                    Packets.EquipmentOpcode.Unequip,
+                    'armour'
+                ]);
             });
 
             self.pendantSlot.click(function() {
-                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'pendant']);
+                self.game.socket.send(Packets.Equipment, [
+                    Packets.EquipmentOpcode.Unequip,
+                    'pendant'
+                ]);
             });
 
             self.ringSlot.click(function() {
-                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'ring']);
+                self.game.socket.send(Packets.Equipment, [
+                    Packets.EquipmentOpcode.Unequip,
+                    'ring'
+                ]);
             });
 
             self.bootsSlot.click(function() {
-                self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'boots']);
+                self.game.socket.send(Packets.Equipment, [
+                    Packets.EquipmentOpcode.Unequip,
+                    'boots'
+                ]);
             });
         },
 
         loadSlots: function() {
             var self = this;
 
-            self.weaponSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.weapon.string));
-            self.armourSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.armour.string));
-            self.pendantSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.pendant.string));
-            self.ringSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.ring.string));
-            self.bootsSlot.css('background-image', self.getImageFormat(self.getScale(), self.player.boots.string));
+            self.weaponSlot.css(
+                'background-image',
+                self.getImageFormat(self.getScale(), self.player.weapon.string)
+            );
+            self.armourSlot.css(
+                'background-image',
+                self.getImageFormat(self.getScale(), self.player.armour.string)
+            );
+            self.pendantSlot.css(
+                'background-image',
+                self.getImageFormat(self.getScale(), self.player.pendant.string)
+            );
+            self.ringSlot.css(
+                'background-image',
+                self.getImageFormat(self.getScale(), self.player.ring.string)
+            );
+            self.bootsSlot.css(
+                'background-image',
+                self.getImageFormat(self.getScale(), self.player.boots.string)
+            );
 
-            self.forEachSlot(function(slot) { slot.css('background-size', '600%'); });
+            self.forEachSlot(function(slot) {
+                slot.css('background-size', '600%');
+            });
         },
 
         update: function() {
@@ -97,6 +133,5 @@ define(['jquery', '../page'], function($, Page) {
         getScale: function() {
             return this.game.renderer.getScale();
         }
-
     });
 });

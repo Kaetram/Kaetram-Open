@@ -13,15 +13,23 @@ Detect.isWindows = function() {
 };
 
 Detect.isChromeOnWindows = function() {
-    return Detect.userAgentContains('Chrome') && Detect.userAgentContains('Windows');
+    return (
+        Detect.userAgentContains('Chrome') &&
+        Detect.userAgentContains('Windows')
+    );
 };
 
 Detect.isCanaryOnWindows = function() {
-    return Detect.userAgentContains('Chrome/52') && Detect.userAgentContains('Windows');
+    return (
+        Detect.userAgentContains('Chrome/52') &&
+        Detect.userAgentContains('Windows')
+    );
 };
 
 Detect.isEdgeOnWindows = function() {
-    return Detect.userAgentContains('Edge') && Detect.userAgentContains('Windows');
+    return (
+        Detect.userAgentContains('Edge') && Detect.userAgentContains('Windows')
+    );
 };
 
 Detect.isFirefox = function() {
@@ -29,7 +37,10 @@ Detect.isFirefox = function() {
 };
 
 Detect.isSafari = function() {
-    return Detect.userAgentContains('Safari') && !Detect.userAgentContains('Chrome');
+    return (
+        Detect.userAgentContains('Safari') &&
+        !Detect.userAgentContains('Chrome')
+    );
 };
 
 Detect.isOpera = function() {
@@ -37,7 +48,10 @@ Detect.isOpera = function() {
 };
 
 Detect.isFirefoxAndroid = function() {
-    return Detect.userAgentContains('Android') && Detect.userAgentContains('Firefox');
+    return (
+        Detect.userAgentContains('Android') &&
+        Detect.userAgentContains('Firefox')
+    );
 };
 
 Detect.userAgentContains = function(string) {
@@ -66,7 +80,7 @@ Detect.iOSVersion = function() {
         // https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
         return '';
     }
-    var match = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/),
+    var match = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/),
         version;
 
     if (match !== undefined && match !== null) {
@@ -82,10 +96,10 @@ Detect.iOSVersion = function() {
 };
 
 Detect.androidVersion = function() {
-    var userAgent = navigator.userAgent.split('Android'), version;
+    var userAgent = navigator.userAgent.split('Android'),
+        version;
 
-    if (userAgent.length > 1)
-        version = userAgent[1].split(';')[0];
+    if (userAgent.length > 1) version = userAgent[1].split(';')[0];
 
     return version;
 };
@@ -105,10 +119,8 @@ Detect.isAppleDevice = function() {
     ];
 
     if (navigator.platform) {
-        while (devices.length) {
-            if (navigator.platform = devices.pop())
-                return true;
-        }
+        while (devices.length)
+            if ((navigator.platform = devices.pop())) return true;
     }
 
     return false;

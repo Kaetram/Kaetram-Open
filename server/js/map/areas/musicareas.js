@@ -1,12 +1,12 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     Area = require('../area'),
     map = require('../../../data/map/world_server');
 
 class MusicAreas {
     constructor() {
-        const self = this;
+        let self = this;
 
         self.musicAreas = [];
 
@@ -14,10 +14,10 @@ class MusicAreas {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         _.each(map.musicAreas, m => {
-            const musicArea = new Area(m.id, m.x, m.y, m.width, m.height);
+            let musicArea = new Area(m.id, m.x, m.y, m.width, m.height);
 
             self.musicAreas.push(musicArea);
         });

@@ -1,6 +1,6 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     Character = require('../character'),
     Mobs = require('../../../../util/mobs'),
     Utils = require('../../../../util/utils'),
@@ -11,10 +11,9 @@ class Mob extends Character {
     constructor(id, instance, x, y, world) {
         super(id, 'mob', instance, x, y);
 
-        const self = this;
+        let self = this;
 
-        if (!Mobs.exists(id))
-            return;
+        if (!Mobs.exists(id)) return;
 
         self.world = world;
 
@@ -47,35 +46,32 @@ class Mob extends Character {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         self.handler = new MobHandler(self, self.world);
     }
 
     refresh() {
-        const self = this;
+        let self = this;
 
         self.hitPoints = self.data.hitPoints;
         self.maxHitPoints = self.data.hitPoints;
 
-        if (self.refreshCallback)
-            self.refreshCallback();
+        if (self.refreshCallback) self.refreshCallback();
     }
 
     getDrop() {
-        const self = this;
+        let self = this;
 
-        if (!self.drops)
-            return null;
+        if (!self.drops) return null;
 
         let min = 0,
             percent = 0,
             random = Utils.randomInt(0, 1000);
 
-
-        for (const drop in self.drops) {
+        for (let drop in self.drops) {
             if (self.drops.hasOwnProperty(drop)) {
-                const chance = self.drops[drop];
+                let chance = self.drops[drop];
 
                 min = percent;
                 percent += chance;
@@ -83,8 +79,16 @@ class Mob extends Character {
                 if (random >= min && random < percent) {
                     let count = 1;
 
-                    if (drop === 'gold')
-                        count = Utils.randomInt(1, self.level * (Math.floor(Math.pow(2, self.level / 7) / (self.level / 4))));
+                    if (drop === 'gold') {
+                        count = Utils.randomInt(
+                            1,
+                            self.level *
+                                Math.floor(
+                                    Math.pow(2, self.level / 7) /
+                                        (self.level / 4)
+                                )
+                        );
+                    }
 
                     return {
                         id: Items.stringToId(drop),
@@ -98,41 +102,38 @@ class Mob extends Character {
     }
 
     getProjectileName() {
-        return this.data.projectileName ? this.data.projectileName : 'projectile-pinearrow';
+        return this.data.projectileName
+            ? this.data.projectileName
+            : 'projectile-pinearrow';
     }
 
     canAggro(player) {
-        const self = this;
+        let self = this;
 
-        if (self.hasTarget())
-            return false;
+        if (self.hasTarget()) return false;
 
-        if (!self.aggressive)
-            return false;
+        if (!self.aggressive) return false;
 
-        if (Math.floor(self.level * 1.5) < player.level)
-            return false;
+        if (Math.floor(self.level * 1.5) < player.level) return false;
 
-        if (!player.hasAggressionTimer())
-            return false;
+        if (!player.hasAggressionTimer()) return false;
 
         return self.isNear(player, self.aggroRange);
     }
 
     destroy() {
-        const self = this;
+        let self = this;
 
         self.dead = true;
         self.clearTarget();
         self.resetPosition();
         self.respawn();
 
-        if (self.area)
-            self.area.removeEntity(self);
+        if (self.area) self.area.removeEntity(self);
     }
 
     return() {
-        const self = this;
+        let self = this;
 
         self.clearTarget();
         self.resetPosition();
@@ -144,11 +145,16 @@ class Mob extends Character {
     }
 
     distanceToSpawn() {
-        return this.getCoordDistance(this.spawnLocation[0], this.spawnLocation[1]);
+        return this.getCoordDistance(
+            this.spawnLocation[0],
+            this.spawnLocation[1]
+        );
     }
 
     isAtSpawn() {
-        return this.x === this.spawnLocation[0] && this.y === this.spawnLocation[1];
+        return (
+            this.x === this.spawnLocation[0] && this.y === this.spawnLocation[1]
+        );
     }
 
     isOutsideSpawn() {
@@ -156,15 +162,16 @@ class Mob extends Character {
     }
 
     addToChestArea(chestAreas) {
-        const self = this,
-            area = _.find(chestAreas, area => { return area.contains(self.x, self.y); });
+        let self = this,
+            area = _.find(chestAreas, area => {
+                return area.contains(self.x, self.y);
+            });
 
-        if (area)
-            area.addEntity(self);
+        if (area) area.addEntity(self);
     }
 
     respawn() {
-        const self = this;
+        let self = this;
 
         /**
          * Some entities are static (only spawned once during an event)
@@ -172,17 +179,15 @@ class Mob extends Character {
          * so the resawning script is handled elsewhere.
          */
 
-        if (!self.static || self.respawnDelay === -1)
-            return;
+        if (!self.static || self.respawnDelay === -1) return;
 
         setTimeout(() => {
-            if (self.respawnCallback)
-                self.respawnCallback();
+            if (self.respawnCallback) self.respawnCallback();
         }, self.respawnDelay);
     }
 
     getState() {
-        const self = this,
+        let self = this,
             base = super.getState();
 
         base.hitPoints = self.hitPoints;
@@ -195,7 +200,7 @@ class Mob extends Character {
     }
 
     resetPosition() {
-        const self = this;
+        let self = this;
 
         self.setPosition(self.spawnLocation[0], self.spawnLocation[1]);
     }

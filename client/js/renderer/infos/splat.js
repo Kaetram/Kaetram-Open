@@ -2,7 +2,6 @@
 
 define(function() {
     return Class.extend({
-
         init: function(id, type, text, x, y, statique) {
             var self = this;
 
@@ -33,13 +32,11 @@ define(function() {
         tick: function() {
             var self = this;
 
-            if (!self.statique)
-                self.y -= 1;
+            if (!self.statique) self.y -= 1;
 
             self.opacity -= 70 / self.duration;
 
-            if (self.opacity < 0)
-                self.destroy();
+            if (self.opacity < 0) self.destroy();
         },
 
         update: function(time) {
@@ -54,13 +51,11 @@ define(function() {
         destroy: function() {
             var self = this;
 
-            if (self.destroyCallback)
-                self.destroyCallback(self.id);
+            if (self.destroyCallback) self.destroyCallback(self.id);
         },
 
         onDestroy: function(callback) {
             this.destroyCallback = callback;
         }
-
     });
 });

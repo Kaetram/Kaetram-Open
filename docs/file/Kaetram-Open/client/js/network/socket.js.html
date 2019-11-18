@@ -38,7 +38,6 @@
 
 define([&apos;./packets&apos;, &apos;./messages&apos;], function(Packets, Messages) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -54,12 +53,11 @@ define([&apos;./packets&apos;, &apos;./messages&apos;], function(Packets, Messag
         },
 
         connect: function() {
-            var self = this, url;
+            var self = this,
+                url;
 
-            if (self.config.ssl)
-                url = &apos;wss://&apos; + self.config.ip;
-            else
-                url = &apos;ws://&apos; + self.config.ip + &apos;:&apos; + self.config.port;
+            if (self.config.ssl) url = &apos;wss://&apos; + self.config.ip;
+            else url = &apos;ws://&apos; + self.config.ip + &apos;:&apos; + self.config.port;
 
             self.connection = null;
 
@@ -75,16 +73,26 @@ define([&apos;./packets&apos;, &apos;./messages&apos;], function(Packets, Messag
 
                 self.game.app.toggleLogin(false);
 
-                if (self.game.isDebug())
-                    self.game.app.sendError(null, &apos;Couldn\&apos;t connect to &apos; + self.config.ip + &apos;:&apos; + self.config.port);
-                else
-                    self.game.app.sendError(null, &apos;Could not connect to the game server.&apos;);
+                if (self.game.isDebug()) {
+                    self.game.app.sendError(
+                        null,
+                        &quot;Couldn&apos;t connect to &quot; +
+                            self.config.ip +
+                            &apos;:&apos; +
+                            self.config.port
+                    );
+                } else {
+                    self.game.app.sendError(
+                        null,
+                        &apos;Could not connect to the game server.&apos;
+                    );
+                }
             });
 
             self.connection.on(&apos;connect&apos;, function() {
                 self.listening = true;
 
-		        log.info(&apos;Connection established...&apos;);
+                log.info(&apos;Connection established...&apos;);
 
                 self.game.app.updateLoader(&apos;Preparing Handshake&apos;);
 
@@ -108,18 +116,14 @@ define([&apos;./packets&apos;, &apos;./messages&apos;], function(Packets, Messag
         receive: function(message) {
             var self = this;
 
-            if (!self.listening)
-                return;
+            if (!self.listening) return;
 
             if (message.startsWith(&apos;[&apos;)) {
                 var data = JSON.parse(message);
 
-                if (data.length &gt; 1)
-                    self.messages.handleBulkData(data);
-                else
-                    self.messages.handleData(JSON.parse(message).shift());
-            } else
-                self.messages.handleUTF8(message);
+                if (data.length &gt; 1) self.messages.handleBulkData(data);
+                else self.messages.handleData(JSON.parse(message).shift());
+            } else self.messages.handleUTF8(message);
         },
 
         send: function(packet, data) {
@@ -129,7 +133,6 @@ define([&apos;./packets&apos;, &apos;./messages&apos;], function(Packets, Messag
             if (self.connection &amp;&amp; self.connection.connected)
                 self.connection.send(json);
         }
-
     });
 });
 </code></pre>

@@ -1,5 +1,4 @@
 ({
-
     appDir: '../',
     baseUrl: 'js',
     dir: '../../client-build',

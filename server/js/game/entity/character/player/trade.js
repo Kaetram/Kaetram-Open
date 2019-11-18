@@ -1,10 +1,10 @@
 /* global module */
 
-const Modules = require('../../../../util/modules');
+let Modules = require('../../../../util/modules');
 
 class Trade {
     constructor(player) {
-        const self = this;
+        let self = this;
 
         self.player = player;
         self.oPlayer = null;
@@ -19,14 +19,14 @@ class Trade {
     }
 
     start() {
-        const self = this;
+        let self = this;
 
         self.oPlayer = self.requestee;
         self.state = Modules.Trade.Started;
     }
 
     stop() {
-        const self = this;
+        let self = this;
 
         self.oPlayer = null;
         self.state = null;
@@ -38,16 +38,15 @@ class Trade {
     }
 
     finalize() {
-        const self = this;
+        let self = this;
 
         if (!self.player.inventory.containsSpaces(self.oPlayerItems.length))
             return;
 
-        for (const i in self.oPlayerItems) {
-            const item = self.oPlayerItems[i];
+        for (let i in self.oPlayerItems) {
+            let item = self.oPlayerItems[i];
 
-            if (!item || item.id === -1)
-                continue;
+            if (!item || item.id === -1) continue;
 
             self.oPlayer.inventory.remove(item.id, item.count, item.index);
             self.player.inventory.add(item);
@@ -55,7 +54,7 @@ class Trade {
     }
 
     select(slot) {
-        const self = this,
+        let self = this,
             item = self.player.inventory.slots[slot];
 
         if (!item || item.id === -1 || self.playerItems.indexOf(item) < 0)
@@ -65,16 +64,15 @@ class Trade {
     }
 
     request(oPlayer) {
-        const self = this;
+        let self = this;
 
         self.requestee = oPlayer;
 
-        if (oPlayer.trade.getRequestee() === self.player.instance)
-            self.start();
+        if (oPlayer.trade.getRequestee() === self.player.instance) self.start();
     }
 
     accept() {
-        const self = this;
+        let self = this;
 
         self.subState = Modules.Trade.Accepted;
 
@@ -85,10 +83,9 @@ class Trade {
     }
 
     getRequestee() {
-        const self = this;
+        let self = this;
 
-        if (!self.requestee)
-            return null;
+        if (!self.requestee) return null;
 
         return self.requestee.instance;
     }

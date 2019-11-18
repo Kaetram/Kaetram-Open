@@ -36,21 +36,21 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/quest/impl/thelie.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Quest = require(&apos;../quest&apos;),
+let Quest = require(&apos;../quest&apos;),
     Packets = require(&apos;../../../../../network/packets&apos;);
 
 class Thelie extends Quest {
     constructor(player, data) {
         super(player, data);
 
-        const self = this;
+        let self = this;
 
         self.player = player;
         self.data = data;
     }
 
     load(stage) {
-        const self = this;
+        let self = this;
 
         super.load(stage);
     }

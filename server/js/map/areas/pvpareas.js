@@ -1,12 +1,12 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     Area = require('../area'),
     map = require('../../../data/map/world_server');
 
 class PVPAreas {
     constructor() {
-        const self = this;
+        let self = this;
 
         self.pvpAreas = [];
 
@@ -14,11 +14,11 @@ class PVPAreas {
     }
 
     load() {
-        const self = this,
+        let self = this,
             list = map.pvpAreas;
 
         _.each(list, p => {
-            const pvpArea = new Area(p.id, p.x, p.y, p.width, p.height);
+            let pvpArea = new Area(p.id, p.x, p.y, p.width, p.height);
 
             self.pvpAreas.push(pvpArea);
         });

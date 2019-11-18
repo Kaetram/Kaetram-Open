@@ -1,11 +1,11 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     AbilityInfo = require('../../../../../util/abilities');
 
 class Abilities {
     constructor(player) {
-        const self = this;
+        let self = this;
 
         self.player = player;
 
@@ -21,16 +21,15 @@ class Abilities {
     }
 
     addShortcut(ability) {
-        const self = this;
+        let self = this;
 
-        if (self.shortcutSize >= 5)
-            return;
+        if (self.shortcutSize >= 5) return;
 
         self.shortcuts.push(ability.name);
     }
 
     removeAbility(ability) {
-        const self = this;
+        let self = this;
 
         if (self.isShortcut(ability))
             self.removeShortcut(self.shortcuts.indexOf(ability.name));
@@ -39,14 +38,12 @@ class Abilities {
     }
 
     removeShortcut(index) {
-        if (index > -1)
-            this.shortcuts.splice(index, 1);
+        if (index > -1) this.shortcuts.splice(index, 1);
     }
 
     hasAbility(ability) {
         _.each(this.abilities, uAbility => {
-            if (uAbility.name === ability.name)
-                return true;
+            if (uAbility.name === ability.name) return true;
         });
 
         return false;

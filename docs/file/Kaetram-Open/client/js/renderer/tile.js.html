@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/renderer/tile.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define(function() {
     return Class.extend({
-
         init: function(id, index, map) {
             var self = this;
 
@@ -64,21 +63,22 @@
         animate: function(time) {
             var self = this;
 
-            if ((time - self.lastTime) &gt; self.animationInfo[self.animationIndex].duration) {
+            if (
+                time - self.lastTime &gt;
+                self.animationInfo[self.animationIndex].duration
+            ) {
                 self.update();
                 self.lastTime = time;
 
                 if (self.animationIndex &gt;= self.animationInfo.length - 1)
                     self.animationIndex = 0;
-                else
-                    self.animationIndex++;
+                else self.animationIndex++;
             }
         },
 
         getPosition: function() {
-            return (this.x &amp;&amp; this.y) ? [this.x, this.y] : [0, 0];
+            return this.x &amp;&amp; this.y ? [this.x, this.y] : [0, 0];
         }
-
     });
 });
 </code></pre>

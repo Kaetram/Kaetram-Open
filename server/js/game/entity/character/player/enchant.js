@@ -1,6 +1,6 @@
 /* global module */
 
-const Items = require('../../../../util/items'),
+let Items = require('../../../../util/items'),
     Messages = require('../../../../network/messages'),
     Packets = require('../../../../network/packets'),
     Utils = require('../../../../util/utils');
@@ -14,9 +14,8 @@ class Enchant {
      * Tier 5 - Damage boost (1-40% & 25% for special ability or special ability level up)
      */
 
-
     constructor(player) {
-        const self = this;
+        let self = this;
 
         self.player = player;
 
@@ -25,28 +24,27 @@ class Enchant {
     }
 
     add(type, item) {
-        const self = this,
+        let self = this,
             isItem = item === 'item';
 
-        if (isItem && !Items.isEnchantable(item.id))
-            return;
+        if (isItem && !Items.isEnchantable(item.id)) return;
 
         if (type === 'item') {
-            if (self.selectedItem)
-                self.remove('item');
+            if (self.selectedItem) self.remove('item');
 
             self.selectedItem = item;
         } else if (type === 'shards') {
-            if (self.selectedShards)
-                self.remove('shards');
+            if (self.selectedShards) self.remove('shards');
 
             self.selectedShards = item;
         }
 
-        self.player.send(new Messages.Enchant(Packets.EnchantOpcode.Select, {
-            type: type,
-            index: item.index
-        }));
+        self.player.send(
+            new Messages.Enchant(Packets.EnchantOpcode.Select, {
+                type: type,
+                index: item.index
+            })
+        );
     }
 
     remove(type) {
@@ -60,26 +58,26 @@ class Enchant {
         } else if (type === 'shards' && self.selectedShards) {
             index = self.selectedShards.index;
 
-
             self.selectedShards = null;
         }
 
-        self.player.send(new Messages.Enchant(Packets.EnchantOpcode.Remove, {
-            type: type,
-            index: index
-        }));
+        self.player.send(
+            new Messages.Enchant(Packets.EnchantOpcode.Remove, {
+                type: type,
+                index: index
+            })
+        );
     }
 
     convert(shard) {
-        const self = this;
+        let self = this;
 
         if (!Items.isShard(shard.id) || !self.player.inventory.hasSpace())
             return;
 
-        const tier = Items.getShardTier(shard.id);
+        let tier = Items.getShardTier(shard.id);
 
-        if (shard.count < 11 && tier > 5)
-            return;
+        if (shard.count < 11 && tier > 5) return;
 
         for (let i = 0; i < shard.count; i += 10) {
             self.player.inventory.remove(shard.id, 10, shard.index);
@@ -94,7 +92,7 @@ class Enchant {
     }
 
     enchant() {
-        const self = this;
+        let self = this;
 
         if (!self.selectedItem) {
             self.player.notify('You have not selected an item to enchant.');
@@ -112,7 +110,9 @@ class Enchant {
         }
 
         if (self.selectedShards.count < 10) {
-            self.player.notify('You must have a minimum of 10 shards to enchant.');
+            self.player.notify(
+                'You must have a minimum of 10 shards to enchant.'
+            );
             return;
         }
 
@@ -121,69 +121,69 @@ class Enchant {
          * and reason them out.
          */
 
-        const tier = self.selectedItem.tier;
+        let tier = self.selectedItem.tier;
 
-        self.selectedItem.count = Utils.randomInt(1, tier === 5 ? 40 : 5 * tier);
+        self.selectedItem.count = Utils.randomInt(
+            1,
+            tier === 5 ? 40 : 5 * tier
+        );
 
-        if (tier < 2)
-            return;
+        if (tier < 2) return;
 
         if (self.hasAbility(self.selectedItem)) {
             if (self.selectedItem.abilityLevel < 5)
                 self.selectedItem.abilityLevel++;
-            else
-                self.generateAbility();
+            else self.generateAbility();
         }
 
-        self.player.inventory.remove(self.selectedShards.id, 10, self.selectedShards.index);
+        self.player.inventory.remove(
+            self.selectedShards.id,
+            10,
+            self.selectedShards.index
+        );
         self.player.sync();
     }
 
     generateAbility() {
-        const self = this,
+        let self = this,
             type = Items.getType(self.selectedItem.id),
             probability = Utils.randomInt(0, 100);
 
-        if (probability > 5 + (5 * self.selectedShards.tier))
-            return;
+        if (probability > 5 + 5 * self.selectedShards.tier) return;
 
         switch (type) {
             case 'armor':
             case 'armorarcher':
-
                 self.selectedItem.ability = Utils.randomInt(2, 3);
-
 
                 break;
 
             case 'weapon':
-
                 self.selectedItem.ability = Utils.randomInt(0, 1);
 
                 break;
 
             case 'weaponarcher':
-
                 self.selectedItem.ability = Utils.randomInt(4, 5);
 
                 break;
 
             case 'pendant':
-
                 break;
 
             case 'ring':
-
                 break;
 
             case 'boots':
-
                 break;
         }
     }
 
     verify() {
-        return Items.isEnchantable(this.selectedItem.id) && Items.isShard(this.selectedShards.id);
+        return (
+            Items.isEnchantable(this.selectedItem.id) &&
+            Items.isShard(this.selectedShards.id)
+        );
     }
 
     hasAbility(item) {

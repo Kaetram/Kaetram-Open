@@ -19,7 +19,7 @@ class Region {
      */
 
     constructor(world) {
-        const self = this;
+        let self = this;
 
         self.map = world.map;
         self.mapRegions = world.map.regions;
@@ -30,27 +30,41 @@ class Region {
         self.loaded = false;
 
         self.onAdd((entity, regionId) => {
-            if (!entity || !entity.username)
-                return;
+            if (!entity || !entity.username) return;
 
-            if (config.debug)
-                log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
+            if (config.debug) {
+                log.info(
+                    'Entity - ' +
+                        entity.username +
+                        ' has entered region - ' +
+                        regionId
+                );
+            }
 
-            if (entity instanceof Player)
-                self.sendRegion(entity, regionId);
+            if (entity instanceof Player) self.sendRegion(entity, regionId);
         });
 
         self.onRemove((entity, oldRegions) => {
-            if (!oldRegions || oldRegions.length < 1 || !entity || !entity.username)
+            if (
+                !oldRegions ||
+                oldRegions.length < 1 ||
+                !entity ||
+                !entity.username
+            )
                 return;
         });
 
         self.onIncoming((entity, regionId) => {
-            if (!entity || !entity.username)
-                return;
+            if (!entity || !entity.username) return;
 
-            if (config.debug)
-                log.info('Entity - ' + entity.username + ' is incoming into region - ' + regionId);
+            if (config.debug) {
+                log.info(
+                    'Entity - ' +
+                        entity.username +
+                        ' is incoming into region - ' +
+                        regionId
+                );
+            }
         });
 
         fs.watchFile(map, () => {
@@ -69,7 +83,7 @@ class Region {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         self.clientWidth = ClientMap.width;
         self.clientHeight = ClientMap.height;
@@ -88,10 +102,9 @@ class Region {
     }
 
     addEntityToInstance(entity, player) {
-        const self = this;
+        let self = this;
 
-        if (!entity)
-            return;
+        if (!entity) return;
 
         self.add(entity, player.region);
 
@@ -99,7 +112,7 @@ class Region {
     }
 
     createInstance(player, regionId) {
-        const self = this;
+        let self = this;
 
         /**
          * We create an instance at the player's current surrounding
@@ -129,7 +142,7 @@ class Region {
     }
 
     deleteInstance(player) {
-        const self = this;
+        let self = this;
 
         player.instanced = false;
 
@@ -137,7 +150,7 @@ class Region {
         self.push(player);
 
         self.mapRegions.forEachAdjacentRegion(player.region, regionId => {
-            const instancedRegion = Region.regionIdToInstance(player, regionId);
+            let instancedRegion = Region.regionIdToInstance(player, regionId);
 
             if (instancedRegion in self.regions)
                 delete self.regions[instancedRegion];
@@ -145,14 +158,12 @@ class Region {
     }
 
     parseRegions() {
-        const self = this;
+        let self = this;
 
-        if (!self.loaded)
-            return;
+        if (!self.loaded) return;
 
         self.mapRegions.forEachRegion(regionId => {
-            if (self.regions[regionId].incoming.length < 1)
-                return;
+            if (self.regions[regionId].incoming.length < 1) return;
 
             self.sendSpawns(regionId);
 
@@ -161,7 +172,7 @@ class Region {
     }
 
     updateRegions() {
-        const self = this;
+        let self = this;
 
         self.world.forEachPlayer(player => {
             player.regionsLoaded = [];
@@ -171,14 +182,13 @@ class Region {
     }
 
     sendRegion(player, region, force) {
-        const self = this,
+        let self = this,
             tileData = self.getRegionData(region, player, force),
             dynamicTiles = player.doors.getAllTiles();
 
-
         // Send dynamic tiles alongside the region
         for (let i = 0; i < tileData.length; i++) {
-            const primaryTile = tileData[i],
+            let primaryTile = tileData[i],
                 index = dynamicTiles.indexes.indexOf(primaryTile.index);
 
             if (index > -1) {
@@ -199,19 +209,24 @@ class Region {
         }
 
         // No need to send empty data...
-        if (tileData.length > 0)
-            player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
+        if (tileData.length > 0) {
+            player.send(
+                new Messages.Region(
+                    Packets.RegionOpcode.Render,
+                    tileData,
+                    force
+                )
+            );
+        }
     }
 
     sendSpawns(regionId) {
-        const self = this;
+        let self = this;
 
-        if (!regionId)
-            return;
+        if (!regionId) return;
 
         _.each(self.regions[regionId].incoming, entity => {
-            if (!entity || !entity.instance || entity.instanced)
-                return;
+            if (!entity || !entity.instance || entity.instanced) return;
 
             self.world.push(Packets.PushOpcode.Regions, {
                 regionId: regionId,
@@ -222,15 +237,15 @@ class Region {
     }
 
     add(entity, regionId) {
-        const self = this,
+        let self = this,
             newRegions = [];
 
-        if (entity && regionId && (regionId in self.regions)) {
+        if (entity && regionId && regionId in self.regions) {
             self.mapRegions.forEachAdjacentRegion(regionId, id => {
                 if (entity.instanced)
                     id = Region.regionIdToInstance(entity, id);
 
-                const region = self.regions[id];
+                let region = self.regions[id];
 
                 if (region && region.entities) {
                     region.entities[entity.instance] = entity;
@@ -244,24 +259,29 @@ class Region {
                 self.regions[regionId].players.push(entity.instance);
         }
 
-        if (self.addCallback)
-            self.addCallback(entity, regionId);
+        if (self.addCallback) self.addCallback(entity, regionId);
 
         return newRegions;
     }
 
     remove(entity) {
-        const self = this,
+        let self = this,
             oldRegions = [];
 
         if (entity && entity.region) {
-            const region = self.regions[entity.region];
+            let region = self.regions[entity.region];
 
-            if (entity instanceof Player)
-                region.players = _.reject(region.players, id => { return id === entity.instance; });
+            if (entity instanceof Player) {
+                region.players = _.reject(region.players, id => {
+                    return id === entity.instance;
+                });
+            }
 
             self.mapRegions.forEachAdjacentRegion(entity.region, id => {
-                if (self.regions[id] && entity.instance in self.regions[id].entities) {
+                if (
+                    self.regions[id] &&
+                    entity.instance in self.regions[id].entities
+                ) {
                     delete self.regions[id].entities[entity.instance];
                     oldRegions.push(id);
                 }
@@ -270,35 +290,32 @@ class Region {
             entity.region = null;
         }
 
-        if (self.removeCallback)
-            self.removeCallback(entity, oldRegions);
+        if (self.removeCallback) self.removeCallback(entity, oldRegions);
 
         return oldRegions;
     }
 
     incoming(entity, regionId) {
-        const self = this;
+        let self = this;
 
-        if (!entity || !regionId)
-            return;
+        if (!entity || !regionId) return;
 
-        const region = self.regions[regionId];
+        let region = self.regions[regionId];
 
         if (region && !_.include(region.entities, entity.instance))
             region.incoming.push(entity);
 
-        if (self.incomingCallback)
-            self.incomingCallback(entity, regionId);
+        if (self.incomingCallback) self.incomingCallback(entity, regionId);
     }
 
     handle(entity, region) {
         let self = this,
             regionsChanged = false;
 
-        if (!entity)
-            return regionsChanged;
+        if (!entity) return regionsChanged;
 
-        let regionId = region || self.mapRegions.regionIdFromPosition(entity.x, entity.y);
+        let regionId =
+            region || self.mapRegions.regionIdFromPosition(entity.x, entity.y);
 
         if (entity.instanced)
             regionId = Region.regionIdToInstance(entity, regionId);
@@ -308,7 +325,7 @@ class Region {
 
             self.incoming(entity, regionId);
 
-            const oldRegions = self.remove(entity),
+            let oldRegions = self.remove(entity),
                 newRegions = self.add(entity, regionId);
 
             if (_.size(oldRegions) > 0)
@@ -322,8 +339,7 @@ class Region {
         let self = this,
             entities;
 
-        if (!player || !(player.region in self.regions))
-            return;
+        if (!player || !(player.region in self.regions)) return;
 
         entities = _.keys(self.regions[player.region].entities);
 
@@ -339,7 +355,7 @@ class Region {
     }
 
     changeTileAt(player, newTile, x, y) {
-        const self = this,
+        let self = this,
             index = self.gridPositionToIndex(x, y);
 
         player.send(Region.getModify(index, newTile));
@@ -360,32 +376,45 @@ class Region {
         let self = this,
             data = [];
 
-        if (!player)
-            return data;
+        if (!player) return data;
 
-        self.mapRegions.forEachAdjacentRegion(region, regionId => {
-            if (!player.hasLoadedRegion(regionId) || force) {
-                player.loadRegion(regionId);
+        self.mapRegions.forEachAdjacentRegion(
+            region,
+            regionId => {
+                if (!player.hasLoadedRegion(regionId) || force) {
+                    player.loadRegion(regionId);
 
-                const bounds = self.getRegionBounds(regionId);
+                    let bounds = self.getRegionBounds(regionId);
 
-                for (let i = 0, y = bounds.startY; y <= bounds.endY; y++, i++) {
-                    for (let x = bounds.startX; x < bounds.endX; x++) {
-                        const index = self.gridPositionToIndex(x - 1, y),
-                            tileData = ClientMap.data[index],
-                            isCollision = ClientMap.collisions.indexOf(index) > -1 || !tileData;
+                    for (
+                        let i = 0, y = bounds.startY;
+                        y <= bounds.endY;
+                        y++, i++
+                    ) {
+                        for (let x = bounds.startX; x < bounds.endX; x++) {
+                            let index = self.gridPositionToIndex(x - 1, y),
+                                tileData = ClientMap.data[index],
+                                isCollision =
+                                    ClientMap.collisions.indexOf(index) > -1 ||
+                                    !tileData;
 
-                        data.push({ index: index, data: tileData, isCollision: isCollision });
+                            data.push({
+                                index: index,
+                                data: tileData,
+                                isCollision: isCollision
+                            });
+                        }
                     }
                 }
-            }
-        }, 2);
+            },
+            2
+        );
 
         return data;
     }
 
     getRegionBounds(regionId) {
-        const self = this,
+        let self = this,
             regionCoordinates = self.mapRegions.regionIdToCoordinates(regionId);
 
         return {
@@ -404,7 +433,7 @@ class Region {
     }
 
     static instanceToRegionId(instancedRegionId) {
-        const region = instancedRegionId.split('-');
+        let region = instancedRegionId.split('-');
 
         return region[0] + '-' + region[1];
     }
@@ -414,7 +443,7 @@ class Region {
     }
 
     gridPositionToIndex(x, y) {
-        return (y * this.clientWidth) + x + 1;
+        return y * this.clientWidth + x + 1;
     }
 
     onAdd(callback) {

@@ -38,7 +38,6 @@
 
 define([&apos;./character/character&apos;], function(Character) {
     return Class.extend({
-
         init: function(entity) {
             var self = this;
 
@@ -50,8 +49,7 @@ define([&apos;./character/character&apos;], function(Character) {
         load: function() {
             var self = this;
 
-            if (!self.entity || !self.game)
-                return;
+            if (!self.entity || !self.game) return;
 
             if (self.isCharacter()) {
                 self.entity.onRequestPath(function(x, y) {
@@ -68,19 +66,38 @@ define([&apos;./character/character&apos;], function(Character) {
                     self.entities.registerDuality(self.entity);
 
                     self.entity.forEachAttacker(function(attacker) {
-                        if (attacker.hasTarget() &amp;&amp; attacker.target.id === self.entity.id &amp;&amp; !attacker.stunned)
+                        if (
+                            attacker.hasTarget() &amp;&amp;
+                            attacker.target.id === self.entity.id &amp;&amp;
+                            !attacker.stunned
+                        )
                             attacker.follow(self.entity);
                     });
 
-                    if (self.entity.type === &apos;mob&apos;)
-                        self.game.socket.send(Packets.Movement, [Packets.MovementOpcode.Entity, self.entity.id, self.entity.gridX, self.entity.gridY]);
+                    if (self.entity.type === &apos;mob&apos;) {
+                        self.game.socket.send(Packets.Movement, [
+                            Packets.MovementOpcode.Entity,
+                            self.entity.id,
+                            self.entity.gridX,
+                            self.entity.gridY
+                        ]);
+                    }
 
-                    if (self.entity.attackRange &gt; 1 &amp;&amp; self.entity.hasTarget() &amp;&amp; self.entity.getDistance(self.entity.target) &lt;= self.entity.attackRange)
+                    if (
+                        self.entity.attackRange &gt; 1 &amp;&amp;
+                        self.entity.hasTarget() &amp;&amp;
+                        self.entity.getDistance(self.entity.target) &lt;=
+                            self.entity.attackRange
+                    )
                         self.entity.stop(false);
                 });
 
                 self.entity.onStopPathing(function() {
-                    self.entities.grids.addToRenderingGrid(self.entity, self.entity.gridX, self.entity.gridY);
+                    self.entities.grids.addToRenderingGrid(
+                        self.entity,
+                        self.entity.gridX,
+                        self.entity.gridY
+                    );
 
                     self.entities.unregisterPosition(self.entity);
                     self.entities.registerPosition(self.entity);
@@ -89,14 +106,18 @@ define([&apos;./character/character&apos;], function(Character) {
         },
 
         isCharacter: function() {
-            return this.entity.type &amp;&amp; (this.entity.type === &apos;player&apos; || this.entity.type === &apos;mob&apos; || this.entity.type === &apos;npc&apos;);
+            return (
+                this.entity.type &amp;&amp;
+                (this.entity.type === &apos;player&apos; ||
+                    this.entity.type === &apos;mob&apos; ||
+                    this.entity.type === &apos;npc&apos;)
+            );
         },
 
         setGame: function(game) {
             var self = this;
 
-            if (!self.game)
-                self.game = game;
+            if (!self.game) self.game = game;
 
             self.setEntities(self.game.entities);
         },
@@ -104,10 +125,8 @@ define([&apos;./character/character&apos;], function(Character) {
         setEntities: function(entities) {
             var self = this;
 
-            if (!self.entities)
-                self.entities = entities;
+            if (!self.entities) self.entities = entities;
         }
-
     });
 });
 </code></pre>

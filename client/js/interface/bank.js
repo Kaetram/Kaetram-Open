@@ -1,6 +1,5 @@
 define(['jquery', './container/container'], function($, Container) {
     return Class.extend({
-
         init: function(game, inventoryContainer, size) {
             var self = this;
 
@@ -29,41 +28,59 @@ define(['jquery', './container/container'], function($, Container) {
 
             for (var i = 0; i < data.length; i++) {
                 var item = data[i],
-                    slot = $('<div id="bankSlot' + i + '" class="bankSlot"></div>');
+                    slot = $(
+                        '<div id="bankSlot' + i + '" class="bankSlot"></div>'
+                    );
 
                 self.container.setSlot(i, item);
 
                 slot.css({
-                    'margin-right': (2 * self.getScale()) + 'px',
-                    'margin-bottom': (4 * self.getScale()) + 'px'
+                    'margin-right': 2 * self.getScale() + 'px',
+                    'margin-bottom': 4 * self.getScale() + 'px'
                 });
 
-                var image = $('<div id="bankImage' + i + '" class="bankImage"></div>');
+                var image = $(
+                    '<div id="bankImage' + i + '" class="bankImage"></div>'
+                );
 
-                if (item.string)
-                    image.css('background-image', self.container.getImageFormat(self.getScale(), item.string));
+                if (item.string) {
+                    image.css(
+                        'background-image',
+                        self.container.getImageFormat(
+                            self.getScale(),
+                            item.string
+                        )
+                    );
+                }
 
                 slot.click(function(event) {
                     self.click('bank', event);
                 });
 
-                if (Detect.isMobile())
-                    image.css('background-size', '600%');
+                if (Detect.isMobile()) image.css('background-size', '600%');
 
                 var count = item.count;
 
-                if (count > 999999)
-                    count = count.toString().substring(0, count.toString().length - 6) + 'M';
-                else if (count > 9999)
+                if (count > 999999) {
+                    count =
+                        count
+                            .toString()
+                            .substring(0, count.toString().length - 6) + 'M';
+                } else if (count > 9999)
                     count = count.toString().substring(0, 2) + 'K';
-                else if (count === 1)
-                    count = '';
+                else if (count === 1) count = '';
 
                 slot.append(image);
-                slot.append('<div id="bankItemCount' + i + '" class="itemCount">' + count + '</div>');
+                slot.append(
+                    '<div id="bankItemCount' +
+                        i +
+                        '" class="itemCount">' +
+                        count +
+                        '</div>'
+                );
 
                 slot.find('#bankItemCount' + i).css({
-                    'font-size': (4 * self.getScale()) + 'px',
+                    'font-size': 4 * self.getScale() + 'px',
                     'margin-top': '0',
                     'margin-left': '0'
                 });
@@ -77,36 +94,56 @@ define(['jquery', './container/container'], function($, Container) {
 
             for (var j = 0; j < self.inventoryContainer.size; j++) {
                 var iItem = self.inventoryContainer.slots[j],
-                    iSlot = $('<div id="bankInventorySlot' + j + '" class="bankSlot"></div>');
+                    iSlot = $(
+                        '<div id="bankInventorySlot' +
+                            j +
+                            '" class="bankSlot"></div>'
+                    );
 
                 iSlot.css({
-                    'margin-right': (3 * self.getScale()) + 'px',
-                    'margin-bottom': (6 * self.getScale()) + 'px'
+                    'margin-right': 3 * self.getScale() + 'px',
+                    'margin-bottom': 6 * self.getScale() + 'px'
                 });
 
-                var slotImage = $('<div id="inventoryImage' + j + '" class="bankImage"></div>');
+                var slotImage = $(
+                    '<div id="inventoryImage' + j + '" class="bankImage"></div>'
+                );
 
-                if (iItem.string)
-                    slotImage.css('background-image', self.container.getImageFormat(self.getScale(), iItem.string));
+                if (iItem.string) {
+                    slotImage.css(
+                        'background-image',
+                        self.container.getImageFormat(
+                            self.getScale(),
+                            iItem.string
+                        )
+                    );
+                }
 
                 iSlot.click(function(event) {
                     self.click('inventory', event);
                 });
 
-                if (Detect.isMobile())
-                    slotImage.css('background-size', '600%');
+                if (Detect.isMobile()) slotImage.css('background-size', '600%');
 
                 var count = iItem.count;
 
-                if (count > 999999)
-                    count = count.toString().substring(0, count.toString().length - 6) + 'M';
-                else if (count > 9999)
+                if (count > 999999) {
+                    count =
+                        count
+                            .toString()
+                            .substring(0, count.toString().length - 6) + 'M';
+                } else if (count > 9999)
                     count = count.toString().substring(0, 2) + 'K';
-                else if (count === 1)
-                    count = '';
+                else if (count === 1) count = '';
 
                 iSlot.append(slotImage);
-                iSlot.append('<div id="inventoryItemCount' + j + '" class="itemCount">' + count + '</div>');
+                iSlot.append(
+                    '<div id="inventoryItemCount' +
+                        j +
+                        '" class="itemCount">' +
+                        count +
+                        '</div>'
+                );
 
                 iSlot.find('#inventoryItemCount' + j).css({
                     'margin-top': '0',
@@ -132,36 +169,50 @@ define(['jquery', './container/container'], function($, Container) {
                     slot = self.container.slots[i];
 
                 bankSlot.css({
-                    'margin-right': (2 * self.getScale()) + 'px',
-                    'margin-bottom': (4 * self.getScale()) + 'px'
+                    'margin-right': 2 * self.getScale() + 'px',
+                    'margin-bottom': 4 * self.getScale() + 'px'
                 });
 
                 bankSlot.find('#bankItemCount' + i).css({
-                    'font-size': (4 * self.getScale()) + 'px',
+                    'font-size': 4 * self.getScale() + 'px',
                     'margin-top': '0',
                     'margin-left': '0'
                 });
 
-                if (Detect.isMobile())
-                    image.css('background-size', '600%');
-                else
-                    image.css('background-image', self.container.getImageFormat(self.getScale(), slot.string));
+                if (Detect.isMobile()) image.css('background-size', '600%');
+                else {
+                    image.css(
+                        'background-image',
+                        self.container.getImageFormat(
+                            self.getScale(),
+                            slot.string
+                        )
+                    );
+                }
             }
 
             for (var j = 0; j < inventoryList.length; j++) {
-                var inventorySlot = $(inventoryList[j]).find('#bankInventorySlot' + j),
+                var inventorySlot = $(inventoryList[j]).find(
+                        '#bankInventorySlot' + j
+                    ),
                     iImage = inventorySlot.find('#inventoryImage' + j),
                     iSlot = self.inventoryContainer.slots[j];
 
                 inventorySlot.css({
-                    'margin-right': (3 * self.getScale()) + 'px',
-                    'margin-bottom': (6 * self.getScale()) + 'px'
+                    'margin-right': 3 * self.getScale() + 'px',
+                    'margin-bottom': 6 * self.getScale() + 'px'
                 });
 
-                if (Detect.isMobile())
-                    iImage.css('background-size', '600%');
-                else
-                    iImage.css('background-image', self.container.getImageFormat(self.getScale(), iSlot.string));
+                if (Detect.isMobile()) iImage.css('background-size', '600%');
+                else {
+                    iImage.css(
+                        'background-image',
+                        self.container.getImageFormat(
+                            self.getScale(),
+                            iSlot.string
+                        )
+                    );
+                }
             }
         },
 
@@ -170,7 +221,11 @@ define(['jquery', './container/container'], function($, Container) {
                 isBank = type === 'bank',
                 index = event.currentTarget.id.substring(isBank ? 8 : 17);
 
-            self.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
+            self.game.socket.send(Packets.Bank, [
+                Packets.BankOpcode.Select,
+                type,
+                index
+            ]);
         },
 
         add: function(info) {
@@ -178,11 +233,16 @@ define(['jquery', './container/container'], function($, Container) {
                 item = $(self.getBankList()[info.index]),
                 slot = self.container.slots[info.index];
 
-            if (!item || !slot)
-                return;
+            if (!item || !slot) return;
 
-            if (slot.isEmpty())
-                slot.load(info.string, info.count, info.ability, info.abilityLevel);
+            if (slot.isEmpty()) {
+                slot.load(
+                    info.string,
+                    info.count,
+                    info.ability,
+                    info.abilityLevel
+                );
+            }
 
             slot.setCount(info.count);
 
@@ -190,13 +250,14 @@ define(['jquery', './container/container'], function($, Container) {
                 cssSlot = bankSlot.find('#bankImage' + info.index),
                 count = bankSlot.find('#bankItemCount' + info.index);
 
-            cssSlot.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
+            cssSlot.css(
+                'background-image',
+                self.container.getImageFormat(self.getScale(), info.string)
+            );
 
-            if (Detect.isMobile())
-                cssSlot.css('background-size', '600%');
+            if (Detect.isMobile()) cssSlot.css('background-size', '600%');
 
-            if (slot.count > 1)
-                count.text(slot.count);
+            if (slot.count > 1) count.text(slot.count);
         },
 
         remove: function(info) {
@@ -204,15 +265,16 @@ define(['jquery', './container/container'], function($, Container) {
                 item = $(self.getBankList()[info.index]),
                 slot = self.container.slots[info.index];
 
-            if (!item || !slot)
-                return;
+            if (!item || !slot) return;
 
             slot.count -= info.count;
 
             if (slot.count < 1) {
                 var divItem = item.find('#bankSlot' + info.index);
 
-                divItem.find('#bankImage' + info.index).css('background-image', '');
+                divItem
+                    .find('#bankImage' + info.index)
+                    .css('background-image', '');
                 divItem.find('#bankItemCount' + info.index).text('');
 
                 slot.empty();
@@ -223,16 +285,17 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 item = $(self.getInventoryList()[info.index]);
 
-            if (!item)
-                return;
+            if (!item) return;
 
             var slot = item.find('#bankInventorySlot' + info.index),
                 image = slot.find('#inventoryImage' + info.index);
 
-            image.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
+            image.css(
+                'background-image',
+                self.container.getImageFormat(self.getScale(), info.string)
+            );
 
-            if (Detect.isMobile())
-                image.css('background-size', '600%');
+            if (Detect.isMobile()) image.css('background-size', '600%');
 
             if (info.count > 1)
                 slot.find('#inventoryItemCount' + info.index).text(info.count);
@@ -242,8 +305,7 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 item = $(self.getInventoryList()[info.index]);
 
-            if (!item)
-                return;
+            if (!item) return;
 
             var itemContainer = self.inventoryContainer.slots[info.index],
                 slot = item.find('#bankInventorySlot' + info.index),
@@ -254,7 +316,10 @@ define(['jquery', './container/container'], function($, Container) {
             else if (diff === 1)
                 slot.find('#inventoryItemCount' + info.index).text('');
             else {
-                slot.find('#inventoryImage' + info.index).css('background-image', '');
+                slot.find('#inventoryImage' + info.index).css(
+                    'background-image',
+                    ''
+                );
                 slot.find('#inventoryItemCount' + info.index).text('');
             }
         },
@@ -282,6 +347,5 @@ define(['jquery', './container/container'], function($, Container) {
         getInventoryList: function() {
             return this.bankInventorySlots.find('ul').find('li');
         }
-
     });
 });

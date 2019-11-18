@@ -1,28 +1,25 @@
 /* global module */
 
-const Mobs = {};
+let Mobs = {};
 
 Mobs.Properties = {};
 Mobs.Ids = {};
 Mobs.Plugins = {};
 
 Mobs.idToString = id => {
-    if (id in Mobs.Ids)
-        return Mobs.Ids[id].key;
+    if (id in Mobs.Ids) return Mobs.Ids[id].key;
 
     return null;
 };
 
 Mobs.idToName = id => {
-    if (id in Mobs.Ids)
-        return Mobs.Ids[id].name;
+    if (id in Mobs.Ids) return Mobs.Ids[id].name;
 
     return null;
 };
 
 Mobs.getXp = id => {
-    if (id in Mobs.Ids)
-        return Mobs.Ids[id].xp;
+    if (id in Mobs.Ids) return Mobs.Ids[id].xp;
 
     return -1;
 };

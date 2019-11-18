@@ -1,6 +1,6 @@
 /* global module */
 
-const Ability = require('./ability');
+let Ability = require('./ability');
 
 class Run extends Ability {
     constructor(name, type) {

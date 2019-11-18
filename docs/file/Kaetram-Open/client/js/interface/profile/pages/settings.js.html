@@ -38,7 +38,6 @@
 
 define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
     return Class.extend({
-
         // TODO - Hide crpyto mining option on mobiles and completely disable it.
 
         init: function(game) {
@@ -74,8 +73,7 @@ define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
         load: function() {
             var self = this;
 
-            if (self.loaded)
-                return;
+            if (self.loaded) return;
 
             self.volume.val(self.getMusicLevel());
             self.sfx.val(self.getSFXLevel());
@@ -92,15 +90,12 @@ define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
 
                 self.button.toggleClass(&apos;active&apos;);
 
-                if (self.isVisible())
-                    self.hide();
-                else
-                    self.show();
+                if (self.isVisible()) self.hide();
+                else self.show();
             });
 
             self.volume.on(&apos;input&apos;, function() {
-                if (self.audio.song)
-                    self.audio.song.volume = this.value / 100;
+                if (self.audio.song) self.audio.song.volume = this.value / 100;
             });
 
             self.brightness.on(&apos;input&apos;, function() {
@@ -139,10 +134,8 @@ define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
             self.cameraCheck.click(function() {
                 var active = self.cameraCheck.hasClass(&apos;active&apos;);
 
-                if (active)
-                    self.renderer.camera.decenter();
-                else
-                    self.renderer.camera.center();
+                if (active) self.renderer.camera.decenter();
+                else self.renderer.camera.center();
 
                 self.cameraCheck.toggleClass(&apos;active&apos;);
 
@@ -189,11 +182,9 @@ define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
                 self.setName(!active);
             });
 
-            if (self.getSound())
-                self.soundCheck.addClass(&apos;active&apos;);
+            if (self.getSound()) self.soundCheck.addClass(&apos;active&apos;);
 
-            if (self.getCamera())
-                self.cameraCheck.addClass(&apos;active&apos;);
+            if (self.getCamera()) self.cameraCheck.addClass(&apos;active&apos;);
             else {
                 self.camera.centered = false;
                 self.renderer.verifyCentration();
@@ -204,18 +195,13 @@ define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
                 self.renderer.debugging = true;
             }
 
-            if (self.getCentreCap())
-                self.centreCheck.addClass(&apos;active&apos;);
+            if (self.getCentreCap()) self.centreCheck.addClass(&apos;active&apos;);
 
-            if (self.getName())
-                self.nameCheck.addClass(&apos;active&apos;);
-            else
-                self.renderer.drawNames = false;
+            if (self.getName()) self.nameCheck.addClass(&apos;active&apos;);
+            else self.renderer.drawNames = false;
 
-            if (self.getLevel())
-                self.levelCheck.addClass(&apos;active&apos;);
-            else
-                self.renderer.drawLevels = false;
+            if (self.getLevel()) self.levelCheck.addClass(&apos;active&apos;);
+            else self.renderer.drawLevels = false;
 
             self.loaded = true;
         },
@@ -330,7 +316,6 @@ define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
         isVisible: function() {
             return this.body.css(&apos;display&apos;) === &apos;block&apos;;
         }
-
     });
 });
 </code></pre>

@@ -1,6 +1,6 @@
 /* global module */
 
-const Entity = require('../entity'),
+let Entity = require('../entity'),
     Modules = require('../../../util/modules'),
     Mobs = require('../../../util/mobs'),
     Combat = require('./combat/combat');
@@ -9,7 +9,7 @@ class Character extends Entity {
     constructor(id, type, instance, x, y) {
         super(id, type, instance, x, y);
 
-        const self = this;
+        let self = this;
 
         self.level = -1;
 
@@ -45,7 +45,7 @@ class Character extends Entity {
     }
 
     loadCombat() {
-        const self = this;
+        let self = this;
 
         /**
          * Ternary could be used here, but readability
@@ -54,12 +54,11 @@ class Character extends Entity {
 
         if (Mobs.hasCombatPlugin(self.id))
             self.combat = new (Mobs.isNewCombatPlugin(self.id))(self);
-        else
-            self.combat = new Combat(self);
+        else self.combat = new Combat(self);
     }
 
     startHealing() {
-        const self = this;
+        let self = this;
 
         self.healingInterval = setInterval(() => {
             if (!self.hasTarget() && !self.combat.isAttacked() && !self.dead)
@@ -68,30 +67,28 @@ class Character extends Entity {
     }
 
     stopHealing() {
-        const self = this;
+        let self = this;
 
         clearInterval(self.healingInterval);
         self.healingInterval = null;
     }
 
     setStun(stun) {
-        const self = this;
+        let self = this;
 
         self.stunned = stun;
 
-        if (self.stunCallback)
-            self.stunCallback(stun);
+        if (self.stunCallback) self.stunCallback(stun);
     }
 
     hit(attacker) {
-        const self = this;
+        let self = this;
 
-        if (self.hitCallback)
-            self.hitCallback(attacker);
+        if (self.hitCallback) self.hitCallback(attacker);
     }
 
     heal(amount) {
-        const self = this;
+        let self = this;
 
         self.setHitPoints(self.hitPoints + amount);
 
@@ -128,24 +125,22 @@ class Character extends Entity {
     }
 
     setPosition(x, y) {
-        const self = this;
+        let self = this;
 
         self.previousX = self.x;
         self.previousY = self.y;
 
         super.setPosition(x, y);
 
-        if (self.movementCallback)
-            self.movementCallback(x, y);
+        if (self.movementCallback) self.movementCallback(x, y);
     }
 
     setTarget(target) {
-        const self = this;
+        let self = this;
 
         self.target = target;
 
-        if (self.targetCallback)
-            self.targetCallback(target);
+        if (self.targetCallback) self.targetCallback(target);
     }
 
     setPotentialTarget(potentialTarget) {
@@ -153,12 +148,11 @@ class Character extends Entity {
     }
 
     setHitPoints(hitPoints) {
-        const self = this;
+        let self = this;
 
         self.hitPoints = hitPoints;
 
-        if (self.hitPointsCallback)
-            self.hitPointsCallback();
+        if (self.hitPointsCallback) self.hitPointsCallback();
     }
 
     getProjectile() {
@@ -178,10 +172,9 @@ class Character extends Entity {
     }
 
     removeTarget() {
-        const self = this;
+        let self = this;
 
-        if (self.removeTargetCallback)
-            self.removeTargetCallback();
+        if (self.removeTargetCallback) self.removeTargetCallback();
 
         self.clearTarget();
     }

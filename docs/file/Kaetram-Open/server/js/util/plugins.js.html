@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/plugins.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const fs = require(&apos;fs&apos;),
+let fs = require(&apos;fs&apos;),
     Filter = /^([^\\.].*)\.js$/;
 
 function identity(val) {
@@ -44,15 +44,14 @@ function identity(val) {
 }
 
 module.exports = function requireItems(directory) {
-    const files = fs.readdirSync(directory),
+    let files = fs.readdirSync(directory),
         modules = {},
         resolve = identity;
 
     files.forEach(file =&gt; {
-        const match = file.match(Filter);
+        let match = file.match(Filter);
 
-        if (match)
-            modules[match[1]] = resolve(require(directory + file));
+        if (match) modules[match[1]] = resolve(require(directory + file));
     });
 
     return modules;

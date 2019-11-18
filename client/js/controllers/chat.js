@@ -2,7 +2,6 @@
 
 define(['jquery'], function($) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -21,10 +20,8 @@ define(['jquery'], function($) {
             self.button.click(function() {
                 self.button.blur();
 
-                if (self.input.is(':visible'))
-                    self.hideInput();
-                else
-                    self.toggle();
+                if (self.input.is(':visible')) self.hideInput();
+                else self.toggle();
             });
         },
 
@@ -34,8 +31,7 @@ define(['jquery'], function($) {
 
             self.showChat();
 
-            if (!self.isActive())
-                self.hideInput();
+            if (!self.isActive()) self.hideInput();
 
             self.hideChat();
 
@@ -50,11 +46,8 @@ define(['jquery'], function($) {
 
             switch (data) {
                 case Modules.Keys.Enter:
-
-                    if (self.input.val() === '')
-                        self.toggle();
-                    else
-                        self.send();
+                    if (self.input.val() === '') self.toggle();
+                    else self.send();
 
                     break;
             }
@@ -72,8 +65,7 @@ define(['jquery'], function($) {
 
             self.clean();
 
-            if (self.visible && !self.isActive())
-                self.showInput();
+            if (self.visible && !self.isActive()) self.showInput();
             else if (self.visible) {
                 self.hideInput();
                 self.hideChat();

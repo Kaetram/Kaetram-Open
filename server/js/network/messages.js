@@ -1,6 +1,6 @@
 /* global module */
 
-const Packets = require('./packets'),
+let Packets = require('./packets'),
     Messages = {};
 
 Messages.Handshake = class {

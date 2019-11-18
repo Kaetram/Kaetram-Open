@@ -2,7 +2,6 @@
 
 define(function() {
     return Class.extend({
-
         /**
          * Do not clutter up the Socket class with callbacks,
          * have this class here until a better method arises in my head.
@@ -92,56 +91,90 @@ define(function() {
                     break;
 
                 case 'error':
-                    self.app.sendError(null, 'The server has responded with an error!');
+                    self.app.sendError(
+                        null,
+                        'The server has responded with an error!'
+                    );
                     break;
 
                 case 'development':
-                    self.app.sendError(null, 'The game is currently in development mode.');
+                    self.app.sendError(
+                        null,
+                        'The game is currently in development mode.'
+                    );
                     break;
 
                 case 'disallowed':
-                    self.app.sendError(null, 'The server is currently not accepting connections!');
+                    self.app.sendError(
+                        null,
+                        'The server is currently not accepting connections!'
+                    );
                     break;
 
                 case 'maintenance':
-                    self.app.sendError(null, 'Kaetram is currently under maintenance.');
+                    self.app.sendError(
+                        null,
+                        'Kaetram is currently under maintenance.'
+                    );
                     break;
 
                 case 'userexists':
-                    self.app.sendError(null, 'The username you have chosen already exists.');
+                    self.app.sendError(
+                        null,
+                        'The username you have chosen already exists.'
+                    );
                     break;
 
                 case 'emailexists':
-                    self.app.sendError(null, 'The email you have chosen is not available.');
+                    self.app.sendError(
+                        null,
+                        'The email you have chosen is not available.'
+                    );
                     break;
 
                 case 'loggedin':
-                    self.app.sendError(null, 'The player is already logged in!');
+                    self.app.sendError(
+                        null,
+                        'The player is already logged in!'
+                    );
                     break;
 
                 case 'invalidlogin':
-                    self.app.sendError(null, 'You have entered the wrong username or password.');
+                    self.app.sendError(
+                        null,
+                        'You have entered the wrong username or password.'
+                    );
                     break;
 
                 case 'toofast':
-                    self.app.sendError(null, 'You are trying to log in too fast from the same connection.');
+                    self.app.sendError(
+                        null,
+                        'You are trying to log in too fast from the same connection.'
+                    );
                     break;
 
                 case 'malform':
-
                     self.app.game.handleDisconnection(true);
-                    self.app.sendError(null, 'Client has experienced a malfunction.');
+                    self.app.sendError(
+                        null,
+                        'Client has experienced a malfunction.'
+                    );
 
                     break;
 
                 case 'timeout':
-
-                    self.app.sendError(null, 'You have been disconnected for being inactive for too long.');
+                    self.app.sendError(
+                        null,
+                        'You have been disconnected for being inactive for too long.'
+                    );
 
                     break;
 
                 default:
-                    self.app.sendError(null, 'An unknown error has occurred, please refer to the forums.');
+                    self.app.sendError(
+                        null,
+                        'An unknown error has occurred, please refer to the forums.'
+                    );
                     break;
             }
         },
@@ -154,23 +187,20 @@ define(function() {
             var self = this,
                 info = data.shift();
 
-            if (self.handshakeCallback)
-                self.handshakeCallback(info);
+            if (self.handshakeCallback) self.handshakeCallback(info);
         },
 
         receiveWelcome: function(data) {
             var self = this,
                 playerData = data.shift();
 
-            if (self.welcomeCallback)
-                self.welcomeCallback(playerData);
+            if (self.welcomeCallback) self.welcomeCallback(playerData);
         },
 
         receiveSpawn: function(data) {
             var self = this;
 
-            if (self.spawnCallback)
-                self.spawnCallback(data);
+            if (self.spawnCallback) self.spawnCallback(data);
         },
 
         receiveEquipment: function(data) {
@@ -185,15 +215,13 @@ define(function() {
         receiveEntityList: function(data) {
             var self = this;
 
-            if (self.entityListCallback)
-                self.entityListCallback(data);
+            if (self.entityListCallback) self.entityListCallback(data);
         },
 
         receiveSync: function(data) {
             var self = this;
 
-            if (self.syncCallback)
-                self.syncCallback(data.shift());
+            if (self.syncCallback) self.syncCallback(data.shift());
         },
 
         receiveMovement: function(data) {
@@ -201,24 +229,21 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.movementCallback)
-                self.movementCallback(opcode, info);
+            if (self.movementCallback) self.movementCallback(opcode, info);
         },
 
         receiveTeleport: function(data) {
             var self = this,
                 info = data.shift();
 
-            if (self.teleportCallback)
-                self.teleportCallback(info);
+            if (self.teleportCallback) self.teleportCallback(info);
         },
 
         receiveDespawn: function(data) {
             var self = this,
                 id = data.shift();
 
-            if (self.despawnCallback)
-                self.despawnCallback(id);
+            if (self.despawnCallback) self.despawnCallback(id);
         },
 
         receiveCombat: function(data) {
@@ -226,8 +251,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.combatCallback)
-                self.combatCallback(opcode, info);
+            if (self.combatCallback) self.combatCallback(opcode, info);
         },
 
         receiveAnimation: function(data) {
@@ -235,8 +259,7 @@ define(function() {
                 id = data.shift(),
                 info = data.shift();
 
-            if (self.animationCallback)
-                self.animationCallback(id, info);
+            if (self.animationCallback) self.animationCallback(id, info);
         },
 
         receiveProjectile: function(data) {
@@ -244,47 +267,41 @@ define(function() {
                 type = data.shift(),
                 info = data.shift();
 
-            if (self.projectileCallback)
-                self.projectileCallback(type, info);
+            if (self.projectileCallback) self.projectileCallback(type, info);
         },
 
         receivePopulation: function(data) {
             var self = this;
 
-            if (self.populationCallback)
-                self.populationCallback(data.shift());
+            if (self.populationCallback) self.populationCallback(data.shift());
         },
 
         receivePoints: function(data) {
             var self = this,
                 pointsData = data.shift();
 
-            if (self.pointsCallback)
-                self.pointsCallback(pointsData);
+            if (self.pointsCallback) self.pointsCallback(pointsData);
         },
 
         receiveNetwork: function(data) {
             var self = this,
                 opcode = data.shift();
 
-            if (self.networkCallback)
-                self.networkCallback(opcode);
+            if (self.networkCallback) self.networkCallback(opcode);
         },
 
         receiveChat: function(data) {
             var self = this,
                 info = data.shift();
 
-            if (self.chatCallback)
-                self.chatCallback(info);
+            if (self.chatCallback) self.chatCallback(info);
         },
 
         receiveCommand: function(data) {
             var self = this,
                 info = data.shift();
 
-            if (self.commandCallback)
-                self.commandCallback(info);
+            if (self.commandCallback) self.commandCallback(info);
         },
 
         receiveInventory: function(data) {
@@ -292,8 +309,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.inventoryCallback)
-                self.inventoryCallback(opcode, info);
+            if (self.inventoryCallback) self.inventoryCallback(opcode, info);
         },
 
         receiveBank: function(data) {
@@ -301,8 +317,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.bankCallback)
-                self.bankCallback(opcode, info);
+            if (self.bankCallback) self.bankCallback(opcode, info);
         },
 
         receiveAbility: function(data) {
@@ -310,8 +325,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.abilityCallback)
-                self.abilityCallback(opcode, info);
+            if (self.abilityCallback) self.abilityCallback(opcode, info);
         },
 
         receiveQuest: function(data) {
@@ -319,8 +333,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.questCallback)
-                self.questCallback(opcode, info);
+            if (self.questCallback) self.questCallback(opcode, info);
         },
 
         receiveNotification: function(data) {
@@ -336,36 +349,31 @@ define(function() {
             var self = this,
                 instance = data.shift();
 
-            if (self.blinkCallback)
-                self.blinkCallback(instance);
+            if (self.blinkCallback) self.blinkCallback(instance);
         },
 
         receiveHeal: function(data) {
             var self = this;
 
-            if (self.healCallback)
-                self.healCallback(data.shift());
+            if (self.healCallback) self.healCallback(data.shift());
         },
 
         receiveExperience: function(data) {
             var self = this;
 
-            if (self.experienceCallback)
-                self.experienceCallback(data.shift());
+            if (self.experienceCallback) self.experienceCallback(data.shift());
         },
 
         receiveDeath: function(data) {
             var self = this;
 
-            if (self.deathCallback)
-                self.deathCallback(data.shift());
+            if (self.deathCallback) self.deathCallback(data.shift());
         },
 
         receiveAudio: function(data) {
             var self = this;
 
-            if (self.audioCallback)
-                self.audioCallback(data.shift());
+            if (self.audioCallback) self.audioCallback(data.shift());
         },
 
         receiveNPC: function(data) {
@@ -373,8 +381,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.npcCallback)
-                self.npcCallback(opcode, info);
+            if (self.npcCallback) self.npcCallback(opcode, info);
         },
 
         receiveRespawn: function(data) {
@@ -383,8 +390,7 @@ define(function() {
                 x = data.shift(),
                 y = data.shift();
 
-            if (self.respawnCallback)
-                self.respawnCallback(id, x, y);
+            if (self.respawnCallback) self.respawnCallback(id, x, y);
         },
 
         receiveEnchant: function(data) {
@@ -392,8 +398,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.enchantCallback)
-                self.enchantCallback(opcode, info);
+            if (self.enchantCallback) self.enchantCallback(opcode, info);
         },
 
         receiveGuild: function(data) {
@@ -401,8 +406,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.guildCallback)
-                self.guildCallback(opcode, info);
+            if (self.guildCallback) self.guildCallback(opcode, info);
         },
 
         receivePointer: function(data) {
@@ -410,8 +414,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.pointerCallback)
-                self.pointerCallback(opcode, info);
+            if (self.pointerCallback) self.pointerCallback(opcode, info);
         },
 
         receivePVP: function(data) {
@@ -419,8 +422,7 @@ define(function() {
                 id = data.shift(),
                 pvp = data.shift();
 
-            if (self.pvpCallback)
-                self.pvpCallback(id, pvp);
+            if (self.pvpCallback) self.pvpCallback(id, pvp);
         },
 
         receiveShop: function(data) {
@@ -428,8 +430,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.shopCallback)
-                self.shopCallback(opcode, info);
+            if (self.shopCallback) self.shopCallback(opcode, info);
         },
 
         receiveMinigame: function(data) {
@@ -437,8 +438,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.minigameCallback)
-                self.minigameCallback(opcode, info);
+            if (self.minigameCallback) self.minigameCallback(opcode, info);
         },
 
         receiveRegion: function(data) {
@@ -447,8 +447,7 @@ define(function() {
                 info = data.shift(),
                 force = data.shift();
 
-            if (self.regionCallback)
-                self.regionCallback(opcode, info, force);
+            if (self.regionCallback) self.regionCallback(opcode, info, force);
         },
 
         receiveOverlay: function(data) {
@@ -456,8 +455,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.overlayCallback)
-                self.overlayCallback(opcode, info);
+            if (self.overlayCallback) self.overlayCallback(opcode, info);
         },
 
         receiveCamera: function(data) {
@@ -465,8 +463,7 @@ define(function() {
                 opcode = data.shift(),
                 info = data.shift();
 
-            if (self.cameraCallback)
-                self.cameraCallback(opcode, info);
+            if (self.cameraCallback) self.cameraCallback(opcode, info);
         },
 
         /**
@@ -624,6 +621,5 @@ define(function() {
         onCamera: function(callback) {
             this.cameraCallback = callback;
         }
-
     });
 });

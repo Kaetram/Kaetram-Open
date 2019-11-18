@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/npc/npc.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Entity = require(&apos;../entity&apos;);
+let Entity = require(&apos;../entity&apos;);
 
 class NPC extends Entity {
     constructor(id, instance, x, y) {
@@ -46,13 +46,11 @@ class NPC extends Entity {
     }
 
     talk(messages) {
-        const self = this,
+        let self = this,
             message = messages[self.talkIndex];
 
-        if (self.talkIndex &gt; messages.length - 1)
-            self.talkIndex = 0;
-        else
-            self.talkIndex++;
+        if (self.talkIndex &gt; messages.length - 1) self.talkIndex = 0;
+        else self.talkIndex++;
 
         return message;
     }

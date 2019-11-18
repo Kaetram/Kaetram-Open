@@ -2,7 +2,6 @@
 
 define(['jquery', '../page'], function($, Page) {
     return Class.extend({
-
         // TODO - Hide crpyto mining option on mobiles and completely disable it.
 
         init: function(game) {
@@ -38,8 +37,7 @@ define(['jquery', '../page'], function($, Page) {
         load: function() {
             var self = this;
 
-            if (self.loaded)
-                return;
+            if (self.loaded) return;
 
             self.volume.val(self.getMusicLevel());
             self.sfx.val(self.getSFXLevel());
@@ -56,15 +54,12 @@ define(['jquery', '../page'], function($, Page) {
 
                 self.button.toggleClass('active');
 
-                if (self.isVisible())
-                    self.hide();
-                else
-                    self.show();
+                if (self.isVisible()) self.hide();
+                else self.show();
             });
 
             self.volume.on('input', function() {
-                if (self.audio.song)
-                    self.audio.song.volume = this.value / 100;
+                if (self.audio.song) self.audio.song.volume = this.value / 100;
             });
 
             self.brightness.on('input', function() {
@@ -103,10 +98,8 @@ define(['jquery', '../page'], function($, Page) {
             self.cameraCheck.click(function() {
                 var active = self.cameraCheck.hasClass('active');
 
-                if (active)
-                    self.renderer.camera.decenter();
-                else
-                    self.renderer.camera.center();
+                if (active) self.renderer.camera.decenter();
+                else self.renderer.camera.center();
 
                 self.cameraCheck.toggleClass('active');
 
@@ -153,11 +146,9 @@ define(['jquery', '../page'], function($, Page) {
                 self.setName(!active);
             });
 
-            if (self.getSound())
-                self.soundCheck.addClass('active');
+            if (self.getSound()) self.soundCheck.addClass('active');
 
-            if (self.getCamera())
-                self.cameraCheck.addClass('active');
+            if (self.getCamera()) self.cameraCheck.addClass('active');
             else {
                 self.camera.centered = false;
                 self.renderer.verifyCentration();
@@ -168,18 +159,13 @@ define(['jquery', '../page'], function($, Page) {
                 self.renderer.debugging = true;
             }
 
-            if (self.getCentreCap())
-                self.centreCheck.addClass('active');
+            if (self.getCentreCap()) self.centreCheck.addClass('active');
 
-            if (self.getName())
-                self.nameCheck.addClass('active');
-            else
-                self.renderer.drawNames = false;
+            if (self.getName()) self.nameCheck.addClass('active');
+            else self.renderer.drawNames = false;
 
-            if (self.getLevel())
-                self.levelCheck.addClass('active');
-            else
-                self.renderer.drawLevels = false;
+            if (self.getLevel()) self.levelCheck.addClass('active');
+            else self.renderer.drawLevels = false;
 
             self.loaded = true;
         },
@@ -294,6 +280,5 @@ define(['jquery', '../page'], function($, Page) {
         isVisible: function() {
             return this.body.css('display') === 'block';
         }
-
     });
 });

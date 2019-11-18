@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/utils.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Utils = {},
+let Utils = {},
     Packets = require(&apos;../network/packets&apos;);
 
 module.exports = Utils;
@@ -46,7 +46,7 @@ Utils.random = range =&gt; {
 };
 
 Utils.randomRange = (min, max) =&gt; {
-    return min + (Math.random() * (max - min));
+    return min + Math.random() * (max - min);
 };
 
 Utils.randomInt = (min, max) =&gt; {
@@ -54,7 +54,7 @@ Utils.randomInt = (min, max) =&gt; {
 };
 
 Utils.getDistance = (startX, startY, toX, toY) =&gt; {
-    const x = Math.abs(startX - toX),
+    let x = Math.abs(startX - toX),
         y = Math.abs(startY - toY);
 
     return x &gt; y ? x : y;
@@ -76,11 +76,22 @@ Utils.positionOffset = radius =&gt; {
  */
 
 Utils.generateClientId = () =&gt; {
-    return Utils.randomInt(0, 1000000) + Utils.randomInt(0, 40000) + Utils.randomInt(0, 9000);
+    return (
+        Utils.randomInt(0, 1000000) +
+        Utils.randomInt(0, 40000) +
+        Utils.randomInt(0, 9000)
+    );
 };
 
 Utils.generateInstance = (randomizer, id, modulo, posY) =&gt; {
-    return &apos;&apos; + randomizer + Utils.randomInt(0, id) + randomizer + Utils.randomInt(0, modulo) + (posY || 0);
+    return (
+        &apos;&apos; +
+        randomizer +
+        Utils.randomInt(0, id) +
+        randomizer +
+        Utils.randomInt(0, modulo) +
+        (posY || 0)
+    );
 };
 
 Utils.generateRandomId = () =&gt; {
@@ -88,19 +99,17 @@ Utils.generateRandomId = () =&gt; {
 };
 
 Utils.validPacket = packet =&gt; {
-    const keys = Object.keys(Packets),
+    let keys = Object.keys(Packets),
         filtered = [];
 
-    for (let i = 0; i &lt; keys.length; i++) {
-        if (!keys[i].endsWith(&apos;Opcode&apos;))
-            filtered.push(keys[i]);
-    }
+    for (let i = 0; i &lt; keys.length; i++)
+        if (!keys[i].endsWith(&apos;Opcode&apos;)) filtered.push(keys[i]);
 
     return packet &gt; -1 &amp;&amp; packet &lt; Packets[filtered[filtered.length - 1]] + 1;
 };
 
 Utils.getCurrentEpoch = () =&gt; {
-    return (new Date()).getTime();
+    return new Date().getTime();
 };
 </code></pre>
 

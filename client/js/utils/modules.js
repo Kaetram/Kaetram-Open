@@ -78,37 +78,37 @@ Modules = {
     },
 
     DamageColours: {
-        'received': {
+        received: {
             fill: 'rgb(255, 50, 50)',
             stroke: 'rgb(255, 180, 180)'
         },
 
-        'inflicted': {
+        inflicted: {
             fill: 'white',
             stroke: '#373737'
         },
 
-        'healed': {
+        healed: {
             fill: 'rgb(80, 255, 80)',
             stroke: 'rgb(50, 120, 50)'
         },
 
-        'mana': {
+        mana: {
             fill: 'rgb(73, 94, 228)',
             stroke: 'rgb(56, 63, 133)'
         },
 
-        'health': {
+        health: {
             fill: 'white',
             stroke: '#373737'
         },
 
-        'exp': {
+        exp: {
             fill: 'rgb(80, 180, 255)',
             stroke: 'rgb(50, 180, 255)'
         },
 
-        'poison': {
+        poison: {
             fill: 'rgb(66, 183, 77)',
             stroke: 'rgb(50, 120 , 50)'
         }
@@ -119,5 +119,4 @@ Modules = {
         Position: 1,
         Relative: 2
     }
-
 };

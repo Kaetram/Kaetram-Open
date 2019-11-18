@@ -36,26 +36,25 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/guild.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Messages = require(&apos;../../../../network/messages&apos;),
+let Messages = require(&apos;../../../../network/messages&apos;),
     Packets = require(&apos;../../../../network/packets&apos;);
 
 class Guild {
     constructor(player, data) {
-        const self = this;
+        let self = this;
 
         self.player = player;
         self.data = data;
     }
 
     join() {
-        const self = this;
+        let self = this;
 
-        if (self.data &amp;&amp; self.data.name)
-            self.leave();
+        if (self.data &amp;&amp; self.data.name) self.leave();
     }
 
     leave() {
-        const self = this;
+        let self = this;
 
         if (!self.data) {
             self.player.notify(&apos;You are not in a guild.&apos;);
@@ -75,7 +74,7 @@ class Guild {
      */
 
     update(data) {
-        const self = this;
+        let self = this;
 
         // Do a server-sided update.
         self.data = data;

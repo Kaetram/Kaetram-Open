@@ -7,7 +7,6 @@ define(function() {
      */
 
     return Class.extend({
-
         init: function(name, string, count, ability, abilityLevel) {
             var self = this;
 
@@ -51,6 +50,5 @@ define(function() {
             self.ability = ability;
             self.abilityLevel = abilityLevel;
         }
-
     });
 });

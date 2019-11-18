@@ -20,7 +20,7 @@ module.exports = {
         'operator-linebreak': 0,
         'no-var': 2,
         'one-var': 0,
-        'prefer-const': 2,
+        'prefer-const': 0,
         'block-spacing': ['error', 'always'],
         'comma-dangle': ['error', 'never'],
         'arrow-parens': ['warn', 'as-needed'],

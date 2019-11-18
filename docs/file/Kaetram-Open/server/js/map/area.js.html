@@ -38,7 +38,7 @@
 
 class Area {
     constructor(id, x, y, width, height) {
-        const self = this;
+        let self = this;
 
         self.id = id;
 
@@ -58,28 +58,30 @@ class Area {
     }
 
     contains(x, y) {
-        return x &gt;= this.x &amp;&amp; y &gt;= this.y &amp;&amp; x &lt; this.x + this.width &amp;&amp; y &lt; this.y + this.height;
+        return (
+            x &gt;= this.x &amp;&amp;
+            y &gt;= this.y &amp;&amp;
+            x &lt; this.x + this.width &amp;&amp;
+            y &lt; this.y + this.height
+        );
     }
 
     addEntity(entity) {
-        const self = this;
+        let self = this;
 
-        if (self.entities.indexOf(entity) &gt; 0)
-            return;
+        if (self.entities.indexOf(entity) &gt; 0) return;
 
         self.entities.push(entity);
         entity.area = self;
 
-        if (self.spawnCallback)
-            self.spawnCallback();
+        if (self.spawnCallback) self.spawnCallback();
     }
 
     removeEntity(entity) {
-        const self = this,
+        let self = this,
             index = self.entities.indexOf(entity);
 
-        if (index &gt; -1)
-            self.entities.splice(index, 1);
+        if (index &gt; -1) self.entities.splice(index, 1);
 
         if (self.entities.length === 0 &amp;&amp; self.emptyCallback)
             self.emptyCallback();

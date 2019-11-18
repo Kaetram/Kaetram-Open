@@ -1,8 +1,11 @@
 /* global _, Modules, log */
 
-define(['../entity', '../../utils/transition', '../animation'], function(Entity, Transition, Animation) {
+define(['../entity', '../../utils/transition', '../animation'], function(
+    Entity,
+    Transition,
+    Animation
+) {
     return Entity.extend({
-
         init: function(id, kind) {
             var self = this;
 
@@ -98,8 +101,13 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             self.spriteFlipY = false;
 
             if (o.indexOf(animation) > -1) {
-                animation += '_' + (orientation === Modules.Orientation.Left ? 'right' : self.orientationToString(orientation));
-                self.spriteFlipX = self.orientation === Modules.Orientation.Left;
+                animation +=
+                    '_' +
+                    (orientation === Modules.Orientation.Left
+                        ? 'right'
+                        : self.orientationToString(orientation));
+                self.spriteFlipX =
+                    self.orientation === Modules.Orientation.Left;
             }
 
             self.setAnimation(animation, speed, count, onEndCount);
@@ -149,8 +157,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         addAttacker: function(character) {
             var self = this;
 
-            if (self.hasAttacker(character))
-                return;
+            if (self.hasAttacker(character)) return;
 
             self.attackers[character.instance] = character;
         },
@@ -165,8 +172,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         hasAttacker: function(character) {
             var self = this;
 
-            if (self.attackers.size === 0)
-                return false;
+            if (self.attackers.size === 0) return false;
 
             return character.instance in self.attackers;
         },
@@ -223,8 +229,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         go: function(x, y, forced) {
             var self = this;
 
-            if (self.frozen)
-                return;
+            if (self.frozen) return;
 
             if (self.following) {
                 self.following = false;
@@ -253,7 +258,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         nextStep: function() {
             var self = this,
                 stop = false,
-                x, y, path;
+                x,
+                y,
+                path;
 
             if (self.step % 2 === 0 && self.secondStepCallback)
                 self.secondStepCallback();
@@ -261,11 +268,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             self.prevGridX = self.gridX;
             self.prevGridY = self.gridY;
 
-            if (!self.hasPath())
-                return;
+            if (!self.hasPath()) return;
 
-            if (self.beforeStepCallback)
-                self.beforeStepCallback();
+            if (self.beforeStepCallback) self.beforeStepCallback();
 
             self.updateGridPosition();
 
@@ -275,8 +280,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
                     self.nextGridY = self.path[self.step + 1][1];
                 }
 
-                if (self.stepCallback)
-                    self.stepCallback();
+                if (self.stepCallback) self.stepCallback();
 
                 if (self.changedPath()) {
                     x = self.newDestination.x;
@@ -284,20 +288,16 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
                     path = self.requestPathfinding(x, y);
 
-                    if (!path)
-                        return;
+                    if (!path) return;
 
                     self.newDestination = null;
 
-                    if (path.length < 2)
-                        stop = true;
-                    else
-                        self.followPath(path);
+                    if (path.length < 2) stop = true;
+                    else self.followPath(path);
                 } else if (self.hasNextStep()) {
                     self.step++;
                     self.updateMovement();
-                } else
-                    stop = true;
+                } else stop = true;
             } else {
                 stop = true;
                 self.interrupted = false;
@@ -307,11 +307,15 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
                 self.path = null;
                 self.idle();
 
-                if (self.stopPathingCallback)
-                    self.stopPathingCallback(self.gridX, self.gridY, self.forced);
+                if (self.stopPathingCallback) {
+                    self.stopPathingCallback(
+                        self.gridX,
+                        self.gridY,
+                        self.forced
+                    );
+                }
 
-                if (self.forced)
-                    self.forced = false;
+                if (self.forced) self.forced = false;
             }
         },
 
@@ -319,17 +323,33 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             var self = this,
                 step = self.step;
 
-            if (self.path[step][0] < self.path[step - 1][0])
-                self.performAction(Modules.Orientation.Left, Modules.Actions.Walk);
+            if (self.path[step][0] < self.path[step - 1][0]) {
+                self.performAction(
+                    Modules.Orientation.Left,
+                    Modules.Actions.Walk
+                );
+            }
 
-            if (self.path[step][0] > self.path[step - 1][0])
-                self.performAction(Modules.Orientation.Right, Modules.Actions.Walk);
+            if (self.path[step][0] > self.path[step - 1][0]) {
+                self.performAction(
+                    Modules.Orientation.Right,
+                    Modules.Actions.Walk
+                );
+            }
 
-            if (self.path[step][1] < self.path[step - 1][1])
-                self.performAction(Modules.Orientation.Up, Modules.Actions.Walk);
+            if (self.path[step][1] < self.path[step - 1][1]) {
+                self.performAction(
+                    Modules.Orientation.Up,
+                    Modules.Actions.Walk
+                );
+            }
 
-            if (self.path[step][1] > self.path[step - 1][1])
-                self.performAction(Modules.Orientation.Down, Modules.Actions.Walk);
+            if (self.path[step][1] > self.path[step - 1][1]) {
+                self.performAction(
+                    Modules.Orientation.Down,
+                    Modules.Actions.Walk
+                );
+            }
         },
 
         followPath: function(path) {
@@ -340,17 +360,14 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
              * himself or somehow into another dimension
              */
 
-            if (!path || path.length < 2)
-                return;
+            if (!path || path.length < 2) return;
 
             self.path = path;
             self.step = 0;
 
-            if (self.following)
-                path.pop();
+            if (self.following) path.pop();
 
-            if (self.startPathingCallback)
-                self.startPathingCallback(path);
+            if (self.startPathingCallback) self.startPathingCallback(path);
 
             self.nextStep();
         },
@@ -365,17 +382,14 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             self.adjacentTiles = {};
 
-            if (self.hasPath() && !forced)
-                self.proceed(x, y);
-            else
-                self.followPath(self.requestPathfinding(x, y));
+            if (self.hasPath() && !forced) self.proceed(x, y);
+            else self.followPath(self.requestPathfinding(x, y));
         },
 
         stop: function(force) {
             var self = this;
 
-            if (!force)
-                self.interrupted = true;
+            if (!force) self.interrupted = true;
             else if (self.hasPath()) {
                 self.path = null;
                 self.newDestination = null;
@@ -389,33 +403,25 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         getEffectAnimation: function() {
             var self = this;
 
-            if (self.critical)
-                return self.criticalAnimation;
+            if (self.critical) return self.criticalAnimation;
 
-            if (self.stunned)
-                return self.stunAnimation;
+            if (self.stunned) return self.stunAnimation;
 
-            if (self.terror)
-                return self.terrorAnimation;
+            if (self.terror) return self.terrorAnimation;
 
-            if (self.explosion)
-                return self.explosionAnimation;
+            if (self.explosion) return self.explosionAnimation;
         },
 
         getActiveEffect: function() {
             var self = this;
 
-            if (self.critical)
-                return 'criticaleffect';
+            if (self.critical) return 'criticaleffect';
 
-            if (self.stunned)
-                return 'stuneffect';
+            if (self.stunned) return 'stuneffect';
 
-            if (self.terror)
-                return 'explosion-terror';
+            if (self.terror) return 'explosion-terror';
 
-            if (self.explosion)
-                return 'explosion-fireball';
+            if (self.explosion) return 'explosion-fireball';
         },
 
         /**
@@ -427,8 +433,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             self.healthBarVisible = true;
 
-            if (self.healthBarTimeout)
-                clearTimeout(self.healthBarTimeout);
+            if (self.healthBarTimeout) clearTimeout(self.healthBarTimeout);
 
             self.healthBarTimeout = setTimeout(function() {
                 self.healthBarVisible = false;
@@ -446,18 +451,23 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         requestPathfinding: function(x, y) {
             var self = this;
 
-            if (self.requestPathCallback)
-                return self.requestPathCallback(x, y);
+            if (self.requestPathCallback) return self.requestPathCallback(x, y);
         },
 
         updateGridPosition: function() {
             var self = this;
 
-            self.setGridPosition(self.path[self.step][0], self.path[self.step][1]);
+            self.setGridPosition(
+                self.path[self.step][0],
+                self.path[self.step][1]
+            );
         },
 
         isMoving: function() {
-            return this.currentAnimation.name === 'walk' && (this.x % 2 !== 0 || this.y % 2 !== 0);
+            return (
+                this.currentAnimation.name === 'walk' &&
+                (this.x % 2 !== 0 || this.y % 2 !== 0)
+            );
         },
 
         forEachAttacker: function(callback) {
@@ -489,7 +499,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         hasNextStep: function() {
-            return (this.path.length - 1 > this.step);
+            return this.path.length - 1 > this.step;
         },
 
         changedPath: function() {
@@ -499,8 +509,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         removeTarget: function() {
             var self = this;
 
-            if (!self.target)
-                return;
+            if (!self.target) return;
 
             self.target = null;
         },
@@ -514,8 +523,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             self.loadDirty();
 
-            if (self.moveCallback)
-                self.moveCallback();
+            if (self.moveCallback) self.moveCallback();
         },
 
         getDistance: function(entity) {
@@ -538,11 +546,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
                 return;
             }
 
-            if (self.target && self.target.id === target.id)
-                return;
+            if (self.target && self.target.id === target.id) return;
 
-            if (self.hasTarget())
-                self.removeTarget();
+            if (self.hasTarget()) self.removeTarget();
 
             self.target = target;
         },
@@ -552,8 +558,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             self.hitPoints = hitPoints;
 
-            if (self.hitPointsCallback)
-                self.hitPointsCallback(self.hitPoints);
+            if (self.hitPointsCallback) self.hitPointsCallback(self.hitPoints);
         },
 
         setIdleSpeed: function(idleSpeed) {
@@ -612,6 +617,5 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         onMaxHitPoints: function(callback) {
             this.maxHitPointsCallback = callback;
         }
-
     });
 });

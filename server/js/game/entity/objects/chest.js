@@ -1,13 +1,13 @@
 /* global module */
 
-const Entity = require('../entity'),
+let Entity = require('../entity'),
     Utils = require('../../../util/utils');
 
 class Chest extends Entity {
     constructor(id, instance, x, y) {
         super(id, 'chest', instance, x, y);
 
-        const self = this;
+        let self = this;
 
         self.respawnDuration = 25000;
         self.static = false;
@@ -16,23 +16,21 @@ class Chest extends Entity {
     }
 
     openChest() {
-        const self = this;
+        let self = this;
 
-        if (self.openCallback)
-            self.openCallback();
+        if (self.openCallback) self.openCallback();
     }
 
     respawn() {
-        const self = this;
+        let self = this;
 
         setTimeout(() => {
-            if (self.respawnCallback)
-                self.respawnCallback();
+            if (self.respawnCallback) self.respawnCallback();
         }, self.respawnDuration);
     }
 
     getItem() {
-        const self = this,
+        let self = this,
             random = Utils.randomInt(0, self.items.length - 1),
             item = self.items[random];
 
@@ -40,8 +38,7 @@ class Chest extends Entity {
          * We must ensure an item is always present in order
          * to avoid any unforeseen circumstances.
          */
-        if (!item)
-            return;
+        if (!item) return;
 
         return item;
     }

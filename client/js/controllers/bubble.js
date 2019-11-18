@@ -2,7 +2,6 @@
 
 define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -19,7 +18,13 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
                 self.bubbles[id].reset(self.game.time);
                 $('#' + id + ' p').html(message);
             } else {
-                var element = $('<div id=\'' + id + '\' class=\'bubble\'><p>' + message + '</p><div class=\'bubbleTip\'></div></div>');
+                var element = $(
+                    "<div id='" +
+                        id +
+                        "' class='bubble'><p>" +
+                        message +
+                        "</p><div class='bubbleTip'></div></div>"
+                );
 
                 $(element).appendTo(self.container);
 
@@ -34,19 +39,25 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
 
             var bubble = self.get(entity.id);
 
-            if (!bubble || !entity)
-                return;
+            if (!bubble || !entity) return;
 
             var scale = self.game.renderer.getScale(),
                 tileSize = 16 * scale,
                 x = (entity.x - self.game.getCamera().x) * scale,
                 width = parseInt(bubble.element.css('width')) + 24,
-                offset = (width / 2) - (tileSize / 2),
-                offsetY = -20, y;
+                offset = width / 2 - tileSize / 2,
+                offsetY = -20,
+                y;
 
-            y = ((entity.y - self.game.getCamera().y) * scale) - (tileSize * 2) - offsetY;
+            y =
+                (entity.y - self.game.getCamera().y) * scale -
+                tileSize * 2 -
+                offsetY;
 
-            bubble.element.css('left', x - offset + (2 + self.game.renderer.scale) + 'px');
+            bubble.element.css(
+                'left',
+                x - offset + (2 + self.game.renderer.scale) + 'px'
+            );
             bubble.element.css('top', y + 'px');
         },
 
@@ -56,8 +67,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
             _.each(self.bubbles, function(bubble) {
                 var entity = self.game.entities.get(bubble.id);
 
-                if (entity)
-                    self.setTo(entity);
+                if (entity) self.setTo(entity);
 
                 if (bubble.isOver(time)) {
                     bubble.destroy();
@@ -69,8 +79,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
         get: function(id) {
             var self = this;
 
-            if (id in self.bubbles)
-                return self.bubbles[id];
+            if (id in self.bubbles) return self.bubbles[id];
 
             return null;
         },
@@ -89,12 +98,10 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
             var self = this,
                 bubble = self.get(id);
 
-            if (!bubble)
-                return;
+            if (!bubble) return;
 
             bubble.destroy();
             delete self.bubbles[id];
         }
-
     });
 });

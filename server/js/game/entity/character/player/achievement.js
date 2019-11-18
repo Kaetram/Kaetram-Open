@@ -1,13 +1,13 @@
 /* global module */
 
-const Data = require('../../../../../data/achievements'),
+let Data = require('../../../../../data/achievements'),
     Messages = require('../../../../network/messages'),
     Packets = require('../../../../network/packets'),
     Modules = require('../../../../util/modules');
 
 class Achievement {
     constructor(id, player) {
-        const self = this;
+        let self = this;
 
         self.id = id;
         self.player = player;
@@ -23,49 +23,51 @@ class Achievement {
     }
 
     step() {
-        const self = this;
+        let self = this;
 
-        if (self.isThreshold())
-            return;
+        if (self.isThreshold()) return;
 
         self.progress++;
 
         self.update();
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
-            id: self.id,
-            name: self.name,
-            progress: self.progress,
-            count: self.data.count,
-            isQuest: false
-        }));
+        self.player.send(
+            new Messages.Quest(Packets.QuestOpcode.Progress, {
+                id: self.id,
+                name: self.name,
+                progress: self.progress,
+                count: self.data.count,
+                isQuest: false
+            })
+        );
     }
 
     converse(npc) {
-        const self = this;
+        let self = this;
 
-        if (self.isThreshold() || self.hasItem())
-            self.finish(npc);
+        if (self.isThreshold() || self.hasItem()) self.finish(npc);
         else {
-            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-                id: npc.instance,
-                text: npc.talk(self.data.text)
-            }));
+            self.player.send(
+                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                    id: npc.instance,
+                    text: npc.talk(self.data.text)
+                })
+            );
 
-            if (!self.isStarted() && npc.talkIndex === 0)
-                self.step();
+            if (!self.isStarted() && npc.talkIndex === 0) self.step();
         }
     }
 
     finish(npc) {
-        const self = this,
+        let self = this,
             rewardType = self.data.rewardType;
 
         switch (rewardType) {
             case Modules.Achievements.Rewards.Item:
-
                 if (!self.player.inventory.hasSpace()) {
-                    self.player.notify('You do not have enough space in your inventory to finish this achievement.');
+                    self.player.notify(
+                        'You do not have enough space in your inventory to finish this achievement.'
+                    );
                     return;
                 }
 
@@ -77,7 +79,6 @@ class Achievement {
                 break;
 
             case Modules.Achievements.Rewards.Experience:
-
                 self.player.addExperience(self.data.reward);
 
                 break;
@@ -86,11 +87,13 @@ class Achievement {
         self.setProgress(9999);
         self.update();
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Finish, {
-            id: self.id,
-            name: self.name,
-            isQuest: false
-        }));
+        self.player.send(
+            new Messages.Quest(Packets.QuestOpcode.Finish, {
+                id: self.id,
+                name: self.name,
+                isQuest: false
+            })
+        );
 
         if (npc && self.player.npcTalkCallback)
             self.player.npcTalkCallback(npc);
@@ -105,9 +108,12 @@ class Achievement {
     }
 
     hasItem() {
-        const self = this;
+        let self = this;
 
-        if (self.data.type === Modules.Achievements.Type.Scavenge && self.player.inventory.contains(self.data.item)) {
+        if (
+            self.data.type === Modules.Achievements.Type.Scavenge &&
+            self.player.inventory.contains(self.data.item)
+        ) {
             self.player.inventory.remove(self.data.item, self.data.itemCount);
 
             return true;

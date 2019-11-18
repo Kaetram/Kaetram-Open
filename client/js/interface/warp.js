@@ -2,7 +2,6 @@
 
 define(['jquery'], function($) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -25,7 +24,10 @@ define(['jquery'], function($) {
 
                 self.toggle();
 
-                self.game.socket.send(Packets.Click, ['warp', self.button.hasClass('active')]);
+                self.game.socket.send(Packets.Click, [
+                    'warp',
+                    self.button.hasClass('active')
+                ]);
             });
 
             self.close.click(function() {
@@ -39,7 +41,9 @@ define(['jquery'], function($) {
                     warp.click(function(event) {
                         self.hide();
 
-                        self.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);
+                        self.game.socket.send(Packets.Warp, [
+                            event.currentTarget.id.substring(4)
+                        ]);
                     });
                 }
             }
@@ -52,10 +56,8 @@ define(['jquery'], function($) {
              * Just so it fades out nicely.
              */
 
-            if (self.isVisible())
-                self.hide();
-            else
-                self.display();
+            if (self.isVisible()) self.hide();
+            else self.display();
         },
 
         isVisible: function() {
@@ -71,6 +73,5 @@ define(['jquery'], function($) {
             this.mapFrame.fadeOut('fast');
             this.button.removeClass('active');
         }
-
     });
 });

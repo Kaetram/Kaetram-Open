@@ -36,13 +36,13 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/map/areas/pvpareas.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const _ = require(&apos;underscore&apos;),
+let _ = require(&apos;underscore&apos;),
     Area = require(&apos;../area&apos;),
     map = require(&apos;../../../data/map/world_server&apos;);
 
 class PVPAreas {
     constructor() {
-        const self = this;
+        let self = this;
 
         self.pvpAreas = [];
 
@@ -50,11 +50,11 @@ class PVPAreas {
     }
 
     load() {
-        const self = this,
+        let self = this,
             list = map.pvpAreas;
 
         _.each(list, p =&gt; {
-            const pvpArea = new Area(p.id, p.x, p.y, p.width, p.height);
+            let pvpArea = new Area(p.id, p.x, p.y, p.width, p.height);
 
             self.pvpAreas.push(pvpArea);
         });

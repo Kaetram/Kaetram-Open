@@ -2,7 +2,6 @@
 
 define(function() {
     return Class.extend({
-
         init: function(map) {
             var self = this;
 
@@ -33,16 +32,26 @@ define(function() {
                 }
             }
 
-            if (self.map.game.isDebug())
-                log.info('Finished generating grids.');
+            if (self.map.game.isDebug()) log.info('Finished generating grids.');
         },
 
         checkPathingGrid: function(player, xRadius, yRadius) {
             var self = this;
 
-            for (var y = player.gridY - yRadius; y < player.gridY + yRadius; y++) {
-                for (var x = player.gridX - xRadius; x < player.gridX + xRadius; x++) {
-                    if (!self.map.isColliding(x, y) && _.size(self.entityGrid[y][x] === 0))
+            for (
+                var y = player.gridY - yRadius;
+                y < player.gridY + yRadius;
+                y++
+            ) {
+                for (
+                    var x = player.gridX - xRadius;
+                    x < player.gridX + xRadius;
+                    x++
+                ) {
+                    if (
+                        !self.map.isColliding(x, y) &&
+                        _.size(self.entityGrid[y][x] === 0)
+                    )
                         self.removeFromPathingGrid(x, y);
                 }
             }
@@ -89,7 +98,11 @@ define(function() {
         removeFromRenderingGrid: function(entity, x, y) {
             var self = this;
 
-            if (entity && self.renderingGrid[y][x] && entity.id in self.renderingGrid[y][x])
+            if (
+                entity &&
+                self.renderingGrid[y][x] &&
+                entity.id in self.renderingGrid[y][x]
+            )
                 delete self.renderingGrid[y][x][entity.id];
         },
 
@@ -104,7 +117,11 @@ define(function() {
         removeFromEntityGrid: function(entity, x, y) {
             var self = this;
 
-            if (entity && self.entityGrid[y][x] && entity.id in self.entityGrid[y][x])
+            if (
+                entity &&
+                self.entityGrid[y][x] &&
+                entity.id in self.entityGrid[y][x]
+            )
                 delete self.entityGrid[y][x][entity.id];
         },
 
@@ -121,14 +138,24 @@ define(function() {
             if (entity) {
                 self.removeFromEntityGrid(entity, entity.gridX, entity.gridY);
                 self.removeFromPathingGrid(entity.gridX, entity.gridY);
-                self.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
+                self.removeFromRenderingGrid(
+                    entity,
+                    entity.gridX,
+                    entity.gridY
+                );
 
                 if (entity.nextGridX > -1 && entity.nextGridY > -1) {
-                    self.removeFromEntityGrid(entity, entity.nextGridX, entity.nextGridY);
-                    self.removeFromPathingGrid(entity.nextGridX, entity.nextGridY);
+                    self.removeFromEntityGrid(
+                        entity,
+                        entity.nextGridX,
+                        entity.nextGridY
+                    );
+                    self.removeFromPathingGrid(
+                        entity.nextGridX,
+                        entity.nextGridY
+                    );
                 }
             }
         }
-
     });
 });

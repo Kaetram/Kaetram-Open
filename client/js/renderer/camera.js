@@ -2,7 +2,6 @@
 
 define(function() {
     return Class.extend({
-
         init: function(renderer) {
             var self = this;
 
@@ -47,8 +46,11 @@ define(function() {
             self.gridWidth = factorWidth;
             self.gridHeight = factorHeight;
 
-            self.borderX = (self.map.width * self.tileSize) - self.gridWidth * self.tileSize;
-            self.borderY = (self.map.height * self.tileSize) - self.gridHeight * self.tileSize;
+            self.borderX =
+                self.map.width * self.tileSize - self.gridWidth * self.tileSize;
+            self.borderY =
+                self.map.height * self.tileSize -
+                self.gridHeight * self.tileSize;
         },
 
         setPosition: function(x, y) {
@@ -65,14 +67,16 @@ define(function() {
         },
 
         clip: function() {
-            this.setGridPosition(Math.round(this.x / 16), Math.round(this.y / 16));
+            this.setGridPosition(
+                Math.round(this.x / 16),
+                Math.round(this.y / 16)
+            );
         },
 
         center: function() {
             var self = this;
 
-            if (self.centered)
-                return;
+            if (self.centered) return;
 
             self.centered = true;
             self.centreOn(self.player);
@@ -83,8 +87,7 @@ define(function() {
         decenter: function() {
             var self = this;
 
-            if (!self.centered)
-                return;
+            if (!self.centered) return;
 
             self.clip();
             self.centered = false;
@@ -110,15 +113,13 @@ define(function() {
 
             self.player = player;
 
-
             self.centreOn(self.player);
         },
 
         handlePanning: function(direction) {
             var self = this;
 
-            if (!self.panning)
-                return;
+            if (!self.panning) return;
 
             switch (direction) {
                 case Modules.Keys.Up:
@@ -142,40 +143,36 @@ define(function() {
         centreOn: function(entity) {
             var self = this;
 
-            if (!entity)
-                return;
+            if (!entity) return;
 
             var width = Math.floor(self.gridWidth / 2),
                 height = Math.floor(self.gridHeight / 2),
-                nextX = entity.x - (width * self.tileSize),
-                nextY = entity.y - (height * self.tileSize);
+                nextX = entity.x - width * self.tileSize,
+                nextY = entity.y - height * self.tileSize;
 
             if (nextX >= 0 && nextX <= self.borderX && !self.lockX) {
                 self.x = nextX;
                 self.gridX = Math.round(entity.x / 16) - width;
-            } else
-                self.offsetX(nextX);
+            } else self.offsetX(nextX);
 
             if (nextY >= 0 && nextY <= self.borderY && !self.lockY) {
                 self.y = nextY;
                 self.gridY = Math.round(entity.y / 16) - height;
-            } else
-                self.offsetY(nextY);
+            } else self.offsetY(nextY);
         },
 
         forceCentre: function(entity) {
             var self = this;
 
-            if (!entity)
-                return;
+            if (!entity) return;
 
             var width = Math.floor(self.gridWidth / 2),
                 height = Math.floor(self.gridHeight / 2);
 
-            self.x = entity.x - (width * self.tileSize);
+            self.x = entity.x - width * self.tileSize;
             self.gridX = Math.round(entity.x / 16) - width;
 
-            self.y = entity.y - (height * self.tileSize);
+            self.y = entity.y - height * self.tileSize;
             self.gridY = Math.round(entity.y / 16) - height;
         },
 
@@ -208,26 +205,34 @@ define(function() {
 
             switch (direction) {
                 case Modules.Orientation.Up:
-
-                    self.setGridPosition(self.gridX, self.gridY - self.gridHeight + 2);
+                    self.setGridPosition(
+                        self.gridX,
+                        self.gridY - self.gridHeight + 2
+                    );
 
                     break;
 
                 case Modules.Orientation.Down:
-
-                    self.setGridPosition(self.gridX, self.gridY + self.gridHeight - 2);
+                    self.setGridPosition(
+                        self.gridX,
+                        self.gridY + self.gridHeight - 2
+                    );
 
                     break;
 
                 case Modules.Orientation.Right:
-
-                    self.setGridPosition(self.gridX + self.gridWidth - 2, self.gridY);
+                    self.setGridPosition(
+                        self.gridX + self.gridWidth - 2,
+                        self.gridY
+                    );
 
                     break;
 
                 case Modules.Orientation.Left:
-
-                    self.setGridPosition(self.gridX - self.gridWidth + 2, self.gridY);
+                    self.setGridPosition(
+                        self.gridX - self.gridWidth + 2,
+                        self.gridY
+                    );
 
                     break;
             }
@@ -236,11 +241,20 @@ define(function() {
         forEachVisiblePosition: function(callback, offset) {
             var self = this;
 
-            if (!offset)
-                offset = 1;
+            if (!offset) offset = 1;
 
-            for (var y = self.gridY - offset, maxY = y + self.gridHeight + (offset * 2); y < maxY; y++) {
-                for (var x = self.gridX - offset, maxX = x + self.gridWidth + (offset * 2); x < maxX; x++)
+            for (
+                var y = self.gridY - offset,
+                    maxY = y + self.gridHeight + offset * 2;
+                y < maxY;
+                y++
+            ) {
+                for (
+                    var x = self.gridX - offset,
+                        maxX = x + self.gridWidth + offset * 2;
+                    x < maxX;
+                    x++
+                )
                     callback(x, y);
             }
         }

@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/equipment/weapon.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Equipment = require(&apos;./equipment&apos;),
+let Equipment = require(&apos;./equipment&apos;),
     Items = require(&apos;../../../../../util/items&apos;),
     Modules = require(&apos;../../../../../util/modules&apos;);
 
@@ -44,7 +44,7 @@ class Weapon extends Equipment {
     constructor(name, id, count, ability, abilityLevel) {
         super(name, id, count, ability, abilityLevel);
 
-        const self = this;
+        let self = this;
 
         self.level = Items.getWeaponLevel(name);
         self.ranged = Items.isArcherWeapon(name);

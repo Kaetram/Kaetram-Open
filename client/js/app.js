@@ -2,7 +2,6 @@
 
 define(['jquery'], function($) {
     return Class.extend({
-
         init: function() {
             var self = this;
 
@@ -71,7 +70,11 @@ define(['jquery'], function($) {
             });
 
             self.parchment.click(function() {
-                if (self.parchment.hasClass('about') || self.parchment.hasClass('credits') || self.parchment.hasClass('git')) {
+                if (
+                    self.parchment.hasClass('about') ||
+                    self.parchment.hasClass('credits') ||
+                    self.parchment.hasClass('git')
+                ) {
                     self.parchment.removeClass('about credits git');
                     self.displayScroll('loadCharacter');
                 }
@@ -94,8 +97,7 @@ define(['jquery'], function($) {
             });
 
             self.rememberMe.click(function() {
-                if (!self.game || !self.game.storage)
-                    return;
+                if (!self.game || !self.game.storage) return;
 
                 var active = self.rememberMe.hasClass('active');
 
@@ -105,8 +107,7 @@ define(['jquery'], function($) {
             });
 
             self.guest.click(function() {
-                if (!self.game)
-                    return;
+                if (!self.game) return;
 
                 self.guest.toggleClass('active');
             });
@@ -121,27 +122,23 @@ define(['jquery'], function($) {
             window.scrollTo(0, 1);
 
             self.window.resize(function() {
-                if (self.game)
-                    self.game.resize();
+                if (self.game) self.game.resize();
             });
 
             $.getJSON('data/config.json', function(json) {
                 self.config = json;
 
-                if (self.readyCallback)
-                    self.readyCallback();
+                if (self.readyCallback) self.readyCallback();
             });
 
             $(document).bind('keydown', function(e) {
-                if (e.which === Modules.Keys.Enter)
-                    return false;
+                if (e.which === Modules.Keys.Enter) return false;
             });
 
             $(document).keydown(function(e) {
                 var key = e.which;
 
-                if (!self.game)
-                    return;
+                if (!self.game) return;
 
                 self.body.focus();
 
@@ -157,14 +154,18 @@ define(['jquery'], function($) {
             $(document).keyup(function(e) {
                 var key = e.which;
 
-                if (!self.game || !self.game.started)
-                    return;
+                if (!self.game || !self.game.started) return;
 
                 self.game.input.keyUp(key);
             });
 
             $(document).mousemove(function(event) {
-                if (!self.game || !self.game.input || !self.game.started || event.target.id !== 'textCanvas')
+                if (
+                    !self.game ||
+                    !self.game.input ||
+                    !self.game.started ||
+                    event.target.id !== 'textCanvas'
+                )
                     return;
 
                 self.game.input.setCoords(event);
@@ -188,7 +189,13 @@ define(['jquery'], function($) {
         login: function() {
             var self = this;
 
-            if (self.loggingIn || !self.game || !self.game.loaded || self.statusMessage || !self.verifyForm())
+            if (
+                self.loggingIn ||
+                !self.game ||
+                !self.game.loaded ||
+                self.statusMessage ||
+                !self.verifyForm()
+            )
                 return;
 
             self.toggleLogin(true);
@@ -220,32 +227,32 @@ define(['jquery'], function($) {
             self.footer.show();
         },
 
-        showDeath: function() {
-
-        },
+        showDeath: function() {},
 
         openScroll: function(origin, destination) {
             var self = this;
 
-            if (!destination || self.loggingIn)
-                return;
+            if (!destination || self.loggingIn) return;
 
             self.cleanErrors();
 
             if (!Detect.isMobile()) {
-                if (self.parchmentAnimating)
-                    return;
+                if (self.parchmentAnimating) return;
 
                 self.parchmentAnimating = true;
 
                 self.parchment.toggleClass('animate').removeClass(origin);
 
-                setTimeout(function() {
-                    self.parchment.toggleClass('animate').addClass(destination);
-                    self.parchmentAnimating = false;
-                }, Detect.isTablet() ? 0 : 1000);
-            } else
-                self.parchment.removeClass(origin).addClass(destination);
+                setTimeout(
+                    function() {
+                        self.parchment
+                            .toggleClass('animate')
+                            .addClass(destination);
+                        self.parchmentAnimating = false;
+                    },
+                    Detect.isTablet() ? 0 : 1000
+                );
+            } else self.parchment.removeClass(origin).addClass(destination);
         },
 
         displayScroll: function(content) {
@@ -255,27 +262,29 @@ define(['jquery'], function($) {
             if (self.game.started) {
                 self.parchment.removeClass().addClass(content);
 
-                self.body.removeClass('credits legal about').toggleClass(content);
+                self.body
+                    .removeClass('credits legal about')
+                    .toggleClass(content);
 
-                if (self.game.player)
-                    self.body.toggleClass('death');
+                if (self.game.player) self.body.toggleClass('death');
 
-                if (content !== 'about')
-                    self.helpButton.removeClass('active');
-            } else if (state !== 'animate')
-                self.openScroll(state, state === content ? 'loadCharacter' : content);
+                if (content !== 'about') self.helpButton.removeClass('active');
+            } else if (state !== 'animate') {
+                self.openScroll(
+                    state,
+                    state === content ? 'loadCharacter' : content
+                );
+            }
         },
 
         verifyForm: function() {
             var self = this,
                 activeForm = self.getActiveForm();
 
-            if (activeForm === 'null')
-                return;
+            if (activeForm === 'null') return;
 
             switch (activeForm) {
                 case 'loadCharacter':
-
                     var nameInput = $('#loginNameInput'),
                         passwordInput = $('#loginPasswordInput');
 
@@ -288,34 +297,56 @@ define(['jquery'], function($) {
                     }
 
                     if (!passwordInput.val() && !self.isGuest()) {
-                        self.sendError(passwordInput, 'Please enter a password.');
+                        self.sendError(
+                            passwordInput,
+                            'Please enter a password.'
+                        );
                         return false;
                     }
 
                     break;
 
                 case 'createCharacter':
-
                     var characterName = $('#registerNameInput'),
                         registerPassword = $('#registerPasswordInput'),
-                        registerPasswordConfirmation = $('#registerPasswordConfirmationInput'),
+                        registerPasswordConfirmation = $(
+                            '#registerPasswordConfirmationInput'
+                        ),
                         email = $('#registerEmailInput');
 
-                    if (self.registerFields.length === 0)
-                        self.registerFields = [characterName, registerPassword, registerPasswordConfirmation, email];
+                    if (self.registerFields.length === 0) {
+                        self.registerFields = [
+                            characterName,
+                            registerPassword,
+                            registerPasswordConfirmation,
+                            email
+                        ];
+                    }
 
                     if (!characterName.val()) {
-                        self.sendError(characterName, 'A username is necessary you silly.');
+                        self.sendError(
+                            characterName,
+                            'A username is necessary you silly.'
+                        );
                         return false;
                     }
 
                     if (!registerPassword.val()) {
-                        self.sendError(registerPassword, 'You must enter a password.');
+                        self.sendError(
+                            registerPassword,
+                            'You must enter a password.'
+                        );
                         return false;
                     }
 
-                    if (registerPasswordConfirmation.val() !== registerPassword.val()) {
-                        self.sendError(registerPasswordConfirmation, 'The passwords do not match!');
+                    if (
+                        registerPasswordConfirmation.val() !==
+                        registerPassword.val()
+                    ) {
+                        self.sendError(
+                            registerPasswordConfirmation,
+                            'The passwords do not match!'
+                        );
                         return false;
                     }
 
@@ -331,7 +362,9 @@ define(['jquery'], function($) {
         },
 
         verifyEmail: function(email) {
-            return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
+            return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+                email
+            );
         },
 
         sendStatus: function(message) {
@@ -341,27 +374,27 @@ define(['jquery'], function($) {
 
             self.statusMessage = message;
 
-            if (!message)
-                return;
+            if (!message) return;
 
             $('<span></span>', {
-                'class': 'status blink',
-                'text': message
+                class: 'status blink',
+                text: message
             }).appendTo('.validation-summary');
 
-            $('.status').append('<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>');
+            $('.status').append(
+                '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>'
+            );
         },
 
         sendError: function(field, error) {
             this.cleanErrors();
 
             $('<span></span>', {
-                'class': 'validation-error blink',
-                'text': error
+                class: 'validation-error blink',
+                text: error
             }).appendTo('.validation-summary');
 
-            if (!field)
-                return;
+            if (!field) return;
 
             field.addClass('field-error').select();
             field.bind('keypress', function(event) {
@@ -376,7 +409,10 @@ define(['jquery'], function($) {
         cleanErrors: function() {
             var self = this,
                 activeForm = self.getActiveForm(),
-                fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
+                fields =
+                    activeForm === 'loadCharacter'
+                        ? self.loginFields
+                        : self.registerFields;
 
             for (var i = 0; i < fields.length; i++)
                 fields[i].removeClass('field-error');
@@ -413,7 +449,7 @@ define(['jquery'], function($) {
             var width = window.innerWidth,
                 height = window.innerHeight;
 
-            return width <= 1000 ? 1 : ((width <= 1500 || height <= 870) ? 2 : 3);
+            return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
         },
 
         revertLoader: function() {
@@ -428,7 +464,8 @@ define(['jquery'], function($) {
                 return;
             }
 
-            var dots = '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
+            var dots =
+                '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
             self.loading.html(message + dots);
         },
 
@@ -457,22 +494,35 @@ define(['jquery'], function($) {
         toggleTyping: function(state) {
             var self = this;
 
-            if (self.loginFields)
-                _.each(self.loginFields, function(field) { field.prop('readonly', state); });
+            if (self.loginFields) {
+                _.each(self.loginFields, function(field) {
+                    field.prop('readonly', state);
+                });
+            }
 
-            if (self.registerFields)
-                _.each(self.registerFields, function(field) { field.prop('readOnly', state); });
+            if (self.registerFields) {
+                _.each(self.registerFields, function(field) {
+                    field.prop('readOnly', state);
+                });
+            }
         },
 
         updateRange: function(obj) {
             var self = this,
-                val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
+                val =
+                    (obj.val() - obj.attr('min')) /
+                    (obj.attr('max') - obj.attr('min'));
 
-            obj.css('background-image',
-                '-webkit-gradient(linear, left top, right top, '
-                + 'color-stop(' + val + ', #4d4d4d), '
-                + 'color-stop(' + val + ', #C5C5C5)'
-                + ')'
+            obj.css(
+                'background-image',
+                '-webkit-gradient(linear, left top, right top, ' +
+                    'color-stop(' +
+                    val +
+                    ', #4d4d4d), ' +
+                    'color-stop(' +
+                    val +
+                    ', #C5C5C5)' +
+                    ')'
             );
         },
 
@@ -481,12 +531,13 @@ define(['jquery'], function($) {
         },
 
         getOrientation: function() {
-            return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+            return window.innerHeight > window.innerWidth
+                ? 'portrait'
+                : 'landscape';
         },
 
         onReady: function(callback) {
             this.readyCallback = callback;
         }
-
     });
 });

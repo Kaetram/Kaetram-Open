@@ -1,6 +1,6 @@
 /* global module */
 
-const Quest = require('../quest'),
+let Quest = require('../quest'),
     Packets = require('../../../../../../network/packets'),
     Messages = require('../../../../../../network/messages');
 
@@ -8,7 +8,7 @@ class Introduction extends Quest {
     constructor(player, data) {
         super(player, data);
 
-        const self = this;
+        let self = this;
 
         self.player = player;
         self.data = data;
@@ -17,7 +17,7 @@ class Introduction extends Quest {
     }
 
     load(stage) {
-        const self = this;
+        let self = this;
 
         if (!self.player.inTutorial()) {
             self.setStage(9999);
@@ -30,27 +30,27 @@ class Introduction extends Quest {
         self.updatePointers();
         self.toggleChat();
 
-        if (self.stage > 9998)
-            return;
+        if (self.stage > 9998) return;
 
         self.loadCallbacks();
     }
 
     loadCallbacks() {
-        const self = this;
+        let self = this;
 
         self.onNPCTalk(npc => {
-            const conversation = self.getConversation(npc.id);
+            let conversation = self.getConversation(npc.id);
 
             self.lastNPC = npc;
 
-            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-                id: npc.instance,
-                text: npc.talk(conversation)
-            }));
+            self.player.send(
+                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                    id: npc.instance,
+                    text: npc.talk(conversation)
+                })
+            );
 
-            if (npc.talkIndex === 0)
-                self.progress('talk');
+            if (npc.talkIndex === 0) self.progress('talk');
         });
 
         self.player.onReady(() => {
@@ -72,18 +72,15 @@ class Introduction extends Quest {
         });
 
         self.player.onProfile(isOpen => {
-            if (isOpen)
-                self.progress('click');
+            if (isOpen) self.progress('click');
         });
 
         self.player.onInventory(isOpen => {
-            if (isOpen)
-                self.progress('click');
+            if (isOpen) self.progress('click');
         });
 
         self.player.onWarp(isOpen => {
-            if (isOpen)
-                self.progress('click');
+            if (isOpen) self.progress('click');
         });
 
         self.player.onKill(character => {
@@ -93,11 +90,10 @@ class Introduction extends Quest {
     }
 
     progress(type) {
-        const self = this,
+        let self = this,
             task = self.data.task[self.stage];
 
-        if (!task || task !== type)
-            return;
+        if (!task || task !== type) return;
 
         if (self.stage === self.data.stages) {
             self.finish();
@@ -106,14 +102,11 @@ class Introduction extends Quest {
 
         switch (type) {
             case 'talk':
-
-                if (self.stage === 6)
-                    self.player.updateRegion();
+                if (self.stage === 6) self.player.updateRegion();
 
                 break;
 
             case 'door':
-
                 if (self.stage === 7) {
                     self.player.inventory.add({
                         id: 248,
@@ -141,11 +134,13 @@ class Introduction extends Quest {
         self.update();
         self.updatePointers();
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
-            id: self.id,
-            stage: self.stage,
-            isQuest: true
-        }));
+        self.player.send(
+            new Messages.Quest(Packets.QuestOpcode.Progress, {
+                id: self.id,
+                stage: self.stage,
+                isQuest: true
+            })
+        );
     }
 
     isFinished() {
@@ -157,7 +152,7 @@ class Introduction extends Quest {
     }
 
     setStage(stage) {
-        const self = this;
+        let self = this;
 
         super.setStage(stage);
 
@@ -165,14 +160,14 @@ class Introduction extends Quest {
     }
 
     finish() {
-        const self = this;
+        let self = this;
 
         self.toggleChat();
         super.finish();
     }
 
     hasDoorUnlocked(door) {
-        const self = this;
+        let self = this;
 
         switch (door.id) {
             case 0:
@@ -183,11 +178,10 @@ class Introduction extends Quest {
     }
 
     verifyDoor(destX, destY) {
-        const self = this,
+        let self = this,
             doorData = self.data.doors[self.stage];
 
-        if (!doorData)
-            return;
+        if (!doorData) return;
 
         return doorData[0] === destX && doorData[1] === destY;
     }

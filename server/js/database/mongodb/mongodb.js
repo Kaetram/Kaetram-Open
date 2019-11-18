@@ -1,6 +1,6 @@
 /* global module */
 
-const MongoClient = require('mongodb').MongoClient,
+let MongoClient = require('mongodb').MongoClient,
     Loader = require('./loader'),
     Creator = require('./creator'),
     bcrypt = require('bcrypt'),
@@ -9,7 +9,7 @@ const MongoClient = require('mongodb').MongoClient,
 
 class MongoDB {
     constructor(host, port, user, password, database) {
-        const self = this;
+        let self = this;
 
         self.host = host;
         self.port = port;
@@ -30,7 +30,7 @@ class MongoDB {
         if (config.mongoAuth)
             URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
 
-        const client = new MongoClient(URL, {
+        let client = new MongoClient(URL, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
             wtimeout: 5
@@ -51,20 +51,25 @@ class MongoDB {
     }
 
     login(player) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database => {
-            const dataCursor = database.collection('player_data').find({ username: player.username }),
-                equipmentCursor = database.collection('player_equipment').find({ username: player.username }),
-                regionsCursor = database.collection('player_regions').find({ username: player.username });
+            let dataCursor = database
+                    .collection('player_data')
+                    .find({ username: player.username }),
+                equipmentCursor = database
+                    .collection('player_equipment')
+                    .find({ username: player.username }),
+                regionsCursor = database
+                    .collection('player_regions')
+                    .find({ username: player.username });
 
             dataCursor.toArray().then(playerData => {
                 equipmentCursor.toArray().then(equipmentData => {
                     regionsCursor.toArray().then(regionData => {
-                        if (playerData.length === 0)
-                            self.register(player);
+                        if (playerData.length === 0) self.register(player);
                         else {
-                            const playerInfo = playerData[0],
+                            let playerInfo = playerData[0],
                                 equipmentInfo = equipmentData[0],
                                 regions = regionData[0];
 
@@ -74,8 +79,14 @@ class MongoDB {
                             playerInfo.ring = equipmentInfo.ring;
                             playerInfo.boots = equipmentInfo.boots;
 
-                            if (regions && regions.gameVersion === config.gver)
-                                player.regionsLoaded = regions.regions.split(',');
+                            if (
+                                regions &&
+                                regions.gameVersion === config.gver
+                            ) {
+                                player.regionsLoaded = regions.regions.split(
+                                    ','
+                                );
+                            }
 
                             player.load(playerInfo);
                             player.intro();
@@ -87,40 +98,47 @@ class MongoDB {
     }
 
     verify(player, callback) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database => {
-            const dataCursor = database.collection('player_data').find({ username: player.username });
+            let dataCursor = database
+                .collection('player_data')
+                .find({ username: player.username });
 
             dataCursor.toArray().then(data => {
-                if (data.length === 0)
-                    callback({ status: 'error' });
+                if (data.length === 0) callback({ status: 'error' });
                 else {
-                    const info = data[0];
+                    let info = data[0];
 
-                    bcrypt.compare(player.password, info.password, (error, result) => {
-                        if (error) throw error;
+                    bcrypt.compare(
+                        player.password,
+                        info.password,
+                        (error, result) => {
+                            if (error) throw error;
 
-                        if (result)
-                            callback({ status: 'success' });
-                        else
-                            callback({ status: 'error' });
-                    });
+                            if (result) callback({ status: 'success' });
+                            else callback({ status: 'error' });
+                        }
+                    );
                 }
             });
         });
     }
 
     register(player) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database => {
-            const playerData = database.collection('player_data'),
+            let playerData = database.collection('player_data'),
                 cursor = playerData.find({ username: player.username });
 
             cursor.toArray().then(info => {
                 if (info.length === 0) {
-                    log.info('No player data found for ' + player.username + '. Creating user.');
+                    log.info(
+                        'No player data found for ' +
+                            player.username +
+                            '. Creating user.'
+                    );
 
                     player.new = true;
 
@@ -132,53 +150,69 @@ class MongoDB {
     }
 
     exists(player, callback) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database => {
-            const playerData = database.collection('player_data'),
+            let playerData = database.collection('player_data'),
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
-            log.info('Looking for - ' + player.email + ' or ' + player.username);
+            log.info(
+                'Looking for - ' + player.email + ' or ' + player.username
+            );
 
             emailCursor.toArray().then(emailArray => {
                 if (emailArray.length === 0) {
                     usernameCursor.toArray().then(usernameArray => {
                         if (usernameArray.length === 0)
                             callback({ exists: false });
-                        else
-                            callback({ exists: true, type: 'user' });
+                        else callback({ exists: true, type: 'user' });
                     });
-                } else
-                    callback({ exists: true, type: 'email' });
+                } else callback({ exists: true, type: 'email' });
             });
         });
     }
 
     delete(player) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database => {
-            const collections = ['player_data', 'player_equipment', 'player_inventory', 'player_abilities', 'player_bank', 'player_quests', 'player_achievements'];
+            let collections = [
+                'player_data',
+                'player_equipment',
+                'player_inventory',
+                'player_abilities',
+                'player_bank',
+                'player_quests',
+                'player_achievements'
+            ];
 
             _.each(collections, col => {
-                const collection = database.collection(col);
+                let collection = database.collection(col);
 
-                collection.deleteOne({
-                    username: player.username
-                }, (error, result) => {
-                    if (error) throw error;
+                collection.deleteOne(
+                    {
+                        username: player.username
+                    },
+                    (error, result) => {
+                        if (error) throw error;
 
-                    if (result)
-                        log.info('Player ' + player.username + ' has been deleted.');
-                });
+                        if (result) {
+                            log.info(
+                                'Player ' +
+                                    player.username +
+                                    ' has been deleted.'
+                            );
+                        }
+                    }
+                );
             });
         });
     }
 
     registeredCount(callback) {
         this.getDatabase(database => {
-            const collection = database.collection('player_data');
+            let collection = database.collection('player_data');
 
             collection.countDocuments().then(count => {
                 callback(count);

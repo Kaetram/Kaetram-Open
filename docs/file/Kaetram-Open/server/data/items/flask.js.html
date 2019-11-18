@@ -36,19 +36,19 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/data/items/flask.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Items = require(&apos;../../js/util/items&apos;),
+let Items = require(&apos;../../js/util/items&apos;),
     Utils = require(&apos;../../js/util/utils&apos;);
 
 class Flask {
     constructor() {
-        const self = this;
+        let self = this;
 
         self.id = 190;
 
         self.healAmount = 0;
         self.manaAmount = 0;
 
-        const customData = Items.getCustomData(self.id);
+        let customData = Items.getCustomData(self.id);
 
         if (customData) {
             self.healAmount = customData.healAmount ? customData.healAmount : 0;
@@ -57,13 +57,11 @@ class Flask {
     }
 
     onUse(character) {
-        const self = this;
+        let self = this;
 
-        if (self.healAmount)
-            character.healHitPoints(self.healAmount);
+        if (self.healAmount) character.healHitPoints(self.healAmount);
 
-        if (self.manaAmount)
-            character.healManaPoints(self.manaAmount);
+        if (self.manaAmount) character.healManaPoints(self.manaAmount);
     }
 }
 

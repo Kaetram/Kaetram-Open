@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/bank.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;, &apos;./container/container&apos;], function($, Container) {
     return Class.extend({
-
         init: function(game, inventoryContainer, size) {
             var self = this;
 
@@ -65,41 +64,59 @@
 
             for (var i = 0; i &lt; data.length; i++) {
                 var item = data[i],
-                    slot = $(&apos;&lt;div id=&quot;bankSlot&apos; + i + &apos;&quot; class=&quot;bankSlot&quot;&gt;&lt;/div&gt;&apos;);
+                    slot = $(
+                        &apos;&lt;div id=&quot;bankSlot&apos; + i + &apos;&quot; class=&quot;bankSlot&quot;&gt;&lt;/div&gt;&apos;
+                    );
 
                 self.container.setSlot(i, item);
 
                 slot.css({
-                    &apos;margin-right&apos;: (2 * self.getScale()) + &apos;px&apos;,
-                    &apos;margin-bottom&apos;: (4 * self.getScale()) + &apos;px&apos;
+                    &apos;margin-right&apos;: 2 * self.getScale() + &apos;px&apos;,
+                    &apos;margin-bottom&apos;: 4 * self.getScale() + &apos;px&apos;
                 });
 
-                var image = $(&apos;&lt;div id=&quot;bankImage&apos; + i + &apos;&quot; class=&quot;bankImage&quot;&gt;&lt;/div&gt;&apos;);
+                var image = $(
+                    &apos;&lt;div id=&quot;bankImage&apos; + i + &apos;&quot; class=&quot;bankImage&quot;&gt;&lt;/div&gt;&apos;
+                );
 
-                if (item.string)
-                    image.css(&apos;background-image&apos;, self.container.getImageFormat(self.getScale(), item.string));
+                if (item.string) {
+                    image.css(
+                        &apos;background-image&apos;,
+                        self.container.getImageFormat(
+                            self.getScale(),
+                            item.string
+                        )
+                    );
+                }
 
                 slot.click(function(event) {
                     self.click(&apos;bank&apos;, event);
                 });
 
-                if (Detect.isMobile())
-                    image.css(&apos;background-size&apos;, &apos;600%&apos;);
+                if (Detect.isMobile()) image.css(&apos;background-size&apos;, &apos;600%&apos;);
 
                 var count = item.count;
 
-                if (count &gt; 999999)
-                    count = count.toString().substring(0, count.toString().length - 6) + &apos;M&apos;;
-                else if (count &gt; 9999)
+                if (count &gt; 999999) {
+                    count =
+                        count
+                            .toString()
+                            .substring(0, count.toString().length - 6) + &apos;M&apos;;
+                } else if (count &gt; 9999)
                     count = count.toString().substring(0, 2) + &apos;K&apos;;
-                else if (count === 1)
-                    count = &apos;&apos;;
+                else if (count === 1) count = &apos;&apos;;
 
                 slot.append(image);
-                slot.append(&apos;&lt;div id=&quot;bankItemCount&apos; + i + &apos;&quot; class=&quot;itemCount&quot;&gt;&apos; + count + &apos;&lt;/div&gt;&apos;);
+                slot.append(
+                    &apos;&lt;div id=&quot;bankItemCount&apos; +
+                        i +
+                        &apos;&quot; class=&quot;itemCount&quot;&gt;&apos; +
+                        count +
+                        &apos;&lt;/div&gt;&apos;
+                );
 
                 slot.find(&apos;#bankItemCount&apos; + i).css({
-                    &apos;font-size&apos;: (4 * self.getScale()) + &apos;px&apos;,
+                    &apos;font-size&apos;: 4 * self.getScale() + &apos;px&apos;,
                     &apos;margin-top&apos;: &apos;0&apos;,
                     &apos;margin-left&apos;: &apos;0&apos;
                 });
@@ -113,36 +130,56 @@
 
             for (var j = 0; j &lt; self.inventoryContainer.size; j++) {
                 var iItem = self.inventoryContainer.slots[j],
-                    iSlot = $(&apos;&lt;div id=&quot;bankInventorySlot&apos; + j + &apos;&quot; class=&quot;bankSlot&quot;&gt;&lt;/div&gt;&apos;);
+                    iSlot = $(
+                        &apos;&lt;div id=&quot;bankInventorySlot&apos; +
+                            j +
+                            &apos;&quot; class=&quot;bankSlot&quot;&gt;&lt;/div&gt;&apos;
+                    );
 
                 iSlot.css({
-                    &apos;margin-right&apos;: (3 * self.getScale()) + &apos;px&apos;,
-                    &apos;margin-bottom&apos;: (6 * self.getScale()) + &apos;px&apos;
+                    &apos;margin-right&apos;: 3 * self.getScale() + &apos;px&apos;,
+                    &apos;margin-bottom&apos;: 6 * self.getScale() + &apos;px&apos;
                 });
 
-                var slotImage = $(&apos;&lt;div id=&quot;inventoryImage&apos; + j + &apos;&quot; class=&quot;bankImage&quot;&gt;&lt;/div&gt;&apos;);
+                var slotImage = $(
+                    &apos;&lt;div id=&quot;inventoryImage&apos; + j + &apos;&quot; class=&quot;bankImage&quot;&gt;&lt;/div&gt;&apos;
+                );
 
-                if (iItem.string)
-                    slotImage.css(&apos;background-image&apos;, self.container.getImageFormat(self.getScale(), iItem.string));
+                if (iItem.string) {
+                    slotImage.css(
+                        &apos;background-image&apos;,
+                        self.container.getImageFormat(
+                            self.getScale(),
+                            iItem.string
+                        )
+                    );
+                }
 
                 iSlot.click(function(event) {
                     self.click(&apos;inventory&apos;, event);
                 });
 
-                if (Detect.isMobile())
-                    slotImage.css(&apos;background-size&apos;, &apos;600%&apos;);
+                if (Detect.isMobile()) slotImage.css(&apos;background-size&apos;, &apos;600%&apos;);
 
                 var count = iItem.count;
 
-                if (count &gt; 999999)
-                    count = count.toString().substring(0, count.toString().length - 6) + &apos;M&apos;;
-                else if (count &gt; 9999)
+                if (count &gt; 999999) {
+                    count =
+                        count
+                            .toString()
+                            .substring(0, count.toString().length - 6) + &apos;M&apos;;
+                } else if (count &gt; 9999)
                     count = count.toString().substring(0, 2) + &apos;K&apos;;
-                else if (count === 1)
-                    count = &apos;&apos;;
+                else if (count === 1) count = &apos;&apos;;
 
                 iSlot.append(slotImage);
-                iSlot.append(&apos;&lt;div id=&quot;inventoryItemCount&apos; + j + &apos;&quot; class=&quot;itemCount&quot;&gt;&apos; + count + &apos;&lt;/div&gt;&apos;);
+                iSlot.append(
+                    &apos;&lt;div id=&quot;inventoryItemCount&apos; +
+                        j +
+                        &apos;&quot; class=&quot;itemCount&quot;&gt;&apos; +
+                        count +
+                        &apos;&lt;/div&gt;&apos;
+                );
 
                 iSlot.find(&apos;#inventoryItemCount&apos; + j).css({
                     &apos;margin-top&apos;: &apos;0&apos;,
@@ -168,36 +205,50 @@
                     slot = self.container.slots[i];
 
                 bankSlot.css({
-                    &apos;margin-right&apos;: (2 * self.getScale()) + &apos;px&apos;,
-                    &apos;margin-bottom&apos;: (4 * self.getScale()) + &apos;px&apos;
+                    &apos;margin-right&apos;: 2 * self.getScale() + &apos;px&apos;,
+                    &apos;margin-bottom&apos;: 4 * self.getScale() + &apos;px&apos;
                 });
 
                 bankSlot.find(&apos;#bankItemCount&apos; + i).css({
-                    &apos;font-size&apos;: (4 * self.getScale()) + &apos;px&apos;,
+                    &apos;font-size&apos;: 4 * self.getScale() + &apos;px&apos;,
                     &apos;margin-top&apos;: &apos;0&apos;,
                     &apos;margin-left&apos;: &apos;0&apos;
                 });
 
-                if (Detect.isMobile())
-                    image.css(&apos;background-size&apos;, &apos;600%&apos;);
-                else
-                    image.css(&apos;background-image&apos;, self.container.getImageFormat(self.getScale(), slot.string));
+                if (Detect.isMobile()) image.css(&apos;background-size&apos;, &apos;600%&apos;);
+                else {
+                    image.css(
+                        &apos;background-image&apos;,
+                        self.container.getImageFormat(
+                            self.getScale(),
+                            slot.string
+                        )
+                    );
+                }
             }
 
             for (var j = 0; j &lt; inventoryList.length; j++) {
-                var inventorySlot = $(inventoryList[j]).find(&apos;#bankInventorySlot&apos; + j),
+                var inventorySlot = $(inventoryList[j]).find(
+                        &apos;#bankInventorySlot&apos; + j
+                    ),
                     iImage = inventorySlot.find(&apos;#inventoryImage&apos; + j),
                     iSlot = self.inventoryContainer.slots[j];
 
                 inventorySlot.css({
-                    &apos;margin-right&apos;: (3 * self.getScale()) + &apos;px&apos;,
-                    &apos;margin-bottom&apos;: (6 * self.getScale()) + &apos;px&apos;
+                    &apos;margin-right&apos;: 3 * self.getScale() + &apos;px&apos;,
+                    &apos;margin-bottom&apos;: 6 * self.getScale() + &apos;px&apos;
                 });
 
-                if (Detect.isMobile())
-                    iImage.css(&apos;background-size&apos;, &apos;600%&apos;);
-                else
-                    iImage.css(&apos;background-image&apos;, self.container.getImageFormat(self.getScale(), iSlot.string));
+                if (Detect.isMobile()) iImage.css(&apos;background-size&apos;, &apos;600%&apos;);
+                else {
+                    iImage.css(
+                        &apos;background-image&apos;,
+                        self.container.getImageFormat(
+                            self.getScale(),
+                            iSlot.string
+                        )
+                    );
+                }
             }
         },
 
@@ -206,7 +257,11 @@
                 isBank = type === &apos;bank&apos;,
                 index = event.currentTarget.id.substring(isBank ? 8 : 17);
 
-            self.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
+            self.game.socket.send(Packets.Bank, [
+                Packets.BankOpcode.Select,
+                type,
+                index
+            ]);
         },
 
         add: function(info) {
@@ -214,11 +269,16 @@
                 item = $(self.getBankList()[info.index]),
                 slot = self.container.slots[info.index];
 
-            if (!item || !slot)
-                return;
+            if (!item || !slot) return;
 
-            if (slot.isEmpty())
-                slot.load(info.string, info.count, info.ability, info.abilityLevel);
+            if (slot.isEmpty()) {
+                slot.load(
+                    info.string,
+                    info.count,
+                    info.ability,
+                    info.abilityLevel
+                );
+            }
 
             slot.setCount(info.count);
 
@@ -226,13 +286,14 @@
                 cssSlot = bankSlot.find(&apos;#bankImage&apos; + info.index),
                 count = bankSlot.find(&apos;#bankItemCount&apos; + info.index);
 
-            cssSlot.css(&apos;background-image&apos;, self.container.getImageFormat(self.getScale(), info.string));
+            cssSlot.css(
+                &apos;background-image&apos;,
+                self.container.getImageFormat(self.getScale(), info.string)
+            );
 
-            if (Detect.isMobile())
-                cssSlot.css(&apos;background-size&apos;, &apos;600%&apos;);
+            if (Detect.isMobile()) cssSlot.css(&apos;background-size&apos;, &apos;600%&apos;);
 
-            if (slot.count &gt; 1)
-                count.text(slot.count);
+            if (slot.count &gt; 1) count.text(slot.count);
         },
 
         remove: function(info) {
@@ -240,15 +301,16 @@
                 item = $(self.getBankList()[info.index]),
                 slot = self.container.slots[info.index];
 
-            if (!item || !slot)
-                return;
+            if (!item || !slot) return;
 
             slot.count -= info.count;
 
             if (slot.count &lt; 1) {
                 var divItem = item.find(&apos;#bankSlot&apos; + info.index);
 
-                divItem.find(&apos;#bankImage&apos; + info.index).css(&apos;background-image&apos;, &apos;&apos;);
+                divItem
+                    .find(&apos;#bankImage&apos; + info.index)
+                    .css(&apos;background-image&apos;, &apos;&apos;);
                 divItem.find(&apos;#bankItemCount&apos; + info.index).text(&apos;&apos;);
 
                 slot.empty();
@@ -259,16 +321,17 @@
             var self = this,
                 item = $(self.getInventoryList()[info.index]);
 
-            if (!item)
-                return;
+            if (!item) return;
 
             var slot = item.find(&apos;#bankInventorySlot&apos; + info.index),
                 image = slot.find(&apos;#inventoryImage&apos; + info.index);
 
-            image.css(&apos;background-image&apos;, self.container.getImageFormat(self.getScale(), info.string));
+            image.css(
+                &apos;background-image&apos;,
+                self.container.getImageFormat(self.getScale(), info.string)
+            );
 
-            if (Detect.isMobile())
-                image.css(&apos;background-size&apos;, &apos;600%&apos;);
+            if (Detect.isMobile()) image.css(&apos;background-size&apos;, &apos;600%&apos;);
 
             if (info.count &gt; 1)
                 slot.find(&apos;#inventoryItemCount&apos; + info.index).text(info.count);
@@ -278,8 +341,7 @@
             var self = this,
                 item = $(self.getInventoryList()[info.index]);
 
-            if (!item)
-                return;
+            if (!item) return;
 
             var itemContainer = self.inventoryContainer.slots[info.index],
                 slot = item.find(&apos;#bankInventorySlot&apos; + info.index),
@@ -290,7 +352,10 @@
             else if (diff === 1)
                 slot.find(&apos;#inventoryItemCount&apos; + info.index).text(&apos;&apos;);
             else {
-                slot.find(&apos;#inventoryImage&apos; + info.index).css(&apos;background-image&apos;, &apos;&apos;);
+                slot.find(&apos;#inventoryImage&apos; + info.index).css(
+                    &apos;background-image&apos;,
+                    &apos;&apos;
+                );
                 slot.find(&apos;#inventoryItemCount&apos; + info.index).text(&apos;&apos;);
             }
         },
@@ -318,7 +383,6 @@
         getInventoryList: function() {
             return this.bankInventorySlots.find(&apos;ul&apos;).find(&apos;li&apos;);
         }
-
     });
 });
 </code></pre>

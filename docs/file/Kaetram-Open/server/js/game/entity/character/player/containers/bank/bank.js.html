@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/containers/bank/bank.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const _ = require(&apos;underscore&apos;),
+let _ = require(&apos;underscore&apos;),
     Container = require(&apos;../container&apos;),
     Messages = require(&apos;../../../../../../network/messages&apos;),
     Packets = require(&apos;../../../../../../network/packets&apos;),
@@ -52,18 +52,25 @@ class Bank extends Container {
     load(ids, counts, abilities, abilityLevels) {
         super.load(ids, counts, abilities, abilityLevels);
 
-        this.owner.send(new Messages.Bank(Packets.BankOpcode.Batch, [this.size, this.slots]));
+        this.owner.send(
+            new Messages.Bank(Packets.BankOpcode.Batch, [this.size, this.slots])
+        );
     }
 
     add(id, count, ability, abilityLevel) {
-        const self = this;
+        let self = this;
 
         if (!self.canHold(id, count)) {
-            self.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, &apos;You do not have enough space in your bank.&apos;));
+            self.owner.send(
+                new Messages.Notification(
+                    Packets.NotificationOpcode.Text,
+                    &apos;You do not have enough space in your bank.&apos;
+                )
+            );
             return false;
         }
 
-        const slot = super.add(id, parseInt(count), ability, abilityLevel);
+        let slot = super.add(id, parseInt(count), ability, abilityLevel);
 
         self.owner.send(new Messages.Bank(Packets.BankOpcode.Add, slot));
         self.owner.save();
@@ -72,15 +79,16 @@ class Bank extends Container {
     }
 
     remove(id, count, index) {
-        const self = this;
+        let self = this;
 
-        if (!super.remove(index, id, count))
-            return;
+        if (!super.remove(index, id, count)) return;
 
-        self.owner.send(new Messages.Bank(Packets.BankOpcode.Remove, {
-            index: parseInt(index),
-            count: count
-        }));
+        self.owner.send(
+            new Messages.Bank(Packets.BankOpcode.Remove, {
+                index: parseInt(index),
+                count: count
+            })
+        );
 
         self.owner.save();
     }

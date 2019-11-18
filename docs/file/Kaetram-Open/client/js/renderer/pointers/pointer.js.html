@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/renderer/pointers/pointer.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define(function() {
     return Class.extend({
-
         init: function(id, element, type) {
             var self = this;
 
@@ -57,10 +56,8 @@
             var self = this;
 
             self.blinkInterval = setInterval(function() {
-                if (self.visible)
-                    self.hide();
-                else
-                    self.show();
+                if (self.visible) self.hide();
+                else self.show();
 
                 self.visible = !self.visible;
             }, 600);
@@ -71,10 +68,8 @@
 
             clearInterval(self.blinkInterval);
 
-            if (self.type === Modules.Pointers.Button)
-                self.hide();
-            else
-                self.element.remove();
+            if (self.type === Modules.Pointers.Button) self.hide();
+            else self.element.remove();
         },
 
         setPosition: function(x, y) {
@@ -87,17 +82,14 @@
         show: function() {
             if (this.type === Modules.Pointers.Button)
                 this.element.addClass(&apos;active&apos;);
-            else
-                this.element.css(&apos;display&apos;, &apos;block&apos;);
+            else this.element.css(&apos;display&apos;, &apos;block&apos;);
         },
 
         hide: function() {
             if (this.type === Modules.Pointers.Button)
                 this.element.removeClass(&apos;active&apos;);
-            else
-                this.element.css(&apos;display&apos;, &apos;none&apos;);
+            else this.element.css(&apos;display&apos;, &apos;none&apos;);
         }
-
     });
 });
 </code></pre>

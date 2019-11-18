@@ -1,6 +1,6 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     NPCData = require('../../data/npcs'),
     ItemData = require('../../data/items'),
     MobData = require('../../data/mobs'),
@@ -16,7 +16,7 @@ const _ = require('underscore'),
 
 class Parser {
     constructor() {
-        const self = this;
+        let self = this;
 
         self.loadMobData();
         self.loadNPCData();
@@ -48,7 +48,9 @@ class Parser {
                 isPoisonous: value.isPoisonous ? value.isPoisonous : false,
                 attackRate: value.attackRate ? value.attackRate : 1000,
                 movementSpeed: value.movementSpeed ? value.movementSpeed : 200,
-                projectileName: value.projectileName ? value.projectileName : null,
+                projectileName: value.projectileName
+                    ? value.projectileName
+                    : null,
                 spawnDelay: value.spawnDelay ? value.spawnDelay : 60000,
                 combatPlugin: value.combatPlugin ? value.combatPlugin : null,
                 hiddenName: value.hiddenName ? value.hiddenName : false
@@ -59,10 +61,14 @@ class Parser {
             mobCounter++;
         });
 
-        Mobs.Plugins = require('../util/plugins')(__dirname + '/../../data/combat/');
+        Mobs.Plugins = require('../util/plugins')(
+            __dirname + '/../../data/combat/'
+        );
 
         log.info('Finished loading ' + mobCounter + ' mobs.');
-        log.info('Loaded ' + Object.keys(Mobs.Plugins).length + ' combat plugins.');
+        log.info(
+            'Loaded ' + Object.keys(Mobs.Plugins).length + ' combat plugins.'
+        );
     }
 
     loadNPCData() {
@@ -120,11 +126,14 @@ class Parser {
             itemCounter++;
         });
 
-
-        Items.Plugins = require('../util/plugins')(__dirname + '/../../data/items/');
+        Items.Plugins = require('../util/plugins')(
+            __dirname + '/../../data/items/'
+        );
 
         log.info('Finished loading ' + itemCounter + ' items.');
-        log.info('Loaded ' + Object.keys(Items.Plugins).length + ' item plugins.');
+        log.info(
+            'Loaded ' + Object.keys(Items.Plugins).length + ' item plugins.'
+        );
     }
 
     loadAbilityData() {
@@ -178,7 +187,9 @@ class Parser {
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
-            const points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
+            let points = Math.floor(
+                0.25 * Math.floor(i + 300 * Math.pow(2, i / 7))
+            );
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
     }

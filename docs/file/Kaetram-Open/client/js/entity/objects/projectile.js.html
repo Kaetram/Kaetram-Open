@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/entity/objects/projectile.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;../entity&apos;], function(Entity) {
     return Entity.extend({
-
         init: function(id, kind, owner) {
             var self = this;
 
@@ -69,8 +68,7 @@
         },
 
         impact: function() {
-            if (this.impactCallback)
-                this.impactCallback();
+            if (this.impactCallback) this.impactCallback();
         },
 
         setSprite: function(sprite) {
@@ -104,8 +102,7 @@
         setTarget: function(target) {
             var self = this;
 
-            if (!target)
-                return;
+            if (!target) return;
 
             self.dynamic = true;
 
@@ -114,8 +111,7 @@
 
             self.updateAngle();
 
-            if (target.type !== &apos;mob&apos;)
-                return;
+            if (target.type !== &apos;mob&apos;) return;
 
             target.onMove(function() {
                 self.destX = target.x;
@@ -143,13 +139,15 @@
         },
 
         updateAngle: function() {
-            this.angle = Math.atan2(this.destY - this.y, this.destX - this.x) * (180 / Math.PI) - 90;
+            this.angle =
+                Math.atan2(this.destY - this.y, this.destX - this.x) *
+                    (180 / Math.PI) -
+                90;
         },
 
         onImpact: function(callback) {
             this.impactCallback = callback;
         }
-
     });
 });
 </code></pre>

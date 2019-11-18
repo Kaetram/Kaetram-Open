@@ -36,11 +36,11 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/map/grids.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const _ = require(&apos;underscore&apos;);
+let _ = require(&apos;underscore&apos;);
 
 class Grids {
     constructor(map) {
-        const self = this;
+        let self = this;
 
         self.map = map;
 
@@ -50,18 +50,17 @@ class Grids {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         for (let i = 0; i &lt; self.map.height; i++) {
             self.entityGrid[i] = [];
 
-            for (let j = 0; j &lt; self.map.width; j++)
-                self.entityGrid[i][j] = {};
+            for (let j = 0; j &lt; self.map.width; j++) self.entityGrid[i][j] = {};
         }
     }
 
     updateEntityPosition(entity) {
-        const self = this;
+        let self = this;
 
         if (entity &amp;&amp; entity.oldX === entity.x &amp;&amp; entity.oldY === entity.y)
             return;
@@ -73,29 +72,43 @@ class Grids {
     }
 
     addToEntityGrid(entity, x, y) {
-        const self = this;
+        let self = this;
 
-        if (entity &amp;&amp; x &gt; 0 &amp;&amp; y &gt; 0 &amp;&amp; x &lt; self.map.width &amp;&amp; x &lt; self.map.height &amp;&amp; self.entityGrid[y][x])
+        if (
+            entity &amp;&amp;
+            x &gt; 0 &amp;&amp;
+            y &gt; 0 &amp;&amp;
+            x &lt; self.map.width &amp;&amp;
+            x &lt; self.map.height &amp;&amp;
+            self.entityGrid[y][x]
+        )
             self.entityGrid[y][x][entity.instance] = entity;
     }
 
     removeFromEntityGrid(entity, x, y) {
-        const self = this;
+        let self = this;
 
-        if (entity &amp;&amp; x &gt; 0 &amp;&amp; y &gt; 0 &amp;&amp; x &lt; self.map.width &amp;&amp; y &lt; self.map.height &amp;&amp; self.entityGrid[y][x] &amp;&amp; entity.instance in self.entityGrid[y][x])
+        if (
+            entity &amp;&amp;
+            x &gt; 0 &amp;&amp;
+            y &gt; 0 &amp;&amp;
+            x &lt; self.map.width &amp;&amp;
+            y &lt; self.map.height &amp;&amp;
+            self.entityGrid[y][x] &amp;&amp;
+            entity.instance in self.entityGrid[y][x]
+        )
             delete self.entityGrid[y][x][entity.instance];
     }
 
     getSurroundingEntities(entity, radius, include) {
-        const self = this,
+        let self = this,
             entities = [];
 
-        if (!self.checkBounds(entity.x, entity.y, radius))
-            return;
+        if (!self.checkBounds(entity.x, entity.y, radius)) return;
 
         for (let i = -radius; i &lt; radius + 1; i++) {
             for (let j = -radius; j &lt; radius + 1; j++) {
-                const pos = self.entityGrid[entity.y + i][entity.x + j];
+                let pos = self.entityGrid[entity.y + i][entity.x + j];
 
                 if (_.size(pos) &gt; 0) {
                     _.each(pos, pEntity =&gt; {
@@ -110,7 +123,12 @@ class Grids {
     }
 
     checkBounds(x, y, radius) {
-        return x + radius &lt; this.map.width &amp;&amp; x - radius &gt; 0 &amp;&amp; y + radius &lt; this.map.height &amp;&amp; y - radius &gt; 0;
+        return (
+            x + radius &lt; this.map.width &amp;&amp;
+            x - radius &gt; 0 &amp;&amp;
+            y + radius &lt; this.map.height &amp;&amp;
+            y - radius &gt; 0
+        );
     }
 }
 

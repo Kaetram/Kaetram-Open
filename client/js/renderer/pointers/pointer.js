@@ -1,6 +1,5 @@
 define(function() {
     return Class.extend({
-
         init: function(id, element, type) {
             var self = this;
 
@@ -21,10 +20,8 @@ define(function() {
             var self = this;
 
             self.blinkInterval = setInterval(function() {
-                if (self.visible)
-                    self.hide();
-                else
-                    self.show();
+                if (self.visible) self.hide();
+                else self.show();
 
                 self.visible = !self.visible;
             }, 600);
@@ -35,10 +32,8 @@ define(function() {
 
             clearInterval(self.blinkInterval);
 
-            if (self.type === Modules.Pointers.Button)
-                self.hide();
-            else
-                self.element.remove();
+            if (self.type === Modules.Pointers.Button) self.hide();
+            else self.element.remove();
         },
 
         setPosition: function(x, y) {
@@ -51,16 +46,13 @@ define(function() {
         show: function() {
             if (this.type === Modules.Pointers.Button)
                 this.element.addClass('active');
-            else
-                this.element.css('display', 'block');
+            else this.element.css('display', 'block');
         },
 
         hide: function() {
             if (this.type === Modules.Pointers.Button)
                 this.element.removeClass('active');
-            else
-                this.element.css('display', 'none');
+            else this.element.css('display', 'none');
         }
-
     });
 });

@@ -36,13 +36,28 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/controllers/entities.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global log, _, Modules, Packets */
 
-define([&apos;../renderer/grids&apos;, &apos;../entity/objects/chest&apos;,
-    &apos;../entity/character/character&apos;, &apos;../entity/character/player/player&apos;,
-    &apos;../entity/objects/item&apos;, &apos;./sprites&apos;, &apos;../entity/character/mob/mob&apos;,
-    &apos;../entity/character/npc/npc&apos;, &apos;../entity/objects/projectile&apos;],
-function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
+define([
+    &apos;../renderer/grids&apos;,
+    &apos;../entity/objects/chest&apos;,
+    &apos;../entity/character/character&apos;,
+    &apos;../entity/character/player/player&apos;,
+    &apos;../entity/objects/item&apos;,
+    &apos;./sprites&apos;,
+    &apos;../entity/character/mob/mob&apos;,
+    &apos;../entity/character/npc/npc&apos;,
+    &apos;../entity/objects/projectile&apos;
+], function(
+    Grids,
+    Chest,
+    Character,
+    Player,
+    Item,
+    Sprites,
+    Mob,
+    NPC,
+    Projectile
+) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -71,32 +86,28 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
 
             self.game.app.sendStatus(&apos;Loading grids&apos;);
 
-            if (!self.grids)
-                self.grids = new Grids(self.game.map);
+            if (!self.grids) self.grids = new Grids(self.game.map);
         },
 
         update: function() {
             var self = this;
 
-            if (self.sprites)
-                self.sprites.updateSprites();
+            if (self.sprites) self.sprites.updateSprites();
         },
 
         create: function(info) {
             var self = this,
                 entity;
 
-            if (self.isPlayer(info.id))
-                return;
+            if (self.isPlayer(info.id)) return;
 
             switch (info.type) {
                 case &apos;chest&apos;:
-
                     /**
-                         * Here we will parse the different types of chests..
-                         * We can go Dark Souls style and implement mimics
-                         * the proper way -ahem- Kaetram V1.0
-                         */
+                     * Here we will parse the different types of chests..
+                     * We can go Dark Souls style and implement mimics
+                     * the proper way -ahem- Kaetram V1.0
+                     */
 
                     var chest = new Chest(info.id, info.string);
 
@@ -105,7 +116,6 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     break;
 
                 case &apos;npc&apos;:
-
                     var npc = new NPC(info.id, info.string);
 
                     entity = npc;
@@ -113,15 +123,19 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     break;
 
                 case &apos;item&apos;:
-
-                    var item = new Item(info.id, info.string, info.count, info.ability, info.abilityLevel);
+                    var item = new Item(
+                        info.id,
+                        info.string,
+                        info.count,
+                        info.ability,
+                        info.abilityLevel
+                    );
 
                     entity = item;
 
                     break;
 
                 case &apos;mob&apos;:
-
                     var mob = new Mob(info.id, info.string);
 
                     mob.setHitPoints(info.hitPoints);
@@ -139,12 +153,15 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     var attacker = self.get(info.characterId),
                         target = self.get(info.targetId);
 
-                    if (!attacker || !target)
-                        return;
+                    if (!attacker || !target) return;
 
                     attacker.lookAt(target);
 
-                    var projectile = new Projectile(info.id, info.projectileType, attacker);
+                    var projectile = new Projectile(
+                        info.id,
+                        info.projectileType,
+                        attacker
+                    );
 
                     projectile.name = info.name;
 
@@ -158,22 +175,35 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     projectile.type = info.type;
 
                     /**
-                         * Move this into the external overall function
-                         */
+                     * Move this into the external overall function
+                     */
 
                     projectile.onImpact(function() {
                         /**
-                             * The data in the projectile is only for rendering purposes
-                             * there is nothing you can change for the actual damage output here.
-                             */
+                         * The data in the projectile is only for rendering purposes
+                         * there is nothing you can change for the actual damage output here.
+                         */
 
-                        if (self.isPlayer(projectile.owner.id) || self.isPlayer(target.id))
-                            self.game.socket.send(Packets.Projectile, [Packets.ProjectileOpcode.Impact, info.id, target.id]);
+                        if (
+                            self.isPlayer(projectile.owner.id) ||
+                            self.isPlayer(target.id)
+                        ) {
+                            self.game.socket.send(Packets.Projectile, [
+                                Packets.ProjectileOpcode.Impact,
+                                info.id,
+                                target.id
+                            ]);
+                        }
 
                         if (info.hitType === Modules.Hits.Explosive)
                             target.explosion = true;
 
-                        self.game.info.create(Modules.Hits.Damage, [info.damage, self.isPlayer(target.id)], target.x, target.y);
+                        self.game.info.create(
+                            Modules.Hits.Damage,
+                            [info.damage, self.isPlayer(target.id)],
+                            target.x,
+                            target.y
+                        );
 
                         target.triggerHealthBar();
 
@@ -183,13 +213,15 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
 
                     self.addEntity(projectile);
 
-                    attacker.performAction(attacker.orientation, Modules.Actions.Attack);
+                    attacker.performAction(
+                        attacker.orientation,
+                        Modules.Actions.Attack
+                    );
                     attacker.triggerHealthBar();
 
                     return;
 
                 case &apos;player&apos;:
-
                     var player = new Player();
 
                     player.setId(info.id);
@@ -201,12 +233,20 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     player.pvp = info.pvp;
                     player.pvpKills = info.pvpKills;
                     player.pvpDeaths = info.pvpDeaths;
-                    player.orientation = info.orientation ? info.orientation : 0;
+                    player.orientation = info.orientation
+                        ? info.orientation
+                        : 0;
                     player.type = info.type;
 
                     var hitPointsData = info.hitPoints,
                         manaData = info.mana,
-                        equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
+                        equipments = [
+                            info.armour,
+                            info.weapon,
+                            info.pendant,
+                            info.ring,
+                            info.boots
+                        ];
 
                     player.setHitPoints(hitPointsData[0]);
                     player.setMaxHitPoints(hitPointsData[1]);
@@ -218,9 +258,14 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     player.idle();
 
                     _.each(equipments, function(equipment) {
-                        player.setEquipment(equipment.type, equipment.name,
-                            equipment.string, equipment.count, equipment.ability,
-                            equipment.abilityLevel);
+                        player.setEquipment(
+                            equipment.type,
+                            equipment.name,
+                            equipment.string,
+                            equipment.count,
+                            equipment.ability,
+                            equipment.abilityLevel
+                        );
                     });
 
                     player.loadHandler(self.game);
@@ -230,10 +275,11 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                     return;
             }
 
-            if (!entity)
-                return;
+            if (!entity) return;
 
-            var sprite = self.getSprite(info.type === &apos;item&apos; ? &apos;item-&apos; + info.string : info.string);
+            var sprite = self.getSprite(
+                info.type === &apos;item&apos; ? &apos;item-&apos; + info.string : info.string
+            );
 
             entity.setGridPosition(info.x, info.y);
             entity.setName(info.name);
@@ -253,8 +299,8 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
             }
 
             /**
-                 * Get ready for errors!
-                 */
+             * Get ready for errors!
+             */
         },
 
         isPlayer: function(id) {
@@ -264,8 +310,7 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
         get: function(id) {
             var self = this;
 
-            if (id in self.entities)
-                return self.entities[id];
+            if (id in self.entities) return self.entities[id];
 
             return null;
         },
@@ -278,7 +323,11 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
             var self = this;
 
             self.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
-            self.grids.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
+            self.grids.removeFromRenderingGrid(
+                entity,
+                entity.gridX,
+                entity.gridY
+            );
 
             delete self.entities[entity.id];
         },
@@ -290,11 +339,12 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
 
             _.each(self.entities, function(entity) {
                 if (ids) {
-                    if (ids.indexOf(parseInt(entity.id)) &lt; 0 &amp;&amp; entity.id !== self.game.player.id)
+                    if (
+                        ids.indexOf(parseInt(entity.id)) &lt; 0 &amp;&amp;
+                        entity.id !== self.game.player.id
+                    )
                         self.removeEntity(entity);
-                } else
-                if (entity.id !== self.game.player.id)
-                    self.removeEntity(entity);
+                } else if (entity.id !== self.game.player.id) self.removeEntity(entity);
             });
 
             self.grids.resetPathingGrid();
@@ -314,21 +364,22 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
         addEntity: function(entity) {
             var self = this;
 
-            if (self.entities[entity.id])
-                return;
+            if (self.entities[entity.id]) return;
 
             self.entities[entity.id] = entity;
             self.registerPosition(entity);
 
-            if (!(entity instanceof Item &amp;&amp; entity.dropped) &amp;&amp; !self.renderer.isPortableDevice())
+            if (
+                !(entity instanceof Item &amp;&amp; entity.dropped) &amp;&amp;
+                !self.renderer.isPortableDevice()
+            )
                 entity.fadeIn(self.game.time);
         },
 
         removeItem: function(item) {
             var self = this;
 
-            if (!item)
-                return;
+            if (!item) return;
 
             self.grids.removeFromItemGrid(item, item.gridX, item.gridY);
             self.grids.removeFromRenderingGrid(item, item.gridX, item.gridY);
@@ -339,16 +390,18 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
         registerPosition: function(entity) {
             var self = this;
 
-            if (!entity)
-                return;
+            if (!entity) return;
 
-            if (entity.type === &apos;player&apos; || entity.type === &apos;mob&apos; || entity.type === &apos;npc&apos; || entity.type === &apos;chest&apos;)
-
+            if (
+                entity.type === &apos;player&apos; ||
+                entity.type === &apos;mob&apos; ||
+                entity.type === &apos;npc&apos; ||
+                entity.type === &apos;chest&apos;
+            )
                 self.grids.addToEntityGrid(entity, entity.gridX, entity.gridY);
 
             /* if (entity.type !== &apos;player&apos; || entity.nonPathable)
                           self.grids.addToPathingGrid(entity.gridX, entity.gridY);*/
-
 
             if (entity.type === &apos;item&apos;)
                 self.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
@@ -359,25 +412,28 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
         registerDuality: function(entity) {
             var self = this;
 
-            if (!entity)
-                return;
+            if (!entity) return;
 
-            self.grids.entityGrid[entity.gridY][entity.gridX][entity.id] = entity;
+            self.grids.entityGrid[entity.gridY][entity.gridX][
+                entity.id
+            ] = entity;
 
             self.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
 
-            if (entity.nextGridX &gt; -1 &amp;&amp; entity.nextGridY &gt; -1)
-                self.grids.entityGrid[entity.nextGridY][entity.nextGridX][entity.id] = entity;
+            if (entity.nextGridX &gt; -1 &amp;&amp; entity.nextGridY &gt; -1) {
+                self.grids.entityGrid[entity.nextGridY][entity.nextGridX][
+                    entity.id
+                ] = entity;
 
-            /* if (!(entity instanceof Player))
+                /* if (!(entity instanceof Player))
                         self.grids.pathingGrid[entity.nextGridY][entity.nextGridX] = 1;*/
+            }
         },
 
         unregisterPosition: function(entity) {
             var self = this;
 
-            if (!entity)
-                return;
+            if (!entity) return;
 
             self.grids.removeEntity(entity);
         },
@@ -391,7 +447,9 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
         },
 
         forEachEntity: function(callback) {
-            _.each(this.entities, function(entity) { callback(entity); });
+            _.each(this.entities, function(entity) {
+                callback(entity);
+            });
         },
 
         forEachEntityAround: function(x, y, radius, callback) {
@@ -399,8 +457,7 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
 
             for (var i = x - radius, max_i = x + radius; i &lt;= max_i; i++) {
                 for (var j = y - radius, max_j = y + radius; j &lt;= max_j; j++) {
-                    if (self.map.isOutOfBounds(i, j))
-                        continue;
+                    if (self.map.isOutOfBounds(i, j)) continue;
 
                     _.each(self.grids.renderingGrid[j][i], function(entity) {
                         callback(entity);
@@ -408,7 +465,6 @@ function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
                 }
             }
         }
-
     });
 });
 </code></pre>

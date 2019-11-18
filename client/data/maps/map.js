@@ -1,4 +1,4 @@
-const mapData = {
+let mapData = {
     width: 600,
     height: 600,
     collisions: [],

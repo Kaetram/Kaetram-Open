@@ -36,18 +36,48 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/game.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global Class, log, Packets, Modules, Detect, _ */
 
-define([&apos;./renderer/renderer&apos;, &apos;./utils/storage&apos;,
-    &apos;./map/map&apos;, &apos;./network/socket&apos;, &apos;./entity/character/player/player&apos;,
-    &apos;./renderer/updater&apos;, &apos;./controllers/entities&apos;, &apos;./controllers/input&apos;,
-    &apos;./entity/character/player/playerhandler&apos;, &apos;./utils/pathfinder&apos;,
-    &apos;./controllers/zoning&apos;, &apos;./controllers/info&apos;, &apos;./controllers/bubble&apos;,
-    &apos;./controllers/interface&apos;, &apos;./controllers/audio&apos;, &apos;./controllers/pointer&apos;,
-    &apos;./renderer/overlay&apos;, &apos;./network/connection&apos;, &apos;./utils/modules&apos;, &apos;./network/packets&apos;],
-function(Renderer, LocalStorage, Map, Socket, Player, Updater,
-    Entities, Input, PlayerHandler, Pathfinder, Zoning, Info,
-    Bubble, Interface, Audio, Pointer, Overlay, Connection) {
+define([
+    &apos;./renderer/renderer&apos;,
+    &apos;./utils/storage&apos;,
+    &apos;./map/map&apos;,
+    &apos;./network/socket&apos;,
+    &apos;./entity/character/player/player&apos;,
+    &apos;./renderer/updater&apos;,
+    &apos;./controllers/entities&apos;,
+    &apos;./controllers/input&apos;,
+    &apos;./entity/character/player/playerhandler&apos;,
+    &apos;./utils/pathfinder&apos;,
+    &apos;./controllers/zoning&apos;,
+    &apos;./controllers/info&apos;,
+    &apos;./controllers/bubble&apos;,
+    &apos;./controllers/interface&apos;,
+    &apos;./controllers/audio&apos;,
+    &apos;./controllers/pointer&apos;,
+    &apos;./renderer/overlay&apos;,
+    &apos;./network/connection&apos;,
+    &apos;./utils/modules&apos;,
+    &apos;./network/packets&apos;
+], function(
+    Renderer,
+    LocalStorage,
+    Map,
+    Socket,
+    Player,
+    Updater,
+    Entities,
+    Input,
+    PlayerHandler,
+    Pathfinder,
+    Zoning,
+    Info,
+    Bubble,
+    Interface,
+    Audio,
+    Pointer,
+    Overlay,
+    Connection
+) {
     return Class.extend({
-
         init: function(app) {
             var self = this;
 
@@ -91,8 +121,7 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         start: function() {
             var self = this;
 
-            if (self.started)
-                return;
+            if (self.started) return;
 
             self.app.fadeMenu();
             self.tick();
@@ -117,8 +146,7 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
                 self.renderer.render();
                 self.updater.update();
 
-                if (!self.stopped)
-                    requestAnimationFrame(self.tick.bind(self));
+                if (!self.stopped) requestAnimationFrame(self.tick.bind(self));
             }
         },
 
@@ -155,7 +183,17 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
 
             self.app.sendStatus(&apos;Initializing render engine&apos;);
 
-            self.setRenderer(new Renderer(background, entities, foreground, overlay, textCanvas, cursor, self));
+            self.setRenderer(
+                new Renderer(
+                    background,
+                    entities,
+                    foreground,
+                    overlay,
+                    textCanvas,
+                    cursor,
+                    self
+                )
+            );
         },
 
         loadControllers: function() {
@@ -166,10 +204,11 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
 
             self.setStorage(new LocalStorage(self.app));
 
-            self.app.sendStatus(hasWorker ? &apos;Loading maps - asynchronous&apos; : null);
+            self.app.sendStatus(
+                hasWorker ? &apos;Loading maps - asynchronous&apos; : null
+            );
 
-            if (hasWorker)
-                self.loadMap();
+            if (hasWorker) self.loadMap();
 
             self.app.sendStatus(&apos;Initializing network socket&apos;);
 
@@ -206,12 +245,13 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
             self.overlays = new Overlay(self);
 
             self.map.onReady(function() {
-                if (!self.isDebug())
-                    self.map.loadRegionData();
+                if (!self.isDebug()) self.map.loadRegionData();
 
                 self.app.sendStatus(&apos;Loading the pathfinder&apos;);
 
-                self.setPathfinder(new Pathfinder(self.map.width, self.map.height));
+                self.setPathfinder(
+                    new Pathfinder(self.map.width, self.map.height)
+                );
 
                 self.renderer.setMap(self.map);
                 self.renderer.loadCamera();
@@ -262,7 +302,11 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
             self.player.setOrientation(self.storage.data.player.orientation);
             self.player.idle();
 
-            self.socket.send(Packets.Ready, [true, self.map.preloadedData, Detect.getUserAgent()]);
+            self.socket.send(Packets.Ready, [
+                true,
+                self.map.preloadedData,
+                Detect.getUserAgent()
+            ]);
 
             self.playerHandler = new PlayerHandler(self, self.player);
 
@@ -288,8 +332,7 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
             loginName.prop(&apos;readonly&apos;, false);
             loginPassword.prop(&apos;readonly&apos;, false);
 
-            if (!self.hasRemember())
-                return;
+            if (!self.hasRemember()) return;
 
             if (self.getStorageUsername() !== &apos;&apos;)
                 loginName.val(self.getStorageUsername());
@@ -308,13 +351,15 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
             if (self.map.isColliding(x, y) || !self.pathfinder || !character)
                 return path;
 
-            if (ignores)
-                _.each(ignores, function(entity) { self.pathfinder.ignoreEntity(entity); });
+            if (ignores) {
+                _.each(ignores, function(entity) {
+                    self.pathfinder.ignoreEntity(entity);
+                });
+            }
 
             path = self.pathfinder.find(grid, character, x, y, false);
 
-            if (ignores)
-                self.pathfinder.clearIgnores();
+            if (ignores) self.pathfinder.clearIgnores();
 
             return path;
         },
@@ -332,8 +377,7 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
              * menu-based errors.
              */
 
-            if (!self.started)
-                return;
+            if (!self.started) return;
 
             self.stop();
             self.renderer.stop();
@@ -343,7 +387,10 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
             self.app.showMenu();
 
             if (noError) {
-                self.app.sendError(null, &apos;You have been disconnected from the server&apos;);
+                self.app.sendError(
+                    null,
+                    &apos;You have been disconnected from the server&apos;
+                );
                 self.app.statusMessage = null;
             }
 
@@ -366,10 +413,12 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         tradeWith: function(player) {
             var self = this;
 
-            if (!player || player.id === self.player.id)
-                return;
+            if (!player || player.id === self.player.id) return;
 
-            self.socket.send(Packets.Trade, [Packets.TradeOpcode.Request, player.id]);
+            self.socket.send(Packets.Trade, [
+                Packets.TradeOpcode.Request,
+                player.id
+            ]);
         },
 
         resize: function() {
@@ -377,8 +426,7 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
 
             self.renderer.resize();
 
-            if (self.pointer)
-                self.pointer.resize();
+            if (self.pointer) self.pointer.resize();
         },
 
         createPlayer: function() {
@@ -416,8 +464,7 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
 
             if (_.size(items) &gt; 0) {
                 _.each(items, function(item) {
-                    if (item.stackable)
-                        return item;
+                    if (item.stackable) return item;
                 });
 
                 return items[_.keys(items)[0]];
@@ -437,33 +484,27 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         },
 
         setRenderer: function(renderer) {
-            if (!this.renderer)
-                this.renderer = renderer;
+            if (!this.renderer) this.renderer = renderer;
         },
 
         setStorage: function(storage) {
-            if (!this.storage)
-                this.storage = storage;
+            if (!this.storage) this.storage = storage;
         },
 
         setSocket: function(socket) {
-            if (!this.socket)
-                this.socket = socket;
+            if (!this.socket) this.socket = socket;
         },
 
         setMessages: function(messages) {
-            if (!this.messages)
-                this.messages = messages;
+            if (!this.messages) this.messages = messages;
         },
 
         setUpdater: function(updater) {
-            if (!this.updater)
-                this.updater = updater;
+            if (!this.updater) this.updater = updater;
         },
 
         setEntityController: function(entities) {
-            if (!this.entities)
-                this.entities = entities;
+            if (!this.entities) this.entities = entities;
         },
 
         setInput: function(input) {
@@ -476,35 +517,28 @@ function(Renderer, LocalStorage, Map, Socket, Player, Updater,
         },
 
         setPathfinder: function(pathfinder) {
-            if (!this.pathfinder)
-                this.pathfinder = pathfinder;
+            if (!this.pathfinder) this.pathfinder = pathfinder;
         },
 
         setInfo: function(info) {
-            if (!this.info)
-                this.info = info;
+            if (!this.info) this.info = info;
         },
 
         setBubble: function(bubble) {
-            if (!this.bubble)
-                this.bubble = bubble;
+            if (!this.bubble) this.bubble = bubble;
         },
 
         setPointer: function(pointer) {
-            if (!this.pointer)
-                this.pointer = pointer;
+            if (!this.pointer) this.pointer = pointer;
         },
 
         setInterface: function(intrface) {
-            if (!this.interface)
-                this.interface = intrface;
+            if (!this.interface) this.interface = intrface;
         },
 
         setAudio: function(audio) {
-            if (!this.audio)
-                this.audio = audio;
+            if (!this.audio) this.audio = audio;
         }
-
     });
 });
 </code></pre>

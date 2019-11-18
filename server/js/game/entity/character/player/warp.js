@@ -1,11 +1,11 @@
 /* global module */
 
-const Modules = require('../../../../util/modules'),
+let Modules = require('../../../../util/modules'),
     Utils = require('../../../../util/utils');
 
 class Warp {
     constructor(player) {
-        const self = this;
+        let self = this;
 
         self.player = player;
 
@@ -14,19 +14,20 @@ class Warp {
     }
 
     warp(id) {
-        const self = this;
+        let self = this;
 
         if (!self.isCooldown()) {
-            self.player.notify('You must wait another ' + self.getDuration() + ' to warp.');
+            self.player.notify(
+                'You must wait another ' + self.getDuration() + ' to warp.'
+            );
             return;
         }
 
-        const data = Modules.Warps[id];
+        let data = Modules.Warps[id];
 
-        if (!data)
-            return;
+        if (!data) return;
 
-        const name = data[0],
+        let name = data[0],
             x = data[3] ? data[1] + Utils.randomInt(0, 1) : data[1],
             y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2],
             levelRequirement = data[4];
@@ -34,7 +35,11 @@ class Warp {
         log.info('Player Rights: ' + self.player.rights);
 
         if (self.hasRequirement()) {
-            self.player.notify('You must be at least level ' + levelRequirement + ' to warp here!');
+            self.player.notify(
+                'You must be at least level ' +
+                    levelRequirement +
+                    ' to warp here!'
+            );
             return;
         }
 
@@ -46,17 +51,18 @@ class Warp {
     }
 
     setLastWarp(lastWarp) {
-        const self = this;
+        let self = this;
 
         if (isNaN(lastWarp)) {
             self.lastWarp = 0;
             self.player.save();
-        } else
-            self.lastWarp = lastWarp;
+        } else self.lastWarp = lastWarp;
     }
 
     isCooldown() {
-        return this.getDifference() > this.warpTimeout || this.player.rights > 1;
+        return (
+            this.getDifference() > this.warpTimeout || this.player.rights > 1
+        );
     }
 
     hasRequirement(levelRequirement) {
@@ -64,13 +70,14 @@ class Warp {
     }
 
     getDuration() {
-        const self = this,
+        let self = this,
             difference = this.warpTimeout - self.getDifference();
 
-        if (!difference)
-            return '5 minutes';
+        if (!difference) return '5 minutes';
 
-        return difference > 60000 ? Math.ceil(difference / 60000) + ' minutes' : Math.floor(difference / 1000) + ' seconds';
+        return difference > 60000
+            ? Math.ceil(difference / 60000) + ' minutes'
+            : Math.floor(difference / 1000) + ' seconds';
     }
 
     getDifference() {

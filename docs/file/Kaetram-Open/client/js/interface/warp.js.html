@@ -38,7 +38,6 @@
 
 define([&apos;jquery&apos;], function($) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -61,7 +60,10 @@ define([&apos;jquery&apos;], function($) {
 
                 self.toggle();
 
-                self.game.socket.send(Packets.Click, [&apos;warp&apos;, self.button.hasClass(&apos;active&apos;)]);
+                self.game.socket.send(Packets.Click, [
+                    &apos;warp&apos;,
+                    self.button.hasClass(&apos;active&apos;)
+                ]);
             });
 
             self.close.click(function() {
@@ -75,7 +77,9 @@ define([&apos;jquery&apos;], function($) {
                     warp.click(function(event) {
                         self.hide();
 
-                        self.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);
+                        self.game.socket.send(Packets.Warp, [
+                            event.currentTarget.id.substring(4)
+                        ]);
                     });
                 }
             }
@@ -88,10 +92,8 @@ define([&apos;jquery&apos;], function($) {
              * Just so it fades out nicely.
              */
 
-            if (self.isVisible())
-                self.hide();
-            else
-                self.display();
+            if (self.isVisible()) self.hide();
+            else self.display();
         },
 
         isVisible: function() {
@@ -107,7 +109,6 @@ define([&apos;jquery&apos;], function($) {
             this.mapFrame.fadeOut(&apos;fast&apos;);
             this.button.removeClass(&apos;active&apos;);
         }
-
     });
 });
 </code></pre>

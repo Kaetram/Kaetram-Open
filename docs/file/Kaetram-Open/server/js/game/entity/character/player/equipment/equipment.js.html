@@ -36,11 +36,11 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/equipment/equipment.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Items = require(&apos;../../../../../util/items&apos;);
+let Items = require(&apos;../../../../../util/items&apos;);
 
 class Equipment {
     constructor(name, id, count, ability, abilityLevel) {
-        const self = this;
+        let self = this;
 
         self.name = name;
         self.id = id;
@@ -70,7 +70,7 @@ class Equipment {
     }
 
     getBaseAmplifier() {
-        return 1.00;
+        return 1.0;
     }
 
     getType() {

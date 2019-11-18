@@ -36,14 +36,14 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/objects/chest.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Entity = require(&apos;../entity&apos;),
+let Entity = require(&apos;../entity&apos;),
     Utils = require(&apos;../../../util/utils&apos;);
 
 class Chest extends Entity {
     constructor(id, instance, x, y) {
         super(id, &apos;chest&apos;, instance, x, y);
 
-        const self = this;
+        let self = this;
 
         self.respawnDuration = 25000;
         self.static = false;
@@ -52,23 +52,21 @@ class Chest extends Entity {
     }
 
     openChest() {
-        const self = this;
+        let self = this;
 
-        if (self.openCallback)
-            self.openCallback();
+        if (self.openCallback) self.openCallback();
     }
 
     respawn() {
-        const self = this;
+        let self = this;
 
         setTimeout(() =&gt; {
-            if (self.respawnCallback)
-                self.respawnCallback();
+            if (self.respawnCallback) self.respawnCallback();
         }, self.respawnDuration);
     }
 
     getItem() {
-        const self = this,
+        let self = this,
             random = Utils.randomInt(0, self.items.length - 1),
             item = self.items[random];
 
@@ -76,8 +74,7 @@ class Chest extends Entity {
          * We must ensure an item is always present in order
          * to avoid any unforeseen circumstances.
          */
-        if (!item)
-            return;
+        if (!item) return;
 
         return item;
     }

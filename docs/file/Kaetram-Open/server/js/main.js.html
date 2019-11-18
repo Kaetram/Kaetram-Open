@@ -41,15 +41,19 @@
     Parser = require(&apos;./util/parser&apos;),
     Database = require(&apos;./database/database&apos;),
     _ = require(&apos;underscore&apos;),
-    worlds = [], allowConnections = false,
+    worlds = [],
+    allowConnections = false,
     worldsCreated = 0;
 
-log = new Log(config.worlds &gt; 1 ? &apos;notice&apos; : config.debugLevel, config.localDebug ? fs.createWriteStream(&apos;runtime.log&apos;) : null);
+log = new Log(
+    config.worlds &gt; 1 ? &apos;notice&apos; : config.debugLevel,
+    config.localDebug ? fs.createWriteStream(&apos;runtime.log&apos;) : null
+);
 
 function main() {
     log.info(&apos;Initializing &apos; + config.name + &apos; game engine...&apos;);
 
-    const webSocket = new WebSocket(config.host, config.port, config.gver),
+    let webSocket = new WebSocket(config.host, config.port, config.gver),
         database = new Database(config.database),
         stdin = process.openStdin();
 
@@ -64,8 +68,7 @@ function main() {
                 }
             }
 
-            if (world)
-                world.playerConnectCallback(connection);
+            if (world) world.playerConnectCallback(connection);
             else {
                 log.info(&apos;Worlds are all currently full. Closing connection.&apos;);
 
@@ -77,7 +80,6 @@ function main() {
             connection.close();
         }
     });
-
 
     webSocket.onWebSocketReady(function() {
         /**
@@ -93,17 +95,15 @@ function main() {
     });
 
     stdin.addListener(&apos;data&apos;, data =&gt; {
-        const message = data.toString().replace(/(\r\n|\n|\r)/gm, &apos;&apos;),
+        let message = data.toString().replace(/(\r\n|\n|\r)/gm, &apos;&apos;),
             type = message.charAt(0);
 
-        if (type !== &apos;/&apos;)
-            return;
+        if (type !== &apos;/&apos;) return;
 
-        const blocks = message.substring(1).split(&apos; &apos;),
+        let blocks = message.substring(1).split(&apos; &apos;),
             command = blocks.shift();
 
-        if (!command)
-            return;
+        if (!command) return;
 
         switch (command) {
             case &apos;players&apos;:
@@ -113,12 +113,13 @@ function main() {
                     total += world.playerCount;
                 });
 
-                log.info(`There are ${total} player(s) in ${worlds.length} world(s).`);
+                log.info(
+                    `There are ${total} player(s) in ${worlds.length} world(s).`
+                );
 
                 break;
 
             case &apos;registered&apos;:
-
                 worlds[0].database.registeredCount(count =&gt; {
                     log.info(`There are ${count} users registered.`);
                 });
@@ -130,15 +131,20 @@ function main() {
 
 function onWorldLoad() {
     worldsCreated++;
-    if (worldsCreated === worlds.length)
-        allWorldsCreated();
+    if (worldsCreated === worlds.length) allWorldsCreated();
 }
 
 function allWorldsCreated() {
-    log.notice(&apos;Finished creating &apos; + worlds.length + &apos; world&apos; + (worlds.length &gt; 1 ? &apos;s&apos; : &apos;&apos;) + &apos;!&apos;);
+    log.notice(
+        &apos;Finished creating &apos; +
+            worlds.length +
+            &apos; world&apos; +
+            (worlds.length &gt; 1 ? &apos;s&apos; : &apos;&apos;) +
+            &apos;!&apos;
+    );
     allowConnections = true;
 
-    const host = config.host === &apos;0.0.0.0&apos; ? &apos;localhost&apos; : config.host;
+    let host = config.host === &apos;0.0.0.0&apos; ? &apos;localhost&apos; : config.host;
     log.notice(&apos;Connect locally via http://&apos; + host + &apos;:&apos; + config.port);
 }
 
@@ -147,16 +153,14 @@ function loadParser() {
 }
 
 function initializeWorlds() {
-    for (const worldId in worlds) {
-        if (worlds.hasOwnProperty(worldId))
-            worlds[worldId].load(onWorldLoad);
-    }
+    for (let worldId in worlds)
+        if (worlds.hasOwnProperty(worldId)) worlds[worldId].load(onWorldLoad);
 }
 
 function getPopulations() {
-    const counts = [];
+    let counts = [];
 
-    for (const index in worlds) {
+    for (let index in worlds) {
         if (worlds.hasOwnProperty(index))
             counts.push(worlds[index].getPopulation());
     }
@@ -169,9 +173,15 @@ function saveAll() {
         world.saveAll();
     });
 
-    const plural = worlds.length &gt; 1;
+    let plural = worlds.length &gt; 1;
 
-    log.notice(&apos;Saved players for &apos; + worlds.length + &apos; world&apos; + (plural ? &apos;s&apos; : &apos;&apos;) + &apos;.&apos;);
+    log.notice(
+        &apos;Saved players for &apos; +
+            worlds.length +
+            &apos; world&apos; +
+            (plural ? &apos;s&apos; : &apos;&apos;) +
+            &apos;.&apos;
+    );
 }
 
 if (typeof String.prototype.startsWith !== &apos;function&apos;) {
@@ -182,7 +192,10 @@ if (typeof String.prototype.startsWith !== &apos;function&apos;) {
 
 if (typeof String.prototype.endsWith !== &apos;function&apos;) {
     String.prototype.endsWith = function(str) {
-        return str.length &gt; 0 &amp;&amp; this.substring(this.length - str.length, this.length) === str;
+        return (
+            str.length &gt; 0 &amp;&amp;
+            this.substring(this.length - str.length, this.length) === str
+        );
     };
 }
 

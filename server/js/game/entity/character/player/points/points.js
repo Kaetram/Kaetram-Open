@@ -2,19 +2,18 @@
 
 class Points {
     constructor(points, maxPoints) {
-        const self = this;
+        let self = this;
 
         self.points = points;
         self.maxPoints = maxPoints;
     }
 
     heal(amount) {
-        const self = this;
+        let self = this;
 
         self.setPoints(self.points + amount);
 
-        if (self.healCallback)
-            self.healCallback();
+        if (self.healCallback) self.healCallback();
     }
 
     increment(amount) {
@@ -26,12 +25,11 @@ class Points {
     }
 
     setPoints(points) {
-        const self = this;
+        let self = this;
 
         self.points = points;
 
-        if (self.points >= self.maxPoints)
-            self.points = self.maxPoints;
+        if (self.points >= self.maxPoints) self.points = self.maxPoints;
     }
 
     setMaxPoints(maxPoints) {

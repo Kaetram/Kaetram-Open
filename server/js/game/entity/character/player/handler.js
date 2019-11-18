@@ -1,6 +1,6 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     Messages = require('../../../../network/messages'),
     Packets = require('../../../../network/packets'),
     Npcs = require('../../../../util/npcs'),
@@ -8,7 +8,7 @@ const _ = require('underscore'),
 
 class Handler {
     constructor(player) {
-        const self = this;
+        let self = this;
 
         self.player = player;
         self.world = player.world;
@@ -20,7 +20,7 @@ class Handler {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         self.player.updateInterval = setInterval(() => {
             self.detectAggro();
@@ -36,10 +36,7 @@ class Handler {
             self.detectLights(x, y);
         });
 
-        self.player.onDeath(() => {
-
-
-        });
+        self.player.onDeath(() => {});
 
         self.player.onHit((attacker, damage) => {
             /**
@@ -53,7 +50,9 @@ class Handler {
 
         self.player.onKill(character => {
             if (self.player.quests.isAchievementMob(character)) {
-                const achievement = self.player.quests.getAchievementByMob(character);
+                let achievement = self.player.quests.getAchievementByMob(
+                    character
+                );
 
                 if (achievement && achievement.isStarted())
                     self.player.quests.getAchievementByMob(character).step();
@@ -93,60 +92,67 @@ class Handler {
 
             switch (Npcs.getType(npc.id)) {
                 case 'banker':
-                    self.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
+                    self.player.send(
+                        new Messages.NPC(Packets.NPCOpcode.Bank, {})
+                    );
                     return;
 
                 case 'enchanter':
-                    self.player.send(new Messages.NPC(Packets.NPCOpcode.Enchant, {}));
+                    self.player.send(
+                        new Messages.NPC(Packets.NPCOpcode.Enchant, {})
+                    );
                     break;
             }
 
-            const text = Npcs.getText(npc.id);
+            let text = Npcs.getText(npc.id);
 
-            if (!text)
-                return;
+            if (!text) return;
 
-            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-                id: npc.instance,
-                text: npc.talk(text)
-            }));
+            self.player.send(
+                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                    id: npc.instance,
+                    text: npc.talk(text)
+                })
+            );
         });
     }
 
     detectAggro() {
-        const self = this,
+        let self = this,
             region = self.world.region.regions[self.player.region];
 
-        if (!region)
-            return;
+        if (!region) return;
 
         _.each(region.entities, entity => {
             if (entity && entity.type === 'mob' && self.canEntitySee(entity)) {
-                const aggro = entity.canAggro(self.player);
+                let aggro = entity.canAggro(self.player);
 
-                if (aggro)
-                    entity.combat.begin(self.player);
+                if (aggro) entity.combat.begin(self.player);
             }
         });
     }
 
     detectMusic(x, y) {
-        const self = this,
-            musicArea = _.find(self.world.getMusicAreas(), area => { return area.contains(x, y); });
+        let self = this,
+            musicArea = _.find(self.world.getMusicAreas(), area => {
+                return area.contains(x, y);
+            });
 
         if (musicArea && self.player.currentSong !== musicArea.id)
             self.player.updateMusic(musicArea.id);
     }
 
     detectPVP(x, y) {
-        const self = this,
-            pvpArea = _.find(self.world.getPVPAreas(), area => { return area.contains(x, y); });
+        let self = this,
+            pvpArea = _.find(self.world.getPVPAreas(), area => {
+                return area.contains(x, y);
+            });
 
         self.player.updatePVP(!!pvpArea);
     }
 
     detectOverlay(x, y) {
-        const self = this,
+        let self = this,
             overlayArea = _.find(self.world.getOverlayAreas(), area => {
                 return area.contains(x, y);
             });
@@ -155,7 +161,7 @@ class Handler {
     }
 
     detectCamera(x, y) {
-        const self = this,
+        let self = this,
             cameraArea = _.find(self.world.getCameraAreas(), area => {
                 return area.contains(x, y);
             });
@@ -164,18 +170,26 @@ class Handler {
     }
 
     detectLights(x, y) {
-        const self = this;
+        let self = this;
 
         _.each(self.map.lights, light => {
-            if (self.map.nearLight(light, x, y) && !self.player.hasLoadedLight(light)) {
+            if (
+                self.map.nearLight(light, x, y) &&
+                !self.player.hasLoadedLight(light)
+            ) {
                 self.player.lightsLoaded.push(light);
-                self.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
+                self.player.send(
+                    new Messages.Overlay(Packets.OverlayOpcode.Lamp, light)
+                );
             }
         });
     }
 
     canEntitySee(entity) {
-        return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
+        return (
+            !this.player.hasInvisible(entity) &&
+            !this.player.hasInvisibleId(entity.id)
+        );
     }
 }
 

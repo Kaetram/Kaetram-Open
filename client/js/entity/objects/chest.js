@@ -1,6 +1,5 @@
 define(['../entity'], function(Entity) {
     return Entity.extend({
-
         init: function(id, kind) {
             var self = this;
 
@@ -28,6 +27,5 @@ define(['../entity'], function(Entity) {
         setSprite: function(sprite) {
             this._super(sprite);
         }
-
     });
 });

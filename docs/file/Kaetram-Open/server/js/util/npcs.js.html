@@ -36,35 +36,31 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/npcs.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const NPCs = {};
+let NPCs = {};
 
 NPCs.Properties = {};
 NPCs.Ids = {};
 
 NPCs.idToString = id =&gt; {
-    if (id in NPCs.Ids)
-        return NPCs.Ids[id].key;
+    if (id in NPCs.Ids) return NPCs.Ids[id].key;
 
     return null;
 };
 
 NPCs.idToName = id =&gt; {
-    if (id in NPCs.Ids)
-        return NPCs.Ids[id].name;
+    if (id in NPCs.Ids) return NPCs.Ids[id].name;
 
     return null;
 };
 
 NPCs.getText = id =&gt; {
-    if (id in NPCs.Ids)
-        return NPCs.Ids[id].text;
+    if (id in NPCs.Ids) return NPCs.Ids[id].text;
 
     return null;
 };
 
 NPCs.getType = id =&gt; {
-    if (id in NPCs.Ids)
-        return NPCs.Ids[id].type;
+    if (id in NPCs.Ids) return NPCs.Ids[id].type;
 
     return null;
 };

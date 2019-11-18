@@ -2,7 +2,6 @@
 
 define(function() {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -37,6 +36,5 @@ define(function() {
         getDirection: function() {
             return this.direction;
         }
-
     });
 });

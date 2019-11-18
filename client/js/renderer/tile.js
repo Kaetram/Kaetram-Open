@@ -1,6 +1,5 @@
 define(function() {
     return Class.extend({
-
         init: function(id, index, map) {
             var self = this;
 
@@ -28,20 +27,21 @@ define(function() {
         animate: function(time) {
             var self = this;
 
-            if ((time - self.lastTime) > self.animationInfo[self.animationIndex].duration) {
+            if (
+                time - self.lastTime >
+                self.animationInfo[self.animationIndex].duration
+            ) {
                 self.update();
                 self.lastTime = time;
 
                 if (self.animationIndex >= self.animationInfo.length - 1)
                     self.animationIndex = 0;
-                else
-                    self.animationIndex++;
+                else self.animationIndex++;
             }
         },
 
         getPosition: function() {
-            return (this.x && this.y) ? [this.x, this.y] : [0, 0];
+            return this.x && this.y ? [this.x, this.y] : [0, 0];
         }
-
     });
 });

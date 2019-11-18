@@ -2,7 +2,6 @@
 
 define(['./animation'], function(Animation) {
     return Class.extend({
-
         init: function(sprite, scale) {
             var self = this;
 
@@ -36,11 +35,9 @@ define(['./animation'], function(Animation) {
             self.image.onload = function() {
                 self.loaded = true;
 
-                if (self.loadHurt)
-                    self.createHurtSprite();
+                if (self.loadHurt) self.createHurtSprite();
 
-                if (self.loadCallback)
-                    self.loadCallback();
+                if (self.loadCallback) self.loadCallback();
             };
         },
 
@@ -56,9 +53,11 @@ define(['./animation'], function(Animation) {
 
             self.offsetX = sprite.offsetX !== undefined ? sprite.offsetX : -16;
             self.offsetY = sprite.offsetY !== undefined ? sprite.offsetY : -16;
-            self.offfsetAngle = sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
+            self.offfsetAngle =
+                sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
 
-            self.idleSpeed = sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
+            self.idleSpeed =
+                sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
         },
 
         update: function(newScale) {
@@ -78,7 +77,13 @@ define(['./animation'], function(Animation) {
                 if (self.animationData.hasOwnProperty(name)) {
                     var a = self.animationData[name];
 
-                    animations[name] = new Animation(name, a.length, a.row, self.width, self.height);
+                    animations[name] = new Animation(
+                        name,
+                        a.length,
+                        a.row,
+                        self.width,
+                        self.height
+                    );
                 }
             }
 
@@ -92,23 +97,33 @@ define(['./animation'], function(Animation) {
         createHurtSprite: function() {
             var self = this;
 
-            if (!self.loaded)
-                self.load();
+            if (!self.loaded) self.load();
 
-            if (self.hurtSprite.loaded)
-                return;
+            if (self.hurtSprite.loaded) return;
 
             var canvas = document.createElement('canvas'),
                 context = canvas.getContext('2d'),
-                spriteData, data;
+                spriteData,
+                data;
 
             canvas.width = self.image.width;
             canvas.height = self.image.height;
 
             try {
-                context.drawImage(self.image, 0, 0, self.image.width, self.image.height);
+                context.drawImage(
+                    self.image,
+                    0,
+                    0,
+                    self.image.width,
+                    self.image.height
+                );
 
-                spriteData = context.getImageData(0, 0, self.image.width, self.image.height);
+                spriteData = context.getImageData(
+                    0,
+                    0,
+                    self.image.width,
+                    self.image.height
+                );
                 data = spriteData.data;
 
                 for (var i = 0; i < data.length; i += 4) {
@@ -138,6 +153,5 @@ define(['./animation'], function(Animation) {
         onLoad: function(callback) {
             this.loadCallback = callback;
         }
-
     });
 });

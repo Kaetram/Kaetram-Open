@@ -2,7 +2,6 @@
 
 define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -23,11 +22,12 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
                         isTarget = data.shift(),
                         dId = self.generateId(self.game.time, damage, x, y);
 
-                    if (damage < 1 || !isInt(damage))
-                        damage = 'MISS';
+                    if (damage < 1 || !isInt(damage)) damage = 'MISS';
 
                     var hitSplat = new Splat(dId, type, damage, x, y, false),
-                        dColour = isTarget ? Modules.DamageColours.received : Modules.DamageColours.inflicted;
+                        dColour = isTarget
+                            ? Modules.DamageColours.received
+                            : Modules.DamageColours.inflicted;
 
                     hitSplat.setColours(dColour.fill, dColour.stroke);
 
@@ -40,13 +40,12 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
                 case Modules.Hits.Experience:
                     var amount = data.shift(),
                         id = self.generateId(self.game.time, amount, x, y),
-                        text = '+', colour;
+                        text = '+',
+                        colour;
 
-                    if (amount < 1 || !isInt(amount))
-                        return;
+                    if (amount < 1 || !isInt(amount)) return;
 
-                    if (type !== Modules.Hits.Experience)
-                        text = '++';
+                    if (type !== Modules.Hits.Experience) text = '++';
 
                     var splat = new Splat(id, type, text + amount, x, y, false);
 
@@ -65,7 +64,14 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
 
                 case Modules.Hits.LevelUp:
                     var lId = self.generateId(self.game.time, '-1', x, y),
-                        levelSplat = new Splat(lId, type, 'Level Up!', x, y, false),
+                        levelSplat = new Splat(
+                            lId,
+                            type,
+                            'Level Up!',
+                            x,
+                            y,
+                            false
+                        ),
                         lColour = Modules.DamageColours.exp;
 
                     levelSplat.setColours(lColour.fill, lColour.stroke);
@@ -113,6 +119,5 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
         generateId: function(time, info, x, y) {
             return time + '' + Math.abs(info) + '' + x + '' + y;
         }
-
     });
 });

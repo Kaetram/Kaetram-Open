@@ -1,6 +1,6 @@
 /* global module */
 
-const Equipment = require('./equipment'),
+let Equipment = require('./equipment'),
     Items = require('../../../../../util/items'),
     Modules = require('../../../../../util/modules');
 
@@ -8,7 +8,7 @@ class Weapon extends Equipment {
     constructor(name, id, count, ability, abilityLevel) {
         super(name, id, count, ability, abilityLevel);
 
-        const self = this;
+        let self = this;
 
         self.level = Items.getWeaponLevel(name);
         self.ranged = Items.isArcherWeapon(name);

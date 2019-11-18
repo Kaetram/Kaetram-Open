@@ -1,4 +1,4 @@
-const Combat = require('../../js/game/entity/character/combat/combat'),
+let Combat = require('../../js/game/entity/character/combat/combat'),
     Utils = require('../../js/util/utils'),
     _ = require('underscore');
 
@@ -14,7 +14,7 @@ class SkeletonKing extends Combat {
         character.spawnDistance = 10;
         super(character);
 
-        const self = this;
+        let self = this;
 
         self.lastSpawn = 0;
 
@@ -26,30 +26,27 @@ class SkeletonKing extends Combat {
     }
 
     reset() {
-        const self = this;
+        let self = this;
 
         self.lastSpawn = 0;
 
-        const listCopy = self.minions.slice();
+        let listCopy = self.minions.slice();
 
-        for (let i = 0; i < listCopy.length; i++)
-            self.world.kill(listCopy[i]);
+        for (let i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
     }
 
     hit(character, target, hitInfo) {
-        const self = this;
+        let self = this;
 
-        if (self.isAttacked())
-            self.beginMinionAttack();
+        if (self.isAttacked()) self.beginMinionAttack();
 
-        if (self.canSpawn())
-            self.spawnMinions();
+        if (self.canSpawn()) self.spawnMinions();
 
         super.hit(character, target, hitInfo);
     }
 
     spawnMinions() {
-        const self = this,
+        let self = this,
             x = self.character.x,
             y = self.character.y;
 
@@ -69,25 +66,22 @@ class SkeletonKing extends Combat {
 
         _.each(self.minions, minion => {
             minion.onDeath(() => {
-                if (self.isLast())
-                    self.lastSpawn = new Date().getTime();
+                if (self.isLast()) self.lastSpawn = new Date().getTime();
 
                 self.minions.splice(self.minions.indexOf(minion), 1);
             });
 
-            if (self.isAttacked())
-                self.beginMinionAttack();
+            if (self.isAttacked()) self.beginMinionAttack();
         });
     }
 
     beginMinionAttack() {
-        const self = this;
+        let self = this;
 
-        if (!self.hasMinions())
-            return;
+        if (!self.hasMinions()) return;
 
         _.each(self.minions, minion => {
-            const randomTarget = self.getRandomTarget();
+            let randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)
                 minion.combat.begin(randomTarget);
@@ -95,18 +89,17 @@ class SkeletonKing extends Combat {
     }
 
     getRandomTarget() {
-        const self = this;
+        let self = this;
 
         if (self.isAttacked()) {
-            const keys = Object.keys(self.attackers),
-                randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
+            let keys = Object.keys(self.attackers),
+                randomAttacker =
+                    self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
-            if (randomAttacker)
-                return randomAttacker;
+            if (randomAttacker) return randomAttacker;
         }
 
-        if (self.character.hasTarget())
-            return self.character.target;
+        if (self.character.hasTarget()) return self.character.target;
 
         return null;
     }
@@ -120,7 +113,11 @@ class SkeletonKing extends Combat {
     }
 
     canSpawn() {
-        return (new Date().getTime() - this.lastSpawn > 25000) && !this.hasMinions() && this.isAttacked();
+        return (
+            new Date().getTime() - this.lastSpawn > 25000 &&
+            !this.hasMinions() &&
+            this.isAttacked()
+        );
     }
 }
 

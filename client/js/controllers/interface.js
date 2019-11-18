@@ -1,12 +1,17 @@
 /* global log */
 
-define(['jquery', '../interface/inventory',
-    '../interface/profile/profile', '../interface/actions',
-    '../interface/bank', '../interface/enchant', '../interface/warp',
-    '../interface/shop', '../interface/header'],
-function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
+define([
+    'jquery',
+    '../interface/inventory',
+    '../interface/profile/profile',
+    '../interface/actions',
+    '../interface/bank',
+    '../interface/enchant',
+    '../interface/warp',
+    '../interface/shop',
+    '../interface/header'
+], function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -38,23 +43,17 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
         resize: function() {
             var self = this;
 
-            if (self.inventory)
-                self.inventory.resize();
+            if (self.inventory) self.inventory.resize();
 
-            if (self.profile)
-                self.profile.resize();
+            if (self.profile) self.profile.resize();
 
-            if (self.bank)
-                self.bank.resize();
+            if (self.bank) self.bank.resize();
 
-            if (self.enchant)
-                self.enchant.resize();
+            if (self.enchant) self.enchant.resize();
 
-            if (self.shop && self.shop.isVisible())
-                self.shop.resize();
+            if (self.shop && self.shop.isVisible()) self.shop.resize();
 
-            if (self.header)
-                self.header.resize();
+            if (self.header) self.header.resize();
         },
 
         loadInventory: function(size, data) {
@@ -93,43 +92,37 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
         loadProfile: function() {
             var self = this;
 
-            if (!self.profile)
-                self.profile = new Profile(self.game);
+            if (!self.profile) self.profile = new Profile(self.game);
         },
 
         loadActions: function() {
             var self = this;
 
-            if (!self.actions)
-                self.actions = new Actions(self);
+            if (!self.actions) self.actions = new Actions(self);
         },
 
         loadEnchant: function() {
             var self = this;
 
-            if (!self.enchant)
-                self.enchant = new Enchant(self.game, self);
+            if (!self.enchant) self.enchant = new Enchant(self.game, self);
         },
 
         loadWarp: function() {
             var self = this;
 
-            if (!self.warp)
-                self.warp = new Warp(self.game, self);
+            if (!self.warp) self.warp = new Warp(self.game, self);
         },
 
         loadShop: function() {
             var self = this;
 
-            if (!self.shop)
-                self.shop = new Shop(self.game, self);
+            if (!self.shop) self.shop = new Shop(self.game, self);
         },
 
         loadHeader: function() {
             var self = this;
 
-            if (!self.header)
-                self.header = new Header(self.game, self);
+            if (!self.header) self.header = new Header(self.game, self);
         },
 
         loadNotifications: function() {
@@ -168,26 +161,28 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
             if (self.inventory && self.inventory.isVisible())
                 self.inventory.hide();
 
-            if (self.actions && self.actions.isVisible())
-                self.actions.hide();
+            if (self.actions && self.actions.isVisible()) self.actions.hide();
 
-            if (self.profile && (self.profile.isVisible() || self.profile.settings.isVisible()))
+            if (
+                self.profile &&
+                (self.profile.isVisible() || self.profile.settings.isVisible())
+            )
                 self.profile.hide();
 
-            if (self.game.input && self.game.input.chatHandler && self.game.input.chatHandler.input.is(':visible'))
+            if (
+                self.game.input &&
+                self.game.input.chatHandler &&
+                self.game.input.chatHandler.input.is(':visible')
+            )
                 self.game.input.chatHandler.hideInput();
 
-            if (self.bank && self.bank.isVisible())
-                self.bank.hide();
+            if (self.bank && self.bank.isVisible()) self.bank.hide();
 
-            if (self.enchant && self.enchant.isVisible())
-                self.enchant.hide();
+            if (self.enchant && self.enchant.isVisible()) self.enchant.hide();
 
-            if (self.warp && self.warp.isVisible())
-                self.warp.hide();
+            if (self.warp && self.warp.isVisible()) self.warp.hide();
 
-            if (self.shop && self.shop.isVisible())
-                self.shop.hide();
+            if (self.shop && self.shop.isVisible()) self.shop.hide();
         },
 
         addInventory: function(info) {
@@ -205,8 +200,7 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
         displayNotify: function(message) {
             var self = this;
 
-            if (self.isNotifyVisible())
-                return;
+            if (self.isNotifyVisible()) return;
 
             self.notify.css('display', 'block');
             self.fade.css('display', 'block');
@@ -218,8 +212,7 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
         displayConfirm: function(message) {
             var self = this;
 
-            if (self.isConfirmVisible())
-                return;
+            if (self.isConfirmVisible()) return;
 
             self.confirm.css('display', 'block');
             self.confirm.text(message);
@@ -248,6 +241,5 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
         isConfirmVisible: function() {
             return this.confirm.css('display') === 'block';
         }
-
     });
 });

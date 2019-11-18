@@ -1,12 +1,14 @@
 /* global log, _ */
 
-define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) {
+define(['../entity/sprite', '../entity/animation'], function(
+    Sprite,
+    Animation
+) {
     /**
      * Class responsible for loading all the necessary sprites from the JSON.
      */
 
     return Class.extend({
-
         init: function(renderer) {
             var self = this;
 
@@ -27,14 +29,16 @@ define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) 
             var self = this;
 
             _.each(spriteData, function(sprite) {
-                self.sprites[sprite.id] = new Sprite(sprite, self.renderer.scale);
+                self.sprites[sprite.id] = new Sprite(
+                    sprite,
+                    self.renderer.scale
+                );
             });
 
             if (self.renderer.game.isDebug())
                 log.info('Finished loading sprite data...');
 
-            if (self.loadedSpritesCallback)
-                self.loadedSpritesCallback();
+            if (self.loadedSpritesCallback) self.loadedSpritesCallback();
         },
 
         loadAnimations: function() {
@@ -51,13 +55,15 @@ define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) 
                 sprite.update(self.renderer.getScale());
             });
 
-            if (self.renderer.game.isDebug())
-                log.info('Updated sprites to scale: ' + self.renderer.getScale());
+            if (self.renderer.game.isDebug()) {
+                log.info(
+                    'Updated sprites to scale: ' + self.renderer.getScale()
+                );
+            }
         },
 
         onLoadedSprites: function(callback) {
             this.loadedSpritesCallback = callback;
         }
-
     });
 });

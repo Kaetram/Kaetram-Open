@@ -1,6 +1,5 @@
 define(function() {
     return Class.extend({
-
         init: function(start, duration) {
             var self = this;
 
@@ -19,6 +18,5 @@ define(function() {
 
             return over;
         }
-
     });
 });

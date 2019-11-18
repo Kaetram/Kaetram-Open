@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/database/mongodb/mongodb.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const MongoClient = require(&apos;mongodb&apos;).MongoClient,
+let MongoClient = require(&apos;mongodb&apos;).MongoClient,
     Loader = require(&apos;./loader&apos;),
     Creator = require(&apos;./creator&apos;),
     bcrypt = require(&apos;bcrypt&apos;),
@@ -45,7 +45,7 @@ const MongoClient = require(&apos;mongodb&apos;).MongoClient,
 
 class MongoDB {
     constructor(host, port, user, password, database) {
-        const self = this;
+        let self = this;
 
         self.host = host;
         self.port = port;
@@ -66,7 +66,7 @@ class MongoDB {
         if (config.mongoAuth)
             URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
 
-        const client = new MongoClient(URL, {
+        let client = new MongoClient(URL, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
             wtimeout: 5
@@ -87,20 +87,25 @@ class MongoDB {
     }
 
     login(player) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database =&gt; {
-            const dataCursor = database.collection(&apos;player_data&apos;).find({ username: player.username }),
-                equipmentCursor = database.collection(&apos;player_equipment&apos;).find({ username: player.username }),
-                regionsCursor = database.collection(&apos;player_regions&apos;).find({ username: player.username });
+            let dataCursor = database
+                    .collection(&apos;player_data&apos;)
+                    .find({ username: player.username }),
+                equipmentCursor = database
+                    .collection(&apos;player_equipment&apos;)
+                    .find({ username: player.username }),
+                regionsCursor = database
+                    .collection(&apos;player_regions&apos;)
+                    .find({ username: player.username });
 
             dataCursor.toArray().then(playerData =&gt; {
                 equipmentCursor.toArray().then(equipmentData =&gt; {
                     regionsCursor.toArray().then(regionData =&gt; {
-                        if (playerData.length === 0)
-                            self.register(player);
+                        if (playerData.length === 0) self.register(player);
                         else {
-                            const playerInfo = playerData[0],
+                            let playerInfo = playerData[0],
                                 equipmentInfo = equipmentData[0],
                                 regions = regionData[0];
 
@@ -110,8 +115,14 @@ class MongoDB {
                             playerInfo.ring = equipmentInfo.ring;
                             playerInfo.boots = equipmentInfo.boots;
 
-                            if (regions &amp;&amp; regions.gameVersion === config.gver)
-                                player.regionsLoaded = regions.regions.split(&apos;,&apos;);
+                            if (
+                                regions &amp;&amp;
+                                regions.gameVersion === config.gver
+                            ) {
+                                player.regionsLoaded = regions.regions.split(
+                                    &apos;,&apos;
+                                );
+                            }
 
                             player.load(playerInfo);
                             player.intro();
@@ -123,40 +134,47 @@ class MongoDB {
     }
 
     verify(player, callback) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database =&gt; {
-            const dataCursor = database.collection(&apos;player_data&apos;).find({ username: player.username });
+            let dataCursor = database
+                .collection(&apos;player_data&apos;)
+                .find({ username: player.username });
 
             dataCursor.toArray().then(data =&gt; {
-                if (data.length === 0)
-                    callback({ status: &apos;error&apos; });
+                if (data.length === 0) callback({ status: &apos;error&apos; });
                 else {
-                    const info = data[0];
+                    let info = data[0];
 
-                    bcrypt.compare(player.password, info.password, (error, result) =&gt; {
-                        if (error) throw error;
+                    bcrypt.compare(
+                        player.password,
+                        info.password,
+                        (error, result) =&gt; {
+                            if (error) throw error;
 
-                        if (result)
-                            callback({ status: &apos;success&apos; });
-                        else
-                            callback({ status: &apos;error&apos; });
-                    });
+                            if (result) callback({ status: &apos;success&apos; });
+                            else callback({ status: &apos;error&apos; });
+                        }
+                    );
                 }
             });
         });
     }
 
     register(player) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database =&gt; {
-            const playerData = database.collection(&apos;player_data&apos;),
+            let playerData = database.collection(&apos;player_data&apos;),
                 cursor = playerData.find({ username: player.username });
 
             cursor.toArray().then(info =&gt; {
                 if (info.length === 0) {
-                    log.info(&apos;No player data found for &apos; + player.username + &apos;. Creating user.&apos;);
+                    log.info(
+                        &apos;No player data found for &apos; +
+                            player.username +
+                            &apos;. Creating user.&apos;
+                    );
 
                     player.new = true;
 
@@ -168,53 +186,69 @@ class MongoDB {
     }
 
     exists(player, callback) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database =&gt; {
-            const playerData = database.collection(&apos;player_data&apos;),
+            let playerData = database.collection(&apos;player_data&apos;),
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
-            log.info(&apos;Looking for - &apos; + player.email + &apos; or &apos; + player.username);
+            log.info(
+                &apos;Looking for - &apos; + player.email + &apos; or &apos; + player.username
+            );
 
             emailCursor.toArray().then(emailArray =&gt; {
                 if (emailArray.length === 0) {
                     usernameCursor.toArray().then(usernameArray =&gt; {
                         if (usernameArray.length === 0)
                             callback({ exists: false });
-                        else
-                            callback({ exists: true, type: &apos;user&apos; });
+                        else callback({ exists: true, type: &apos;user&apos; });
                     });
-                } else
-                    callback({ exists: true, type: &apos;email&apos; });
+                } else callback({ exists: true, type: &apos;email&apos; });
             });
         });
     }
 
     delete(player) {
-        const self = this;
+        let self = this;
 
         self.getDatabase(database =&gt; {
-            const collections = [&apos;player_data&apos;, &apos;player_equipment&apos;, &apos;player_inventory&apos;, &apos;player_abilities&apos;, &apos;player_bank&apos;, &apos;player_quests&apos;, &apos;player_achievements&apos;];
+            let collections = [
+                &apos;player_data&apos;,
+                &apos;player_equipment&apos;,
+                &apos;player_inventory&apos;,
+                &apos;player_abilities&apos;,
+                &apos;player_bank&apos;,
+                &apos;player_quests&apos;,
+                &apos;player_achievements&apos;
+            ];
 
             _.each(collections, col =&gt; {
-                const collection = database.collection(col);
+                let collection = database.collection(col);
 
-                collection.deleteOne({
-                    username: player.username
-                }, (error, result) =&gt; {
-                    if (error) throw error;
+                collection.deleteOne(
+                    {
+                        username: player.username
+                    },
+                    (error, result) =&gt; {
+                        if (error) throw error;
 
-                    if (result)
-                        log.info(&apos;Player &apos; + player.username + &apos; has been deleted.&apos;);
-                });
+                        if (result) {
+                            log.info(
+                                &apos;Player &apos; +
+                                    player.username +
+                                    &apos; has been deleted.&apos;
+                            );
+                        }
+                    }
+                );
             });
         });
     }
 
     registeredCount(callback) {
         this.getDatabase(database =&gt; {
-            const collection = database.collection(&apos;player_data&apos;);
+            let collection = database.collection(&apos;player_data&apos;);
 
             collection.countDocuments().then(count =&gt; {
                 callback(count);

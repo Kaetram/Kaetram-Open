@@ -1,6 +1,5 @@
 define(['./equipment'], function(Equipment) {
     return Equipment.extend({
-
         init: function(name, string, count, ability, abilityLevel) {
             var self = this;
 
@@ -20,6 +19,5 @@ define(['./equipment'], function(Equipment) {
         update: function(name, string, count, ability, abilityLevel) {
             this._super(name, string, count, ability, abilityLevel);
         }
-
     });
 });

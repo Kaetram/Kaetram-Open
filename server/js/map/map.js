@@ -1,6 +1,6 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     Grids = require('./grids'),
     Regions = require('./regions'),
     Utils = require('../util/utils'),
@@ -18,7 +18,7 @@ const _ = require('underscore'),
 
 class Map {
     constructor(world) {
-        const self = this;
+        let self = this;
 
         self.world = world;
 
@@ -31,7 +31,7 @@ class Map {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         self.width = map.width;
         self.height = map.height;
@@ -60,8 +60,7 @@ class Map {
 
         self.readyInterval = setInterval(() => {
             if (!self.world.ready) {
-                if (self.readyCallback)
-                    self.readyCallback();
+                if (self.readyCallback) self.readyCallback();
                 else {
                     clearInterval(self.readyInterval);
                     self.readyInterval = null;
@@ -71,7 +70,7 @@ class Map {
     }
 
     loadAreas() {
-        const self = this;
+        let self = this;
 
         /**
          * The structure for the new self.areas is as follows:
@@ -97,7 +96,7 @@ class Map {
     }
 
     loadDoors() {
-        const self = this;
+        let self = this;
 
         self.doors = {};
 
@@ -135,7 +134,7 @@ class Map {
     }
 
     loadStaticEntities() {
-        const self = this;
+        let self = this;
 
         self.staticEntities = [];
 
@@ -148,7 +147,7 @@ class Map {
         });
 
         _.each(Spawns, data => {
-            const tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
+            let tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
 
             self.staticEntities.push({
                 tileIndex: tileIndex,
@@ -159,11 +158,11 @@ class Map {
     }
 
     indexToGridPosition(tileIndex) {
-        const self = this;
+        let self = this;
 
         tileIndex -= 1;
 
-        const x = self.getX(tileIndex + 1, self.width),
+        let x = self.getX(tileIndex + 1, self.width),
             y = Math.floor(tileIndex / self.width);
 
         return {
@@ -173,14 +172,13 @@ class Map {
     }
 
     gridPositionToIndex(x, y) {
-        return (y * this.width) + x + 1;
+        return y * this.width + x + 1;
     }
 
     getX(index, width) {
-        if (index === 0)
-            return 0;
+        if (index === 0) return 0;
 
-        return (index % width === 0) ? width - 1 : (index % width) - 1;
+        return index % width === 0 ? width - 1 : (index % width) - 1;
     }
 
     getRandomPosition(area) {
@@ -198,20 +196,23 @@ class Map {
     }
 
     inArea(posX, posY, x, y, width, height) {
-        return posX >= x && posY >= y && posX <= width + x && posY <= height + y;
+        return (
+            posX >= x && posY >= y && posX <= width + x && posY <= height + y
+        );
     }
 
     inTutorialArea(entity) {
-        if (entity.x === -1 || entity.y === -1)
-            return true;
+        if (entity.x === -1 || entity.y === -1) return true;
 
-        return this.inArea(entity.x, entity.y, 11, 551, 10, 10) ||
-                this.inArea(entity.x, entity.y, 12, 514, 35, 35) ||
-                this.inArea(entity.x, entity.y, 22, 489, 25, 25);
+        return (
+            this.inArea(entity.x, entity.y, 11, 551, 10, 10) ||
+            this.inArea(entity.x, entity.y, 12, 514, 35, 35) ||
+            this.inArea(entity.x, entity.y, 22, 489, 25, 25)
+        );
     }
 
     nearLight(light, x, y) {
-        const self = this,
+        let self = this,
             diff = Math.round(light.distance / 16),
             startX = light.x - self.zoneWidth - diff,
             startY = light.y - self.zoneHeight - diff,
@@ -230,7 +231,12 @@ class Map {
     }
 
     isValidPosition(x, y) {
-        return isInt(x) && isInt(y) && !this.isOutOfBounds(x, y) && !this.isColliding(x, y);
+        return (
+            isInt(x) &&
+            isInt(y) &&
+            !this.isOutOfBounds(x, y) &&
+            !this.isColliding(x, y)
+        );
     }
 
     isOutOfBounds(x, y) {
@@ -238,50 +244,49 @@ class Map {
     }
 
     isColliding(x, y) {
-        const self = this;
+        let self = this;
 
-        if (self.isOutOfBounds(x, y))
-            return false;
+        if (self.isOutOfBounds(x, y)) return false;
 
-        const tileIndex = self.gridPositionToIndex(x - 1, y);
+        let tileIndex = self.gridPositionToIndex(x - 1, y);
 
         return self.collisions.indexOf(tileIndex) > -1;
     }
 
     /* For preventing NPCs from roaming in null areas. */
     isEmpty(x, y) {
-        const self = this;
+        let self = this;
 
-        if (self.isOutOfBounds(x, y))
-            return true;
+        if (self.isOutOfBounds(x, y)) return true;
 
-        const tileIndex = self.gridPositionToIndex(x - 1, y);
+        let tileIndex = self.gridPositionToIndex(x - 1, y);
 
         return ClientMap.data[tileIndex] === 0;
     }
 
     getActualTileIndex(tileIndex) {
-        const self = this,
+        let self = this,
             tileset = self.getTileset(tileIndex);
 
-        if (!tileset)
-            return;
+        if (!tileset) return;
 
         return tileIndex - tileset.firstGID - 1;
     }
 
     getTileset(tileIndex) {
-        const self = this;
+        let self = this;
         /**
          * if (id > self.tilesets[idx].firstGID - 1 &&
          id < self.tilesets[idx].lastGID + 1)
          return self.tilesets[idx];
          */
 
-        for (const id in self.tilesets) {
+        for (let id in self.tilesets) {
             if (self.tilesets.hasOwnProperty(id)) {
-                if (tileIndex > self.tilesets[id].firstGID - 1 &&
-                    tileIndex < self.tilesets[id].lastGID + 1)
+                if (
+                    tileIndex > self.tilesets[id].firstGID - 1 &&
+                    tileIndex < self.tilesets[id].lastGID + 1
+                )
                     return self.tilesets[id];
             }
         }

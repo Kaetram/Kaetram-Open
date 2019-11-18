@@ -1,6 +1,5 @@
 define(function() {
     return Class.extend({
-
         /**
          * Ripped from BrowserQuest's client
          */
@@ -21,7 +20,7 @@ define(function() {
             var self = this,
                 i = self.currentFrame.index;
 
-            i = (i < self.length - 1) ? i + 1 : 0;
+            i = i < self.length - 1 ? i + 1 : 0;
 
             if (self.count > 0 && i === 0) {
                 self.count -= 1;
@@ -50,8 +49,7 @@ define(function() {
                 self.tick();
 
                 return true;
-            } else
-                return false;
+            } else return false;
         },
 
         setCount: function(count, onEndCount) {
@@ -70,7 +68,7 @@ define(function() {
         },
 
         readyToAnimate: function(time) {
-            return (time - this.lastTime) > this.speed;
+            return time - this.lastTime > this.speed;
         },
 
         reset: function() {
@@ -83,6 +81,5 @@ define(function() {
                 y: self.row * self.height
             };
         }
-
     });
 });

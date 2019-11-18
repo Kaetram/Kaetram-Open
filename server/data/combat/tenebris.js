@@ -1,4 +1,4 @@
-const Combat = require('../../js/game/entity/character/combat/combat'),
+let Combat = require('../../js/game/entity/character/combat/combat'),
     Messages = require('../../js/network/messages'),
     Packets = require('../../js/network/packets'),
     Utils = require('../../js/util/utils');
@@ -8,7 +8,7 @@ class Tenebris extends Combat {
         character.spawnDistance = 24;
         super(character);
 
-        const self = this;
+        let self = this;
 
         self.illusions = [];
         self.firstIllusionKilled = false;
@@ -18,8 +18,7 @@ class Tenebris extends Combat {
 
         character.onDeath(() => {
             if (self.isIllusion()) {
-                if (!self.firstIllusionKilled)
-                    self.spawnTenbris();
+                if (!self.firstIllusionKilled) self.spawnTenbris();
                 else {
                     self.removeIllusions();
 
@@ -28,57 +27,56 @@ class Tenebris extends Combat {
             }
         });
 
-        if (!self.isIllusion())
-            self.forceTalk('Who dares summon Tenebris!');
+        if (!self.isIllusion()) self.forceTalk('Who dares summon Tenebris!');
     }
 
     reset() {
-        const self = this;
+        let self = this;
 
         self.illusions = [];
         self.firstIllusionKilled = false;
 
         setTimeout(() => {
-            const offset = Utils.positionOffset(4);
+            let offset = Utils.positionOffset(4);
 
             self.world.spawnMob(105, 48 + offset.x, 338 + offset.y);
         }, self.respawnDelay);
     }
 
     hit(attacker, target, hitInfo) {
-        const self = this;
+        let self = this;
 
-        if (self.isAttacked())
-            self.beginIllusionAttack();
+        if (self.isAttacked()) self.beginIllusionAttack();
 
-        if (self.canSpawn())
-            self.spawnIllusions();
+        if (self.canSpawn()) self.spawnIllusions();
 
         super.hit(attacker, target, hitInfo);
     }
 
     spawnTenbris() {
-        const self = this;
+        let self = this;
 
         self.world.spawnMob(104, self.character.x, self.character.y);
     }
 
     spawnIllusions() {
-        const self = this;
+        let self = this;
 
-        self.illusions.push(self.world.spawnMob(105, self.character.x + 1, self.character.y + 1));
-        self.illusions.push(self.world.spawnMob(105, self.character.x - 1, self.character.y + 1));
+        self.illusions.push(
+            self.world.spawnMob(105, self.character.x + 1, self.character.y + 1)
+        );
+        self.illusions.push(
+            self.world.spawnMob(105, self.character.x - 1, self.character.y + 1)
+        );
 
         _.each(self.illusions, illusion => {
             illusion.onDeath(() => {
-                if (self.isLast())
-                    self.lastIllusion = new Date().getTime();
+                if (self.isLast()) self.lastIllusion = new Date().getTime();
 
                 self.illusions.splice(self.illusions.indexOf(illusion), 1);
             });
 
-            if (self.isAttacked())
-                self.beginIllusionAttack();
+            if (self.isAttacked()) self.beginIllusionAttack();
         });
 
         self.character.setPosition(62, 343);
@@ -95,52 +93,47 @@ class Tenebris extends Combat {
     }
 
     removeIllusions() {
-        const self = this;
+        let self = this;
 
         self.lastIllusion = 0;
 
-        const listCopy = self.illusions.slice();
+        let listCopy = self.illusions.slice();
 
-        for (let i = 0; i < listCopy.length; i++)
-            self.world.kill(listCopy[i]);
+        for (let i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
     }
 
     beginIllusionAttack() {
-        const self = this;
+        let self = this;
 
-        if (!self.hasIllusions())
-            return;
+        if (!self.hasIllusions()) return;
 
         _.each(self.illusions, illusion => {
-            const target = self.getRandomTarget();
+            let target = self.getRandomTarget();
 
-            if (!illusion.hasTarget && target)
-                illusion.combat.begin(target);
+            if (!illusion.hasTarget && target) illusion.combat.begin(target);
         });
     }
 
     getRandomTarget() {
-        const self = this;
+        let self = this;
 
         if (self.isAttacked()) {
-            const keys = Object.keys(self.attackers),
-                randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
+            let keys = Object.keys(self.attackers),
+                randomAttacker =
+                    self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
-            if (randomAttacker)
-                return randomAttacker;
+            if (randomAttacker) return randomAttacker;
         }
 
-        if (self.character.hasTarget())
-            return self.character.target;
+        if (self.character.hasTarget()) return self.character.target;
 
         return null;
     }
 
     forceTalk(instance, message) {
-        const self = this;
+        let self = this;
 
-        if (!self.world)
-            return;
+        if (!self.world) return;
 
         self.world.push(Packets.PushOpcode.Regions, {
             regionId: self.character.region,
@@ -157,7 +150,12 @@ class Tenebris extends Combat {
     }
 
     canSpawn() {
-        return !this.isIllusion() && !this.hasIllusions && new Date().getTime() - this.lastIllusion === 45000 && Utils.randomInt(0, 4) === 2;
+        return (
+            !this.isIllusion() &&
+            !this.hasIllusions &&
+            new Date().getTime() - this.lastIllusion === 45000 &&
+            Utils.randomInt(0, 4) === 2
+        );
     }
 
     isIllusion() {

@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/controllers/shops.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const _ = require(&apos;underscore&apos;),
+let _ = require(&apos;underscore&apos;),
     ShopData = require(&apos;../util/shops&apos;),
     Items = require(&apos;../util/items&apos;),
     Messages = require(&apos;../network/messages&apos;),
@@ -44,7 +44,7 @@ const _ = require(&apos;underscore&apos;),
 
 class Shops {
     constructor(world) {
-        const self = this;
+        let self = this;
 
         self.world = world;
 
@@ -55,7 +55,7 @@ class Shops {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         self.shopInterval = setInterval(() =&gt; {
             _.each(ShopData.Data, info =&gt; {
@@ -68,17 +68,19 @@ class Shops {
     }
 
     open(player, npcId) {
-        const self = this;
+        let self = this;
 
-        player.send(new Messages.Shop(Packets.ShopOpcode.Open, {
-            instance: player.instance,
-            npcId: npcId,
-            shopData: self.getShopData(npcId)
-        }));
+        player.send(
+            new Messages.Shop(Packets.ShopOpcode.Open, {
+                instance: player.instance,
+                npcId: npcId,
+                shopData: self.getShopData(npcId)
+            })
+        );
     }
 
     buy(player, npcId, buyId, count) {
-        const self = this,
+        let self = this,
             cost = ShopData.getCost(npcId, buyId, count),
             currency = self.getCurrency(npcId),
             stock = ShopData.getStock(npcId, buyId);
@@ -105,8 +107,7 @@ class Shops {
             return;
         }
 
-        if (count &gt; stock)
-            count = stock;
+        if (count &gt; stock) count = stock;
 
         player.inventory.remove(currency, cost);
         player.inventory.add({
@@ -122,24 +123,26 @@ class Shops {
     }
 
     refresh(shop) {
-        const self = this;
+        let self = this;
 
         self.world.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Shop(Packets.ShopOpcode.Refresh, self.getShopData(shop))
+            message: new Messages.Shop(
+                Packets.ShopOpcode.Refresh,
+                self.getShopData(shop)
+            )
         });
     }
 
     getCurrency(npcId) {
-        const shop = ShopData.Ids[npcId];
+        let shop = ShopData.Ids[npcId];
 
-        if (!shop)
-            return null;
+        if (!shop) return null;
 
         return shop.currency;
     }
 
     getShopData(npcId) {
-        const self = this,
+        let self = this,
             strings = [],
             names = [],
             items = ShopData.getItems(npcId);

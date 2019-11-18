@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/points/hitpoints.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Points = require(&apos;./points&apos;);
+let Points = require(&apos;./points&apos;);
 
 class HitPoints extends Points {
     constructor(hitPoints, maxHitPoints) {
@@ -44,21 +44,19 @@ class HitPoints extends Points {
     }
 
     setHitPoints(hitPoints) {
-        const self = this;
+        let self = this;
 
         super.setPoints(hitPoints);
 
-        if (self.hitPointsCallback)
-            self.hitPointsCallback();
+        if (self.hitPointsCallback) self.hitPointsCallback();
     }
 
     setMaxHitPoints(maxHitPoints) {
-        const self = this;
+        let self = this;
 
         super.setMaxPoints(maxHitPoints);
 
-        if (self.maxHitPointsCallback)
-            self.maxHitPointsCallback();
+        if (self.maxHitPointsCallback) self.maxHitPointsCallback();
     }
 
     getHitPoints() {
@@ -70,11 +68,11 @@ class HitPoints extends Points {
     }
 
     onHitPoints(callback) {
-        return this.hitPointsCallback = callback;
+        return (this.hitPointsCallback = callback);
     }
 
     onMaxHitPoints(callback) {
-        return this.maxHitPointsCallback = callback;
+        return (this.maxHitPointsCallback = callback);
     }
 }
 

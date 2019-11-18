@@ -38,7 +38,6 @@
 
 define([&apos;jquery&apos;], function($) {
     return Class.extend({
-
         init: function(intrfce) {
             var self = this;
 
@@ -82,14 +81,15 @@ define([&apos;jquery&apos;], function($) {
 
             switch (self.activeClass) {
                 case &apos;inventory&apos;:
-                    var dropButton = $(&apos;&lt;div id=&quot;drop&quot; class=&quot;actionButton&quot;&gt;Drop&lt;/div&gt;&apos;);
+                    var dropButton = $(
+                        &apos;&lt;div id=&quot;drop&quot; class=&quot;actionButton&quot;&gt;Drop&lt;/div&gt;&apos;
+                    );
 
                     self.add(dropButton);
 
                     break;
 
                 case &apos;profile&apos;:
-
                     break;
             }
         },
@@ -104,8 +104,7 @@ define([&apos;jquery&apos;], function($) {
                     self.interface.inventory.clickAction(event);
             });
 
-            if (misc)
-                self.miscButton = button;
+            if (misc) self.miscButton = button;
         },
 
         removeMisc: function() {
@@ -119,8 +118,7 @@ define([&apos;jquery&apos;], function($) {
             var self = this,
                 buttons = self.getButtons();
 
-            for (var i = 0; i &lt; buttons.length; i++)
-                $(buttons[i]).remove();
+            for (var i = 0; i &lt; buttons.length; i++) $(buttons[i]).remove();
         },
 
         show: function() {
@@ -130,13 +128,12 @@ define([&apos;jquery&apos;], function($) {
         showPlayerActions: function(player, mouseX, mouseY) {
             var self = this;
 
-            if (!player)
-                return;
+            if (!player) return;
 
             self.pBody.fadeIn(&apos;fast&apos;);
             self.pBody.css({
-                &apos;left&apos;: mouseX - (self.pBody.width() / 2) + &apos;px&apos;,
-                &apos;top&apos;: mouseY + (self.pBody.height() / 2) + &apos;px&apos;
+                left: mouseX - self.pBody.width() / 2 + &apos;px&apos;,
+                top: mouseY + self.pBody.height() / 2 + &apos;px&apos;
             });
 
             self.follow.click(function() {
@@ -195,7 +192,6 @@ define([&apos;jquery&apos;], function($) {
         isVisible: function() {
             return this.body.css(&apos;display&apos;) === &apos;block&apos;;
         }
-
     });
 });
 </code></pre>

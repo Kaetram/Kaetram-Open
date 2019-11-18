@@ -1,7 +1,6 @@
 /* global module */
 
-const Modules = {
-
+let Modules = {
     Orientation: {
         Up: 0,
         Down: 1,
@@ -110,7 +109,6 @@ const Modules = {
         4: ['Crullfeld', 397, 227, true, 20], // Desert
         5: ['Patsow', 262, 131, true, 25] // Lava
     }
-
 };
 
 module.exports = Modules;

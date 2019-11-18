@@ -36,12 +36,12 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/ability/abilities.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const _ = require(&apos;underscore&apos;),
+let _ = require(&apos;underscore&apos;),
     AbilityInfo = require(&apos;../../../../../util/abilities&apos;);
 
 class Abilities {
     constructor(player) {
-        const self = this;
+        let self = this;
 
         self.player = player;
 
@@ -57,16 +57,15 @@ class Abilities {
     }
 
     addShortcut(ability) {
-        const self = this;
+        let self = this;
 
-        if (self.shortcutSize &gt;= 5)
-            return;
+        if (self.shortcutSize &gt;= 5) return;
 
         self.shortcuts.push(ability.name);
     }
 
     removeAbility(ability) {
-        const self = this;
+        let self = this;
 
         if (self.isShortcut(ability))
             self.removeShortcut(self.shortcuts.indexOf(ability.name));
@@ -75,14 +74,12 @@ class Abilities {
     }
 
     removeShortcut(index) {
-        if (index &gt; -1)
-            this.shortcuts.splice(index, 1);
+        if (index &gt; -1) this.shortcuts.splice(index, 1);
     }
 
     hasAbility(ability) {
         _.each(this.abilities, uAbility =&gt; {
-            if (uAbility.name === ability.name)
-                return true;
+            if (uAbility.name === ability.name) return true;
         });
 
         return false;

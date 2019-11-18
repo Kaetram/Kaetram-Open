@@ -1,6 +1,6 @@
 /* global module */
 
-const bcrypt = require('bcrypt'),
+let bcrypt = require('bcrypt'),
     config = require('../../../config');
 
 class Creator {
@@ -9,10 +9,10 @@ class Creator {
     }
 
     save(player) {
-        const self = this;
+        let self = this;
 
         self.database.getDatabase(database => {
-            const playerData = database.collection('player_data'),
+            let playerData = database.collection('player_data'),
                 playerEquipment = database.collection('player_equipment'),
                 playerQuests = database.collection('player_quests'),
                 playerAchievements = database.collection('player_achievements'),
@@ -36,115 +36,193 @@ class Creator {
 
     savePlayerData(collection, player) {
         Creator.getPlayerData(player, data => {
-            collection.updateOne({
-                username: player.username
-            }, { $set: data }, {
-                upsert: true
-            }, (error, result) => {
-                if (error)
-                    throw error;
+            collection.updateOne(
+                {
+                    username: player.username
+                },
+                { $set: data },
+                {
+                    upsert: true
+                },
+                (error, result) => {
+                    if (error) throw error;
 
-                if (result)
-                    log.debug('Player ' + player.username + ' data has been saved successfully.');
-            });
+                    if (result) {
+                        log.debug(
+                            'Player ' +
+                                player.username +
+                                ' data has been saved successfully.'
+                        );
+                    }
+                }
+            );
         });
     }
 
     savePlayerEquipment(collection, player) {
-        collection.updateOne({
-            username: player.username
-        }, { $set: Creator.getPlayerEquipment(player) }, {
-            upsert: true
-        }, (error, result) => {
-            if (error)
-                throw error;
+        collection.updateOne(
+            {
+                username: player.username
+            },
+            { $set: Creator.getPlayerEquipment(player) },
+            {
+                upsert: true
+            },
+            (error, result) => {
+                if (error) throw error;
 
-            if (result)
-                log.debug('Player ' + player.username + ' equipment data has been saved successfully.');
-        });
+                if (result) {
+                    log.debug(
+                        'Player ' +
+                            player.username +
+                            ' equipment data has been saved successfully.'
+                    );
+                }
+            }
+        );
     }
 
     savePlayerQuests(collection, player) {
-        collection.updateOne({
-            username: player.username
-        }, { $set: player.quests.getQuests() }, {
-            upsert: true
-        }, (error, result) => {
-            if (error)
-                throw error;
+        collection.updateOne(
+            {
+                username: player.username
+            },
+            { $set: player.quests.getQuests() },
+            {
+                upsert: true
+            },
+            (error, result) => {
+                if (error) throw error;
 
-            if (result)
-                log.debug('Player ' + player.username + ' quest data has been saved successfully.');
-        });
+                if (result) {
+                    log.debug(
+                        'Player ' +
+                            player.username +
+                            ' quest data has been saved successfully.'
+                    );
+                }
+            }
+        );
     }
 
     savePlayerAchievements(collection, player) {
-        collection.updateOne({
-            username: player.username
-        }, { $set: player.quests.getAchievements() }, {
-            upsert: true
-        }, (error, result) => {
-            if (error)
-                throw error;
+        collection.updateOne(
+            {
+                username: player.username
+            },
+            { $set: player.quests.getAchievements() },
+            {
+                upsert: true
+            },
+            (error, result) => {
+                if (error) throw error;
 
-            if (result)
-                log.debug('Player ' + player.username + ' achievement data has been saved successfully.');
-        });
+                if (result) {
+                    log.debug(
+                        'Player ' +
+                            player.username +
+                            ' achievement data has been saved successfully.'
+                    );
+                }
+            }
+        );
     }
 
     savePlayerBank(collection, player) {
-        collection.updateOne({
-            username: player.username
-        }, { $set: player.bank.getArray() }, {
-            upsert: true
-        }, (error, result) => {
-            if (error)
-                throw error;
+        collection.updateOne(
+            {
+                username: player.username
+            },
+            { $set: player.bank.getArray() },
+            {
+                upsert: true
+            },
+            (error, result) => {
+                if (error) throw error;
 
-            if (result)
-                log.debug('Player ' + player.username + ' bank data has been saved successfully.');
-        });
+                if (result) {
+                    log.debug(
+                        'Player ' +
+                            player.username +
+                            ' bank data has been saved successfully.'
+                    );
+                }
+            }
+        );
     }
 
     savePlayerRegions(collection, player) {
-        collection.updateOne({
-            username: player.username
-        }, { $set: { regions: player.regionsLoaded.toString(), gameVersion: config.gver } }, {
-            upsert: true
-        }, (error, result) => {
-            if (error) throw error;
+        collection.updateOne(
+            {
+                username: player.username
+            },
+            {
+                $set: {
+                    regions: player.regionsLoaded.toString(),
+                    gameVersion: config.gver
+                }
+            },
+            {
+                upsert: true
+            },
+            (error, result) => {
+                if (error) throw error;
 
-            if (result)
-                log.debug('Player ' + player.username + ' regions data has been saved successfully.');
-        });
+                if (result) {
+                    log.debug(
+                        'Player ' +
+                            player.username +
+                            ' regions data has been saved successfully.'
+                    );
+                }
+            }
+        );
     }
 
     savePlayerAbilities(collection, player) {
-        collection.updateOne({
-            username: player.username
-        }, { $set: player.abilities.getArray() }, {
-            upsert: true
-        }, (error, result) => {
-            if (error)
-                throw error;
+        collection.updateOne(
+            {
+                username: player.username
+            },
+            { $set: player.abilities.getArray() },
+            {
+                upsert: true
+            },
+            (error, result) => {
+                if (error) throw error;
 
-            if (result)
-                log.debug('Player ' + player.username + ' abilities data has been saved successfully.');
-        });
+                if (result) {
+                    log.debug(
+                        'Player ' +
+                            player.username +
+                            ' abilities data has been saved successfully.'
+                    );
+                }
+            }
+        );
     }
 
     savePlayerInventory(collection, player, callback) {
-        collection.updateOne({
-            username: player.username
-        }, { $set: player.inventory.getArray() }, {
-            upsert: true
-        }, (error, result) => {
-            if (error)
-                throw error;
+        collection.updateOne(
+            {
+                username: player.username
+            },
+            { $set: player.inventory.getArray() },
+            {
+                upsert: true
+            },
+            (error, result) => {
+                if (error) throw error;
 
-            if (result)
-                log.debug('Player ' + player.username + ' inventory data has been saved successfully.');
-        });
+                if (result) {
+                    log.debug(
+                        'Player ' +
+                            player.username +
+                            ' inventory data has been saved successfully.'
+                    );
+                }
+            }
+        );
     }
 
     static getPasswordHash(password, callback) {
@@ -188,11 +266,36 @@ class Creator {
     static getPlayerEquipment(player) {
         return {
             username: player.username,
-            armour: [player.armour ? player.armour.getId() : 114, player.armour ? player.armour.getCount() : 0, player.armour ? player.armour.getAbility() : 0, player.armour ? player.armour.getAbilityLevel() : 0],
-            weapon: [player.weapon ? player.weapon.getId() : -1, player.weapon ? player.weapon.getCount() : 0, player.weapon ? player.weapon.getAbility() : 0, player.weapon ? player.weapon.getAbilityLevel() : 0],
-            pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : 0, player.pendant ? player.pendant.getAbility() : 0, player.pendant ? player.pendant.getAbilityLevel() : 0],
-            ring: [player.ring ? player.ring.getId() : -1, player.ring ? player.ring.getCount() : 0, player.ring ? player.ring.getAbility() : 0, player.ring ? player.ring.getAbilityLevel() : 0],
-            boots: [player.boots ? player.boots.getId() : -1, player.boots ? player.boots.getCount() : 0, player.boots ? player.boots.getAbility() : 0, player.boots ? player.boots.getAbilityLevel() : 0]
+            armour: [
+                player.armour ? player.armour.getId() : 114,
+                player.armour ? player.armour.getCount() : 0,
+                player.armour ? player.armour.getAbility() : 0,
+                player.armour ? player.armour.getAbilityLevel() : 0
+            ],
+            weapon: [
+                player.weapon ? player.weapon.getId() : -1,
+                player.weapon ? player.weapon.getCount() : 0,
+                player.weapon ? player.weapon.getAbility() : 0,
+                player.weapon ? player.weapon.getAbilityLevel() : 0
+            ],
+            pendant: [
+                player.pendant ? player.pendant.getId() : -1,
+                player.pendant ? player.pendant.getCount() : 0,
+                player.pendant ? player.pendant.getAbility() : 0,
+                player.pendant ? player.pendant.getAbilityLevel() : 0
+            ],
+            ring: [
+                player.ring ? player.ring.getId() : -1,
+                player.ring ? player.ring.getCount() : 0,
+                player.ring ? player.ring.getAbility() : 0,
+                player.ring ? player.ring.getAbilityLevel() : 0
+            ],
+            boots: [
+                player.boots ? player.boots.getId() : -1,
+                player.boots ? player.boots.getCount() : 0,
+                player.boots ? player.boots.getAbility() : 0,
+                player.boots ? player.boots.getAbilityLevel() : 0
+            ]
         };
     }
 
@@ -203,7 +306,7 @@ class Creator {
      */
 
     static getFullData(player) {
-        const position = player.getSpawn();
+        let position = player.getSpawn();
 
         return {
             username: player.username,
@@ -226,11 +329,36 @@ class Creator {
             pvpDeaths: player.pvpDeaths ? player.pvpDeaths : 0,
             orientation: player.orientation ? player.orientation : 0,
             lastWarp: player.warp.lastWarp ? player.warp.lastWarp : 0,
-            armour: [player.armour ? player.armour.getId() : 114, player.armour ? player.armour.getCount() : 0, player.armour ? player.armour.getAbility() : 0, player.armour ? player.armour.getAbilityLevel() : 0],
-            weapon: [player.weapon ? player.weapon.getId() : -1, player.weapon ? player.weapon.getCount() : 0, player.weapon ? player.weapon.getAbility() : 0, player.weapon ? player.weapon.getAbilityLevel() : 0],
-            pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : 0, player.pendant ? player.pendant.getAbility() : 0, player.pendant ? player.pendant.getAbilityLevel() : 0],
-            ring: [player.ring ? player.ring.getId() : -1, player.ring ? player.ring.getCount() : 0, player.ring ? player.ring.getAbility() : 0, player.ring ? player.ring.getAbilityLevel() : 0],
-            boots: [player.boots ? player.boots.getId() : -1, player.boots ? player.boots.getCount() : 0, player.boots ? player.boots.getAbility() : 0, player.boots ? player.boots.getAbilityLevel() : 0]
+            armour: [
+                player.armour ? player.armour.getId() : 114,
+                player.armour ? player.armour.getCount() : 0,
+                player.armour ? player.armour.getAbility() : 0,
+                player.armour ? player.armour.getAbilityLevel() : 0
+            ],
+            weapon: [
+                player.weapon ? player.weapon.getId() : -1,
+                player.weapon ? player.weapon.getCount() : 0,
+                player.weapon ? player.weapon.getAbility() : 0,
+                player.weapon ? player.weapon.getAbilityLevel() : 0
+            ],
+            pendant: [
+                player.pendant ? player.pendant.getId() : -1,
+                player.pendant ? player.pendant.getCount() : 0,
+                player.pendant ? player.pendant.getAbility() : 0,
+                player.pendant ? player.pendant.getAbilityLevel() : 0
+            ],
+            ring: [
+                player.ring ? player.ring.getId() : -1,
+                player.ring ? player.ring.getCount() : 0,
+                player.ring ? player.ring.getAbility() : 0,
+                player.ring ? player.ring.getAbilityLevel() : 0
+            ],
+            boots: [
+                player.boots ? player.boots.getId() : -1,
+                player.boots ? player.boots.getCount() : 0,
+                player.boots ? player.boots.getAbility() : 0,
+                player.boots ? player.boots.getAbilityLevel() : 0
+            ]
         };
     }
 }

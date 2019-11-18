@@ -36,11 +36,11 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/containers/slot.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Items = require(&apos;../../../../../util/items&apos;);
+let Items = require(&apos;../../../../../util/items&apos;);
 
 class Slot {
     constructor(index) {
-        const self = this;
+        let self = this;
 
         self.index = index;
 
@@ -53,7 +53,7 @@ class Slot {
     }
 
     load(id, count, ability, abilityLevel) {
-        const self = this;
+        let self = this;
 
         self.id = parseInt(id);
         self.count = parseInt(count);
@@ -68,7 +68,7 @@ class Slot {
     }
 
     empty() {
-        const self = this;
+        let self = this;
 
         self.id = -1;
         self.count = -1;
@@ -79,7 +79,7 @@ class Slot {
     }
 
     increment(amount) {
-        const self = this;
+        let self = this;
 
         self.count += parseInt(amount);
 
@@ -87,21 +87,26 @@ class Slot {
     }
 
     decrement(amount) {
-        const self = this;
+        let self = this;
 
         self.count -= parseInt(amount);
 
-        if (self.count &lt; 1)
-            log.error(&apos;[Slot] Item &apos; + self.id + &apos; has a count below 1 -&gt; count: &apos; + self.count);
+        if (self.count &lt; 1) {
+            log.error(
+                &apos;[Slot] Item &apos; +
+                    self.id +
+                    &apos; has a count below 1 -&gt; count: &apos; +
+                    self.count
+            );
+        }
 
         self.verify();
     }
 
     verify() {
-        const self = this;
+        let self = this;
 
-        if (isNaN(self.count) || self.count &lt; 1)
-            self.count = 1;
+        if (isNaN(self.count) || self.count &lt; 1) self.count = 1;
     }
 
     getData() {

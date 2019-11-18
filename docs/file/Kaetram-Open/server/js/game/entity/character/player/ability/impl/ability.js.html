@@ -36,11 +36,11 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/ability/impl/ability.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Abilities = require(&apos;../../../../../../util/abilities&apos;);
+let Abilities = require(&apos;../../../../../../util/abilities&apos;);
 
 class Ability {
     constructor(name, type) {
-        const self = this;
+        let self = this;
 
         self.name = name;
         self.type = type;

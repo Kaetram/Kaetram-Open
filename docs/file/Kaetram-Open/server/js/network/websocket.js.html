@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/network/websocket.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Socket = require(&apos;./socket&apos;),
+let Socket = require(&apos;./socket&apos;),
     Connection = require(&apos;./connection&apos;),
     connect = require(&apos;connect&apos;),
     serve = require(&apos;serve-static&apos;),
@@ -51,21 +51,20 @@ class WebSocket extends Socket {
     constructor(host, port, version) {
         super(port);
 
-        const self = this;
+        let self = this;
 
         self.host = host;
         self.version = version;
 
         self.ips = {};
 
-        const app = connect();
-        app.use(serve(&apos;client&apos;, { &apos;index&apos;: [&apos;index.html&apos;] }), null);
+        let app = connect();
+        app.use(serve(&apos;client&apos;, { index: [&apos;index.html&apos;] }), null);
 
-        const readyWebSocket = function(port) {
+        let readyWebSocket = function(port) {
             log.info(&apos;Server is now listening on: &apos; + port);
 
-            if (self.webSocketReadyCallback)
-                self.webSocketReadyCallback();
+            if (self.webSocketReadyCallback) self.webSocketReadyCallback();
         };
 
         if (config.ssl) {
@@ -80,21 +79,27 @@ class WebSocket extends Socket {
 
         self.io = new SocketIO(self.httpServer);
         self.io.on(&apos;connection&apos;, socket =&gt; {
-            if (socket.handshake.headers[&apos;cf-connecting-ip&apos;])
-                socket.conn.remoteAddress = socket.handshake.headers[&apos;cf-connecting-ip&apos;];
+            if (socket.handshake.headers[&apos;cf-connecting-ip&apos;]) {
+                socket.conn.remoteAddress =
+                    socket.handshake.headers[&apos;cf-connecting-ip&apos;];
+            }
 
             log.info(&apos;Received connection from: &apos; + socket.conn.remoteAddress);
 
-            const client = new Connection(self.createId(), socket, self);
+            let client = new Connection(self.createId(), socket, self);
 
             socket.on(&apos;client&apos;, data =&gt; {
                 if (data.gVer !== self.version) {
                     client.sendUTF8(&apos;updated&apos;);
-                    client.close(&apos;Wrong client version - expected &apos; + self.version + &apos; received &apos; + data.gVer);
+                    client.close(
+                        &apos;Wrong client version - expected &apos; +
+                            self.version +
+                            &apos; received &apos; +
+                            data.gVer
+                    );
                 }
 
-                if (self.connectionCallback)
-                    self.connectionCallback(client);
+                if (self.connectionCallback) self.connectionCallback(client);
 
                 self.addConnection(client);
             });

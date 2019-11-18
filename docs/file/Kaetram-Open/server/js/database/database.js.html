@@ -36,12 +36,12 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/database/database.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const MongoDB = require(&apos;./mongodb/mongodb&apos;),
+let MongoDB = require(&apos;./mongodb/mongodb&apos;),
     config = require(&apos;../../config&apos;);
 
 class Database {
     constructor(databaseType) {
-        const self = this;
+        let self = this;
 
         self.database = null;
         self.databaseType = databaseType;
@@ -49,21 +49,31 @@ class Database {
         switch (self.databaseType) {
             case &apos;mongo&apos;:
             case &apos;mongodb&apos;:
-                self.database = new MongoDB(config.mongoHost, config.mongoPort, config.mongoUser,
-                    config.mongoPassword, config.mongoDatabase);
+                self.database = new MongoDB(
+                    config.mongoHost,
+                    config.mongoPort,
+                    config.mongoUser,
+                    config.mongoPassword,
+                    config.mongoDatabase
+                );
                 break;
 
             default:
-                log.error(&apos;The database &apos; + self.databaseType + &apos; could not be found.&apos;);
+                log.error(
+                    &apos;The database &apos; + self.databaseType + &apos; could not be found.&apos;
+                );
                 break;
         }
     }
 
     getDatabase() {
-        const self = this;
+        let self = this;
 
-        if (!self.database)
-            log.error(&apos;[Database] No database is currently present. It is advised against proceeding in this state.&apos;);
+        if (!self.database) {
+            log.error(
+                &apos;[Database] No database is currently present. It is advised against proceeding in this state.&apos;
+            );
+        }
 
         return self.database;
     }

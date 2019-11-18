@@ -1,6 +1,6 @@
 /* global module */
 
-const Equipment = require('./equipment'),
+let Equipment = require('./equipment'),
     Items = require('../../../../../util/items'),
     Modules = require('../../../../../util/modules');
 
@@ -12,7 +12,7 @@ class Ring extends Equipment {
     }
 
     getBaseAmplifier() {
-        return 1.00 + (this.ringLevel / 100);
+        return 1.0 + this.ringLevel / 100;
     }
 
     getType() {

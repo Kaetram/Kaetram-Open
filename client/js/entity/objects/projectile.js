@@ -1,6 +1,5 @@
 define(['../entity'], function(Entity) {
     return Entity.extend({
-
         init: function(id, kind, owner) {
             var self = this;
 
@@ -33,8 +32,7 @@ define(['../entity'], function(Entity) {
         },
 
         impact: function() {
-            if (this.impactCallback)
-                this.impactCallback();
+            if (this.impactCallback) this.impactCallback();
         },
 
         setSprite: function(sprite) {
@@ -68,8 +66,7 @@ define(['../entity'], function(Entity) {
         setTarget: function(target) {
             var self = this;
 
-            if (!target)
-                return;
+            if (!target) return;
 
             self.dynamic = true;
 
@@ -78,8 +75,7 @@ define(['../entity'], function(Entity) {
 
             self.updateAngle();
 
-            if (target.type !== 'mob')
-                return;
+            if (target.type !== 'mob') return;
 
             target.onMove(function() {
                 self.destX = target.x;
@@ -107,12 +103,14 @@ define(['../entity'], function(Entity) {
         },
 
         updateAngle: function() {
-            this.angle = Math.atan2(this.destY - this.y, this.destX - this.x) * (180 / Math.PI) - 90;
+            this.angle =
+                Math.atan2(this.destY - this.y, this.destX - this.x) *
+                    (180 / Math.PI) -
+                90;
         },
 
         onImpact: function(callback) {
             this.impactCallback = callback;
         }
-
     });
 });

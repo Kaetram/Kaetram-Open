@@ -36,9 +36,14 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/profile/profile.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global log, _, Packets */
 
-define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apos;, &apos;./pages/settings&apos;, &apos;./pages/quest&apos;], function($, State, Ability, Settings, Quest) {
+define([
+    &apos;jquery&apos;,
+    &apos;./pages/state&apos;,
+    &apos;./pages/ability&apos;,
+    &apos;./pages/settings&apos;,
+    &apos;./pages/quest&apos;
+], function($, State, Ability, Settings, Quest) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -72,24 +77,23 @@ define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apo
                     self.button.addClass(&apos;active&apos;);
                 }
 
-                if (!self.activePage.loaded)
-                    self.activePage.load();
+                if (!self.activePage.loaded) self.activePage.load();
 
-                self.game.socket.send(Packets.Click, [&apos;profile&apos;, self.button.hasClass(&apos;active&apos;)]);
+                self.game.socket.send(Packets.Click, [
+                    &apos;profile&apos;,
+                    self.button.hasClass(&apos;active&apos;)
+                ]);
             });
 
             self.next.click(function() {
                 if (self.activeIndex + 1 &lt; self.pages.length)
                     self.setPage(self.activeIndex + 1);
-                else
-                    self.next.removeClass(&apos;enabled&apos;);
+                else self.next.removeClass(&apos;enabled&apos;);
             });
 
             self.previous.click(function() {
-                if (self.activeIndex &gt; 0)
-                    self.setPage(self.activeIndex - 1);
-                else
-                    self.previous.removeClass(&apos;enabled&apos;);
+                if (self.activeIndex &gt; 0) self.setPage(self.activeIndex - 1);
+                else self.previous.removeClass(&apos;enabled&apos;);
             });
 
             self.state = new State(self.game);
@@ -101,20 +105,27 @@ define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apo
 
             self.activePage = self.state;
 
-            if (self.activeIndex === 0 &amp;&amp; self.activeIndex !== self.pages.length)
+            if (
+                self.activeIndex === 0 &amp;&amp;
+                self.activeIndex !== self.pages.length
+            )
                 self.next.addClass(&apos;enabled&apos;);
         },
 
         update: function() {
             var self = this;
 
-            _.each(self.pages, function(page) { page.update(); });
+            _.each(self.pages, function(page) {
+                page.update();
+            });
         },
 
         resize: function() {
             var self = this;
 
-            _.each(self.pages, function(page) { page.resize(); });
+            _.each(self.pages, function(page) {
+                page.resize();
+            });
         },
 
         setPage: function(index) {
@@ -123,8 +134,7 @@ define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apo
 
             self.clear();
 
-            if (page.isVisible())
-                return;
+            if (page.isVisible()) return;
 
             self.activePage = page;
             self.activeIndex = index;
@@ -154,8 +164,7 @@ define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apo
             self.body.fadeOut(&apos;fast&apos;);
             self.button.removeClass(&apos;active&apos;);
 
-            if (self.settings)
-                self.settings.hide();
+            if (self.settings) self.settings.hide();
         },
 
         isVisible: function() {
@@ -165,10 +174,8 @@ define([&apos;jquery&apos;, &apos;./pages/state&apos;, &apos;./pages/ability&apo
         clear: function() {
             var self = this;
 
-            if (self.activePage)
-                self.activePage.hide();
+            if (self.activePage) self.activePage.hide();
         }
-
     });
 });
 </code></pre>

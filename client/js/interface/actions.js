@@ -2,7 +2,6 @@
 
 define(['jquery'], function($) {
     return Class.extend({
-
         init: function(intrfce) {
             var self = this;
 
@@ -46,14 +45,15 @@ define(['jquery'], function($) {
 
             switch (self.activeClass) {
                 case 'inventory':
-                    var dropButton = $('<div id="drop" class="actionButton">Drop</div>');
+                    var dropButton = $(
+                        '<div id="drop" class="actionButton">Drop</div>'
+                    );
 
                     self.add(dropButton);
 
                     break;
 
                 case 'profile':
-
                     break;
             }
         },
@@ -68,8 +68,7 @@ define(['jquery'], function($) {
                     self.interface.inventory.clickAction(event);
             });
 
-            if (misc)
-                self.miscButton = button;
+            if (misc) self.miscButton = button;
         },
 
         removeMisc: function() {
@@ -83,8 +82,7 @@ define(['jquery'], function($) {
             var self = this,
                 buttons = self.getButtons();
 
-            for (var i = 0; i < buttons.length; i++)
-                $(buttons[i]).remove();
+            for (var i = 0; i < buttons.length; i++) $(buttons[i]).remove();
         },
 
         show: function() {
@@ -94,13 +92,12 @@ define(['jquery'], function($) {
         showPlayerActions: function(player, mouseX, mouseY) {
             var self = this;
 
-            if (!player)
-                return;
+            if (!player) return;
 
             self.pBody.fadeIn('fast');
             self.pBody.css({
-                'left': mouseX - (self.pBody.width() / 2) + 'px',
-                'top': mouseY + (self.pBody.height() / 2) + 'px'
+                left: mouseX - self.pBody.width() / 2 + 'px',
+                top: mouseY + self.pBody.height() / 2 + 'px'
             });
 
             self.follow.click(function() {
@@ -159,6 +156,5 @@ define(['jquery'], function($) {
         isVisible: function() {
             return this.body.css('display') === 'block';
         }
-
     });
 });

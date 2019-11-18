@@ -38,7 +38,6 @@
 
 define([&apos;jquery&apos;], function($) {
     return Class.extend({
-
         init: function(element) {
             var self = this;
 
@@ -72,12 +71,10 @@ define([&apos;jquery&apos;], function($) {
         },
 
         getImageFormat: function(scale, name) {
-            if (!name || name === &apos;null&apos;)
-                return &apos;&apos;;
+            if (!name || name === &apos;null&apos;) return &apos;&apos;;
 
             return &apos;url(&quot;img/&apos; + scale + &apos;/item-&apos; + name + &apos;.png&quot;)&apos;;
         }
-
     });
 });
 </code></pre>

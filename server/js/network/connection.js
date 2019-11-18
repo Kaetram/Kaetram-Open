@@ -2,22 +2,20 @@
 
 class Connection {
     constructor(id, connection, server) {
-        const self = this;
+        let self = this;
 
         self.id = id;
         self.socket = connection;
         self._server = server;
 
         self.socket.on('message', message => {
-            if (self.listenCallback)
-                self.listenCallback(JSON.parse(message));
+            if (self.listenCallback) self.listenCallback(JSON.parse(message));
         });
 
         self.socket.on('disconnect', () => {
             log.info('Closed socket: ' + self.socket.conn.remoteAddress);
 
-            if (self.closeCallback)
-                self.closeCallback();
+            if (self.closeCallback) self.closeCallback();
 
             delete self._server.removeConnection(self.id);
         });
@@ -40,8 +38,7 @@ class Connection {
     }
 
     close(reason) {
-        if (reason)
-            log.info('[Connection] Closing - ' + reason);
+        if (reason) log.info('[Connection] Closing - ' + reason);
 
         this.socket.conn.close();
     }

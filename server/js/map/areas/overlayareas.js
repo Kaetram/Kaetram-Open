@@ -1,12 +1,12 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     Area = require('../area'),
     map = require('../../../data/map/world_server');
 
 class OverlayAreas {
     constructor() {
-        const self = this;
+        let self = this;
 
         self.overlayAreas = [];
 
@@ -14,17 +14,16 @@ class OverlayAreas {
     }
 
     load() {
-        const self = this,
+        let self = this,
             list = map.overlayAreas;
 
         _.each(list, o => {
-            const overlayArea = new Area(o.id, o.x, o.y, o.width, o.height);
+            let overlayArea = new Area(o.id, o.x, o.y, o.width, o.height);
 
             overlayArea.darkness = o.darkness;
             overlayArea.type = o.type;
 
-            if (o.fog)
-                overlayArea.fog = o.fog;
+            if (o.fog) overlayArea.fog = o.fog;
 
             self.overlayAreas.push(overlayArea);
         });

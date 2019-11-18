@@ -34,13 +34,13 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/mob/mobhandler.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Utils = require(&apos;../../../../util/utils&apos;),
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">let Utils = require(&apos;../../../../util/utils&apos;),
     Messages = require(&apos;../../../../network/messages&apos;),
     Packets = require(&apos;../../../../network/packets&apos;);
 
 class MobHandler {
     constructor(mob, world) {
-        const self = this;
+        let self = this;
 
         self.mob = mob;
         self.world = world;
@@ -55,48 +55,60 @@ class MobHandler {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
-        if (!self.mob.roaming)
-            return;
+        if (!self.mob.roaming) return;
 
         self.roamingInterval = setInterval(() =&gt; {
             if (!self.mob.dead) {
-                const newX = self.mob.x + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
-                    newY = self.mob.y + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
-                    distance = Utils.getDistance(self.spawnLocation[0], self.spawnLocation[1], newX, newY);
+                let newX =
+                        self.mob.x +
+                        Utils.randomInt(
+                            -self.maxRoamingDistance,
+                            self.maxRoamingDistance
+                        ),
+                    newY =
+                        self.mob.y +
+                        Utils.randomInt(
+                            -self.maxRoamingDistance,
+                            self.maxRoamingDistance
+                        ),
+                    distance = Utils.getDistance(
+                        self.spawnLocation[0],
+                        self.spawnLocation[1],
+                        newX,
+                        newY
+                    );
 
-                if (self.map.isColliding(newX, newY))
-                    return;
+                if (self.map.isColliding(newX, newY)) return;
 
-                if (self.map.isEmpty(newX, newY))
-                    return;
+                if (self.map.isEmpty(newX, newY)) return;
 
-                if (self.map.isDoor(newX, newY))
-                    return;
+                if (self.map.isDoor(newX, newY)) return;
 
-                if (distance &lt; self.mob.maxRoamingDistance)
-                    return;
+                if (distance &lt; self.mob.maxRoamingDistance) return;
 
-                if (self.mob.combat.started)
-                    return;
+                if (self.mob.combat.started) return;
 
                 self.mob.setPosition(newX, newY);
 
                 self.world.push(Packets.PushOpcode.Regions, {
                     regionId: self.mob.region,
-                    message: new Messages.Movement(Packets.MovementOpcode.Move, {
-                        id: self.mob.instance,
-                        x: newX,
-                        y: newY
-                    })
+                    message: new Messages.Movement(
+                        Packets.MovementOpcode.Move,
+                        {
+                            id: self.mob.instance,
+                            x: newX,
+                            y: newY
+                        }
+                    )
                 });
             }
         }, 5000);
     }
 
     loadCallbacks() {
-        const self = this;
+        let self = this;
 
         /* self.mob.onMovement((x, y) =&gt; {
 

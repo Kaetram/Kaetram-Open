@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/game/entity/character/player/points/mana.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Points = require(&apos;./points&apos;);
+let Points = require(&apos;./points&apos;);
 
 class Mana extends Points {
     constructor(mana, maxMana) {
@@ -44,21 +44,19 @@ class Mana extends Points {
     }
 
     setMana(mana) {
-        const self = this;
+        let self = this;
 
         self.points = mana;
 
-        if (self.manaCallback)
-            self.manaCallback();
+        if (self.manaCallback) self.manaCallback();
     }
 
     setMaxMana(maxMana) {
-        const self = this;
+        let self = this;
 
         self.maxPoints = maxMana;
 
-        if (self.maxManaCallback)
-            self.maxManaCallback();
+        if (self.maxManaCallback) self.maxManaCallback();
     }
 
     getMana() {

@@ -1,10 +1,10 @@
 /* global module */
 
-const Items = require('../../../../../util/items');
+let Items = require('../../../../../util/items');
 
 class Equipment {
     constructor(name, id, count, ability, abilityLevel) {
-        const self = this;
+        let self = this;
 
         self.name = name;
         self.id = id;
@@ -34,7 +34,7 @@ class Equipment {
     }
 
     getBaseAmplifier() {
-        return 1.00;
+        return 1.0;
     }
 
     getType() {

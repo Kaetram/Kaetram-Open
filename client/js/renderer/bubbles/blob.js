@@ -1,6 +1,5 @@
 define(['../../utils/timer'], function(Timer) {
     return Class.extend({
-
         init: function(id, element, duration) {
             var self = this;
 
@@ -23,6 +22,5 @@ define(['../../utils/timer'], function(Timer) {
         destroy: function() {
             $(this.element).remove();
         }
-
     });
 });

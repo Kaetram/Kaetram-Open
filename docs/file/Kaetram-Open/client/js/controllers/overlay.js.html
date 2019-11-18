@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/controllers/overlay.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;], function($) {
     return Class.extend({
-
         init: function(input) {
             var self = this;
 
@@ -57,45 +56,69 @@
             if (!self.validEntity(entity)) {
                 self.hovering = null;
 
-                if (self.isVisible())
-                    self.hide();
+                if (self.isVisible()) self.hide();
 
                 return;
             }
 
-            if (!self.isVisible())
-                self.display();
+            if (!self.isVisible()) self.display();
 
             self.hovering = entity;
 
-            self.name.html(entity.type === &apos;player&apos; ? entity.username : entity.name);
+            self.name.html(
+                entity.type === &apos;player&apos; ? entity.username : entity.name
+            );
 
             if (self.hasHealth()) {
                 self.health.css({
-                    &apos;display&apos;: &apos;block&apos;,
-                    &apos;width&apos;: Math.ceil(entity.hitPoints / entity.maxHitPoints * 100) - 10 + &apos;%&apos;
+                    display: &apos;block&apos;,
+                    width:
+                        Math.ceil(
+                            (entity.hitPoints / entity.maxHitPoints) * 100
+                        ) -
+                        10 +
+                        &apos;%&apos;
                 });
 
-                self.details.html(entity.hitPoints + &apos; / &apos; + entity.maxHitPoints);
+                self.details.html(
+                    entity.hitPoints + &apos; / &apos; + entity.maxHitPoints
+                );
             } else {
                 self.health.css(&apos;display&apos;, &apos;none&apos;);
                 self.details.html(&apos;&apos;);
             }
 
             self.onUpdate(function(entityId, hitPoints) {
-                if (self.hovering &amp;&amp; self.hovering.id === entityId &amp;&amp; self.hovering.type !== &apos;npc&apos; &amp;&amp; self.hovering.type !== &apos;item&apos;) {
-                    if (hitPoints &lt; 1)
-                        self.hide();
+                if (
+                    self.hovering &amp;&amp;
+                    self.hovering.id === entityId &amp;&amp;
+                    self.hovering.type !== &apos;npc&apos; &amp;&amp;
+                    self.hovering.type !== &apos;item&apos;
+                ) {
+                    if (hitPoints &lt; 1) self.hide();
                     else {
-                        self.health.css(&apos;width&apos;, Math.ceil(hitPoints / self.hovering.maxHitPoints * 100) - 10 + &apos;%&apos;);
-                        self.details.html(hitPoints + &apos; / &apos; + self.hovering.maxHitPoints);
+                        self.health.css(
+                            &apos;width&apos;,
+                            Math.ceil(
+                                (hitPoints / self.hovering.maxHitPoints) * 100
+                            ) -
+                                10 +
+                                &apos;%&apos;
+                        );
+                        self.details.html(
+                            hitPoints + &apos; / &apos; + self.hovering.maxHitPoints
+                        );
                     }
                 }
             });
         },
 
         validEntity: function(entity) {
-            return entity &amp;&amp; entity.id !== this.input.getPlayer().id &amp;&amp; entity.type !== &apos;projectile&apos;;
+            return (
+                entity &amp;&amp;
+                entity.id !== this.input.getPlayer().id &amp;&amp;
+                entity.type !== &apos;projectile&apos;
+            );
         },
 
         clean: function() {
@@ -106,7 +129,9 @@
         },
 
         hasHealth: function() {
-            return this.hovering.type === &apos;mob&apos; || this.hovering.type === &apos;player&apos;;
+            return (
+                this.hovering.type === &apos;mob&apos; || this.hovering.type === &apos;player&apos;
+            );
         },
 
         display: function() {
@@ -128,7 +153,6 @@
         onUpdate: function(callback) {
             this.updateCallback = callback;
         }
-
     });
 });
 </code></pre>

@@ -1,6 +1,5 @@
 define(['jquery', './container/container'], function($, Container) {
     return Class.extend({
-
         init: function(game, intrface) {
             var self = this;
 
@@ -38,11 +37,13 @@ define(['jquery', './container/container'], function($, Container) {
                 scale = self.getScale(),
                 width = self.healthBar.width();
 
-            if (scale < 2)
-                scale = 2;
+            if (scale < 2) scale = 2;
 
             // 11 is due to the offset of the #health in the #healthBar
-            var diff = Math.floor(width * (self.player.hitPoints / self.player.maxHitPoints) - (11 * scale)),
+            var diff = Math.floor(
+                    width * (self.player.hitPoints / self.player.maxHitPoints) -
+                        11 * scale
+                ),
                 prevWidth = self.health.width();
 
             if (prevWidth > diff) {
@@ -60,7 +61,9 @@ define(['jquery', './container/container'], function($, Container) {
             }
 
             self.health.css('width', diff + 'px');
-            self.healthBarText.text(self.player.hitPoints + '/' + self.player.maxHitPoints);
+            self.healthBarText.text(
+                self.player.hitPoints + '/' + self.player.maxHitPoints
+            );
         },
 
         calculateExpBar: function() {
@@ -68,11 +71,12 @@ define(['jquery', './container/container'], function($, Container) {
                 scale = self.getScale(),
                 width = self.expBar.width();
 
-            if (scale < 2)
-                scale = 2;
+            if (scale < 2) scale = 2;
 
-            var experience = self.player.experience - self.player.prevExperience,
-                nextExperience = self.player.nextExperience - self.player.prevExperience;
+            var experience =
+                    self.player.experience - self.player.prevExperience,
+                nextExperience =
+                    self.player.nextExperience - self.player.prevExperience;
 
             var diff = Math.floor(width * (experience / nextExperience));
 
@@ -89,6 +93,5 @@ define(['jquery', './container/container'], function($, Container) {
         getScale: function() {
             return this.game.app.getUIScale();
         }
-
     });
 });

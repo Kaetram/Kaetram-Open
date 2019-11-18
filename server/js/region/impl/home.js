@@ -3,7 +3,6 @@
 let MapClient = require('../../../data/map/world_client');
 
 class Home {
-
     startRegion = '0-4';
     endRegion = '4-10';
 

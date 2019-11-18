@@ -36,13 +36,13 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/map/areas/cameraareas.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const _ = require(&apos;underscore&apos;),
+let _ = require(&apos;underscore&apos;),
     Area = require(&apos;../area&apos;),
     map = require(&apos;../../../data/map/world_server&apos;);
 
 class CameraAreas {
     constructor() {
-        const self = this;
+        let self = this;
 
         self.cameraAreas = [];
 
@@ -50,11 +50,11 @@ class CameraAreas {
     }
 
     load() {
-        const self = this,
+        let self = this,
             list = map.cameraAreas;
 
         _.each(list, o =&gt; {
-            const cameraArea = new Area(o.id, o.x, o.y, o.width, o.height);
+            let cameraArea = new Area(o.id, o.x, o.y, o.width, o.height);
 
             cameraArea.type = o.type;
 

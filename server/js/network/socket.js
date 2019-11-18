@@ -2,7 +2,7 @@
 
 class Socket {
     constructor(port) {
-        const self = this;
+        let self = this;
 
         self.port = port;
 

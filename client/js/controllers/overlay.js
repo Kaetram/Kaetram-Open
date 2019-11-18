@@ -1,6 +1,5 @@
 define(['jquery'], function($) {
     return Class.extend({
-
         init: function(input) {
             var self = this;
 
@@ -21,45 +20,69 @@ define(['jquery'], function($) {
             if (!self.validEntity(entity)) {
                 self.hovering = null;
 
-                if (self.isVisible())
-                    self.hide();
+                if (self.isVisible()) self.hide();
 
                 return;
             }
 
-            if (!self.isVisible())
-                self.display();
+            if (!self.isVisible()) self.display();
 
             self.hovering = entity;
 
-            self.name.html(entity.type === 'player' ? entity.username : entity.name);
+            self.name.html(
+                entity.type === 'player' ? entity.username : entity.name
+            );
 
             if (self.hasHealth()) {
                 self.health.css({
-                    'display': 'block',
-                    'width': Math.ceil(entity.hitPoints / entity.maxHitPoints * 100) - 10 + '%'
+                    display: 'block',
+                    width:
+                        Math.ceil(
+                            (entity.hitPoints / entity.maxHitPoints) * 100
+                        ) -
+                        10 +
+                        '%'
                 });
 
-                self.details.html(entity.hitPoints + ' / ' + entity.maxHitPoints);
+                self.details.html(
+                    entity.hitPoints + ' / ' + entity.maxHitPoints
+                );
             } else {
                 self.health.css('display', 'none');
                 self.details.html('');
             }
 
             self.onUpdate(function(entityId, hitPoints) {
-                if (self.hovering && self.hovering.id === entityId && self.hovering.type !== 'npc' && self.hovering.type !== 'item') {
-                    if (hitPoints < 1)
-                        self.hide();
+                if (
+                    self.hovering &&
+                    self.hovering.id === entityId &&
+                    self.hovering.type !== 'npc' &&
+                    self.hovering.type !== 'item'
+                ) {
+                    if (hitPoints < 1) self.hide();
                     else {
-                        self.health.css('width', Math.ceil(hitPoints / self.hovering.maxHitPoints * 100) - 10 + '%');
-                        self.details.html(hitPoints + ' / ' + self.hovering.maxHitPoints);
+                        self.health.css(
+                            'width',
+                            Math.ceil(
+                                (hitPoints / self.hovering.maxHitPoints) * 100
+                            ) -
+                                10 +
+                                '%'
+                        );
+                        self.details.html(
+                            hitPoints + ' / ' + self.hovering.maxHitPoints
+                        );
                     }
                 }
             });
         },
 
         validEntity: function(entity) {
-            return entity && entity.id !== this.input.getPlayer().id && entity.type !== 'projectile';
+            return (
+                entity &&
+                entity.id !== this.input.getPlayer().id &&
+                entity.type !== 'projectile'
+            );
         },
 
         clean: function() {
@@ -70,7 +93,9 @@ define(['jquery'], function($) {
         },
 
         hasHealth: function() {
-            return this.hovering.type === 'mob' || this.hovering.type === 'player';
+            return (
+                this.hovering.type === 'mob' || this.hovering.type === 'player'
+            );
         },
 
         display: function() {
@@ -92,6 +117,5 @@ define(['jquery'], function($) {
         onUpdate: function(callback) {
             this.updateCallback = callback;
         }
-
     });
 });

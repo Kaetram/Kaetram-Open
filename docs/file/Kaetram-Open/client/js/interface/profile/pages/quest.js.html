@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/profile/pages/quest.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;, &apos;../page&apos;], function($, Page) {
     return Page.extend({
-
         init: function() {
             var self = this;
 
@@ -67,14 +66,21 @@
                 if (achievement.progress &gt; 0 &amp;&amp; achievement.progress &lt; 9999) {
                     name.css(&apos;background&apos;, &apos;rgba(255, 255, 10, 0.4)&apos;);
 
-                    name.text(achievement.name + (achievement.count &gt; 2 ? &apos; &apos; + (achievement.progress - 1) + &apos;/&apos; + (achievement.count - 1) : &apos;&apos;));
+                    name.text(
+                        achievement.name +
+                            (achievement.count &gt; 2
+                                ? &apos; &apos; +
+                                  (achievement.progress - 1) +
+                                  &apos;/&apos; +
+                                  (achievement.count - 1)
+                                : &apos;&apos;)
+                    );
                 } else if (achievement.progress &gt; 9998) {
                     name.text(achievement.name);
                     name.css(&apos;background&apos;, &apos;rgba(10, 255, 10, 0.3)&apos;);
                 }
 
-                if (achievement.finished)
-                    finishedAchievements++;
+                if (achievement.finished) finishedAchievements++;
 
                 item.append(name);
 
@@ -85,7 +91,9 @@
                 self.achievementsList.append(listItem);
             });
 
-            self.achievementsCount.html(finishedAchievements + &apos;/&apos; + achievements.length);
+            self.achievementsCount.html(
+                finishedAchievements + &apos;/&apos; + achievements.length
+            );
         },
 
         loadQuests(quests) {
@@ -105,8 +113,7 @@
                 else if (quest.stage &gt; 9998)
                     name.css(&apos;background&apos;, &apos;rgba(10, 255, 10, 0.3)&apos;);
 
-                if (quest.finished)
-                    finishedQuests++;
+                if (quest.finished) finishedQuests++;
 
                 item.append(name);
 
@@ -122,38 +129,48 @@
 
         progress: function(info) {
             var self = this,
-                item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
+                item = info.isQuest
+                    ? self.getQuest(info.id)
+                    : self.getAchievement(info.id);
 
-            if (!item)
-                return;
+            if (!item) return;
 
-            var name = item.find(&apos;&apos; + (info.isQuest ? &apos;#quest&apos; : &apos;#achievement&apos;) + info.id + &apos;name&apos;);
+            var name = item.find(
+                &apos;&apos; +
+                    (info.isQuest ? &apos;#quest&apos; : &apos;#achievement&apos;) +
+                    info.id +
+                    &apos;name&apos;
+            );
 
-            if (!name)
-                return;
+            if (!name) return;
 
-            if (!info.isQuest &amp;&amp; info.count &gt; 2)
-                name.text(info.name + &apos; &apos; + info.progress + &apos;/&apos; + (info.count - 1));
-            else
-                name.text(info.name);
+            if (!info.isQuest &amp;&amp; info.count &gt; 2) {
+                name.text(
+                    info.name + &apos; &apos; + info.progress + &apos;/&apos; + (info.count - 1)
+                );
+            } else name.text(info.name);
 
             name.css(&apos;background&apos;, &apos;rgba(255, 255, 10, 0.4)&apos;);
         },
 
         finish: function(info) {
             var self = this,
-                item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
+                item = info.isQuest
+                    ? self.getQuest(info.id)
+                    : self.getAchievement(info.id);
 
-            if (!item)
-                return;
+            if (!item) return;
 
-            var name = item.find(&apos;&apos; + (info.isQuest ? &apos;#quest&apos; : &apos;#achievement&apos;) + info.id + &apos;name&apos;);
+            var name = item.find(
+                &apos;&apos; +
+                    (info.isQuest ? &apos;#quest&apos; : &apos;#achievement&apos;) +
+                    info.id +
+                    &apos;name&apos;
+            );
 
-            if (!name)
-                return;
+            if (!name) return;
 
-            if (!info.isQuest)
-                name.text(info.name);
+            if (!info.isQuest) name.text(info.name);
 
             name.css(&apos;background&apos;, &apos;rgba(10, 255, 10, 0.3)&apos;);
         },
@@ -163,9 +180,10 @@
         },
 
         getAchievement: function(id) {
-            return $(this.achievementsList.find(&apos;li&apos;)[id]).find(&apos;#achievement&apos; + id);
+            return $(this.achievementsList.find(&apos;li&apos;)[id]).find(
+                &apos;#achievement&apos; + id
+            );
         },
-
 
         /**
          * Might as well properly organize them based
@@ -173,13 +191,22 @@
          */
 
         getItem: function(isQuest, id) {
-            return $(&apos;&lt;div id=&quot;&apos; + (isQuest ? &apos;quest&apos; : &apos;achievement&apos;) + id + &apos;&quot; class=&quot;questItem&quot;&gt;&lt;/div&gt;&apos;);
+            return $(
+                &apos;&lt;div id=&quot;&apos; +
+                    (isQuest ? &apos;quest&apos; : &apos;achievement&apos;) +
+                    id +
+                    &apos;&quot; class=&quot;questItem&quot;&gt;&lt;/div&gt;&apos;
+            );
         },
 
         getName: function(isQuest, id) {
-            return $(&apos;&lt;div id=&quot;&apos; + (isQuest ? &apos;quest&apos; : &apos;achievement&apos;) + id + &apos;name&quot; class=&quot;questName&quot;&gt;&lt;/div&gt;&apos;);
+            return $(
+                &apos;&lt;div id=&quot;&apos; +
+                    (isQuest ? &apos;quest&apos; : &apos;achievement&apos;) +
+                    id +
+                    &apos;name&quot; class=&quot;questName&quot;&gt;&lt;/div&gt;&apos;
+            );
         }
-
     });
 });
 </code></pre>

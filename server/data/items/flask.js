@@ -1,18 +1,18 @@
 /* global module */
 
-const Items = require('../../js/util/items'),
+let Items = require('../../js/util/items'),
     Utils = require('../../js/util/utils');
 
 class Flask {
     constructor() {
-        const self = this;
+        let self = this;
 
         self.id = 190;
 
         self.healAmount = 0;
         self.manaAmount = 0;
 
-        const customData = Items.getCustomData(self.id);
+        let customData = Items.getCustomData(self.id);
 
         if (customData) {
             self.healAmount = customData.healAmount ? customData.healAmount : 0;
@@ -21,13 +21,11 @@ class Flask {
     }
 
     onUse(character) {
-        const self = this;
+        let self = this;
 
-        if (self.healAmount)
-            character.healHitPoints(self.healAmount);
+        if (self.healAmount) character.healHitPoints(self.healAmount);
 
-        if (self.manaAmount)
-            character.healManaPoints(self.manaAmount);
+        if (self.manaAmount) character.healManaPoints(self.manaAmount);
     }
 }
 

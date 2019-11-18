@@ -1,13 +1,13 @@
 /* global module */
 
-const _ = require('underscore'),
+let _ = require('underscore'),
     Slot = require('./slot'),
     Items = require('../../../../../util/items'),
     Constants = require('../../../../../util/constants');
 
 class Container {
     constructor(type, owner, size) {
-        const self = this;
+        let self = this;
 
         self.type = type;
         self.owner = owner;
@@ -15,12 +15,11 @@ class Container {
 
         self.slots = [];
 
-        for (let i = 0; i < self.size; i++)
-            self.slots.push(new Slot(i));
+        for (let i = 0; i < self.size; i++) self.slots.push(new Slot(i));
     }
 
     load(ids, counts, abilities, abilityLevels) {
-        const self = this;
+        let self = this;
 
         /**
          * Fill each slot with manual data or the database
@@ -29,34 +28,41 @@ class Container {
         if (ids.length !== self.slots.length)
             log.error('[' + self.type + '] Mismatch in container size.');
 
-        for (let i = 0; i < self.slots.length; i++)
-            self.slots[i].load(ids[i], counts[i], abilities[i], abilityLevels[i]);
+        for (let i = 0; i < self.slots.length; i++) {
+            self.slots[i].load(
+                ids[i],
+                counts[i],
+                abilities[i],
+                abilityLevels[i]
+            );
+        }
     }
 
     loadEmpty() {
-        const self = this,
+        let self = this,
             data = [];
 
-        for (let i = 0; i < self.size; i++)
-            data.push(-1);
+        for (let i = 0; i < self.size; i++) data.push(-1);
 
         self.load(data, data, data, data);
     }
 
     add(id, count, ability, abilityLevel) {
-        const self = this;
+        let self = this;
 
         // log.info('Trying to pickup ' + count + ' x ' + id);
-        const maxStackSize = Items.maxStackSize(id) === -1 ? Constants.MAX_STACK : Items.maxStackSize(id);
+        let maxStackSize =
+            Items.maxStackSize(id) === -1
+                ? Constants.MAX_STACK
+                : Items.maxStackSize(id);
 
         // log.info('Max stack size = ' + maxStackSize);
 
-        if (!id || count < 0 || count > maxStackSize)
-            return null;
+        if (!id || count < 0 || count > maxStackSize) return null;
 
         if (!Items.isStackable(id)) {
             if (self.hasSpace()) {
-                const nsSlot = self.slots[self.getEmptySlot()]; // non-stackable slot
+                let nsSlot = self.slots[self.getEmptySlot()]; // non-stackable slot
 
                 nsSlot.load(id, count, ability, abilityLevel);
 
@@ -64,14 +70,14 @@ class Container {
             }
         } else {
             if (maxStackSize === -1 || self.type === 'Bank') {
-                const sSlot = self.getSlot(id);
+                let sSlot = self.getSlot(id);
 
                 if (sSlot) {
                     sSlot.increment(count);
                     return sSlot;
                 } else {
                     if (self.hasSpace()) {
-                        const slot = self.slots[self.getEmptySlot()];
+                        let slot = self.slots[self.getEmptySlot()];
 
                         slot.load(id, count, ability, abilityLevel);
 
@@ -83,9 +89,9 @@ class Container {
 
                 for (let i = 0; i < self.slots.length; i++) {
                     if (self.slots[i].id === id) {
-                        const rSlot = self.slots[i];
+                        let rSlot = self.slots[i];
 
-                        const available = maxStackSize - rSlot.count;
+                        let available = maxStackSize - rSlot.count;
 
                         if (available >= remainingItems) {
                             rSlot.increment(remainingItems);
@@ -99,8 +105,7 @@ class Container {
                 }
 
                 if (remainingItems > 0 && self.hasSpace()) {
-                    const rrSlot = self.slots[self.getEmptySlot()];
-
+                    let rrSlot = self.slots[self.getEmptySlot()];
 
                     rrSlot.load(id, remainingItems, ability, abilityLevel);
 
@@ -111,27 +116,24 @@ class Container {
     }
 
     canHold(id, count) {
-        const self = this;
+        let self = this;
 
-        if (!Items.isStackable(id))
-            return self.hasSpace();
+        if (!Items.isStackable(id)) return self.hasSpace();
 
-        if (self.hasSpace())
-            return true;
+        if (self.hasSpace()) return true;
 
-        const maxStackSize = Items.maxStackSize(id);
+        let maxStackSize = Items.maxStackSize(id);
 
         if ((self.type === 'Bank' || maxStackSize === -1) && self.contains(id))
             return true;
 
-        if (maxStackSize !== -1 && count > maxStackSize)
-            return false;
+        if (maxStackSize !== -1 && count > maxStackSize) return false;
 
         let remainingSpace = 0;
 
         for (let i = 0; i < self.slots.length; i++) {
             if (self.slots[i].id === id)
-                remainingSpace += (maxStackSize - self.slots[i].count);
+                remainingSpace += maxStackSize - self.slots[i].count;
         }
 
         return remainingSpace >= count;
@@ -142,58 +144,48 @@ class Container {
          * Perform item validity prior to calling the method.
          */
 
-        const self = this,
+        let self = this,
             slot = self.slots[index];
 
-        if (!slot)
-            return false;
+        if (!slot) return false;
 
         if (Items.isStackable(id)) {
-            if (count >= slot.count)
-                slot.empty();
-            else
-                slot.decrement(count);
-        } else
-            slot.empty();
+            if (count >= slot.count) slot.empty();
+            else slot.decrement(count);
+        } else slot.empty();
 
         return true;
     }
 
     getSlot(id) {
-        const self = this;
+        let self = this;
 
-        for (let i = 0; i < self.slots.length; i++) {
-            if (self.slots[i].id === id)
-                return self.slots[i];
-        }
+        for (let i = 0; i < self.slots.length; i++)
+            if (self.slots[i].id === id) return self.slots[i];
 
         return null;
     }
 
     contains(id, count) {
-        const self = this;
+        let self = this;
 
-        if (!count || count === 'undefined')
-            count = 1;
+        if (!count || count === 'undefined') count = 1;
 
-        for (const index in self.slots) {
-            const slot = self.slots[index];
+        for (let index in self.slots) {
+            let slot = self.slots[index];
 
-            if (slot.id === id)
-                return slot.count >= count;
+            if (slot.id === id) return slot.count >= count;
         }
 
         return false;
     }
 
     containsSpaces(count) {
-        const self = this,
+        let self = this,
             emptySpaces = [];
 
-        for (let i = 0; i < self.slots.length; i++) {
-            if (self.slots[i].id === -1)
-                emptySpaces.push(self.slots[i]);
-        }
+        for (let i = 0; i < self.slots.length; i++)
+            if (self.slots[i].id === -1) emptySpaces.push(self.slots[i]);
 
         return emptySpaces.length === count;
     }
@@ -203,46 +195,40 @@ class Container {
     }
 
     getEmptySlot() {
-        const self = this;
+        let self = this;
 
-        for (let i = 0; i < self.slots.length; i++) {
-            if (self.slots[i].id === -1)
-                return i;
-        }
+        for (let i = 0; i < self.slots.length; i++)
+            if (self.slots[i].id === -1) return i;
 
         return -1;
     }
 
     getIndex(id) {
-        const self = this;
+        let self = this;
 
         /**
          * Used when the index is not determined,
          * returns the first item found based on the id.
          */
 
-        for (let i = 0; i < self.slots.length; i++) {
-            if (self.slots[i].id === id)
-                return i;
-        }
+        for (let i = 0; i < self.slots.length; i++)
+            if (self.slots[i].id === id) return i;
 
         return -1;
     }
 
     check() {
-        const self = this;
+        let self = this;
 
         _.each(self.slots, slot => {
-            if (isNaN(slot.id))
-                slot.empty();
+            if (isNaN(slot.id)) slot.empty();
         });
     }
 
     forEachSlot(callback) {
-        const self = this;
+        let self = this;
 
-        for (let i = 0; i < self.slots.length; i++)
-            callback(self.slots[i]);
+        for (let i = 0; i < self.slots.length; i++) callback(self.slots[i]);
     }
 
     getArray() {

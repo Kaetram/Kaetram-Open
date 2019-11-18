@@ -38,7 +38,6 @@
 
 define([&apos;../entity/character/character&apos;], function(Character) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -67,8 +66,7 @@ define([&apos;../entity/character/character&apos;], function(Character) {
             var self = this,
                 time = self.game.time;
 
-            if (!self.renderer.animateTiles)
-                return;
+            if (!self.renderer.animateTiles) return;
 
             self.renderer.forEachAnimatedTile(function(tile) {
                 tile.animate(time);
@@ -84,8 +82,7 @@ define([&apos;../entity/character/character&apos;], function(Character) {
 
                     var animation = entity.currentAnimation;
 
-                    if (animation)
-                        animation.update(self.game.time);
+                    if (animation) animation.update(self.game.time);
 
                     if (entity instanceof Character) {
                         if (entity.critical &amp;&amp; entity.criticalAnimation)
@@ -108,8 +105,8 @@ define([&apos;../entity/character/character&apos;], function(Character) {
 
                             switch (entity.orientation) {
                                 case Modules.Orientation.Left:
-
-                                    entity.movement.start(self.game.time,
+                                    entity.movement.start(
+                                        self.game.time,
                                         function(x) {
                                             entity.x = x;
                                             entity.moved();
@@ -121,13 +118,14 @@ define([&apos;../entity/character/character&apos;], function(Character) {
                                         },
                                         entity.x - tick,
                                         entity.x - 16,
-                                        entity.movementSpeed);
+                                        entity.movementSpeed
+                                    );
 
                                     break;
 
                                 case Modules.Orientation.Right:
-
-                                    entity.movement.start(self.game.time,
+                                    entity.movement.start(
+                                        self.game.time,
                                         function(x) {
                                             entity.x = x;
                                             entity.moved();
@@ -139,13 +137,14 @@ define([&apos;../entity/character/character&apos;], function(Character) {
                                         },
                                         entity.x + tick,
                                         entity.x + 16,
-                                        entity.movementSpeed);
+                                        entity.movementSpeed
+                                    );
 
                                     break;
 
                                 case Modules.Orientation.Up:
-
-                                    entity.movement.start(self.game.time,
+                                    entity.movement.start(
+                                        self.game.time,
                                         function(y) {
                                             entity.y = y;
                                             entity.moved();
@@ -157,13 +156,14 @@ define([&apos;../entity/character/character&apos;], function(Character) {
                                         },
                                         entity.y - tick,
                                         entity.y - 16,
-                                        entity.movementSpeed);
+                                        entity.movementSpeed
+                                    );
 
                                     break;
 
                                 case Modules.Orientation.Down:
-
-                                    entity.movement.start(self.game.time,
+                                    entity.movement.start(
+                                        self.game.time,
                                         function(y) {
                                             entity.y = y;
                                             entity.moved();
@@ -175,7 +175,8 @@ define([&apos;../entity/character/character&apos;], function(Character) {
                                         },
                                         entity.y + tick,
                                         entity.y + 16,
-                                        entity.movementSpeed);
+                                        entity.movementSpeed
+                                    );
 
                                     break;
                             }
@@ -187,14 +188,12 @@ define([&apos;../entity/character/character&apos;], function(Character) {
                             tDistance = Math.sqrt(dx * dx + dy * dy),
                             amount = mDistance / tDistance;
 
-                        if (amount &gt; 1)
-                            amount = 1;
+                        if (amount &gt; 1) amount = 1;
 
                         entity.x += dx * amount;
                         entity.y += dy * amount;
 
-                        if (tDistance &lt; 5)
-                            entity.impact();
+                        if (tDistance &lt; 5) entity.impact();
                     }
                 }
             });
@@ -203,8 +202,7 @@ define([&apos;../entity/character/character&apos;], function(Character) {
         updateFading: function(entity) {
             var self = this;
 
-            if (!entity || !entity.fading)
-                return;
+            if (!entity || !entity.fading) return;
 
             var duration = 1000,
                 time = self.game.time,
@@ -213,8 +211,7 @@ define([&apos;../entity/character/character&apos;], function(Character) {
             if (dt &gt; duration) {
                 entity.isFading = false;
                 entity.fadingAlpha = 1;
-            } else
-                entity.fadingAlpha = dt / duration;
+            } else entity.fadingAlpha = dt / duration;
         },
 
         updateKeyboard: function() {
@@ -225,20 +222,14 @@ define([&apos;../entity/character/character&apos;], function(Character) {
                     y: player.gridY
                 };
 
-            if (player.frozen)
-                return;
+            if (player.frozen) return;
 
-            if (player.moveUp)
-                position.y--;
-            else if (player.moveDown)
-                position.y++;
-            else if (player.moveRight)
-                position.x++;
-            else if (player.moveLeft)
-                position.x--;
+            if (player.moveUp) position.y--;
+            else if (player.moveDown) position.y++;
+            else if (player.moveRight) position.x++;
+            else if (player.moveLeft) position.x--;
 
-            if (player.hasKeyboardMovement())
-                self.input.keyMove(position);
+            if (player.hasKeyboardMovement()) self.input.keyMove(position);
         },
 
         updateAnimations: function() {
@@ -248,32 +239,26 @@ define([&apos;../entity/character/character&apos;], function(Character) {
             if (target &amp;&amp; self.input.selectedCellVisible)
                 target.update(self.game.time);
 
-            if (!self.sprites)
-                return;
+            if (!self.sprites) return;
 
             var sparks = self.sprites.sparksAnimation;
 
-            if (sparks)
-                sparks.update(self.game.time);
+            if (sparks) sparks.update(self.game.time);
         },
 
         updateInfos: function() {
-            if (this.game.info)
-                this.game.info.update(this.game.time);
+            if (this.game.info) this.game.info.update(this.game.time);
         },
 
         updateBubbles: function() {
-            if (this.game.bubble)
-                this.game.bubble.update(this.game.time);
+            if (this.game.bubble) this.game.bubble.update(this.game.time);
 
-            if (this.game.pointer)
-                this.game.pointer.update();
+            if (this.game.pointer) this.game.pointer.update();
         },
 
         setSprites: function(sprites) {
             this.sprites = sprites;
         }
-
     });
 });
 </code></pre>

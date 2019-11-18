@@ -2,7 +2,6 @@
 
 define(['jquery'], function($) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -29,12 +28,10 @@ define(['jquery'], function($) {
         ready: function() {
             var self = this,
                 rC = function() {
-                    if (self.readyCallback)
-                        self.readyCallback();
+                    if (self.readyCallback) self.readyCallback();
                 };
 
-            if (self.mapLoaded && self.tilesetsLoaded)
-                rC();
+            if (self.mapLoaded && self.tilesetsLoaded) rC();
             else {
                 setTimeout(function() {
                     self.loadTilesets();
@@ -61,14 +58,17 @@ define(['jquery'], function($) {
                     self.mapLoaded = true;
                 };
             } else {
-                if (self.game.isDebug())
-                    log.info('Parsing map with Ajax...');
+                if (self.game.isDebug()) log.info('Parsing map with Ajax...');
 
-                $.get('data/maps/map.json', function(data) {
-                    self.parseMap(data);
-                    self.loadCollisions();
-                    self.mapLoaded = true;
-                }, 'json');
+                $.get(
+                    'data/maps/map.json',
+                    function(data) {
+                        self.parseMap(data);
+                        self.loadCollisions();
+                        self.mapLoaded = true;
+                    },
+                    'json'
+                );
             }
         },
 
@@ -82,10 +82,12 @@ define(['jquery'], function($) {
 
                 self.data[tile.index] = tile.data;
 
-                if (tile.isCollision && collisionIndex < 0) // Adding new collision tileIndex
+                if (tile.isCollision && collisionIndex < 0)
+                    // Adding new collision tileIndex
                     self.collisions.push(tile.index);
 
-                if (!tile.isCollision && collisionIndex > 0) { // Removing existing collision tileIndex
+                if (!tile.isCollision && collisionIndex > 0) {
+                    // Removing existing collision tileIndex
                     var position = self.indexToGridPosition(tile.index + 1);
 
                     self.collisions.splice(collisionIndex, 1);
@@ -100,11 +102,15 @@ define(['jquery'], function($) {
         loadTilesets: function() {
             var self = this;
 
-            if (self.rawTilesets.length < 1)
-                return;
+            if (self.rawTilesets.length < 1) return;
 
             _.each(self.rawTilesets, function(rawTileset) {
-                self.tilesets.push(self.loadTileset('img/tilesets/' + rawTileset.imageName, rawTileset));
+                self.tilesets.push(
+                    self.loadTileset(
+                        'img/tilesets/' + rawTileset.imageName,
+                        rawTileset
+                    )
+                );
             });
 
             self.tilesetsLoaded = true;
@@ -123,8 +129,11 @@ define(['jquery'], function($) {
             tileset.scale = rawTileset.scale;
 
             tileset.onload = function() {
-                if (tileset.width % self.tileSize > 0)
-                    throw Error('The tile size is malformed in the tile set: ' + path);
+                if (tileset.width % self.tileSize > 0) {
+                    throw Error(
+                        'The tile size is malformed in the tile set: ' + path
+                    );
+                }
             };
 
             return tileset;
@@ -154,8 +163,7 @@ define(['jquery'], function($) {
 
             for (var i = 0; i < self.height; i++) {
                 self.grid[i] = [];
-                for (var j = 0; j < self.width; j++)
-                    self.grid[i][j] = 0;
+                for (var j = 0; j < self.width; j++) self.grid[i][j] = 0;
             }
 
             _.each(self.collisions, function(index) {
@@ -177,11 +185,9 @@ define(['jquery'], function($) {
             _.each(self.collisions, function(index) {
                 var position = self.indexToGridPosition(index + 1);
 
-                if (position.x > self.width - 1)
-                    position.x = self.width - 1;
+                if (position.x > self.width - 1) position.x = self.width - 1;
 
-                if (position.y > self.height - 1)
-                    position.y = self.height - 1;
+                if (position.y > self.height - 1) position.y = self.height - 1;
 
                 self.grid[position.y][position.x] = 1;
             });
@@ -202,14 +208,13 @@ define(['jquery'], function($) {
         },
 
         gridPositionToIndex: function(x, y) {
-            return (y * this.width) + x + 1;
+            return y * this.width + x + 1;
         },
 
         isColliding: function(x, y) {
             var self = this;
 
-            if (self.isOutOfBounds(x, y) || !self.grid)
-                return false;
+            if (self.isOutOfBounds(x, y) || !self.grid) return false;
 
             return self.grid[y][x] === 1;
         },
@@ -223,18 +228,21 @@ define(['jquery'], function($) {
         },
 
         isAnimatedTile: function(id) {
-            return (id + 1) in this.animatedTiles;
+            return id + 1 in this.animatedTiles;
         },
 
         isOutOfBounds: function(x, y) {
-            return isInt(x) && isInt(y) && (x < 0 || x >= this.width || y < 0 || y >= this.height);
+            return (
+                isInt(x) &&
+                isInt(y) &&
+                (x < 0 || x >= this.width || y < 0 || y >= this.height)
+            );
         },
 
         getX: function(index, width) {
-            if (index === 0)
-                return 0;
+            if (index === 0) return 0;
 
-            return (index % width === 0) ? width - 1 : (index % width) - 1;
+            return index % width === 0 ? width - 1 : (index % width) - 1;
         },
 
         getTileAnimation: function(id) {
@@ -245,8 +253,10 @@ define(['jquery'], function($) {
             var self = this;
 
             for (var idx in self.tilesets) {
-                if (id > self.tilesets[idx].firstGID - 1 &&
-                    id < self.tilesets[idx].lastGID + 1)
+                if (
+                    id > self.tilesets[idx].firstGID - 1 &&
+                    id < self.tilesets[idx].lastGID + 1
+                )
                     return self.tilesets[idx];
             }
 
@@ -264,8 +274,7 @@ define(['jquery'], function($) {
                 regionData = self.game.storage.getRegionData(),
                 collisions = self.game.storage.getCollisions();
 
-            if (regionData.length < 1)
-                return;
+            if (regionData.length < 1) return;
 
             self.preloadedData = true;
 
@@ -278,6 +287,5 @@ define(['jquery'], function($) {
         onReady: function(callback) {
             this.readyCallback = callback;
         }
-
     });
 });

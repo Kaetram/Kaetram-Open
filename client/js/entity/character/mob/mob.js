@@ -1,6 +1,5 @@
 define(['../character'], function(Character) {
     return Character.extend({
-
         init: function(id, kind) {
             var self = this;
 
@@ -51,6 +50,5 @@ define(['../character'], function(Character) {
         drawNames: function() {
             return !this.hiddenName;
         }
-
     });
 });

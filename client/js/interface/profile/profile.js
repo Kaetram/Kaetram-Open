@@ -1,8 +1,13 @@
 /* global log, _, Packets */
 
-define(['jquery', './pages/state', './pages/ability', './pages/settings', './pages/quest'], function($, State, Ability, Settings, Quest) {
+define([
+    'jquery',
+    './pages/state',
+    './pages/ability',
+    './pages/settings',
+    './pages/quest'
+], function($, State, Ability, Settings, Quest) {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -36,24 +41,23 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
                     self.button.addClass('active');
                 }
 
-                if (!self.activePage.loaded)
-                    self.activePage.load();
+                if (!self.activePage.loaded) self.activePage.load();
 
-                self.game.socket.send(Packets.Click, ['profile', self.button.hasClass('active')]);
+                self.game.socket.send(Packets.Click, [
+                    'profile',
+                    self.button.hasClass('active')
+                ]);
             });
 
             self.next.click(function() {
                 if (self.activeIndex + 1 < self.pages.length)
                     self.setPage(self.activeIndex + 1);
-                else
-                    self.next.removeClass('enabled');
+                else self.next.removeClass('enabled');
             });
 
             self.previous.click(function() {
-                if (self.activeIndex > 0)
-                    self.setPage(self.activeIndex - 1);
-                else
-                    self.previous.removeClass('enabled');
+                if (self.activeIndex > 0) self.setPage(self.activeIndex - 1);
+                else self.previous.removeClass('enabled');
             });
 
             self.state = new State(self.game);
@@ -65,20 +69,27 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
 
             self.activePage = self.state;
 
-            if (self.activeIndex === 0 && self.activeIndex !== self.pages.length)
+            if (
+                self.activeIndex === 0 &&
+                self.activeIndex !== self.pages.length
+            )
                 self.next.addClass('enabled');
         },
 
         update: function() {
             var self = this;
 
-            _.each(self.pages, function(page) { page.update(); });
+            _.each(self.pages, function(page) {
+                page.update();
+            });
         },
 
         resize: function() {
             var self = this;
 
-            _.each(self.pages, function(page) { page.resize(); });
+            _.each(self.pages, function(page) {
+                page.resize();
+            });
         },
 
         setPage: function(index) {
@@ -87,8 +98,7 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
 
             self.clear();
 
-            if (page.isVisible())
-                return;
+            if (page.isVisible()) return;
 
             self.activePage = page;
             self.activeIndex = index;
@@ -118,8 +128,7 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
             self.body.fadeOut('fast');
             self.button.removeClass('active');
 
-            if (self.settings)
-                self.settings.hide();
+            if (self.settings) self.settings.hide();
         },
 
         isVisible: function() {
@@ -129,9 +138,7 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
         clear: function() {
             var self = this;
 
-            if (self.activePage)
-                self.activePage.hide();
+            if (self.activePage) self.activePage.hide();
         }
-
     });
 });

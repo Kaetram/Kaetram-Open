@@ -7,7 +7,6 @@ define(function() {
      */
 
     return Class.extend({
-
         init: function(game, player) {
             var self = this;
 
@@ -26,16 +25,21 @@ define(function() {
             var self = this;
 
             self.player.onRequestPath(function(x, y) {
-                if (self.player.dead)
-                    return null;
+                if (self.player.dead) return null;
 
                 var ignores = [self.player];
 
-                if (self.player.hasTarget())
-                    ignores.push(self.player.target);
+                if (self.player.hasTarget()) ignores.push(self.player.target);
 
-                if (!self.game.map.isColliding(x, y))
-                    self.socket.send(Packets.Movement, [Packets.MovementOpcode.Request, x, y, self.player.gridX, self.player.gridY]);
+                if (!self.game.map.isColliding(x, y)) {
+                    self.socket.send(Packets.Movement, [
+                        Packets.MovementOpcode.Request,
+                        x,
+                        y,
+                        self.player.gridX,
+                        self.player.gridY
+                    ]);
+                }
 
                 return self.game.findPath(self.player, x, y, ignores);
             });
@@ -47,10 +51,24 @@ define(function() {
                 self.input.selectedY = path[i][1];
                 self.input.selectedCellVisible = true;
 
-                if (!self.game.getEntityAt(self.input.selectedX, self.input.selectedY))
-                    self.socket.send(Packets.Target, [Packets.TargetOpcode.None]);
+                if (
+                    !self.game.getEntityAt(
+                        self.input.selectedX,
+                        self.input.selectedY
+                    )
+                ) {
+                    self.socket.send(Packets.Target, [
+                        Packets.TargetOpcode.None
+                    ]);
+                }
 
-                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Started, self.input.selectedX, self.input.selectedY, self.player.gridX, self.player.gridY]);
+                self.socket.send(Packets.Movement, [
+                    Packets.MovementOpcode.Started,
+                    self.input.selectedX,
+                    self.input.selectedY,
+                    self.player.gridX,
+                    self.player.gridY
+                ]);
             });
 
             self.player.onStopPathing(function(x, y) {
@@ -64,15 +82,26 @@ define(function() {
                 var id = null,
                     entity = self.game.getEntityAt(x, y, true);
 
-                if (entity)
-                    id = entity.id;
+                if (entity) id = entity.id;
 
                 var hasTarget = self.player.hasTarget();
 
-                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Stop, x, y, id, hasTarget, self.player.orientation]);
+                self.socket.send(Packets.Movement, [
+                    Packets.MovementOpcode.Stop,
+                    x,
+                    y,
+                    id,
+                    hasTarget,
+                    self.player.orientation
+                ]);
 
                 if (hasTarget) {
-                    self.socket.send(Packets.Target, [self.isAttackable() ? Packets.TargetOpcode.Attack : Packets.TargetOpcode.Talk, self.player.target.id]);
+                    self.socket.send(Packets.Target, [
+                        self.isAttackable()
+                            ? Packets.TargetOpcode.Attack
+                            : Packets.TargetOpcode.Talk,
+                        self.player.target.id
+                    ]);
 
                     self.player.lookAt(self.player.target);
                 }
@@ -85,8 +114,7 @@ define(function() {
             self.player.onBeforeStep(function() {
                 self.entities.unregisterPosition(self.player);
 
-                if (!self.isAttackable())
-                    return;
+                if (!self.isAttackable()) return;
 
                 if (self.player.isRanged()) {
                     if (self.player.getDistance(self.player.target) < 7)
@@ -101,15 +129,22 @@ define(function() {
                 if (self.player.hasNextStep())
                     self.entities.registerDuality(self.player);
 
-                if (!self.camera.centered || self.camera.lockX || self.camera.lockY)
+                if (
+                    !self.camera.centered ||
+                    self.camera.lockX ||
+                    self.camera.lockY
+                )
                     self.checkBounds();
 
                 self.player.forEachAttacker(function(attacker) {
-                    if (!attacker.stunned)
-                        attacker.follow(self.player);
+                    if (!attacker.stunned) attacker.follow(self.player);
                 });
 
-                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Step, self.player.gridX, self.player.gridY]);
+                self.socket.send(Packets.Movement, [
+                    Packets.MovementOpcode.Step,
+                    self.player.gridX,
+                    self.player.gridY
+                ]);
             });
 
             self.player.onSecondStep(function() {
@@ -121,8 +156,7 @@ define(function() {
                  * This is a callback representing the absolute exact position of the player.
                  */
 
-                if (self.camera.centered)
-                    self.camera.centreOn(self.player);
+                if (self.camera.centered) self.camera.centreOn(self.player);
 
                 if (self.player.hasTarget())
                     self.player.follow(self.player.target);
@@ -137,10 +171,12 @@ define(function() {
             var self = this,
                 target = self.player.target;
 
-            if (!target)
-                return;
+            if (!target) return;
 
-            return target.type === 'mob' || (target.type === 'player' && target.pvp);
+            return (
+                target.type === 'mob' ||
+                (target.type === 'player' && target.pvp)
+            );
         },
 
         checkBounds: function() {
@@ -149,10 +185,8 @@ define(function() {
                 y = self.player.gridY - self.camera.gridY,
                 isBorder = false;
 
-            if (x === 0)
-                self.game.zoning.setLeft();
-            else if (y === 0)
-                self.game.zoning.setUp();
+            if (x === 0) self.game.zoning.setLeft();
+            else if (y === 0) self.game.zoning.setUp();
             else if (x === self.camera.gridWidth - 1)
                 self.game.zoning.setRight();
             else if (y === self.camera.gridHeight - 1)
@@ -163,6 +197,5 @@ define(function() {
                 self.game.zoning.reset();
             }
         }
-
     });
 });

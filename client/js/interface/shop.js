@@ -1,6 +1,5 @@
 define(['jquery', './container/container'], function($, Container) {
     return Class.extend({
-
         init: function(game, intrface) {
             var self = this;
 
@@ -33,7 +32,12 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 id = event.currentTarget.id.substring(11);
 
-            self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
+            self.game.socket.send(Packets.Shop, [
+                Packets.ShopOpcode.Buy,
+                self.openShop,
+                id,
+                1
+            ]);
         },
 
         sell: function() {
@@ -73,21 +77,42 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this;
 
             for (var i = 0; i < self.container.size; i++) {
-                var shopItem = $('<div id="shopItem' + i + '" class="shopItem"></div>'),
+                var shopItem = $(
+                        '<div id="shopItem' + i + '" class="shopItem"></div>'
+                    ),
                     string = self.data.strings[i],
                     name = self.data.names[i],
                     count = self.data.counts[i],
-                    itemImage, itemCount, itemName, itemBuy;
+                    itemImage,
+                    itemCount,
+                    itemName,
+                    itemBuy;
 
-                if (!string || !name || !count)
-                    continue;
+                if (!string || !name || !count) continue;
 
-                itemImage = $('<div id="shopItemImage' + i + '" class="shopItemImage"></div>');
-                itemCount = $('<div id="shopItemCount' + i + '" class="shopItemCount"></div>');
-                itemName = $('<div id="shopItemName' + i + '" class="shopItemName"></div>');
-                itemBuy = $('<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>');
+                itemImage = $(
+                    '<div id="shopItemImage' +
+                        i +
+                        '" class="shopItemImage"></div>'
+                );
+                itemCount = $(
+                    '<div id="shopItemCount' +
+                        i +
+                        '" class="shopItemCount"></div>'
+                );
+                itemName = $(
+                    '<div id="shopItemName' +
+                        i +
+                        '" class="shopItemName"></div>'
+                );
+                itemBuy = $(
+                    '<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>'
+                );
 
-                itemImage.css('background-image', self.container.getImageFormat(1, string));
+                itemImage.css(
+                    'background-image',
+                    self.container.getImageFormat(1, string)
+                );
                 itemCount.html(count);
                 itemName.html(name);
                 itemBuy.html('Purchase');
@@ -137,8 +162,7 @@ define(['jquery', './container/container'], function($, Container) {
         open: function(id) {
             var self = this;
 
-            if (!id)
-                return;
+            if (!id) return;
 
             self.openShop = id;
 
@@ -172,6 +196,5 @@ define(['jquery', './container/container'], function($, Container) {
         getInventoryList: function() {
             return this.inventory.find('ul');
         }
-
     });
 });

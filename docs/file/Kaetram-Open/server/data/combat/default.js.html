@@ -34,7 +34,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/data/combat/default.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Combat = require(&apos;../../js/game/entity/character/combat/combat&apos;);
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">let Combat = require(&apos;../../js/game/entity/character/combat/combat&apos;);
 
 /*
  * The default superclass for combat-related plugins.
@@ -46,7 +46,7 @@ class Default extends Combat {
     constructor(character) {
         super(character);
 
-        const self = this;
+        let self = this;
 
         self.character = character;
     }

@@ -1,4 +1,4 @@
-const World = require('../game/world'),
+let World = require('../game/world'),
     Messages = require('./messages'),
     Packets = require('./packets'),
     Player = require('../game/entity/character/player/player'),
@@ -8,7 +8,7 @@ const World = require('../game/world'),
 
 class Network {
     constructor(world) {
-        const self = this;
+        let self = this;
 
         self.world = world;
         self.database = world.database;
@@ -24,7 +24,7 @@ class Network {
     }
 
     load() {
-        const self = this;
+        let self = this;
 
         self.world.onPlayerConnection(connection => {
             self.handlePlayerConnection(connection);
@@ -36,31 +36,39 @@ class Network {
     }
 
     parsePackets() {
-        const self = this;
+        let self = this;
 
         /**
          * This parses through the packet pool and sends them
          */
 
-        for (const id in self.packets) {
-            if (self.packets[id].length > 0 && self.packets.hasOwnProperty(id)) {
-                const conn = self.socket.getConnection(id);
+        for (let id in self.packets) {
+            if (
+                self.packets[id].length > 0 &&
+                self.packets.hasOwnProperty(id)
+            ) {
+                let conn = self.socket.getConnection(id);
 
                 if (conn) {
                     conn.send(self.packets[id]);
                     self.packets[id] = [];
                     self.packets[id].id = id;
-                } else
-                    delete self.socket.getConnection(id);
+                } else delete self.socket.getConnection(id);
             }
         }
     }
 
     handlePlayerConnection(connection) {
-        const self = this,
+        let self = this,
             clientId = Utils.generateClientId(),
-            player = new Player(self.world, self.database, connection, clientId),
-            timeDifference = new Date().getTime() - self.getSocketTime(connection);
+            player = new Player(
+                self.world,
+                self.database,
+                connection,
+                clientId
+            ),
+            timeDifference =
+                new Date().getTime() - self.getSocketTime(connection);
 
         if (!config.debug && timeDifference - self.differenceThreshold < 5000) {
             connection.sendUTF8('toofast');
@@ -69,14 +77,19 @@ class Network {
             return;
         }
 
-        self.socket.ips[connection.socket.conn.remoteAddress] = new Date().getTime();
+        self.socket.ips[
+            connection.socket.conn.remoteAddress
+        ] = new Date().getTime();
 
         self.addToPackets(player);
 
-        self.pushToPlayer(player, new Messages.Handshake({
-            id: clientId,
-            development: config.devClient
-        }));
+        self.pushToPlayer(
+            player,
+            new Messages.Handshake({
+                id: clientId,
+                development: config.devClient
+            })
+        );
     }
 
     handlePopulationChange() {
@@ -96,7 +109,7 @@ class Network {
      */
 
     pushBroadcast(message) {
-        const self = this;
+        let self = this;
 
         _.each(self.packets, packet => {
             packet.push(message.serialize());
@@ -108,7 +121,7 @@ class Network {
      */
 
     pushSelectively(message, ignores) {
-        const self = this;
+        let self = this;
 
         _.each(self.packets, packet => {
             if (ignores.indexOf(packet.id) < 0)
@@ -130,10 +143,13 @@ class Network {
      */
 
     pushToPlayers(players, message) {
-        const self = this;
+        let self = this;
 
         _.each(players, playerInstance => {
-            self.pushToPlayer(self.world.getPlayerByInstance(playerInstance), message);
+            self.pushToPlayer(
+                self.world.getPlayerByInstance(playerInstance),
+                message
+            );
         });
     }
 
@@ -142,14 +158,18 @@ class Network {
      */
 
     pushToRegion(regionId, message, ignoreId) {
-        const self = this,
+        let self = this,
             region = self.region.regions[regionId];
 
         if (!region) return;
 
         _.each(region.players, playerInstance => {
-            if (playerInstance !== ignoreId)
-                self.pushToPlayer(self.world.getEntityByInstance(playerInstance), message);
+            if (playerInstance !== ignoreId) {
+                self.pushToPlayer(
+                    self.world.getEntityByInstance(playerInstance),
+                    message
+                );
+            }
         });
     }
 
@@ -161,7 +181,7 @@ class Network {
      */
 
     pushToAdjacentRegions(regionId, message, ignoreId) {
-        const self = this;
+        let self = this;
 
         self.map.regions.forEachAdjacentRegion(regionId, id => {
             self.pushToRegion(id, message, ignoreId);
@@ -173,13 +193,12 @@ class Network {
      */
 
     pushToNameArray(names, message) {
-        const self = this;
+        let self = this;
 
         _.each(names, name => {
-            const player = self.world.getPlayerByName(name);
+            let player = self.world.getPlayerByName(name);
 
-            if (player)
-                self.pushToPlayer(player, message);
+            if (player) self.pushToPlayer(player, message);
         });
     }
 
@@ -188,7 +207,7 @@ class Network {
      */
 
     pushToOldRegions(player, message) {
-        const self = this;
+        let self = this;
 
         _.each(player.recentRegions, id => {
             self.pushToRegion(id, message);

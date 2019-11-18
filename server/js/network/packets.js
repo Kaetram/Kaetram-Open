@@ -1,6 +1,6 @@
 /* global module */
 
-const Packets = {
+let Packets = {
     Handshake: 0,
     Intro: 1,
     Welcome: 2,

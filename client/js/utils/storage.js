@@ -3,7 +3,6 @@ define(function() {
         name = 'data';
 
     return Class.extend({
-
         init: function(app) {
             var self = this;
 
@@ -16,10 +15,8 @@ define(function() {
         load: function() {
             var self = this;
 
-            if (storage.data)
-                self.data = JSON.parse(storage.getItem(name));
-            else
-                self.data = self.create();
+            if (storage.data) self.data = JSON.parse(storage.getItem(name));
+            else self.data = self.create();
 
             if (self.data.clientVersion !== self.app.config.version) {
                 self.data = self.create();
@@ -60,8 +57,7 @@ define(function() {
         },
 
         save: function() {
-            if (this.data)
-                storage.setItem(name, JSON.stringify(this.data));
+            if (this.data) storage.setItem(name, JSON.stringify(this.data));
         },
 
         clear: function() {
@@ -89,8 +85,7 @@ define(function() {
             var self = this,
                 pData = self.getPlayer();
 
-            if (pData.hasOwnProperty(option))
-                pData[option] = value;
+            if (pData.hasOwnProperty(option)) pData[option] = value;
 
             self.save();
         },
@@ -99,8 +94,7 @@ define(function() {
             var self = this,
                 sData = self.getSettings();
 
-            if (sData.hasOwnProperty(option))
-                sData[option] = value;
+            if (sData.hasOwnProperty(option)) sData[option] = value;
 
             self.save();
         },
@@ -129,6 +123,5 @@ define(function() {
         getCollisions: function() {
             return this.data.map.collisions;
         }
-
     });
 });

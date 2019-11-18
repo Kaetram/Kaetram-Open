@@ -1,4 +1,4 @@
-const Combat = require('../../js/game/entity/character/combat/combat');
+let Combat = require('../../js/game/entity/character/combat/combat');
 
 /*
  * The default superclass for combat-related plugins.
@@ -10,7 +10,7 @@ class Default extends Combat {
     constructor(character) {
         super(character);
 
-        const self = this;
+        let self = this;
 
         self.character = character;
     }

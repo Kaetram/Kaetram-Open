@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/container/slot.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define(function() {
     return Class.extend({
-
         init: function(index) {
             var self = this;
 
@@ -51,7 +50,14 @@
             self.equippable = false;
         },
 
-        load: function(string, count, ability, abilityLevel, edible, equippable) {
+        load: function(
+            string,
+            count,
+            ability,
+            abilityLevel,
+            edible,
+            equippable
+        ) {
             var self = this;
 
             self.string = string;
@@ -86,7 +92,6 @@
         setString: function(string) {
             this.string = string;
         }
-
     });
 });
 </code></pre>

@@ -2,7 +2,6 @@
 
 define(['./entityhandler'], function(EntityHandler) {
     return Class.extend({
-
         init: function(id, kind) {
             var self = this;
 
@@ -64,8 +63,7 @@ define(['./entityhandler'], function(EntityHandler) {
 
             self.dirty = true;
 
-            if (self.dirtyCallback)
-                self.dirtyCallback();
+            if (self.dirtyCallback) self.dirtyCallback();
         },
 
         fadeIn: function(time) {
@@ -86,8 +84,7 @@ define(['./entityhandler'], function(EntityHandler) {
         stopBlinking: function() {
             var self = this;
 
-            if (self.blinking)
-                clearInterval(self.blinking);
+            if (self.blinking) clearInterval(self.blinking);
 
             self.setVisible(true);
         },
@@ -102,11 +99,9 @@ define(['./entityhandler'], function(EntityHandler) {
             if (!sprite || (self.sprite && self.sprite.name === sprite.name))
                 return;
 
-            if (self.type === 'player')
-                sprite.loadHurt = true;
+            if (self.type === 'player') sprite.loadHurt = true;
 
-            if (!sprite.loaded)
-                sprite.load();
+            if (!sprite.loaded) sprite.load();
 
             sprite.name = sprite.id;
 
@@ -116,14 +111,12 @@ define(['./entityhandler'], function(EntityHandler) {
             self.animations = sprite.createAnimations();
 
             sprite.onLoad(function() {
-                if (sprite.loadHurt)
-                    self.hurtSprite = sprite.hurtSprite;
+                if (sprite.loadHurt) self.hurtSprite = sprite.hurtSprite;
             });
 
             self.spriteLoaded = true;
 
-            if (self.readyCallback)
-                self.readyCallback();
+            if (self.readyCallback) self.readyCallback();
         },
 
         setPosition: function(x, y) {
@@ -145,24 +138,29 @@ define(['./entityhandler'], function(EntityHandler) {
         setAnimation: function(name, speed, count, onEndCount) {
             var self = this;
 
-            if (!self.spriteLoaded || (self.currentAnimation && self.currentAnimation.name === name))
+            if (
+                !self.spriteLoaded ||
+                (self.currentAnimation && self.currentAnimation.name === name)
+            )
                 return;
 
             var anim = self.getAnimationByName(name);
 
-            if (!anim)
-                return;
+            if (!anim) return;
 
             self.currentAnimation = anim;
 
-            if (name.substr(0, 3) === 'atk')
-                self.currentAnimation.reset();
+            if (name.substr(0, 3) === 'atk') self.currentAnimation.reset();
 
             self.currentAnimation.setSpeed(speed);
 
-            self.currentAnimation.setCount(count || 0, onEndCount || function() {
-                self.idle();
-            });
+            self.currentAnimation.setCount(
+                count || 0,
+                onEndCount ||
+                    function() {
+                        self.idle();
+                    }
+            );
         },
 
         setCountdown: function(count) {
@@ -204,16 +202,23 @@ define(['./entityhandler'], function(EntityHandler) {
         },
 
         inAttackRadius: function(entity) {
-            return entity && this.getDistance(entity) < 2 && !(this.gridX !== entity.gridX && this.gridY !== entity.gridY);
+            return (
+                entity &&
+                this.getDistance(entity) < 2 &&
+                !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
+            );
         },
 
         inExtraAttackRadius: function(entity) {
-            return entity && this.getDistance(entity) < 3 && !(this.gridX !== entity.gridX && this.gridY !== entity.gridY);
+            return (
+                entity &&
+                this.getDistance(entity) < 3 &&
+                !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
+            );
         },
 
         getAnimationByName: function(name) {
-            if (name in this.animations)
-                return this.animations[name];
+            if (name in this.animations) return this.animations[name];
 
             return null;
         },
@@ -249,6 +254,5 @@ define(['./entityhandler'], function(EntityHandler) {
         onDirty: function(callback) {
             this.dirtyCallback = callback;
         }
-
     });
 });

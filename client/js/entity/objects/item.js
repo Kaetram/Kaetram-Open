@@ -1,6 +1,5 @@
 define(['../entity'], function(Entity) {
     return Entity.extend({
-
         init: function(id, kind, count, ability, abilityLevel) {
             var self = this;
 
@@ -39,6 +38,5 @@ define(['../entity'], function(Entity) {
         hasShadow: function() {
             return true;
         }
-
     });
 });

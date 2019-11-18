@@ -2,7 +2,7 @@
 
 class Hit {
     constructor(type, damage) {
-        const self = this;
+        let self = this;
 
         self.type = type;
         self.damage = damage;

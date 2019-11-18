@@ -36,7 +36,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/client/js/interface/enchant.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">define([&apos;jquery&apos;], function($) {
     return Class.extend({
-
         init: function(game, intrface) {
             var self = this;
 
@@ -53,8 +52,8 @@
             self.shardsCount = $(&apos;#shardsCount&apos;);
 
             self.confirm.css({
-                &apos;left&apos;: &apos;70%&apos;,
-                &apos;top&apos;: &apos;80%&apos;
+                left: &apos;70%&apos;,
+                top: &apos;80%&apos;
             });
 
             $(&apos;#closeEnchant&apos;).click(function() {
@@ -105,8 +104,10 @@
 
             switch (type) {
                 case &apos;item&apos;:
-
-                    self.selectedItem.css(&apos;background-image&apos;, image.css(&apos;background-image&apos;));
+                    self.selectedItem.css(
+                        &apos;background-image&apos;,
+                        image.css(&apos;background-image&apos;)
+                    );
 
                     if (Detect.isMobile())
                         self.selectedItem.css(&apos;background-size&apos;, &apos;600%&apos;);
@@ -114,49 +115,56 @@
                     break;
 
                 case &apos;shards&apos;:
-
-                    self.selectedShards.css(&apos;background-image&apos;, image.css(&apos;background-image&apos;));
+                    self.selectedShards.css(
+                        &apos;background-image&apos;,
+                        image.css(&apos;background-image&apos;)
+                    );
 
                     if (Detect.isMobile())
                         self.selectedShards.css(&apos;background-size&apos;, &apos;600%&apos;);
 
                     var count = self.getItemSlot(index).count;
 
-                    if (count &gt; 1)
-                        self.shardsCount.text(count);
+                    if (count &gt; 1) self.shardsCount.text(count);
 
                     break;
             }
 
             image.css(&apos;background-image&apos;, &apos;&apos;);
 
-            self.getSlot(index).find(&apos;#inventoryItemCount&apos; + index).text(&apos;&apos;);
+            self.getSlot(index)
+                .find(&apos;#inventoryItemCount&apos; + index)
+                .text(&apos;&apos;);
         },
 
         moveBack: function(type, index) {
             var self = this,
                 image = self.getSlot(index).find(&apos;#inventoryImage&apos; + index),
-                itemCount = self.getSlot(index).find(&apos;#inventoryItemCount&apos; + index),
+                itemCount = self
+                    .getSlot(index)
+                    .find(&apos;#inventoryItemCount&apos; + index),
                 count = self.getItemSlot(index).count;
 
             switch (type) {
                 case &apos;item&apos;:
+                    image.css(
+                        &apos;background-image&apos;,
+                        self.selectedItem.css(&apos;background-image&apos;)
+                    );
 
-                    image.css(&apos;background-image&apos;, self.selectedItem.css(&apos;background-image&apos;));
-
-                    if (count &gt; 1)
-                        itemCount.text(count);
+                    if (count &gt; 1) itemCount.text(count);
 
                     self.selectedItem.css(&apos;background-image&apos;, &apos;&apos;);
 
                     break;
 
                 case &apos;shards&apos;:
+                    image.css(
+                        &apos;background-image&apos;,
+                        self.selectedShards.css(&apos;background-image&apos;)
+                    );
 
-                    image.css(&apos;background-image&apos;, self.selectedShards.css(&apos;background-image&apos;));
-
-                    if (count &gt; 1)
-                        itemCount.text(count);
+                    if (count &gt; 1) itemCount.text(count);
 
                     self.selectedShards.css(&apos;background-image&apos;, &apos;&apos;);
 
@@ -167,15 +175,23 @@
         },
 
         enchant: function() {
-            this.game.socket.send(Packets.Enchant, [Packets.EnchantOpcode.Enchant]);
+            this.game.socket.send(Packets.Enchant, [
+                Packets.EnchantOpcode.Enchant
+            ]);
         },
 
         select: function(event) {
-            this.game.socket.send(Packets.Enchant, [Packets.EnchantOpcode.Select, event.currentTarget.id.substring(17)]);
+            this.game.socket.send(Packets.Enchant, [
+                Packets.EnchantOpcode.Select,
+                event.currentTarget.id.substring(17)
+            ]);
         },
 
         remove: function(type) {
-            this.game.socket.send(Packets.Enchant, [Packets.EnchantOpcode.Remove, type]);
+            this.game.socket.send(Packets.Enchant, [
+                Packets.EnchantOpcode.Remove,
+                type
+            ]);
         },
 
         getInventorySize: function() {
@@ -217,7 +233,6 @@
         isVisible: function() {
             return this.body.css(&apos;display&apos;) === &apos;block&apos;;
         }
-
     });
 });
 </code></pre>

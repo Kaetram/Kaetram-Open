@@ -36,7 +36,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/shops.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Shops = {},
+let Shops = {},
     _ = require(&apos;underscore&apos;);
 
 Shops.Data = {};
@@ -59,27 +59,24 @@ Shops.getItemCount = id =&gt; {
 };
 
 Shops.increment = (shopId, itemId, count) =&gt; {
-    const shop = Shops.Ids[shopId],
+    let shop = Shops.Ids[shopId],
         index = shop.items.indexOf(itemId);
 
-    if (index &lt; 0)
-        return;
+    if (index &lt; 0) return;
 
-    const shopData = Shops.Data[shop.key];
+    let shopData = Shops.Data[shop.key];
 
     shopData.count[index] += count;
 };
 
 Shops.decrement = (npcId, buyId, count) =&gt; {
-    const shop = Shops.Ids[npcId];
+    let shop = Shops.Ids[npcId];
 
-    if (!buyId || buyId &lt; 0)
-        return;
+    if (!buyId || buyId &lt; 0) return;
 
     shop.count[buyId] -= count;
 
-    if (shop.count[buyId] &lt; 0)
-        shop.count[buyId] = 0;
+    if (shop.count[buyId] &lt; 0) shop.count[buyId] = 0;
 };
 
 Shops.getCost = (npcId, buyId, count) =&gt; {
@@ -89,48 +86,42 @@ Shops.getCost = (npcId, buyId, count) =&gt; {
      * spice up the game.
      */
 
-    const shop = Shops.Ids[npcId];
+    let shop = Shops.Ids[npcId];
 
-    if (!shop || !buyId || buyId &lt; 0)
-        return;
+    if (!shop || !buyId || buyId &lt; 0) return;
 
     return shop.prices[buyId] * count;
 };
 
 Shops.getStock = (npcId, buyId) =&gt; {
-    const shop = Shops.Ids[npcId];
+    let shop = Shops.Ids[npcId];
 
-    if (!shop || !buyId || buyId &lt; 0)
-        return null;
+    if (!shop || !buyId || buyId &lt; 0) return null;
 
     return shop.count[buyId];
 };
 
 Shops.getOriginalStock = (shopId, buyId) =&gt; {
-    const shop = Shops.Ids[shopId];
+    let shop = Shops.Ids[shopId];
 
-    if (!buyId || buyId &lt; 0)
-        return;
+    if (!buyId || buyId &lt; 0) return;
 
     return shop.originalCount[buyId];
 };
 
 Shops.getCount = npcId =&gt; {
-    const count = Shops.Ids[npcId].count,
+    let count = Shops.Ids[npcId].count,
         counts = [];
 
-    if (_.isArray(count))
-        return count;
+    if (_.isArray(count)) return count;
 
-    for (let i = 0; i &lt; Shops.getItemCount(npcId); i++)
-        counts.push(count);
+    for (let i = 0; i &lt; Shops.getItemCount(npcId); i++) counts.push(count);
 
     return counts;
 };
 
 Shops.getItem = (npcId, buyId) =&gt; {
-    if (!buyId || buyId &lt; 0)
-        return;
+    if (!buyId || buyId &lt; 0) return;
 
     return Shops.Ids[npcId].items[buyId];
 };

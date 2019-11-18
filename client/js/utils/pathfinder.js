@@ -2,7 +2,6 @@
 
 define(['../lib/astar'], function(AStar) {
     return Class.extend({
-
         init: function(width, height) {
             var self = this;
 
@@ -24,8 +23,7 @@ define(['../lib/astar'], function(AStar) {
             for (var i = 0; i < self.height; i++) {
                 self.blankGrid[i] = [];
 
-                for (var j = 0; j < self.width; j++)
-                    self.blankGrid[i][j] = 0;
+                for (var j = 0; j < self.width; j++) self.blankGrid[i][j] = 0;
             }
 
             // log.info('Successfully loaded the pathfinder!');
@@ -34,7 +32,8 @@ define(['../lib/astar'], function(AStar) {
         find: function(grid, entity, x, y, incomplete) {
             var self = this,
                 start = [entity.gridX, entity.gridY],
-                end = [x, y], path;
+                end = [x, y],
+                path;
 
             self.grid = grid;
             self.applyIgnore(true);
@@ -50,7 +49,9 @@ define(['../lib/astar'], function(AStar) {
         findIncomplete: function(start, end) {
             var self = this,
                 incomplete = [],
-                perfect, x, y;
+                perfect,
+                x,
+                y;
 
             perfect = AStar(self.blankGrid, start, end, self.mode);
 
@@ -69,22 +70,22 @@ define(['../lib/astar'], function(AStar) {
 
         applyIgnore: function(ignored) {
             var self = this,
-                x, y, g;
+                x,
+                y,
+                g;
 
             _.each(self.ignores, function(entity) {
                 x = entity.hasPath() ? entity.nextGridX : entity.gridX;
                 y = entity.hasPath() ? entity.nextGridY : entity.gridY;
 
-                if (x >= 0 && y >= 0)
-                    self.grid[y][x] = ignored ? 0 : 1;
+                if (x >= 0 && y >= 0) self.grid[y][x] = ignored ? 0 : 1;
             });
         },
 
         ignoreEntity: function(entity) {
             var self = this;
 
-            if (!entity)
-                return;
+            if (!entity) return;
 
             self.ignores.push(entity);
         },
@@ -95,6 +96,5 @@ define(['../lib/astar'], function(AStar) {
             self.applyIgnore(false);
             self.ignores = [];
         }
-
     });
 });

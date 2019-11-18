@@ -36,29 +36,26 @@
 <div class="content" data-ice="content"><h1 data-ice="title">Kaetram-Open/server/js/util/mobs.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* global module */
 
-const Mobs = {};
+let Mobs = {};
 
 Mobs.Properties = {};
 Mobs.Ids = {};
 Mobs.Plugins = {};
 
 Mobs.idToString = id =&gt; {
-    if (id in Mobs.Ids)
-        return Mobs.Ids[id].key;
+    if (id in Mobs.Ids) return Mobs.Ids[id].key;
 
     return null;
 };
 
 Mobs.idToName = id =&gt; {
-    if (id in Mobs.Ids)
-        return Mobs.Ids[id].name;
+    if (id in Mobs.Ids) return Mobs.Ids[id].name;
 
     return null;
 };
 
 Mobs.getXp = id =&gt; {
-    if (id in Mobs.Ids)
-        return Mobs.Ids[id].xp;
+    if (id in Mobs.Ids) return Mobs.Ids[id].xp;
 
     return -1;
 };

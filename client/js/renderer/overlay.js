@@ -2,7 +2,6 @@
 
 define(function() {
     return Class.extend({
-
         init: function(game) {
             var self = this;
 
@@ -28,8 +27,7 @@ define(function() {
             overlay.src = 'img/overlays/' + overlayName;
 
             overlay.onload = function() {
-                if (self.game.isDebug())
-                    log.info('Loaded ' + overlayName);
+                if (self.game.isDebug()) log.info('Loaded ' + overlayName);
             };
 
             return overlay;
@@ -40,13 +38,11 @@ define(function() {
 
             if (overlay in self.overlays)
                 self.currentOverlay = self.overlays[overlay];
-            else
-                self.currentOverlay = overlay;
+            else self.currentOverlay = overlay;
         },
 
         getFog: function() {
             return this.currentOverlay;
         }
-
     });
 });
