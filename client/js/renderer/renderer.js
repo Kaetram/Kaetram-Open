@@ -53,7 +53,7 @@ define(['jquery', './camera', './tile',
             self.checkDevice();
 
             self.tileSize = 16;
-            self.fontSize = 10;
+            self.fontSize = 14;
 
             self.screenWidth = 0;
             self.screenHeight = 0;
@@ -105,7 +105,6 @@ define(['jquery', './camera', './tile',
             self.superScaling = self.getSuperScaling();
 
             self.loadLights();
-            self.handleScaling();
         },
 
         removeSmoothing: function() {
@@ -339,7 +338,6 @@ define(['jquery', './camera', './tile',
             self.forEachVisibleEntity(function(entity) {
                 if (entity.spriteLoaded)
                     self.drawEntity(entity);
-
             });
         },
 
@@ -601,7 +599,7 @@ define(['jquery', './camera', './tile',
             self.clearScreen(self.cursorContext);
             self.cursorContext.save();
 
-            if (cursor && self.scale > 1) {
+            if (cursor) {
                 if (!cursor.loaded)
                     cursor.load();
 
@@ -636,15 +634,15 @@ define(['jquery', './camera', './tile',
         },
 
         drawFPS: function() {
-            this.drawText('FPS: ' + this.realFPS, 10, 11, false, 'white');
+            this.drawText('FPS: ' + this.realFPS, 10, 31, false, 'white');
         },
 
         drawPosition: function() {
             var self = this,
                 player = self.game.player;
 
-            self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 31, false, 'white');
-            self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringInstance, 10, 51, false, 'white');
+            self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 51, false, 'white');
+            self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringInstance, 10, 71, false, 'white');
         },
 
         drawCollisions: function() {
@@ -726,7 +724,7 @@ define(['jquery', './camera', './tile',
         drawScaledImage: function(context, image, x, y, width, height, dx, dy) {
             var self = this,
                 tilesetScale = image.scale,
-                scale = self.superScaling;
+                scale = self.superScaling; // self.superScaling * 1.5;
 
             if (!context)
                 return;
@@ -742,13 +740,10 @@ define(['jquery', './camera', './tile',
                 height * scale); // Destination Height
         },
 
-        drawText: function(text, x, y, centered, colour, strokeColour) {
+        drawText: function(text, x, y, centered, colour, strokeColour, fontSize) {
             var self = this,
-                strokeSize = 1,
+                strokeSize = 3,
                 context = self.textContext;
-
-            if (self.scale > 2)
-                strokeSize = 3;
 
             if (text && x && y) {
                 context.save();
@@ -758,6 +753,7 @@ define(['jquery', './camera', './tile',
 
                 context.strokeStyle = strokeColour || '#373737';
                 context.lineWidth = strokeSize;
+                context.font = (fontSize || self.fontSize) + 'px AdvoCut';
                 context.strokeText(text, x * self.superScaling, y * self.superScaling);
                 context.fillStyle = colour || 'white';
                 context.fillText(text, x * self.superScaling, y * self.superScaling);
@@ -899,7 +895,7 @@ define(['jquery', './camera', './tile',
         },
 
         getSuperScaling: function() {
-            return 2;
+            return 3;
         },
 
         clearContext: function() {
@@ -927,22 +923,6 @@ define(['jquery', './camera', './tile',
             this.forEachContext(function(context) {
                 context.clearRect(0, 0, context.canvas.width, context.canvas.height);
             });
-        },
-
-        handleScaling: function() {
-            var self = this;
-
-            /**
-             * Using scale factors to zoom canvas may
-             * have some adverse performance effects.
-             * This is a temporary solution.
-             * Eventually, we will have to scale the sprites
-             * to 1.5 times their current size to obtain
-             * the same effect, with no performance hit. //hopefully
-             */
-
-            self.canvas.style.transformOrigin = '0 0';
-            self.canvas.style.transform = 'scale(1.5)';
         },
 
         saveAll: function() {
