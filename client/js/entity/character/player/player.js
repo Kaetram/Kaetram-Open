@@ -51,11 +51,11 @@ define(['../character', './equipment/armour', './equipment/weapon',
             var self = this;
 
             self.setId(data.instance);
+            self.setName(data.username);
             self.setGridPosition(data.x, data.y);
             self.setPointsData(data.hitPoints, data.mana);
             self.setExperience(data.experience, data.nextExperience, data.prevExperience);
 
-            self.username = data.username;
             self.level = data.level;
 
             self.lastLogin = data.lastLogin;

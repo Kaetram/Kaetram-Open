@@ -526,7 +526,7 @@ define(['jquery', './camera', './tile',
         drawName: function(entity) {
             var self = this;
 
-            if (entity.hidden || (!self.drawNames && !self.drawLevels))
+            if (entity.hidden || !entity.drawNames() || (!self.drawNames && !self.drawLevels))
                 return;
 
             var colour = entity.wanted ? 'red' : 'white';
@@ -543,30 +543,31 @@ define(['jquery', './camera', './tile',
             self.setCameraView(self.textContext);
             self.textContext.font = '11px AdvoCut';
 
-            if (entity.drawNames()) {
-                if (!entity.hasCounter) {
+            if (!entity.hasCounter) {
+                var x = entity.x + 8;
+                var y = entity.y - 10;
 
-                    if (self.drawNames && (entity.type === 'mob' || entity.type === 'player'))
-                        self.drawText(entity.type === 'player' ? entity.username : entity.name, (entity.x + 8), (entity.y - (self.drawLevels ? 20 : 10)), true, colour, '#000');
+                if (self.drawNames && entity instanceof Character)
+                    self.drawText(entity.name, x, (self.drawLevels && entity.type !== 'npc') ? y - 10 : y, true, colour, '#000');
 
-                    if (self.drawLevels && (entity.type === 'mob' || entity.type === 'player'))
-                        self.drawText('Level ' + entity.level, (entity.x + 8), (entity.y - (entity.type === 'player' ? 12 : 10)), true, colour, '#000');
+                if (self.drawLevels && (entity.type === 'mob' || entity.type === 'player'))
+                    self.drawText('Level ' + entity.level, x, y, true, colour, '#000');
 
-                    if (entity.type === 'item' && entity.count > 1)
-                        self.drawText(entity.count, (entity.x + 8), (entity.y - 10), true, colour);
+                if (entity.type === 'item' && entity.count > 1)
+                    self.drawText(entity.count, x, y, true, colour);
 
-                } else {
+            } else {
 
-                    if (self.game.time - entity.countdownTime > 1000) {
-                        entity.countdownTime = self.game.time;
-                        entity.counter--;
-                    }
-
-                    if (entity.counter <= 0)
-                        entity.hasCounter = false;
-
-                    self.drawText(entity.counter, (entity.x + 8), (entity.y - 10), true, colour);
+                //TODO - Move this countdown elsewhere.
+                if (self.game.time - entity.countdownTime > 1000) {
+                    entity.countdownTime = self.game.time;
+                    entity.counter--;
                 }
+
+                if (entity.counter <= 0)
+                    entity.hasCounter = false;
+
+                self.drawText(entity.counter, (entity.x + 8), (entity.y - 10), true, colour);
             }
 
             self.textContext.restore();
