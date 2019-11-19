@@ -1,5 +1,10 @@
 /* global module */
 
+/**
+ * This package is used for creating functions used all throughout the
+ * game server.
+ */
+
 let Utils = {},
     Packets = require('../network/packets');
 

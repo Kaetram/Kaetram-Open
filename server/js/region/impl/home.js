@@ -2,10 +2,13 @@
 
 let MapClient = require('../../../data/map/world_client');
 
-class Home {
+/**
+ * Class used for storing hardcoded values and actions for a specific area
+ * in the game.
+ * @experiemntal Hardcoding regions and areas is still a work in progress.
+ */
 
-    startRegion = '0-4';
-    endRegion = '4-10';
+class Home {
 
     constructor(region) {
         let self = this;
