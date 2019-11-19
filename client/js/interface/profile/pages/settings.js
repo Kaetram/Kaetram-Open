@@ -190,7 +190,10 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         hide: function() {
-            this.body.fadeOut('fast');
+            var self = this;
+            
+            self.body.fadeOut('fast');
+            self.button.removeClass('active');
         },
 
         setMusicLevel: function(musicLevel) {

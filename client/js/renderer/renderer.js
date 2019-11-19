@@ -339,6 +339,7 @@ define(['jquery', './camera', './tile',
             self.forEachVisibleEntity(function(entity) {
                 if (entity.spriteLoaded)
                     self.drawEntity(entity);
+
             });
         },
 
@@ -361,9 +362,6 @@ define(['jquery', './camera', './tile',
 
             self.context.save();
             self.setCameraView(self.context);
-
-            if (entity.id !== self.game.player.id)
-                self.context.globalCompositeOperation = 'destination-over';
 
             if (data.sprite !== sprite) {
 
