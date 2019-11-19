@@ -34,6 +34,7 @@
     },
     "devDependencies": {
         "esdoc": "^1.1.0",
+        "esdoc-ecmascript-proposal-plugin": "^1.0.0",
         "esdoc-standard-plugin": "^1.0.0",
         "eslint": "^6.6.0",
         "eslint-config-google": "^0.14.0",
@@ -51,6 +52,9 @@
     "esdoc": {
         "source": "./",
         "destination": "./docs",
+        "includes": [
+            "\\.js$"
+        ],
         "excludes": [
             "node_modules",
             "cordova",
@@ -61,7 +65,47 @@
         ],
         "plugins": [
             {
-                "name": "esdoc-standard-plugin"
+                "name": "esdoc-ecmascript-proposal-plugin",
+                "option": {
+                    "all": true
+                }
+            },
+            {
+                "name": "esdoc-standard-plugin",
+                "option": {
+                    "lint": {
+                        "enable": true
+                    },
+                    "coverage": {
+                        "enable": true
+                    },
+                    "accessor": {
+                        "access": [
+                            "public",
+                            "protected",
+                            "private"
+                        ],
+                        "autoPrivate": true
+                    },
+                    "undocumentIdentifier": {
+                        "enable": true
+                    },
+                    "unexportedIdentifier": {
+                        "enable": false
+                    },
+                    "typeInference": {
+                        "enable": true
+                    },
+                    "brand": {
+                        "logo": "./client/img/icons/icon-512x512.png",
+                        "title": "Kaetram Documentation",
+                        "description": "Kaetram development support.",
+                        "repository": "https://github.com/Veradictus/Kaetram-Open",
+                        "site": "https://kaetram.com",
+                        "author": "https://github.com/Veradictus",
+                        "image": "https://kaetram.com/img/icons/icon-512x512.png"
+                    }
+                }
             }
         ]
     },
