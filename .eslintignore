@@ -1,0 +1,6 @@
+**/*.min.js
+lib/
+node_modules/
+cordova/
+**/map.js
+**/mapworker.js
