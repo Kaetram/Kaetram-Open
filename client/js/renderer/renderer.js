@@ -53,7 +53,7 @@ define(['jquery', './camera', './tile',
             self.checkDevice();
 
             self.tileSize = 16;
-            self.fontSize = 14;
+            self.fontSize = 16;
 
             self.screenWidth = 0;
             self.screenHeight = 0;
@@ -308,10 +308,9 @@ define(['jquery', './camera', './tile',
 
             self.game.info.forEachInfo(function(info) {
                 self.textContext.save();
-                self.textContext.font = '20px AdvoCut';
                 self.setCameraView(self.textContext);
                 self.textContext.globalAlpha = info.opacity;
-                self.drawText('' + info.text, Math.floor((info.x + 8)), Math.floor(info.y), true, info.fill, info.stroke);
+                self.drawText('' + info.text, Math.floor((info.x + 8)), Math.floor(info.y), true, info.fill, info.stroke, 26);
                 self.textContext.restore();
             });
         },
@@ -505,7 +504,7 @@ define(['jquery', './camera', './tile',
 
             var barLength = 16,
                 healthX = entity.x * self.superScaling - barLength / 2 + 8,
-                healthY = (entity.y - 9) * self.superScaling,
+                healthY = (entity.y - 6) * self.superScaling,
                 healthWidth = Math.round(entity.hitPoints / entity.maxHitPoints * barLength * self.superScaling),
                 healthHeight = 2 * self.superScaling;
 
@@ -544,7 +543,7 @@ define(['jquery', './camera', './tile',
                 var y = entity.y - 10;
 
                 if (self.drawNames && entity instanceof Character)
-                    self.drawText(entity.name, x, (self.drawLevels && entity.type !== 'npc') ? y - 10 : y, true, colour, '#000');
+                    self.drawText(entity.name, x, (self.drawLevels && entity.type !== 'npc') ? y - 8 : y, true, colour, '#000');
 
                 if (self.drawLevels && (entity.type === 'mob' || entity.type === 'player'))
                     self.drawText('Level ' + entity.level, x, y, true, colour, '#000');
