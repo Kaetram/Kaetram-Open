@@ -57,7 +57,6 @@ body {
     background: #111;
     overflow: hidden;
     image-rendering: -moz-crisp-edges;
-    border-top: 2px solid #707070;
 }
 
 #resizeCheck {

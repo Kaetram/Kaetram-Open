@@ -1,8 +1,8 @@
 // This is the "Offline page" service worker
 
-const CACHE = 'pwabuilder-page';
+var CACHE = 'pwabuilder-page';
 
-const offlineFallbackPage = 'index.html';
+var offlineFallbackPage = 'index.html';
 
 // Install stage sets up the offline page in the cache and opens a new cache
 self.addEventListener('install', function(event) {
@@ -27,9 +27,9 @@ self.addEventListener('fetch', function(event) {
             if (
                 event.request.destination !== 'document' ||
                 event.request.mode !== 'navigate'
-            ) {
+            ) 
                 return;
-            }
+            
 
             console.error(
                 '[PWA Builder] Network request Failed. Serving offline page ' +
@@ -44,7 +44,7 @@ self.addEventListener('fetch', function(event) {
 
 // This is an event that can be fired from your page to tell the SW to update the offline page
 self.addEventListener('refreshOffline', function() {
-    const offlinePageRequest = new Request(offlineFallbackPage);
+    var offlinePageRequest = new Request(offlineFallbackPage);
 
     return fetch(offlineFallbackPage).then(function(response) {
         return caches.open(CACHE).then(function(cache) {
