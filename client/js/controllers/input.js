@@ -317,13 +317,12 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             var self = this,
                 offset = self.app.canvas.offset(),
                 width = self.renderer.background.width,
-                height = self.renderer.background.height,
-                proportionality = self.renderer.scale === 3 ? (2 / 3) : 1;
+                height = self.renderer.background.height;
 
             self.cursorMoved = false;
 
-            self.mouse.x = Math.round((event.pageX - offset.left)) * proportionality;
-            self.mouse.y = Math.round((event.pageY - offset.top)) * proportionality;
+            self.mouse.x = Math.round((event.pageX - offset.left));
+            self.mouse.y = Math.round((event.pageY - offset.top));
 
             if (self.mouse.x >= width)
                 self.mouse.x = width - 1;
