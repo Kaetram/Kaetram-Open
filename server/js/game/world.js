@@ -15,6 +15,7 @@ let config = require('../../config.json'),
     Chest = require('./entity/objects/chest'),
     Character = require('./entity/character/character'),
     Projectile = require('./entity/objects/projectile'),
+    Minigames = require('../controllers/minigames'),
     Packets = require('../network/packets'),
     Formulas = require('../util/formulas'),
     Modules = require('../util/modules'),
@@ -51,7 +52,6 @@ class World {
         self.ready = false;
 
         self.malformTimeout = null;
-
     }
 
     load(onWorldLoad) {
@@ -92,6 +92,7 @@ class World {
         self.shops = new Shops(self);
         self.region = new Region(self);
         self.network = new Network(self);
+        self.minigames = new Minigames(self);
 
         self.ready = true;
 

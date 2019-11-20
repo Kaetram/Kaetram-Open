@@ -36,8 +36,8 @@ class Parser {
             Mobs.Plugins = require ('../util/plugins')(__dirname + '/../../data/combat/');
             Items.Plugins = require ('../util/plugins')(__dirname + '/../../data/items/');
 
-            log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins`);
-            log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins`);
+            log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
+            log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
         });
     }
 

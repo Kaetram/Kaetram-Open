@@ -356,7 +356,7 @@ html [type="button"],
 
 #health {
     /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(right, #FF8888, #FF0000);
+    background: -webkit-linear-gradient(right, #ff0000, #ef5a5a);
     /* Firefox 3.6+ */
     background: -moz-linear-gradient(right, #FF8888, #FF0000);
     -webkit-transition: .5s width ease;

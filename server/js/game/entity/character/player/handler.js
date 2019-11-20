@@ -121,6 +121,15 @@ class Handler {
             }));
 
         });
+
+        self.player.onTeleport((x, y, isDoor) => {
+            if (!self.player.finishedTutorial && isDoor && self.player.doorCallback) {
+                self.player.doorCallback(x, y);
+                return;
+            }
+
+            
+        });
     }
 
     detectAggro() {

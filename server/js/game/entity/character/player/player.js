@@ -509,12 +509,8 @@ class Player extends Character {
     teleport(x, y, isDoor, animate) {
         let self = this;
 
-        if (isDoor && !self.finishedTutorial()) {
-            if (self.doorCallback)
-                self.doorCallback(x, y);
-
-            return;
-        }
+        if (self.teleportCallback)
+            self.teleportCallback(x, y, isDoor);
 
         self.sendToAdjacentRegions(self.region, new Messages.Teleport({
             id: self.instance,
@@ -524,9 +520,8 @@ class Player extends Character {
         }));
 
         self.setPosition(x, y);
-        //self.checkRegions();
-
         self.world.cleanCombat(self);
+
     }
 
     updatePVP(pvp) {
@@ -1150,6 +1145,10 @@ class Player extends Character {
 
     onDoor(callback) {
         this.doorCallback = callback;
+    }
+
+    onTeleport(callback) {
+        this.teleportCallback = callback;
     }
 
     onProfile(callback) {
