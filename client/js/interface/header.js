@@ -40,9 +40,6 @@ define(['jquery', './container/container'], function($, Container) {
                 scale = self.getScale(),
                 width = self.healthBar.width();
 
-            if (scale < 2)
-                scale = 2;
-
             //11 is due to the offset of the #health in the #healthBar
             var diff = Math.floor(width * (self.player.hitPoints / self.player.maxHitPoints) - (11 * scale)),
                 prevWidth = self.health.width();
@@ -70,9 +67,6 @@ define(['jquery', './container/container'], function($, Container) {
                 scale = self.getScale(),
                 width = self.expBar.width();
 
-            if (scale < 2)
-                scale = 2;
-
             var experience = self.player.experience - self.player.prevExperience,
                 nextExperience = self.player.nextExperience - self.player.prevExperience;
 
@@ -89,7 +83,13 @@ define(['jquery', './container/container'], function($, Container) {
         },
 
         getScale: function() {
-            return this.game.app.getUIScale();
+            var self = this,
+                scale = self.game.app.getUIScale();
+
+            if (scale < 2)
+                scale = 2;
+
+            return scale;
         }
 
     });

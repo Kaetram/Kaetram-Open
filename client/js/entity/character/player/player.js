@@ -176,7 +176,7 @@ define(['../character', './equipment/armour', './equipment/weapon',
 
             self.experience = experience;
             self.nextExperience = nextExperience;
-            self.prevExperience = prevExperience;
+            self.prevExperience = prevExperience || 0;
 
             if (self.experienceCallback)
                 self.experienceCallback();
