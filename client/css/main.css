@@ -22,6 +22,10 @@ article, aside, details, figcaption, figure, footer, header, menu, nav, section 
 
 canvas {
     position: absolute;
+    -ms-interpolation-mode: nearest-neighbor;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-pixelated;
     image-rendering: pixelated;
 }
 
@@ -37,9 +41,7 @@ html {
 #container {
     z-index: 100;
     background: rgba(0, 0, 0, 0.2);
-    -moz-transition: 1s opacity linear 0.5s;
     -webkit-transition: 1s opacity linear 0.5s;
-    -o-transition: 1s opacity linear 0.5s;
     transition: 1s opacity linear 0.5s;
 }
 
@@ -51,9 +53,7 @@ footer {
     text-align: center;
     width: 100%;
     color: #c6c0a3;
-    -moz-transition: 0.2s opacity linear;
     -webkit-transition: 0.2s opacity linear;
-    -o-transition: 0.2s opacity linear;
     transition: 0.2s opacity linear;
     font-size: 16px;
 }
@@ -98,14 +98,15 @@ footer div {
 
 #foreground, #background, #entities, #cursor, #overlay {
     -webkit-transform: translatez(0);
-    -moz-transform: translatez(0);
-    -ms-transform: translatez(0);
-    -o-transform: translatez(0);
     transform: translatez(0);
 }
 
 .parchment-left, .parchment-middle, .parchment-right, #respawn {
     background: url('../img/3/spritesheet.png');
+    -ms-interpolation-mode: nearest-neighbor;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-pixelated;
     image-rendering: pixelated;
 }
 
@@ -126,9 +127,7 @@ footer div {
     background: rgba(0, 0, 0, 0.05);
     text-align: center;
     color: #eee;
-    -moz-animation: glow 0.5s linear infinite alternate;
     -webkit-animation: glow 0.5s linear infinite alternate;
-    -o-animation: glow 0.5s linear infinite alternate;
     animation: glow 0.5s linear infinite alternate;
 }
 
@@ -136,10 +135,7 @@ footer div {
     border-color: rgba(0, 0, 0, 0.3);
     background: rgba(0, 0, 0, 0.1);
     color: #fff;
-
-    -moz-animation: none;
     -webkit-animation: none;
-    -o-animation: none;
     animation: none;
 }
 
@@ -156,9 +152,7 @@ footer div {
 }
 
 #intro {
-    -moz-transition: 0.4s opacity linear;
     -webkit-transition: 0.4s opacity linear;
-    -o-transition: 0.4s opacity linear;
     transition: 0.4s opacity linear;
 }
 
@@ -179,9 +173,7 @@ footer div {
 }
 
 #intro {
-    -moz-transition: 0.4s opacity linear;
     -webkit-transition: 0.4s opacity linear;
-    -o-transition: 0.4s opacity linear;
     transition: 0.4s opacity linear;
 }
 
@@ -206,9 +198,7 @@ footer div {
 #credits, #git, #about, #loadCharacter, #createCharacter, #death, #ask, #error {
     opacity: 0;
     pointer-events: none;
-    -moz-transition: none;
     -webkit-transition: none;
-    -o-transition: none;
     transition: none;
 }
 
@@ -223,9 +213,7 @@ footer div {
 .credits #credits, .about #about, .git #git, .death #death, .ask #ask, .error #error, .createCharacter #createCharacter, .loadCharacter #loadCharacter {
     opacity: 1;
     pointer-events: auto;
-    -moz-transition: 0.5s opacity linear;
     -webkit-transition: 0.5s opacity linear;
-    -o-transition: 0.5s opacity linear;
     transition: 0.5s opacity linear;
 }
 
@@ -253,16 +241,12 @@ footer div {
 }
 
 .animate .parchment-left {
-    -moz-animation: parchleft 1s ease-in-out 1;
     -webkit-animation: parchleft 1s ease-in-out 1;
-    -o-animation: parchleft 1s ease-in-out 1;
     animation: parchleft 1s ease-in-out 1;
 }
 
 .animate .parchment-right {
-    -moz-animation: parchright 1s ease-in-out 1;
     -webkit-animation: parchright 1s ease-in-out 1;
-    -o-animation: parchright 1s ease-in-out 1;
     animation: parchright 1s ease-in-out 1;
 }
 
@@ -322,7 +306,11 @@ footer div {
 
     .parchment-left, .parchment-middle, .parchment-right, #respawn {
         background: url('../img/3/spritesheet.png');
-        image-rendering: pixelated;
+        -ms-interpolation-mode: nearest-neighbor;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -o-pixelated;
+            image-rendering: pixelated;
     }
 
     .parchment-left, .parchment-middle, .parchment-right {
@@ -389,9 +377,7 @@ footer div {
     }
 
     .animate .parchment-middle {
-        -moz-animation: parchmiddle3 1s ease-in-out 1;
         -webkit-animation: parchmiddle3 1s ease-in-out 1;
-        -o-animation: parchmiddle3 1s ease-in-out 1;
         animation: parchmiddle3 1s ease-in-out 1;
     }
 
@@ -438,7 +424,11 @@ footer div {
 
     .parchment-left, .parchment-middle, .parchment-right, #respawn {
         background: url('../img/2/spritesheet.png');
-        image-rendering: pixelated;
+        -ms-interpolation-mode: nearest-neighbor;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -o-pixelated;
+            image-rendering: pixelated;
     }
 
     .parchment-left, .parchment-middle, .parchment-right {
@@ -505,9 +495,7 @@ footer div {
     }
 
     .animate .parchment-middle {
-        -moz-animation: parchmiddle2 1s ease-in-out 1;
         -webkit-animation: parchmiddle2 1s ease-in-out 1;
-        -o-animation: parchmiddle2 1s ease-in-out 1;
         animation: parchmiddle2 1s ease-in-out 1;
     }
 
@@ -616,9 +604,7 @@ footer div {
     }
 
     .animate .parchment-middle {
-        -moz-animation: parchmiddle1 1s ease-in-out 1;
         -webkit-animation: parchmiddle1 1s ease-in-out 1;
-        -o-animation: parchmiddle1 1s ease-in-out 1;
         animation: parchmiddle1 1s ease-in-out 1;
     }
 
@@ -645,8 +631,6 @@ footer div {
 }
 
 .tablet .animate .parchment-left, .tablet .animate .parchment-right, .tablet .animate .parchment-middle {
-    -webkit-animation:none;
-    -moz-animation:none;
-    -o-animation:none;
-    animation:none;
+    -webkit-animation: none;
+    animation: none;
 }

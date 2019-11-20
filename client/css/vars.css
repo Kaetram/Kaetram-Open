@@ -1,3 +1,4 @@
+
 body {
     line-height: 1;
 }
@@ -61,7 +62,11 @@ body {
     margin: 0;
     background: #111;
     overflow: hidden;
-    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-pixelated;
+        image-rendering: pixelated;
 }
 
 #resizeCheck {
@@ -69,9 +74,7 @@ body {
     height: 0;
     left: 0;
     position: absolute;
-    -moz-transition: 0.001s height ease-in-out;
     -webkit-transition: 0.001s height ease-in-out;
-    -o-transition: 0.001s height ease-in-out;
     transition: 0.001s height ease-in-out;
 }
 
@@ -86,7 +89,11 @@ body {
 
 .left-ornament, .right-ornament {
     background: url('../img/1/spritesheet.png');
-    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-pixelated;
+        image-rendering: pixelated;
 }
 
 .left-ornament {
@@ -109,9 +116,7 @@ body {
     height: 0;
     top: 0;
     left: 0;
-    -moz-transition: 0.001s height ease-in-out;
     -webkit-transition: 0.001s height ease-in-out;
-    -o-transition: 0.001s height ease-in-out;
     transition: 0.001s height ease-in-out;
 }
 
@@ -344,16 +349,8 @@ html [type="button"],
 #close-about {
     margin-top: 10%;
 }
-
-@-moz-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
 @-webkit-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
-@-o-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
-@-ms-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
-
-@-moz-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
 @-webkit-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
-@-o-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
-@-ms-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
 
 #health, #healthBar {
     cursor: default;
@@ -361,45 +358,29 @@ html [type="button"],
 
 #health {
     /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(top, #FF8888, #FF0000);
     /* Firefox 3.6+ */
     background: -moz-linear-gradient(top, #FF8888, #FF0000);
-
-    -moz-transition:.5s width ease;
-    -webkit-transition:.5s width ease;
-    -o-transition:.5s width ease;
-    -ms-transition:.5s width ease;
-    transition:.5s width ease;
+    -webkit-transition: .5s width ease;
+    transition: .5s width ease;
 }
 
 #exp {
 
     /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(top, #44FF44, #008800);
     /* Firefox 3.6+ */
     background: -moz-linear-gradient(top, #44FF44, #008800);
-
-    -moz-transition:.5s width ease;
-    -webkit-transition:.5s width ease;
-    -o-transition:.5s width ease;
-    -ms-transition:.5s width ease;
-    transition:.5s width ease;
+    -webkit-transition: .5s width ease;
+    transition: .5s width ease;
 }
 
 #health.white {
-    -moz-animation:flash 0.5s linear 1;
-    -webkit-animation:flash 0.5s linear 1;
-    -o-animation:flash 0.5s linear 1;
-    -ms-animation:flash 0.5s linear 1;
-    animation:flash 0.5s linear 1;
+    -webkit-animation: flash 0.5s linear 1;
+    animation: flash 0.5s linear 1;
 }
 
 #health.green {
-    -moz-animation:flash-green 0.5s linear 1;
-    -webkit-animation:flash-green 0.5s linear 1;
-    -o-animation:flash-green 0.5s linear 1;
-    -ms-animation:flash-green 0.5s linear 1;
-    animation:flash-green 0.5s linear 1;
+    -webkit-animation: flash-green 0.5s linear 1;
+    animation: flash-green 0.5s linear 1;
 }
 
 @media only screen and (min-width: 1501px) {
@@ -420,7 +401,11 @@ html [type="button"],
 
     .left-ornament, .right-ornament {
         background: url('../img/3/spritesheet.png');
-        image-rendering: pixelated;
+        -ms-interpolation-mode: nearest-neighbor;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -o-pixelated;
+            image-rendering: pixelated;
     }
 
     .left-ornament, .right-ornament {
@@ -626,8 +611,6 @@ html [type="button"],
     }
 
     input[type='range']::-webkit-slider-thumb {
-        -webkit-border-radius: 6px;
-        -moz-border-radius: 6px;
         border-radius: 6px;
         height: 24px;
         width: 15px;
@@ -646,7 +629,11 @@ html [type="button"],
 
     .left-ornament, .right-ornament {
         background: url('../img/2/spritesheet.png');
-        image-rendering: pixelated;
+        -ms-interpolation-mode: nearest-neighbor;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -o-pixelated;
+            image-rendering: pixelated;
     }
 
     .left-ornament, .right-ornament {
@@ -846,8 +833,6 @@ html [type="button"],
     }
 
     input[type='range']::-webkit-slider-thumb {
-        -webkit-border-radius: 4px;
-        -moz-border-radius: 4px;
         border-radius: 4px;
         height: 15px;
         width: 10px;
@@ -1081,8 +1066,6 @@ html [type="button"],
     }
 
     input[type='range']::-webkit-slider-thumb {
-        -webkit-border-radius: 2px;
-        -moz-border-radius: 2px;
         border-radius: 2px;
         height: 8px;
         width: 5px;
