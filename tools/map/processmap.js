@@ -208,13 +208,8 @@ module.exports = function parse(json, options) {
                             height: area.height / map.tilesize
                         };
 
-                        chestArea['i'] = _.map(area.properties[0].value.split(','), function(name) {
-                            return name;
-                        });
-
-                        _.each(area.properties, function(value, name) {
-                            if (name !== 'items')
-                                chestArea['t' + name] = isValid(parseInt(value, 10)) ? parseInt(value, 10) : value;
+                        _.each(area.properties, function(property) {
+                            chestArea['t' + property.name] = property.value;
                         });
 
                         map.chestAreas.push(chestArea);
