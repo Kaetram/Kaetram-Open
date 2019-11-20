@@ -22,7 +22,7 @@ article, aside, details, figcaption, figure, footer, header, menu, nav, section 
 
 canvas {
     position: absolute;
-    image-rendering: optimizeSpeed;
+    image-rendering: pixelated;
 }
 
 html {
@@ -106,7 +106,7 @@ footer div {
 
 .parchment-left, .parchment-middle, .parchment-right, #respawn {
     background: url('../img/3/spritesheet.png');
-    image-rendering: -moz-crisp-edges;
+    image-rendering: pixelated;
 }
 
 #death p {
@@ -322,7 +322,7 @@ footer div {
 
     .parchment-left, .parchment-middle, .parchment-right, #respawn {
         background: url('../img/3/spritesheet.png');
-        image-rendering: -moz-crisp-edges;
+        image-rendering: pixelated;
     }
 
     .parchment-left, .parchment-middle, .parchment-right {
@@ -438,14 +438,12 @@ footer div {
 
     .parchment-left, .parchment-middle, .parchment-right, #respawn {
         background: url('../img/2/spritesheet.png');
-        image-rendering: -moz-crisp-edges;
+        image-rendering: pixelated;
     }
 
     .parchment-left, .parchment-middle, .parchment-right {
         background-size: 844px;
     }
-
-
 
     .parchment-left {
         width: 76px;
