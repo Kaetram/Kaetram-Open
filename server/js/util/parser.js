@@ -19,12 +19,26 @@ class Parser {
     constructor() {
         let self = this;
 
+        self.load();
+
         self.loadMobData();
         self.loadNPCData();
         self.loadItemData();
         self.loadAbilityData();
         self.loadShops();
         self.loadLevels();
+    }
+
+    load() {
+        let self = this;
+
+        self.onReady(() => {
+            Mobs.Plugins = require ('../util/plugins')(__dirname + '/../../data/combat/');
+            Items.Plugins = require ('../util/plugins')(__dirname + '/../../data/items/');
+
+            log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins`);
+            log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins`);
+        });
     }
 
     loadMobData() {
@@ -36,23 +50,23 @@ class Parser {
             Mobs.Properties[key] = {
                 key: key,
                 id: value.id,
-                name: value.name ? value.name : key,
-                drops: value.drops ? value.drops : null,
-                hitPoints: value.hitPoints ? value.hitPoints : 10,
-                armour: value.armour ? value.armour : 0,
-                weapon: value.weapon ? value.weapon : 0,
-                xp: value.xp ? value.xp : 0,
-                level: value.level ? value.level : 0,
-                aggroRange: value.aggroRange ? value.aggroRange : 2,
-                attackRange: value.attackRange ? value.attackRange : 1,
-                aggressive: value.aggressive ? value.aggressive : false,
-                isPoisonous: value.isPoisonous ? value.isPoisonous : false,
-                attackRate: value.attackRate ? value.attackRate : 1000,
-                movementSpeed: value.movementSpeed ? value.movementSpeed : 200,
-                projectileName: value.projectileName ? value.projectileName : null,
-                spawnDelay: value.spawnDelay ? value.spawnDelay : 60000,
-                combatPlugin: value.combatPlugin ? value.combatPlugin : null,
-                hiddenName: value.hiddenName ? value.hiddenName: false
+                name: value.name || key,
+                drops: value.drops || null,
+                hitPoints: value.hitPoints || 10,
+                armour: value.armour || 0,
+                weapon: value.weapon || 0,
+                xp: value.xp || 0,
+                level: value.level || 0,
+                aggroRange: value.aggroRange || 2,
+                attackRange: value.attackRange || 1,
+                aggressive: value.aggressive || false,
+                isPoisonous: value.isPoisonous || false,
+                attackRate: value.attackRate || 1000,
+                movementSpeed: value.movementSpeed || 200,
+                projectileName: value.projectileName || null,
+                spawnDelay: value.spawnDelay || 60000,
+                combatPlugin: value.combatPlugin || null,
+                hiddenName: value.hiddenName || false
             };
 
             Mobs.Ids[value.id] = Mobs.Properties[key];
@@ -60,10 +74,7 @@ class Parser {
             mobCounter++;
         });
 
-        Mobs.Plugins = require ('../util/plugins')(__dirname + '/../../data/combat/');
-
         log.info('Finished loading ' + mobCounter + ' mobs.');
-        log.info('Loaded ' + Object.keys(Mobs.Plugins).length + ' combat plugins.');
     }
 
     loadNPCData() {
@@ -75,9 +86,9 @@ class Parser {
             NPCs.Properties[key] = {
                 key: key,
                 id: value.id,
-                name: value.name ? value.name : key,
-                text: value.text ? value.text : null,
-                type: value.type ? value.type : null
+                name: value.name || key,
+                text: value.text || null,
+                type: value.type || null
             };
 
             NPCs.Ids[value.id] = NPCs.Properties[key];
@@ -96,24 +107,24 @@ class Parser {
 
             Items.Data[key] = {
                 key: key,
-                id: value.id ? value.id : -1,
-                type: value.type ? value.type : 'object',
-                attack: value.attack ? value.attack : 0,
-                defense: value.defense ? value.defense : 0,
-                pendantLevel: value.pendantLevel ? value.pendantLevel : null,
-                ringLevel: value.ringLevel ? value.ringLevel : null,
-                bootsLevel: value.bootsLevel ? value.bootsLevel : null,
-                name: value.name ? value.name : key,
-                price: value.price ? value.price : 1,
-                storeCount: value.storeCount ? value.storeCount : 1,
-                stackable: value.stackable ? value.stackable : 0,
-                edible: value.edible ? value.edible : 0,
-                healsHealth: value.healsHealth ? value.healsHealth : 0,
-                healsMana: value.healsMana ? value.healsMana : 0,
-                maxStackSize: value.maxStackSize ? value.maxStackSize : -1,
-                plugin: value.plugin ? value.plugin : null,
-                customData: value.customData ? value.customData : null,
-                requirement: value.requirement ? value.requirement : null
+                id: value.id || -1,
+                type: value.type || 'object',
+                attack: value.attack || 0,
+                defense: value.defense || 0,
+                pendantLevel: value.pendantLevel || null,
+                ringLevel: value.ringLevel || null,
+                bootsLevel: value.bootsLevel || null,
+                name: value.name || key,
+                price: value.price || 1,
+                storeCount: value.storeCount || 1,
+                stackable: value.stackable || 0,
+                edible: value.edible || 0,
+                healsHealth: value.healsHealth || 0,
+                healsMana: value.healsMana || 0,
+                maxStackSize: value.maxStackSize || -1,
+                plugin: value.plugin || null,
+                customData: value.customData || null,
+                requirement: value.requirement || null
             };
 
             Items.Ids[value.id] = Items.Data[key];
@@ -121,11 +132,7 @@ class Parser {
             itemCounter++;
         });
 
-
-        Items.Plugins = require ('../util/plugins')(__dirname + '/../../data/items/');
-
         log.info('Finished loading ' + itemCounter + ' items.');
-        log.info('Loaded ' + Object.keys(Items.Plugins).length + ' item plugins.');
     }
 
     loadAbilityData() {
@@ -138,8 +145,8 @@ class Parser {
                 key: key,
                 id: value.id,
                 type: value.type,
-                mana: value.mana ? value.mana : 0,
-                cooldown: value.cooldown ? value.cooldown : null
+                mana: value.mana || 0,
+                cooldown: value.cooldown || null
             };
 
             Abilities.Ids[value.id] = Abilities.Data[key];
@@ -176,12 +183,21 @@ class Parser {
     }
 
     loadLevels() {
+        let self = this;
+
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
             let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
+
+        if (self.readyCallback)
+            self.readyCallback();
+    }
+
+    onReady(callback) {
+        this.readyCallback = callback;
     }
 }
 
