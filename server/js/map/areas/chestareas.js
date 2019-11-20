@@ -22,19 +22,24 @@ class ChestAreas {
         _.each(map.chestAreas, (m) => {
             let chestArea = new Area(m.id, m.x, m.y, m.width, m.height);
 
-            chestArea.maxEntities = m.entities;
-            chestArea.items = m.i;
+            chestArea.maxEntities = m.entities || 0;
+            chestArea.items = m.titems.split(',');
             chestArea.cX = m.tx;
             chestArea.cY = m.ty;
+
+            log.info(chestArea);
 
             self.chestAreas.push(chestArea);
 
             chestArea.onEmpty(() => {
-                self.spawnChest(this);
+                log.info(chestArea);
+                log.info(chestArea.items);
+
+                self.spawnChest(chestArea);
             });
 
             chestArea.onSpawn(() => {
-                self.removeChest(this);
+                self.removeChest(chestArea);
             });
 
         });
