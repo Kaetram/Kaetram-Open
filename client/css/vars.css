@@ -63,10 +63,9 @@ body {
     background: #111;
     overflow: hidden;
     -ms-interpolation-mode: nearest-neighbor;
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: -moz-crisp-edges;
-        image-rendering: -o-pixelated;
-        image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-pixelated;
+    image-rendering: pixelated;
 }
 
 #resizeCheck {
@@ -90,10 +89,9 @@ body {
 .left-ornament, .right-ornament {
     background: url('../img/1/spritesheet.png');
     -ms-interpolation-mode: nearest-neighbor;
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: -moz-crisp-edges;
-        image-rendering: -o-pixelated;
-        image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-pixelated;
+    image-rendering: pixelated;
 }
 
 .left-ornament {
@@ -358,17 +356,18 @@ html [type="button"],
 
 #health {
     /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(right, #FF8888, #FF0000);
     /* Firefox 3.6+ */
-    background: -moz-linear-gradient(top, #FF8888, #FF0000);
+    background: -moz-linear-gradient(right, #FF8888, #FF0000);
     -webkit-transition: .5s width ease;
     transition: .5s width ease;
 }
 
 #exp {
-
     /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #44FF44, #008800);
     /* Firefox 3.6+ */
-    background: -moz-linear-gradient(top, #44FF44, #008800);
+    background: -moz-linear-gradient(left, #44FF44, #008800);
     -webkit-transition: .5s width ease;
     transition: .5s width ease;
 }
@@ -402,10 +401,9 @@ html [type="button"],
     .left-ornament, .right-ornament {
         background: url('../img/3/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: -o-pixelated;
-            image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-pixelated;
+        image-rendering: pixelated;
     }
 
     .left-ornament, .right-ornament {
@@ -630,10 +628,9 @@ html [type="button"],
     .left-ornament, .right-ornament {
         background: url('../img/2/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: -o-pixelated;
-            image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -o-pixelated;
+        image-rendering: pixelated;
     }
 
     .left-ornament, .right-ornament {
