@@ -4,6 +4,21 @@ var CACHE = 'pwabuilder-page';
 
 var offlineFallbackPage = 'index.html';
 
+self.addEventListener('activate', function(event) {
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.filter(function(cacheName) {
+                    // Return true if you want to remove this cache
+                    return false;
+                }).map(function(cacheName) {
+                    return caches.delete(cacheName);
+                })
+            );
+        })
+    );
+});
+
 // Install stage sets up the offline page in the cache and opens a new cache
 self.addEventListener('install', function(event) {
     console.log('[PWA Builder] Install Event processing');

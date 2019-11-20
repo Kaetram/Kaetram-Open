@@ -20,7 +20,11 @@
         property="og:description"
         content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool."
     />
-    <meta property="og:image" content="./img/favicon.png" />
+    <meta property="og:image" content="https://kaetram.com/img/favicon.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="64" />
+    <meta property="og:image:height" content="64" />
+    <meta property="og:image:alt" content="Kaetram Logo" />
 
     <!-- Meta -->
     <meta
@@ -29,7 +33,7 @@
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Veradictus" />
-    <meta name="image" content="./img/favicon.png" />
+    <meta name="image" content="https://kaetram.com/img/favicon.png" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="language" content="English" />
 
@@ -39,7 +43,7 @@
         itemprop="description"
         content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool."
     />
-    <meta itemprop="image" content="./img/favicon.png" />
+    <meta itemprop="image" content="https://kaetram.com/img/favicon.png" />
 
     <!-- Mobile -->
     <meta name="format-detection" content="telephone=no" />
@@ -69,8 +73,8 @@
         }
     </script>
 
-    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
-    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
+    <link rel="icon" type="image/png" href="./img/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="./img/favicon.png" />
 
     <title>Kaetram</title>
 
@@ -415,7 +419,7 @@
             <div id="trade">
                 <div id="closeTrade" class="close"></div>
 
-                <div id="tradePlayerCotainer"></div>
+                <div id="tradePlayerContainer"></div>
                 <div id="tradeOPlayerContainer"></div>
             </div>
             <div id="enchant">
@@ -512,5 +516,63 @@
     <script src="lib/socket.io.js"></script>
     <script src="js/lib/jquery.js"></script>
     <script data-main="js/lib/home" src="js/lib/require.js"></script>
+    <script>
+        var install = function() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function(choiceResult) {
+
+                    if (choiceResult.outcome === 'accepted')
+                        log.info('Your PWA has been installed');
+                    else
+                        log.info('User chose to not install your PWA');
+
+                    deferredPrompt = null;
+                });
+            }
+        };
+
+        window.addEventListener('beforeinstallprompt', function(e) {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+
+            install();
+        });
+
+        var isUpdateAvailable = new Promise(function(resolve, reject) {
+            // This is the "Offline page" service worker
+
+            // Add this below content to your HTML page, or add the js file to your page at the very top to register service worker
+
+            // Check compatibility for the browser we're running this in
+            if ('serviceWorker' in navigator) {
+                if (navigator.serviceWorker.controller)
+                    log.info('[PWA Builder] active service worker found, no need to register');
+                else {
+                    // Register the service worker
+                    navigator.serviceWorker.register('sw.js', {
+                            scope: '../'
+                        }).then(function(reg) {
+                            log.info('[PWA Builder] Service worker has been registered for scope: ' + reg.scope);
+
+                            reg.onupdatefound = () => {
+                                var installingWorker = reg.installing;
+                                installingWorker.onstatechange = () => {
+                                    switch (installingWorker.state) {
+                                        case 'installed':
+                                            if (navigator.serviceWorker.controller);
+                                            break;
+                                    }
+                                };
+                            };
+                        })
+                        .catch(err => log.error('[SW ERROR]', err));
+                }    
+            }
+        });
+    </script>
 </body>
 </html>
