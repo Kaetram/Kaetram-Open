@@ -26,9 +26,7 @@ class ChestAreas {
             chestArea.items = m.titems.split(',');
             chestArea.cX = m.tx;
             chestArea.cY = m.ty;
-
-            log.info(chestArea);
-
+            
             self.chestAreas.push(chestArea);
 
             chestArea.onEmpty(() => {
