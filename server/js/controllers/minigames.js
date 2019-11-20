@@ -16,8 +16,10 @@ class Minigames {
 
     load() {
         let self = this;
-        
-        self.minigames['TeamWar'] = new TeamWar();
+
+        self.minigames['TeamWar'] = new TeamWar(self.world);
+
+        log.info(`Finished loading ${Object.keys(self.minigames).length} minigames.`)
     }
 
     getTeamWar() {
