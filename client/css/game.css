@@ -1,3 +1,4 @@
+
 body.game {
     background: #000;
 }
@@ -8,8 +9,6 @@ body.game {
 
 .game #parchment {
     z-index: 0;
-    -moz-transition: 0.5s opacity linear 0.5s, z-index 0s linear 1s;
-    -o-transition: 0.5s opacity linear 0.5s, z-index 0s linear 1s;
     -webkit-transition: 0.5s opacity linear 0.5s, z-index 0s linear 1s;
     transition: 0.5s opacity linear 0.5s, z-index 0s linear 1s;
     top: 50%;
@@ -17,8 +16,6 @@ body.game {
 
 .game #credits, .game #death, .game #ask, .game #about, .game #git {
     opacity: 0;
-    -moz-transition: 0s opacity linear 0s;
-    -o-transition: 0s opacity linear 0s;
     -webkit-transition: 0s opacity linear 0s;
     transition: 0s opacity linear 0s;
     z-index: 1000;
@@ -26,8 +23,6 @@ body.game {
 
 .game.credits #credits, .game.death #death, .game.ask #ask, .game.about #about, .game.git #git {
     opacity: 1;
-    -moz-transition: 0.5s opacity linear 0.5s;
-    -o-transition: 0.5s opacity linear 0.5s;
     -webkit-transition: 0.5s opacity linear 0.5s;
     transition: 0.5s opacity linear 0.5s;
     z-index: 1000;
@@ -35,31 +30,23 @@ body.game {
 
 .game.credits #parchment, .game.death #parchment, .game.ask #parchment, .game.about #parchment, .game.git #parchment {
     opacity: 1;
-    -moz-transition: 0.5s opacity linear 0s;
-    -o-transition: 0.5s opacity linear 0s;
     -webkit-transition: 0.5s opacity linear 0s;
     transition: 0.5s opacity linear 0s;
     z-index: 1000;
 }
 
 .game .parchment-left {
-    -moz-transition: 0.5s left ease-in-out;
     -webkit-transition: 0.5s left ease-in-out;
-    -o-transition: 0.5s left ease-in-out;
     transition: 0.5s left ease-in-out;
     left: 41%;
 }
 .game .parchment-right {
-    -moz-transition: 0.5s right ease-in-out;
     -webkit-transition: 0.5s right ease-in-out;
-    -o-transition: 0.5s right ease-in-out;
     transition: 0.5s right ease-in-out;
     right: 41%;
 }
 .game .parchment-middle {
-    -moz-transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out, 0.5s background-position ease-in-out;
     -webkit-transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out, 0.5s background-position ease-in-out;
-    -o-transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out, 0.5s background-position ease-in-out;
     transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out, 0.5s background-position ease-in-out;
     width: 0;
     margin-left: 0;
