@@ -6,7 +6,7 @@ Live Version - <https://kaetram.com>
 
 Discord - <https://discord.gg/MmbGAaw>
 
-![Demo](https://i.imgur.com/M7N8RRp.png)
+![Demo](https://i.imgur.com/rVHL2Uc.png)
 
 ## Features
 
