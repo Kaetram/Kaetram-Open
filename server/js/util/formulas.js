@@ -158,6 +158,8 @@ Formulas.expToLevel = (experience) => {
     for (let i = 1; i < Formulas.LevelExp.length; i++)
         if (experience < Formulas.LevelExp[i])
             return i;
+
+    return Constants.MAX_LEVEL;
 };
 
 Formulas.getRewardExperience = (player) => {
