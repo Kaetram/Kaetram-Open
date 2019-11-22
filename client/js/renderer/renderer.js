@@ -334,6 +334,9 @@ define(['jquery', './camera', './tile',
         drawEntities: function() {
             var self = this;
 
+            if (self.game.player.dead)
+                return;
+
             self.forEachVisibleEntity(function(entity) {
                 if (entity.spriteLoaded)
                     self.drawEntity(entity);

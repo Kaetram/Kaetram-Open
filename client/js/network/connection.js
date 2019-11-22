@@ -838,7 +838,7 @@ define(['./impl/teamwar'], function(TeamWar) {
                 }
 
                 self.game.player.setGridPosition(x, y);
-                self.entities.addEntity(self.game.player);
+                self.entities.registerPosition(self.game.player);
                 self.renderer.camera.centreOn(self.game.player);
 
                 self.game.player.currentAnimation = null;
