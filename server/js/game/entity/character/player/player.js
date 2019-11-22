@@ -331,6 +331,8 @@ class Player extends Character {
         data.prevExperience = self.prevExperience;
 
         self.send(new Messages.Experience(data));
+
+        self.sync();
     }
 
     heal(amount) {
@@ -521,7 +523,6 @@ class Player extends Character {
 
         self.setPosition(x, y);
         self.world.cleanCombat(self);
-
     }
 
     updatePVP(pvp) {
@@ -987,7 +988,7 @@ class Player extends Character {
         self.y = position.y;
     }
 
-    sync(all) {
+    sync() {
         let self = this;
 
         /**
@@ -1004,13 +1005,12 @@ class Player extends Character {
             maxHitPoints: self.getMaxHitPoints(),
             mana: self.mana.getMana(),
             maxMana: self.mana.getMaxMana(),
-            experience: self.experience,
             level: self.level,
             armour: self.armour.getString(),
             weapon: self.weapon.getData()
         };
 
-        self.sendToAdjacentRegions(self.region, new Messages.Sync(info), all ? null : self.instance);
+        self.sendToAdjacentRegions(self.region, new Messages.Sync(info));
 
         self.save();
     }

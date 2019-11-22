@@ -58,6 +58,9 @@ define(['jquery', './container/container'], function($, Container) {
                 }, 500);
             }
 
+            if (diff > width)
+                diff = width;
+
             self.health.css('width', diff + 'px');
             self.healthBarText.text(self.player.hitPoints + '/' + self.player.maxHitPoints);
         },
@@ -68,9 +71,8 @@ define(['jquery', './container/container'], function($, Container) {
                 width = self.expBar.width();
 
             var experience = self.player.experience - self.player.prevExperience,
-                nextExperience = self.player.nextExperience - self.player.prevExperience;
-
-            var diff = Math.floor(width * (experience / nextExperience));
+                nextExperience = self.player.nextExperience - self.player.prevExperience,
+                diff = Math.floor(width * (experience / nextExperience));
 
             self.exp.css('width', diff + 'px');
         },

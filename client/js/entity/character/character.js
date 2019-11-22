@@ -556,6 +556,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         setHitPoints: function(hitPoints) {
             var self = this;
 
+            if (hitPoints < 0)
+                hitPoints = 0;
+
             self.hitPoints = hitPoints;
 
             if (self.hitPointsCallback)
