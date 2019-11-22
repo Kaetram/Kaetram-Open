@@ -33,6 +33,10 @@ Modules = {
         Explosive: 8
     },
 
+    Infos: {
+        Countdown: 0
+    },
+
     Equipment: {
         Armour: 0,
         Weapon: 1,

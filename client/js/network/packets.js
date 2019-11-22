@@ -177,7 +177,8 @@ Packets.MinigameOpcode = {
         Team: 1,
         Red: 2,
         Blue: 3,
-        Leave: 4
+        Leave: 4,
+        Countdown: 5
     }
 };
 

@@ -438,7 +438,7 @@ Messages.Minigame = class {
     }
 
     serialize() {
-        return [Packets.Shop, this.opcode, this.info];
+        return [Packets.Minigame, this.opcode, this.info];
     }
 
 };

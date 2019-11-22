@@ -1,6 +1,6 @@
 /* global log, _ */
 
-define(function() {
+define(['./impl/teamwar'], function(TeamWar) {
 
     return Class.extend({
 
@@ -23,6 +23,8 @@ define(function() {
             self.info = game.info;
             self.pointer = game.pointer;
             self.inventory = game.inventory;
+
+            self.teamWar = new TeamWar();
 
             self.load();
         },
@@ -971,7 +973,17 @@ define(function() {
             });
 
             self.messages.onMinigame(function(opcode, info) {
-                log.info('Lorem Ipsum.');
+
+                switch (opcode) {
+
+                    case Packets.MinigameOpcode.TeamWar:
+
+                        self.teamWar.handle(info);
+
+                        break;
+
+                }
+
             });
 
             self.messages.onRegion(function(opcode, info) {
