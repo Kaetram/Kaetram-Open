@@ -8,7 +8,7 @@
   { "type": "mob", "string": "rat", "x": 95, "y": 82, "roaming": true },
   { "type": "mob", "string": "rat", "x": 80, "y": 99, "roaming": true },
   { "type": "mob", "string": "rat", "x": 89, "y": 111, "roaming": true },
-  { "type": "mob", "string": "rat", "x": 27, "y": 100, "roaming": true },
+  { "type": "mob", "string": "rat", "x": 27, "y": 98, "roaming": true },
   { "type": "mob", "string": "rat", "x": 55, "y": 95, "roaming": true },
   { "type": "mob", "string": "rat", "x": 41, "y": 113, "roaming": true },
 
@@ -36,5 +36,24 @@
   { "type": "mob", "string": "rat", "x": 31, "y": 468, "roaming": true },
   { "type": "mob", "string": "rat", "x": 33, "y": 466, "roaming": true },
 
-  { "type": "item", "string": "watermelon", "x": 66, "y": 137 }
+  { "type": "item", "string": "watermelon", "x": 66, "y": 137 },
+
+  { "type": "mob", "string": "crab", "x": 20, "y": 134, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 24, "y": 139, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 32, "y": 132, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 34, "y": 140, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 47, "y": 138, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 40, "y": 125, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 49, "y": 119, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 59, "y": 130, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 62, "y": 122, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 61, "y": 140, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 74, "y": 140, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 80, "y": 122, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 87, "y": 141, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 96, "y": 141, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 90, "y": 129, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 98, "y": 135, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 104, "y": 134, "roaming": true },
+  { "type": "mob", "string": "crab", "x": 107, "y": 141, "roaming": true }
 ]
