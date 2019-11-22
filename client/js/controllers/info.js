@@ -1,6 +1,7 @@
 /* global _, Modules */
 
-define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
+define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdown'],
+    function(Queue, Splat, Countdown) {
 
     return Class.extend({
 
@@ -75,11 +76,30 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
 
                     break;
 
+                case Modules.Info.Timer:
+                    /**
+                     * We only allow the creation of one countdown timer.
+                     */
+
+                    if (countdownExists)
+                        return;
+
+                    var time = data.shift(),
+                        countdown = new Countdown('countdown', time);
+
+                    self.addInfo(countdown);
+
+                    break;
+
             }
         },
 
         getCount: function() {
             return Object.keys(this.infos).length;
+        },
+
+        getCountdown: function() {
+            return this.infos['countdown'];
         },
 
         addInfo: function(info) {
@@ -104,6 +124,14 @@ define(['../utils/queue', '../renderer/infos/splat'], function(Queue, Splat) {
             });
 
             self.destroyQueue.reset();
+        },
+
+        countdownExists: function() {
+            return 'countdown' in this.infos;
+        },
+
+        clearCountdown: function() {
+            delete this.infos['countdown'];
         },
 
         forEachInfo: function(callback) {

@@ -20,6 +20,9 @@ class TeamWar extends Minigame {
         self.started = false;
 
         self.countdown = 120;
+        self.updateInterval = 1000;
+        self.lastSync = new Date().getTime();
+        self.syncThreshold = 10000;
 
         self.load();
     }
@@ -34,9 +37,12 @@ class TeamWar extends Minigame {
 
             self.buildTeams();
 
-            
+            if (new Date().getTime() - self.lastSync > self.syncThreshold)
+                self.synchronize();
+
             self.started = true;
-        });
+
+        }, self.updateInterval);
     }
 
     start() {
@@ -52,6 +58,7 @@ class TeamWar extends Minigame {
             return;
 
         self.lobby.push(player);
+
     }
 
     remove(player) {
@@ -84,6 +91,34 @@ class TeamWar extends Minigame {
 
     count() {
         return this.lobby.length;
+    }
+
+    synchronize() {
+        let self = this;
+
+        if (self.started)
+            return;
+
+        _.each(self.lobby, (player) => {
+            self.sendCountdown(player);
+        });
+    }
+
+    sendCountdown(player) {
+        let self = this;
+
+        /**
+         * We handle this logic client-sided. If a countdown does not exist,
+         * we create one, otherwise we synchronize it with the packets we receive.
+         */
+
+        self.world.push(Packets.PushOpcode.Player, {
+            player: player,
+            message: new Messages.Minigame(Packets.MinigameOpcode.TeamWar, {
+                opcode: Packets.MinigameOpcode.TeamWarOpcode.Countdown,
+                countdown: self.countdown
+            })
+        });
     }
 
     // Used for radius

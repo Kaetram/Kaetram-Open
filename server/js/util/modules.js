@@ -29,6 +29,10 @@ let Modules = {
         Explosive: 8
     },
 
+    Infos: {
+        Countdown: 0
+    },
+
     Projectiles: {
         Arrow: 0,
         Boulder: 1,
