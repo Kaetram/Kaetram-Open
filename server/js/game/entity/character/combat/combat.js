@@ -64,14 +64,7 @@ class Combat {
                 }, 3000);
             }
         });
-
-        self.character.onRemoveTarget(() => {
-            let target = self.character.target;
-
-            if (target && target.combat)
-                target.combat.removeAttacker(self.character);
-
-        });
+        
     }
 
     begin(attacker) {

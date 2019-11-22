@@ -17,7 +17,7 @@ class Character extends Entity {
         self.movementSpeed = 150;
         self.attackRange = 1;
         self.attackRate = 1000;
-        self.healingRate = 7000;
+        self.healingRate = 25000;
 
         self.spawnDistance = 7;
 
@@ -63,14 +63,11 @@ class Character extends Entity {
         let self = this;
 
         self.healingInterval = setInterval(() => {
-            
+
             if (self.dead)
                 return;
 
             if (self.combat.started)
-                return;
-
-            if (self.combat.isAttacked())
                 return;
 
             self.heal(1);
