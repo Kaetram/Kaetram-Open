@@ -539,7 +539,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         setTarget: function(target) {
             var self = this;
 
-            if (target === null) {
+            if (!target) {
                 self.removeTarget();
                 return;
             }

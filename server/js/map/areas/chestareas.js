@@ -24,15 +24,12 @@ class ChestAreas {
 
             chestArea.maxEntities = m.entities || 0;
             chestArea.items = m.titems.split(',');
-            chestArea.cX = m.tx;
-            chestArea.cY = m.ty;
-            
+            chestArea.cX = parseInt(m.tx);
+            chestArea.cY = parseInt(m.ty);
+
             self.chestAreas.push(chestArea);
 
             chestArea.onEmpty(() => {
-                log.info(chestArea);
-                log.info(chestArea.items);
-
                 self.spawnChest(chestArea);
             });
 
