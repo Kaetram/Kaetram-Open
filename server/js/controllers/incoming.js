@@ -242,7 +242,7 @@ class Incoming {
         _.each(message.shift(), (id) => {
             let entity = self.world.getEntityByInstance(id);
 
-            if (entity && entity.id)
+            if (entity && entity.id && !entity.dead)
                 self.player.send(new Messages.Spawn(entity));
         });
     }

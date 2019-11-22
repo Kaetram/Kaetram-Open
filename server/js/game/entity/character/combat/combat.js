@@ -7,6 +7,7 @@ let _ = require('underscore'),
     Formulas = require('../../../../util/formulas'),
     Modules = require('../../../../util/modules'),
     Messages = require('../../../../network/messages'),
+    Character = require('../character'),
     Packets = require('../../../../network/packets');
 
 class Combat {
@@ -62,6 +63,14 @@ class Combat {
 
                 }, 3000);
             }
+        });
+
+        self.character.onRemoveTarget(() => {
+            let target = self.character.target;
+
+            if (target && target.combat)
+                target.combat.removeAttacker(self.character);
+
         });
     }
 

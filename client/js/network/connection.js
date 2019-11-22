@@ -487,11 +487,6 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                 var entity = self.entities.get(data.id);
 
-                //var id = data.shift(),
-                //    hitPoints = data.shift(),
-                //    mana = data.shift(),
-                //    entity = self.entities.get(id);
-
                 if (!entity)
                     return;
 
@@ -735,7 +730,9 @@ define(['./impl/teamwar'], function(TeamWar) {
                     entity.level = info.level;
                     self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
 
-                } else if (entity.id === self.game.player.id) {
+                }
+
+                if (entity.id === self.game.player.id) {
 
                     if (info.id === self.game.player.id)
                         self.game.player.setExperience(info.experience, info.nextExperience, info.prevExperience);
