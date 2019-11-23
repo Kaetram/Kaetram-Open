@@ -1,3 +1,5 @@
+var deferredPrompt = null;
+
 var install = function() {
     if (deferredPrompt) {
         try {
