@@ -13,7 +13,7 @@
   "scope": "/",
   "start_url": "/?utm_source=a2hs",
   "display": "fullscreen",
-  "orientation": "landscape",
+  "orientation": "any",
   "theme_color": "#000000",
   "background_color": "#000000",
   "serviceworker": {
