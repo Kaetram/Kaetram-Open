@@ -200,6 +200,7 @@ define(['jquery'], function($) {
 
             self.toggleLogin(true);
             self.game.connect();
+            install();
         },
 
         fadeMenu: function() {
@@ -477,7 +478,7 @@ define(['jquery'], function($) {
                 _.each(self.loginFields, function(field) { field.prop('readonly', state); });
 
             if (self.registerFields)
-                _.each(self.registerFields, function(field) { field.prop('readOnly', state); })
+                _.each(self.registerFields, function(field) { field.prop('readOnly', state); });
         },
 
         updateRange: function(obj) {

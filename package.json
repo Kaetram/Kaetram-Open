@@ -12,25 +12,26 @@
         "lint:client": "eslint -c ./.eslintrc-client.js \"./client/**/*.js\"",
         "lint:server": "eslint -c ./.eslintrc-server.js \"./server/**/*.js\"",
         "docs": "esdoc",
-        "build": "webpack"
+        "build": "gulp"
     },
     "dependencies": {
         "bcrypt": "^3.0.7",
         "commander": "^4.0.1",
         "connect": "^3.7.0",
+        "html-minifier": "^4.0.0",
         "http": "0.0.0",
         "log": "^1.4.0",
         "memcache": "^0.3.0",
         "mongodb": "^3.3.4",
         "mysql": "^2.17.1",
+        "ncp": "^2.0.0",
         "request": "^2.88.0",
         "sanitizer": "^0.1.3",
         "serve-static": "^1.14.1",
         "shutdown-hook": "^1.1.5",
         "socket.io": "^2.3.0",
         "underscore": "^1.9.1",
-        "url": "^0.11.0",
-        "workbox-webpack-plugin": "^4.3.1"
+        "url": "^0.11.0"
     },
     "devDependencies": {
         "esdoc": "^1.1.0",
@@ -43,11 +44,10 @@
         "eslint-plugin-node": "^10.0.0",
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-standard": "^4.0.1",
-        "grunt": "^1.0.4",
+        "gulp": "^4.0.2",
         "morgan": "^1.9.1",
-        "uglifyjs-webpack-plugin": "^2.2.0",
-        "webpack": "^4.41.2",
-        "webpack-cli": "^3.3.10"
+        "workbox-build": "^4.3.1",
+        "workbox-cli": "^4.3.1"
     },
     "esdoc": {
         "source": "./",

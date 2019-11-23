@@ -1,6 +1,8 @@
 var install = function() {
     if (deferredPrompt) {
-        deferredPrompt.prompt();
+        try {
+            deferredPrompt.prompt();
+        } catch(err) {}
         deferredPrompt.userChoice.then(function(choiceResult) {
 
             if (choiceResult.outcome === 'accepted')
@@ -19,8 +21,6 @@ window.addEventListener('beforeinstallprompt', function(e) {
 
     // Stash the event so it can be triggered later.
     deferredPrompt = e;
-
-    install();
 });
 
 var isUpdateAvailable = new Promise(function(resolve, reject) {
@@ -39,9 +39,9 @@ var isUpdateAvailable = new Promise(function(resolve, reject) {
                 }).then(function(reg) {
                     log.info('[PWA Builder] Service worker has been registered for scope: ' + reg.scope);
 
-                    reg.onupdatefound = () => {
+                    reg.onupdatefound = function() {
                         var installingWorker = reg.installing;
-                        installingWorker.onstatechange = () => {
+                        installingWorker.onstatechange = function() {
                             switch (installingWorker.state) {
                                 case 'installed':
                                     if (navigator.serviceWorker.controller);
@@ -50,7 +50,9 @@ var isUpdateAvailable = new Promise(function(resolve, reject) {
                         };
                     };
                 })
-                .catch(err => log.error('[SW ERROR]', err));
-        }
+                .catch(function(err) {
+                    log.error('[SW ERROR]', err)
+                });
+        }    
     }
 });

@@ -53,9 +53,10 @@ footer {
     text-align: center;
     width: 100%;
     color: #c6c0a3;
+    text-shadow: 0 1px 0 black;
     -webkit-transition: 0.2s opacity linear;
     transition: 0.2s opacity linear;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .sub-forum-link {
