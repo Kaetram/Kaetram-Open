@@ -172,6 +172,8 @@ define(['./impl/teamwar'], function(TeamWar) {
                         data.weapon.string, data.weapon.count, data.weapon.ability,
                         data.weapon.abilityLevel);
 
+                entity.setPoison(data.poison);
+
                 self.interface.profile.update();
             });
 
@@ -394,7 +396,7 @@ define(['./impl/teamwar'], function(TeamWar) {
                         var hit = info.hitInfo,
                             isPlayer = target.id === self.game.player.id;
 
-                        if (!hit.isAoE) {
+                        if (!hit.isAoE && !hit.isPoison) {
                             attacker.lookAt(target);
                             attacker.performAction(attacker.orientation, Modules.Actions.Attack);
 

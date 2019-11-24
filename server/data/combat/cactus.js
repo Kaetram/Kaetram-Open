@@ -5,7 +5,7 @@ let Combat = require('../../js/game/entity/character/combat/combat'),
 class Cactus extends Combat {
 
     constructor(character) {
-        character.spawnDistance = 15;
+        character.spawnDistance = 10;
         super(character);
 
         let self = this;
@@ -43,9 +43,9 @@ class Cactus extends Combat {
         if (calculatedDamage < 1)
             return;
 
-        let hit = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
+        let hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 
-        self.hit(self.character, attacker, hit, true);
+        self.hit(self.character, attacker, hitInfo, true);
     }
 
 }
