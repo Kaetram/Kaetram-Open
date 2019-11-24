@@ -389,7 +389,7 @@ class Player extends Character {
         if (!item)
             return;
 
-        new (item)().onUse(self);
+        new (item)(id).onUse(self);
     }
 
     equip(string, count, ability, abilityLevel) {

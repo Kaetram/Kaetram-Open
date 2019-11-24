@@ -15,21 +15,16 @@ Items.getData = (name) => {
     return 'null';
 };
 
-Items.hasPlugin = (string) => {
-    if (Number.isInteger(string))
-      string = Items.idToString(string);
-
-    if (string in Items.Plugins)
+Items.hasPlugin = (id) => {
+    if (id in Items.Plugins)
       return true;
 
     return false;
 };
 
 Items.getPlugin = (id) => {
-    let string = Items.idToString(id);
-
-    if (Items.hasPlugin(string))
-      return Items.Plugins[string];
+    if (Items.hasPlugin(id))
+      return Items.Plugins[id];
 
     return null;
 };

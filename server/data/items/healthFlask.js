@@ -3,12 +3,12 @@
 let Items = require('../../js/util/items'),
     Utils = require('../../js/util/utils');
 
-class Flask {
+class HealthFlask {
 
-    constructor() {
+    constructor(id) {
         let self = this;
 
-        self.id = 190;
+        self.id = id;
 
         self.healAmount = 0;
         self.manaAmount = 0;
@@ -19,6 +19,9 @@ class Flask {
             self.healAmount = customData.healAmount ? customData.healAmount : 0;
             self.manaAmount = customData.manaAmount ? customData.manaAmount : 0;
         }
+
+        log.info(self.healAmount);
+        log.info(self.manaAmount);
     }
 
     onUse(character) {
@@ -34,4 +37,4 @@ class Flask {
 
 }
 
-module.exports = Flask;
+module.exports = HealthFlask;
