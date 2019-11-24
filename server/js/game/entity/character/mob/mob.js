@@ -33,6 +33,7 @@ class Mob extends Character {
         self.attackRange = self.data.attackRange;
         self.aggroRange = self.data.aggroRange;
         self.aggressive = self.data.aggressive;
+        self.attackRate = self.data.attackRate;
 
         self.spawnLocation = [x, y];
 
