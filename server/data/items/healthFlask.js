@@ -20,8 +20,6 @@ class HealthFlask {
             self.manaAmount = customData.manaAmount ? customData.manaAmount : 0;
         }
 
-        log.info(self.healAmount);
-        log.info(self.manaAmount);
     }
 
     onUse(character) {

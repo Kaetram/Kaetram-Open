@@ -64,7 +64,7 @@ class Combat {
                 }, 3000);
             }
         });
-        
+
     }
 
     begin(attacker) {
@@ -403,11 +403,11 @@ class Combat {
         character.setPosition(x, y);
     }
 
-    hit(character, target, hitInfo) {
+    hit(character, target, hitInfo, force) {
         let self = this,
             time = self.getTime();
 
-        if (time - self.lastHit < self.character.attackRate && !hitInfo.isAoE)
+        if (time - self.lastHit < self.character.attackRate && !hitInfo.isAoE && !force)
             return;
 
         if (character.isRanged() || hitInfo.isRanged) {

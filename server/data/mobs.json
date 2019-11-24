@@ -19,7 +19,7 @@
   "Bat": {
     "name": "Batterfly",
     "id": 1,
-    "drops": {"flask": 500},
+    "drops": {"flask": 100},
     "hitPoints": 20,
     "armour": 0,
     "weapon": 0,
@@ -36,7 +36,7 @@
   "Crab": {
     "name": "Crab",
     "id": 2,
-    "drops": {"flask": 500},
+    "drops": {"flask": 100},
     "hitPoints": 35,
     "armour": 0,
     "weapon": 0,
@@ -380,19 +380,20 @@
   "Cactus": {
     "name": "Cactus",
     "id": 21,
-    "drops": {"gold": 600, "cactusaxe": 100},
-    "hitPoints": 115,
-    "armour": 4,
+    "drops": {"gold": 200, "cactusaxe": 10},
+    "hitPoints": 160,
+    "armour": 14,
     "weapon": 1,
     "xp": 35,
     "level": 16,
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
-    "attackRate": 900,
+    "attackRate": 1800,
     "movementSpeed": 400,
     "spawnDelay": 35000,
-    "hiddenName": true
+    "hiddenName": true,
+    "combatPlugin": "cactus"
   },
 
   "Cat": {
@@ -936,7 +937,8 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "spawnDelay": 35000,
+    "hiddenName": true
   },
 
   "MiniIceKnight": {

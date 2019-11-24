@@ -115,8 +115,13 @@ class Character extends Entity {
         return this.attackRange > 1;
     }
 
-    applyDamage(damage) {
-        this.hitPoints -= damage;
+    applyDamage(damage, attacker) {
+        let self = this;
+
+        self.hitPoints -= damage;
+
+        if (self.damagedCallback)
+            self.damagedCallback(damage, attacker);
     }
 
     isDead() {
@@ -228,6 +233,10 @@ class Character extends Entity {
 
     onDamage(callback) {
         this.damageCallback = callback;
+    }
+
+    onDamaged(callback) { // When the entity gets hit.
+        this.damagedCallback = callback;
     }
 
     onStunned(callback) {
