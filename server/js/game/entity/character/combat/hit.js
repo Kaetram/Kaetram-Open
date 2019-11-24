@@ -11,6 +11,8 @@ class Hit {
         self.ranged = false;
         self.aoe = false;
         self.terror = false;
+        self.poison = false;
+
     }
 
     isRanged() {
@@ -19,6 +21,10 @@ class Hit {
 
     isAoE() {
         return this.aoe;
+    }
+
+    isPoison() {
+        return this.poison;
     }
 
     getDamage() {
@@ -31,7 +37,8 @@ class Hit {
             damage: this.damage,
             isRanged: this.isRanged(),
             isAoE: this.isAoE(),
-            hasTerror: this.terror
+            hasTerror: this.terror,
+            isPoison: this.poison
         }
     }
 

@@ -66,11 +66,8 @@ class MobHandler {
     loadCallbacks() {
         let self = this;
 
-        /*self.mob.onMovement((x, y) => {
 
-
-            console.trace(`x: ${x}, y: ${y}`);
-        });*/
+        //TODO - Implement posion on Mobs
     }
 
 }

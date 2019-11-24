@@ -122,7 +122,7 @@
   "Skeleton2": {
     "name": "Scary Skeleton",
     "id": 7,
-    "drops": {"axe": 500, "morningstar": 200, "platearmor": 150, "platearcherarmor": 150},
+    "drops": {"axe": 50, "morningstar": 20, "platearmor": 15, "platearcherarmor": 15},
     "hitPoints": 120,
     "armour": 5,
     "weapon": 2,
@@ -139,9 +139,9 @@
   "Snek": {
     "name": "Snek",
     "id": 8,
-    "drops": {"gold": 900, "morningstar": 50, "platearmor": 50},
-    "hitPoints": 55,
-    "armour": 4,
+    "drops": {"gold": 50, "morningstar": 5, "platearmor": 5},
+    "hitPoints": 85,
+    "armour": 6,
     "weapon": 2,
     "xp": 30,
     "level": 8,
@@ -150,7 +150,8 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "spawnDelay": 35000,
+    "combatPlugin": "snek"
   },
 
   "Spectre": {

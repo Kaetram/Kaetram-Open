@@ -2,8 +2,10 @@
 
 let _ = require('underscore'),
     Messages = require('../../../../network/messages'),
+    Modules = require('../../../../util/modules'),
     Packets = require('../../../../network/packets'),
     Npcs = require('../../../../util/npcs'),
+    Hit = require('../combat/hit'),
     Shops = require('../../../../util/shops');
 
 class Handler {
@@ -15,7 +17,8 @@ class Handler {
         self.world = player.world;
         self.map = player.world.map;
 
-        self.updateInterval = 400; //400 milliseconds
+        self.updateTicks = 0;
+        self.updateInterval = null;
 
         self.load();
     }
@@ -23,9 +26,17 @@ class Handler {
     load() {
         let self = this;
 
-        self.player.updateInterval = setInterval(() => {
+        self.updateInterval = setInterval(() => {
 
             self.detectAggro();
+
+            if (self.updateTicks % 4 === 0) // Every 4 update ticks.
+                self.handlePoison();
+
+            if (self.updateTicks > 1000) // Reset them every now and then.
+                self.updateTicks = 0;
+
+            self.updateTicks++;
 
         }, 400);
 
@@ -78,6 +89,10 @@ class Handler {
         self.player.connection.onClose(() => {
             self.player.stopHealing();
 
+            /* Avoid a memory leak */
+            clearInterval(self.updateInterval);
+            self.updateInterval = null;
+
             self.world.removePlayer(self.player);
         });
 
@@ -128,7 +143,18 @@ class Handler {
                 return;
             }
 
-            
+
+        });
+
+        self.player.onPoison((info) => {
+            self.player.sync();
+
+            if (info)
+                self.player.notify('You have been poisoned.');
+            else
+                self.player.notify('The poison has worn off.');
+
+            log.debug(`Player ${self.player.instance} updated poison status.`);
         });
     }
 
@@ -192,6 +218,28 @@ class Handler {
                 self.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
             }
         });
+    }
+
+    handlePoison() {
+        let self = this;
+
+        if (!self.player.poison)
+            return;
+
+        let info = self.player.poison.split(':'),
+            timeDiff = new Date().getTime() - info[0];
+
+        if (timeDiff > info[1]) {
+            self.player.setPoison(false);
+            return;
+        }
+
+        let hit = new Hit(Modules.Hits.Poison, info[2])
+
+        hit.poison = true;
+
+        self.player.combat.hit(self.player, self.player, hit.getData());
+
     }
 
     canEntitySee(entity) {

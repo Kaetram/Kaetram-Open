@@ -81,8 +81,6 @@ class Player extends Character {
 
         self.canTalk = true;
 
-        self.profileDialogOpen = false;
-
         self.instanced = false;
         self.visible = true;
 
@@ -380,7 +378,6 @@ class Player extends Character {
             amount: amount
         }));
     }
-
 
     eat(id) {
         let self = this,
@@ -1007,7 +1004,8 @@ class Player extends Character {
             maxMana: self.mana.getMaxMana(),
             level: self.level,
             armour: self.armour.getString(),
-            weapon: self.weapon.getData()
+            weapon: self.weapon.getData(),
+            poison: !!self.poison
         };
 
         self.sendToAdjacentRegions(self.region, new Messages.Sync(info));

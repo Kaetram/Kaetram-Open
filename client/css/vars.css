@@ -348,8 +348,9 @@ html [type="button"],
 #close-about {
     margin-top: 10%;
 }
-@-webkit-keyframes flash { 0% {background:#ffa2a2;} 100% {background:#e22525; }}
-@-webkit-keyframes flash-green { 0% {background:#a2ffa2;} 100% {background:#25e225; }}
+@-webkit-keyframes flash { 0% { background:#ffa2a2; } 100% { background:#e22525; }}
+@-webkit-keyframes flash-green { 0% { background:#a2ffa2; } 100% { background:#25e225; }}
+@-webkit-keyframes flash-poison { 0% { background:#0cab3c; } 100% { background:#035819; }}
 
 #health, #healthBar {
     cursor: default;
@@ -381,6 +382,11 @@ html [type="button"],
 #health.green {
     -webkit-animation: flash-green 0.5s linear 1;
     animation: flash-green 0.5s linear 1;
+}
+
+#health.poison {
+    -webkit-animation: flash-poison 0.5s linear 1;
+    animation: flash-poison 0.5s linear 1;
 }
 
 @media only screen and (min-width: 1501px) {

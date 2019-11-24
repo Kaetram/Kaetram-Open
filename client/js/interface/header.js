@@ -44,19 +44,10 @@ define(['jquery', './container/container'], function($, Container) {
             var diff = Math.floor(width * (self.player.hitPoints / self.player.maxHitPoints) - (11 * scale)),
                 prevWidth = self.health.width();
 
-            if (prevWidth > diff) {
-                self.health.addClass('white');
-
-                setTimeout(function() {
-                    self.health.removeClass('white');
-                }, 500);
-            } else if (diff - 1 > prevWidth) {
-                self.health.addClass('green');
-
-                setTimeout(function() {
-                    self.health.removeClass('green');
-                }, 500);
-            }
+            if (self.player.poison)
+                self.toggle('poison');
+            else
+                self.toggle(diff - 1 > prevWidth ? 'green' : 'white');
 
             if (diff > width)
                 diff = width;
@@ -92,6 +83,16 @@ define(['jquery', './container/container'], function($, Container) {
                 scale = 2;
 
             return scale;
+        },
+
+        toggle: function(tClass) {
+            let self = this;
+            
+            self.health.addClass(tClass);
+
+            setTimeout(function() {
+                self.health.removeClass(tClass);
+            }, 500);
         }
 
     });
