@@ -4,12 +4,12 @@ let Modules = require('../../../../util/modules'),
     Utils = require('../../../../util/utils');
 
 class Warp {
-    
+
     constructor(player) {
         let self = this;
-        
+
         self.player = player;
-        
+
         self.lastWarp = 0;
         self.warpTimeout = 30000;
     }
@@ -33,6 +33,11 @@ class Warp {
             levelRequirement = data[4];
 
         log.info('Player Rights: ' + self.player.rights);
+
+        if (!self.player.finishedTutorial()) {
+            self.player.notify('You cannot warp while in this event.');
+            return;
+        }
 
         if (self.hasRequirement()) {
             self.player.notify('You must be at least level ' + levelRequirement + ' to warp here!');
@@ -78,7 +83,7 @@ class Warp {
     getDifference() {
         return new Date().getTime() - this.lastWarp;
     }
-    
+
 }
 
 module.exports = Warp;
