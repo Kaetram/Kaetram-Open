@@ -332,10 +332,6 @@ define(['./impl/teamwar'], function(TeamWar) {
                 if (!entity)
                     return;
 
-                entity.dead = true;
-
-                entity.stop();
-
                 switch (entity.type) {
                     case 'item':
 
@@ -354,6 +350,10 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                         return;
                 }
+
+                entity.dead = true;
+
+                entity.stop();
 
                 if (self.game.player.hasTarget() && self.game.player.target.id === entity.id)
                     self.game.player.removeTarget();
