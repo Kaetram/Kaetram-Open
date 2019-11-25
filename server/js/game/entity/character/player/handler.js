@@ -178,10 +178,12 @@ class Handler {
 
     detectMusic(x, y) {
         let self = this,
-            musicArea = _.find(self.world.getMusicAreas(), (area) => { return area.contains(x, y); });
+            musicArea = _.find(self.world.getMusicAreas(), (area) => { return area.contains(x, y); }),
+            song = musicArea ? musicArea.id : null;
 
-        if (musicArea && self.player.currentSong !== musicArea.id)
-            self.player.updateMusic(musicArea.id);
+        if (self.player.currentSong !== song)
+            self.player.updateMusic(song);
+            
     }
 
     detectPVP(x, y) {
