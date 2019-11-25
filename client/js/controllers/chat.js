@@ -138,6 +138,10 @@ define(['jquery'], function($) {
             self.hideChat();
         },
 
+        clear: function() {
+            this.button.unbind('click');
+        },
+
         clean: function() {
             var self = this;
 

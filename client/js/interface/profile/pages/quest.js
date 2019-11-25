@@ -126,6 +126,13 @@ define(['jquery', '../page'], function($, Page) {
 
         },
 
+        clear: function() {
+            var self = this;
+
+            self.achievementsList.empty();
+            self.questList.empty();
+        },
+
         getQuest: function(id) {
             return $(this.questList.find('li')[id]).find('#quest' + id);
         },

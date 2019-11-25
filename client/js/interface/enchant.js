@@ -17,18 +17,21 @@ define(['jquery'], function($) {
             self.confirm = $('#confirmEnchant');
             self.shardsCount = $('#shardsCount');
 
+            self.closeEnchant = $('#closeEnchant');
+
             self.confirm.css({
                 'left': '70%',
                 'top': '80%'
             });
 
-            $('#closeEnchant').click(function() {
-                self.hide();
-            });
-
             self.confirm.click(function() {
                 self.enchant();
             });
+
+            self.closeEnchant.click(function() {
+                self.hide();
+            });
+
         },
 
         resize: function() {
@@ -166,6 +169,16 @@ define(['jquery'], function($) {
             self.selectedShards.css('background-image', '');
 
             self.body.fadeOut('fast');
+        },
+
+        clear: function() {
+            var self = this;
+
+            self.enchantSlots.find('ul').empty();
+
+            self.confirm.unbind('click');
+            self.closeEnchant.unbind('click');
+
         },
 
         hasImage: function(image) {

@@ -166,6 +166,35 @@ define(['jquery', '../interface/inventory',
             });
         },
 
+        stop: function() {
+            var self = this;
+
+            if (self.inventory)
+                self.inventory.clear();
+
+            if (self.actions)
+                self.actions.clear();
+
+            if (self.profile)
+                self.profile.clean();
+
+            if (self.game.input)
+                self.game.input.chatHandler.clear();
+
+            if (self.bank)
+                self.bank.clear();
+
+            if (self.enchant)
+                self.enchant.clear();
+
+            if (self.warp)
+                self.warp.clear();
+
+            if (self.shop)
+                self.shop.clear();
+
+        },
+
         hideAll: function() {
             var self = this;
 
