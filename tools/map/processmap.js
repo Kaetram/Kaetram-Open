@@ -264,9 +264,12 @@ module.exports = function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize,
-                            id: area.properties.id
+                            height: area.height / map.tilesize
                         };
+
+                        _.each(area.properties, function(property) {
+                            musicArea[property.name] = property.value;
+                        });
 
                         map.musicAreas.push(musicArea);
                     });
