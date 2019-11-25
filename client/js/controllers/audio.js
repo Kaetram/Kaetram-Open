@@ -94,7 +94,7 @@ define(function() {
         play: function(type, name) {
             var self = this;
 
-            if (!self.isEnabled() || !self.fileExists(name))
+            if (!self.isEnabled() || !self.fileExists(name) || self.game.player.dead)
                 return;
 
             switch(type) {

@@ -378,7 +378,7 @@ define(['./impl/teamwar'], function(TeamWar) {
                 var attacker = self.entities.get(info.attackerId),
                     target = self.entities.get(info.targetId);
 
-                if (!target || !attacker || self.game.player.dead)
+                if (!target || !attacker)
                     return;
 
                 switch (opcode) {
@@ -753,11 +753,13 @@ define(['./impl/teamwar'], function(TeamWar) {
                 if (!entity || id !== self.game.player.id)
                     return;
 
-                self.audio.play(Modules.AudioTypes.SFX, 'death');
+                //self.audio.play(Modules.AudioTypes.SFX, 'death');
 
                 self.game.player.dead = true;
                 self.game.player.removeTarget();
                 self.game.player.orientation = Modules.Orientation.Down;
+
+                self.audio.stop();
 
                 self.app.body.addClass('death');
             });
