@@ -254,7 +254,7 @@ class Player extends Character {
 
         let info = {
             instance: self.instance,
-            username: self.username.charAt(0).toUpperCase() + self.username.substr(1),
+            username: Utils.formatUsername(self.username),
             x: self.x,
             y: self.y,
             kind: self.kind,
@@ -854,7 +854,7 @@ class Player extends Character {
         return {
             type: self.type,
             id: self.instance,
-            name: self.username,
+            name: Utils.formatUsername(self.username),
             x: self.x,
             y: self.y,
             rights: self.rights,
