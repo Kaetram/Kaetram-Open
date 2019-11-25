@@ -644,7 +644,12 @@ define(['jquery', './camera', './tile',
                 player = self.game.player;
 
             self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 51, false, 'white');
-            self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringInstance, 10, 71, false, 'white');
+
+            if (self.input.hoveringEntity) {
+                self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringEntity.id, 10, 71, false, 'white');
+                self.drawText('attack range: ' + self.input.hoveringEntity.attackRange, 10, 91, false, 'white');
+            }
+
         },
 
         drawCollisions: function() {

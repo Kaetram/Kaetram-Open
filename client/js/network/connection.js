@@ -172,6 +172,7 @@ define(['./impl/teamwar'], function(TeamWar) {
                         data.weapon.string, data.weapon.count, data.weapon.ability,
                         data.weapon.abilityLevel);
 
+                entity.attackRange = data.attackRange;
                 entity.setPoison(data.poison);
 
                 self.interface.profile.update();
@@ -377,7 +378,7 @@ define(['./impl/teamwar'], function(TeamWar) {
                 var attacker = self.entities.get(info.attackerId),
                     target = self.entities.get(info.targetId);
 
-                if (!target || !attacker)
+                if (!target || !attacker || self.game.player.dead)
                     return;
 
                 switch (opcode) {
