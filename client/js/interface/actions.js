@@ -126,6 +126,16 @@ define(['jquery'], function($) {
             this.pBody.fadeOut('fast');
         },
 
+        clear: function() {
+            var self = this;
+
+            $('#dropAccept').unbind('click');
+            $('#dropCancel').unbind('click');
+
+            self.trade.unbind('click');
+            self.follow.unbind('click');
+        },
+
         displayDrop: function(activeClass) {
             var self = this;
 

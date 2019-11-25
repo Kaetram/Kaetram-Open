@@ -157,6 +157,16 @@ define(['jquery', './container/container'], function($, Container) {
             self.body.fadeOut('fast');
         },
 
+        clear: function() {
+            var self = this;
+
+            if (self.shop)
+                self.shop.find('ul').empty();
+
+            if (self.inventory)
+                self.inventory.find('ul').empty();
+        },
+
         getScale: function() {
             return this.game.renderer.getScale();
         },

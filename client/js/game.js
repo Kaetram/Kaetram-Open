@@ -305,6 +305,7 @@ define(['./renderer/renderer', './utils/storage',
 
             self.stop();
             self.renderer.stop();
+            self.interface.stop();
 
             self.unload();
 

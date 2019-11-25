@@ -432,6 +432,12 @@ class Commands {
 
                 break;
 
+            case 'timeout':
+
+                self.player.timeout();
+
+                break;
+
         }
     }
 

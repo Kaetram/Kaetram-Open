@@ -270,6 +270,13 @@ define(['jquery', './container/container'], function($, Container) {
             this.body.fadeOut('fast');
         },
 
+        clear: function() {
+            var self = this;
+
+            self.bankSlots.find('ul').empty();
+            self.bankInventorySlots.find('ul').empty();
+        },
+
         isVisible: function() {
             return this.body.css('display') === 'block';
         },
