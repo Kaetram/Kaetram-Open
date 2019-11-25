@@ -54,6 +54,7 @@ class Handler {
 
         self.player.onDeath(() => {
 
+            self.player.combat.stop();
 
         });
 
@@ -138,7 +139,7 @@ class Handler {
         });
 
         self.player.onTeleport((x, y, isDoor) => {
-            if (!self.player.finishedTutorial && isDoor && self.player.doorCallback) {
+            if (!self.player.finishedTutorial() && isDoor && self.player.doorCallback) {
                 self.player.doorCallback(x, y);
                 return;
             }

@@ -862,6 +862,7 @@ class Player extends Character {
             pvp: self.pvp,
             pvpKills: self.pvpKills,
             pvpDeaths: self.pvpDeaths,
+            attackRange: self.attackRange,
             orientation: self.orientation,
             hitPoints: self.hitPoints.getData(),
             mana: self.mana.getData(),
@@ -998,6 +999,7 @@ class Player extends Character {
 
         let info = {
             id: self.instance,
+            attackRange: self.attackRange,
             hitPoints: self.getHitPoints(),
             maxHitPoints: self.getMaxHitPoints(),
             mana: self.mana.getMana(),
