@@ -250,8 +250,6 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             if (self.game.interface)
                 self.game.interface.hideAll();
 
-            if (Detect.isMobile())
-                self.game.audio.update();
         },
 
         updateCursor: function() {
