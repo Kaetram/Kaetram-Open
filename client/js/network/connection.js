@@ -764,10 +764,10 @@ define(['./impl/teamwar'], function(TeamWar) {
                 self.app.body.addClass('death');
             });
 
-            self.messages.onAudio(function(song) {
-                self.audio.songName = song;
+            self.messages.onAudio(function(newSong) {
+                self.audio.newSong = newSong;
 
-                if (Detect.isSafari() && !self.audio.song)
+                if (!self.audio.newSong || Detect.isMobile())
                     return;
 
                 self.audio.update();
