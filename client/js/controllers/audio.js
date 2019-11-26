@@ -143,7 +143,10 @@ define(function() {
             if (!self.isEnabled())
                 return;
 
-            var song = self.getMusic(self.songName);
+            if (self.newSong === self.song)
+                return;
+
+            var song = self.getMusic(self.newSong);
 
             if (song && !(self.song && self.song.name === song.name)) {
                 if (self.game.renderer.mobile)
@@ -172,6 +175,7 @@ define(function() {
                     self.fadeSongOut();
             }
 
+            self.songName = self.newSong;
         },
 
         fadeIn: function(song) {
