@@ -97,6 +97,9 @@ define(function() {
             if (!self.isEnabled() || !self.fileExists(name) || self.game.player.dead)
                 return;
 
+            if (Detect.isSafari())
+                return;
+
             switch(type) {
                 case Modules.AudioTypes.Music:
 
