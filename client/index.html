@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="msapplication-starturl" content="/?utm_source=a2hs" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge;chrome=1" />
     <link rel="manifest" href="manifest.json" />
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"
+        content="width=device-width,initial-scale=1.0,minimum-scale=1,maximum-scale=1.0,shrink-to-fit=no,user-scalable=no"
     />
 
     <!-- Open Graph -->
@@ -22,8 +21,8 @@
     />
     <meta property="og:image" content="https://kaetram.com/img/favicon.png" />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="64" />
-    <meta property="og:image:height" content="64" />
+    <meta property="og:image:width" content="192" />
+    <meta property="og:image:height" content="192" />
     <meta property="og:image:alt" content="Kaetram Logo" />
 
     <!-- Meta -->
@@ -36,6 +35,7 @@
     <meta name="image" content="https://kaetram.com/img/favicon.png" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="language" content="English" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 
     <!-- Google -->
     <meta itemprop="name" content="Kaetram" />
@@ -45,22 +45,69 @@
     />
     <meta itemprop="image" content="https://kaetram.com/img/favicon.png" />
 
-    <!-- Mobile -->
+    <!-- Mobile and Android -->
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="Kaetram" />
+    <link rel="icon" type="image/png" sizes="36x36" href="img/icons/android-icon-36x36.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="img/icons/android-icon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="72x72" href="img/icons/android-icon-72x72.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="img/icons/android-icon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="144x144"  href="img/icons/android-icon-144x144.png" />
+    <link rel="icon" type="image/png" sizes="192x192"  href="img/icons/android-icon-192x192.png" />
+    
+    <!-- Safari on iOS -->
     <meta name="apple-mobile-web-app-title" content="Kaetram" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
         name="apple-mobile-web-app-status-bar-style"
         content="black-translucent"
     />
-    <link rel="apple-touch-icon" href="img/icons/icon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="img/icons/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="img/icons/apple-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="img/icons/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="img/icons/apple-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="img/icons/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="img/icons/apple-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="img/icons/apple-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="img/icons/apple-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-icon-180x180.png" />
+    <!-- TODO: Startup Image  -->
+    <!-- <link rel="apple-touch-startup-image" href="img/icons/touch-icon-start-up-320x480.png" /> -->
+
+    <!-- TODO: Pinned Tab  -->
+    <!-- <link rel="mask-icon" href="path/to/icon.svg" size="any" color="black"> -->
+
+    <!-- Tile icon for Win8  -->
+    <meta name="application-name" content="Kaetram" />
+    <meta name="msapplication-TileImage" content="img/icons/ms-icon-144x144.png">
+    <meta name="msapplication-starturl" content="/?utm_source=a2hs" />
+    <meta name="msapplication-tooltip" content="Kaetram" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <!-- UC Mobile Browser  -->
+    <meta name="full-screen" content="yes" />
+    <meta name="browsermode" content="application" />
+
+    <!-- Disable night mode for this page  -->
+    <meta name="nightmode" content="enable/disable" />
+
+    <!-- Fitscreen  -->
+    <meta name="viewport" content="uc-fitscreen=yes"/>
+
+    <!-- Layout mode -->
+    <meta name="layoutmode" content="fitscreen/standard" />
+
+    <!-- imagemode - show image even in text only mode  -->
+    <meta name="imagemode" content="force" />
+
+    <!-- Orientation  -->
+    <meta name="screen-orientation" content="any">
 
     <!-- Theme Colors -->
     <meta name="theme-color" content="#000000" />
     <meta name="msapplication-TileColor" content="#000000" />
     <meta name="msapplication-navbutton-color" content="#000000" />
+    <meta name="msapplication-config" content="browserconfig.xml">
 
     <!-- JSON-LD -->
     <script type="application/ld+json">
@@ -72,9 +119,6 @@
             "url": "https://kaetram.com/"
         }
     </script>
-
-    <link rel="icon" type="image/png" href="img/favicon.png" />
-    <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
 
     <title>Kaetram</title>
 
@@ -513,6 +557,7 @@
     <script src="js/lib/log.js" type="text/javascript"></script>
     <script src="lib/socket.io.js" type="text/javascript"></script>
     <script src="js/lib/jquery.js" type="text/javascript"></script>
+    <!-- <script src="dist/home.js" type="text/javascript"></script> -->
     <script data-main="js/lib/home" src="js/lib/require.js" type="text/javascript"></script>
     <script src="lib/pwa.js" type="text/javascript"></script>
 </body>

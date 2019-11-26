@@ -11,6 +11,10 @@ cordova
 release
 docs/
 
+dist/
+/data
+\.lister*
+
 ### Node ###
 # Logs
 logs
