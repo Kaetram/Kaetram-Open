@@ -1,4 +1,5 @@
-let World = require('./game/world'),
+let fs = require("fs"),
+    World = require('./game/world'),
     WebSocket = require('./network/websocket'),
     config = require('../config'),
     Log = require('log'),

@@ -137,11 +137,11 @@ self.__precacheManifest = [
   },
   {
     "url": "css/vars.css",
-    "revision": "06bd9abe7432561bb727f12c51ecd590"
+    "revision": "69979002f3c1c188bea916758490bf50"
   },
   {
     "url": "data/config.json",
-    "revision": "1a63b485c4246ec3e5fb1277ad0571fd"
+    "revision": "02f0d8794fcd0b506ad019cde83e8a6e"
   },
   {
     "url": "data/config.json-dist",
@@ -149,7 +149,7 @@ self.__precacheManifest = [
   },
   {
     "url": "data/maps/map.js",
-    "revision": "a94f85ba1322899dfcd3619470046151"
+    "revision": "8007e67a0497f26252d8da74b43686f1"
   },
   {
     "url": "data/maps/map.json",
@@ -158,6 +158,10 @@ self.__precacheManifest = [
   {
     "url": "data/sprites.json",
     "revision": "060355f2ab86dcea72be9b7b305daf1f"
+  },
+  {
+    "url": "dist/home.js",
+    "revision": "2c5955ea75fa2c08306220a9de3ed218"
   },
   {
     "url": "favicon.ico",
@@ -5085,11 +5089,11 @@ self.__precacheManifest = [
   },
   {
     "url": "img/tilesets/tilesheet.png",
-    "revision": "b2cf8f9ab06792819062ec5d669adaf4"
+    "revision": "3a600f069fc12025e1b77c9ab392b3b5"
   },
   {
     "url": "index.html",
-    "revision": "03530d745bef992e8b7e529b9d72c0ea"
+    "revision": "c3a9c4a64bdb7c54286f27338dc735d7"
   },
   {
     "url": "js/app.js",
@@ -5117,7 +5121,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/controllers/info.js",
-    "revision": "7ce9c2cf9f2ed4249702823880d19653"
+    "revision": "fbf970f16c65fefd39f0a42d1cd96166"
   },
   {
     "url": "js/controllers/input.js",
@@ -5149,7 +5153,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/character/character.js",
-    "revision": "d3ee42c3355387a26867b171bdd75ee2"
+    "revision": "fbbebe0ac56804e17a929b35a3968c98"
   },
   {
     "url": "js/entity/character/mob/mob.js",
@@ -5245,7 +5249,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/header.js",
-    "revision": "1156c3ea08e0f08ac2cd22afc87b20fe"
+    "revision": "183a72a58ff914e2f1c01c9a4a31bf00"
   },
   {
     "url": "js/interface/inventory.js",
@@ -5333,7 +5337,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/connection.js",
-    "revision": "a1fb6694a7b38ed8a163fc5dbe756d1a"
+    "revision": "f89ad84460220b19858e88fbda5a05d7"
+  },
+  {
+    "url": "js/network/impl/teamwar.js",
+    "revision": "642d0680cfd0aef490981bd0f8c40202"
   },
   {
     "url": "js/network/messages.js",
@@ -5341,7 +5349,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/packets.js",
-    "revision": "b077b358e2ab451765e1d5eb4879f0b4"
+    "revision": "a18326864e8ebfe62f7ab1c2989ef0cb"
   },
   {
     "url": "js/network/socket.js",
@@ -5360,6 +5368,10 @@ self.__precacheManifest = [
     "revision": "a6871bbbb58cdaa8061b2da3876bc83e"
   },
   {
+    "url": "js/renderer/infos/countdown.js",
+    "revision": "35acaef1eb2c092a66edfd939948b23e"
+  },
+  {
     "url": "js/renderer/infos/splat.js",
     "revision": "6cfee26093c9319bb7eb10b80a3da7a6"
   },
@@ -5373,7 +5385,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "0322c3b29ac008ca6de9dcaff97ac6b4"
+    "revision": "8b7394f50b6b0d4bc3f1090e606e7a82"
   },
   {
     "url": "js/renderer/tile.js",
@@ -5393,7 +5405,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/utils/modules.js",
-    "revision": "1fad6ad77b62bb505d1d2aceb0e58078"
+    "revision": "1697a48cccd338cc574e7f50b65bedb8"
   },
   {
     "url": "js/utils/pathfinder.js",
@@ -5424,12 +5436,16 @@ self.__precacheManifest = [
     "revision": "72ae0223710a4849af39c54299bc4ed7"
   },
   {
+    "url": "lib/pwa.js",
+    "revision": "a381e9b7b7d731712ad2153dac9a10e8"
+  },
+  {
     "url": "lib/socket.io.js",
     "revision": "c396a1221c117c4903d6281c575420a2"
   },
   {
     "url": "manifest.json",
-    "revision": "b772655a59b9a903765e8fc6b4606c27"
+    "revision": "2b75211a76744101019962cca72bda2c"
   },
   {
     "url": "robots.txt",
