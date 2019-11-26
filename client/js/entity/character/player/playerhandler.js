@@ -32,9 +32,6 @@ define(function() {
 
                 var ignores = [self.player];
 
-                if (self.player.hasTarget())
-                    ignores.push(self.player.target);
-
                 if (!self.game.map.isColliding(x, y))
                     self.socket.send(Packets.Movement, [Packets.MovementOpcode.Request, x, y, self.player.gridX, self.player.gridY]);
 
