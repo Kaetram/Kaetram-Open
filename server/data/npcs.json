@@ -5,7 +5,7 @@
   },
 
   "VillageGirl": {
-    "name": "Village Girl",
+    "name": "Azaria",
     "id": 1,
     "text": ["Eventually, fire turns to ash.", "And all that remains is but that.",
             "The ability to reignite...", "Though it never will."]
@@ -30,23 +30,28 @@
   },
 
   "Nyan": {
-    "id": 5
+    "id": 5,
+    "name": "Nyan Cat (Stale Meme)"
   },
 
   "Rick": {
-    "id": 6
+    "id": 6,
+    "name": "Rick"
   },
 
   "Priest": {
-    "id": 7
+    "id": 7,
+    "name": "Priest"
   },
 
   "Guard": {
-    "id": 8
+    "id": 8,
+    "name": "Guard"
   },
 
   "Scientist": {
-    "id": 9
+    "id": 9,
+    "name": "Scientist"
   },
 
   "DesertNpc": {
@@ -66,11 +71,13 @@
   },
 
   "Vampire": {
-    "id": 13
+    "id": 13,
+    "name": "Vampire"
   },
 
   "Doctor": {
-    "id": 14
+    "id": 14,
+    "name": "Doctor"
   },
 
   "Oddeyecat": {
@@ -92,7 +99,8 @@
   },
 
   "ForestNpc": {
-    "id": 18
+    "id": 18,
+    "name": "Forester"
   },
 
   "Octocat": {
@@ -103,15 +111,17 @@
 
   "Soldier": {
     "id": 20,
-    "name": "Melee Instructor"
+    "name": "Soldier"
   },
 
   "Fisherman": {
-    "id": 21
+    "id": 21,
+    "name": "Fisherman"
   },
 
   "Octopus": {
-    "id": 22
+    "id": 22,
+    "name": "Octopus"
   },
 
   "Mermaidnpc": {
@@ -125,7 +135,8 @@
   },
 
   "Fairynpc": {
-    "id": 25
+    "id": 25,
+    "name": "Fairy"
   },
 
   "Shepherdboy": {
@@ -150,7 +161,8 @@
   },
 
   "Redbikinigirlnpc": {
-    "id": 30
+    "id": 30,
+    "name": "Flaris"
   },
 
   "Iamverycoldnpc": {

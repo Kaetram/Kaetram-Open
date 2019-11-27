@@ -14,6 +14,13 @@ module.exports = function parse(json, options) {
 
     self.json = json;
     self.options = options;
+    self.ignoredTiles = [1079, 1098, 1099, 1070, 1090, 1091, 930, 931,
+                        950, 938, 939, 959, 203, 204, 223, 208, 209,
+                        229, 1186, 1206, 1207, 1218, 1219, 1199, 1369,
+                        1389, 1388, 1360, 1380, 1381, 1220, 1221, 1240,
+                        1228, 1229, 1249, 3590, 3610, 3611, 3599, 3618,
+                        3619, 3450, 3451, 3470, 3458, 3459, 3479, 781,
+                        383, 384, 388, 389]; //Blank Tiles
 
     mode = self.options.mode;
 
@@ -136,6 +143,9 @@ module.exports = function parse(json, options) {
 
             _.each(tileset.tiles, function(tile) {
                 let id = parseInt(tileset.firstgid) + parseInt(tile.id);
+
+                if (self.ignoredTiles.indexOf(tile.id) > -1)
+                    return;
 
                 if (tile.animation && mode === 'info')
                     handleAnimation(id, tileset.firstgid, tile);
