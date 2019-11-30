@@ -2,11 +2,11 @@ define(['jquery'], function($) {
 
     return Class.extend({
 
-        init: function(game, intrface) {
+        init: function(game, interface) {
             var self = this;
 
             self.game = game;
-            self.interface = intrface;
+            self.interface = interface;
 
             self.body = $('#enchant');
             self.container = $('#enchantContainer');
@@ -181,7 +181,7 @@ define(['jquery'], function($) {
         },
 
         isVisible: function() {
-            return this.body.css('display') === 'block'
+            return this.body.css('display') === 'block';
         }
 
     });
