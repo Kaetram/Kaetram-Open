@@ -280,8 +280,8 @@ body {
 
 #rememberMeText {
     position: absolute;
-    top: 57%;
-    left: 22%;
+    top: 5%;
+    left: 50%;
 }
 
 #guest, #guestText {
@@ -294,7 +294,8 @@ body {
 }
 
 #guestText {
-    left: 72%;
+    top: 5%;
+    left: 110%;
 }
 
 input[type="range"] {
@@ -518,7 +519,7 @@ html [type="button"],
         background-position: -309px 0;
     }
 
-    #login:hover {
+    #login:hover, #login:focus {
         background-position: -312px -87px;
     }
 
@@ -534,7 +535,7 @@ html [type="button"],
         background-position: -618px 0;
     }
 
-    #newCharacter:hover {
+    #newCharacter:hover, #newCharacter:focus {
         background-position: -621px -87px;
     }
 
@@ -582,7 +583,7 @@ html [type="button"],
         background-position: 0 0;
     }
 
-    #play:hover {
+    #play:hover, #play:focus {
         background-position: 0 -87px;
     }
 
@@ -739,7 +740,7 @@ html [type="button"],
         background-position: -205px 0;
     }
 
-    #login:hover {
+    #login:hover, #login:focus {
         background-position: -207px -58px;
     }
 
@@ -755,7 +756,7 @@ html [type="button"],
         background-position: -412px 0;
     }
 
-    #newCharacter:hover {
+    #newCharacter:hover, #newCharacter:focus {
         background-position: -414px -58px;
     }
 
@@ -803,7 +804,7 @@ html [type="button"],
         background-position: 0 0;
     }
 
-    #play:hover {
+    #play:hover, #play:focus {
         background-position: 0 -58px;
     }
 
@@ -956,7 +957,7 @@ html [type="button"],
         background-position: -103px 0;
     }
 
-    #login:hover {
+    #login:hover, #login:focus {
         background-position: -104px -29px;
     }
 
@@ -972,7 +973,7 @@ html [type="button"],
         background-position: -206px 0;
     }
 
-    #newCharacter:hover {
+    #newCharacter:hover, #newCharacter:focus {
         background-position: -207px -29px;
     }
 
@@ -1020,7 +1021,7 @@ html [type="button"],
         background-position: 0 0;
     }
 
-    #play:hover {
+    #play:hover, #play:focus {
         background-position: 0 -29px;
     }
 
