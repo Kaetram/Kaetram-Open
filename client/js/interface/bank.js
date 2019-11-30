@@ -198,7 +198,7 @@ define(['jquery', './container/container'], function($, Container) {
                 cssSlot.css('background-size', '600%');
 
             if (slot.count > 1)
-                count.text(slot.count)
+                count.text(slot.count);
         },
 
         remove: function(info) {

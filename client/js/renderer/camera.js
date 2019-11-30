@@ -242,8 +242,8 @@ define(function() {
                 offset = 1;
 
             for(var y = self.gridY - offset, maxY = y + self.gridHeight + (offset * 2); y < maxY; y++)
-                for(var x = self.gridX - offset, maxX = x + self.gridWidth + (offset * 2); x < maxX; x++)
-                    callback(x, y);
+                {for(var x = self.gridX - offset, maxX = x + self.gridWidth + (offset * 2); x < maxX; x++)
+                    callback(x, y);}
         }
     });
 
