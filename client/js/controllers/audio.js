@@ -94,7 +94,10 @@ define(function() {
         play: function(type, name) {
             var self = this;
 
-            if (!self.isEnabled() || !self.fileExists(name))
+            if (!self.isEnabled() || !self.fileExists(name) || self.game.player.dead)
+                return;
+
+            if (Detect.isSafari())
                 return;
 
             switch(type) {
@@ -143,7 +146,10 @@ define(function() {
             if (!self.isEnabled())
                 return;
 
-            var song = self.getMusic(self.songName);
+            if (self.newSong === self.song)
+                return;
+
+            var song = self.getMusic(self.newSong);
 
             if (song && !(self.song && self.song.name === song.name)) {
                 if (self.game.renderer.mobile)
@@ -172,6 +178,7 @@ define(function() {
                     self.fadeSongOut();
             }
 
+            self.songName = self.newSong;
         },
 
         fadeIn: function(song) {

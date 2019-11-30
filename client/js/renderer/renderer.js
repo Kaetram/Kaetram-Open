@@ -173,7 +173,7 @@ define(['jquery', './camera', './tile',
 
             self.stopRendering = true;
 
-            self.clearAll();
+            self.clear();
 
             self.checkDevice();
 
@@ -212,8 +212,6 @@ define(['jquery', './camera', './tile',
                 return;
 
             self.clear();
-
-            self.clearText();
 
             self.saveAll();
 
@@ -264,6 +262,7 @@ define(['jquery', './camera', './tile',
                     self.drawTile(context, id, self.map.width, index);
             });
 
+
             if (self.animateTiles)
                 self.forEachAnimatedTile(function(tile) {
                     self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
@@ -277,8 +276,6 @@ define(['jquery', './camera', './tile',
                 overlay = self.game.overlays.getFog();
 
             if (overlay) {
-                self.overlayContext.save();
-
                 if (overlay !== 'empty') {
 
                     self.overlayContext.fillStyle = self.overlayContext.createPattern(overlay, 'repeat');
@@ -295,8 +292,6 @@ define(['jquery', './camera', './tile',
 
                 self.overlayContext.globalCompositeOperation = 'source-over';
                 self.darkMask.render(self.overlayContext);
-
-                self.overlayContext.restore();
             }
         },
 
@@ -644,7 +639,12 @@ define(['jquery', './camera', './tile',
                 player = self.game.player;
 
             self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 51, false, 'white');
-            self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringInstance, 10, 71, false, 'white');
+
+            if (self.input.hoveringEntity) {
+                self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringEntity.id, 10, 71, false, 'white');
+                self.drawText('attack range: ' + self.input.hoveringEntity.attackRange, 10, 91, false, 'white');
+            }
+
         },
 
         drawCollisions: function() {
@@ -900,10 +900,6 @@ define(['jquery', './camera', './tile',
             return 3;
         },
 
-        clearContext: function() {
-            this.context.clearRect(0, 0, this.screenWidth * this.scale, this.screenHeight * this.scale);
-        },
-
         clearText: function() {
             this.textContext.clearRect(0, 0, this.textCanvas.width, this.textCanvas.height);
             this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
@@ -912,12 +908,6 @@ define(['jquery', './camera', './tile',
         restore: function() {
             this.forEachContext(function(context) {
                 context.restore();
-            });
-        },
-
-        clearAll: function() {
-            this.forEachContext(function(context) {
-                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
             });
         },
 
@@ -1058,7 +1048,7 @@ define(['jquery', './camera', './tile',
         },
 
         forEachContext: function(callback) {
-            _.each(this.contexts, function(context) {
+            _.each(this.allContexts, function(context) {
                 callback(context);
             });
         },

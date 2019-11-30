@@ -172,6 +172,9 @@ define(['./impl/teamwar'], function(TeamWar) {
                         data.weapon.string, data.weapon.count, data.weapon.ability,
                         data.weapon.abilityLevel);
 
+                entity.attackRange = data.attackRange;
+                entity.setPoison(data.poison);
+
                 self.interface.profile.update();
             });
 
@@ -329,10 +332,6 @@ define(['./impl/teamwar'], function(TeamWar) {
                 if (!entity)
                     return;
 
-                entity.dead = true;
-
-                entity.stop();
-
                 switch (entity.type) {
                     case 'item':
 
@@ -351,6 +350,10 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                         return;
                 }
+
+                entity.dead = true;
+
+                entity.stop();
 
                 if (self.game.player.hasTarget() && self.game.player.target.id === entity.id)
                     self.game.player.removeTarget();
@@ -394,7 +397,7 @@ define(['./impl/teamwar'], function(TeamWar) {
                         var hit = info.hitInfo,
                             isPlayer = target.id === self.game.player.id;
 
-                        if (!hit.isAoE) {
+                        if (!hit.isAoE && !hit.isPoison) {
                             attacker.lookAt(target);
                             attacker.performAction(attacker.orientation, Modules.Actions.Attack);
 
@@ -750,19 +753,21 @@ define(['./impl/teamwar'], function(TeamWar) {
                 if (!entity || id !== self.game.player.id)
                     return;
 
-                self.audio.play(Modules.AudioTypes.SFX, 'death');
+                //self.audio.play(Modules.AudioTypes.SFX, 'death');
 
                 self.game.player.dead = true;
                 self.game.player.removeTarget();
                 self.game.player.orientation = Modules.Orientation.Down;
 
+                self.audio.stop();
+
                 self.app.body.addClass('death');
             });
 
-            self.messages.onAudio(function(song) {
-                self.audio.songName = song;
+            self.messages.onAudio(function(newSong) {
+                self.audio.newSong = newSong;
 
-                if (Detect.isSafari() && !self.audio.song)
+                if (!self.audio.newSong || Detect.isMobile())
                     return;
 
                 self.audio.update();

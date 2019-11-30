@@ -169,7 +169,7 @@ class Creator {
                 experience: player.experience,
                 kind: player.kind,
                 rights: player.rights,
-                poisoned: player.poisoned,
+                poison: player.poison,
                 hitPoints: player.getHitPoints(),
                 mana: player.getMana(),
                 pvpKills: player.pvpKills,

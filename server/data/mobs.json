@@ -3,7 +3,7 @@
     "name": "Rat",
     "id": 128,
     "drops": null,
-    "hitPoints": 1,
+    "hitPoints": 10,
     "armour": 0,
     "weapon": 0,
     "xp": 4,
@@ -13,13 +13,13 @@
     "aggressive": false,
     "attackRate": 1500,
     "movementSpeed": 500,
-    "spawnDelay": 15000
+    "spawnDelay": 10000
   },
 
   "Bat": {
     "name": "Batterfly",
     "id": 1,
-    "drops": {"flask": 500},
+    "drops": {"flask": 50},
     "hitPoints": 20,
     "armour": 0,
     "weapon": 0,
@@ -36,7 +36,7 @@
   "Crab": {
     "name": "Crab",
     "id": 2,
-    "drops": {"flask": 500},
+    "drops": {"flask": 100},
     "hitPoints": 35,
     "armour": 0,
     "weapon": 0,
@@ -53,7 +53,7 @@
   "Wizard": {
     "name": "Wizard",
     "id": 3,
-    "drops": {"axe": 200, "morningstar": 100, "woodenbow": 300, "sword2": 400},
+    "drops": {"axe": 10, "morningstar": 10, "woodenbow": 5, "sword2": 50},
     "hitPoints": 45,
     "armour": 4,
     "weapon": 2,
@@ -71,7 +71,7 @@
   "Goblin": {
     "name": "Goblin",
     "id": 4,
-    "drops": {"leatherarmor": 100, "plasticbow": 100, "gold": 400, "leatherarcherarmor": 100, "sword2": 300},
+    "drops": {"leatherarmor": 10, "plasticbow": 10, "gold": 50, "leatherarcherarmor": 100, "sword2": 20},
     "hitPoints": 30,
     "armour": 1,
     "weapon": 2,
@@ -105,7 +105,7 @@
   "Ogre": {
     "name": "Ogre",
     "id": 6,
-    "drops": {"axe": 300, "gold": 150, "bluesword": 50, "mailarmor": 175, "ironbow": 150, "mailarcherarmor": 175},
+    "drops": {"axe": 10, "gold": 75, "bluesword": 5, "mailarmor": 20, "ironbow": 15, "mailarcherarmor": 20},
     "hitPoints": 60,
     "armour": 3,
     "weapon": 2,
@@ -122,7 +122,7 @@
   "Skeleton2": {
     "name": "Scary Skeleton",
     "id": 7,
-    "drops": {"axe": 500, "morningstar": 200, "platearmor": 150, "platearcherarmor": 150},
+    "drops": {"axe": 50, "morningstar": 20, "platearmor": 15, "platearcherarmor": 15},
     "hitPoints": 120,
     "armour": 5,
     "weapon": 2,
@@ -139,9 +139,9 @@
   "Snek": {
     "name": "Snek",
     "id": 8,
-    "drops": {"gold": 900, "morningstar": 50, "platearmor": 50},
-    "hitPoints": 55,
-    "armour": 4,
+    "drops": {"gold": 50, "morningstar": 5, "platearmor": 5},
+    "hitPoints": 85,
+    "armour": 6,
     "weapon": 2,
     "xp": 30,
     "level": 8,
@@ -150,7 +150,8 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "spawnDelay": 35000,
+    "combatPlugin": "snek"
   },
 
   "Spectre": {
@@ -380,19 +381,20 @@
   "Cactus": {
     "name": "Cactus",
     "id": 21,
-    "drops": {"gold": 600, "cactusaxe": 100},
-    "hitPoints": 115,
-    "armour": 4,
+    "drops": {"gold": 200, "cactusaxe": 10},
+    "hitPoints": 160,
+    "armour": 14,
     "weapon": 1,
     "xp": 35,
     "level": 16,
     "aggroRange": 2,
     "attackRange": 1,
     "aggressive": true,
-    "attackRate": 900,
+    "attackRate": 1300,
     "movementSpeed": 400,
     "spawnDelay": 35000,
-    "hiddenName": true
+    "hiddenName": true,
+    "combatPlugin": "cactus"
   },
 
   "Cat": {
@@ -687,16 +689,16 @@
   "Golem": {
     "name": "Golem",
     "id": 39,
-    "drops": {"deathbow": 100, "bluesword": 200, "gold": 700},
-    "hitPoints": 200,
-    "armour": 10,
-    "weapon": 1,
-    "xp": 30,
-    "level": 15,
+    "drops": {"deathbow": 5, "bluesword": 10, "gold": 50},
+    "hitPoints": 350,
+    "armour": 25,
+    "weapon": 15,
+    "xp": 75,
+    "level": 18,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
-    "attackRate": 900,
+    "attackRate": 750,
     "movementSpeed": 400,
     "spawnDelay": 35000
   },
@@ -936,7 +938,8 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "spawnDelay": 35000,
+    "hiddenName": true
   },
 
   "MiniIceKnight": {

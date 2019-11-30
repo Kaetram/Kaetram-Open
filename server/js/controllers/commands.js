@@ -44,6 +44,11 @@ class Commands {
 
                 self.player.notify(`There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`);
 
+                if (self.player.rights > 1)
+                    _.each(self.world.players, (player) => {
+                        self.player.notify(player.username);
+                    });
+
                 return;
 
             case 'tutstage':
@@ -424,6 +429,12 @@ class Commands {
                         self.player.inventory.remove(slot.id, slot.count);
                     }
                 });
+
+                break;
+
+            case 'timeout':
+
+                self.player.timeout();
 
                 break;
 

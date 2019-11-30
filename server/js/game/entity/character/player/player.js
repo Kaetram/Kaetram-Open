@@ -81,8 +81,6 @@ class Player extends Character {
 
         self.canTalk = true;
 
-        self.profileDialogOpen = false;
-
         self.instanced = false;
         self.visible = true;
 
@@ -256,7 +254,7 @@ class Player extends Character {
 
         let info = {
             instance: self.instance,
-            username: self.username.charAt(0).toUpperCase() + self.username.substr(1),
+            username: Utils.formatUsername(self.username),
             x: self.x,
             y: self.y,
             kind: self.kind,
@@ -381,7 +379,6 @@ class Player extends Character {
         }));
     }
 
-
     eat(id) {
         let self = this,
             item = Items.getPlugin(id);
@@ -389,7 +386,7 @@ class Player extends Character {
         if (!item)
             return;
 
-        new (item)().onUse(self);
+        new (item)(id).onUse(self);
     }
 
     equip(string, count, ability, abilityLevel) {
@@ -857,7 +854,7 @@ class Player extends Character {
         return {
             type: self.type,
             id: self.instance,
-            name: self.username,
+            name: Utils.formatUsername(self.username),
             x: self.x,
             y: self.y,
             rights: self.rights,
@@ -865,6 +862,7 @@ class Player extends Character {
             pvp: self.pvp,
             pvpKills: self.pvpKills,
             pvpDeaths: self.pvpDeaths,
+            attackRange: self.attackRange,
             orientation: self.orientation,
             hitPoints: self.hitPoints.getData(),
             mana: self.mana.getData(),
@@ -1001,13 +999,15 @@ class Player extends Character {
 
         let info = {
             id: self.instance,
+            attackRange: self.attackRange,
             hitPoints: self.getHitPoints(),
             maxHitPoints: self.getMaxHitPoints(),
             mana: self.mana.getMana(),
             maxMana: self.mana.getMaxMana(),
             level: self.level,
             armour: self.armour.getString(),
-            weapon: self.weapon.getData()
+            weapon: self.weapon.getData(),
+            poison: !!self.poison
         };
 
         self.sendToAdjacentRegions(self.region, new Messages.Sync(info));

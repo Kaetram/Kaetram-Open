@@ -131,6 +131,18 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
                 self.settings.hide();
         },
 
+        clean: function() {
+            var self = this;
+
+            self.button.unbind('click');
+            self.next.unbind('click');
+            self.previous.unbind('click');
+
+            self.quests.clear();
+            self.settings.clear();
+            self.state.clear();
+        },
+
         isVisible: function() {
             return this.body.css('display') === 'block';
         },

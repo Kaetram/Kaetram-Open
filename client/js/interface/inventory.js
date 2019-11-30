@@ -139,8 +139,6 @@ define(['jquery', './container/container'], function($, Container) {
             var self = this,
                 action = event.currentTarget ? event.currentTarget.id : event;
 
-            log.info(action);
-
             if (!self.selectedSlot || !self.selectedItem)
                 return;
 
@@ -294,6 +292,14 @@ define(['jquery', './container/container'], function($, Container) {
 
             if (!keepSelection)
                 self.clearSelection();
+        },
+
+        clear: function() {
+            var self = this;
+
+            $('#inventory').find('ul').empty();
+
+            self.button.unbind('click');
         },
 
         getScale: function() {

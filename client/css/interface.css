@@ -253,6 +253,8 @@
     position: absolute;
     top: 20%;
     left: 25%;
+
+    cursor: default;
 }
 
 #bankContainer {
@@ -1952,8 +1954,9 @@
     }
 
     #profileDialog {
-        bottom: 30px;
-        right: 90px;
+        transform: scale(1.5);
+        bottom: 84px;
+        right: 104px;
     }
 
     #profileDialog, .page {
@@ -1973,11 +1976,13 @@
     }
 
     #settingsPage {
+        transform: scale(1.5);
+
         background: url('../img/1/characterdialogsheet.png') -248px 0;
         display: none;
 
-        right: 34px;
-        bottom: 30px;
+        right: 60px;
+        bottom: 84px;
     }
 
     #questPage {
@@ -2265,6 +2270,8 @@
     }
 
     #mapFrame {
+        transform: scale(1.6);
+
         width: 270px;
         height: 180px;
         background: url('../img/1/mapframe.png');
