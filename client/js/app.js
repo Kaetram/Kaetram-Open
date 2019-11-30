@@ -142,7 +142,7 @@ define(['jquery'], function($) {
             });
 
             $(document).keydown(function(e) {
-                var key = e.which;
+                var key = e.which || e.keyCode || 0;
 
                 if (!self.game)
                     return;
