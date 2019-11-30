@@ -120,6 +120,10 @@ self.__precacheManifest = [
     "revision": "e7323edd76d6af9909a5e300d745f11c"
   },
   {
+    "url": "browserconfig.xml",
+    "revision": "45a3c9fe825bd2857bc24f14c69d46da"
+  },
+  {
     "url": "css/animations.css",
     "revision": "ee1eeeb9ff4a21bc7534a26b92e071db"
   },
@@ -129,7 +133,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/interface.css",
-    "revision": "30faefe99a1e8f2449b08afff84824f8"
+    "revision": "a3d51492ebaea50b25bb6c9244421ee6"
   },
   {
     "url": "css/main.css",
@@ -137,7 +141,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/vars.css",
-    "revision": "69979002f3c1c188bea916758490bf50"
+    "revision": "1ab3d9c7c7d8e66bafa4989c0956010c"
   },
   {
     "url": "data/config.json",
@@ -149,7 +153,7 @@ self.__precacheManifest = [
   },
   {
     "url": "data/maps/map.js",
-    "revision": "8007e67a0497f26252d8da74b43686f1"
+    "revision": "a94f85ba1322899dfcd3619470046151"
   },
   {
     "url": "data/maps/map.json",
@@ -160,12 +164,8 @@ self.__precacheManifest = [
     "revision": "060355f2ab86dcea72be9b7b305daf1f"
   },
   {
-    "url": "dist/home.js",
-    "revision": "2c5955ea75fa2c08306220a9de3ed218"
-  },
-  {
     "url": "favicon.ico",
-    "revision": "2f476e3ff4089233a26dc00bc750e72c"
+    "revision": "8b2c195090507ff540eccf7732a89aa7"
   },
   {
     "url": "fonts/advocut/advocut-webfont.eot",
@@ -2357,31 +2357,103 @@ self.__precacheManifest = [
   },
   {
     "url": "img/favicon.png",
-    "revision": "b7ef70c6d22af1ab90fdc8fe9bb57433"
-  },
-  {
-    "url": "img/icons/icon-144x144.png",
-    "revision": "8e4e254f10464de81fd3bd03b75506f3"
-  },
-  {
-    "url": "img/icons/icon-192x192.png",
     "revision": "12f7a1b2a69af985302415db673be8fb"
   },
   {
-    "url": "img/icons/icon-48x48.png",
-    "revision": "3de063c990a10a6cfcbc0ac603f65c7e"
+    "url": "img/icons/android-icon-144x144.png",
+    "revision": "97000c1dc8159be51b582be3a21075e9"
   },
   {
-    "url": "img/icons/icon-512x512.png",
-    "revision": "562e0513238ac9bd9ccf79a662f06537"
+    "url": "img/icons/android-icon-192x192.png",
+    "revision": "380daba331307f3d0df856c53047a161"
   },
   {
-    "url": "img/icons/icon-72x72.png",
-    "revision": "e57e598f049c585022a3f22f0f009856"
+    "url": "img/icons/android-icon-36x36.png",
+    "revision": "57a4a0ae69ae1a2791d1afbd3800e432"
   },
   {
-    "url": "img/icons/icon-96x96.png",
-    "revision": "b8a289a9f8cc236827b290adf0c0e21f"
+    "url": "img/icons/android-icon-48x48.png",
+    "revision": "6a49671bc0e4e798d2471b91d372ce6e"
+  },
+  {
+    "url": "img/icons/android-icon-72x72.png",
+    "revision": "8b8473a6aaf58b7aa26d4470f36fc9b8"
+  },
+  {
+    "url": "img/icons/android-icon-96x96.png",
+    "revision": "9e927f76c68640bed67e85951e87fb93"
+  },
+  {
+    "url": "img/icons/apple-icon-114x114.png",
+    "revision": "21cd41fa57480f934224d9713b7da0a9"
+  },
+  {
+    "url": "img/icons/apple-icon-120x120.png",
+    "revision": "c4e940e39249f1a1ef4824597b017652"
+  },
+  {
+    "url": "img/icons/apple-icon-144x144.png",
+    "revision": "97000c1dc8159be51b582be3a21075e9"
+  },
+  {
+    "url": "img/icons/apple-icon-152x152.png",
+    "revision": "ff76c8a588eaf2632338fa9046295cb1"
+  },
+  {
+    "url": "img/icons/apple-icon-180x180.png",
+    "revision": "d03a89155375c0820e160ac9d7190d69"
+  },
+  {
+    "url": "img/icons/apple-icon-57x57.png",
+    "revision": "76577427de51141f94c80240322e9a14"
+  },
+  {
+    "url": "img/icons/apple-icon-60x60.png",
+    "revision": "84cf9b10fac84cda9197671bd4abd463"
+  },
+  {
+    "url": "img/icons/apple-icon-72x72.png",
+    "revision": "8b8473a6aaf58b7aa26d4470f36fc9b8"
+  },
+  {
+    "url": "img/icons/apple-icon-76x76.png",
+    "revision": "c4a7dc4ec0e8a1048295387051fd2369"
+  },
+  {
+    "url": "img/icons/apple-icon-precomposed.png",
+    "revision": "52ab2b0194d188a8adf1a398b7ed60b8"
+  },
+  {
+    "url": "img/icons/apple-icon.png",
+    "revision": "52ab2b0194d188a8adf1a398b7ed60b8"
+  },
+  {
+    "url": "img/icons/favicon-16x16.png",
+    "revision": "e2e72107826141371ef01d03c515b6f8"
+  },
+  {
+    "url": "img/icons/favicon-32x32.png",
+    "revision": "33e26cae8daf236ed07b9ad56e27a4a8"
+  },
+  {
+    "url": "img/icons/favicon-96x96.png",
+    "revision": "9e927f76c68640bed67e85951e87fb93"
+  },
+  {
+    "url": "img/icons/ms-icon-144x144.png",
+    "revision": "97000c1dc8159be51b582be3a21075e9"
+  },
+  {
+    "url": "img/icons/ms-icon-150x150.png",
+    "revision": "cb965c522fe0bfb38bee9ba3513e7830"
+  },
+  {
+    "url": "img/icons/ms-icon-310x310.png",
+    "revision": "db967b310047180c819c0bc90162b30b"
+  },
+  {
+    "url": "img/icons/ms-icon-70x70.png",
+    "revision": "e5ce6c633e42b3561942fb4a2cee3b43"
   },
   {
     "url": "img/overlays/fog.png",
@@ -5093,11 +5165,11 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "c3a9c4a64bdb7c54286f27338dc735d7"
+    "revision": "0c48403a8e17b18ab44e2937cdd160e2"
   },
   {
     "url": "js/app.js",
-    "revision": "0d5f637c8813ada8f6cacf1d7154d8c6"
+    "revision": "c8d0710b40f23f8d77966cda54fabac3"
   },
   {
     "url": "js/build.js",
@@ -5125,11 +5197,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/controllers/input.js",
-    "revision": "c7bba339f74ee9719fdbacfe1fbc1e0e"
+    "revision": "a529dfe389b477b91d155b7dae9eed9d"
   },
   {
     "url": "js/controllers/interface.js",
-    "revision": "e3a55e2704bda95e9a69da15b8b697be"
+    "revision": "bb0205c3c3b5b4e8111d62c818f212d7"
   },
   {
     "url": "js/controllers/overlay.js",
@@ -5221,7 +5293,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/game.js",
-    "revision": "be8e01bb3a04e9136b73bd0f72e4bf7e"
+    "revision": "144bb4d732fa6e1cd6f96ba4afeb484a"
   },
   {
     "url": "js/interface/abilities.js",
@@ -5233,7 +5305,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/bank.js",
-    "revision": "e72ba54806023d3282f81b333b2c6d8c"
+    "revision": "91de4f07f00efd46b877b36791a9f831"
   },
   {
     "url": "js/interface/container/container.js",
@@ -5245,15 +5317,15 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/enchant.js",
-    "revision": "e8b1b8e888b6af81424b993fbcbad6c6"
+    "revision": "2a29d4533051ac930e58b10fca1530b2"
   },
   {
     "url": "js/interface/header.js",
-    "revision": "183a72a58ff914e2f1c01c9a4a31bf00"
+    "revision": "a95d3d31ebb12654f13ccd86114938fc"
   },
   {
     "url": "js/interface/inventory.js",
-    "revision": "b0f177e41c136900567e46364b088618"
+    "revision": "069abce036d24171e6761df3e585fe8f"
   },
   {
     "url": "js/interface/profile/page.js",
@@ -5269,7 +5341,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/profile/pages/settings.js",
-    "revision": "57c370e4cff468b7e7ec5174b4a71813"
+    "revision": "4ff660208cc48102d2c98b81b987cda3"
   },
   {
     "url": "js/interface/profile/pages/state.js",
@@ -5277,15 +5349,15 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/profile/profile.js",
-    "revision": "7844614a4900c8b8bbd09622449ab9ec"
+    "revision": "83ec2aec9d12af8ba94757f08e85a57b"
   },
   {
     "url": "js/interface/shop.js",
-    "revision": "d3dcccf63d38a5af2ef1f96ca44a15f4"
+    "revision": "59db1d30ed79f8f7edfc0756775d9401"
   },
   {
     "url": "js/interface/warp.js",
-    "revision": "cfef9c545618f90c8f14df36b20e156a"
+    "revision": "362b90c659ef623a1b0d225137d534d6"
   },
   {
     "url": "js/lib/astar.js",
@@ -5361,7 +5433,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/camera.js",
-    "revision": "7f85132c222fe4c576f89e2323f308a2"
+    "revision": "530f3ebca5f60460c9edc049910ac4d9"
   },
   {
     "url": "js/renderer/grids.js",
@@ -5405,7 +5477,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/utils/modules.js",
-    "revision": "1697a48cccd338cc574e7f50b65bedb8"
+    "revision": "412737bd5032cdaf8c8e2cd00539d720"
   },
   {
     "url": "js/utils/pathfinder.js",
@@ -5445,7 +5517,7 @@ self.__precacheManifest = [
   },
   {
     "url": "manifest.json",
-    "revision": "2b75211a76744101019962cca72bda2c"
+    "revision": "0726407f74d78751653341c1f6ca280c"
   },
   {
     "url": "robots.txt",
@@ -5453,7 +5525,12 @@ self.__precacheManifest = [
   },
   {
     "url": "sitemap.xml",
-    "revision": "08882be0290aaaaef815e759069b4950"
+    "revision": "0cb5c74bea59445adc3dc4171907595f"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+workbox.routing.registerRoute(/txt|xml|html|css|js|json/, new workbox.strategies.NetworkFirst({ "cacheName":"web", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 86400, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
+workbox.routing.registerRoute(/ico|png|gif|jpg/, new workbox.strategies.NetworkFirst({ "cacheName":"images", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 604800, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
+workbox.routing.registerRoute(/woff|eot|woff2|ttf|svg/, new workbox.strategies.NetworkFirst({ "cacheName":"audio", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 604800, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
+workbox.routing.registerRoute(/mp3/, new workbox.strategies.NetworkFirst({ "cacheName":"fonts", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 604800, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
