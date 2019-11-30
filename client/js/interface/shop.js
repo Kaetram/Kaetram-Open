@@ -2,7 +2,7 @@ define(['jquery', './container/container'], function($, Container) {
 
     return Class.extend({
 
-        init: function(game, intrface) {
+        init: function(game, interface) {
             var self = this;
 
             self.game = game;
@@ -12,7 +12,7 @@ define(['jquery', './container/container'], function($, Container) {
             self.inventory = $('#shopInventorySlots');
 
             self.player = game.player;
-            self.interface = intrface;
+            self.interface = interface;
 
             self.container = null;
             self.data = null;
