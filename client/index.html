@@ -6,10 +6,22 @@
     <link rel="manifest" href="manifest.json" />
     <meta
         name="viewport"
-        content="width=device-width,initial-scale=1.0,minimum-scale=1,maximum-scale=1.0,shrink-to-fit=no,user-scalable=no"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"
     />
 
-    <!-- Open Graph -->
+    <!-- Meta -->
+    <meta
+        name="description"
+        content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Veradictus" />
+    <meta name="image" content="https://kaetram.com/img/favicon.png" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="language" content="English" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Open Graph Protocol -->
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://kaetram.com/" />
     <meta property="og:type" content="game" />
@@ -25,18 +37,6 @@
     <meta property="og:image:height" content="192" />
     <meta property="og:image:alt" content="Kaetram Logo" />
 
-    <!-- Meta -->
-    <meta
-        name="description"
-        content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool."
-    />
-    <meta name="robots" content="index, follow" />
-    <meta name="author" content="Veradictus" />
-    <meta name="image" content="https://kaetram.com/img/favicon.png" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="language" content="English" />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-
     <!-- Google -->
     <meta itemprop="name" content="Kaetram" />
     <meta
@@ -45,7 +45,13 @@
     />
     <meta itemprop="image" content="https://kaetram.com/img/favicon.png" />
 
-    <!-- Mobile and Android -->
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Kaetram" />
+    <meta name="twitter:description" content="Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool." />
+    <meta name="twitter:image:src" content="https://kaetram.com/img/favicon.png">
+
+    <!-- Mobile -->
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
     <link rel="icon" type="image/png" sizes="36x36" href="img/icons/android-icon-36x36.png" />
@@ -55,7 +61,7 @@
     <link rel="icon" type="image/png" sizes="144x144"  href="img/icons/android-icon-144x144.png" />
     <link rel="icon" type="image/png" sizes="192x192"  href="img/icons/android-icon-192x192.png" />
     
-    <!-- Safari on iOS -->
+    <!-- iOS -->
     <meta name="apple-mobile-web-app-title" content="Kaetram" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
@@ -77,57 +83,85 @@
     <!-- TODO: Pinned Tab  -->
     <!-- <link rel="mask-icon" href="path/to/icon.svg" size="any" color="black"> -->
 
-    <!-- Tile icon for Win8  -->
+    <!-- Windows  -->
     <meta name="application-name" content="Kaetram" />
-    <meta name="msapplication-TileImage" content="img/icons/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="img/icons/ms-icon-144x144.png" />
     <meta name="msapplication-starturl" content="/?utm_source=a2hs" />
     <meta name="msapplication-tooltip" content="Kaetram" />
     <meta name="msapplication-tap-highlight" content="no" />
-
+    <meta name="msapplication-config" content="browserconfig.xml">
+    
     <!-- UC Mobile Browser  -->
     <meta name="full-screen" content="yes" />
     <meta name="browsermode" content="application" />
-
+    
     <!-- Disable night mode for this page  -->
     <meta name="nightmode" content="enable/disable" />
-
-    <!-- Fitscreen  -->
-    <meta name="viewport" content="uc-fitscreen=yes"/>
-
+    
     <!-- Layout mode -->
     <meta name="layoutmode" content="fitscreen/standard" />
-
+    
     <!-- imagemode - show image even in text only mode  -->
     <meta name="imagemode" content="force" />
-
+    
     <!-- Orientation  -->
-    <meta name="screen-orientation" content="any">
-
+    <meta name="screen-orientation" content="any" />
+    
     <!-- Theme Colors -->
     <meta name="theme-color" content="#000000" />
     <meta name="msapplication-TileColor" content="#000000" />
     <meta name="msapplication-navbutton-color" content="#000000" />
-    <meta name="msapplication-config" content="browserconfig.xml">
-
+    
     <!-- JSON-LD -->
     <script type="application/ld+json">
         {
             "@context": "http://www.schema.org",
-            "@type": "Game",
+            "@type": "VideoGame",
             "name": "Kaetram",
             "alternateName": "Kaetram",
-            "url": "https://kaetram.com/"
+            "url": "https://kaetram.com/",
+            "image": "https://kaetram.com/img/favicon.png",
+            "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool.",
+            "inLanguage": ["English"],
+ 			"operatingSystem": "ANY",
+			"applicationCategory": "https://schema.org/VideoGame",
+            "aggregateRating": {
+                "@type":"AggregateRating",
+                "ratingValue":"5",
+                "ratingCount":"1"
+            },
+            "author": {
+                "@type": "Organization",
+                "name": "Veradictus",
+                "url": "http://gds.com"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "genre":["MMORPG"],
+            "audience": {
+                "@type":"PeopleAudience",
+                "suggestedMinAge":"8"
+            },
+            "numberOfPlayers":{
+                "@type":"QuantitativeValue",
+                "minValue":"0",
+                "maxValue":"200"
+            }
         }
     </script>
 
-    <title>Kaetram</title>
+    <meta name="rating" content="General">
 
+    <title>Kaetram</title>
+    
     <link rel="stylesheet" type="text/css" href="css/animations.css" />
     <link rel="stylesheet" type="text/css" href="css/game.css" />
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/vars.css" />
     <link rel="stylesheet" type="text/css" href="css/interface.css" />
-
     <script src="js/lib/modernizr.js" type="text/javascript"></script>
 </head>
 <body class="intro">
@@ -136,10 +170,8 @@
             You must enable JavaScript to play Kaetram.
         </div>
     </noscript>
-
     <div id="intro">
         <!-- <h1 id="logo"></h1> -->
-
         <section id="parchment" class="loadCharacter">
             <div class="parchment-left"></div>
             <div class="parchment-middle">
@@ -149,7 +181,6 @@
                         Kaetram
                         <span class="right-ornament"></span>
                     </h1>
-
                     <form method="get" accept-charset="utf-8">
                         <input
                             type="text"
@@ -157,6 +188,7 @@
                             class="stroke"
                             name="player-name"
                             placeholder="Username"
+                            tabindex="0"
                             maxlength="32"
                             autocomplete="off"
                             readonly
@@ -168,31 +200,28 @@
                             class="stroke"
                             name="player-password"
                             placeholder="Password"
+                            tabindex="0"
                             maxlength="64"
                             readonly
                             autocomplete="off"
                         />
                     </form>
-
-                    <div id="guest" class="check"></div>
-                    <div id="guestText">Play as a guest</div>
-
-                    <div id="rememberMe" class="check"></div>
-                    <div id="rememberMeText">Remember Me</div>
-
-                    <div id="login"></div>
-                    <div id="newCharacter"></div>
-
+                    <div id="rememberMe" class="check" tabindex="0">
+                        <div id="rememberMeText">Remember Me</div>
+                    </div>
+                    <div id="guest" class="check" tabindex="0">
+                        <div id="guestText">Play as a guest</div>
+                    </div>
+                    <div id="login" tabindex="0"></div>
+                    <div id="newCharacter" tabindex="0"></div>
                     <div class="validation-summary"></div>
                 </article>
-
                 <article id="createCharacter">
                     <h1>
                         <span class="left-ornament"></span>
                         New Character
                         <span class="right-ornament"></span>
                     </h1>
-
                     <form method="get" accept-charset="utf-8">
                         <input
                             type="text"
@@ -200,6 +229,7 @@
                             class="stroke"
                             name="player-name"
                             placeholder="Username"
+                            tabindex="0"
                             maxlength="32"
                             autocomplete="off"
                         />
@@ -209,6 +239,7 @@
                             class="stroke"
                             name="player-password"
                             placeholder="Password"
+                            tabindex="0"
                             maxlength="64"
                             autocomplete="off"
                         />
@@ -218,6 +249,7 @@
                             class="stroke"
                             name="player-password2"
                             placeholder="Confirm Password"
+                            tabindex="0"
                             maxlength="64"
                             autocomplete="off"
                         />
@@ -227,50 +259,38 @@
                             class="stroke"
                             name="player-email"
                             placeholder="Email Address"
+                            tabindex="0"
                             maxlength="64"
                             autocomplete="off"
                         />
                     </form>
-
-                    <div id="play"></div>
-
-                    <p></p>
-
-                    <div id="cancelButton"></div>
-
-                    <div class="validation-summary"></div>
+                    <!-- <p></p> -->
+                    <div id="cancelButton" tabindex="0"></div>
+                    <div id="play" tabindex="0"></div>
+                    <div class="validation-summary" tabindex="0"></div>
                 </article>
-
                 <article id="credits">
                     <h1>
                         <span class="left-ornament"></span>
-
                         <span class="title">Credits</span>
-
                         <span class="right-ornament"></span>
                     </h1>
-
                     <p id="cDescription">
                         <br />
                         Special thanks to Little Workshop for the pixel art.
                     </p>
-
                     <div id="close-about">
                         <span>-- Click anywhere to close --</span>
                     </div>
                 </article>
-
                 <article id="about">
                     <h1>
                         <span class="left-ornament"></span>
-
                         <span class="title">
                             About
                         </span>
-
                         <span class="right-ornament"></span>
                     </h1>
-
                     <p id="aDescription">
                         Kaetram is a 2D open-source experiment. The game is
                         still very early in development, so please be wary
@@ -280,16 +300,13 @@
                             >GitHub Repository</a
                         >.
                     </p>
-
                     <div id="close-about">
                         <span>-- Click anywhere to close --</span>
                     </div>
                 </article>
-
                 <article id="git">
                     Structure this later
                 </article>
-
                 <article id="death">
                     <p>You have died...</p>
                     <div id="respawn" class="button"></div>
@@ -303,7 +320,6 @@
             </div>
         </section>
     </div>
-
     <div id="container">
         <div id="border">
             <div id="canvas">
@@ -357,23 +373,19 @@
                     <div id="profileName" class="profileInfo"></div>
                     <div id="profileLevel" class="profileInfo"></div>
                     <div id="profileExperience" class="profileInfo"></div>
-
                     <div id="weaponSlot" class="profileSlot"></div>
                     <div id="armourSlot" class="profileSlot"></div>
                     <div id="pendantSlot" class="profileSlot"></div>
                     <div id="ringSlot" class="profileSlot"></div>
                     <div id="bootsSlot" class="profileSlot"></div>
                 </div>
-
                 <div id="questPage" class="page">
                     <div id="achievementCount" class="stroke"></div>
                     <div id="achievementList"><ul></ul></div>
-
                     <div id="questCount" class="stroke"></div>
                     <div id="questList"><ul></ul></div>
                 </div>
                 <div id="skillPage" class="page"></div>
-
                 <div id="navigator">
                     <div id="previous"></div>
                     <div id="next"></div>
@@ -409,7 +421,6 @@
                         value="100"
                     />
                 </div>
-
                 <div id="texts">
                     <p>Volume</p>
                     <p>SFX</p>
@@ -421,7 +432,6 @@
                     <p>Names</p>
                     <p>Levels</p>
                 </div>
-
                 <div id="info"></div>
                 <div id="checkMarks">
                     <div id="soundCheck" class="check"></div>
@@ -444,13 +454,11 @@
                 <div id="warp4" class="mapButton"></div>
                 <div id="warp5" class="mapButton"></div>
                 <div id="warp6" class="mapButton"></div>
-
                 <div id="closeMapFrame" class="close"></div>
             </div>
             <div id="inventory"><ul></ul></div>
             <div id="bank">
                 <div id="closeBank" class="close"></div>
-
                 <div id="bankContainer">
                     <div id="bankSlots"><ul></ul></div>
                 </div>
@@ -462,20 +470,17 @@
             </div>
             <div id="trade">
                 <div id="closeTrade" class="close"></div>
-
                 <div id="tradePlayerContainer"></div>
                 <div id="tradeOPlayerContainer"></div>
             </div>
             <div id="enchant">
                 <div id="closeEnchant" class="close"></div>
                 <div id="confirmEnchant" class="ok"></div>
-
                 <div id="enchantContainer">
                     <div id="enchantInventorySlots" class="inventorySlots">
                         <ul></ul>
                     </div>
                 </div>
-
                 <div id="enchantSelectedItem"></div>
                 <div id="enchantShards">
                     <div id="shardsCount"></div>
@@ -483,7 +488,6 @@
             </div>
             <div id="shop">
                 <div id="closeShop" class="close"></div>
-
                 <div id="shopContainer"><ul></ul></div>
                 <div id="shopInventoryContainer">
                     <div id="shopInventorySlots" class="inventorySlots">
@@ -494,19 +498,15 @@
             <div id="bubbles"></div>
             <div id="notifications">
                 <div id="notifyFade" class="fade"></div>
-
                 <div id="notify">
                     <div id="exclamation"></div>
                     <div id="notifyDone" class="done"></div>
                 </div>
-
                 <div id="confirm">
                     <div id="question"></div>
-
                     <div id="confirmDone" class="done"></div>
                     <div id="cancel"></div>
                 </div>
-
                 <div id="message"></div>
             </div>
             <div id="chat">
@@ -523,7 +523,6 @@
                 </div>
                 <div id="chatLog"></div>
             </div>
-
             <div id="playerInfo">
                 <div id="health"></div>
                 <div id="healthBar">
@@ -534,7 +533,6 @@
             </div>
         </div>
     </div>
-
     <footer>
         <div id="about-link" class="clickable">
             <span id="toggle-about">About</span>
@@ -548,16 +546,12 @@
             <span id="toggle-discord">Discord</span>
         </div>
     </footer>
-
     <div id="resizeCheck"></div>
-
     <script src="lib/illuminated.js"></script>
-
     <script src="js/utils/detect.js" type="text/javascript"></script>
     <script src="js/lib/log.js" type="text/javascript"></script>
     <script src="lib/socket.io.js" type="text/javascript"></script>
     <script src="js/lib/jquery.js" type="text/javascript"></script>
-    <!-- <script src="dist/home.js" type="text/javascript"></script> -->
     <script data-main="js/lib/home" src="js/lib/require.js" type="text/javascript"></script>
     <script src="lib/pwa.js" type="text/javascript"></script>
 </body>
