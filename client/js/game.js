@@ -463,9 +463,9 @@ define(['./renderer/renderer', './utils/storage',
                 this.pointer = pointer;
         },
 
-        setInterface: function(intrface) {
+        setInterface: function(interface) {
             if (!this.interface)
-                this.interface = intrface;
+                this.interface = interface;
         },
 
         setAudio: function(audio) {
