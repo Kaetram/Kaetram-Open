@@ -1,10 +1,10 @@
 /* global log */
 
 define(['jquery', '../interface/inventory',
-        '../interface/profile/profile', '../interface/actions',
-        '../interface/bank', '../interface/enchant', '../interface/warp',
-        '../interface/shop', '../interface/header'],
-    function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
+    '../interface/profile/profile', '../interface/actions',
+    '../interface/bank', '../interface/enchant', '../interface/warp',
+    '../interface/shop', '../interface/header'],
+function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
 
     return Class.extend({
 
