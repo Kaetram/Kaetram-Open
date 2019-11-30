@@ -26,24 +26,7 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
             var self = this;
 
             self.button.click(function() {
-
-                self.game.interface.hideAll();
-                self.settings.hide();
-
-                if (self.isVisible()) {
-                    self.hide();
-                    self.button.removeClass('active');
-
-                } else {
-                    self.show();
-                    self.button.addClass('active');
-                }
-
-                if (!self.activePage.loaded)
-                    self.activePage.load();
-
-                self.game.socket.send(Packets.Click, ['profile', self.button.hasClass('active')]);
-
+                self.open();
             });
 
             self.next.click(function() {
@@ -71,6 +54,28 @@ define(['jquery', './pages/state', './pages/ability', './pages/settings', './pag
 
             if (self.activeIndex === 0 && self.activeIndex !== self.pages.length)
                 self.next.addClass('enabled');
+        },
+
+        open: function() {
+            var self = this;
+
+            self.game.interface.hideAll();
+            self.settings.hide();
+
+            if (self.isVisible()) {
+                self.hide();
+                self.button.removeClass('active');
+
+            } else {
+                self.show();
+                self.button.addClass('active');
+            }
+
+            if (!self.activePage.loaded)
+                self.activePage.load();
+
+            self.game.socket.send(Packets.Click, ['profile', self.button.hasClass('active')]);
+
         },
 
         update: function() {

@@ -62,16 +62,22 @@ define(['jquery', './container/container'], function($, Container) {
                 list.append(itemSlotList);
             }
 
-            self.button.click(function(event) {
-                self.game.interface.hideAll();
-
-                if (self.isVisible())
-                    self.hide();
-                else
-                    self.display();
-
-                self.game.socket.send(Packets.Click, ['inventory', self.button.hasClass('active')]);
+            self.button.click(function() {
+                self.open();
             });
+        },
+
+        open: function() {
+            var self = this;
+
+            self.game.interface.hideAll();
+
+            if (self.isVisible())
+                self.hide();
+            else
+                self.display();
+
+            self.game.socket.send(Packets.Click, ['inventory', self.button.hasClass('active')]);
         },
 
         click: function(event) {
