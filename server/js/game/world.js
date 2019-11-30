@@ -149,7 +149,7 @@ class World {
         //Stop screwing with this - it's so the target retaliates.
 
         target.hit(attacker);
-        target.applyDamage(damage);
+        target.applyDamage(damage, attacker);
 
         self.push(Packets.PushOpcode.Regions, {
             regionId: target.region,

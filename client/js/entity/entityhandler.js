@@ -33,11 +33,6 @@ define(['./character/character'], function(Character) {
                 self.entity.onStep(function() {
                     self.entities.registerDuality(self.entity);
 
-                    self.entity.forEachAttacker(function(attacker) {
-                        if (attacker.hasTarget() && attacker.target.id === self.entity.id && !attacker.stunned)
-                            attacker.follow(self.entity);
-                    });
-
                     if (self.entity.type === 'mob')
                         self.game.socket.send(Packets.Movement, [Packets.MovementOpcode.Entity, self.entity.id, self.entity.gridX, self.entity.gridY]);
 

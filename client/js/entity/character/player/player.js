@@ -159,6 +159,20 @@ define(['../character', './equipment/armour', './equipment/weapon',
             this.maxMana = maxMana;
         },
 
+        setPoison: function(poison) {
+            var self = this;
+
+            if (self.poison === poison)
+                return;
+
+            self.poison = poison;
+
+            if (self.poison)
+                $('#health').css('background', '-webkit-linear-gradient(right, #079231, #012b0c)');
+            else
+                $('#health').css('background', '-webkit-linear-gradient(right, #ff0000, #ef5a5a)');
+        },
+
         clearHealthBar: function() {
             this._super();
         },

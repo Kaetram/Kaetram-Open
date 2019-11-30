@@ -33,6 +33,7 @@ class Mob extends Character {
         self.attackRange = self.data.attackRange;
         self.aggroRange = self.data.aggroRange;
         self.aggressive = self.data.aggressive;
+        self.attackRate = self.data.attackRate;
 
         self.spawnLocation = [x, y];
 
@@ -75,7 +76,6 @@ class Mob extends Character {
             percent = 0,
             random = Utils.randomInt(0, 1000);
 
-
         for (let drop in self.drops)
             if (self.drops.hasOwnProperty(drop)) {
                 let chance = self.drops[drop];
@@ -87,7 +87,7 @@ class Mob extends Character {
                     let count = 1;
 
                     if (drop === 'gold')
-                        count = Utils.randomInt(1, self.level * (Math.floor(Math.pow(2, self.level / 7) / (self.level / 4))));
+                        count = Utils.randomInt(1, self.level * 5);
 
                     return {
                         id: Items.stringToId(drop),

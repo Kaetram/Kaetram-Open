@@ -41,6 +41,8 @@ define(['jquery'], function($) {
 
                     });
                 }
+
+                self.warpCount++;
             }
 
         },
@@ -73,13 +75,27 @@ define(['jquery'], function($) {
         },
 
         display: function() {
-            this.mapFrame.fadeIn('slow');
-            this.button.addClass('active');
+            var self = this;
+
+            self.mapFrame.fadeIn('slow');
+            self.button.addClass('active');
         },
 
         hide: function() {
-            this.mapFrame.fadeOut('fast');
-            this.button.removeClass('active');
+            var self = this;
+
+            self.mapFrame.fadeOut('fast');
+            self.button.removeClass('active');
+        },
+
+        clear: function() {
+            var self = this;
+
+            for (var i = 0; i < self.warpCount; i++)
+                self.mapFrame.find('#warp' + i).unbind('click');
+
+            self.close.unbind('click');
+            self.button.unbind('click');
         }
 
     });

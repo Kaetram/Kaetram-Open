@@ -27,7 +27,9 @@ class Character extends Entity {
         self.hitPoints = -1;
         self.maxHitPoints = -1;
 
+        /* States */
         self.dead = false;
+        self.poison = false;
         self.aggressive = false;
         self.aggroRange = 2;
 
@@ -68,6 +70,9 @@ class Character extends Entity {
                 return;
 
             if (self.combat.started)
+                return;
+
+            if (self.poison)
                 return;
 
             self.heal(1);
@@ -115,8 +120,13 @@ class Character extends Entity {
         return this.attackRange > 1;
     }
 
-    applyDamage(damage) {
-        this.hitPoints -= damage;
+    applyDamage(damage, attacker) {
+        let self = this;
+
+        self.hitPoints -= damage;
+
+        if (self.damagedCallback)
+            self.damagedCallback(damage, attacker);
     }
 
     isDead() {
@@ -167,6 +177,15 @@ class Character extends Entity {
 
         if (self.hitPointsCallback)
             self.hitPointsCallback();
+    }
+
+    setPoison(poison) {
+        let self = this;
+
+        self.poison = poison;
+
+        if (self.poisonCallback)
+            self.poisonCallback(poison);
     }
 
     getProjectile() {
@@ -230,12 +249,20 @@ class Character extends Entity {
         this.damageCallback = callback;
     }
 
+    onDamaged(callback) { // When the entity gets hit.
+        this.damagedCallback = callback;
+    }
+
     onStunned(callback) {
         this.stunCallback = callback;
     }
 
     onSubAoE(callback) {
         this.subAoECallback = callback;
+    }
+
+    onPoison(callback) {
+        this.poisonCallback = callback;
     }
 }
 

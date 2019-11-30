@@ -234,6 +234,8 @@ class Incoming {
 
         if (self.player.readyCallback)
             self.player.readyCallback();
+
+        self.player.sync();
     }
 
     handleWho(message) {

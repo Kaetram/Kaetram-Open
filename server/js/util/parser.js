@@ -34,7 +34,6 @@ class Parser {
 
         self.onReady(() => {
             Mobs.Plugins = require ('../util/plugins')(__dirname + '/../../data/combat/');
-            Items.Plugins = require ('../util/plugins')(__dirname + '/../../data/items/');
 
             log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
             log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
@@ -128,6 +127,9 @@ class Parser {
             };
 
             Items.Ids[value.id] = Items.Data[key];
+
+            if (value.plugin)
+                Items.Plugins[value.id] = require('../../data/items/' + value.plugin);
 
             itemCounter++;
         });

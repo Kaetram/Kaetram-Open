@@ -40,6 +40,7 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
                 case Modules.Hits.Heal:
                 case Modules.Hits.Mana:
                 case Modules.Hits.Experience:
+                case Modules.Hits.Poison:
                         var amount = data.shift(),
                             id = self.generateId(self.game.time, amount, x, y),
                             text = '+', colour;
@@ -50,6 +51,9 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
                         if (type !== Modules.Hits.Experience)
                             text = '++';
 
+                        if (type === Modules.Hits.Poison)
+                            text = '--';
+
                         var splat = new Splat(id, type, text + amount, x, y, false);
 
                         if (type === Modules.Hits.Heal)
@@ -58,6 +62,8 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
                             colour = Modules.DamageColours.mana;
                         else if (type === Modules.Hits.Experience)
                             colour = Modules.DamageColours.exp;
+                        else if (type === Modules.Hits.Poison)
+                            colour = Modules.DamageColours.poison;
 
                         splat.setColours(colour.fill, colour.stroke);
 
@@ -76,7 +82,7 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
 
                     break;
 
-                case Modules.Info.Timer:
+                case Modules.Info.Countdown:
                     /**
                      * We only allow the creation of one countdown timer.
                      */
