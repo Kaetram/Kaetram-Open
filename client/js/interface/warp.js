@@ -22,11 +22,7 @@ define(['jquery'], function($) {
             var self = this;
 
             self.button.click(function() {
-                self.game.interface.hideAll();
-
-                self.toggle();
-
-                self.game.socket.send(Packets.Click, ['warp', self.button.hasClass('active')]);
+                self.open();
             });
 
             self.close.click(function() {
@@ -36,16 +32,27 @@ define(['jquery'], function($) {
             for (var i = 1; i < 7; i++) {
                 var warp = self.mapFrame.find('#warp' + i);
 
-                if (warp)
+                if (warp) {
                     warp.click(function(event) {
 
                         self.hide();
 
                         self.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);
 
-                    })
+                    });
+                }
             }
 
+        },
+
+        open: function() {
+            var self = this;
+
+            self.game.interface.hideAll();
+
+            self.toggle();
+
+            self.game.socket.send(Packets.Click, ['warp', self.button.hasClass('active')]);
         },
 
         toggle: function() {

@@ -97,28 +97,28 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                         case Modules.Keys.W:
                         case Modules.Keys.Up:
 
-                            self.getPlayer().moveUp = true;
+                            player.moveUp = true;
 
                             break;
 
                         case Modules.Keys.A:
                         case Modules.Keys.Left:
 
-                            self.getPlayer().moveLeft = true;
+                            player.moveLeft = true;
 
                             break;
 
                         case Modules.Keys.S:
                         case Modules.Keys.Down:
 
-                            self.getPlayer().moveDown = true;
+                            player.moveDown = true;
 
                             break;
 
                         case Modules.Keys.D:
                         case Modules.Keys.Right:
 
-                            self.getPlayer().moveRight = true;
+                            player.moveRight = true;
 
                             break;
 
@@ -128,19 +128,42 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
                             break;
 
+                        case Modules.Keys.I:
+
+                            self.game.interface.inventory.open();
+
+                            break;
+
+                        case Modules.Keys.M:
+
+                            self.game.interface.warp.open();
+
+                            break;
+
+                        case Modules.Keys.P:
+
+                            self.game.interface.profile.open();
+
+                            break;
+
+                        case Modules.Keys.Esc:
+
+                            self.game.interface.profile.settings.open();
+
+                            break;
                     }
 
                     break;
 
-                    case Modules.InputType.LeftClick:
+                case Modules.InputType.LeftClick:
 
-                        player.disableAction = false;
-                        self.keyMovement = false;
+                    player.disableAction = false;
+                    self.keyMovement = false;
 
-                        self.setCoords(data);
-                        self.click(self.getCoords());
+                    self.setCoords(data);
+                    self.click(self.getCoords());
 
-                        break;
+                    break;
             }
         },
 
@@ -359,7 +382,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
         },
 
         getAttackCursor: function() {
-            return this.cursors[this.getPlayer().isRanged() ? 'bow' : 'sword']
+            return this.cursors[this.getPlayer().isRanged() ? 'bow' : 'sword'];
         },
 
         getCoords: function() {
@@ -377,7 +400,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             return {
                 x: x,
                 y: y
-            }
+            };
         },
 
         getTargetData: function() {
@@ -399,7 +422,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 dy: self.selectedY * 16 * superScale,
                 dw: sprite.width * superScale,
                 dh: sprite.height * superScale
-            }
+            };
         },
 
         isTargetable: function(entity) {

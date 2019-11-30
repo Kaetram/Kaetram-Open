@@ -73,7 +73,10 @@ Modules = {
         U: 85,
         J: 74,
         Enter: 13,
-        T: 84
+        T: 84,
+        I: 73,
+        P: 80,
+        M: 77
     },
 
     AudioTypes: {

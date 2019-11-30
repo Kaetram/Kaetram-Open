@@ -53,14 +53,7 @@ define(['jquery', '../page'], function($, Page) {
             self.renderer.adjustBrightness(self.getBrightness());
 
             self.button.click(function() {
-                self.game.interface.hideAll();
-
-                self.button.toggleClass('active');
-
-                if (self.isVisible())
-                    self.hide();
-                else
-                    self.show();
+                self.open();
             });
 
             self.volume.on('input', function() {
@@ -183,6 +176,19 @@ define(['jquery', '../page'], function($, Page) {
                 self.renderer.drawLevels = false;
 
             self.loaded = true;
+        },
+
+        open: function() {
+            var self = this;
+
+            self.game.interface.hideAll();
+
+            self.button.toggleClass('active');
+
+            if (self.isVisible())
+                self.hide();
+            else
+                self.show();
         },
 
         show: function() {
