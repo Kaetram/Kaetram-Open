@@ -2,49 +2,18 @@
 
 const path = require('path');
 const { task, series, parallel, src, dest } = require('gulp');
-const del = require('del');
-const csso = require('gulp-csso');
-const htmlmin = require('gulp-htmlmin');
-const uglify = require('gulp-uglify');
-const { generateSW } = require('workbox-build');
+const workbox = require('workbox-build');
 
-// Gulp task to minify HTML files
-task('pages', async () =>
-    src([path.resolve(__dirname, './client/index.html')])
-        .pipe(
-            htmlmin({
-                caseSensitive: false,
-                collapseInlineTagWhitespace: true,
-                minifyCSS: true,
-                minifyJS: true,
-                collapseWhitespace: true,
-                removeComments: true,
-                sortAttributes: true,
-                sortClassName: false,
-                processScripts: ['application/ld+json']
-            })
-        )
-        .pipe(dest(path.resolve(__dirname, './dist')))
-);
-
-// Gulp task to minify CSS files
-task('styles', async () =>
-    src(path.resolve(__dirname, './client/**/*.css'))
-        .pipe(csso())
-        .pipe(dest(path.resolve(__dirname, './dist/css')))
-);
-
-// Gulp task to minify JavaScript files
-task('scripts', async () =>
-    src(path.resolve(__dirname, './client/**/*.js'))
-        .pipe(uglify())
-        .pipe(dest(path.resolve(__dirname, './dist/js')))
-);
-
-task('clean', async () => del(['dist']));
+// maxAgeSeconds
+// * One minute: max-age=60
+// * One hour: max-age=3600
+// * One day: max-age=86400
+// * One week: max-age=604800
+// * One month: max-age=2628000
+// * One year: max-age=31536000
 
 task('generate-sw', async () => {
-    const build = await generateSW({
+    const build = await workbox.generateSW({
         swDest: path.resolve(__dirname, './client/sw.js'),
         globDirectory: path.resolve(__dirname, './client/'),
         globPatterns: [
@@ -52,7 +21,65 @@ task('generate-sw', async () => {
         ],
         maximumFileSizeToCacheInBytes: 5e6,
         clientsClaim: true,
-        skipWaiting: true
+        skipWaiting: true,
+        runtimeCaching: [
+            {
+                urlPattern: /txt|xml|html|css|js|json/,
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'web',
+                    expiration: {
+                        maxAgeSeconds: 86400
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                        headers: { 'x-test': 'true' }
+                    }
+                }
+            },
+            {
+                urlPattern: /ico|png|gif|jpg/,
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'images',
+                    expiration: {
+                        maxAgeSeconds: 604800
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                        headers: { 'x-test': 'true' }
+                    }
+                }
+            },
+            {
+                urlPattern: /woff|eot|woff2|ttf|svg/,
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'audio',
+                    expiration: {
+                        maxAgeSeconds: 604800
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                        headers: { 'x-test': 'true' }
+                    }
+                }
+            },
+            {
+                urlPattern: /mp3/,
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'fonts',
+                    expiration: {
+                        maxAgeSeconds: 604800
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                        headers: { 'x-test': 'true' }
+                    }
+                }
+            }
+        ]
     });
     const { count, size, warnings } = build;
 
@@ -63,7 +90,5 @@ task('generate-sw', async () => {
 });
 
 exports.default = series(
-    'clean',
-    parallel('pages', 'styles', 'scripts'),
     'generate-sw'
 );
