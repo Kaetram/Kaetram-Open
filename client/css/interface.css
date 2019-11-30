@@ -851,7 +851,7 @@
         background: url('../img/3/characterdialogsheet.png') -330px -723px;
     }
 
-    .check:hover {
+    .check:hover, .check:focus {
         background-position: -357px -723px;
     }
 
@@ -1286,7 +1286,7 @@
         background: url('../img/2/containers.png') -601px -108px;
     }
 
-    #cancel:hover {
+    #cancel:hover, #cancel:focus {
         background: url('../img/2/containers.png') -601px -94px;
     }
 
@@ -1506,7 +1506,7 @@
         background: url('../img/2/characterdialogsheet.png') -220px -481px;
     }
 
-    .check:hover {
+    .check:hover, .check:focus {
         background-position: -238px -481px;
     }
 
@@ -1933,7 +1933,7 @@
         background: url('../img/1/containers.png') -371px -79px;
     }
 
-    #cancel:hover {
+    #cancel:hover, #cancel:focus {
         background: url('../img/1/containers.png') -371px -65px;
     }
 
@@ -2116,7 +2116,7 @@
         background: url('../img/1/characterdialogsheet.png') -110px -241px;
     }
 
-    .check:hover {
+    .check:hover, .check:focus {
         background-position: -119px -241px;
     }
 
