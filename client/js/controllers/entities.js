@@ -96,6 +96,7 @@ define(['../renderer/grids', '../entity/objects/chest',
                         mob.attackRange = info.attackRange;
                         mob.level = info.level;
                         mob.hiddenName = info.hiddenName;
+                        mob.movementSpeed = info.movementSpeed;
 
                         entity = mob;
 
@@ -171,6 +172,7 @@ define(['../renderer/grids', '../entity/objects/chest',
                         player.attackRange = info.attackRange;
                         player.orientation = info.orientation ? info.orientation : 0;
                         player.type = info.type;
+                        player.movementSpeed = info.movementSpeed;
 
                         var hitPointsData = info.hitPoints,
                             manaData = info.mana,

@@ -110,6 +110,7 @@ class Parser {
                 type: value.type || 'object',
                 attack: value.attack || 0,
                 defense: value.defense || 0,
+                movementSpeed: value.movementSpeed || null,
                 pendantLevel: value.pendantLevel || null,
                 ringLevel: value.ringLevel || null,
                 bootsLevel: value.bootsLevel || null,

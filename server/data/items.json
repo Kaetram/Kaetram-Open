@@ -1035,7 +1035,8 @@
     "id":148,
     "defense":35,
     "type":"armor",
-    "name":"Rabbit Armour"
+    "name":"Rabbit Armour",
+    "movementSpeed": 210
   },
 
   "PortalArmor": {

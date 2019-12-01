@@ -14,7 +14,7 @@ class Character extends Entity {
 
         self.level = -1;
 
-        self.movementSpeed = 150;
+        self.movementSpeed = 250;
         self.attackRange = 1;
         self.attackRate = 1000;
         self.healingRate = 25000;
@@ -198,6 +198,15 @@ class Character extends Entity {
 
     getDrop() {
         return null;
+    }
+
+    getState() {
+        let self = this,
+            state = super.getState();
+
+        state.movementSpeed = self.movementSpeed;
+
+        return state;
     }
 
     hasMaxHitPoitns() {

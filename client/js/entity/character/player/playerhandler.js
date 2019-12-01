@@ -48,7 +48,7 @@ define(function() {
                 if (!self.game.getEntityAt(self.input.selectedX, self.input.selectedY))
                     self.socket.send(Packets.Target, [Packets.TargetOpcode.None]);
 
-                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Started, self.input.selectedX, self.input.selectedY, self.player.gridX, self.player.gridY]);
+                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Started, self.input.selectedX, self.input.selectedY, self.player.gridX, self.player.gridY, self.player.movementSpeed]);
             });
 
             self.player.onStopPathing(function(x, y) {

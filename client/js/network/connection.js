@@ -175,6 +175,8 @@ define(['./impl/teamwar'], function(TeamWar) {
                 entity.attackRange = data.attackRange;
                 entity.setPoison(data.poison);
 
+                entity.movementSpeed = data.movementSpeed;
+
                 self.interface.profile.update();
             });
 
