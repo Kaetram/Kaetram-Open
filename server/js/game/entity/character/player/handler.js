@@ -30,10 +30,13 @@ class Handler {
 
             self.detectAggro();
 
-            if (self.updateTicks % 4 === 0) // Every 4 update ticks.
+            if (self.updateTicks % 4 === 0) // Every 4 (1.6 seconds) update ticks.
                 self.handlePoison();
 
-            if (self.updateTicks > 1000) // Reset them every now and then.
+            if (self.updateTicks % 16 === 0) // Every 16 (6.4 seconds) update ticks.
+                self.player.cheatScore = 0;
+
+            if (self.updateTicks > 100) // Reset them every now and then.
                 self.updateTicks = 0;
 
             self.updateTicks++;
@@ -157,6 +160,18 @@ class Handler {
 
             log.debug(`Player ${self.player.instance} updated poison status.`);
         });
+
+        self.player.onCheatScore(() => {
+            /**
+             * This is a primitive anti-cheating system.
+             * It will not accomplish much, but it is enough for now.
+             */
+
+            if (self.player.cheatScore > 10)
+                self.player.timeout();
+
+            log.debug('Cheat score - ' + self.player.cheatScore);
+        });
     }
 
     detectAggro() {
@@ -183,7 +198,7 @@ class Handler {
 
         if (self.player.currentSong !== song)
             self.player.updateMusic(song);
-            
+
     }
 
     detectPVP(x, y) {

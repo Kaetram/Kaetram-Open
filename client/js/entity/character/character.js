@@ -43,7 +43,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             self.attackAnimationSpeed = 50;
             self.walkAnimationSpeed = 100;
-            self.movementSpeed = 250;
+            self.movementSpeed = -1;
 
             self.attackRange = 1;
 

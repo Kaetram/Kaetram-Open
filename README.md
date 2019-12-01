@@ -50,5 +50,6 @@ Once you finish modifying your map in `tools/maps/data` you can parse the map da
 
 - Write documentation outlining the entirety of the source code.
 - Come up with a storyline.
+- Implement anti-cheating.
 
 - Add (continue) to NPC talking -- spacebar when talking

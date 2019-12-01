@@ -339,6 +339,8 @@ class Incoming {
                 if (self.preventNoClip(requestX, requestY))
                     self.player.guessPosition(requestX, requestY);
 
+                self.player.movementStart = new Date().getTime();
+
                 break;
 
             case Packets.Movement.Started:
@@ -388,6 +390,11 @@ class Incoming {
 
                 self.player.moving = false;
                 self.player.lastMovement = new Date().getTime();
+
+                let diff = self.player.lastMovement - self.player.movementStart;
+
+                if (diff < self.player.movementSpeed)
+                    self.player.incrementCheatScore(1);
 
                 break;
 
@@ -445,6 +452,8 @@ class Incoming {
                 if (!entity || !self.player.isAdjacent(entity))
                     return;
 
+                self.player.cheatScore = 0;
+
                 if (entity.type === 'chest') {
                     entity.openChest();
                     return;
@@ -464,6 +473,8 @@ class Incoming {
 
                 if (!target || target.dead || !self.canAttack(self.player, target))
                     return;
+
+                self.player.cheatScore = 0;
 
                 self.world.push(Packets.PushOpcode.Regions, {
                     regionId: target.region,

@@ -64,6 +64,8 @@ define(['../character', './equipment/armour', './equipment/weapon',
 
             self.orientation = data.orienation;
 
+            self.movementSpeed = data.movementSpeed;
+
             self.type = 'player';
         },
 

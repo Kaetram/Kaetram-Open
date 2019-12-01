@@ -219,6 +219,13 @@ Items.healsHealth = (id) => {
     return false;
 };
 
+Items.getMovementSpeed = (string) => {
+    if (string in Items.Data)
+        return Items.Data[string].movementSpeed;
+
+    return null;
+};
+
 
 Items.healsMana = (id) => {
     if (id in Items.Ids)

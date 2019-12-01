@@ -84,6 +84,8 @@ class Player extends Character {
         self.instanced = false;
         self.visible = true;
 
+        self.cheatScore = 0;
+
         self.regionsLoaded = [];
         self.lightsLoaded = [];
     }
@@ -268,7 +270,8 @@ class Player extends Character {
             lastLogin: self.lastLogin,
             pvpKills: self.pvpKills,
             pvpDeaths: self.pvpDeaths,
-            orientation: self.orientation
+            orientation: self.orientation,
+            movementSpeed: self.getMovementSpeed()
         };
 
         self.regionPosition = [self.x, self.y];
@@ -522,6 +525,15 @@ class Player extends Character {
         self.world.cleanCombat(self);
     }
 
+    incrementCheatScore(amount) {
+        let self = this;
+
+        self.cheatScore += amount;
+
+        if (self.cheatScoreCallback)
+            self.cheatScoreCallback();
+    }
+
     updatePVP(pvp) {
         let self = this;
 
@@ -654,6 +666,18 @@ class Player extends Character {
 
     getTutorial() {
         return this.quests.getQuest(Modules.Quests.Introduction);
+    }
+
+    getMovementSpeed() {
+        let self = this,
+            itemMovementSpeed = Items.getMovementSpeed(self.armour.name);
+
+        /*
+         * Here we can handle equipment/potions/abilities that alter
+         * the player's movement speed. We then just broadcast it.
+         */
+
+        return itemMovementSpeed || 250;
     }
 
     /**
@@ -865,6 +889,7 @@ class Player extends Character {
             attackRange: self.attackRange,
             orientation: self.orientation,
             hitPoints: self.hitPoints.getData(),
+            movementSpeed: self.getMovementSpeed(),
             mana: self.mana.getData(),
             armour: self.armour.getData(),
             weapon: self.weapon.getData(),
@@ -991,11 +1016,13 @@ class Player extends Character {
 
         /**
          * Function to be used for syncing up health,
-         * mana, exp, and other letiables
+         * mana, exp, and other variables
          */
 
         if (!self.hitPoints || !self.mana)
             return;
+
+        self.movementSpeed = self.getMovementSpeed();
 
         let info = {
             id: self.instance,
@@ -1007,7 +1034,8 @@ class Player extends Character {
             level: self.level,
             armour: self.armour.getString(),
             weapon: self.weapon.getData(),
-            poison: !!self.poison
+            poison: !!self.poison,
+            movementSpeed: self.movementSpeed
         };
 
         self.sendToAdjacentRegions(self.region, new Messages.Sync(info));
@@ -1161,6 +1189,10 @@ class Player extends Character {
 
     onWarp(callback) {
         this.warpToggleCallback = callback;
+    }
+
+    onCheatScore(callback) {
+        this.cheatScoreCallback = callback;
     }
 
     onReady(callback) {
