@@ -89,12 +89,12 @@ define(['./impl/teamwar'], function(TeamWar) {
 
             self.messages.onEquipment(function(opcode, info) {
 
-
                 switch (opcode) {
                     case Packets.EquipmentOpcode.Batch:
 
                         _.each(info, function(data) {
-                            self.game.player.setEquipment(data.type, data.name, data.string, data.count, data.ability, data.abilityLevel);
+                            self.game.player.setEquipment(data.type, data.name, data.string,
+                                data.count, data.ability, data.abilityLevel, data.power);
                         });
 
                         self.interface.loadProfile();
@@ -103,7 +103,8 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                     case Packets.EquipmentOpcode.Equip:
 
-                        self.game.player.setEquipment(info.type, info.name, info.string, info.count, info.ability, info.abilityLevel);
+                        self.game.player.setEquipment(info.type, info.name, info.string,
+                                info.count, info.ability, info.abilityLevel, info.power);
 
                         self.interface.profile.update();
 
@@ -170,7 +171,7 @@ define(['./impl/teamwar'], function(TeamWar) {
                 if (data.weapon)
                     entity.setEquipment(data.weapon.type, data.weapon.name,
                         data.weapon.string, data.weapon.count, data.weapon.ability,
-                        data.weapon.abilityLevel);
+                        data.weapon.abilityLevel, data.weapon.power);
 
                 entity.attackRange = data.attackRange;
                 entity.setPoison(data.poison);

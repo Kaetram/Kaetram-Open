@@ -395,7 +395,7 @@ class Player extends Character {
     equip(string, count, ability, abilityLevel) {
         let self = this,
             data = Items.getData(string),
-            type, id;
+            type, id, power;
 
         if (!data || data === 'null')
             return;
@@ -412,6 +412,7 @@ class Player extends Character {
             type = Modules.Equipment.Boots;
 
         id = Items.stringToId(string);
+        power = Items.getLevelRequirement(string) / 2;
 
         switch(type) {
             case Modules.Equipment.Armour:
@@ -419,7 +420,7 @@ class Player extends Character {
                 if (self.hasArmour() && self.armour.id !== 114)
                     self.inventory.add(self.armour.getItem());
 
-                self.setArmour(id, count, ability, abilityLevel);
+                self.setArmour(id, count, ability, abilityLevel, power);
                 break;
 
             case Modules.Equipment.Weapon:
@@ -427,7 +428,7 @@ class Player extends Character {
                 if (self.hasWeapon())
                     self.inventory.add(self.weapon.getItem());
 
-                self.setWeapon(id, count, ability, abilityLevel);
+                self.setWeapon(id, count, ability, abilityLevel, power);
                 break;
 
             case Modules.Equipment.Pendant:
@@ -435,7 +436,7 @@ class Player extends Character {
                 if (self.hasPendant())
                     self.inventory.add(self.pendant.getItem());
 
-                self.setPendant(id, count, ability, abilityLevel);
+                self.setPendant(id, count, ability, abilityLevel, power);
                 break;
 
             case Modules.Equipment.Ring:
@@ -443,7 +444,7 @@ class Player extends Character {
                 if (self.hasRing())
                     self.inventory.add(self.ring.getItem());
 
-                self.setRing(id, count, ability, abilityLevel);
+                self.setRing(id, count, ability, abilityLevel, power);
                 break;
 
             case Modules.Equipment.Boots:
@@ -451,7 +452,7 @@ class Player extends Character {
                 if (self.hasBoots())
                     self.inventory.add(self.boots.getItem());
 
-                self.setBoots(id, count, ability, abilityLevel);
+                self.setBoots(id, count, ability, abilityLevel, power);
                 break;
         }
 
@@ -461,7 +462,8 @@ class Player extends Character {
             string: string,
             count: count,
             ability: ability,
-            abilityLevel: abilityLevel
+            abilityLevel: abilityLevel,
+            power: power
         }));
 
         self.sync();

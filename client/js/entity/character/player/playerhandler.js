@@ -129,8 +129,18 @@ define(function() {
 
             });
 
-            self.player.onUpdateArmour(function(armourName) {
+            self.player.onUpdateArmour(function(armourName, power) {
                 self.player.setSprite(self.game.getSprite(armourName));
+
+                if (self.game.interface && self.game.interface.profile)
+                    self.game.interface.profile.update();
+            });
+
+            self.player.onUpdateEquipment(function(type, power) {
+
+                if (self.game.interface && self.game.interface.profile)
+                    self.game.interface.profile.update();
+                    
             });
 
         },
