@@ -212,61 +212,70 @@ define(['../character', './equipment/armour', './equipment/weapon',
             self.setMana(mana);
         },
 
-        setEquipment: function(type, name, string, count, ability, abilityLevel) {
+        setEquipment: function(type, name, string, count, ability, abilityLevel, power) {
             var self = this;
 
             switch (type) {
                 case Modules.Equipment.Armour:
 
                     if (!self.armour)
-                        self.armour = new Armour(name, string, count, ability, abilityLevel);
+                        self.armour = new Armour(name, string, count, ability, abilityLevel, power);
                     else
-                        self.armour.update(name, string, count, ability, abilityLevel);
+                        self.armour.update(name, string, count, ability, abilityLevel, power);
 
                     if (self.updateArmourCallback)
-                        self.updateArmourCallback(string);
+                        self.updateArmourCallback(string, power);
 
                     break;
 
                 case Modules.Equipment.Weapon:
 
+                    log.info('Weapon - ' + power);
+                    console.trace();
+
                     if (!self.weapon)
-                        self.weapon = new Weapon(name, string, count, ability, abilityLevel);
+                        self.weapon = new Weapon(name, string, count, ability, abilityLevel, power);
                     else
-                        self.weapon.update(name, string, count, ability, abilityLevel);
+                        self.weapon.update(name, string, count, ability, abilityLevel, power);
 
                     self.weapon.ranged = string.includes('bow');
+
+                    if (self.updateWeaponCallback)
+                        self.updateWeaponCallback(string, power);
 
                     break;
 
                 case Modules.Equipment.Pendant:
 
                     if (!self.pendant)
-                        self.pendant = new Pendant(name, string, count, ability, abilityLevel);
+                        self.pendant = new Pendant(name, string, count, ability, abilityLevel, power);
                     else
-                        self.pendant.update(name, string, count, ability, abilityLevel);
+                        self.pendant.update(name, string, count, ability, abilityLevel, power);
 
                     break;
 
                 case Modules.Equipment.Ring:
 
                     if (!self.ring)
-                        self.ring = new Ring(name, string, count, ability, abilityLevel);
+                        self.ring = new Ring(name, string, count, ability, abilityLevel, power);
                     else
-                        self.ring.update(name, string, count, ability, abilityLevel);
+                        self.ring.update(name, string, count, ability, abilityLevel, power);
 
                     break;
 
                 case Modules.Equipment.Boots:
 
                     if (!self.boots)
-                        self.boots = new Boots(name, string, count, ability, abilityLevel);
+                        self.boots = new Boots(name, string, count, ability, abilityLevel, power);
                     else
-                        self.boots.update(name, string, count, ability, abilityLevel);
+                        self.boots.update(name, string, count, ability, abilityLevel, power);
 
                     break;
 
             }
+
+            if (self.updateEquipmentCallback)
+                self.updateEquipmentCallback(type, power);
         },
 
         unequip: function(type) {
@@ -310,6 +319,14 @@ define(['../character', './equipment/armour', './equipment/weapon',
 
         onUpdateArmour: function(callback) {
             this.updateArmourCallback = callback;
+        },
+
+        onUpdateWeapon: function(callback) {
+            this.updateWeaponCallback = callback;
+        },
+
+        onUpdateEquipment: function(callback) {
+            this.updateEquipmentCallback = callback;
         },
 
         onExperience: function(callback) {

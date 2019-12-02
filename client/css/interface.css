@@ -560,6 +560,26 @@
     font-family: 'AdvoCut', sans-serif;
 }
 
+.profileInfo {
+    position: absolute;
+    width: 92px;
+    height: 12px;
+    line-height: 12px;
+    font-family: 'AdvoCut', sans-serif;
+    font-size: 6px;
+    font-weight: bold;
+    text-shadow: 1px 1px #808080;
+    text-align: center;
+    left: 24px;
+}
+
+.profileItemInfo {
+    position: absolute;
+    font-family: 'AdvoCut', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+}
+
 @media only screen and (min-width: 1501px) {
 
     #chatButton {
@@ -1395,6 +1415,16 @@
         text-shadow: 1px 1px #808080;
         text-align: center;
         left: 45px;
+    }
+
+    #weaponSlotInfo {
+        top: 122px;
+        left: 22px;
+    }
+
+    #armourSlotInfo {
+        top: 122px;
+        left: 88px;
     }
 
     #weaponSlot {

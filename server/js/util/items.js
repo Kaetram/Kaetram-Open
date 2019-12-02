@@ -226,7 +226,6 @@ Items.getMovementSpeed = (string) => {
     return null;
 };
 
-
 Items.healsMana = (id) => {
     if (id in Items.Ids)
         return Items.Ids[id].healsMana > 0;

@@ -49,7 +49,8 @@ class Equipment {
             string: Items.idToString(this.id),
             count: this.count,
             ability: this.ability,
-            abilityLevel: this.abilityLevel
+            abilityLevel: this.abilityLevel,
+            power: Items.getLevelRequirement(this.name)
         };
     }
 

@@ -22,6 +22,9 @@ define(['jquery', '../page'], function($, Page) {
             self.ringSlot = $('#ringSlot');
             self.bootsSlot = $('#bootsSlot');
 
+            self.weaponSlotInfo = $('#weaponSlotInfo');
+            self.armourSlotInfo = $('#armourSlotInfo');
+
             self.slots = [self.weaponSlot, self.armourSlot, self.pendantSlot, self.ringSlot, self.bootsSlot];
 
             self.loaded = false;
@@ -86,6 +89,12 @@ define(['jquery', '../page'], function($, Page) {
 
             self.level.text(self.player.level);
             self.experience.text(self.player.experience);
+
+            if (self.player.weapon.power)
+                self.weaponSlotInfo.text('+' + self.player.weapon.power);
+
+            if (self.player.armour.power)
+                self.armourSlotInfo.text('+' + self.player.armour.power);
 
             self.loadSlots();
         },
