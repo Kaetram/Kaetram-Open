@@ -22,16 +22,14 @@ Shops.getItemCount = (id) => {
     return Shops.getItems(id).length;
 };
 
-Shops.increment = (shopId, itemId, count) => {
-    let shop = Shops.Ids[shopId],
+Shops.increment = (npcId, itemId, count) => {
+    let shop = Shops.Ids[npcId],
         index = shop.items.indexOf(itemId);
 
     if (index < 0)
         return;
 
-    let shopData = Shops.Data[shop.key];
-
-    shopData.count[index] += count;
+    shop.count[index] += count;
 
 };
 

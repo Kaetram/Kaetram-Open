@@ -5,6 +5,7 @@ let _ = require('underscore'),
     Mobs = require('../../../../util/mobs'),
     Utils = require('../../../../util/utils'),
     Items = require('../../../../util/items'),
+    Constants = require('../../../../util/constants'),
     MobHandler = require('./mobhandler');
 
 class Mob extends Character {
@@ -72,31 +73,19 @@ class Mob extends Character {
         if (!self.drops)
             return null;
 
-        let min = 0,
-            percent = 0,
-            random = Utils.randomInt(0, 1000);
+        let random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
+            dropObjects = Object.keys(self.drops),
+            item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
 
-        for (let drop in self.drops)
-            if (self.drops.hasOwnProperty(drop)) {
-                let chance = self.drops[drop];
+        if (random > self.drops[item])
+            return null;
 
-                min = percent;
-                percent += chance;
+        let count = item === 'gold' ? self.level * 5 : 1;
 
-                if (random >= min && random < percent) {
-                    let count = 1;
-
-                    if (drop === 'gold')
-                        count = Utils.randomInt(1, self.level * 5);
-
-                    return {
-                        id: Items.stringToId(drop),
-                        count: count
-                    }
-                }
-            }
-
-        return null;
+        return {
+            id: Items.stringToId(item),
+            count: count
+        }
     }
 
     getProjectileName() {
