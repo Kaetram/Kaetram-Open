@@ -273,8 +273,11 @@ define(['jquery', './container/container'], function($, Container) {
         clear: function() {
             var self = this;
 
-            self.bankSlots.find('ul').empty();
-            self.bankInventorySlots.find('ul').empty();
+            if (self.bankSlots)
+                self.bankSlots.find('ul').empty();
+
+            if (self.bankInventorySlots)
+                self.bankInventorySlots.find('ul').empty();
         },
 
         isVisible: function() {

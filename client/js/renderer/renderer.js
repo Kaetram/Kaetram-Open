@@ -211,6 +211,8 @@ define(['jquery', './camera', './tile',
             if (self.stopRendering)
                 return;
 
+
+
             self.clear();
 
             self.clearText();
@@ -256,9 +258,14 @@ define(['jquery', './camera', './tile',
 
             self.forEachVisibleTile(function(id, index) {
                 var isHighTile = self.map.isHighTile(id),
-                    isLightTile = self.map.isLightTile(id),
-                    context = isLightTile ? self.overlayContext :
-                        (isHighTile ? self.foreContext : self.backContext);
+                    context = isHighTile ? self.foreContext : self.backContext;
+
+                // Only do the lighting logic if there is an overlay.
+                if (self.game.overlays.getFog()) {
+                    var isLightTile = self.map.isLightTile(id);
+
+                    context = isLightTile ? self.overlayContext : context;
+                }
 
                 if (!self.map.isAnimatedTile(id) || !self.animateTiles)
                     self.drawTile(context, id, self.map.width, index);
