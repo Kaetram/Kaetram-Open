@@ -89,6 +89,8 @@ define(function() {
 
                 case 'updated':
                     self.app.sendError(null, 'The client has been updated!');
+
+                    self.app.openScroll('loadCharacter', 'clientUpdated');
                     break;
 
                 case 'full':
@@ -145,7 +147,7 @@ define(function() {
                     break;
 
                 default:
-                    self.app.sendError(null, 'An unknown error has occurred, please refer to the forums.');
+                    self.app.sendError(null, 'An unknown error has occurred, please submit a bug report.');
                     break;
             }
         },

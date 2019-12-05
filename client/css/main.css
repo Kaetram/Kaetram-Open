@@ -197,14 +197,19 @@ footer div {
     font-family: 'AdvoCut', sans-serif;
 }
 
-#credits, #git, #about, #loadCharacter, #createCharacter, #death, #ask, #error {
+#cuDescription {
+    margin-left: 10%;
+    width: 80%;
+}
+
+#credits, #git, #about, #loadCharacter, #createCharacter, #death, #ask, #error, #clientUpdated {
     opacity: 0;
     pointer-events: none;
     -webkit-transition: none;
     transition: none;
 }
 
-#credits, #about, #git, #death, #ask, #error, #loadCharacter, #createCharacter {
+#credits, #about, #git, #death, #ask, #error, #loadCharacter, #createCharacter, #clientUpdated {
     position: absolute;
     left: 50%;
     text-align: center;
@@ -212,7 +217,7 @@ footer div {
     z-index: 1000;
 }
 
-.credits #credits, .about #about, .git #git, .death #death, .ask #ask, .error #error, .createCharacter #createCharacter, .loadCharacter #loadCharacter {
+.credits #credits, .about #about, .git #git, .death #death, .ask #ask, .error #error, .createCharacter #createCharacter, .loadCharacter #loadCharacter, .clientUpdated #clientUpdated {
     opacity: 1;
     pointer-events: auto;
     -webkit-transition: 0.5s opacity linear;
@@ -338,7 +343,7 @@ footer div {
         background-position: -1152px -882px;
     }
 
-    #parchment, #createCharacter, #loadCharacter, #error {
+    #parchment, #createCharacter, #loadCharacter, #error, #clientUpdated {
         width: 1266px;
         height: 546px;
         position: absolute;
@@ -456,7 +461,7 @@ footer div {
         background-position: -768px -588px;
     }
 
-    #parchment, #createCharacter, #loadCharacter, #error {
+    #parchment, #createCharacter, #loadCharacter, #error, #clientUpdated {
         width: 844px;
         height: 364px;
         position: absolute;
@@ -565,7 +570,7 @@ footer div {
         background-position: -384px -294px;
     }
 
-    #parchment, #createCharacter, #loadCharacter, #error {
+    #parchment, #createCharacter, #loadCharacter, #error, #clientUpdated {
         width: 422px;
         height: 182px;
         position: absolute;
