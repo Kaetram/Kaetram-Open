@@ -22,25 +22,20 @@ define(['jquery', './camera', './tile',
             self.textCanvas = textCanvas;
             self.cursor = cursor;
 
-            self.context = self.entities.getContext('2d');
-            self.backContext = self.background.getContext('2d');
-            self.foreContext = self.foreground.getContext('2d');
-            self.overlayContext = self.overlay.getContext('2d');
-            self.textContext = self.textCanvas.getContext('2d');
-            self.cursorContext = self.cursor.getContext('2d');
+            self.context = self.entities.getContext('2d'); // Entities
+            self.backContext = self.background.getContext('2d'); // Background
+            self.foreContext = self.foreground.getContext('2d'); // Foreground
+            self.overlayContext = self.overlay.getContext('2d'); // Lighting
+            self.textContext = self.textCanvas.getContext('2d'); // Texts
+            self.cursorContext = self.cursor.getContext('2d'); // Cursor
 
-            self.contexts = [self.context, self.backContext, self.foreContext];
             self.canvases = [self.background, self.entities, self.foreground, self.overlay, self.textCanvas, self.cursor];
 
-            self.allContexts = [self.context, self.backContext, self.foreContext, self.overlayContext,
-                self.textContext, self.cursorContext];
+            self.allContexts = [self.context, self.backContext, self.foreContext, self.overlayContext, self.textContext, self.cursorContext];
 
-            self.context.imageSmoothingEnabled = false;
-            self.backContext.imageSmoothingEnabled = false;
-            self.foreContext.imageSmoothingEnabled = false;
-            self.overlayContext.imageSmoothingEnabled = false;
-            self.textContext.imageSmoothingEnabled = false;
-            self.cursorContext.imageSmoothingEnabled = false;
+            self.contexts = [self.context, self.textContext];
+            self.drawingContexts = [self.backContext, self.foreContext, self.overlayContext]; // For drawing the map.
+
 
             self.lightings = [];
             self.textures = {};
@@ -173,7 +168,7 @@ define(['jquery', './camera', './tile',
 
             self.stopRendering = true;
 
-            self.clearAll();
+            self.clear();
 
             self.checkDevice();
 
@@ -211,15 +206,12 @@ define(['jquery', './camera', './tile',
             if (self.stopRendering)
                 return;
 
-
-
             self.clear();
-
-            self.clearText();
-
-            self.saveAll();
+            self.save();
 
             self.removeSmoothing();
+
+            self.draw();
 
             /**
              * Rendering related draws
@@ -243,7 +235,7 @@ define(['jquery', './camera', './tile',
 
             self.calculateFPS();
 
-            self.restoreAll();
+            self.restore();
 
         },
 
@@ -254,11 +246,18 @@ define(['jquery', './camera', './tile',
         draw: function() {
             var self = this;
 
+            if (self.hasRenderedFrame())
+                return;
+
+            self.clearDrawing();
+            self.saveDrawing();
+
             self.updateDrawingView();
 
             self.forEachVisibleTile(function(id, index) {
                 var isHighTile = self.map.isHighTile(id),
-                    context = isHighTile ? self.foreContext : self.backContext;
+                    context = isHighTile ? self.foreContext : self.backContext,
+                    animated = !self.map.isAnimatedTile(id) || !self.animateTiles
 
                 // Only do the lighting logic if there is an overlay.
                 if (self.game.overlays.getFog()) {
@@ -267,7 +266,7 @@ define(['jquery', './camera', './tile',
                     context = isLightTile ? self.overlayContext : context;
                 }
 
-                if (!self.map.isAnimatedTile(id) || !self.animateTiles)
+                if (animated && !self.camera.centered)
                     self.drawTile(context, id, self.map.width, index);
             });
 
@@ -277,6 +276,10 @@ define(['jquery', './camera', './tile',
                     tile.loaded = true;
                 });
 
+
+            self.restoreDrawing();
+
+            self.saveFrame();
         },
 
         drawOverlays: function() {
@@ -912,13 +915,33 @@ define(['jquery', './camera', './tile',
             return 3;
         },
 
-        clearContext: function() {
-            this.context.clearRect(0, 0, this.screenWidth * this.scale, this.screenHeight * this.scale);
+        clear: function() {
+            this.forEachContext(function(context) {
+                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            });
         },
 
         clearText: function() {
             this.textContext.clearRect(0, 0, this.textCanvas.width, this.textCanvas.height);
             this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
+        },
+
+        clearDrawing: function() {
+            this.forEachDrawingContext(function(context) {
+                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            });
+        },
+
+        save: function() {
+            this.forEachContext(function(context) {
+                context.save();
+            });
+        },
+
+        saveDrawing: function() {
+            this.forEachDrawingContext(function(context) {
+                context.save();
+            });
         },
 
         restore: function() {
@@ -927,28 +950,31 @@ define(['jquery', './camera', './tile',
             });
         },
 
-        clearAll: function() {
-            this.forEachContext(function(context) {
-                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-            });
-        },
-
-        clear: function() {
-            this.forEachContext(function(context) {
-                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-            });
-        },
-
-        saveAll: function() {
-            this.forEachContext(function(context) {
-                context.save();
-            });
-        },
-
-        restoreAll: function() {
-            this.forEachContext(function(context) {
+        restoreDrawing: function() {
+            this.forEachDrawingContext(function(context) {
                 context.restore();
             });
+        },
+
+        hasRenderedFrame: function() {
+            var self = this;
+
+            if (self.forceRendering)
+                return false;
+
+            if (!self.camera || self.stopRendering || !self.input)
+                return true;
+
+            return self.renderedFrame[0] === self.camera.x && self.renderedFrame[1] === self.camera.y;
+        },
+
+        saveFrame: function() {
+            var self = this;
+
+            self.renderedFrame[0] = self.camera.x;
+            self.renderedFrame[1] = self.camera.y;
+
+            self.forceRendering = false;
         },
 
         isIntersecting: function(rectOne, rectTwo) {
@@ -1076,9 +1102,8 @@ define(['jquery', './camera', './tile',
         },
 
         forEachDrawingContext: function(callback) {
-            _.each(this.contexts, function(context) {
-                if (context.canvas.id !== 'entities')
-                    callback(context);
+            _.each(this.drawingContexts, function(context) {
+                callback(context);
             });
         },
 
