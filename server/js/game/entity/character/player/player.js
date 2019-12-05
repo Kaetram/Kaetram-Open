@@ -536,14 +536,14 @@ class Player extends Character {
             self.cheatScoreCallback();
     }
 
-    updatePVP(pvp) {
+    updatePVP(pvp, permanent) {
         let self = this;
 
         /**
          * No need to update if the state is the same
          */
 
-        if (self.pvp === pvp)
+        if (self.pvp === pvp || self.permanentPVP)
             return;
 
         if (self.pvp && !pvp)
@@ -552,6 +552,7 @@ class Player extends Character {
             self.notify('You have entered a PvP zone!');
 
         self.pvp = pvp;
+        self.permanentPVP = permanent;
 
         self.sendToRegion(new Messages.PVP(self.instance, self.pvp));
     }
@@ -672,14 +673,18 @@ class Player extends Character {
 
     getMovementSpeed() {
         let self = this,
-            itemMovementSpeed = Items.getMovementSpeed(self.armour.name);
+            itemMovementSpeed = Items.getMovementSpeed(self.armour.name),
+            movementSpeed = itemMovementSpeed || 250;
 
         /*
          * Here we can handle equipment/potions/abilities that alter
          * the player's movement speed. We then just broadcast it.
          */
 
-        return itemMovementSpeed || 250;
+        self.movementSpeed = Utils.randomInt(movementSpeed - 2, movementSpeed + 2);
+
+        // Spice things up a bit.
+        return self.movementSpeed;
     }
 
     /**
@@ -1024,8 +1029,6 @@ class Player extends Character {
         if (!self.hitPoints || !self.mana)
             return;
 
-        self.movementSpeed = self.getMovementSpeed();
-
         let info = {
             id: self.instance,
             attackRange: self.attackRange,
@@ -1037,7 +1040,7 @@ class Player extends Character {
             armour: self.armour.getString(),
             weapon: self.weapon.getData(),
             poison: !!self.poison,
-            movementSpeed: self.movementSpeed
+            movementSpeed: self.getMovementSpeed()
         };
 
         self.sendToAdjacentRegions(self.region, new Messages.Sync(info));

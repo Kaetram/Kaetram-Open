@@ -230,9 +230,6 @@ define(['../character', './equipment/armour', './equipment/weapon',
 
                 case Modules.Equipment.Weapon:
 
-                    log.info('Weapon - ' + power);
-                    console.trace();
-
                     if (!self.weapon)
                         self.weapon = new Weapon(name, string, count, ability, abilityLevel, power);
                     else

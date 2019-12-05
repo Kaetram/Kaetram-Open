@@ -343,7 +343,7 @@ class Incoming {
 
                 break;
 
-            case Packets.Movement.Started:
+            case Packets.MovementOpcode.Started:
                 let selectedX = message.shift(),
                     selectedY = message.shift(),
                     pX = message.shift(),
@@ -377,6 +377,14 @@ class Incoming {
                     id = message.shift(),
                     hasTarget = message.shift(),
                     entity = self.world.getEntityByInstance(id);
+
+                if (!self.player.moving) {
+
+                    if (config.debug)
+                        log.info(`[Warning] Did not receive movement start packet for ${self.player.username}.`);
+
+                    self.player.incrementCheatScore(1);
+                }
 
                 orientation = message.shift();
 

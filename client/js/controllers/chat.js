@@ -139,7 +139,10 @@ define(['jquery'], function($) {
         },
 
         clear: function() {
-            this.button.unbind('click');
+            var self = this;
+
+            if (self.button)
+                self.button.unbind('click');
         },
 
         clean: function() {
