@@ -438,6 +438,14 @@ class Commands {
 
                 break;
 
+            case 'togglepvp':
+
+                self.world.forEachPlayer((player) => {
+                    player.updatePVP(true, true);
+                });
+
+                break;
+
         }
     }
 
