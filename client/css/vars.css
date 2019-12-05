@@ -349,6 +349,11 @@ html [type="button"],
 #close-about {
     margin-top: 10%;
 }
+
+#close-updated {
+    margin-top: 5%;
+}
+
 @-webkit-keyframes flash { 0% { background:#ffa2a2; } 100% { background:#e22525; }}
 @-webkit-keyframes flash-green { 0% { background:#a2ffa2; } 100% { background:#25e225; }}
 @-webkit-keyframes flash-poison { 0% { background:#0cab3c; } 100% { background:#035819; }}
@@ -392,7 +397,7 @@ html [type="button"],
 
 @media only screen and (min-width: 1501px) {
 
-    #parchment h1, #loadCharacter h1, #about h1 {
+    #parchment h1, #loadCharacter h1, #about h1, #clientUpdated h1 {
         margin-top: 30px;
         font-size: 30px;
     }
@@ -402,7 +407,7 @@ html [type="button"],
         font-size: 30px;
     }
 
-    #parchment h2, #loadCharacter h1, #createCharacter h1, #about h1 {
+    #parchment h2, #loadCharacter h1, #createCharacter h1, #about h1, #clientUpdated h1 {
         margin-left: 30px;
     }
 
@@ -625,7 +630,7 @@ html [type="button"],
 
 @media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
 
-    #parchment h1, #loadCharacter h1, #createCharacter h1, #about h1 {
+    #parchment h1, #loadCharacter h1, #createCharacter h1, #about h1, #clientUpdated h1 {
         margin-top: 40px;
     }
 
@@ -850,7 +855,7 @@ html [type="button"],
 
 @media only screen and (max-width: 1000px) {
 
-    #parchment h1, #loadCharacter h1, #createCharacter h1, #about h1 {
+    #parchment h1, #loadCharacter h1, #createCharacter h1, #about h1, #clientUpdated h1 {
         margin-top: 20px;
     }
 
