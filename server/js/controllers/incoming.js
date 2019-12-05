@@ -347,7 +347,11 @@ class Incoming {
                 let selectedX = message.shift(),
                     selectedY = message.shift(),
                     pX = message.shift(),
-                    pY = message.shift();
+                    pY = message.shift(),
+                    movementSpeed = message.shift();
+
+                if (!movementSpeed || movementSpeed != self.player.movementSpeed)
+                    self.player.incrementCheatScore(1);
 
                 if (pX !== self.player.x || pY !== self.player.y || self.player.stunned || !self.preventNoClip(selectedX, selectedY))
                     return;
