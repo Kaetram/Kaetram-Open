@@ -103,6 +103,7 @@ class Player extends Character {
         self.pvpKills = data.pvpKills;
         self.pvpDeaths = data.pvpDeaths;
         self.orientation = data.orientation;
+        self.mapVersion = data.mapVersion;
 
         self.warp.setLastWarp(data.lastWarp);
 
@@ -131,6 +132,27 @@ class Player extends Character {
         self.setBoots(boots[0], boots[1], boots[2], boots[3]);
 
         self.guild = new Guild(self, null);
+    }
+
+    loadRegions(regions) {
+        let self = this;
+
+        if (!regions)
+            return;
+
+        if (self.mapVersion !== self.world.map.version) {
+            self.mapVersion = self.world.map.version;
+
+            self.save();
+
+            if (config.debug)
+                log.info(`Updated map version for ${self.username}`);
+
+            return;
+        }
+
+        if (regions.gameVersion === config.gver)
+            self.regionsLoaded = regions.regions.split(',');
     }
 
     loadInventory() {

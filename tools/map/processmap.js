@@ -27,7 +27,8 @@ module.exports = function parse(json, options) {
     map = {
         width: 0,
         height: 0,
-        collisions: []
+        collisions: [],
+        version: new Date().getTime()
     };
 
     switch (mode) {

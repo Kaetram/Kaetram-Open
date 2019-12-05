@@ -183,7 +183,8 @@ class Creator {
                 lastWarp: player.lastWarp,
                 guildName: player.guildName,
                 invisibleIds: player.formatInvisibles(),
-                userAgent: player.userAgent
+                userAgent: player.userAgent,
+                mapVersion: player.mapVersion
             })
         });
     }
@@ -229,6 +230,7 @@ class Creator {
             pvpDeaths: player.pvpDeaths ? player.pvpDeaths : 0,
             orientation: player.orientation ? player.orientation : 0,
             lastWarp: player.warp.lastWarp ? player.warp.lastWarp : 0,
+            mapVersion: player.mapVersion ? player.mapVersion : 0,
             armour: [player.armour ? player.armour.getId() : 114, player.armour ? player.armour.getCount() : 0, player.armour ? player.armour.getAbility() : 0, player.armour ? player.armour.getAbilityLevel() : 0],
             weapon: [player.weapon ? player.weapon.getId() : -1, player.weapon ? player.weapon.getCount() : 0, player.weapon ? player.weapon.getAbility() : 0, player.weapon ? player.weapon.getAbilityLevel() : 0],
             pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : 0, player.pendant ? player.pendant.getAbility() : 0, player.pendant ? player.pendant.getAbilityLevel() : 0],

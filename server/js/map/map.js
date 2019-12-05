@@ -34,6 +34,8 @@ class Map {
     load() {
         let self = this;
 
+        self.version = map.version || 0;
+
         self.width = map.width;
         self.height = map.height;
         self.collisions = map.collisions;
