@@ -175,6 +175,9 @@ define(function() {
 
             if (self.game.zoning.direction !== null) {
                 self.camera.zone(self.game.zoning.getDirection());
+
+                self.renderer.updateAnimatedTiles();
+
                 self.game.zoning.reset();
             }
 
