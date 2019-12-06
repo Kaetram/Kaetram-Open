@@ -111,7 +111,6 @@ define(function() {
 
             self.player = player;
 
-
             self.centreOn(self.player);
         },
 
@@ -233,6 +232,29 @@ define(function() {
 
                     break;
             }
+
+            self.zoneClip();
+        },
+
+        zoneClip: function() {
+            var self = this;
+
+            /**
+             * Clip the map to the boundaries of the map if
+             * we zone somewhere out of the limitations.
+             */
+
+            if (self.gridX < 0)
+                self.setGridPosition(0, self.gridY);
+
+            if (self.gridX > self.map.width)
+                self.setGridPosition(self.map.width, self.gridY);
+
+            if (self.gridY < 0)
+                self.setGridPosition(self.gridX, 0);
+
+            if (self.gridY > self.map.height)
+                self.setGridPosition(self.gridX, self.map.height);
         },
 
         forEachVisiblePosition: function(callback, offset) {
