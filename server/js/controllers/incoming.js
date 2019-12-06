@@ -632,6 +632,9 @@ class Incoming {
 
                 let iSlot = self.player.inventory.slots[item.index];
 
+                if (iSlot.id < 1)
+                    return;
+
                 if (count > iSlot.count)
                     count = iSlot.count;
 
@@ -648,7 +651,7 @@ class Incoming {
                     ability = slot.ability,
                     abilityLevel = slot.abilityLevel;
 
-                if (!slot)
+                if (!slot || slot.id < 1)
                     return;
 
                 id = Items.stringToId(slot.string);
@@ -687,6 +690,9 @@ class Incoming {
                 if (isBank) {
                     let bankSlot = self.player.bank.slots[index];
 
+                    if (bankSlot.id < 1)
+                        return;
+
                     //Infinite stacks move all at onces, otherwise move one by one.
                     let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
 
@@ -695,6 +701,9 @@ class Incoming {
 
                 } else {
                     let inventorySlot = self.player.inventory.slots[index];
+
+                    if (inventorySlot.id < 1)
+                        return;
 
                     if (self.player.bank.add(inventorySlot.id, inventorySlot.count, inventorySlot.ability, inventorySlot.abilityLevel))
                         self.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
@@ -760,6 +769,9 @@ class Incoming {
                     item = self.player.inventory.slots[index],
                     type = 'item';
 
+                if (item.id < 1)
+                    return;
+
                 if (Items.isShard(item.id))
                     type = 'shards';
 
@@ -818,7 +830,7 @@ class Incoming {
     handleShop(message) {
         let self = this,
             opcode = message.shift(),
-            shopId = message.shift();
+            npcId = message.shift();
 
         switch (opcode) {
             case Packets.ShopOpcode.Buy:
@@ -830,9 +842,25 @@ class Incoming {
                     return;
                 }
 
-                log.debug('Received Buy: ' + shopId + ' ' + buyId + ' ' + amount);
+                log.debug('Received Buy: ' + npcId + ' ' + buyId + ' ' + amount);
 
-                self.world.shops.buy(self.player, shopId, buyId, amount);
+                self.world.shops.buy(self.player, npcId, buyId, amount);
+
+                break;
+
+            case Packets.ShopOpcode.Sell:
+
+                break;
+
+            case Packets.ShopOpcode.Select:
+                let slotId = message.shift();
+
+                if (!slotId) {
+                    self.player.notify('Incorrect purchase packets.');
+                    return;
+                }
+
+                log.debug('Received Sell: ' + npcId + ' ' + sellId);
 
                 break;
         }
