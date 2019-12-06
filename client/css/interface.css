@@ -1112,8 +1112,23 @@
 
     #shopInventoryContainer {
         width: 387px;
-        height: 365px;
+        height: 464px;
         background: url("../img/3/containers.png") 0 0;;
+    }
+
+    #shopInventorySell, #shopInventorySellReturn {
+        position: absolute;
+        width: 48px;
+        height: 49px;
+        top: 369px;
+    }
+
+    #shopInventorySell {
+        left: 42px;
+    }
+
+    #shopInventorySellReturn {
+        left: 132px;
     }
 
     .shopItemName {
@@ -1797,6 +1812,21 @@
         background: url("../img/2/containers.png") 0 0;;
     }
 
+    #shopInventorySell, #shopInventorySellReturn {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        top: 246px;
+    }
+
+    #shopInventorySell {
+        left: 28px;
+    }
+
+    #shopInventorySellReturn {
+        left: 88px;
+    }
+
     #health {
         position: absolute;
         top: 3px;
@@ -2367,15 +2397,33 @@
     }
 
     #shop {
+        top: 30%;
+        left: 55%;
         width: 170px;
         height: 168px;
         background: url("../img/1/containers.png") -129px -22px;;
+        transform: scale(1.5);
     }
 
     #shopInventoryContainer {
         width: 129px;
         height: 155px;
         background: url("../img/1/containers.png") 0 0;;
+    }
+
+    #shopInventorySell, #shopInventorySellReturn {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 123px;
+    }
+
+    #shopInventorySell {
+        left: 14px;
+    }
+
+    #shopInventorySellReturn {
+        left: 44px;
     }
 
     #shopContainer ul li {
@@ -2396,12 +2444,8 @@
         background-size: 600%;
     }
 
-    .shopItemName {
-        font-size: 6px;
-    }
-
-    .shopItemCount {
-        font-size: 6px;
+    .shopItemName, .shopItemCount {
+        font-size: 7px;
     }
 
     .shopItemBuy {

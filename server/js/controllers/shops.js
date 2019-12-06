@@ -90,6 +90,23 @@ class Shops {
         self.refresh(npcId);
     }
 
+    sell(player, npcId, slotId) {
+        let self = this,
+            item = player.inventory.slots[slotId],
+            shop = ShopData.Ids[npcId];
+
+        if (!shop || !npcId || item.id < 1) {
+            log.info('Invalid shop data.');
+            return;
+        }
+
+        if (shop.items.indexOf(item.id) < 0) {
+            player.notify('That item cannot be sold in this store.');
+            return;
+        }
+
+    }
+
     refresh(shop) {
         let self = this;
 
