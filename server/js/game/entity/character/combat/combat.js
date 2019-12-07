@@ -165,6 +165,17 @@ class Combat {
 
             }
         }
+
+        if (self.isPlayer()) {
+            if (!self.character.hasTarget())
+                return;
+
+            if (self.character.target.type !== 'player')
+                return;
+
+            if (!self.inProximity())
+                self.follow(self.character, self.character.target);
+        }
     }
 
     parseCheck() {
@@ -468,14 +479,14 @@ class Combat {
         if (!self.character.hasTarget() || self.character.target.isDead())
             return;
 
-        let ignores = [self.character.instance, self.character.target.instance];
+        //let ignores = [self.character.instance, self.character.target.instance];
 
-        self.world.push(Packets.PushOpcode.Selectively, {
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
             message: new Messages.Movement(Packets.MovementOpcode.Follow, {
                 attackerId: self.character.instance,
                 targetId: self.character.target.instance
-            }),
-            ignores: ignores
+            })
         });
 
     }

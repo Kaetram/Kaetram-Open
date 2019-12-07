@@ -303,7 +303,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             if (self.renderer.debugging)
                 self.hoveringEntity = entity;
 
-            if (!entity || (entity.id === player.id) || entity.type === 'player') {
+            if (!entity || (entity.id === player.id)) {
                 self.setCursor(self.cursors['hand']);
                 self.hovering = null;
             } else {
@@ -322,6 +322,14 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                     case 'npc':
                         self.setCursor(self.cursors['talk']);
                         self.hovering = Modules.Hovering.NPC;
+                        break;
+
+                    case 'player':
+                        if (entity.pvp && self.game.pvp) {
+                            self.setCursor(self.getAttackCursor());
+                            self.hovering = Modules.Hovering.Player;
+                        }
+
                         break;
                 }
             }

@@ -29,6 +29,7 @@ class Handler {
         self.updateInterval = setInterval(() => {
 
             self.detectAggro();
+            self.detectPVP(self.player.x, self.player.y);
 
             if (self.updateTicks % 4 === 0) // Every 4 (1.6 seconds) update ticks.
                 self.handlePoison();
@@ -47,7 +48,6 @@ class Handler {
 
             self.player.checkRegions();
 
-            self.detectPVP(x, y);
             self.detectMusic(x, y);
             self.detectOverlay(x, y);
             self.detectCamera(x, y);
@@ -205,7 +205,7 @@ class Handler {
         let self = this,
             pvpArea = _.find(self.world.getPVPAreas(), (area) => { return area.contains(x, y); });
 
-        self.player.updatePVP(!!pvpArea);
+        self.player.updatePVP(!pvpArea);
     }
 
     detectOverlay(x, y) {

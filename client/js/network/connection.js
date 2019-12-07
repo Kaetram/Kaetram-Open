@@ -938,7 +938,7 @@ define(['./impl/teamwar'], function(TeamWar) {
             self.messages.onPVP(function(id, pvp) {
 
                 if (self.game.player.id === id)
-                    self.pvp = pvp;
+                    self.game.pvp = pvp;
                 else {
                     var entity = self.entities.get(id);
 

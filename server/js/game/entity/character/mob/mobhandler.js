@@ -44,6 +44,9 @@ class MobHandler {
                 if (distance < self.mob.maxRoamingDistance)
                     return;
 
+                if (newX === self.mob.x && newY === self.mob.y)
+                    return;
+
                 if (self.mob.combat.started)
                     return;
 

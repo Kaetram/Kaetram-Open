@@ -34,6 +34,8 @@ class Region {
             if (!entity || !entity.username)
                 return;
 
+            console.trace();
+
             if (config.debug)
                 log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
 
