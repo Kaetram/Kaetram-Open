@@ -253,8 +253,8 @@ module.exports = function parse(json, options) {
 
                     _.each(lights, function(lightObject) {
                         let light = {
-                            x: lightObject.x / 16,
-                            y: lightObject.y / 16
+                            x: (lightObject.x / 16) + 0.5,
+                            y: (lightObject.y / 16) + 0.5
                         };
 
                         _.each(lightObject.properties, function(property) {
