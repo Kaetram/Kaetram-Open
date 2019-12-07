@@ -106,12 +106,6 @@ define(function() {
                 if (!self.camera.centered || self.camera.lockX || self.camera.lockY)
                     self.checkBounds();
 
-                self.player.forEachAttacker(function(attacker) {
-
-                    if (!attacker.stunned)
-                        attacker.follow(self.player);
-                });
-
                 self.socket.send(Packets.Movement, [Packets.MovementOpcode.Step, self.player.gridX, self.player.gridY]);
             });
 

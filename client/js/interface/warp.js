@@ -94,8 +94,11 @@ define(['jquery'], function($) {
             for (var i = 0; i < self.warpCount; i++)
                 self.mapFrame.find('#warp' + i).unbind('click');
 
-            self.close.unbind('click');
-            self.button.unbind('click');
+            if (self.close)
+                self.close.unbind('click');
+
+            if (self.button)
+                self.button.unbind('click');
         }
 
     });

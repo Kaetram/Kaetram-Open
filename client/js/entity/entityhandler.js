@@ -33,6 +33,32 @@ define(['./character/character'], function(Character) {
                 self.entity.onStep(function() {
                     self.entities.registerDuality(self.entity);
 
+                    self.entity.forEachAttacker(function(attacker) {
+
+                        /**
+                         * This is the client-sided logic for representing PVP
+                         * fights. It basically adds another layer of movement
+                         * so the entity is always following the player.
+                         */
+
+                        if (self.entity.type !== 'player')
+                            return;
+
+                        if (attacker.type !== 'player')
+                            return;
+
+                        if (!attacker.hasTarget())
+                            return;
+
+                        if (attacker.target.id !== self.entity.id)
+                            return;
+
+                        if (attacker.stunned)
+                            return;
+
+                        attacker.follow(self.entity);
+                    });
+
                     if (self.entity.type === 'mob')
                         self.game.socket.send(Packets.Movement, [Packets.MovementOpcode.Entity, self.entity.id, self.entity.gridX, self.entity.gridY]);
 

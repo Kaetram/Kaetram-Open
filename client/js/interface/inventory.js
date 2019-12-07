@@ -299,7 +299,8 @@ define(['jquery', './container/container'], function($, Container) {
 
             $('#inventory').find('ul').empty();
 
-            self.button.unbind('click');
+            if (self.button)
+                self.button.unbind('click');
         },
 
         getScale: function() {
