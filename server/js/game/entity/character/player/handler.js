@@ -233,8 +233,6 @@ class Handler {
             if (self.map.nearLight(light, x, y) && !self.player.hasLoadedLight(light)) {
 
                 // Add a half a tile offset so the light is centered on the tile.
-                light.x += 0.5;
-                light.y += 0.5;
 
                 self.player.lightsLoaded.push(light);
                 self.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
