@@ -860,7 +860,7 @@ class Incoming {
                     return;
                 }
 
-                log.debug('Received Sell: ' + npcId + ' ' + sellId);
+                //log.debug('Received Sell: ' + npcId + ' ' + sellId);
 
                 break;
         }
