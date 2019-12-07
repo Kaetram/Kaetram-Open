@@ -33,8 +33,8 @@ define(['jquery', './camera', './tile',
 
             self.allContexts = [self.context, self.backContext, self.foreContext, self.overlayContext, self.textContext, self.cursorContext];
 
-            self.contexts = [self.context, self.textContext];
-            self.drawingContexts = [self.backContext, self.foreContext, self.overlayContext]; // For drawing the map.
+            self.contexts = [self.context, self.textContext, self.overlayContext];
+            self.drawingContexts = [self.backContext, self.foreContext]; // For drawing the map.
 
 
             self.lightings = [];
@@ -197,6 +197,8 @@ define(['jquery', './camera', './tile',
 
                     self.updateAnimatedTiles();
 
+                    self.forceRendering = true;
+
                 }, 500);
         },
 
@@ -210,8 +212,6 @@ define(['jquery', './camera', './tile',
             self.save();
 
             self.removeSmoothing();
-
-            self.draw();
 
             /**
              * Rendering related draws
@@ -275,7 +275,6 @@ define(['jquery', './camera', './tile',
                     tile.loaded = true;
                 });
 
-
             self.restoreDrawing();
 
             self.saveFrame();
@@ -286,7 +285,6 @@ define(['jquery', './camera', './tile',
                 overlay = self.game.overlays.getFog();
 
             if (overlay) {
-                self.overlayContext.save();
 
                 if (overlay !== 'empty') {
 
@@ -305,7 +303,6 @@ define(['jquery', './camera', './tile',
                 self.overlayContext.globalCompositeOperation = 'source-over';
                 self.darkMask.render(self.overlayContext);
 
-                self.overlayContext.restore();
             }
         },
 
@@ -958,7 +955,7 @@ define(['jquery', './camera', './tile',
         hasRenderedFrame: function() {
             var self = this;
 
-            if (self.forceRendering)
+            if (self.forceRendering || (self.mobile && self.camera.centered))
                 return false;
 
             if (!self.camera || self.stopRendering || !self.input)
@@ -969,6 +966,9 @@ define(['jquery', './camera', './tile',
 
         saveFrame: function() {
             var self = this;
+
+            if (self.mobile && self.camera.centered)
+                return;
 
             self.renderedFrame[0] = self.camera.x;
             self.renderedFrame[1] = self.camera.y;
