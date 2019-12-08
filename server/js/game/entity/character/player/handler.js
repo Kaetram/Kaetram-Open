@@ -205,7 +205,7 @@ class Handler {
         let self = this,
             pvpArea = _.find(self.world.getPVPAreas(), (area) => { return area.contains(x, y); });
 
-        self.player.updatePVP(!pvpArea);
+        self.player.updatePVP(!!pvpArea);
     }
 
     detectOverlay(x, y) {

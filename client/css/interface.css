@@ -580,6 +580,10 @@
     font-weight: bold;
 }
 
+#armourSlotInfo {
+    text-align: right;
+}
+
 @media only screen and (min-width: 1501px) {
 
     #chatButton {
@@ -761,6 +765,21 @@
         text-shadow: 1px 1px #808080;
         text-align: center;
         left: 72px;
+    }
+
+    .profileItemInfo {
+        font-size: 24px;
+    }
+
+    #weaponSlotInfo {
+        top: 369px;
+        left: 66px;
+    }
+
+    #armourSlotInfo {
+        width: 306px;
+        top: 369px;
+        text-align: right;
     }
 
     #weaponSlot {
@@ -1432,14 +1451,19 @@
         left: 45px;
     }
 
+    .profileItemInfo {
+        font-size: 18px;
+    }
+
     #weaponSlotInfo {
-        top: 122px;
-        left: 22px;
+        top: 246px;
+        left: 44px;
     }
 
     #armourSlotInfo {
-        top: 122px;
-        left: 88px;
+        width: 204px;
+        top: 246px;
+        text-align: right;
     }
 
     #weaponSlot {
@@ -2068,6 +2092,21 @@
         text-shadow: 1px 1px #808080;
         text-align: center;
         left: 24px;
+    }
+
+    .profileItemInfo {
+        font-size: 8px;
+    }
+
+    #weaponSlotInfo {
+        top: 123px;
+        left: 22px;
+    }
+
+    #armourSlotInfo {
+        width: 102px;
+        top: 123px;
+        text-align: right;
     }
 
     #weaponSlot {
