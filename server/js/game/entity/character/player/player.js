@@ -571,8 +571,6 @@ class Player extends Character {
         if (!self.region)
             return;
 
-        log.info(self.region);
-
         if (self.pvp === pvp || self.permanentPVP)
             return;
 
