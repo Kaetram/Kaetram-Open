@@ -44,6 +44,7 @@ define(['../entity/character/character'], function(Character) {
             var self = this;
 
             self.game.entities.forEachEntity(function(entity) {
+                if (!entity) return;
 
                 if (entity.spriteLoaded) {
                     self.updateFading(entity);

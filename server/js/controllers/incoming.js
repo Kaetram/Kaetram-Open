@@ -860,7 +860,27 @@ class Incoming {
                     return;
                 }
 
-                //log.debug('Received Sell: ' + npcId + ' ' + sellId);
+                slotId = parseInt(slotId);
+
+                /**
+                 * Though all this could be done client-sided
+                 * it's just safer to send it to the server to sanitize data.
+                 * It also allows us to add cheat checks in the future
+                 * or do some fancier stuff.
+                 */
+
+                let item = self.player.inventory.slots[slotId];
+
+                if (!item || item.id < 1)
+                    return;
+
+                self.player.send(new Messages.Shop(Packets.ShopOpcode.Select, {
+                    id: npcId,
+                    slotId: slotId,
+                    price: self.world.shops.getSellPrice(item.id)
+                }));
+
+                log.info('Received Select: ' + npcId + ' ' + slotId);
 
                 break;
         }
