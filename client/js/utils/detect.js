@@ -12,18 +12,6 @@ Detect.isWindows = function() {
       return Detect.userAgentContains('Windows');
 };
 
-Detect.isChromeOnWindows = function() {
-    return Detect.userAgentContains('Chrome') && Detect.userAgentContains('Windows');
-};
-
-Detect.isCanaryOnWindows = function() {
-    return Detect.userAgentContains('Chrome/52') && Detect.userAgentContains('Windows');
-};
-
-Detect.isEdgeOnWindows = function() {
-    return Detect.userAgentContains('Edge') && Detect.userAgentContains('Windows');
-};
-
 Detect.isFirefox = function() {
     return Detect.userAgentContains('Firefox');
 };
@@ -34,6 +22,14 @@ Detect.isSafari = function() {
 
 Detect.isOpera = function() {
     return Detect.userAgentContains('Opera');
+};
+
+Detect.isInternetExplorer = function() {
+    return false || !!document.documentMode;
+};
+
+Detect.isEdge = function() {
+    return !Detect.isInternetExplorer() && !!window.StyleMedia;
 };
 
 Detect.isFirefoxAndroid = function() {
