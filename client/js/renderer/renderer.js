@@ -344,6 +344,8 @@ define(['jquery', './camera', './tile',
                 return;
 
             self.forEachVisibleEntity(function(entity) {
+                if (!entity) return;
+
                 if (entity.spriteLoaded)
                     self.drawEntity(entity);
             });

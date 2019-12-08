@@ -124,6 +124,15 @@ class Shops {
         return shop.currency;
     }
 
+    getSellPrice(npcId, itemId) {
+        let shop = ShopData.Ids[npcId];
+
+        if (!shop)
+            return 1;
+
+        return Math.floor(shop.getCost(npcId, itemId, 1) / 2);
+    }
+
     getShopData(npcId) {
         let self = this,
             strings = [],
