@@ -45,8 +45,6 @@ define(['jquery', './camera', './tile',
             self.entities = null;
             self.input = null;
 
-            self.checkDevice();
-
             self.tileSize = 16;
             self.fontSize = 16;
 
@@ -100,6 +98,7 @@ define(['jquery', './camera', './tile',
             self.superScaling = self.getSuperScaling();
 
             self.loadLights();
+            self.checkDevice();
         },
 
         removeSmoothing: function() {
@@ -144,7 +143,7 @@ define(['jquery', './camera', './tile',
 
             self.loadSizes();
 
-            if (storage.data.new && (self.firefox || parseFloat(Detect.androidVersion()) < 6.0 || parseFloat(Detect.iOSVersion() < 9.0) || Detect.isIpad())) {
+            if (storage.data.new && (self.mEdge || self.firefox || parseFloat(Detect.androidVersion()) < 6.0 || parseFloat(Detect.iOSVersion() < 9.0) || Detect.isIpad())) {
                 self.camera.centered = false;
 
                 storage.data.settings.centerCamera = false;
@@ -219,6 +218,8 @@ define(['jquery', './camera', './tile',
 
             self.draw();
 
+            self.drawAnimatedTiles();
+
             self.drawOverlays();
 
             self.drawTargetCell();
@@ -269,15 +270,27 @@ define(['jquery', './camera', './tile',
                     self.drawTile(context, id, self.map.width, index);
             });
 
-            if (self.animateTiles)
-                self.forEachAnimatedTile(function(tile) {
-                    self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
-                    tile.loaded = true;
-                });
-
             self.restoreDrawing();
 
             self.saveFrame();
+        },
+
+        drawAnimatedTiles: function() {
+            var self = this;
+
+            if (!self.animateTiles)
+                return;
+
+            self.saveDrawing();
+
+            self.updateDrawingView();
+
+            self.forEachAnimatedTile(function(tile) {
+                self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
+                tile.loaded = true;
+            });
+
+            self.restoreDrawing();
         },
 
         drawOverlays: function() {
@@ -1133,6 +1146,9 @@ define(['jquery', './camera', './tile',
             self.mobile = Detect.isMobile();
             self.tablet = Detect.isTablet();
             self.firefox = Detect.isFirefox();
+            self.mEdge = Detect.isEdge();
+
+            self.animateTiles = !self.firefox && !self.mEdge;
         },
 
         verifyCentration: function() {
