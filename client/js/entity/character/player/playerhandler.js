@@ -84,9 +84,7 @@ define(function() {
 
                 self.game.storage.setOrientation(self.player.orientation);
 
-                setTimeout(function() {
-                    self.player.moving = false;
-                }, 16);
+                self.player.moving = false;
 
             });
 

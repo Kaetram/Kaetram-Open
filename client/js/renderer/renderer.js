@@ -289,11 +289,7 @@ define(['jquery', './camera', './tile',
             self.forEachAnimatedTile(function(tile) {
                 tile.animate(self.game.time);
 
-                if (tile.canDraw || self.game.player.moving) {
-                    self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
-
-                    tile.canDraw = false;
-                }
+                self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
 
             });
 
@@ -920,11 +916,6 @@ define(['jquery', './camera', './tile',
             });
         },
 
-        isVisiblePosition: function(x, y) {
-            return y >= this.camera.gridY && y < this.camera.gridY + this.camera.gridHeight &&
-                x >= this.camera.gridX && x < this.camera.gridX + this.camera.gridWidth
-        },
-
         getScale: function() {
             return this.game.getScaleFactor();
         },
@@ -996,16 +987,6 @@ define(['jquery', './camera', './tile',
             self.renderedFrame[1] = self.camera.y;
 
             self.forceRendering = false;
-        },
-
-        isIntersecting: function(rectOne, rectTwo) {
-            return (rectTwo.left > rectOne.right || rectTwo.right < rectOne.left || rectTwo.top > rectOne.bottom || rectTwo.bottom < rectOne.top);
-        },
-
-        focus: function() {
-            this.forEachContext(function(context) {
-                context.focus();
-            });
         },
 
         transition: function(duration, forward, callback) {
