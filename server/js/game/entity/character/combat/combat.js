@@ -122,11 +122,11 @@ class Combat {
 
         if (self.character.hasTarget() && self.inProximity()) {
 
-            if (self.queue.hasQueue())
-                self.hit(self.character, self.character.target, self.queue.getHit());
-
             if (self.character.target && !self.character.target.isDead())
                 self.attack(self.character.target);
+
+            if (self.queue.hasQueue())
+                self.hit(self.character, self.character.target, self.queue.getHit());
 
             self.sync();
 
@@ -253,7 +253,7 @@ class Combat {
         if (!self.character.target || !self.inProximity())
             return;
 
-        self.stop();
+        //self.stop();
         self.start();
 
         self.attackCount(2, self.character.target);

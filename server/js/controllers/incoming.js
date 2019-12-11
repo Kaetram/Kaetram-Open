@@ -436,6 +436,16 @@ class Incoming {
                 });
 
                 break;
+
+            case Packets.MovementOpcode.Freeze:
+                /**
+                 * Just used to prevent player from following entities in combat.
+                 * This is primarily for the 'hold-position' functionality.
+                 */
+
+                self.player.frozen = message.shift();
+
+                break;
         }
     }
 

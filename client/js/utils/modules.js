@@ -76,7 +76,8 @@ Modules = {
         T: 84,
         I: 73,
         P: 80,
-        M: 77
+        M: 77,
+        Spacebar: 32
     },
 
     AudioTypes: {
