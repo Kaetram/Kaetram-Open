@@ -41,6 +41,8 @@ define(function() {
             self.player.onStartPathing(function(path) {
                 var i = path.length - 1;
 
+                self.player.moving = true;
+
                 self.input.selectedX = path[i][0];
                 self.input.selectedY = path[i][1];
                 self.input.selectedCellVisible = true;
@@ -81,6 +83,10 @@ define(function() {
                 self.input.setPassiveTarget();
 
                 self.game.storage.setOrientation(self.player.orientation);
+
+                setTimeout(function() {
+                    self.player.moving = false;
+                }, 16);
 
             });
 

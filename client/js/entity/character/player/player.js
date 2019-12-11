@@ -309,7 +309,7 @@ define(['../character', './equipment/armour', './equipment/weapon',
             if (!self.tempBlinkTimeout)
                 self.tempBlinkTimeout = setTimeout(function() { self.stopBlinking(); }, 500);
         },
-
+        
         getDistance: function(entity) {
             return this._super(entity);
         },
