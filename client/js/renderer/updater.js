@@ -10,7 +10,6 @@ define(['../entity/character/character'], function(Character) {
             self.game = game;
             self.map = game.map;
             self.player = game.player;
-            self.camera = game.getCamera();
             self.renderer = game.renderer;
             self.input = game.input;
             self.sprites = null;
