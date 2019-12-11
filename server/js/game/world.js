@@ -101,16 +101,20 @@ class World {
         log.info('********************************');
     }
 
-    tick() {
-        let self = this;
+    async tick() {
+        let self = this,
+            update = 1000 / self.updateTime;
 
-        setInterval(() => {
+        const setIntervalAsync = (fn, ms) => {
+            fn().then(() => {
+                setTimeout(() => setIntervalAsync(fn, ms), ms);
+            });
+        };
 
+        setIntervalAsync(async() => {
             self.network.parsePackets();
             self.region.parseRegions();
-
-        }, 1000 / self.updateTime);
-
+        }, update);
     }
 
     /****************************
