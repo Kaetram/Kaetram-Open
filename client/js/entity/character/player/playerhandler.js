@@ -27,7 +27,7 @@ define(function() {
             var self = this;
 
             self.player.onRequestPath(function(x, y) {
-                if (self.player.dead)
+                if (self.player.dead || self.player.frozen)
                     return null;
 
                 var ignores = [self.player];

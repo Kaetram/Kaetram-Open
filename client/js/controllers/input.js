@@ -122,6 +122,20 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
                             break;
 
+                        case Modules.Keys.Spacebar:
+
+                            if (player.moving)
+                                break;
+
+                            if (!player.isRanged())
+                                break;
+
+                            player.frozen = true;
+
+                            self.updateFrozen(player.frozen);
+
+                            break;
+
                         case Modules.Keys.Enter:
 
                             self.chatHandler.toggle();
@@ -174,22 +188,44 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             switch(key) {
                 case Modules.Keys.W:
                 case Modules.Keys.Up:
+
                     player.moveUp = false;
+
                     break;
 
                 case Modules.Keys.A:
                 case Modules.Keys.Left:
+
                     player.moveLeft = false;
+
                     break;
 
                 case Modules.Keys.S:
                 case Modules.Keys.Down:
+
                     player.moveDown = false;
+
                     break;
 
                 case Modules.Keys.D:
                 case Modules.Keys.Right:
+
                     player.moveRight = false;
+
+                    break;
+
+                case Modules.Keys.Spacebar:
+
+                    if (player.moving)
+                        break;
+
+                    if (!player.isRanged())
+                        break;
+
+                    player.frozen = false;
+
+                    self.updateFrozen(player.frozen);
+
                     break;
             }
 
@@ -429,6 +465,10 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 dw: sprite.width * superScale,
                 dh: sprite.height * superScale
             };
+        },
+
+        updateFrozen: function(state) {
+            this.game.socket.send(Packets.Movement, [Packets.MovementOpcode.Freeze, state]);
         },
 
         isTargetable: function(entity) {
