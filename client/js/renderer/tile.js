@@ -14,7 +14,7 @@ define(function() {
             self.animationIndex = 0;
             self.lastTime = 0;
 
-            self.loaded = false;
+            self.canDraw = true;
         },
 
         setPosition: function(position) {
@@ -24,6 +24,7 @@ define(function() {
 
         update: function() {
             this.id = this.animationInfo[this.animationIndex].tileID - 1;
+            this.canDraw = true;
         },
 
         animate: function(time) {

@@ -8,6 +8,8 @@ define(['../entity/character/character'], function(Character) {
             var self = this;
 
             self.game = game;
+            self.map = game.map;
+            self.player = game.player;
             self.camera = game.getCamera();
             self.renderer = game.renderer;
             self.input = game.input;
@@ -17,7 +19,6 @@ define(['../entity/character/character'], function(Character) {
         update: function() {
             this.timeDifferential = (new Date() - this.lastUpdate) / 1000;
 
-            this.animateTiles();
             this.updateEntities();
             this.input.updateCursor();
             this.updateKeyboard();
@@ -26,18 +27,6 @@ define(['../entity/character/character'], function(Character) {
             this.updateBubbles();
 
             this.lastUpdate = new Date();
-        },
-
-        animateTiles: function() {
-            var self = this,
-                time = self.game.time;
-
-            if (!self.renderer.animateTiles)
-                return;
-
-            self.renderer.forEachAnimatedTile(function(tile) {
-                tile.animate(time);
-            });
         },
 
         updateEntities: function() {

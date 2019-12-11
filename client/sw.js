@@ -5528,7 +5528,7 @@ self.__precacheManifest = [
     "revision": "0cb5c74bea59445adc3dc4171907595f"
   }
 ].concat(self.__precacheManifest || []);
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+//workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 workbox.routing.registerRoute(/txt|xml|html|css|js|json/, new workbox.strategies.NetworkFirst({ "cacheName":"web", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 86400, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
 workbox.routing.registerRoute(/ico|png|gif|jpg/, new workbox.strategies.NetworkFirst({ "cacheName":"images", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 604800, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');

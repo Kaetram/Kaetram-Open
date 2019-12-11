@@ -463,7 +463,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         isMoving: function() {
-            return this.currentAnimation.name === 'walk' && (this.x % 2 !== 0 || this.y % 2 !== 0);
+            return this.currentAnimation.name === 'walk' || (this.x % 2 !== 0 || this.y % 2 !== 0);
         },
 
         forEachAttacker: function(callback) {

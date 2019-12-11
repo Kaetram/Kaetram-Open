@@ -74,6 +74,7 @@ define(['jquery', './camera', './tile',
             self.drawNames = true;
             self.drawLevels = true;
             self.forceRendering = false;
+            self.animatedTilesDrawCalls = 0;
 
             self.load();
         },
@@ -286,8 +287,14 @@ define(['jquery', './camera', './tile',
             self.updateDrawingView();
 
             self.forEachAnimatedTile(function(tile) {
-                self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
-                tile.loaded = true;
+                tile.animate(self.game.time);
+
+                if (tile.canDraw || self.game.player.moving) {
+                    self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
+
+                    tile.canDraw = false;
+                }
+
             });
 
             self.restoreDrawing();
