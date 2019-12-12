@@ -14,7 +14,6 @@ define(['./animation'], function(Animation) {
 
             self.loaded = false;
             self.loadHurt = false;
-            self.loadSilhouette = true;
 
             self.offsetX = 0;
             self.offsetY = 0;
