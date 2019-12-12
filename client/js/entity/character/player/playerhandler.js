@@ -159,20 +159,23 @@ define(function() {
         checkBounds: function() {
             var self = this,
                 x = self.player.gridX - self.camera.gridX,
-                y = self.player.gridY - self.camera.gridY,
-                isBorder = false;
+                y = self.player.gridY - self.camera.gridY;
 
             if (x === 0)
                 self.game.zoning.setLeft();
             else if (y === 0)
                 self.game.zoning.setUp();
-            else if (x === self.camera.gridWidth - 1)
+            else if (x === self.camera.gridWidth - 2)
                 self.game.zoning.setRight();
-            else if (y === self.camera.gridHeight - 1)
+            else if (y === self.camera.gridHeight - 2)
                 self.game.zoning.setDown();
 
             if (self.game.zoning.direction !== null) {
-                self.camera.zone(self.game.zoning.getDirection());
+                var direction = self.game.zoning.getDirection();
+
+                self.camera.zone(direction);
+
+                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Zone, direction]);
 
                 self.renderer.updateAnimatedTiles();
 

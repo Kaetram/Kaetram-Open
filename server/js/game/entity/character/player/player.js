@@ -582,8 +582,6 @@ class Player extends Character {
         self.pvp = pvp;
         self.permanentPVP = permanent;
 
-        log.info(self.region);
-
         self.sendToAdjacentRegions(self.region, new Messages.PVP(self.instance, self.pvp));
     }
 

@@ -446,6 +446,13 @@ class Incoming {
                 self.player.frozen = message.shift();
 
                 break;
+
+            case Packets.MovementOpcode.Zone:
+                let direction = message.shift();
+
+                log.info('Player zoned - ' + direction);
+
+                break;
         }
     }
 
