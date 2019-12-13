@@ -266,7 +266,15 @@ define(function() {
             for(var y = self.gridY - offset, maxY = y + self.gridHeight + (offset * 2); y < maxY; y++)
                 {for(var x = self.gridX - offset, maxX = x + self.gridWidth + (offset * 2); x < maxX; x++)
                     callback(x, y);}
+        },
+
+        isVisible: function(x, y, offset) {
+            return x > this.gridX - offset &&
+                    x < this.gridX + this.gridWidth &&
+                    y > this.gridY - offset &&
+                    y < this.gridY + this.gridHeight;
         }
+
     });
 
 });

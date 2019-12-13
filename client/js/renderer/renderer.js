@@ -287,6 +287,9 @@ define(['jquery', './camera', './tile',
             self.updateDrawingView();
 
             self.forEachAnimatedTile(function(tile) {
+                if (!self.camera.isVisible(tile.x, tile.y, 3))
+                    return;
+
                 tile.animate(self.game.time);
 
                 self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
