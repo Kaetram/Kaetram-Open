@@ -10,6 +10,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             self.game = game;
             self.app = game.app;
             self.renderer = game.renderer;
+            self.map = game.map;
 
             self.selectedCellVisible = false;
             self.previousClick = {};
@@ -266,6 +267,9 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
             if (self.renderer.mobile && self.chatHandler.input.is(':visible') && self.chatHandler.input.val() === '')
                 self.chatHandler.hideInput();
+
+            if (self.map.isOutOfBounds(position.x, position.y))
+                return;
 
             if ((self.game.zoning && self.game.zoning.direction) || player.disableAction)
                 return;
