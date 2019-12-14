@@ -124,8 +124,12 @@ define(['jquery'], function($) {
             tileset.scale = rawTileset.scale;
 
             tileset.onload = function() {
-                if (tileset.width % self.tileSize > 0)
+                if (tileset.width % self.tileSize > 0) // Prevent uneven tilemaps from loading.
                     throw Error('The tile size is malformed in the tile set: ' + path);
+            };
+
+            tileset.onerror = function() {
+                throw Error('Could not find tile set: ' + path);
             };
 
             return tileset;

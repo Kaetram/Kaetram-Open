@@ -365,8 +365,8 @@ module.exports = function parse(json, options) {
             }
     });
 
-    for (let l = self.json.layers.length - 1; l > 0; l--)
-        parseLayer(self.json.layers[l]);
+    for (let i = self.json.layers.length; i > 0; i--)
+        parseLayer(self.json.layers[i - 1]);
 
     if (mode === 'client')
         for (let i = 0, max = map.data.length; i < max; i++)
@@ -386,7 +386,7 @@ let isValid = function(number) {
 let parseLayer = function(layer) {
     let name = layer.name.toLowerCase(),
         type = layer.type;
-
+        
     if (name === 'entities' && mode === 'server') {
         let tiles = layer.data;
 
