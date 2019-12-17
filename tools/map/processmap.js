@@ -55,7 +55,6 @@ module.exports = function parse(json, options) {
         case 'server':
 
             map.tilesets = [];
-            map.roamingAreas = [];
             map.pvpAreas = [];
             map.gameAreas = [];
             map.doors = {};
@@ -180,30 +179,6 @@ module.exports = function parse(json, options) {
                             };
                         }
                     });
-
-                    break;
-
-                case 'roaming':
-
-                    let areas = layer.objects;
-
-                    for (let a = 0; a < areas.length; a++) {
-                        let count = 1;
-
-                        if (areas[a].properties)
-                            count = parseInt(areas[a].properties.count, 10);
-
-                        map.roamingAreas[a] = {
-                            id: a,
-                            x: areas[a].x / map.tilesize,
-                            y: areas[a].y / map.tilesize,
-                            width: areas[a].width / map.tilesize,
-                            height: areas[a].height / map.tilesize,
-                            type: areas[a].type,
-                            count: count
-                        }
-
-                    }
 
                     break;
 
@@ -386,7 +361,7 @@ let isValid = function(number) {
 let parseLayer = function(layer) {
     let name = layer.name.toLowerCase(),
         type = layer.type;
-        
+
     if (name === 'entities' && mode === 'server') {
         let tiles = layer.data;
 
