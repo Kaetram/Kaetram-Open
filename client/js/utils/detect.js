@@ -87,7 +87,10 @@ Detect.androidVersion = function() {
 };
 
 Detect.supportsWebGL = function() {
-    return !!document.createElement('canvas').getContext('webgl');
+    var canvas = document.createElement('testCanvas'),
+        gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+    return gl && gl instanceof WebGLRenderingContext;
 };
 
 Detect.isAppleDevice = function() {
