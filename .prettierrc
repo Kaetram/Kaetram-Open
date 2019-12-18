@@ -1,0 +1,9 @@
+{
+    "tabWidth": 4,
+    "htmlWhitespaceSensitivity": "strict",
+    "singleQuote": true,
+    "insertPragma": true,
+    "requirePragma": true,
+    "bracketSpacing": true,
+    "trailingComma": "none"
+}
