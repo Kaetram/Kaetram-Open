@@ -4,16 +4,10 @@ node_modules/
 yarn.lock
 package-lock.json
 bin/
-\.prettierrc
-\.prettierignore
+dist/
 **/config.json
 cordova
 release
-docs/
-
-dist/
-/data
-\.lister*
 
 ### Node ###
 # Logs
