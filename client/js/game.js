@@ -76,6 +76,8 @@ define(['./renderer/renderer', './utils/storage',
         tick: function() {
             var self = this;
 
+
+
             if (self.ready) {
 
                 self.time = new Date().getTime();
@@ -191,6 +193,9 @@ define(['./renderer/renderer', './utils/storage',
                 self.renderer.setEntities(self.entities);
 
                 self.app.sendStatus(null);
+
+                if (Detect.supportsWebGL())
+                    self.map.loadWebGL(self.renderer.backContext);
 
                 self.loaded = true;
             });

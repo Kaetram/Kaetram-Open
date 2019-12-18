@@ -24,15 +24,15 @@ function getMap() {
 }
 
 function onMap(data) {
-    parseClient(data, '../../server/data/map/world_client');
+    let clientMap = parseClient(data, '../../server/data/map/world_client');
+
     parseServer(data, '../../server/data/map/world_server');
-    parseInfo(data, '../../client/data/maps/map');
+    parseInfo(data, '../../client/data/maps/map', clientMap);
 }
 
 function parseClient(data, destination) {
-    let map = JSON.stringify(processMap(data, {
-        mode: 'client'
-    }));
+    let processedMap = processMap(data, { mode: 'client' }),
+        map = JSON.stringify(processedMap);
 
     fs.writeFile(destination + '.json', map, function(err, file) {
         if (err)
@@ -41,6 +41,7 @@ function parseClient(data, destination) {
             log.info('[Client] Map saved at: ' + destination + '.json');
     });
 
+    return processedMap;
 }
 
 function parseServer(data, destination) {
@@ -56,10 +57,13 @@ function parseServer(data, destination) {
     });
 }
 
-function parseInfo(data, destination) {
-    let map = JSON.stringify(processMap(data, {
-        mode: 'info'
-    }));
+function parseInfo(data, destination, clientMap) {
+    let mapData = processMap(data, { mode: 'info' });
+
+    if (clientMap)
+        mapData.depth = clientMap.depth;
+
+    let map = JSON.stringify(mapData);
 
     fs.writeFile(destination + '.json', map, function(err, file) {
         if (err)
