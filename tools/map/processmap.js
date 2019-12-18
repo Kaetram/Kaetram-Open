@@ -49,6 +49,7 @@ module.exports = function parse(json, options) {
             map.high = [];
 
             map.animated = {};
+            map.depth = 1;
 
             break;
 
@@ -343,15 +344,32 @@ module.exports = function parse(json, options) {
     for (let i = self.json.layers.length; i > 0; i--)
         parseLayer(self.json.layers[i - 1]);
 
-    if (mode === 'client')
+    if (mode === 'client') {
         for (let i = 0, max = map.data.length; i < max; i++)
             if (!map.data[i])
                 map.data[i] = 0;
+
+        map.depth = calculateDepth(map);
+    }
 
     if (mode === 'info')
         map.collisions = [];
 
     return map;
+};
+
+let calculateDepth = function(map) {
+    let depth = 1;
+
+    _.each(map.data, (info) => {
+        if (!_.isArray(info))
+            return;
+
+        if (info.length > depth)
+            depth = info.length;
+    });
+
+    return depth;
 };
 
 let isValid = function(number) {

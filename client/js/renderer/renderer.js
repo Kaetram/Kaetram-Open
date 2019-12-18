@@ -23,8 +23,13 @@ define(['jquery', './camera', './tile',
             self.cursor = cursor;
 
             self.context = self.entities.getContext('2d'); // Entities
-            self.backContext = self.background.getContext('2d'); // Background
-            self.foreContext = self.foreground.getContext('2d'); // Foreground
+
+            if (!Detect.supportsWebGL()) {
+                self.backContext = self.background.getContext('2d'); // Background
+                self.foreContext = self.foreground.getContext('2d'); // Foreground
+            } else
+                self.backContext = self.background.getContext('webgl') || self.background.getContext('experimental-webgl');
+
             self.overlayContext = self.overlay.getContext('2d'); // Lighting
             self.textContext = self.textCanvas.getContext('2d'); // Texts
             self.cursorContext = self.cursor.getContext('2d'); // Cursor
@@ -106,6 +111,9 @@ define(['jquery', './camera', './tile',
             var self = this;
 
             self.forAllContexts(function(context) {
+                if (!context)
+                    return;
+
                 context.imageSmoothingQuality = 'low';
 
                 context.imageSmoothingEnabled = false;
@@ -134,6 +142,7 @@ define(['jquery', './camera', './tile',
                 canvas.width = self.canvasWidth;
                 canvas.height = self.canvasHeight;
             });
+
         },
 
         loadCamera: function() {
@@ -248,38 +257,54 @@ define(['jquery', './camera', './tile',
         draw: function() {
             var self = this;
 
-            if (self.hasRenderedFrame())
-                return;
+            if (self.webGL) {
 
-            self.clearDrawing();
-            self.saveDrawing();
+                var dt = self.game.time - self.game.lastTime;
 
-            self.updateDrawingView();
+                self.game.lastTime = self.game.time;
 
-            self.forEachVisibleTile(function(id, index) {
-                var isHighTile = self.map.isHighTile(id),
-                    context = isHighTile ? self.foreContext : self.backContext;
+                self.map.webGLMap.tileScale = 1;
 
-                // Only do the lighting logic if there is an overlay.
-                if (self.game.overlays.getFog()) {
-                    var isLightTile = self.map.isLightTile(id);
+                self.map.webGLMap.update(dt);
+                self.map.webGLMap.draw(self.camera.x, self.camera.y);
 
-                    context = isLightTile ? self.overlayContext : context;
-                }
+            } else {
 
-                if (!self.map.isAnimatedTile(id) || !self.animateTiles)
-                    self.drawTile(context, id, self.map.width, index);
-            });
+                if (self.hasRenderedFrame())
+                    return;
 
-            self.restoreDrawing();
+                self.clearDrawing();
+                self.saveDrawing();
 
-            self.saveFrame();
+                self.updateDrawingView();
+
+                self.forEachVisibleTile(function(id, index) {
+                    var isHighTile = self.map.isHighTile(id),
+                        context = isHighTile ? self.foreContext : self.backContext;
+
+                    // Only do the lighting logic if there is an overlay.
+                    if (self.game.overlays.getFog()) {
+                        var isLightTile = self.map.isLightTile(id);
+
+                        context = isLightTile ? self.overlayContext : context;
+                    }
+
+                    if (!self.map.isAnimatedTile(id) || !self.animateTiles)
+                        self.drawTile(context, id, self.map.width, index);
+                });
+
+                self.restoreDrawing();
+
+                self.saveFrame();
+
+            }
+
         },
 
         drawAnimatedTiles: function() {
             var self = this;
 
-            if (!self.animateTiles)
+            if (!self.animateTiles || self.webGL)
                 return;
 
             self.saveDrawing();
@@ -1138,6 +1163,7 @@ define(['jquery', './camera', './tile',
             self.tablet = Detect.isTablet();
             self.firefox = Detect.isFirefox();
             self.mEdge = Detect.isEdge();
+            self.webGL = Detect.supportsWebGL();
 
             self.animateTiles = !self.firefox && !self.mEdge;
         },
