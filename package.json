@@ -3,26 +3,21 @@
     "version": "1.1.5",
     "private": false,
     "author": "Veradictus",
-    "main": "./server/js/main.js",
+    "main": "server/js/main.js",
     "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
     "homepage": "https://kaetram.com/",
     "scripts": {
-        "start": "node ./server/js/main.js",
-        "format": "prettier --write \"**/*.js\"",
-        "lint:client": "eslint -c ./.eslintrc-client.js \"./client/**/*.js\"",
-        "lint:server": "eslint -c ./.eslintrc-server.js \"./server/**/*.js\"",
-        "docs": "esdoc",
+        "start": "node server/js/main.js",
         "build": "gulp"
     },
     "dependencies": {
         "bcrypt": "^3.0.7",
         "commander": "^4.0.1",
         "connect": "^3.7.0",
-        "html-minifier": "^4.0.0",
         "http": "0.0.0",
         "log": "^1.4.0",
         "memcache": "^0.3.0",
-        "mongodb": "^3.3.4",
+        "mongodb": "^3.4.0",
         "mysql": "^2.17.1",
         "ncp": "^2.0.0",
         "r": "0.0.5",
@@ -36,111 +31,10 @@
     },
     "devDependencies": {
         "del": "^5.1.0",
-        "esdoc": "^1.1.0",
-        "esdoc-ecmascript-proposal-plugin": "^1.0.0",
-        "esdoc-standard-plugin": "^1.0.0",
-        "eslint": "^6.6.0",
-        "eslint-config-google": "^0.14.0",
-        "eslint-config-standard": "^14.1.0",
-        "eslint-plugin-import": "^2.18.2",
-        "eslint-plugin-node": "^10.0.0",
-        "eslint-plugin-promise": "^4.2.1",
-        "eslint-plugin-standard": "^4.0.1",
         "gulp": "^4.0.2",
+        "html-minifier": "^4.0.0",
         "morgan": "^1.9.1",
-        "workbox-build": "^4.3.1",
-        "workbox-cli": "^4.3.1"
-    },
-    "esdoc": {
-        "source": "./",
-        "destination": "./docs",
-        "includes": [
-            "\\.js$"
-        ],
-        "excludes": [
-            "node_modules",
-            "cordova",
-            "lib/*",
-            "map.js",
-            "bundle.js",
-            "mapworker.js"
-        ],
-        "plugins": [
-            {
-                "name": "esdoc-ecmascript-proposal-plugin",
-                "option": {
-                    "all": true
-                }
-            },
-            {
-                "name": "esdoc-standard-plugin",
-                "option": {
-                    "lint": {
-                        "enable": true
-                    },
-                    "coverage": {
-                        "enable": true
-                    },
-                    "accessor": {
-                        "access": [
-                            "public",
-                            "protected",
-                            "private"
-                        ],
-                        "autoPrivate": true
-                    },
-                    "undocumentIdentifier": {
-                        "enable": true
-                    },
-                    "unexportedIdentifier": {
-                        "enable": false
-                    },
-                    "typeInference": {
-                        "enable": true
-                    },
-                    "brand": {
-                        "logo": "./client/img/icons/icon-512x512.png",
-                        "title": "Kaetram Documentation",
-                        "description": "Kaetram development support.",
-                        "repository": "https://github.com/Veradictus/Kaetram-Open",
-                        "site": "https://kaetram.com",
-                        "author": "https://github.com/Veradictus",
-                        "image": "https://kaetram.com/img/icons/icon-512x512.png"
-                    }
-                }
-            }
-        ]
-    },
-    "eslintConfig": {
-        "rules": {
-            "curly": [
-                "error",
-                "multi-or-nest"
-            ],
-            "indent": [
-                "warn",
-                4,
-                {
-                    "SwitchCase": 1
-                }
-            ],
-            "linebreak-style": [
-                "error",
-                "unix"
-            ],
-            "quotes": [
-                "error",
-                "single"
-            ],
-            "semi": [
-                "error",
-                "always"
-            ],
-            "operator-linebreak": 0
-        }
-    },
-    "directories": {
-        "doc": "docs"
+        "workbox-build": "^4.3.1"
     },
     "repository": "git+https://github.com/Veradictus/Kaetram-Open.git",
     "bugs": {
