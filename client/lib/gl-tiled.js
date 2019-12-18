@@ -67,6 +67,7 @@
         function GLImagelayer(desc, assetCache) {
             var _this = this;
             this.desc = desc;
+
             this.type = exports.ELayerType.Imagelayer;
             this.scrollScaleX = 1;
             this.scrollScaleY = 1;
@@ -151,6 +152,7 @@
             this.desc = desc;
             this.gl = null;
             /** The images in this tileset. */
+
             this.images = [];
             /** The gl textures in this tileset */
             this.textures = [];
@@ -288,6 +290,7 @@
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         };
+
         return GLTileset;
     }());
 
@@ -305,6 +308,7 @@
     var GLTilelayer = /** @class */ (function () {
         function GLTilelayer(desc, tilesets) {
             this.desc = desc;
+
             this.type = exports.ELayerType.Tilelayer;
             this.gl = null;
             this.scrollScaleX = 1;
@@ -320,7 +324,7 @@
             // If this isn't true then we probably did something wrong or got bad data...
             // This has caught me putting in base64 data instead of array data more than once!
             if ((desc.width * desc.height) !== this.desc.data.length)
-                throw new Error('Sizes are off!');
+                throw new Error('Sizes are off! Expected: ' + (desc.width * desc.height) + ' and received: ' + this.desc.data.length);
             this._buildMapTexture(tilesets);
         }
         Object.defineProperty(GLTilelayer.prototype, "repeatTiles", {

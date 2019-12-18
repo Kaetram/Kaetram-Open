@@ -14,6 +14,7 @@ define(['jquery'], function($) {
             self.data = [];
             self.tilesets = [];
             self.rawTilesets = [];
+            self.lastSyncData = []; // Prevent unnecessary sync data.
 
             self.grid = null;
             self.webGLMap = null; // Map used for rendering webGL.
@@ -78,6 +79,9 @@ define(['jquery'], function($) {
             var self = this;
             // Use traditional for-loop instead of _
 
+            if (self.lastSyncData.length === tileData.length)
+                return;
+
             for (var i = 0; i < tileData.length; i++) {
                 var tile = tileData[i],
                     collisionIndex = self.collisions.indexOf(tile.index);
@@ -96,10 +100,15 @@ define(['jquery'], function($) {
                 }
             }
 
+            log.info('Syncing');
+
+
             if (self.webGLMap)
                 self.synchronizeWebGL(tileData);
 
             self.saveRegionData();
+
+            self.lastSyncData = tileData;
         },
 
         loadTilesets: function() {
@@ -131,6 +140,7 @@ define(['jquery'], function($) {
             tileset.name = rawTileset.imageName;
 
             tileset.crossOrigin = 'Anonymous';
+            tileset.path = 'img/tilesets/' + tileset.name;
             tileset.src = 'img/tilesets/' + tileset.name;
             tileset.raw = tileset;
             tileset.firstGID = rawTileset.firstGID;
@@ -170,18 +180,33 @@ define(['jquery'], function($) {
 
         // Load the webGL map into the memory.
         loadWebGL: function(context) {
-            var self = this;
+            var self = this,
+                map = self.formatWebGL(),
+                resources = {};
 
-            self.webGLMap = new glTiled.GLTilemap(self.formatWebGL(), {
-                gl: context
+            for (var i = 0; i < self.tilesets.length; i++) {
+                resources[self.tilesets[i].name] = {
+                    name: self.tilesets[i].name,
+                    url: self.tilesets[i].path,
+                    data: self.tilesets[i],
+                    extension: 'png'
+                };
+            }
+
+            if (self.webGLMap)
+                self.webGLMap.glTerminate();
+
+            self.webGLMap = new glTiled.GLTilemap(map, {
+                gl: context,
+                assetCache: resources
             });
 
+            self.webGLMap.glInitialize(context);
             self.webGLMap.repeatTiles = false;
 
             context.viewport(0, 0, context.canvas.width, context.canvas.height);
             self.webGLMap.resizeViewport(context.canvas.width, context.canvas.height);
 
-            //self.webGLMap.glInitialize(context);
 
         },
 
@@ -212,7 +237,7 @@ define(['jquery'], function($) {
                 };
 
             /* Create 'layers' based on map depth and data. */
-            for (var i = self.depth; i > 0; i--) {
+            for (var i = 0; i < self.depth; i++) {
                 var layerObject = {
                     id: i,
                     width: object.width,
@@ -227,17 +252,19 @@ define(['jquery'], function($) {
                 };
 
                 for (var j = 0; j < self.data.length; j++) {
-                    /* We just push everything if it's the last layer. */
-                    if (i === 1)
-                        if (Array.isArray(self.data[j]))
-                            layerObject.data.push(self.data[j][i]);
+                    var tile = self.data[j];
+
+                    if (Array.isArray(tile)) {
+                        if (tile[i])
+                            layerObject.data[j] = tile[i];
                         else
-                            layerObject.data.push(self.data[j]);
-                    else
-                        if (Array.isArray(self.data[j]) && self.data[j].length === i)
-                            layerObject.data.push(self.data[j][i]);
+                            layerObject.data[j] = 0;
+                    } else
+                        if (i === 0)
+                            layerObject.data[j] = tile;
                         else
-                            layerObject.data.push(0);
+                            layerObject.data[j] = 0;
+
                 }
 
                 object.layers.push(layerObject);
@@ -249,11 +276,11 @@ define(['jquery'], function($) {
                     margin: 0,
                     spacing: 0,
                     firstgid: self.tilesets[i].firstGID,
-                    image: self.tilesets[i].src,
+                    image: self.tilesets[i].name,
                     imagewidth: self.tilesets[i].width,
                     imageheight: self.tilesets[i].height,
-                    name: self.tilesets[i].name,
-                    tilecount: (self.tilesets[i].width * self.tilesets[i].height) / 16,
+                    name: self.tilesets[i].name.split('.png')[0],
+                    tilecount: (self.tilesets[i].width / 16) * (self.tilesets[i].height / 16),
                     tilewidth: object.tilewidth,
                     tileheight: object.tileheight
                 });
@@ -267,17 +294,7 @@ define(['jquery'], function($) {
         synchronizeWebGL: function(tileData) {
             var self = this;
 
-            for (var i = 0; i < tileData.length; i++) {
-                var tile = tileData[i],
-                    depth = Array.isArray(tile.data) ? tile.data.length : 1;
-
-                //[1, 2, 3, 4]
-                //[1, 3]
-                //[1, 2, 3]
-
-                //for (var j = 0; j < depth; j++)
-                //    self.webGLMap.layers[]
-            }
+            self.loadWebGL(self.renderer.backContext);
         },
 
         loadCollisions: function() {
