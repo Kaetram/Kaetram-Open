@@ -13,9 +13,11 @@
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
-workbox.core.skipWaiting();
-
-workbox.core.clientsClaim();
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
@@ -121,7 +123,7 @@ self.__precacheManifest = [
   },
   {
     "url": "browserconfig.xml",
-    "revision": "45a3c9fe825bd2857bc24f14c69d46da"
+    "revision": "57345c1e7bf92de8beac4b0a7ae704b2"
   },
   {
     "url": "css/animations.css",
@@ -133,15 +135,15 @@ self.__precacheManifest = [
   },
   {
     "url": "css/interface.css",
-    "revision": "a3d51492ebaea50b25bb6c9244421ee6"
+    "revision": "1acec8b00001dd375d8e0d427787b822"
   },
   {
     "url": "css/main.css",
-    "revision": "865db92f78c545781c331c5caa89a326"
+    "revision": "308b17be9edf36fbbad7bcc78342a974"
   },
   {
     "url": "css/vars.css",
-    "revision": "1ab3d9c7c7d8e66bafa4989c0956010c"
+    "revision": "03457fb0d14172c00244d472f5fc4442"
   },
   {
     "url": "data/config.json",
@@ -153,11 +155,11 @@ self.__precacheManifest = [
   },
   {
     "url": "data/maps/map.js",
-    "revision": "a94f85ba1322899dfcd3619470046151"
+    "revision": "0b5585d1a9980835fe27ade48af35711"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "3a1a5264a0b7ac44881794b2b707af90"
+    "revision": "2cc950f18eb7570be4ec56b43418fab8"
   },
   {
     "url": "data/sprites.json",
@@ -165,7 +167,7 @@ self.__precacheManifest = [
   },
   {
     "url": "favicon.ico",
-    "revision": "8b2c195090507ff540eccf7732a89aa7"
+    "revision": "441c07fb4eb3aa0e35c842579a3b92be"
   },
   {
     "url": "fonts/advocut/advocut-webfont.eot",
@@ -2360,100 +2362,152 @@ self.__precacheManifest = [
     "revision": "12f7a1b2a69af985302415db673be8fb"
   },
   {
-    "url": "img/icons/android-icon-144x144.png",
-    "revision": "97000c1dc8159be51b582be3a21075e9"
+    "url": "img/icons/android-chrome-144x144.png",
+    "revision": "4559cb9b1532a8b77645abd486344a75"
   },
   {
-    "url": "img/icons/android-icon-192x192.png",
-    "revision": "380daba331307f3d0df856c53047a161"
+    "url": "img/icons/android-chrome-192x192.png",
+    "revision": "d12b018d5c47426c746c31e8c503ac96"
   },
   {
-    "url": "img/icons/android-icon-36x36.png",
-    "revision": "57a4a0ae69ae1a2791d1afbd3800e432"
+    "url": "img/icons/android-chrome-256x256.png",
+    "revision": "304b2aa28dbe5e0991899061d7f8382b"
   },
   {
-    "url": "img/icons/android-icon-48x48.png",
-    "revision": "6a49671bc0e4e798d2471b91d372ce6e"
+    "url": "img/icons/android-chrome-36x36.png",
+    "revision": "30095ef435136a1ea5ca75ea330f26fe"
   },
   {
-    "url": "img/icons/android-icon-72x72.png",
-    "revision": "8b8473a6aaf58b7aa26d4470f36fc9b8"
+    "url": "img/icons/android-chrome-384x384.png",
+    "revision": "35ec0ac8712dac62a1b191e03ba76e44"
   },
   {
-    "url": "img/icons/android-icon-96x96.png",
-    "revision": "9e927f76c68640bed67e85951e87fb93"
+    "url": "img/icons/android-chrome-48x48.png",
+    "revision": "2921dd170f2259c27c09bf31adc41fe9"
   },
   {
-    "url": "img/icons/apple-icon-114x114.png",
-    "revision": "21cd41fa57480f934224d9713b7da0a9"
+    "url": "img/icons/android-chrome-72x72.png",
+    "revision": "42e0f6e82ad0f8bb589877bf804071dc"
   },
   {
-    "url": "img/icons/apple-icon-120x120.png",
-    "revision": "c4e940e39249f1a1ef4824597b017652"
+    "url": "img/icons/android-chrome-96x96.png",
+    "revision": "0f4935f0fefd876473668c303ef56dbc"
   },
   {
-    "url": "img/icons/apple-icon-144x144.png",
-    "revision": "97000c1dc8159be51b582be3a21075e9"
+    "url": "img/icons/apple-touch-icon-114x114-precomposed.png",
+    "revision": "13b298263ffb394fe5c8089a5e89bd5a"
   },
   {
-    "url": "img/icons/apple-icon-152x152.png",
-    "revision": "ff76c8a588eaf2632338fa9046295cb1"
+    "url": "img/icons/apple-touch-icon-114x114.png",
+    "revision": "f9042423593b695b12c7fcc36709c351"
   },
   {
-    "url": "img/icons/apple-icon-180x180.png",
-    "revision": "d03a89155375c0820e160ac9d7190d69"
+    "url": "img/icons/apple-touch-icon-120x120-precomposed.png",
+    "revision": "1e8aa2f60458c05e30696a9e25fe6111"
   },
   {
-    "url": "img/icons/apple-icon-57x57.png",
-    "revision": "76577427de51141f94c80240322e9a14"
+    "url": "img/icons/apple-touch-icon-120x120.png",
+    "revision": "a4bb472cead12303b9ee744f420263c2"
   },
   {
-    "url": "img/icons/apple-icon-60x60.png",
-    "revision": "84cf9b10fac84cda9197671bd4abd463"
+    "url": "img/icons/apple-touch-icon-144x144-precomposed.png",
+    "revision": "1c097d4d930300bd1527e789db04fe29"
   },
   {
-    "url": "img/icons/apple-icon-72x72.png",
-    "revision": "8b8473a6aaf58b7aa26d4470f36fc9b8"
+    "url": "img/icons/apple-touch-icon-144x144.png",
+    "revision": "5cd21a1b5f42a9b5a76b29f322da05c0"
   },
   {
-    "url": "img/icons/apple-icon-76x76.png",
-    "revision": "c4a7dc4ec0e8a1048295387051fd2369"
+    "url": "img/icons/apple-touch-icon-152x152-precomposed.png",
+    "revision": "b9903a8e4cd2fdead6ec11c6bff9b4d6"
   },
   {
-    "url": "img/icons/apple-icon-precomposed.png",
-    "revision": "52ab2b0194d188a8adf1a398b7ed60b8"
+    "url": "img/icons/apple-touch-icon-152x152.png",
+    "revision": "e269044e89968839c0657a2a104af2ba"
   },
   {
-    "url": "img/icons/apple-icon.png",
-    "revision": "52ab2b0194d188a8adf1a398b7ed60b8"
+    "url": "img/icons/apple-touch-icon-180x180-precomposed.png",
+    "revision": "ade17e322355fa8d87e25886ba7323b5"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-180x180.png",
+    "revision": "a44ba061e0c43561ddbd279963d99e13"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-57x57-precomposed.png",
+    "revision": "701983605cbc9979693244dda50d73a8"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-57x57.png",
+    "revision": "9813a0d8ba0369f46fa7779ae08f8e19"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-60x60-precomposed.png",
+    "revision": "381ba6d06d37ecedec5aaba854f666c6"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-60x60.png",
+    "revision": "bc32a03d68834a1274f7c5b6d70771ba"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-72x72-precomposed.png",
+    "revision": "45497ac516e348609be21e9e70d99ac5"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-72x72.png",
+    "revision": "2211c22567663f5506d4ec46d0959996"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-76x76-precomposed.png",
+    "revision": "fdb76edf0f3f8b8033b088eb30902e12"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-76x76.png",
+    "revision": "b6ec880f008fda3672137723c6058c71"
+  },
+  {
+    "url": "img/icons/apple-touch-icon-precomposed.png",
+    "revision": "ade17e322355fa8d87e25886ba7323b5"
+  },
+  {
+    "url": "img/icons/apple-touch-icon.png",
+    "revision": "a44ba061e0c43561ddbd279963d99e13"
   },
   {
     "url": "img/icons/favicon-16x16.png",
-    "revision": "e2e72107826141371ef01d03c515b6f8"
+    "revision": "974fa7dae6d5192665fd5b77f851ed4a"
+  },
+  {
+    "url": "img/icons/favicon-194x194.png",
+    "revision": "057aed33851e789cbceb017a9927bcc0"
   },
   {
     "url": "img/icons/favicon-32x32.png",
-    "revision": "33e26cae8daf236ed07b9ad56e27a4a8"
+    "revision": "a5336479b289a43ea646230e96582cf3"
   },
   {
-    "url": "img/icons/favicon-96x96.png",
-    "revision": "9e927f76c68640bed67e85951e87fb93"
+    "url": "img/icons/mstile-144x144.png",
+    "revision": "5cd21a1b5f42a9b5a76b29f322da05c0"
   },
   {
-    "url": "img/icons/ms-icon-144x144.png",
-    "revision": "97000c1dc8159be51b582be3a21075e9"
+    "url": "img/icons/mstile-150x150.png",
+    "revision": "9ead778d9731448d285598ff2585ac7f"
   },
   {
-    "url": "img/icons/ms-icon-150x150.png",
-    "revision": "cb965c522fe0bfb38bee9ba3513e7830"
+    "url": "img/icons/mstile-310x150.png",
+    "revision": "e2e74ed1015dadf94400b21859bb07cf"
   },
   {
-    "url": "img/icons/ms-icon-310x310.png",
-    "revision": "db967b310047180c819c0bc90162b30b"
+    "url": "img/icons/mstile-310x310.png",
+    "revision": "5732d0ff8c5878b82e26ddf933329aad"
   },
   {
-    "url": "img/icons/ms-icon-70x70.png",
-    "revision": "e5ce6c633e42b3561942fb4a2cee3b43"
+    "url": "img/icons/mstile-70x70.png",
+    "revision": "fc5ff439f954125af05190e6f3329922"
+  },
+  {
+    "url": "img/icons/safari-pinned-tab.svg",
+    "revision": "2544bb9ec5e1bbd0792716fb8efe48ab"
   },
   {
     "url": "img/overlays/fog.png",
@@ -2464,8 +2518,8 @@ self.__precacheManifest = [
     "revision": "e4683e2527946c0aed590bb524ca9b72"
   },
   {
-    "url": "img/screenshots/screenshot.png",
-    "revision": "0a50f74a107b3597487f43ed138a46e6"
+    "url": "img/screenshots/kaetram.com_.png",
+    "revision": "4ed52363592df74f5fbd8186dd1626db"
   },
   {
     "url": "img/spinner.gif",
@@ -5165,7 +5219,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "0c48403a8e17b18ab44e2937cdd160e2"
+    "revision": "d26bf8a2deb77773fcf802e1b0604d4b"
   },
   {
     "url": "js/app.js",
@@ -5177,7 +5231,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/controllers/audio.js",
-    "revision": "557e595feffd9b1e823b0ceb8625b4e9"
+    "revision": "de6ce2be5ecfd99827d19f46390bcc85"
   },
   {
     "url": "js/controllers/bubble.js",
@@ -5185,23 +5239,23 @@ self.__precacheManifest = [
   },
   {
     "url": "js/controllers/chat.js",
-    "revision": "9ce0246a868aa0198234cb43959ad744"
+    "revision": "64004f4d5f4cf46ee8a2a83c60b3ff0d"
   },
   {
     "url": "js/controllers/entities.js",
-    "revision": "79de4f5b97de31760da929b3608bca2d"
+    "revision": "45b11f7301a7cd912ee146ccd5898e53"
   },
   {
     "url": "js/controllers/info.js",
-    "revision": "fbf970f16c65fefd39f0a42d1cd96166"
+    "revision": "d8d2346475dd5334fb8ce8562cddc26d"
   },
   {
     "url": "js/controllers/input.js",
-    "revision": "a529dfe389b477b91d155b7dae9eed9d"
+    "revision": "6c98ce90377b4178532e4333b2b005e6"
   },
   {
     "url": "js/controllers/interface.js",
-    "revision": "bb0205c3c3b5b4e8111d62c818f212d7"
+    "revision": "52214cf10784a220e8a8f9d0b0ec746a"
   },
   {
     "url": "js/controllers/overlay.js",
@@ -5225,7 +5279,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/character/character.js",
-    "revision": "fbbebe0ac56804e17a929b35a3968c98"
+    "revision": "65760e9cccf782f14e0826861f722946"
   },
   {
     "url": "js/entity/character/mob/mob.js",
@@ -5237,35 +5291,35 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/character/player/equipment/armour.js",
-    "revision": "3f36533d5174d3151b1dcd594636f378"
+    "revision": "456d86f340f30f615454c99f011391a8"
   },
   {
     "url": "js/entity/character/player/equipment/boots.js",
-    "revision": "f2cd8e9e3da1dcff3398cdf4ee34616d"
+    "revision": "8b4836ab51c9f2eb1e1a1454dbce9ffe"
   },
   {
     "url": "js/entity/character/player/equipment/equipment.js",
-    "revision": "2158af974491912695a8618df7f27957"
+    "revision": "d673cad3f9551c8eb9fbf3f858a3faa6"
   },
   {
     "url": "js/entity/character/player/equipment/pendant.js",
-    "revision": "f2cd8e9e3da1dcff3398cdf4ee34616d"
+    "revision": "8b4836ab51c9f2eb1e1a1454dbce9ffe"
   },
   {
     "url": "js/entity/character/player/equipment/ring.js",
-    "revision": "f2cd8e9e3da1dcff3398cdf4ee34616d"
+    "revision": "8b4836ab51c9f2eb1e1a1454dbce9ffe"
   },
   {
     "url": "js/entity/character/player/equipment/weapon.js",
-    "revision": "c642befe2e5c85103af1d1ee824db264"
+    "revision": "d78382c72d0f8d9b1d444efb34f43120"
   },
   {
     "url": "js/entity/character/player/player.js",
-    "revision": "f8bb1a9d408c7de00962126c93e8d202"
+    "revision": "7a4bdbc5f72386453aaf24959b1d278f"
   },
   {
     "url": "js/entity/character/player/playerhandler.js",
-    "revision": "a9a5ec2a93434deaf586da2f9290a197"
+    "revision": "d898878df5d575428a9278a9ace19348"
   },
   {
     "url": "js/entity/entity.js",
@@ -5273,7 +5327,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/entityhandler.js",
-    "revision": "21ec52b8ac6550f39cea1f342f843935"
+    "revision": "ea18a124f0570dac8dbc0de0c3c0d21d"
   },
   {
     "url": "js/entity/objects/chest.js",
@@ -5293,7 +5347,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/game.js",
-    "revision": "144bb4d732fa6e1cd6f96ba4afeb484a"
+    "revision": "d66ee04771458803d4955f64b054cf4c"
   },
   {
     "url": "js/interface/abilities.js",
@@ -5301,11 +5355,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/actions.js",
-    "revision": "792af4855005b211c57172fad22b9a8e"
+    "revision": "a2ed0e3b61c8e9b4908bea04fa3ed50d"
   },
   {
     "url": "js/interface/bank.js",
-    "revision": "91de4f07f00efd46b877b36791a9f831"
+    "revision": "af4d29b72512721fb81393d10e5dd65e"
   },
   {
     "url": "js/interface/container/container.js",
@@ -5317,15 +5371,15 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/enchant.js",
-    "revision": "2a29d4533051ac930e58b10fca1530b2"
+    "revision": "ccca91a7d14be7a5df5584ab16b53908"
   },
   {
     "url": "js/interface/header.js",
-    "revision": "a95d3d31ebb12654f13ccd86114938fc"
+    "revision": "fcb3db57be4d8e3689315140846dd9f9"
   },
   {
     "url": "js/interface/inventory.js",
-    "revision": "069abce036d24171e6761df3e585fe8f"
+    "revision": "c7760482b3df15ce6da37616f987b6ca"
   },
   {
     "url": "js/interface/profile/page.js",
@@ -5337,27 +5391,27 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/profile/pages/quest.js",
-    "revision": "5bfe2169cf7198517cde33640a13ac15"
+    "revision": "f9c6ec1bccc2a2cf3f8572d70386ffdb"
   },
   {
     "url": "js/interface/profile/pages/settings.js",
-    "revision": "4ff660208cc48102d2c98b81b987cda3"
+    "revision": "4000def6df8e81c42b6db9687caf409c"
   },
   {
     "url": "js/interface/profile/pages/state.js",
-    "revision": "8b7eecc6388c6db0b6de50c98c01d5b2"
+    "revision": "c1db4e9856d06b229441f85e72b52ceb"
   },
   {
     "url": "js/interface/profile/profile.js",
-    "revision": "83ec2aec9d12af8ba94757f08e85a57b"
+    "revision": "6e54de4863b974b98ba72c873d51aeba"
   },
   {
     "url": "js/interface/shop.js",
-    "revision": "59db1d30ed79f8f7edfc0756775d9401"
+    "revision": "f893f5a4c7d38a0f81b60d8a64fd0402"
   },
   {
     "url": "js/interface/warp.js",
-    "revision": "362b90c659ef623a1b0d225137d534d6"
+    "revision": "7b32a405d04950b50714960c7f08f757"
   },
   {
     "url": "js/lib/astar.js",
@@ -5409,7 +5463,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/connection.js",
-    "revision": "f89ad84460220b19858e88fbda5a05d7"
+    "revision": "640dc1b59093d7b7488de6e40a80a1e1"
   },
   {
     "url": "js/network/impl/teamwar.js",
@@ -5417,7 +5471,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/messages.js",
-    "revision": "15eea4df6b310b56d0697e575377ca2d"
+    "revision": "8be58bc0aed7050fd1c4193a8ec38ac1"
   },
   {
     "url": "js/network/packets.js",
@@ -5433,7 +5487,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/camera.js",
-    "revision": "530f3ebca5f60460c9edc049910ac4d9"
+    "revision": "6f85e26189e14253701394f0468f5d80"
   },
   {
     "url": "js/renderer/grids.js",
@@ -5457,7 +5511,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "8b7394f50b6b0d4bc3f1090e606e7a82"
+    "revision": "bf85e83dddda8353581c17a4ff43bbd1"
   },
   {
     "url": "js/renderer/tile.js",
@@ -5509,7 +5563,7 @@ self.__precacheManifest = [
   },
   {
     "url": "lib/pwa.js",
-    "revision": "a381e9b7b7d731712ad2153dac9a10e8"
+    "revision": "41ea9c9d5159526df8d53d1e0bee081a"
   },
   {
     "url": "lib/socket.io.js",
@@ -5517,7 +5571,7 @@ self.__precacheManifest = [
   },
   {
     "url": "manifest.json",
-    "revision": "0726407f74d78751653341c1f6ca280c"
+    "revision": "39f63b5fe8ef6a350231acf9bdea944d"
   },
   {
     "url": "robots.txt",
@@ -5529,8 +5583,3 @@ self.__precacheManifest = [
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-
-workbox.routing.registerRoute(/txt|xml|html|css|js|json/, new workbox.strategies.NetworkFirst({ "cacheName":"web", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 86400, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
-workbox.routing.registerRoute(/ico|png|gif|jpg/, new workbox.strategies.NetworkFirst({ "cacheName":"images", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 604800, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
-workbox.routing.registerRoute(/woff|eot|woff2|ttf|svg/, new workbox.strategies.NetworkFirst({ "cacheName":"audio", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 604800, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
-workbox.routing.registerRoute(/mp3/, new workbox.strategies.NetworkFirst({ "cacheName":"fonts", plugins: [new workbox.expiration.Plugin({ maxAgeSeconds: 604800, purgeOnQuotaError: false }), new workbox.cacheableResponse.Plugin({ statuses: [ 0, 200 ], headers: { 'x-test': 'true' } })] }), 'GET');
