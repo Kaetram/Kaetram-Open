@@ -27,8 +27,10 @@ define(['jquery', './camera', './tile',
             if (!Detect.supportsWebGL()) {
                 self.backContext = self.background.getContext('2d'); // Background
                 self.foreContext = self.foreground.getContext('2d'); // Foreground
-            } else
+            } else {
                 self.backContext = self.background.getContext('webgl') || self.background.getContext('experimental-webgl');
+                self.foreContext = self.foreground.getContext('webgl') || self.foreground.getContext('experimental-webgl');
+            }
 
             self.overlayContext = self.overlay.getContext('2d'); // Lighting
             self.textContext = self.textCanvas.getContext('2d'); // Texts
@@ -263,7 +265,7 @@ define(['jquery', './camera', './tile',
 
                 self.game.lastTime = self.game.time;
 
-                self.map.webGLMap.tileScale = 1;
+                self.map.webGLMap.tileScale = 3;
 
                 self.map.webGLMap.update(dt);
                 self.map.webGLMap.draw(self.camera.x, self.camera.y);
