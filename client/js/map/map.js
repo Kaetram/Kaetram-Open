@@ -100,9 +100,6 @@ define(['jquery'], function($) {
                 }
             }
 
-            log.info('Syncing');
-
-
             if (self.webGLMap)
                 self.synchronizeWebGL(tileData);
 

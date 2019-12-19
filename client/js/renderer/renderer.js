@@ -259,7 +259,7 @@ define(['jquery', './camera', './tile',
         draw: function() {
             var self = this;
 
-            if (self.webGL) {
+            if (self.webGL) { // Do the WebGL Rendering here
 
                 var dt = self.game.time - self.game.lastTime;
 
@@ -270,7 +270,7 @@ define(['jquery', './camera', './tile',
                 self.map.webGLMap.update(dt);
                 self.map.webGLMap.draw(self.camera.x, self.camera.y);
 
-            } else {
+            } else { // Canvas rendering.
 
                 if (self.hasRenderedFrame())
                     return;
@@ -1167,7 +1167,7 @@ define(['jquery', './camera', './tile',
             self.mEdge = Detect.isEdge();
             self.webGL = Detect.supportsWebGL();
 
-            self.animateTiles = !self.firefox && !self.mEdge;
+            //self.animateTiles = !self.firefox && !self.mEdge;
         },
 
         verifyCentration: function() {
