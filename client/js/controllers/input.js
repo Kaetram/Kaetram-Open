@@ -10,6 +10,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             self.game = game;
             self.app = game.app;
             self.renderer = game.renderer;
+            self.map = game.map;
 
             self.selectedCellVisible = false;
             self.previousClick = {};
@@ -122,6 +123,20 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
                             break;
 
+                        case Modules.Keys.Spacebar:
+
+                            if (player.moving)
+                                break;
+
+                            if (!player.isRanged())
+                                break;
+
+                            player.frozen = true;
+
+                            self.updateFrozen(player.frozen);
+
+                            break;
+
                         case Modules.Keys.Enter:
 
                             self.chatHandler.toggle();
@@ -174,22 +189,44 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             switch(key) {
                 case Modules.Keys.W:
                 case Modules.Keys.Up:
+
                     player.moveUp = false;
+
                     break;
 
                 case Modules.Keys.A:
                 case Modules.Keys.Left:
+
                     player.moveLeft = false;
+
                     break;
 
                 case Modules.Keys.S:
                 case Modules.Keys.Down:
+
                     player.moveDown = false;
+
                     break;
 
                 case Modules.Keys.D:
                 case Modules.Keys.Right:
+
                     player.moveRight = false;
+
+                    break;
+
+                case Modules.Keys.Spacebar:
+
+                    if (player.moving)
+                        break;
+
+                    if (!player.isRanged())
+                        break;
+
+                    player.frozen = false;
+
+                    self.updateFrozen(player.frozen);
+
                     break;
             }
 
@@ -230,6 +267,9 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
             if (self.renderer.mobile && self.chatHandler.input.is(':visible') && self.chatHandler.input.val() === '')
                 self.chatHandler.hideInput();
+
+            if (self.map.isOutOfBounds(position.x, position.y))
+                return;
 
             if ((self.game.zoning && self.game.zoning.direction) || player.disableAction)
                 return;
@@ -303,7 +343,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             if (self.renderer.debugging)
                 self.hoveringEntity = entity;
 
-            if (!entity || (entity.id === player.id) || entity.type === 'player') {
+            if (!entity || (entity.id === player.id)) {
                 self.setCursor(self.cursors['hand']);
                 self.hovering = null;
             } else {
@@ -322,6 +362,14 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                     case 'npc':
                         self.setCursor(self.cursors['talk']);
                         self.hovering = Modules.Hovering.NPC;
+                        break;
+
+                    case 'player':
+                        if (entity.pvp && self.game.pvp) {
+                            self.setCursor(self.getAttackCursor());
+                            self.hovering = Modules.Hovering.Player;
+                        }
+
                         break;
                 }
             }
@@ -421,6 +469,10 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 dw: sprite.width * superScale,
                 dh: sprite.height * superScale
             };
+        },
+
+        updateFrozen: function(state) {
+            this.game.socket.send(Packets.Movement, [Packets.MovementOpcode.Freeze, state]);
         },
 
         isTargetable: function(entity) {

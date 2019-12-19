@@ -210,25 +210,25 @@ define(function() {
             switch (direction) {
                 case Modules.Orientation.Up:
 
-                    self.setGridPosition(self.gridX, self.gridY - self.gridHeight + 2);
+                    self.setGridPosition(self.gridX, self.gridY - self.gridHeight + 3);
 
                     break;
 
                 case Modules.Orientation.Down:
 
-                    self.setGridPosition(self.gridX, self.gridY + self.gridHeight - 2);
+                    self.setGridPosition(self.gridX, self.gridY + self.gridHeight - 3);
 
                     break;
 
                 case Modules.Orientation.Right:
 
-                    self.setGridPosition(self.gridX + self.gridWidth - 2, self.gridY);
+                    self.setGridPosition(self.gridX + self.gridWidth - 3, self.gridY);
 
                     break;
 
                 case Modules.Orientation.Left:
 
-                    self.setGridPosition(self.gridX - self.gridWidth + 2, self.gridY);
+                    self.setGridPosition(self.gridX - self.gridWidth + 3, self.gridY);
 
                     break;
             }
@@ -266,7 +266,15 @@ define(function() {
             for(var y = self.gridY - offset, maxY = y + self.gridHeight + (offset * 2); y < maxY; y++)
                 {for(var x = self.gridX - offset, maxX = x + self.gridWidth + (offset * 2); x < maxX; x++)
                     callback(x, y);}
+        },
+
+        isVisible: function(x, y, offset) {
+            return x > this.gridX - offset &&
+                    x < this.gridX + this.gridWidth &&
+                    y > this.gridY - offset &&
+                    y < this.gridY + this.gridHeight;
         }
+
     });
 
 });

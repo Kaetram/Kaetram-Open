@@ -552,6 +552,9 @@ class Player extends Character {
     incrementCheatScore(amount) {
         let self = this;
 
+        if (self.combat.started)
+            return;
+
         self.cheatScore += amount;
 
         if (self.cheatScoreCallback)
@@ -565,6 +568,9 @@ class Player extends Character {
          * No need to update if the state is the same
          */
 
+        if (!self.region)
+            return;
+
         if (self.pvp === pvp || self.permanentPVP)
             return;
 
@@ -576,7 +582,7 @@ class Player extends Character {
         self.pvp = pvp;
         self.permanentPVP = permanent;
 
-        self.sendToRegion(new Messages.PVP(self.instance, self.pvp));
+        self.sendToAdjacentRegions(self.region, new Messages.PVP(self.instance, self.pvp));
     }
 
     updateOverlay(overlay) {
@@ -703,9 +709,8 @@ class Player extends Character {
          * the player's movement speed. We then just broadcast it.
          */
 
-        self.movementSpeed = Utils.randomInt(movementSpeed - 2, movementSpeed + 2);
+        self.movementSpeed = movementSpeed;
 
-        // Spice things up a bit.
         return self.movementSpeed;
     }
 

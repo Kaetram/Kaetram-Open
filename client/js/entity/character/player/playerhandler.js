@@ -27,7 +27,7 @@ define(function() {
             var self = this;
 
             self.player.onRequestPath(function(x, y) {
-                if (self.player.dead)
+                if (self.player.dead || self.player.frozen)
                     return null;
 
                 var ignores = [self.player];
@@ -40,6 +40,8 @@ define(function() {
 
             self.player.onStartPathing(function(path) {
                 var i = path.length - 1;
+
+                self.player.moving = true;
 
                 self.input.selectedX = path[i][0];
                 self.input.selectedY = path[i][1];
@@ -82,6 +84,8 @@ define(function() {
 
                 self.game.storage.setOrientation(self.player.orientation);
 
+                self.player.moving = false;
+
             });
 
             self.player.onBeforeStep(function() {
@@ -105,12 +109,6 @@ define(function() {
 
                 if (!self.camera.centered || self.camera.lockX || self.camera.lockY)
                     self.checkBounds();
-
-                self.player.forEachAttacker(function(attacker) {
-
-                    if (!attacker.stunned)
-                        attacker.follow(self.player);
-                });
 
                 self.socket.send(Packets.Movement, [Packets.MovementOpcode.Step, self.player.gridX, self.player.gridY]);
             });
@@ -161,20 +159,23 @@ define(function() {
         checkBounds: function() {
             var self = this,
                 x = self.player.gridX - self.camera.gridX,
-                y = self.player.gridY - self.camera.gridY,
-                isBorder = false;
+                y = self.player.gridY - self.camera.gridY;
 
             if (x === 0)
                 self.game.zoning.setLeft();
             else if (y === 0)
                 self.game.zoning.setUp();
-            else if (x === self.camera.gridWidth - 1)
+            else if (x === self.camera.gridWidth - 2)
                 self.game.zoning.setRight();
-            else if (y === self.camera.gridHeight - 1)
+            else if (y === self.camera.gridHeight - 2)
                 self.game.zoning.setDown();
 
             if (self.game.zoning.direction !== null) {
-                self.camera.zone(self.game.zoning.getDirection());
+                var direction = self.game.zoning.getDirection();
+
+                self.camera.zone(direction);
+
+                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Zone, direction]);
 
                 self.renderer.updateAnimatedTiles();
 

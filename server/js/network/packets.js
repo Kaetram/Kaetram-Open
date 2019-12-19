@@ -71,7 +71,8 @@ Packets.MovementOpcode = {
     Follow: 6,
     Entity: 7,
     Freeze: 8,
-    Stunned: 9
+    Stunned: 9,
+    Zone: 10
 };
 
 Packets.TargetOpcode = {
@@ -169,7 +170,8 @@ Packets.ShopOpcode = {
     Open: 0,
     Buy: 1,
     Sell: 2,
-    Refresh: 3
+    Refresh: 3,
+    Select: 4
 };
 
 Packets.MinigameOpcode = {

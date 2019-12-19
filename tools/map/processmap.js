@@ -49,13 +49,13 @@ module.exports = function parse(json, options) {
             map.high = [];
 
             map.animated = {};
+            map.depth = 1;
 
             break;
 
         case 'server':
 
             map.tilesets = [];
-            map.roamingAreas = [];
             map.pvpAreas = [];
             map.gameAreas = [];
             map.doors = {};
@@ -183,30 +183,6 @@ module.exports = function parse(json, options) {
 
                     break;
 
-                case 'roaming':
-
-                    let areas = layer.objects;
-
-                    for (let a = 0; a < areas.length; a++) {
-                        let count = 1;
-
-                        if (areas[a].properties)
-                            count = parseInt(areas[a].properties.count, 10);
-
-                        map.roamingAreas[a] = {
-                            id: a,
-                            x: areas[a].x / map.tilesize,
-                            y: areas[a].y / map.tilesize,
-                            width: areas[a].width / map.tilesize,
-                            height: areas[a].height / map.tilesize,
-                            type: areas[a].type,
-                            count: count
-                        }
-
-                    }
-
-                    break;
-
                 case 'chestareas':
 
                     let cAreas = layer.objects;
@@ -253,8 +229,8 @@ module.exports = function parse(json, options) {
 
                     _.each(lights, function(lightObject) {
                         let light = {
-                            x: lightObject.x / 16,
-                            y: lightObject.y / 16
+                            x: (lightObject.x / 16) + 0.5,
+                            y: (lightObject.y / 16) + 0.5
                         };
 
                         _.each(lightObject.properties, function(property) {
@@ -365,18 +341,35 @@ module.exports = function parse(json, options) {
             }
     });
 
-    for (let l = self.json.layers.length - 1; l > 0; l--)
-        parseLayer(self.json.layers[l]);
+    for (let i = self.json.layers.length; i > 0; i--)
+        parseLayer(self.json.layers[i - 1]);
 
-    if (mode === 'client')
+    if (mode === 'client') {
         for (let i = 0, max = map.data.length; i < max; i++)
             if (!map.data[i])
                 map.data[i] = 0;
+
+        map.depth = calculateDepth(map);
+    }
 
     if (mode === 'info')
         map.collisions = [];
 
     return map;
+};
+
+let calculateDepth = function(map) {
+    let depth = 1;
+
+    _.each(map.data, (info) => {
+        if (!_.isArray(info))
+            return;
+
+        if (info.length > depth)
+            depth = info.length;
+    });
+
+    return depth;
 };
 
 let isValid = function(number) {

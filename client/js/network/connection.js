@@ -703,6 +703,10 @@ define(['./impl/teamwar'], function(TeamWar) {
                 if (!entity)
                     return;
 
+                /**
+                 * Healing just triggers an info to display.
+                 */
+
                 switch (info.type) {
                     case 'health':
 
@@ -717,11 +721,6 @@ define(['./impl/teamwar'], function(TeamWar) {
                         break;
                 }
 
-                if (entity.hitPoints + info.amount > entity.maxHitPoints)
-                    entity.setHitPoints(entity.maxHitPoints);
-                else
-                    entity.setHitPoints(entity.hitPoints + info.amount);
-
                 entity.triggerHealthBar();
             });
 
@@ -731,12 +730,20 @@ define(['./impl/teamwar'], function(TeamWar) {
                 if (!entity || entity.type !== 'player')
                     return;
 
+                /**
+                 * We only receive level information about other entities.
+                 */
                 if (entity.level !== info.level) {
 
                     entity.level = info.level;
                     self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
 
                 }
+
+                /**
+                 * When we receive experience information about our own player
+                 * we update the experience bar and create an info.
+                 */
 
                 if (entity.id === self.game.player.id) {
 
@@ -756,13 +763,13 @@ define(['./impl/teamwar'], function(TeamWar) {
                 if (!entity || id !== self.game.player.id)
                     return;
 
+                self.audio.stop();
+
                 //self.audio.play(Modules.AudioTypes.SFX, 'death');
 
                 self.game.player.dead = true;
                 self.game.player.removeTarget();
                 self.game.player.orientation = Modules.Orientation.Down;
-
-                self.audio.stop();
 
                 self.app.body.addClass('death');
             });
@@ -938,7 +945,7 @@ define(['./impl/teamwar'], function(TeamWar) {
             self.messages.onPVP(function(id, pvp) {
 
                 if (self.game.player.id === id)
-                    self.pvp = pvp;
+                    self.game.pvp = pvp;
                 else {
                     var entity = self.entities.get(id);
 
@@ -964,6 +971,13 @@ define(['./impl/teamwar'], function(TeamWar) {
                         break;
 
                     case Packets.ShopOpcode.Sell:
+
+                        break;
+
+                    case Packets.ShopOpcode.Select:
+
+                        if (self.interface.shop.isShopOpen(info.id))
+                            self.interface.shop.move(info);
 
                         break;
 
