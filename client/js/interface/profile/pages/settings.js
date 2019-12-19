@@ -96,10 +96,7 @@ define(['jquery', '../page'], function($, Page) {
 
             self.cameraCheck.click(function() {
                 var active = self.cameraCheck.hasClass('active');
-
-                /* Firefox and Edge have outdated rendering engines. */
-
-
+e
                 if (active)
                     self.renderer.camera.decenter();
                 else
