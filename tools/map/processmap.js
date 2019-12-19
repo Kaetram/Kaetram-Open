@@ -62,7 +62,7 @@ module.exports = function parse(json, options) {
             map.cameraAreas = [];
 
             map.lights = [];
-            map.plateau = [];
+            map.plateau = {};
 
             break;
     }
@@ -393,14 +393,15 @@ let parseLayer = function(layer) {
             if (bGid && bGid > 0)
                 map.collisions.push(j);
         }
-    } else if (name === 'plateau' && mode === 'server') {
+    } else if (name.startsWith('plateau') && mode === 'server') {
         for (let j = 0; j < tiles.length; j++) {
-            let pGid = tiles[j];
+            let pGid = tiles[j],
+                level = parseInt(name.split('plateau')[1]);
 
             if (pGid && pGid > 0)
-                map.plateau.push(j);
+                map.plateau[j] = level;
         }
-    } else if (type === 'tilelayer' && layer.visible !== 0 && name !== 'entities' && name !== 'plateau') {
+    } else if (type === 'tilelayer' && layer.visible !== 0 && name !== 'entities' && !name.startsWith('plateau')) {
 
         for (let k = 0; k < tiles.length; k++) {
             let tGid = tiles[k];
@@ -423,3 +424,16 @@ let parseLayer = function(layer) {
     }
 
 };
+
+
+if ( typeof String.prototype.startsWith !== 'function' ) {
+    String.prototype.startsWith = function(str) {
+        return str.length > 0 && this.substring( 0, str.length ) === str;
+    };
+}
+
+if ( typeof String.prototype.endsWith !== 'function' ) {
+    String.prototype.endsWith = function(str) {
+        return str.length > 0 && this.substring( this.length - str.length, this.length ) === str;
+    };
+}
