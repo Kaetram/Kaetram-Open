@@ -309,9 +309,8 @@ define(['jquery', './camera', './tile',
             if (!self.animateTiles || self.webGL)
                 return;
 
-            self.saveDrawing();
-
-            self.updateDrawingView();
+            self.context.save();
+            self.setCameraView(self.context);
 
             self.forEachAnimatedTile(function(tile) {
                 if (!self.camera.isVisible(tile.x, tile.y, 3))
@@ -319,11 +318,11 @@ define(['jquery', './camera', './tile',
 
                 tile.animate(self.game.time);
 
-                self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
+                self.drawTile(self.context, tile.id, self.map.width, tile.index);
 
             });
 
-            self.restoreDrawing();
+            self.context.restore();
         },
 
         drawOverlays: function() {
@@ -389,6 +388,8 @@ define(['jquery', './camera', './tile',
             if (self.game.player.dead)
                 return;
 
+            self.setCameraView(self.context);
+
             self.forEachVisibleEntity(function(entity) {
                 if (!entity) return;
 
@@ -415,7 +416,7 @@ define(['jquery', './camera', './tile',
                 flipY = dy + data.height;
 
             self.context.save();
-            self.setCameraView(self.context);
+
 
             if (data.sprite !== sprite) {
 
