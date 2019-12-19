@@ -135,7 +135,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/interface.css",
-    "revision": "1acec8b00001dd375d8e0d427787b822"
+    "revision": "d7e5a52c7461d6727f131c2040b02371"
   },
   {
     "url": "css/main.css",
@@ -155,11 +155,11 @@ self.__precacheManifest = [
   },
   {
     "url": "data/maps/map.js",
-    "revision": "0b5585d1a9980835fe27ade48af35711"
+    "revision": "9df575b24a537f89cfd8631dc45ac555"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "2cc950f18eb7570be4ec56b43418fab8"
+    "revision": "8c1ce0d43623f6bc7709503c291e3a4a"
   },
   {
     "url": "data/sprites.json",
@@ -5214,12 +5214,32 @@ self.__precacheManifest = [
     "revision": "865ec535f921709b68d62654abe5993e"
   },
   {
+    "url": "img/tilesets/tilesheet-1.png",
+    "revision": "4ed6ad19567e986eeea6165090e38fae"
+  },
+  {
+    "url": "img/tilesets/tilesheet-2.png",
+    "revision": "542cc171d76067629a2579a4538d9594"
+  },
+  {
+    "url": "img/tilesets/tilesheet-3.png",
+    "revision": "c47d61b646854f4199b212a32f0547b4"
+  },
+  {
+    "url": "img/tilesets/tilesheet-4.png",
+    "revision": "1d606e8c58f3d06831d9a9ca2d04b5e4"
+  },
+  {
+    "url": "img/tilesets/tilesheet-5.png",
+    "revision": "a4abbe9197e99606af0d99689e7b993f"
+  },
+  {
     "url": "img/tilesets/tilesheet.png",
     "revision": "3a600f069fc12025e1b77c9ab392b3b5"
   },
   {
     "url": "index.html",
-    "revision": "d26bf8a2deb77773fcf802e1b0604d4b"
+    "revision": "464684bda1ece3a3ff2917af038e399f"
   },
   {
     "url": "js/app.js",
@@ -5251,7 +5271,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/controllers/input.js",
-    "revision": "6c98ce90377b4178532e4333b2b005e6"
+    "revision": "23df3a4c0adbecfbae14be298390d81a"
   },
   {
     "url": "js/controllers/interface.js",
@@ -5279,7 +5299,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/character/character.js",
-    "revision": "65760e9cccf782f14e0826861f722946"
+    "revision": "c5e6c92983028e2d9678406710d5b79d"
   },
   {
     "url": "js/entity/character/mob/mob.js",
@@ -5315,11 +5335,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/character/player/player.js",
-    "revision": "7a4bdbc5f72386453aaf24959b1d278f"
+    "revision": "fc789884604c08cbaa8d33445d5f00a3"
   },
   {
     "url": "js/entity/character/player/playerhandler.js",
-    "revision": "d898878df5d575428a9278a9ace19348"
+    "revision": "55b7306b01edcc6e4df1888156e61bac"
   },
   {
     "url": "js/entity/entity.js",
@@ -5327,7 +5347,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/entityhandler.js",
-    "revision": "ea18a124f0570dac8dbc0de0c3c0d21d"
+    "revision": "cb7bb54cb1587499ed59fc6204ac2929"
   },
   {
     "url": "js/entity/objects/chest.js",
@@ -5343,11 +5363,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/sprite.js",
-    "revision": "370f79ef1d42fd82749b50d270232fa5"
+    "revision": "e061f428a34281a96b168c23f98d3c4e"
   },
   {
     "url": "js/game.js",
-    "revision": "d66ee04771458803d4955f64b054cf4c"
+    "revision": "2193300af3a44cfc567ad305a7bfa967"
   },
   {
     "url": "js/interface/abilities.js",
@@ -5379,7 +5399,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/inventory.js",
-    "revision": "c7760482b3df15ce6da37616f987b6ca"
+    "revision": "b79573dcd539da376da7b8eb8d93bfef"
   },
   {
     "url": "js/interface/profile/page.js",
@@ -5395,7 +5415,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/profile/pages/settings.js",
-    "revision": "4000def6df8e81c42b6db9687caf409c"
+    "revision": "f10325b56877890e66afa9e1fc8d70ef"
   },
   {
     "url": "js/interface/profile/pages/state.js",
@@ -5407,11 +5427,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/shop.js",
-    "revision": "f893f5a4c7d38a0f81b60d8a64fd0402"
+    "revision": "774cef246add033eef981150c72ef1f8"
   },
   {
     "url": "js/interface/warp.js",
-    "revision": "7b32a405d04950b50714960c7f08f757"
+    "revision": "df80b50208e558852bd92e56d9dc85e6"
   },
   {
     "url": "js/lib/astar.js",
@@ -5455,7 +5475,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/map/map.js",
-    "revision": "132ebccc541037b4f227d33790566789"
+    "revision": "cba2dd460815c5bdd80c8850cceeaffd"
   },
   {
     "url": "js/map/mapworker.js",
@@ -5463,7 +5483,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/connection.js",
-    "revision": "640dc1b59093d7b7488de6e40a80a1e1"
+    "revision": "bd66395b5aa4b414303cd0b6380d4474"
   },
   {
     "url": "js/network/impl/teamwar.js",
@@ -5475,7 +5495,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/packets.js",
-    "revision": "a18326864e8ebfe62f7ab1c2989ef0cb"
+    "revision": "5eaaf2b9aa6809369f9bb3cf0a62a3b3"
   },
   {
     "url": "js/network/socket.js",
@@ -5487,7 +5507,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/camera.js",
-    "revision": "6f85e26189e14253701394f0468f5d80"
+    "revision": "7c82b6f70715010a9998ce16a9ad8b4a"
   },
   {
     "url": "js/renderer/grids.js",
@@ -5511,15 +5531,15 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "bf85e83dddda8353581c17a4ff43bbd1"
+    "revision": "68ae4d125c6dd721887f202eeaa426e4"
   },
   {
     "url": "js/renderer/tile.js",
-    "revision": "9cd5738df647fddb0d8eda3c9e288597"
+    "revision": "1d35af512b6ff5a41f1fcf71323a66f3"
   },
   {
     "url": "js/renderer/updater.js",
-    "revision": "0105bb4f576697c3fe53d942188ed4fb"
+    "revision": "a0ac9f48016bca8922cc1fd96ef3b282"
   },
   {
     "url": "js/text.js",
@@ -5527,11 +5547,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/utils/detect.js",
-    "revision": "150c6b147a5add047b3aa2eac484be7d"
+    "revision": "b16597fdab6d94071b81f7e9d5ee5890"
   },
   {
     "url": "js/utils/modules.js",
-    "revision": "412737bd5032cdaf8c8e2cd00539d720"
+    "revision": "22471fa74dea660b01e8f61f8558499d"
   },
   {
     "url": "js/utils/pathfinder.js",
@@ -5558,6 +5578,14 @@ self.__precacheManifest = [
     "revision": "4a2178e98a5ad055f388c82504536ac6"
   },
   {
+    "url": "lib/gl-tiled.js",
+    "revision": "6e6c8df533f84a8ff01aa91e4e1b51d8"
+  },
+  {
+    "url": "lib/gl-tiled.resource-loader.js",
+    "revision": "899aff2e0e391495e48a84f3b24186e6"
+  },
+  {
     "url": "lib/illuminated.js",
     "revision": "72ae0223710a4849af39c54299bc4ed7"
   },
@@ -5571,7 +5599,7 @@ self.__precacheManifest = [
   },
   {
     "url": "manifest.json",
-    "revision": "39f63b5fe8ef6a350231acf9bdea944d"
+    "revision": "86a0899ca7f160da54abba83d6d52c5f"
   },
   {
     "url": "robots.txt",

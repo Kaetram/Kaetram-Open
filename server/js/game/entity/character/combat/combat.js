@@ -122,11 +122,11 @@ class Combat {
 
         if (self.character.hasTarget() && self.inProximity()) {
 
-            if (self.queue.hasQueue())
-                self.hit(self.character, self.character.target, self.queue.getHit());
-
             if (self.character.target && !self.character.target.isDead())
                 self.attack(self.character.target);
+
+            if (self.queue.hasQueue())
+                self.hit(self.character, self.character.target, self.queue.getHit());
 
             self.sync();
 
@@ -164,6 +164,17 @@ class Combat {
                     self.follow(self.character, attacker);
 
             }
+        }
+
+        if (self.isPlayer()) {
+            if (!self.character.hasTarget())
+                return;
+
+            if (self.character.target.type !== 'player')
+                return;
+
+            if (!self.inProximity())
+                self.follow(self.character, self.character.target);
         }
     }
 
@@ -242,7 +253,7 @@ class Combat {
         if (!self.character.target || !self.inProximity())
             return;
 
-        self.stop();
+        //self.stop();
         self.start();
 
         self.attackCount(2, self.character.target);
@@ -468,14 +479,14 @@ class Combat {
         if (!self.character.hasTarget() || self.character.target.isDead())
             return;
 
-        let ignores = [self.character.instance, self.character.target.instance];
+        //let ignores = [self.character.instance, self.character.target.instance];
 
-        self.world.push(Packets.PushOpcode.Selectively, {
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.character.region,
             message: new Messages.Movement(Packets.MovementOpcode.Follow, {
                 attackerId: self.character.instance,
                 targetId: self.character.target.instance
-            }),
-            ignores: ignores
+            })
         });
 
     }

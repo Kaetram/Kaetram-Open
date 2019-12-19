@@ -29,6 +29,7 @@ class Handler {
         self.updateInterval = setInterval(() => {
 
             self.detectAggro();
+            self.detectPVP(self.player.x, self.player.y);
 
             if (self.updateTicks % 4 === 0) // Every 4 (1.6 seconds) update ticks.
                 self.handlePoison();
@@ -47,7 +48,6 @@ class Handler {
 
             self.player.checkRegions();
 
-            self.detectPVP(x, y);
             self.detectMusic(x, y);
             self.detectOverlay(x, y);
             self.detectCamera(x, y);
@@ -233,8 +233,6 @@ class Handler {
             if (self.map.nearLight(light, x, y) && !self.player.hasLoadedLight(light)) {
 
                 // Add a half a tile offset so the light is centered on the tile.
-                light.x += 0.5;
-                light.y += 0.5;
 
                 self.player.lightsLoaded.push(light);
                 self.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));

@@ -23,8 +23,15 @@ define(['jquery', './camera', './tile',
             self.cursor = cursor;
 
             self.context = self.entities.getContext('2d'); // Entities
-            self.backContext = self.background.getContext('2d'); // Background
-            self.foreContext = self.foreground.getContext('2d'); // Foreground
+
+            if (!Detect.supportsWebGL()) {
+                self.backContext = self.background.getContext('2d'); // Background
+                self.foreContext = self.foreground.getContext('2d'); // Foreground
+            } else {
+                self.backContext = self.background.getContext('webgl') || self.background.getContext('experimental-webgl');
+                self.foreContext = self.foreground.getContext('webgl') || self.foreground.getContext('experimental-webgl');
+            }
+
             self.overlayContext = self.overlay.getContext('2d'); // Lighting
             self.textContext = self.textCanvas.getContext('2d'); // Texts
             self.cursorContext = self.cursor.getContext('2d'); // Cursor
@@ -33,8 +40,8 @@ define(['jquery', './camera', './tile',
 
             self.allContexts = [self.context, self.backContext, self.foreContext, self.overlayContext, self.textContext, self.cursorContext];
 
-            self.contexts = [self.context, self.textContext];
-            self.drawingContexts = [self.backContext, self.foreContext, self.overlayContext]; // For drawing the map.
+            self.contexts = [self.context, self.textContext, self.overlayContext];
+            self.drawingContexts = [self.backContext, self.foreContext]; // For drawing the map.
 
 
             self.lightings = [];
@@ -44,8 +51,6 @@ define(['jquery', './camera', './tile',
             self.camera = null;
             self.entities = null;
             self.input = null;
-
-            self.checkDevice();
 
             self.tileSize = 16;
             self.fontSize = 16;
@@ -76,6 +81,7 @@ define(['jquery', './camera', './tile',
             self.drawNames = true;
             self.drawLevels = true;
             self.forceRendering = false;
+            self.animatedTilesDrawCalls = 0;
 
             self.load();
         },
@@ -100,12 +106,16 @@ define(['jquery', './camera', './tile',
             self.superScaling = self.getSuperScaling();
 
             self.loadLights();
+            self.checkDevice();
         },
 
         removeSmoothing: function() {
             var self = this;
 
             self.forAllContexts(function(context) {
+                if (!context)
+                    return;
+
                 context.imageSmoothingQuality = 'low';
 
                 context.imageSmoothingEnabled = false;
@@ -134,6 +144,7 @@ define(['jquery', './camera', './tile',
                 canvas.width = self.canvasWidth;
                 canvas.height = self.canvasHeight;
             });
+
         },
 
         loadCamera: function() {
@@ -144,7 +155,7 @@ define(['jquery', './camera', './tile',
 
             self.loadSizes();
 
-            if (storage.data.new && (self.firefox || parseFloat(Detect.androidVersion()) < 6.0 || parseFloat(Detect.iOSVersion() < 9.0) || Detect.isIpad())) {
+            if (storage.data.new && (self.mEdge || self.firefox || parseFloat(Detect.androidVersion()) < 6.0 || parseFloat(Detect.iOSVersion() < 9.0) || Detect.isIpad())) {
                 self.camera.centered = false;
 
                 storage.data.settings.centerCamera = false;
@@ -197,6 +208,8 @@ define(['jquery', './camera', './tile',
 
                     self.updateAnimatedTiles();
 
+                    self.forceRendering = true;
+
                 }, 500);
         },
 
@@ -211,13 +224,13 @@ define(['jquery', './camera', './tile',
 
             self.removeSmoothing();
 
-            self.draw();
-
             /**
              * Rendering related draws
              */
 
             self.draw();
+
+            self.drawAnimatedTiles();
 
             self.drawOverlays();
 
@@ -246,39 +259,71 @@ define(['jquery', './camera', './tile',
         draw: function() {
             var self = this;
 
-            if (self.hasRenderedFrame())
+            if (self.webGL) {
+
+                var dt = self.game.time - self.game.lastTime;
+
+                self.game.lastTime = self.game.time;
+
+                self.map.webGLMap.tileScale = 3;
+
+                self.map.webGLMap.update(dt);
+                self.map.webGLMap.draw(self.camera.x, self.camera.y);
+
+            } else {
+
+                if (self.hasRenderedFrame())
+                    return;
+
+                self.clearDrawing();
+                self.saveDrawing();
+
+                self.updateDrawingView();
+
+                self.forEachVisibleTile(function(id, index) {
+                    var isHighTile = self.map.isHighTile(id),
+                        context = isHighTile ? self.foreContext : self.backContext;
+
+                    // Only do the lighting logic if there is an overlay.
+                    if (self.game.overlays.getFog()) {
+                        var isLightTile = self.map.isLightTile(id);
+
+                        context = isLightTile ? self.overlayContext : context;
+                    }
+
+                    if (!self.map.isAnimatedTile(id) || !self.animateTiles)
+                        self.drawTile(context, id, self.map.width, index);
+                });
+
+                self.restoreDrawing();
+
+                self.saveFrame();
+
+            }
+
+        },
+
+        drawAnimatedTiles: function() {
+            var self = this;
+
+            if (!self.animateTiles || self.webGL)
                 return;
 
-            self.clearDrawing();
             self.saveDrawing();
 
             self.updateDrawingView();
 
-            self.forEachVisibleTile(function(id, index) {
-                var isHighTile = self.map.isHighTile(id),
-                    context = isHighTile ? self.foreContext : self.backContext;
+            self.forEachAnimatedTile(function(tile) {
+                if (!self.camera.isVisible(tile.x, tile.y, 3))
+                    return;
 
-                // Only do the lighting logic if there is an overlay.
-                if (self.game.overlays.getFog()) {
-                    var isLightTile = self.map.isLightTile(id);
+                tile.animate(self.game.time);
 
-                    context = isLightTile ? self.overlayContext : context;
-                }
+                self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
 
-                if (!self.map.isAnimatedTile(id) || !self.animateTiles)
-                    self.drawTile(context, id, self.map.width, index);
             });
 
-            if (self.animateTiles)
-                self.forEachAnimatedTile(function(tile) {
-                    self.drawTile(self.backContext, tile.id, self.map.width, tile.index);
-                    tile.loaded = true;
-                });
-
-
             self.restoreDrawing();
-
-            self.saveFrame();
         },
 
         drawOverlays: function() {
@@ -286,7 +331,6 @@ define(['jquery', './camera', './tile',
                 overlay = self.game.overlays.getFog();
 
             if (overlay) {
-                self.overlayContext.save();
 
                 if (overlay !== 'empty') {
 
@@ -305,7 +349,6 @@ define(['jquery', './camera', './tile',
                 self.overlayContext.globalCompositeOperation = 'source-over';
                 self.darkMask.render(self.overlayContext);
 
-                self.overlayContext.restore();
             }
         },
 
@@ -347,6 +390,8 @@ define(['jquery', './camera', './tile',
                 return;
 
             self.forEachVisibleEntity(function(entity) {
+                if (!entity) return;
+
                 if (entity.spriteLoaded)
                     self.drawEntity(entity);
             });
@@ -901,11 +946,6 @@ define(['jquery', './camera', './tile',
             });
         },
 
-        isVisiblePosition: function(x, y) {
-            return y >= this.camera.gridY && y < this.camera.gridY + this.camera.gridHeight &&
-                x >= this.camera.gridX && x < this.camera.gridX + this.camera.gridWidth
-        },
-
         getScale: function() {
             return this.game.getScaleFactor();
         },
@@ -958,7 +998,7 @@ define(['jquery', './camera', './tile',
         hasRenderedFrame: function() {
             var self = this;
 
-            if (self.forceRendering)
+            if (self.forceRendering || (self.mobile && self.camera.centered))
                 return false;
 
             if (!self.camera || self.stopRendering || !self.input)
@@ -970,20 +1010,13 @@ define(['jquery', './camera', './tile',
         saveFrame: function() {
             var self = this;
 
+            if (self.mobile && self.camera.centered)
+                return;
+
             self.renderedFrame[0] = self.camera.x;
             self.renderedFrame[1] = self.camera.y;
 
             self.forceRendering = false;
-        },
-
-        isIntersecting: function(rectOne, rectTwo) {
-            return (rectTwo.left > rectOne.right || rectTwo.right < rectOne.left || rectTwo.top > rectOne.bottom || rectTwo.bottom < rectOne.top);
-        },
-
-        focus: function() {
-            this.forEachContext(function(context) {
-                context.focus();
-            });
         },
 
         transition: function(duration, forward, callback) {
@@ -1131,6 +1164,10 @@ define(['jquery', './camera', './tile',
             self.mobile = Detect.isMobile();
             self.tablet = Detect.isTablet();
             self.firefox = Detect.isFirefox();
+            self.mEdge = Detect.isEdge();
+            self.webGL = Detect.supportsWebGL();
+
+            self.animateTiles = !self.firefox && !self.mEdge;
         },
 
         verifyCentration: function() {

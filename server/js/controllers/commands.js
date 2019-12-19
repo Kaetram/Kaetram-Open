@@ -446,6 +446,12 @@ class Commands {
 
                 break;
 
+            case 'die':
+
+                self.world.handleDeath(self.player);
+
+                break;
+
         }
     }
 

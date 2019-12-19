@@ -14,8 +14,10 @@ define(['jquery'], function($) {
             self.data = [];
             self.tilesets = [];
             self.rawTilesets = [];
+            self.lastSyncData = []; // Prevent unnecessary sync data.
 
             self.grid = null;
+            self.webGLMap = null; // Map used for rendering webGL.
 
             self.tilesetsLoaded = false;
             self.mapLoaded = false;
@@ -77,6 +79,9 @@ define(['jquery'], function($) {
             var self = this;
             // Use traditional for-loop instead of _
 
+            if (self.lastSyncData.length === tileData.length)
+                return;
+
             for (var i = 0; i < tileData.length; i++) {
                 var tile = tileData[i],
                     collisionIndex = self.collisions.indexOf(tile.index);
@@ -95,7 +100,15 @@ define(['jquery'], function($) {
                 }
             }
 
+            log.info('Syncing');
+
+
+            if (self.webGLMap)
+                self.synchronizeWebGL(tileData);
+
             self.saveRegionData();
+
+            self.lastSyncData = tileData;
         },
 
         loadTilesets: function() {
@@ -105,18 +118,30 @@ define(['jquery'], function($) {
                 return;
 
             _.each(self.rawTilesets, function(rawTileset) {
-                self.tilesets.push(self.loadTileset('img/tilesets/' + rawTileset.imageName, rawTileset));
+
+                self.loadTileset(rawTileset, function(tileset) {
+                    self.tilesets[tileset.index] = tileset;
+                    //self.tilesets.push(tileset);
+
+                    if (self.tilesets.length === self.rawTilesets.length)
+                        self.tilesetsLoaded = true;
+
+                });
+
             });
 
-            self.tilesetsLoaded = true;
         },
 
-        loadTileset: function(path, rawTileset) {
+        loadTileset: function(rawTileset, callback) {
             var self = this,
                 tileset = new Image();
 
+            tileset.index = self.rawTilesets.indexOf(rawTileset);
+            tileset.name = rawTileset.imageName;
+
             tileset.crossOrigin = 'Anonymous';
-            tileset.src = path;
+            tileset.path = 'img/tilesets/' + tileset.name;
+            tileset.src = 'img/tilesets/' + tileset.name;
             tileset.raw = tileset;
             tileset.firstGID = rawTileset.firstGID;
             tileset.lastGID = rawTileset.lastGID;
@@ -124,11 +149,15 @@ define(['jquery'], function($) {
             tileset.scale = rawTileset.scale;
 
             tileset.onload = function() {
-                if (tileset.width % self.tileSize > 0)
+                if (tileset.width % self.tileSize > 0) // Prevent uneven tilemaps from loading.
                     throw Error('The tile size is malformed in the tile set: ' + path);
+
+                callback(tileset);
             };
 
-            return tileset;
+            tileset.onerror = function() {
+                throw Error('Could not find tile set: ' + path);
+            };
         },
 
         parseMap: function(map) {
@@ -143,9 +172,129 @@ define(['jquery'], function($) {
             self.lights = map.lights;
             self.rawTilesets = map.tilesets;
             self.animatedTiles = map.animations;
+            self.depth = map.depth;
 
-            for (var i = 0; i < self.width * self.height - 20; i++)
+            for (var i = 0; i < self.width * self.height; i++)
                 self.data.push(0);
+        },
+
+        // Load the webGL map into the memory.
+        loadWebGL: function(context) {
+            var self = this,
+                map = self.formatWebGL(),
+                resources = {};
+
+            for (var i = 0; i < self.tilesets.length; i++) {
+                resources[self.tilesets[i].name] = {
+                    name: self.tilesets[i].name,
+                    url: self.tilesets[i].path,
+                    data: self.tilesets[i],
+                    extension: 'png'
+                };
+            }
+
+            if (self.webGLMap)
+                self.webGLMap.glTerminate();
+
+            self.webGLMap = new glTiled.GLTilemap(map, {
+                gl: context,
+                assetCache: resources
+            });
+
+            self.webGLMap.glInitialize(context);
+            self.webGLMap.repeatTiles = false;
+
+            context.viewport(0, 0, context.canvas.width, context.canvas.height);
+            self.webGLMap.resizeViewport(context.canvas.width, context.canvas.height);
+
+
+        },
+
+        /**
+         * To reduce development strain, we convert the entirety of the client
+         * map into the bare minimum necessary for the gl-tiled library.
+         * This is because gl-tiled uses the original Tiled mapping format.
+         * It is easier for us to adapt to that format than to rewrite
+         * the entire library adapted for Kaetram.
+         */
+
+        formatWebGL: function() {
+            // Create the object's constants.
+            var self = this,
+                object = {
+                    compressionlevel: -1,
+                    width: self.width,
+                    height: self.height,
+                    tilewidth: self.tileSize,
+                    tileheight: self.tileSize,
+                    type: 'map',
+                    version: 1.2,
+                    tiledversion: '1.3.1',
+                    orientation: 'orthogonal',
+                    renderorder: 'right-down',
+                    layers: [],
+                    tilesets: []
+                };
+
+            /* Create 'layers' based on map depth and data. */
+            for (var i = 0; i < self.depth; i++) {
+                var layerObject = {
+                    id: i,
+                    width: object.width,
+                    height: object.height,
+                    name: 'layer' + i,
+                    opacity: 1,
+                    type: 'tilelayer',
+                    visible: true,
+                    x: 0,
+                    y: 0,
+                    data: []
+                };
+
+                for (var j = 0; j < self.data.length; j++) {
+                    var tile = self.data[j];
+
+                    if (Array.isArray(tile)) {
+                        if (tile[i])
+                            layerObject.data[j] = tile[i];
+                        else
+                            layerObject.data[j] = 0;
+                    } else
+                        if (i === 0)
+                            layerObject.data[j] = tile;
+                        else
+                            layerObject.data[j] = 0;
+
+                }
+
+                object.layers.push(layerObject);
+            }
+
+            for (var i = 0; i < self.tilesets.length; i++)
+                object.tilesets.push({
+                    columns: 64,
+                    margin: 0,
+                    spacing: 0,
+                    firstgid: self.tilesets[i].firstGID,
+                    image: self.tilesets[i].name,
+                    imagewidth: self.tilesets[i].width,
+                    imageheight: self.tilesets[i].height,
+                    name: self.tilesets[i].name.split('.png')[0],
+                    tilecount: (self.tilesets[i].width / 16) * (self.tilesets[i].height / 16),
+                    tilewidth: object.tilewidth,
+                    tileheight: object.tileheight
+                });
+
+            if (self.game.isDebug())
+                log.info('Successfully generated the WebGL map.');
+
+            return object;
+        },
+
+        synchronizeWebGL: function(tileData) {
+            var self = this;
+
+            self.loadWebGL(self.renderer.backContext);
         },
 
         loadCollisions: function() {
@@ -253,13 +402,13 @@ define(['jquery'], function($) {
             return null;
         },
 
-        saveRegionData() {
+        saveRegionData: function() {
             var self = this;
 
             self.game.storage.setRegionData(self.data, self.collisions);
         },
 
-        loadRegionData() {
+        loadRegionData: function() {
             var self = this,
                 regionData = self.game.storage.getRegionData(),
                 collisions = self.game.storage.getCollisions();

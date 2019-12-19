@@ -11,6 +11,16 @@ define(['jquery', './container/container'], function($, Container) {
             self.shop = $('#shopContainer');
             self.inventory = $('#shopInventorySlots');
 
+            /**
+             * sellSlot represents what the player currently has queued for sale
+             * and sellSlotReturn shows the currency the player is receiving.
+             * The reason for this is because shops are written such that
+             * they can handle different currencies.
+             */
+
+            self.sellSlot = $('#shopInventorySell');
+            self.sellSlotReturn = $('#shopInventorySellReturn');
+
             self.player = game.player;
             self.interface = interface;
 
@@ -38,10 +48,21 @@ define(['jquery', './container/container'], function($, Container) {
             self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
         },
 
-        sell: function() {
-            var self = this;
+        select: function(event) {
+            var self = this,
+                id = event.currentTarget.id.substring(17);
 
+            self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, self.openShop, id]);
+        },
 
+        move: function(info) {
+            var self = this,
+                inventorySlot = self.getInventoryList().find('#shopInventorySlot' + info.slotId);
+
+            log.info('Moving');
+            log.info(inventorySlot);
+
+            log.info(info);
         },
 
         /**
@@ -121,6 +142,12 @@ define(['jquery', './container/container'], function($, Container) {
             for (var j = 0; j < inventorySize; j++) {
                 var item = $(inventoryItems[j]).clone(),
                     slot = item.find('#bankInventorySlot' + j);
+
+                slot.attr('id', 'shopInventorySlot' + j);
+
+                slot.click(function(event) {
+                    self.select(event);
+                });
 
                 self.getInventoryList().append(slot);
             }

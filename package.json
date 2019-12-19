@@ -1,6 +1,6 @@
 {
     "name": "kaetram",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "private": false,
     "author": "Veradictus",
     "main": "server/js/main.js",
