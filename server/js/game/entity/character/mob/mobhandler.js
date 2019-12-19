@@ -58,10 +58,13 @@ class MobHandler {
                     return;
 
                 /**
-                 * Prevents mobs from entering areas not the same as theirs.
-                 * Mobs inside the plateau cannot enter areas outside of it and vice versa.
+                 * An expansion of the plateau level present in BrowserQuest.
+                 * Because is far more complex, we will require multiple levels
+                 * of plateau in order to properly roam entities without them
+                 * walking into other regions (or clipping).
                  */
-                if (self.mob.getPlateauState() !== self.map.isPlateau(newX, newY))
+
+                if (self.mob.getPlateauLevel() !== self.map.getPlateauLevel(newX, newY))
                     return;
 
                 self.mob.setPosition(newX, newY);
