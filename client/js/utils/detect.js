@@ -90,7 +90,7 @@ Detect.supportsWebGL = function() {
     var canvas = document.createElement('canvas'),
         gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
-    return gl && gl instanceof WebGLRenderingContext;
+    return false;
 };
 
 Detect.isAppleDevice = function() {
