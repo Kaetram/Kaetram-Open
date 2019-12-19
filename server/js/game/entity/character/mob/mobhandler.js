@@ -59,9 +59,9 @@ class MobHandler {
 
                 /**
                  * An expansion of the plateau level present in BrowserQuest.
-                 * Because is far more complex, we will require multiple levels
-                 * of plateau in order to properly roam entities without them
-                 * walking into other regions (or clipping).
+                 * Because the map is far more complex, we will require multiple
+                 * levels of plateau in order to properly roam entities without
+                 * them walking into other regions (or clipping).
                  */
 
                 if (self.mob.getPlateauLevel() !== self.map.getPlateauLevel(newX, newY))
