@@ -46,6 +46,7 @@ class Map {
 
         self.tilesets = map.tilesets;
         self.lights = map.lights;
+        self.plateau = map.plateau;
 
         self.zoneWidth = 30;
         self.zoneHeight = 15;
@@ -145,11 +146,11 @@ class Map {
         self.staticEntities = [];
 
         // Legacy static entities (from Tiled);
-        _.each(map.staticEntities, (string, tileIndex) => {
-
+        _.each(map.staticEntities, (entity, tileIndex) => {
             self.staticEntities.push({
                 tileIndex: tileIndex,
-                string: string
+                string: entity.type,
+                roaming: entity.roaming
             });
 
         });
@@ -243,6 +244,10 @@ class Map {
 
     isOutOfBounds(x, y) {
         return x < 0 || x >= this.width || y < 0 || y >= this.height;
+    }
+
+    isPlateau(x, y) {
+        return this.plateau.indexOf(this.gridPositionToIndex(x - 1, y)) > -1;
     }
 
     isColliding(x, y) {

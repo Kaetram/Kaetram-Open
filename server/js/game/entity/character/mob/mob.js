@@ -186,6 +186,10 @@ class Mob extends Character {
         return base;
     }
 
+    getPlateauState() {
+        return this.world.map.isPlateau(this.x, this.y);
+    }
+
     resetPosition() {
         let self = this;
 
