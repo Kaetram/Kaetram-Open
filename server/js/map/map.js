@@ -246,8 +246,8 @@ class Map {
         return x < 0 || x >= this.width || y < 0 || y >= this.height;
     }
 
-    isPlateau(x, y) {
-        return this.plateau.indexOf(this.gridPositionToIndex(x - 1, y)) > -1;
+    isPlateau(index) {
+        return index in this.plateau;
     }
 
     isColliding(x, y) {
@@ -271,6 +271,16 @@ class Map {
         let tileIndex = self.gridPositionToIndex(x - 1, y);
 
         return ClientMap.data[tileIndex] === 0;
+    }
+
+    getPlateauLevel(x, y) {
+        let self = this,
+            index = self.gridPositionToIndex(x - 1, y);
+
+        if (!self.isPlateau(index))
+            return 0;
+
+        return self.plateau[index];
     }
 
     getActualTileIndex(tileIndex) {
