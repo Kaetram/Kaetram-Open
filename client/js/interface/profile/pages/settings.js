@@ -96,7 +96,7 @@ define(['jquery', '../page'], function($, Page) {
 
             self.cameraCheck.click(function() {
                 var active = self.cameraCheck.hasClass('active');
-e
+
                 if (active)
                     self.renderer.camera.decenter();
                 else
