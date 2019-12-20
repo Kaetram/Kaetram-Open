@@ -1,49 +1,161 @@
-var cls = require('../../server/js/lib/class'),
-    Player = require('../../server/js/game/entity/character/player/player'),
-    Creator = require('../../server/js/database/creator'),
-    Utils = require('../../server/js/util/utils'),
-    _ = require('underscore');
+#!/usr/bin/env node
 
-module.exports = Bot = cls.Class.extend({
+var Utils = require('../../server/js/util/utils'),
+    io = require('socket.io-client'),
+    _ = require('underscore'),
+    Log = require('log'),
+    config = require('../../server/config');
 
-    init: function(world, count) {
-        var self = this;
+log = new Log('info');
 
-        self.world = world;
-        self.count = count;
+class Entity {
 
-        self.creator = new Creator(null);
+    constructor(id, x, y, connection) {
+        let self = this;
 
-        self.players = [];
+        self.id = id;
+        self.x = x;
+        self.y = y;
 
-        self.load();
-    },
-
-    load: function() {
-        var self = this;
-
-        for (var i = 0; i < self.count; i++) {
-            var connection = {
-                id: i,
-                listen: function() {},
-                onClose: function() {}
-            },
-            player = new Player(self.world, self.world.database, connection, -1);
-
-            self.world.addPlayer(player);
-
-            player.username = 'Bot' + i;
-
-            player.load(self.creator.getPlayerData(player));
-
-            player.intro();
-
-            player.walkRandomly();
-
-            self.players.push(player);
-
-        }
+        self.connection = connection;
     }
 
+}
 
-});
+module.exports = Entity;
+
+class Bot {
+
+    constructor() {
+        let self = this;
+
+        self.bots = [];
+        self.botCount = 20;
+
+        self.load();
+    }
+
+    load() {
+        let self = this;
+
+        setInterval(() => {
+
+            _.each(self.bots, (bot) => {
+                self.move(bot);
+            });
+
+        }, 2500);
+
+        for (let i = 0; i < self.botCount; i++)
+            self.connect();
+    }
+
+    connect() {
+        let self = this,
+            connection = null;
+
+        connection = io('ws://127.0.0.1:9001', {
+            forceNew: true,
+            reconnection: false
+        });
+
+        connection.on('connect', () => {
+            log.info('Connection established...');
+
+            connection.emit('client', {
+                gVer: config.gver,
+                cType: 'HTML5',
+                bot: true
+            });
+
+        });
+
+        connection.on('connect_error', () => {
+            log.info('Failed to establish connection.');
+        });
+
+        connection.on('message', (message) => {
+
+            if (message.startsWith('[')) {
+                var data = JSON.parse(message);
+
+                if (data.length > 1)
+                    _.each(data, (msg) => { self.handlePackets(connection, msg); });
+                else
+                    self.handlePackets(connection, JSON.parse(message).shift());
+
+            } else
+                self.handlePackets(connection, 'utf8');
+        });
+
+        connection.on('disconnect', () => {
+
+        });
+
+
+    }
+
+    handlePackets(connection, message, type) {
+        let self = this;
+
+        if (type === 'utf8') {
+            log.info(`Received UTF8 message ${message}.`);
+            return;
+        }
+
+        let opcode = message.shift();
+
+        switch (opcode) {
+            case 0:
+
+                self.send(connection, 1, [2, 'n' + self.bots.length, 'n', 'n']);
+
+                break;
+
+            case 2:
+
+                let info = message.shift();
+
+                self.bots.push(new Entity(info.instance, info.x, info.y, connection));
+
+                break;
+
+            case 14: //Combat
+
+                break;
+        }
+
+    }
+
+    send(connection, packet, data) {
+        var self = this,
+            json = JSON.stringify([packet, data]);
+
+        if (connection && connection.connected)
+            connection.send(json);
+    }
+
+    move(bot) {
+        let self = this,
+            currentX = bot.x,
+            currentY = bot.y,
+            newX = currentX + Utils.randomInt(-3, 3),
+            newY = currentY + Utils.randomInt(-3, 3);
+
+        self.send(bot.connection, 9, [0, newX, newY, currentX, currentY]);
+        self.send(bot.connection, 13, [2]);
+        self.send(bot.connection, 9, [1, newX, newY, currentX, currentY, 250]);
+
+        setTimeout(() => {
+            self.send(bot.connection, 9, [3, newX, newY])
+        }, 1000);
+
+        bot.x = newX;
+        bot.y = newY;
+    }
+
+}
+
+module.exports = Bot;
+
+new Bot();
