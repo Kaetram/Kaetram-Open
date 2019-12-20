@@ -30,13 +30,21 @@ class Bot {
         let self = this;
 
         self.bots = [];
-        self.botCount = 20;
+        self.botCount = 350;
 
         self.load();
     }
 
     load() {
-        let self = this;
+        let self = this,
+            connecting = setInterval(() => {
+                self.connect();
+
+                self.botCount--;
+
+                if (self.botCount < 1)
+                    clearInterval(connecting);
+            }, 200);
 
         setInterval(() => {
 
@@ -45,9 +53,6 @@ class Bot {
             });
 
         }, 2500);
-
-        for (let i = 0; i < self.botCount; i++)
-            self.connect();
     }
 
     connect() {
@@ -85,7 +90,7 @@ class Bot {
                     self.handlePackets(connection, JSON.parse(message).shift());
 
             } else
-                self.handlePackets(connection, 'utf8');
+                self.handlePackets(connection, message, 'utf8');
         });
 
         connection.on('disconnect', () => {
@@ -98,7 +103,7 @@ class Bot {
     handlePackets(connection, message, type) {
         let self = this;
 
-        if (type === 'utf8') {
+        if (type === 'utf8' || !_.isArray(message)) {
             log.info(`Received UTF8 message ${message}.`);
             return;
         }
@@ -142,11 +147,25 @@ class Bot {
             newX = currentX + Utils.randomInt(-3, 3),
             newY = currentY + Utils.randomInt(-3, 3);
 
-        self.send(bot.connection, 9, [0, newX, newY, currentX, currentY]);
-        self.send(bot.connection, 13, [2]);
-        self.send(bot.connection, 9, [1, newX, newY, currentX, currentY, 250]);
+        setTimeout(() => { // Movement Request
 
-        setTimeout(() => {
+            self.send(bot.connection, 9, [0, newX, newY, currentX, currentY]);
+
+        }, 250);
+
+        setTimeout(() => { // Empty target packet
+
+            self.send(bot.connection, 13, [2]);
+
+        }, 250);
+
+        setTimeout(() => { // Start Movement
+
+            self.send(bot.connection, 9, [1, newX, newY, currentX, currentY, 250]);
+
+        }, 250);
+
+        setTimeout(() => { // Stop Movement
             self.send(bot.connection, 9, [3, newX, newY])
         }, 1000);
 

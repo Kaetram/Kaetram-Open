@@ -23,7 +23,7 @@ function main() {
             let world;
 
             for (let i = 0; i < worlds.length; i++)
-                if (worlds[i].playerCount < worlds[i].maxPlayers) {
+                if (worlds[i].getPopulation() < worlds[i].maxPlayers) {
                     world = worlds[i];
                     break;
                 }
@@ -78,7 +78,7 @@ function main() {
                 let total = 0;
 
                 _.each(worlds, (world) => {
-                    total += world.playerCount;
+                    total += world.getPopulation();
                 });
 
                 log.info(`There are ${total} player(s) in ${worlds.length} world(s).`);
