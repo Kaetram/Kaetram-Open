@@ -232,6 +232,8 @@ define(['jquery', './camera', './tile',
 
             self.drawAnimatedTiles();
 
+            self.drawDebugging();
+
             self.drawOverlays();
 
             self.drawTargetCell();
@@ -241,8 +243,6 @@ define(['jquery', './camera', './tile',
             self.drawEntities();
 
             self.drawInfos();
-
-            self.drawDebugging();
 
             self.drawCursor();
 
