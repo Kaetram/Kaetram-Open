@@ -46,6 +46,7 @@ class Map {
 
         self.tilesets = map.tilesets;
         self.lights = map.lights;
+        self.plateau = map.plateau;
 
         self.zoneWidth = 30;
         self.zoneHeight = 15;
@@ -145,11 +146,11 @@ class Map {
         self.staticEntities = [];
 
         // Legacy static entities (from Tiled);
-        _.each(map.staticEntities, (string, tileIndex) => {
-
+        _.each(map.staticEntities, (entity, tileIndex) => {
             self.staticEntities.push({
                 tileIndex: tileIndex,
-                string: string
+                string: entity.type,
+                roaming: entity.roaming
             });
 
         });
@@ -245,6 +246,10 @@ class Map {
         return x < 0 || x >= this.width || y < 0 || y >= this.height;
     }
 
+    isPlateau(index) {
+        return index in this.plateau;
+    }
+
     isColliding(x, y) {
         let self = this;
 
@@ -266,6 +271,16 @@ class Map {
         let tileIndex = self.gridPositionToIndex(x - 1, y);
 
         return ClientMap.data[tileIndex] === 0;
+    }
+
+    getPlateauLevel(x, y) {
+        let self = this,
+            index = self.gridPositionToIndex(x - 1, y);
+
+        if (!self.isPlateau(index))
+            return 0;
+
+        return self.plateau[index];
     }
 
     getActualTileIndex(tileIndex) {

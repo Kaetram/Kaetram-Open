@@ -28,26 +28,43 @@ class MobHandler {
         self.roamingInterval = setInterval(() => {
 
             if (!self.mob.dead) {
-                let newX = self.mob.x + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
-                    newY = self.mob.y + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
+                // Calculate a random position near the mobs spawn location.
+                let newX = self.spawnLocation[0] + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
+                    newY = self.spawnLocation[1] + Utils.randomInt(-self.maxRoamingDistance, self.maxRoamingDistance),
                     distance = Utils.getDistance(self.spawnLocation[0], self.spawnLocation[1], newX, newY);
 
+                // Return if the tile is colliding.
                 if (self.map.isColliding(newX, newY))
                     return;
 
+                // Prevent movement if the area is empty.
                 if (self.map.isEmpty(newX, newY))
                     return;
 
+                // Don't have mobs block a door.
                 if (self.map.isDoor(newX, newY))
                     return;
 
+                // Prevent mobs from going outside of their roaming radius.
                 if (distance < self.mob.maxRoamingDistance)
                     return;
 
+                // No need to move mobs to the same position as theirs.
                 if (newX === self.mob.x && newY === self.mob.y)
                     return;
 
+                // We don't want mobs randomly roaming while in combat.
                 if (self.mob.combat.started)
+                    return;
+
+                /**
+                 * An expansion of the plateau level present in BrowserQuest.
+                 * Because the map is far more complex, we will require multiple
+                 * levels of plateau in order to properly roam entities without
+                 * them walking into other regions (or clipping).
+                 */
+
+                if (self.mob.getPlateauLevel() !== self.map.getPlateauLevel(newX, newY))
                     return;
 
                 self.mob.setPosition(newX, newY);
