@@ -186,6 +186,11 @@ class Mob extends Character {
         return base;
     }
 
+    // We take the plateau level of where the entity spawns.
+    getPlateauLevel() {
+        return this.world.map.getPlateauLevel(this.spawnLocation[0], this.spawnLocation[1]);
+    }
+
     resetPosition() {
         let self = this;
 
