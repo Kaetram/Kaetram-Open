@@ -30,10 +30,9 @@
         "url": "^0.11.0"
     },
     "devDependencies": {
-        "del": "^5.1.0",
         "gulp": "^4.0.2",
-        "html-minifier": "^4.0.0",
         "morgan": "^1.9.1",
+        "socket.io-client": "^2.3.0",
         "workbox-build": "^4.3.1"
     },
     "repository": "git+https://github.com/Veradictus/Kaetram-Open.git",
