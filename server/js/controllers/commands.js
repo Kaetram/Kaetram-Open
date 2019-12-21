@@ -42,12 +42,12 @@ class Commands {
                 let population = self.world.getPopulation(),
                     singular = population === 1;
 
-                self.player.notify(`There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`);
-
                 if (self.player.rights > 1)
                     _.each(self.world.players, (player) => {
                         self.player.notify(player.username);
                     });
+
+                self.player.notify(`There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`);
 
                 return;
 
