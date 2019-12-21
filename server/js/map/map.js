@@ -48,8 +48,8 @@ class Map {
         self.lights = map.lights;
         self.plateau = map.plateau;
 
-        self.zoneWidth = 30;
-        self.zoneHeight = 15;
+        self.zoneWidth = 25;
+        self.zoneHeight = 20;
 
         self.regionWidth = Math.floor(self.width / self.zoneWidth);
         self.regionHeight = Math.floor(self.height / self.zoneHeight);
