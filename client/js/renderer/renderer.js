@@ -717,7 +717,7 @@ define(['jquery', './camera', './tile',
             var self = this,
                 player = self.game.player;
 
-            self.drawText('x: ' + player.gridX + ' y: ' + player.gridY, 10, 51, false, 'white');
+            self.drawText('x: ' + player.gridX + ' y: ' + player.gridY + ' tileIndex: ' + self.map.gridPositionToIndex(player.gridX, player.gridY), 10, 51, false, 'white');
 
             if (self.input.hoveringEntity) {
                 self.drawText('x: ' + self.input.getCoords().x + ' y: ' + self.input.getCoords().y + ' instance: ' + self.input.hoveringEntity.id, 10, 71, false, 'white');
