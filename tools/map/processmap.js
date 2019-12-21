@@ -105,11 +105,11 @@ module.exports = function parse(json, options) {
         _.each(tile.animation, function(animation) {
             animationData.push({
                 duration: animation.duration,
-                tileID: parseInt(firstGID) + parseInt(animation.tileid)
+                tileid: parseInt(firstGID) + parseInt(animation.tileid) - 1
             })
         });
 
-        map.animations[id] = animationData;
+        map.animations[id - 1] = animationData;
     };
 
     if (self.json.tilesets instanceof Array) {
