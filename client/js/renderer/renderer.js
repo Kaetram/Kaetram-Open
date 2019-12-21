@@ -24,14 +24,12 @@ define(['jquery', './camera', './tile',
 
             self.context = self.entities.getContext('2d'); // Entities
 
-            if (!Detect.supportsWebGL()) {
+            if (!Detect.supportsWebGL())
                 self.backContext = self.background.getContext('2d'); // Background
-                self.foreContext = self.foreground.getContext('2d'); // Foreground
-            } else {
+            else
                 self.backContext = self.background.getContext('webgl') || self.background.getContext('experimental-webgl');
-                self.foreContext = self.foreground.getContext('webgl') || self.foreground.getContext('experimental-webgl');
-            }
 
+            self.foreContext = self.foreground.getContext('2d'); // Foreground
             self.overlayContext = self.overlay.getContext('2d'); // Lighting
             self.textContext = self.textCanvas.getContext('2d'); // Texts
             self.cursorContext = self.cursor.getContext('2d'); // Cursor
@@ -262,47 +260,66 @@ define(['jquery', './camera', './tile',
             var self = this;
 
             if (self.webGL) { // Do the WebGL Rendering here
-
-                var dt = self.game.time - self.game.lastTime;
-
-                self.game.lastTime = self.game.time;
-
-                self.map.webGLMap.tileScale = 3;
-
-                self.map.webGLMap.update(dt);
-                self.map.webGLMap.draw(self.camera.x, self.camera.y);
-
-            } else { // Canvas rendering.
-
-                if (self.hasRenderedFrame())
-                    return;
-
-                self.clearDrawing();
-                self.saveDrawing();
-
-                self.updateDrawingView();
-
-                self.forEachVisibleTile(function(id, index) {
-                    var isHighTile = self.map.isHighTile(id),
-                        context = isHighTile ? self.foreContext : self.backContext;
-
-                    // Only do the lighting logic if there is an overlay.
-                    if (self.game.overlays.getFog()) {
-                        var isLightTile = self.map.isLightTile(id);
-
-                        context = isLightTile ? self.overlayContext : context;
-                    }
-
-                    if (!self.map.isAnimatedTile(id) || !self.animateTiles)
-                        self.drawTile(context, id, self.map.width, index);
-                });
-
-                self.restoreDrawing();
-
-                self.saveFrame();
-
+                self.drawWebGL();
+                return;
             }
 
+            // Canvas rendering.
+            if (self.hasRenderedFrame())
+                return;
+
+            self.clearDrawing();
+            self.saveDrawing();
+
+            self.updateDrawingView();
+
+            self.forEachVisibleTile(function(id, index) {
+                var isHighTile = self.map.isHighTile(id),
+                    context = isHighTile ? self.foreContext : self.backContext;
+
+                // Only do the lighting logic if there is an overlay.
+                if (self.game.overlays.getFog()) {
+                    var isLightTile = self.map.isLightTile(id);
+
+                    context = isLightTile ? self.overlayContext : context;
+                }
+
+                if (!self.map.isAnimatedTile(id) || !self.animateTiles)
+                    self.drawTile(context, id, self.map.width, index);
+            });
+
+            self.restoreDrawing();
+
+            self.saveFrame();
+
+        },
+
+        drawWebGL: function() {
+            var self = this,
+                dt = self.game.time - self.game.lastTime;
+
+            self.game.lastTime = self.game.time;
+
+            self.map.webGLMap.tileScale = 3;
+
+            self.map.webGLMap.update(dt);
+            self.map.webGLMap.draw(self.camera.x, self.camera.y);
+
+            // This is a janky and temporary solution to drawing high tiles
+            // on the WebGL context.
+
+            self.foreContext.clearRect(0, 0, self.foreground.width, self.foreground.height);
+            self.foreContext.save();
+
+            self.setCameraView(self.foreContext);
+
+            self.forEachVisibleTile(function(id, index) {
+                if (self.map.isHighTile(id))
+                    self.drawTile(self.foreContext, id, self.map.width, index);
+
+            });
+
+            self.foreContext.restore();
         },
 
         drawAnimatedTiles: function() {
