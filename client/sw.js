@@ -155,11 +155,11 @@ self.__precacheManifest = [
   },
   {
     "url": "data/maps/map.js",
-    "revision": "daf1a1756890e1accbce9f25c04ef7e5"
+    "revision": "1a3b8c647928264a3b58a569bb299b1d"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "02ca5306c00de677fc04036cfdf0830a"
+    "revision": "c58aa40c657499b2039c72fd8a3086a5"
   },
   {
     "url": "data/sprites.json",
@@ -5215,7 +5215,7 @@ self.__precacheManifest = [
   },
   {
     "url": "img/tilesets/tilesheet-1.png",
-    "revision": "30c5cb92350828cac5aa487b2205bd3d"
+    "revision": "a7952d28f065f9e581a1e64a39630c36"
   },
   {
     "url": "img/tilesets/tilesheet-2.png",
@@ -5475,7 +5475,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/map/map.js",
-    "revision": "19435f5d8f308ead28a4c024e3830363"
+    "revision": "d2b6cfcda935dcc9ab909e672f0d5344"
   },
   {
     "url": "js/map/mapworker.js",
@@ -5507,7 +5507,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/camera.js",
-    "revision": "7c82b6f70715010a9998ce16a9ad8b4a"
+    "revision": "f59888688e359d8fff643a454c305872"
   },
   {
     "url": "js/renderer/grids.js",
@@ -5531,11 +5531,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "d09a051fef90a3dca99491a6d9fa832a"
+    "revision": "8db4ed9051591089a48222091f76337a"
   },
   {
     "url": "js/renderer/tile.js",
-    "revision": "1d35af512b6ff5a41f1fcf71323a66f3"
+    "revision": "1b8fd2a75e67752876989066fe069f55"
   },
   {
     "url": "js/renderer/updater.js",
