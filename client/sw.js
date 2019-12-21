@@ -155,11 +155,11 @@ self.__precacheManifest = [
   },
   {
     "url": "data/maps/map.js",
-    "revision": "9df575b24a537f89cfd8631dc45ac555"
+    "revision": "daf1a1756890e1accbce9f25c04ef7e5"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "8c1ce0d43623f6bc7709503c291e3a4a"
+    "revision": "02ca5306c00de677fc04036cfdf0830a"
   },
   {
     "url": "data/sprites.json",
@@ -5215,7 +5215,7 @@ self.__precacheManifest = [
   },
   {
     "url": "img/tilesets/tilesheet-1.png",
-    "revision": "4ed6ad19567e986eeea6165090e38fae"
+    "revision": "30c5cb92350828cac5aa487b2205bd3d"
   },
   {
     "url": "img/tilesets/tilesheet-2.png",
@@ -5415,7 +5415,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/profile/pages/settings.js",
-    "revision": "f10325b56877890e66afa9e1fc8d70ef"
+    "revision": "4000def6df8e81c42b6db9687caf409c"
   },
   {
     "url": "js/interface/profile/pages/state.js",
@@ -5475,7 +5475,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/map/map.js",
-    "revision": "cba2dd460815c5bdd80c8850cceeaffd"
+    "revision": "19435f5d8f308ead28a4c024e3830363"
   },
   {
     "url": "js/map/mapworker.js",
@@ -5531,7 +5531,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "68ae4d125c6dd721887f202eeaa426e4"
+    "revision": "d09a051fef90a3dca99491a6d9fa832a"
   },
   {
     "url": "js/renderer/tile.js",
@@ -5547,7 +5547,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/utils/detect.js",
-    "revision": "b16597fdab6d94071b81f7e9d5ee5890"
+    "revision": "9a97a5fd460137a6cd310d1ab0d4dcc6"
   },
   {
     "url": "js/utils/modules.js",
