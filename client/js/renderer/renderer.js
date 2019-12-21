@@ -145,6 +145,8 @@ define(['jquery', './camera', './tile',
                 canvas.height = self.canvasHeight;
             });
 
+            if (self.webGL)
+                self.map.loadWebGL(self.backContext);
         },
 
         loadCamera: function() {
@@ -313,7 +315,7 @@ define(['jquery', './camera', './tile',
             self.setCameraView(self.context);
 
             self.forEachAnimatedTile(function(tile) {
-                if (!self.camera.isVisible(tile.x, tile.y, 3))
+                if (!self.camera.isVisible(tile.x, tile.y, 3, 1))
                     return;
 
                 tile.animate(self.game.time);
@@ -827,7 +829,7 @@ define(['jquery', './camera', './tile',
         updateAnimatedTiles: function() {
             var self = this;
 
-            if (!self.animateTiles)
+            if (!self.animateTiles || self.webGL)
                 return;
 
             self.forEachVisibleTile(function(id, index) {

@@ -23,7 +23,7 @@ define(function() {
         },
 
         update: function() {
-            this.id = this.animationInfo[this.animationIndex].tileID - 1;
+            this.id = this.animationInfo[this.animationIndex].tileid;
             this.canDraw = true;
         },
 

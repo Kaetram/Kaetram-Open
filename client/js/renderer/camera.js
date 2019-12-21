@@ -268,11 +268,11 @@ define(function() {
                     callback(x, y);}
         },
 
-        isVisible: function(x, y, offset) {
+        isVisible: function(x, y, offset, offset2) {
             return x > this.gridX - offset &&
                     x < this.gridX + this.gridWidth &&
                     y > this.gridY - offset &&
-                    y < this.gridY + this.gridHeight;
+                    y < this.gridY + this.gridHeight + offset2;
         }
 
     });
