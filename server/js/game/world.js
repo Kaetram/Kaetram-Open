@@ -32,8 +32,6 @@ class World {
         self.socket = socket;
         self.database = database;
 
-        self.playerCount = 0;
-
         self.maxPlayers = config.maxPlayers;
         self.updateTime = config.updateTime;
 
