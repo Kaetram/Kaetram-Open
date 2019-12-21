@@ -115,7 +115,6 @@ define(['jquery'], function($) {
 
                 self.loadTileset(rawTileset, function(tileset) {
                     self.tilesets[tileset.index] = tileset;
-                    //self.tilesets.push(tileset);
 
                     if (self.tilesets.length === self.rawTilesets.length)
                         self.tilesetsLoaded = true;
@@ -264,8 +263,8 @@ define(['jquery'], function($) {
                 object.layers.push(layerObject);
             }
 
-            for (var i = 0; i < self.tilesets.length; i++)
-                object.tilesets.push({
+            for (var i = 0; i < self.tilesets.length; i++) {
+                var tileset = {
                     columns: 64,
                     margin: 0,
                     spacing: 0,
@@ -276,8 +275,24 @@ define(['jquery'], function($) {
                     name: self.tilesets[i].name.split('.png')[0],
                     tilecount: (self.tilesets[i].width / 16) * (self.tilesets[i].height / 16),
                     tilewidth: object.tilewidth,
-                    tileheight: object.tileheight
-                });
+                    tileheight: object.tileheight,
+                    tiles: []
+                };
+
+                for (var j in self.animatedTiles) {
+                    var indx = parseInt(j);
+
+                    if (indx > tileset.firstgid - 1 && indx < tileset.tilecount)
+                        tileset.tiles.push({
+                            animation: self.animatedTiles[j],
+                            id: indx
+                        });
+                }
+
+                log.info(tileset);
+
+                object.tilesets.push(tileset);
+            }
 
             if (self.game.isDebug())
                 log.info('Successfully generated the WebGL map.');
@@ -367,7 +382,7 @@ define(['jquery'], function($) {
         },
 
         isAnimatedTile: function(id) {
-            return (id + 1) in this.animatedTiles;
+            return id in this.animatedTiles;
         },
 
         isOutOfBounds: function(x, y) {
@@ -382,7 +397,7 @@ define(['jquery'], function($) {
         },
 
         getTileAnimation: function(id) {
-            return this.animatedTiles[id + 1];
+            return this.animatedTiles[id];
         },
 
         getTilesetFromId: function(id) {
