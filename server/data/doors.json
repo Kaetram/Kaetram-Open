@@ -31,49 +31,22 @@
     "questId": 1,
 
     "closedIds": {
-        "55209": { "data": [175,2038], "isColliding": true },
-        "55808": { "data": [156,511,2057], "isColliding": true },
-        "55809": { "data": [155,2058], "isColliding": true },
-        "55810": { "data": [156,2059], "isColliding": true },
-        "56408": { "data": [176,551,2077], "isColliding": true },
-        "56409": { "data": [175,492,2078], "isColliding": true },
-        "56410": { "data": [176,493,2079], "isColliding": true }
+        "73008": { "data": [1739,313], "isColliding": true },
+        "73009": { "data": [1804,314], "isColliding": true },
+        "73010": { "data": [1739,315], "isColliding": true },
+        "74008": { "data": [1803,377], "isColliding": true },
+        "74009": { "data": [1804,378], "isColliding": true },
+        "74010": { "data": [1803,379], "isColliding": true }
     },
 
     "openIds": {
-        "55209": { "data": [175,1878], "isColliding": true },
-        "55808": { "data": [156,511,1897], "isColliding": true },
-        "55809": { "data": [155,1898], "isColliding": true },
-        "55810": { "data": [156,1899], "isColliding": true },
-        "56408": { "data": [176,551,1917], "isColliding": true },
-        "56409": { "data": [175,492,1918], "isColliding": false },
-        "56410": { "data": [176,493,1919], "isColliding": true }
+        "73008": { "data": [1739,2149], "isColliding": true },
+        "73009": { "data": [1804,2150], "isColliding": true },
+        "73010": { "data": [1739,2151], "isColliding": true },
+        "74008": { "data": [1803,2213], "isColliding": true },
+        "74009": { "data": [1804,2214], "isColliding": false },
+        "74010": { "data": [1803,2215], "isColliding": true }
     }
-  },
-
-  "2": {
-      "id": 2,
-      "status": "closed",
-      "requirement": "level",
-      "level": 10,
-
-      "closedIds": {
-          "52834": { "data": [346], "isColliding": true },
-          "52835": { "data": [347], "isColliding": true },
-          "52836": { "data": [348], "isColliding": true },
-          "53434": { "data": [511,366], "isColliding": true },
-          "53435": { "data": [367], "isColliding": true },
-          "53436": { "data": [512,368], "isColliding": true }
-      },
-
-      "openIds": {
-          "52834": { "data": [1661], "isColliding": true },
-          "52835": { "data": [1662], "isColliding": true },
-          "52836": { "data": [1663], "isColliding": true },
-          "53434": { "data": [511,1681], "isColliding": true },
-          "53435": { "data": [1682], "isColliding": false },
-          "53436": { "data": [512,1683], "isColliding": true }
-      }
   }
 
 }

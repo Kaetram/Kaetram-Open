@@ -85,6 +85,7 @@ class Player extends Character {
         self.visible = true;
 
         self.cheatScore = 0;
+        self.defaultMovementSpeed = 250; // For fallback.
 
         self.regionsLoaded = [];
         self.lightsLoaded = [];
@@ -702,7 +703,7 @@ class Player extends Character {
     getMovementSpeed() {
         let self = this,
             itemMovementSpeed = Items.getMovementSpeed(self.armour.name),
-            movementSpeed = itemMovementSpeed || 250;
+            movementSpeed = itemMovementSpeed || self.defaultMovementSpeed;
 
         /*
          * Here we can handle equipment/potions/abilities that alter
