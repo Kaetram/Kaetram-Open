@@ -452,6 +452,24 @@ class Commands {
 
                 break;
 
+            case 'ms':
+
+                let movementSpeed = parseInt(blocks.shift());
+
+                if (!movementSpeed) {
+                    self.player.notify('No movement speed specified.');
+                    return;
+                }
+
+                if (movementSpeed < 75) // Just to not break stuff.
+                    movementSpeed = 75;
+
+                self.player.defaultMovementSpeed = movementSpeed;
+
+                self.player.sync();
+
+                break;
+
         }
     }
 

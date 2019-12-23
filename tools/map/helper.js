@@ -13,7 +13,15 @@ class Helper {
         self.width = worldServer.width;
         self.height = worldServer.height;
 
-        self.getTileData(36, 69);
+        self.getTileData(8, 73);
+        self.getTileData(9, 73);
+        self.getTileData(10, 73);
+
+        self.getTileData(8, 74);
+        self.getTileData(9, 74);
+        self.getTileData(10, 74);
+
+
 
         //for (let i = 1; i < 5; i++)
         //    for (let j = 1; j < 5; j++)
@@ -24,7 +32,7 @@ class Helper {
         let self = this,
             index = self.gridPositionToIndex(x, y);
 
-        console.log(`"${index}": { "data": [${worldClient.data[index]}], "isColliding": true },`);
+        console.log(`"${index}": { "data": [${worldClient.data[index]}], "isColliding": ${worldClient.collisions.indexOf(index) > -1} },`);
         //log.info(index + ' -- ' + worldClient.data[index]);
     }
 
