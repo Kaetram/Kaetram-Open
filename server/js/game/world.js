@@ -408,7 +408,7 @@ class World {
 
         item.onBlink(() => {
             self.push(Packets.PushOpcode.Broadcast, {
-                message: new Messages.Blink(item.intsance)
+                message: new Messages.Blink(item.instance)
             });
         });
 
