@@ -7,8 +7,7 @@
   "VillageGirl": {
     "name": "Azaria",
     "id": 1,
-    "text": ["Eventually, fire turns to ash.", "And all that remains is but that.",
-            "The ability to reignite...", "Though it never will."]
+    "text": ["It's okay, I understand.", "Words aren't necessary."]
   },
 
   "Villager": {
