@@ -20,6 +20,7 @@
       "336615": { "data": 12744, "isColliding": true },
       "336616": { "data": 12745, "isColliding": true }
     },
+
     "x": 15,
     "y": 560
   },
@@ -46,7 +47,10 @@
         "74008": { "data": [1803,2213], "isColliding": true },
         "74009": { "data": [1804,2214], "isColliding": false },
         "74010": { "data": [1803,2215], "isColliding": true }
-    }
+    },
+    "x": 9,
+    "y": 74
+
   },
 
   "2": {
@@ -83,7 +87,10 @@
         "132966": { "data": [461], "isColliding": false },
         "133964": { "data": [463], "isColliding": false },
         "133965": { "data": [461], "isColliding": false }
-    }
+    },
+
+    "x": 965,
+    "y": 131
   }
 
 }

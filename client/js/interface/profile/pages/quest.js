@@ -100,7 +100,7 @@ define(['jquery', '../page'], function($, Page) {
                 return;
 
             if (!info.isQuest && info.count > 2)
-                name.text(info.name + ' ' + info.progress + '/' + (info.count - 1));
+                name.text(info.name + ' ' + (info.progress - 1) + '/' + (info.count - 1));
             else
                 name.text(info.name);
 
