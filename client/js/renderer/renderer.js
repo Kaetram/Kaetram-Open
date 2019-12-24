@@ -585,14 +585,14 @@ define(['jquery', './camera', './tile',
                 healthWidth = Math.round(entity.hitPoints / entity.maxHitPoints * barLength * self.superScaling),
                 healthHeight = 2 * self.superScaling;
 
-            self.context.save();
-            self.setCameraView(self.context);
-            self.context.strokeStyle = '#00000';
-            self.context.lineWidth = 1;
-            self.context.strokeRect(healthX, healthY, barLength * self.superScaling, healthHeight);
-            self.context.fillStyle = '#FD0000';
-            self.context.fillRect(healthX, healthY, healthWidth, healthHeight);
-            self.context.restore();
+            self.textContext.save();
+            self.setCameraView(self.textContext);
+            self.textContext.strokeStyle = '#00000';
+            self.textContext.lineWidth = 1;
+            self.textContext.strokeRect(healthX, healthY, barLength * self.superScaling, healthHeight);
+            self.textContext.fillStyle = '#FD0000';
+            self.textContext.fillRect(healthX, healthY, healthWidth, healthHeight);
+            self.textContext.restore();
         },
 
         drawName: function(entity) {
