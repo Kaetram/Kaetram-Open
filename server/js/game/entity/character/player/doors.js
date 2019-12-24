@@ -12,6 +12,8 @@ class Doors {
 
         self.world = player.world;
         self.player = player;
+        self.map = self.world.map;
+        self.regions = self.map.regions;
 
         self.doors = {};
 
@@ -88,6 +90,12 @@ class Doors {
             };
 
         _.each(self.doors, (door) => {
+            /* There's no need to send dynamic data if the player is not nearby. */
+            let doorRegion = self.regions.regionIdFromPosition(door.x, door.y);
+
+            if (!self.regions.isAdjacent(self.player.region, doorRegion))
+                return;
+
             let tiles = self.getTiles(door);
 
             allTiles.indexes.push.apply(allTiles.indexes, tiles.indexes);

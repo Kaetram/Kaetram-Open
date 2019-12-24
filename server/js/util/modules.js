@@ -107,7 +107,7 @@ let Modules = {
     },
 
     Warps: {
-        0: ['Mudwich', 25, 95, true, 1], //Starting Village
+        0: ['Mudwich', 65, 103, true, 1], //Starting Village
         1: ['Northton', 49, 207, true, 25], //Ice World
         2: ['Lakesworld', 530, 121, false, 60], //Citadels
         3: ['Aynor', 178, 140, true, 50],

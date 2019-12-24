@@ -46,7 +46,7 @@ class Regions {
     // y y x y x
     // y y x y y
 
-    getAdjacentRegions(id, offset = 1) {
+    getAdjacentRegions(id, offset = 1, stringFormat) {
         let self = this,
             position = self.regionIdToPosition(id),
             x = position.x, y = position.y;
@@ -56,7 +56,7 @@ class Regions {
         for (let i = -offset; i <= offset; i++) // y
             for (let j = -1; j <= 1; j++) // x
                 if (i > -2 || i < 2)
-                    list.push({ x: x + j, y: y + i });
+                    list.push(stringFormat ? (x + j) + '-' + (y + i) : { x: x + j, y: y + i });
 
         _.each(self.linkedRegions[id], (regionPosition) => {
 
@@ -115,6 +115,10 @@ class Regions {
             x: parseInt(position[0]) * self.zoneWidth,
             y: parseInt(position[1]) * self.zoneHeight
         }
+    }
+
+    isAdjacent(regionId, toRegionId) {
+        return this.getAdjacentRegions(regionId, 1, true).indexOf(regionId) > -1;
     }
 }
 
