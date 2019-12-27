@@ -937,6 +937,10 @@ class Incoming {
             let x = self.player.previousX < 0 ? self.player.x : self.player.previousX,
                 y = self.player.previousY < 0 ? self.player.y : self.player.previousY;
 
+            // Not sure about this...
+            //while (self.world.map.isColliding(x, y))
+            //    x += Utils.randomInt(-1, 1), y += Utils.randomInt(-1, 1);
+
             self.player.teleport(x, y, false, true);
             return false;
         }

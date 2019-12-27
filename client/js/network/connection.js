@@ -263,7 +263,10 @@ define(['./impl/teamwar'], function(TeamWar) {
                 entity.stop(true);
                 entity.frozen = true;
 
-                self.bubble.clean();
+                if (isPlayer)
+                    self.bubble.clean();
+                else
+                    self.bubble.destroy(info.id);
 
                 /**
                  * Teleporting an entity seems to cause a glitch with the
@@ -357,6 +360,8 @@ define(['./impl/teamwar'], function(TeamWar) {
                 entity.dead = true;
 
                 entity.stop();
+
+                self.bubble.destroy(entity.id);
 
                 if (self.game.player.hasTarget() && self.game.player.target.id === entity.id)
                     self.game.player.removeTarget();
