@@ -1,6 +1,7 @@
 let Utils = require('../../../../util/utils'),
     Messages = require('../../../../network/messages'),
-    Packets = require('../../../../network/packets');
+    Packets = require('../../../../network/packets'),
+    config = require('../../../../../config');
 
 class MobHandler {
 
@@ -67,6 +68,9 @@ class MobHandler {
                 if (self.mob.getPlateauLevel() !== self.map.getPlateauLevel(newX, newY))
                     return;
 
+                if (config.debug)
+                    self.forceTalk('Yes hello, I am moving.');
+
                 self.mob.setPosition(newX, newY);
 
                 self.world.push(Packets.PushOpcode.Regions, {
@@ -88,6 +92,23 @@ class MobHandler {
 
 
         //TODO - Implement posion on Mobs
+    }
+
+    forceTalk(message) {
+        var self = this;
+
+        if (!self.world)
+            return;
+
+        self.world.push(Packets.PushOpcode.Regions, {
+            regionId: self.mob.region,
+            message: new Messages.NPC(Packets.NPCOpcode.Talk, {
+                id: self.mob.instance,
+                text: message,
+                nonNPC: true
+            })
+        });
+
     }
 
 }
