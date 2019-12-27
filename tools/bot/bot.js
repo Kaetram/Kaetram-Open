@@ -50,6 +50,7 @@ class Bot {
 
             _.each(self.bots, (bot) => {
                 self.move(bot);
+                self.talk(bot);
             });
 
         }, 2500);
@@ -171,6 +172,10 @@ class Bot {
 
         bot.x = newX;
         bot.y = newY;
+    }
+
+    talk(bot) {
+        this.send(bot.connection, 20, ['am human, hello there.']);
     }
 
 }
