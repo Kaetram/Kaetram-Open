@@ -37,16 +37,30 @@ class Chest extends Entity {
     getItem() {
         let self = this,
             random = Utils.randomInt(0, self.items.length - 1),
-            item = self.items[random];
+            item = self.items[random], count = 1, probability = 100;
+
+        if (item.includes(':')) {
+            let itemData = item.split(':');
+
+            item = itemData.shift(); // name
+            count = parseInt(itemData.shift()); // count
+            probability = parseInt(itemData.shift()); // probability
+        }
 
         /**
          * We must ensure an item is always present in order
          * to avoid any unforeseen circumstances.
          */
         if (!item)
-            return;
+            return null;
 
-        return item;
+        if (Utils.randomInt(0, 100) > probability)
+            return null;
+
+        return {
+            string: item,
+            count: count
+        };
     }
 
     onOpen(callback) {

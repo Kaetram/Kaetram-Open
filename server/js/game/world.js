@@ -377,7 +377,12 @@ class World {
             if (config.debug)
                 log.info(`Opening chest at x: ${chest.x}, y: ${chest.y}`);
 
-            self.dropItem(Items.stringToId(chest.getItem()), 1, chest.x, chest.y);
+            let item = chest.getItem();
+
+            if (!item)
+                return;
+
+            self.dropItem(Items.stringToId(item.string), item.count, chest.x, chest.y);
 
         });
 
