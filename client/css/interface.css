@@ -586,6 +586,10 @@
     text-align: right;
 }
 
+#shopInventorySellReturnText {
+    color: black;
+}
+
 @media only screen and (min-width: 1501px) {
 
     #chatButton {
@@ -1150,6 +1154,10 @@
 
     #shopInventorySellReturn {
         left: 132px;
+    }
+
+    #shopInventorySellReturnText {
+        margin-top: 57px;
     }
 
     .shopItemName {
@@ -1853,6 +1861,10 @@
         left: 88px;
     }
 
+    #shopInventorySellReturnText {
+        margin-top: 38px;
+    }
+
     #health {
         position: absolute;
         top: 3px;
@@ -2465,6 +2477,10 @@
 
     #shopInventorySellReturn {
         left: 44px;
+    }
+
+    #shopInventorySellReturnText {
+        margin-top: 19px;
     }
 
     #shopContainer ul li {

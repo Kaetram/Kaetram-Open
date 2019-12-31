@@ -54,8 +54,8 @@ Shops.getCost = (npcId, buyId, count) => {
 
     let shop = Shops.Ids[npcId];
 
-    if (!shop || !buyId || buyId < 0)
-        return;
+    if (!shop || buyId < 0)
+        return 2;
 
     return shop.prices[buyId] * count;
 };
