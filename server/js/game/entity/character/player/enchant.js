@@ -158,7 +158,6 @@ class Enchant {
 
                 self.selectedItem.ability = Utils.randomInt(2, 3);
 
-
                 break;
 
             case 'weapon':
