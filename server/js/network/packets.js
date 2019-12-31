@@ -171,7 +171,8 @@ Packets.ShopOpcode = {
     Buy: 1,
     Sell: 2,
     Refresh: 3,
-    Select: 4
+    Select: 4,
+    Remove: 5
 };
 
 Packets.MinigameOpcode = {

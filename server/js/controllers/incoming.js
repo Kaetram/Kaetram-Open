@@ -891,13 +891,33 @@ class Incoming {
                 if (!item || item.id < 1)
                     return;
 
+                if (self.player.selectedShopItem)
+                    self.world.shops.remove(self.player);
+
+                let currency = self.world.shops.getCurrency(npcId);
+
+                if (!currency)
+                    return;
+
                 self.player.send(new Messages.Shop(Packets.ShopOpcode.Select, {
                     id: npcId,
                     slotId: slotId,
-                    price: self.world.shops.getSellPrice(item.id)
+                    currency: Items.idToString(currency),
+                    price: self.world.shops.getSellPrice(npcId, item.id)
                 }));
 
+                self.player.selectedShopItem = {
+                    id: npcId,
+                    index: item.index
+                };
+
                 log.info('Received Select: ' + npcId + ' ' + slotId);
+
+                break;
+
+            case Packets.ShopOpcode.Remove:
+
+                self.world.shops.remove(self.player);
 
                 break;
         }

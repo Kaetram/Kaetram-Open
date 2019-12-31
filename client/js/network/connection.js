@@ -986,6 +986,13 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                         break;
 
+                    case Packets.ShopOpcode.Remove:
+
+                        if (self.interface.shop.isShopOpen(info.id))
+                            self.interface.shop.moveBack(info.index);
+
+                        break;
+
                     case Packets.ShopOpcode.Refresh:
 
                         if (self.interface.shop.isShopOpen(info.id))

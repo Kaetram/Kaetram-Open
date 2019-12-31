@@ -107,6 +107,21 @@ class Shops {
 
     }
 
+    remove(player) {
+        let self = this,
+            selectedItem = player.selectedShopItem;
+
+        if (!selectedItem)
+            return;
+
+        player.send(new Messages.Shop(Packets.ShopOpcode.Remove, {
+            id: selectedItem.id,
+            index: selectedItem.index
+        }));
+
+        player.selectedShopItem = null;
+    }
+
     refresh(shop) {
         let self = this;
 
@@ -124,13 +139,18 @@ class Shops {
         return shop.currency;
     }
 
-    getSellPrice(npcId, itemId) {
+    getSellPrice(npcId, itemId, count = 1) {
         let shop = ShopData.Ids[npcId];
 
         if (!shop)
             return 1;
 
-        return Math.floor(shop.getCost(npcId, itemId, 1) / 2);
+        let buyId = shop.items.indexOf(itemId);
+
+        if (buyId < 0)
+            return 1;
+
+        return Math.floor(ShopData.getCost(npcId, buyId, count) / 2);
     }
 
     getShopData(npcId) {
