@@ -20,6 +20,7 @@ define(['jquery', './container/container'], function($, Container) {
 
             self.sellSlot = $('#shopInventorySell');
             self.sellSlotReturn = $('#shopInventorySellReturn');
+            self.sellSlotReturnText = $('#shopInventorySellReturnText');
 
             self.player = game.player;
             self.interface = interface;
@@ -39,6 +40,9 @@ define(['jquery', './container/container'], function($, Container) {
                 self.hide();
             });
 
+            self.sellSlot.click(function() {
+                self.remove();
+            });
         },
 
         buy: function(event) {
@@ -55,14 +59,44 @@ define(['jquery', './container/container'], function($, Container) {
             self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, self.openShop, id]);
         },
 
+        remove: function(event) {
+            this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
+        },
+
         move: function(info) {
             var self = this,
-                inventorySlot = self.getInventoryList().find('#shopInventorySlot' + info.slotId);
+                inventorySlot = self.getInventoryList().find('#shopInventorySlot' + info.slotId),
+                slotImage = inventorySlot.find('#inventoryImage' + info.slotId),
+                slotText = inventorySlot.find('#inventoryItemCount' + info.slotId);
 
-            log.info('Moving');
-            log.info(inventorySlot);
+            self.sellSlot.css({
+                'background-image': slotImage.css('background-image'),
+                'background-size': slotImage.css('background-size')
+            });
 
-            log.info(info);
+            self.sellSlotReturn.css({
+                'background-image': self.container.getImageFormat(1, info.currency),
+                'background-size': self.sellSlot.css('background-size')
+            });
+
+            self.sellSlotReturnText.text(info.price);
+
+            slotImage.css('background-image', '');
+            slotText.text('');
+
+        },
+
+        moveBack: function(index) {
+            var self = this,
+                inventorySlot = self.getInventoryList().find('#shopInventorySlot' + index);
+
+            inventorySlot.find('#inventoryImage' + index).css('background-image', self.sellSlot.css('background-image'));
+
+            self.sellSlot.css('background-image', '');
+            self.sellSlotReturn.css('background-image', '');
+            self.sellSlotReturnText.text('');
+
+
         },
 
         /**
