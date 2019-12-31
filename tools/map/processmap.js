@@ -398,6 +398,9 @@ let parseLayer = function(layer) {
             let pGid = tiles[j],
                 level = parseInt(name.split('plateau')[1]);
 
+            if (map.collisions.indexOf(j) > -1) // Skip collision indexes.
+                continue;
+
             if (pGid && pGid > 0)
                 map.plateau[j] = level;
         }
