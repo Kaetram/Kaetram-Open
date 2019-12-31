@@ -60,11 +60,20 @@ class Region {
             log.info('Received Map Update -> Sending to Players...');
 
             fs.readFile(map, 'utf8', (error, data) => {
-                if (error) throw error;
+                if (error) {
+                    log.info('Could not reload the map file...');
+                    return;
+                }
 
-                ClientMap = JSON.parse(data);
+                try {
 
-                self.updateRegions();
+                    ClientMap = JSON.parse(data);
+
+                    self.updateRegions();
+
+                } catch(e) {
+                    log.info('Could not parse JSON.');
+                }
             });
 
         });
