@@ -18,9 +18,9 @@ define(['jquery', './container/container'], function($, Container) {
              * they can handle different currencies.
              */
 
-            self.sellSlot = $('#shopInventorySell');
-            self.sellSlotReturn = $('#shopInventorySellReturn');
-            self.sellSlotReturnText = $('#shopInventorySellReturnText');
+            self.sellSlot = $('#shopSellSlot');
+            self.sellSlotReturn = $('#shopSellSlotReturn');
+            self.sellSlotReturnText = $('#shopSellSlotReturnText');
 
             self.player = game.player;
             self.interface = interface;
@@ -75,7 +75,7 @@ define(['jquery', './container/container'], function($, Container) {
             });
 
             self.sellSlotReturn.css({
-                'background-image': self.container.getImageFormat(1, info.currency),
+                'background-image': self.container.getImageFormat(self.getScale(), info.currency),
                 'background-size': self.sellSlot.css('background-size')
             });
 
@@ -136,20 +136,23 @@ define(['jquery', './container/container'], function($, Container) {
                     string = self.data.strings[i],
                     name = self.data.names[i],
                     count = self.data.counts[i],
-                    itemImage, itemCount, itemName, itemBuy;
+                    price = self.data.prices[i],
+                    itemImage, itemCount, itemPrice, itemName, itemBuy;
 
                 if (!string || !name || !count)
                     continue;
 
                 itemImage = $('<div id="shopItemImage' + i + '" class="shopItemImage"></div>');
                 itemCount = $('<div id="shopItemCount' + i + '" class="shopItemCount"></div>');
+                itemPrice = $('<div id="shopItemPrice' + i + '" class="shopItemPrice"></div>');
                 itemName = $('<div id="shopItemName' + i + '" class="shopItemName"></div>');
                 itemBuy = $('<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>');
 
                 itemImage.css('background-image', self.container.getImageFormat(1, string));
                 itemCount.html(count);
+                itemPrice.html(price + 'g');
                 itemName.html(name);
-                itemBuy.html('Purchase');
+                itemBuy.html('Buy');
 
                 self.container.setSlot(i, {
                     string: string,
@@ -163,7 +166,7 @@ define(['jquery', './container/container'], function($, Container) {
 
                 var listItem = $('<li></li>');
 
-                shopItem.append(itemImage, itemCount, itemName, itemBuy);
+                shopItem.append(itemImage, itemCount, itemPrice, itemName, itemBuy);
 
                 listItem.append(shopItem);
 
