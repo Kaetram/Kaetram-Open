@@ -95,7 +95,7 @@ class Shops {
             item = player.inventory.slots[slotId],
             shop = ShopData.Ids[npcId];
 
-        if (!shop || !npcId || item.id < 1) {
+        if (!shop || !item) {
             log.info('Invalid shop data.');
             return;
         }
@@ -104,6 +104,20 @@ class Shops {
             player.notify('That item cannot be sold in this store.');
             return;
         }
+
+        let currency = self.getCurrency(npcId),
+            price = self.getSellPrice(npcId, item.id, item.count);
+
+        ShopData.increment(npcId, item.id, item.count);
+
+        player.inventory.remove(item.id, item.count, item.index);
+        player.inventory.add({
+            id: currency,
+            count: price
+        });
+
+        self.remove(player);
+        self.refresh(npcId);
 
     }
 
