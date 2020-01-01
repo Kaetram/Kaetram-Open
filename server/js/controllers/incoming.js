@@ -867,6 +867,13 @@ class Incoming {
 
             case Packets.ShopOpcode.Sell:
 
+                if (!self.player.selectedShopItem) {
+                    self.player.notify('No item has been selected.');
+                    return;
+                }
+
+                self.world.shops.sell(self.player, npcId, self.player.selectedShopItem.index);
+
                 break;
 
             case Packets.ShopOpcode.Select:
