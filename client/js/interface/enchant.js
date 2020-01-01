@@ -19,11 +19,6 @@ define(['jquery'], function($) {
 
             self.closeEnchant = $('#closeEnchant');
 
-            self.confirm.css({
-                'left': '70%',
-                'top': '80%'
-            });
-
             self.confirm.click(function() {
                 self.enchant();
             });
@@ -157,6 +152,8 @@ define(['jquery'], function($) {
 
         display: function() {
             var self = this;
+
+            log.info('Yes hello, I am displaying');
 
             self.body.fadeIn('fast');
             self.load();

@@ -155,20 +155,24 @@ class Shops {
 
     getShopData(npcId) {
         let self = this,
-            strings = [],
-            names = [],
-            items = ShopData.getItems(npcId);
+            shop = ShopData.Ids[npcId];
 
-        for (let i = 0; i < items.length; i++) {
-            strings.push(Items.idToString(items[i]));
-            names.push(Items.idToName(items[i]));
+        if (!shop || !_.isArray(shop.items))
+            return;
+
+        let strings = [], names = [];
+
+        for (let i = 0; i < shop.items.length; i++) {
+            strings.push(Items.idToString(shop.items[i]));
+            names.push(Items.idToName(shop.items[i]));
         }
 
         return {
             id: npcId,
             strings: strings,
             names: names,
-            counts: ShopData.getCount(npcId)
+            counts: shop.count,
+            prices: shop.prices
         }
     }
 

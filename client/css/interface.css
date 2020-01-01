@@ -296,8 +296,11 @@
 #enchant {
     position: absolute;
     display: none;
-    top: 15%;
-    left: 37%;
+
+    cursor: default;
+
+    top: 50%;
+    left: 50%;
 }
 
 #trade {
@@ -517,29 +520,30 @@
     border-radius: 100%;
 }
 
-.shopItemName {
+.shopItemName, .shopItemCount, .shopItemPrice, .shopItemBuy {
     position: absolute;
-    padding-top: 4%;
-    left: 20%;
+    padding-top: 2%;
     font-size: 12px;
+    float: left;
+}
+
+.shopItemName {
+    left: 20%;
 }
 
 .shopItemCount {
-    position: absolute;
-    float: left;
-    padding-top: 4%;
     left: 55%;
-    font-size: 12px;
+}
+
+.shopItemPrice {
+    left: 65%;
 }
 
 .shopItemBuy {
     position: relative;
-    float: left;
     border: 2px solid rgba(0, 255, 0, 0.3);
     border-radius: 30%;
-    padding-top: 4%;
-    left: 65%;
-    font-size: 12px;
+    left: 75%;
 }
 
 .shopItemBuy:hover {
@@ -586,8 +590,13 @@
     text-align: right;
 }
 
-#shopInventorySellReturnText {
+#shopSellSlotReturnText, #shopSellSlotText {
     color: black;
+}
+
+#confirmEnchant, #confirmSell {
+    top: 80%;
+    left: 70%;
 }
 
 @media only screen and (min-width: 1501px) {
@@ -1008,6 +1017,9 @@
         width: 387px;
         height: 465px;
         background: url('../img/3/containers.png') 0 0;
+
+        margin-left: -193px;
+        margin-top: -232px;
     }
 
     #enchantSelectedItem, #enchantShards {
@@ -1141,34 +1153,26 @@
         background: url("../img/3/containers.png") 0 0;;
     }
 
-    #shopInventorySell, #shopInventorySellReturn {
+    #shopSellSlot, #shopSellSlotReturn {
         position: absolute;
         width: 48px;
         height: 49px;
         top: 369px;
     }
 
-    #shopInventorySell {
+    #shopSellSlot {
         left: 42px;
     }
 
-    #shopInventorySellReturn {
+    #shopSellSlotReturn {
         left: 132px;
     }
 
-    #shopInventorySellReturnText {
+    #shopSellSlotReturnText, #shopSellSlotText {
         margin-top: 57px;
     }
 
-    .shopItemName {
-        font-size: 16px;
-    }
-
-    .shopItemCount {
-        font-size: 16px;
-    }
-
-    .shopItemBuy {
+    .shopItemName, .shopItemCount, .shopItemPrice, .shopItemBuy {
         font-size: 16px;
     }
 
@@ -1697,6 +1701,9 @@
         width: 258px;
         height: 310px;
         background: url('../img/2/containers.png') 0 0;
+
+        margin-left: -129px;
+        margin-top: -155px;
     }
 
     #trade {
@@ -1846,22 +1853,22 @@
         background: url("../img/2/containers.png") 0 0;;
     }
 
-    #shopInventorySell, #shopInventorySellReturn {
+    #shopSellSlot, #shopSellSlotReturn {
         position: absolute;
         width: 32px;
         height: 32px;
         top: 246px;
     }
 
-    #shopInventorySell {
+    #shopSellSlot {
         left: 28px;
     }
 
-    #shopInventorySellReturn {
+    #shopSellSlotReturn {
         left: 88px;
     }
 
-    #shopInventorySellReturnText {
+    #shopSellSlotReturnText, #shopSellSlotText {
         margin-top: 38px;
     }
 
@@ -2341,9 +2348,14 @@
     }
 
     #enchant {
+        transform: scale(1.6);
+
         width: 129px;
         height: 155px;
         background: url('../img/1/containers.png') 0 0;
+
+        margin-left: -64px;
+        margin-top: -77px;
     }
 
     #enchantSelectedItem, #enchantShards {
@@ -2464,22 +2476,22 @@
         background: url("../img/1/containers.png") 0 0;;
     }
 
-    #shopInventorySell, #shopInventorySellReturn {
+    #shopSellSlot, #shopSellSlotReturn {
         position: absolute;
         width: 16px;
         height: 16px;
         top: 123px;
     }
 
-    #shopInventorySell {
+    #shopSellSlot {
         left: 14px;
     }
 
-    #shopInventorySellReturn {
+    #shopSellSlotReturn {
         left: 44px;
     }
 
-    #shopInventorySellReturnText {
+    #shopSellSlotReturnText, #shopSellSlotText {
         margin-top: 19px;
     }
 
@@ -2501,7 +2513,7 @@
         background-size: 600%;
     }
 
-    .shopItemName, .shopItemCount {
+    .shopItemName, .shopItemCount, .shopItemPrice {
         font-size: 7px;
     }
 
@@ -2509,8 +2521,7 @@
         position: relative;
         float: left;
         border: 1px solid rgba(0, 255, 0, 0.3);
-        padding-top: 4%;
-        left: 65%;
+        padding-top: 2%;
         font-size: 6px;
     }
 

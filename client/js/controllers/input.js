@@ -265,6 +265,11 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
              * on mobile, and it is far harder to control.
              */
 
+            self.getActions().hidePlayerActions();
+
+            if (self.game.interface)
+                self.game.interface.hideAll();
+
             if (self.renderer.mobile && self.chatHandler.input.is(':visible') && self.chatHandler.input.val() === '')
                 self.chatHandler.hideInput();
 
@@ -305,13 +310,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             } else
                 player.removeTarget();
 
-
-            self.getActions().hidePlayerActions();
-
             player.go(position.x, position.y);
-
-            if (self.game.interface)
-                self.game.interface.hideAll();
 
         },
 

@@ -911,7 +911,7 @@ class Incoming {
                     index: item.index
                 };
 
-                log.info('Received Select: ' + npcId + ' ' + slotId);
+                log.debug('Received Select: ' + npcId + ' ' + slotId);
 
                 break;
 
