@@ -265,11 +265,6 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
              * on mobile, and it is far harder to control.
              */
 
-            self.getActions().hidePlayerActions();
-
-            if (self.game.interface)
-                self.game.interface.hideAll();
-
             if (self.renderer.mobile && self.chatHandler.input.is(':visible') && self.chatHandler.input.val() === '')
                 self.chatHandler.hideInput();
 
@@ -278,6 +273,11 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
             if ((self.game.zoning && self.game.zoning.direction) || player.disableAction)
                 return;
+
+            self.getActions().hidePlayerActions();
+
+            if (self.game.interface)
+                self.game.interface.hideAll();
 
             var entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX && position.y === player.gridY));
 
