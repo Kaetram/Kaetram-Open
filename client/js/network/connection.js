@@ -590,15 +590,15 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                     case Packets.InventoryOpcode.Remove:
 
-                        if (!self.interface.inventory)
-                            return;
-
-                        self.interface.inventory.remove(info);
-
                         if (!self.interface.bank)
                             return;
 
                         self.interface.removeInventory(info);
+
+                        if (!self.interface.inventory)
+                            return;
+
+                        self.interface.inventory.remove(info);
 
                         break;
                 }
