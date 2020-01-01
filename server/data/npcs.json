@@ -222,7 +222,7 @@
   "Vendingmachine": {
     "id": 42,
     "name": "Enchantment Table",
-    "type": "echanter"
+    "type": "enchanter"
   },
 
   "Redstoremannpc": {
