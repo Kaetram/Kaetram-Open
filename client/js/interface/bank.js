@@ -248,6 +248,11 @@ define(['jquery', './container/container'], function($, Container) {
             if (!item)
                 return;
 
+            /**
+             * All we're doing here is subtracting and updating the count
+             * of the items in the inventory first.
+             */
+
             var itemContainer = self.inventoryContainer.slots[info.index],
                 slot = item.find('#bankInventorySlot' + info.index),
                 diff = itemContainer.count - info.count;
