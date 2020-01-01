@@ -22,6 +22,8 @@ define(['jquery', './container/container'], function($, Container) {
             self.sellSlotReturn = $('#shopSellSlotReturn');
             self.sellSlotReturnText = $('#shopSellSlotReturnText');
 
+            self.confirmSell = $('#confirmSell');
+
             self.player = game.player;
             self.interface = interface;
 
@@ -43,6 +45,10 @@ define(['jquery', './container/container'], function($, Container) {
             self.sellSlot.click(function() {
                 self.remove();
             });
+
+            self.confirmSell.click(function() {
+                self.sell();
+            });
         },
 
         buy: function(event) {
@@ -52,6 +58,11 @@ define(['jquery', './container/container'], function($, Container) {
             self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
         },
 
+        sell: function() {
+            // The server will handle the selected item and verifications.
+            this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Sell, this.openShop]);
+        },
+
         select: function(event) {
             var self = this,
                 id = event.currentTarget.id.substring(17);
@@ -59,7 +70,7 @@ define(['jquery', './container/container'], function($, Container) {
             self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, self.openShop, id]);
         },
 
-        remove: function(event) {
+        remove: function() {
             this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
         },
 
@@ -229,6 +240,15 @@ define(['jquery', './container/container'], function($, Container) {
 
             if (self.inventory)
                 self.inventory.find('ul').empty();
+
+            if (self.close)
+                self.close.unbind('click');
+
+            if (self.sellSlot)
+                self.sellSlot.unbind('click');
+
+            if (self.confirmSell)
+                self.confirmSell.unbind('click');
         },
 
         getScale: function() {

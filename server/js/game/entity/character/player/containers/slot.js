@@ -22,8 +22,8 @@ class Slot {
 
         self.id = parseInt(id);
         self.count = parseInt(count);
-        self.ability = parseInt(ability);
-        self.abilityLevel = parseInt(abilityLevel);
+        self.ability = parseInt(ability) || -1;
+        self.abilityLevel = parseInt(abilityLevel) || -1;
 
         self.string = Items.idToString(self.id);
         self.edible = Items.isEdible(self.id);
