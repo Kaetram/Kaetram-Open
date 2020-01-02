@@ -17,6 +17,12 @@ class Weapon extends Equipment {
         self.breakable = false;
     }
 
+    getBaseAmplifier() {
+        let base = super.getBaseAmplifier();
+
+        return base + (0.05 * this.abilityLevel);
+    }
+
     hasCritical() {
         return this.ability === 1;
     }

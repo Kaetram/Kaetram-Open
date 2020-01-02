@@ -1,9 +1,11 @@
 /* global module */
 
-let Items = require('../../../../util/items'),
+let _ = require('underscore'),
+    Items = require('../../../../util/items'),
     Messages = require('../../../../network/messages'),
     Packets = require('../../../../network/packets'),
-    Utils = require('../../../../util/utils');
+    Utils = require('../../../../util/utils'),
+    Modules = require('../../../../util/modules');
 
 class Enchant {
 
@@ -12,7 +14,7 @@ class Enchant {
      * Tier 2 - Damage boost (1-10% & 10% for special ability or special ability level up)
      * Tier 3 - Damage boost (1-15% & 15% for special ability or special ability level up)
      * Tier 4 - Damage boost (1-20% & 20% for special ability or special ability level up)
-     * Tier 5 - Damage boost (1-40% & 25% for special ability or special ability level up)
+     * Tier 5 - Damage boost (1-25% & 25% for special ability or special ability level up)
      */
 
 
@@ -129,18 +131,12 @@ class Enchant {
          * and reason them out.
          */
 
-        let tier = self.selectedItem.tier;
+        let tier = Items.getShardTier(self.selectedShards.id);
 
-        self.selectedItem.count = Utils.randomInt(1, tier === 5 ? 40 : 5 * tier);
-
-        if (tier < 2)
+        if (tier < 1)
             return;
 
-        if (self.hasAbility(self.selectedItem))
-            if (self.selectedItem.abilityLevel < 5)
-                self.selectedItem.abilityLevel++;
-            else
-                self.generateAbility();
+        self.generateAbility(tier);
 
         self.player.inventory.remove(self.selectedShards.id, 10, self.selectedShards.index);
 
@@ -150,13 +146,25 @@ class Enchant {
         self.player.sync();
     }
 
-    generateAbility() {
+    generateAbility(tier) {
         let self = this,
             type = Items.getType(self.selectedItem.id),
             probability = Utils.randomInt(0, 100);
 
-        if (probability > 5 + (5 * self.selectedShards.tier))
+        if (probability > 20 + (5 * tier)) {
+            self.player.notify('The item has failed to enchant.');
             return;
+        }
+
+        if (self.selectedItem.ability !== -1) {
+            if (tier !== self.selectedItem.abilityLevel) {
+                self.selectedItem.abilityLevel = tier;
+
+                self.player.notify(`Your item has been imbued with level ${tier} of the ${Object.keys(Modules.Enchantmnet)[self.selectedItem.ability]} ability.`);
+            }
+
+            return;
+        }
 
         switch (type) {
             case 'armor':
@@ -191,6 +199,15 @@ class Enchant {
                 break;
 
         }
+
+        self.selectedItem.abilityLevel = tier;
+
+        _.each(Modules.Enchantment, (id, index) => {
+            if (id === self.selectedItem.ability)
+                self.player.notify(`Your item has been imbued with the ${index.toLowerCase()} ability.`);
+
+        });
+
     }
 
     verify() {
