@@ -54,7 +54,7 @@ class Enchant {
 
     remove(type) {
         let self = this,
-            index;
+            index = -1;
 
         if (type === 'item' && self.selectedItem) {
 
@@ -66,9 +66,11 @@ class Enchant {
 
             index = self.selectedShards.index;
 
-
             self.selectedShards = null;
         }
+
+        if (index < 0)
+            return;
 
         self.player.send(new Messages.Enchant(Packets.EnchantOpcode.Remove, {
             type: type,
@@ -141,6 +143,10 @@ class Enchant {
                 self.generateAbility();
 
         self.player.inventory.remove(self.selectedShards.id, 10, self.selectedShards.index);
+
+        self.remove('item');
+        self.remove('shards');
+
         self.player.sync();
     }
 

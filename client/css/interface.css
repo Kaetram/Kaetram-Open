@@ -365,13 +365,6 @@
     left: 0;
 }
 
-#shardsCount {
-    position: absolute;
-    font-family: 'AdvoCut', sans-serif;
-    top: 120%;
-    text-align: center;
-}
-
 .skillSlot {
     position: relative;
     float: left;
@@ -590,7 +583,7 @@
     text-align: right;
 }
 
-#shopSellSlotReturnText, #shopSellSlotText {
+#shopSellSlotReturnText, #shopSellSlotText, #shardsCount {
     color: black;
 }
 
@@ -1168,7 +1161,7 @@
         left: 132px;
     }
 
-    #shopSellSlotReturnText, #shopSellSlotText {
+    #shopSellSlotReturnText, #shopSellSlotText, #shardsCount {
         margin-top: 57px;
     }
 
@@ -1868,7 +1861,7 @@
         left: 88px;
     }
 
-    #shopSellSlotReturnText, #shopSellSlotText {
+    #shopSellSlotReturnText, #shopSellSlotText, #shardsCount {
         margin-top: 38px;
     }
 
@@ -2491,7 +2484,7 @@
         left: 44px;
     }
 
-    #shopSellSlotReturnText, #shopSellSlotText {
+    #shopSellSlotReturnText, #shopSellSlotText, #shardsCount {
         margin-top: 19px;
     }
 
