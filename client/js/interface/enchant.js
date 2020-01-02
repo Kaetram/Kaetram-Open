@@ -162,8 +162,12 @@ define(['jquery'], function($) {
         hide: function() {
             var self = this;
 
+            self.remove('item');
+            self.remove('shards');
+
             self.selectedItem.css('background-image', '');
             self.selectedShards.css('background-image', '');
+            self.shardsCount.text('');
 
             self.body.fadeOut('fast');
         },
