@@ -423,6 +423,9 @@ class Player extends Character {
         if (!data || data === 'null')
             return;
 
+        if (config.debug)
+            log.info(`Equipping item - ${[string, count, ability, abilityLevel]}`);
+
         if (Items.isArmour(string))
             type = Modules.Equipment.Armour;
         else if (Items.isWeapon(string))
