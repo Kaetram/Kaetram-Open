@@ -99,14 +99,15 @@ define(['jquery'], function($) {
 
         moveBack: function(type, index) {
             var self = this,
-                image = self.getSlot(index).find('#inventoryImage'+ index),
+                image = self.getSlot(index).find('#inventoryImage' + index),
                 itemCount = self.getSlot(index).find('#inventoryItemCount' + index),
                 count = self.getItemSlot(index).count;
 
             switch (type) {
                 case 'item':
 
-                    image.css('background-image', self.selectedItem.css('background-image'));
+                    if (count > 0)
+                        image.css('background-image', self.selectedItem.css('background-image'));
 
                     if (count > 1)
                         itemCount.text(count);
@@ -117,7 +118,8 @@ define(['jquery'], function($) {
 
                 case 'shards':
 
-                    image.css('background-image', self.selectedShards.css('background-image'));
+                    if (count > 0)
+                        image.css('background-image', self.selectedShards.css('background-image'));
 
                     if (count > 1)
                         itemCount.text(count);
