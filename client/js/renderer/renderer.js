@@ -625,8 +625,14 @@ define(['jquery', './camera', './tile',
                 if (self.drawLevels && (entity.type === 'mob' || entity.type === 'player'))
                     self.drawText('Level ' + entity.level, x, y, true, colour, '#000');
 
-                if (entity.type === 'item' && entity.count > 1)
-                    self.drawText(entity.count, x, y, true, colour);
+                if (entity.type === 'item') {
+                    if (entity.count > 1)
+                        self.drawText(entity.count, x, y, true, colour);
+
+                    if (entity.ability > -1)
+                        self.drawText(Modules.EnchantmentNames[entity.ability] + ' [+' + entity.abilityLevel + ']', x, entity.y + 20, true, colour);
+                }
+
 
             } else {
 
