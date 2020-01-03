@@ -87,7 +87,7 @@ define(['jquery', './container/container'], function($, Container) {
 
         toggle: function(tClass) {
             let self = this;
-            
+
             self.health.addClass(tClass);
 
             setTimeout(function() {
