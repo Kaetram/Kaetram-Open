@@ -470,6 +470,13 @@ class Commands {
 
                 break;
 
+            case 'toggleheal':
+                self.player.send(new Messages.Command({
+                    command: 'toggleheal'
+                }));
+                break;
+
+
         }
     }
 

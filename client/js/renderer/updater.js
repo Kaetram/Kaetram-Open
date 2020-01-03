@@ -57,6 +57,9 @@ define(['../entity/character/character'], function(Character) {
                         if (entity.explosion && entity.explosionAnimation)
                             entity.explosionAnimation.update(self.game.time);
 
+                        if (entity.healing && entity.healingAnimation)
+                            entity.healingAnimation.update(self.game.time);
+
                         if (entity.movement && entity.movement.inProgress)
                             entity.movement.step(self.game.time);
 
