@@ -552,6 +552,9 @@ define(['jquery', './camera', './tile',
                              offsetY = sprite.offsetY * self.superScaling;
 
                          self.context.drawImage(sprite.image, x, y, width, height, offsetX, offsetY, width, height);
+
+                         animation.update(self.game.time);
+
                      }
                  }
 
