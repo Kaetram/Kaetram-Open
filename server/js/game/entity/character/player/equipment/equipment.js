@@ -10,8 +10,8 @@ class Equipment {
         self.name = name;
         self.id = id;
         self.count = count ? count : 0;
-        self.ability = ability ? ability : 0;
-        self.abilityLevel = abilityLevel ? abilityLevel : 0;
+        self.ability = !isNaN(ability) ? ability : -1;
+        self.abilityLevel = !isNaN(abilityLevel) ? ability : -1;
     }
 
     getName() {
