@@ -6461,42 +6461,10 @@
     "width": 32,
     "height": 32,
     "animations": {
-      "atk_right": {
-        "length": 10,
-        "row": 0
-      },
-      "walk_right": {
-        "length": 10,
-        "row": 0
-      },
-      "idle_right": {
-        "length": 10,
-        "row": 0
-      },
-      "atk_up": {
-        "length": 10,
-        "row": 0
-      },
-      "walk_up": {
-        "length": 10,
-        "row": 0
-      },
-      "idle_up": {
-        "length": 10,
-        "row": 0
-      },
-      "atk_down": {
-        "length": 10,
-        "row": 0
-      },
-      "walk_down": {
-        "length": 10,
-        "row": 0
-      },
-      "idle_down": {
-        "length": 10,
-        "row": 0
-      }
+        "atk_down": {
+          "length": 10,
+          "row": 0
+        }
     },
     "offsetX": -8,
     "offsetY": -10
@@ -18604,8 +18572,8 @@
         "row": 0
       }
     },
-    "offsetX": -24,
-    "offsetY": -24
+    "offsetX": -16,
+    "offsetY": -16
   },
   {
     "id": "explosion-iceball",

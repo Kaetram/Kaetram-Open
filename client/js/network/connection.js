@@ -558,6 +558,11 @@ define(['./impl/teamwar'], function(TeamWar) {
                         self.renderer.debugging = !self.renderer.debugging;
                         break;
 
+                    case 'toggleheal':
+                        log.info('llll');
+                        self.game.player.healing = true;
+                        break;
+
                 }
 
             });
@@ -716,6 +721,8 @@ define(['./impl/teamwar'], function(TeamWar) {
                     case 'health':
 
                         self.info.create(Modules.Hits.Heal, [info.amount], entity.x, entity.y);
+
+                        self.game.player.healing = true;
 
                         break;
 

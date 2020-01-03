@@ -33,6 +33,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             self.frozen = false;
             self.stunned = false;
             self.explosion = false;
+            self.healing = false;
 
             self.path = null;
             self.target = null;
@@ -53,6 +54,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         loadGlobals: function() {
             var self = this;
 
+            // Critical Hit Animation
             self.criticalAnimation = new Animation('atk_down', 10, 0, 48, 48);
             self.criticalAnimation.setSpeed(30);
 
@@ -63,6 +65,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
                 self.criticalAnimation.count = 1;
             });
 
+            // Terror Animation
             self.terrorAnimation = new Animation('explosion', 8, 0, 64, 64);
             self.terrorAnimation.setSpeed(50);
 
@@ -73,9 +76,11 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
                 self.terrorAnimation.count = 1;
             });
 
+            // Stunned Animation
             self.stunAnimation = new Animation('atk_down', 6, 0, 48, 48);
             self.stunAnimation.setSpeed(30);
 
+            // Explosion Animation
             self.explosionAnimation = new Animation('explosion', 8, 0, 64, 64);
             self.explosionAnimation.setSpeed(50);
 
@@ -84,6 +89,17 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
                 self.explosionAnimation.reset();
                 self.explosionAnimation.count = 1;
+            });
+
+            // Healing Animation
+            self.healingAnimation = new Animation('explosion', 8, 0, 48, 48);
+            self.healingAnimation.setSpeed(50);
+
+            self.healingAnimation.setCount(1, function() {
+                self.healing = false;
+
+                self.healingAnimation.reset();
+                self.healingAnimation.count = 1;
             });
 
         },
@@ -392,6 +408,10 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             }
         },
 
+        hasEffect: function() {
+            return this.critical || this.stunned || this.terror || this.explosion || this.healing;
+        },
+
         getEffectAnimation: function() {
             var self = this;
 
@@ -406,6 +426,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             if (self.explosion)
                 return self.explosionAnimation;
+
+            if (self.healing)
+                return self.healingAnimation;
         },
 
         getActiveEffect: function() {
@@ -422,6 +445,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             if (self.explosion)
                 return 'explosion-fireball';
+
+            if (self.healing)
+                return 'explosion-heal';
         },
 
         /**
