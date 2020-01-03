@@ -136,6 +136,13 @@ class Enchant {
         if (tier < 1)
             return;
 
+        if (tier <= self.selectedItem.abilityLevel) {
+
+            self.player.notify('This item has already been imbued with those shards.');
+
+            return;
+        }
+
         self.generateAbility(tier);
 
         self.player.inventory.remove(self.selectedShards.id, 10, self.selectedShards.index);
@@ -156,12 +163,14 @@ class Enchant {
             return;
         }
 
-        if (self.selectedItem.ability !== -1) {
-            if (tier !== self.selectedItem.abilityLevel) {
-                self.selectedItem.abilityLevel = tier;
+        log.info(`Selected item ability info: ${self.selectedItem.ability} + ${self.selectedItem.abilityLevel}.`);
 
-                self.player.notify(`Your item has been imbued with level ${tier} of the ${Object.keys(Modules.Enchantmnet)[self.selectedItem.ability]} ability.`);
-            }
+        if (self.hasAbility(self.selectedItem)) {
+            let abilityName = Object.keys(Modules.Enchantment)[self.selectedItem.ability];
+
+            self.selectedItem.abilityLevel = tier;
+
+            self.player.notify(`Your item has been imbued with level ${tier} of the ${abilityName} ability.`);
 
             return;
         }
