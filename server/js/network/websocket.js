@@ -33,14 +33,11 @@ class WebSocket extends Socket {
                 self.webSocketReadyCallback();
         };
 
-        if (config.ssl)
-            self.httpServer = https.createServer(app).listen(port, host, () => {
-                readyWebSocket(port);
-            });
-        else
-            self.httpServer = http.createServer(app).listen(port, host, () => {
-                readyWebSocket(port);
-            });
+        let server = config.ssl ? https : http;
+
+        self.httpServer = server.createServer(app).listen(port, host, () => {
+            readyWebSocket(port);
+        });
 
         self.io = new SocketIO(self.httpServer);
         self.io.on('connection', (socket) => {
