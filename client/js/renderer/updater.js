@@ -44,22 +44,6 @@ define(['../entity/character/character'], function(Character) {
 
                     if (entity instanceof Character) {
 
-
-                        if (entity.critical && entity.criticalAnimation)
-                            entity.criticalAnimation.update(self.game.time);
-
-                        if (entity.terror && entity.terrorAnimation)
-                            entity.terrorAnimation.update(self.game.time);
-
-                        if (entity.stunned && entity.stunAnimation)
-                            entity.stunAnimation.update(self.game.time);
-
-                        if (entity.explosion && entity.explosionAnimation)
-                            entity.explosionAnimation.update(self.game.time);
-
-                        if (entity.healing && entity.healingAnimation)
-                            entity.healingAnimation.update(self.game.time);
-
                         if (entity.movement && entity.movement.inProgress)
                             entity.movement.step(self.game.time);
 
