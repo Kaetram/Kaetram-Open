@@ -126,6 +126,17 @@ Modules = {
         Entity: 0,
         Position: 1,
         Relative: 2
+    },
+
+    Enchantment: {
+        Bloodsucking: 0,
+        Critical: 1,
+        Evasion: 2,
+        Spike: 3,
+        Explosive: 4,
+        Stun: 5,
+        AntiStun: 6,
+        Splash: 7
     }
 
 };
