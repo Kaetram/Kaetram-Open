@@ -52,6 +52,7 @@ class Creator {
     }
 
     savePlayerEquipment(collection, player) {
+
         collection.updateOne({
             username: player.username
         }, { $set: Creator.getPlayerEquipment(player) }, {
@@ -231,11 +232,11 @@ class Creator {
             orientation: player.orientation ? player.orientation : 0,
             lastWarp: player.warp.lastWarp ? player.warp.lastWarp : 0,
             mapVersion: player.mapVersion ? player.mapVersion : 0,
-            armour: [player.armour ? player.armour.getId() : 114, player.armour ? player.armour.getCount() : 0, player.armour ? player.armour.getAbility() : 0, player.armour ? player.armour.getAbilityLevel() : 0],
-            weapon: [player.weapon ? player.weapon.getId() : -1, player.weapon ? player.weapon.getCount() : 0, player.weapon ? player.weapon.getAbility() : 0, player.weapon ? player.weapon.getAbilityLevel() : 0],
-            pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : 0, player.pendant ? player.pendant.getAbility() : 0, player.pendant ? player.pendant.getAbilityLevel() : 0],
-            ring: [player.ring ? player.ring.getId() : -1, player.ring ? player.ring.getCount() : 0, player.ring ? player.ring.getAbility() : 0, player.ring ? player.ring.getAbilityLevel() : 0],
-            boots: [player.boots ? player.boots.getId() : -1, player.boots ? player.boots.getCount() : 0, player.boots ? player.boots.getAbility() : 0, player.boots ? player.boots.getAbilityLevel() : 0]
+            armour: [player.armour ? player.armour.getId() : 114, player.armour ? player.armour.getCount() : -1, player.armour ? player.armour.getAbility() : -1, player.armour ? player.armour.getAbilityLevel() : -1],
+            weapon: [player.weapon ? player.weapon.getId() : -1, player.weapon ? player.weapon.getCount() : -1, player.weapon ? player.weapon.getAbility() : -1, player.weapon ? player.weapon.getAbilityLevel() : -1],
+            pendant: [player.pendant ? player.pendant.getId() : -1, player.pendant ? player.pendant.getCount() : -1, player.pendant ? player.pendant.getAbility() : -1, player.pendant ? player.pendant.getAbilityLevel() : -1],
+            ring: [player.ring ? player.ring.getId() : -1, player.ring ? player.ring.getCount() : -1, player.ring ? player.ring.getAbility() : -1, player.ring ? player.ring.getAbilityLevel() : -1],
+            boots: [player.boots ? player.boots.getId() : -1, player.boots ? player.boots.getCount() : -1, player.boots ? player.boots.getAbility() : -1, player.boots ? player.boots.getAbilityLevel() : -1]
         }
     }
 
