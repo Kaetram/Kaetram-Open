@@ -4,7 +4,7 @@ let Entity = require('../entity');
 
 class Item extends Entity {
 
-    constructor(id, instance, x, y) {
+    constructor(id, instance, x, y, ability, abilityLevel) {
         super(id, 'item', instance, x, y);
 
         let self = this;
@@ -14,9 +14,15 @@ class Item extends Entity {
         self.shard = false;
 
         self.count = 1;
-        self.ability = 0;
-        self.abilityLevel = 0;
+        self.ability = ability;
+        self.abilityLevel = abilityLevel;
         self.tier = 1;
+
+        if (isNaN(ability))
+            self.ability = -1;
+
+        if (isNaN(abilityLevel))
+            self.abilityLevel = -1;
 
         self.respawnTime = 30000;
         self.despawnDuration = 4000;
