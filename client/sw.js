@@ -30,8 +30,32 @@ self.__precacheManifest = [
     "revision": "bb712dd9c179a93a4cc4e16954481c16"
   },
   {
+    "url": "audio/music/beach2.mp3",
+    "revision": "c354bcf1f549cf94c332be7b643bf2b8"
+  },
+  {
+    "url": "audio/music/boss.mp3",
+    "revision": "32ca583a018379a307d35ad6caf52f90"
+  },
+  {
+    "url": "audio/music/cave.mp3",
+    "revision": "237867d0f5afdc1d632382a4277461c9"
+  },
+  {
     "url": "audio/music/codingroom.mp3",
     "revision": "793237a957672987964006a1f12cb7d4"
+  },
+  {
+    "url": "audio/music/desert.mp3",
+    "revision": "8379702aa93e0678638634b93495327f"
+  },
+  {
+    "url": "audio/music/forest.mp3",
+    "revision": "05d2b50ca00c8c71e8129316c6aec2a0"
+  },
+  {
+    "url": "audio/music/lavaland.mp3",
+    "revision": "c898e2915a432d11a027ef6da8781c0e"
   },
   {
     "url": "audio/music/meadowofthepast.mp3",
@@ -63,7 +87,7 @@ self.__precacheManifest = [
   },
   {
     "url": "audio/sounds/death.mp3",
-    "revision": "8af3be715318441738897bea78791ed8"
+    "revision": "68afed165dad2c0222db29999c716ae4"
   },
   {
     "url": "audio/sounds/firefox.mp3",
@@ -95,7 +119,7 @@ self.__precacheManifest = [
   },
   {
     "url": "audio/sounds/loot.mp3",
-    "revision": "40d6fe1c8cdf0c673f4c6dafa5200009"
+    "revision": "bbc072e4dd0bafecddbc9beec86b03f5"
   },
   {
     "url": "audio/sounds/noloot.mp3",
@@ -115,7 +139,7 @@ self.__precacheManifest = [
   },
   {
     "url": "audio/sounds/revive.mp3",
-    "revision": "34939ef954a5ee80f939f0666057fabc"
+    "revision": "fa243f979ba1e1a119184dd6ba92625a"
   },
   {
     "url": "audio/sounds/teleport.mp3",
@@ -135,7 +159,7 @@ self.__precacheManifest = [
   },
   {
     "url": "css/interface.css",
-    "revision": "d7e5a52c7461d6727f131c2040b02371"
+    "revision": "c109ed2a107eac9cf7daffa50bf1a621"
   },
   {
     "url": "css/main.css",
@@ -147,7 +171,7 @@ self.__precacheManifest = [
   },
   {
     "url": "data/config.json",
-    "revision": "02f0d8794fcd0b506ad019cde83e8a6e"
+    "revision": "31b3b902dc0a296730efea2df9040446"
   },
   {
     "url": "data/config.json-dist",
@@ -155,11 +179,11 @@ self.__precacheManifest = [
   },
   {
     "url": "data/maps/map.js",
-    "revision": "1a3b8c647928264a3b58a569bb299b1d"
+    "revision": "d9a658ce7207bd21881b92c8d7ff691d"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "c58aa40c657499b2039c72fd8a3086a5"
+    "revision": "ae37bf9440e0afccbc38bc5e2d4daf03"
   },
   {
     "url": "data/sprites.json",
@@ -5215,11 +5239,11 @@ self.__precacheManifest = [
   },
   {
     "url": "img/tilesets/tilesheet-1.png",
-    "revision": "a7952d28f065f9e581a1e64a39630c36"
+    "revision": "0ab2c5a7b8ada179a117da7b6c82ece1"
   },
   {
     "url": "img/tilesets/tilesheet-2.png",
-    "revision": "542cc171d76067629a2579a4538d9594"
+    "revision": "1d0f7c5eead888d1614991b2b8173498"
   },
   {
     "url": "img/tilesets/tilesheet-3.png",
@@ -5239,7 +5263,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "464684bda1ece3a3ff2917af038e399f"
+    "revision": "89f837daf52ced79f497470108133c1d"
   },
   {
     "url": "js/app.js",
@@ -5271,7 +5295,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/controllers/input.js",
-    "revision": "23df3a4c0adbecfbae14be298390d81a"
+    "revision": "46808869f0d8c00ec938fded8634d06d"
   },
   {
     "url": "js/controllers/interface.js",
@@ -5379,7 +5403,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/bank.js",
-    "revision": "af4d29b72512721fb81393d10e5dd65e"
+    "revision": "376658c354d0a8057c18cb5dce5bafbe"
   },
   {
     "url": "js/interface/container/container.js",
@@ -5391,7 +5415,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/enchant.js",
-    "revision": "ccca91a7d14be7a5df5584ab16b53908"
+    "revision": "4e85a230db8a8c21ab9b19391c2f0064"
   },
   {
     "url": "js/interface/header.js",
@@ -5411,7 +5435,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/profile/pages/quest.js",
-    "revision": "f9c6ec1bccc2a2cf3f8572d70386ffdb"
+    "revision": "c60b9d4565c75a49a95dca49f44464cc"
   },
   {
     "url": "js/interface/profile/pages/settings.js",
@@ -5427,7 +5451,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/shop.js",
-    "revision": "774cef246add033eef981150c72ef1f8"
+    "revision": "7aa5876dd62eaeab3b076a6f9c1b4a7e"
   },
   {
     "url": "js/interface/warp.js",
@@ -5483,7 +5507,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/connection.js",
-    "revision": "bd66395b5aa4b414303cd0b6380d4474"
+    "revision": "d8dfc829b90f5d44e1ffce3561c55c55"
   },
   {
     "url": "js/network/impl/teamwar.js",
@@ -5495,7 +5519,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/packets.js",
-    "revision": "5eaaf2b9aa6809369f9bb3cf0a62a3b3"
+    "revision": "7d1ced652352f75782a2f44378e0456a"
   },
   {
     "url": "js/network/socket.js",
@@ -5531,7 +5555,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "8db4ed9051591089a48222091f76337a"
+    "revision": "e38d1c00d78872c698c48c5a2585a8ad"
   },
   {
     "url": "js/renderer/tile.js",
@@ -5547,7 +5571,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/utils/detect.js",
-    "revision": "9a97a5fd460137a6cd310d1ab0d4dcc6"
+    "revision": "3d203e4bd0e055bdf65a45d5f0e6c6ee"
   },
   {
     "url": "js/utils/modules.js",
