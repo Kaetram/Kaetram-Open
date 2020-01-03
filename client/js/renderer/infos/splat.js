@@ -19,7 +19,8 @@ define(function() {
             self.lastTime = 0;
             self.speed = 100;
 
-            self.duration = 1000;
+            self.updateSpeed = type === Modules.Hits.Heal ? 2 : 1;
+            self.duration = type === Modules.Hits.Heal ? 400 : 1000;
         },
 
         setColours: function(fill, stroke) {
@@ -35,7 +36,7 @@ define(function() {
             var self = this;
 
             if (!self.statique)
-                self.y -= 1;
+                self.y -= self.updateSpeed;
 
             self.opacity -= 70 / self.duration;
 

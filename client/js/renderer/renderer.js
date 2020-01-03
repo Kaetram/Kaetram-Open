@@ -535,7 +535,7 @@ define(['jquery', './camera', './tile',
                      }
                  }
 
-                 if (entity.terror || entity.stunned || entity.critical || entity.explosion) {
+                 if (entity.hasEffect()) {
                      var sprite = self.entities.getSprite(entity.getActiveEffect());
 
                      if (!sprite.loaded)
