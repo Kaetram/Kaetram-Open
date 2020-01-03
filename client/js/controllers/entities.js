@@ -80,6 +80,8 @@ define(['../renderer/grids', '../entity/objects/chest',
 
                     case 'item':
 
+                        log.info(info);
+
                         var item = new Item(info.id, info.string, info.count, info.ability, info.abilityLevel);
 
                         entity = item;

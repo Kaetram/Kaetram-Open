@@ -391,14 +391,14 @@ class World {
         return chest;
     }
 
-    createItem(id, instance, x, y) {
-        return new Item(id, instance, x, y);;
+    createItem(id, instance, x, y, ability, abilityLevel) {
+        return new Item(id, instance, x, y, ability, abilityLevel);
     }
 
-    dropItem(id, count, x, y) {
+    dropItem(id, count, x, y, ability, abilityLevel) {
         let self = this,
             instance = Utils.generateInstance(4, id + (Object.keys(self.entities)).length, x, y),
-            item = self.createItem(id, instance, x, y);
+            item = self.createItem(id, instance, x, y, ability, abilityLevel);
 
         item.count = count;
         item.dropped = true;

@@ -632,7 +632,7 @@ class Incoming {
     handleInventory(message) {
         let self = this,
             opcode = message.shift(),
-            id;
+            id, ability, abilityLevel;
 
         switch (opcode) {
             case Packets.InventoryOpcode.Remove:
@@ -655,8 +655,10 @@ class Incoming {
                 if (count > iSlot.count)
                     count = iSlot.count;
 
+                ability = iSlot.ability, abilityLevel = iSlot.abilityLevel;
+
                 if (self.player.inventory.remove(id, count ? count : item.count, item.index))
-                    self.world.dropItem(id, count ? count : 1, self.player.x, self.player.y);
+                    self.world.dropItem(id, count ? count : 1, self.player.x, self.player.y, ability, abilityLevel);
 
                 break;
 
@@ -664,9 +666,10 @@ class Incoming {
                 let index = message.shift(),
                     slot = self.player.inventory.slots[index],
                     string = slot.string,
-                    sCount = slot.count,
-                    ability = slot.ability,
-                    abilityLevel = slot.abilityLevel;
+                    sCount = slot.count;
+
+                ability = slot.ability,
+                abilityLevel = slot.abilityLevel;
 
                 if (!slot || slot.id < 1)
                     return;
