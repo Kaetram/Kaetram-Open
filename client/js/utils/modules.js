@@ -137,6 +137,9 @@ Modules = {
         Stun: 5,
         AntiStun: 6,
         Splash: 7
-    }
+    },
+
+    EnchantmentNames: ["Bloodsucking", "Critical", "Evasion", "Spike", "Explosive", "Stun", "AntiStun", "Splash"]
+
 
 };
