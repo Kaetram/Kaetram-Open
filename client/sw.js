@@ -179,15 +179,15 @@ self.__precacheManifest = [
   },
   {
     "url": "data/maps/map.js",
-    "revision": "d9a658ce7207bd21881b92c8d7ff691d"
+    "revision": "d13c328e9f4885046a431ee3a959a4e8"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "ae37bf9440e0afccbc38bc5e2d4daf03"
+    "revision": "80b97b5984f2ffdc09eaab331c738183"
   },
   {
     "url": "data/sprites.json",
-    "revision": "060355f2ab86dcea72be9b7b305daf1f"
+    "revision": "ddaa114ef603e5e49d19f3a4777b6d66"
   },
   {
     "url": "favicon.ico",
@@ -5239,7 +5239,7 @@ self.__precacheManifest = [
   },
   {
     "url": "img/tilesets/tilesheet-1.png",
-    "revision": "0ab2c5a7b8ada179a117da7b6c82ece1"
+    "revision": "bc0b5633ef89421eefc8915d17834b66"
   },
   {
     "url": "img/tilesets/tilesheet-2.png",
@@ -5323,7 +5323,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/entity/character/character.js",
-    "revision": "c5e6c92983028e2d9678406710d5b79d"
+    "revision": "1d8c7d0ec9df065624bb6e0358f59bb1"
   },
   {
     "url": "js/entity/character/mob/mob.js",
@@ -5419,7 +5419,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/interface/header.js",
-    "revision": "fcb3db57be4d8e3689315140846dd9f9"
+    "revision": "89695bb4409ddcbab1851e0ebf6ef81b"
   },
   {
     "url": "js/interface/inventory.js",
@@ -5507,7 +5507,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/network/connection.js",
-    "revision": "d8dfc829b90f5d44e1ffce3561c55c55"
+    "revision": "9e72dc4b5fd57fbf1fcfe6c31185f7d3"
   },
   {
     "url": "js/network/impl/teamwar.js",
@@ -5543,7 +5543,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/infos/splat.js",
-    "revision": "6cfee26093c9319bb7eb10b80a3da7a6"
+    "revision": "15e22fd89294681bccefa094dc875419"
   },
   {
     "url": "js/renderer/overlay.js",
@@ -5555,7 +5555,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "e38d1c00d78872c698c48c5a2585a8ad"
+    "revision": "b1eedc3957dd9e3cf3bb522c2110dc02"
   },
   {
     "url": "js/renderer/tile.js",
@@ -5563,7 +5563,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/renderer/updater.js",
-    "revision": "a0ac9f48016bca8922cc1fd96ef3b282"
+    "revision": "45b202b4a302a84d831a3bdef9fb37f8"
   },
   {
     "url": "js/text.js",
@@ -5571,11 +5571,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/utils/detect.js",
-    "revision": "3d203e4bd0e055bdf65a45d5f0e6c6ee"
+    "revision": "3493e2f9210c447965485207948d97ad"
   },
   {
     "url": "js/utils/modules.js",
-    "revision": "22471fa74dea660b01e8f61f8558499d"
+    "revision": "00f000e5de665640ed0b1ddfdda9c293"
   },
   {
     "url": "js/utils/pathfinder.js",
