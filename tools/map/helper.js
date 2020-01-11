@@ -13,23 +13,9 @@ class Helper {
         self.width = worldServer.width;
         self.height = worldServer.height;
 
-        self.getTileData(964, 129);
-        self.getTileData(965, 129);
+        //self.getTileData(964, 129);
 
-        self.getTileData(964, 130);
-        self.getTileData(965, 130);
-
-        self.getTileData(964, 131);
-        self.getTileData(965, 131);
-        self.getTileData(966, 131);
-
-        self.getTileData(964, 132);
-        self.getTileData(965, 132);
-        self.getTileData(966, 132);
-
-        self.getTileData(964, 133);
-        self.getTileData(965, 133);
-
+        console.log(self.indexToGridPosition(192175));
 
         //for (let i = 1; i < 5; i++)
         //    for (let j = 1; j < 5; j++)
@@ -60,6 +46,13 @@ class Helper {
             x: x,
             y: y
         }
+    }
+
+    getX(index, width) {
+        if (index === 0)
+            return 0;
+
+        return (index % width === 0) ? width - 1 : (index % width) - 1;
     }
 
 }

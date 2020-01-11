@@ -1,10 +1,5 @@
 /* global _, m4, log, Detect */
 
-var DarkMask = illuminated.DarkMask,
-    Lamp = illuminated.Lamp,
-    Lighting = illuminated.Lighting,
-    Vec2 = illuminated.Vec2;
-
 define(['jquery', './camera', './tile',
     '../entity/character/player/player', '../entity/character/character',
     '../entity/objects/item'], function($, Camera, Tile, Player, Character, Item) {
@@ -436,7 +431,6 @@ define(['jquery', './camera', './tile',
 
             self.context.save();
 
-
             if (data.sprite !== sprite) {
 
                 data.sprite = sprite;
@@ -789,10 +783,23 @@ define(['jquery', './camera', './tile',
          */
 
         drawTile: function(context, tileId, gridWidth, cellId) {
-            var self = this;
+            var self = this, rotation;
 
             if (tileId < 0)
                 return;
+
+            if (tileId > DIAGONAL_FLIP_FLAG) {
+                if (!(tileId & HORIZONTAL_FLIP_FLAG))
+                    rotation = ROT_NEG_90_DEG;
+
+                if (!(tileId & VERTICAL_FLIP_FLAG))
+                    rotation = ROT_90_DEG;
+
+                if (!(tileId & DIAGONAL_FLIP_FLAG))
+                    rotation = ROT_180_DEG;
+
+                tileId &= ~(HORIZONTAL_FLIP_FLAG | VERTICAL_FLIP_FLAG | DIAGONAL_FLIP_FLAG);
+            }
 
             var tileset = self.map.getTilesetFromId(tileId);
 
@@ -808,16 +815,50 @@ define(['jquery', './camera', './tile',
                 Math.floor(tileId / setWidth) * self.tileSize,
                 self.tileSize, self.tileSize,
                 self.getX(cellId + 1, gridWidth) * self.tileSize,
-                Math.floor(cellId / gridWidth) * self.tileSize);
+                Math.floor(cellId / gridWidth) * self.tileSize, rotation);
         },
 
-        drawScaledImage: function(context, image, x, y, width, height, dx, dy) {
+        drawScaledImage: function(context, image, x, y, width, height, dx, dy, rotation) {
             var self = this,
                 tilesetScale = image.scale,
                 scale = self.superScaling; // self.superScaling * 1.5;
 
             if (!context)
                 return;
+
+            if (rotation) {
+                context.save();
+                context.rotate(rotation);
+
+                var temp = dx;
+
+                switch (rotation) {
+                    case ROT_180_DEG:
+
+                        context.translate(-width * scale, -height * scale);
+
+                        dx = -dx, dy = -dy;
+
+                        break;
+
+                    case ROT_90_DEG:
+
+                        context.translate(0, -height * scale);
+
+                        dx = dy, dy = -temp;
+
+                        break;
+
+                    case ROT_NEG_90_DEG:
+
+                        context.translate(-width * scale, 0);
+
+                        dx = -dy, dy = temp;
+
+                        break;
+                }
+
+            }
 
             context.drawImage(image,
                 x * tilesetScale, // Source X
@@ -828,6 +869,9 @@ define(['jquery', './camera', './tile',
                 dy * scale, // Destination Y
                 width * scale, // Destination Width
                 height * scale); // Destination Height
+
+            if (rotation)
+                context.restore();
         },
 
         drawText: function(text, x, y, centered, colour, strokeColour, fontSize) {
@@ -1360,3 +1404,15 @@ define(['jquery', './camera', './tile',
     });
 
 });
+
+var DarkMask = illuminated.DarkMask,
+    Lamp = illuminated.Lamp,
+    Lighting = illuminated.Lighting,
+    Vec2 = illuminated.Vec2;
+
+const HORIZONTAL_FLIP_FLAG = 0x80000000,
+      VERTICAL_FLIP_FLAG = 0x40000000,
+      DIAGONAL_FLIP_FLAG = 0x20000000,
+      ROT_90_DEG = Math.PI / 2,
+      ROT_NEG_90_DEG = ROT_90_DEG * -1,
+      ROT_180_DEG = Math.PI;
