@@ -6,6 +6,8 @@ class Cactus extends Combat {
 
     constructor(character) {
         character.spawnDistance = 10;
+        character.alwaysAggressive = true;
+
         super(character);
 
         let self = this;
@@ -36,6 +38,12 @@ class Cactus extends Combat {
 
         if (!attacker || !attacker.armour || attacker.isRanged())
             return;
+
+        /**
+         * This is the formula for dealing damage when a player
+         * attacks the cactus. Eventually the damage will cancel out
+         * as the armour gets better.
+         **/
 
         let defense = attacker.armour.getDefense(),
             calculatedDamage = Math.floor((damage / 2) - (defense * 5));
