@@ -47,7 +47,6 @@ class Mob extends Character {
         self.maxRoamingDistance = 3;
 
         self.projectileName = self.getProjectileName();
-
     }
 
     load() {
@@ -101,7 +100,7 @@ class Mob extends Character {
         if (!self.aggressive)
           return false;
 
-        if (Math.floor(self.level * 1.5) < player.level)
+        if ((Math.floor(self.level * 1.5) < player.level) && !self.alwaysAggressive)
           return false;
 
         if (!player.hasAggressionTimer())
