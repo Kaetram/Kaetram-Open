@@ -8,7 +8,8 @@
     "homepage": "https://kaetram.com/",
     "scripts": {
         "start": "node server/js/main.js",
-        "build": "gulp"
+        "build": "gulp",
+        "map": "cd tools/map && ./exportmap.js ./data/map-refactor.json"
     },
     "dependencies": {
         "bcrypt": "^3.0.7",
