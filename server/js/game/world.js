@@ -185,12 +185,12 @@ class World {
                 message: new Messages.Despawn(target.instance)
             }]);
 
-            self.handleDeath(target);
+            self.handleDeath(target, false, attacker);
 
         }
     }
 
-    handleDeath(character, ignoreDrops) {
+    handleDeath(character, ignoreDrops, lastAttacker) {
         let self = this;
 
         if (!character)
@@ -199,6 +199,9 @@ class World {
         if (character.type === 'mob') {
             let deathX = character.x,
                 deathY = character.y;
+
+            if (lastAttacker)
+                character.lastAttacker = lastAttacker;
 
             if (character.deathCallback)
                 character.deathCallback();
@@ -295,6 +298,8 @@ class World {
                 mob.onRespawn(() => {
 
                     mob.dead = false;
+
+                    mob.lastAttacker = null;
 
                     mob.refresh();
 

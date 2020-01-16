@@ -52,5 +52,11 @@
     "id": 3,
     "name": "Dodgey Dodge",
     "description": "Learn the art of dodging attacks."
+  },
+
+  "4": {
+    "id": 4,
+    "name": "Skeletal Pass",
+    "description": ""
   }
 }

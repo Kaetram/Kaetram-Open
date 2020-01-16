@@ -68,8 +68,8 @@ class MobHandler {
                 if (self.mob.getPlateauLevel() !== self.map.getPlateauLevel(newX, newY))
                     return;
 
-                if (config.debug)
-                    self.forceTalk('Yes hello, I am moving.');
+                //if (config.debug)
+                //    self.forceTalk('Yes hello, I am moving.');
 
                 self.mob.setPosition(newX, newY);
 

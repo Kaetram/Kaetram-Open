@@ -20,6 +20,7 @@ class Area {
         self.chest = null;
 
         self.maxEntities = 0;
+        self.spawnDelay = 0;
     }
 
     contains(x, y) {
@@ -35,6 +36,10 @@ class Area {
         self.entities.push(entity);
         entity.area = self;
 
+        // Grab a spawn delay from an mob to create an offset for the chest.
+        if (!self.spawnDelay)
+            self.spawnDelay = entity.respawnDelay;
+
         if (self.spawnCallback)
             self.spawnCallback();
     }
@@ -46,8 +51,21 @@ class Area {
         if (index > -1)
             self.entities.splice(index, 1);
 
-        if (self.entities.length === 0 && self.emptyCallback)
+        if (self.entities.length === 0 && self.emptyCallback) {
+            if (entity.lastAttacker && entity.lastAttacker.type === 'player')
+                self.handleAchievement(entity);
+
             self.emptyCallback();
+        }
+    }
+
+    handleAchievement(entity) {
+        let self = this;
+
+        if (!self.achievement)
+            return;
+
+        //handle achievement here
     }
 
     setMaxEntities(maxEntities) {

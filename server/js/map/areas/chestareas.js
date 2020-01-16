@@ -27,9 +27,13 @@ class ChestAreas {
             chestArea.cX = parseInt(m.tx);
             chestArea.cY = parseInt(m.ty);
 
+            if (m.tachievement)
+                chestArea.achievement = parseInt(m.tachievement);
+
             self.chestAreas.push(chestArea);
 
             chestArea.onEmpty(() => {
+
                 self.spawnChest(chestArea);
             });
 
@@ -43,7 +47,13 @@ class ChestAreas {
     }
 
     spawnChest(chestArea) {
-        chestArea.chest = this.world.spawnChest(chestArea.items, chestArea.cX, chestArea.cY, false);
+        let self = this;
+
+        if (new Date().getTime() - chestArea.lastSpawn < chestArea.spawnDelay)
+            return;
+
+        chestArea.chest = self.world.spawnChest(chestArea.items, chestArea.cX, chestArea.cY, false);
+        chestArea.lastSpawn = new Date().getTime();
     }
 
     removeChest(chestArea) {
