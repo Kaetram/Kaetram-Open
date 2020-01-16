@@ -136,7 +136,7 @@ class Achievement {
             name: this.name,
             type: this.data.type,
             description: this.description,
-            count: this.data.count ? this.data.count : 1,
+            count: this.data.count || 1,
             progress: this.progress,
             finished: this.isFinished()
         }
