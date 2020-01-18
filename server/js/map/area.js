@@ -65,7 +65,7 @@ class Area {
         if (!self.achievement)
             return;
 
-        //handle achievement here
+        entity.finishAchievement(self.achievement);
     }
 
     setMaxEntities(maxEntities) {
