@@ -123,8 +123,6 @@ class Achievement {
 
         self.progress = parseInt(progress);
 
-        log.info(self.data);
-
         if (self.data.rewardType === 'door')
             self.player.updateRegion();
     }
