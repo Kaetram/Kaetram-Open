@@ -1112,6 +1112,16 @@ class Player extends Character {
         return self.quests.getQuest(0).isFinished() || !config.tutorialEnabled;
     }
 
+    finishAchievement(id) {
+        let self = this,
+            achievement = self.quests.achievements[id];
+
+        if (!achievement)
+            return;
+
+        achievement.finish();
+    }
+
     checkRegions() {
         let self = this;
 
