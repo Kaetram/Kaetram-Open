@@ -32,6 +32,7 @@ class Doors {
                 requirement: door.requirement,
                 level: door.level,
                 questId: door.questId,
+                achievementId: door.achievementId,
                 closedIds: door.closedIds,
                 openIds: door.openIds
             }
@@ -47,10 +48,12 @@ class Doors {
             case 'quest':
                 let quest = self.player.quests.getQuest(door.questId);
 
-                if (door.status === 'open')
-                    return door.status;
-
                 return (quest && quest.hasDoorUnlocked(door)) ? 'open' : 'closed';
+
+            case 'achievement':
+                let achievement = self.player.quests.achievements[door.achievementId];
+
+                return (achievement && achievement.isFinished()) ? 'open' : 'closed';
 
             case 'level':
                 return self.player.level >= door.level ? 'open' : 'closed';

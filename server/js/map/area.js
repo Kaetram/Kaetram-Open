@@ -53,7 +53,7 @@ class Area {
 
         if (self.entities.length === 0 && self.emptyCallback) {
             if (entity.lastAttacker && entity.lastAttacker.type === 'player')
-                self.handleAchievement(entity);
+                self.handleAchievement(entity.lastAttacker);
 
             self.emptyCallback();
         }

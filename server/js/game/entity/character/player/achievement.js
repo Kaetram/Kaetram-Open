@@ -119,7 +119,14 @@ class Achievement {
     }
 
     setProgress(progress) {
-        this.progress = parseInt(progress);
+        let self = this;
+
+        self.progress = parseInt(progress);
+
+        log.info(self.data);
+
+        if (self.data.rewardType === 'door')
+            self.player.updateRegion();
     }
 
     isStarted() {

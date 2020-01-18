@@ -91,6 +91,24 @@
 
     "x": 965,
     "y": 131
-  }
+  },
 
+  "3": {
+    "id": 3,
+    "status": "closed",
+    "requirement": "achievement",
+    "achievementId": 4,
+
+    "closedIds": {
+        "94945": { "data": [2074,2958], "isColliding": true },
+        "94946": { "data": [2137,2958], "isColliding": true },
+        "94947": { "data": [2074,2961], "isColliding": true }
+    },
+
+    "openIds": {
+        "94945": { "data": [2074,3521], "isColliding": true },
+        "94946": { "data": [2137,3522], "isColliding": false },
+        "94947": { "data": [2074,3523], "isColliding": true }
+    }
+  }
 }
