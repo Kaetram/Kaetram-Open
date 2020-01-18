@@ -133,7 +133,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "spawnDelay": 60000
   },
 
   "Snek": {

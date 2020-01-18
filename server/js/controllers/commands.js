@@ -418,7 +418,7 @@ class Commands {
 
             case 'resetAchievement':
 
-                self.player.quests.achievements[1].setProgress(0);
+                self.player.quests.achievements[4].setProgress(0);
 
                 break;
 

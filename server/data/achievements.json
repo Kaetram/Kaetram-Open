@@ -57,6 +57,7 @@
   "4": {
     "id": 4,
     "name": "Skeletal Pass",
-    "description": ""
+    "description": "",
+    "rewardType": "door"
   }
 }
