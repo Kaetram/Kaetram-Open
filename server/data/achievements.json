@@ -59,5 +59,13 @@
     "name": "Skeletal Pass",
     "description": "",
     "rewardType": "door"
+  },
+
+  "5": {
+    "id": 5,
+    "name": "Skeleton Boss",
+    "description": "Defeat the skeleton boss.",
+    "rewardType": "door"
   }
+
 }
