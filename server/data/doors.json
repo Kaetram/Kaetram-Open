@@ -1,7 +1,6 @@
 {
   "0": {
     "id": 0,
-    "status": "closed",
     "requirement": "quest",
     "questId": 0,
     "closedIds": {
@@ -27,7 +26,6 @@
 
   "1": {
     "id": 1,
-    "status": "closed",
     "requirement": "quest",
     "questId": 1,
 
@@ -55,7 +53,6 @@
 
   "2": {
     "id": 2,
-    "status": "closed",
     "requirement": "quest",
     "questId": 2,
 
@@ -95,7 +92,6 @@
 
   "3": {
     "id": 3,
-    "status": "closed",
     "requirement": "achievement",
     "achievementId": 4,
 
@@ -110,5 +106,24 @@
         "94946": { "data": [2137,3522], "isColliding": false },
         "94947": { "data": [2074,3523], "isColliding": true }
     }
+  },
+
+  "4": {
+    "id": 4,
+    "requirement": "achievement",
+    "achievementId": 5,
+
+    "closedIds": {
+        "71908": { "data": [3724], "isColliding": false },
+        "72908": { "data": [3788], "isColliding": true },
+        "73908": { "data": [2075,461,3852], "isColliding": true }
+    },
+
+    "openIds": {
+        "71908": { "data": [1951], "isColliding": false },
+        "72908": { "data": [2015], "isColliding": false },
+        "73908": { "data": [2075,461,2079], "isColliding": false }
+    }
+
   }
 }

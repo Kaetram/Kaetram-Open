@@ -43,6 +43,9 @@ class Doors {
     getStatus(door) {
         let self = this;
 
+        if (door.status)
+            return door.status;
+
         switch(door.requirement) {
 
             case 'quest':
