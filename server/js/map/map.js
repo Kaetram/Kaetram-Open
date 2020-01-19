@@ -214,9 +214,7 @@ class Map {
         if (entity.x === -1 || entity.y === -1)
             return true;
 
-        return this.inArea(entity.x, entity.y, 11, 551, 10, 10) ||
-                this.inArea(entity.x, entity.y, 12, 514, 35, 35) ||
-                this.inArea(entity.x, entity.y, 22, 489, 25, 25);
+        return this.inArea(entity.x, entity.y, 370, 36, 10, 10);
     }
 
     nearLight(light, x, y) {
