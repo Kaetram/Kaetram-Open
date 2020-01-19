@@ -951,7 +951,7 @@ class Player extends Character {
          */
 
 
-        return self.finishedTutorial() ? { x: 65, y: 109 } : { x: 65, y: 109 };
+        return self.finishedTutorial() ? { x: 325, y: 87 } : { x: 375, y: 41 };
     }
 
     getHit(target) {
