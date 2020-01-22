@@ -110,3 +110,16 @@ Detect.isAppleDevice = function() {
 
     return false;
 };
+
+// Older mobile devices will default to non-centred camera mode
+Detect.isOldAndroid = function() {
+    return parseFloat(Detect.androidVersion() < 6.0);
+};
+
+Detect.isOldApple = function() {
+    return parseFloat(Detect.iOSVersion() < 9.0);
+};
+
+Detect.useCenteredCamera = function() {
+    return Detect.isOldAndroid() || Detect.isOldApple() || Detect.isIpad();
+};

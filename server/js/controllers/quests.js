@@ -231,6 +231,9 @@ class Quests {
     isQuestMob(mob) {
         let self = this;
 
+        if (mob.type !== 'mob')
+            return false;
+
         for (let id in self.quests) {
             if (self.quests.hasOwnProperty(id)) {
                 let quest = self.quests[id];
@@ -239,10 +242,15 @@ class Quests {
                     return true;
             }
         }
+
+        return false;
     }
 
     isAchievementMob(mob) {
         let self = this;
+
+        if (mob.type !== 'mob')
+            return false;
 
         for (let id in self.achievements)
             if (self.achievements.hasOwnProperty(id))
@@ -255,6 +263,9 @@ class Quests {
     isQuestNPC(npc) {
         let self = this;
 
+        if (npc.type !== 'npc')
+            return false;
+
         for (let id in self.quests) {
             if (self.quests.hasOwnProperty(id)) {
                 let quest = self.quests[id];
@@ -263,6 +274,8 @@ class Quests {
                     return true;
             }
         }
+
+        return false;
     }
 
     isAchievementNPC(npc) {

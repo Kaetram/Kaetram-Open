@@ -54,6 +54,9 @@ define(['../renderer/grids', '../entity/objects/chest',
                 if (self.isPlayer(info.id))
                     return;
 
+                if (info.id in self.entities) // Don't initialize things twice.
+                    return;
+
                 switch (info.type) {
 
                     case 'chest':
@@ -97,6 +100,10 @@ define(['../renderer/grids', '../entity/objects/chest',
                         mob.level = info.level;
                         mob.hiddenName = info.hiddenName;
                         mob.movementSpeed = info.movementSpeed;
+
+                        // Colour schemes
+                        mob.miniboss = info.miniboss;
+                        mob.achievementAreaMob = info.achievementAreaMob;
 
                         entity = mob;
 

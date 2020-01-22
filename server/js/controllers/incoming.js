@@ -244,8 +244,19 @@ class Incoming {
         _.each(message.shift(), (id) => {
             let entity = self.world.getEntityByInstance(id);
 
-            if (entity && entity.id && !entity.dead)
-                self.player.send(new Messages.Spawn(entity));
+            if (!entity || entity.dead)
+                return;
+
+            /* We handle player-specific entity statuses here. */
+
+            // Entity is an area-based mob
+            if (entity.area && entity.area.achievement && !self.player.finishedAchievement(entity.area.achievement))
+                entity.achievementAreaMob = true;
+
+            if (self.player.quests.isQuestNPC)
+                entity.questNPC = true;
+
+            self.player.send(new Messages.Spawn(entity));
         });
     }
 
