@@ -146,11 +146,15 @@ define(['jquery', './camera', './tile',
             var self = this,
                 storage = self.game.storage;
 
-            self.camera = new Camera(this);
+            self.camera = new Camera(self);
 
             self.loadSizes();
 
-            if (storage.data.new && (self.mEdge || self.firefox || parseFloat(Detect.androidVersion()) < 6.0 || parseFloat(Detect.iOSVersion() < 9.0) || Detect.isIpad())) {
+            if (!storage.data.new)
+                return;
+
+            if (self.mEdge || self.firefox || Detect.useCenteredCamera()) {
+
                 self.camera.centered = false;
 
                 storage.data.settings.centerCamera = false;
@@ -607,6 +611,12 @@ define(['jquery', './camera', './tile',
 
             if (entity.id === self.game.player.id)
                 colour = '#fcda5c';
+
+            if (entity.miniboss)
+                colour = '#cc3300';
+
+            if (entity.achievementAreaMob)
+                colour = '#009900';
 
             self.textContext.save();
             self.setCameraView(self.textContext);

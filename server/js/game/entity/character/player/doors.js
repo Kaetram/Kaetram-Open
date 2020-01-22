@@ -3,7 +3,8 @@
 let _ = require('underscore'),
     DoorData = require('../../../../../data/doors'),
     Messages = require('../../../../network/messages'),
-    Packets = require('../../../../network/packets');
+    Packets = require('../../../../network/packets'),
+    config = require('../../../../../config');
 
 class Doors {
 
@@ -45,6 +46,9 @@ class Doors {
 
         if (door.status)
             return door.status;
+
+        if (config.offlineMode)
+            return true;
 
         switch(door.requirement) {
 
