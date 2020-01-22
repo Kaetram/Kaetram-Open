@@ -222,6 +222,8 @@ body {
     height: 100%;
     margin-top: -44%;
     overflow-y: hidden;
+    text-shadow: 2px 2px 2px black;
+    font-size: 15px;
 }
 
 #talk {
@@ -501,10 +503,6 @@ html [type="button"],
         height: 300px;
     }
 
-    #chatLog {
-        font-size: 15px;
-    }
-
     #talk {
         margin-top: 300px;
         height: 30px;
@@ -722,10 +720,6 @@ html [type="button"],
         height: 200px;
     }
 
-    #chatLog {
-        font-size: 15px;
-    }
-
     #talk {
         margin-top: 200px;
         height: 20px;
@@ -939,9 +933,6 @@ html [type="button"],
         height: 100px;
     }
 
-    #chatLog {
-        font-size: 10px;
-    }
 
     #talk {
         margin-top: 100px;

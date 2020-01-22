@@ -1106,10 +1106,20 @@ class Player extends Character {
     finishedTutorial() {
         let self = this;
 
-        if (!self.quests || config.offlineMode)
+        if (!self.quests || !config.tutorialEnabled)
             return true;
 
-        return self.quests.getQuest(0).isFinished() || !config.tutorialEnabled;
+        return self.quests.getQuest(0).isFinished();
+    }
+
+    finishedAchievement(id) {
+        let self = this,
+            achievement = self.quests.achievements[id];
+
+        if (!achievement)
+            return true;
+
+        return achievement.isFinished();
     }
 
     finishAchievement(id) {

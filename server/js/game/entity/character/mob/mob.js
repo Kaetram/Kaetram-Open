@@ -182,6 +182,10 @@ class Mob extends Character {
         base.level = self.level;
         base.hiddenName = self.hiddenName;
 
+        // Have mobs with special titles display differently client-sided.
+        base.miniboss = !!self.miniboss;
+        base.achievementAreaMob = !!self.achievementAreaMob;
+
         return base;
     }
 

@@ -161,7 +161,8 @@ class Map {
             self.staticEntities.push({
                 tileIndex: tileIndex,
                 string: data.string,
-                roaming: data.roaming
+                roaming: data.roaming,
+                miniboss: data.miniboss
             });
 
         });
