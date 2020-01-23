@@ -200,6 +200,7 @@ define(['jquery'], function($) {
 
             self.toggleLogin(true);
             self.game.connect();
+
             install();
         },
 
