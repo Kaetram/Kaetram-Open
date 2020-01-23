@@ -221,6 +221,9 @@ define(['../renderer/grids', '../entity/objects/chest',
                 if (info.nameColour)
                     entity.nameColour = info.nameColour;
 
+                if (info.customScale)
+                    entity.customScale = info.customScale;
+
                 self.addEntity(entity);
 
                 if (info.type !== 'item' && entity.handler) {

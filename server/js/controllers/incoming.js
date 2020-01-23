@@ -250,14 +250,22 @@ class Incoming {
             /* We handle player-specific entity statuses here. */
 
             // Entity is an area-based mob
-            if (entity.area && entity.area.achievement && !self.player.finishedAchievement(entity.area.achievement))
-                entity.specialState = 'achievementArea';
+            if (entity.area)
+                entity.specialState = 'area';
 
             if (self.player.quests.isQuestNPC(entity))
                 entity.specialState = 'questNpc';
 
             if (self.player.quests.isQuestMob(entity))
                 entity.specialState = 'questMob';
+
+            if (entity.miniboss) {
+                entity.specialState = 'miniboss';
+                entity.customScale = 1.25;
+            }
+
+            //if (self.player.quests.isAchievementNPC(entity))
+            //    entity.specialState = 'achievementNpc';
 
             self.player.send(new Messages.Spawn(entity));
         });
