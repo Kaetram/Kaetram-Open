@@ -4,6 +4,7 @@
     "name": "Introduction",
     "description": "Teaching you the basics about Kaetram",
     "npcs": [17, 16, 8],
+    "mobs": [128],
     "stages": 23,
     "conversations": {
       "17": {

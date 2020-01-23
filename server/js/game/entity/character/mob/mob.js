@@ -180,11 +180,7 @@ class Mob extends Character {
         base.maxHitPoints = self.maxHitPoints;
         base.attackRange = self.attackRange;
         base.level = self.level;
-        base.hiddenName = self.hiddenName;
-
-        // Have mobs with special titles display differently client-sided.
-        base.miniboss = !!self.miniboss;
-        base.achievementAreaMob = !!self.achievementAreaMob;
+        base.hiddenName = self.hiddenName; // TODO - Just don't send name when hiddenName present.
 
         return base;
     }
