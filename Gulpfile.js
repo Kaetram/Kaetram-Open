@@ -5,7 +5,8 @@ const { task, series } = require('gulp');
 const workbox = require('workbox-build');
 
 task('generate-sw', async () => {
-    const build = await workbox.generateSW({
+    const build = await workbox.injectManifest({
+        swSrc: path.resolve(__dirname, './client/workbox-sw.js'),
         swDest: path.resolve(__dirname, './client/sw.js'),
         globDirectory: path.resolve(__dirname, './client/'),
         globPatterns: [
