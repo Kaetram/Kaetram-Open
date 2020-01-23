@@ -700,7 +700,8 @@
     "aggressive": true,
     "attackRate": 750,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "spawnDelay": 35000,
+    "combatPlugin": "golem"
   },
 
   "GreenFish": {
