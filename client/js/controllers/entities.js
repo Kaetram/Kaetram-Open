@@ -101,10 +101,6 @@ define(['../renderer/grids', '../entity/objects/chest',
                         mob.hiddenName = info.hiddenName;
                         mob.movementSpeed = info.movementSpeed;
 
-                        // Colour schemes
-                        mob.miniboss = info.miniboss;
-                        mob.achievementAreaMob = info.achievementAreaMob;
-
                         entity = mob;
 
                         break;
@@ -221,6 +217,9 @@ define(['../renderer/grids', '../entity/objects/chest',
 
                 entity.idle();
                 entity.type = info.type;
+
+                if (info.nameColour)
+                    entity.nameColour = info.nameColour;
 
                 self.addEntity(entity);
 

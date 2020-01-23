@@ -251,10 +251,13 @@ class Incoming {
 
             // Entity is an area-based mob
             if (entity.area && entity.area.achievement && !self.player.finishedAchievement(entity.area.achievement))
-                entity.achievementAreaMob = true;
+                entity.specialState = 'achievementArea';
 
-            if (self.player.quests.isQuestNPC)
-                entity.questNPC = true;
+            if (self.player.quests.isQuestNPC(entity))
+                entity.specialState = 'questNpc';
+
+            if (self.player.quests.isQuestMob(entity))
+                entity.specialState = 'questMob';
 
             self.player.send(new Messages.Spawn(entity));
         });
