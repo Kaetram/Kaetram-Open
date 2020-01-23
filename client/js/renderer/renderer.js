@@ -612,11 +612,8 @@ define(['jquery', './camera', './tile',
             if (entity.id === self.game.player.id)
                 colour = '#fcda5c';
 
-            if (entity.miniboss)
-                colour = '#cc3300';
-
-            if (entity.achievementAreaMob)
-                colour = '#009900';
+            if (entity.nameColour)
+                colour = entity.nameColour;
 
             self.textContext.save();
             self.setCameraView(self.textContext);

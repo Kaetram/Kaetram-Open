@@ -148,8 +148,13 @@ class Quest {
         this.npcTalkCallback = callback;
     }
 
-    static hasMob() {
-        return false;
+    hasMob(mob) {
+        let self = this;
+
+        if (!self.data.mobs)
+            return;
+
+        return self.data.mobs.indexOf(mob.id) > -1;
     }
 
     hasNPC(id) {
