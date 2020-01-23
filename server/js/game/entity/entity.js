@@ -158,8 +158,29 @@ class Entity {
             string: string,
             name: name,
             x: self.x,
-            y: self.y
+            y: self.y,
+            nameColour: self.getNameColour()
         }
+    }
+
+    getNameColour() {
+        let self = this;
+
+        switch (self.specialState) {
+            case 'miniboss':
+                return '#cc3300';
+
+            case 'achievementArea':
+                return '#009900';
+
+            case 'questNpc':
+                return '#3333ff';
+
+            case 'questMob':
+                return '#0099cc';
+        }
+
+        return null;
     }
 
 }
