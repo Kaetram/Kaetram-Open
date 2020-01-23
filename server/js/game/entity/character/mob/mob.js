@@ -53,6 +53,9 @@ class Mob extends Character {
         let self = this;
 
         self.handler = new MobHandler(self, self.world);
+
+        if (self.loadCallback)
+            self.loadCallback();
     }
 
     refresh() {
@@ -194,6 +197,10 @@ class Mob extends Character {
         let self = this;
 
         self.setPosition(self.spawnLocation[0], self.spawnLocation[1]);
+    }
+
+    onLoad(callback) {
+        this.loadCallback = callback;
     }
 
     onRespawn(callback) {

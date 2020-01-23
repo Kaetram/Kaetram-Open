@@ -291,7 +291,7 @@ class World {
                     mob.roaming = true;
 
                 if (data.miniboss)
-                    mob.specialState = 'miniboss';
+                    mob.miniboss = data.miniboss;
 
                 if (Mobs.Properties[key].hiddenName)
                     mob.hiddenName = Mobs.Properties[key].hiddenName;

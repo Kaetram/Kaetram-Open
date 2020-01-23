@@ -468,6 +468,9 @@ define(['jquery', './camera', './tile',
             } else
                 self.context.translate(dx, dy);
 
+            if (entity.customScale)
+                self.context.scale(entity.customScale, entity.customScale);
+
             if (entity.angled)
                 self.context.rotate(data.angle);
 
