@@ -57,6 +57,12 @@ Once you finish modifying your map in `tools/maps/data` you can parse the map da
 ./exportmap.js ./data/map.json
 ```
 
+In order to build the current game map you can run
+
+```console
+npm run map
+```
+
 ## TODO
 
 - Write documentation outlining the entirety of the source code.
