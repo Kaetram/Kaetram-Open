@@ -281,6 +281,9 @@ class Quests {
     isAchievementNPC(npc) {
         let self = this;
 
+        if (npc.type !== 'npc')
+            return false;
+
         for (let id in self.achievements)
             if (self.achievements.hasOwnProperty(id))
                 if (self.achievements[id].data.npc === npc.id && !self.achievements[id].isFinished())
