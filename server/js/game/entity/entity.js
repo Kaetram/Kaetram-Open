@@ -150,17 +150,23 @@ class Entity {
     getState() {
         let self = this,
             string = self.isMob() ? Mobs.idToString(self.id) : (self.isNPC() ? NPCs.idToString(self.id) : Items.idToString(self.id)),
-            name = self.isMob() ? Mobs.idToName(self.id) : (self.isNPC() ? NPCs.idToName(self.id) : Items.idToName(self.id));
+            name = self.isMob() ? Mobs.idToName(self.id) : (self.isNPC() ? NPCs.idToName(self.id) : Items.idToName(self.id)),
+            data = {
+                type: self.type,
+                id: self.instance,
+                string: string,
+                name: name,
+                x: self.x,
+                y: self.y
+            };
 
-        return {
-            type: self.type,
-            id: self.instance,
-            string: string,
-            name: name,
-            x: self.x,
-            y: self.y,
-            nameColour: self.getNameColour()
-        }
+        if (self.specialState)
+            data.nameColour = self.getNameColour();
+
+        if (self.customScale)
+            data.customScale = self.customScale;
+
+        return data;
     }
 
     getNameColour() {
@@ -170,17 +176,18 @@ class Entity {
             case 'miniboss':
                 return '#cc3300';
 
-            case 'achievementArea':
-                return '#009900';
+            case 'achievementNpc':
+                return '#669900';
+
+            case 'area':
+                return '#00aa00';
 
             case 'questNpc':
-                return '#3333ff';
+                return '#6699ff';
 
             case 'questMob':
                 return '#0099cc';
         }
-
-        return null;
     }
 
 }
