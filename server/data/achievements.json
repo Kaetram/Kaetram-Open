@@ -63,9 +63,17 @@
 
   "5": {
     "id": 5,
+    "name": "Golem",
+    "description": "",
+    "rewardType": "door"
+  },
+
+  "6": {
+    "id": 6,
     "name": "Skeleton Boss",
     "description": "Defeat the skeleton boss.",
     "rewardType": "door"
   }
+
 
 }

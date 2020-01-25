@@ -125,5 +125,53 @@
       "73908": { "data": [2075,461,2079], "isColliding": false }
     }
 
+  },
+
+  "5": {
+    "id": 5,
+    "requirement": "achievement",
+    "achievementId": 5,
+
+    "closedIds": {
+        "77197": { "data": [1798], "isColliding": false },
+        "78196": { "data": [1735], "isColliding": false },
+        "78197": { "data": [1799], "isColliding": false },
+        "78198": { "data": [1734], "isColliding": false }
+    },
+
+    "openIds": {
+        "77197": { "data": [1798,2082], "isColliding": false },
+        "78196": { "data": [1735,2145], "isColliding": false },
+        "78197": { "data": [1799,2146], "isColliding": false },
+        "78198": { "data": [1734,2147], "isColliding": false }
+    }
+  },
+
+  "6": {
+    "id": 6,
+    "requirement": "quest",
+    "questId": 0,
+
+    "closedIds": {
+        "23323": { "data": [422], "isColliding": false }
+    },
+
+    "openIds": {
+        "23323": { "data": [422,1178], "isColliding": false }
+    }
+  },
+
+  "7": {
+    "id": 7,
+    "requirement": "quest",
+    "questId": 0,
+
+    "closedIds": {
+        "19406": { "data": [1810], "isColliding": false }
+    },
+
+    "openIds": {
+        "19406": { "data": [1810,1178], "isColliding": false }
+    }
   }
 }

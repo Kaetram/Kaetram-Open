@@ -17,11 +17,21 @@ class Golem extends Combat {
 
         self.character = character;
 
+        self.achievementId = 5; // Achievement we are finishing.
+
         // Start processing after we initialize the mob in this case.
         self.character.onLoad(() => {
 
             if (self.character.miniboss)
-                self.updateData(35, 550, 23, 45);
+                self.updateData(35, 550, 23, 20);
+
+        });
+
+        self.character.onDeath(() => {
+
+            self.forEachAttacker((attacker) => {
+                attacker.finishAchievement(5);
+            });
 
         });
 
@@ -40,6 +50,9 @@ class Golem extends Combat {
         self.character.maxHitPoints = hitPoints;
         self.character.weaponLevel = weaponLevel;
         self.character.armourLevel = armourLevel;
+
+        self.character.attackRate = 1200;
+        self.character.alwaysAggressive = true;
 
         self.updated = true;
     }
