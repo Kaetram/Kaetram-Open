@@ -76,23 +76,23 @@ class Introduction extends Quest {
             }
         });
 
-        self.player.onProfile((isOpen) => {
+        self.player.onInventory((isOpen) => {
 
-            if (isOpen)
+            if (isOpen && self.stage === 1)
                 self.progress('click');
 
         });
 
-        self.player.onInventory((isOpen) => {
+        self.player.onProfile((isOpen) => {
 
-            if (isOpen)
+            if (isOpen && self.stage === 3)
                 self.progress('click');
 
         });
 
         self.player.onWarp((isOpen) => {
 
-            if (isOpen)
+            if (isOpen && self.stage === 5)
                 self.progress('click');
 
         });
@@ -118,12 +118,6 @@ class Introduction extends Quest {
         }
 
         switch (type) {
-            case 'talk':
-
-                if (self.stage === 6)
-                    self.player.updateRegion();
-
-                break;
 
             case 'door':
 
@@ -161,6 +155,9 @@ class Introduction extends Quest {
             stage: self.stage,
             isQuest: true
         }));
+
+        if (self.getTask() === 'door')
+            self.player.updateRegion();
     }
 
     isFinished() {
@@ -191,7 +188,13 @@ class Introduction extends Quest {
 
         switch (door.id) {
             case 0:
-                return self.stage > 5;
+                return self.stage > 6;
+
+            case 6:
+                return self.stage > 14;
+
+            case 7:
+                return self.stage > 22;
         }
 
         return false;
