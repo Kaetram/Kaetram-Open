@@ -144,7 +144,10 @@
         "78196": { "data": [1735,2145], "isColliding": false },
         "78197": { "data": [1799,2146], "isColliding": false },
         "78198": { "data": [1734,2147], "isColliding": false }
-    }
+    },
+
+    "x": 197,
+    "y": 78
   },
 
   "6": {
