@@ -212,10 +212,14 @@ class Map {
     }
 
     inTutorialArea(entity) {
+        let self = this;
+
         if (entity.x === -1 || entity.y === -1)
             return true;
 
-        return this.inArea(entity.x, entity.y, 370, 36, 10, 10);
+        return self.inArea(entity.x, entity.y, 370, 36, 10, 10) ||
+                self.inArea(entity.x, entity.y, 312, 11, 25, 22) ||
+                self.inArea(entity.x, entity.y, 399, 18, 20, 15);
     }
 
     nearLight(light, x, y) {

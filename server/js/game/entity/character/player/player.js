@@ -1126,7 +1126,7 @@ class Player extends Character {
         let self = this,
             achievement = self.quests.achievements[id];
 
-        if (!achievement)
+        if (!achievement || achievement.isFinished())
             return;
 
         achievement.finish();
