@@ -82,7 +82,7 @@
     "aggressive": false,
     "attackRate": 1250,
     "movementSpeed": 300,
-    "spawnDelay": 25000
+    "spawnDelay": 55000
   },
 
   "Skeleton": {
