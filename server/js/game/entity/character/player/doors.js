@@ -119,10 +119,20 @@ class Doors {
     hasCollision(x, y) {
         let self = this,
             tiles = self.getAllTiles(),
-            tileIndex = self.world.map.gridPositionToIndex(x, y),
-            index = tiles.indexes.indexOf(tileIndex) - 1 ;
+            tileIndex = self.world.map.gridPositionToIndex(x, y) - 1,
+            index = tiles.indexes.indexOf(tileIndex);
 
-        return index < 0 ? false : tiles.collisions[index];
+        /**
+         * We look through the indexes of the door json file and
+         * only process for collision when tile exists in the index.
+         * The index represents the key in `openIds` and `closedIds`
+         * in doors.json file.
+         */
+
+        if (index < 0) // Tile does not exist.
+            return false;
+
+        return tiles.collisions[index];
     }
 
     getDoor(x, y, callback) {
