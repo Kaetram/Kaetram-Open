@@ -124,10 +124,16 @@ class Doors {
 
         return index < 0 ? false : tiles.collisions[index];
     }
+
     getDoor(x, y, callback) {
-        this.forEachDoor((door) => {
-            callback((door.x === x && door.y === y) ? door : null);
-        })
+        let self = this;
+
+        for (let i in self.doors)
+            if (self.doors.hasOwnProperty(i))
+                if (self.doors[i].x === x && self.doors[i].y === y)
+                    return self.doors[i];
+
+        return null;
     }
 
     isDoor(x, y, callback) {
