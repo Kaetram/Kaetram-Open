@@ -73,6 +73,13 @@
     "name": "Skeleton Boss",
     "description": "Defeat the skeleton boss.",
     "rewardType": "door"
+  },
+
+  "7": {
+    "id": 7,
+    "name": "Spectre Passage",
+    "description": "",
+    "rewardType": "door"
   }
 
 
