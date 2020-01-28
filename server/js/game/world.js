@@ -293,6 +293,9 @@ class World {
                 if (data.miniboss)
                     mob.miniboss = data.miniboss;
 
+                if (data.boss)
+                    mob.boss = data.boss;
+
                 if (Mobs.Properties[key].hiddenName)
                     mob.hiddenName = Mobs.Properties[key].hiddenName;
 
