@@ -418,7 +418,14 @@ class Commands {
 
             case 'resetAchievement':
 
-                self.player.quests.achievements[5].setProgress(0);
+                let achievementId = parseInt(blocks.shift());
+
+                if (!achievementId) {
+                    self.player.notify('Invalid command format. /resetAchievement <achievementId>');
+                    return;
+                }
+
+                self.player.quests.achievements[achievementId].setProgress(0);
                 self.player.updateRegion();
 
                 break;
