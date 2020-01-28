@@ -53,8 +53,8 @@
 
   "2": {
     "id": 2,
-    "requirement": "quest",
-    "questId": 2,
+    "requirement": "achievement",
+    "achievementId": 7,
 
     "closedIds": {
       "129964": { "data": [461,3795,897], "isColliding": true },
