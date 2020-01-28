@@ -162,7 +162,8 @@ class Map {
                 tileIndex: tileIndex,
                 string: data.string,
                 roaming: data.roaming,
-                miniboss: data.miniboss
+                miniboss: data.miniboss,
+                boss: data.boss
             });
 
         });
