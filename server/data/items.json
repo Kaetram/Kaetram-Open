@@ -1368,9 +1368,9 @@
     "price": 600,
     "stackable": 1,
     "edible": 1,
-    "maxStackSize": 10,
+    "maxStackSize": 7,
     "plugin":"healthFlask",
-    "customData": {"healAmount": 350}
+    "customData": {"healAmount": 500}
   },
 
   "Chest": {

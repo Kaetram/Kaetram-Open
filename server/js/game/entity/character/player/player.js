@@ -22,6 +22,7 @@ let Character = require('../character'),
     config = require('../../../../../config.json'),
     Enchant = require('./enchant'),
     Utils = require('../../../../util/utils'),
+    Constants = require('../../../../util/constants'),
     Hit = require('../combat/hit'),
     Trade = require('./trade'),
     Warp = require('./warp'),
@@ -516,6 +517,9 @@ class Player extends Character {
     canEquip(string) {
         let self = this,
             requirement = Items.getLevelRequirement(string);
+
+        if (requirement > Constants.MAX_LEVEL)
+            requirement = Constants.MAX_LEVEL;
 
         if (requirement > self.level) {
             self.notify('You must be at least level ' + requirement + ' to equip this.');

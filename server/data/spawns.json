@@ -1,3 +1,4 @@
 [
- { "string": "golem", "x": 203, "y": 77, "roaming": true, "miniboss": true, "achievement": 5 }
+ { "string": "golem", "x": 203, "y": 77, "roaming": true, "miniboss": true, "achievement": 5 },
+ { "string": "deathknight", "x": 790, "y": 35, "roaming": true, "miniboss": true, "achievement": 9 }
 ]
