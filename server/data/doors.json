@@ -216,5 +216,24 @@
 
     "x": 816,
     "y": 10
+  },
+
+  "10": {
+    "id": 10,
+    "requirement": "achievement",
+    "achievementId": 9,
+
+    "closedIds": {
+      "36790": { "data": [486], "isColliding": false },
+      "42790": { "data": [486], "isColliding": false }
+    },
+
+    "openIds": {
+      "36790": { "data": [486,5638], "isColliding": false },
+      "42790": { "data": [486,5638], "isColliding": false }
+    },
+
+    "x": 790,
+    "y": 36
   }
 }
