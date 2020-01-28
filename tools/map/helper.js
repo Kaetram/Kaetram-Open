@@ -13,7 +13,8 @@ class Helper {
         self.width = worldServer.width;
         self.height = worldServer.height;
 
-        self.getTileData(196, 77);
+        self.getTileData(823, 8);
+        self.getTileData(816, 10);
 
         //for (let i = 1; i < 5; i++)
         //    for (let j = 1; j < 5; j++)

@@ -80,7 +80,12 @@
     "name": "Spectre Passage",
     "description": "",
     "rewardType": "door"
-  }
+  },
 
+  "8": {
+    "id": 8,
+    "name": "Quite a Mimic",
+    "rewardType": "door"
+  }
 
 }
