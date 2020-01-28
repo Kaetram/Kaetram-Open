@@ -16,11 +16,17 @@ define(['jquery', '../page'], function($, Page) {
             self.achievementsList = self.achievements.find('ul');
             self.questList = self.quests.find('ul');
 
+            self.finishedAchievements = 0;
+            self.finishedQuests = 0;
+
+            self.achievementsLength = 0;
+            self.questsLength = 0;
         },
 
         loadAchievements: function(achievements) {
-            var self = this,
-                finishedAchievements = 0;
+            var self = this;
+
+            self.achievementsLength = achievements.length;
 
             _.each(achievements, function(achievement) {
                 var item = self.getItem(false, achievement.id),
@@ -41,7 +47,7 @@ define(['jquery', '../page'], function($, Page) {
                 }
 
                 if (achievement.finished)
-                    finishedAchievements++;
+                    self.finishedAchievements++;
 
                 item.append(name);
 
@@ -52,12 +58,13 @@ define(['jquery', '../page'], function($, Page) {
                 self.achievementsList.append(listItem);
             });
 
-            self.achievementsCount.html(finishedAchievements + '/' + achievements.length);
+            self.updateCount();
         },
 
         loadQuests(quests) {
-            var self = this,
-                finishedQuests = 0;
+            var self = this;
+
+            self.questsLength = quests.length;
 
             _.each(quests, function(quest) {
                 var item = self.getItem(true, quest.id),
@@ -73,7 +80,7 @@ define(['jquery', '../page'], function($, Page) {
                     name.css('background', 'rgba(10, 255, 10, 0.3)');
 
                 if (quest.finished)
-                    finishedQuests++;
+                    self.finishedQuests++;
 
                 item.append(name);
 
@@ -84,7 +91,7 @@ define(['jquery', '../page'], function($, Page) {
                 self.questList.append(listItem);
             });
 
-            self.questCount.html(finishedQuests + '/' + quests.length);
+            self.updateCount();
         },
 
         progress: function(info) {
@@ -105,6 +112,8 @@ define(['jquery', '../page'], function($, Page) {
                 name.text(info.name);
 
             name.css('background', 'rgba(255, 255, 10, 0.4)');
+
+            self.updateCount();
         },
 
         finish: function(info) {
@@ -119,11 +128,27 @@ define(['jquery', '../page'], function($, Page) {
             if (!name)
                 return;
 
-            if (!info.isQuest)
+            if (!info.isQuest) {
                 name.text(info.name);
+                self.finishedAchievements++;
+            }
 
             name.css('background', 'rgba(10, 255, 10, 0.3)');
 
+            if (info.isQuest)
+                self.finishedQuests++;
+
+            self.updateCount();
+        },
+
+        updateCount: function() {
+            var self = this;
+
+            if (self.finishedAchievement !== 0 && self.achievementsLength !== 0)
+                self.achievementsCount.html(self.finishedAchievements + '/' + self.achievementsLength);
+
+            if (self.finishedQuests !== 0 && self.questsLength !== 0)
+                self.questCount.html(self.finishedQuests + '/' + self.questsLength);
         },
 
         clear: function() {
