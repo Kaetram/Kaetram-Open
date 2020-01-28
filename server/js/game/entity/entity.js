@@ -173,6 +173,9 @@ class Entity {
         let self = this;
 
         switch (self.specialState) {
+            case 'boss':
+                return '#660033';
+
             case 'miniboss':
                 return '#cc3300';
 

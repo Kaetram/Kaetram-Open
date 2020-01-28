@@ -264,6 +264,9 @@ class Incoming {
                 entity.customScale = 1.25;
             }
 
+            if (entity.boss)
+                entity.specialState = 'boss';
+
             //if (self.player.quests.isAchievementNPC(entity))
             //    entity.specialState = 'achievementNpc';
 
