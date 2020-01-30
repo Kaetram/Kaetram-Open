@@ -55,6 +55,7 @@ class Player extends Character {
 
         self.team = null;
         self.userAgent = null;
+        self.guild = null;
 
         self.disconnectTimeout = null;
         self.timeoutDuration = 1000 * 60 * 10; //10 minutes
@@ -132,8 +133,6 @@ class Player extends Character {
         self.setPendant(pendant[0], pendant[1], pendant[2], pendant[3]);
         self.setRing(ring[0], ring[1], ring[2], ring[3]);
         self.setBoots(boots[0], boots[1], boots[2], boots[3]);
-
-        self.guild = new Guild(self, null);
     }
 
     loadRegions(regions) {
@@ -904,10 +903,6 @@ class Player extends Character {
 
     hasSpecialAttack() {
         return this.weapon && (this.weapon.hasCritical() || this.weapon.hasExplosive() || this.weapon.hasStun());
-    }
-
-    hasGuild() {
-
     }
 
     canBeStunned() {
