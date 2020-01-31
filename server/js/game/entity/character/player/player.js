@@ -26,7 +26,6 @@ let Character = require('../character'),
     Hit = require('../combat/hit'),
     Trade = require('./trade'),
     Warp = require('./warp'),
-    Guild = require('./guild'),
     Doors = require('./doors');
 
 class Player extends Character {
