@@ -96,7 +96,9 @@ class Loader {
 
         self.database.getDatabase((database) => {
             let guilds = database.collection('guild_data'),
-                cursor = guilds.find()
+                cursor = guilds.find();
+
+            log.info('Guilds...');
         });
     }
 
@@ -105,7 +107,7 @@ class Loader {
 
         self.database.getDatabase((database) => {
             let guilds = database.collection('guild_data'),
-                cursor = achievements.find({ name: name });
+                cursor = guilds.find({ name: name });
 
             cursor.toArray().then((guildsArray) => {
                 let info = guildsArray[0];
