@@ -33,7 +33,29 @@ class Guilds {
     }
 
     leave(player) {
+        let self = this;
 
+        if (!player.guild)
+            return;
+
+
+    }
+
+    save(guild) {
+        let self = this;
+
+        if (guild) {
+            self.creator.saveGuild(guild);
+            return;
+        }
+
+        self.forEachGuild((guild) => {
+            self.creator.saveGuild(guild);
+        });
+    }
+
+    forEachGuild(callback) {
+        _.each(this.guilds, (guild) => { callback(guild); });
     }
 
 }
