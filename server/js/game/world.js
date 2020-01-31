@@ -21,6 +21,7 @@ let config = require('../../config.json'),
     Modules = require('../util/modules'),
     Shops = require('../controllers/shops'),
     Region = require('../region/region'),
+    Guilds = require('../controllers/guilds'),
     Network = require('../network/network');
 
 class World {
@@ -91,6 +92,7 @@ class World {
         self.region = new Region(self);
         self.network = new Network(self);
         self.minigames = new Minigames(self);
+        self.guilds = new Guilds(self);
 
         self.ready = true;
 
