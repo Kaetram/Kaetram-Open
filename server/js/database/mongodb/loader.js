@@ -119,7 +119,7 @@ class Loader {
                     callback({
                         name: info.name,
                         owner: info.owner,
-                        players: info.players
+                        members: info.members
                     })
                 }
             });

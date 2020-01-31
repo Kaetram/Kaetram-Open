@@ -7,6 +7,13 @@ class Guilds {
         self.creator = world.database.creator;
         self.loader = world.database.loader;
 
+        /**
+         * A guild contains the following information:
+         * `name` - Identifies the guild
+         * `owner` - Indicates who owns the guild
+         * `members` - An array containing all the members in the guild.
+         */
+
         self.guilds = {};
     }
 
@@ -38,7 +45,10 @@ class Guilds {
         if (!player.guild)
             return;
 
+        let guild = self.guilds[player.guild],
+            index = guild.
 
+        self.guilds[player.guild].members
     }
 
     save(guild) {
