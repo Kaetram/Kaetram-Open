@@ -1,3 +1,5 @@
+let _ = require('underscore');
+
 class Guilds {
 
     constructor(world) {
@@ -15,13 +17,37 @@ class Guilds {
          */
 
         self.guilds = {};
+
+        self.load();
     }
 
     load() {
         let self = this;
 
-        self.loader.getGuilds((guildInfo) => {
+        //self.create('testGuild', { username: 'test' });
 
+        self.loader.getGuilds((guilds) => {
+            log.info(guilds);
+        });
+    }
+
+    create(name, owner) {
+        let self = this,
+            newGuild = {
+                name: name,
+                owner: owner.username,
+                members: [owner.username]
+            };
+
+        self.loader.getGuild(newGuild.name, (guild) => {
+            if (guild) {
+                owner.notify('A guild with that name already exists.');
+                return;
+            }
+
+            self.guilds[name] = newGuild;
+
+            self.save(newGuild);
         });
     }
 

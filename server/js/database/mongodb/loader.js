@@ -98,7 +98,9 @@ class Loader {
             let guilds = database.collection('guild_data'),
                 cursor = guilds.find();
 
-            log.info('Guilds...');
+            cursor.toArray().then((guildsList) => {
+                callback(guildsList);
+            });
         });
     }
 
@@ -112,16 +114,20 @@ class Loader {
             cursor.toArray().then((guildsArray) => {
                 let info = guildsArray[0];
 
-                if (info) {
-                    if (info.name !== name)
-                        log.notice('[Loader] Mismatch whilst retrieving guild data for ' + name);
-
-                    callback({
-                        name: info.name,
-                        owner: info.owner,
-                        members: info.members
-                    })
+                if (!info) {
+                    callback(null);
+                    return;
                 }
+
+                if (info.name !== name)
+                    log.notice('[Loader] Mismatch whilst retrieving guild data for ' + name);
+
+                callback({
+                    name: info.name,
+                    owner: info.owner,
+                    members: info.members
+                });
+
             });
         });
     }
