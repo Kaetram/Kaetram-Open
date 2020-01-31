@@ -154,14 +154,18 @@ class Creator {
     }
 
     saveGuild(guild) {
-        let self = this;
+        let self = this,
+            data = {
+                owner: guild.owner,
+                members: guild.members
+            };
 
         self.database.getDatabase((database) => {
             let guilds = database.collection('guild_data');
 
             guilds.updateOne({
                 name: guild.name
-            }. { $set: guild }, {
+            }, { $set: data }, {
                 upsert: true
             }, (error, result) => {
                 if (error)
