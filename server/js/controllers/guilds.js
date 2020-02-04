@@ -40,7 +40,6 @@ class Guilds {
                 self.loaded = true;
         });
 
-        setTimeout(() => {log.info(self.loaded)}, 100);
     }
 
     get(guild) {
