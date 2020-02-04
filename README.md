@@ -17,7 +17,9 @@ Live Version - <https://kaetram.com>
 
 Discord - <https://discord.gg/MmbGAaw>
 
-![Demo](https://i.imgur.com/rVHL2Uc.png)
+![Demo](https://i.imgur.com/cZTFqnd.png)
+![Demo1](https://i.imgur.com/jS5d3oq.png)
+![Demo2](https://i.imgur.com/slnzrZB.png)
 
 ## Features
 
