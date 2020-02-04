@@ -93,6 +93,12 @@ function main() {
 
                 break;
 
+            case 'deleteGuilds':
+
+                worlds[0].database.deleteGuilds();
+
+                break;
+
         }
     });
 
