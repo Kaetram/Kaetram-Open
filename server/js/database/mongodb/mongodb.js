@@ -180,8 +180,9 @@ class MongoDB {
     }
 
     registeredCount(callback) {
+        let self = this;
 
-        this.getDatabase((database) => {
+        self.getDatabase((database) => {
             let collection = database.collection('player_data');
 
             collection.countDocuments().then((count) => {
@@ -189,6 +190,18 @@ class MongoDB {
             });
 
         });
+    }
+
+    /* Primarily for debugging or should something go wrong. */
+
+    deleteGuilds() {
+        let self = this;
+
+        self.loader.getGuilds((guilds, collection) => {
+
+            _.each(guilds, (guild) => { collection.deleteOne({ name: guild.name }) })
+
+        }, true);
     }
 
 }

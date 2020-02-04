@@ -18,17 +18,38 @@ class Guilds {
 
         self.guilds = {};
 
+        self.loaded = false;
+
         self.load();
     }
 
     load() {
         let self = this;
 
-        //self.create('testGuild', { username: 'test' });
-
         self.loader.getGuilds((guilds) => {
-            log.info(guilds);
+            _.each(guilds, (guild) => {
+
+                self.guilds[guild.name] = {
+                    owner: guild.owner,
+                    members: guild.members
+                };
+
+            });
+
+            if (self.guildCount() === guilds.length)
+                self.loaded = true;
         });
+
+        setTimeout(() => {log.info(self.loaded)}, 100);
+    }
+
+    get(guild) {
+        let self = this;
+
+        if (guild in self.guilds)
+            return self.guilds[guild];
+
+        return null;
     }
 
     create(name, owner) {
@@ -80,6 +101,9 @@ class Guilds {
     save(guild) {
         let self = this;
 
+        if (!self.loaded)
+            return;
+
         if (guild) {
             self.creator.saveGuild(guild);
             return;
@@ -88,6 +112,21 @@ class Guilds {
         self.forEachGuild((guild) => {
             self.creator.saveGuild(guild);
         });
+    }
+
+    hasGuild(owner) {
+        let self = this;
+
+        for (let i in self.guilds)
+            if (self.guilds.hasOwnProperty(i))
+                if (self.guilds[i].owner.toLowerCase() === owner.toLowerCase())
+                    return true;
+
+        return false;
+    }
+
+    guildCount() {
+        return Object.keys(this.guilds).length;
     }
 
     forEachGuild(callback) {
