@@ -3,13 +3,18 @@ let config = require('../../config'),
 
 class API {
 
+    /**
+     * API will have a variety of uses. Including communication
+     * between multiple worlds (planned for the future).
+     *
+     * `accessToken` - A randomly generated token that can be used
+     * to verify the validity between the client and the server.
+     * This is a rudimentary security method, but is enough considering
+     * the simplicity of the current API.
+     */
+
     constructor(world) {
         let self = this;
-
-        /**
-         * API will have a variety of uses. Including communication
-         * between multiple worlds (planned for the future).
-         */
 
         self.world = world;
 
