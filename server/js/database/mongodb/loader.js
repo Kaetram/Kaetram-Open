@@ -91,7 +91,7 @@ class Loader {
         });
     }
 
-    getGuilds(callback) {
+    getGuilds(callback, returnCollection) {
         let self = this;
 
         self.database.getDatabase((database) => {
@@ -99,7 +99,7 @@ class Loader {
                 cursor = guilds.find();
 
             cursor.toArray().then((guildsList) => {
-                callback(guildsList);
+                callback(guildsList, returnCollection ? guilds : null);
             });
         });
     }
@@ -109,7 +109,7 @@ class Loader {
 
         self.database.getDatabase((database) => {
             let guilds = database.collection('guild_data'),
-                cursor = guilds.find({ name: name });
+                cursor = guilds.find({ name: name.toLowerCase() });
 
             cursor.toArray().then((guildsArray) => {
                 let info = guildsArray[0];
@@ -128,6 +128,19 @@ class Loader {
                     members: info.members
                 });
 
+            });
+        });
+    }
+
+    guildExists(name, callback) {
+        let self = this;
+
+        self.database.getDatabase((database) => {
+            let guilds = database.collection('guild_data'),
+                cursor = guilds.find({ name: name.toLowerCase() });
+
+            cursor.toArray().then((data) => {
+                callback(data.length === 0);
             });
         });
     }
