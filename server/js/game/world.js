@@ -22,7 +22,8 @@ let config = require('../../config.json'),
     Shops = require('../controllers/shops'),
     Region = require('../region/region'),
     Guilds = require('../controllers/guilds'),
-    Network = require('../network/network');
+    Network = require('../network/network'),
+    API = require('../network/api');
 
 class World {
 
@@ -75,7 +76,7 @@ class World {
             self.spawnChests();
             self.spawnEntities();
 
-            onWorldLoad();
+            setTimeout(onWorldLoad, 100);
 
         });
 
@@ -83,10 +84,14 @@ class World {
 
     loaded() {
         let self = this;
+
         /**
-         * Similar to Kaetram engine here, but it's loaded upon initialization
-         * rather than being called from elsewhere.
+         * The following are all globally based 'plugins'. We load them
+         * in a batch here in order to keep it organized and neat.
          */
+
+        if (config.enableAPI)
+            self.api = new API(self);
 
         self.shops = new Shops(self);
         self.region = new Region(self);
