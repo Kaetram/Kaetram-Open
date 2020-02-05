@@ -8,7 +8,7 @@ let fs = require("fs"),
     _ = require('underscore'),
     allowConnections = false, world;
 
-log = new Log(config.worlds > 1 ? 'notice' : config.debugLevel, config.localDebug ? fs.createWriteStream('runtime.log') : null);
+log = new Log(config.debugLevel, config.localDebug ? fs.createWriteStream('runtime.log') : null);
 
 function main() {
     log.info('Initializing ' + config.name + ' game engine...');
@@ -21,7 +21,7 @@ function main() {
         if (allowConnections) {
 
             if (world.isFull()) {
-                log.info('Worlds are all currently full. Closing connection.');
+                log.info('All the worlds are currently full. Please try again later.');
 
                 connection.sendUTF8('full');
                 connection.close();
@@ -38,7 +38,8 @@ function main() {
 
     webSocket.onWebSocketReady(function() {
         /**
-         * Initialize the worlds after the webSocket finishes.
+         * Initialize the world after we have finished loading
+         * the websocket.
          */
 
         loadParser();
@@ -80,7 +81,7 @@ function main() {
 
             case 'deleteGuilds':
 
-                worlds.database.deleteGuilds();
+                world.database.deleteGuilds();
 
                 break;
 
@@ -99,22 +100,6 @@ function onWorldLoad() {
 
 function loadParser() {
     new Parser();
-}
-
-function initializeWorlds() {
-    for (var worldId in worlds)
-        if (worlds.hasOwnProperty(worldId))
-            worlds[worldId].load(onWorldLoad);
-}
-
-function saveAll() {
-    _.each(worlds, function(world) {
-        world.saveAll();
-    });
-
-    var plural = worlds.length > 1;
-
-    log.notice('Saved players for ' + worlds.length + ' world' + (plural ? 's' : '') + '.');
 }
 
 if ( typeof String.prototype.startsWith !== 'function' ) {
