@@ -21,7 +21,6 @@
 
   "debugLevel": "info",
   "localDebug": false,
-  "worlds": 1,
   "maxPlayers": 200,
   "gver": 1,
   "updateTime": 200,
