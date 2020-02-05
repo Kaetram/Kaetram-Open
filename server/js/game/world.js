@@ -27,10 +27,9 @@ let config = require('../../config.json'),
 
 class World {
 
-    constructor(id, socket, database) {
+    constructor(socket, database) {
         let self = this;
 
-        self.id = id;
         self.socket = socket;
         self.database = database;
 
@@ -57,7 +56,7 @@ class World {
     load(onWorldLoad) {
         let self = this;
 
-        log.info('************ World ' + self.id + ' ***********');
+        log.info('************ World Information ***********');
 
         /**
          * The reason maps are loaded per each world is because
@@ -103,7 +102,7 @@ class World {
 
         self.tick();
 
-        log.info('********************************');
+        log.info('******************************************');
     }
 
     async tick() {
@@ -738,6 +737,10 @@ class World {
                     return self.players[id];
 
         return null;
+    }
+
+    isFull() {
+        return this.getPopulation() >= this.maxPlayers;
     }
 
     getPlayerByInstance(instance) {

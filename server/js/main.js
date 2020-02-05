@@ -6,8 +6,7 @@ let fs = require("fs"),
     Parser = require('./util/parser'),
     Database = require('./database/database'),
     _ = require('underscore'),
-    worlds = [], allowConnections = false,
-    worldsCreated = 0;
+    allowConnections = false, world;
 
 log = new Log(config.worlds > 1 ? 'notice' : config.debugLevel, config.localDebug ? fs.createWriteStream('runtime.log') : null);
 
@@ -20,22 +19,14 @@ function main() {
 
     webSocket.onConnect(function(connection) {
         if (allowConnections) {
-            let world;
 
-            for (let i = 0; i < worlds.length; i++)
-                if (worlds[i].getPopulation() < worlds[i].maxPlayers) {
-                    world = worlds[i];
-                    break;
-                }
-
-            if (world)
-                world.playerConnectCallback(connection);
-            else {
+            if (world.isFull()) {
                 log.info('Worlds are all currently full. Closing connection.');
 
                 connection.sendUTF8('full');
                 connection.close();
-            }
+            } else
+                world.playerConnectCallback(connection);
 
         } else {
             connection.sendUTF8('disallowed');
@@ -52,10 +43,9 @@ function main() {
 
         loadParser();
 
-        for (let i = 0; i < config.worlds; i++)
-            worlds.push(new World(i + 1, webSocket, database.getDatabase()));
+        world = new World(webSocket, database.getDatabase());
 
-        initializeWorlds();
+        world.load(onWorldLoad);
 
     });
 
@@ -75,19 +65,14 @@ function main() {
         switch (command) {
 
             case 'players':
-                let total = 0;
 
-                _.each(worlds, (world) => {
-                    total += world.getPopulation();
-                });
-
-                log.info(`There are ${total} player(s) in ${worlds.length} world(s).`);
+                log.info(`There are a total of ${world.getPopulation()} player(s) logged in.`);
 
                 break;
 
             case 'registered':
 
-                worlds[0].database.registeredCount((count) => {
+                world.database.registeredCount((count) => {
                     log.info(`There are ${count} users registered.`);
                 });
 
@@ -95,7 +80,7 @@ function main() {
 
             case 'deleteGuilds':
 
-                worlds[0].database.deleteGuilds();
+                worlds.database.deleteGuilds();
 
                 break;
 
@@ -105,13 +90,7 @@ function main() {
 }
 
 function onWorldLoad() {
-    worldsCreated++;
-    if (worldsCreated === worlds.length)
-        allWorldsCreated();
-}
-
-function allWorldsCreated() {
-    log.notice('Finished creating ' + worlds.length + ' world' + (worlds.length > 1 ? 's' : '') + '!');
+    log.notice(`World has successfully been created.`);
     allowConnections = true;
 
     var host = config.host === '0.0.0.0' ? 'localhost' : config.host;
@@ -126,16 +105,6 @@ function initializeWorlds() {
     for (var worldId in worlds)
         if (worlds.hasOwnProperty(worldId))
             worlds[worldId].load(onWorldLoad);
-}
-
-function getPopulations() {
-    var counts = [];
-
-    for (var index in worlds)
-        if (worlds.hasOwnProperty(index))
-            counts.push(worlds[index].getPopulation());
-
-    return counts;
 }
 
 function saveAll() {
