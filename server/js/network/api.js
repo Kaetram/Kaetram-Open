@@ -1,5 +1,6 @@
 let config = require('../../config'),
-    http = require('http');
+    http = require('http'),
+    Constants = require('../util/constants');
 
 class API {
 
@@ -55,6 +56,10 @@ class API {
             default:
 
                 response.writeHead(200, { 'Content-Type': 'application/json' });
+                response.write(JSON.stringify({
+                    error: Constants.API_CONSTANTS.NOT_FOUND_ERROR,
+                    message: 'The API call could not be processed.'
+                }));
                 response.end();
 
                 break;
