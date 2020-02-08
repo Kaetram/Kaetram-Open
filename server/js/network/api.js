@@ -1,6 +1,8 @@
 let config = require('../../config'),
-    http = require('http'),
-    Constants = require('../util/constants');
+    express = require('express'),
+    bodyParser = require('body-parser'),
+    _ = require('underscore'),
+    APIConstants = require('../util/apiconstants');
 
 class API {
 
@@ -19,52 +21,70 @@ class API {
 
         self.world = world;
 
-        self.httpServer = http.createServer((request, response) => {
-            self.handle(request, response);
-        }).listen(config.apiPort, config.host, () => {
-            log.info('API is now listening on: ' + config.apiPort);
+        let app = express();
+
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.json());
+
+        let router = express.Router();
+
+        self.handle(router);
+
+        app.use('/', router);
+
+        app.listen(config.apiPort, () => {
+            log.info(config.name + ' API is now listening on: ' + config.apiPort);
+        });
+
+    }
+
+    handle(router) {
+        let self = this;
+
+        router.get('/', (request, response) => {
+            response.json({
+                name: config.name,
+                gameVersion: config.gver,
+                maxPlayers: config.maxPlayers,
+                playerCount: self.world.getPopulation()
+            });
+        });
+
+        router.get('/players', (request, response) => {
+            if (!request.query.token || request.query.token !== config.accessToken) {
+                self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `token` specified for /player GET request.');
+                return;
+            }
+
+            let players = {};
+
+
+            _.each(self.world.players, (player) => {
+                players[player.username] = {
+                    x: player.x,
+                    y: player.y,
+                    experience: player.experience,
+                    level: player.level,
+                    hitPoints: player.hitPoints,
+                    maxHitPoints: player.maxHitPoints,
+                    mana: player.mana,
+                    maxMana: player.maxMana,
+                    pvpKills: player.pvpKills,
+                    orientation: player.orientation,
+                    lastLogin: player.lastLogin,
+                    mapVersion: player.mapVersion
+                };
+            });
+
+            response.json(players);
         });
     }
 
-    handle(request, response) {
-        let self = this;
-
-        switch (request.url) {
-            case '/':
-
-                let data = {
-                    name: config.name,
-                    gameVersion: config.gver,
-                    maxPlayers: config.maxPlayers,
-                    playerCount: self.world.getPopulation()
-                }
-
-                response.writeHead(200, { 'Content-Type': 'application/json' });
-                response.write(JSON.stringify(data));
-                response.end();
-
-                break;
-
-            case '/player/status':
-
-                /**
-                 * TODO - Get data about a player.
-                 */
-
-                break;
-
-            default:
-
-                response.writeHead(200, { 'Content-Type': 'application/json' });
-                response.write(JSON.stringify({
-                    error: Constants.API_CONSTANTS.NOT_FOUND_ERROR,
-                    message: 'The API call could not be processed.'
-                }));
-                response.end();
-
-                break;
-        }
-
+    returnError(response, error, message) {
+        response.json({
+            error: error,
+            message: message
+        });
     }
 
 }
