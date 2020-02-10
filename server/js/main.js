@@ -85,6 +85,26 @@ function main() {
 
                 break;
 
+            case 'kill':
+
+                let username = blocks.join(' ');
+
+                if (!world.playerInWorld(username)) {
+                    log.info('Player is not logged in.');
+                    return;
+                }
+
+                let player = world.getPlayerByName(username);
+
+                if (!player) {
+                    log.info('An error has occurred.');
+                    return;
+                }
+
+                world.kill(player);
+
+                break;
+
         }
     });
 

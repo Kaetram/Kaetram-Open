@@ -72,6 +72,9 @@ define(function() {
 
                 var hasTarget = self.player.hasTarget();
 
+                if (self.game.isDebug())
+                    log.info('Stopping pathing.');
+
                 self.socket.send(Packets.Movement, [Packets.MovementOpcode.Stop, x, y, id, hasTarget, self.player.orientation]);
 
                 if (hasTarget) {
