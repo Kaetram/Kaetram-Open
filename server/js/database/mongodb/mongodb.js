@@ -192,6 +192,36 @@ class MongoDB {
         });
     }
 
+    resetPositions(newX, newY, callback) {
+        let self = this;
+
+        self.getDatabase((database) => {
+            let collection = database.collection('player_data'),
+                cursor = collection.find();
+
+            cursor.toArray().then((playerList) => {
+                _.each(playerList, (playerInfo) => {
+                    delete playerInfo._id;
+
+                    playerInfo.x = newX;
+                    playerInfo.y = newY;
+
+                    collection.updateOne({
+                        username: playerInfo.username
+                    }, { $set: playerInfo }, {
+                        upsert: true
+                    }, (error, result) => {
+                        if (error)
+                            throw error;
+
+                        if (result)
+                            callback('Successfully updated positions.');
+                    });
+                });
+            });
+        });
+    }
+
     /* Primarily for debugging or should something go wrong. */
 
     deleteGuilds() {
