@@ -4,6 +4,7 @@
   "port": 9001,
   "ssl": false,
 
+  "allowConnectionsToggle": false,
   "offlineMode": false,
   "devClient": true,
   "development": false,
