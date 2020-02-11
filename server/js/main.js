@@ -105,6 +105,39 @@ function main() {
 
                 break;
 
+            case 'resetPositions':
+
+                let newX = parseInt(blocks.shift()),
+                    newY = parseInt(blocks.shift());
+
+                //x: 325, y: 87
+
+                if (!newX || !newY) {
+                    log.info('Invalid command parameters. Expected: /resetPositions <newX> <newY>');
+                    return;
+                }
+
+                /**
+                 * We are iterating through all of the users in the database
+                 * and resetting their position to the paramters inputted.
+                 * This is to be used when doing some game-breaking map
+                 * updates. This command is best used in tandem with the
+                 * `allowConnectionsToggle` to prevent users from logging
+                 * in.
+                 */
+
+                world.database.resetPositions(newX, newY, (result) => {
+                    log.info(result);
+                });
+
+                break;
+
+            case 'allowConnections':
+
+                allowConnections = true;
+
+                break;
+
         }
     });
 
@@ -112,7 +145,9 @@ function main() {
 
 function onWorldLoad() {
     log.notice(`World has successfully been created.`);
-    allowConnections = true;
+
+    if (!config.allowConnectionsToggle)
+        allowConnections = true;
 
     var host = config.host === '0.0.0.0' ? 'localhost' : config.host;
     log.notice('Connect locally via http://' + host + ':' + config.port);
