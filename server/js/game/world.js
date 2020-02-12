@@ -37,6 +37,7 @@ class World {
         self.updateTime = config.updateTime;
 
         self.debug = false;
+        self.allowConnections = false;
 
         self.players = {};
         self.entities = {};
