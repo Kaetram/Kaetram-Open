@@ -6,7 +6,8 @@ let fs = require("fs"),
     Parser = require('./util/parser'),
     Database = require('./database/database'),
     _ = require('underscore'),
-    allowConnections = false, world;
+    Request = require('request'),
+    world;
 
 log = new Log(config.debugLevel, config.localDebug ? fs.createWriteStream('runtime.log') : null);
 
@@ -18,7 +19,7 @@ function main() {
         stdin = process.openStdin();
 
     webSocket.onConnect(function(connection) {
-        if (allowConnections) {
+        if (world.allowConnections) {
 
             if (world.isFull()) {
                 log.info('All the worlds are currently full. Please try again later.');
@@ -134,7 +135,12 @@ function main() {
 
             case 'allowConnections':
 
-                allowConnections = true;
+                world.allowConnections = !world.allowConnections;
+
+                if (world.allowConnections)
+                    log.info('Server is now allowing connections.')
+                else
+                    log.info('The server is not allowing connections.');
 
                 break;
 
@@ -147,7 +153,7 @@ function onWorldLoad() {
     log.notice(`World has successfully been created.`);
 
     if (!config.allowConnectionsToggle)
-        allowConnections = true;
+        world.allowConnections = true;
 
     var host = config.host === '0.0.0.0' ? 'localhost' : config.host;
     log.notice('Connect locally via http://' + host + ':' + config.port);
