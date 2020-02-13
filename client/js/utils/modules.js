@@ -73,6 +73,7 @@ Modules = {
         U: 85,
         J: 74,
         Enter: 13,
+        Slash: 191,
         T: 84,
         I: 73,
         P: 80,
