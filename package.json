@@ -1,6 +1,6 @@
 {
     "name": "kaetram",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "private": false,
     "author": "Veradictus",
     "main": "server/js/main.js",
@@ -15,6 +15,7 @@
         "bcrypt": "^3.0.7",
         "commander": "^4.1.0",
         "connect": "^3.7.0",
+        "express": "^4.17.1",
         "http": "0.0.0",
         "log": "<=1.4.0",
         "memcache": "^0.3.0",

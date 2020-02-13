@@ -13,6 +13,8 @@ class Creator {
         let self = this;
 
         self.database.getDatabase((database) => {
+            /* Handle the player databases */
+
             let playerData = database.collection('player_data'),
                 playerEquipment = database.collection('player_equipment'),
                 playerQuests = database.collection('player_quests'),
@@ -149,6 +151,35 @@ class Creator {
             if (result)
                 log.debug('Player ' + player.username + ' inventory data has been saved successfully.');
         });
+    }
+
+    saveGuild(guild) {
+        let self = this,
+            data = {
+                name: guild.name, // Actual name
+                owner: guild.owner,
+                members: guild.members
+            };
+
+        if (!data.name || !data.owner || !data.members)
+            return;
+
+        self.database.getDatabase((database) => {
+            let guilds = database.collection('guild_data');
+
+            guilds.updateOne({
+                name: guild.name.toLowerCase()
+            }, { $set: data }, {
+                upsert: true
+            }, (error, result) => {
+                if (error)
+                    throw error;
+
+                if (result)
+                    log.debug(`Successfully saved data for ${guild.name}'s guild.`)
+            });
+        });
+
     }
 
     static getPasswordHash(password, callback) {
