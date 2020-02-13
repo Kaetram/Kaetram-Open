@@ -211,15 +211,19 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "data/config.json",
-    "revision": "6c5cefab19d299da52dd34a115477927"
+    "revision": "26c197b22216a1ad35e442c7b53bfcf3"
+  },
+  {
+    "url": "data/config.json-dist",
+    "revision": "8032ede6627e4bb94663d6ec68f40fa4"
   },
   {
     "url": "data/maps/map.js",
-    "revision": "8bb15d5e219740f4b7c8cb9c081b45ec"
+    "revision": "440b646fdfe09d51cc5c00ad02e3907e"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "cb15709bf2d6b518bafa00712bd971bc"
+    "revision": "a7e65b9936942b23585ab9d5a9c1cc22"
   },
   {
     "url": "data/sprites.json",
@@ -5299,7 +5303,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "1f7869a7df0584643d0e8c90ba8b5061"
+    "revision": "b8484dfcddb6c6505ea6f818555067ed"
   },
   {
     "url": "js/app.js",
@@ -5319,11 +5323,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/controllers/chat.js",
-    "revision": "bab4eb5de304103f66661a41fa198225"
+    "revision": "243131d45581176f3bd3721f13f69af8"
   },
   {
     "url": "js/controllers/entities.js",
-    "revision": "6bf34e6417b25039b0bc1fea7c7350a1"
+    "revision": "5e0df1021a0f4af8b3126d60b337817c"
   },
   {
     "url": "js/controllers/info.js",
@@ -5331,7 +5335,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/controllers/input.js",
-    "revision": "498be3439503bb7fa949d6e148018a8b"
+    "revision": "8efe5edb1b869eeb30d8d60fbc334c53"
   },
   {
     "url": "js/controllers/interface.js",
@@ -5591,7 +5595,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "63f27464c4e3683eb8b743b3c1c2b5f1"
+    "revision": "1ee9dcddfac423fa96c3b142a616902e"
   },
   {
     "url": "js/renderer/tile.js",
@@ -5611,7 +5615,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/utils/modules.js",
-    "revision": "0262c41133c99ac11e37a33548eb7c8f"
+    "revision": "8291d6356bc96034ef984aa697c85f4c"
   },
   {
     "url": "js/utils/pathfinder.js",
@@ -5651,7 +5655,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "lib/pwa.js",
-    "revision": "a3cdafeac385111a8f3d4e7043487554"
+    "revision": "15f93e12201e72ae68511e8bf6d162a4"
   },
   {
     "url": "lib/socket.io.js",
