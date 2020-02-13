@@ -92,6 +92,12 @@
     "id": 9,
     "name": "Death Gate",
     "rewardType": "door"
+  },
+
+  "10": {
+    "id": 10,
+    "name": "Frozen Knighthood",
+    "rewardType": "door"
   }
 
 }
