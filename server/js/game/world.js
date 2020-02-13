@@ -21,14 +21,15 @@ let config = require('../../config.json'),
     Modules = require('../util/modules'),
     Shops = require('../controllers/shops'),
     Region = require('../region/region'),
-    Network = require('../network/network');
+    Guilds = require('../controllers/guilds'),
+    Network = require('../network/network'),
+    API = require('../network/api');
 
 class World {
 
-    constructor(id, socket, database) {
+    constructor(socket, database) {
         let self = this;
 
-        self.id = id;
         self.socket = socket;
         self.database = database;
 
@@ -36,6 +37,7 @@ class World {
         self.updateTime = config.updateTime;
 
         self.debug = false;
+        self.allowConnections = false;
 
         self.players = {};
         self.entities = {};
@@ -55,7 +57,7 @@ class World {
     load(onWorldLoad) {
         let self = this;
 
-        log.info('************ World ' + self.id + ' ***********');
+        log.info('************ World Information ***********');
 
         /**
          * The reason maps are loaded per each world is because
@@ -74,7 +76,7 @@ class World {
             self.spawnChests();
             self.spawnEntities();
 
-            onWorldLoad();
+            setTimeout(onWorldLoad, 100);
 
         });
 
@@ -82,21 +84,26 @@ class World {
 
     loaded() {
         let self = this;
+
         /**
-         * Similar to Kaetram engine here, but it's loaded upon initialization
-         * rather than being called from elsewhere.
+         * The following are all globally based 'plugins'. We load them
+         * in a batch here in order to keep it organized and neat.
          */
+
+        if (config.enableAPI)
+            self.api = new API(self);
 
         self.shops = new Shops(self);
         self.region = new Region(self);
         self.network = new Network(self);
         self.minigames = new Minigames(self);
+        self.guilds = new Guilds(self);
 
         self.ready = true;
 
         self.tick();
 
-        log.info('********************************');
+        log.info('******************************************');
     }
 
     async tick() {
@@ -292,6 +299,9 @@ class World {
 
                 if (data.miniboss)
                     mob.miniboss = data.miniboss;
+
+                if (data.boss)
+                    mob.boss = data.boss;
 
                 if (Mobs.Properties[key].hiddenName)
                     mob.hiddenName = Mobs.Properties[key].hiddenName;
@@ -728,6 +738,10 @@ class World {
                     return self.players[id];
 
         return null;
+    }
+
+    isFull() {
+        return this.getPopulation() >= this.maxPlayers;
     }
 
     getPlayerByInstance(instance) {
