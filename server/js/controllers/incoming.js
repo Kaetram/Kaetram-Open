@@ -264,6 +264,9 @@ class Incoming {
                 entity.customScale = 1.25;
             }
 
+            if (entity.boss)
+                entity.specialState = 'boss';
+
             //if (self.player.quests.isAchievementNPC(entity))
             //    entity.specialState = 'achievementNpc';
 
@@ -414,6 +417,11 @@ class Incoming {
                     self.player.inventory.add(entity);
 
                 if (self.world.map.isDoor(posX, posY) && !hasTarget) {
+                    let door = self.player.doors.getDoor(posX, posY);
+
+                    if (door && self.player.doors.getStatus(door) === 'closed')
+                        return;
+
                     let destination = self.world.map.getDoorDestination(posX, posY);
 
                     self.player.teleport(destination.x, destination.y, true);

@@ -872,6 +872,8 @@ define(['./impl/teamwar'], function(TeamWar) {
                 self.game.player.setSprite(self.game.getSprite(self.game.player.getSpriteName()));
                 self.game.player.idle();
 
+                self.entities.addEntity(self.game.player);
+
                 self.game.player.dead = false;
             });
 

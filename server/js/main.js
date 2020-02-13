@@ -6,10 +6,10 @@ let fs = require("fs"),
     Parser = require('./util/parser'),
     Database = require('./database/database'),
     _ = require('underscore'),
-    worlds = [], allowConnections = false,
-    worldsCreated = 0;
+    Request = require('request'),
+    world;
 
-log = new Log(config.worlds > 1 ? 'notice' : config.debugLevel, config.localDebug ? fs.createWriteStream('runtime.log') : null);
+log = new Log(config.debugLevel, config.localDebug ? fs.createWriteStream('runtime.log') : null);
 
 function main() {
     log.info('Initializing ' + config.name + ' game engine...');
@@ -19,23 +19,15 @@ function main() {
         stdin = process.openStdin();
 
     webSocket.onConnect(function(connection) {
-        if (allowConnections) {
-            let world;
+        if (world.allowConnections) {
 
-            for (let i = 0; i < worlds.length; i++)
-                if (worlds[i].getPopulation() < worlds[i].maxPlayers) {
-                    world = worlds[i];
-                    break;
-                }
-
-            if (world)
-                world.playerConnectCallback(connection);
-            else {
-                log.info('Worlds are all currently full. Closing connection.');
+            if (world.isFull()) {
+                log.info('All the worlds are currently full. Please try again later.');
 
                 connection.sendUTF8('full');
                 connection.close();
-            }
+            } else
+                world.playerConnectCallback(connection);
 
         } else {
             connection.sendUTF8('disallowed');
@@ -47,15 +39,15 @@ function main() {
 
     webSocket.onWebSocketReady(function() {
         /**
-         * Initialize the worlds after the webSocket finishes.
+         * Initialize the world after we have finished loading
+         * the websocket.
          */
 
         loadParser();
 
-        for (let i = 0; i < config.worlds; i++)
-            worlds.push(new World(i + 1, webSocket, database.getDatabase()));
+        world = new World(webSocket, database.getDatabase());
 
-        initializeWorlds();
+        world.load(onWorldLoad);
 
     });
 
@@ -75,21 +67,80 @@ function main() {
         switch (command) {
 
             case 'players':
-                let total = 0;
 
-                _.each(worlds, (world) => {
-                    total += world.getPopulation();
-                });
-
-                log.info(`There are ${total} player(s) in ${worlds.length} world(s).`);
+                log.info(`There are a total of ${world.getPopulation()} player(s) logged in.`);
 
                 break;
 
             case 'registered':
 
-                worlds[0].database.registeredCount((count) => {
+                world.database.registeredCount((count) => {
                     log.info(`There are ${count} users registered.`);
                 });
+
+                break;
+
+            case 'deleteGuilds':
+
+                world.database.deleteGuilds();
+
+                break;
+
+            case 'kill':
+
+                let username = blocks.join(' ');
+
+                if (!world.playerInWorld(username)) {
+                    log.info('Player is not logged in.');
+                    return;
+                }
+
+                let player = world.getPlayerByName(username);
+
+                if (!player) {
+                    log.info('An error has occurred.');
+                    return;
+                }
+
+                world.kill(player);
+
+                break;
+
+            case 'resetPositions':
+
+                let newX = parseInt(blocks.shift()),
+                    newY = parseInt(blocks.shift());
+
+                //x: 325, y: 87
+
+                if (!newX || !newY) {
+                    log.info('Invalid command parameters. Expected: /resetPositions <newX> <newY>');
+                    return;
+                }
+
+                /**
+                 * We are iterating through all of the users in the database
+                 * and resetting their position to the paramters inputted.
+                 * This is to be used when doing some game-breaking map
+                 * updates. This command is best used in tandem with the
+                 * `allowConnectionsToggle` to prevent users from logging
+                 * in.
+                 */
+
+                world.database.resetPositions(newX, newY, (result) => {
+                    log.info(result);
+                });
+
+                break;
+
+            case 'allowConnections':
+
+                world.allowConnections = !world.allowConnections;
+
+                if (world.allowConnections)
+                    log.info('Server is now allowing connections.')
+                else
+                    log.info('The server is not allowing connections.');
 
                 break;
 
@@ -99,14 +150,10 @@ function main() {
 }
 
 function onWorldLoad() {
-    worldsCreated++;
-    if (worldsCreated === worlds.length)
-        allWorldsCreated();
-}
+    log.notice(`World has successfully been created.`);
 
-function allWorldsCreated() {
-    log.notice('Finished creating ' + worlds.length + ' world' + (worlds.length > 1 ? 's' : '') + '!');
-    allowConnections = true;
+    if (!config.allowConnectionsToggle)
+        world.allowConnections = true;
 
     var host = config.host === '0.0.0.0' ? 'localhost' : config.host;
     log.notice('Connect locally via http://' + host + ':' + config.port);
@@ -114,32 +161,6 @@ function allWorldsCreated() {
 
 function loadParser() {
     new Parser();
-}
-
-function initializeWorlds() {
-    for (var worldId in worlds)
-        if (worlds.hasOwnProperty(worldId))
-            worlds[worldId].load(onWorldLoad);
-}
-
-function getPopulations() {
-    var counts = [];
-
-    for (var index in worlds)
-        if (worlds.hasOwnProperty(index))
-            counts.push(worlds[index].getPopulation());
-
-    return counts;
-}
-
-function saveAll() {
-    _.each(worlds, function(world) {
-        world.saveAll();
-    });
-
-    var plural = worlds.length > 1;
-
-    log.notice('Saved players for ' + worlds.length + ' world' + (plural ? 's' : '') + '.');
 }
 
 if ( typeof String.prototype.startsWith !== 'function' ) {

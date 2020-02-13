@@ -22,7 +22,7 @@ define(['../entity'], function(Entity) {
             self.static = false;
             self.dynamic = false;
 
-            self.speed = 200;
+            self.speed = 150;
 
             self.angle = 0;
 
