@@ -52,6 +52,12 @@ define(['jquery'], function($) {
             var self = this;
 
             switch(data) {
+                case Modules.Keys.Esc:
+
+                    self.toggle();
+
+                    break;
+
                 case Modules.Keys.Enter:
 
                     if (self.input.val() === '')

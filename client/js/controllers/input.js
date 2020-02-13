@@ -137,6 +137,10 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
                             break;
 
+                        case Modules.Keys.Slash:
+
+                            self.chatHandler.input.val('/');
+
                         case Modules.Keys.Enter:
 
                             self.chatHandler.toggle();
