@@ -4,12 +4,12 @@
   "port": 9001,
   "ssl": false,
 
+  "allowConnectionsToggle": false,
   "offlineMode": false,
   "devClient": true,
   "development": false,
   "overrideAuth": false,
   "debug": false,
-  "useAPI": false,
 
   "database": "mongodb",
 
@@ -22,7 +22,6 @@
 
   "debugLevel": "info",
   "localDebug": false,
-  "worlds": 1,
   "maxPlayers": 200,
   "gver": 1,
   "updateTime": 200,
@@ -31,5 +30,9 @@
   "administrators": [],
   "moderators": [],
 
-  "tutorialEnabled": false
+  "tutorialEnabled": false,
+
+  "enableAPI": false,
+  "apiPort": 9002,
+  "accessToken": "b76b6d491fa6fcce9b5376dbf8b8bbbd49629b636a88d6100f444ac46fbf36a7"
 }

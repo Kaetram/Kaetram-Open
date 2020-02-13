@@ -219,11 +219,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "data/maps/map.js",
-    "revision": "440b646fdfe09d51cc5c00ad02e3907e"
+    "revision": "ec628674e4bd1f8e2e78524b890ff726"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "a7e65b9936942b23585ab9d5a9c1cc22"
+    "revision": "1a66df48c83d770a017056ecd9472508"
   },
   {
     "url": "data/sprites.json",
@@ -5279,23 +5279,27 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "img/tilesets/tilesheet-1.png",
-    "revision": "43c1a045ecd37579e4e5c8e1670fc441"
+    "revision": "3b8bb9c2b78359461f2d486760752c37"
   },
   {
     "url": "img/tilesets/tilesheet-2.png",
-    "revision": "1d0f7c5eead888d1614991b2b8173498"
+    "revision": "556375d7437412db82bab8437e8edc55"
   },
   {
     "url": "img/tilesets/tilesheet-3.png",
-    "revision": "c47d61b646854f4199b212a32f0547b4"
+    "revision": "255745c59ab5dd7d138828632a2f5a14"
   },
   {
     "url": "img/tilesets/tilesheet-4.png",
-    "revision": "1d606e8c58f3d06831d9a9ca2d04b5e4"
+    "revision": "85bfd3070c8130d834655a55b04e12c6"
   },
   {
     "url": "img/tilesets/tilesheet-5.png",
-    "revision": "a4abbe9197e99606af0d99689e7b993f"
+    "revision": "a7b433d58ab277aad576f6f0df8fcfcb"
+  },
+  {
+    "url": "img/tilesets/tilesheet-6.png",
+    "revision": "7c62c9f52d78e16ceca60295f7bd406c"
   },
   {
     "url": "img/tilesets/tilesheet.png",
@@ -5403,7 +5407,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/character/player/playerhandler.js",
-    "revision": "aadd346d3cc9d9b343489cb510f4015e"
+    "revision": "88ae665fd1008da041bfe6d05bc6dca9"
   },
   {
     "url": "js/entity/entity.js",
@@ -5423,7 +5427,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/objects/projectile.js",
-    "revision": "54c78478320bb0c99769e81d665831c0"
+    "revision": "4039127ed518b58c1ae193e513035946"
   },
   {
     "url": "js/entity/sprite.js",
@@ -5475,7 +5479,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/interface/profile/pages/quest.js",
-    "revision": "778dfc7aad5bc12f2fc9ee1efc6ee1c4"
+    "revision": "0aa3d96b16d81e601dc007dffe681ac2"
   },
   {
     "url": "js/interface/profile/pages/settings.js",
@@ -5547,7 +5551,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/network/connection.js",
-    "revision": "a725adfe138fe2004af073e50844bb89"
+    "revision": "638788d62f9b9c08002fa9e3c9185144"
   },
   {
     "url": "js/network/impl/teamwar.js",

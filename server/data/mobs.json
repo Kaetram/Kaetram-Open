@@ -202,7 +202,8 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "spawnDelay": 65000,
+    "combatPlugin": "deathknight"
   },
 
   "Adherer": {
@@ -928,12 +929,12 @@
   "Mimic": {
     "name": "Mimic",
     "id": 53,
-    "drops": {"gold": 600, "bluescimitar": 400},
-    "hitPoints": 200,
+    "drops": {"gold": 20, "bluescimitar": 20, "flask": 100},
+    "hitPoints": 1200,
     "armour": 2,
-    "weapon": 1,
+    "weapon": 16,
     "xp": 45,
-    "level": 22,
+    "level": 44,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": true,
@@ -1739,13 +1740,14 @@
     "drops": {"gold": 50},
     "hitPoints": 15000,
     "armour": 40,
-    "weapon": 35,
+    "weapon": 1,
     "xp": 2000,
+    "projectileName": "projectile-iceball",
     "level": 195,
     "aggroRange": 3,
-    "attackRange": 2,
+    "attackRange": 6,
     "aggressive": true,
-    "attackRate": 1100,
+    "attackRate": 1300,
     "movementSpeed": 500,
     "spawnDelay": 95000
   },
