@@ -828,6 +828,13 @@
     "name":"Ruby Armour"
   },
 
+  "BlueArmor": {
+    "id": 260,
+    "defense": 6,
+    "type": "armor",
+    "name": "Crystal Armour"
+  },
+
   "GoldenArmor": {
     "id":119,
     "defense":6,
