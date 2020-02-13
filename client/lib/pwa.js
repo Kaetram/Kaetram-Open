@@ -19,22 +19,22 @@ var install = function() {
     }
 };
 
-var refreshing;
-// ? Maybe prompt user before force refreshing
-navigator.serviceWorker.addEventListener('controllerchange', function() {
-    if (refreshing) return;
-    refreshing = true;
-    window.location.reload(true);
-});
-
-window.addEventListener('beforeinstallprompt', function(e) {
-    // Prevent Chrome 67 and earlier from automatically showing the prompt
-    e.preventDefault();
-    deferredPrompt = e;
-});
-
 // Check compatibility for the browser we're running this in
 if ('serviceWorker' in navigator) {
+    var refreshing;
+    // ? Maybe prompt user before force refreshing
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload(true);
+    });
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        deferredPrompt = e;
+    });
+
     window.addEventListener('load', function() {
         if (navigator.serviceWorker.controller)
             log.info(
