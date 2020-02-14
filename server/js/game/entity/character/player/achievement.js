@@ -51,7 +51,7 @@ class Achievement {
 
             self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: npc.talk(self.data.text)
+                text: npc.talk(self.data.text, self.player)
             }));
 
             if (!self.isStarted() && npc.talkIndex === 0)
