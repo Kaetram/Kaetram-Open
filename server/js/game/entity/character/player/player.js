@@ -85,13 +85,13 @@ class Player extends Character {
         self.instanced = false;
         self.visible = true;
 
+        self.talkIndex = 0;
         self.cheatScore = 0;
         self.defaultMovementSpeed = 250; // For fallback.
 
         self.regionsLoaded = [];
         self.lightsLoaded = [];
 
-        self.talkIndex = 0;
         self.npcTalk = null;
     }
 

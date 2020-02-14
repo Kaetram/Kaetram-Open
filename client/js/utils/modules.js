@@ -51,7 +51,8 @@ Modules = {
         Player: 2,
         Item: 3,
         NPC: 4,
-        Chest: 5
+        Chest: 5,
+        Object: 6
     },
 
     Keys: {

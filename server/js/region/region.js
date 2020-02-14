@@ -389,9 +389,38 @@ class Region {
                     for (let x = bounds.startX; x < bounds.endX; x++) {
                         let index = self.gridPositionToIndex(x - 1, y),
                             tileData = ClientMap.data[index],
-                            isCollision = ClientMap.collisions.indexOf(index) > -1 || !tileData;
+                            isCollision = ClientMap.collisions.indexOf(index) > -1 || !tileData,
+                            isObject = false;
 
-                        data.push({index: index, data: tileData, isCollision: isCollision});
+                        if (tileData !== 0) {
+
+                            if (tileData instanceof Array) {
+
+                                for (let j = 0; j < tileData.length; j++) {
+                                    if (self.map.isObject(tileData[j])) {
+                                        isObject = true;
+                                        break;
+                                    }
+                                }
+                            } else
+                                if (self.map.isObject(tileData))
+                                    isObject = true;
+                        }
+
+                        let info = {
+                            index: index
+                        };
+
+                        if (tileData)
+                            info.data = tileData;
+
+                        if (isCollision)
+                            info.isCollision = isCollision;
+
+                        if (isObject)
+                            info.isObject = isObject;
+
+                        data.push(info);
                     }
                 }
             }
@@ -407,8 +436,8 @@ class Region {
         return {
             startX: regionCoordinates.x,
             startY: regionCoordinates.y,
-            endX: regionCoordinates.x + self.mapRegions.zoneWidth,
-            endY: regionCoordinates.y + self.mapRegions.zoneHeight
+            endX: regionCoordinates.x + self.map.regionWidth,
+            endY: regionCoordinates.y + self.map.regionHeight
         }
     }
 

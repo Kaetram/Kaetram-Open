@@ -12,6 +12,7 @@ define(['jquery'], function($) {
             self.supportsWorker = self.game.app.hasWorker();
 
             self.data = [];
+            self.objects = [];
             self.tilesets = [];
             self.rawTilesets = [];
             self.lastSyncData = []; // Prevent unnecessary sync data.
@@ -81,7 +82,8 @@ define(['jquery'], function($) {
 
             for (var i = 0; i < tileData.length; i++) {
                 var tile = tileData[i],
-                    collisionIndex = self.collisions.indexOf(tile.index);
+                    collisionIndex = self.collisions.indexOf(tile.index),
+                    objectIndex = self.objects.indexOf(tile.index);
 
                 self.data[tile.index] = tile.data;
 
@@ -95,6 +97,13 @@ define(['jquery'], function($) {
 
                     self.grid[position.y][position.x] = 0;
                 }
+
+                if (tile.isObject && objectIndex < 0)
+                    self.objects.push(tile.index);
+
+                if (!tile.isObject && objectIndex > 0)
+                    self.objects.splice(objectIndex, 1);
+
             }
 
             if (self.webGLMap)
@@ -371,6 +380,13 @@ define(['jquery'], function($) {
                 return false;
 
             return self.grid[y][x] === 1;
+        },
+
+        isObject: function(x, y) {
+            var self = this,
+                index = self.gridPositionToIndex(x, y) - 1;
+
+            return this.objects.indexOf(index) > -1;
         },
 
         isHighTile: function(id) {
