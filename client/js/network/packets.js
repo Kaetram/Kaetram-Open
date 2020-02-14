@@ -76,7 +76,8 @@ Packets.MovementOpcode = {
 Packets.TargetOpcode = {
     Talk: 0,
     Attack: 1,
-    None: 2
+    None: 2,
+    Object: 3
 };
 
 Packets.CombatOpcode = {
