@@ -90,6 +90,9 @@ class Player extends Character {
 
         self.regionsLoaded = [];
         self.lightsLoaded = [];
+
+        self.talkIndex = 0;
+        self.npcTalk = null;
     }
 
     load(data) {
