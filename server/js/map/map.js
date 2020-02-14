@@ -47,6 +47,7 @@ class Map {
         self.tilesets = map.tilesets;
         self.lights = map.lights;
         self.plateau = map.plateau;
+        self.objects = map.objects;
 
         self.zoneWidth = 25;
         self.zoneHeight = 20;
@@ -232,6 +233,10 @@ class Map {
             endY = light.y + self.zoneHeight + diff;
 
         return x > startX && y > startY && x < endX && y < endY;
+    }
+
+    isObject(id) {
+        return this.objects.indexOf(id) > -1;
     }
 
     isDoor(x, y) {
