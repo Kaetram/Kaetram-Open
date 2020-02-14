@@ -10,14 +10,23 @@ class NPC extends Entity {
         this.talkIndex = 0;
     }
 
-    talk(messages) {
-        let self = this,
-            message = messages[self.talkIndex];
+    talk(messages, player) {
+        let self = this;
 
-        if (self.talkIndex > messages.length - 1)
-            self.talkIndex = 0;
+        if (!player)
+            return;
+
+        if (player.npcTalk !== self.id) {
+            player.talkIndex = 0;
+            player.npcTalk = self.id;
+        }
+
+        let message = messages[player.talkIndex];
+
+        if (player.talkIndex > messages.length - 1)
+            player.talkIndex = 0;
         else
-            self.talkIndex++;
+            player.talkIndex++;
 
         return message;
     }
