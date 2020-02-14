@@ -48,6 +48,8 @@ module.exports = function parse(json, options) {
 
         case 'server':
 
+            map.objects = [];
+
             map.tilesets = [];
             map.pvpAreas = [];
             map.gameAreas = [];
@@ -97,6 +99,9 @@ module.exports = function parse(json, options) {
                 map.animated[id].d = value;
             }
         }
+
+        if (mode === 'server' && property === 'o')
+            map.objects.push(id);
     };
 
     let handleAnimation = function(id, firstGID, tile) {

@@ -347,8 +347,13 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 self.hoveringEntity = entity;
 
             if (!entity || (entity.id === player.id)) {
-                self.setCursor(self.cursors['hand']);
-                self.hovering = null;
+                if (self.map.isObject(position.x, position.y)) {
+                    self.setCursor(self.cursors['talk']);
+                    self.hovering = Modules.Hovering.Object;
+                } else {
+                    self.setCursor(self.cursors['hand']);
+                    self.hovering = null;
+                }
             } else {
                 switch (entity.type) {
                     case 'item':
