@@ -283,6 +283,14 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             if (self.game.interface)
                 self.game.interface.hideAll();
 
+            if (self.map.isObject(position.x, position.y)) {
+
+                player.setObjectTarget(position.x, position.y)
+                player.followPosition(position.x, position.y);
+
+                return;
+            }
+
             var entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX && position.y === player.gridY));
 
             if (entity) {
