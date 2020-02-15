@@ -551,6 +551,12 @@ class Incoming {
                 self.player.removeTarget();
 
                 break;
+
+            case Packets.TargetOpcode.Object:
+
+                log.info('Received object target data.');
+
+                break;
         }
     }
 

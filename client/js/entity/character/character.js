@@ -152,7 +152,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
 
             self.following = true;
 
-            self.move(character.gridX, character.gridY);
+            self.move(x, y);
         },
 
         attack: function(attacker, character) {

@@ -13,6 +13,7 @@ define(function() {
             var self = this;
 
             self.game = game;
+            self.map = game.map;
             self.camera = game.getCamera();
             self.input = game.input;
             self.player = player;
@@ -47,9 +48,6 @@ define(function() {
                 self.input.selectedY = path[i][1];
                 self.input.selectedCellVisible = true;
 
-                if (!self.game.getEntityAt(self.input.selectedX, self.input.selectedY))
-                    self.socket.send(Packets.Target, [Packets.TargetOpcode.None]);
-
                 if (self.game.isDebug())
                     log.info('Movement speed: ' + self.player.movementSpeed);
 
@@ -77,11 +75,10 @@ define(function() {
 
                 self.socket.send(Packets.Movement, [Packets.MovementOpcode.Stop, x, y, id, hasTarget, self.player.orientation]);
 
-                if (hasTarget) {
-                    self.socket.send(Packets.Target, [self.isAttackable() ? Packets.TargetOpcode.Attack : Packets.TargetOpcode.Talk, self.player.target.id]);
-
+                if (hasTarget)
                     self.player.lookAt(self.player.target);
-                }
+
+                self.socket.send(Packets.Target, [self.getTargetType(), self.getTargetId()]);
 
                 self.input.setPassiveTarget();
 
@@ -185,6 +182,29 @@ define(function() {
                 self.game.zoning.reset();
             }
 
+        },
+
+        getTargetId: function() {
+            return this.player.target ? this.player.target.id : null;
+        },
+
+        getTargetType: function() {
+            var self = this,
+                target = self.player.target;
+
+            if (!target)
+                return Packets.TargetOpcode.None;
+
+            if (self.isAttackable())
+                return Packets.TargetOpcode.Attack;
+
+            if (target.type === 'npc')
+                return Packets.TargetOpcode.Talk;
+
+            if (target.type === 'object')
+                return Packets.TargetOpcode.Object;
+
+            return Packets.TargetOpcode.None;
         }
 
     });
