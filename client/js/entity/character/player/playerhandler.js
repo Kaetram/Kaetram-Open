@@ -68,17 +68,21 @@ define(function() {
                 if (entity)
                     id = entity.id;
 
-                var hasTarget = self.player.hasTarget();
-
                 if (self.game.isDebug())
                     log.info('Stopping pathing.');
 
+                var hasTarget = self.player.hasTarget();
+
                 self.socket.send(Packets.Movement, [Packets.MovementOpcode.Stop, x, y, id, hasTarget, self.player.orientation]);
 
-                if (hasTarget)
+                self.socket.send(Packets.Target, [self.getTargetType(), self.getTargetId()]);
+
+                if (hasTarget) {
                     self.player.lookAt(self.player.target);
 
-                self.socket.send(Packets.Target, [self.getTargetType(), self.getTargetId()]);
+                    if (self.player.target.type === 'object')
+                        self.player.removeTarget();
+                }
 
                 self.input.setPassiveTarget();
 
