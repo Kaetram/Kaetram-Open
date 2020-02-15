@@ -147,6 +147,14 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
             self.move(character.gridX, character.gridY);
         },
 
+        followPosition: function(x, y) {
+            var self = this;
+
+            self.following = true;
+
+            self.move(character.gridX, character.gridY);
+        },
+
         attack: function(attacker, character) {
             var self = this;
 
@@ -577,6 +585,22 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
                 self.removeTarget();
 
             self.target = target;
+        },
+
+        setObjectTarget: function(x, y) {
+            var self = this;
+
+            /**
+             * All we are doing is mimicking the `setTarget` entity
+             * parameter. But we are throwing in an extra.
+             */
+
+             self.setTarget({
+                 id: 'obj',
+                 type: 'object',
+                 gridX: x,
+                 gridY: y
+             });
         },
 
         setHitPoints: function(hitPoints) {
