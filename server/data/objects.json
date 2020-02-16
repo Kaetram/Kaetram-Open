@@ -3,6 +3,6 @@
     "x": 53,
     "y": 249,
     "type": "sign",
-    "messages": ["Hello!"]
+    "messages": ["This is a sign...", "and multiple messages seem", "to work very well :D"]
   }
 }

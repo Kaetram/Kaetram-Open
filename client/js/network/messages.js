@@ -61,6 +61,7 @@ define(function() {
             self.messages[Packets.Region] = self.receiveRegion;
             self.messages[Packets.Overlay] = self.receiveOverlay;
             self.messages[Packets.Camera] = self.receiveCamera;
+            self.messages[Packets.Bubble] = self.receiveBubble;
 
         },
 
@@ -475,6 +476,14 @@ define(function() {
                 self.cameraCallback(opcode, info);
         },
 
+        receiveBubble: function(data) {
+            let self = this,
+                info = data.shift();
+
+            if (self.bubbleCallback)
+                self.bubbleCallback(info);
+        },
+
         /**
          * Universal Callbacks
          */
@@ -629,6 +638,10 @@ define(function() {
 
         onCamera: function(callback) {
             this.cameraCallback = callback;
+        },
+
+        onBubble: function(callback) {
+            this.bubbleCallback = callback;
         }
 
     });

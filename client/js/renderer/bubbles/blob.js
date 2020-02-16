@@ -2,7 +2,7 @@ define(['../../utils/timer'], function(Timer) {
 
     return Class.extend({
 
-        init: function(id, element, duration) {
+        init: function(id, element, duration, isObject, info) {
             var self = this;
 
             self.id = id;
@@ -11,6 +11,11 @@ define(['../../utils/timer'], function(Timer) {
 
             self.time = new Date().getTime();
             self.timer = new Timer(self.time, self.duration);
+
+            if (isObject) {
+                self.type = 'object';
+                self.info = info;
+            }
         },
 
         isOver: function(time) {

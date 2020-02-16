@@ -1142,6 +1142,18 @@ define(['./impl/teamwar'], function(TeamWar) {
                 }
 
             });
+
+            self.messages.onBubble(function(info) {
+
+                if (!info.text) {
+                    self.bubble.destroy(info.id);
+                    return;
+                }
+
+                self.bubble.create(info.id, info.text, info.duration, info.isObject, info.info);
+                self.bubble.setTo(info.info);
+
+            });
         }
 
     });
