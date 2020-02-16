@@ -596,7 +596,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
              */
 
              self.setTarget({
-                 id: 'obj',
+                 id: x + '-' + y,
                  type: 'object',
                  gridX: x,
                  gridY: y
