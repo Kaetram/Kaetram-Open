@@ -557,10 +557,25 @@ class Incoming {
 
                 let object = self.globalObjects.getObject(instance);
 
-                if (object)
+                if (!object)
                     return;
 
-                    
+                let message = self.globalObjects.talk(object, self.player);
+
+                self.world.push(Packets.PushOpcode.Player, {
+                    player: self.player,
+                    message: new Messages.Bubble({
+                        id: instance,
+                        text: message,
+                        duration: 5000,
+                        isObject: true,
+                        info: {
+                            id: instance,
+                            x: object.x * 16,
+                            y: (object.y * 16) + 8
+                        }
+                    })
+                });
 
                 break;
         }
