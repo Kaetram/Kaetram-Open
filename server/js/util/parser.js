@@ -6,11 +6,13 @@ let _ = require('underscore'),
     MobData = require('../../data/mobs'),
     AbilityData = require('../../data/abilities'),
     ShopsData = require('../../data/shops'),
+    ObjectData = require('../../data/objects'),
     Mobs = require('./mobs'),
     NPCs = require('./npcs'),
     Items = require('./items'),
     Abilities = require('./abilities'),
     Shops = require('./shops'),
+    Objects = require('./objects'),
     Formulas = require('./formulas'),
     Constants = require('./constants');
 
@@ -27,6 +29,7 @@ class Parser {
         self.loadAbilityData();
         self.loadShops();
         self.loadLevels();
+        self.loadObjects();
     }
 
     load() {
@@ -219,7 +222,27 @@ class Parser {
             let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
-        
+
+    }
+
+    loadObjects() {
+        let self = this,
+            objectCounter = 0;
+
+        _.each(ObjectData, (value, key) => {
+
+            Objects.Data[key] = {
+                x: value.x,
+                y: value.y,
+                type: value.type,
+                messages: value.messages
+            };
+
+            objectCounter++;
+        });
+
+        log.info('Finished loading ' + objectCounter + ' global objects.');
+
         if (self.readyCallback)
             self.readyCallback();
     }
