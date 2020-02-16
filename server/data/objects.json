@@ -1,8 +1,8 @@
-[
-  {
+{
+  "53-249": {
     "x": 53,
     "y": 249,
     "type": "sign",
-    "text": "Hello!"
+    "messages": ["Hello!"]
   }
-]
+}

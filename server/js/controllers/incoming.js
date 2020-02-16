@@ -19,6 +19,7 @@ class Incoming {
         self.player = player;
         self.connection = self.player.connection;
         self.world = self.player.world;
+        self.globalObjects = self.world.globalObjects;
         self.database = self.player.database;
         self.commands = new Commands(self.player);
 
@@ -554,7 +555,12 @@ class Incoming {
 
             case Packets.TargetOpcode.Object:
 
-                log.info('Received object target data.');
+                let object = self.globalObjects.getObject(instance);
+
+                if (object)
+                    return;
+
+                    
 
                 break;
         }
