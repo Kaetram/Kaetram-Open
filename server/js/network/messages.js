@@ -481,4 +481,16 @@ Messages.Camera = class {
 
 };
 
+Messages.Bubble = class {
+
+    constructor(info) {
+        this.info = info;
+    }
+
+    serialize() {
+        return [Packets.Bubble, this.info];
+    }
+
+};
+
 module.exports = Messages;
