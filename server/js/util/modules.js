@@ -108,11 +108,11 @@ let Modules = {
 
     Warps: {
         0: ['Mudwich', 65, 103, true, 1], //Starting Village
-        1: ['Northton', 49, 207, true, 25], //Ice World
+        1: ['Southorn', 41, 260, true, 25], //Ice World
         2: ['Lakesworld', 530, 121, false, 60], //Citadels
-        3: ['Aynor', 178, 140, true, 50],
-        4: ['Crullfeld', 397, 227, true, 20], //Desert
-        5: ['Patsow', 262, 131, true, 25] //Lava
+        3: ['Aynor', 996, 204, true, 50],
+        4: ['Crullfeld', 151, 21, true, 20], //Desert
+        5: ['Patsow', 238, 159, true, 25] //Lava
     }
 
 };
