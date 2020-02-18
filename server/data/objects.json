@@ -3,6 +3,12 @@
     "x": 53,
     "y": 249,
     "type": "sign",
-    "messages": ["This is a sign...", "and multiple messages seem", "to work very well :D"]
+    "messages": ["Welcome to Southorn!"]
+  },
+  "58-249": {
+    "x": 58,
+    "y": 249,
+    "type": "sign",
+    "messages": ["Welcome to Southorn!"]
   }
 }
