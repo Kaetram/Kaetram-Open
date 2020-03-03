@@ -116,6 +116,9 @@ typings/
 # Optional npm cache directory
 .npm
 
+# Optional yarn cache directory
+.yarn
+
 # Optional eslint cache
 .eslintcache
 
@@ -124,6 +127,9 @@ typings/
 
 # Output of `npm pack`
 *.tgz
+
+# PnPify
+.pnp.js
 
 # Yarn Integrity file
 .yarn-integrity
