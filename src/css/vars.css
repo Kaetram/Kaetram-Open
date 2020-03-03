@@ -300,6 +300,10 @@ body {
     left: 110%;
 }
 
+#login, #newCharacter, #continue, #cancelButton, #play {
+    border: none;
+}
+
 input[type="range"] {
     width: 100%;
     -webkit-appearance: none;

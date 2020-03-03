@@ -1,4 +1,6 @@
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
+importScripts(
+  'https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js'
+);
 
 workbox.setConfig({ debug: false });
 
@@ -14,9 +16,9 @@ workbox.routing.registerRoute(
     cacheName: 'audio',
     plugins: [
       new workbox.expiration.Plugin({
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-      }),
-    ],
+        maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
+      })
+    ]
   })
 );
 
@@ -27,16 +29,16 @@ workbox.routing.registerRoute(
     cacheName: 'images',
     plugins: [
       new workbox.expiration.Plugin({
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-      }),
-    ],
+        maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
+      })
+    ]
   })
 );
 
 workbox.routing.registerRoute(
   new RegExp('/data/'),
   new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'data',
+    cacheName: 'data'
   })
 );
 
@@ -47,21 +49,21 @@ workbox.routing.registerRoute(
     cacheName: 'fonts',
     plugins: [
       new workbox.cacheableResponse.Plugin({
-        statuses: [0, 200],
+        statuses: [0, 200]
       }),
       new workbox.expiration.Plugin({
         maxAgeSeconds: 60 * 60 * 24 * 365,
-        maxEntries: 30,
-      }),
-    ],
+        maxEntries: 30
+      })
+    ]
   })
 );
 
 workbox.routing.registerRoute(
   /\.(?:js|css)$/,
   new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'static-resources',
+    cacheName: 'static-resources'
   })
 );
 
-workbox.precaching.precacheAndRoute([]);
+workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);

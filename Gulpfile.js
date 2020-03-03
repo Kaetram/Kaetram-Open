@@ -1,25 +1,40 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @format */
 
-const path = require('path');
-const { task, series } = require('gulp');
-const workbox = require('workbox-build');
+const gulp = require('gulp');
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
+const tsify = require('tsify');
+const sourcemaps = require('gulp-sourcemaps');
+const buffer = require('vinyl-buffer');
+const paths = {
+    pages: ['src/*.html']
+};
 
-task('generate-sw', async () => {
-    const build = await workbox.injectManifest({
-        swSrc: path.resolve(__dirname, './client/workbox-sw.js'),
-        swDest: path.resolve(__dirname, './client/sw.js'),
-        globDirectory: path.resolve(__dirname, './client/'),
-        globPatterns: [
-            '**/*.{mp3,css,json,json-dist,js,ico,eot,svg,ttf,woff,png,gif,jpg,html,txt,xml}'
-        ],
-        maximumFileSizeToCacheInBytes: 5e6
-    });
-    const { count, size, warnings } = build;
-
-    warnings.forEach(console.warn);
-    console.log(`${count} files will be precached, totaling ${size} bytes.`);
-
-    return build;
+gulp.task('copy-html', function() {
+    return gulp.src(paths.pages).pipe(gulp.dest('client'));
 });
 
-exports.default = series('generate-sw');
+gulp.task(
+    'default',
+    gulp.series(gulp.parallel('copy-html'), function() {
+        return browserify({
+            basedir: '.',
+            debug: true,
+            entries: ['src/main.ts'],
+            cache: {},
+            packageCache: {}
+        })
+            .plugin(tsify)
+            .transform('babelify', {
+                presets: ['env'],
+                extensions: ['.ts']
+            })
+            .bundle()
+            .pipe(source('bundle.js'))
+            .pipe(buffer())
+            .pipe(sourcemaps.init({ loadMaps: true }))
+            .pipe(sourcemaps.write('./'))
+            .pipe(gulp.dest('client'));
+    })
+);

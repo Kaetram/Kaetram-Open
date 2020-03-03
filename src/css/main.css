@@ -258,6 +258,7 @@ footer div {
 }
 
 #createCharacter form {
+    padding-bottom: 12%;
     position: relative;
 }
 
