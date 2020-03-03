@@ -1,0 +1,24 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "allowJs": true,
+        "rootDir": "./",
+        "outDir": "../dist",
+        "incremental": true,
+        "watch": true,
+        "allowUmdGlobalAccess": true,
+        "moduleResolution": "node",
+        "noImplicitAny": false,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": false,
+        "typeRoots": ["./node_modules/@types", "./typings/**"]
+    },
+    "include": ["**/*.ts"],
+    "exclude": ["**/*.spec.ts"]
+}

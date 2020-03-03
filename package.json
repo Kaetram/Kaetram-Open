@@ -1,40 +1,140 @@
 {
     "name": "kaetram",
     "version": "1.1.7",
-    "private": false,
     "author": "Veradictus",
-    "main": "server/js/main.js",
+    "main": "server/ts/main.ts",
     "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
     "homepage": "https://kaetram.com/",
     "scripts": {
-        "start": "node server/js/main",
-        "build": "gulp",
-        "map": "cd tools/map && node exportmap data/map-refactor.json"
+        "start": "ts-node server/ts/main",
+        "dev": "ts-node-dev server/ts/main.ts",
+        "build": "concurrently \"npm:build:server\" \"npm:build:client\"",
+        "build:client": "gulp",
+        "build:server": "cd server && tsc",
+        "map": "cd tools/map && ts-node exportmap data/map-refactor.json"
     },
     "dependencies": {
-        "bcrypt": "^3.0.7",
-        "commander": "^4.1.0",
+        "bcrypt": "^4.0.1",
+        "body-parser": "^1.19.0",
+        "commander": "^4.1.1",
         "connect": "^3.7.0",
         "express": "^4.17.1",
         "http": "0.0.0",
         "log": "<=1.4.0",
         "memcache": "^0.3.0",
-        "mongodb": "^3.5.2",
+        "mongodb": "^3.5.4",
         "mysql": "^2.18.1",
         "ncp": "^2.0.0",
-        "request": "^2.88.0",
+        "redis": "^3.0.2",
+        "request": "^2.88.2",
         "sanitizer": "^0.1.3",
         "serve-static": "^1.14.1",
         "shutdown-hook": "^1.1.5",
         "socket.io": "^2.3.0",
         "underscore": "^1.9.2",
-        "url": "^0.11.0"
+        "url": "^0.11.0",
+        "winston": "^3.2.1"
     },
     "devDependencies": {
+        "@types/node": "^13.7.7",
+        "@typescript-eslint/eslint-plugin": "^2.22.0",
+        "@typescript-eslint/parser": "^2.22.0",
+        "babel-core": "^6.26.3",
+        "babel-preset-env": "^1.7.0",
+        "babel-preset-es2015": "^6.24.1",
+        "babelify": "^10.0.0",
+        "browserify": "^16.5.0",
+        "concurrently": "^5.1.0",
+        "eslint": "^6.8.0",
+        "eslint-config-prettier": "^6.10.0",
+        "eslint-config-standard": "^14.1.0",
+        "eslint-config-stylelint": "^11.1.0",
+        "eslint-plugin-import": "^2.20.1",
+        "eslint-plugin-node": "^11.0.0",
+        "eslint-plugin-prettier": "^3.1.2",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.1",
+        "fancy-log": "^1.3.3",
         "gulp": "^4.0.2",
+        "gulp-sourcemaps": "^2.6.5",
+        "gulp-typescript": "^6.0.0-alpha.1",
+        "gulp-uglify": "^3.0.2",
         "morgan": "^1.9.1",
+        "prettier": "^1.19.1",
         "socket.io-client": "^2.3.0",
-        "workbox-build": "^4.3.1"
+        "stylelint-config-prettier": "^8.0.1",
+        "stylelint-prettier": "^1.1.2",
+        "ts-node": "^8.6.2",
+        "ts-node-dev": "^1.0.0-pre.44",
+        "tsc": "^1.20150623.0",
+        "tsify": "^4.0.1",
+        "tslint": "^6.0.0",
+        "typescript": "^3.8.3",
+        "vinyl-buffer": "^1.0.1",
+        "vinyl-source-stream": "^2.0.0",
+        "watchify": "^3.11.1",
+        "workbox-build": "^5.0.0"
+    },
+    "prettierConfig": {
+        "tabWidth": 4,
+        "htmlWhitespaceSensitivity": "strict",
+        "singleQuote": true,
+        "insertPragma": false,
+        "requirePragma": true,
+        "bracketSpacing": true,
+        "trailingComma": "none"
+    },
+    "eslintConfig": {
+        "env": {
+            "browser": true,
+            "es6": true,
+            "node": true,
+            "jquery": true
+        },
+        "extends": [
+            "plugin:prettier/recommended",
+            "plugin:@typescript-eslint/recommended"
+        ],
+        "globals": {
+            "Atomics": "readonly",
+            "SharedArrayBuffer": "readonly"
+        },
+        "parser": "@typescript-eslint/parser",
+        "parserOptions": {
+            "ecmaVersion": 2018,
+            "sourceType": "module"
+        },
+        "plugins": [
+            "@typescript-eslint"
+        ],
+        "rules": {
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-unused-vars": "off",
+            "@typescript-eslint/no-empty-function": "off",
+            "@typescript-eslint/explicit-function-return-type": "off",
+            "prettier/prettier": "off",
+            "semi": [
+                "warn",
+                "always"
+            ],
+            "indent": [
+                "off",
+                4,
+                {
+                    "SwitchCase": 1,
+                    "flatTernaryExpressions": true
+                }
+            ],
+            "quotes": [
+                "warn",
+                "single"
+            ]
+        },
+        "ignorePatterns": [
+            "node_modules/",
+            "*.json",
+            "*.json-dist"
+        ]
     },
     "repository": {
         "type": "git",
