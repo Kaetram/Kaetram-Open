@@ -1,25 +1,25 @@
 # Kaetram
 
-[![Version](https://img.shields.io/github/package-json/v/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open)
-[![Open Issues](https://img.shields.io/github/issues/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open/issues)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com%2F)](https://kaetram.com/)
-[![Fork This Repo](https://img.shields.io/github/forks/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open/fork)
-[![Star This Repo](https://img.shields.io/github/stars/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open)
-[![Watch This Repo](https://img.shields.io/github/watchers/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open)
-[![MPL-2.0 License](https://img.shields.io/github/license/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open/blob/master/LICENSE)
-[![Discord](https://img.shields.io/discord/583033499741847574)](https://discord.gg/MmbGAaw)
-[![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social)](https://www.reddit.com/r/kaetram/)
-[![Send Tip](https://img.shields.io/static/v1?label=BAT&message=Send%20a%20Tip&style=flat&logo=brave&color=fb542b)]()
+[![Version](https://img.shields.io/github/package-json/v/Veradictus/Kaetram-Open?style=flat-square)](https://github.com/Veradictus/Kaetram-Open)
+[![MPL-2.0 License](https://img.shields.io/github/license/Veradictus/Kaetram-Open?style=flat-square)](https://github.com/Veradictus/Kaetram-Open/blob/master/LICENSE)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com%2F&style=flat-square)](https://kaetram.com/)
+[![Open Issues](https://img.shields.io/github/issues/Veradictus/Kaetram-Open?style=flat-square)](https://github.com/Veradictus/Kaetram-Open/issues)
+[![Watch This Repo](https://img.shields.io/github/watchers/Veradictus/Kaetram-Open?style=social&icon=github)](https://github.com/Veradictus/Kaetram-Open/subscription) <!-- /watchers -->
+[![Star This Repo](https://img.shields.io/github/stars/Veradictus/Kaetram-Open?style=social&icon=github)](https://github.com/Veradictus/Kaetram-Open/stargazers)
+[![Fork This Repo](https://img.shields.io/github/forks/Veradictus/Kaetram-Open?style=social&icon=github)](https://github.com/Veradictus/Kaetram-Open/fork)
+[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat-square)](https://discord.gg/MmbGAaw)
+[![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social&icon=reddit)](https://www.reddit.com/r/kaetram/)
+[![Send Tip](https://img.shields.io/static/v1?label=BAT&message=Send%20a%20Tip&style=flat-square&logo=brave&color=fb542b)](#)
 
-Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.
+Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game &ndash; BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.
 
-Live Version - <https://kaetram.com>
+**Live Version** &ndash; <https://kaetram.com>
 
-Discord - <https://discord.gg/MmbGAaw>
+**Discord** &ndash; <https://discord.gg/MmbGAaw>
 
-![Demo](https://i.imgur.com/cZTFqnd.png)
-![Demo1](https://i.imgur.com/jS5d3oq.png)
-![Demo2](https://i.imgur.com/slnzrZB.png)
+![Demo1](https://i.imgur.com/cZTFqnd.png)
+![Demo2](https://i.imgur.com/jS5d3oq.png)
+![Demo3](https://i.imgur.com/slnzrZB.png)
 
 ## Features
 
@@ -53,16 +53,21 @@ Before starting Kaetram, make sure you rename the `config.json-dist` to `config.
 
 ## Map Parsing
 
-Once you finish modifying your map in `tools/maps/data` you can parse the map data by executing `exportmap.js` in `tools/maps` directory. Example command:
+Once you finish modifying your map in `tools/map/data` you can parse the map data by executing `exportmap.ts` in `tools/map` directory.
+Example command:
 
 ```console
-./exportmap.js ./data/map.json
+npx ts-node ./exportmap.ts ./data/map.json
 ```
 
 In order to build the current game map you can run
 
 ```console
+# NPM
 npm run map
+
+# Yarn
+yarn map
 ```
 
 ## TODO
