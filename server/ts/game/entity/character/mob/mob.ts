@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Character from '../character';
 import Mobs from '../../../../util/mobs';
@@ -7,6 +5,7 @@ import Utils from '../../../../util/utils';
 import Items from '../../../../util/items';
 import Constants from '../../../../util/constants';
 import MobHandler from './mobhandler';
+import Area from '../../../../map/area';
 
 class Mob extends Character {
     public data: any;
@@ -173,7 +172,7 @@ class Mob extends Character {
     }
 
     addToChestArea(chestAreas) {
-        const area = _.find(chestAreas, area => {
+        const area = _.find(chestAreas, (area: Area) => {
             return area.contains(this.x, this.y);
         });
 
@@ -201,7 +200,7 @@ class Mob extends Character {
         base.maxHitPoints = this.maxHitPoints;
         base.attackRange = this.attackRange;
         base.level = this.level;
-        base.hiddenName = this.hiddenName; // TODO - Just don't send name when hiddenName present.
+        base.hiddenName = this.hiddenName; // TODO: Just don't send name when hiddenName present.
 
         return base;
     }

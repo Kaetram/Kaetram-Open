@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Area from '../area';
 import map from '../../../data/map/world_server.json';
@@ -17,7 +15,7 @@ class ChestAreas {
     }
 
     load() {
-        _.each(map.chestAreas, m => {
+        _.each(map.chestAreas, (m: any) => {
             const chestArea = new Area(m.id, m.x, m.y, m.width, m.height);
 
             chestArea.maxEntities = m.entities || 0;

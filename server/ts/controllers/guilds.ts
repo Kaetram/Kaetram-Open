@@ -1,5 +1,13 @@
 import _ from 'underscore';
 
+/**
+ * @class
+ * A guild contains the following information:
+ *
+ * @param name - Identifies the guild
+ * @param owner - Indicates who owns the guild
+ * @param members - An array containing all the members in the guild.
+ */
 class Guilds {
     public guilds: any;
     public loader: any;
@@ -12,13 +20,6 @@ class Guilds {
         this.creator = world.database.creator;
         this.loader = world.database.loader;
 
-        /**
-         * A guild contains the following information:
-         * `name` - Identifies the guild
-         * `owner` - Indicates who owns the guild
-         * `members` - An array containing all the members in the guild.
-         */
-
         this.guilds = {};
 
         this.loaded = false;
@@ -28,7 +29,7 @@ class Guilds {
 
     load() {
         this.loader.getGuilds(guilds => {
-            _.each(guilds, guild => {
+            _.each(guilds, (guild: any) => {
                 this.guilds[guild.name] = {
                     owner: guild.owner,
                     members: guild.members
@@ -78,8 +79,8 @@ class Guilds {
         }
 
         this.loader.getGuild(guild.name, guildData => {
-			//
-		});
+            //
+        });
     }
 
     leave(player) {

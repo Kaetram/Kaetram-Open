@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Grids from './grids';
 import Regions from './regions';
@@ -15,6 +13,7 @@ import OverlayAreas from './areas/overlayareas';
 import CameraAreas from './areas/cameraareas';
 import Mobs from '../util/mobs';
 import ClientMap from '../../data/map/world_client.json';
+import Entity from '../game/entity/entity';
 
 class Map {
     public width: any;
@@ -118,7 +117,7 @@ class Map {
     loadDoors() {
         this.doors = {};
 
-        _.each(map.doors, door => {
+        _.each(map.doors, (door: any) => {
             let orientation;
 
             switch (door.o) {
@@ -155,7 +154,7 @@ class Map {
         this.staticEntities = [];
 
         // Legacy static entities (from Tiled);
-        _.each(map.staticEntities, (entity, tileIndex) => {
+        _.each(map.staticEntities, (entity: Entity, tileIndex) => {
             this.staticEntities.push({
                 tileIndex,
                 string: entity.type,
@@ -163,7 +162,7 @@ class Map {
             });
         });
 
-        _.each(Spawns, data => {
+        _.each(Spawns, (data: any) => {
             const tileIndex = this.gridPositionToIndex(data.x - 1, data.y);
 
             this.staticEntities.push({
@@ -280,7 +279,7 @@ class Map {
 
         const tileIndex = this.gridPositionToIndex(x - 1, y);
 
-        return ClientMap.data[tileIndex] === 0;
+        return (ClientMap as any).data[tileIndex] === 0;
     }
 
     getPlateauLevel(x, y) {

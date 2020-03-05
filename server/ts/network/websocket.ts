@@ -1,5 +1,3 @@
-/** @format */
-
 import Socket from './socket';
 import Connection from './connection';
 import connect from 'connect';
@@ -31,7 +29,7 @@ class WebSocket extends Socket {
 
         const app = connect();
 
-        app.use(serve('client', { index: ['index.html'] }), null);
+        app.use(serve('client-dist', { index: ['index.html'] }), null);
 
         const readyWebSocket = port => {
             console.info('Server is now listening on: ' + port);
@@ -79,11 +77,11 @@ class WebSocket extends Socket {
         return '1' + Utils.random(9999) + '' + this._counter++;
     }
 
-    onConnect(callback) {
+    onConnect(callback: (connection: Connection) => void) {
         this.connectionCallback = callback;
     }
 
-    onWebSocketReady(callback) {
+    onWebSocketReady(callback: Function) {
         this.webSocketReadyCallback = callback;
     }
 }

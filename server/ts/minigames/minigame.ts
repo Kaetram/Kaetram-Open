@@ -1,5 +1,3 @@
-/** @format */
-
 class Minigame {
     public id: any;
     public name: any;

@@ -1,5 +1,3 @@
-/** @format */
-
 class Points {
     public points: any;
     public maxPoints: any;

@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Minigame from '../minigame';
 import Utils from '../../util/utils';

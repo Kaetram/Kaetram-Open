@@ -1,15 +1,21 @@
-/** @format */
-
 import MongoDB from './mongodb/mongodb';
 import config from '../../config.json';
 
+/**
+ *
+ *
+ * @class Database
+ */
 class Database {
     public database: any;
-    databaseType: any;
 
-    constructor(databaseType) {
+    /**
+     * Creates an instance of Database.
+     * @param {string} databaseType
+     * @memberof Database
+     */
+    constructor(public databaseType: string) {
         this.database = null;
-        this.databaseType = databaseType;
 
         switch (this.databaseType) {
             case 'mongo':

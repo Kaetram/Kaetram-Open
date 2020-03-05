@@ -1,5 +1,3 @@
-/** @format */
-
 import MapClient from '../../../data/map/world_client.json';
 
 /**
@@ -40,7 +38,7 @@ class Home {
                 const tileIndex = this.region.gridPositionToIndex(x, y);
 
                 info.indexes.push(tileIndex);
-                info.data.push(MapClient.data[tileIndex]);
+                info.data.push((MapClient as any).data[tileIndex]);
                 info.collisions.push(this.map.isColliding(x, y));
             }
         }

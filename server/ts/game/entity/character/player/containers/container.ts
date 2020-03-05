@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Slot from './slot';
 import Items from '../../../../../util/items';
@@ -205,7 +203,7 @@ class Container {
     }
 
     check() {
-        _.each(this.slots, slot => {
+        _.each(this.slots, (slot: Slot) => {
             if (isNaN(slot.id)) slot.empty();
         });
     }

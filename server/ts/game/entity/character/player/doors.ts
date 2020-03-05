@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import DoorData from '../../../../../data/doors.json';
 import Messages from '../../../../network/messages';
@@ -25,7 +23,7 @@ class Doors {
     }
 
     load() {
-        _.each(DoorData, door => {
+        _.each(DoorData, (door: any) => {
             this.doors[door.id] = {
                 id: door.id,
                 x: door.x,
@@ -79,7 +77,7 @@ class Doors {
             closed: door.closedIds
         };
 
-        _.each(doorState[status], (value, key) => {
+        _.each(doorState[status], (value: any, key: any) => {
             tiles.indexes.push(parseInt(key));
             tiles.data.push(value.data);
             tiles.collisions.push(value.isColliding);
@@ -95,7 +93,7 @@ class Doors {
             collisions: []
         };
 
-        _.each(this.doors, door => {
+        _.each(this.doors, (door: any) => {
             /* There's no need to send dynamic data if the player is not nearby. */
             const doorRegion = this.regions.regionIdFromPosition(
                 door.x,

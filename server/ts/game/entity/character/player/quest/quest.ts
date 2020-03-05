@@ -1,5 +1,3 @@
-/** @format */
-
 import Messages from '../../../../../network/messages';
 import Packets from '../../../../../network/packets';
 import Utils from '../../../../../util/utils';

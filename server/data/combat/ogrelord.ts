@@ -4,198 +4,172 @@ import Packets from '../../ts/network/packets';
 import Modules from '../../ts/util/modules';
 import Utils from '../../ts/util/utils';
 import _ from 'underscore';
+import Mob from '../../ts/game/entity/character/mob/mob';
 
 class OgreLord extends Combat {
-	public dialogues: any;
-	public minions: any;
-	public lastSpawn: any;
-	public isAttacked: any;
-	public talkingInterval: any;
-	public character: any;
-	public updateInterval: any;
-	public loaded: any;
-	public world: any;
-	public attackers: any;
+    public dialogues: any;
+    public minions: Mob[];
+    public lastSpawn: any;
+    public isAttacked: any;
+    public talkingInterval: any;
+    public character: any;
+    public updateInterval: any;
+    public loaded: any;
+    public world: any;
+    public attackers: any;
 
-	constructor(character) {
-	    super(character);
+    constructor(character) {
+        super(character);
 
-	    
+        this.character = character;
 
-	    this.character = character;
+        this.dialogues = [
+            'Get outta my swamp',
+            'No, not the onion.',
+            'My minions give me strength! You stand no chance!'
+        ];
 
-	    this.dialogues = ['Get outta my swamp', 'No, not the onion.', 'My minions give me strength! You stand no chance!'];
+        this.minions = [];
 
-	    this.minions = [];
+        this.lastSpawn = 0;
 
-	    this.lastSpawn = 0;
+        this.loaded = false;
 
-	    this.loaded = false;
+        character.projectile = Modules.Projectiles.Boulder;
+        character.projectileName = 'projectile-boulder';
 
-	    character.projectile = Modules.Projectiles.Boulder;
-	    character.projectileName = 'projectile-boulder';
+        character.onDeath(() => {
+            this.reset();
+        });
+    }
 
-	    character.onDeath(() => {
-	        this.reset();
-	    });
-	}
+    load() {
+        this.talkingInterval = setInterval(() => {
+            if (this.character.hasTarget()) this.forceTalk(this.getMessage());
+        }, 9000);
 
-	load() {
-	    
+        this.updateInterval = setInterval(() => {
+            this.character.armourLevel = 50 + this.minions.length * 15;
+        }, 2000);
 
-	    this.talkingInterval = setInterval(() => {
+        this.loaded = true;
+    }
 
-	        if (this.character.hasTarget())
-	            this.forceTalk(this.getMessage());
+    hit(character, target, hitInfo) {
+        if (this.isAttacked()) this.beginMinionAttack();
 
-	    }, 9000);
+        if (!character.isNonDiagonal(target)) {
+            const distance = character.getDistance(target);
 
-	    this.updateInterval = setInterval(() => {
+            if (distance < 7) {
+                hitInfo.isRanged = true;
+                character.attackRange = 7;
+            }
+        }
 
-	        this.character.armourLevel = 50 + (this.minions.length * 15);
+        if (this.canSpawn()) this.spawnMinions();
 
-	    }, 2000);
+        super.hit(character, target, hitInfo);
+    }
 
-	    this.loaded = true;
-	}
+    forceTalk(message) {
+        if (!this.world) return;
 
-	hit(character, target, hitInfo) {
-	    
+        this.world.push(Packets.PushOpcode.Regions, {
+            regionId: this.character.region,
+            message: new Messages.NPC(Packets.NPCOpcode.Talk, {
+                id: this.character.instance,
+                text: message,
+                nonNPC: true
+            })
+        });
+    }
 
-	    if (this.isAttacked())
-	        this.beginMinionAttack();
+    getMessage() {
+        return this.dialogues[Utils.randomInt(0, this.dialogues.length - 1)];
+    }
 
-	    if (!character.isNonDiagonal(target)) {
-	        const distance = character.getDistance(target);
+    spawnMinions() {
+        const xs = [414, 430, 415, 420, 429];
+        const ys = [172, 173, 183, 185, 180];
 
-	        if (distance < 7) {
-	            hitInfo.isRanged = true;
-	            character.attackRange = 7;
-	        }
-	    }
+        this.lastSpawn = new Date().getTime();
 
-	    if (this.canSpawn())
-	        this.spawnMinions();
+        this.forceTalk('Now you shall see my true power!');
 
-	    super.hit(character, target, hitInfo);
-	}
+        for (let i = 0; i < xs.length; i++)
+            this.minions.push(this.world.spawnMob(12, xs[i], ys[i]));
 
-	forceTalk(message) {
-	    
+        _.each(this.minions, minion => {
+            minion.onDeath(() => {
+                if (this.isLast()) this.lastSpawn = new Date().getTime();
 
-	    if (!this.world)
-	        return;
+                this.minions.splice(this.minions.indexOf(minion), 1);
+            });
 
-	    this.world.push(Packets.PushOpcode.Regions, {
-	        regionId: this.character.region,
-	        message: new Messages.NPC(Packets.NPCOpcode.Talk, {
-	            id: this.character.instance,
-	            text: message,
-	            nonNPC: true
-	        })
-	    });
+            if (this.isAttacked()) this.beginMinionAttack();
+        });
 
-	}
+        if (!this.loaded) this.load();
+    }
 
-	getMessage() {
-	    return this.dialogues[Utils.randomInt(0, this.dialogues.length - 1)];
-	}
+    beginMinionAttack() {
+        if (!this.hasMinions()) return;
 
-	spawnMinions() {
-	    const 
-	        xs = [414, 430, 415, 420, 429];
-	        const ys = [172, 173, 183, 185, 180];
+        _.each(this.minions, minion => {
+            const randomTarget = this.getRandomTarget();
 
-	    this.lastSpawn = new Date().getTime();
+            if (!minion.hasTarget() && randomTarget)
+                minion.combat.begin(randomTarget);
+        });
+    }
 
-	    this.forceTalk('Now you shall see my true power!');
+    reset() {
+        this.lastSpawn = 0;
 
-	    for (let i = 0; i < xs.length; i++)
-	        this.minions.push(this.world.spawnMob(12, xs[i], ys[i]));
+        const listCopy = this.minions.slice();
 
-	    _.each(this.minions, (minion) => {
+        for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
 
-	        minion.onDeath(() => {
+        clearInterval(this.talkingInterval);
+        clearInterval(this.updateInterval);
 
-	            if (this.isLast())
-	                this.lastSpawn = new Date().getTime();
+        this.talkingInterval = null;
+        this.updateInterval = null;
 
-	            this.minions.splice(this.minions.indexOf(minion), 1);
+        this.loaded = false;
+    }
 
-	        });
+    getRandomTarget() {
+        if (this.isAttacked()) {
+            const keys = Object.keys(this.attackers);
+            const randomAttacker = this.attackers[
+                keys[Utils.randomInt(0, keys.length)]
+            ];
 
-	        if (this.isAttacked())
-	            this.beginMinionAttack();
+            if (randomAttacker) return randomAttacker;
+        }
 
-	    });
+        if (this.character.hasTarget()) return this.character.target;
 
-	    if (!this.loaded)
-	        this.load();
-	}
+        return null;
+    }
 
-	beginMinionAttack() {
-	    
+    hasMinions() {
+        return this.minions.length > 0;
+    }
 
-	    if (!this.hasMinions())
-	        return;
+    isLast() {
+        return this.minions.length === 1;
+    }
 
-	    _.each(this.minions, (minion) => {
-	        const randomTarget = this.getRandomTarget();
-
-	        if (!minion.hasTarget() && randomTarget)
-	            minion.combat.begin(randomTarget);
-
-	    });
-	}
-
-	reset() {
-	    
-
-	    this.lastSpawn = 0;
-
-	    const listCopy = this.minions.slice();
-
-	    for (let i = 0; i < listCopy.length; i++)
-	        this.world.kill(listCopy[i]);
-
-	    clearInterval(this.talkingInterval);
-	    clearInterval(this.updateInterval);
-
-	    this.talkingInterval = null;
-	    this.updateInterval = null;
-
-	    this.loaded = false;
-	}
-
-	getRandomTarget() {
-	    
-
-	    if (this.isAttacked()) {
-	        const keys = Object.keys(this.attackers);
-	            const randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
-
-	        if (randomAttacker)
-	            return randomAttacker;
-	    }
-
-	    if (this.character.hasTarget())
-	        return this.character.target;
-
-	    return null;
-	}
-
-	hasMinions() {
-	    return this.minions.length > 0;
-	}
-
-	isLast() {
-	    return this.minions.length === 1;
-	}
-
-	canSpawn() {
-	    return (new Date().getTime() - this.lastSpawn > 50000) && !this.hasMinions() && this.isAttacked();
-	}
-
+    canSpawn() {
+        return (
+            new Date().getTime() - this.lastSpawn > 50000 &&
+            !this.hasMinions() &&
+            this.isAttacked()
+        );
+    }
 }
 
 export default OgreLord;

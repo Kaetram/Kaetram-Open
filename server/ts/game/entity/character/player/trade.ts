@@ -1,5 +1,3 @@
-/** @format */
-
 import Modules from '../../../../util/modules';
 
 class Trade {

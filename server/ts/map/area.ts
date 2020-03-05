@@ -1,5 +1,3 @@
-/** @format */
-
 class Area {
     public x: any;
     public y: any;

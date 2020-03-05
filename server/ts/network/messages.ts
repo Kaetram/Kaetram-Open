@@ -1,5 +1,3 @@
-/** @format */
-
 import Packets from './packets';
 
 export default {

@@ -1,5 +1,3 @@
-/** @format */
-
 class Socket {
     public _connections: any;
     port: any;

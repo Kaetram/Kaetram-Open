@@ -1,5 +1,3 @@
-/** @format */
-
 import Entity from '../entity';
 import Utils from '../../../util/utils';
 

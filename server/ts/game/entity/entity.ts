@@ -1,10 +1,11 @@
-/** @format */
-
 import Mobs from '../../util/mobs';
 import Items from '../../util/items';
 import NPCs from '../../util/npcs';
 
 class Entity {
+    canAggro(player: any): any {
+        throw new Error('Method not implemented.');
+    }
     public x: any;
     public y: any;
     public type: any;
@@ -20,6 +21,7 @@ class Entity {
     combat: any;
     dead: boolean;
     recentRegions: any[];
+    roaming: any;
 
     constructor(id, type, instance, x?, y?) {
         this.id = id;

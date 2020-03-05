@@ -1,5 +1,3 @@
-/** @format */
-
 import * as fs from 'fs';
 import path from 'path';
 const Filter = /^([^\\.].*)\.js$/;

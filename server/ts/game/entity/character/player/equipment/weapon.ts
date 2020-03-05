@@ -1,5 +1,3 @@
-/** @format */
-
 import Equipment from './equipment';
 import Items from '../../../../../util/items';
 import Modules from '../../../../../util/modules';

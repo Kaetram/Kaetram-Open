@@ -1,5 +1,3 @@
-/** @format */
-
 const Modules = {
     Orientation: {
         Up: 0,

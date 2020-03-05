@@ -1,11 +1,10 @@
-/** @format */
-
 import _ from 'underscore';
 import Introduction from '../game/entity/character/player/quest/impl/introduction';
 import BulkySituation from '../game/entity/character/player/quest/impl/bulkysituation';
 import QuestData from '../../data/quests.json';
 import AchievementData from '../../data/achievements.json';
 import Achievement from '../game/entity/character/player/achievement';
+import Quest from '../game/entity/character/player/quest/quest';
 
 class Quests {
     public quests: any;
@@ -45,7 +44,7 @@ class Quests {
 
     updateQuests(ids, stages) {
         if (!ids || !stages) {
-            _.each(this.quests, quest => {
+            _.each(this.quests, (quest: Quest) => {
                 quest.load(0);
             });
 

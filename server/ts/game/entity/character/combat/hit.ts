@@ -1,5 +1,3 @@
-/** @format */
-
 class Hit {
     public ranged: any;
     public aoe: any;

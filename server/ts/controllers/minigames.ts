@@ -1,5 +1,3 @@
-/** @format */
-
 import TeamWar from '../minigames/impl/teamwar';
 
 class Minigames {

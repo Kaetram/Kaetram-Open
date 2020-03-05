@@ -1,5 +1,3 @@
-/** @format */
-
 import Entity from '../entity';
 import Modules from '../../../util/modules';
 import Mobs from '../../../util/mobs';

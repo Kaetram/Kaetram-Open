@@ -1,5 +1,3 @@
-/** @format */
-
 class Connection {
     public listenCallback: any;
     public closeCallback: any;
@@ -41,7 +39,7 @@ class Connection {
         this.socket.send(data);
     }
 
-    close(reason) {
+    close(reason?) {
         if (reason) console.info('[Connection] Closing - ' + reason);
 
         this.socket.conn.close();

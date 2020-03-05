@@ -1,14 +1,14 @@
-/** @format */
-
 import _ from 'underscore';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
 import MapClient from '../../data/map/world_client.json';
 import config from '../../config.json';
+import Player from '../game/entity/character/player/player';
+import World from '../game/world';
 
 class Commands {
     public player: any;
-    public world: any;
+    public world: World;
 
     constructor(player) {
         this.player = player;
@@ -37,7 +37,7 @@ class Commands {
                 const singular = population === 1;
 
                 if (this.player.rights > 1)
-                    _.each(this.world.players, player => {
+                    _.each(this.world.players, (player: Player) => {
                         this.player.notify(player.username);
                     });
 
@@ -131,7 +131,7 @@ class Commands {
                     user.ban = timeFrame;
                     user.save();
 
-                    user.sendUTF8('ban');
+                    user.connection.sendUTF8('ban');
                     user.connection.close('banned');
                 }
 
@@ -336,7 +336,9 @@ class Commands {
 
                 console.info('Tile Index: ' + getTileIndex);
 
-                console.info('Tile Info: ' + MapClient.data[getTileIndex]);
+                console.info(
+                    'Tile Info: ' + (MapClient as any).data[getTileIndex]
+                );
 
                 console.info(
                     'Actual Index: ' +

@@ -13,7 +13,7 @@ class PirateCaptain extends Combat {
     public world: any;
     public forEachAttacker: any;
     public begin: any;
-  location: { x: any; y: any };
+    location: { x: any; y: any };
 
     constructor(character) {
         character.spawnDistance = 20;

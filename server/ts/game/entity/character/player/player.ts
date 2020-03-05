@@ -1,5 +1,3 @@
-/** @format */
-
 import Character from '../character';
 import Incoming from '../../../../controllers/incoming';
 import Armour from './equipment/armour';
@@ -27,9 +25,17 @@ import Hit from '../combat/hit';
 import Trade from './trade';
 import Warp from './warp';
 import Doors from './doors';
+import World from '../../../world';
+import MongoDB from '../../../../database/mongodb/mongodb';
+import Connection from '../../../../network/connection';
 
+/**
+ *
+ *
+ * @class Player
+ * @extends {Character}
+ */
 class Player extends Character {
-    public world: any;
     public region: any;
     public invisiblesIds: any;
     public hitPoints: any;
@@ -44,7 +50,6 @@ class Player extends Character {
     public pendant: any;
     public ring: any;
     public boots: any;
-    public connection: any;
     public dead: any;
     public lastRegionChange: any;
     public orientationCallback: any;
@@ -79,7 +84,6 @@ class Player extends Character {
     public userAgent: any;
     public username: any;
     public inventory: any;
-    public database: any;
     public bank: any;
     public achievementsLoaded: any;
     public questsLoaded: any;
@@ -106,29 +110,42 @@ class Player extends Character {
     public poison: any;
     public isGuest: any;
     public new: any;
-    clientId: any;
-    incoming: Incoming;
-    ready: boolean;
-    moving: boolean;
-    newRegion: boolean;
-    team: any;
-    guild: any;
-    handler: Handler;
-    abilities: Abilities;
-    enchant: Enchant;
-    trade: Trade;
-    doors: Doors;
-    introduced: boolean;
-    acceptedTrade: boolean;
-    invincible: boolean;
-    noDamage: boolean;
-    canTalk: boolean;
-    instanced: boolean;
-    visible: boolean;
-    talkIndex: number;
-    npcTalk: any;
+    public incoming: Incoming;
+    public ready: boolean;
+    public moving: boolean;
+    public newRegion: boolean;
+    public team: any;
+    public guild: any;
+    public handler: Handler;
+    public abilities: Abilities;
+    public enchant: Enchant;
+    public trade: Trade;
+    public doors: Doors;
+    public introduced: boolean;
+    public acceptedTrade: boolean;
+    public invincible: boolean;
+    public noDamage: boolean;
+    public canTalk: boolean;
+    public instanced: boolean;
+    public visible: boolean;
+    public talkIndex: number;
+    public npcTalk: any;
+    public maxMana: any;
 
-    constructor(world, database, connection, clientId) {
+    /**
+     * Creates an instance of Player.
+     * @param {World} world
+     * @param {MongoDB} database
+     * @param {Connection} connection
+     * @param {string} clientId
+     * @memberof Player
+     */
+    constructor(
+        public world: World,
+        public database: MongoDB,
+        public connection: Connection,
+        public clientId: string
+    ) {
         super(-1, 'player', connection.id, -1, -1);
 
         this.world = world;
@@ -626,7 +643,7 @@ class Player extends Character {
         this.send(new Messages.Death(this.instance));
     }
 
-    teleport(x, y, isDoor, animate) {
+    teleport(x, y, isDoor?, animate?) {
         if (this.teleportCallback) this.teleportCallback(x, y, isDoor);
 
         this.sendToAdjacentRegions(

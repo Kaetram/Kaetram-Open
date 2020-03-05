@@ -1,10 +1,8 @@
-/** @format */
-import log from './util/logger';
+import config from '../config.json';
+import Database from './database/database';
 import World from './game/world';
 import WebSocket from './network/websocket';
-import config from '../config.json';
 import Parser from './util/parser';
-import Database from './database/database';
 
 let world: World;
 
@@ -126,7 +124,7 @@ function main() {
 
                 /**
                  * We are iterating through all of the users in the database
-                 * and resetting their position to the paramters inputted.
+                 * and resetting their position to the parameters inputted.
                  * This is to be used when doing some game-breaking map
                  * updates. This command is best used in tandem with the
                  * `allowConnectionsToggle` to prevent users from logging

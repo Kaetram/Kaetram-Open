@@ -1,11 +1,14 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "allowJs": true,
+        "watch": false,
+        "allowJs": false,
         "rootDir": "./",
         "outDir": "../dist",
         "incremental": true,
-        "watch": true,
+        "module": "commonjs",
+        "target": "es5",
+        "types": ["node"],
         "allowUmdGlobalAccess": true,
         "moduleResolution": "node",
         "noImplicitAny": false,
@@ -16,8 +19,8 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
-        "declaration": false,
-        "typeRoots": ["./node_modules/@types", "./typings/**"]
+        "declaration": true,
+        "typeRoots": ["./typings/**"]
     },
     "include": ["**/*.ts"],
     "exclude": ["**/*.spec.ts"]

@@ -1,5 +1,3 @@
-/** @format */
-
 /**
  * This package is used for creating functions used all throughout the
  * game server.

@@ -1,5 +1,3 @@
-/** @format */
-
 class CombatQueue {
     public hitQueue: any;
 

@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Messages from '../../../../network/messages';
 import Modules from '../../../../util/modules';
@@ -7,6 +5,8 @@ import Packets from '../../../../network/packets';
 import Npcs from '../../../../util/npcs';
 import Hit from '../combat/hit';
 import Shops from '../../../../util/shops';
+import Entity from '../../entity';
+import Area from '../../../../map/area';
 
 class Handler {
     public player: any;
@@ -181,7 +181,7 @@ class Handler {
 
         if (!region) return;
 
-        _.each(region.entities, entity => {
+        _.each(region.entities, (entity: Entity) => {
             if (entity && entity.type === 'mob' && this.canEntitySee(entity)) {
                 const aggro = entity.canAggro(this.player);
 
@@ -191,7 +191,7 @@ class Handler {
     }
 
     detectMusic(x, y) {
-        const musicArea = _.find(this.world.getMusicAreas(), area => {
+        const musicArea = _.find(this.world.getMusicAreas(), (area: Area) => {
             return area.contains(x, y);
         });
         const song = musicArea ? musicArea.id : null;
@@ -200,7 +200,7 @@ class Handler {
     }
 
     detectPVP(x, y) {
-        const pvpArea = _.find(this.world.getPVPAreas(), area => {
+        const pvpArea = _.find(this.world.getPVPAreas(), (area: Area) => {
             return area.contains(x, y);
         });
 
@@ -208,15 +208,18 @@ class Handler {
     }
 
     detectOverlay(x, y) {
-        const overlayArea = _.find(this.world.getOverlayAreas(), area => {
-            return area.contains(x, y);
-        });
+        const overlayArea = _.find(
+            this.world.getOverlayAreas(),
+            (area: Area) => {
+                return area.contains(x, y);
+            }
+        );
 
         this.player.updateOverlay(overlayArea);
     }
 
     detectCamera(x, y) {
-        const cameraArea = _.find(this.world.getCameraAreas(), area => {
+        const cameraArea = _.find(this.world.getCameraAreas(), (area: Area) => {
             return area.contains(x, y);
         });
 

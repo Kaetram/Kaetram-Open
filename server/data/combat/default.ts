@@ -7,14 +7,9 @@ import Combat from '../../ts/game/entity/character/combat/combat';
  */
 
 class Default extends Combat {
-
     constructor(character) {
         super(character);
 
-        
-
         this.character = character;
-
     }
-
 }

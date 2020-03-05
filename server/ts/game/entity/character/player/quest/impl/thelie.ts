@@ -1,5 +1,3 @@
-/** @format */
-
 import Quest from '../quest';
 import Packets from '../../../../../../network/packets';
 

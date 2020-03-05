@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Area from '../area';
 import map from '../../../data/map/world_server.json';

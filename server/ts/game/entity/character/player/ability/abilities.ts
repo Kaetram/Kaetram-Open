@@ -1,7 +1,6 @@
-/** @format */
-
 import _ from 'underscore';
 import AbilityInfo from '../../../../../util/abilities';
+import Ability from './impl/ability';
 
 class Abilities {
     public abilities: any;
@@ -41,7 +40,7 @@ class Abilities {
     }
 
     hasAbility(ability) {
-        _.each(this.abilities, uAbility => {
+        _.each(this.abilities, (uAbility: Ability) => {
             if (uAbility.name === ability.name) return true;
         });
 
@@ -57,7 +56,7 @@ class Abilities {
         let abilityLevels = '';
         const shortcuts = this.shortcuts.toString();
 
-        _.each(this.abilities, ability => {
+        _.each(this.abilities, (ability: Ability) => {
             abilities += ability.name;
             abilityLevels += ability.level;
         });

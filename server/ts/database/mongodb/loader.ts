@@ -1,5 +1,3 @@
-/** @format */
-
 class Loader {
     public database: any;
 

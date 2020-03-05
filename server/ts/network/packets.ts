@@ -1,5 +1,3 @@
-/** @format */
-
 const Packets: { [key: string]: any } = {
     Handshake: 0,
     Intro: 1,

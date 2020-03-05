@@ -1,5 +1,3 @@
-/** @format */
-
 import Utils from './utils';
 import Constants from './constants';
 

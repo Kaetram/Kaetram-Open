@@ -1,5 +1,3 @@
-/** @format */
-
 import Items from '../../../../../util/items';
 
 class Equipment {

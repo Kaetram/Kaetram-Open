@@ -1,5 +1,3 @@
-/** @format */
-
 import Abilities from '../../../../../../util/abilities';
 
 class Ability {

@@ -1,60 +1,58 @@
-/** @format */
-
-import config from '../../config.json';
-import Player from './entity/character/player/player';
-import Map from '../map/map';
 import _ from 'underscore';
-import Messages from '../network/messages';
-import Utils from '../util/utils';
-import Mobs from '../util/mobs';
-import Mob from './entity/character/mob/mob';
-import NPCs from '../util/npcs';
-import NPC from './entity/npc/npc';
-import Items from '../util/items';
-import Item from './entity/objects/item';
-import Chest from './entity/objects/chest';
-import Character from './entity/character/character';
-import Projectile from './entity/objects/projectile';
-import Minigames from '../controllers/minigames';
-import Packets from '../network/packets';
-import Formulas from '../util/formulas';
-import Modules from '../util/modules';
-import Shops from '../controllers/shops';
-import Region from '../region/region';
-import Guilds from '../controllers/guilds';
+import config from '../../config.json';
 import GlobalObjects from '../controllers/globalobjects';
-import Network from '../network/network';
+import Guilds from '../controllers/guilds';
+import Minigames from '../controllers/minigames';
+import Shops from '../controllers/shops';
+import MongoDB from '../database/mongodb/mongodb';
+import Map from '../map/map';
 import API from '../network/api';
+import Messages from '../network/messages';
+import Network from '../network/network';
+import Packets from '../network/packets';
+import Socket from '../network/socket';
+import Region from '../region/region';
+import Formulas from '../util/formulas';
+import Items from '../util/items';
+import Mobs from '../util/mobs';
+import Modules from '../util/modules';
+import NPCs from '../util/npcs';
+import Utils from '../util/utils';
+import Character from './entity/character/character';
+import Mob from './entity/character/mob/mob';
+import Player from './entity/character/player/player';
+import Entity from './entity/entity';
+import NPC from './entity/npc/npc';
+import Chest from './entity/objects/chest';
+import Item from './entity/objects/item';
+import Projectile from './entity/objects/projectile';
 
 class World {
-    public entities: any;
-    public maxPlayers: any;
-    public players: any;
-    public map: any;
-    public playerConnectCallback: any;
-    public populationCallback: any;
-    public api: any;
-    public shops: any;
-    public region: any;
-    public network: any;
-    public minigames: any;
-    public guilds: any;
-    public globalObjects: any;
-    public ready: any;
-    public updateTime: any;
-    public debug: any;
-    public chests: any;
-    public npcs: any;
-    public mobs: any;
-    public items: any;
-    public projectiles: any;
-    public database: any;
-    socket: any;
-    allowConnections: boolean;
-    loadedRegions: boolean;
-    malformTimeout: any;
+    public entities: { [key: string]: Entity };
+    public maxPlayers: number;
+    public players: { [key: string]: Player };
+    public map: Map;
+    public playerConnectCallback: Function;
+    public populationCallback: Function;
+    public api: API;
+    public shops: Shops;
+    public region: Region;
+    public network: Network;
+    public minigames: Minigames;
+    public guilds: Guilds;
+    public globalObjects: GlobalObjects;
+    public ready: boolean;
+    public updateTime: number;
+    public debug: boolean;
+    public chests: { [key: string]: Chest };
+    public npcs: { [key: string]: NPC };
+    public mobs: { [key: string]: Mob };
+    public items: { [key: string]: Item };
+    public projectiles: { [key: string]: Projectile };
+    public allowConnections: boolean;
+    public loadedRegions: boolean;
 
-    constructor(socket, database) {
+    constructor(public socket: Socket, public database: MongoDB) {
         this.socket = socket;
         this.database = database;
 
@@ -75,8 +73,6 @@ class World {
         this.loadedRegions = false;
 
         this.ready = false;
-
-        this.malformTimeout = null;
     }
 
     load(onWorldLoad) {
@@ -213,7 +209,7 @@ class World {
         }
     }
 
-    handleDeath(character, ignoreDrops, lastAttacker?) {
+    handleDeath(character, ignoreDrops?, lastAttacker?) {
         if (!character) return;
 
         if (character.type === 'mob') {
@@ -279,7 +275,7 @@ class World {
     spawnEntities() {
         let entities = 0;
 
-        _.each(this.map.staticEntities, data => {
+        _.each(this.map.staticEntities, (data: any) => {
             const key = data.string;
             const isMob = !!Mobs.Properties[key];
             const isNpc = !!NPCs.Properties[key];
@@ -375,7 +371,7 @@ class World {
     spawnChests() {
         let chests = 0;
 
-        _.each(this.map.chests, info => {
+        _.each(this.map.chests, (info: any) => {
             this.spawnChest(info.i, info.x, info.y, true);
 
             chests++;

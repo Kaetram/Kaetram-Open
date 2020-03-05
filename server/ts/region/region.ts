@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
@@ -8,7 +6,7 @@ import fs from 'fs';
 import WorldClientMap from '../../data/map/world_client.json';
 import config from '../../config.json';
 
-let ClientMap = WorldClientMap;
+let ClientMap: any = WorldClientMap;
 
 const map = 'server/../data/map/world_client.json';
 
@@ -226,7 +224,7 @@ class Region {
     sendSpawns(regionId) {
         if (!regionId) return;
 
-        _.each(this.regions[regionId].incoming, entity => {
+        _.each(this.regions[regionId].incoming, (entity: any) => {
             if (!entity || !entity.instance || entity.instanced) return;
 
             this.world.push(Packets.PushOpcode.Regions, {
@@ -341,7 +339,7 @@ class Region {
             return instance === player.instance; // TODO //|| player.isInvisible(instance);
         });
 
-        entities = _.map(entities, instance => {
+        entities = _.map(entities, (instance: any) => {
             return parseInt(instance);
         });
 

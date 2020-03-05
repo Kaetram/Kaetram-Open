@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import NPCData from '../../data/npcs.json';
 import ItemData from '../../data/items.json';
@@ -49,7 +47,7 @@ class Parser {
     loadMobData() {
         let mobCounter = 0;
 
-        _.each(MobData, (value, key) => {
+        _.each(MobData, (value: any, key) => {
             key = key.toLowerCase();
 
             Mobs.Properties[key] = {
@@ -85,7 +83,7 @@ class Parser {
     loadNPCData() {
         let npcCounter = 0;
 
-        _.each(NPCData, (value, key) => {
+        _.each(NPCData, (value: any, key) => {
             key = key.toLowerCase();
 
             NPCs.Properties[key] = {
@@ -107,7 +105,7 @@ class Parser {
     loadItemData() {
         let itemCounter = 0;
 
-        _.each(ItemData, (value, key) => {
+        _.each(ItemData, (value: any, key) => {
             key = key.toLowerCase();
 
             Items.Data[key] = {

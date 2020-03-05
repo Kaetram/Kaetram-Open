@@ -1,5 +1,3 @@
-/** @format */
-
 import Entity from '../entity';
 
 class NPC extends Entity {

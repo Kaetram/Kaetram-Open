@@ -1,6 +1,5 @@
-/** @format */
-
 import _ from 'underscore';
+import Entity from '../game/entity/entity';
 
 class Grids {
     public map: any;
@@ -67,7 +66,7 @@ class Grids {
                 const pos = this.entityGrid[entity.y + i][entity.x + j];
 
                 if (_.size(pos) > 0) {
-                    _.each(pos, pEntity => {
+                    _.each(pos, (pEntity: Entity) => {
                         if (!include && pEntity.instance !== entity.instance)
                             entities.push(pEntity);
                     });

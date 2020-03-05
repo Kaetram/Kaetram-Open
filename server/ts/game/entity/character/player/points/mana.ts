@@ -1,5 +1,3 @@
-/** @format */
-
 import Points from './points';
 
 class Mana extends Points {

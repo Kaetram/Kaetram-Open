@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Hit from './hit';
 import CombatQueue from './combatqueue';

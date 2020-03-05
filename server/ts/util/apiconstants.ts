@@ -1,5 +1,3 @@
-/** @format */
-
 const APIConstants = {
     UNHANDLED_HTTP_METHOD: 0,
     NOT_FOUND_ERROR: 1,

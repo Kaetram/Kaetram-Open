@@ -1,5 +1,3 @@
-/** @format */
-
 import { MongoClient } from 'mongodb';
 import Loader from './loader';
 import Creator from './creator';
@@ -7,6 +5,11 @@ import bcrypt from 'bcrypt';
 import _ from 'underscore';
 import config from '../../../config.json';
 
+/**
+ *
+ *
+ * @class MongoDB
+ */
 class MongoDB {
     public host: any;
     public port: any;
@@ -217,7 +220,7 @@ class MongoDB {
             const cursor = collection.find();
 
             cursor.toArray().then(playerList => {
-                _.each(playerList, playerInfo => {
+                _.each(playerList, (playerInfo: any) => {
                     delete playerInfo._id;
 
                     playerInfo.x = newX;
@@ -247,7 +250,7 @@ class MongoDB {
 
     deleteGuilds() {
         this.loader.getGuilds((guilds, collection) => {
-            _.each(guilds, guild => {
+            _.each(guilds, (guild: any) => {
                 collection.deleteOne({ name: guild.name });
             });
         }, true);

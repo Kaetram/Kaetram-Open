@@ -1,5 +1,3 @@
-/** @format */
-
 import Packets from '../network/packets';
 import Request from 'request';
 import config from '../../config.json';

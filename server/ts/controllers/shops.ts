@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import ShopData from '../util/shops';
 import Items from '../util/items';
@@ -22,7 +20,7 @@ class Shops {
 
     load() {
         this.shopInterval = setInterval(() => {
-            _.each(ShopData.Data, info => {
+            _.each(ShopData.Data, (info: any) => {
                 for (let i = 0; i < info.count; i++)
                     if (info.count[i] < info.originalCount[i])
                         ShopData.increment(info.id, info.items[i], 1);

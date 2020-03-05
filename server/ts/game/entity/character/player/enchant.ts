@@ -1,5 +1,3 @@
-/** @format */
-
 import _ from 'underscore';
 import Items from '../../../../util/items';
 import Messages from '../../../../network/messages';
