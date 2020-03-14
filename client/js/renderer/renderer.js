@@ -193,6 +193,8 @@ define(['jquery', './camera', './tile',
 
                     self.loadSizes();
 
+                    self.game.sendClientData();
+
                     if (self.entities)
                         self.entities.update();
 
