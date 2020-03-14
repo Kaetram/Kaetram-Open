@@ -76,6 +76,8 @@ define(['jquery', './camera', './tile',
             self.forceRendering = false;
             self.animatedTilesDrawCalls = 0;
 
+			self.tiles = {};
+
             self.load();
         },
 
@@ -818,19 +820,26 @@ define(['jquery', './camera', './tile',
             if (!tileset)
                 return;
 
-            tileId -= tileset.firstGID - 1;
+			if (!(tileId in self.tiles)) {
+				var setWidth = tileset.width / self.tileSize / tileset.scale,
+					relativeTileId = tileId - tileset.firstGID + 1;
 
-            var setWidth = tileset.width / self.tileSize / tileset.scale;
+				self.tiles[tileId] = {
+					relativeTileId: relativeTileId,
+					setWidth: setWidth,
+					x: self.getX(relativeTileId + 1, setWidth) * self.tileSize,
+					y: Math.floor(relativeTileId / setWidth) * self.tileSize,
+					width: self.tileSize, height: self.tileSize
+				};
+			}
 
-            self.drawScaledImage(context, tileset,
-                self.getX(tileId + 1, setWidth) * self.tileSize,
-                Math.floor(tileId / setWidth) * self.tileSize,
-                self.tileSize, self.tileSize,
-                self.getX(cellId + 1, gridWidth) * self.tileSize,
-                Math.floor(cellId / gridWidth) * self.tileSize, rotation);
+			var dx = self.getX(cellId + 1, gridWidth) * self.tileSize,
+				dy = Math.floor(cellId / gridWidth) * self.tileSize;
+
+            self.drawScaledImage(context, tileset, self.tiles[tileId], dx, dy, rotation);
         },
 
-        drawScaledImage: function(context, image, x, y, width, height, dx, dy, rotation) {
+        drawScaledImage: function(context, image, tile, dx, dy, rotation) {
             var self = this,
                 tilesetScale = image.scale,
                 scale = self.superScaling; // self.superScaling * 1.5;
@@ -847,7 +856,7 @@ define(['jquery', './camera', './tile',
                 switch (rotation) {
                     case ROT_180_DEG:
 
-                        context.translate(-width * scale, -height * scale);
+                        context.translate(-tile.width * scale, -tile.height * scale);
 
                         dx = -dx, dy = -dy;
 
@@ -855,7 +864,7 @@ define(['jquery', './camera', './tile',
 
                     case ROT_90_DEG:
 
-                        context.translate(0, -height * scale);
+                        context.translate(0, -tile.height * scale);
 
                         dx = dy, dy = -temp;
 
@@ -863,7 +872,7 @@ define(['jquery', './camera', './tile',
 
                     case ROT_NEG_90_DEG:
 
-                        context.translate(-width * scale, 0);
+                        context.translate(-tile.width * scale, 0);
 
                         dx = -dy, dy = temp;
 
@@ -873,14 +882,14 @@ define(['jquery', './camera', './tile',
             }
 
             context.drawImage(image,
-                x * tilesetScale, // Source X
-                y * tilesetScale, // Source Y
-                width * tilesetScale, // Source Width
-                height * tilesetScale, // Source Height
+                tile.x * tilesetScale, // Source X
+                tile.y * tilesetScale, // Source Y
+                tile.width * tilesetScale, // Source Width
+                tile.height * tilesetScale, // Source Height
                 dx * scale, // Destination X
                 dy * scale, // Destination Y
-                width * scale, // Destination Width
-                height * scale); // Destination Height
+                tile.width * scale, // Destination Width
+                tile.height * scale); // Destination Height
 
             if (rotation)
                 context.restore();
