@@ -13,11 +13,11 @@ class Regions {
         self.width = self.map.width;
         self.height = self.map.height;
 
-        self.zoneWidth = self.map.zoneWidth;
-        self.zoneHeight = self.map.zoneHeight;
+        self.zoneWidth = self.map.zoneWidth; // 25
+        self.zoneHeight = self.map.zoneHeight; // 20
 
-        self.regionWidth = self.map.regionWidth;
-        self.regionHeight = self.map.regionHeight;
+        self.regionWidth = self.map.regionWidth; // 40
+        self.regionHeight = self.map.regionHeight; // 50
 
         self.linkedRegions = {};
 

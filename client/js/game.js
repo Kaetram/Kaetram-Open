@@ -235,6 +235,7 @@ define(['./renderer/renderer', './utils/storage',
             self.player.idle();
 
             self.socket.send(Packets.Ready, [true, self.map.preloadedData, Detect.getUserAgent()]);
+            self.sendClientData();
 
             self.playerHandler = new PlayerHandler(self, self.player);
 
@@ -353,6 +354,17 @@ define(['./renderer/renderer', './utils/storage',
 
             if (self.pointer)
                 self.pointer.resize();
+        },
+
+        sendClientData: function() {
+            let self = this,
+                canvasWidth = self.renderer.canvasWidth,
+                canvasHeight = self.renderer.canvasHeight;
+
+            if (!canvasWidth || !canvasHeight)
+                return;
+
+            self.socket.send(Packets.Client, [canvasWidth, canvasHeight])
         },
 
         createPlayer: function() {
