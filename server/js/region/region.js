@@ -372,6 +372,14 @@ class Region {
 
     }
 
+    /**
+     * Compare the user's screen size and chip away the amount of data
+     * we are sending.
+     */
+    formatRegionData(player, data) {
+        let self = this;
+    }
+
     getRegionData(region, player, force) {
         let self = this,
             data = [];
