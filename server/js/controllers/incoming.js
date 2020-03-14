@@ -124,6 +124,10 @@ class Incoming {
                     self.handleCamera(message);
                     break;
 
+                case Packets.Client:
+                    self.handleClient(message);
+                    break;
+
             }
 
         });
@@ -997,6 +1001,20 @@ class Incoming {
 
         self.player.cameraArea = null;
         self.player.handler.detectCamera(self.player.x, self.player.y);
+    }
+
+    /**
+     * Receive client information such as screen size, will be expanded
+     * for more functionality when needed.
+     */
+
+    handleClient(message) {
+        let self = this,
+            canvasWidth = message.shift(),
+            canvasHeight = message.shift();
+
+        log.info('Received canvas data');
+        log.info(`width: ${canvasWidth} ; height: ${canvasHeight}`);
     }
 
     canAttack(attacker, target) {

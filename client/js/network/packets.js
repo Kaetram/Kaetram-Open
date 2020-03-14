@@ -45,7 +45,8 @@ Packets = {
     Region: 43,
     Overlay: 44,
     Camera: 45,
-    Bubble: 46
+    Bubble: 46,
+    Client: 47
 };
 
 Packets.IntroOpcode = {
