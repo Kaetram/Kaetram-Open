@@ -1,6 +1,6 @@
 /* global module */
 
-let config = require('../../config.json'),
+let config = require('../../config'),
     Player = require('./entity/character/player/player'),
     Map = require('../map/map'),
     _ = require('underscore'),
