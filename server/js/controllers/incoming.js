@@ -411,7 +411,7 @@ class Incoming {
                 if (!self.player.moving) {
 
                     if (config.debug)
-                        log.info(`[Warning] Did not receive movement start packet for ${self.player.username}.`);
+                        log.warning(`Did not receive movement start packet for ${self.player.username}.`);
 
                     self.player.incrementCheatScore(1);
                 }
