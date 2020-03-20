@@ -36,8 +36,8 @@ Config.moderators = [];
 
 // Debugging
 Config.debug = false;
-Config.debugLevel = 'info';
-Config.localDebug = false; // Write to file instead of console.
+Config.debugLevel = 'all';
+Config.fsDebugging = false; // filestream debugging -> Write to a filestream instead of stdout.
 Config.allowConnectionsToggle = false; // Used closing/opening connections
 
 module.exports = Config;
