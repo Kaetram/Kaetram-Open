@@ -49,7 +49,7 @@ npm install
 npm start
 ```
 
-Before starting Kaetram, make sure you rename the `config.json-dist` to `config.json` and modify them accordingly. There are two configurations in `server/` and `client/data`.
+Before starting Kaetram, there is some configuration that must be done. In `server/` directory, rename `config.js-dist` to `config.js`. Modify the file as to fit your needs. Similar procedure for the `client/data` directory, simply rename `config.json-dist` to `config.json`. Make sure the settings in the client match those in the server.
 
 ## Map Parsing
 
