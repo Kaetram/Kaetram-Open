@@ -202,7 +202,7 @@ define(function() {
             if (self.isAttackable())
                 return Packets.TargetOpcode.Attack;
 
-            if (target.type === 'npc')
+            if (target.type === 'npc' || target.type === 'chest')
                 return Packets.TargetOpcode.Talk;
 
             if (target.type === 'object')
