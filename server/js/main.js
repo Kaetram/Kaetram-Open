@@ -2,14 +2,14 @@ let fs = require("fs"),
     World = require('./game/world'),
     WebSocket = require('./network/websocket'),
     config = require('../config'),
-    Log = require('log'),
+    Log = require('./util/log'),
     Parser = require('./util/parser'),
     Database = require('./database/database'),
     _ = require('underscore'),
     Request = require('request'),
     world;
 
-log = new Log(config.debugLevel, config.localDebug ? fs.createWriteStream('runtime.log') : null);
+log = new Log(config.debugLevel, config.fsDebugging ? fs.createWriteStream('runtime.log') : null);
 
 function main() {
     log.info('Initializing ' + config.name + ' game engine...');
