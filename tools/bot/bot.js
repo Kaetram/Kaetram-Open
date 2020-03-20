@@ -3,7 +3,7 @@
 var Utils = require('../../server/js/util/utils'),
     io = require('socket.io-client'),
     _ = require('underscore'),
-    Log = require('log'),
+    Log = require('../../server/js/util/log'),
     config = require('../../server/config');
 
 log = new Log('info');
@@ -30,7 +30,7 @@ class Bot {
         let self = this;
 
         self.bots = [];
-        self.botCount = 350;
+        self.botCount = 100;
 
         self.load();
     }
@@ -44,7 +44,7 @@ class Bot {
 
                 if (self.botCount < 1)
                     clearInterval(connecting);
-            }, 200);
+            }, 1000);
 
         setInterval(() => {
 
