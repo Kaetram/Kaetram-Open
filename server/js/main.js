@@ -9,7 +9,7 @@ let fs = require("fs"),
     Request = require('request'),
     world;
 
-log = new Log(config.debugLevel, config.fsDebugging ? fs.createWriteStream('runtime.log') : null);
+log = new Log();
 
 function main() {
     log.info('Initializing ' + config.name + ' game engine...');

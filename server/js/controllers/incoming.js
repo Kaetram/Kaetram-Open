@@ -1013,8 +1013,8 @@ class Incoming {
             canvasWidth = message.shift(),
             canvasHeight = message.shift();
 
-        log.info('Received canvas data');
-        log.info(`width: ${canvasWidth} ; height: ${canvasHeight}`);
+        //log.info('Received canvas data');
+        //log.info(`width: ${canvasWidth} ; height: ${canvasHeight}`);
     }
 
     canAttack(attacker, target) {

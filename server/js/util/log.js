@@ -1,4 +1,5 @@
-let fs = require('fs');
+let fs = require('fs'),
+	config = require('../../config');
 
 class Log {
 
@@ -8,27 +9,38 @@ class Log {
      * Can be adapted and expanded, without using megabytes of npm repos.
      **/
 
-    constructor(logLevel, stream) {
+    constructor() {
         let self = this;
 
 		// Stream can be used to keep a log of what happened.
-        self.logLevel = logLevel || 'all';
-		self.stream = stream; // Write to a different stream
+        self.logLevel = config.debugLevel || 'all';
+		self.stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
+
+		self.debugging = config.debug;
     }
 
     info(message) {
         let self = this;
 
-        if (self.logLevel !== 'all' && self.logLevel !== 'info')
+        if (self.isLoggable('info'))
             return;
 
         self.send(null, `[${new Date()}] INFO ${message}`);
     }
 
+	debug(message) {
+		let self = this;
+
+		if (!self.debugging)
+			return;
+
+		self.send('\x1b[36m%s\x1b[0m', `[${new Date()}] DEBUG ${message}`)
+	}
+
     warning(message) {
         let self = this;
 
-        if (self.logLevel !== 'all' && self.logLevel !== 'warning')
+        if (self.isLoggable('warning'))
             return;
 
         self.send('\x1b[33m%s\x1b[0m', `[${new Date()}] WARNING ${message}`);
@@ -37,7 +49,7 @@ class Log {
     error(message) {
         let self = this;
 
-        if (self.logLevel !== 'all' && self.logLevel !== 'error')
+        if (self.isLoggable('error'))
             return;
 
         self.send('\x1b[31m%s\x1b[0m', `[${new Date()}] ERROR ${message}`);
@@ -46,7 +58,7 @@ class Log {
     notice(message) {
         let self = this;
 
-        if (self.logLevel !== 'all' && self.logLevel !== 'notice')
+        if (self.isLoggable('notice'))
             return;
 
         self.send('\x1b[32m%s\x1b[0m', `[${new Date()}] NOTICE ${message}`);
@@ -63,6 +75,10 @@ class Log {
 		else
 			console.log(colour, message);
     }
+
+	isLoggable(type) {
+		return this.logLevel !== 'all' && this.logLevel !== type;
+	}
 
     /**
      * Reset = "\x1b[0m"
