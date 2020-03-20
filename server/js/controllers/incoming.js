@@ -506,7 +506,7 @@ class Incoming {
             opcode = message.shift(),
             instance = message.shift();
 
-        log.debug('Targeted: ' + instance);
+		log.debug(`Target (opcode): ${instance} (${opcode})`);
 
         switch (opcode) {
 
