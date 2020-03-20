@@ -1032,7 +1032,8 @@ define(['jquery', './camera', './tile',
                 var indexData = self.map.data[index];
 
                 if (Array.isArray(indexData))
-                    _.each(indexData, function(id) { callback(id - 1, index) });
+					for (var i in indexData)
+						callback(indexData[i] - 1, index);
                 else if (!(isNaN(self.map.data[index] - 1)))
                     callback(self.map.data[index] - 1, index);
 
