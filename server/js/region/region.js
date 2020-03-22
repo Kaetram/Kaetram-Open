@@ -61,7 +61,7 @@ class Region {
 
             fs.readFile(map, 'utf8', (error, data) => {
                 if (error) {
-                    log.info('Could not reload the map file...');
+                    log.error('Could not reload the map file...');
                     return;
                 }
 
@@ -72,7 +72,7 @@ class Region {
                     self.updateRegions();
 
                 } catch(e) {
-                    log.info('Could not parse JSON.');
+                    log.error('Could not parse JSON.');
                 }
             });
 
