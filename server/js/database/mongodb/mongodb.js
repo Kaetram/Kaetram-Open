@@ -123,7 +123,7 @@ class MongoDB {
 
             cursor.toArray().then((info) => {
                 if (info.length === 0) {
-                    log.info('No player data found for ' + player.username + '. Creating user.');
+                    log.notice('No player data found for ' + player.username + '. Creating user.');
 
                     player.new = true;
 
@@ -142,7 +142,7 @@ class MongoDB {
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
-            log.info('Looking for - ' + player.email +' or ' + player.username);
+            log.debug('Looking for - ' + player.email +' or ' + player.username);
 
             emailCursor.toArray().then((emailArray) => {
                 if (emailArray.length === 0) {
@@ -173,7 +173,7 @@ class MongoDB {
                     if (error) throw error;
 
                     if (result)
-                        log.info('Player ' + player.username + ' has been deleted.')
+                        log.notice('Player ' + player.username + ' has been deleted.')
                 })
             });
         });
