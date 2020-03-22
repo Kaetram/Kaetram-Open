@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-let Log = require('log'),
+let Log = require('../../server/js/util/log'),
     fs = require("fs"),
     file = require('../file'),
     processMap = require('./processmap'),
