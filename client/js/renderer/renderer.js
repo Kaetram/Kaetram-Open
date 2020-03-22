@@ -798,7 +798,13 @@ define(['jquery', './camera', './tile',
          */
 
         drawTile: function(context, tileId, cellId) {
-            var self = this, rotation;
+            var self = this,
+				originalTileId = tileId, rotation;
+
+			/**
+			 * `originalTileId` is the tileId prior to doing any
+			 * bitwise operations (for rotations).
+			 */
 
             if (tileId < 0)
                 return;
@@ -828,17 +834,17 @@ define(['jquery', './camera', './tile',
 			 * split up and messed with.
 			*/
 
-
-			if (!(tileId in self.tiles)) {
+			if (!(originalTileId in self.tiles)) {
 				var setWidth = tileset.width / self.tileSize,
 					relativeTileId = tileId - tileset.firstGID + 1;
 
-				self.tiles[tileId] = {
+				self.tiles[originalTileId] = {
 					relativeTileId: relativeTileId,
 					setWidth: setWidth,
 					x: self.getX(relativeTileId + 1, setWidth) * self.tileSize,
 					y: Math.floor(relativeTileId / setWidth) * self.tileSize,
-					width: self.tileSize, height: self.tileSize
+					width: self.tileSize, height: self.tileSize,
+					rotation: rotation
 				};
 			}
 
@@ -850,36 +856,36 @@ define(['jquery', './camera', './tile',
 					dy: Math.floor(cellId / self.map.width) * self.tileSize * scale,
 					width: self.tileSize * scale, height: self.tileSize * scale
 				};
-
-
 			}
 
             self.drawImage(context,
 				tileset,
-				self.tiles[tileId],
-				self.cells[cellId],
-				rotation);
+				self.tiles[originalTileId],
+				self.cells[cellId]);
         },
 
-        drawImage: function(context, image, tile, cell, rotation) {
+        drawImage: function(context, image, tile, cell) {
             var self = this,
-                scale = self.superScaling; // self.superScaling * 1.5;
+                scale = self.superScaling, dx, dy; // self.superScaling * 1.5;
 
             if (!context)
                 return;
 
-            if (rotation) {
+            if (tile.rotation) {
                 context.save();
-                context.rotate(rotation);
+                context.rotate(tile.rotation);
+
+				dx = cell.dx;
+				dy = cell.dy;
 
                 var temp = cell.dx;
 
-                switch (rotation) {
+                switch (tile.rotation) {
                     case ROT_180_DEG:
 
                         context.translate(-cell.width, -cell.height);
 
-                        cell.dx = -cell.dx, cell.dy = -cell.dy;
+                        dx = -dx, dy = -dy;
 
                         break;
 
@@ -887,7 +893,7 @@ define(['jquery', './camera', './tile',
 
                         context.translate(0, -cell.height);
 
-                        cell.dx = cell.dy, cell.dy = -temp;
+                        dx = dy, dy = -temp;
 
                         break;
 
@@ -895,11 +901,10 @@ define(['jquery', './camera', './tile',
 
                         context.translate(-cell.width, 0);
 
-                        cell.dx = -cell.dy, cell.dy = temp;
+                        dx = -dy, dy = temp;
 
                         break;
                 }
-
             }
 
             context.drawImage(image,
@@ -907,12 +912,12 @@ define(['jquery', './camera', './tile',
                 tile.y, // Source Y
                 tile.width, // Source Width
                 tile.height, // Source Height
-                cell.dx, // Destination X
-                cell.dy, // Destination Y
+                tile.rotation ? dx : cell.dx, // Destination X
+                tile.rotation ? dy : cell.dy, // Destination Y
                 cell.width, // Destination Width
                 cell.height); // Destination Height
 
-            if (rotation)
+            if (tile.rotation)
                 context.restore();
         },
 
