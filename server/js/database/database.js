@@ -1,7 +1,6 @@
 /* global module */
 
-let MongoDB = require('./mongodb/mongodb'),
-    config = require('../../config');
+let MongoDB = require('./mongodb/mongodb');
 
 class Database {
 

@@ -6,7 +6,6 @@ let _ = require('underscore'),
     Player = require('../game/entity/character/player/player'),
     fs = require('fs'),
     ClientMap = require('../../data/map/world_client.json'),
-    config = require('../../config'),
     map = 'server/data/map/world_client.json';
 
 class Region {

@@ -1,7 +1,6 @@
 /* global module */
 
-let config = require('../../config'),
-    Player = require('./entity/character/player/player'),
+let Player = require('./entity/character/player/player'),
     Map = require('../map/map'),
     _ = require('underscore'),
     Messages = require('../network/messages'),

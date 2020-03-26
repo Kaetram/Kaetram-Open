@@ -3,8 +3,7 @@
 let _ = require('underscore'),
     Messages = require('../network/messages'),
     Packets = require('../network/packets'),
-    MapClient = require('../../data/map/world_client'),
-    config = require('../../config');
+    MapClient = require('../../data/map/world_client');
 
 class Commands {
 
