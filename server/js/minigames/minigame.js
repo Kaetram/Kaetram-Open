@@ -16,6 +16,14 @@ class Minigame {
     getName() {
         return this.name;
     }
+
+	// Used to mark if `player` is in a minigame instance.
+	getState() {
+		return {
+			id: this.id,
+			name: this.name
+		}
+	}
 }
 
 module.exports = Minigame;
