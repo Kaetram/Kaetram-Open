@@ -83,6 +83,10 @@ class Incoming {
                     self.handleChat(message);
                     break;
 
+                case Packets.Command:
+                    self.handleCommand(message);
+                    break;
+
                 case Packets.Inventory:
                     self.handleInventory(message);
                     break;
@@ -687,6 +691,23 @@ class Incoming {
 
         }
 
+    }
+
+    handleCommand(message) {
+        let self = this,
+            opcode = message.shift();
+
+        if (self.player.rights < 2)
+            return;
+
+        switch(opcode) {
+            case Packets.CommandOpcode.CtrlClick:
+                let position = message.shift();
+
+                self.player.teleport(position.x, position.y, false, true);
+
+                break;
+        }
     }
 
     handleInventory(message) {
