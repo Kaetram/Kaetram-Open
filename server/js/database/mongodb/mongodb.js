@@ -42,7 +42,11 @@ class MongoDB {
         }
 
         client.connect((error, newClient) => {
-            if (error) throw error;
+            if (error) {
+                log.error('Could not connect to MongoDB database.');
+                log.error(`Error Info: ${error}`);
+                return;
+            }
 
             self.connection = newClient.db(self.database);
 
