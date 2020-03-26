@@ -2,7 +2,6 @@
 
 let Packets = require('../network/packets'),
     Request = require('request'),
-    config = require('../../config'),
     _ = require('underscore'),
     Messages = require('../network/messages'),
     sanitizer = require('sanitizer'),

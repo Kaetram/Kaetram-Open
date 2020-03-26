@@ -3,7 +3,6 @@ let World = require('../game/world'),
     Packets = require('./packets'),
     Player = require('../game/entity/character/player/player'),
     Utils = require('../util/utils'),
-    config = require('../../config'),
     _ = require('underscore');
 
 class Network {

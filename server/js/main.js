@@ -1,7 +1,6 @@
 let fs = require("fs"),
     World = require('./game/world'),
     WebSocket = require('./network/websocket'),
-    config = require('../config'),
     Log = require('./util/log'),
     Parser = require('./util/parser'),
     Database = require('./database/database'),
@@ -9,6 +8,7 @@ let fs = require("fs"),
     Request = require('request'),
     world;
 
+config = require('../config')
 log = new Log();
 
 function main() {

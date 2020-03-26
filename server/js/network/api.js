@@ -1,5 +1,4 @@
-let config = require('../../config'),
-    express = require('express'),
+let express = require('express'),
     bodyParser = require('body-parser'),
     _ = require('underscore'),
     APIConstants = require('../util/apiconstants');

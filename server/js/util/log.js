@@ -1,5 +1,4 @@
-let fs = require('fs'),
-	config = require('../../config');
+let fs = require('fs');
 
 class Log {
 
@@ -64,7 +63,13 @@ class Log {
         self.send('\x1b[32m%s\x1b[0m', `[${new Date()}] NOTICE ${message}`);
     }
 
-    send(colour, message) {
+	trace(message) {
+		let self = this;
+
+		self.send('\x1b[35m%s\x1b[0m', `[${new Date()}] TRACE ${message}`, true);
+	}
+
+    send(colour, message, trace) {
     	let self = this;
 
 		if (self.stream)
@@ -72,6 +77,8 @@ class Log {
 
 		if (!colour)
 			console.log(message);
+		else if (trace)
+			console.trace(colour, message);
 		else
 			console.log(colour, message);
     }
