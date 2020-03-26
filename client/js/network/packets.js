@@ -210,3 +210,7 @@ Packets.CameraOpcode = {
     FreeFlow: 2,
     Player: 3
 };
+
+Packets.CommandOpcode = {
+    CtrlClick: 0
+};

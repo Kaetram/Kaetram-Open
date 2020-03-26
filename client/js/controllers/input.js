@@ -178,8 +178,15 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
                     player.disableAction = false;
                     self.keyMovement = false;
-
                     self.setCoords(data);
+
+                    if (window.event.ctrlKey) {
+                        log.info('Control key is pressed lmao');
+
+                        self.game.socket.send(Packets.Command, [Packets.CommandOpcode.CtrlClick, self.getCoords()]);
+                        return;
+                    }
+
                     self.click(self.getCoords());
 
                     break;
