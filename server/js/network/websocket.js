@@ -8,8 +8,7 @@ let Socket = require('./socket'),
     SocketIO = require('socket.io'),
     http = require('http'),
     https = require('https'),
-    Utils = require('../util/utils'),
-    config = require('../../config');
+    Utils = require('../util/utils');
 
 class WebSocket extends Socket {
 

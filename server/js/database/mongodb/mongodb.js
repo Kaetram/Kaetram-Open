@@ -4,8 +4,7 @@ let MongoClient = require('mongodb').MongoClient,
     Loader = require('./loader'),
     Creator = require('./creator'),
     bcrypt = require('bcrypt'),
-    _ = require('underscore'),
-    config = require('../../../config');
+    _ = require('underscore');
 
 class MongoDB {
 
@@ -41,6 +40,8 @@ class MongoDB {
             callback(self.connection);
             return;
         }
+
+        log.trace('Trying to connect.');
 
         client.connect((error, newClient) => {
             if (error) throw error;

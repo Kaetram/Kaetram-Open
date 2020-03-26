@@ -1,7 +1,6 @@
 let Utils = require('../../../../util/utils'),
     Messages = require('../../../../network/messages'),
-    Packets = require('../../../../network/packets'),
-    config = require('../../../../../config');
+    Packets = require('../../../../network/packets');
 
 class MobHandler {
 

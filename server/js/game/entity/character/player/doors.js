@@ -3,8 +3,7 @@
 let _ = require('underscore'),
     DoorData = require('../../../../../data/doors'),
     Messages = require('../../../../network/messages'),
-    Packets = require('../../../../network/packets'),
-    config = require('../../../../../config');
+    Packets = require('../../../../network/packets');
 
 class Doors {
 

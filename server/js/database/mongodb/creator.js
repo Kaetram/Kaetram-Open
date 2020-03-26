@@ -1,7 +1,6 @@
 /* global module */
 
-let bcrypt = require('bcrypt'),
-    config = require('../../../config');
+let bcrypt = require('bcrypt');
 
 class Creator {
 
