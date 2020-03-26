@@ -59,6 +59,7 @@ class TeamWar extends Minigame {
 
         self.lobby.push(player);
 
+		player.minigame = self.getState(player);
     }
 
     remove(player) {
@@ -121,13 +122,29 @@ class TeamWar extends Minigame {
         });
     }
 
+	inLobby(player) {
+		// TODO - Update these when new lobby is available.
+		return player.x > 0 && player.x < 10 && player.y > 10 && player.y < 0;
+	}
+
     // Used for radius
     getRandom(radius) {
         return Utils.randomInt(0, radius || 4);
     }
 
     getTeam(player) {
-        return this.redTeam.indexOf(player) > -1 ? 'red' : this.blueTeam.indexOf(player) > -1 ? 'blue' : 'lobby';
+		let self = this;
+
+		if (self.redTeam.indexOf(player) > -1)
+			return 'red';
+
+		if (self.blueTeam.indexOf(player) > -1)
+			return 'blue';
+
+		if (self.lobby.indexOf(player) > -1)
+			return 'lobby';
+
+		return null;
     }
 
     // Both these spawning areas randomize the spawning to a radius of 4
@@ -150,6 +167,20 @@ class TeamWar extends Minigame {
             y: 499 + self.getRandom()
         }
     }
+
+	// Expand on the super `getState()`
+	getState(player) {
+		let self = this,
+			state = super.getState();
+
+		// Player can only be in team `red`, `blue`, or `lobby`.
+		state.team = self.getTeam(player);
+
+		if (!state.team)
+			return null;
+
+		return state;
+	}
 }
 
 module.exports = TeamWar;
