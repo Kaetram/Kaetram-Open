@@ -20,6 +20,11 @@ class Guilds {
 
         self.loaded = false;
 
+        if (config.offlineMode) {
+            log.debug('Server in offline mode, not loading guilds.');
+            return;
+        }
+
         self.load();
     }
 

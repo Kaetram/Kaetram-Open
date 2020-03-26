@@ -41,8 +41,6 @@ class MongoDB {
             return;
         }
 
-        log.trace('Trying to connect.');
-
         client.connect((error, newClient) => {
             if (error) throw error;
 
