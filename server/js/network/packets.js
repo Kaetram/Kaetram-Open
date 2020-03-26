@@ -225,4 +225,8 @@ Packets.PushOpcode = {
     OldRegions: 7
 };
 
+Packets.CommandOpcode = {
+    CtrlClick: 0
+};
+
 module.exports = Packets;
