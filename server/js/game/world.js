@@ -719,7 +719,7 @@ class World {
             delete self.chests[chest.instance];
     }
 
-    playerInWorld(username) {
+    isOnline(username) {
         let self = this;
 
         for (let id in self.players)
