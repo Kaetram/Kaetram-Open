@@ -115,8 +115,10 @@ class Commands {
                 let otherPlayer = blocks.shift(),
                     message = blocks.join(' ');
 
+                self.player.sendMessage(otherPlayer);
+
                 if (!self.world.isOnline(otherPlayer)) {
-                    self.player.notify(`Player <span style="color:aquamarine;">${otherPlayer}</span> is not online.`, 'crimson');
+                    self.player.notify(`@crimson@Player @aquamarine@${otherPlayer}@crimson@ is not online.`);
                     return;
                 }
 
