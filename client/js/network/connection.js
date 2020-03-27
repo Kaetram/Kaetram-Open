@@ -674,7 +674,7 @@ define(['./impl/teamwar'], function(TeamWar) {
 
             });
 
-            self.messages.onNotification(function(opcode, message) {
+            self.messages.onNotification(function(opcode, message, colour) {
 
                 switch (opcode) {
                     case Packets.NotificationOpcode.Ok:
@@ -691,7 +691,7 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                     case Packets.NotificationOpcode.Text:
 
-                        self.input.chatHandler.add('WORLD', message);
+                        self.input.chatHandler.add('WORLD', message, colour);
 
                         break;
                 }
