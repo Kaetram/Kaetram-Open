@@ -6,6 +6,7 @@
  */
 
 let Utils = {},
+    _ = require('underscore'),
     Packets = require('../network/packets');
 
 module.exports = Utils;
@@ -76,4 +77,31 @@ Utils.formatUsername = (username) => {
     return username.replace(/\w\S*/g, (string) => {
         return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
     });
+};
+
+/**
+ * This function is responsible for parsing a message and looking for special
+ * characters (primarily used for colour codes). This function will be expanded
+ * if necessary in the nearby future.
+ */
+Utils.parseMessage = (message) => {
+    let messageBlocks = message.split('@');
+
+    if (messageBlocks.length % 2 === 0) {
+        log.warning('Improper message block format!');
+        log.warning('Ensure format follows @COLOUR@ format.');
+        return messageBlocks.join(' ');
+    }
+
+    let codeCount = messageBlocks.length / 2;
+
+    _.each(messageBlocks, (block, index) => {
+        if (index % 2 !== 0) // we hit a colour code.
+            messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
+    });
+
+    for (let i = 0; i < codeCount; i++)
+        messageBlocks.push('</span>');
+
+    return messageBlocks.join(' ');
 };

@@ -1050,6 +1050,15 @@ class Player extends Character {
         self.y = position.y;
     }
 
+    sendMessage(playerName) {
+        let self = this;
+
+        if (!self.world.isOnline(playerName)) {
+
+            return;
+        }
+    }
+
     sync() {
         let self = this;
 
@@ -1085,6 +1094,8 @@ class Player extends Character {
 
         if (!message)
             return;
+
+        message = Utils.parseMessage(message);
 
         self.send(new Messages.Notification(Packets.NotificationOpcode.Text, message, colour));
     }
