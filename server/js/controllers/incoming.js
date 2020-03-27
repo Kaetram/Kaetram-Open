@@ -153,7 +153,7 @@ class Incoming {
         if (self.introduced)
             return;
 
-        if (self.world.playerInWorld(self.player.username)) {
+        if (self.world.isOnline(self.player.username)) {
             self.connection.sendUTF8('loggedin');
             self.connection.close('Player already logged in..');
             return;
