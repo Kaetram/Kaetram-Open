@@ -1080,13 +1080,13 @@ class Player extends Character {
         self.save();
     }
 
-    notify(message) {
+    notify(message, colour) {
         let self = this;
 
         if (!message)
             return;
 
-        self.send(new Messages.Notification(Packets.NotificationOpcode.Text, message));
+        self.send(new Messages.Notification(Packets.NotificationOpcode.Text, message, colour));
     }
 
     stopMovement(force) {

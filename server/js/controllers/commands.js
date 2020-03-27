@@ -3,6 +3,7 @@
 let _ = require('underscore'),
     Messages = require('../network/messages'),
     Packets = require('../network/packets'),
+    Utils = require('../util/utils'),
     MapClient = require('../../data/map/world_client');
 
 class Commands {
@@ -105,6 +106,24 @@ class Commands {
 
                 self.player.updateRegion();
                 self.player.save();
+
+                return;
+
+            case 'pm':
+            case 'msg':
+
+                let otherPlayer = blocks.shift(),
+                    message = blocks.join(' ');
+
+                if (!self.world.isOnline(otherPlayer)) {
+                    self.player.notify(`Player <span style="color:aquamarine;">${otherPlayer}</span> is not online.`, 'crimson');
+                    return;
+                }
+
+                otherPlayer = self.world.getPlayerByName(otherPlayer);
+
+                otherPlayer.notify(`[From ${Utils.formatUsername(self.player.username)}]: ${message}`, 'aquamarine');
+                self.player.notify(`[To ${Utils.formatUsername(otherPlayer.username)}]: ${message}`, 'aquamarine');
 
                 return;
 
