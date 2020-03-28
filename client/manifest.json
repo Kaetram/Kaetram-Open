@@ -4,7 +4,7 @@
     "default_locale": "en",
     "name": "Kaetram",
     "short_name": "Kaetram",
-    "version": "1.1.6",
+    "version": "1.1.8",
     "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool.",
     "developer": {
         "name": "Veradictus",
