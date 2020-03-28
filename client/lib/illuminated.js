@@ -514,7 +514,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         var cache = createCanvasAnd2dContext('gc'+this.id, D, D);
         var g = cache.ctx.createRadialGradient(center.x, center.y, 0, d, d, d);
         g.addColorStop( Math.min(1,this.radius/this.distance), this.color );
-        g.addColorStop( 1, cp.getRGBA(this.color, 0) );
+        g.addColorStop( 1, 'rgba(0,0,0,0)'); // No need for this.
         cache.ctx.fillStyle = g;
         cache.ctx.fillRect(0, 0, cache.w, cache.h);
         return this._gcache = cache;
