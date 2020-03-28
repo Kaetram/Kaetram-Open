@@ -61,7 +61,7 @@ define(['jquery', '../page'], function($, Page) {
             self.updateCount();
         },
 
-        loadQuests(quests) {
+        loadQuests: function(quests) {
             var self = this;
 
             self.questsLength = quests.length;
