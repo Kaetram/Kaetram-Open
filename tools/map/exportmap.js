@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+config = { debugLevel: 'all' };
+
 let Log = require('../../server/js/util/log'),
     fs = require("fs"),
     file = require('../file'),
