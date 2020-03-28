@@ -71,5 +71,6 @@ npm run map
 - Come up with a storyline.
 - Implement anti-cheating.
 - Implement special abilities/weapon perks.
+- Improve/rewrite the lighting system
 
 - Add (continue) to NPC talking -- spacebar when talking
