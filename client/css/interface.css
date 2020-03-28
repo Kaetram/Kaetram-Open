@@ -755,6 +755,11 @@
         display: none;
     }
 
+    #guildPage {
+        background: url('../img/2/characterdialogsheet.png') -1488px 0;
+        display: none;
+    }
+
     .profileSlot {
         background-position: 0 0;
         position: absolute;
@@ -1438,6 +1443,11 @@
         display: none;
     }
 
+    #guildPage {
+        background: url('../img/2/characterdialogsheet.png') -992px 0;
+        display: none;
+    }
+
     .profileSlot {
         background-position: 0 0;
         position: absolute;
@@ -2085,6 +2095,11 @@
 
     #questPage {
         background: url('../img/1/characterdialogsheet.png') -372px 0;
+        display: none;
+    }
+
+    #guildPage {
+        background: url('../img/2/characterdialogsheet.png') -496px 0;
         display: none;
     }
 
