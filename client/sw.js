@@ -199,7 +199,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "css/interface.css",
-    "revision": "773dc33b2ffc2c2aa72d2fdc8a386b85"
+    "revision": "3ea9d7af14bf6e80439eee51bbf951dd"
   },
   {
     "url": "css/main.css",
@@ -207,11 +207,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "css/vars.css",
-    "revision": "917691d20c484bd58d52296f3be76ce2"
+    "revision": "bcb2e8a98c46608aec28931ce883256c"
   },
   {
     "url": "data/config.json",
-    "revision": "26c197b22216a1ad35e442c7b53bfcf3"
+    "revision": "8032ede6627e4bb94663d6ec68f40fa4"
   },
   {
     "url": "data/config.json-dist",
@@ -219,15 +219,15 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "data/maps/map.js",
-    "revision": "ec628674e4bd1f8e2e78524b890ff726"
+    "revision": "2426753108d6da5286d9ec0b59b4943e"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "1a66df48c83d770a017056ecd9472508"
+    "revision": "86c533b017e79d3f5865befe536c01c0"
   },
   {
     "url": "data/sprites.json",
-    "revision": "88d33115a73d5800fe09f85e2498b25c"
+    "revision": "afc77616e9b5824d39a8a74ed1ae5f94"
   },
   {
     "url": "favicon.ico",
@@ -263,7 +263,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "img/1/characterdialogsheet.png",
-    "revision": "9e845ae46a504e03f2a8481a9f9be276"
+    "revision": "afde8b324e539d54ecc87af0caae1228"
   },
   {
     "url": "img/1/containers.png",
@@ -319,7 +319,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "img/2/characterdialogsheet.png",
-    "revision": "10d3673339186853449c1cd21945d95a"
+    "revision": "f0419191e0007752bd00fb85cd8ac927"
   },
   {
     "url": "img/2/containers.png",
@@ -416,6 +416,10 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/2/item-bloodbow.png",
     "revision": "4ef5466fe4fb45da16fef0a6dd3e11b4"
+  },
+  {
+    "url": "img/2/item-bluearmor.png",
+    "revision": "156280909fe630aee0ba66e6c0d10039"
   },
   {
     "url": "img/2/item-bluedamboarmor.png",
@@ -1375,7 +1379,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "img/3/characterdialogsheet.png",
-    "revision": "52d796e6b9645ffdabcb4c67478653b8"
+    "revision": "a0626bd21132f897b3e4f942f1f78b49"
   },
   {
     "url": "img/3/containers.png",
@@ -1472,6 +1476,10 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/3/item-bloodbow.png",
     "revision": "6e76ea9c00149659625fd030c1a0b6be"
+  },
+  {
+    "url": "img/3/item-bluearmor.png",
+    "revision": "d8264e447076bbe7e6657d052f444ed6"
   },
   {
     "url": "img/3/item-bluedamboarmor.png",
@@ -2714,6 +2722,10 @@ workbox.precaching.precacheAndRoute([
     "revision": "fa73a064160f279f0a725ae1a416510c"
   },
   {
+    "url": "img/sprites/bluearmor.png",
+    "revision": "7c0c000436c5148d171de0f4aff42d4a"
+  },
+  {
     "url": "img/sprites/bluebikinigirlnpc.png",
     "revision": "5c9a95fcff8c2b308eb2de8a331aa0a0"
   },
@@ -3342,12 +3354,16 @@ workbox.precaching.precacheAndRoute([
     "revision": "ee56aa4a61ad34a9a0c6509094dbae00"
   },
   {
+    "url": "img/sprites/icebat.png",
+    "revision": "48e867b18b00a0389dcfce1d55542ddc"
+  },
+  {
     "url": "img/sprites/iceelfnpc.png",
     "revision": "deee8de56591d9b1feefe3247dd750dc"
   },
   {
     "url": "img/sprites/icegoblin.png",
-    "revision": "c1ac4e6afc04e3b79cc0a55b3b2f649c"
+    "revision": "78434aa36f2e1056f5acdb6fc1872110"
   },
   {
     "url": "img/sprites/icegolem.png",
@@ -3355,7 +3371,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "img/sprites/iceknight.png",
-    "revision": "0f3174eed2bd802ca37d2ff0235579ef"
+    "revision": "0e7fea6e19f1a7e3e1b26cf9b8e99235"
+  },
+  {
+    "url": "img/sprites/icerat.png",
+    "revision": "1f1d794e220d3698344fa518d390b257"
   },
   {
     "url": "img/sprites/icerose.png",
@@ -3476,6 +3496,10 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/item-bloodbow.png",
     "revision": "06ce54f88553f375ab396e08d436aa2d"
+  },
+  {
+    "url": "img/sprites/item-bluearmor.png",
+    "revision": "d8264e447076bbe7e6657d052f444ed6"
   },
   {
     "url": "img/sprites/item-bluedamboarmor.png",
@@ -5307,7 +5331,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "b8484dfcddb6c6505ea6f818555067ed"
+    "revision": "c182184df143d3061c17d3f8e6a99651"
   },
   {
     "url": "js/app.js",
@@ -5323,7 +5347,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/controllers/bubble.js",
-    "revision": "d68eed80934ccc2331da552304bc9329"
+    "revision": "6bae5a0b96e3c8c29c64691e366e816d"
   },
   {
     "url": "js/controllers/chat.js",
@@ -5339,7 +5363,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/controllers/input.js",
-    "revision": "8efe5edb1b869eeb30d8d60fbc334c53"
+    "revision": "a5e33fc14ed2b4ef7da392de9832d065"
   },
   {
     "url": "js/controllers/interface.js",
@@ -5367,7 +5391,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/character/character.js",
-    "revision": "f34048a17930d447622345edcc943862"
+    "revision": "87e6b3e5a51ddc7e8d5355bd6d877e55"
   },
   {
     "url": "js/entity/character/mob/mob.js",
@@ -5407,7 +5431,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/character/player/playerhandler.js",
-    "revision": "88ae665fd1008da041bfe6d05bc6dca9"
+    "revision": "7d118fb525fe1418f47e4051c5a52de4"
   },
   {
     "url": "js/entity/entity.js",
@@ -5435,7 +5459,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/game.js",
-    "revision": "81dbcebefd6b0b1791dc6182562213c7"
+    "revision": "6153b0943d9eb4b811f84c5913b0a45c"
   },
   {
     "url": "js/interface/abilities.js",
@@ -5478,8 +5502,12 @@ workbox.precaching.precacheAndRoute([
     "revision": "6dadb8ec15d2f993265a7fee12ff258b"
   },
   {
+    "url": "js/interface/profile/pages/guild.js",
+    "revision": "605cc6e8a6457c0f05eb0086f0afb68b"
+  },
+  {
     "url": "js/interface/profile/pages/quest.js",
-    "revision": "0aa3d96b16d81e601dc007dffe681ac2"
+    "revision": "8301c6db2c9d37d317b262168a7e96ee"
   },
   {
     "url": "js/interface/profile/pages/settings.js",
@@ -5491,7 +5519,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/interface/profile/profile.js",
-    "revision": "2c2bb134906666000bcb11f7ef029bad"
+    "revision": "07cda4d67b7a67e17286bae1aba72bb2"
   },
   {
     "url": "js/interface/shop.js",
@@ -5543,7 +5571,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/map/map.js",
-    "revision": "cd4527881aaf75c245345968f916ae35"
+    "revision": "89c96f4d773101684a862278d46cee62"
   },
   {
     "url": "js/map/mapworker.js",
@@ -5551,7 +5579,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/network/connection.js",
-    "revision": "638788d62f9b9c08002fa9e3c9185144"
+    "revision": "18ec04a299aafd289e85547736d047ec"
   },
   {
     "url": "js/network/impl/teamwar.js",
@@ -5559,11 +5587,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/network/messages.js",
-    "revision": "0ba72852a879d35182741b1f1e37ed75"
+    "revision": "afc39f541259db8e55d0f69b010783b1"
   },
   {
     "url": "js/network/packets.js",
-    "revision": "3977f85ee7422d246ad978ab7b273b11"
+    "revision": "12f749caea60016a53ed92f2c5c41fab"
   },
   {
     "url": "js/network/socket.js",
@@ -5571,7 +5599,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/renderer/bubbles/blob.js",
-    "revision": "b3751625efe2b2c89a566fa9c6f543c6"
+    "revision": "f514b4a08e8345d2125144b43e0ebd93"
   },
   {
     "url": "js/renderer/camera.js",
@@ -5599,7 +5627,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/renderer/renderer.js",
-    "revision": "1ee9dcddfac423fa96c3b142a616902e"
+    "revision": "c37020933616700efae9b29aa0e91276"
   },
   {
     "url": "js/renderer/tile.js",
@@ -5619,7 +5647,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/utils/modules.js",
-    "revision": "8291d6356bc96034ef984aa697c85f4c"
+    "revision": "b952c486f51a2d6dac6a3ed3624779bb"
   },
   {
     "url": "js/utils/pathfinder.js",
@@ -5667,7 +5695,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "manifest.json",
-    "revision": "9142e3196c9d9778b5e008f4805dcbab"
+    "revision": "d13b7e44117ef8022a0ae79d6ea357ff"
   },
   {
     "url": "robots.txt",
