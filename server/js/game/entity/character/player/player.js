@@ -1050,13 +1050,20 @@ class Player extends Character {
         self.y = position.y;
     }
 
-    sendMessage(playerName) {
+    sendMessage(playerName, message) {
         let self = this;
 
         if (!self.world.isOnline(playerName)) {
-
+            self.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
             return;
         }
+
+        let otherPlayer = self.world.getPlayerByName(playerName),
+            oFormattedName = Utils.formatUsername(playerName), // Formated username of the other player.
+            formattedName = Utils.formatUsername(self.username); // Formatted username of current instance.
+
+        otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
+        self.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
     }
 
     sync() {

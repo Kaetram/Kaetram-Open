@@ -115,20 +115,9 @@ class Commands {
                 let otherPlayer = blocks.shift(),
                     message = blocks.join(' ');
 
-                self.player.sendMessage(otherPlayer);
-
-                if (!self.world.isOnline(otherPlayer)) {
-                    self.player.notify(`@crimson@Player @aquamarine@${otherPlayer}@crimson@ is not online.`);
-                    return;
-                }
-
-                otherPlayer = self.world.getPlayerByName(otherPlayer);
-
-                otherPlayer.notify(`[From ${Utils.formatUsername(self.player.username)}]: ${message}`, 'aquamarine');
-                self.player.notify(`[To ${Utils.formatUsername(otherPlayer.username)}]: ${message}`, 'aquamarine');
+                self.player.sendMessage(otherPlayer, message);
 
                 return;
-
         }
     }
 
