@@ -1306,12 +1306,31 @@ define(['jquery', './camera', './tile',
             self.darkMask.compute(self.overlay.width, self.overlay.height);
         },
 
-        addLight: function(x, y, distance, diffuse, color, relative) {
+        parseObjects: function(objects) {
+            var self = this,
+                parsedObjects = [];
+
+            if (!objects)
+                return parsedObjects;
+
+            for (var i = 0; i < objects.length; i++) {
+                let object = objects[i];
+
+                parseObjects.push(new RectangleObject({
+                    topleft: new Vec2(object.x, object.y),
+                    bottomright: new Vec2(object.x + self.tileSize, object.y + self.tileSize)
+                }));
+            }
+
+            return parsedObjects;
+        },
+
+        addLight: function(x, y, distance, diffuse, color, relative, objects) {
             var self = this,
                 light = new Lamp(self.getLightData(x, y, distance, diffuse, color)),
                 lighting = new Lighting({
                     light: light,
-                    objects: [],
+                    objects: self.parseObjects(objects),
                     diffuse: light.diffuse
                 });
 
