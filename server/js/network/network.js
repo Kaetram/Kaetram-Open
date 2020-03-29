@@ -163,7 +163,7 @@ class Network {
     pushToAdjacentRegions(regionId, message, ignoreId) {
         let self = this;
 
-        self.map.regions.forEachAdjacentRegion(regionId, (id) => {
+        self.map.regions.forEachSurroundingRegion(regionId, (id) => {
             self.pushToRegion(id, message, ignoreId);
         });
     }

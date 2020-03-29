@@ -243,7 +243,8 @@ class Player extends Character {
             self.send(new Messages.Quest(Packets.QuestOpcode.AchievementBatch, self.quests.getAchievementData()));
 
             /* Update region here because we receive quest info */
-            self.updateRegion();
+            if (self.questsLoaded)
+                self.updateRegion();
 
             self.achievementsLoaded = true;
         });
@@ -253,7 +254,8 @@ class Player extends Character {
             self.send(new Messages.Quest(Packets.QuestOpcode.QuestBatch, self.quests.getQuestData()));
 
             /* Update region here because we receive quest info */
-            self.updateRegion();
+            if (self.achievementsLoaded)
+                self.updateRegion();
 
             self.questsLoaded = true;
         });
