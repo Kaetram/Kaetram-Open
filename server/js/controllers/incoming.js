@@ -649,7 +649,9 @@ class Incoming {
 
         switch (opcode) {
             case Packets.NetworkOpcode.Pong:
-                log.info('Pingy pongy pung pong.');
+                let time = new Date().getTime();
+
+                log.notice(`Latency of ${time - self.player.pingTime}ms`);
                 break;
         }
     }
