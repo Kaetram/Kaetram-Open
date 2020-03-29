@@ -36,9 +36,15 @@ class Region {
             if (config.debug)
                 log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
 
-            if (entity instanceof Player)
-                self.sendRegion(entity, regionId);
+            if (entity instanceof Player) {
+                if (!entity.questsLoaded)
+                    return;
 
+                if (!entity.achievementsLoaded)
+                    return;
+
+                self.sendRegion(entity, regionId);
+            }
         });
 
         self.onRemove((entity, oldRegions) => {
@@ -120,7 +126,7 @@ class Region {
 
         player.instanced = true;
 
-        self.mapRegions.forEachAdjacentRegion(regionId, (region) => {
+        self.mapRegions.forEachSurroundingRegion(regionId, (region) => {
             self.regions[Region.regionIdToInstance(player, region)] = {
                 entities: {},
                 players: [],
@@ -149,7 +155,7 @@ class Region {
         self.handle(player);
         self.push(player);
 
-        self.mapRegions.forEachAdjacentRegion(player.region, (regionId) => {
+        self.mapRegions.forEachSurroundingRegion(player.region, (regionId) => {
             let instancedRegion = Region.regionIdToInstance(player, regionId);
 
             if (instancedRegion in self.regions)
@@ -240,7 +246,7 @@ class Region {
             newRegions = [];
 
         if (entity && regionId && (regionId in self.regions)) {
-            self.mapRegions.forEachAdjacentRegion(regionId, (id) => {
+            self.mapRegions.forEachSurroundingRegion(regionId, (id) => {
                 if (entity.instanced)
                     id = Region.regionIdToInstance(entity, id);
 
@@ -274,7 +280,7 @@ class Region {
             if (entity instanceof Player)
                 region.players = _.reject(region.players, (id) => { return id === entity.instance; });
 
-            self.mapRegions.forEachAdjacentRegion(entity.region, (id) => {
+            self.mapRegions.forEachSurroundingRegion(entity.region, (id) => {
                 if (self.regions[id] && entity.instance in self.regions[id].entities) {
                     delete self.regions[id].entities[entity.instance];
                     oldRegions.push(id);
@@ -386,13 +392,13 @@ class Region {
         if (!player)
             return data;
 
-        self.mapRegions.forEachAdjacentRegion(region, (regionId) => {
+        self.mapRegions.forEachSurroundingRegion(region, (regionId) => {
             if (!player.hasLoadedRegion(regionId) || force) {
                 player.loadRegion(regionId);
 
                 let bounds = self.getRegionBounds(regionId);
 
-                for (let i = 0, y = bounds.startY; y <= bounds.endY; y++, i++) {
+                for (let y = bounds.startY; y < bounds.endY; y++) {
                     for (let x = bounds.startX; x < bounds.endX; x++) {
                         let index = self.gridPositionToIndex(x - 1, y),
                             tileData = ClientMap.data[index],
@@ -427,11 +433,14 @@ class Region {
                         if (isObject)
                             info.isObject = isObject;
 
+                        if (index < 81000)
+                            log.info(index)
+
                         data.push(info);
                     }
                 }
             }
-        }, 2);
+        });
 
         return data;
     }

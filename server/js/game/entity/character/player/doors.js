@@ -102,7 +102,7 @@ class Doors {
             /* There's no need to send dynamic data if the player is not nearby. */
             let doorRegion = self.regions.regionIdFromPosition(door.x, door.y);
 
-            if (!self.regions.isAdjacent(self.player.region, doorRegion))
+            if (!self.regions.isSurrounding(self.player.region, doorRegion))
                 return;
 
             let tiles = self.getTiles(door);

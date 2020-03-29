@@ -1033,8 +1033,17 @@ class Incoming {
             canvasWidth = message.shift(),
             canvasHeight = message.shift();
 
-        //log.info('Received canvas data');
-        //log.info(`width: ${canvasWidth} ; height: ${canvasHeight}`);
+        if (!canvasWidth || !canvasHeight)
+            return;
+
+        /**
+         * The client is by default scaled to 3x the normal
+         * tileSize of 16x16. So we are using 48x48 to find
+         * a desireable region size.
+         */
+
+        self.player.regionWidth = Math.ceil(canvasWidth / 48);
+        self.player.regionHeight = Math.ceil(canvasHeight / 48);
     }
 
     canAttack(attacker, target) {

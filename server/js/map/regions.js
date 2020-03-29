@@ -40,23 +40,35 @@ class Regions {
         });
     }
 
+    /**
+     * This is a dynamic approach for getting player regions.
+     * What we are doing is building surrounding regions according
+     * to the player
+     */
+
+    getDynamicRegions(player) {
+        let self = this;
+
+
+    }
+
     // y y x y y
     // y y x y y
     // y x x x y
     // y y x y x
     // y y x y y
 
-    getAdjacentRegions(id, offset = 1, stringFormat) {
+    getSurroundingRegions(id, offset = 1, stringFormat) {
         let self = this,
             position = self.regionIdToPosition(id),
             x = position.x, y = position.y;
 
-        let list = [];
+        let list = [], stringList = [];
 
         for (let i = -offset; i <= offset; i++) // y
             for (let j = -1; j <= 1; j++) // x
                 if (i > -2 || i < 2)
-                    list.push(stringFormat ? (x + j) + '-' + (y + i) : { x: x + j, y: y + i });
+                    list.push({ x: x + j, y: y + i });
 
         _.each(self.linkedRegions[id], (regionPosition) => {
 
@@ -66,13 +78,46 @@ class Regions {
 
         });
 
-        return _.reject(list, (regionPosition) => {
+        list = _.reject(list, (regionPosition) => {
             let gX = regionPosition.x,
                 gY = regionPosition.y;
 
             return gX < 0 || gY < 0 || gX >= self.regionWidth || gY >= self.regionHeight;
         });
 
+        return stringFormat ? self.regionsToCoordinates(list) : list;
+    }
+
+    getAdjacentRegions(id, offset, stringFormat) {
+        let self = this,
+            surroundingRegions = self.getSurroundingRegions(id, offset);
+
+        /**
+         * We will leave this hardcoded to surrounding areas of
+         * 9 since we will not be processing larger regions at
+         * the moment.
+         */
+
+        if (surroundingRegions.length !== 9)
+            return;
+
+        /**
+         * 11-0 12-0 13-0
+         * 11-1 12-1 13-1
+         * 11-2 12-2 13-2
+         */
+
+        let centreRegion = self.regionIdToPosition(id),
+            adjacentRegions = [];
+
+        _.each(surroundingRegions, (region) => {
+            if (region.x !== centreRegion.x && region.y !== centreRegion.y)
+                return;
+
+            adjacentRegions.push(region);
+        });
+
+        return stringFormat ? self.regionsToCoordinates(adjacentRegions) : adjacentRegions;
     }
 
     forEachRegion(callback) {
@@ -83,14 +128,25 @@ class Regions {
                 callback(x + '-' + y)
     }
 
+    forEachSurroundingRegion(regionId, callback, offset) {
+        let self = this;
+
+        if (!regionId)
+            return;
+
+        _.each(self.getSurroundingRegions(regionId, offset), (region) => {
+            callback(region.x + '-' + region.y);
+        });
+    }
+
     forEachAdjacentRegion(regionId, callback, offset) {
         let self = this;
 
         if (!regionId)
             return;
 
-        _.each(self.getAdjacentRegions(regionId, offset), (position) => {
-            callback(position.x + '-' + position.y);
+        _.each(self.getAdjacentRegions(regionId, offset), (region) => {
+            callback(region.x + '-' + region.y);
         });
     }
 
@@ -117,8 +173,22 @@ class Regions {
         }
     }
 
-    isAdjacent(regionId, toRegionId) {
-        return this.getAdjacentRegions(regionId, 1, true).indexOf(regionId) > -1;
+    /**
+     * Converts an array of regions from object type to string format.
+     */
+    regionsToCoordinates(regions) {
+        let self = this,
+            stringList = [];
+
+        _.each(regions, (region) => {
+            stringList.push(region.x + '-' + region.y);
+        });
+
+        return stringList;
+    }
+
+    isSurrounding(regionId, toRegionId) {
+        return this.getSurroundingRegions(regionId, 1, true).indexOf(regionId) > -1;
     }
 }
 
