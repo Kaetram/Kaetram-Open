@@ -23,6 +23,17 @@ class Handler {
         self.load();
     }
 
+    destroy() {
+        let self = this;
+
+        clearInterval(self.updateInterval);
+        self.updateInterval = null;
+
+        self.map = null;
+        self.world = null;
+        self.player = null; 
+    }
+
     load() {
         let self = this;
 
