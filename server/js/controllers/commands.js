@@ -118,6 +118,13 @@ class Commands {
                 self.player.sendMessage(otherPlayer, message);
 
                 return;
+
+            case 'ping':
+
+                self.player.pingTime = new Date().getTime();
+                self.player.send(new Messages.Network(Packets.NetworkOpcode.Ping));
+
+                break;
         }
     }
 
