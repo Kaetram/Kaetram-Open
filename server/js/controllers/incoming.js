@@ -651,7 +651,7 @@ class Incoming {
             case Packets.NetworkOpcode.Pong:
                 let time = new Date().getTime();
 
-                log.notice(`Latency of ${time - self.player.pingTime}ms`);
+                self.player.notify(`Latency of ${time - self.player.pingTime}ms`, 'red');
                 break;
         }
     }

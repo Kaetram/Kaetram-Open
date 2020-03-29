@@ -695,6 +695,9 @@ class World {
 
         delete self.players[player.instance];
         delete self.network.packets[player.instance];
+
+        player.destroy();
+        player = null;
     }
 
     removeProjectile(projectile) {

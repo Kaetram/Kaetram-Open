@@ -137,6 +137,28 @@ class Player extends Character {
         self.setBoots(boots[0], boots[1], boots[2], boots[3]);
     }
 
+    destroy() {
+        let self = this;
+
+        clearTimeout(self.disconnectTimeout);
+
+        self.disconnectTimeout = null;
+
+        self.handler.destroy();
+
+        self.connection = null;
+
+        self.handler = null;
+        self.inventory = null;
+        self.abilities = null;
+        self.enchant = null;
+        self.bank = null;
+        self.quests = null;
+        self.trade = null;
+        self.doors = null;
+        self.warp = null;
+    }
+
     loadRegions(regions) {
         let self = this;
 
@@ -954,7 +976,7 @@ class Player extends Character {
          */
 
 
-        return self.finishedTutorial() ? { x: 325, y: 87 } : { x: 375, y: 41 };
+        return self.finishedTutorial() ? { x: 50, y: 89 } : { x: 375, y: 41 };
     }
 
     getHit(target) {

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
+config = { debugLevel: 'all', gver: 1 };
+
 var Utils = require('../../server/js/util/utils'),
     io = require('socket.io-client'),
     _ = require('underscore'),
-    Log = require('../../server/js/util/log'),
-    config = require('../../server/config');
-
+    Log = require('../../server/js/util/log');
 log = new Log('info');
 
 class Entity {
@@ -30,7 +30,7 @@ class Bot {
         let self = this;
 
         self.bots = [];
-        self.botCount = 100;
+        self.botCount = 300;
 
         self.load();
     }
@@ -44,16 +44,18 @@ class Bot {
 
                 if (self.botCount < 1)
                     clearInterval(connecting);
-            }, 1000);
+            }, 100);
 
         setInterval(() => {
 
             _.each(self.bots, (bot) => {
                 self.move(bot);
-                self.talk(bot);
+
+                if (Utils.randomInt(0, 50) === 10)
+                    self.talk(bot);
             });
 
-        }, 2500);
+        }, 2000);
     }
 
     connect() {
