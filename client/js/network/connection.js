@@ -1028,8 +1028,6 @@ define(['./impl/teamwar'], function(TeamWar) {
 
             self.messages.onRegion(function(opcode, info) {
 
-                log.info(info);
-
                 switch(opcode) {
                     case Packets.RegionOpcode.Render:
 
