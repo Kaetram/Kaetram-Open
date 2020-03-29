@@ -63,7 +63,7 @@ class Quests {
 
         for (let id = 0; id < ids.length; id++)
             if (!isNaN(parseInt(ids[id])) && self.achievements[id])
-                self.achievements[id].setProgress(progress[id]);
+                self.achievements[id].setProgress(progress[id], true);
 
         if (self.achievementsReadyCallback)
             self.achievementsReadyCallback();

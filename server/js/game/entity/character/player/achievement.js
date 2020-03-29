@@ -118,12 +118,12 @@ class Achievement {
         return false
     }
 
-    setProgress(progress) {
+    setProgress(progress, skipRegion) {
         let self = this;
 
         self.progress = parseInt(progress);
 
-        if (self.data.rewardType === 'door')
+        if (self.data.rewardType === 'door' && !skipRegion)
             self.player.updateRegion();
     }
 

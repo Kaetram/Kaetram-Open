@@ -51,8 +51,12 @@ class Map {
         self.zoneWidth = 25;
         self.zoneHeight = 20;
 
-        self.regionWidth = Math.floor(self.width / self.zoneWidth);
-        self.regionHeight = Math.floor(self.height / self.zoneHeight);
+        /**
+         * These are temporarily hardcoded,
+         * but we will use a dynamic approach.
+         */
+        self.regionWidth = 40;
+        self.regionHeight = 20;
 
         self.areas = {};
 
