@@ -1083,7 +1083,7 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                     case Packets.OverlayOpcode.Lamp:
 
-                        self.renderer.addLight(info.x, info.y, info.distance, info.diffuse, 'rgba(0,0,0,0.4)', true);
+                        self.renderer.addLight(info.x, info.y, info.distance, info.diffuse, 'rgba(0,0,0,0.4)', true, info.objects);
 
                         break;
 
