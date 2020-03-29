@@ -433,9 +433,6 @@ class Region {
                         if (isObject)
                             info.isObject = isObject;
 
-                        if (index < 81000)
-                            log.info(index)
-
                         data.push(info);
                     }
                 }
