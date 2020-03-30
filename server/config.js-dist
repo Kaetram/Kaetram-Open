@@ -12,12 +12,17 @@ Config.accessToken = 'generate-a-token-with-the-hash-of-your-liking';
 Config.enableAPI = false;
 Config.apiPort = 9002;
 
+// Hub Configuration
+Config.hubEnabled = false;
+Config.hubHost = '127.0.0.1';
+Config.hubPort = '9526';
+
 // Database Configuration
 Config.database = 'mongodb'; // Used for multiple database support
 Config.offlineMode = false; // Skip database checking upon login
 
-Config.mongoHost = "127.0.0.1";
-Config.mongoPort = "27017";
+Config.mongoHost = '127.0.0.1';
+Config.mongoPort = '27017';
 Config.mongoUser = 'admin';
 Config.mongoPassword = 'password';
 Config.mongoDatabase = 'database';
