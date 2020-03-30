@@ -15,6 +15,11 @@ class Discord {
         if (!config.discordEnabled)
             return;
 
+        if (config.hubEnabled) {
+            log.warning('Server is in hub-mode, disabling Discord connection.');
+            return;
+        }
+
         self.world = world;
 
         self.client = new DiscordJS.Client();
