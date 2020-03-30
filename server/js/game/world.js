@@ -126,7 +126,7 @@ class World {
         if (!config.hubEnabled)
             return;
 
-        if (!config.enableAPI)
+        if (!config.apiEnabled)
             log.warning('Server is in hub-mode but API is not enabled!');
 
         setIntervalAsync(async() => {
