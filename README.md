@@ -9,7 +9,6 @@
 [![Fork This Repo](https://img.shields.io/github/forks/Veradictus/Kaetram-Open?style=social&icon=github)](https://github.com/Veradictus/Kaetram-Open/fork)
 [![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat-square)](https://discord.gg/MmbGAaw)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social&icon=reddit)](https://www.reddit.com/r/kaetram/)
-[![Send Tip](https://img.shields.io/static/v1?label=BAT&message=Send%20a%20Tip&style=flat-square&logo=brave&color=fb542b)](#)
 
 Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game &ndash; BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.
 
@@ -42,14 +41,14 @@ The rendering engine has been updated such that it can handle multiple tilesets 
 
 ## Installing and Running
 
-You must install MongoDB to create a user and a database.
+You must first [install Node JS](https://nodejs.org/en/download/) to run the server, and then [install MongoDB](https://www.mongodb.com/download-center/community) in order to create a user and a database.
+
+Before starting Kaetram, make sure you rename the `config.json-dist` to `config.json` and modify them accordingly. There are two configurations in `server/` and `client/data`.
 
 ```console
 npm install
 npm start
 ```
-
-Before starting Kaetram, make sure you rename the `config.json-dist` to `config.json` and modify them accordingly. There are two configurations in `server/` and `client/data`.
 
 ## Map Parsing
 

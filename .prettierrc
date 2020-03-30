@@ -1,9 +1,19 @@
 {
+    "printWidth": 80,
     "tabWidth": 4,
-    "htmlWhitespaceSensitivity": "strict",
+    "useTabs": false,
+    "semi": true,
     "singleQuote": true,
-    "insertPragma": true,
-    "requirePragma": true,
+    "quoteProps": "as-needed",
+    "jsxSingleQuote": false,
+    "trailingComma": "none",
     "bracketSpacing": true,
-    "trailingComma": "none"
+    "jsxBracketSameLine": false,
+    "arrowParens": "always",
+    "parser": "typescript",
+    "requirePragma": false,
+    "insertPragma": false,
+    "proseWrap": "always",
+    "htmlWhitespaceSensitivity": "strict",
+    "endOfLine": "auto"
 }
