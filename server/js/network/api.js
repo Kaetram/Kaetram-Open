@@ -1,5 +1,6 @@
 let express = require('express'),
     bodyParser = require('body-parser'),
+    request = require('request'),
     _ = require('underscore'),
     APIConstants = require('../util/apiconstants');
 
@@ -19,6 +20,9 @@ class API {
         let self = this;
 
         self.world = world;
+
+        if (!config.apiEnabled)
+            return;
 
         let app = express();
 
@@ -76,6 +80,37 @@ class API {
             });
 
             response.json(players);
+        });
+    }
+
+
+    pingHub() {
+        let self = this,
+            url = `http://${config.hubHost}:${config.hubPort}`,
+            data = {
+                form: {
+                    serverId: config.serverId,
+                    accessToken: config.accessToken
+                }
+            };
+
+        request.post(url, data, (error, response, body) => {
+
+            try {
+                let data = JSON.parse(body);
+
+                if (data.status === 'success') {
+                    if (!self.hubConnected) {
+                        log.notice('Connected to Kaetram Hub successfully!');
+                        self.hubConnected = true;
+                    }
+                }
+
+            } catch (e) {
+                log.error('Could not connect to Kaetram Hub.');
+                self.hubConnected = false;
+            }
+
         });
     }
 
