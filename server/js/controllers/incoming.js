@@ -680,6 +680,9 @@ class Incoming {
             if (config.debug)
                 log.info(`${self.player.username} - ${text}`);
 
+            if (config.discordEnabled)
+                self.world.discord.sendMessage(self.player, text);
+
             self.world.push(Packets.PushOpcode.Regions, {
                 regionId: self.player.region,
                 message: new Messages.Chat({
