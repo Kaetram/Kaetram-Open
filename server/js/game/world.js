@@ -90,9 +90,7 @@ class World {
          * in a batch here in order to keep it organized and neat.
          */
 
-        if (config.enableAPI)
-            self.api = new API(self);
-
+        self.api = new API(self);
         self.shops = new Shops(self);
         self.region = new Region(self);
         self.network = new Network(self);
@@ -121,6 +119,13 @@ class World {
             self.network.parsePackets();
             self.region.parseRegions();
         }, update);
+
+        if (!config.hubEnabled)
+            return;
+
+        setIntervalAsync(async() => {
+            self.api.pingHub();
+        }, 5000);
     }
 
     /****************************
