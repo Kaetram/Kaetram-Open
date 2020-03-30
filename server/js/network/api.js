@@ -86,7 +86,7 @@ class API {
 
     pingHub() {
         let self = this,
-            url = `http://${config.hubHost}:${config.hubPort}`,
+            url = `http://${config.hubHost}:${config.hubPort}/ping`,
             data = {
                 form: {
                     serverId: config.serverId,
