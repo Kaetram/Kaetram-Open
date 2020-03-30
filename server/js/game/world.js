@@ -91,12 +91,13 @@ class World {
          * in a batch here in order to keep it organized and neat.
          */
 
+        self.minigames = new Minigames(self);
+
         self.api = new API(self);
         self.shops = new Shops(self);
         self.region = new Region(self);
         self.discord = new Discord(self);
         self.network = new Network(self);
-        self.minigames = new Minigames(self);
         self.guilds = new Guilds(self);
         self.globalObjects = new GlobalObjects(self);
 
@@ -124,6 +125,9 @@ class World {
 
         if (!config.hubEnabled)
             return;
+
+        if (!config.apiEnabled)
+            log.warning('Server is in hub-mode but API is not enabled!');
 
         setIntervalAsync(async() => {
 
