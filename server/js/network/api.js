@@ -90,7 +90,8 @@ class API {
             data = {
                 form: {
                     serverId: config.serverId,
-                    accessToken: config.accessToken
+                    accessToken: config.accessToken,
+                    port: config.port
                 }
             };
 
