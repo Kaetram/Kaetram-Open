@@ -124,8 +124,10 @@ class World {
             return;
 
         setIntervalAsync(async() => {
+
             self.api.pingHub();
-        }, 5000);
+
+        }, config.hubPing);
     }
 
     /****************************
