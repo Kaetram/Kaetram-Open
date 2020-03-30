@@ -30,7 +30,7 @@ export default class PlayerHandler {
     }
 
     load() {
-        this.player.onRequestPath(function(x, y) {
+        this.player.onRequestPath((x, y) => {
             if (this.player.dead || this.player.frozen) return null;
 
             const ignores = [this.player];
@@ -47,7 +47,7 @@ export default class PlayerHandler {
             return this.game.findPath(this.player, x, y, ignores);
         });
 
-        this.player.onStartPathing(function(path) {
+        this.player.onStartPathing((path) => {
             const i = path.length - 1;
 
             this.player.moving = true;
@@ -69,7 +69,7 @@ export default class PlayerHandler {
             ]);
         });
 
-        this.player.onStopPathing(function(x, y) {
+        this.player.onStopPathing((x, y) => {
             this.entities.unregisterPosition(this.player);
             this.entities.registerPosition(this.player);
 
@@ -156,14 +156,14 @@ export default class PlayerHandler {
             if (this.player.hasTarget()) this.player.follow(this.player.target);
         });
 
-        this.player.onUpdateArmour(function(armourName, power) {
+        this.player.onUpdateArmour((armourName, power) => {
             this.player.setSprite(this.game.getSprite(armourName));
 
             if (this.game.interface && this.game.interface.profile)
                 this.game.interface.profile.update();
         });
 
-        this.player.onUpdateEquipment(function(type, power) {
+        this.player.onUpdateEquipment((type, power) => {
             if (this.game.interface && this.game.interface.profile)
                 this.game.interface.profile.update();
         });

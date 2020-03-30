@@ -1,26 +1,10 @@
-import mapData from '../../data/maps/map';
-import _ from 'underscore';
+importScripts('../data/maps/map.js', './underscore.js');
 
-function getX(index, width) {
-    if (index === 0) return 0;
+onmessage = function(event) {
+    loadCollisionGrid();
 
-    return index % width === 0 ? width - 1 : (index % width) - 1;
-}
-
-function indexToGridPosition(index) {
-    let x = 0;
-    let y = 0;
-
-    index -= 1;
-
-    x = getX(index + 1, mapData.width);
-    y = Math.floor(index / mapData.width);
-
-    return {
-        x: x,
-        y: y
-    };
-}
+    postMessage(mapData);
+};
 
 function loadCollisionGrid() {
     const tileIndex = 0;
@@ -44,8 +28,23 @@ function loadCollisionGrid() {
     });
 }
 
-onmessage = (event) => {
-    loadCollisionGrid();
+function indexToGridPosition(index) {
+    let x = 0;
+    let y = 0;
 
-    postMessage(mapData, '0.0.0.0');
-};
+    index -= 1;
+
+    x = getX(index + 1, mapData.width);
+    y = Math.floor(index / mapData.width);
+
+    return {
+        x: x,
+        y: y
+    };
+}
+
+function getX(index, width) {
+    if (index === 0) return 0;
+
+    return index % width === 0 ? width - 1 : (index % width) - 1;
+}

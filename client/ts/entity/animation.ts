@@ -11,6 +11,8 @@ export default class Animation {
     count: number;
     lastTime: number;
     speed: any;
+    endCountCallback: Function;
+
     constructor(name, length, row, width, height) {
         this.name = name;
         this.length = length;
@@ -40,10 +42,6 @@ export default class Animation {
         this.currentFrame.y = this.height * this.row;
 
         this.currentFrame.index = i;
-    }
-
-    endCountCallback() {
-        throw new Error('Method not implemented.');
     }
 
     update(time) {

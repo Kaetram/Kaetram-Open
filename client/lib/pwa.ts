@@ -6,7 +6,7 @@ export default () => {
             if (localStorage.getItem('prompted') !== 'true')
                 deferredPrompt.prompt();
         } catch (err) {}
-        deferredPrompt.userChoice.then(function(choiceResult) {
+        deferredPrompt.userChoice.then((choiceResult) => {
             localStorage.setItem('prompted', 'true');
             if (choiceResult.outcome === 'accepted') {
                 // PWA has been installed
@@ -47,7 +47,7 @@ window.addEventListener('load', () => {
             .register('sw.js', {
                 scope: '../'
             })
-            .then(function(reg) {
+            .then((reg) => {
                 console.info(
                     '[PWA Builder] Service worker has been registered for scope: ' +
                         reg.scope
@@ -65,7 +65,7 @@ window.addEventListener('load', () => {
                     };
                 };
             })
-            .catch(function(err) {
+            .catch((err) => {
                 console.error('[SW ERROR]', err);
             });
     }

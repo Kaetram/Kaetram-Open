@@ -24,6 +24,8 @@ export default class Connection {
     pointer: any;
     inventory: any;
     teamWar: TeamWar;
+    population: any;
+    queueColour: any;
     constructor(game) {
         this.game = game;
         this.app = game.app;
@@ -48,7 +50,7 @@ export default class Connection {
     }
 
     load() {
-        this.messages.onHandshake(function(data) {
+        this.messages.onHandshake((data) => {
             this.game.id = data.id;
             this.game.development = data.development;
 
@@ -102,7 +104,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onWelcome(function(data) {
+        this.messages.onWelcome((data) => {
             this.interface.loadHeader();
 
             this.game.player.load(data);
@@ -111,7 +113,7 @@ export default class Connection {
             this.game.postLoad();
         });
 
-        this.messages.onEquipment(function(opcode, info) {
+        this.messages.onEquipment((opcode, info) => {
             switch (opcode) {
                 case Packets.EquipmentOpcode.Batch:
                     _.each(info, (data: any) => {
@@ -163,30 +165,31 @@ export default class Connection {
             }
         });
 
-        this.messages.onSpawn(function(data) {
+        this.messages.onSpawn((data) => {
             this.entities.create(data.shift());
         });
 
-        this.messages.onEntityList(function(data) {
+        this.messages.onEntityList((data) => {
             const ids = _.pluck(this.entities.getAll(), 'id');
             const known = _.intersection(ids, data);
             const newIds = _.difference(data, known);
 
-            this.entities.decrepit = _.reject(this.entities.getAll(), function(
-                entity: any
-            ) {
-                return (
-                    _.include(known, entity.id) ||
-                    entity.id === this.game.player.id
-                );
-            });
+            this.entities.decrepit = _.reject(
+                this.entities.getAll(),
+                (entity: any) => {
+                    return (
+                        _.include(known, entity.id) ||
+                        entity.id === this.game.player.id
+                    );
+                }
+            );
 
             this.entities.clean(newIds);
 
             this.socket.send(Packets.Who, newIds);
         });
 
-        this.messages.onSync(function(data) {
+        this.messages.onSync((data) => {
             const entity = this.entities.get(data.id);
 
             if (!entity || entity.type !== 'player') return;
@@ -290,7 +293,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onTeleport(function(info) {
+        this.messages.onTeleport((info) => {
             const entity = this.entities.get(info.id);
             const isPlayer = info.id === this.game.player.id;
 
@@ -357,7 +360,7 @@ export default class Connection {
                     }); */
         });
 
-        this.messages.onDespawn(function(id) {
+        this.messages.onDespawn((id) => {
             const entity = this.entities.get(id);
 
             if (!entity) return;
@@ -415,7 +418,7 @@ export default class Connection {
             });
         });
 
-        this.messages.onCombat(function(opcode, info) {
+        this.messages.onCombat((opcode, info) => {
             const attacker = this.entities.get(info.attackerId);
             const target = this.entities.get(info.targetId);
 
@@ -510,7 +513,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onAnimation(function(id, info) {
+        this.messages.onAnimation((id, info) => {
             const entity = this.entities.get(id);
             const animation = info.shift();
             const speed = info.shift();
@@ -521,7 +524,7 @@ export default class Connection {
             entity.animate(animation, speed, count);
         });
 
-        this.messages.onProjectile(function(opcode, info) {
+        this.messages.onProjectile((opcode, info) => {
             switch (opcode) {
                 case Packets.ProjectileOpcode.Create:
                     this.entities.create(info);
@@ -530,11 +533,11 @@ export default class Connection {
             }
         });
 
-        this.messages.onPopulation(function(population) {
+        this.messages.onPopulation((population) => {
             this.population = population;
         });
 
-        this.messages.onPoints(function(data) {
+        this.messages.onPoints((data) => {
             const entity = this.entities.get(data.id);
 
             if (!entity) return;
@@ -560,7 +563,7 @@ export default class Connection {
             this.socket.send(Packets.Network, [Packets.NetworkOpcode.Pong]);
         });
 
-        this.messages.onChat(function(info) {
+        this.messages.onChat((info) => {
             if (this.game.isDebug()) console.info(info);
 
             if (info.withBubble) {
@@ -582,7 +585,7 @@ export default class Connection {
             this.input.chatHandler.add(info.name, info.text, info.colour);
         });
 
-        this.messages.onCommand(function(info) {
+        this.messages.onCommand((info) => {
             /**
              * This is for random miscellaneous commands that require
              * a specific action done by the client as opposed to
@@ -603,7 +606,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onInventory(function(opcode, info) {
+        this.messages.onInventory((opcode, info) => {
             switch (opcode) {
                 case Packets.InventoryOpcode.Batch:
                     const inventorySize = info.shift();
@@ -637,7 +640,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onBank(function(opcode, info) {
+        this.messages.onBank((opcode, info) => {
             switch (opcode) {
                 case Packets.BankOpcode.Batch:
                     const bankSize = info.shift();
@@ -661,9 +664,9 @@ export default class Connection {
             }
         });
 
-        this.messages.onAbility(function(opcode, info) {});
+        this.messages.onAbility((opcode, info) => {});
 
-        this.messages.onQuest(function(opcode, info) {
+        this.messages.onQuest((opcode, info) => {
             switch (opcode) {
                 case Packets.QuestOpcode.AchievementBatch:
                     this.interface
@@ -689,7 +692,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onNotification(function(opcode, message) {
+        this.messages.onNotification((opcode, message) => {
             switch (opcode) {
                 case Packets.NotificationOpcode.Ok:
                     this.interface.displayNotify(message);
@@ -708,7 +711,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onBlink(function(instance) {
+        this.messages.onBlink((instance) => {
             const item = this.entities.get(instance);
 
             if (!item) return;
@@ -716,7 +719,7 @@ export default class Connection {
             item.blink(150);
         });
 
-        this.messages.onHeal(function(info) {
+        this.messages.onHeal((info) => {
             const entity = this.entities.get(info.id);
 
             if (!entity) return;
@@ -752,7 +755,7 @@ export default class Connection {
             entity.triggerHealthBar();
         });
 
-        this.messages.onExperience(function(info) {
+        this.messages.onExperience((info) => {
             const entity = this.entities.get(info.id);
 
             if (!entity || entity.type !== 'player') return;
@@ -794,7 +797,7 @@ export default class Connection {
             this.interface.profile.update();
         });
 
-        this.messages.onDeath(function(id) {
+        this.messages.onDeath((id) => {
             const entity = this.entities.get(id);
 
             if (!entity || id !== this.game.player.id) return;
@@ -810,7 +813,7 @@ export default class Connection {
             this.app.body.addClass('death');
         });
 
-        this.messages.onAudio(function(newSong) {
+        this.messages.onAudio((newSong) => {
             this.audio.newSong = newSong;
 
             if (!this.audio.newSong || Detect.isMobile()) return;
@@ -818,7 +821,7 @@ export default class Connection {
             this.audio.update();
         });
 
-        this.messages.onNPC(function(opcode, info) {
+        this.messages.onNPC((opcode, info) => {
             switch (opcode) {
                 case Packets.NPCOpcode.Talk: {
                     const entity = this.entities.get(info.id);
@@ -875,7 +878,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onRespawn(function(id, x, y) {
+        this.messages.onRespawn((id, x, y) => {
             if (id !== this.game.player.id) {
                 console.error('Player id mismatch.');
                 return;
@@ -896,7 +899,7 @@ export default class Connection {
             this.game.player.dead = false;
         });
 
-        this.messages.onEnchant(function(opcode, info) {
+        this.messages.onEnchant((opcode, info) => {
             const type = info.type;
             const index = info.index;
 
@@ -913,7 +916,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onGuild(function(opcode, info) {
+        this.messages.onGuild((opcode, info) => {
             switch (opcode) {
                 case Packets.GuildOpcode.Create:
                     break;
@@ -923,7 +926,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onPointer(function(opcode, info) {
+        this.messages.onPointer((opcode, info) => {
             switch (opcode) {
                 case Packets.PointerOpcode.NPC:
                     const entity = this.entities.get(info.id);
@@ -967,7 +970,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onPVP(function(id, pvp) {
+        this.messages.onPVP((id, pvp) => {
             if (this.game.player.id === id) this.game.pvp = pvp;
             else {
                 const entity = this.entities.get(id);
@@ -976,7 +979,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onShop(function(opcode, info) {
+        this.messages.onShop((opcode, info) => {
             const shopData = info.shopData;
 
             switch (opcode) {
@@ -1012,7 +1015,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onMinigame(function(opcode, info) {
+        this.messages.onMinigame((opcode, info) => {
             switch (opcode) {
                 case Packets.MinigameOpcode.TeamWar:
                     this.teamWar.handle(info);
@@ -1021,7 +1024,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onRegion(function(opcode, info) {
+        this.messages.onRegion((opcode, info) => {
             switch (opcode) {
                 case Packets.RegionOpcode.Render:
                     this.map.synchronize(info);
@@ -1050,7 +1053,7 @@ export default class Connection {
             this.renderer.updateAnimatedTiles();
         });
 
-        this.messages.onOverlay(function(opcode, info) {
+        this.messages.onOverlay((opcode, info) => {
             switch (opcode) {
                 case Packets.OverlayOpcode.Set:
                     this.overlays.updateOverlay(info.image);
@@ -1091,7 +1094,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onCamera(function(opcode, info) {
+        this.messages.onCamera((opcode, info) => {
             if (this.game.player.x === 0 || this.game.player.y === 0) {
                 this.socket.send(Packets.Camera);
                 return;
@@ -1135,7 +1138,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onBubble(function(info) {
+        this.messages.onBubble((info) => {
             if (!info.text) {
                 this.bubble.destroy(info.id);
                 return;
@@ -1150,5 +1153,9 @@ export default class Connection {
             );
             this.bubble.setTo(info.info);
         });
+    }
+
+    time(id: any, message: any, time: any, arg3: number) {
+        // throw new Error('Method not implemented.');
     }
 }

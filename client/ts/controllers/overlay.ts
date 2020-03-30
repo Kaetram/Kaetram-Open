@@ -53,7 +53,7 @@ export default class Overlay {
             this.details.html('');
         }
 
-        this.onUpdate(function(entityId, hitPoints) {
+        this.onUpdate((entityId, hitPoints) => {
             if (
                 this.hovering &&
                 this.hovering.id === entityId &&

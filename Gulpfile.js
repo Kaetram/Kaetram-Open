@@ -46,6 +46,7 @@ gulp.task('copy-client', async () =>
             [
                 'client/audio/**/*',
                 'client/css/**/*',
+                'client/data/**/*',
                 'client/fonts/**/*',
                 'client/img/**/*',
                 'client/lib/**',
@@ -69,7 +70,7 @@ gulp.task('build-client', async () => {
         .pipe(tsProject())
         .pipe(buffer())
         .pipe(uglify())
-        .pipe(sourcemaps.write('./'))
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('client-dist'));
 });
 

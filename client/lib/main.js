@@ -8,5 +8,5 @@ require.config({
 });
 
 define(['../js/app.js', 'stacktrace'], function() {
-    require(['client/ts/main'], app => app.load());
+    require(['client/ts/main']);
 });

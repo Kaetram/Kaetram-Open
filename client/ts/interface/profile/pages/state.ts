@@ -5,10 +5,6 @@ import Page from '../page';
 import Packets from '../../../network/packets';
 
 export default class State extends Page {
-    clear() {
-        throw new Error('Method not implemented.');
-    }
-
     game: any;
     player: any;
     name: JQuery<HTMLElement>;
@@ -127,7 +123,7 @@ export default class State extends Page {
             this.getImageFormat(this.getScale(), this.player.boots.string)
         );
 
-        this.forEachSlot(function(slot) {
+        this.forEachSlot((slot) => {
             slot.css('background-size', '600%');
         });
     }
@@ -146,7 +142,7 @@ export default class State extends Page {
     }
 
     forEachSlot(callback) {
-        _.each(this.slots, function(slot) {
+        _.each(this.slots, (slot) => {
             callback(slot);
         });
     }
@@ -154,4 +150,8 @@ export default class State extends Page {
     getScale() {
         return this.game.renderer.getScale();
     }
-};
+
+    clear() {
+        // if (this.activePage) this.activePage.hide();
+    }
+}

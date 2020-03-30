@@ -70,7 +70,7 @@ export default class Map {
             if (this.game.isDebug())
                 console.info('Parsing map with Web Workers...');
 
-            const worker = new Worker('./js/map/mapworker.js');
+            const worker = new Worker('/lib/mapworker.js');
             worker.postMessage(1);
 
             worker.onmessage = (event) => {
@@ -85,7 +85,7 @@ export default class Map {
 
             $.get(
                 'data/maps/map.json',
-                function(data) {
+                (data) => {
                     this.parseMap(data);
                     this.loadCollisions();
                     this.mapLoaded = true;
@@ -132,8 +132,8 @@ export default class Map {
     loadTilesets() {
         if (this.rawTilesets.length < 1) return;
 
-        _.each(this.rawTilesets, function(rawTileset) {
-            this.loadTileset(rawTileset, function(tileset) {
+        _.each(this.rawTilesets, (rawTileset) => {
+            this.loadTileset(rawTileset, (tileset) => {
                 this.tilesets[tileset.index] = tileset;
 
                 if (this.tilesets.length === this.rawTilesets.length)
@@ -402,4 +402,4 @@ export default class Map {
     onReady(callback) {
         this.readyCallback = callback;
     }
-};
+}

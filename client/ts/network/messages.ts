@@ -110,7 +110,7 @@ export default class Messages {
     }
 
     handleBulkData(data) {
-        _.each(data, function(message) {
+        _.each(data, (message) => {
             this.handleData(message);
         });
     }

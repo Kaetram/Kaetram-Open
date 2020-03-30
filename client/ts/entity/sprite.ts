@@ -137,7 +137,7 @@ export default class Sprite {
                 data[i + 1] = data[i + 2] = 75;
             }
 
-            spriteData.data = data;
+            spriteData.data.set(data);
 
             context.putImageData(spriteData, 0, 0);
 

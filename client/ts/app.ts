@@ -161,6 +161,7 @@ export default class App {
 
         this.config = config;
 
+
         $(document).bind('keydown', (e) => {
             if (e.which === Modules.Keys.Enter) return false;
         });
@@ -499,12 +500,12 @@ export default class App {
 
     toggleTyping(state) {
         if (this.loginFields)
-            _.each(this.loginFields, function(field) {
+            _.each(this.loginFields, (field) => {
                 field.prop('readonly', state);
             });
 
         if (this.registerFields)
-            _.each(this.registerFields, function(field) {
+            _.each(this.registerFields, (field) => {
                 field.prop('readOnly', state);
             });
     }
@@ -536,7 +537,4 @@ export default class App {
             : 'landscape';
     }
 
-    onReady(callback) {
-        this.readyCallback = callback;
-    }
 }

@@ -71,10 +71,8 @@ export default class Game {
 
         this.lastTime = new Date().getTime();
 
-        // this.loadRenderer();
-        // this.loadControllers();
-
-        console.log(2, this);
+        this.loadRenderer();
+        this.loadControllers();
     }
 
     start() {
@@ -147,7 +145,6 @@ export default class Game {
     }
 
     loadControllers() {
-        console.log(1, this);
         const hasWorker = this.app.hasWorker();
 
         this.app.sendStatus('Loading local storage');
@@ -290,7 +287,7 @@ export default class Game {
             return path;
 
         if (ignores)
-            _.each(ignores, function(entity) {
+            _.each(ignores, (entity) => {
                 this.pathfinder.ignoreEntity(entity);
             });
 
@@ -391,7 +388,7 @@ export default class Game {
         const items = this.entities.grids.itemGrid[y][x];
 
         if (_.size(items) > 0) {
-            _.each(items, function(item: any) {
+            _.each(items, (item: any) => {
                 if (item.stackable) return item;
             });
 

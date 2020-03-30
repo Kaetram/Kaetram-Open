@@ -217,7 +217,7 @@ export default class Entities {
                 player.setSprite(this.getSprite(info.armour.string));
                 player.idle();
 
-                _.each(equipments, function(equipment) {
+                _.each(equipments, (equipment) => {
                     player.setEquipment(
                         equipment.type,
                         equipment.name,
@@ -292,21 +292,22 @@ export default class Entities {
     clean(ids) {
         ids = ids[0];
 
-        _.each(this.entities, function(entity) {
+        _.each(this.entities, (entity) => {
             if (ids) {
                 if (
                     ids.indexOf(parseInt(entity.id)) < 0 &&
                     entity.id !== this.game.player.id
                 )
                     this.removeEntity(entity);
-            } else if (entity.id !== this.game.player.id) this.removeEntity(entity);
+            } else if (entity.id !== this.game.player.id)
+                this.removeEntity(entity);
         });
 
         this.grids.resetPathingGrid();
     }
 
     clearPlayers(exception) {
-        _.each(this.entities, function(entity) {
+        _.each(this.entities, (entity) => {
             if (entity.id !== exception.id && entity.type === 'player')
                 this.removeEntity(entity);
         });
@@ -389,7 +390,7 @@ export default class Entities {
     }
 
     forEachEntity(callback) {
-        _.each(this.entities, function(entity) {
+        _.each(this.entities, (entity) => {
             callback(entity);
         });
     }
@@ -399,7 +400,7 @@ export default class Entities {
             for (let j = y - radius, maxJ = y + radius; j <= maxJ; j++) {
                 if (this.map.isOutOfBounds(i, j)) continue;
 
-                _.each(this.grids.renderingGrid[j][i], function(entity) {
+                _.each(this.grids.renderingGrid[j][i], (entity) => {
                     callback(entity);
                 });
             }

@@ -43,7 +43,7 @@ export default class Pointers {
     }
 
     resize() {
-        _.each(this.pointers, function(pointer) {
+        _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
                 case Modules.Pointers.Relative:
                     const scale = this.getScale();
@@ -72,7 +72,7 @@ export default class Pointers {
     }
 
     clean() {
-        _.each(this.pointers, function(pointer) {
+        _.each(this.pointers, (pointer) => {
             pointer.destroy();
         });
 
@@ -174,7 +174,7 @@ export default class Pointers {
     }
 
     update() {
-        _.each(this.pointers, function(pointer) {
+        _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
                 case Modules.Pointers.Entity:
                     const entity = this.game.entities.get(pointer.id);

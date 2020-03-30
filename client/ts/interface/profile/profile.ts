@@ -86,13 +86,13 @@ export default class Profile {
     }
 
     update() {
-        _.each(this.pages, function(page) {
+        _.each(this.pages, (page) => {
             page.update();
         });
     }
 
     resize() {
-        _.each(this.pages, function(page) {
+        _.each(this.pages, (page) => {
             page.resize();
         });
     }
@@ -147,4 +147,4 @@ export default class Profile {
     clear() {
         if (this.activePage) this.activePage.hide();
     }
-};
+}

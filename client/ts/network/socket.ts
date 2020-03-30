@@ -68,7 +68,7 @@ export default class Socket {
             });
         });
 
-        this.connection.on('message', function(message) {
+        this.connection.on('message', (message) => {
             const actualMessage = message.message ? message.message : message;
 
             this.receive(actualMessage);

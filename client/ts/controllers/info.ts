@@ -117,17 +117,17 @@ export default class Info {
     addInfo(info) {
         this.infos[info.id] = info;
 
-        info.onDestroy(function(id) {
+        info.onDestroy((id) => {
             this.destroyQueue.add(id);
         });
     }
 
     update(time) {
-        this.forEachInfo(function(info) {
+        this.forEachInfo((info) => {
             info.update(time);
         });
 
-        this.destroyQueue.forEachQueue(function(id) {
+        this.destroyQueue.forEachQueue((id) => {
             delete this.infos[id];
         });
 
@@ -143,7 +143,7 @@ export default class Info {
     }
 
     forEachInfo(callback) {
-        _.each(this.infos, function(info) {
+        _.each(this.infos, (info) => {
             callback(info);
         });
     }

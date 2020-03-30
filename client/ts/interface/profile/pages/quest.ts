@@ -40,7 +40,7 @@ export default class Quest extends Page {
     loadAchievements(achievements) {
         this.achievementsLength = achievements.length;
 
-        _.each(achievements, function(achievement: any) {
+        _.each(achievements, (achievement: any) => {
             const item = this.getItem(false, achievement.id);
             const name = this.getName(false, achievement.id);
 
@@ -82,7 +82,7 @@ export default class Quest extends Page {
     loadQuests(quests) {
         this.questsLength = quests.length;
 
-        _.each(quests, function(quest: any) {
+        _.each(quests, (quest: any) => {
             const item = this.getItem(true, quest.id);
             const name = this.getName(true, quest.id);
 

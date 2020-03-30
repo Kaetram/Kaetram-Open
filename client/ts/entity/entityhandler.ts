@@ -17,7 +17,7 @@ export default class EntityHandler {
         if (!this.entity || !this.game) return;
 
         if (this.isCharacter()) {
-            this.entity.onRequestPath(function(x, y) {
+            this.entity.onRequestPath((x, y) => {
                 const ignored = [this.entity];
 
                 return this.game.findPath(this.entity, x, y, ignored);
@@ -30,7 +30,7 @@ export default class EntityHandler {
             this.entity.onStep(() => {
                 this.entities.registerDuality(this.entity);
 
-                this.entity.forEachAttacker(function(attacker) {
+                this.entity.forEachAttacker((attacker) => {
                     /**
                      * This is the client-sided logic for representing PVP
                      * fights. It basically adds another layer of movement

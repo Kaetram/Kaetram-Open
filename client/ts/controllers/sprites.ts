@@ -19,7 +19,7 @@ export default class Sprites {
 
         this.sparksAnimation = null;
 
-        $.getJSON('data/sprites.json', function(json) {
+        $.getJSON('data/sprites.json', (json) => {
             this.load(json);
         });
 
@@ -27,7 +27,7 @@ export default class Sprites {
     }
 
     load(spriteData) {
-        _.each(spriteData, function(sprite: Sprite) {
+        _.each(spriteData, (sprite: Sprite) => {
             this.sprites[sprite.id] = new Sprite(sprite, this.renderer.scale);
         });
 
@@ -43,7 +43,7 @@ export default class Sprites {
     }
 
     updateSprites() {
-        _.each(this.sprites, function(sprite) {
+        _.each(this.sprites, (sprite) => {
             sprite.update(this.renderer.getScale());
         });
 

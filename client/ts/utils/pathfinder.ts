@@ -70,7 +70,7 @@ export default class Pathfinder {
     applyIgnore(ignored) {
         let x, y, g;
 
-        _.each(this.ignores, function(entity) {
+        _.each(this.ignores, (entity) => {
             x = entity.hasPath() ? entity.nextGridX : entity.gridX;
             y = entity.hasPath() ? entity.nextGridY : entity.gridY;
 

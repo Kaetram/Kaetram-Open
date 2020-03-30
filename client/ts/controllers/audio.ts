@@ -223,7 +223,7 @@ export default class Audio {
     fadeSongOut() {
         if (!this.song) return;
 
-        this.fadeOut(this.song, function(song) {
+        this.fadeOut(this.song, (song) => {
             this.reset(song);
         });
 
@@ -267,7 +267,7 @@ export default class Audio {
     get(name) {
         if (!this.audibles[name]) return null;
 
-        let audible: any = _.detect(this.audibles[name], function(audible) {
+        let audible: any = _.detect(this.audibles[name], (audible) => {
             return audible.ended || audible.paused;
         });
 

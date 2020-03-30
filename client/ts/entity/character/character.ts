@@ -53,6 +53,8 @@ export default class Character extends Entity {
     forced: boolean;
     teleporting: any;
     weapon: any;
+    secondStepCallback: Function;
+
     constructor(id, kind) {
         super(id, kind);
 
@@ -355,10 +357,6 @@ export default class Character extends Entity {
         }
     }
 
-    secondStepCallback() {
-        throw new Error('Method not implemented.');
-    }
-
     updateMovement() {
         const step = this.step;
 
@@ -486,7 +484,7 @@ export default class Character extends Entity {
     }
 
     forEachAttacker(callback) {
-        _.each(this.attackers, function(attacker) {
+        _.each(this.attackers, (attacker) => {
             callback(attacker);
         });
     }

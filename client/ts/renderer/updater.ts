@@ -35,7 +35,7 @@ export default class Updater {
     }
 
     updateEntities() {
-        this.game.entities.forEachEntity(function(entity) {
+        this.game.entities.forEachEntity((entity) => {
             if (!entity) return;
 
             if (entity.spriteLoaded) {
@@ -56,7 +56,7 @@ export default class Updater {
                             case Modules.Orientation.Left:
                                 entity.movement.start(
                                     this.game.time,
-                                    function(x) {
+                                    (x) => {
                                         entity.x = x;
                                         entity.moved();
                                     },
@@ -75,7 +75,7 @@ export default class Updater {
                             case Modules.Orientation.Right:
                                 entity.movement.start(
                                     this.game.time,
-                                    function(x) {
+                                    (x) => {
                                         entity.x = x;
                                         entity.moved();
                                     },
@@ -94,7 +94,7 @@ export default class Updater {
                             case Modules.Orientation.Up:
                                 entity.movement.start(
                                     this.game.time,
-                                    function(y) {
+                                    (y) => {
                                         entity.y = y;
                                         entity.moved();
                                     },
@@ -113,7 +113,7 @@ export default class Updater {
                             case Modules.Orientation.Down:
                                 entity.movement.start(
                                     this.game.time,
-                                    function(y) {
+                                    (y) => {
                                         entity.y = y;
                                         entity.moved();
                                     },

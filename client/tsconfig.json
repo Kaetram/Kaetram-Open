@@ -3,8 +3,9 @@
         "allowJs": true,
         "module": "amd",
         "target": "es3",
+        "baseUrl": "./",
         "rootDir": "./",
-        "sourceRoot": "../",
+        "sourceRoot": "./",
         "outFile": "../client-dist/js/app.js",
         "inlineSourceMap": true,
         "alwaysStrict": true,
@@ -13,9 +14,13 @@
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "allowUmdGlobalAccess": true,
-        "typeRoots": ["./typings/**"]
+        "typeRoots": ["typings"]
     },
     "files": ["./ts/main.ts"],
     "include": ["./**/*.ts"],
-    "exclude": ["../server/**/*.ts"]
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "../server/**"
+    ]
 }

@@ -28,4 +28,8 @@ export default class Page {
 
         return 'url("img/' + scale + '/item-' + name + '.png")';
     }
-};
+
+    update() {
+        // throw new Error('Method not implemented.');
+    }
+}

@@ -63,7 +63,7 @@ export default class Bubble {
     }
 
     update(time) {
-        _.each(this.bubbles, function(bubble) {
+        _.each(this.bubbles, (bubble) => {
             const entity = this.game.entities.get(bubble.id);
 
             if (entity) this.setTo(entity);
@@ -84,7 +84,7 @@ export default class Bubble {
     }
 
     clean() {
-        _.each(this.bubbles, function(bubble) {
+        _.each(this.bubbles, (bubble) => {
             bubble.destroy();
         });
 
