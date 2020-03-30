@@ -40,6 +40,13 @@ Config.gver = 1; // Game version
 Config.administrators = []; // i.e. ['user1', 'user2', 'user3'] (case-insensitive)
 Config.moderators = [];
 
+// Discord Configuration
+Config.discordEnabled = false;
+Config.discordServerId = '';
+Config.discordBotToken = '';
+Config.discordWebhookId = '';
+Config.discordWebhookToken = '';
+
 // Debugging
 Config.debug = false;
 Config.debugLevel = 'all';

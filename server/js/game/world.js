@@ -1,8 +1,9 @@
 /* global module */
 
-let Player = require('./entity/character/player/player'),
+let _ = require('underscore'),
+    Discord = require('../network/discord'),
+    Player = require('./entity/character/player/player'),
     Map = require('../map/map'),
-    _ = require('underscore'),
     Messages = require('../network/messages'),
     Utils = require('../util/utils'),
     Mobs = require('../util/mobs'),
@@ -93,6 +94,7 @@ class World {
         self.api = new API(self);
         self.shops = new Shops(self);
         self.region = new Region(self);
+        self.discord = new Discord(self);
         self.network = new Network(self);
         self.minigames = new Minigames(self);
         self.guilds = new Guilds(self);
@@ -727,6 +729,20 @@ class World {
             chest.respawn();
         else
             delete self.chests[chest.instance];
+    }
+
+    globalMessage(source, message, colour, isGlobal, withBubble) {
+        let self = this;
+
+        self.push(Packets.PushOpcode.Broadcast, {
+            message: new Messages.Chat({
+                name: source,
+                text: message,
+                colour: colour,
+                isGlobal: isGlobal,
+                withBubble: withBubble
+            })
+        });
     }
 
     isOnline(username) {

@@ -76,15 +76,12 @@ class Commands {
 
             case 'global':
 
-                self.world.push(Packets.PushOpcode.Broadcast, {
-                    message: new Messages.Chat({
-                        name: self.player.username,
-                        text: blocks.join(' '),
-                        isGlobal: true,
-                        withBubble: false,
-                        colour: 'rgba(191, 191, 63, 1.0)'
-                    })
-                });
+                self.world.globalMessage(
+                    self.player.username,
+                    blocks.join(' '),
+                    'rgba(191, 191, 63, 1.0)',
+                    true,
+                    false);
 
                 return;
 
