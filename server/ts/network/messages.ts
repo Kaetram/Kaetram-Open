@@ -63,6 +63,7 @@ export default {
 
     Equipment: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info) {
@@ -77,6 +78,7 @@ export default {
 
     Movement: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info?) {
@@ -115,6 +117,7 @@ export default {
 
     Animation: class {
         id: any;
+
         info: any;
 
         constructor(id, data) {
@@ -127,9 +130,10 @@ export default {
         }
     },
 
-    // TODO - Revise this when going over combat.
+    // TODO: Revise this when going over combat.
     Combat: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info) {
@@ -144,6 +148,7 @@ export default {
 
     Projectile: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, data) {
@@ -223,6 +228,7 @@ export default {
 
     Inventory: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, data) {
@@ -237,6 +243,7 @@ export default {
 
     Bank: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, data) {
@@ -251,6 +258,7 @@ export default {
 
     Ability: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, data) {
@@ -265,6 +273,7 @@ export default {
 
     Quest: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, data) {
@@ -279,6 +288,7 @@ export default {
 
     Notification: class {
         opcode: any;
+
         message: any;
 
         constructor(opcode, message) {
@@ -353,6 +363,7 @@ export default {
 
     NPC: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info) {
@@ -367,7 +378,9 @@ export default {
 
     Respawn: class {
         instance: any;
+
         x: any;
+
         y: any;
 
         constructor(instance, x, y) {
@@ -383,6 +396,7 @@ export default {
 
     Enchant: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info) {
@@ -397,6 +411,7 @@ export default {
 
     Guild: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info) {
@@ -411,6 +426,7 @@ export default {
 
     Pointer: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info) {
@@ -425,6 +441,7 @@ export default {
 
     PVP: class {
         id: any;
+
         pvp: any;
 
         constructor(id, pvp) {
@@ -439,6 +456,7 @@ export default {
 
     Shop: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info) {
@@ -453,6 +471,7 @@ export default {
 
     Minigame: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info) {
@@ -467,6 +486,7 @@ export default {
 
     Region: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info, force?) {
@@ -481,6 +501,7 @@ export default {
 
     Overlay: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info?) {
@@ -495,6 +516,7 @@ export default {
 
     Camera: class {
         opcode: any;
+
         info: any;
 
         constructor(opcode, info?) {

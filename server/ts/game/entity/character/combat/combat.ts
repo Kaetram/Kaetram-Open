@@ -1,32 +1,48 @@
-import _ from 'underscore';
-import Hit from './hit';
-import CombatQueue from './combatqueue';
-import Utils from '../../../../util/utils';
+import * as _ from 'underscore';
+import Messages from '../../../../network/messages';
+import Packets from '../../../../network/packets';
 import Formulas from '../../../../util/formulas';
 import Modules from '../../../../util/modules';
-import Messages from '../../../../network/messages';
+import Utils from '../../../../util/utils';
 import Character from '../character';
-import Packets from '../../../../network/packets';
+import CombatQueue from './combatqueue';
+import Hit from './hit';
 
+/**
+ *
+ */
 class Combat {
     public attackers: any;
-    public character: any;
-    public retaliate: any;
-    public world: any;
-    public forgetCallback: any;
-    public started: any;
-    public lastAction: any;
-    public attackLoop: any;
-    public followLoop: any;
-    public checkLoop: any;
-    public queue: any;
-    public lastActionThreshold: any;
-    public lastHit: any;
-    attacking: boolean;
-    first: boolean;
-    cleanTimeout: any;
 
-    constructor(character) {
+    public retaliate: any;
+
+    public world: any;
+
+    public forgetCallback: any;
+
+    public started: any;
+
+    public lastAction: any;
+
+    public attackLoop: any;
+
+    public followLoop: any;
+
+    public checkLoop: any;
+
+    public queue: any;
+
+    public lastActionThreshold: any;
+
+    public lastHit: any;
+
+    public attacking: boolean;
+
+    public first: boolean;
+
+    public cleanTimeout: any;
+
+    constructor(public character: Character) {
         this.character = character;
         this.world = null;
 
@@ -210,9 +226,7 @@ class Combat {
     }
 
     dealAoE(radius, hasTerror) {
-        /**
-         * TODO - Find a way to implement special effects without hardcoding them.
-         */
+        // TODO: Find a way to implement special effects without hard-coding them.
 
         if (!this.world) return;
 
@@ -220,7 +234,7 @@ class Combat {
             .getGrids()
             .getSurroundingEntities(this.character, radius);
 
-        _.each(entities, entity => {
+        _.each(entities, (entity) => {
             const hitData = new Hit(
                 Modules.Hits.Damage,
                 Formulas.getAoEDamage(this.character, entity)
@@ -339,7 +353,7 @@ class Combat {
         let closest = null;
         const lowestDistance = 100;
 
-        this.forEachAttacker(attacker => {
+        this.forEachAttacker((attacker) => {
             const distance = this.character.getDistance(attacker);
 
             if (distance < lowestDistance) closest = attacker;
@@ -448,7 +462,7 @@ class Combat {
     }
 
     forEachAttacker(callback) {
-        _.each(this.attackers, attacker => {
+        _.each(this.attackers, (attacker) => {
             callback(attacker);
         });
     }
@@ -461,7 +475,7 @@ class Combat {
         if (!this.character.hasTarget() || !this.isMob()) return;
 
         const spawnPoint = this.character.spawnLocation;
-        const target = this.character.target;
+        const { target } = this.character;
 
         return (
             Utils.getDistance(

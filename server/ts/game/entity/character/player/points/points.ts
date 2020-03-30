@@ -1,6 +1,8 @@
 class Points {
     public points: any;
+
     public maxPoints: any;
+
     public healCallback: any;
 
     constructor(points, maxPoints) {

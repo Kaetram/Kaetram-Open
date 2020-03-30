@@ -1,18 +1,15 @@
 import MongoDB from './mongodb/mongodb';
-import config from '../../config.json';
+import config from '../../config';
 
 /**
- *
- *
- * @class Database
+ * Loads and initializes the database.
  */
 class Database {
-    public database: any;
+    public database: MongoDB;
 
     /**
      * Creates an instance of Database.
-     * @param {string} databaseType
-     * @memberof Database
+     * @param databaseType - The name of the library to use for the database.
      */
     constructor(public databaseType: string) {
         this.database = null;
@@ -31,7 +28,7 @@ class Database {
 
             default:
                 console.error(
-                    'The database ' + this.databaseType + ' could not be found.'
+                    `The database ${this.databaseType} could not be found.`
                 );
                 break;
         }

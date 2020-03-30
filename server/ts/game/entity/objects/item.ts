@@ -1,23 +1,43 @@
 import Entity from '../entity';
 
+/**
+ *
+ */
 class Item extends Entity {
     public id: any;
+
     public count: any;
+
     public ability: any;
+
     public abilityLevel: any;
+
     public respawnCallback: any;
+
     public blinkCallback: any;
+
     public despawnCallback: any;
+
     public blinkTimeout: any;
+
     public despawnTimeout: any;
+
     public static: any;
+
     public despawnDuration: any;
+
     public blinkDelay: any;
+
     public respawnTime: any;
+
     dropped: boolean;
+
     region: any;
+
     shard: boolean;
+
     tier: number;
+
     despawnDelay: number;
 
     constructor(id, instance, x, y, ability, abilityLevel) {

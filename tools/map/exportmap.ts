@@ -1,20 +1,18 @@
 #!/usr/bin/env node
 
-/** @format */
-
 import fs from 'fs';
 import file from '../file';
 import processMap from './processmap';
 
-let source  = process.argv[2];
+let source = process.argv[2];
 
 function parseClient(data: any, destination: string) {
-    const processedMap = processMap(data, { mode: 'client' }),
-        map = JSON.stringify(processedMap);
+    const processedMap = processMap(data, { mode: 'client' });
+    const map = JSON.stringify(processedMap);
 
-    fs.writeFile(destination + '.json', map, function(err) {
+    fs.writeFile(`${destination}.json`, map, (err) => {
         if (err) console.error(JSON.stringify(err));
-        else console.info('[Client] Map saved at: ' + destination + '.json');
+        else console.info(`[Client] Map saved at: ${destination}.json`);
     });
 
     return processedMap;
@@ -27,16 +25,16 @@ function parseInfo(data: any, destination: string, clientMap: { depth: any }) {
 
     let map = JSON.stringify(mapData);
 
-    fs.writeFile(destination + '.json', map, function(err) {
+    fs.writeFile(`${destination}.json`, map, (err) => {
         if (err) console.error(JSON.stringify(err));
-        else console.info('[Client] Map saved at: ' + destination + '.json');
+        else console.info(`[Client] Map saved at: ${destination}.json`);
     });
 
-    map = 'let mapData = ' + map;
+    map = `let mapData = ${map}`;
 
-    fs.writeFile(destination + '.js', map, function(err) {
+    fs.writeFile(`${destination}.js`, map, (err) => {
         if (err) console.error(JSON.stringify(err));
-        else console.info('[Client] Map saved at: ' + destination + '.js');
+        else console.info(`[Client] Map saved at: ${destination}.js`);
     });
 }
 
@@ -47,9 +45,9 @@ function parseServer(data: any, destination: string) {
         })
     );
 
-    fs.writeFile(destination + '.json', map, function(err) {
+    fs.writeFile(`${destination}.json`, map, (err) => {
         if (err) console.error(JSON.stringify(err));
-        else console.info('[Server] Map saved at: ' + destination + '.json');
+        else console.info(`[Server] Map saved at: ${destination}.json`);
     });
 }
 
@@ -61,17 +59,18 @@ function onMap(data: any) {
 }
 
 function getMap() {
-    if (!source)
-        source = 'data/map.json';
+    if (!source) source = 'data/map.json';
 
-    file.exists(source, function(exists: any) {
+    file.exists(source, (exists: any) => {
         if (!exists) {
-            console.error('The file: ' + source + ' could not be found.');
+            console.error(`The file: ${source} could not be found.`);
             return;
         }
 
-        fs.readFile(source, function(error, file) {
-            onMap(JSON.parse(file.toString()));
+        fs.readFile(source, (err, map) => {
+            if (err) throw err;
+
+            onMap(JSON.parse(map.toString()));
         });
     });
 }

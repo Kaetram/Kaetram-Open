@@ -2,9 +2,14 @@ import Combat from '../../ts/game/entity/character/combat/combat';
 import Hit from '../../ts/game/entity/character/combat/hit';
 import Modules from '../../ts/util/modules';
 
+/**
+ *
+ */
 class Golem extends Combat {
     public updated: any;
+
     public character: any;
+
     achievementId: number;
 
     /**
@@ -26,7 +31,7 @@ class Golem extends Combat {
         });
 
         this.character.onDeath(() => {
-            this.forEachAttacker(attacker => {
+            this.forEachAttacker((attacker) => {
                 attacker.finishAchievement(5);
             });
         });

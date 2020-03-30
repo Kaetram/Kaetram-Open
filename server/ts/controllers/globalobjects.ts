@@ -1,6 +1,9 @@
 import Objects from '../util/objects';
 import World from '../game/world';
 
+/**
+ *
+ */
 class GlobalObjects {
     constructor(public world: World) {}
 

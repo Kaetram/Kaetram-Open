@@ -1,20 +1,36 @@
 import Quest from '../quest';
 import Packets from '../../../../../../network/packets';
 import Messages from '../../../../../../network/messages';
+import Player from '../../player';
 
+/**
+ *
+ */
 class Introduction extends Quest {
-    public player: any;
+    public player: Player;
+
     public finishedCallback: any;
+
     public update: any;
+
     public updatePointers: any;
+
     public stage: any;
+
     public onNPCTalk: any;
+
     public getConversation: any;
+
     public lastNPC: any;
+
     public getTask: any;
+
     public data: any;
+
     public clearPointers: any;
+
     public resetTalkIndex: any;
+
     public id: any;
 
     constructor(player, data) {
@@ -45,7 +61,7 @@ class Introduction extends Quest {
     }
 
     loadCallbacks() {
-        this.onNPCTalk(npc => {
+        this.onNPCTalk((npc) => {
             const conversation = this.getConversation(npc.id);
 
             this.lastNPC = npc;
@@ -79,19 +95,19 @@ class Introduction extends Quest {
             }
         });
 
-        this.player.onInventory(isOpen => {
+        this.player.onInventory((isOpen) => {
             if (isOpen && this.stage === 1) this.progress('click');
         });
 
-        this.player.onProfile(isOpen => {
+        this.player.onProfile((isOpen) => {
             if (isOpen && this.stage === 3) this.progress('click');
         });
 
-        this.player.onWarp(isOpen => {
+        this.player.onWarp((isOpen) => {
             if (isOpen && this.stage === 5) this.progress('click');
         });
 
-        this.player.onKill(character => {
+        this.player.onKill((character) => {
             if (this.data.kill[this.stage] === character.id)
                 this.progress('kill');
         });

@@ -1,14 +1,20 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Items from '../../../../util/items';
 import Messages from '../../../../network/messages';
 import Packets from '../../../../network/packets';
 import Utils from '../../../../util/utils';
 import Modules from '../../../../util/modules';
+import Player from './player';
 
+/**
+ *
+ */
 class Enchant {
     public selectedItem: any;
+
     public selectedShards: any;
-    public player: any;
+
+    public player: Player;
 
     /**
      * Tier 1 - Damage/Armour boost (1-5%)

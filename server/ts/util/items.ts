@@ -5,31 +5,31 @@ export default {
 
     Plugins: {},
 
-    getData(name) {
+    getData(name: string) {
         if (name in this.Data) return this.Data[name];
 
         return 'null';
     },
 
-    hasPlugin(id) {
+    hasPlugin(id: number) {
         if (id in this.Plugins) return true;
 
         return false;
     },
 
-    getPlugin(id) {
+    getPlugin(id: number) {
         if (this.hasPlugin(id)) return this.Plugins[id];
 
         return null;
     },
 
-    idToString(id) {
+    idToString(id: number) {
         if (id in this.Ids) return this.Ids[id].key;
 
         return 'null';
     },
 
-    idToName(id) {
+    idToName(id: number) {
         if (id in this.Ids) return this.Ids[id].name;
 
         return 'null';
@@ -37,7 +37,7 @@ export default {
 
     stringToId(name) {
         if (name in this.Data) return this.Data[name].id;
-        else console.error('Item: ' + name + ' not found in the database.');
+        console.error(`Item: ${name} not found in the database.`);
 
         return 'null';
     },
@@ -133,52 +133,52 @@ export default {
         return false;
     },
 
-    getType(id) {
+    getType(id: number) {
         if (id in this.Ids) return this.Ids[id].type;
 
         return null;
     },
 
-    isStackable(id) {
+    isStackable(id: number) {
         if (id in this.Ids) return this.Ids[id].stackable;
 
         return false;
     },
 
-    isEdible(id) {
+    isEdible(id: number) {
         if (id in this.Ids) return this.Ids[id].edible;
 
         return false;
     },
 
-    getCustomData(id) {
+    getCustomData(id: number) {
         if (id in this.Ids) return this.Ids[id].customData;
 
         return null;
     },
 
-    maxStackSize(id) {
+    maxStackSize(id: number) {
         if (id in this.Ids) return this.Ids[id].maxStackSize;
 
         return false;
     },
 
-    isShard(id) {
+    isShard(id: number) {
         return (
             id === 253 || id === 254 || id === 255 || id === 256 || id === 257
         );
     },
 
-    isEnchantable(id) {
+    isEnchantable(id: number) {
         return this.getType(id) !== 'object' && this.getType(id) !== 'craft';
     },
 
-    getShardTier(id) {
+    getShardTier(id: number) {
         if (id === 253) return 1;
-        else if (id === 254) return 2;
-        else if (id === 255) return 3;
-        else if (id === 256) return 4;
-        else if (id === 257) return 5;
+        if (id === 254) return 2;
+        if (id === 255) return 3;
+        if (id === 256) return 4;
+        if (id === 257) return 5;
     },
 
     isEquippable(string) {
@@ -191,7 +191,7 @@ export default {
         );
     },
 
-    healsHealth(id) {
+    healsHealth(id: number) {
         if (id in this.Ids) return this.Ids[id].healsHealth > 0;
 
         return false;
@@ -203,17 +203,17 @@ export default {
         return null;
     },
 
-    healsMana(id) {
+    healsMana(id: number) {
         if (id in this.Ids) return this.Ids[id].healsMana > 0;
     },
 
-    getHealingFactor(id) {
+    getHealingFactor(id: number) {
         if (id in this.Ids) return this.Ids[id].healsHealth;
 
         return 0;
     },
 
-    getManaFactor(id) {
+    getManaFactor(id: number) {
         if (id in this.Ids) return this.Ids[id].healsMana;
 
         return 0;

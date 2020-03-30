@@ -1,6 +1,9 @@
 import Quest from '../quest';
 import Packets from '../../../../../../network/packets';
 
+/**
+ *
+ */
 class Thelie extends Quest {
     constructor(player, data) {
         super(player, data);

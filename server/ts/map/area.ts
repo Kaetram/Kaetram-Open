@@ -1,22 +1,40 @@
 class Area {
     public x: any;
+
     public y: any;
+
     public width: any;
+
     public height: any;
+
     public maxEntities: any;
+
     public emptyCallback: any;
+
     public spawnCallback: any;
+
     public entities: any;
+
     public spawnDelay: any;
+
     public achievement: any;
+
     id: any;
+
     items: any[];
+
     hasRespawned: boolean;
+
     chest: any;
+
     cX: number;
+
     cY: number;
+
     darkness: any;
+
     type: any;
+
     fog: any;
 
     constructor(id, x, y, width, height) {

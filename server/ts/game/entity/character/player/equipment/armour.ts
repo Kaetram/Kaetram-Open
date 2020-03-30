@@ -2,8 +2,12 @@ import Equipment from './equipment';
 import Items from '../../../../../util/items';
 import Modules from '../../../../../util/modules';
 
+/**
+ *
+ */
 class Armour extends Equipment {
     public defense: any;
+
     public ability: any;
 
     constructor(name, id, count, ability, abilityLevel) {

@@ -1,15 +1,25 @@
+import * as _ from 'underscore';
 import Messages from '../../../../../network/messages';
 import Packets from '../../../../../network/packets';
 import Utils from '../../../../../util/utils';
-import _ from 'underscore';
+import Player from '../player';
 
+/**
+ *
+ */
 class Quest {
-    public player: any;
+    public player: Player;
+
     public npcTalkCallback: any;
+
     public data: any;
+
     public stage: any;
+
     public id: any;
+
     public name: any;
+
     public description: any;
 
     constructor(player, data) {

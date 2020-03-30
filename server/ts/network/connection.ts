@@ -1,8 +1,12 @@
 class Connection {
     public listenCallback: any;
+
     public closeCallback: any;
+
     public socket: any;
+
     id: any;
+
     _server: any;
 
     constructor(id, connection, server) {
@@ -10,12 +14,12 @@ class Connection {
         this.socket = connection;
         this._server = server;
 
-        this.socket.on('message', message => {
+        this.socket.on('message', (message) => {
             if (this.listenCallback) this.listenCallback(JSON.parse(message));
         });
 
         this.socket.on('disconnect', () => {
-            console.info('Closed socket: ' + this.socket.conn.remoteAddress);
+            console.info(`Closed socket: ${this.socket.conn.remoteAddress}`);
 
             if (this.closeCallback) this.closeCallback();
 
@@ -40,7 +44,7 @@ class Connection {
     }
 
     close(reason?) {
-        if (reason) console.info('[Connection] Closing - ' + reason);
+        if (reason) console.info(`[Connection] Closing - ${reason}`);
 
         this.socket.conn.close();
     }

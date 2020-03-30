@@ -1,17 +1,27 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Combat from '../../ts/game/entity/character/combat/combat';
 import Messages from '../../ts/network/messages';
 import Packets from '../../ts/network/packets';
 import Utils from '../../ts/util/utils';
 
+/**
+ *
+ */
 class Tenebris extends Combat {
     public illusions: any[];
+
     public lastIllusion: any;
+
     public character: any;
+
     public firstIllusionKilled: any;
+
     public world: any;
+
     public respawnDelay: any;
+
     public isAttacked: any;
+
     public attackers: any;
 
     constructor(character) {
@@ -68,7 +78,7 @@ class Tenebris extends Combat {
             this.world.spawnMob(105, this.character.x - 1, this.character.y + 1)
         );
 
-        _.each(this.illusions, illusion => {
+        _.each(this.illusions, (illusion) => {
             illusion.onDeath(() => {
                 if (this.isLast()) this.lastIllusion = new Date().getTime();
 
@@ -102,7 +112,7 @@ class Tenebris extends Combat {
     beginIllusionAttack() {
         if (!this.hasIllusions()) return;
 
-        _.each(this.illusions, illusion => {
+        _.each(this.illusions, (illusion) => {
             const target = this.getRandomTarget();
 
             if (!illusion.hasTarget && target) illusion.combat.begin(target);

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Messages from '../../../../network/messages';
 import Modules from '../../../../util/modules';
 import Packets from '../../../../network/packets';
@@ -7,12 +7,20 @@ import Hit from '../combat/hit';
 import Shops from '../../../../util/shops';
 import Entity from '../../entity';
 import Area from '../../../../map/area';
+import Player from './player';
 
+/**
+ *
+ */
 class Handler {
-    public player: any;
+    public player: Player;
+
     public updateInterval: any;
+
     public updateTicks: any;
+
     public world: any;
+
     public map: any;
 
     constructor(player) {
@@ -69,7 +77,7 @@ class Handler {
                 this.player.combat.begin(attacker);
         });
 
-        this.player.onKill(character => {
+        this.player.onKill((character) => {
             if (this.player.quests.isAchievementMob(character)) {
                 const achievement = this.player.quests.getAchievementByMob(
                     character
@@ -97,7 +105,7 @@ class Handler {
             this.world.removePlayer(this.player);
         });
 
-        this.player.onTalkToNPC(npc => {
+        this.player.onTalkToNPC((npc) => {
             if (this.player.quests.isQuestNPC(npc)) {
                 this.player.quests.getQuestByNPC(npc).triggerTalk(npc);
 
@@ -153,7 +161,7 @@ class Handler {
             }
         });
 
-        this.player.onPoison(info => {
+        this.player.onPoison((info) => {
             this.player.sync();
 
             if (info) this.player.notify('You have been poisoned.');
@@ -172,7 +180,7 @@ class Handler {
 
             if (this.player.cheatScore > 10) this.player.timeout();
 
-            console.debug('Cheat score - ' + this.player.cheatScore);
+            console.debug(`Cheat score - ${this.player.cheatScore}`);
         });
     }
 
@@ -227,7 +235,7 @@ class Handler {
     }
 
     detectLights(x, y) {
-        _.each(this.map.lights, light => {
+        _.each(this.map.lights, (light) => {
             if (
                 this.map.nearLight(light, x, y) &&
                 !this.player.hasLoadedLight(light)

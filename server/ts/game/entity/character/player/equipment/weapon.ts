@@ -2,11 +2,18 @@ import Equipment from './equipment';
 import Items from '../../../../../util/items';
 import Modules from '../../../../../util/modules';
 
+/**
+ *
+ */
 class Weapon extends Equipment {
     public abilityLevel: any;
+
     public ability: any;
+
     public ranged: any;
+
     public level: any;
+
     breakable: boolean;
 
     constructor(name, id, count, ability, abilityLevel) {

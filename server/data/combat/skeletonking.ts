@@ -1,15 +1,24 @@
+import * as _ from 'underscore';
 import Combat from '../../ts/game/entity/character/combat/combat';
 import Utils from '../../ts/util/utils';
-import _ from 'underscore';
 import Mob from '../../ts/game/entity/character/mob/mob';
 
+/**
+ *
+ */
 class SkeletonKing extends Combat {
     public minions: Mob[];
+
     public lastSpawn: any;
+
     public isAttacked: any;
+
     public world: any;
+
     public character: any;
+
     public colliding: any;
+
     public attackers: any;
 
     /**
@@ -49,8 +58,8 @@ class SkeletonKing extends Combat {
     }
 
     spawnMinions() {
-        const x = this.character.x;
-        const y = this.character.y;
+        const { x } = this.character;
+        const { y } = this.character;
 
         this.lastSpawn = new Date().getTime();
 
@@ -66,7 +75,7 @@ class SkeletonKing extends Combat {
         if (!this.colliding(x - 1, y + 1))
             this.minions.push(this.world.spawnMob(11, x - 1, y - 1));
 
-        _.each(this.minions, minion => {
+        _.each(this.minions, (minion) => {
             minion.onDeath(() => {
                 if (this.isLast()) this.lastSpawn = new Date().getTime();
 
@@ -80,7 +89,7 @@ class SkeletonKing extends Combat {
     beginMinionAttack() {
         if (!this.hasMinions()) return;
 
-        _.each(this.minions, minion => {
+        _.each(this.minions, (minion) => {
             const randomTarget = this.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)

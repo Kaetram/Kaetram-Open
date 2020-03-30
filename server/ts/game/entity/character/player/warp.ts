@@ -1,9 +1,15 @@
 import Modules from '../../../../util/modules';
 import Utils from '../../../../util/utils';
+import Player from './player';
 
+/**
+ *
+ */
 class Warp {
     public warpTimeout: any;
-    public player: any;
+
+    public player: Player;
+
     public lastWarp: any;
 
     constructor(player) {
@@ -16,7 +22,7 @@ class Warp {
     warp(id) {
         if (!this.isCooldown()) {
             this.player.notify(
-                'You must wait another ' + this.getDuration() + ' to warp.'
+                `You must wait another ${this.getDuration()} to warp.`
             );
 
             return;
@@ -31,7 +37,7 @@ class Warp {
         const y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2];
         const levelRequirement = data[4];
 
-        console.info('Player Rights: ' + this.player.rights);
+        console.info(`Player Rights: ${this.player.rights}`);
 
         if (!this.player.finishedTutorial()) {
             this.player.notify('You cannot warp while in this event.');
@@ -41,9 +47,7 @@ class Warp {
 
         if (this.hasRequirement()) {
             this.player.notify(
-                'You must be at least level ' +
-                    levelRequirement +
-                    ' to warp here!'
+                `You must be at least level ${levelRequirement} to warp here!`
             );
 
             return;
@@ -51,7 +55,7 @@ class Warp {
 
         this.player.teleport(x, y, false, true);
 
-        this.player.notify('You have been warped to ' + name);
+        this.player.notify(`You have been warped to ${name}`);
 
         this.lastWarp = new Date().getTime();
     }
@@ -81,8 +85,8 @@ class Warp {
         if (!difference) return '5 minutes';
 
         return difference > 60000
-            ? Math.ceil(difference / 60000) + ' minutes'
-            : Math.floor(difference / 1000) + ' seconds';
+            ? `${Math.ceil(difference / 60000)} minutes`
+            : `${Math.floor(difference / 1000)} seconds`;
     }
 
     getDifference() {

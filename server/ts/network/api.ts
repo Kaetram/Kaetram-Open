@@ -1,18 +1,22 @@
-import config from '../../config.json';
 import express from 'express';
 import bodyParser from 'body-parser';
-import _ from 'underscore';
+import * as _ from 'underscore';
+import config from '../../config';
 import APIConstants from '../util/apiconstants';
 import Player from '../game/entity/character/player/player';
+
+/**
+ * @param accessToken - A randomly generated token that can be used
+ * to verify the validity between the client and the server.
+ * This is a rudimentary security method, but is enough considering
+ * the simplicity of the current API.
+ */
 
 /**
  * API will have a variety of uses. Including communication
  * between multiple worlds (planned for the future).
  *
- * @var accessToken - A randomly generated token that can be used
- * to verify the validity between the client and the server.
- * This is a rudimentary security method, but is enough considering
- * the simplicity of the current API.
+ * @beta
  */
 class API {
     public world: any;
@@ -33,7 +37,7 @@ class API {
 
         app.listen(config.apiPort, () => {
             console.info(
-                config.name + ' API is now listening on: ' + config.apiPort
+                `${config.name} API is now listening on: ${config.apiPort}`
             );
         });
     }

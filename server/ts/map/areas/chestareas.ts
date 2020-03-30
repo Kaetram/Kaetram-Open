@@ -1,9 +1,13 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Area from '../area';
 import map from '../../../data/map/world_server.json';
 
+/**
+ *
+ */
 class ChestAreas {
     public chestAreas: any;
+
     public world: any;
 
     constructor(world) {
@@ -37,7 +41,7 @@ class ChestAreas {
             });
         });
 
-        console.info('Loaded ' + this.chestAreas.length + ' chest areas.');
+        console.info(`Loaded ${this.chestAreas.length} chest areas.`);
     }
 
     spawnChest(chestArea) {

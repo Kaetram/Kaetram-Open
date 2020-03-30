@@ -44,18 +44,14 @@ export default {
     },
 
     generateInstance(randomizer, id, modulo, posY?) {
-        return (
-            '' +
-            randomizer +
-            this.randomInt(0, id) +
-            randomizer +
-            this.randomInt(0, modulo) +
-            (posY || 0)
-        );
+        return `${randomizer}${this.randomInt(
+            0,
+            id
+        )}${randomizer}${this.randomInt(0, modulo)}${posY || 0}`;
     },
 
     generateRandomId() {
-        return '' + 1 + this.random(0, 200) + this.random(0, 20) + 2;
+        return `${1}${this.random(0, 200)}${this.random(0, 20)}${2}`;
     },
 
     validPacket(packet) {
@@ -75,7 +71,7 @@ export default {
     },
 
     formatUsername(username) {
-        return username.replace(/\w\S*/g, string => {
+        return username.replace(/\w\S*/g, (string) => {
             return (
                 string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
             );

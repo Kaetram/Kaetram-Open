@@ -1,15 +1,17 @@
 import MapClient from '../../../data/map/world_client.json';
 
 /**
- * Class used for storing hardcoded values and actions for a specific area
+ * Class used for storing hard-coded values and actions for a specific area
  * in the game.
- * @experiemntal Hardcoding regions and areas is still a work in progress.
+ * @beta Hard-coding regions and areas is still a work in progress.
  */
-
 class Home {
     public region: any;
+
     public startRegion: any;
+
     public endRegion: any;
+
     public map: any;
 
     constructor(region) {

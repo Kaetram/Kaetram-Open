@@ -9,7 +9,9 @@ import Modules from '../../ts/util/modules';
  */
 class Golem extends Combat {
     public updated: any;
+
     public character: any;
+
     achievementId: number;
 
     constructor(character) {
@@ -25,7 +27,7 @@ class Golem extends Combat {
         });
 
         this.character.onDeath(() => {
-            this.forEachAttacker(attacker => {
+            this.forEachAttacker((attacker) => {
                 attacker.finishAchievement(9);
             });
         });

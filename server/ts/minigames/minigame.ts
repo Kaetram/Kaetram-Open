@@ -1,5 +1,6 @@
 class Minigame {
     public id: any;
+
     public name: any;
 
     constructor(id, name) {

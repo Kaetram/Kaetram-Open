@@ -1,14 +1,22 @@
 import Utils from '../../../../util/utils';
 import Messages from '../../../../network/messages';
 import Packets from '../../../../network/packets';
-import config from '../../../../../config.json';
+import config from '../../../../../config';
 
+/**
+ *
+ */
 class MobHandler {
     public mob: any;
+
     public roamingInterval: any;
+
     public spawnLocation: any;
+
     public maxRoamingDistance: any;
+
     public map: any;
+
     public world: any;
 
     constructor(mob, world) {
@@ -101,7 +109,7 @@ class MobHandler {
     }
 
     loadCallbacks() {
-        // TODO - Implement posion on Mobs
+        // TODO: Implement posion on Mobs
     }
 
     forceTalk(message) {

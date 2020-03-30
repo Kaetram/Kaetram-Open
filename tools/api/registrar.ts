@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
-/** @format */
-
 import redis from 'redis';
 import request from 'request';
 
@@ -16,7 +14,7 @@ class Registrar {
             socket_nodelay: true
         });
 
-        this.readyCallback();
+        if (this.readyCallback) this.readyCallback();
     }
 
     onReady(callback) {
@@ -27,9 +25,7 @@ class Registrar {
 function load() {
     const registrar = new Registrar();
 
-    registrar.onReady(function() {
-        //
-    });
+    // registrar.onReady(function() {});
 }
 
 load();

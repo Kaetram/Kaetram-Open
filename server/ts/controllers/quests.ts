@@ -1,17 +1,25 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Introduction from '../game/entity/character/player/quest/impl/introduction';
 import BulkySituation from '../game/entity/character/player/quest/impl/bulkysituation';
 import QuestData from '../../data/quests.json';
 import AchievementData from '../../data/achievements.json';
 import Achievement from '../game/entity/character/player/achievement';
 import Quest from '../game/entity/character/player/quest/quest';
+import Player from '../game/entity/character/player/player';
 
+/**
+ *
+ */
 class Quests {
     public quests: any;
+
     public achievements: any;
+
     public achievementsReadyCallback: any;
+
     public questsReadyCallback: any;
-    public player: any;
+
+    public player: Player;
 
     constructor(player) {
         this.player = player;
@@ -25,7 +33,7 @@ class Quests {
     load() {
         let questCount = 0;
 
-        _.each(QuestData, quest => {
+        _.each(QuestData, (quest) => {
             if (questCount === 0)
                 this.quests[quest.id] = new Introduction(this.player, quest);
             else if (questCount === 1)
@@ -34,7 +42,7 @@ class Quests {
             questCount++;
         });
 
-        _.each(AchievementData, achievement => {
+        _.each(AchievementData, (achievement) => {
             this.achievements[achievement.id] = new Achievement(
                 achievement.id,
                 this.player
@@ -79,8 +87,8 @@ class Quests {
         for (let id = 0; id < this.getQuestSize(); id++) {
             const quest = this.quests[id];
 
-            ids += id + ' ';
-            stages += quest.stage + ' ';
+            ids += `${id} `;
+            stages += `${quest.stage} `;
         }
 
         return {
@@ -95,8 +103,8 @@ class Quests {
         let progress = '';
 
         for (let id = 0; id < this.getAchievementSize(); id++) {
-            ids += id + ' ';
-            progress += this.achievements[id].progress + ' ';
+            ids += `${id} `;
+            progress += `${this.achievements[id].progress} `;
         }
 
         return {
@@ -109,7 +117,7 @@ class Quests {
     getAchievementData() {
         const achievements = [];
 
-        this.forEachAchievement(achievement => {
+        this.forEachAchievement((achievement) => {
             achievements.push(achievement.getInfo());
         });
 
@@ -121,7 +129,7 @@ class Quests {
     getQuestData() {
         const quests = [];
 
-        this.forEachQuest(quest => {
+        this.forEachQuest((quest) => {
             quests.push(quest.getInfo());
         });
 
@@ -131,13 +139,13 @@ class Quests {
     }
 
     forEachQuest(callback) {
-        _.each(this.quests, quest => {
+        _.each(this.quests, (quest) => {
             callback(quest);
         });
     }
 
     forEachAchievement(callback) {
-        _.each(this.achievements, achievement => {
+        _.each(this.achievements, (achievement) => {
             callback(achievement);
         });
     }

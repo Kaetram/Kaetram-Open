@@ -1,9 +1,15 @@
 import Points from './points';
 
+/**
+ *
+ */
 class Mana extends Points {
     public points: any;
+
     public maxPoints: any;
+
     public manaCallback: any;
+
     public maxManaCallback: any;
 
     constructor(mana, maxMana) {

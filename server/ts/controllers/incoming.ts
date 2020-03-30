@@ -1,43 +1,49 @@
-import Packets from '../network/packets';
 import Request from 'request';
-import config from '../../config.json';
-import _ from 'underscore';
-import Messages from '../network/messages';
+import * as _ from 'underscore';
 import sanitizer from 'sanitizer';
+import Packets from '../network/packets';
+import config from '../../config';
+import Messages from '../network/messages';
 import Commands from './commands';
 import Items from '../util/items';
 import Creator from '../database/mongodb/creator';
 import Utils from '../util/utils';
+import World from '../game/world';
+import Player from '../game/entity/character/player/player';
 
+/**
+ *
+ */
 class Incoming {
     handleRegion(message: any) {
         throw new Error('Method not implemented.');
     }
 
-    public player: any;
     public introduced: any;
-    public world: any;
+
+    public world: World;
+
     public connection: any;
+
     public database: any;
+
     public globalObjects: any;
+
     public commands: any;
 
-    constructor(player) {
-        this.player = player;
+    constructor(public player: any) {
         this.connection = this.player.connection;
         this.world = this.player.world;
         this.globalObjects = this.world.globalObjects;
         this.database = this.player.database;
         this.commands = new Commands(this.player);
 
-        this.connection.listen(data => {
+        this.connection.listen((data) => {
             const packet = data.shift();
             const message = data[0];
 
             if (!Utils.validPacket(packet)) {
-                console.error(
-                    'Non-existent packet received: ' + packet + ' data: '
-                );
+                console.error(`Non-existent packet received: ${packet} data: `);
 
                 console.error(message);
 
@@ -179,27 +185,27 @@ class Incoming {
         this.introduced = true;
 
         if (isRegistering) {
-            this.database.exists(this.player, result => {
+            this.database.exists(this.player, (result) => {
                 if (result.exists) {
-                    this.connection.sendUTF8(result.type + 'exists');
-                    this.connection.close(result.type + ' is not available.');
+                    this.connection.sendUTF8(`${result.type}exists`);
+                    this.connection.close(`${result.type} is not available.`);
                 } else this.database.register(this.player);
             });
         } else if (isGuest) {
-            this.player.username = 'Guest' + Utils.randomInt(0, 2000000);
+            this.player.username = `Guest${Utils.randomInt(0, 2000000)}`;
             this.player.password = null;
             this.player.email = null;
             this.player.isGuest = true;
 
             this.database.login(this.player);
         } else
-            this.database.verify(this.player, result => {
+            this.database.verify(this.player, (result) => {
                 if (result.status === 'success')
                     this.database.login(this.player);
                 else {
                     this.connection.sendUTF8('invalidlogin');
                     this.connection.close(
-                        'Wrong password entered for: ' + this.player.username
+                        `Wrong password entered for: ${this.player.username}`
                     );
                 }
             });
@@ -242,7 +248,7 @@ class Incoming {
     }
 
     handleWho(message) {
-        _.each(message.shift(), id => {
+        _.each(message.shift(), (id) => {
             const entity = this.world.getEntityByInstance(id);
 
             if (!entity || entity.dead) return;
@@ -378,7 +384,7 @@ class Incoming {
 
                 if (
                     !movementSpeed ||
-                    movementSpeed != this.player.movementSpeed
+                    movementSpeed !== this.player.movementSpeed
                 )
                     this.player.incrementCheatScore(1);
 
@@ -497,7 +503,7 @@ class Incoming {
             case Packets.MovementOpcode.Zone:
                 const direction = message.shift();
 
-                console.info('Player zoned - ' + direction);
+                console.info(`Player zoned - ${direction}`);
 
                 break;
         }
@@ -515,7 +521,7 @@ class Incoming {
         const opcode = message.shift();
         const instance = message.shift();
 
-        console.debug('Targeted: ' + instance);
+        console.debug(`Targeted: ${instance}`);
 
         switch (opcode) {
             case Packets.TargetOpcode.Talk:
@@ -739,7 +745,8 @@ class Incoming {
 
                 if (count > iSlot.count) count = iSlot.count;
 
-                (ability = iSlot.ability), (abilityLevel = iSlot.abilityLevel);
+                ability = iSlot.ability;
+                abilityLevel = iSlot.abilityLevel;
 
                 if (
                     this.player.inventory.remove(
@@ -762,10 +769,11 @@ class Incoming {
             case Packets.InventoryOpcode.Select:
                 const index = message.shift();
                 const slot = this.player.inventory.slots[index];
-                const string = slot.string;
+                const { string } = slot;
                 const sCount = slot.count;
 
-                (ability = slot.ability), (abilityLevel = slot.abilityLevel);
+                ability = slot.ability;
+                abilityLevel = slot.abilityLevel;
 
                 if (!slot || slot.id < 1) return;
 
@@ -950,9 +958,7 @@ class Incoming {
                     return;
                 }
 
-                console.debug(
-                    'Received Buy: ' + npcId + ' ' + buyId + ' ' + amount
-                );
+                console.debug(`Received Buy: ${npcId} ${buyId} ${amount}`);
 
                 this.world.shops.buy(this.player, npcId, buyId, amount);
 
@@ -1016,7 +1022,7 @@ class Incoming {
                     index: item.index
                 };
 
-                console.debug('Received Select: ' + npcId + ' ' + slotId);
+                console.debug(`Received Select: ${npcId} ${slotId}`);
 
                 break;
 
@@ -1028,7 +1034,7 @@ class Incoming {
     }
 
     handleCamera(message) {
-        console.info(this.player.x + ' ' + this.player.y);
+        console.info(`${this.player.x} ${this.player.y}`);
 
         this.player.cameraArea = null;
         this.player.handler.detectCamera(this.player.x, this.player.y);
@@ -1072,7 +1078,8 @@ class Incoming {
             if (this.world.map.isColliding(x, y)) {
                 const spawn = this.player.getSpawn();
 
-                (x = spawn.x), (y = spawn.y);
+                x = spawn.x;
+                y = spawn.y;
             }
 
             this.player.teleport(x, y, false, true);

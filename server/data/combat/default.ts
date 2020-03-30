@@ -6,6 +6,9 @@ import Combat from '../../ts/game/entity/character/combat/combat';
  * when adding special entities.
  */
 
+/**
+ *
+ */
 class Default extends Combat {
     constructor(character) {
         super(character);

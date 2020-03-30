@@ -1,5 +1,5 @@
-import _ from 'underscore';
-import config from '../../config.json';
+import * as _ from 'underscore';
+import config from '../../config';
 import GlobalObjects from '../controllers/globalobjects';
 import Guilds from '../controllers/guilds';
 import Minigames from '../controllers/minigames';
@@ -27,29 +27,54 @@ import Chest from './entity/objects/chest';
 import Item from './entity/objects/item';
 import Projectile from './entity/objects/projectile';
 
+/**
+ * The world where everything is handled and rendered.
+ */
 class World {
-    public entities: { [key: string]: Entity };
+    public entities: { [key: string]: any };
+
     public maxPlayers: number;
+
     public players: { [key: string]: Player };
+
     public map: Map;
+
     public playerConnectCallback: Function;
+
     public populationCallback: Function;
+
     public api: API;
+
     public shops: Shops;
+
     public region: Region;
+
     public network: Network;
+
     public minigames: Minigames;
+
     public guilds: Guilds;
+
     public globalObjects: GlobalObjects;
+
     public ready: boolean;
+
     public updateTime: number;
+
     public debug: boolean;
+
     public chests: { [key: string]: Chest };
+
     public npcs: { [key: string]: NPC };
+
     public mobs: { [key: string]: Mob };
+
     public items: { [key: string]: Item };
+
     public projectiles: { [key: string]: Projectile };
+
     public allowConnections: boolean;
+
     public loadedRegions: boolean;
 
     constructor(public socket: Socket, public database: MongoDB) {
@@ -135,9 +160,9 @@ class World {
         }, update);
     }
 
-    /****************************
+    /** **************************
      * Entity related functions *
-     ****************************/
+     *************************** */
 
     kill(entity) {
         entity.applyDamage(entity.hitPoints);
@@ -187,7 +212,7 @@ class World {
 
             if (attacker.type === 'player') attacker.killCharacter(target);
 
-            target.combat.forEachAttacker(attacker => {
+            target.combat.forEachAttacker((attacker) => {
                 attacker.removeTarget();
             });
 
@@ -294,10 +319,7 @@ class World {
             if (!info || info === 'null') {
                 if (this.debug)
                     console.info(
-                        'Unknown object spawned at: ' +
-                            position.x +
-                            ' ' +
-                            position.y
+                        `Unknown object spawned at: ${position.x} ${position.y}`
                     );
 
                 return;
@@ -363,9 +385,7 @@ class World {
             entities++;
         });
 
-        console.info(
-            'Spawned ' + Object.keys(this.entities).length + ' entities!'
-        );
+        console.info(`Spawned ${Object.keys(this.entities).length} entities!`);
     }
 
     spawnChests() {
@@ -378,7 +398,7 @@ class World {
         });
 
         console.info(
-            'Spawned ' + Object.keys(this.chests).length + ' static chests'
+            `Spawned ${Object.keys(this.chests).length} static chests`
         );
     }
 
@@ -473,7 +493,7 @@ class World {
 
     push(type, info) {
         if (_.isArray(info)) {
-            _.each(info, i => {
+            _.each(info, (i) => {
                 this.push(type, i);
             });
 
@@ -541,7 +561,7 @@ class World {
 
     addEntity(entity, region?) {
         if (entity.instance in this.entities)
-            console.info('Entity ' + entity.instance + ' already exists.');
+            console.info(`Entity ${entity.instance} already exists.`);
 
         this.entities[entity.instance] = entity;
 
@@ -589,7 +609,7 @@ class World {
         if (entity instanceof Character) {
             entity.getCombat().setWorld(this);
 
-            entity.onStunned(stun => {
+            entity.onStunned((stun) => {
                 this.push(Packets.PushOpcode.Regions, {
                     regionId: entity.region,
                     message: new Messages.Movement(
@@ -618,7 +638,7 @@ class World {
 
     addMob(mob, region?) {
         if (!Mobs.exists(mob.id)) {
-            console.error('Cannot spawn mob. ' + mob.id + ' does not exist.');
+            console.error(`Cannot spawn mob. ${mob.id} does not exist.`);
 
             return;
         }
@@ -628,7 +648,7 @@ class World {
 
         mob.addToChestArea(this.getChestAreas());
 
-        mob.onHit(attacker => {
+        mob.onHit((attacker) => {
             if (mob.isDead() || mob.combat.started) return;
 
             mob.combat.begin(attacker);
@@ -666,7 +686,7 @@ class World {
     }
 
     cleanCombat(entity) {
-        _.each(this.entities, oEntity => {
+        _.each(this.entities, (oEntity) => {
             if (
                 oEntity instanceof Character &&
                 oEntity.combat.hasAttacker(entity)
@@ -755,7 +775,7 @@ class World {
     }
 
     forEachPlayer(callback) {
-        _.each(this.players, player => {
+        _.each(this.players, (player) => {
             callback(player);
         });
     }

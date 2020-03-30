@@ -1,36 +1,49 @@
 import Mobs from '../../util/mobs';
 import Items from '../../util/items';
 import NPCs from '../../util/npcs';
+import Player from './character/player/player';
 
+/**
+ *
+ */
 class Entity {
-    canAggro(player: any): any {
-        throw new Error('Method not implemented.');
-    }
-    public x: any;
-    public y: any;
-    public type: any;
     public setPositionCallback: any;
+
     public invisibles: any;
+
     public invisiblesIds: any;
+
     public oldX: any;
+
     public oldY: any;
-    public id: any;
-    public instance: any;
+
     public specialState: any;
+
     public customScale: any;
-    combat: any;
-    dead: boolean;
-    recentRegions: any[];
-    roaming: any;
 
-    constructor(id, type, instance, x?, y?) {
-        this.id = id;
-        this.type = type;
-        this.instance = instance;
+    public combat: any;
 
-        this.x = x;
-        this.y = y;
+    public dead: boolean;
 
+    public recentRegions: any[];
+
+    public roaming: any;
+
+    /**
+     * Creates an instance of Entity.
+     * @param id - A unique id given to each entity.
+     * @param type -
+     * @param instance -
+     * @param x - The x position of the entity.
+     * @param y - The y position of the entity.
+     */
+    constructor(
+        public id: number,
+        public type: string,
+        public instance: string,
+        public x?: number,
+        public y?: number
+    ) {
         this.oldX = x;
         this.oldY = y;
 
@@ -198,6 +211,10 @@ class Entity {
             case 'questMob':
                 return '#0099cc';
         }
+    }
+
+    canAggro(player: Player): any {
+        throw new Error('Method not implemented.');
     }
 }
 

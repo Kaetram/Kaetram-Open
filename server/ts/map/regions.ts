@@ -1,14 +1,24 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import map from '../../data/map/world_server.json';
 
+/**
+ *
+ */
 class Regions {
     public zoneWidth: any;
+
     public zoneHeight: any;
+
     public linkedRegions: any;
+
     public regionWidth: any;
+
     public regionHeight: any;
+
     map: any;
+
     width: any;
+
     height: any;
 
     constructor(map) {
@@ -29,9 +39,9 @@ class Regions {
     }
 
     loadDoors() {
-        const doors = map.doors;
+        const { doors } = map;
 
-        _.each(doors, door => {
+        _.each(doors, (door) => {
             const regionId = this.regionIdFromPosition(door.x, door.y);
             const linkedRegionId = this.regionIdFromPosition(door.tx, door.ty);
             const linkedRegionPosition = this.regionIdToPosition(
@@ -52,8 +62,8 @@ class Regions {
 
     getAdjacentRegions(id, offset = 1, stringFormat?) {
         const position = this.regionIdToPosition(id);
-        const x = position.x;
-        const y = position.y;
+        const { x } = position;
+        const { y } = position;
 
         const list = [];
 
@@ -70,20 +80,20 @@ class Regions {
                 if (i > -2 || i < 2)
                     list.push(
                         stringFormat
-                            ? x + j + '-' + (y + i)
+                            ? `${x + j}-${y + i}`
                             : { x: x + j, y: y + i }
                     );
 
-        _.each(this.linkedRegions[id], regionPosition => {
+        _.each(this.linkedRegions[id], (regionPosition) => {
             if (
-                !_.any(list, regionPosition => {
+                !_.any(list, (regionPosition) => {
                     return regionPosition.x === x && regionPosition.y === y;
                 })
             )
                 list.push(regionPosition);
         });
 
-        return _.reject(list, regionPosition => {
+        return _.reject(list, (regionPosition) => {
             const gX = regionPosition.x;
             const gY = regionPosition.y;
 
@@ -98,23 +108,21 @@ class Regions {
 
     forEachRegion(callback) {
         for (let x = 0; x < this.regionWidth; x++)
-            for (let y = 0; y < this.regionHeight; y++) callback(x + '-' + y);
+            for (let y = 0; y < this.regionHeight; y++) callback(`${x}-${y}`);
     }
 
     forEachAdjacentRegion(regionId, callback, offset) {
         if (!regionId) return;
 
-        _.each(this.getAdjacentRegions(regionId, offset), position => {
-            callback(position.x + '-' + position.y);
+        _.each(this.getAdjacentRegions(regionId, offset), (position) => {
+            callback(`${position.x}-${position.y}`);
         });
     }
 
     regionIdFromPosition(x, y) {
-        return (
-            Math.floor(x / this.zoneWidth) +
-            '-' +
-            Math.floor(y / this.zoneHeight)
-        );
+        return `${Math.floor(x / this.zoneWidth)}-${Math.floor(
+            y / this.zoneHeight
+        )}`;
     }
 
     regionIdToPosition(id) {

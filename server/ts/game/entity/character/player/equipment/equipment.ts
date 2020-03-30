@@ -1,10 +1,17 @@
 import Items from '../../../../../util/items';
 
+/**
+ *
+ */
 class Equipment {
     public name: any;
+
     public id: any;
+
     public count: any;
+
     public ability: any;
+
     public abilityLevel: any;
 
     constructor(name, id, count, ability, abilityLevel) {

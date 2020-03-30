@@ -1,34 +1,44 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
+import fs from 'fs';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
 import Player from '../game/entity/character/player/player';
-import fs from 'fs';
 import WorldClientMap from '../../data/map/world_client.json';
-import config from '../../config.json';
+import config from '../../config';
 
 let ClientMap: any = WorldClientMap;
 
 const map = 'server/../data/map/world_client.json';
 
+/**
+ * Region Generation.
+ *
+ * @remarks
+ * This is used in order to send the client data about the new region
+ * it is about to enter. This has to be greatly expanded to generated
+ * instanced areas where other entities will not be pushed to surrounding
+ * players, even if they share the same coordinates.
+ */
 class Region {
     public clientWidth: any;
-    public addCallback: any;
-    public removeCallback: any;
-    public incomingCallback: any;
-    public clientHeight: any;
-    public mapRegions: any;
-    public regions: any;
-    public loaded: any;
-    public world: any;
-    public map: any;
 
-    /**
-     * Region Generation.
-     * This is used in order to send the client data about the new region
-     * it is about to enter. This has to be greatly expanded to generated
-     * instanced areas where other entities will not be pushed to surrounding
-     * players, even if they share the same coordinates.
-     */
+    public addCallback: any;
+
+    public removeCallback: any;
+
+    public incomingCallback: any;
+
+    public clientHeight: any;
+
+    public mapRegions: any;
+
+    public regions: any;
+
+    public loaded: any;
+
+    public world: any;
+
+    public map: any;
 
     constructor(world) {
         this.map = world.map;
@@ -44,10 +54,7 @@ class Region {
 
             if (config.debug)
                 console.info(
-                    'Entity - ' +
-                        entity.username +
-                        ' has entered region - ' +
-                        regionId
+                    `Entity - ${entity.username} has entered region - ${regionId}`
                 );
 
             if (entity instanceof Player) this.sendRegion(entity, regionId);
@@ -60,6 +67,7 @@ class Region {
                 !entity ||
                 !entity.username
             )
+                // eslint-disable-next-line no-useless-return
                 return;
         });
 
@@ -68,10 +76,7 @@ class Region {
 
             if (config.debug)
                 console.info(
-                    'Entity - ' +
-                        entity.username +
-                        ' is incoming into region - ' +
-                        regionId
+                    `Entity - ${entity.username} is incoming into region - ${regionId}`
                 );
         });
 
@@ -102,7 +107,7 @@ class Region {
         this.clientWidth = ClientMap.width;
         this.clientHeight = ClientMap.height;
 
-        this.mapRegions.forEachRegion(regionId => {
+        this.mapRegions.forEachRegion((regionId) => {
             this.regions[regionId] = {
                 entities: {},
                 players: [],
@@ -131,7 +136,7 @@ class Region {
 
         player.instanced = true;
 
-        this.mapRegions.forEachAdjacentRegion(regionId, region => {
+        this.mapRegions.forEachAdjacentRegion(regionId, (region) => {
             this.regions[Region.regionIdToInstance(player, region)] = {
                 entities: {},
                 players: [],
@@ -157,7 +162,7 @@ class Region {
         this.handle(player);
         this.push(player);
 
-        this.mapRegions.forEachAdjacentRegion(player.region, regionId => {
+        this.mapRegions.forEachAdjacentRegion(player.region, (regionId) => {
             const instancedRegion = Region.regionIdToInstance(player, regionId);
 
             if (instancedRegion in this.regions)
@@ -168,7 +173,7 @@ class Region {
     parseRegions() {
         if (!this.loaded) return;
 
-        this.mapRegions.forEachRegion(regionId => {
+        this.mapRegions.forEachRegion((regionId) => {
             if (this.regions[regionId].incoming.length < 1) return;
 
             this.sendSpawns(regionId);
@@ -178,7 +183,7 @@ class Region {
     }
 
     updateRegions() {
-        this.world.forEachPlayer(player => {
+        this.world.forEachPlayer((player) => {
             player.regionsLoaded = [];
 
             this.sendRegion(player, player.region, true);
@@ -239,7 +244,7 @@ class Region {
         const newRegions = [];
 
         if (entity && regionId && regionId in this.regions) {
-            this.mapRegions.forEachAdjacentRegion(regionId, id => {
+            this.mapRegions.forEachAdjacentRegion(regionId, (id) => {
                 if (entity.instanced)
                     id = Region.regionIdToInstance(entity, id);
 
@@ -269,11 +274,11 @@ class Region {
             const region = this.regions[entity.region];
 
             if (entity instanceof Player)
-                region.players = _.reject(region.players, id => {
+                region.players = _.reject(region.players, (id) => {
                     return id === entity.instance;
                 });
 
-            this.mapRegions.forEachAdjacentRegion(entity.region, id => {
+            this.mapRegions.forEachAdjacentRegion(entity.region, (id) => {
                 if (
                     this.regions[id] &&
                     entity.instance in this.regions[id].entities
@@ -335,7 +340,7 @@ class Region {
 
         entities = _.keys(this.regions[player.region].entities);
 
-        entities = _.reject(entities, instance => {
+        entities = _.reject(entities, (instance) => {
             return instance === player.instance; // TODO //|| player.isInvisible(instance);
         });
 
@@ -369,7 +374,7 @@ class Region {
 
         this.mapRegions.forEachAdjacentRegion(
             region,
-            regionId => {
+            (regionId) => {
                 if (!player.hasLoadedRegion(regionId) || force) {
                     player.loadRegion(regionId);
 
@@ -444,11 +449,11 @@ class Region {
     static instanceToRegionId(instancedRegionId) {
         const region = instancedRegionId.split('-');
 
-        return region[0] + '-' + region[1];
+        return `${region[0]}-${region[1]}`;
     }
 
     static regionIdToInstance(player, regionId) {
-        return regionId + '-' + player.instance;
+        return `${regionId}-${player.instance}`;
     }
 
     gridPositionToIndex(x, y) {

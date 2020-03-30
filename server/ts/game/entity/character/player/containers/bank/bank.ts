@@ -1,14 +1,21 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Container from '../container';
 import Messages from '../../../../../../network/messages';
 import Packets from '../../../../../../network/packets';
 import Items from '../../../../../../util/items';
 
+/**
+ *
+ */
 class Bank extends Container {
     public open: any;
+
     public owner: any;
+
     public size: any;
+
     public slots: any;
+
     public canHold: any;
 
     constructor(owner, size) {

@@ -2,8 +2,12 @@ import Combat from '../../ts/game/entity/character/combat/combat';
 import Hit from '../../ts/game/entity/character/combat/hit';
 import Modules from '../../ts/util/modules';
 
+/**
+ *
+ */
 class Cactus extends Combat {
     public hit: any;
+
     public character: any;
 
     constructor(character) {
@@ -25,7 +29,7 @@ class Cactus extends Combat {
         });
 
         this.character.onDeath(() => {
-            this.forEachAttacker(attacker => {
+            this.forEachAttacker((attacker) => {
                 this.damageAttacker(this.character.maxHitPoints, attacker);
             });
 
@@ -40,7 +44,7 @@ class Cactus extends Combat {
          * This is the formula for dealing damage when a player
          * attacks the cactus. Eventually the damage will cancel out
          * as the armour gets better.
-         **/
+         * */
 
         const defense = attacker.armour.getDefense();
         const calculatedDamage = Math.floor(damage / 2 - defense * 5);

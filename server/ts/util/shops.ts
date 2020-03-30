@@ -1,4 +1,5 @@
-import _ from 'underscore';
+/* eslint-disable consistent-return */
+import * as _ from 'underscore';
 
 export default {
     Data: {},
@@ -70,7 +71,7 @@ export default {
     },
 
     getCount(npcId) {
-        const count = this.Ids[npcId].count;
+        const { count } = this.Ids[npcId];
         const counts = [];
 
         if (_.isArray(count)) return count;

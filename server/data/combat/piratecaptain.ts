@@ -4,15 +4,26 @@ import Messages from '../../ts/network/messages';
 import Packets from '../../ts/network/packets';
 import Modules from '../../ts/util/modules';
 
+/**
+ *
+ */
 class PirateCaptain extends Combat {
     public lastTeleport: any;
+
     public character: any;
+
     public teleportLocations: any;
+
     public stop: any;
+
     public lastTeleportIndex: any;
+
     public world: any;
+
     public forEachAttacker: any;
+
     public begin: any;
+
     location: { x: any; y: any };
 
     constructor(character) {
@@ -71,7 +82,7 @@ class PirateCaptain extends Combat {
                 })
             });
 
-        this.forEachAttacker(attacker => {
+        this.forEachAttacker((attacker) => {
             attacker.removeTarget();
         });
 

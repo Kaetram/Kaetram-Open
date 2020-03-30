@@ -1,48 +1,105 @@
-import Entity from '../entity';
-import Modules from '../../../util/modules';
 import Mobs from '../../../util/mobs';
+import Modules from '../../../util/modules';
+import Entity from '../entity';
 import Combat from './combat/combat';
 
+/**
+ *
+ */
 class Character extends Entity {
     public attackRange: any;
-    public hitPoints: any;
-    public dead: any;
-    public combat: Combat;
-    public maxHitPoints: any;
-    public potentialTarget: any;
-    public projectile: any;
-    public projectileName: any;
-    public target: any;
-    public targetCallback: any;
-    public removeTargetCallback: any;
-    public movementCallback: any;
-    public hitCallback: any;
-    public healthChangeCallback: any;
-    public damageCallback: any;
-    public damagedCallback: any;
-    public stunCallback: any;
-    public subAoECallback: any;
-    public poisonCallback: any;
-    public id: any;
-    public healingInterval: any;
-    public poison: any;
-    public healingRate: any;
-    public stunned: any;
-    public previousX: any;
-    public x: any;
-    public previousY: any;
-    public y: any;
-    public hitPointsCallback: any;
-    public movementSpeed: any;
-    region: any;
-    level: number;
-    attackRate: number;
-    spawnDistance: number;
-    aggressive: boolean;
-    aggroRange: number;
-    stunTimeout: any;
 
-    constructor(id, type, instance, x, y) {
+    public hitPoints: any;
+
+    public dead: any;
+
+    public combat: Combat;
+
+    public maxHitPoints: any;
+
+    public potentialTarget: any;
+
+    public projectile: any;
+
+    public projectileName: any;
+
+    public target: any;
+
+    public targetCallback: any;
+
+    public removeTargetCallback: any;
+
+    public movementCallback: any;
+
+    public hitCallback: any;
+
+    public healthChangeCallback: any;
+
+    public damageCallback: any;
+
+    public damagedCallback: any;
+
+    public stunCallback: any;
+
+    public subAoECallback: any;
+
+    public poisonCallback: any;
+
+    public healingInterval: any;
+
+    public poison: any;
+
+    public healingRate: any;
+
+    public stunned: any;
+
+    public previousX: any;
+
+    public previousY: any;
+
+    public hitPointsCallback: any;
+
+    public movementSpeed: any;
+
+    public region: any;
+
+    public level: number;
+
+    public attackRate: number;
+
+    public spawnDistance: number;
+
+    public aggressive: boolean;
+
+    public aggroRange: number;
+
+    public stunTimeout: any;
+
+    public frozen: any;
+
+    public moving: any;
+
+    public lastMovement: number;
+
+    public spawnLocation: any;
+
+    public pvp: any;
+
+    /**
+     * Creates an instance of Character.
+     * @param id -
+     * @param type -
+     * @param instance -
+     * @param x -
+     * @param y -
+     */
+    constructor(
+        public id: number,
+        public type: string,
+        public instance: string,
+        public x: number,
+        public y: number
+    ) {
         super(id, type, instance, x, y);
 
         this.level = -1;
@@ -87,6 +144,7 @@ class Character extends Entity {
          */
 
         if (Mobs.hasCombatPlugin(this.id)) {
+            // eslint-disable-next-line new-cap
             this.combat = new (Mobs.isNewCombatPlugin(this.id).default)(this);
         } else this.combat = new Combat(this);
     }
@@ -228,6 +286,16 @@ class Character extends Entity {
         this.targetCallback = callback;
     }
 
+    resetPosition() {
+        this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
+    }
+
+    return() {
+        this.clearTarget();
+        this.resetPosition();
+        this.setPosition(this.x, this.y);
+    }
+
     onRemoveTarget(callback) {
         this.removeTargetCallback = callback;
     }
@@ -263,6 +331,18 @@ class Character extends Entity {
 
     onPoison(callback) {
         this.poisonCallback = callback;
+    }
+
+    hasBreakableWeapon(): any {
+        throw new Error('Method not implemented.');
+    }
+
+    breakWeapon(): any {
+        throw new Error('Method not implemented.');
+    }
+
+    getHit(target: any): any {
+        throw new Error('Method not implemented.');
     }
 }
 

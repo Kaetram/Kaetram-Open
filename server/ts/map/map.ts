@@ -1,8 +1,8 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Grids from './grids';
 import Regions from './regions';
 import Utils from '../util/utils';
-import config from '../../config.json';
+import config from '../../config';
 import Modules from '../util/modules';
 import PVPAreas from './areas/pvpareas';
 import MusicAreas from './areas/musicareas';
@@ -15,29 +15,54 @@ import Mobs from '../util/mobs';
 import ClientMap from '../../data/map/world_client.json';
 import Entity from '../game/entity/entity';
 
+/**
+ *
+ */
 class Map {
     public width: any;
+
     public objects: any;
+
     public doors: any;
+
     public height: any;
+
     public plateau: any;
+
     public readyCallback: any;
+
     public version: any;
+
     public collisions: any;
+
     public chestAreas: any;
+
     public chests: any;
+
     public tilesets: any;
+
     public lights: any;
+
     public zoneWidth: any;
+
     public zoneHeight: any;
+
     public regionWidth: any;
+
     public regionHeight: any;
+
     public areas: any;
+
     public ready: any;
+
     public readyInterval: any;
+
     public world: any;
+
     public staticEntities: any;
+
     regions: any;
+
     grids: any;
 
     constructor(world) {
@@ -94,6 +119,7 @@ class Map {
         /**
          * The structure for the new this.areas is as follows:
          *
+         * ```
          * this.areas = {
          *      pvpAreas = {
          *          allPvpAreas
@@ -105,6 +131,7 @@ class Map {
          *
          *      ...
          * }
+         * ```
          */
 
         this.areas.PVP = new PVPAreas();
@@ -198,7 +225,7 @@ class Map {
     }
 
     getRandomPosition(area) {
-        const pos: Pos = {};
+        const pos: { [key: string]: any } = {};
         let valid = false;
 
         while (!valid) {
@@ -299,11 +326,11 @@ class Map {
     }
 
     getTileset(tileIndex) {
-        /**
-         * if (id > this.tilesets[idx].firstGID - 1 &&
-         id < this.tilesets[idx].lastGID + 1)
-         return this.tilesets[idx];
-         */
+        // if (
+        //     id > this.tilesets[idx].firstGID - 1 &&
+        //     id < this.tilesets[idx].lastGID + 1
+        // )
+        //     return this.tilesets[idx];
 
         for (const id in this.tilesets)
             if (this.tilesets.hasOwnProperty(id))

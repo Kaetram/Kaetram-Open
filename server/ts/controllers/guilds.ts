@@ -1,7 +1,6 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 /**
- * @class
  * A guild contains the following information:
  *
  * @param name - Identifies the guild
@@ -10,9 +9,13 @@ import _ from 'underscore';
  */
 class Guilds {
     public guilds: any;
+
     public loader: any;
+
     public loaded: any;
+
     public creator: any;
+
     public world: any;
 
     constructor(world) {
@@ -28,7 +31,7 @@ class Guilds {
     }
 
     load() {
-        this.loader.getGuilds(guilds => {
+        this.loader.getGuilds((guilds) => {
             _.each(guilds, (guild: any) => {
                 this.guilds[guild.name] = {
                     owner: guild.owner,
@@ -53,7 +56,7 @@ class Guilds {
             members: [owner.username]
         };
 
-        this.loader.getGuild(newGuild.name, guild => {
+        this.loader.getGuild(newGuild.name, (guild) => {
             if (guild) {
                 owner.notify('A guild with that name already exists.');
 
@@ -78,7 +81,7 @@ class Guilds {
             return;
         }
 
-        this.loader.getGuild(guild.name, guildData => {
+        this.loader.getGuild(guild.name, (guildData) => {
             //
         });
     }
@@ -99,7 +102,7 @@ class Guilds {
             return;
         }
 
-        this.forEachGuild(guild => {
+        this.forEachGuild((guild) => {
             this.creator.saveGuild(guild);
         });
     }
@@ -118,7 +121,7 @@ class Guilds {
     }
 
     forEachGuild(callback) {
-        _.each(this.guilds, guild => {
+        _.each(this.guilds, (guild) => {
             callback(guild);
         });
     }

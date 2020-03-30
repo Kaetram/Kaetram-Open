@@ -1,7 +1,11 @@
 import TeamWar from '../minigames/impl/teamwar';
 
+/**
+ *
+ */
 class Minigames {
     public minigames: any;
+
     public world: any;
 
     constructor(world) {

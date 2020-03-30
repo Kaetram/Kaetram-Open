@@ -1,8 +1,12 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Entity from '../game/entity/entity';
 
+/**
+ *
+ */
 class Grids {
     public map: any;
+
     public entityGrid: any;
 
     constructor(map) {

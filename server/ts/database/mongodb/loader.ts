@@ -1,23 +1,39 @@
+import MongoDB from './mongodb';
+import Player from '../../game/entity/character/player/player';
+
+/**
+ * Loads player data from the database.
+ *
+ * @remarks
+ * Loads player content from the database such as:
+ * - Inventory
+ * - Bank
+ * - Quests
+ * - Achievements
+ * - Guild(s)
+ */
 class Loader {
-    public database: any;
+    /**
+     * Creates an instance of Loader.
+     * @param database - The database client.
+     */
+    constructor(public database: MongoDB) {}
 
-    constructor(database) {
-        this.database = database;
-    }
-
-    getInventory(player, callback) {
-        this.database.getDatabase(database => {
+    getInventory(
+        player: Player,
+        callback: (arg0: any, arg1: any, arg2: any, arg3: any) => void
+    ) {
+        this.database.getDatabase((database) => {
             const inventory = database.collection('player_inventory');
             const cursor = inventory.find({ username: player.username });
 
-            cursor.toArray().then(inventoryArray => {
+            cursor.toArray().then((inventoryArray) => {
                 const info = inventoryArray[0];
 
                 if (info) {
                     if (info.username !== player.username)
                         console.info(
-                            '[Loader] Mismatch in usernames whilst retrieving inventory data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving inventory data for: ${player.username}`
                         );
 
                     callback(
@@ -32,18 +48,17 @@ class Loader {
     }
 
     getBank(player, callback) {
-        this.database.getDatabase(database => {
+        this.database.getDatabase((database) => {
             const bank = database.collection('player_bank');
             const cursor = bank.find({ username: player.username });
 
-            cursor.toArray().then(bankArray => {
+            cursor.toArray().then((bankArray) => {
                 const info = bankArray[0];
 
                 if (info) {
                     if (info.username !== player.username)
                         console.info(
-                            '[Loader] Mismatch in usernames whilst retrieving bank data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving bank data for: ${player.username}`
                         );
 
                     callback(
@@ -58,18 +73,17 @@ class Loader {
     }
 
     getQuests(player, callback) {
-        this.database.getDatabase(database => {
+        this.database.getDatabase((database) => {
             const quests = database.collection('player_quests');
             const cursor = quests.find({ username: player.username });
 
-            cursor.toArray().then(questArray => {
+            cursor.toArray().then((questArray) => {
                 const info = questArray[0];
 
                 if (info) {
                     if (info.username !== player.username)
                         console.info(
-                            '[Loader] Mismatch in usernames whilst retrieving quest data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving quest data for: ${player.username}`
                         );
 
                     callback(info.ids.split(' '), info.stages.split(' '));
@@ -79,18 +93,17 @@ class Loader {
     }
 
     getAchievements(player, callback) {
-        this.database.getDatabase(database => {
+        this.database.getDatabase((database) => {
             const achievements = database.collection('player_achievements');
             const cursor = achievements.find({ username: player.username });
 
-            cursor.toArray().then(achievementsArray => {
+            cursor.toArray().then((achievementsArray) => {
                 const info = achievementsArray[0];
 
                 if (info) {
                     if (info.username !== player.username)
                         console.info(
-                            '[Loader] Mismatch in usernames whilst retrieving achievement data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving achievement data for: ${player.username}`
                         );
 
                     callback(info.ids.split(' '), info.progress.split(' '));
@@ -100,22 +113,22 @@ class Loader {
     }
 
     getGuilds(callback, returnCollection) {
-        this.database.getDatabase(database => {
+        this.database.getDatabase((database) => {
             const guilds = database.collection('guild_data');
             const cursor = guilds.find();
 
-            cursor.toArray().then(guildsList => {
+            cursor.toArray().then((guildsList) => {
                 callback(guildsList, returnCollection ? guilds : null);
             });
         });
     }
 
     getGuild(name, callback) {
-        this.database.getDatabase(database => {
+        this.database.getDatabase((database) => {
             const guilds = database.collection('guild_data');
             const cursor = guilds.find({ name: name.toLowerCase() });
 
-            cursor.toArray().then(guildsArray => {
+            cursor.toArray().then((guildsArray) => {
                 const info = guildsArray[0];
 
                 if (!info) {
@@ -126,8 +139,7 @@ class Loader {
 
                 if (info.name !== name)
                     console.info(
-                        '[Loader] Mismatch whilst retrieving guild data for ' +
-                            name
+                        `[Loader] Mismatch whilst retrieving guild data for ${name}`
                     );
 
                 callback({
@@ -140,11 +152,11 @@ class Loader {
     }
 
     guildExists(name, callback) {
-        this.database.getDatabase(database => {
+        this.database.getDatabase((database) => {
             const guilds = database.collection('guild_data');
             const cursor = guilds.find({ name: name.toLowerCase() });
 
-            cursor.toArray().then(data => {
+            cursor.toArray().then((data) => {
                 callback(data.length === 0);
             });
         });

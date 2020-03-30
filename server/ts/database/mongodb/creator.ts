@@ -1,15 +1,21 @@
-import bcrypt from 'bcrypt';
-import config from '../../../config.json';
+import * as bcrypt from 'bcrypt';
+import config from '../../../config';
+import MongoDB from './mongodb';
 
+/**
+ * Creates, saves, and loads player data from the database.
+ */
 class Creator {
-    public database: any;
-
-    constructor(database) {
+    /**
+     * Creates an instance of this.
+     * @param database - The database client.
+     */
+    constructor(public database: MongoDB) {
         this.database = database;
     }
 
     save(player) {
-        this.database.getDatabase(database => {
+        this.database.getDatabase((database) => {
             /* Handle the player databases */
 
             const playerData = database.collection('player_data');
@@ -37,7 +43,7 @@ class Creator {
     }
 
     savePlayerData(collection, player) {
-        Creator.getPlayerData(player, data => {
+        this.getPlayerData(player, (data) => {
             collection.updateOne(
                 {
                     username: player.username
@@ -51,9 +57,7 @@ class Creator {
 
                     if (result)
                         console.debug(
-                            'Player ' +
-                                player.username +
-                                ' data has been saved successfully.'
+                            `Player ${player.username} data has been saved successfully.`
                         );
                 }
             );
@@ -65,7 +69,7 @@ class Creator {
             {
                 username: player.username
             },
-            { $set: Creator.getPlayerEquipment(player) },
+            { $set: this.getPlayerEquipment(player) },
             {
                 upsert: true
             },
@@ -74,9 +78,7 @@ class Creator {
 
                 if (result)
                     console.debug(
-                        'Player ' +
-                            player.username +
-                            ' equipment data has been saved successfully.'
+                        `Player ${player.username} equipment data has been saved successfully.`
                     );
             }
         );
@@ -96,9 +98,7 @@ class Creator {
 
                 if (result)
                     console.debug(
-                        'Player ' +
-                            player.username +
-                            ' quest data has been saved successfully.'
+                        `Player ${player.username} quest data has been saved successfully.`
                     );
             }
         );
@@ -118,9 +118,7 @@ class Creator {
 
                 if (result)
                     console.debug(
-                        'Player ' +
-                            player.username +
-                            ' achievement data has been saved successfully.'
+                        `Player ${player.username} achievement data has been saved successfully.`
                     );
             }
         );
@@ -140,9 +138,7 @@ class Creator {
 
                 if (result)
                     console.debug(
-                        'Player ' +
-                            player.username +
-                            ' bank data has been saved successfully.'
+                        `Player ${player.username} bank data has been saved successfully.`
                     );
             }
         );
@@ -167,9 +163,7 @@ class Creator {
 
                 if (result)
                     console.debug(
-                        'Player ' +
-                            player.username +
-                            ' regions data has been saved successfully.'
+                        `Player ${player.username} regions data has been saved successfully.`
                     );
             }
         );
@@ -189,9 +183,7 @@ class Creator {
 
                 if (result)
                     console.debug(
-                        'Player ' +
-                            player.username +
-                            ' abilities data has been saved successfully.'
+                        `Player ${player.username} abilities data has been saved successfully.`
                     );
             }
         );
@@ -211,9 +203,7 @@ class Creator {
 
                 if (result)
                     console.debug(
-                        'Player ' +
-                            player.username +
-                            ' inventory data has been saved successfully.'
+                        `Player ${player.username} inventory data has been saved successfully.`
                     );
             }
         );
@@ -228,7 +218,7 @@ class Creator {
 
         if (!data.name || !data.owner || !data.members) return;
 
-        this.database.getDatabase(database => {
+        this.database.getDatabase((database) => {
             const guilds = database.collection('guild_data');
 
             guilds.updateOne(
@@ -251,7 +241,7 @@ class Creator {
         });
     }
 
-    static getPasswordHash(password, callback) {
+    getPasswordHash(password, callback) {
         bcrypt.hash(password, 10, (error, hash) => {
             if (error) throw error;
 
@@ -259,8 +249,8 @@ class Creator {
         });
     }
 
-    static getPlayerData(player, callback) {
-        Creator.getPasswordHash(player.password, hash => {
+    getPlayerData(player, callback) {
+        this.getPasswordHash(player.password, (hash) => {
             callback({
                 username: player.username,
                 password: hash,
@@ -290,7 +280,7 @@ class Creator {
         });
     }
 
-    static getPlayerEquipment(player) {
+    getPlayerEquipment(player) {
         return {
             username: player.username,
             armour: [

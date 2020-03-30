@@ -1,11 +1,18 @@
 import Entity from '../entity';
 import Utils from '../../../util/utils';
 
+/**
+ *
+ */
 class Chest extends Entity {
     public openCallback: any;
+
     public respawnCallback: any;
+
     public respawnDuration: any;
+
     public items: any;
+
     static: any;
 
     constructor(id, instance, x, y) {

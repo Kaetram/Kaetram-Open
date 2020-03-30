@@ -3,6 +3,9 @@ import Hit from '../../ts/game/entity/character/combat/hit';
 import Utils from '../../ts/util/utils';
 import Modules from '../../ts/util/modules';
 
+/**
+ *
+ */
 class Snek extends Combat {
     public character: any;
 
@@ -30,7 +33,7 @@ class Snek extends Combat {
     }
 
     getPoisonData() {
-        return new Date().getTime().toString() + ':30000:1';
+        return `${new Date().getTime().toString()}:30000:1`;
     }
 }
 

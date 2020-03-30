@@ -1,12 +1,19 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import AbilityInfo from '../../../../../util/abilities';
 import Ability from './impl/ability';
+import Player from '../player';
 
+/**
+ *
+ */
 class Abilities {
     public abilities: any;
+
     public shortcuts: any;
+
     public shortcutSize: any;
-    public player: any;
+
+    public player: Player;
 
     constructor(player) {
         this.player = player;

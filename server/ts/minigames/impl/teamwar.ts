@@ -1,18 +1,29 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Minigame from '../minigame';
 import Utils from '../../util/utils';
 import Messages from '../../network/messages';
 import Packets from '../../network/packets';
 
+/**
+ *
+ */
 class TeamWar extends Minigame {
     public lobby: any;
+
     public redTeam: any;
+
     public blueTeam: any;
+
     public updateInterval: any;
+
     public countdown: any;
+
     public lastSync: any;
+
     public syncThreshold: any;
+
     public started: any;
+
     public world: any;
 
     constructor(world) {
@@ -77,9 +88,13 @@ class TeamWar extends Minigame {
         const half = Math.ceil(tmp.length / 2);
         const random = Utils.randomInt(0, 1);
 
-        if (random === 1)
-            (this.redTeam = tmp.splice(0, half)), (this.blueTeam = tmp);
-        else (this.blueTeam = tmp.splice(0, half)), (this.redTeam = tmp);
+        if (random === 1) {
+            this.redTeam = tmp.splice(0, half);
+            this.blueTeam = tmp;
+        } else {
+            this.blueTeam = tmp.splice(0, half);
+            this.redTeam = tmp;
+        }
     }
 
     count() {
@@ -89,7 +104,7 @@ class TeamWar extends Minigame {
     synchronize() {
         if (this.started) return;
 
-        _.each(this.lobby, player => {
+        _.each(this.lobby, (player) => {
             this.sendCountdown(player);
         });
     }

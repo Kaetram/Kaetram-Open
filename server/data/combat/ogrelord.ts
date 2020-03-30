@@ -1,21 +1,33 @@
+import * as _ from 'underscore';
 import Combat from '../../ts/game/entity/character/combat/combat';
 import Messages from '../../ts/network/messages';
 import Packets from '../../ts/network/packets';
 import Modules from '../../ts/util/modules';
 import Utils from '../../ts/util/utils';
-import _ from 'underscore';
 import Mob from '../../ts/game/entity/character/mob/mob';
 
+/**
+ *
+ */
 class OgreLord extends Combat {
     public dialogues: any;
+
     public minions: Mob[];
+
     public lastSpawn: any;
+
     public isAttacked: any;
+
     public talkingInterval: any;
+
     public character: any;
+
     public updateInterval: any;
+
     public loaded: any;
+
     public world: any;
+
     public attackers: any;
 
     constructor(character) {
@@ -100,7 +112,7 @@ class OgreLord extends Combat {
         for (let i = 0; i < xs.length; i++)
             this.minions.push(this.world.spawnMob(12, xs[i], ys[i]));
 
-        _.each(this.minions, minion => {
+        _.each(this.minions, (minion) => {
             minion.onDeath(() => {
                 if (this.isLast()) this.lastSpawn = new Date().getTime();
 
@@ -116,7 +128,7 @@ class OgreLord extends Combat {
     beginMinionAttack() {
         if (!this.hasMinions()) return;
 
-        _.each(this.minions, minion => {
+        _.each(this.minions, (minion) => {
             const randomTarget = this.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)

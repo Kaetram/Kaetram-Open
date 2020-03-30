@@ -1,25 +1,42 @@
+import * as _ from 'underscore';
 import Combat from '../../ts/game/entity/character/combat/combat';
 import Packets from '../../ts/network/packets';
 import Messages from '../../ts/network/messages';
 import Utils from '../../ts/util/utils';
-import _ from 'underscore';
 import Mob from '../../ts/game/entity/character/mob/mob';
 
+/**
+ *
+ */
 class QueenAnt extends Combat {
     public lastAoE: any;
+
     public minions: Mob[];
+
     public lastSpawn: any;
+
     public isAttacked: any;
+
     public frozen: any;
+
     public lastHit: any;
+
     public getTime: any;
+
     public aoeCountdown: any;
+
     public aoeTimeout: any;
+
     public dealAoE: any;
+
     public aoeRadius: any;
+
     public minionCount: any;
+
     public world: any;
+
     public character: any;
+
     public attackers: any;
     /*
      * The queen ant is a little more complex as it uses
@@ -117,7 +134,7 @@ class QueenAnt extends Combat {
                 this.world.spawnMob(13, this.character.x, this.character.y)
             );
 
-        _.each(this.minions, minion => {
+        _.each(this.minions, (minion) => {
             minion.aggressive = true;
             minion.spawnDistance = 12;
 
@@ -134,7 +151,7 @@ class QueenAnt extends Combat {
     beginMinionAttack() {
         if (!this.hasMinions()) return;
 
-        _.each(this.minions, minion => {
+        _.each(this.minions, (minion) => {
             const randomTarget = this.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget)

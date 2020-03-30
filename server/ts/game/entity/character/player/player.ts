@@ -1,144 +1,240 @@
-import Character from '../character';
+import config from '../../../../../config';
 import Incoming from '../../../../controllers/incoming';
-import Armour from './equipment/armour';
-import Weapon from './equipment/weapon';
-import Pendant from './equipment/pendant';
-import Ring from './equipment/ring';
-import Boots from './equipment/boots';
-import Items from '../../../../util/items';
-import Messages from '../../../../network/messages';
-import Formulas from '../../../../util/formulas';
-import HitPoints from './points/hitpoints';
-import Mana from './points/mana';
-import Packets from '../../../../network/packets';
-import Modules from '../../../../util/modules';
-import Handler from './handler';
 import Quests from '../../../../controllers/quests';
-import Inventory from './containers/inventory/inventory';
-import Abilities from './ability/abilities';
-import Bank from './containers/bank/bank';
-import config from '../../../../../config.json';
-import Enchant from './enchant';
-import Utils from '../../../../util/utils';
-import Constants from '../../../../util/constants';
-import Hit from '../combat/hit';
-import Trade from './trade';
-import Warp from './warp';
-import Doors from './doors';
-import World from '../../../world';
 import MongoDB from '../../../../database/mongodb/mongodb';
 import Connection from '../../../../network/connection';
+import Messages from '../../../../network/messages';
+import Packets from '../../../../network/packets';
+import Constants from '../../../../util/constants';
+import Formulas from '../../../../util/formulas';
+import Items from '../../../../util/items';
+import Modules from '../../../../util/modules';
+import Utils from '../../../../util/utils';
+import World from '../../../world';
+import Character from '../character';
+import Hit from '../combat/hit';
+import Abilities from './ability/abilities';
+import Bank from './containers/bank/bank';
+import Inventory from './containers/inventory/inventory';
+import Doors from './doors';
+import Enchant from './enchant';
+import Armour from './equipment/armour';
+import Boots from './equipment/boots';
+import Pendant from './equipment/pendant';
+import Ring from './equipment/ring';
+import Weapon from './equipment/weapon';
+import Handler from './handler';
+import HitPoints from './points/hitpoints';
+import Mana from './points/mana';
+import Trade from './trade';
+import Warp from './warp';
 
 /**
  *
- *
- * @class Player
- * @extends {Character}
  */
 class Player extends Character {
     public region: any;
+
     public invisiblesIds: any;
+
     public hitPoints: any;
+
     public mana: any;
+
     public quests: any;
+
     public potentialPosition: any;
+
     public futurePosition: any;
+
     public regionsLoaded: any;
+
     public lightsLoaded: any;
+
     public armour: any;
+
     public weapon: any;
+
     public pendant: any;
+
     public ring: any;
+
     public boots: any;
+
     public dead: any;
+
     public lastRegionChange: any;
+
     public orientationCallback: any;
+
     public regionCallback: any;
+
     public attackCallback: any;
+
     public hitCallback: any;
+
     public killCallback: any;
+
     public deathCallback: any;
+
     public npcTalkCallback: any;
+
     public doorCallback: any;
+
     public teleportCallback: any;
+
     public profileToggleCallback: any;
+
     public inventoryToggleCallback: any;
+
     public warpToggleCallback: any;
+
     public cheatScoreCallback: any;
+
     public readyCallback: any;
+
     public kind: any;
+
     public rights: any;
+
     public experience: any;
+
     public ban: any;
+
     public mute: any;
+
     public membership: any;
+
     public lastLogin: any;
+
     public pvpKills: any;
+
     public pvpDeaths: any;
+
     public orientation: any;
+
     public mapVersion: any;
+
     public warp: any;
+
     public level: any;
+
     public nextExperience: any;
+
     public prevExperience: any;
+
     public userAgent: any;
+
     public username: any;
+
     public inventory: any;
+
     public bank: any;
+
     public achievementsLoaded: any;
+
     public questsLoaded: any;
+
     public x: any;
+
     public y: any;
+
     public instance: any;
+
     public regionPosition: any;
+
     public combat: any;
+
     public cheatScore: any;
+
     public pvp: any;
+
     public permanentPVP: any;
+
     public overlayArea: any;
+
     public cameraArea: any;
+
     public currentSong: any;
+
     public profileDialogOpen: any;
+
     public inventoryOpen: any;
+
     public warpOpen: any;
+
     public defaultMovementSpeed: any;
+
     public movementSpeed: any;
+
     public attackRange: any;
+
     public disconnectTimeout: any;
+
     public timeoutDuration: any;
+
     public type: any;
+
     public poison: any;
+
     public isGuest: any;
-    public new: any;
+
+    public new: boolean;
+
     public incoming: Incoming;
+
     public ready: boolean;
+
     public moving: boolean;
+
     public newRegion: boolean;
+
     public team: any;
+
     public guild: any;
+
     public handler: Handler;
+
     public abilities: Abilities;
+
     public enchant: Enchant;
+
     public trade: Trade;
+
     public doors: Doors;
+
     public introduced: boolean;
+
     public acceptedTrade: boolean;
+
     public invincible: boolean;
+
     public noDamage: boolean;
+
     public canTalk: boolean;
+
     public instanced: boolean;
+
     public visible: boolean;
+
     public talkIndex: number;
+
     public npcTalk: any;
+
     public maxMana: any;
+
+    public frozen: any;
+
+    public lastMovement: number;
+
+    public spawnLocation: any;
 
     /**
      * Creates an instance of Player.
-     * @param {World} world
-     * @param {MongoDB} database
-     * @param {Connection} connection
-     * @param {string} clientId
-     * @memberof Player
+     * @param world -
+     * @param database -
+     * @param connection -
+     * @param clientId -
      */
     constructor(
         public world: World,
@@ -237,11 +333,11 @@ class Player extends Character {
 
         this.userAgent = data.userAgent;
 
-        const armour = data.armour;
-        const weapon = data.weapon;
-        const pendant = data.pendant;
-        const ring = data.ring;
-        const boots = data.boots;
+        const { armour } = data;
+        const { weapon } = data;
+        const { pendant } = data;
+        const { ring } = data;
+        const { boots } = data;
 
         this.setPosition(data.x, data.y);
         this.setArmour(armour[0], armour[1], armour[2], armour[3]);
@@ -382,7 +478,7 @@ class Player extends Character {
     intro() {
         if (this.ban > new Date()) {
             this.connection.sendUTF8('ban');
-            this.connection.close('Player: ' + this.username + ' is banned.');
+            this.connection.close(`Player: ${this.username} is banned.`);
         }
 
         if (this.x <= 0 || this.y <= 0) this.sendToSpawn();
@@ -527,11 +623,11 @@ class Player extends Character {
     }
 
     eat(id) {
-        const item = Items.getPlugin(id);
+        const Item = Items.getPlugin(id);
 
-        if (!item) return;
+        if (!Item) return;
 
-        new item(id).onUse(this);
+        new Item(id).onUse(this);
     }
 
     equip(string, count, ability, abilityLevel) {
@@ -626,7 +722,7 @@ class Player extends Character {
 
         if (requirement > this.level) {
             this.notify(
-                'You must be at least level ' + requirement + ' to equip this.'
+                `You must be at least level ${requirement} to equip this.`
             );
 
             return false;
@@ -668,7 +764,7 @@ class Player extends Character {
         if (this.cheatScoreCallback) this.cheatScoreCallback();
     }
 
-    updatePVP(pvp, permanent) {
+    updatePVP(pvp, permanent?) {
         /**
          * No need to update if the state is the same
          */
@@ -700,7 +796,7 @@ class Player extends Character {
             this.send(
                 new Messages.Overlay(Packets.OverlayOpcode.Set, {
                     image: overlay.fog ? overlay.fog : 'empty',
-                    colour: 'rgba(0,0,0,' + overlay.darkness + ')'
+                    colour: `rgba(0,0,0,${overlay.darkness})`
                 })
             );
         } else this.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
@@ -906,7 +1002,7 @@ class Player extends Character {
 
         if (this.orientationCallback)
             // Will be necessary in the future.
-            this.orientationCallback;
+            this.orientationCallback();
     }
 
     setFuturePosition(x, y) {
@@ -1000,6 +1096,7 @@ class Player extends Character {
         );
     }
 
+    // eslint-disable-next-line class-methods-use-this
     canBeStunned() {
         return true;
     }

@@ -1,7 +1,11 @@
 import Entity from '../entity';
 
+/**
+ *
+ */
 class NPC extends Entity {
     public talkIndex: any;
+
     public id: any;
 
     constructor(id, instance, x, y) {

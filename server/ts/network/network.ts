@@ -1,18 +1,27 @@
+import * as _ from 'underscore';
 import World from '../game/world';
 import Messages from './messages';
 import Packets from './packets';
 import Player from '../game/entity/character/player/player';
 import Utils from '../util/utils';
-import config from '../../config.json';
-import _ from 'underscore';
+import config from '../../config';
 
+/**
+ *
+ */
 class Network {
     public world: any;
+
     public packets: any;
+
     public socket: any;
+
     public database: any;
+
     public differenceThreshold: any;
+
     public region: any;
+
     public map: any;
 
     constructor(world) {
@@ -30,7 +39,7 @@ class Network {
     }
 
     load() {
-        this.world.onPlayerConnection(connection => {
+        this.world.onPlayerConnection((connection) => {
             this.handlePlayerConnection(connection);
         });
 
@@ -101,9 +110,9 @@ class Network {
         this.packets[player.instance] = [];
     }
 
-    /*****************************************
+    /** ***************************************
      * Broadcasting and Socket Communication *
-     *****************************************/
+     **************************************** */
 
     /**
      * Broadcast a message to everyone in the world.
@@ -140,7 +149,7 @@ class Network {
      */
 
     pushToPlayers(players, message) {
-        _.each(players, playerInstance => {
+        _.each(players, (playerInstance) => {
             this.pushToPlayer(
                 this.world.getPlayerByInstance(playerInstance),
                 message
@@ -157,7 +166,7 @@ class Network {
 
         if (!region) return;
 
-        _.each(region.players, playerInstance => {
+        _.each(region.players, (playerInstance) => {
             if (playerInstance !== ignoreId)
                 this.pushToPlayer(
                     this.world.getEntityByInstance(playerInstance),
@@ -174,7 +183,7 @@ class Network {
      */
 
     pushToAdjacentRegions(regionId, message, ignoreId) {
-        this.map.regions.forEachAdjacentRegion(regionId, id => {
+        this.map.regions.forEachAdjacentRegion(regionId, (id) => {
             this.pushToRegion(id, message, ignoreId);
         });
     }
@@ -184,7 +193,7 @@ class Network {
      */
 
     pushToNameArray(names, message) {
-        _.each(names, name => {
+        _.each(names, (name) => {
             const player = this.world.getPlayerByName(name);
 
             if (player) this.pushToPlayer(player, message);
@@ -196,7 +205,7 @@ class Network {
      */
 
     pushToOldRegions(player, message) {
-        _.each(player.recentRegions, id => {
+        _.each(player.recentRegions, (id) => {
             this.pushToRegion(id, message);
         });
 

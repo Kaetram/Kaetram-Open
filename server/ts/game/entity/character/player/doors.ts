@@ -1,14 +1,22 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import DoorData from '../../../../../data/doors.json';
 import Messages from '../../../../network/messages';
 import Packets from '../../../../network/packets';
-import config from '../../../../../config.json';
+import config from '../../../../../config';
+import Player from './player';
 
+/**
+ *
+ */
 class Doors {
     public doors: any;
-    public player: any;
+
+    public player: Player;
+
     public regions: any;
+
     public world: any;
+
     map: any;
 
     constructor(player) {
@@ -142,13 +150,13 @@ class Doors {
     }
 
     isDoor(x, y, callback) {
-        this.forEachDoor(door => {
+        this.forEachDoor((door) => {
             callback(door.x === x && door.y === y);
         });
     }
 
     forEachDoor(callback) {
-        _.each(this.doors, door => {
+        _.each(this.doors, (door) => {
             callback(door);
         });
     }

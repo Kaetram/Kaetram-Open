@@ -2,14 +2,24 @@ import Data from '../../../../../data/achievements.json';
 import Messages from '../../../../network/messages';
 import Packets from '../../../../network/packets';
 import Modules from '../../../../util/modules';
+import Player from './player';
 
+/**
+ *
+ */
 class Achievement {
-    public player: any;
+    public player: Player;
+
     public progress: any;
+
     public data: any;
+
     public id: any;
+
     public name: any;
+
     public description: any;
+
     discovered: boolean;
 
     constructor(id, player) {
@@ -59,7 +69,7 @@ class Achievement {
     }
 
     finish(npc) {
-        const rewardType = this.data.rewardType;
+        const { rewardType } = this.data;
 
         switch (rewardType) {
             case Modules.Achievements.Rewards.Item:

@@ -1,13 +1,23 @@
 import Modules from '../../../../util/modules';
+import Player from './player';
 
+/**
+ *
+ */
 class Trade {
     public state: any;
-    public oPlayer: any;
+
+    public oPlayer: Player;
+
     public requestee: any;
+
     public subState: any;
+
     public playerItems: any;
+
     public oPlayerItems: any;
-    public player: any;
+
+    public player: Player;
 
     constructor(player) {
         this.player = player;

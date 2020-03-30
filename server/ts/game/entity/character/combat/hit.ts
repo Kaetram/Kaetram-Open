@@ -1,15 +1,13 @@
 class Hit {
     public ranged: any;
+
     public aoe: any;
+
     public poison: any;
-    public damage: any;
-    public type: any;
+
     public terror: any;
 
-    constructor(type, damage) {
-        this.type = type;
-        this.damage = damage;
-
+    constructor(public type: number, public damage: number) {
         this.ranged = false;
         this.aoe = false;
         this.terror = false;

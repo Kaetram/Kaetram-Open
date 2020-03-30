@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import NPCData from '../../data/npcs.json';
 import ItemData from '../../data/items.json';
 import MobData from '../../data/mobs.json';
@@ -8,13 +8,16 @@ import ObjectData from '../../data/objects.json';
 import Mobs from './mobs';
 import NPCs from './npcs';
 import Items from './items';
-import Plugins from '../util/plugins';
+import Plugins from './plugins';
 import Abilities from './abilities';
 import Shops from './shops';
 import Objects from './objects';
 import Formulas from './formulas';
 import Constants from './constants';
 
+/**
+ *
+ */
 class Parser {
     public readyCallback: any;
 
@@ -32,7 +35,7 @@ class Parser {
 
     load() {
         this.onReady(() => {
-            Mobs.Plugins = Plugins(__dirname + '/../../data/combat/');
+            Mobs.Plugins = Plugins(`${__dirname}/../../data/combat/`);
 
             console.info(
                 `Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`
@@ -77,7 +80,7 @@ class Parser {
             mobCounter++;
         });
 
-        console.info('Finished loading ' + mobCounter + ' mobs.');
+        console.info(`Finished loading ${mobCounter} mobs.`);
     }
 
     loadNPCData() {
@@ -99,7 +102,7 @@ class Parser {
             npcCounter++;
         });
 
-        console.info('Finished loading ' + npcCounter + ' NPCs.');
+        console.info(`Finished loading ${npcCounter} NPCs.`);
     }
 
     loadItemData() {
@@ -134,13 +137,14 @@ class Parser {
             Items.Ids[value.id] = Items.Data[key];
 
             if (value.plugin)
-                Items.Plugins[value.id] = require('../../data/items/' +
-                    value.plugin);
+                Items.Plugins[
+                    value.id
+                ] = require(`../../data/items/${value.plugin}`);
 
             itemCounter++;
         });
 
-        console.info('Finished loading ' + itemCounter + ' items.');
+        console.info(`Finished loading ${itemCounter} items.`);
     }
 
     loadAbilityData() {
@@ -162,7 +166,7 @@ class Parser {
             skillCounter++;
         });
 
-        console.info('Finished loading ' + skillCounter + ' skills.');
+        console.info(`Finished loading ${skillCounter} skills.`);
     }
 
     loadShops() {
@@ -187,7 +191,7 @@ class Parser {
             shopCounter++;
         });
 
-        console.info('Finished loading ' + shopCounter + ' shops.');
+        console.info(`Finished loading ${shopCounter} shops.`);
     }
 
     /**
@@ -213,7 +217,7 @@ class Parser {
     188884693, 208545524, 230252838, 254219653, 280681159, 309897028,      - Lvl 124-129
     342153959, 377768495, 417090128, 460504727                             - Lvl 130-134
 
-    **/
+    * */
 
     loadLevels() {
         Formulas.LevelExp[0] = 0;
@@ -241,7 +245,7 @@ class Parser {
             objectCounter++;
         });
 
-        console.info('Finished loading ' + objectCounter + ' global objects.');
+        console.info(`Finished loading ${objectCounter} global objects.`);
 
         if (this.readyCallback) this.readyCallback();
     }

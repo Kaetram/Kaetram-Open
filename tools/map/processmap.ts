@@ -1,18 +1,16 @@
-/** @format */
-
-import _ from 'underscore';
+import * as _ from 'underscore';
 
 /**
  * Global Values
  */
 
-const collisions = {},
-    entities = {};
-let mobsFirstGid = -1,
-    map,
-    mode;
+const collisions = {};
+const entities = {};
+let mobsFirstGid = -1;
+let map;
+let mode;
 
-const isValid = function(number) {
+const isValid = (number) => {
     return (
         number &&
         !isNaN(number - 0) &&
@@ -22,10 +20,10 @@ const isValid = function(number) {
     );
 };
 
-const calculateDepth = function(map) {
+const calculateDepth = (mapData) => {
     let depth = 1;
 
-    _.each(map.data, info => {
+    _.each(mapData.data, (info) => {
         if (!_.isArray(info)) return;
 
         if (info.length > depth) depth = info.length;
@@ -34,9 +32,9 @@ const calculateDepth = function(map) {
     return depth;
 };
 
-const parseLayer = function(layer) {
-    const name = layer.name.toLowerCase(),
-        type = layer.type;
+const parseLayer = (layer) => {
+    const name = layer.name.toLowerCase();
+    const { type } = layer;
 
     if (name === 'entities' && mode === 'server') {
         const tiles = layer.data;
@@ -58,8 +56,8 @@ const parseLayer = function(layer) {
         }
     } else if (name.startsWith('plateau') && mode === 'server') {
         for (let j = 0; j < tiles.length; j++) {
-            const pGid = tiles[j],
-                level = parseInt(name.split('plateau')[1]);
+            const pGid = tiles[j];
+            const level = parseInt(name.split('plateau')[1]);
 
             if (map.collisions.indexOf(j) > -1)
                 // Skip collision indexes.
@@ -174,10 +172,10 @@ export default function parse(json, options) {
         if (mode === 'server' && property === 'o') map.objects.push(id);
     };
 
-    const handleAnimation = function(id, firstGID, tile) {
+    const handleAnimation = (id, firstGID, tile) => {
         const animationData = [];
 
-        _.each(tile.animation, function(animation) {
+        _.each(tile.animation, (animation: any) => {
             animationData.push({
                 duration: animation.duration,
                 tileid: parseInt(firstGID) + parseInt(animation.tileid) - 1
@@ -188,7 +186,7 @@ export default function parse(json, options) {
     };
 
     if (this.json.tilesets instanceof Array) {
-        _.each(this.json.tilesets, function(tileset) {
+        _.each(this.json.tilesets, (tileset: any) => {
             const name = tileset.name.toLowerCase();
 
             if (mode === 'info' || mode === 'server')
@@ -206,23 +204,23 @@ export default function parse(json, options) {
             if (name === 'mobs' && mode === 'server') {
                 mobsFirstGid = tileset.firstgid;
 
-                _.each(tileset.tiles, function(tile) {
+                _.each(tileset.tiles, (tile: any) => {
                     entities[parseInt(tile.id) + 1] = {};
 
-                    _.each(tile.properties, function(property) {
+                    _.each(tile.properties, (property: any) => {
                         entities[parseInt(tile.id) + 1][property.name] =
                             property.value;
                     });
                 });
             }
 
-            _.each(tileset.tiles, function(tile) {
+            _.each(tileset.tiles, (tile: any) => {
                 const id = parseInt(tileset.firstgid) + parseInt(tile.id);
 
                 if (tile.animation && mode === 'info')
                     handleAnimation(id, tileset.firstgid, tile);
                 else
-                    _.each(tile.properties, function(data) {
+                    _.each(tile.properties, (data: any) => {
                         handleProperty(
                             data.name,
                             isValid(parseInt(data.value, 10))
@@ -235,7 +233,7 @@ export default function parse(json, options) {
         });
     }
 
-    _.each(this.json.layers, function(layer) {
+    _.each(this.json.layers, (layer: any) => {
         const name = layer.name.toLowerCase();
 
         if (mode === 'server')
@@ -243,7 +241,7 @@ export default function parse(json, options) {
                 case 'doors':
                     const doors = layer.objects;
 
-                    _.each(doors, function(door) {
+                    _.each(doors, (door: any) => {
                         if (door.properties.length > 2) {
                             map.doors[door.id] = {
                                 o: door.properties[0].value,
@@ -260,7 +258,7 @@ export default function parse(json, options) {
                 case 'chestareas':
                     const cAreas = layer.objects;
 
-                    _.each(cAreas, function(area) {
+                    _.each(cAreas, (area: any) => {
                         const chestArea = {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
@@ -268,8 +266,8 @@ export default function parse(json, options) {
                             height: area.height / map.tilesize
                         };
 
-                        _.each(area.properties, function(property) {
-                            chestArea['t' + property.name] = property.value;
+                        _.each(area.properties, (property: any) => {
+                            chestArea[`t${property.name}`] = property.value;
                         });
 
                         map.chestAreas.push(chestArea);
@@ -280,16 +278,17 @@ export default function parse(json, options) {
                 case 'chests':
                     const chests = layer.objects;
 
-                    _.each(chests, function(chest) {
+                    _.each(chests, (chest: any) => {
                         const oChest = {
+                            i: null,
                             x: chest.x / map.tilesize,
                             y: chest.y / map.tilesize
                         };
 
-                        oChest['i'] = _.map(
+                        oChest.i = _.map(
                             chest.properties[0].value.split(','),
-                            function(name) {
-                                return name;
+                            (chestName) => {
+                                return chestName;
                             }
                         );
 
@@ -301,13 +300,13 @@ export default function parse(json, options) {
                 case 'lights':
                     const lights = layer.objects;
 
-                    _.each(lights, function(lightObject) {
+                    _.each(lights, (lightObject: any) => {
                         const light = {
                             x: lightObject.x / 16 + 0.5,
                             y: lightObject.y / 16 + 0.5
                         };
 
-                        _.each(lightObject.properties, function(property) {
+                        _.each(lightObject.properties, (property: any) => {
                             light[property.name] = property.value;
                         });
 
@@ -319,7 +318,7 @@ export default function parse(json, options) {
                 case 'music':
                     const mAreas = layer.objects;
 
-                    _.each(mAreas, function(area) {
+                    _.each(mAreas, (area: any) => {
                         const musicArea = {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
@@ -327,7 +326,7 @@ export default function parse(json, options) {
                             height: area.height / map.tilesize
                         };
 
-                        _.each(area.properties, function(property) {
+                        _.each(area.properties, (property: any) => {
                             musicArea[property.name] = property.value;
                         });
 
@@ -339,7 +338,7 @@ export default function parse(json, options) {
                 case 'pvp':
                     const pAreas = layer.objects;
 
-                    _.each(pAreas, function(area) {
+                    _.each(pAreas, (area: any) => {
                         const pvpArea = {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
@@ -355,7 +354,7 @@ export default function parse(json, options) {
                 case 'overlays':
                     const overlayAreas = layer.objects;
 
-                    _.each(overlayAreas, function(area) {
+                    _.each(overlayAreas, (area: any) => {
                         const oArea = {
                             id: area.id,
                             x: area.x / map.tilesize,
@@ -364,7 +363,7 @@ export default function parse(json, options) {
                             height: area.height / map.tilesize
                         };
 
-                        _.each(area.properties, function(property) {
+                        _.each(area.properties, (property: any) => {
                             oArea[property.name] = isNaN(property.value)
                                 ? property.value
                                 : parseFloat(property.value);
@@ -378,7 +377,7 @@ export default function parse(json, options) {
                 case 'camera':
                     const cameraAreas = layer.objects;
 
-                    _.each(cameraAreas, function(area) {
+                    _.each(cameraAreas, (area: any) => {
                         const cArea = {
                             id: area.id,
                             x: area.x / map.tilesize,
@@ -396,7 +395,7 @@ export default function parse(json, options) {
                 case 'games':
                     const gAreas = layer.objects;
 
-                    _.each(gAreas, function(area) {
+                    _.each(gAreas, (area: any) => {
                         const gameArea = {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
@@ -426,17 +425,17 @@ export default function parse(json, options) {
     return map;
 }
 
-if (typeof String.prototype.startsWith !== 'function') {
-    String.prototype.startsWith = function(str) {
-        return str.length > 0 && this.substring(0, str.length) === str;
-    };
-}
+// if (typeof String.prototype.startsWith !== 'function') {
+//     String.prototype.startsWith = function(str) {
+//         return str.length > 0 && this.substring(0, str.length) === str;
+//     };
+// }
 
-if (typeof String.prototype.endsWith !== 'function') {
-    String.prototype.endsWith = function(str) {
-        return (
-            str.length > 0 &&
-            this.substring(this.length - str.length, this.length) === str
-        );
-    };
-}
+// if (typeof String.prototype.endsWith !== 'function') {
+//     String.prototype.endsWith = function(str) {
+//         return (
+//             str.length > 0 &&
+//             this.substring(this.length - str.length, this.length) === str
+//         );
+//     };
+// }

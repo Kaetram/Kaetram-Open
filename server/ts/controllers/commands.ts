@@ -1,13 +1,17 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
 import MapClient from '../../data/map/world_client.json';
-import config from '../../config.json';
+import config from '../../config';
 import Player from '../game/entity/character/player/player';
 import World from '../game/world';
 
+/**
+ *
+ */
 class Commands {
-    public player: any;
+    public player: Player;
+
     public world: World;
 
     constructor(player) {
@@ -58,7 +62,7 @@ class Commands {
                 this.player.send(
                     new Messages.Notification(
                         Packets.NotificationOpcode.Text,
-                        'x: ' + this.player.x + ' y: ' + this.player.y
+                        `x: ${this.player.x} y: ${this.player.y}`
                     )
                 );
 
@@ -175,7 +179,7 @@ class Commands {
 
             case 'maxhealth':
                 this.player.notify(
-                    'Max health is ' + this.player.hitPoints.getMaxHitPoints()
+                    `Max health is ${this.player.hitPoints.getMaxHitPoints()}`
                 );
 
                 return;
@@ -275,7 +279,7 @@ class Commands {
                 return;
 
             case 'teleall':
-                _.each(this.world.players, player => {
+                _.each(this.world.players, (player) => {
                     player.teleport(this.player.x, this.player.y);
                 });
 
@@ -311,7 +315,7 @@ class Commands {
                     tileY
                 );
 
-                console.info('Sending Tile: ' + tileIndex);
+                console.info(`Sending Tile: ${tileIndex}`);
 
                 this.world.push(Packets.PushOpcode.Player, {
                     player: this.player,
@@ -334,15 +338,16 @@ class Commands {
                     getTileY
                 );
 
-                console.info('Tile Index: ' + getTileIndex);
+                console.info(`Tile Index: ${getTileIndex}`);
 
                 console.info(
-                    'Tile Info: ' + (MapClient as any).data[getTileIndex]
+                    `Tile Info: ${(MapClient as any).data[getTileIndex]}`
                 );
 
                 console.info(
-                    'Actual Index: ' +
-                        this.world.map.getActualTileIndex(getTileIndex)
+                    `Actual Index: ${this.world.map.getActualTileIndex(
+                        getTileIndex
+                    )}`
                 );
 
                 return;
@@ -356,7 +361,7 @@ class Commands {
                 return;
 
             case 'checkregion':
-                this.player.notify('Current Region: ' + this.player.region);
+                this.player.notify(`Current Region: ${this.player.region}`);
 
                 return;
 
@@ -419,7 +424,7 @@ class Commands {
                 break;
 
             case 'clear':
-                this.player.inventory.forEachSlot(slot => {
+                this.player.inventory.forEachSlot((slot) => {
                     if (slot !== -1) {
                         this.player.inventory.remove(slot.id, slot.count);
                     }
@@ -433,7 +438,7 @@ class Commands {
                 break;
 
             case 'togglepvp':
-                this.world.forEachPlayer(player => {
+                this.world.forEachPlayer((player) => {
                     player.updatePVP(true, true);
                 });
 

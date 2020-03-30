@@ -1,12 +1,17 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import ShopData from '../util/shops';
 import Items from '../util/items';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
 
+/**
+ *
+ */
 class Shops {
     public shopInterval: any;
+
     public interval: any;
+
     public world: any;
 
     constructor(world) {

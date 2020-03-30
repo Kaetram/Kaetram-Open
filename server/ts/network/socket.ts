@@ -1,6 +1,8 @@
 class Socket {
     public _connections: any;
+
     port: any;
+
     _counter: number;
 
     constructor(port) {

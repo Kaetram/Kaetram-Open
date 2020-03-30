@@ -1,4 +1,4 @@
-import config from '../config.json';
+import config from '../config';
 import Database from './database/database';
 import World from './game/world';
 import WebSocket from './network/websocket';
@@ -13,10 +13,11 @@ function onWorldLoad() {
 
     const host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
-    console.info('Connect locally via http://' + host + ':' + config.port);
+    console.info(`Connect locally via http://${host}:${config.port}`);
 }
 
 function loadParser() {
+    // eslint-disable-next-line no-new
     new Parser();
 }
 
@@ -27,7 +28,7 @@ function main() {
     const database = new Database(config.database);
     const stdin = process.openStdin();
 
-    webSocket.onConnect(connection => {
+    webSocket.onConnect((connection) => {
         if (world.allowConnections) {
             if (world.isFull()) {
                 console.info(
@@ -56,7 +57,7 @@ function main() {
         world.load(onWorldLoad);
     });
 
-    stdin.addListener('../../data', data => {
+    stdin.addListener('../../data', (data) => {
         const message = data.toString().replace(/(\r\n|\n|\r)/gm, '');
         const type = message.charAt(0);
 
@@ -76,7 +77,7 @@ function main() {
                 break;
 
             case 'registered':
-                world.database.registeredCount(count => {
+                world.database.registeredCount((count) => {
                     console.info(`There are ${count} users registered.`);
                 });
 
@@ -131,7 +132,7 @@ function main() {
                  * in.
                  */
 
-                world.database.resetPositions(newX, newY, result => {
+                world.database.resetPositions(newX, newY, (result) => {
                     console.info(result);
                 });
 
@@ -140,28 +141,31 @@ function main() {
             case 'allowConnections':
                 world.allowConnections = !world.allowConnections;
 
-                if (world.allowConnections)
+                if (world.allowConnections) {
                     console.info('Server is now allowing connections.');
-                else console.info('The server is not allowing connections.');
+                } else console.info('The server is not allowing connections.');
 
+                break;
+            default:
+                console.error('Could not find command.');
                 break;
         }
     });
 }
 
-if (typeof String.prototype.startsWith !== 'function') {
-    String.prototype.startsWith = function(str) {
-        return str.length > 0 && this.substring(0, str.length) === str;
-    };
-}
+// if (typeof String.prototype.startsWith !== 'function') {
+//     String.prototype.startsWith = function(str) {
+//         return str.length > 0 && this.substring(0, str.length) === str;
+//     };
+// }
 
-if (typeof String.prototype.endsWith !== 'function') {
-    String.prototype.endsWith = function(str) {
-        return (
-            str.length > 0 &&
-            this.substring(this.length - str.length, this.length) === str
-        );
-    };
-}
+// if (typeof String.prototype.endsWith !== 'function') {
+//     String.prototype.endsWith = function(str) {
+//         return (
+//             str.length > 0 &&
+//             this.substring(this.length - str.length, this.length) === str
+//         );
+//     };
+// }
 
 main();

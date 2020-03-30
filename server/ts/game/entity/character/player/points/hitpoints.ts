@@ -1,9 +1,15 @@
 import Points from './points';
 
+/**
+ *
+ */
 class HitPoints extends Points {
     public points: any;
+
     public maxPoints: any;
+
     public hitPointsCallback: any;
+
     public maxHitPointsCallback: any;
 
     constructor(hitPoints, maxHitPoints) {

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import * as _ from 'underscore';
 import Character from '../character';
 import Mobs from '../../../../util/mobs';
 import Utils from '../../../../util/utils';
@@ -7,45 +7,85 @@ import Constants from '../../../../util/constants';
 import MobHandler from './mobhandler';
 import Area from '../../../../map/area';
 
+/**
+ *
+ */
 class Mob extends Character {
     public data: any;
+
     public attackRange: any;
+
     public getCoordDistance: any;
+
     public spawnLocation: any;
+
     public x: any;
+
     public y: any;
+
     public spawnDistance: any;
+
     public world: any;
+
     public loadCallback: any;
+
     public respawnCallback: any;
+
     public returnCallback: any;
+
     public refreshCallback: any;
+
     public deathCallback: any;
+
     public handler: any;
+
     public hitPoints: any;
+
     public maxHitPoints: any;
+
     public drops: any;
+
     public level: any;
+
     public hasTarget: any;
+
     public aggressive: any;
+
     public alwaysAggressive: any;
+
     public isNear: any;
+
     public aggroRange: any;
+
     public dead: any;
+
     public clearTarget: any;
+
     public area: any;
+
     public setPosition: any;
+
     public static: any;
+
     public respawnDelay: any;
+
     public hiddenName: any;
-    roaming: boolean;
-    miniboss: any;
-    boss: any;
-    lastAttacker: any;
-    armourLevel: any;
-    weaponLevel: any;
-    attackRate: any;
-    maxRoamingDistance: number;
+
+    public roaming: boolean;
+
+    public miniboss: any;
+
+    public boss: any;
+
+    public lastAttacker: any;
+
+    public armourLevel: any;
+
+    public weaponLevel: any;
+
+    public attackRate: any;
+
+    public maxRoamingDistance: number;
 
     constructor(id, instance, x, y, world?) {
         super(id, 'mob', instance, x, y);

@@ -1,18 +1,32 @@
 import Quest from '../quest';
 import Packets from '../../../../../../network/packets';
 import Messages from '../../../../../../network/messages';
+import Player from '../../player';
 
+/**
+ *
+ */
 class BulkySituation extends Quest {
     public getTask: any;
-    public player: any;
+
+    public player: Player;
+
     public getItem: any;
+
     public stage: any;
+
     public onNPCTalk: any;
+
     public getConversation: any;
+
     public lastNPC: any;
+
     public data: any;
+
     public resetTalkIndex: any;
+
     public id: any;
+
     public update: any;
 
     constructor(player, data) {
@@ -33,7 +47,7 @@ class BulkySituation extends Quest {
     }
 
     loadCallbacks() {
-        this.onNPCTalk(npc => {
+        this.onNPCTalk((npc) => {
             if (this.hasRequirement()) {
                 this.progress('item');
 

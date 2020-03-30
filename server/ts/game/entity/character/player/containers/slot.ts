@@ -1,13 +1,23 @@
 import Items from '../../../../../util/items';
 
+/**
+ *
+ */
 class Slot {
     public index: any;
+
     public string: any;
+
     public count: any;
+
     public ability: any;
+
     public abilityLevel: any;
+
     public id: any;
+
     public edible: any;
+
     public equippable: any;
 
     constructor(index) {
@@ -54,10 +64,7 @@ class Slot {
 
         if (this.count < 1)
             console.error(
-                '[Slot] Item ' +
-                    this.id +
-                    ' has a count below 1 -> count: ' +
-                    this.count
+                `[Slot] Item ${this.id} has a count below 1 -> count: ${this.count}`
             );
 
         this.verify();

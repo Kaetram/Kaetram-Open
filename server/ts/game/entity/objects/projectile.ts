@@ -1,19 +1,35 @@
 import Entity from '../entity';
 
+/**
+ *
+ */
 class Projectile extends Entity {
     public x: any;
+
     public y: any;
+
     public target: any;
+
     public destX: any;
+
     public destY: any;
+
     public static: any;
+
     public owner: any;
+
     public instance: any;
+
     public damage: any;
+
     public special: any;
+
     public hitType: any;
+
     public type: any;
+
     startX: number;
+
     startY: number;
 
     constructor(id, instance) {
@@ -40,7 +56,7 @@ class Projectile extends Entity {
     }
 
     /**
-     * TODO - Merge setTarget() && setStaticTarget into one function.
+     * TODO: Merge setTarget() && setStaticTarget into one function.
      */
 
     setTarget(target) {
