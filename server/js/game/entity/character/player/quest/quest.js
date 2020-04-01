@@ -118,7 +118,7 @@ class Quest {
         if (!npc)
             return;
 
-        npc.talkIndex = 0;
+        self.player.talkIndex = 0;
 
         self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
             id: npc.instance,
@@ -126,18 +126,12 @@ class Quest {
         }));
     }
 
-    resetTalkIndex(npc) {
-        let self = this;
-
+    resetTalkIndex() {
         /**
-         * Ensures that an NPC does not go off the conversation
-         * index and is resetted in order to start a new chat
+         * Resets the player's talk index for the next dialogue to take place.
          */
 
-        if(!npc)
-            return;
-
-        npc.talkIndex = 0;
+        this.player.talkIndex = 0;
     }
 
     clearPointers() {
