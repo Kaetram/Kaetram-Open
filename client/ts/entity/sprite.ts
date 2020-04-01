@@ -1,25 +1,26 @@
-/* global log, _ */
-
 import Animation from './animation';
 
 export default class Sprite {
-    sprite: any;
-    scale: any;
-    id: any;
+    sprite: Sprite;
+    scale: number;
+    id: string;
     loaded: boolean;
     loadHurt: boolean;
     offsetX: number;
     offsetY: number;
     offsetAngle: number;
-    hurtSprite: { [key: string]: any };
-    image: HTMLImageElement;
-    filepath: any;
-    loadCallback: any;
+    hurtSprite: Sprite | any;
+    image: HTMLImageElement | HTMLCanvasElement;
+    filepath: string;
+    loadCallback: Callback;
     animationData: any;
-    width: any;
-    height: any;
-    offfsetAngle: any;
-    idleSpeed: any;
+    width: number;
+    height: number;
+    offfsetAngle: number;
+    idleSpeed: number;
+    animations: Animation;
+    type: string;
+
     constructor(sprite, scale) {
         this.sprite = sprite;
         this.scale = scale;
@@ -34,7 +35,7 @@ export default class Sprite {
         this.offsetAngle = 0;
 
         this.hurtSprite = {
-            loaded: false
+            loaded: false,
         };
 
         this.loadSprite();
@@ -55,9 +56,9 @@ export default class Sprite {
     }
 
     loadSprite() {
-        const sprite = this.sprite;
+        const { sprite } = this;
 
-        this.filepath = 'img/sprites/' + this.id + '.png';
+        this.filepath = `img/sprites/${this.id}.png`;
         this.animationData = sprite.animations;
 
         this.width = sprite.width;
@@ -81,9 +82,13 @@ export default class Sprite {
 
     createAnimations() {
         const animations = {};
+        const dataKeys = Object.keys(this.animationData);
 
-        for (const name in this.animationData) {
-            if (this.animationData.hasOwnProperty(name)) {
+        for (let i = 0; i < dataKeys.length; i++) {
+            const name = dataKeys[i];
+            if (
+                Object.prototype.hasOwnProperty.call(this.animationData, name)
+            ) {
                 const a = this.animationData[name];
 
                 animations[name] = new Animation(
@@ -110,7 +115,8 @@ export default class Sprite {
 
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
-        let spriteData, data;
+        let spriteData;
+        let data;
 
         canvas.width = this.image.width;
         canvas.height = this.image.height;
@@ -148,7 +154,7 @@ export default class Sprite {
                 offsetY: this.offsetY,
                 width: this.width,
                 height: this.height,
-                type: 'hurt'
+                type: 'hurt',
             };
         } catch (e) {
             console.error('Could not load hurt sprite.');

@@ -1,19 +1,18 @@
-/* global Packets, Modules, log */
-
 import $ from 'jquery';
 import Modules from '../utils/modules';
 import Packets from '../network/packets';
+import Game from '../game';
 
 export default class Chat {
-    game: any;
     chat: JQuery<HTMLElement>;
     log: JQuery<HTMLElement>;
     input: JQuery<HTMLElement>;
     button: JQuery<HTMLElement>;
     visible: boolean;
     fadingDuration: number;
-    fadingTimeout: any;
-    constructor(game) {
+    fadingTimeout: number;
+
+    constructor(public game: Game) {
         this.game = game;
 
         this.chat = $('#chat');
@@ -34,8 +33,8 @@ export default class Chat {
         });
     }
 
-    add(source, text, colour) {
-        const element = $('<p>' + source + ': ' + text + '</p>');
+    add(source, text, colour?) {
+        const element = $(`<p>${source}: ${text}</p>`);
 
         this.showChat();
 
@@ -104,7 +103,7 @@ export default class Chat {
             this.fadingTimeout = null;
         }
 
-        this.fadingTimeout = setTimeout(() => {
+        this.fadingTimeout = window.setTimeout(() => {
             if (!this.isActive()) {
                 this.chat.fadeOut('slow');
 
@@ -135,4 +134,4 @@ export default class Chat {
     isActive() {
         return this.input.is(':focus');
     }
-};
+}

@@ -7,6 +7,7 @@ export default class Transition {
     updateFunction: any;
     stopFunction: any;
     count: number;
+
     constructor() {
         this.startValue = 0;
         this.endValue = 0;

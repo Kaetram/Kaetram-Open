@@ -1,15 +1,17 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import Pointer from '../renderer/pointers/pointer';
 import Modules from '../utils/modules';
-import _ from 'underscore';
+import Camera from '../renderer/camera';
+import Game from '../game';
 
 export default class Pointers {
-    game: any;
-    pointers: { [key: string]: any };
-    scale: any;
+    pointers: { [key: string]: Pointer };
+    scale: number;
     container: JQuery<HTMLElement>;
-    camera: any;
-    constructor(game) {
+    camera: Camera;
+
+    constructor(public game: Game) {
         this.game = game;
         this.pointers = {};
 
@@ -18,19 +20,17 @@ export default class Pointers {
         this.container = $('#bubbles');
     }
 
-    create(id, type, name) {
+    create(id, type, name?) {
         if (id in this.pointers) return;
 
         switch (type) {
             case Modules.Pointers.Button:
-                this.pointers[id] = new Pointer(id, $('#' + name), type);
+                this.pointers[id] = new Pointer(id, $(`#${name}`), type);
 
                 break;
 
-            default:
-                const element = $(
-                    '<div id="' + id + '" class="pointer"></div>'
-                );
+            default: {
+                const element = $(`<div id="${id}" class="pointer"></div>`);
 
                 this.setSize(element);
 
@@ -39,35 +39,37 @@ export default class Pointers {
                 this.pointers[id] = new Pointer(id, element, type);
 
                 break;
+            }
         }
     }
 
     resize() {
         _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
-                case Modules.Pointers.Relative:
+                case Modules.Pointers.Relative: {
                     const scale = this.getScale();
-                    const x = pointer.x;
-                    const y = pointer.y;
+                    const { x } = pointer;
+                    const { y } = pointer;
                     const offsetX = 0;
                     const offsetY = 0;
 
-                    pointer.element.css('left', x * scale - offsetX + 'px');
-                    pointer.element.css('top', y * scale - offsetY + 'px');
+                    pointer.element.css('left', `${x * scale - offsetX}px`);
+                    pointer.element.css('top', `${y * scale - offsetY}px`);
 
                     break;
+                }
             }
         });
     }
 
     setSize(element) {
         element.css({
-            width: 16 + 16 * this.scale + 'px',
-            height: 16 + 16 * this.scale + 'px',
+            width: `${16 + 16 * this.scale}px`,
+            height: `${16 + 16 * this.scale}px`,
             margin: 'inherit',
-            'margin-top': '-' + 6 * this.scale + 'px',
-            top: 10 * this.scale + 'px',
-            background: 'url("img/' + this.scale + '/pointer.png")'
+            'margin-top': `-${6 * this.scale}px`,
+            top: `${10 * this.scale}px`,
+            background: `url("img/${this.scale}/pointer.png")`,
         });
     }
 
@@ -131,9 +133,9 @@ export default class Pointers {
 
             pointer.element.css('transform', 'rotate(180deg)');
         } else {
-            pointer.element.css('left', x - offset + 'px');
+            pointer.element.css('left', `${x - offset}px`);
             pointer.element.css('right', '');
-            pointer.element.css('top', y + 'px');
+            pointer.element.css('top', `${y}px`);
             pointer.element.css('bottom', '');
 
             pointer.element.css('transform', '');
@@ -169,24 +171,25 @@ export default class Pointers {
 
         pointer.setPosition(x, y);
 
-        pointer.element.css('left', x * scale - offsetX + 'px');
-        pointer.element.css('top', y * scale - offsetY + 'px');
+        pointer.element.css('left', `${x * scale - offsetX}px`);
+        pointer.element.css('top', `${y * scale - offsetY}px`);
     }
 
     update() {
         _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
-                case Modules.Pointers.Entity:
+                case Modules.Pointers.Entity: {
                     const entity = this.game.entities.get(pointer.id);
 
                     if (entity) this.setToEntity(entity);
                     else this.destroy(pointer);
 
                     break;
-
+                }
                 case Modules.Pointers.Position:
-                    if (pointer.x !== -1 && pointer.y !== -1)
+                    if (pointer.x !== -1 && pointer.y !== -1) {
                         this.set(pointer, pointer.x, pointer.y);
+                    }
 
                     break;
             }
@@ -206,4 +209,4 @@ export default class Pointers {
     getScale() {
         return this.game.getScaleFactor(); // always 3
     }
-};
+}

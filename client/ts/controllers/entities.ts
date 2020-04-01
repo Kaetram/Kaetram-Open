@@ -1,27 +1,29 @@
-/* global log, _, Modules, Packets */
-
-import Grids from '../renderer/grids';
-import Chest from '../entity/objects/chest';
-import Character from '../entity/character/character';
-import Player from '../entity/character/player/player';
-import Item from '../entity/objects/item';
-import Sprites from './sprites';
-import Mob from '../entity/character/mob/mob';
-import NPC from '../entity/character/npc/npc';
-import Projectile from '../entity/objects/projectile';
-import Packets from '../network/packets';
-import Modules from '../utils/modules';
 import _ from 'underscore';
 
+import Mob from '../entity/character/mob/mob';
+import NPC from '../entity/character/npc/npc';
+import Player from '../entity/character/player/player';
+import Entity from '../entity/entity';
+import Chest from '../entity/objects/chest';
+import Item from '../entity/objects/item';
+import Projectile from '../entity/objects/projectile';
+import Game from '../game';
+import Map from '../map/map';
+import Packets from '../network/packets';
+import Grids from '../renderer/grids';
+import Renderer from '../renderer/renderer';
+import Modules from '../utils/modules';
+import Sprites from './sprites';
+
 export default class Entities {
-    game: any;
-    renderer: any;
-    grids: any;
-    sprites: any;
-    entities: { [key: string]: any };
-    decrepit: { [key: string]: any };
-    map: any;
-    constructor(game) {
+    renderer: Renderer;
+    grids: Grids;
+    sprites: Sprites;
+    entities: { [id: number]: Entity };
+    decrepit: { [id: number]: Entity };
+    map: Map;
+
+    constructor(public game: Game) {
         this.game = game;
         this.renderer = game.renderer;
 
@@ -57,12 +59,13 @@ export default class Entities {
 
         if (this.isPlayer(info.id)) return;
 
-        if (info.id in this.entities)
+        if (info.id in this.entities) {
             // Don't initialize things twice.
             return;
+        }
 
         switch (info.type) {
-            case 'chest':
+            case 'chest': {
                 /**
                  * Here we will parse the different types of chests..
                  * We can go Dark Souls style and implement mimics
@@ -74,15 +77,16 @@ export default class Entities {
                 entity = chest;
 
                 break;
+            }
 
-            case 'npc':
+            case 'npc': {
                 const npc = new NPC(info.id, info.string);
 
                 entity = npc;
 
                 break;
-
-            case 'item':
+            }
+            case 'item': {
                 const item = new Item(
                     info.id,
                     info.string,
@@ -94,8 +98,8 @@ export default class Entities {
                 entity = item;
 
                 break;
-
-            case 'mob':
+            }
+            case 'mob': {
                 const mob = new Mob(info.id, info.string);
 
                 mob.setHitPoints(info.hitPoints);
@@ -109,8 +113,9 @@ export default class Entities {
                 entity = mob;
 
                 break;
+            }
 
-            case 'projectile':
+            case 'projectile': {
                 const attacker = this.get(info.characterId);
                 const target = this.get(info.targetId);
 
@@ -148,15 +153,17 @@ export default class Entities {
                     if (
                         this.isPlayer(projectile.owner.id) ||
                         this.isPlayer(target.id)
-                    )
+                    ) {
                         this.game.socket.send(Packets.Projectile, [
                             Packets.ProjectileOpcode.Impact,
                             info.id,
-                            target.id
+                            target.id,
                         ]);
+                    }
 
-                    if (info.hitType === Modules.Hits.Explosive)
+                    if (info.hitType === Modules.Hits.Explosive) {
                         target.explosion = true;
+                    }
 
                     this.game.info.create(
                         Modules.Hits.Damage,
@@ -180,8 +187,8 @@ export default class Entities {
                 attacker.triggerHealthBar();
 
                 return;
-
-            case 'player':
+            }
+            case 'player': {
                 const player = new Player();
 
                 player.setId(info.id);
@@ -205,7 +212,7 @@ export default class Entities {
                     info.weapon,
                     info.pendant,
                     info.ring,
-                    info.boots
+                    info.boots,
                 ];
 
                 player.setHitPoints(hitPointsData[0]);
@@ -234,12 +241,13 @@ export default class Entities {
                 this.addEntity(player);
 
                 return;
+            }
         }
 
         if (!entity) return;
 
         const sprite = this.getSprite(
-            info.type === 'item' ? 'item-' + info.string : info.string
+            info.type === 'item' ? `item-${info.string}` : info.string
         );
 
         entity.setGridPosition(info.x, info.y);
@@ -273,7 +281,7 @@ export default class Entities {
     }
 
     get(id) {
-        if (id in this.entities) return this.entities[id];
+        if (id in this.entities) return this.entities[id] as Player;
 
         return null;
     }
@@ -290,17 +298,19 @@ export default class Entities {
     }
 
     clean(ids) {
-        ids = ids[0];
+        [ids] = ids;
 
         _.each(this.entities, (entity) => {
             if (ids) {
                 if (
                     ids.indexOf(parseInt(entity.id)) < 0 &&
                     entity.id !== this.game.player.id
-                )
+                ) {
                     this.removeEntity(entity);
-            } else if (entity.id !== this.game.player.id)
+                }
+            } else if (entity.id !== this.game.player.id) {
                 this.removeEntity(entity);
+            }
         });
 
         this.grids.resetPathingGrid();
@@ -308,8 +318,9 @@ export default class Entities {
 
     clearPlayers(exception) {
         _.each(this.entities, (entity) => {
-            if (entity.id !== exception.id && entity.type === 'player')
+            if (entity.id !== exception.id && entity.type === 'player') {
                 this.removeEntity(entity);
+            }
         });
 
         this.grids.resetPathingGrid();
@@ -324,8 +335,9 @@ export default class Entities {
         if (
             !(entity instanceof Item && entity.dropped) &&
             !this.renderer.isPortableDevice()
-        )
+        ) {
             entity.fadeIn(this.game.time);
+        }
     }
 
     removeItem(item) {
@@ -352,8 +364,9 @@ export default class Entities {
                           this.grids.addToPathingGrid(entity.gridX, entity.gridY); */
         }
 
-        if (entity.type === 'item')
+        if (entity.type === 'item') {
             this.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
+        }
 
         this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
     }

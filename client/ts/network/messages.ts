@@ -1,7 +1,5 @@
-/* global log, _, Packets */
-
-import Packets from './packets';
 import _ from 'underscore';
+import Packets from './packets';
 
 export default class Messages {
     app: any;
@@ -105,8 +103,9 @@ export default class Messages {
     handleData(data) {
         const packet = data.shift();
 
-        if (this.messages[packet] && _.isFunction(this.messages[packet]))
+        if (this.messages[packet] && _.isFunction(this.messages[packet])) {
             this.messages[packet].call(this, data);
+        }
     }
 
     handleBulkData(data) {
@@ -239,8 +238,9 @@ export default class Messages {
         const equipType = data.shift();
         const equipInfo = data.shift();
 
-        if (this.equipmentCallback)
+        if (this.equipmentCallback) {
             this.equipmentCallback(equipType, equipInfo);
+        }
     }
 
     receiveEntityList(data) {
@@ -351,8 +351,9 @@ export default class Messages {
         const opcode = data.shift();
         const message = data.shift();
 
-        if (this.notificationCallback)
+        if (this.notificationCallback) {
             this.notificationCallback(opcode, message);
+        }
     }
 
     receiveBlink(data) {

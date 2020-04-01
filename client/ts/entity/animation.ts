@@ -45,15 +45,17 @@ export default class Animation {
     }
 
     update(time) {
-        if (this.lastTime === 0 && this.name.substr(0, 3) === 'atk')
+        if (this.lastTime === 0 && this.name.substr(0, 3) === 'atk') {
             this.lastTime = time;
+        }
 
         if (this.readyToAnimate(time)) {
             this.lastTime = time;
             this.tick();
 
             return true;
-        } else return false;
+        }
+        return false;
     }
 
     setCount(count, onEndCount) {
@@ -78,7 +80,7 @@ export default class Animation {
         this.currentFrame = {
             index: 0,
             x: 0,
-            y: this.row * this.height
+            y: this.row * this.height,
         };
     }
 }

@@ -1,9 +1,9 @@
 import $ from 'jquery';
 import Detect from '../utils/detect';
 import Packets from '../network/packets';
+import Game from '../game';
 
 export default class Enchant {
-    game: any;
     interface: any;
     body: JQuery<HTMLElement>;
     container: JQuery<HTMLElement>;
@@ -13,7 +13,8 @@ export default class Enchant {
     confirm: JQuery<HTMLElement>;
     shardsCount: JQuery<HTMLElement>;
     closeEnchant: JQuery<HTMLElement>;
-    constructor(game, intrface) {
+
+    constructor(public game: Game, intrface) {
         this.game = game;
         this.interface = intrface;
 
@@ -49,7 +50,7 @@ export default class Enchant {
 
         for (let i = 0; i < this.getInventorySize(); i++) {
             const item = $(inventoryList[i]).clone();
-            const slot = item.find('#bankInventorySlot' + i);
+            const slot = item.find(`#bankInventorySlot${i}`);
 
             slot.click((event) => {
                 this.select(event);
@@ -68,7 +69,7 @@ export default class Enchant {
     }
 
     add(type, index) {
-        const image = this.getSlot(index).find('#inventoryImage' + index);
+        const image = this.getSlot(index).find(`#inventoryImage${index}`);
 
         switch (type) {
             case 'item':
@@ -77,48 +78,50 @@ export default class Enchant {
                     image.css('background-image')
                 );
 
-                if (Detect.isMobile())
+                if (Detect.isMobile()) {
                     this.selectedItem.css('background-size', '600%');
+                }
 
                 break;
 
-            case 'shards':
+            case 'shards': {
                 this.selectedShards.css(
                     'background-image',
                     image.css('background-image')
                 );
 
-                if (Detect.isMobile())
+                if (Detect.isMobile()) {
                     this.selectedShards.css('background-size', '600%');
+                }
 
-                const count = this.getItemSlot(index).count;
+                const { count } = this.getItemSlot(index);
 
                 if (count > 1) this.shardsCount.text(count);
 
                 break;
+            }
         }
 
         image.css('background-image', '');
 
-        this.getSlot(index)
-            .find('#inventoryItemCount' + index)
-            .text('');
+        this.getSlot(index).find(`#inventoryItemCount${index}`).text('');
     }
 
     moveBack(type, index) {
-        const image = this.getSlot(index).find('#inventoryImage' + index);
+        const image = this.getSlot(index).find(`#inventoryImage${index}`);
         const itemCount = this.getSlot(index).find(
-            '#inventoryItemCount' + index
+            `#inventoryItemCount${index}`
         );
-        const count = this.getItemSlot(index).count;
+        const { count } = this.getItemSlot(index);
 
         switch (type) {
             case 'item':
-                if (count > 0)
+                if (count > 0) {
                     image.css(
                         'background-image',
                         this.selectedItem.css('background-image')
                     );
+                }
 
                 if (count > 1) itemCount.text(count);
 
@@ -127,11 +130,12 @@ export default class Enchant {
                 break;
 
             case 'shards':
-                if (count > 0)
+                if (count > 0) {
                     image.css(
                         'background-image',
                         this.selectedShards.css('background-image')
                     );
+                }
 
                 if (count > 1) itemCount.text(count);
 
@@ -150,14 +154,14 @@ export default class Enchant {
     select(event) {
         this.game.socket.send(Packets.Enchant, [
             Packets.EnchantOpcode.Select,
-            event.currentTarget.id.substring(17)
+            event.currentTarget.id.substring(17),
         ]);
     }
 
     remove(type) {
         this.game.socket.send(Packets.Enchant, [
             Packets.EnchantOpcode.Remove,
-            type
+            type,
         ]);
     }
 
@@ -209,4 +213,4 @@ export default class Enchant {
     isVisible() {
         return this.body.css('display') === 'block';
     }
-};
+}

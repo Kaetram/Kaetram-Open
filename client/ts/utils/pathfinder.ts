@@ -1,14 +1,16 @@
-/* global _, log */
+import _ from 'underscore';
 
+import Character from '../entity/character/character';
 import AStar from '../lib/astar';
 
 export default class Pathfinder {
-    width: any;
-    height: any;
+    width: number;
+    height: number;
     mode: string;
-    grid: any;
-    blankGrid: any[];
-    ignores: any[];
+    grid: number[];
+    blankGrid: number[][];
+    ignores: Character[];
+
     constructor(width, height) {
         this.width = width;
         this.height = height;
@@ -42,8 +44,9 @@ export default class Pathfinder {
 
         path = AStar(this.grid, start, end, this.mode);
 
-        if (path.length === 0 && incomplete)
+        if (path.length === 0 && incomplete) {
             path = this.findIncomplete(start, end);
+        }
 
         return path;
     }
@@ -55,8 +58,7 @@ export default class Pathfinder {
         const perfect = AStar(this.blankGrid, start, end, this.mode);
 
         for (let i = perfect.length - 1; i > 0; i--) {
-            x = perfect[i][0];
-            y = perfect[i][1];
+            [x, y] = perfect[i];
 
             if (this.grid[y][x] === 0) {
                 incomplete = AStar(this.grid, start, [x.y], this.mode);
@@ -68,7 +70,8 @@ export default class Pathfinder {
     }
 
     applyIgnore(ignored) {
-        let x, y, g;
+        let x;
+        let y;
 
         _.each(this.ignores, (entity) => {
             x = entity.hasPath() ? entity.nextGridX : entity.gridX;

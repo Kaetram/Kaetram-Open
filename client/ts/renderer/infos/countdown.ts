@@ -1,11 +1,10 @@
-/* global Modules */
-
 export default class Countdown {
     id: any;
     time: any;
     string: any;
     lastTime: number;
     updateTime: number;
+
     constructor(id, time) {
         this.id = id;
         this.time = time;
@@ -33,13 +32,13 @@ export default class Countdown {
     }
 
     getStringFormat() {
-        if (this.time < 60) return '00:' + this.time;
+        if (this.time < 60) return `00:${this.time}`;
 
         const minutes = Math.floor(this.time / 60);
         const seconds = this.time - minutes * 60;
 
-        if (minutes < 10) return '0' + minutes + ':' + seconds;
+        if (minutes < 10) return `0${minutes}:${seconds}`;
 
-        return minutes + ':' + seconds;
+        return `${minutes}:${seconds}`;
     }
 }

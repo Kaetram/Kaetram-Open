@@ -1,14 +1,16 @@
 import Modules from '../utils/modules';
-
-/* global Modules */
+import Game from '../game';
+import Renderer from '../renderer/renderer';
+import Camera from '../renderer/camera';
+import Input from './input';
 
 export default class Zoning {
-    game: any;
-    renderer: any;
-    camera: any;
-    input: any;
-    direction: any;
-    constructor(game) {
+    renderer: Renderer;
+    camera: Camera;
+    input: Input;
+    direction: number;
+
+    constructor(public game: Game) {
         this.game = game;
         this.renderer = game.renderer;
         this.camera = game.camera;

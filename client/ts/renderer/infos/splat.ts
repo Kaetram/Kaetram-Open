@@ -1,5 +1,3 @@
-/* global Modules */
-
 import Modules from '../../utils/modules';
 
 export default class Splat {
@@ -17,6 +15,7 @@ export default class Splat {
     fill: any;
     stroke: any;
     destroyCallback: any;
+
     constructor(id, type, text, x, y, statique) {
         this.id = id;
         this.type = type;

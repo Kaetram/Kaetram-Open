@@ -1,17 +1,16 @@
-/* global _, Modules */
-
+import _ from 'underscore';
 import Queue from '../utils/queue';
 import Splat from '../renderer/infos/splat';
 import Countdown from '../renderer/infos/countdown';
 import Modules from '../utils/modules';
-import _ from 'underscore';
 import { isInt } from '../utils/util';
+import Game from '../game';
 
 export default class Info {
-    game: any;
-    infos: { [key: string]: any };
+    infos: { [key: string]: Info };
     destroyQueue: Queue;
-    constructor(game) {
+
+    constructor(public game: Game) {
         this.game = game;
 
         this.infos = {};
@@ -22,7 +21,7 @@ export default class Info {
         switch (type) {
             case Modules.Hits.Damage:
             case Modules.Hits.Stun:
-            case Modules.Hits.Critical:
+            case Modules.Hits.Critical: {
                 let damage = data.shift();
                 const isTarget = data.shift();
                 const dId = this.generateId(this.game.time, damage, x, y);
@@ -39,11 +38,11 @@ export default class Info {
                 this.addInfo(hitSplat);
 
                 break;
-
+            }
             case Modules.Hits.Heal:
             case Modules.Hits.Mana:
             case Modules.Hits.Experience:
-            case Modules.Hits.Poison:
+            case Modules.Hits.Poison: {
                 const amount = data.shift();
                 const id = this.generateId(this.game.time, amount, x, y);
                 let text = '+';
@@ -57,22 +56,23 @@ export default class Info {
 
                 const splat = new Splat(id, type, text + amount, x, y, false);
 
-                if (type === Modules.Hits.Heal)
+                if (type === Modules.Hits.Heal) {
                     colour = Modules.DamageColours.healed;
-                else if (type === Modules.Hits.Mana)
+                } else if (type === Modules.Hits.Mana) {
                     colour = Modules.DamageColours.mana;
-                else if (type === Modules.Hits.Experience)
+                } else if (type === Modules.Hits.Experience) {
                     colour = Modules.DamageColours.exp;
-                else if (type === Modules.Hits.Poison)
+                } else if (type === Modules.Hits.Poison) {
                     colour = Modules.DamageColours.poison;
+                }
 
                 splat.setColours(colour.fill, colour.stroke);
 
                 this.addInfo(splat);
 
                 break;
-
-            case Modules.Hits.LevelUp:
+            }
+            case Modules.Hits.LevelUp: {
                 const lId = this.generateId(this.game.time, '-1', x, y);
                 const levelSplat = new Splat(
                     lId,
@@ -89,8 +89,8 @@ export default class Info {
                 this.addInfo(levelSplat);
 
                 break;
-
-            case Modules.Info.Countdown:
+            }
+            case Modules.Info.Countdown: {
                 /**
                  * We only allow the creation of one countdown timer.
                  */
@@ -103,6 +103,7 @@ export default class Info {
                 this.addInfo(countdown);
 
                 break;
+            }
         }
     }
 
@@ -149,6 +150,6 @@ export default class Info {
     }
 
     generateId(time, info, x, y) {
-        return time + '' + Math.abs(info) + '' + x + '' + y;
+        return `${time}${Math.abs(info)}${x}${y}`;
     }
 }

@@ -1,14 +1,21 @@
 import Timer from '../../utils/timer';
 
 export default class Blob {
-    id: any;
-    element: any;
-    duration: any;
+    id: string;
+    element: JQuery<HTMLElement>;
+    duration: number;
     time: number;
-    timer: any;
+    timer: Timer;
     type: string;
-    info: any;
-    constructor(id, element, duration, isObject, info) {
+    info: string;
+
+    constructor(
+        id: string,
+        element: JQuery<HTMLElement>,
+        duration: number,
+        isObject: boolean,
+        info: string
+    ) {
         this.id = id;
         this.element = element;
         this.duration = duration || 5000;
@@ -22,11 +29,11 @@ export default class Blob {
         }
     }
 
-    isOver(time) {
+    isOver(time: number) {
         return this.timer.isOver(time);
     }
 
-    reset(time) {
+    reset(time: number) {
         this.timer.time = time;
     }
 

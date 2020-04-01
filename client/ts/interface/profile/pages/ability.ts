@@ -1,11 +1,14 @@
-import $ from 'jquery';
 import Page from '../page';
+import Game from '../../../game';
 
 export default class Ability extends Page {
-    game: any;
-    constructor(game) {
+    constructor(public game: Game) {
         super('#skillPage');
 
         this.game = game;
     }
-};
+
+    resize() {
+        // XXX: Resize for Ability
+    }
+}

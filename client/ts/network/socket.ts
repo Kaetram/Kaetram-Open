@@ -1,17 +1,16 @@
-/* global log */
-
 import io from 'socket.io-client';
-import Packets from './packets';
+
+import Game from '../game';
 import Messages from './messages';
 
 export default class Socket {
-    game: any;
     config: any;
     connection: any;
     listening: boolean;
     disconnected: boolean;
     messages: Messages;
-    constructor(game) {
+
+    constructor(public game: Game) {
         this.game = game;
         this.config = this.game.app.config;
         this.connection = null;
@@ -26,33 +25,34 @@ export default class Socket {
     connect() {
         let url;
 
-        if (this.config.ssl) url = 'wss://' + this.config.ip;
-        else url = 'ws://' + this.config.ip + ':' + this.config.port;
+        if (this.config.ssl) url = `wss://${this.config.ip}`;
+        else url = `ws://${this.config.ip}:${this.config.port}`;
 
         this.connection = null;
 
         this.connection = io(url, {
             forceNew: true,
-            reconnection: false
+            reconnection: false,
         });
 
         this.connection.on('connect_error', () => {
-            console.info('Failed to connect to: ' + this.config.ip);
+            console.info(`Failed to connect to: ${this.config.ip}`);
 
             this.listening = false;
 
             this.game.app.toggleLogin(false);
 
-            if (this.game.isDebug())
+            if (this.game.isDebug()) {
                 this.game.app.sendError(
                     null,
                     `Couldn't connect to ${this.config.ip}:${this.config.port}`
                 );
-            else
+            } else {
                 this.game.app.sendError(
                     null,
                     'Could not connect to the game server.'
                 );
+            }
         });
 
         this.connection.on('connect', () => {
@@ -64,7 +64,7 @@ export default class Socket {
 
             this.connection.emit('client', {
                 gVer: this.config.version,
-                cType: 'HTML5'
+                cType: 'HTML5',
             });
         });
 
@@ -90,10 +90,11 @@ export default class Socket {
         } else this.messages.handleUTF8(message);
     }
 
-    send(packet, data) {
+    send(packet, data?) {
         const json = JSON.stringify([packet, data]);
 
-        if (this.connection && this.connection.connected)
+        if (this.connection && this.connection.connected) {
             this.connection.send(json);
+        }
     }
 }

@@ -1,13 +1,14 @@
-/* global _ */
-
 /**
  * Very useful file used for queuing various objects,
  * most notably used in the info controller to queue
  * objects to delete
  */
 
+import _ from 'underscore';
+
 export default class Queue {
-    queue: any[];
+    queue: string[];
+
     constructor() {
         this.queue = [];
     }

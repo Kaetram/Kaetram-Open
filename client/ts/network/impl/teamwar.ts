@@ -1,5 +1,7 @@
+import Game from '../../game';
+
 export default class TeamWar {
-    constructor(game?) {}
+    constructor(public game?: Game) {}
 
     handle(info) {
         console.info(info);

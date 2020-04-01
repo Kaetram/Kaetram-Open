@@ -90,10 +90,10 @@ export default (() => {
         const $W = W > -1 && !grid[y][W];
         const result = [];
         let i = 0;
-        $N && (result[i++] = { x: x, y: N });
-        $E && (result[i++] = { x: E, y: y });
-        $S && (result[i++] = { x: x, y: S });
-        $W && (result[i++] = { x: W, y: y });
+        $N && (result[i++] = { x, y: N });
+        $E && (result[i++] = { x: E, y });
+        $S && (result[i++] = { x, y: S });
+        $W && (result[i++] = { x: W, y });
         return find($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i);
     }
 
@@ -124,8 +124,8 @@ export default (() => {
                 y: start[1],
                 f: 0,
                 g: 0,
-                v: start[0] + start[1] * cols
-            }
+                v: start[0] + start[1] * cols,
+            },
         ];
         let length = 1;
         let f2 = Math.max;
@@ -159,9 +159,10 @@ export default (() => {
         find || (find = diagonalSuccessorsFree);
 
         do {
-            if (length > 100)
+            if (length > 100) {
                 // Don't let it get too crazy.
                 return [];
+            }
 
             max = limit;
             min = 0;
@@ -172,13 +173,14 @@ export default (() => {
                 }
             }
 
-            current = open.splice(min, 1)[0];
+            [current] = open.splice(min, 1);
             if (current.v !== end.v) {
                 --length;
                 next = successors(find, current.x, current.y, grid, rows, cols);
                 for (i = 0, j = next.length; i < j; ++i) {
                     (adj = next[i]).p = current;
-                    adj.f = adj.g = 0;
+                    adj.f = 0;
+                    adj.g = 0;
                     adj.v = adj.x + adj.y * cols;
                     if (!(adj.v in list)) {
                         adj.f =
@@ -190,7 +192,8 @@ export default (() => {
                     }
                 }
             } else {
-                i = length = 0;
+                i = 0;
+                length = 0;
                 do {
                     result[i++] = [current.x, current.y];
                 } while ((current = current.p));

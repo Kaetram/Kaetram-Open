@@ -1,21 +1,23 @@
-/* global log, Detect, Packets */
-
 import $ from 'jquery';
-import Container from './container/container';
+
+import Game from '../game';
 import Packets from '../network/packets';
 import Detect from '../utils/detect';
+import Actions from './actions';
+import Container from './container/container';
+import Slot from './container/slot';
 
-export default class Interface {
-    game: any;
-    actions: any;
+export default class Inventory {
+    actions: Actions;
     body: JQuery<HTMLElement>;
     button: JQuery<HTMLElement>;
     action: JQuery<HTMLElement>;
     container: Container;
     activeClass: string;
-    selectedSlot: any;
-    selectedItem: any;
-    constructor(game, size) {
+    selectedSlot: JQuery<HTMLElement>;
+    selectedItem: Slot;
+
+    constructor(public game: Game, size) {
         this.game = game;
         this.actions = game.interface.actions;
 
@@ -39,15 +41,14 @@ export default class Interface {
 
             this.container.setSlot(i, item);
 
-            const itemSlot = $(
-                '<div id="slot' + i + '" class="itemSlot"></div>'
-            );
+            const itemSlot = $(`<div id="slot${i}" class="itemSlot"></div>`);
 
-            if (item.string !== 'null')
+            if (item.string !== 'null') {
                 itemSlot.css(
                     'background-image',
                     this.container.getImageFormat(this.getScale(), item.string)
                 );
+            }
 
             itemSlot.css('background-size', '600%');
 
@@ -60,23 +61,19 @@ export default class Interface {
             });
 
             const itemSlotList = $('<li></li>');
-            let count = item.count;
+            let { count } = item;
 
-            if (count > 999999)
-                count =
-                    count.toString().substring(0, count.toString().length - 6) +
-                    'M';
-            else if (count > 9999)
-                count = count.toString().substring(0, 2) + 'K';
-            else if (count === 1) count = '';
+            if (count > 999999) {
+                count = `${count
+                    .toString()
+                    .substring(0, count.toString().length - 6)}M`;
+            } else if (count > 9999) {
+                count = `${count.toString().substring(0, 2)}K`;
+            } else if (count === 1) count = '';
 
             itemSlotList.append(itemSlot);
             itemSlotList.append(
-                '<div id="itemCount' +
-                    i +
-                    '" class="inventoryItemCount">' +
-                    count +
-                    '</div>'
+                `<div id="itemCount${i}" class="inventoryItemCount">${count}</div>`
             );
 
             list.append(itemSlotList);
@@ -95,7 +92,7 @@ export default class Interface {
 
         this.game.socket.send(Packets.Click, [
             'inventory',
-            this.button.hasClass('active')
+            this.button.hasClass('active'),
         ]);
     }
 
@@ -106,26 +103,32 @@ export default class Interface {
 
         this.clearSelection();
 
-        if (slot.string === null || slot.count === -1 || slot.string === 'null')
+        if (
+            slot.string === null ||
+            slot.count === -1 ||
+            slot.string === 'null'
+        ) {
             return;
+        }
 
         this.actions.reset();
         this.actions.loadDefaults('inventory');
 
-        if (slot.edible)
+        if (slot.edible) {
             this.actions.add($('<div id="eat" class="actionButton">Eat</div>'));
-        else if (slot.equippable)
+        } else if (slot.equippable) {
             this.actions.add(
                 $('<div id="wield" class="actionButton">Wield</div>')
             );
-        else if (slot.count > 999999)
+        } else if (slot.count > 999999) {
             this.actions.add(
                 $('<div id="itemInfo" class="actionButton">Info</div>')
             );
+        }
 
         if (!this.actions.isVisible()) this.actions.show();
 
-        const sSlot = item.find('#slot' + index);
+        const sSlot = item.find(`#slot${index}`);
 
         sSlot.addClass('select');
 
@@ -142,7 +145,7 @@ export default class Interface {
         if (!slot.edible && !slot.equippable) return;
 
         const item = $(this.getList()[index]);
-        const sSlot = item.find('#slot' + index);
+        const sSlot = item.find(`#slot${index}`);
 
         this.clearSelection();
 
@@ -154,7 +157,7 @@ export default class Interface {
         this.actions.hideDrop();
     }
 
-    clickAction(event, dAction?) {
+    clickAction(event) {
         const action = event.currentTarget ? event.currentTarget.id : event;
 
         if (!this.selectedSlot || !this.selectedItem) return;
@@ -164,13 +167,13 @@ export default class Interface {
             case 'wield':
                 this.game.socket.send(Packets.Inventory, [
                     Packets.InventoryOpcode.Select,
-                    this.selectedItem.index
+                    this.selectedItem.index,
                 ]);
                 this.clearSelection();
 
                 break;
 
-            case 'drop':
+            case 'drop': {
                 const item = this.selectedItem;
 
                 if (item.count > 1) {
@@ -180,28 +183,28 @@ export default class Interface {
                 } else {
                     this.game.socket.send(Packets.Inventory, [
                         Packets.InventoryOpcode.Remove,
-                        item
+                        item,
                     ]);
                     this.clearSelection();
                 }
 
                 break;
-
-            case 'dropAccept':
-                const count: any = $('#dropCount').val();
+            }
+            case 'dropAccept': {
+                const count = $('#dropCount').val() as number;
 
                 if (isNaN(count) || count < 1) return;
 
                 this.game.socket.send(Packets.Inventory, [
                     Packets.InventoryOpcode.Remove,
                     this.selectedItem,
-                    count
+                    count,
                 ]);
                 this.actions.hideDrop();
                 this.clearSelection();
 
                 break;
-
+            }
             case 'dropCancel':
                 this.actions.hideDrop();
                 this.clearSelection();
@@ -211,7 +214,7 @@ export default class Interface {
             case 'itemInfo':
                 this.game.input.chatHandler.add(
                     'WORLD',
-                    'You have ' + this.selectedItem.count + ' coins.'
+                    `You have ${this.selectedItem.count} coins.`
                 );
 
                 break;
@@ -236,7 +239,7 @@ export default class Interface {
             info.equippable
         );
 
-        const cssSlot = item.find('#slot' + info.index);
+        const cssSlot = item.find(`#slot${info.index}`);
 
         cssSlot.css(
             'background-image',
@@ -245,16 +248,17 @@ export default class Interface {
 
         cssSlot.css('background-size', '600%');
 
-        let count = slot.count;
+        const { count } = slot;
+        let size: string;
 
-        if (count > 999999)
-            count =
-                count.toString().substring(0, count.toString().length - 6) +
-                'M';
-        else if (count > 9999) count = count.toString().substring(0, 2) + 'K';
-        else if (count === 1) count = '';
+        if (count > 999999) {
+            size = `${count
+                .toString()
+                .substring(0, count.toString().length - 6)}M`;
+        } else if (count > 9999) size = `${count.toString().substring(0, 2)}K`;
+        else if (count === 1) size = '';
 
-        item.find('#itemCount' + info.index).text(count);
+        item.find(`#itemCount${info.index}`).text(size);
     }
 
     remove(info) {
@@ -265,11 +269,11 @@ export default class Interface {
 
         slot.count -= info.count;
 
-        item.find('#itemCount' + info.index).text(slot.count);
+        item.find(`#itemCount${info.index}`).text(slot.count);
 
         if (slot.count < 1) {
-            item.find('#slot' + info.index).css('background-image', '');
-            item.find('#itemCount' + info.index).text('');
+            item.find(`#slot${info.index}`).css('background-image', '');
+            item.find(`#itemCount${info.index}`).text('');
             slot.empty();
         }
     }
@@ -278,17 +282,18 @@ export default class Interface {
         const list = this.getList();
 
         for (let i = 0; i < list.length; i++) {
-            const item = $(list[i]).find('#slot' + i);
+            const item = $(list[i]).find(`#slot${i}`);
             const slot = this.container.slots[i];
 
             if (!slot) continue;
 
             if (Detect.isMobile()) item.css('background-size', '600%');
-            else
+            else {
                 item.css(
                     'background-image',
                     this.container.getImageFormat(this.getScale(), slot.string)
                 );
+            }
         }
     }
 
@@ -315,9 +320,7 @@ export default class Interface {
     }
 
     clear() {
-        $('#inventory')
-            .find('ul')
-            .empty();
+        $('#inventory').find('ul').empty();
 
         if (this.button) this.button.unbind('click');
     }
@@ -331,12 +334,10 @@ export default class Interface {
     }
 
     getList() {
-        return $('#inventory')
-            .find('ul')
-            .find('li');
+        return $('#inventory').find('ul').find('li');
     }
 
     isVisible() {
         return this.body.css('display') === 'block';
     }
-};
+}

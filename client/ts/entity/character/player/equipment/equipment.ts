@@ -4,14 +4,15 @@
  * in the client side. This does not dictate the damage,
  * defense or bonus stats, it's just for looks.
  */
-
 export default class Equipment {
-    name: any;
-    string: any;
-    count: any;
-    ability: any;
-    abilityLevel: any;
-    power: any;
+    type: string;
+    name: string;
+    string: string;
+    count: string;
+    ability: string;
+    abilityLevel: string;
+    power: string;
+
     constructor(name, string, count, ability, abilityLevel, power) {
         this.name = name;
         this.string = string;

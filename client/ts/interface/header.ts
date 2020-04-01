@@ -1,15 +1,17 @@
 import $ from 'jquery';
-import Container from './container/container';
+import Game from '../game';
+import Player from '../entity/character/player/player';
+import Interface from '../controllers/interface';
 
 export default class Header {
-    game: any;
-    player: any;
+    player: Player;
     health: JQuery<HTMLElement>;
     healthBar: JQuery<HTMLElement>;
     healthBarText: JQuery<HTMLElement>;
     exp: JQuery<HTMLElement>;
     expBar: JQuery<HTMLElement>;
-    constructor(game, intrface) {
+
+    constructor(public game: Game, intrface: Interface) {
         this.game = game;
         this.player = game.player;
 
@@ -53,9 +55,9 @@ export default class Header {
 
         if (diff > width) diff = width;
 
-        this.health.css('width', diff + 'px');
+        this.health.css('width', `${diff}px`);
         this.healthBarText.text(
-            this.player.hitPoints + '/' + this.player.maxHitPoints
+            `${this.player.hitPoints}/${this.player.maxHitPoints}`
         );
     }
 
@@ -68,7 +70,7 @@ export default class Header {
             this.player.nextExperience - this.player.prevExperience;
         const diff = Math.floor(width * (experience / nextExperience));
 
-        this.exp.css('width', diff + 'px');
+        this.exp.css('width', `${diff}px`);
     }
 
     resize() {
@@ -91,4 +93,4 @@ export default class Header {
             this.health.removeClass(tClass);
         }, 500);
     }
-};
+}

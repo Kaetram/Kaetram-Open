@@ -1,14 +1,17 @@
 import $ from 'jquery';
 import Container from './container/container';
 import Packets from '../network/packets';
+import Interface from '../controllers/interface';
+import Player from '../entity/character/player/player';
+import Item from '../entity/objects/item';
+import Game from '../game';
 
 export default class Shop {
-    game: any;
     body: JQuery<HTMLElement>;
     shop: JQuery<HTMLElement>;
     inventory: JQuery<HTMLElement>;
     /**
-     * sellSlot represents what the player currently has queued for sale
+     * Represents what the player currently has queued for sale
      * and sellSlotReturn shows the currency the player is receiving.
      * The reason for this is because shops are written such that
      * they can handle different currencies.
@@ -17,15 +20,16 @@ export default class Shop {
     sellSlotReturn: JQuery<HTMLElement>;
     sellSlotReturnText: JQuery<HTMLElement>;
     confirmSell: JQuery<HTMLElement>;
-    player: any;
-    interface: any;
-    container: any;
-    data: any;
+    player: Player;
+    interface: Interface;
+    container: Container;
+    data: { strings: any[]; names: any[]; counts: any[]; prices: any[] };
     openShop: number;
-    items: any[];
-    counts: any[];
+    items: Item[];
+    counts: void[];
     close: JQuery<HTMLElement>;
-    constructor(game, intrface) {
+
+    constructor(public game: Game, intrface) {
         this.game = game;
 
         this.body = $('#shop');
@@ -72,7 +76,7 @@ export default class Shop {
             Packets.ShopOpcode.Buy,
             this.openShop,
             id,
-            1
+            1,
         ]);
     }
 
@@ -80,7 +84,7 @@ export default class Shop {
         // The server will handle the selected item and verifications.
         this.game.socket.send(Packets.Shop, [
             Packets.ShopOpcode.Sell,
-            this.openShop
+            this.openShop,
         ]);
     }
 
@@ -90,7 +94,7 @@ export default class Shop {
         this.game.socket.send(Packets.Shop, [
             Packets.ShopOpcode.Select,
             this.openShop,
-            id
+            id,
         ]);
     }
 
@@ -100,16 +104,16 @@ export default class Shop {
 
     move(info) {
         const inventorySlot = this.getInventoryList().find(
-            '#shopInventorySlot' + info.slotId
+            `#shopInventorySlot${info.slotId}`
         );
-        const slotImage = inventorySlot.find('#inventoryImage' + info.slotId);
+        const slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`);
         const slotText = inventorySlot.find(
-            '#inventoryItemCount' + info.slotId
+            `#inventoryItemCount${info.slotId}`
         );
 
         this.sellSlot.css({
             'background-image': slotImage.css('background-image'),
-            'background-size': slotImage.css('background-size')
+            'background-size': slotImage.css('background-size'),
         });
 
         this.sellSlotReturn.css({
@@ -117,7 +121,7 @@ export default class Shop {
                 this.getScale(),
                 info.currency
             ),
-            'background-size': this.sellSlot.css('background-size')
+            'background-size': this.sellSlot.css('background-size'),
         });
 
         this.sellSlotReturnText.text(info.price);
@@ -128,11 +132,11 @@ export default class Shop {
 
     moveBack(index) {
         const inventorySlot = this.getInventoryList().find(
-            '#shopInventorySlot' + index
+            `#shopInventorySlot${index}`
         );
 
         inventorySlot
-            .find('#inventoryImage' + index)
+            .find(`#inventoryImage${index}`)
             .css('background-image', this.sellSlot.css('background-image'));
 
         this.sellSlot.css('background-image', '');
@@ -168,7 +172,7 @@ export default class Shop {
     load() {
         for (let i = 0; i < this.container.size; i++) {
             const shopItem = $(
-                '<div id="shopItem' + i + '" class="shopItem"></div>'
+                `<div id="shopItem${i}" class="shopItem"></div>`
             );
             const string = this.data.strings[i];
             const name = this.data.names[i];
@@ -183,33 +187,31 @@ export default class Shop {
             if (!string || !name || !count) continue;
 
             itemImage = $(
-                '<div id="shopItemImage' + i + '" class="shopItemImage"></div>'
+                `<div id="shopItemImage${i}" class="shopItemImage"></div>`
             );
             itemCount = $(
-                '<div id="shopItemCount' + i + '" class="shopItemCount"></div>'
+                `<div id="shopItemCount${i}" class="shopItemCount"></div>`
             );
             itemPrice = $(
-                '<div id="shopItemPrice' + i + '" class="shopItemPrice"></div>'
+                `<div id="shopItemPrice${i}" class="shopItemPrice"></div>`
             );
             itemName = $(
-                '<div id="shopItemName' + i + '" class="shopItemName"></div>'
+                `<div id="shopItemName${i}" class="shopItemName"></div>`
             );
-            itemBuy = $(
-                '<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>'
-            );
+            itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
 
             itemImage.css(
                 'background-image',
                 this.container.getImageFormat(1, string)
             );
             itemCount.html(count);
-            itemPrice.html(price + 'g');
+            itemPrice.html(`${price}g`);
             itemName.html(name);
             itemBuy.html('Buy');
 
             this.container.setSlot(i, {
-                string: string,
-                count: count
+                string,
+                count,
             });
 
             // Bind the itemBuy to the local buy function.
@@ -231,9 +233,9 @@ export default class Shop {
 
         for (let j = 0; j < inventorySize; j++) {
             const item = $(inventoryItems[j]).clone();
-            const slot = item.find('#bankInventorySlot' + j);
+            const slot = item.find(`#bankInventorySlot${j}`);
 
-            slot.attr('id', 'shopInventorySlot' + j);
+            slot.attr('id', `shopInventorySlot${j}`);
 
             slot.click((event) => {
                 this.select(event);
@@ -298,4 +300,4 @@ export default class Shop {
     getInventoryList() {
         return this.inventory.find('ul');
     }
-};
+}

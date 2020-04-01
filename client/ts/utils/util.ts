@@ -3,8 +3,8 @@
  */
 
 export const isInt = (n) => {
-           return n % 1 === 0;
-       };
+    return n % 1 === 0;
+};
 
 export const TRANSITIONEND = 'transitionend webkitTransitionEnd oTransitionEnd';
 
@@ -13,15 +13,11 @@ if (!window.requestAnimationFrame) {
     window.requestAnimationFrame = (() => {
         return (
             window.webkitRequestAnimationFrame ||
-            (window as any).mozRequestAnimationFrame || // comment out if FF4 is slow (it caps framerate at ~30fps: https://bugzilla.mozilla.org/show_bug.cgi?id=630127)
-            (window as any).oRequestAnimationFrame ||
-            (window as any).msRequestAnimationFrame ||
-            ((
-                /* function FrameRequestCallback */ callback,
-                /* DOMElement Element */ element
-            ) => {
-                window.setTimeout(callback, 17);
-            })
+            window.mozRequestAnimationFrame || // comment out if FF4 is slow (it caps framerate at ~30fps: https://bugzilla.mozilla.org/show_bug.cgi?id=630127)
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            ((callback: FrameRequestCallback) =>
+                window.setTimeout(callback, 17))
         );
     })();
 }

@@ -1,5 +1,3 @@
-/* global log */
-
 import _ from 'underscore';
 
 export default class Grids {
@@ -8,6 +6,7 @@ export default class Grids {
     pathingGrid: any[];
     entityGrid: any[];
     itemGrid: any[];
+
     constructor(map) {
         this.map = map;
 
@@ -38,17 +37,20 @@ export default class Grids {
     }
 
     checkPathingGrid(player, xRadius, yRadius) {
-        for (let y = player.gridY - yRadius; y < player.gridY + yRadius; y++)
+        for (let y = player.gridY - yRadius; y < player.gridY + yRadius; y++) {
             for (
                 let x = player.gridX - xRadius;
                 x < player.gridX + xRadius;
                 x++
-            )
+            ) {
                 if (
                     !this.map.isColliding(x, y) &&
                     _.size(this.entityGrid[y][x] === 0)
-                )
+                ) {
                     this.removeFromPathingGrid(x, y);
+                }
+            }
+        }
     }
 
     resetPathingGrid() {
@@ -57,14 +59,16 @@ export default class Grids {
         for (let i = 0; i < this.map.height; i++) {
             this.pathingGrid[i] = [];
 
-            for (let j = 0; j < this.map.width; j++)
+            for (let j = 0; j < this.map.width; j++) {
                 this.pathingGrid[i][j] = this.map.grid[i][j];
+            }
         }
     }
 
     addToRenderingGrid(entity, x, y) {
-        if (!this.map.isOutOfBounds(x, y))
+        if (!this.map.isOutOfBounds(x, y)) {
             this.renderingGrid[y][x][entity.id] = entity;
+        }
     }
 
     addToPathingGrid(x, y) {
@@ -72,8 +76,9 @@ export default class Grids {
     }
 
     addToEntityGrid(entity, x, y) {
-        if (entity && this.entityGrid[y][x])
+        if (entity && this.entityGrid[y][x]) {
             this.entityGrid[y][x][entity.id] = entity;
+        }
     }
 
     addToItemGrid(item, x, y) {
@@ -85,8 +90,9 @@ export default class Grids {
             entity &&
             this.renderingGrid[y][x] &&
             entity.id in this.renderingGrid[y][x]
-        )
+        ) {
             delete this.renderingGrid[y][x][entity.id];
+        }
     }
 
     removeFromPathingGrid(x, y) {
@@ -102,13 +108,15 @@ export default class Grids {
             entity &&
             this.entityGrid[y][x] &&
             entity.id in this.entityGrid[y][x]
-        )
+        ) {
             delete this.entityGrid[y][x][entity.id];
+        }
     }
 
     removeFromItemGrid(item, x, y) {
-        if (item && this.itemGrid[y][x][item.id])
+        if (item && this.itemGrid[y][x][item.id]) {
             delete this.itemGrid[y][x][item.id];
+        }
     }
 
     removeEntity(entity) {

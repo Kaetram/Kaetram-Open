@@ -1,14 +1,14 @@
-/* global _ */
-/** @format */
-
 import $ from 'jquery';
+import _ from 'underscore';
+
+import Game from '../game';
 import Blob from '../renderer/bubbles/blob';
 
 export default class Bubble {
-    game: any;
     bubbles: { [key: string]: Blob };
-    container: any;
-    constructor(game) {
+    container: JQuery<HTMLElement>;
+
+    constructor(public game: Game) {
         this.game = game;
         this.bubbles = {};
 
@@ -24,10 +24,10 @@ export default class Bubble {
      * @param isObject - (optional) Boolean value used to determine object.
      * @param info - (optional) Used in conjunction with `isObject` to specify object data.
      */
-    create(id, message: string, duration: number, isObject?: boolean, info?) {
+    create(id, message: string, duration?: number, isObject?: boolean, info?) {
         if (this.bubbles[id]) {
             this.bubbles[id].reset(this.game.time);
-            $('#' + id + ' p').html(message);
+            $(`#${id} p`).html(message);
         } else {
             const element = $(
                 `<div id='${id}'class='bubble'><p>${message}</p><div class='bubbleTip'></div></div>`
@@ -57,9 +57,9 @@ export default class Bubble {
 
         bubble.element.css(
             'left',
-            x - offset + (2 + this.game.renderer.scale) + 'px'
+            `${x - offset + (2 + this.game.renderer.scale)}px`
         );
-        bubble.element.css('top', y + 'px');
+        bubble.element.css('top', `${y}px`);
     }
 
     update(time) {
@@ -99,4 +99,4 @@ export default class Bubble {
         bubble.destroy();
         delete this.bubbles[id];
     }
-};
+}

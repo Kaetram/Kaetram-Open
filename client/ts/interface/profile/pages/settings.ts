@@ -1,16 +1,18 @@
-/* global log, Detect */
-
 import $ from 'jquery';
-import Page from '../page';
 
-// TODO - Hide crypto mining option on mobiles and completely disable it.
+import Audio from '../../../controllers/audio';
+import Game from '../../../game';
+import Camera from '../../../renderer/camera';
+import Renderer from '../../../renderer/renderer';
+import LocalStorage from '../../../utils/storage';
+
+// TODO: Hide crypto mining option on mobiles and completely disable it.
 
 export default class Settings {
-    game: any;
-    audio: any;
-    storage: any;
-    renderer: any;
-    camera: any;
+    audio: Audio;
+    storage: LocalStorage;
+    renderer: Renderer;
+    camera: Camera;
     body: JQuery<HTMLElement>;
     button: JQuery<HTMLElement>;
     volume: JQuery<HTMLElement>;
@@ -25,7 +27,8 @@ export default class Settings {
     levelCheck: JQuery<HTMLElement>;
     loaded: boolean;
     value: number;
-    constructor(game) {
+
+    constructor(public game: Game) {
         this.game = game;
         this.audio = game.audio;
         this.storage = game.storage;
@@ -298,4 +301,4 @@ export default class Settings {
     isVisible() {
         return this.body.css('display') === 'block';
     }
-};
+}

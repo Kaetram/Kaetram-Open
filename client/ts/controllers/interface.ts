@@ -1,5 +1,3 @@
-/* global log */
-
 import $ from 'jquery';
 import Inventory from '../interface/inventory';
 import Profile from '../interface/profile/profile';
@@ -9,23 +7,24 @@ import Enchant from '../interface/enchant';
 import Warp from '../interface/warp';
 import Shop from '../interface/shop';
 import Header from '../interface/header';
+import Game from '../game';
 
 export default class Interface {
-    game: any;
     notify: JQuery<HTMLElement>;
     confirm: JQuery<HTMLElement>;
     message: JQuery<HTMLElement>;
     fade: JQuery<HTMLElement>;
     done: JQuery<HTMLElement>;
-    inventory: any;
-    profile: any;
-    actions: any;
-    enchant: any;
-    shop: any;
-    header: any;
-    bank: any;
-    warp: any;
-    constructor(game) {
+    inventory: Inventory;
+    profile: Profile;
+    actions: Actions;
+    enchant: Enchant;
+    shop: Shop;
+    header: Header;
+    bank: Bank;
+    warp: Warp;
+
+    constructor(public game: Game) {
         this.game = game;
 
         this.notify = $('#notify');
@@ -37,6 +36,7 @@ export default class Interface {
         this.inventory = null;
         this.profile = null;
         this.actions = null;
+        this.bank = null;
         this.enchant = null;
         this.shop = null;
         this.header = null;
@@ -173,15 +173,17 @@ export default class Interface {
         if (
             this.profile &&
             (this.profile.isVisible() || this.profile.settings.isVisible())
-        )
+        ) {
             this.profile.hide();
+        }
 
         if (
             this.game.input &&
             this.game.input.chatHandler &&
             this.game.input.chatHandler.input.is(':visible')
-        )
+        ) {
             this.game.input.chatHandler.hideInput();
+        }
 
         if (this.bank && this.bank.isVisible()) this.bank.hide();
 
@@ -238,4 +240,4 @@ export default class Interface {
     isConfirmVisible() {
         return this.confirm.css('display') === 'block';
     }
-};
+}

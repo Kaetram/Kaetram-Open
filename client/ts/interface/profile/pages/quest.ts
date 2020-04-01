@@ -1,22 +1,36 @@
 import $ from 'jquery';
-import Page from '../page';
 import _ from 'underscore';
-import Achievement from '../../../../../server/ts/game/entity/character/player/achievement';
+import Page from '../page';
+import Game from '../../../game';
+
+interface LocalType {
+    id: string;
+    name: string;
+    count: number;
+    finished: boolean;
+}
+
+interface Achievement extends LocalType {
+    progress: number;
+}
+interface QuestType extends LocalType {
+    stage: number;
+}
 
 export default class Quest extends Page {
-    game: any;
     achievements: JQuery<HTMLElement>;
     quests: JQuery<HTMLElement>;
     achievementsCount: JQuery<HTMLElement>;
     questCount: JQuery<HTMLElement>;
-    achievementsList: any;
-    questList: any;
+    achievementsList: JQuery<HTMLElement>;
+    questList: JQuery<HTMLElement>;
     finishedAchievements: number;
     finishedQuests: number;
     achievementsLength: number;
     questsLength: number;
     finishedAchievement: number;
-    constructor(game) {
+
+    constructor(public game: Game) {
         super('#questPage');
 
         this.game = game;
@@ -37,10 +51,10 @@ export default class Quest extends Page {
         this.questsLength = 0;
     }
 
-    loadAchievements(achievements) {
+    loadAchievements(achievements: Achievement[]) {
         this.achievementsLength = achievements.length;
 
-        _.each(achievements, (achievement: any) => {
+        _.each(achievements, (achievement: Achievement) => {
             const item = this.getItem(false, achievement.id);
             const name = this.getName(false, achievement.id);
 
@@ -54,10 +68,9 @@ export default class Quest extends Page {
                 name.text(
                     achievement.name +
                         (achievement.count > 2
-                            ? ' ' +
-                              (achievement.progress - 1) +
-                              '/' +
-                              (achievement.count - 1)
+                            ? ` ${achievement.progress - 1}/${
+                                  achievement.count - 1
+                              }`
                             : '')
                 );
             } else if (achievement.progress > 9998) {
@@ -82,7 +95,7 @@ export default class Quest extends Page {
     loadQuests(quests) {
         this.questsLength = quests.length;
 
-        _.each(quests, (quest: any) => {
+        _.each(quests, (quest: QuestType) => {
             const item = this.getItem(true, quest.id);
             const name = this.getName(true, quest.id);
 
@@ -90,10 +103,11 @@ export default class Quest extends Page {
 
             name.css('background', 'rgba(255, 10, 10, 0.3)');
 
-            if (quest.stage > 0 && quest.stage < 9999)
+            if (quest.stage > 0 && quest.stage < 9999) {
                 name.css('background', 'rgba(255, 255, 10, 0.4)');
-            else if (quest.stage > 9998)
+            } else if (quest.stage > 9998) {
                 name.css('background', 'rgba(10, 255, 10, 0.3)');
+            }
 
             if (quest.finished) this.finishedQuests++;
 
@@ -117,16 +131,14 @@ export default class Quest extends Page {
         if (!item) return;
 
         const name = item.find(
-            '' + (info.isQuest ? '#quest' : '#achievement') + info.id + 'name'
+            `${info.isQuest ? '#quest' : '#achievement'}${info.id}name`
         );
 
         if (!name) return;
 
-        if (!info.isQuest && info.count > 2)
-            name.text(
-                info.name + ' ' + (info.progress - 1) + '/' + (info.count - 1)
-            );
-        else name.text(info.name);
+        if (!info.isQuest && info.count > 2) {
+            name.text(`${info.name} ${info.progress - 1}/${info.count - 1}`);
+        } else name.text(info.name);
 
         name.css('background', 'rgba(255, 255, 10, 0.4)');
 
@@ -141,7 +153,7 @@ export default class Quest extends Page {
         if (!item) return;
 
         const name = item.find(
-            '' + (info.isQuest ? '#quest' : '#achievement') + info.id + 'name'
+            `${info.isQuest ? '#quest' : '#achievement'}${info.id}name`
         );
 
         if (!name) return;
@@ -159,13 +171,15 @@ export default class Quest extends Page {
     }
 
     updateCount() {
-        if (this.finishedAchievement !== 0 && this.achievementsLength !== 0)
+        if (this.finishedAchievement !== 0 && this.achievementsLength !== 0) {
             this.achievementsCount.html(
-                this.finishedAchievements + '/' + this.achievementsLength
+                `${this.finishedAchievements}/${this.achievementsLength}`
             );
+        }
 
-        if (this.finishedQuests !== 0 && this.questsLength !== 0)
-            this.questCount.html(this.finishedQuests + '/' + this.questsLength);
+        if (this.finishedQuests !== 0 && this.questsLength !== 0) {
+            this.questCount.html(`${this.finishedQuests}/${this.questsLength}`);
+        }
     }
 
     clear() {
@@ -174,12 +188,12 @@ export default class Quest extends Page {
     }
 
     getQuest(id) {
-        return $(this.questList.find('li')[id]).find('#quest' + id);
+        return $(this.questList.find('li')[id]).find(`#quest${id}`);
     }
 
     getAchievement(id) {
         return $(this.achievementsList.find('li')[id]).find(
-            '#achievement' + id
+            `#achievement${id}`
         );
     }
 
@@ -190,19 +204,21 @@ export default class Quest extends Page {
 
     getItem(isQuest, id) {
         return $(
-            '<div id="' +
-                (isQuest ? 'quest' : 'achievement') +
-                id +
-                '" class="questItem"></div>'
+            `<div id="${
+                isQuest ? 'quest' : 'achievement'
+            }${id}" class="questItem"></div>`
         );
     }
 
     getName(isQuest, id) {
         return $(
-            '<div id="' +
-                (isQuest ? 'quest' : 'achievement') +
-                id +
-                'name" class="questName"></div>'
+            `<div id="${
+                isQuest ? 'quest' : 'achievement'
+            }${id}name" class="questName"></div>`
         );
     }
-};
+
+    resize() {
+        // XXX: Resize for Quests
+    }
+}

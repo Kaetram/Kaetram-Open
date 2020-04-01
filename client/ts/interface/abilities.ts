@@ -1,9 +1,11 @@
 import $ from 'jquery';
 
+import Game from '../game';
+
 export default class Abilities {
-    game: any;
     shortcuts: JQuery<HTMLElement>;
-    constructor(game) {
+
+    constructor(public game: Game) {
         this.game = game;
 
         this.shortcuts = $('#abilityShortcut');
@@ -12,4 +14,4 @@ export default class Abilities {
     getList() {
         return this.shortcuts.find('ul');
     }
-};
+}

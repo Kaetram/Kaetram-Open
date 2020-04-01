@@ -1,23 +1,25 @@
-/* global _, Modules, log */
+import _ from 'underscore';
 
-import Entity from '../entity';
+import Tile from '../../renderer/tile';
+import Modules from '../../utils/modules';
 import Transition from '../../utils/transition';
 import Animation from '../animation';
-import Modules from '../../utils/modules';
-import _ from 'underscore';
+import Entity from '../entity';
+import Weapon from './player/equipment/weapon';
+import Player from './player/player';
 
 export default class Character extends Entity {
     nextGridX: number;
     nextGridY: number;
     prevGridX: number;
     prevGridY: number;
-    orientation: any;
+    orientation: number;
     hitPoints: number;
     maxHitPoints: number;
     mana: number;
     maxMana: number;
     healthBarVisible: boolean;
-    healthBarTimeout: any;
+    healthBarTimeout: number;
     dead: boolean;
     following: boolean;
     attacking: boolean;
@@ -25,9 +27,9 @@ export default class Character extends Entity {
     frozen: boolean;
     explosion: boolean;
     healing: boolean;
-    path: any;
-    target: any;
-    attackers: { [key: string]: any };
+    path: number[][];
+    target: Player;
+    attackers: { [id: string]: Entity } & { size?: number };
     movement: Transition;
     attackAnimationSpeed: number;
     walkAnimationSpeed: number;
@@ -38,21 +40,22 @@ export default class Character extends Entity {
     stunAnimation: Animation;
     explosionAnimation: Animation;
     healingAnimation: Animation;
-    newDestination: { x: any; y: any };
+    newDestination: Pos;
     step: number;
-    beforeStepCallback: any;
-    stepCallback: any;
-    stopPathingCallback: any;
-    startPathingCallback: any;
-    destination: { gridX: any; gridY: any };
-    adjacentTiles: { [key: string]: any };
-    requestPathCallback: any;
-    moveCallback: any;
-    hitPointsCallback: any;
-    maxHitPointsCallback: any;
+    beforeStepCallback: Callback;
+    stepCallback: Callback;
+    stopPathingCallback: Callback;
+    startPathingCallback: Callback;
+    destination: { gridX: number; gridY: number };
+    adjacentTiles: { [key: string]: Tile };
+    requestPathCallback: Callback;
+    moveCallback: Callback;
+    hitPointsCallback: Callback;
+    maxHitPointsCallback: Callback;
     forced: boolean;
-    teleporting: any;
-    weapon: any;
+    teleporting: boolean;
+    weapon: Weapon;
+    // STUB: moving: boolean;
     secondStepCallback: Function;
 
     constructor(id, kind) {
@@ -71,7 +74,7 @@ export default class Character extends Entity {
         this.maxMana = -1;
 
         this.healthBarVisible = false;
-        this.healthBarTimeout = false;
+        this.healthBarTimeout = null;
 
         this.dead = false;
         this.following = false;
@@ -152,20 +155,21 @@ export default class Character extends Entity {
 
     animate(animation, speed, count?, onEndCount?) {
         const o = ['atk', 'walk', 'idle'];
-        const orientation = this.orientation;
+        const { orientation } = this;
 
-        if (this.currentAnimation && this.currentAnimation.name === 'death')
+        if (this.currentAnimation && this.currentAnimation.name === 'death') {
             return;
+        }
 
         this.spriteFlipX = false;
         this.spriteFlipY = false;
 
         if (o.indexOf(animation) > -1) {
-            animation +=
-                '_' +
-                (orientation === Modules.Orientation.Left
+            animation += `_${
+                orientation === Modules.Orientation.Left
                     ? 'right'
-                    : this.orientationToString(orientation));
+                    : this.orientationToString(orientation)
+            }`;
             this.spriteFlipX = this.orientation === Modules.Orientation.Left;
         }
 
@@ -173,14 +177,15 @@ export default class Character extends Entity {
     }
 
     lookAt(character) {
-        if (character.gridX > this.gridX)
+        if (character.gridX > this.gridX) {
             this.setOrientation(Modules.Orientation.Right);
-        else if (character.gridX < this.gridX)
+        } else if (character.gridX < this.gridX) {
             this.setOrientation(Modules.Orientation.Left);
-        else if (character.gridY > this.gridY)
+        } else if (character.gridY > this.gridY) {
             this.setOrientation(Modules.Orientation.Down);
-        else if (character.gridY < this.gridY)
+        } else if (character.gridY < this.gridY) {
             this.setOrientation(Modules.Orientation.Up);
+        }
 
         this.idle();
     }
@@ -273,7 +278,7 @@ export default class Character extends Entity {
         }
     }
 
-    go(x, y, forced) {
+    go(x: number, y: number, forced?: boolean) {
         if (this.frozen) return;
 
         if (this.following) {
@@ -286,8 +291,8 @@ export default class Character extends Entity {
 
     proceed(x, y) {
         this.newDestination = {
-            x: x,
-            y: y
+            x,
+            y,
         };
     }
 
@@ -305,8 +310,9 @@ export default class Character extends Entity {
         let y;
         let path;
 
-        if (this.step % 2 === 0 && this.secondStepCallback)
+        if (this.step % 2 === 0 && this.secondStepCallback) {
             this.secondStepCallback();
+        }
 
         this.prevGridX = this.gridX;
         this.prevGridY = this.gridY;
@@ -319,8 +325,7 @@ export default class Character extends Entity {
 
         if (!this.interrupted) {
             if (this.hasNextStep()) {
-                this.nextGridX = this.path[this.step + 1][0];
-                this.nextGridY = this.path[this.step + 1][1];
+                [this.nextGridX, this.nextGridY] = this.path[this.step + 1];
             }
 
             if (this.stepCallback) this.stepCallback();
@@ -350,27 +355,32 @@ export default class Character extends Entity {
             this.path = null;
             this.idle();
 
-            if (this.stopPathingCallback)
+            if (this.stopPathingCallback) {
                 this.stopPathingCallback(this.gridX, this.gridY, this.forced);
+            }
 
             if (this.forced) this.forced = false;
         }
     }
 
     updateMovement() {
-        const step = this.step;
+        const { step } = this;
 
-        if (this.path[step][0] < this.path[step - 1][0])
+        if (this.path[step][0] < this.path[step - 1][0]) {
             this.performAction(Modules.Orientation.Left, Modules.Actions.Walk);
+        }
 
-        if (this.path[step][0] > this.path[step - 1][0])
+        if (this.path[step][0] > this.path[step - 1][0]) {
             this.performAction(Modules.Orientation.Right, Modules.Actions.Walk);
+        }
 
-        if (this.path[step][1] < this.path[step - 1][1])
+        if (this.path[step][1] < this.path[step - 1][1]) {
             this.performAction(Modules.Orientation.Up, Modules.Actions.Walk);
+        }
 
-        if (this.path[step][1] > this.path[step - 1][1])
+        if (this.path[step][1] > this.path[step - 1][1]) {
             this.performAction(Modules.Orientation.Down, Modules.Actions.Walk);
+        }
     }
 
     /**
@@ -393,7 +403,7 @@ export default class Character extends Entity {
     move(x, y, forced?) {
         this.destination = {
             gridX: x,
-            gridY: y
+            gridY: y,
         };
 
         this.adjacentTiles = {};
@@ -402,7 +412,7 @@ export default class Character extends Entity {
         else this.followPath(this.requestPathfinding(x, y));
     }
 
-    stop(force) {
+    stop(force?: boolean) {
         if (!force) this.interrupted = true;
         else if (this.hasPath()) {
             this.path = null;
@@ -456,7 +466,7 @@ export default class Character extends Entity {
 
         if (this.healthBarTimeout) clearTimeout(this.healthBarTimeout);
 
-        this.healthBarTimeout = setTimeout(() => {
+        this.healthBarTimeout = window.setTimeout(() => {
             this.healthBarVisible = false;
         }, 7000);
     }
@@ -552,10 +562,10 @@ export default class Character extends Entity {
      */
     setObjectTarget(x, y) {
         this.setTarget({
-            id: x + '-' + y,
+            id: `${x}-${y}`,
             type: 'object',
             gridX: x,
-            gridY: y
+            gridY: y,
         });
     }
 
@@ -570,8 +580,9 @@ export default class Character extends Entity {
     setMaxHitPoints(maxHitPoints) {
         this.maxHitPoints = maxHitPoints;
 
-        if (this.maxHitPointsCallback)
+        if (this.maxHitPointsCallback) {
             this.maxHitPointsCallback(this.maxHitPoints);
+        }
     }
 
     setOrientation(orientation) {

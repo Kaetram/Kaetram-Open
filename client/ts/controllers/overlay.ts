@@ -9,6 +9,7 @@ export default class Overlay {
     details: any;
     health: any;
     updateCallback: any;
+
     constructor(input) {
         this.input = input;
         this.hovering = null;
@@ -41,13 +42,13 @@ export default class Overlay {
         if (this.hasHealth()) {
             this.health.css({
                 display: 'block',
-                width:
+                width: `${
                     Math.ceil((entity.hitPoints / entity.maxHitPoints) * 100) -
-                    10 +
-                    '%'
+                    10
+                }%`,
             });
 
-            this.details.html(entity.hitPoints + ' / ' + entity.maxHitPoints);
+            this.details.html(`${entity.hitPoints} / ${entity.maxHitPoints}`);
         } else {
             this.health.css('display', 'none');
             this.details.html('');
@@ -64,14 +65,14 @@ export default class Overlay {
                 else {
                     this.health.css(
                         'width',
-                        Math.ceil(
-                            (hitPoints / this.hovering.maxHitPoints) * 100
-                        ) -
-                            10 +
-                            '%'
+                        `${
+                            Math.ceil(
+                                (hitPoints / this.hovering.maxHitPoints) * 100
+                            ) - 10
+                        }%`
                     );
                     this.details.html(
-                        hitPoints + ' / ' + this.hovering.maxHitPoints
+                        `${hitPoints} / ${this.hovering.maxHitPoints}`
                     );
                 }
             }
@@ -114,4 +115,4 @@ export default class Overlay {
     onUpdate(callback) {
         this.updateCallback = callback;
     }
-};
+}

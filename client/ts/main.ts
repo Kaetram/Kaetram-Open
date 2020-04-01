@@ -1,18 +1,13 @@
-/* global log, Detect */
-
 import $ from 'jquery';
-import _ from 'underscore';
-import './utils/util';
-
-import Detect from './utils/detect';
 
 import App from './app';
 import Game from './game';
+import Detect from './utils/detect';
 
-let app: App,
-    body: JQuery<HTMLBodyElement>,
-    chatInput: JQuery<HTMLInputElement>,
-    game: Game;
+let app: App;
+let body: JQuery<HTMLBodyElement>;
+let chatInput: JQuery<HTMLInputElement>;
+let game: Game;
 
 const addClasses = () => {
     if (Detect.isWindows()) body.addClass('windows');
@@ -32,7 +27,7 @@ const initGame = () => {
 };
 
 const load = () => {
-    $(document).ready(() => {
+    $(() => {
         app = new App();
         body = $('body');
         chatInput = $('#chatInput');

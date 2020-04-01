@@ -1,18 +1,23 @@
-/* global log, Modules */
+import Player from '../entity/character/player/player';
 
 import Character from '../entity/character/character';
+import Map from '../map/map';
 import Modules from '../utils/modules';
+import Input from '../controllers/input';
+import Sprites from '../controllers/sprites';
+import Renderer from './renderer';
+import Game from '../game';
 
 export default class Updater {
-    game: any;
-    map: any;
-    player: any;
-    renderer: any;
-    input: any;
-    sprites: any;
+    map: Map;
+    player: Player;
+    renderer: Renderer;
+    input: Input;
+    sprites: Sprites;
     timeDifferential: number;
-    lastUpdate: any;
-    constructor(game) {
+    lastUpdate: number;
+
+    constructor(public game: Game) {
         this.game = game;
         this.map = game.map;
         this.player = game.player;
@@ -22,7 +27,7 @@ export default class Updater {
     }
 
     update() {
-        this.timeDifferential = ((new Date() as any) - this.lastUpdate) / 1000;
+        this.timeDifferential = (new Date().getTime() - this.lastUpdate) / 1000;
 
         this.updateEntities();
         this.input.updateCursor();
@@ -31,7 +36,7 @@ export default class Updater {
         this.updateInfos();
         this.updateBubbles();
 
-        this.lastUpdate = new Date();
+        this.lastUpdate = new Date().getTime();
     }
 
     updateEntities() {
@@ -46,8 +51,9 @@ export default class Updater {
                 if (animation) animation.update(this.game.time);
 
                 if (entity instanceof Character) {
-                    if (entity.movement && entity.movement.inProgress)
+                    if (entity.movement && entity.movement.inProgress) {
                         entity.movement.step(this.game.time);
+                    }
 
                     if (entity.hasPath() && !entity.movement.inProgress) {
                         const tick = Math.round(266 / entity.movementSpeed);
@@ -152,7 +158,7 @@ export default class Updater {
         if (!entity || !entity.fading) return;
 
         const duration = 1000;
-        const time = this.game.time;
+        const { time } = this.game;
         const dt = time - entity.fadingTime;
 
         if (dt > duration) {
@@ -162,10 +168,10 @@ export default class Updater {
     }
 
     updateKeyboard() {
-        const player = this.game.player;
+        const { player } = this.game;
         const position = {
             x: player.gridX,
-            y: player.gridY
+            y: player.gridY,
         };
 
         if (player.frozen) return;
@@ -181,8 +187,9 @@ export default class Updater {
     updateAnimations() {
         const target = this.input.targetAnimation;
 
-        if (target && this.input.selectedCellVisible)
+        if (target && this.input.selectedCellVisible) {
             target.update(this.game.time);
+        }
 
         if (!this.sprites) return;
 

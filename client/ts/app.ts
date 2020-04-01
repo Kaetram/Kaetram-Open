@@ -1,45 +1,51 @@
-/* global log, Class, Detect, Modules */
-
 import $ from 'jquery';
 import _ from 'underscore';
-import Modules from './utils/modules';
-import Detect from './utils/detect';
-import install from '../lib/pwa';
-import config from '../data/config.json';
 
+import config from '../data/config.json';
+import Game from './game';
+import Detect from './utils/detect';
+import Modules from './utils/modules';
+
+/**
+ *
+ */
 export default class App {
-    statusMessage: any;
-    config: any;
-    body: JQuery<HTMLElement>;
-    parchment: JQuery<HTMLElement>;
-    container: JQuery<HTMLElement>;
-    window: JQuery<Window>;
-    canvas: JQuery<HTMLElement>;
-    border: JQuery<HTMLElement>;
-    intro: JQuery<HTMLElement>;
-    loginButton: JQuery<HTMLElement>;
-    createButton: JQuery<HTMLElement>;
-    registerButton: JQuery<HTMLElement>;
-    helpButton: JQuery<HTMLElement>;
-    cancelButton: JQuery<HTMLElement>;
-    yes: JQuery<HTMLElement>;
-    no: JQuery<HTMLElement>;
-    loading: JQuery<HTMLElement>;
-    respawn: JQuery<HTMLElement>;
-    rememberMe: JQuery<HTMLElement>;
-    guest: JQuery<HTMLElement>;
     about: JQuery<HTMLElement>;
+    body: JQuery<HTMLElement>;
+    border: JQuery<HTMLElement>;
+    cancelButton: JQuery<HTMLElement>;
+    canvas: JQuery<HTMLElement>;
+    config: Config;
+    container: JQuery<HTMLElement>;
+    createButton: JQuery<HTMLElement>;
     credits: JQuery<HTMLElement>;
     discord: JQuery<HTMLElement>;
-    git: JQuery<HTMLElement>;
     footer: JQuery<HTMLElement>;
-    loginFields: any[];
-    registerFields: any[];
-    game: any;
-    parchmentAnimating: boolean;
+    game: Game;
+    git: JQuery<HTMLElement>;
+    guest: JQuery<HTMLElement>;
+    helpButton: JQuery<HTMLElement>;
+    intro: JQuery<HTMLElement>;
+    loading: JQuery<HTMLElement>;
     loggingIn: boolean;
+    loginButton: JQuery<HTMLElement>;
+    loginFields: Array<JQuery<HTMLElement>>;
+    no: JQuery<HTMLElement>;
     orientation: string;
-    readyCallback: any;
+    parchment: JQuery<HTMLElement>;
+    parchmentAnimating: boolean;
+    readyCallback: (callback: Function) => void;
+    registerButton: JQuery<HTMLElement>;
+    registerFields: Array<JQuery<HTMLElement>>;
+    rememberMe: JQuery<HTMLElement>;
+    respawn: JQuery<HTMLElement>;
+    statusMessage: string;
+    window: JQuery<Window>;
+    yes: JQuery<HTMLElement>;
+
+    /**
+     * Creates an instance of App.
+     */
     constructor() {
         this.config = null;
 
@@ -147,8 +153,9 @@ export default class App {
         });
 
         this.respawn.click(() => {
-            if (!this.game || !this.game.player || !this.game.player.dead)
+            if (!this.game || !this.game.player || !this.game.player.dead) {
                 return;
+            }
 
             this.game.respawn();
         });
@@ -161,9 +168,9 @@ export default class App {
 
         this.config = config;
 
-
         $(document).bind('keydown', (e) => {
             if (e.which === Modules.Keys.Enter) return false;
+            return undefined;
         });
 
         $(document).keydown((e) => {
@@ -178,8 +185,9 @@ export default class App {
                 return;
             }
 
-            if (this.game.started)
+            if (this.game.started) {
                 this.game.handleInput(Modules.InputType.Key, key);
+            }
         });
 
         $(document).keyup((e) => {
@@ -196,8 +204,9 @@ export default class App {
                 !this.game.input ||
                 !this.game.started ||
                 event.target.id !== 'textCanvas'
-            )
+            ) {
                 return;
+            }
 
             this.game.input.setCoords(event);
             this.game.input.moveCursor();
@@ -223,14 +232,14 @@ export default class App {
             !this.game.loaded ||
             this.statusMessage ||
             !this.verifyForm()
-        )
+        ) {
             return;
+        }
 
         this.toggleLogin(true);
         this.game.connect();
 
-        // eslint-disable-next-line no-undef
-        install();
+        window.install();
     }
 
     fadeMenu() {
@@ -253,8 +262,6 @@ export default class App {
 
         this.footer.show();
     }
-
-    showDeath() {}
 
     openScroll(origin, destination) {
         if (!destination || this.loggingIn) return;
@@ -289,11 +296,12 @@ export default class App {
             if (this.game.player) this.body.toggleClass('death');
 
             if (content !== 'about') this.helpButton.removeClass('active');
-        } else if (state !== 'animate')
+        } else if (state !== 'animate') {
             this.openScroll(
                 state,
                 state === content ? 'loadCharacter' : content
             );
+        }
     }
 
     verifyForm() {
@@ -302,12 +310,13 @@ export default class App {
         if (activeForm === 'null') return;
 
         switch (activeForm) {
-            case 'loadCharacter':
+            case 'loadCharacter': {
                 const nameInput = $('#loginNameInput');
                 const passwordInput = $('#loginPasswordInput');
 
-                if (this.loginFields.length === 0)
+                if (this.loginFields.length === 0) {
                     this.loginFields = [nameInput, passwordInput];
+                }
 
                 if (!nameInput.val() && !this.isGuest()) {
                     this.sendError(nameInput, 'Please enter a username.');
@@ -320,8 +329,8 @@ export default class App {
                 }
 
                 break;
-
-            case 'createCharacter':
+            }
+            case 'createCharacter': {
                 const characterName = $('#registerNameInput');
                 const registerPassword = $('#registerPasswordInput');
                 const registerPasswordConfirmation = $(
@@ -329,13 +338,14 @@ export default class App {
                 );
                 const email = $('#registerEmailInput');
 
-                if (this.registerFields.length === 0)
+                if (this.registerFields.length === 0) {
                     this.registerFields = [
                         characterName,
                         registerPassword,
                         registerPasswordConfirmation,
-                        email
+                        email,
                     ];
+                }
 
                 if (!characterName.val()) {
                     this.sendError(
@@ -370,6 +380,9 @@ export default class App {
                 }
 
                 break;
+            }
+
+            default:
         }
 
         return true;
@@ -390,7 +403,7 @@ export default class App {
 
         $('<span></span>', {
             class: 'status blink',
-            text: message
+            text: message,
         }).appendTo('.validation-summary');
 
         $('.status').append(
@@ -403,7 +416,7 @@ export default class App {
 
         $('<span></span>', {
             class: 'validation-error blink',
-            text: error
+            text: error,
         }).appendTo('.validation-summary');
 
         if (!field) return;
@@ -425,8 +438,9 @@ export default class App {
                 ? this.loginFields
                 : this.registerFields;
 
-        for (let i = 0; i < fields.length; i++)
+        for (let i = 0; i < fields.length; i++) {
             fields[i].removeClass('field-error');
+        }
 
         $('.validation-error').remove();
         $('.status').remove();
@@ -499,15 +513,17 @@ export default class App {
     }
 
     toggleTyping(state) {
-        if (this.loginFields)
+        if (this.loginFields) {
             _.each(this.loginFields, (field) => {
                 field.prop('readonly', state);
             });
+        }
 
-        if (this.registerFields)
+        if (this.registerFields) {
             _.each(this.registerFields, (field) => {
                 field.prop('readOnly', state);
             });
+        }
     }
 
     updateRange(obj) {
@@ -516,13 +532,10 @@ export default class App {
 
         obj.css(
             'background-image',
-            '-webkit-gradient(linear, left top, right top, ' +
-                'color-stop(' +
-                val +
-                ', #4d4d4d), ' +
-                'color-stop(' +
-                val +
-                ', #C5C5C5)' +
+            `${
+                '-webkit-gradient(linear, left top, right top, ' + 'color-stop('
+            }${val}, #4d4d4d), ` +
+                `color-stop(${val}, #C5C5C5)` +
                 ')'
         );
     }
@@ -536,5 +549,4 @@ export default class App {
             ? 'portrait'
             : 'landscape';
     }
-
 }

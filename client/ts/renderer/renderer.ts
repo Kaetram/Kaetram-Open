@@ -1,19 +1,24 @@
-/* global _, m4, log, Detect */
+/* eslint-disable max-classes-per-file */
 
 import $ from 'jquery';
 import _ from 'underscore';
-import Camera from './camera';
-import Tile from './tile';
-import Player from '../entity/character/player/player';
+
+import Entities from '../controllers/entities';
+import Input from '../controllers/input';
 import Character from '../entity/character/character';
 import Item from '../entity/objects/item';
+import Sprite from '../entity/sprite';
+import Game from '../game';
+import Map from '../map/map';
 import Detect from '../utils/detect';
 import Modules from '../utils/modules';
+import Camera from './camera';
+import Tile from './tile';
 
-const DarkMask = window.illuminated.DarkMask;
-const Lamp = window.illuminated.Lamp;
-const Lighting = window.illuminated.Lighting;
-const Vec2 = window.illuminated.Vec2;
+const { DarkMask } = window.illuminated;
+const { Lamp } = window.illuminated;
+const { Lighting } = window.illuminated;
+const { Vec2 } = window.illuminated;
 
 const HORIZONTAL_FLIP_FLAG = 0x80000000;
 const VERTICAL_FLIP_FLAG = 0x40000000;
@@ -23,40 +28,40 @@ const ROT_NEG_90_DEG = ROT_90_DEG * -1;
 const ROT_180_DEG = Math.PI;
 
 export default class Renderer {
-    canvas: HTMLElement;
-    background: any;
-    entities: any;
-    foreground: any;
-    overlay: any;
-    textCanvas: any;
-    cursor: any;
-    context: any;
-    backContext: any;
-    foreContext: any;
-    overlayContext: any;
-    textContext: any;
-    cursorContext: any;
-    canvases: any[];
-    allContexts: any[];
-    contexts: any[];
-    drawingContexts: any[];
+    canvas: HTMLCanvasElement;
+    background: HTMLCanvasElement;
+    entities: Entities & HTMLCanvasElement;
+    foreground: HTMLCanvasElement;
+    overlay: HTMLCanvasElement;
+    textCanvas: HTMLCanvasElement;
+    cursor: HTMLCanvasElement;
+    context: CanvasRenderingContext2D;
+    backContext: CanvasRenderingContext2D;
+    foreContext: CanvasRenderingContext2D;
+    overlayContext: CanvasRenderingContext2D;
+    textContext: CanvasRenderingContext2D;
+    cursorContext: CanvasRenderingContext2D;
+    canvases: HTMLCanvasElement[];
+    allContexts: CanvasRenderingContext2D[];
+    contexts: CanvasRenderingContext2D[];
+    drawingContexts: CanvasRenderingContext2D[];
     lightings: any[];
     textures: {};
-    game: any;
-    camera: any;
-    input: any;
+
+    camera: Camera;
+    input: Input;
     tileSize: number;
     fontSize: number;
     screenWidth: number;
     screenHeight: number;
-    time: any;
+    time: number;
     fps: number;
     frameCount: number;
     renderedFrame: number[];
     lastTarget: number[];
     animatedTiles: {};
-    drawnTiles: any[];
-    resizeTimeout: any;
+    drawnTiles: [];
+    resizeTimeout: number;
     autoCentre: boolean;
     drawTarget: boolean;
     selectedCellVisible: boolean;
@@ -68,24 +73,25 @@ export default class Renderer {
     drawLevels: boolean;
     forceRendering: boolean;
     animatedTilesDrawCalls: number;
-    scale: any;
+    scale: number;
     superScaling: number;
     lightTileSize: number;
     canvasWidth: number;
     canvasHeight: number;
-    webGL: any;
-    map: any;
-    mEdge: any;
-    firefox: any;
+    webGL: boolean;
+    map: Map;
+    mEdge: boolean;
+    firefox: boolean;
     darkMask: any;
-    mobile: any;
-    shadowSprite: any;
-    sparksSprite: any;
-    tablet: any;
-    realFPS: any;
+    mobile: boolean;
+    shadowSprite: Sprite;
+    sparksSprite: Sprite;
+    tablet: boolean;
+    realFPS: number;
     transitioning: boolean;
-    transitionInterval: any;
+    transitionInterval: number;
     tileset: any;
+
     constructor(
         background,
         entities,
@@ -93,9 +99,9 @@ export default class Renderer {
         overlay,
         textCanvas,
         cursor,
-        game
+        public game: Game
     ) {
-        this.canvas = document.getElementById('canvas');
+        this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.background = background;
         this.entities = entities;
         this.foreground = foreground;
@@ -117,7 +123,7 @@ export default class Renderer {
             this.foreground,
             this.overlay,
             this.textCanvas,
-            this.cursor
+            this.cursor,
         ];
 
         this.allContexts = [
@@ -126,7 +132,7 @@ export default class Renderer {
             this.foreContext,
             this.overlayContext,
             this.textContext,
-            this.cursorContext
+            this.cursorContext,
         ];
 
         this.contexts = [this.context, this.textContext, this.overlayContext];
@@ -146,7 +152,7 @@ export default class Renderer {
         this.screenWidth = 0;
         this.screenHeight = 0;
 
-        this.time = new Date();
+        this.time = new Date().getTime();
 
         this.fps = 0;
         this.frameCount = 0;
@@ -227,7 +233,7 @@ export default class Renderer {
     }
 
     loadCamera() {
-        const storage = this.game.storage;
+        const { storage } = this.game;
 
         this.camera = new Camera(this);
 
@@ -246,7 +252,7 @@ export default class Renderer {
     loadLights() {
         this.darkMask = new DarkMask({
             lights: [],
-            color: 'rgba(0, 0, 0, 0.84)'
+            color: 'rgba(0, 0, 0, 0.84)',
         });
 
         this.darkMask.compute(this.overlay.width, this.overlay.height);
@@ -259,8 +265,8 @@ export default class Renderer {
 
         this.checkDevice();
 
-        if (!this.resizeTimeout)
-            this.resizeTimeout = setTimeout(() => {
+        if (!this.resizeTimeout) {
+            this.resizeTimeout = window.setTimeout(() => {
                 this.scale = this.getScale();
                 this.clearScreen(this.cursorContext);
 
@@ -268,7 +274,7 @@ export default class Renderer {
 
                 this.loadSizes();
 
-                if (this.entities) this.entities.update();
+                // if (this.entities) this.entities.update();
 
                 if (this.camera) this.camera.centreOn(this.game.player);
 
@@ -281,6 +287,7 @@ export default class Renderer {
 
                 this.forceRendering = true;
             }, 500);
+        }
     }
 
     render() {
@@ -348,8 +355,9 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
-            if (!this.map.isAnimatedTile(id) || !this.animateTiles)
+            if (!this.map.isAnimatedTile(id) || !this.animateTiles) {
                 this.drawTile(context, id, this.map.width, index);
+            }
         });
 
         this.restoreDrawing();
@@ -381,8 +389,9 @@ export default class Renderer {
         this.setCameraView(this.foreContext);
 
         this.forEachVisibleTile((id, index) => {
-            if (this.map.isHighTile(id))
+            if (this.map.isHighTile(id)) {
                 this.drawTile(this.foreContext, id, this.map.width, index);
+            }
         });
 
         this.foreContext.restore();
@@ -442,7 +451,7 @@ export default class Renderer {
             this.setCameraView(this.textContext);
             this.textContext.globalAlpha = info.opacity;
             this.drawText(
-                '' + info.text,
+                `${info.text}`,
                 Math.floor(info.x + 8),
                 Math.floor(info.y),
                 true,
@@ -480,7 +489,7 @@ export default class Renderer {
     }
 
     drawEntity(entity) {
-        const sprite = entity.sprite;
+        const { sprite } = entity;
         const animation = entity.currentAnimation;
         const data = entity.renderingData;
 
@@ -525,8 +534,9 @@ export default class Renderer {
             this.context.scale(1, -1);
         } else this.context.translate(dx, dy);
 
-        if (entity.customScale)
+        if (entity.customScale) {
             this.context.scale(entity.customScale, entity.customScale);
+        }
 
         if (entity.angled) this.context.rotate(data.angle);
 
@@ -569,19 +579,19 @@ export default class Renderer {
         if (!this.game.overlays.getFog()) this.drawName(entity);
     }
 
+    /**
+     * Function used to draw special effects prior
+     * to rendering the entity.
+     */
     drawEntityBack(entity) {
-        /**
-         * Function used to draw special effects prior
-         * to rendering the entity.
-         */
+        // TODO: Draw back special effects prior
     }
 
+    /**
+     * Function used to draw special effects after
+     * having rendererd the entity
+     */
     drawEntityFore(entity) {
-        /**
-         * Function used to draw special effects after
-         * having rendererd the entity
-         */
-
         if (
             entity instanceof Character &&
             !entity.dead &&
@@ -632,7 +642,7 @@ export default class Renderer {
 
                 if (sprite) {
                     const animation = entity.getEffectAnimation();
-                    const index = animation.currentFrame.index;
+                    const { index } = animation.currentFrame;
                     const x = sprite.width * index * this.superScaling;
                     const y = sprite.height * animation.row * this.superScaling;
                     const width = sprite.width * this.superScaling;
@@ -658,7 +668,7 @@ export default class Renderer {
         }
 
         if (entity instanceof Item) {
-            const sparksAnimation = this.entities.sprites.sparksAnimation;
+            const { sparksAnimation } = this.entities.sprites;
             const sparksFrame = sparksAnimation.currentFrame;
             const sparksX =
                 this.sparksSprite.width * sparksFrame.index * this.superScaling;
@@ -688,8 +698,9 @@ export default class Renderer {
             !entity.hitPoints ||
             entity.hitPoints < 0 ||
             !entity.healthBarVisible
-        )
+        ) {
             return;
+        }
 
         const barLength = 16;
         const healthX = entity.x * this.superScaling - barLength / 2 + 8;
@@ -721,8 +732,9 @@ export default class Renderer {
             entity.hidden ||
             !entity.drawNames() ||
             (!this.drawNames && !this.drawLevels)
-        )
+        ) {
             return;
+        }
 
         let colour = entity.wanted ? 'red' : 'white';
 
@@ -741,7 +753,7 @@ export default class Renderer {
             const x = entity.x + 8;
             const y = entity.y - 10;
 
-            if (this.drawNames && entity instanceof Character)
+            if (this.drawNames && entity instanceof Character) {
                 this.drawText(
                     entity.name,
                     x,
@@ -750,35 +762,38 @@ export default class Renderer {
                     colour,
                     '#000'
                 );
+            }
 
             if (
                 this.drawLevels &&
                 (entity.type === 'mob' || entity.type === 'player')
-            )
+            ) {
                 this.drawText(
-                    'Level ' + entity.level,
+                    `Level ${entity.level}`,
                     x,
                     y,
                     true,
                     colour,
                     '#000'
                 );
+            }
 
             if (entity.type === 'item') {
-                if (entity.count > 1)
+                if (entity.count > 1) {
                     this.drawText(entity.count, x, y, true, colour);
+                }
 
-                if (entity.ability > -1)
+                if (entity.ability > -1) {
                     this.drawText(
-                        Modules.EnchantmentNames[entity.ability] +
-                            ' [+' +
-                            entity.abilityLevel +
-                            ']',
+                        `${Modules.EnchantmentNames[entity.ability]} [+${
+                            entity.abilityLevel
+                        }]`,
                         x,
                         entity.y + 20,
                         true,
                         colour
                     );
+                }
             }
         } else {
             // TODO - Move this countdown elsewhere.
@@ -827,10 +842,11 @@ export default class Renderer {
             this.mobile ||
             this.hasRenderedMouse() ||
             this.input.cursorMoved
-        )
+        ) {
             return;
+        }
 
-        const cursor = this.input.cursor;
+        const { cursor } = this.input;
         const scaling = 14 * this.superScaling;
 
         this.clearScreen(this.cursorContext);
@@ -839,7 +855,7 @@ export default class Renderer {
         if (cursor) {
             if (!cursor.loaded) cursor.load();
 
-            if (cursor.loaded)
+            if (cursor.loaded) {
                 this.cursorContext.drawImage(
                     cursor.image,
                     0,
@@ -851,6 +867,7 @@ export default class Renderer {
                     scaling,
                     scaling
                 );
+            }
         }
 
         this.cursorContext.restore();
@@ -861,7 +878,7 @@ export default class Renderer {
     calculateFPS() {
         if (!this.debugging) return;
 
-        const currentTime: any = new Date();
+        const currentTime = new Date().getTime();
         const timeDiff = currentTime - this.time;
 
         if (timeDiff >= 1000) {
@@ -875,19 +892,19 @@ export default class Renderer {
     }
 
     drawFPS() {
-        this.drawText('FPS: ' + this.realFPS, 10, 31, false, 'white');
+        this.drawText(`FPS: ${this.realFPS}`, 10, 31, false, 'white');
     }
 
     drawPosition() {
-        const player = this.game.player;
+        const { player } = this.game;
 
         this.drawText(
-            'x: ' +
-                player.gridX +
-                ' y: ' +
-                player.gridY +
-                ' tileIndex: ' +
-                this.map.gridPositionToIndex(player.gridX, player.gridY),
+            `x: ${player.gridX} y: ${
+                player.gridY
+            } tileIndex: ${this.map.gridPositionToIndex(
+                player.gridX,
+                player.gridY
+            )}`,
             10,
             51,
             false,
@@ -896,19 +913,16 @@ export default class Renderer {
 
         if (this.input.hoveringEntity) {
             this.drawText(
-                'x: ' +
-                    this.input.getCoords().x +
-                    ' y: ' +
-                    this.input.getCoords().y +
-                    ' instance: ' +
-                    this.input.hoveringEntity.id,
+                `x: ${this.input.getCoords().x} y: ${
+                    this.input.getCoords().y
+                } instance: ${this.input.hoveringEntity.id}`,
                 10,
                 71,
                 false,
                 'white'
             );
             this.drawText(
-                'attack range: ' + this.input.hoveringEntity.attackRange,
+                `attack range: ${this.input.hoveringEntity.attackRange}`,
                 10,
                 91,
                 false,
@@ -918,7 +932,7 @@ export default class Renderer {
     }
 
     drawCollisions() {
-        const pathingGrid = this.entities.grids.pathingGrid;
+        const { pathingGrid } = this.entities.grids;
 
         if (!pathingGrid) return;
 
@@ -928,11 +942,13 @@ export default class Renderer {
                 y < 0 ||
                 x > this.map.width - 1 ||
                 y > this.map.height - 1
-            )
+            ) {
                 return;
+            }
 
-            if (pathingGrid[y][x] !== 0)
+            if (pathingGrid[y][x] !== 0) {
                 this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
+            }
         });
     }
 
@@ -947,8 +963,8 @@ export default class Renderer {
     drawSelectedCell() {
         if (!this.input.selectedCellVisible || this.input.keyMovement) return;
 
-        const posX = this.input.selectedX;
-        const posY = this.input.selectedY;
+        // const posX = this.input.selectedX;
+        // const posY = this.input.selectedY;
         const tD = this.input.getTargetData(); // target data
 
         if (tD) {
@@ -1080,7 +1096,7 @@ export default class Renderer {
 
             context.strokeStyle = strokeColour || '#373737';
             context.lineWidth = strokeSize;
-            context.font = (fontSize || this.fontSize) + 'px AdvoCut';
+            context.font = `${fontSize || this.fontSize}px AdvoCut`;
             context.strokeText(
                 text,
                 x * this.superScaling,
@@ -1157,8 +1173,9 @@ export default class Renderer {
             !this.camera ||
             !this.map ||
             this.input.keyMovement
-        )
+        ) {
             return;
+        }
 
         const location = this.input.getCoords();
 
@@ -1184,8 +1201,9 @@ export default class Renderer {
 
     forEachVisibleIndex(callback, offset) {
         this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y))
+            if (!this.map.isOutOfBounds(x, y)) {
                 callback(this.map.gridPositionToIndex(x, y) - 1);
+            }
         }, offset);
     }
 
@@ -1195,12 +1213,13 @@ export default class Renderer {
         this.forEachVisibleIndex((index) => {
             const indexData = this.map.data[index];
 
-            if (Array.isArray(indexData))
+            if (Array.isArray(indexData)) {
                 _.each(indexData, (id) => {
                     callback(id - 1, index);
                 });
-            else if (!isNaN(this.map.data[index] - 1))
+            } else if (!isNaN(this.map.data[index] - 1)) {
                 callback(this.map.data[index] - 1, index);
+            }
         }, offset);
     }
 
@@ -1213,13 +1232,14 @@ export default class Renderer {
     forEachVisibleEntity(callback) {
         if (!this.entities || !this.camera) return;
 
-        const grids = this.entities.grids;
+        const { grids } = this.entities;
 
         this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
+            if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x]) {
                 _.each(grids.renderingGrid[y][x], (entity) => {
                     callback(entity);
                 });
+            }
         });
     }
 
@@ -1293,8 +1313,9 @@ export default class Renderer {
     }
 
     hasRenderedFrame() {
-        if (this.forceRendering || (this.mobile && this.camera.centered))
+        if (this.forceRendering || (this.mobile && this.camera.centered)) {
             return false;
+        }
 
         if (!this.camera || this.stopRendering || !this.input) return true;
 
@@ -1321,12 +1342,12 @@ export default class Renderer {
 
         this.transitioning = true;
 
-        this.transitionInterval = setInterval(() => {
+        this.transitionInterval = window.setTimeout(() => {
             this.brightness += forward ? 6 : -6;
 
             textCanvas.css(
                 'background',
-                'rgba(0,0,0,' + (1 - this.brightness / 100) + ')'
+                `rgba(0,0,0,${1 - this.brightness / 100})`
             );
 
             if (hasThreshold()) {
@@ -1391,7 +1412,7 @@ export default class Renderer {
 
         $('#textCanvas').css(
             'background',
-            'rgba(0, 0, 0, ' + (0.5 - level / 200) + ')'
+            `rgba(0, 0, 0, ${0.5 - level / 200})`
         );
     }
 
@@ -1405,7 +1426,7 @@ export default class Renderer {
         if (!this.sparksSprite.loaded) this.sparksSprite.load();
     }
 
-    hasDrawnTile(id) {
+    hasDrawnTile(id: never) {
         return this.drawnTiles.indexOf(id) > -1;
     }
 
@@ -1477,9 +1498,9 @@ export default class Renderer {
             this.getLightData(x, y, distance, diffuse, color)
         );
         const lighting = new Lighting({
-            light: light,
+            light,
             objects: [],
-            diffuse: light.diffuse
+            diffuse: light.diffuse,
         });
 
         light.origX = light.position.x;
@@ -1519,26 +1540,27 @@ export default class Renderer {
     getLightData(x, y, distance, diffuse, color) {
         return {
             position: new Vec2(x, y),
-            distance: distance,
-            diffuse: diffuse,
-            color: color,
+            distance,
+            diffuse,
+            color,
             radius: 0,
             samples: 2,
             roughness: 0,
-            angle: 0
+            angle: 0,
         };
     }
 
     hasLighting(lighting) {
         for (let i = 0; i < this.lightings.length; i++) {
-            const light = this.lightings[i].light;
+            const { light } = this.lightings[i];
 
             if (
                 lighting.light.origX === light.origX &&
                 lighting.light.origY === light.origY &&
                 lighting.light.distance === light.distance
-            )
+            ) {
                 return true;
+            }
         }
 
         return false;
@@ -1548,7 +1570,7 @@ export default class Renderer {
         const position = {
             x: lighting.light.origX,
             y: lighting.light.origY,
-            diff: lighting.light.diff
+            diff: lighting.light.diff,
         };
 
         return (
@@ -1564,7 +1586,7 @@ export default class Renderer {
     getMiddle() {
         return {
             x: this.overlay.width / 2,
-            y: this.overlay.height / 2
+            y: this.overlay.height / 2,
         };
     }
 

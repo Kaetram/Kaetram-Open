@@ -1,25 +1,37 @@
-/* global Modules, log, _, Detect, Packets */
-
-import $ from 'jquery';
+import App from '../app';
 import Animation from '../entity/animation';
+import Sprite from '../entity/sprite';
+import Game from '../game';
+import Map from '../map/map';
+import Packets from '../network/packets';
+import Renderer from '../renderer/renderer';
+import Modules from '../utils/modules';
 import Chat from './chat';
 import Overlay from './overlay';
-import Modules from '../utils/modules';
-import Packets from '../network/packets';
+
+interface Cursor {
+    hand?: Sprite;
+    sword?: Sprite;
+    loot?: Sprite;
+    target?: Sprite;
+    arrow?: Sprite;
+    talk?: Sprite;
+    spell?: Sprite;
+    bow?: Sprite;
+}
 
 export default class Input {
-    game: any;
-    app: any;
-    renderer: any;
-    map: any;
+    app: App;
+    renderer: Renderer;
+    map: Map;
     selectedCellVisible: boolean;
     previousClick: {};
     cursorVisible: boolean;
     targetVisible: boolean;
     selectedX: number;
     selectedY: number;
-    cursor: any;
-    newCursor: any;
+    cursor: Sprite;
+    newCursor: Sprite;
     targetData: any;
     targetColour: any;
     newTargetColour: any;
@@ -27,7 +39,7 @@ export default class Input {
     keyMovement: boolean;
     cursorMoved: boolean;
     previousKey: {};
-    cursors: { [key: string]: any };
+    cursors: Cursor;
     lastMousePosition: { [key: string]: any };
     hovering: any;
     hoveringEntity: any;
@@ -35,7 +47,8 @@ export default class Input {
     targetAnimation: Animation;
     chatHandler: Chat;
     overlay: Overlay;
-    constructor(game) {
+
+    constructor(public game: Game) {
         this.game = game;
         this.app = game.app;
         this.renderer = game.renderer;
@@ -70,7 +83,7 @@ export default class Input {
 
         this.mouse = {
             x: 0,
-            y: 0
+            y: 0,
         };
 
         this.load();
@@ -141,7 +154,7 @@ export default class Input {
                         break;
 
                     case Modules.Keys.Spacebar:
-                        if (player.moving) break;
+                        if (player.isMoving()) break;
 
                         if (!player.isRanged()) break;
 
@@ -153,7 +166,6 @@ export default class Input {
 
                     case Modules.Keys.Slash:
                         this.chatHandler.input.val('/');
-
                     case Modules.Keys.Enter:
                         this.chatHandler.toggle();
 
@@ -222,7 +234,7 @@ export default class Input {
                 break;
 
             case Modules.Keys.Spacebar:
-                if (player.moving) break;
+                if (player.isMoving()) break;
 
                 if (!player.isRanged()) break;
 
@@ -269,16 +281,18 @@ export default class Input {
             this.renderer.mobile &&
             this.chatHandler.input.is(':visible') &&
             this.chatHandler.input.val() === ''
-        )
+        ) {
             this.chatHandler.hideInput();
+        }
 
         if (this.map.isOutOfBounds(position.x, position.y)) return;
 
         if (
             (this.game.zoning && this.game.zoning.direction) ||
             player.disableAction
-        )
+        ) {
             return;
+        }
 
         this.getActions().hidePlayerActions();
 
@@ -311,17 +325,21 @@ export default class Input {
             ) {
                 this.game.socket.send(Packets.Target, [
                     Packets.TargetOpcode.Attack,
-                    entity.id
+                    entity.id,
                 ]);
                 player.lookAt(entity);
                 return;
             }
 
-            if (entity.gridX === player.gridX && entity.gridY === player.gridY)
+            if (
+                entity.gridX === player.gridX &&
+                entity.gridY === player.gridY
+            ) {
                 this.game.socket.send(Packets.Target, [
                     Packets.TargetOpcode.Attack,
-                    entity.id
+                    entity.id,
                 ]);
+            }
 
             if (entity.type === 'player') {
                 this.getActions().showPlayerActions(
@@ -346,13 +364,15 @@ export default class Input {
 
         if (this.newCursor !== this.cursor) this.cursor = this.newCursor;
 
-        if (this.newTargetColour !== this.targetColour)
+        if (this.newTargetColour !== this.targetColour) {
             this.targetColour = this.newTargetColour;
+        }
     }
 
     moveCursor() {
-        if (!this.renderer || this.renderer.mobile || !this.renderer.camera)
+        if (!this.renderer || this.renderer.mobile || !this.renderer.camera) {
             return;
+        }
 
         const position = this.getCoords();
         const player = this.getPlayer();
@@ -410,8 +430,8 @@ export default class Input {
 
     setCoords(event) {
         const offset = this.app.canvas.offset();
-        const width = this.renderer.background.width;
-        const height = this.renderer.background.height;
+        const { width } = this.renderer.background;
+        const { height } = this.renderer.background;
 
         this.cursorMoved = false;
 
@@ -427,7 +447,7 @@ export default class Input {
 
     setCursor(cursor) {
         if (cursor) this.newCursor = cursor;
-        else console.error('Cursor: ' + cursor + ' could not be found.');
+        else console.error(`Cursor: ${cursor} could not be found.`);
     }
 
     setAttackTarget() {
@@ -457,8 +477,8 @@ export default class Input {
             (this.mouse.y - offsetY) / tileScale + this.game.getCamera().gridY;
 
         return {
-            x: x,
-            y: y
+            x,
+            y,
         };
     }
 
@@ -470,7 +490,7 @@ export default class Input {
         if (!sprite.loaded) sprite.load();
 
         return (this.targetData = {
-            sprite: sprite,
+            sprite,
             x: frame.x * superScale,
             y: frame.y * superScale,
             width: sprite.width * superScale,
@@ -478,14 +498,14 @@ export default class Input {
             dx: this.selectedX * 16 * superScale,
             dy: this.selectedY * 16 * superScale,
             dw: sprite.width * superScale,
-            dh: sprite.height * superScale
+            dh: sprite.height * superScale,
         });
     }
 
     updateFrozen(state) {
         this.game.socket.send(Packets.Movement, [
             Packets.MovementOpcode.Freeze,
-            state
+            state,
         ]);
     }
 
@@ -511,4 +531,4 @@ export default class Input {
     getActions() {
         return this.game.interface.actions;
     }
-};
+}

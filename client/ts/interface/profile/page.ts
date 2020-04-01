@@ -1,10 +1,9 @@
-/* global log */
-
 import $ from 'jquery';
 
 export default class Page {
-    body: JQuery<any>;
+    body: JQuery<HTMLBodyElement>;
     loaded: boolean;
+
     constructor(element) {
         this.body = $(element);
 
@@ -26,7 +25,7 @@ export default class Page {
     getImageFormat(scale, name) {
         if (!name || name === 'null') return '';
 
-        return 'url("img/' + scale + '/item-' + name + '.png")';
+        return `url("img/${scale}/item-${name}.png")`;
     }
 
     update() {

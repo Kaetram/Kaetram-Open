@@ -1,10 +1,10 @@
-/* global log */
+import Game from '../game';
 
 export default class Overlay {
-    game: any;
     overlays: {};
     currentOverlay: any;
-    constructor(game) {
+
+    constructor(public game: Game) {
         this.game = game;
 
         this.overlays = {};
@@ -21,19 +21,19 @@ export default class Overlay {
         const overlay = new Image();
 
         overlay.crossOrigin = 'Anonymous';
-        overlay.src = 'img/overlays/' + overlayName;
+        overlay.src = `img/overlays/${overlayName}`;
 
         overlay.onload = () => {
-            if (this.game.isDebug()) console.info('Loaded ' + overlayName);
+            if (this.game.isDebug()) console.info(`Loaded ${overlayName}`);
         };
 
         return overlay;
     }
 
     updateOverlay(overlay) {
-        if (overlay in this.overlays)
+        if (overlay in this.overlays) {
             this.currentOverlay = this.overlays[overlay];
-        else this.currentOverlay = overlay;
+        } else this.currentOverlay = overlay;
     }
 
     getFog() {

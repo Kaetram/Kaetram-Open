@@ -1,6 +1,9 @@
-/* global log, Packets, Modules */
-
+import Input from '../../../controllers/input';
+import Player from '../../../entity/character/player/player';
+import Game from '../../../game';
+import Map from '../../../map/map';
 import Packets from '../../../network/packets';
+import Camera from '../../../renderer/camera';
 
 /**
  * This is a player handler, responsible for all the callbacks
@@ -8,15 +11,15 @@ import Packets from '../../../network/packets';
  */
 
 export default class PlayerHandler {
-    game: any;
-    map: any;
-    camera: any;
-    input: any;
-    player: any;
+    map: Map;
+    camera: Camera;
+    input: Input;
+    player: Player;
     entities: any;
     socket: any;
     renderer: any;
-    constructor(game, player) {
+
+    constructor(public game: Game, player) {
         this.game = game;
         this.map = game.map;
         this.camera = game.getCamera();
@@ -35,14 +38,15 @@ export default class PlayerHandler {
 
             const ignores = [this.player];
 
-            if (!this.game.map.isColliding(x, y))
+            if (!this.game.map.isColliding(x, y)) {
                 this.socket.send(Packets.Movement, [
                     Packets.MovementOpcode.Request,
                     x,
                     y,
                     this.player.gridX,
-                    this.player.gridY
+                    this.player.gridY,
                 ]);
+            }
 
             return this.game.findPath(this.player, x, y, ignores);
         });
@@ -50,14 +54,14 @@ export default class PlayerHandler {
         this.player.onStartPathing((path) => {
             const i = path.length - 1;
 
-            this.player.moving = true;
+            // STUB: this.player.moving = true;
 
-            this.input.selectedX = path[i][0];
-            this.input.selectedY = path[i][1];
+            [this.input.selectedX, this.input.selectedY] = path[i];
             this.input.selectedCellVisible = true;
 
-            if (this.game.isDebug())
-                console.info('Movement speed: ' + this.player.movementSpeed);
+            if (this.game.isDebug()) {
+                console.info(`Movement speed: ${this.player.movementSpeed}`);
+            }
 
             this.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Started,
@@ -65,7 +69,7 @@ export default class PlayerHandler {
                 this.input.selectedY,
                 this.player.gridX,
                 this.player.gridY,
-                this.player.movementSpeed
+                this.player.movementSpeed,
             ]);
         });
 
@@ -92,26 +96,27 @@ export default class PlayerHandler {
                 y,
                 id,
                 hasTarget,
-                this.player.orientation
+                this.player.orientation,
             ]);
 
             this.socket.send(Packets.Target, [
                 this.getTargetType(),
-                this.getTargetId()
+                this.getTargetId(),
             ]);
 
             if (hasTarget) {
                 this.player.lookAt(this.player.target);
 
-                if (this.player.target.type === 'object')
+                if (this.player.target.type === 'object') {
                     this.player.removeTarget();
+                }
             }
 
             this.input.setPassiveTarget();
 
             this.game.storage.setOrientation(this.player.orientation);
 
-            this.player.moving = false;
+            // STUB: this.player.moving = false;
         });
 
         this.player.onBeforeStep(() => {
@@ -120,8 +125,9 @@ export default class PlayerHandler {
             if (!this.isAttackable()) return;
 
             if (this.player.isRanged()) {
-                if (this.player.getDistance(this.player.target) < 7)
+                if (this.player.getDistance(this.player.target) < 7) {
                     this.player.stop();
+                }
             } else {
                 this.input.selectedX = this.player.target.gridX;
                 this.input.selectedY = this.player.target.gridY;
@@ -129,16 +135,22 @@ export default class PlayerHandler {
         });
 
         this.player.onStep(() => {
-            if (this.player.hasNextStep())
+            if (this.player.hasNextStep()) {
                 this.entities.registerDuality(this.player);
+            }
 
-            if (!this.camera.centered || this.camera.lockX || this.camera.lockY)
+            if (
+                !this.camera.centered ||
+                this.camera.lockX ||
+                this.camera.lockY
+            ) {
                 this.checkBounds();
+            }
 
             this.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Step,
                 this.player.gridX,
-                this.player.gridY
+                this.player.gridY,
             ]);
         });
 
@@ -159,18 +171,20 @@ export default class PlayerHandler {
         this.player.onUpdateArmour((armourName, power) => {
             this.player.setSprite(this.game.getSprite(armourName));
 
-            if (this.game.interface && this.game.interface.profile)
+            if (this.game.interface && this.game.interface.profile) {
                 this.game.interface.profile.update();
+            }
         });
 
         this.player.onUpdateEquipment((type, power) => {
-            if (this.game.interface && this.game.interface.profile)
+            if (this.game.interface && this.game.interface.profile) {
                 this.game.interface.profile.update();
+            }
         });
     }
 
     isAttackable() {
-        const target = this.player.target;
+        const { target } = this.player;
 
         if (!target) return;
 
@@ -195,7 +209,7 @@ export default class PlayerHandler {
 
             this.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Zone,
-                direction
+                direction,
             ]);
 
             this.renderer.updateAnimatedTiles();
@@ -209,7 +223,7 @@ export default class PlayerHandler {
     }
 
     getTargetType() {
-        const target = this.player.target;
+        const { target } = this.player;
 
         if (!target) return Packets.TargetOpcode.None;
 

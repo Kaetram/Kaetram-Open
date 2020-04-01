@@ -1,5 +1,3 @@
-/* global Modules, log */
-
 import Modules from '../utils/modules';
 
 export default class Camera {
@@ -26,6 +24,7 @@ export default class Camera {
     gridHeight: number;
     borderX: number;
     borderY: number;
+
     constructor(renderer) {
         this.renderer = renderer;
         this.map = renderer.map;
@@ -243,16 +242,18 @@ export default class Camera {
 
         if (this.gridX < 0) this.setGridPosition(0, this.gridY);
 
-        if (this.gridX > this.map.width)
+        if (this.gridX > this.map.width) {
             this.setGridPosition(this.map.width, this.gridY);
+        }
 
         if (this.gridY < 0) this.setGridPosition(this.gridX, 0);
 
-        if (this.gridY > this.map.height)
+        if (this.gridY > this.map.height) {
             this.setGridPosition(this.gridX, this.map.height);
+        }
     }
 
-    forEachVisiblePosition(callback, offset) {
+    forEachVisiblePosition(callback, offset?) {
         if (!offset) offset = 1;
 
         for (
@@ -260,14 +261,16 @@ export default class Camera {
                 maxY = y + this.gridHeight + offset * 2;
             y < maxY;
             y++
-        )
+        ) {
             for (
                 let x = this.gridX - offset,
                     maxX = x + this.gridWidth + offset * 2;
                 x < maxX;
                 x++
-            )
+            ) {
                 callback(x, y);
+            }
+        }
     }
 
     isVisible(x, y, offset, offset2) {

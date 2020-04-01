@@ -1,34 +1,47 @@
-/* global log, _ */
-
 import $ from 'jquery';
+import _ from 'underscore';
 import Game from '../game';
 import { isInt } from '../utils/util';
+import Renderer from '../renderer/renderer';
+
+interface Tileset extends HTMLImageElement {
+    index: number;
+    name: string;
+    crossOrigin: string;
+    path: string;
+    src: string;
+    raw: this;
+    firstGID: number;
+    lastGID: number;
+    loaded: boolean;
+    scale: number;
+}
 
 export default class Map {
-    game: Game;
-    renderer: any;
-    supportsWorker: any;
-    data: any[];
-    objects: any[];
-    tilesets: any[];
-    rawTilesets: any[];
-    lastSyncData: any[];
-    grid: any;
+    renderer: Renderer;
+    supportsWorker: boolean;
+    data: number[];
+    objects: number[];
+    tilesets: Tileset[];
+    rawTilesets: Tileset[];
+    lastSyncData: [];
+    grid: number[][];
     webGLMap: any;
     tilesetsLoaded: boolean;
     mapLoaded: boolean;
     preloadedData: boolean;
-    readyCallback: any;
-    collisions: any;
+    readyCallback: Callback;
+    collisions: number[];
     tileSize: number;
-    width: any;
-    height: any;
-    blocking: any;
+    width: number;
+    height: number;
+    blocking: [];
     high: any;
     lights: any;
-    animatedTiles: any;
-    depth: any;
-    constructor(game) {
+    animatedTiles: [];
+    depth: number;
+
+    constructor(public game: Game) {
         this.game = game;
         this.renderer = this.game.renderer;
         this.supportsWorker = this.game.app.hasWorker();
@@ -58,17 +71,19 @@ export default class Map {
         };
 
         if (this.mapLoaded && this.tilesetsLoaded) rC();
-        else
+        else {
             setTimeout(() => {
                 this.loadTilesets();
                 this.ready();
             }, 50);
+        }
     }
 
     load() {
         if (this.supportsWorker) {
-            if (this.game.isDebug())
+            if (this.game.isDebug()) {
                 console.info('Parsing map with Web Workers...');
+            }
 
             const worker = new Worker('/lib/mapworker.js');
             worker.postMessage(1);
@@ -105,9 +120,10 @@ export default class Map {
 
             this.data[tile.index] = tile.data;
 
-            if (tile.isCollision && collisionIndex < 0)
+            if (tile.isCollision && collisionIndex < 0) {
                 // Adding new collision tileIndex
                 this.collisions.push(tile.index);
+            }
 
             if (!tile.isCollision && collisionIndex > 0) {
                 // Removing existing collision tileIndex
@@ -120,9 +136,12 @@ export default class Map {
 
             if (tile.isObject && objectIndex < 0) this.objects.push(tile.index);
 
-            if (!tile.isObject && objectIndex > 0)
+            if (!tile.isObject && objectIndex > 0) {
                 this.objects.splice(objectIndex, 1);
+            }
         }
+
+        if (this.webGLMap) this.synchronizeWebGL(tileData);
 
         this.saveRegionData();
 
@@ -136,21 +155,22 @@ export default class Map {
             this.loadTileset(rawTileset, (tileset) => {
                 this.tilesets[tileset.index] = tileset;
 
-                if (this.tilesets.length === this.rawTilesets.length)
+                if (this.tilesets.length === this.rawTilesets.length) {
                     this.tilesetsLoaded = true;
+                }
             });
         });
     }
 
     loadTileset(rawTileset, callback) {
-        const tileset: any = new Image();
+        const tileset = new Image() as Tileset;
 
         tileset.index = this.rawTilesets.indexOf(rawTileset);
         tileset.name = rawTileset.imageName;
 
         tileset.crossOrigin = 'Anonymous';
-        tileset.path = 'img/tilesets/' + tileset.name;
-        tileset.src = 'img/tilesets/' + tileset.name;
+        tileset.path = `img/tilesets/${tileset.name}`;
+        tileset.src = `img/tilesets/${tileset.name}`;
         tileset.raw = tileset;
         tileset.firstGID = rawTileset.firstGID;
         tileset.lastGID = rawTileset.lastGID;
@@ -158,22 +178,22 @@ export default class Map {
         tileset.scale = rawTileset.scale;
 
         tileset.onload = () => {
-            if (tileset.width % this.tileSize > 0)
+            if (tileset.width % this.tileSize > 0) {
                 // Prevent uneven tilemaps from loading.
                 throw Error(
-                    'The tile size is malformed in the tile set: ' +
-                        tileset.path
+                    `The tile size is malformed in the tile set: ${tileset.path}`
                 );
+            }
 
             callback(tileset);
         };
 
         tileset.onerror = () => {
-            throw Error('Could not find tile set: ' + tileset.path);
+            throw Error(`Could not find tile set: ${tileset.path}`);
         };
     }
 
-    parseMap(map) {
+    parseMap(map: MapType) {
         this.width = map.width;
         this.height = map.height;
         this.tileSize = map.tilesize;
@@ -188,6 +208,38 @@ export default class Map {
         for (let i = 0; i < this.width * this.height; i++) this.data.push(0);
     }
 
+    /**
+     * Load the webGL map into the memory.
+     */
+    loadWebGL(context) {
+        const map = this.formatWebGL();
+        const resources = {};
+
+        for (let i = 0; i < this.tilesets.length; i++) {
+            resources[this.tilesets[i].name] = {
+                name: this.tilesets[i].name,
+                url: this.tilesets[i].path,
+                data: this.tilesets[i],
+                extension: 'png',
+            };
+        }
+
+        if (this.webGLMap) this.webGLMap.glTerminate();
+
+        this.webGLMap = new window.glTiled.GLTilemap(map, {
+            gl: context,
+            assetCache: resources,
+        });
+
+        this.webGLMap.glInitialize(context);
+        this.webGLMap.repeatTiles = false;
+
+        context.viewport(0, 0, context.canvas.width, context.canvas.height);
+        this.webGLMap.resizeViewport(
+            context.canvas.width,
+            context.canvas.height
+        );
+    }
     /**
      * To reduce development strain, we convert the entirety of the client
      * map into the bare minimum necessary for the gl-tiled library.
@@ -210,7 +262,7 @@ export default class Map {
             orientation: 'orthogonal',
             renderorder: 'right-down',
             layers: [],
-            tilesets: []
+            tilesets: [],
         };
 
         /* Create 'layers' based on map depth and data. */
@@ -219,13 +271,13 @@ export default class Map {
                 id: i,
                 width: object.width,
                 height: object.height,
-                name: 'layer' + i,
+                name: `layer${i}`,
                 opacity: 1,
                 type: 'tilelayer',
                 visible: true,
                 x: 0,
                 y: 0,
-                data: []
+                data: [],
             };
 
             for (let j = 0; j < this.data.length; j++) {
@@ -256,17 +308,16 @@ export default class Map {
                     (this.tilesets[i].height / 16),
                 tilewidth: object.tilewidth,
                 tileheight: object.tileheight,
-                tiles: []
+                tiles: [],
             };
 
-            for (const j in this.animatedTiles) {
-                const indx = parseInt(j);
-
-                if (indx > tileset.firstgid - 1 && indx < tileset.tilecount)
+            for (let j = 0; j < this.animatedTiles.length; j++) {
+                if (j > tileset.firstgid - 1 && j < tileset.tilecount) {
                     tileset.tiles.push({
                         animation: this.animatedTiles[j],
-                        id: indx
+                        id: j,
                     });
+                }
             }
 
             console.info(tileset);
@@ -274,10 +325,15 @@ export default class Map {
             object.tilesets.push(tileset);
         }
 
-        if (this.game.isDebug())
+        if (this.game.isDebug()) {
             console.info('Successfully generated the WebGL map.');
+        }
 
         return object;
+    }
+
+    synchronizeWebGL(tileData) {
+        this.loadWebGL(this.renderer.backContext);
     }
 
     loadCollisions() {
@@ -288,12 +344,12 @@ export default class Map {
             for (let j = 0; j < this.width; j++) this.grid[i][j] = 0;
         }
 
-        _.each(this.collisions, (index: any) => {
+        _.each(this.collisions, (index: number) => {
             const position = this.indexToGridPosition(index + 1);
             this.grid[position.y][position.x] = 1;
         });
 
-        _.each(this.blocking, (index: any) => {
+        _.each(this.blocking, (index: number) => {
             const position = this.indexToGridPosition(index + 1);
 
             if (this.grid[position.y]) this.grid[position.y][position.x] = 1;
@@ -301,7 +357,7 @@ export default class Map {
     }
 
     updateCollisions() {
-        _.each(this.collisions, (index: any) => {
+        _.each(this.collisions, (index: number) => {
             const position = this.indexToGridPosition(index + 1);
 
             if (position.x > this.width - 1) position.x = this.width - 1;
@@ -319,8 +375,8 @@ export default class Map {
         const y = Math.floor(index / this.width);
 
         return {
-            x: x,
-            y: y
+            x,
+            y,
         };
     }
 
@@ -371,12 +427,12 @@ export default class Map {
     }
 
     getTilesetFromId(id) {
-        for (const idx in this.tilesets)
-            if (
-                id > this.tilesets[idx].firstGID - 1 &&
-                id < this.tilesets[idx].lastGID + 1
-            )
-                return this.tilesets[idx];
+        for (let idk = 0; idk < this.tilesets.length; idk++) {
+            const tileset = this.tilesets[idk];
+            if (id > tileset.firstGID - 1 && id < tileset.lastGID + 1) {
+                return tileset;
+            }
+        }
 
         return null;
     }

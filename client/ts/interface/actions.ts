@@ -1,5 +1,3 @@
-/* global _, log */
-
 import $ from 'jquery';
 
 export default class Actions {
@@ -12,6 +10,7 @@ export default class Actions {
     trade: JQuery<HTMLElement>;
     activeClass: any;
     miscButton: any;
+
     constructor(intrface) {
         this.interface = intrface;
 
@@ -35,13 +34,15 @@ export default class Actions {
         const dropCancel = $('#dropCancel');
 
         dropAccept.click((event) => {
-            if (this.activeClass === 'inventory')
+            if (this.activeClass === 'inventory') {
                 this.interface.inventory.clickAction(event);
+            }
         });
 
         dropCancel.click((event) => {
-            if (this.activeClass === 'inventory')
+            if (this.activeClass === 'inventory') {
                 this.interface.inventory.clickAction(event);
+            }
         });
     }
 
@@ -49,7 +50,7 @@ export default class Actions {
         this.activeClass = activeClass;
 
         switch (this.activeClass) {
-            case 'inventory':
+            case 'inventory': {
                 const dropButton = $(
                     '<div id="drop" class="actionButton">Drop</div>'
                 );
@@ -57,7 +58,7 @@ export default class Actions {
                 this.add(dropButton);
 
                 break;
-
+            }
             case 'profile':
                 break;
         }
@@ -67,8 +68,9 @@ export default class Actions {
         this.body.find('ul').prepend($('<li></li>').append(button));
 
         button.click((event) => {
-            if (this.activeClass === 'inventory')
+            if (this.activeClass === 'inventory') {
                 this.interface.inventory.clickAction(event);
+            }
         });
 
         if (misc) this.miscButton = button;
@@ -94,8 +96,8 @@ export default class Actions {
 
         this.pBody.fadeIn('fast');
         this.pBody.css({
-            left: mouseX - this.pBody.width() / 2 + 'px',
-            top: mouseY + this.pBody.height() / 2 + 'px'
+            left: `${mouseX - this.pBody.width() / 2}px`,
+            top: `${mouseY + this.pBody.height() / 2}px`,
         });
 
         this.follow.click(() => {
@@ -158,4 +160,4 @@ export default class Actions {
     isVisible() {
         return this.body.css('display') === 'block';
     }
-};
+}

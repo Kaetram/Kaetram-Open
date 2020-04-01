@@ -1,8 +1,9 @@
 import Slot from './slot';
 
 export default class Container {
-    size: any;
-    slots: any[];
+    size: number;
+    slots: Slot[];
+
     constructor(size) {
         this.size = size;
 
@@ -29,8 +30,9 @@ export default class Container {
     }
 
     getEmptySlot() {
-        for (let i = 0; i < this.slots.length; i++)
+        for (let i = 0; i < this.slots.length; i++) {
             if (!this.slots[i].string) return i;
+        }
 
         return -1;
     }
@@ -38,6 +40,6 @@ export default class Container {
     getImageFormat(scale, name) {
         if (scale === 1) scale = 2;
 
-        return 'url("img/' + scale + '/item-' + name + '.png")';
+        return `url("img/${scale}/item-${name}.png")`;
     }
 }

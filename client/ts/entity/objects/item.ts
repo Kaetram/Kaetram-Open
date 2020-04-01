@@ -6,6 +6,7 @@ export default class Item extends Entity {
     abilityLevel: any;
     dropped: boolean;
     stackable: boolean;
+
     constructor(id, kind, count, ability, abilityLevel) {
         super(id, kind);
 

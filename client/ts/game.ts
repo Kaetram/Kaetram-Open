@@ -1,60 +1,64 @@
-/* global Class, log, Packets, Modules, Detect, _ */
-
-import Renderer from './renderer/renderer';
-import LocalStorage from './utils/storage';
-import Map from './map/map';
-import Socket from './network/socket';
-import Player from './entity/character/player/player';
-import Updater from './renderer/updater';
-import Entities from './controllers/entities';
-import Input from './controllers/input';
-import PlayerHandler from './entity/character/player/playerhandler';
-import Pathfinder from './utils/pathfinder';
-import Zoning from './controllers/zoning';
-import Info from './controllers/info';
-import Bubble from './controllers/bubble';
-import Interface from './controllers/interface';
-import Audio from './controllers/audio';
-import Pointers from './controllers/pointer';
-import Overlay from './renderer/overlay';
-import Connection from './network/connection';
-import Modules from './utils/modules';
-import Packets from './network/packets';
-import Detect from './utils/detect';
-
 import _ from 'underscore';
+
 import App from './app';
+import Audio from './controllers/audio';
+import Bubble from './controllers/bubble';
+import Entities from './controllers/entities';
+import Info from './controllers/info';
+import Input from './controllers/input';
+import Interface from './controllers/interface';
+import Pointers from './controllers/pointer';
+import Zoning from './controllers/zoning';
+import Player from './entity/character/player/player';
+import PlayerHandler from './entity/character/player/playerhandler';
+import Map from './map/map';
+import Connection from './network/connection';
 import Messages from './network/messages';
+import Packets from './network/packets';
+import Socket from './network/socket';
+import Overlay from './renderer/overlay';
+import Renderer from './renderer/renderer';
+import Updater from './renderer/updater';
+import Detect from './utils/detect';
+import Modules from './utils/modules';
+import Pathfinder from './utils/pathfinder';
+import LocalStorage from './utils/storage';
+import Item from './entity/objects/item';
+import Inventory from './interface/inventory';
+import Camera from './renderer/camera';
 
 export default class Game {
-    public id: number;
-    public socket: Socket;
-    public messages: Messages;
-    public renderer: Renderer;
-    public updater: Updater;
-    public storage: Storage;
-    public entities: Entities;
-    public input: Input;
-    public map: Map;
-    public playerHandler: PlayerHandler;
-    public pathfinder: Pathfinder;
-    public zoning: Zoning;
-    public info: Info;
-    public interface: Interface;
-    public audio: Audio;
-    public player: Player;
-    public stopped: boolean;
-    public started: boolean;
-    public ready: boolean;
-    public loaded: boolean;
-    public pvp: boolean;
-    public population: number;
-    public lastTime: number;
-    public overlays: Overlay;
-    public connectionHandler: Connection;
-    public pointer: Pointers;
-    public bubble: Bubble;
-    public time: Date;
+    id: number;
+    socket: Socket;
+    messages: Messages;
+    renderer: Renderer;
+    updater: Updater;
+    storage: LocalStorage;
+    entities: Entities;
+    input: Input;
+    map: Map;
+    playerHandler: PlayerHandler;
+    pathfinder: Pathfinder;
+    zoning: Zoning;
+    info: Info;
+    interface: Interface;
+    audio: Audio;
+    player: Player;
+    stopped: boolean;
+    started: boolean;
+    ready: boolean;
+    loaded: boolean;
+    pvp: boolean;
+    population: number;
+    lastTime: number;
+    overlays: Overlay;
+    connectionHandler: Connection;
+    pointer: Pointers;
+    bubble: Bubble;
+    time: number;
+    inventory: Inventory;
+    development: boolean;
+    camera: Camera;
 
     constructor(public app: App) {
         this.id = -1;
@@ -64,7 +68,7 @@ export default class Game {
         this.ready = false;
         this.loaded = false;
 
-        this.time = new Date();
+        this.time = new Date().getTime();
 
         this.pvp = false;
         this.population = -1;
@@ -92,7 +96,7 @@ export default class Game {
 
     tick() {
         if (this.ready) {
-            this.time = new Date();
+            this.time = new Date().getTime();
 
             this.renderer.render();
             this.updater.update();
@@ -207,6 +211,10 @@ export default class Game {
 
             this.app.sendStatus(null);
 
+            if (Detect.supportsWebGL()) {
+                this.map.loadWebGL(this.renderer.backContext);
+            }
+
             this.loaded = true;
         });
     }
@@ -242,7 +250,7 @@ export default class Game {
         this.socket.send(Packets.Ready, [
             true,
             this.map.preloadedData,
-            Detect.getUserAgent()
+            Detect.getUserAgent(),
         ]);
 
         this.playerHandler = new PlayerHandler(this, this.player);
@@ -270,11 +278,13 @@ export default class Game {
 
         if (!this.hasRemember()) return;
 
-        if (this.getStorageUsername() !== '')
+        if (this.getStorageUsername() !== '') {
             loginName.val(this.getStorageUsername());
+        }
 
-        if (this.getStoragePassword() !== '')
+        if (this.getStoragePassword() !== '') {
             loginPassword.val(this.getStoragePassword());
+        }
 
         $('#rememberMe').addClass('active');
     }
@@ -283,13 +293,15 @@ export default class Game {
         const grid = this.entities.grids.pathingGrid;
         let path = [];
 
-        if (this.map.isColliding(x, y) || !this.pathfinder || !character)
+        if (this.map.isColliding(x, y) || !this.pathfinder || !character) {
             return path;
+        }
 
-        if (ignores)
+        if (ignores) {
             _.each(ignores, (entity) => {
                 this.pathfinder.ignoreEntity(entity);
             });
+        }
 
         path = this.pathfinder.find(grid, character, x, y, false);
 
@@ -307,7 +319,7 @@ export default class Game {
      * disconnects of a player whilst in the game, not
      * menu-based errors.
      */
-    handleDisconnection(noError) {
+    handleDisconnection(noError?: boolean) {
         if (!this.started) return;
 
         this.stop();
@@ -345,7 +357,7 @@ export default class Game {
 
         this.socket.send(Packets.Trade, [
             Packets.TradeOpcode.Request,
-            player.id
+            player.id,
         ]);
     }
 
@@ -382,13 +394,14 @@ export default class Game {
     getEntityAt(x, y, ignoreSelf) {
         const entities = this.entities.grids.renderingGrid[y][x];
 
-        if (_.size(entities) > 0)
+        if (_.size(entities) > 0) {
             return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
+        }
 
         const items = this.entities.grids.itemGrid[y][x];
 
         if (_.size(items) > 0) {
-            _.each(items, (item: any) => {
+            _.each(items, (item: Item) => {
                 if (item.stackable) return item;
             });
 

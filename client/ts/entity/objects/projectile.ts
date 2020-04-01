@@ -12,6 +12,7 @@ export default class Projectile extends Entity {
     speed: number;
     lighting: any;
     impactCallback: any;
+
     constructor(id, kind, owner) {
         super(id, kind);
 

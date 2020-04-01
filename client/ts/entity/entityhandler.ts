@@ -1,12 +1,13 @@
-/* global log, Packets */
-
-import Character from './character/character';
+import Entities from '../controllers/entities';
+import Game from '../game';
 import Packets from '../network/packets';
+import Character from './character/character';
 
 export default class EntityHandler {
-    entity: any;
-    game: any;
-    entities: any;
+    entity: Character;
+    game: Game;
+    entities: Entities;
+
     constructor(entity) {
         this.entity = entity;
         this.game = null;
@@ -50,21 +51,23 @@ export default class EntityHandler {
                     attacker.follow(this.entity);
                 });
 
-                if (this.entity.type === 'mob')
+                if (this.entity.type === 'mob') {
                     this.game.socket.send(Packets.Movement, [
                         Packets.MovementOpcode.Entity,
                         this.entity.id,
                         this.entity.gridX,
-                        this.entity.gridY
+                        this.entity.gridY,
                     ]);
+                }
 
                 if (
                     this.entity.attackRange > 1 &&
                     this.entity.hasTarget() &&
                     this.entity.getDistance(this.entity.target) <=
                         this.entity.attackRange
-                )
+                ) {
                     this.entity.stop(false);
+                }
             });
 
             this.entity.onStopPathing(() => {

@@ -1,12 +1,13 @@
-/* global log, _ */
-
 import $ from 'jquery';
-import Page from '../page';
+import _ from 'underscore';
+
+import Player from '../../../entity/character/player/player';
+import Game from '../../../game';
 import Packets from '../../../network/packets';
+import Page from '../page';
 
 export default class State extends Page {
-    game: any;
-    player: any;
+    player: Player;
     name: JQuery<HTMLElement>;
     level: JQuery<HTMLElement>;
     experience: JQuery<HTMLElement>;
@@ -17,8 +18,9 @@ export default class State extends Page {
     bootsSlot: JQuery<HTMLElement>;
     weaponSlotInfo: JQuery<HTMLElement>;
     armourSlotInfo: JQuery<HTMLElement>;
-    slots: any[];
-    constructor(game) {
+    slots: Array<JQuery<HTMLElement>>;
+
+    constructor(public game: Game) {
         super('#statePage');
 
         this.game = game;
@@ -42,7 +44,7 @@ export default class State extends Page {
             this.armourSlot,
             this.pendantSlot,
             this.ringSlot,
-            this.bootsSlot
+            this.bootsSlot,
         ];
 
         this.loaded = false;
@@ -68,35 +70,35 @@ export default class State extends Page {
         this.weaponSlot.click(() => {
             this.game.socket.send(Packets.Equipment, [
                 Packets.EquipmentOpcode.Unequip,
-                'weapon'
+                'weapon',
             ]);
         });
 
         this.armourSlot.click(() => {
             this.game.socket.send(Packets.Equipment, [
                 Packets.EquipmentOpcode.Unequip,
-                'armour'
+                'armour',
             ]);
         });
 
         this.pendantSlot.click(() => {
             this.game.socket.send(Packets.Equipment, [
                 Packets.EquipmentOpcode.Unequip,
-                'pendant'
+                'pendant',
             ]);
         });
 
         this.ringSlot.click(() => {
             this.game.socket.send(Packets.Equipment, [
                 Packets.EquipmentOpcode.Unequip,
-                'ring'
+                'ring',
             ]);
         });
 
         this.bootsSlot.click(() => {
             this.game.socket.send(Packets.Equipment, [
                 Packets.EquipmentOpcode.Unequip,
-                'boots'
+                'boots',
             ]);
         });
     }
@@ -132,11 +134,13 @@ export default class State extends Page {
         this.level.text(this.player.level);
         this.experience.text(this.player.experience);
 
-        if (this.player.weapon.power)
-            this.weaponSlotInfo.text('+' + this.player.weapon.power);
+        if (this.player.weapon.power) {
+            this.weaponSlotInfo.text(`+${this.player.weapon.power}`);
+        }
 
-        if (this.player.armour.power)
-            this.armourSlotInfo.text('+' + this.player.armour.power);
+        if (this.player.armour.power) {
+            this.armourSlotInfo.text(`+${this.player.armour.power}`);
+        }
 
         this.loadSlots();
     }

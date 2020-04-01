@@ -1,17 +1,19 @@
-/* global log, _ */
+import _ from 'underscore';
 
-import Sprite from '../entity/sprite';
 import Animation from '../entity/animation';
+import Sprite from '../entity/sprite';
+import Renderer from '../renderer/renderer';
 
 /**
  * Class responsible for loading all the necessary sprites from the JSON.
  */
 
 export default class Sprites {
-    renderer: any;
+    renderer: Renderer;
     sprites: { [key: string]: Sprite };
-    sparksAnimation: any;
-    loadedSpritesCallback: any;
+    sparksAnimation: Animation;
+    loadedSpritesCallback: Callback;
+
     constructor(renderer) {
         this.renderer = renderer;
 
@@ -31,8 +33,9 @@ export default class Sprites {
             this.sprites[sprite.id] = new Sprite(sprite, this.renderer.scale);
         });
 
-        if (this.renderer.game.isDebug())
+        if (this.renderer.game.isDebug()) {
             console.info('Finished loading sprite data...');
+        }
 
         if (this.loadedSpritesCallback) this.loadedSpritesCallback();
     }
@@ -47,10 +50,11 @@ export default class Sprites {
             sprite.update(this.renderer.getScale());
         });
 
-        if (this.renderer.game.isDebug())
+        if (this.renderer.game.isDebug()) {
             console.info(
-                'Updated sprites to scale: ' + this.renderer.getScale()
+                `Updated sprites to scale: ${this.renderer.getScale()}`
             );
+        }
     }
 
     onLoadedSprites(callback) {

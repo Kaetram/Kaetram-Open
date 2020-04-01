@@ -1,6 +1,6 @@
 let deferredPrompt = null;
 
-export default () => {
+window.install = () => {
     if (deferredPrompt) {
         try {
             if (localStorage.getItem('prompted') !== 'true')

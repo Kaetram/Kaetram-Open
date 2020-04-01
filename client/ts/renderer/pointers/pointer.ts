@@ -8,6 +8,7 @@ export default class Pointer {
     visible: boolean;
     x: number;
     y: number;
+
     constructor(id, element, type) {
         this.id = id;
         this.element = element;
@@ -23,7 +24,7 @@ export default class Pointer {
     }
 
     load() {
-        this.blinkInterval = setInterval(() => {
+        this.blinkInterval = window.setTimeout(() => {
             if (this.visible) this.hide();
             else this.show();
 
@@ -44,14 +45,14 @@ export default class Pointer {
     }
 
     show() {
-        if (this.type === Modules.Pointers.Button)
+        if (this.type === Modules.Pointers.Button) {
             this.element.addClass('active');
-        else this.element.css('display', 'block');
+        } else this.element.css('display', 'block');
     }
 
     hide() {
-        if (this.type === Modules.Pointers.Button)
+        if (this.type === Modules.Pointers.Button) {
             this.element.removeClass('active');
-        else this.element.css('display', 'none');
+        } else this.element.css('display', 'none');
     }
 }

@@ -1,20 +1,26 @@
-/* global log, _, Detect, Modules */
-
-import Detect from '../utils/detect';
-import Modules from '../utils/modules';
 import _ from 'underscore';
 
+import Game from '../game';
+import Detect from '../utils/detect';
+import Modules from '../utils/modules';
+
+interface Song extends HTMLAudioElement {
+    name: string;
+    fadingIn: number;
+    fadingOut: number;
+}
+
 export default class Audio {
-    game: any;
-    audibles: { [key: string]: any };
+    audibles: { [name: string]: HTMLAudioElement[] };
     format: string;
-    song: any;
-    songName: any;
+    song: Song;
+    songName: string;
     enabled: boolean;
-    music: { [key: string]: any };
-    sounds: { [key: string]: any };
-    newSong: any;
-    constructor(game) {
+    music: { [key: string]: boolean };
+    sounds: { [key: string]: boolean };
+    newSong: string;
+
+    constructor(public game: Game) {
         this.game = game;
 
         this.audibles = {};
@@ -35,7 +41,7 @@ export default class Audio {
             village: false,
             beach: false,
             spookyship: false,
-            meadowofthepast: false
+            meadowofthepast: false,
         };
 
         this.sounds = {
@@ -55,35 +61,26 @@ export default class Audio {
             teleport: false,
             chest: false,
             npc: false,
-            'npc-end': false
+            'npc-end': false,
         };
     }
 
-    parse(path, name, channels, callback?) {
-        const fullPath = path + name + '.' + this.format;
-        const sound: any = document.createElement('audio');
+    parse(path: string, name: string, channels: number, callback?: () => void) {
+        const fullPath = `${path}${name}.${this.format}`;
+        const sound = document.createElement('audio');
 
-        sound.addEventListener(
-            'canplaythrough',
-            function(e) {
-                this.removeEventListener(
-                    'canplaythrough',
-                    arguments.callee,
-                    false
-                );
+        function event() {
+            sound.removeEventListener('canplaythrough', event, false);
 
-                if (callback) callback();
-            },
-            false
-        );
+            if (callback) callback();
+        }
+        sound.addEventListener('canplaythrough', event, false);
 
         sound.addEventListener(
             'error',
             () => {
                 console.error(
-                    'The audible: ' +
-                        name +
-                        ' could not be loaded - unsupported extension?'
+                    `The audible: ${name} could not be loaded - unsupported extension?`
                 );
 
                 this.audibles[name] = null;
@@ -92,7 +89,7 @@ export default class Audio {
         );
 
         sound.preload = 'auto';
-        sound.autobuffer = true;
+        sound.setAttribute('autobuffer', 'true');
         sound.src = fullPath;
 
         sound.load();
@@ -100,25 +97,26 @@ export default class Audio {
         this.audibles[name] = [sound];
 
         _.times(channels - 1, () => {
-            this.audibles[name].push(sound.cloneNode(true));
+            this.audibles[name].push(sound.cloneNode(true) as HTMLAudioElement);
         });
 
         if (name in this.music) this.music[name] = true;
         else if (name in this.sounds) this.sounds[name] = true;
     }
 
-    play(type, name) {
+    play(type: number, name: string) {
         if (
             !this.isEnabled() ||
             !this.fileExists(name) ||
             this.game.player.dead
-        )
+        ) {
             return;
+        }
 
         if (Detect.isSafari()) return;
 
         switch (type) {
-            case Modules.AudioTypes.Music:
+            case Modules.AudioTypes.Music: {
                 this.fadeOut(this.song, () => {
                     this.reset(this.song);
                 });
@@ -136,8 +134,8 @@ export default class Audio {
                 this.song = song;
 
                 break;
-
-            case Modules.AudioTypes.SFX:
+            }
+            case Modules.AudioTypes.SFX: {
                 if (!this.sounds[name]) this.parse('audio/sounds/', name, 4);
 
                 const sound = this.get(name);
@@ -149,13 +147,14 @@ export default class Audio {
                 sound.play();
 
                 break;
+            }
         }
     }
 
     update() {
         if (!this.isEnabled()) return;
 
-        if (this.newSong === this.song) return;
+        if (this.newSong === this.song.name) return;
 
         const song = this.getMusic(this.newSong);
 
@@ -179,20 +178,18 @@ export default class Audio {
             }
 
             this.play(Modules.AudioTypes.Music, song.name);
-        } else {
-            if (this.game.renderer.mobile) this.reset(this.song);
-            else this.fadeSongOut();
-        }
+        } else if (this.game.renderer.mobile) this.reset(this.song);
+        else this.fadeSongOut();
 
         this.songName = this.newSong;
     }
 
-    fadeIn(song) {
+    fadeIn(song: Song) {
         if (!song || song.fadingIn) return;
 
         this.clearFadeOut(song);
 
-        song.fadingIn = setInterval(() => {
+        song.fadingIn = window.setTimeout(() => {
             song.volume += 0.02;
 
             if (song.volume >= this.getMusicVolume() - 0.02) {
@@ -202,12 +199,12 @@ export default class Audio {
         }, 100);
     }
 
-    fadeOut(song, callback) {
+    fadeOut(song: Song, callback: Function) {
         if (!song || song.fadingOut) return;
 
         this.clearFadeIn(song);
 
-        song.fadingOut = setInterval(() => {
+        song.fadingOut = window.setTimeout(() => {
             song.volume -= 0.08;
 
             if (song.volume <= 0.08) {
@@ -223,28 +220,28 @@ export default class Audio {
     fadeSongOut() {
         if (!this.song) return;
 
-        this.fadeOut(this.song, (song) => {
+        this.fadeOut(this.song, (song: Song) => {
             this.reset(song);
         });
 
         this.song = null;
     }
 
-    clearFadeIn(song) {
+    clearFadeIn(song: { fadingIn: number }) {
         if (song.fadingIn) {
             clearInterval(song.fadingIn);
             song.fadingIn = null;
         }
     }
 
-    clearFadeOut(song) {
+    clearFadeOut(song: Song) {
         if (song.fadingOut) {
             clearInterval(song.fadingOut);
             song.fadingOut = null;
         }
     }
 
-    reset(song) {
+    reset(song: Song) {
         if (!song || !(song.readyState > 0)) return;
 
         song.pause();
@@ -260,31 +257,31 @@ export default class Audio {
         });
     }
 
-    fileExists(name) {
+    fileExists(name: string) {
         return name in this.music || name in this.sounds;
     }
 
-    get(name) {
+    get(name: string): Song {
         if (!this.audibles[name]) return null;
 
-        let audible: any = _.detect(this.audibles[name], (audible) => {
+        let song = _.find(this.audibles[name], (audible) => {
             return audible.ended || audible.paused;
         });
 
-        if (audible && audible.ended) audible.currentTime = 0;
-        else audible = this.audibles[name][0];
+        if (song && song.ended) song.currentTime = 0;
+        else [song] = this.audibles[name];
 
-        return audible;
+        return song as Song;
     }
 
-    getMusic(name) {
+    getMusic(name: string) {
         return {
             sound: this.get(name),
-            name: name
+            name,
         };
     }
 
-    setSongVolume(volume) {
+    setSongVolume(volume: number) {
         this.song.volume = volume;
     }
 

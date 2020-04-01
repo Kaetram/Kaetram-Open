@@ -1,11 +1,13 @@
+import App from '../app';
 import Modules from './modules';
 
 const storage = window.localStorage;
 const name = 'data';
 
 export default class Storage {
-    app: any;
+    app: App;
     data: any;
+
     constructor(app) {
         this.app = app;
         this.data = null;
@@ -33,7 +35,7 @@ export default class Storage {
                 password: '',
                 autoLogin: false,
                 rememberMe: false,
-                orientation: Modules.Orientation.Down
+                orientation: Modules.Orientation.Down,
             },
 
             settings: {
@@ -45,13 +47,13 @@ export default class Storage {
                 centerCamera: true,
                 debug: false,
                 showNames: true,
-                showLevels: true
+                showLevels: true,
             },
 
             map: {
                 regionData: [],
-                collisions: []
-            }
+                collisions: [],
+            },
         };
     }
 
@@ -80,7 +82,9 @@ export default class Storage {
     setPlayer(option, value) {
         const pData = this.getPlayer();
 
-        if (pData.hasOwnProperty(option)) pData[option] = value;
+        if (Object.prototype.hasOwnProperty.call(pData, option)) {
+            pData[option] = value;
+        }
 
         this.save();
     }
@@ -88,7 +92,9 @@ export default class Storage {
     setSettings(option, value) {
         const sData = this.getSettings();
 
-        if (sData.hasOwnProperty(option)) sData[option] = value;
+        if (Object.prototype.hasOwnProperty.call(sData, option)) {
+            sData[option] = value;
+        }
 
         this.save();
     }

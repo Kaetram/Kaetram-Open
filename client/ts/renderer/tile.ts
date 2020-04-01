@@ -1,13 +1,16 @@
+import Map from '../map/map';
+
 export default class Tile {
-    id: any;
-    index: any;
-    map: any;
-    animationInfo: any;
+    x: number;
+    y: number;
+    id: string;
+    index: number;
+    map: Map;
+    animationInfo: any[];
     animationIndex: number;
     lastTime: number;
     canDraw: boolean;
-    x: any;
-    y: any;
+
     constructor(id, index, map) {
         this.id = id;
         this.index = index;
@@ -39,9 +42,9 @@ export default class Tile {
             this.update();
             this.lastTime = time;
 
-            if (this.animationIndex >= this.animationInfo.length - 1)
+            if (this.animationIndex >= this.animationInfo.length - 1) {
                 this.animationIndex = 0;
-            else this.animationIndex++;
+            } else this.animationIndex++;
         }
     }
 

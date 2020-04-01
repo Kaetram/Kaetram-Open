@@ -4,6 +4,7 @@ export default class Weapon extends Equipment {
     level: number;
     damage: number;
     ranged: any;
+
     constructor(name, string, count, ability, abilityLevel, power) {
         super(name, string, count, ability, abilityLevel, power);
 
