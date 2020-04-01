@@ -51,7 +51,7 @@ class Introduction extends Quest {
                 text: npc.talk(conversation, self.player)
             }));
 
-            if (npc.talkIndex === 0)
+            if (self.player.talkIndex === 0)
                 self.progress('talk');
 
         });
@@ -145,7 +145,7 @@ class Introduction extends Quest {
         self.stage++;
 
         self.clearPointers();
-        self.resetTalkIndex(self.lastNPC);
+        self.resetTalkIndex();
 
         self.update();
         self.updatePointers();

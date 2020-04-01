@@ -238,6 +238,13 @@ class Incoming {
             self.player.updateRegion(true);
         }
 
+        log.debug(self.player.new);
+
+        if (self.player.new) {
+            self.player.questsLoaded = true;
+            self.player.achievementsLoaded = true;
+        }
+
         self.player.save();
 
         if (self.player.readyCallback)
