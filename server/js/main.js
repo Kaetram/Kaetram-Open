@@ -62,10 +62,10 @@ class Main {
 
         });
 
-        self.loadConsoleCommands();
+        self.loadConsole();
     }
 
-    loadConsoleCommands() {
+    loadConsole() {
         let self = this,
             stdin = process.openStdin();
 
