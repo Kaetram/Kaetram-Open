@@ -36,7 +36,7 @@ class API {
         app.use('/', router);
 
         app.listen(config.apiPort, () => {
-            log.info(config.name + ' API is now listening on: ' + config.apiPort);
+            log.notice(config.name + ' API has successfully initialized.');
         });
 
     }
@@ -73,7 +73,7 @@ class API {
         let playerName = request.body.playerName;
 
         if (!playerName) {
-            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'No `playerName` variable has been declared.');
+            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'No `playerName` variable received.');
             return;
         }
 
@@ -82,8 +82,9 @@ class API {
             return;
         }
 
+        let player = self.world.getPlayerByName(playerName);
 
-
+        response.json(self.getPlayerData(player));
 	}
 
 	handlePlayers(request, response) {
@@ -97,25 +98,11 @@ class API {
 		let players = {};
 
 		_.each(self.world.players, (player) => {
-			players[player.username] = {
-				x: player.x,
-				y: player.y,
-				experience: player.experience,
-				level: player.level,
-				hitPoints: player.hitPoints,
-				maxHitPoints: player.maxHitPoints,
-				mana: player.mana,
-				maxMana: player.maxMana,
-				pvpKills: player.pvpKills,
-				orientation: player.orientation,
-				lastLogin: player.lastLogin,
-				mapVersion: player.mapVersion
-			};
+			players[player.username] = self.getPlayerData(player);
 		});
 
 		response.json(players);
 	}
-
 
     pingHub() {
         let self = this,
@@ -146,6 +133,26 @@ class API {
             }
 
         });
+    }
+
+    getPlayerData(player) {
+        let self = this;
+
+        if (!player)
+            return {};
+
+        return {
+            x: player.x,
+            y: player.y,
+            experience: player.experience,
+            level: player.level,
+            hitPoints: player.hitPoints,
+            mana: player.mana,
+            pvpKills: player.pvpKills,
+            orientation: player.orientation,
+            lastLogin: player.lastLogin,
+            mapVersion: player.mapVersion
+        };
     }
 
     returnError(response, error, message) {

@@ -8,7 +8,8 @@ Config.ssl = false; // Whether to use `https` module or `http`
 Config.devClient = false; // Will be used for local debugging.
 
 // API Configuration
-Config.accessToken = 'generate-a-token-with-the-hash-of-your-liking';
+Config.serverId = 'kaetram_server01';
+Config.accessToken = '';
 Config.apiEnabled = false;
 Config.apiPort = 9002;
 
