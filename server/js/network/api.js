@@ -142,6 +142,7 @@ class API {
             return {};
 
         return {
+            serverId: config.serverId,
             x: player.x,
             y: player.y,
             experience: player.experience,
