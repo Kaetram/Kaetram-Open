@@ -17,6 +17,7 @@ class Discord {
 
         if (config.hubEnabled) {
             log.warning('Server is in hub-mode, disabling Discord connection.');
+            config.discordEnabled = false;
             return;
         }
 
@@ -44,6 +45,10 @@ class Discord {
 
         self.client.login(config.discordBotToken);
     }
+
+    /**
+     * Sends a message to the Discord server using the webhook.
+     */
 
     sendMessage(player, message) {
         let self = this;
