@@ -47,7 +47,7 @@ class BulkySituation extends Quest {
                 text: npc.talk(conversation, self.player)
             }));
 
-            if (npc.talkIndex === 0)
+            if (self.player.talkIndex === 0)
                 self.progress('talk');
 
         });
@@ -74,7 +74,7 @@ class BulkySituation extends Quest {
                 break;
         }
 
-        self.resetTalkIndex(self.lastNPC);
+        self.resetTalkIndex();
 
         self.stage++;
 
