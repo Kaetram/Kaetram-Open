@@ -3,6 +3,7 @@ const path = require('path');
 const gulp = require('gulp');
 const uglify = require('gulp-uglify');
 const ts = require('gulp-typescript');
+const typedoc = require('gulp-typedoc');
 const sourcemaps = require('gulp-sourcemaps');
 const watch = require('gulp-watch');
 const connect = require('gulp-connect');
@@ -92,8 +93,27 @@ gulp.task('generate-sw', async () => {
     return build;
 });
 
+// gulp.task('typedoc', () =>
+//     gulp
+//         .src(['./client/ts/main.ts', './server/**/*.ts', './tools/**/*.ts'])
+//         .pipe(
+//             typedoc({
+//                 typeRoots: ['./client/typings'],
+//                 esModuleInterop: true,
+//                 resolveJsonModule: true,
+//                 mode: 'modules',
+//                 out: './docs',
+//                 theme: 'default',
+//                 name: 'Kaetram',
+//                 hideGenerator: true
+//             })
+//         )
+// );
+
 gulp.task('client', gulp.series('build-client', 'copy-client'));
 gulp.task('server', gulp.series('build-server', 'copy-server'));
+
+gulp.task('post-build', gulp.series('generate-sw'));
 
 gulp.task(
     'default',
