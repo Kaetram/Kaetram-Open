@@ -106,9 +106,6 @@ class API {
 
         self.world.globalMessage(source, message, colour);
 
-        console.log(`--${source}--`);
-        console.log(`--${message}--`);
-
         response.json({ status: 'success' });
     }
 
