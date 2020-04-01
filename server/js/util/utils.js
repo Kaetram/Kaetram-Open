@@ -93,15 +93,15 @@ Utils.parseMessage = (message) => {
         return messageBlocks.join(' ');
     }
 
-    let codeCount = messageBlocks.length / 2;
-
     _.each(messageBlocks, (block, index) => {
         if (index % 2 !== 0) // we hit a colour code.
             messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
     });
 
+    let codeCount = (messageBlocks.length / 2) - 1;
+
     for (let i = 0; i < codeCount; i++)
         messageBlocks.push('</span>');
 
-    return messageBlocks.join(' ');
+    return messageBlocks.join('');
 };

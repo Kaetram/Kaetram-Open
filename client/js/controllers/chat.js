@@ -33,7 +33,7 @@ define(['jquery'], function($) {
 
         add: function(source, text, colour) {
             var self = this,
-                element = $('<p>' + source + ': ' + text + '</p>');
+                element = $('<p>' + source + ' » ' + text + '</p>');
 
             self.showChat();
 
