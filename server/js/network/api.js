@@ -111,7 +111,7 @@ class API {
                 form: {
                     serverId: config.serverId,
                     accessToken: config.accessToken,
-                    port: config.port
+                    port: config.apiPort
                 }
             };
 
