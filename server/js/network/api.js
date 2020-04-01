@@ -2,7 +2,8 @@ let express = require('express'),
     bodyParser = require('body-parser'),
     request = require('request'),
     _ = require('underscore'),
-    APIConstants = require('../util/apiconstants');
+    APIConstants = require('../util/apiconstants'),
+    Utils = require('../util/utils');
 
 class API {
 
@@ -57,6 +58,10 @@ class API {
 			self.handlePlayer(request, response);
 		});
 
+        router.post('/chat', (request, response) => {
+            self.handleChat(request, response);
+        });
+
         router.get('/players', (request, response) => {
 			self.handlePlayers(request, response);
 		});
@@ -86,6 +91,26 @@ class API {
 
         response.json(self.getPlayerData(player));
 	}
+
+    handleChat(request, response) {
+        let self = this;
+
+        if (!request.body.token || request.body.token !== config.accessToken) {
+            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `token` specified for /chat POST request.');
+            return;
+        }
+
+        let message = Utils.parseMessage(request.body.message),
+            source = Utils.parseMessage(request.body.source),
+            colour = request.body.colour;
+
+        self.world.globalMessage(source, message, colour);
+
+        console.log(`--${source}--`);
+        console.log(`--${message}--`);
+
+        response.json({ status: 'success' });
+    }
 
 	handlePlayers(request, response) {
 		let self = this;
