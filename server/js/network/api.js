@@ -53,35 +53,68 @@ class API {
             });
         });
 
+		router.post('/player', (request, response) => {
+			self.handlePlayer(request, response);
+		});
+
         router.get('/players', (request, response) => {
-            if (!request.query.token || request.query.token !== config.accessToken) {
-                self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `token` specified for /player GET request.');
-                return;
-            }
-
-            let players = {};
-
-
-            _.each(self.world.players, (player) => {
-                players[player.username] = {
-                    x: player.x,
-                    y: player.y,
-                    experience: player.experience,
-                    level: player.level,
-                    hitPoints: player.hitPoints,
-                    maxHitPoints: player.maxHitPoints,
-                    mana: player.mana,
-                    maxMana: player.maxMana,
-                    pvpKills: player.pvpKills,
-                    orientation: player.orientation,
-                    lastLogin: player.lastLogin,
-                    mapVersion: player.mapVersion
-                };
-            });
-
-            response.json(players);
-        });
+			self.handlePlayers(request, response);
+		});
     }
+
+	handlePlayer(request, response) {
+		let self = this;
+
+        if (!request.body.token || request.body.token !== config.accessToken) {
+            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `token` specified for /player POST request.');
+            return;
+        }
+
+        let playerName = request.body.playerName;
+
+        if (!playerName) {
+            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'No `playerName` variable has been declared.');
+            return;
+        }
+
+        if (!self.world.isOnline(playerName)) {
+            self.returnError(response, APIConstants.PLAYER_NOT_ONLINE, `Player ${playerName} is not online.`);
+            return;
+        }
+
+
+
+	}
+
+	handlePlayers(request, response) {
+		let self = this;
+
+		if (!request.query.token || request.query.token !== config.accessToken) {
+			self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `token` specified for /players GET request.');
+			return;
+		}
+
+		let players = {};
+
+		_.each(self.world.players, (player) => {
+			players[player.username] = {
+				x: player.x,
+				y: player.y,
+				experience: player.experience,
+				level: player.level,
+				hitPoints: player.hitPoints,
+				maxHitPoints: player.maxHitPoints,
+				mana: player.mana,
+				maxMana: player.maxMana,
+				pvpKills: player.pvpKills,
+				orientation: player.orientation,
+				lastLogin: player.lastLogin,
+				mapVersion: player.mapVersion
+			};
+		});
+
+		response.json(players);
+	}
 
 
     pingHub() {
