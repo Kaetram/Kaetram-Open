@@ -89,7 +89,7 @@ class Projectile extends Entity {
             damage: this.damage,
             special: this.special,
             hitType: this.hitType,
-            type: this.type
+            type: this.type,
         };
     }
 }

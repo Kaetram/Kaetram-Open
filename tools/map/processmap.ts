@@ -59,9 +59,10 @@ const parseLayer = (layer) => {
             const pGid = tiles[j];
             const level = parseInt(name.split('plateau')[1]);
 
-            if (map.collisions.indexOf(j) > -1)
+            if (map.collisions.indexOf(j) > -1) {
                 // Skip collision indexes.
                 continue;
+            }
 
             if (pGid && pGid > 0) map.plateau[j] = level;
         }
@@ -77,9 +78,9 @@ const parseLayer = (layer) => {
             if (mode === 'client') {
                 if (tGid > 0) {
                     if (map.data[k] === undefined) map.data[k] = tGid;
-                    else if (map.data[k] instanceof Array)
+                    else if (map.data[k] instanceof Array) {
                         map.data[k].unshift(tGid);
-                    else map.data[k] = [tGid, map.data[k]];
+                    } else map.data[k] = [tGid, map.data[k]];
                 }
             }
 
@@ -98,7 +99,7 @@ export default function parse(json, options) {
         width: 0,
         height: 0,
         collisions: [],
-        version: new Date().getTime()
+        version: new Date().getTime(),
     };
 
     switch (mode) {
@@ -148,7 +149,7 @@ export default function parse(json, options) {
 
     map.tilesize = this.json.tilewidth;
 
-    const handleProperty = function(property, value, id) {
+    const handleProperty = (property, value, id) => {
         if (property === 'c') collisions[id] = true;
 
         if (mode === 'client' || mode === 'info') {
@@ -178,7 +179,7 @@ export default function parse(json, options) {
         _.each(tile.animation, (animation: any) => {
             animationData.push({
                 duration: animation.duration,
-                tileid: parseInt(firstGID) + parseInt(animation.tileid) - 1
+                tileid: parseInt(firstGID) + parseInt(animation.tileid) - 1,
             });
         });
 
@@ -189,8 +190,8 @@ export default function parse(json, options) {
         _.each(this.json.tilesets, (tileset: any) => {
             const name = tileset.name.toLowerCase();
 
-            if (mode === 'info' || mode === 'server')
-                if (tileset.name !== 'Mobs')
+            if (mode === 'info' || mode === 'server') {
+                if (tileset.name !== 'Mobs') {
                     map.tilesets.push({
                         name: tileset.name,
                         firstGID: tileset.firstgid,
@@ -198,8 +199,10 @@ export default function parse(json, options) {
                         imageName: tileset.image.includes('/')
                             ? tileset.image.split('/')[2]
                             : tileset.image,
-                        scale: tileset.name === 'tilesheet' ? 2 : 1
+                        scale: tileset.name === 'tilesheet' ? 2 : 1,
                     });
+                }
+            }
 
             if (name === 'mobs' && mode === 'server') {
                 mobsFirstGid = tileset.firstgid;
@@ -217,9 +220,9 @@ export default function parse(json, options) {
             _.each(tileset.tiles, (tile: any) => {
                 const id = parseInt(tileset.firstgid) + parseInt(tile.id);
 
-                if (tile.animation && mode === 'info')
+                if (tile.animation && mode === 'info') {
                     handleAnimation(id, tileset.firstgid, tile);
-                else
+                } else {
                     _.each(tile.properties, (data: any) => {
                         handleProperty(
                             data.name,
@@ -229,6 +232,7 @@ export default function parse(json, options) {
                             id
                         );
                     });
+                }
             });
         });
     }
@@ -236,9 +240,9 @@ export default function parse(json, options) {
     _.each(this.json.layers, (layer: any) => {
         const name = layer.name.toLowerCase();
 
-        if (mode === 'server')
+        if (mode === 'server') {
             switch (name) {
-                case 'doors':
+                case 'doors': {
                     const doors = layer.objects;
 
                     _.each(doors, (door: any) => {
@@ -248,14 +252,14 @@ export default function parse(json, options) {
                                 tx: parseInt(door.properties[1].value),
                                 ty: parseInt(door.properties[2].value),
                                 x: door.x / 16,
-                                y: door.y / 16
+                                y: door.y / 16,
                             };
                         }
                     });
 
                     break;
-
-                case 'chestareas':
+                }
+                case 'chestareas': {
                     const cAreas = layer.objects;
 
                     _.each(cAreas, (area: any) => {
@@ -263,7 +267,7 @@ export default function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize
+                            height: area.height / map.tilesize,
                         };
 
                         _.each(area.properties, (property: any) => {
@@ -274,15 +278,16 @@ export default function parse(json, options) {
                     });
 
                     break;
+                }
 
-                case 'chests':
+                case 'chests': {
                     const chests = layer.objects;
 
                     _.each(chests, (chest: any) => {
                         const oChest = {
                             i: null,
                             x: chest.x / map.tilesize,
-                            y: chest.y / map.tilesize
+                            y: chest.y / map.tilesize,
                         };
 
                         oChest.i = _.map(
@@ -296,14 +301,14 @@ export default function parse(json, options) {
                     });
 
                     break;
-
-                case 'lights':
+                }
+                case 'lights': {
                     const lights = layer.objects;
 
                     _.each(lights, (lightObject: any) => {
                         const light = {
                             x: lightObject.x / 16 + 0.5,
-                            y: lightObject.y / 16 + 0.5
+                            y: lightObject.y / 16 + 0.5,
                         };
 
                         _.each(lightObject.properties, (property: any) => {
@@ -314,8 +319,8 @@ export default function parse(json, options) {
                     });
 
                     break;
-
-                case 'music':
+                }
+                case 'music': {
                     const mAreas = layer.objects;
 
                     _.each(mAreas, (area: any) => {
@@ -323,7 +328,7 @@ export default function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize
+                            height: area.height / map.tilesize,
                         };
 
                         _.each(area.properties, (property: any) => {
@@ -334,8 +339,9 @@ export default function parse(json, options) {
                     });
 
                     break;
+                }
 
-                case 'pvp':
+                case 'pvp': {
                     const pAreas = layer.objects;
 
                     _.each(pAreas, (area: any) => {
@@ -343,15 +349,15 @@ export default function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize
+                            height: area.height / map.tilesize,
                         };
 
                         map.pvpAreas.push(pvpArea);
                     });
 
                     break;
-
-                case 'overlays':
+                }
+                case 'overlays': {
                     const overlayAreas = layer.objects;
 
                     _.each(overlayAreas, (area: any) => {
@@ -360,7 +366,7 @@ export default function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize
+                            height: area.height / map.tilesize,
                         };
 
                         _.each(area.properties, (property: any) => {
@@ -373,8 +379,8 @@ export default function parse(json, options) {
                     });
 
                     break;
-
-                case 'camera':
+                }
+                case 'camera': {
                     const cameraAreas = layer.objects;
 
                     _.each(cameraAreas, (area: any) => {
@@ -384,15 +390,15 @@ export default function parse(json, options) {
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
                             height: area.height / map.tilesize,
-                            type: area.properties[0].value
+                            type: area.properties[0].value,
                         };
 
                         map.cameraAreas.push(cArea);
                     });
 
                     break;
-
-                case 'games':
+                }
+                case 'games': {
                     const gAreas = layer.objects;
 
                     _.each(gAreas, (area: any) => {
@@ -400,22 +406,26 @@ export default function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize
+                            height: area.height / map.tilesize,
                         };
 
                         map.gameAreas.push(gameArea);
                     });
 
                     break;
+                }
             }
+        }
     });
 
-    for (let i = this.json.layers.length; i > 0; i--)
+    for (let i = this.json.layers.length; i > 0; i--) {
         parseLayer(this.json.layers[i - 1]);
+    }
 
     if (mode === 'client') {
-        for (let i = 0, max = map.data.length; i < max; i++)
+        for (let i = 0, max = map.data.length; i < max; i++) {
             if (!map.data[i]) map.data[i] = 0;
+        }
 
         map.depth = calculateDepth(map);
     }

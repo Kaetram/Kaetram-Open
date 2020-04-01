@@ -58,7 +58,7 @@ class Bank extends Container {
         this.owner.send(
             new Messages.Bank(Packets.BankOpcode.Remove, {
                 index: parseInt(index),
-                count
+                count,
             })
         );
 

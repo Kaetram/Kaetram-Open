@@ -1,6 +1,5 @@
 import connect from 'connect';
 import serve from 'serve-static';
-import request from 'request';
 import SocketIO from 'socket.io';
 import http from 'http';
 import https from 'https';
@@ -55,9 +54,10 @@ class WebSocket extends Socket {
 
         this.io = new SocketIO(this.httpServer);
         this.io.on('connection', (socket) => {
-            if (socket.handshake.headers['cf-connecting-ip'])
+            if (socket.handshake.headers['cf-connecting-ip']) {
                 socket.conn.remoteAddress =
                     socket.handshake.headers['cf-connecting-ip'];
+            }
 
             console.info(
                 `Received connection from: ${socket.conn.remoteAddress}`

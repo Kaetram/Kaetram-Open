@@ -42,7 +42,7 @@ class Doors {
                 questId: door.questId,
                 achievementId: door.achievementId,
                 closedIds: door.closedIds,
-                openIds: door.openIds
+                openIds: door.openIds,
             };
         });
     }
@@ -76,13 +76,13 @@ class Doors {
         const tiles = {
             indexes: [],
             data: [],
-            collisions: []
+            collisions: [],
         };
 
         const status = this.getStatus(door);
         const doorState = {
             open: door.openIds,
-            closed: door.closedIds
+            closed: door.closedIds,
         };
 
         _.each(doorState[status], (value: any, key: any) => {
@@ -98,7 +98,7 @@ class Doors {
         const allTiles = {
             indexes: [],
             data: [],
-            collisions: []
+            collisions: [],
         };
 
         _.each(this.doors, (door: any) => {
@@ -108,8 +108,9 @@ class Doors {
                 door.y
             );
 
-            if (!this.regions.isAdjacent(this.player.region, doorRegion))
+            if (!this.regions.isAdjacent(this.player.region, doorRegion)) {
                 return;
+            }
 
             const tiles = this.getTiles(door);
 
@@ -133,18 +134,22 @@ class Doors {
          * in doors.json file.
          */
 
-        if (index < 0)
+        if (index < 0) {
             // Tile does not exist.
             return false;
+        }
 
         return tiles.collisions[index];
     }
 
     getDoor(x, y, callback) {
-        for (const i in this.doors)
-            if (this.doors.hasOwnProperty(i))
-                if (this.doors[i].x === x && this.doors[i].y === y)
+        for (const i in this.doors) {
+            if (this.doors.hasOwnProperty(i)) {
+                if (this.doors[i].x === x && this.doors[i].y === y) {
                     return this.doors[i];
+                }
+            }
+        }
 
         return null;
     }

@@ -1,4 +1,4 @@
 export default {
     Data: {},
-    Ids: {}
+    Ids: {},
 };

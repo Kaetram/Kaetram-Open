@@ -56,14 +56,17 @@ export default {
          * Apply special amulets
          */
 
-        if (pendant && pendant.pendantLevel > 0)
+        if (pendant && pendant.pendantLevel > 0) {
             damageAmplifier *= pendant.getBaseAmplifier();
+        }
 
-        if (ring && ring.ringLevel > 0)
+        if (ring && ring.ringLevel > 0) {
             damageAmplifier *= ring.getBaseAmplifier();
+        }
 
-        if (boots && boots.bootsLevel > 0)
+        if (boots && boots.bootsLevel > 0) {
             damageAmplifier *= boots.getBaseAmplifier();
+        }
 
         /**
          * Just so amplifiers don't get out of hand.
@@ -75,8 +78,9 @@ export default {
 
         damageAbsorbed = target.level + targetArmour / 2;
 
-        if (targetPendant)
+        if (targetPendant) {
             absorptionAmplifier *= targetPendant.getBaseAmplifier();
+        }
 
         if (targetRing) absorptionAmplifier *= targetRing.getBaseAmplifier();
 
@@ -132,22 +136,25 @@ export default {
     nextExp(experience) {
         if (experience < 0) return -1;
 
-        for (let i = 1; i < this.LevelExp.length; i++)
+        for (let i = 1; i < this.LevelExp.length; i++) {
             if (experience < this.LevelExp[i]) return this.LevelExp[i];
+        }
     },
 
     prevExp(experience) {
         if (experience < 0) return -1;
 
-        for (let i = Constants.MAX_LEVEL; i > 0; i--)
+        for (let i = Constants.MAX_LEVEL; i > 0; i--) {
             if (experience > this.LevelExp[i]) return this.LevelExp[i];
+        }
     },
 
     expToLevel(experience) {
         if (experience < 0) return -1;
 
-        for (let i = 1; i < this.LevelExp.length; i++)
+        for (let i = 1; i < this.LevelExp.length; i++) {
             if (experience < this.LevelExp[i]) return i;
+        }
 
         return Constants.MAX_LEVEL;
     },
@@ -164,5 +171,5 @@ export default {
 
     getMaxMana(level) {
         return 10 + level * 8;
-    }
+    },
 };

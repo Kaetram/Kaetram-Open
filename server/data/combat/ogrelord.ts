@@ -38,7 +38,7 @@ class OgreLord extends Combat {
         this.dialogues = [
             'Get outta my swamp',
             'No, not the onion.',
-            'My minions give me strength! You stand no chance!'
+            'My minions give me strength! You stand no chance!',
         ];
 
         this.minions = [];
@@ -92,8 +92,8 @@ class OgreLord extends Combat {
             message: new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: this.character.instance,
                 text: message,
-                nonNPC: true
-            })
+                nonNPC: true,
+            }),
         });
     }
 
@@ -109,8 +109,9 @@ class OgreLord extends Combat {
 
         this.forceTalk('Now you shall see my true power!');
 
-        for (let i = 0; i < xs.length; i++)
+        for (let i = 0; i < xs.length; i++) {
             this.minions.push(this.world.spawnMob(12, xs[i], ys[i]));
+        }
 
         _.each(this.minions, (minion) => {
             minion.onDeath(() => {
@@ -131,8 +132,9 @@ class OgreLord extends Combat {
         _.each(this.minions, (minion) => {
             const randomTarget = this.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget)
+            if (!minion.hasTarget() && randomTarget) {
                 minion.combat.begin(randomTarget);
+            }
         });
     }
 

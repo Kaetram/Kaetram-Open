@@ -2,14 +2,13 @@
 
 import io from 'socket.io-client';
 import * as _ from 'underscore';
-import Log from 'log';
 import Utils from '../../server/ts/util/utils';
-import config from '../../server/config.json';
+import config from '../../server/config';
 import Entity from './entity';
 
 class Bot {
-    public botCount: any;
     public bots: any;
+    public botCount: any;
 
     constructor() {
         this.bots = [];
@@ -40,42 +39,45 @@ class Bot {
 
         connection = io('ws://127.0.0.1:9001', {
             forceNew: true,
-            reconnection: false
+            reconnection: false,
         });
 
         connection.on('connect', () => {
-            Log.info('Connection established...');
+            console.info('Connection established...');
 
             connection.emit('client', {
                 gVer: config.gver,
                 cType: 'HTML5',
-                bot: true
+                bot: true,
             });
         });
 
         connection.on('connect_error', () => {
-            Log.info('Failed to establish connection.');
+            console.info('Failed to establish connection.');
         });
 
         connection.on('message', (message) => {
             if (message.startsWith('[')) {
                 const data = JSON.parse(message);
 
-                if (data.length > 1)
+                if (data.length > 1) {
                     _.each(data, (msg) => {
                         this.handlePackets(connection, msg);
                     });
-                else
+                } else {
                     this.handlePackets(connection, JSON.parse(message).shift());
+                }
             } else this.handlePackets(connection, message, 'utf8');
         });
 
-        connection.on('disconnect', () => {});
+        connection.on('disconnect', () => {
+            //
+        });
     }
 
     handlePackets(connection, message, type?) {
         if (type === 'utf8' || !_.isArray(message)) {
-            Log.info(`Received UTF8 message ${message}.`);
+            console.info(`Received UTF8 message ${message}.`);
             return;
         }
 
@@ -87,7 +89,7 @@ class Bot {
 
                 break;
 
-            case 2:
+            case 2: {
                 const info = message.shift();
 
                 this.bots.push(
@@ -95,7 +97,7 @@ class Bot {
                 );
 
                 break;
-
+            }
             case 14: // Combat
                 break;
         }
@@ -134,7 +136,7 @@ class Bot {
                 newY,
                 currentX,
                 currentY,
-                250
+                250,
             ]);
         }, 250);
 

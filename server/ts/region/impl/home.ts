@@ -28,7 +28,7 @@ class Home {
         const info = {
             indexes: [],
             data: [],
-            collisions: []
+            collisions: [],
         };
 
         /**

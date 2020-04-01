@@ -539,5 +539,5 @@ export default {
         serialize() {
             return [Packets.Bubble, this.info];
         }
-    }
+    },
 };

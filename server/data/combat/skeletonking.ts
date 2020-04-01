@@ -63,17 +63,21 @@ class SkeletonKing extends Combat {
 
         this.lastSpawn = new Date().getTime();
 
-        if (!this.colliding(x + 2, y - 2))
+        if (!this.colliding(x + 2, y - 2)) {
             this.minions.push(this.world.spawnMob(17, x + 2, y + 2));
+        }
 
-        if (!this.colliding(x - 2, y - 2))
+        if (!this.colliding(x - 2, y - 2)) {
             this.minions.push(this.world.spawnMob(17, x - 2, y + 2));
+        }
 
-        if (!this.colliding(x + 1, y + 1))
+        if (!this.colliding(x + 1, y + 1)) {
             this.minions.push(this.world.spawnMob(11, x + 1, y - 1));
+        }
 
-        if (!this.colliding(x - 1, y + 1))
+        if (!this.colliding(x - 1, y + 1)) {
             this.minions.push(this.world.spawnMob(11, x - 1, y - 1));
+        }
 
         _.each(this.minions, (minion) => {
             minion.onDeath(() => {
@@ -92,8 +96,9 @@ class SkeletonKing extends Combat {
         _.each(this.minions, (minion) => {
             const randomTarget = this.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget)
+            if (!minion.hasTarget() && randomTarget) {
                 minion.combat.begin(randomTarget);
+            }
         });
     }
 

@@ -40,13 +40,14 @@ class MongoDB {
     getDatabase(callback, type?) {
         let URL = `mongodb://${this.host}:${this.port}/${this.database}`;
 
-        if (config.mongoAuth)
+        if (config.mongoAuth) {
             URL = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
+        }
 
         const client = new MongoClient(URL, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
-            wtimeout: 5
+            wtimeout: 5,
         });
 
         if (this.connection) {
@@ -153,7 +154,7 @@ class MongoDB {
             const playerData = database.collection('player_data');
             const emailCursor = playerData.find({ email: player.email });
             const usernameCursor = playerData.find({
-                username: player.username
+                username: player.username,
             });
 
             console.info(`Looking for - ${player.email} or ${player.username}`);
@@ -161,9 +162,9 @@ class MongoDB {
             emailCursor.toArray().then((emailArray) => {
                 if (emailArray.length === 0) {
                     usernameCursor.toArray().then((usernameArray) => {
-                        if (usernameArray.length === 0)
+                        if (usernameArray.length === 0) {
                             callback({ exists: false });
-                        else callback({ exists: true, type: 'user' });
+                        } else callback({ exists: true, type: 'user' });
                     });
                 } else callback({ exists: true, type: 'email' });
             });
@@ -179,7 +180,7 @@ class MongoDB {
                 'player_abilities',
                 'player_bank',
                 'player_quests',
-                'player_achievements'
+                'player_achievements',
             ];
 
             _.each(collections, (col) => {
@@ -187,15 +188,16 @@ class MongoDB {
 
                 collection.deleteOne(
                     {
-                        username: player.username
+                        username: player.username,
                     },
                     (error, result) => {
                         if (error) throw error;
 
-                        if (result)
+                        if (result) {
                             console.info(
                                 `Player ${player.username} has been deleted.`
                             );
+                        }
                     }
                 );
             });
@@ -227,17 +229,18 @@ class MongoDB {
 
                     collection.updateOne(
                         {
-                            username: playerInfo.username
+                            username: playerInfo.username,
                         },
                         { $set: playerInfo },
                         {
-                            upsert: true
+                            upsert: true,
                         },
                         (error, result) => {
                             if (error) throw error;
 
-                            if (result)
+                            if (result) {
                                 callback('Successfully updated positions.');
+                            }
                         }
                     );
                 });

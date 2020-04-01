@@ -29,7 +29,7 @@ class Inventory extends Container {
         this.owner.send(
             new Messages.Inventory(Packets.InventoryOpcode.Batch, [
                 this.size,
-                this.slots
+                this.slots,
             ])
         );
     }
@@ -37,9 +37,10 @@ class Inventory extends Container {
     add(item, count) {
         if (!count) count = -1;
 
-        if (count === -1)
+        if (count === -1) {
             // default to moving whole stack
             count = parseInt(item.count);
+        }
 
         if (!this.canHold(item.id, count)) {
             this.owner.send(
@@ -77,7 +78,7 @@ class Inventory extends Container {
         this.owner.send(
             new Messages.Inventory(Packets.InventoryOpcode.Remove, {
                 index: parseInt(index),
-                count
+                count,
             })
         );
 

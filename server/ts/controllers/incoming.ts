@@ -198,17 +198,18 @@ class Incoming {
             this.player.isGuest = true;
 
             this.database.login(this.player);
-        } else
+        } else {
             this.database.verify(this.player, (result) => {
-                if (result.status === 'success')
+                if (result.status === 'success') {
                     this.database.login(this.player);
-                else {
+                } else {
                     this.connection.sendUTF8('invalidlogin');
                     this.connection.close(
                         `Wrong password entered for: ${this.player.username}`
                     );
                 }
             });
+        }
     }
 
     handleReady(message) {
@@ -218,8 +219,9 @@ class Incoming {
 
         if (!isReady) return;
 
-        if (this.player.regionsLoaded.length > 0 && !preloadedData)
+        if (this.player.regionsLoaded.length > 0 && !preloadedData) {
             this.player.regionsLoaded = [];
+        }
 
         this.player.ready = true;
 
@@ -230,8 +232,9 @@ class Incoming {
         this.player.loadInventory();
         this.player.loadQuests();
 
-        if (this.world.map.isOutOfBounds(this.player.x, this.player.y))
+        if (this.world.map.isOutOfBounds(this.player.x, this.player.y)) {
             this.player.setPosition(50, 89);
+        }
 
         if (this.player.userAgent !== userAgent) {
             this.player.userAgent = userAgent;
@@ -258,11 +261,13 @@ class Incoming {
             // Entity is an area-based mob
             if (entity.area) entity.specialState = 'area';
 
-            if (this.player.quests.isQuestNPC(entity))
+            if (this.player.quests.isQuestNPC(entity)) {
                 entity.specialState = 'questNpc';
+            }
 
-            if (this.player.quests.isQuestMob(entity))
+            if (this.player.quests.isQuestMob(entity)) {
                 entity.specialState = 'questMob';
+            }
 
             if (entity.miniboss) {
                 entity.specialState = 'miniboss';
@@ -309,8 +314,9 @@ class Incoming {
                         if (
                             this.player.hasArmour() &&
                             this.player.armour.id === 114
-                        )
+                        ) {
                             return;
+                        }
 
                         this.player.inventory.add(this.player.armour.getItem());
                         this.player.setArmour(114, 1, -1, -1);
@@ -346,7 +352,7 @@ class Incoming {
 
                 this.player.send(
                     new Messages.Equipment(Packets.EquipmentOpcode.Unequip, [
-                        type
+                        type,
                     ])
                 );
                 this.player.sync();
@@ -368,8 +374,9 @@ class Incoming {
                 const playerX = message.shift();
                 const playerY = message.shift();
 
-                if (this.preventNoClip(requestX, requestY))
+                if (this.preventNoClip(requestX, requestY)) {
                     this.player.guessPosition(requestX, requestY);
+                }
 
                 this.player.movementStart = new Date().getTime();
 
@@ -385,16 +392,18 @@ class Incoming {
                 if (
                     !movementSpeed ||
                     movementSpeed !== this.player.movementSpeed
-                )
+                ) {
                     this.player.incrementCheatScore(1);
+                }
 
                 if (
                     pX !== this.player.x ||
                     pY !== this.player.y ||
                     this.player.stunned ||
                     !this.preventNoClip(selectedX, selectedY)
-                )
+                ) {
                     return;
+                }
 
                 this.player.moving = true;
 
@@ -418,24 +427,30 @@ class Incoming {
                 const entity = this.world.getEntityByInstance(id);
 
                 if (!this.player.moving) {
-                    if (config.debug)
+                    if (config.debug) {
                         console.info(
                             `[Warning] Did not receive movement start packet for ${this.player.username}.`
                         );
+                    }
 
                     this.player.incrementCheatScore(1);
                 }
 
                 orientation = message.shift();
 
-                if (entity && entity.type === 'item')
+                if (entity && entity.type === 'item') {
                     this.player.inventory.add(entity);
+                }
 
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     const door = this.player.doors.getDoor(posX, posY);
 
-                    if (door && this.player.doors.getStatus(door) === 'closed')
+                    if (
+                        door &&
+                        this.player.doors.getStatus(door) === 'closed'
+                    ) {
                         return;
+                    }
 
                     const destination = this.world.map.getDoorDestination(
                         posX,
@@ -454,8 +469,9 @@ class Incoming {
                 const diff =
                     this.player.lastMovement - this.player.movementStart;
 
-                if (diff < this.player.movementSpeed)
+                if (diff < this.player.movementSpeed) {
                     this.player.incrementCheatScore(1);
+                }
 
                 break;
 
@@ -468,8 +484,9 @@ class Incoming {
                 if (
                     !oEntity ||
                     (oEntity.x === entityX && oEntity.y === entityY)
-                )
+                ) {
                     return;
+                }
 
                 oEntity.setPosition(entityX, entityY);
 
@@ -485,7 +502,7 @@ class Incoming {
                     message: new Messages.Movement(
                         Packets.MovementOpcode.Orientate,
                         [this.player.instance, orientation]
-                    )
+                    ),
                 });
 
                 break;
@@ -539,8 +556,9 @@ class Incoming {
 
                 if (entity.dead) return;
 
-                if (this.player.npcTalkCallback)
+                if (this.player.npcTalkCallback) {
                     this.player.npcTalkCallback(entity);
+                }
 
                 break;
 
@@ -551,8 +569,9 @@ class Incoming {
                     !target ||
                     target.dead ||
                     !this.canAttack(this.player, target)
-                )
+                ) {
                     return;
+                }
 
                 this.player.cheatScore = 0;
 
@@ -562,9 +581,9 @@ class Incoming {
                         Packets.CombatOpcode.Initiate,
                         {
                             attackerId: this.player.instance,
-                            targetId: target.instance
+                            targetId: target.instance,
                         }
-                    )
+                    ),
                 });
 
                 break;
@@ -592,9 +611,9 @@ class Incoming {
                         info: {
                             id: instance,
                             x: object.x * 16,
-                            y: object.y * 16 + 8
-                        }
-                    })
+                            y: object.y * 16 + 8,
+                        },
+                    }),
                 });
 
                 break;
@@ -617,8 +636,9 @@ class Incoming {
                     !attacker ||
                     attacker.dead ||
                     !this.canAttack(attacker, target)
-                )
+                ) {
                     return;
+                }
 
                 attacker.setTarget(target);
 
@@ -658,8 +678,9 @@ class Incoming {
                     target.combat.started ||
                     target.dead ||
                     target.type !== 'mob'
-                )
+                ) {
                     return;
+                }
 
                 target.begin(projectile.owner);
 
@@ -682,9 +703,9 @@ class Incoming {
 
         if (!text || text.length < 1 || !/\S/.test(text)) return;
 
-        if (text.charAt(0) === '/' || text.charAt(0) === ';')
+        if (text.charAt(0) === '/' || text.charAt(0) === ';') {
             this.commands.parse(text);
-        else {
+        } else {
             if (this.player.isMuted()) {
                 this.player.send(
                     new Messages.Notification(
@@ -716,8 +737,8 @@ class Incoming {
                     name: this.player.username,
                     withBubble: true,
                     text,
-                    duration: 7000
-                })
+                    duration: 7000,
+                }),
             });
         }
     }
@@ -754,7 +775,7 @@ class Incoming {
                         count || item.count,
                         item.index
                     )
-                )
+                ) {
                     this.world.dropItem(
                         id,
                         count || 1,
@@ -763,6 +784,7 @@ class Incoming {
                         ability,
                         abilityLevel
                     );
+                }
 
                 break;
 
@@ -815,8 +837,9 @@ class Incoming {
                             ? bankSlot.count
                             : 1;
 
-                    if (this.player.inventory.add(bankSlot, moveAmount))
+                    if (this.player.inventory.add(bankSlot, moveAmount)) {
                         this.player.bank.remove(bankSlot.id, moveAmount, index);
+                    }
                 } else {
                     const inventorySlot = this.player.inventory.slots[index];
 
@@ -829,12 +852,13 @@ class Incoming {
                             inventorySlot.ability,
                             inventorySlot.abilityLevel
                         )
-                    )
+                    ) {
                         this.player.inventory.remove(
                             inventorySlot.id,
                             inventorySlot.count,
                             index
                         );
+                    }
                 }
 
                 break;
@@ -854,7 +878,7 @@ class Incoming {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId: this.player.region,
             message: new Messages.Spawn(this.player),
-            ignoreId: this.player.instance
+            ignoreId: this.player.instance,
         });
 
         this.player.send(
@@ -1001,8 +1025,9 @@ class Incoming {
 
                 if (!item || item.id < 1) return;
 
-                if (this.player.selectedShopItem)
+                if (this.player.selectedShopItem) {
                     this.world.shops.remove(this.player);
+                }
 
                 const currency = this.world.shops.getCurrency(npcId);
 
@@ -1013,13 +1038,13 @@ class Incoming {
                         id: npcId,
                         slotId,
                         currency: Items.idToString(currency),
-                        price: this.world.shops.getSellPrice(npcId, item.id)
+                        price: this.world.shops.getSellPrice(npcId, item.id),
                     })
                 );
 
                 this.player.selectedShopItem = {
                     id: npcId,
-                    index: item.index
+                    index: item.index,
                 };
 
                 console.debug(`Received Select: ${npcId} ${slotId}`);

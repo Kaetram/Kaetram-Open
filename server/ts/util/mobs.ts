@@ -30,7 +30,8 @@ export default {
     },
 
     isNewCombatPlugin(id: number) {
-        if (id in this.Ids && this.Ids[id].combatPlugin in this.Plugins)
+        if (id in this.Ids && this.Ids[id].combatPlugin in this.Plugins) {
             return this.Plugins[this.Ids[id].combatPlugin];
-    }
+        }
+    },
 };

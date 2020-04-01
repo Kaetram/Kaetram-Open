@@ -35,10 +35,11 @@ class Database {
     }
 
     getDatabase() {
-        if (!this.database)
+        if (!this.database) {
             console.error(
                 '[Database] No database is currently present. It is advised against proceeding in this state.'
             );
+        }
 
         return this.database;
     }

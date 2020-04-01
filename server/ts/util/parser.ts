@@ -72,7 +72,7 @@ class Parser {
                 projectileName: value.projectileName || null,
                 spawnDelay: value.spawnDelay || 60000,
                 combatPlugin: value.combatPlugin || null,
-                hiddenName: value.hiddenName || false
+                hiddenName: value.hiddenName || false,
             };
 
             Mobs.Ids[value.id] = Mobs.Properties[key];
@@ -94,7 +94,7 @@ class Parser {
                 id: value.id,
                 name: value.name || key,
                 text: value.text || null,
-                type: value.type || null
+                type: value.type || null,
             };
 
             NPCs.Ids[value.id] = NPCs.Properties[key];
@@ -131,15 +131,16 @@ class Parser {
                 maxStackSize: value.maxStackSize || -1,
                 plugin: value.plugin || null,
                 customData: value.customData || null,
-                requirement: value.requirement || null
+                requirement: value.requirement || null,
             };
 
             Items.Ids[value.id] = Items.Data[key];
 
-            if (value.plugin)
+            if (value.plugin) {
                 Items.Plugins[
                     value.id
                 ] = require(`../../data/items/${value.plugin}`);
+            }
 
             itemCounter++;
         });
@@ -158,7 +159,7 @@ class Parser {
                 id: value.id,
                 type: value.type,
                 mana: value.mana || 0,
-                cooldown: value.cooldown || null
+                cooldown: value.cooldown || null,
             };
 
             Abilities.Ids[value.id] = Abilities.Data[key];
@@ -183,7 +184,7 @@ class Parser {
                 originalCount: value.count,
                 prices: value.prices,
                 currency: value.currency,
-                stockDuration: value.stockDuration
+                stockDuration: value.stockDuration,
             };
 
             Shops.Ids[value.npcId] = Shops.Data[key];
@@ -224,7 +225,7 @@ class Parser {
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
             const points = Math.floor(
-                0.25 * Math.floor(i + 300 * Math.pow(2, i / 7))
+                0.25 * Math.floor(i + 300 * (2 ** i / 7))
             );
 
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
@@ -239,7 +240,7 @@ class Parser {
                 x: value.x,
                 y: value.y,
                 type: value.type,
-                messages: value.messages
+                messages: value.messages,
             };
 
             objectCounter++;

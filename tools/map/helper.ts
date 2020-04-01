@@ -44,7 +44,7 @@ class Helper {
 
         return {
             x,
-            y
+            y,
         };
     }
 

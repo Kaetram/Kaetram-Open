@@ -35,7 +35,7 @@ class Guilds {
             _.each(guilds, (guild: any) => {
                 this.guilds[guild.name] = {
                     owner: guild.owner,
-                    members: guild.members
+                    members: guild.members,
                 };
             });
 
@@ -53,7 +53,7 @@ class Guilds {
         const newGuild = {
             name,
             owner: owner.username,
-            members: [owner.username]
+            members: [owner.username],
         };
 
         this.loader.getGuild(newGuild.name, (guild) => {
@@ -108,10 +108,15 @@ class Guilds {
     }
 
     hasGuild(owner) {
-        for (const i in this.guilds)
-            if (this.guilds.hasOwnProperty(i))
-                if (this.guilds[i].owner.toLowerCase() === owner.toLowerCase())
+        for (const i in this.guilds) {
+            if (this.guilds.hasOwnProperty(i)) {
+                if (
+                    this.guilds[i].owner.toLowerCase() === owner.toLowerCase()
+                ) {
                     return true;
+                }
+            }
+        }
 
         return false;
     }

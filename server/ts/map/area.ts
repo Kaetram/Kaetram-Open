@@ -83,8 +83,9 @@ class Area {
         if (index > -1) this.entities.splice(index, 1);
 
         if (this.entities.length === 0 && this.emptyCallback) {
-            if (entity.lastAttacker && entity.lastAttacker.type === 'player')
+            if (entity.lastAttacker && entity.lastAttacker.type === 'player') {
                 this.handleAchievement(entity.lastAttacker);
+            }
 
             this.emptyCallback();
         }

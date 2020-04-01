@@ -26,9 +26,11 @@ class Shops {
     load() {
         this.shopInterval = setInterval(() => {
             _.each(ShopData.Data, (info: any) => {
-                for (let i = 0; i < info.count; i++)
-                    if (info.count[i] < info.originalCount[i])
+                for (let i = 0; i < info.count; i++) {
+                    if (info.count[i] < info.originalCount[i]) {
                         ShopData.increment(info.id, info.items[i], 1);
+                    }
+                }
             });
         }, this.interval);
     }
@@ -38,7 +40,7 @@ class Shops {
             new Messages.Shop(Packets.ShopOpcode.Open, {
                 instance: player.instance,
                 npcId,
-                shopData: this.getShopData(npcId)
+                shopData: this.getShopData(npcId),
             })
         );
     }
@@ -81,7 +83,7 @@ class Shops {
             id: ShopData.getItem(npcId, buyId),
             count,
             ability: -1,
-            abilityLevel: -1
+            abilityLevel: -1,
         });
 
         ShopData.decrement(npcId, buyId, count);
@@ -113,7 +115,7 @@ class Shops {
         player.inventory.remove(item.id, item.count, item.index);
         player.inventory.add({
             id: currency,
-            count: price
+            count: price,
         });
 
         this.remove(player);
@@ -128,7 +130,7 @@ class Shops {
         player.send(
             new Messages.Shop(Packets.ShopOpcode.Remove, {
                 id: selectedItem.id,
-                index: selectedItem.index
+                index: selectedItem.index,
             })
         );
 
@@ -140,7 +142,7 @@ class Shops {
             message: new Messages.Shop(
                 Packets.ShopOpcode.Refresh,
                 this.getShopData(shop)
-            )
+            ),
         });
     }
 
@@ -182,7 +184,7 @@ class Shops {
             strings,
             names,
             counts: shop.count,
-            prices: shop.prices
+            prices: shop.prices,
         };
     }
 }

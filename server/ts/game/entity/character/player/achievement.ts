@@ -49,7 +49,7 @@ class Achievement {
                 name: this.name,
                 progress: this.progress,
                 count: this.data.count,
-                isQuest: false
+                isQuest: false,
             })
         );
     }
@@ -60,7 +60,7 @@ class Achievement {
             this.player.send(
                 new Messages.NPC(Packets.NPCOpcode.Talk, {
                     id: npc.instance,
-                    text: npc.talk(this.data.text, this.player)
+                    text: npc.talk(this.data.text, this.player),
                 })
             );
 
@@ -83,7 +83,7 @@ class Achievement {
 
                 this.player.inventory.add({
                     id: this.data.item,
-                    count: this.data.itemCount
+                    count: this.data.itemCount,
                 });
 
                 break;
@@ -101,12 +101,13 @@ class Achievement {
             new Messages.Quest(Packets.QuestOpcode.Finish, {
                 id: this.id,
                 name: this.name,
-                isQuest: false
+                isQuest: false,
             })
         );
 
-        if (npc && this.player.npcTalkCallback)
+        if (npc && this.player.npcTalkCallback) {
             this.player.npcTalkCallback(npc);
+        }
     }
 
     update() {
@@ -152,7 +153,7 @@ class Achievement {
             description: this.description,
             count: this.data.count || 1,
             progress: this.progress,
-            finished: this.isFinished()
+            finished: this.isFinished(),
         };
     }
 }

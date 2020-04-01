@@ -48,8 +48,9 @@ class Trade {
     }
 
     finalize() {
-        if (!this.player.inventory.containsSpaces(this.oPlayerItems.length))
+        if (!this.player.inventory.containsSpaces(this.oPlayerItems.length)) {
             return;
+        }
 
         for (const i in this.oPlayerItems) {
             const item = this.oPlayerItems[i];
@@ -64,8 +65,9 @@ class Trade {
     select(slot) {
         const item = this.player.inventory.slots[slot];
 
-        if (!item || item.id === -1 || this.playerItems.indexOf(item) < 0)
+        if (!item || item.id === -1 || this.playerItems.indexOf(item) < 0) {
             return;
+        }
 
         this.playerItems.push(item);
     }

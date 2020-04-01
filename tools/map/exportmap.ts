@@ -41,7 +41,7 @@ function parseInfo(data: any, destination: string, clientMap: { depth: any }) {
 function parseServer(data: any, destination: string) {
     const map = JSON.stringify(
         processMap(data, {
-            mode: 'server'
+            mode: 'server',
         })
     );
 

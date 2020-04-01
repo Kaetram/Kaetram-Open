@@ -179,8 +179,9 @@ class Character extends Entity {
     heal(amount) {
         this.setHitPoints(this.hitPoints + amount);
 
-        if (this.hitPoints >= this.maxHitPoints)
+        if (this.hitPoints >= this.maxHitPoints) {
             this.hitPoints = this.maxHitPoints;
+        }
     }
 
     isRanged() {

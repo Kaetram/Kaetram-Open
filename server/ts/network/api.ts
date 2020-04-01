@@ -48,7 +48,7 @@ class API {
                 name: config.name,
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
-                playerCount: this.world.getPopulation()
+                playerCount: this.world.getPopulation(),
             });
         });
 
@@ -81,7 +81,7 @@ class API {
                     pvpKills: player.pvpKills,
                     orientation: player.orientation,
                     lastLogin: player.lastLogin,
-                    mapVersion: player.mapVersion
+                    mapVersion: player.mapVersion,
                 };
             });
 
@@ -92,7 +92,7 @@ class API {
     returnError(response, error, message) {
         response.json({
             error,
-            message
+            message,
         });
     }
 }

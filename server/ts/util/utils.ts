@@ -28,7 +28,7 @@ export default {
     positionOffset(radius) {
         return {
             x: this.randomInt(0, radius),
-            y: this.randomInt(0, radius)
+            y: this.randomInt(0, radius),
         };
     },
 
@@ -58,8 +58,9 @@ export default {
         const keys = Object.keys(Packets);
         const filtered = [];
 
-        for (let i = 0; i < keys.length; i++)
+        for (let i = 0; i < keys.length; i++) {
             if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
+        }
 
         return (
             packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1
@@ -76,5 +77,5 @@ export default {
                 string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
             );
         });
-    }
+    },
 };

@@ -28,8 +28,9 @@ class Commands {
 
         this.handlePlayerCommands(command, blocks);
 
-        if (this.player.rights > 0)
+        if (this.player.rights > 0) {
             this.handleModeratorCommands(command, blocks);
+        }
 
         if (this.player.rights > 1) this.handleAdminCommands(command, blocks);
     }
@@ -40,10 +41,11 @@ class Commands {
                 const population = this.world.getPopulation();
                 const singular = population === 1;
 
-                if (this.player.rights > 1)
+                if (this.player.rights > 1) {
                     _.each(this.world.players, (player: Player) => {
                         this.player.notify(player.username);
                     });
+                }
 
                 this.player.notify(
                     `There ${singular ? 'is' : 'are'} currently ${population} ${
@@ -74,7 +76,7 @@ class Commands {
                 this.player.send(
                     new Messages.Quest(Packets.QuestOpcode.Progress, {
                         id: tutorialQuest.id,
-                        stage: tutorialQuest.stage
+                        stage: tutorialQuest.stage,
                     })
                 );
 
@@ -87,8 +89,8 @@ class Commands {
                         text: blocks.join(' '),
                         isGlobal: true,
                         withBubble: false,
-                        colour: 'rgba(191, 191, 63, 1.0)'
-                    })
+                        colour: 'rgba(191, 191, 63, 1.0)',
+                    }),
                 });
 
                 return;
@@ -172,7 +174,7 @@ class Commands {
                     id: spawnId,
                     count,
                     ability: ability || -1,
-                    abilityLevel: abilityLevel || -1
+                    abilityLevel: abilityLevel || -1,
                 });
 
                 return;
@@ -261,7 +263,7 @@ class Commands {
                         new Messages.Pointer(Packets.PointerOpcode.Location, {
                             id: this.player.instance,
                             x: posX,
-                            y: posY
+                            y: posY,
                         })
                     );
                 } else {
@@ -271,7 +273,7 @@ class Commands {
 
                     this.player.send(
                         new Messages.Pointer(Packets.PointerOpcode.NPC, {
-                            id: instance
+                            id: instance,
                         })
                     );
                 }
@@ -321,8 +323,8 @@ class Commands {
                     player: this.player,
                     message: new Messages.Region(Packets.RegionOpcode.Modify, {
                         index: tileIndex,
-                        data: tileInfo
-                    })
+                        data: tileInfo,
+                    }),
                 });
 
                 return;
@@ -373,7 +375,7 @@ class Commands {
             case 'debug':
                 this.player.send(
                     new Messages.Command({
-                        command: 'debug'
+                        command: 'debug',
                     })
                 );
 
@@ -458,9 +460,10 @@ class Commands {
                     return;
                 }
 
-                if (movementSpeed < 75)
+                if (movementSpeed < 75) {
                     // Just to not break stuff.
                     movementSpeed = 75;
+                }
 
                 this.player.defaultMovementSpeed = movementSpeed;
 
@@ -471,7 +474,7 @@ class Commands {
             case 'toggleheal':
                 this.player.send(
                     new Messages.Command({
-                        command: 'toggleheal'
+                        command: 'toggleheal',
                     })
                 );
                 break;

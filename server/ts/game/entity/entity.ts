@@ -181,7 +181,7 @@ class Entity {
             string,
             name,
             x: this.x,
-            y: this.y
+            y: this.y,
         };
 
         if (this.specialState) data.nameColour = this.getNameColour();

@@ -39,7 +39,7 @@ class PirateCaptain extends Combat {
 
         this.location = {
             x: this.character.x,
-            y: this.character.y
+            y: this.character.y,
         };
 
         this.load();
@@ -71,16 +71,17 @@ class PirateCaptain extends Combat {
 
         this.character.setPosition(position.x, position.y);
 
-        if (this.world)
+        if (this.world) {
             this.world.push(Packets.PushOpcode.Regions, {
                 regionId: this.character.region,
                 message: new Messages.Teleport({
                     id: this.character.instance,
                     x: this.character.x,
                     y: this.character.y,
-                    withAnimation: true
-                })
+                    withAnimation: true,
+                }),
             });
+        }
 
         this.forEachAttacker((attacker) => {
             attacker.removeTarget();
@@ -98,7 +99,7 @@ class PirateCaptain extends Combat {
         return {
             x: position.x,
             y: position.y,
-            index: random
+            index: random,
         };
     }
 

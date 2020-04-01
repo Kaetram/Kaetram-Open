@@ -70,8 +70,9 @@ export default {
     },
 
     getPendantLevel(pendantName) {
-        if (this.isPendant(pendantName))
+        if (this.isPendant(pendantName)) {
             return this.Data[pendantName].pendantLevel;
+        }
 
         return -1;
     },
@@ -89,28 +90,31 @@ export default {
     },
 
     isArcherWeapon(string) {
-        if (string in this.Data)
+        if (string in this.Data) {
             return this.Data[string].type === 'weaponarcher';
+        }
 
         return false;
     },
 
     isWeapon(string) {
-        if (string in this.Data)
+        if (string in this.Data) {
             return (
                 this.Data[string].type === 'weapon' ||
                 this.Data[string].type === 'weaponarcher'
             );
+        }
 
         return false;
     },
 
     isArmour(string) {
-        if (string in this.Data)
+        if (string in this.Data) {
             return (
                 this.Data[string].type === 'armor' ||
                 this.Data[string].type === 'armorarcher'
             );
+        }
 
         return false;
     },
@@ -217,5 +221,5 @@ export default {
         if (id in this.Ids) return this.Ids[id].healsMana;
 
         return 0;
-    }
+    },
 };

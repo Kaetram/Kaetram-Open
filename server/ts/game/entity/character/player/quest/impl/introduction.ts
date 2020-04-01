@@ -69,7 +69,7 @@ class Introduction extends Quest {
             this.player.send(
                 new Messages.NPC(Packets.NPCOpcode.Talk, {
                     id: npc.instance,
-                    text: npc.talk(conversation, this.player)
+                    text: npc.talk(conversation, this.player),
                 })
             );
 
@@ -87,9 +87,9 @@ class Introduction extends Quest {
                 return;
             }
 
-            if (!this.verifyDoor(this.player.x, this.player.y))
+            if (!this.verifyDoor(this.player.x, this.player.y)) {
                 this.player.notify('You are not supposed to go through here.');
-            else {
+            } else {
                 this.progress('door');
                 this.player.teleport(destX, destY, false);
             }
@@ -108,8 +108,9 @@ class Introduction extends Quest {
         });
 
         this.player.onKill((character) => {
-            if (this.data.kill[this.stage] === character.id)
+            if (this.data.kill[this.stage] === character.id) {
                 this.progress('kill');
+            }
         });
     }
 
@@ -126,20 +127,21 @@ class Introduction extends Quest {
 
         switch (type) {
             case 'door':
-                if (this.stage === 7)
+                if (this.stage === 7) {
                     this.player.inventory.add({
                         id: 248,
                         count: 1,
                         ability: -1,
-                        abilityLevel: -1
+                        abilityLevel: -1,
                     });
-                else if (this.stage === 15)
+                } else if (this.stage === 15) {
                     this.player.inventory.add({
                         id: 87,
                         count: 1,
                         ability: -1,
-                        abilityLevel: -1
+                        abilityLevel: -1,
                     });
+                }
 
                 break;
         }
@@ -156,7 +158,7 @@ class Introduction extends Quest {
             new Messages.Quest(Packets.QuestOpcode.Progress, {
                 id: this.id,
                 stage: this.stage,
-                isQuest: true
+                isQuest: true,
             })
         );
 

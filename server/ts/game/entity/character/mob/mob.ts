@@ -149,7 +149,7 @@ class Mob extends Character {
 
         return {
             id: Items.stringToId(item),
-            count
+            count,
         };
     }
 
@@ -167,8 +167,9 @@ class Mob extends Character {
         if (
             Math.floor(this.level * 1.5) < player.level &&
             !this.alwaysAggressive
-        )
+        ) {
             return false;
+        }
 
         if (!player.hasAggressionTimer()) return false;
 

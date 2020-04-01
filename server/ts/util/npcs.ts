@@ -24,5 +24,5 @@ export default {
         if (id in this.Ids) return this.Ids[id].type;
 
         return null;
-    }
+    },
 };

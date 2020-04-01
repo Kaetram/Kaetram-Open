@@ -48,9 +48,9 @@ class Regions {
                 linkedRegionId
             );
 
-            if (regionId in this.linkedRegions)
+            if (regionId in this.linkedRegions) {
                 this.linkedRegions[regionId].push(linkedRegionPosition);
-            else this.linkedRegions[regionId] = [linkedRegionPosition];
+            } else this.linkedRegions[regionId] = [linkedRegionPosition];
         });
     }
 
@@ -60,7 +60,7 @@ class Regions {
     // y y x y x
     // y y x y y
 
-    getAdjacentRegions(id, offset = 1, stringFormat?) {
+    getAdjacentRegions(id, offset = 1, stringFormat?: any) {
         const position = this.regionIdToPosition(id);
         const { x } = position;
         const { y } = position;
@@ -71,26 +71,30 @@ class Regions {
             let i = -offset;
             i <= offset;
             i++ // y
-        )
+        ) {
             for (
                 let j = -1;
                 j <= 1;
                 j++ // x
-            )
-                if (i > -2 || i < 2)
+            ) {
+                if (i > -2 || i < 2) {
                     list.push(
                         stringFormat
                             ? `${x + j}-${y + i}`
                             : { x: x + j, y: y + i }
                     );
+                }
+            }
+        }
 
         _.each(this.linkedRegions[id], (regionPosition) => {
             if (
                 !_.any(list, (regionPosition) => {
                     return regionPosition.x === x && regionPosition.y === y;
                 })
-            )
+            ) {
                 list.push(regionPosition);
+            }
         });
 
         return _.reject(list, (regionPosition) => {
@@ -107,14 +111,15 @@ class Regions {
     }
 
     forEachRegion(callback) {
-        for (let x = 0; x < this.regionWidth; x++)
+        for (let x = 0; x < this.regionWidth; x++) {
             for (let y = 0; y < this.regionHeight; y++) callback(`${x}-${y}`);
+        }
     }
 
     forEachAdjacentRegion(regionId, callback, offset) {
         if (!regionId) return;
 
-        _.each(this.getAdjacentRegions(regionId, offset), (position) => {
+        _.each(this.getAdjacentRegions(regionId, offset), (position: any) => {
             callback(`${position.x}-${position.y}`);
         });
     }
@@ -130,7 +135,7 @@ class Regions {
 
         return {
             x: parseInt(position[0], 10),
-            y: parseInt(position[1], 10)
+            y: parseInt(position[1], 10),
         };
     }
 
@@ -139,7 +144,7 @@ class Regions {
 
         return {
             x: parseInt(position[0]) * this.zoneWidth,
-            y: parseInt(position[1]) * this.zoneHeight
+            y: parseInt(position[1]) * this.zoneHeight,
         };
     }
 

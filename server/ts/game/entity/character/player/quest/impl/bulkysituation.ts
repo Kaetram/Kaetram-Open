@@ -61,7 +61,7 @@ class BulkySituation extends Quest {
             this.player.send(
                 new Messages.NPC(Packets.NPCOpcode.Talk, {
                     id: npc.instance,
-                    text: npc.talk(conversation, this.player)
+                    text: npc.talk(conversation, this.player),
                 })
             );
 
@@ -95,7 +95,7 @@ class BulkySituation extends Quest {
             new Messages.Quest(Packets.QuestOpcode.Progress, {
                 id: this.id,
                 stage: this.stage,
-                isQuest: true
+                isQuest: true,
             })
         );
 

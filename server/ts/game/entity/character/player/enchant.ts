@@ -49,7 +49,7 @@ class Enchant {
         this.player.send(
             new Messages.Enchant(Packets.EnchantOpcode.Select, {
                 type,
-                index: item.index
+                index: item.index,
             })
         );
     }
@@ -72,14 +72,15 @@ class Enchant {
         this.player.send(
             new Messages.Enchant(Packets.EnchantOpcode.Remove, {
                 type,
-                index
+                index,
             })
         );
     }
 
     convert(shard) {
-        if (!Items.isShard(shard.id) || !this.player.inventory.hasSpace())
+        if (!Items.isShard(shard.id) || !this.player.inventory.hasSpace()) {
             return;
+        }
 
         const tier = Items.getShardTier(shard.id);
 
@@ -92,7 +93,7 @@ class Enchant {
                 id: shard.id + 1,
                 count: 1,
                 ability: -1,
-                abilityLevel: -1
+                abilityLevel: -1,
             });
         }
     }
@@ -213,10 +214,11 @@ class Enchant {
         this.selectedItem.abilityLevel = tier;
 
         _.each(Modules.Enchantment, (id, index) => {
-            if (id === this.selectedItem.ability)
+            if (id === this.selectedItem.ability) {
                 this.player.notify(
                     `Your item has been imbued with the ${index.toLowerCase()} ability.`
                 );
+            }
         });
     }
 

@@ -46,19 +46,20 @@ class Creator {
         this.getPlayerData(player, (data) => {
             collection.updateOne(
                 {
-                    username: player.username
+                    username: player.username,
                 },
                 { $set: data },
                 {
-                    upsert: true
+                    upsert: true,
                 },
                 (error, result) => {
                     if (error) throw error;
 
-                    if (result)
+                    if (result) {
                         console.debug(
                             `Player ${player.username} data has been saved successfully.`
                         );
+                    }
                 }
             );
         });
@@ -67,19 +68,20 @@ class Creator {
     savePlayerEquipment(collection, player) {
         collection.updateOne(
             {
-                username: player.username
+                username: player.username,
             },
             { $set: this.getPlayerEquipment(player) },
             {
-                upsert: true
+                upsert: true,
             },
             (error, result) => {
                 if (error) throw error;
 
-                if (result)
+                if (result) {
                     console.debug(
                         `Player ${player.username} equipment data has been saved successfully.`
                     );
+                }
             }
         );
     }
@@ -87,19 +89,20 @@ class Creator {
     savePlayerQuests(collection, player) {
         collection.updateOne(
             {
-                username: player.username
+                username: player.username,
             },
             { $set: player.quests.getQuests() },
             {
-                upsert: true
+                upsert: true,
             },
             (error, result) => {
                 if (error) throw error;
 
-                if (result)
+                if (result) {
                     console.debug(
                         `Player ${player.username} quest data has been saved successfully.`
                     );
+                }
             }
         );
     }
@@ -107,19 +110,20 @@ class Creator {
     savePlayerAchievements(collection, player) {
         collection.updateOne(
             {
-                username: player.username
+                username: player.username,
             },
             { $set: player.quests.getAchievements() },
             {
-                upsert: true
+                upsert: true,
             },
             (error, result) => {
                 if (error) throw error;
 
-                if (result)
+                if (result) {
                     console.debug(
                         `Player ${player.username} achievement data has been saved successfully.`
                     );
+                }
             }
         );
     }
@@ -127,19 +131,20 @@ class Creator {
     savePlayerBank(collection, player) {
         collection.updateOne(
             {
-                username: player.username
+                username: player.username,
             },
             { $set: player.bank.getArray() },
             {
-                upsert: true
+                upsert: true,
             },
             (error, result) => {
                 if (error) throw error;
 
-                if (result)
+                if (result) {
                     console.debug(
                         `Player ${player.username} bank data has been saved successfully.`
                     );
+                }
             }
         );
     }
@@ -147,24 +152,25 @@ class Creator {
     savePlayerRegions(collection, player) {
         collection.updateOne(
             {
-                username: player.username
+                username: player.username,
             },
             {
                 $set: {
                     regions: player.regionsLoaded.toString(),
-                    gameVersion: config.gver
-                }
+                    gameVersion: config.gver,
+                },
             },
             {
-                upsert: true
+                upsert: true,
             },
             (error, result) => {
                 if (error) throw error;
 
-                if (result)
+                if (result) {
                     console.debug(
                         `Player ${player.username} regions data has been saved successfully.`
                     );
+                }
             }
         );
     }
@@ -172,19 +178,20 @@ class Creator {
     savePlayerAbilities(collection, player) {
         collection.updateOne(
             {
-                username: player.username
+                username: player.username,
             },
             { $set: player.abilities.getArray() },
             {
-                upsert: true
+                upsert: true,
             },
             (error, result) => {
                 if (error) throw error;
 
-                if (result)
+                if (result) {
                     console.debug(
                         `Player ${player.username} abilities data has been saved successfully.`
                     );
+                }
             }
         );
     }
@@ -192,19 +199,20 @@ class Creator {
     savePlayerInventory(collection, player, callback) {
         collection.updateOne(
             {
-                username: player.username
+                username: player.username,
             },
             { $set: player.inventory.getArray() },
             {
-                upsert: true
+                upsert: true,
             },
             (error, result) => {
                 if (error) throw error;
 
-                if (result)
+                if (result) {
                     console.debug(
                         `Player ${player.username} inventory data has been saved successfully.`
                     );
+                }
             }
         );
     }
@@ -213,7 +221,7 @@ class Creator {
         const data = {
             name: guild.name, // Actual name
             owner: guild.owner,
-            members: guild.members
+            members: guild.members,
         };
 
         if (!data.name || !data.owner || !data.members) return;
@@ -223,19 +231,20 @@ class Creator {
 
             guilds.updateOne(
                 {
-                    name: guild.name.toLowerCase()
+                    name: guild.name.toLowerCase(),
                 },
                 { $set: data },
                 {
-                    upsert: true
+                    upsert: true,
                 },
                 (error, result) => {
                     if (error) throw error;
 
-                    if (result)
+                    if (result) {
                         console.debug(
                             `Successfully saved data for ${guild.name}'s guild.`
                         );
+                    }
                 }
             );
         });
@@ -275,7 +284,7 @@ class Creator {
                 guildName: player.guildName,
                 invisibleIds: player.formatInvisibles(),
                 userAgent: player.userAgent,
-                mapVersion: player.mapVersion
+                mapVersion: player.mapVersion,
             });
         });
     }
@@ -287,32 +296,32 @@ class Creator {
                 player.armour ? player.armour.getId() : 114,
                 player.armour ? player.armour.getCount() : -1,
                 player.armour ? player.armour.getAbility() : -1,
-                player.armour ? player.armour.getAbilityLevel() : -1
+                player.armour ? player.armour.getAbilityLevel() : -1,
             ],
             weapon: [
                 player.weapon ? player.weapon.getId() : -1,
                 player.weapon ? player.weapon.getCount() : -1,
                 player.weapon ? player.weapon.getAbility() : -1,
-                player.weapon ? player.weapon.getAbilityLevel() : -1
+                player.weapon ? player.weapon.getAbilityLevel() : -1,
             ],
             pendant: [
                 player.pendant ? player.pendant.getId() : -1,
                 player.pendant ? player.pendant.getCount() : -1,
                 player.pendant ? player.pendant.getAbility() : -1,
-                player.pendant ? player.pendant.getAbilityLevel() : -1
+                player.pendant ? player.pendant.getAbilityLevel() : -1,
             ],
             ring: [
                 player.ring ? player.ring.getId() : -1,
                 player.ring ? player.ring.getCount() : -1,
                 player.ring ? player.ring.getAbility() : -1,
-                player.ring ? player.ring.getAbilityLevel() : -1
+                player.ring ? player.ring.getAbilityLevel() : -1,
             ],
             boots: [
                 player.boots ? player.boots.getId() : -1,
                 player.boots ? player.boots.getCount() : -1,
                 player.boots ? player.boots.getAbility() : -1,
-                player.boots ? player.boots.getAbilityLevel() : -1
-            ]
+                player.boots ? player.boots.getAbilityLevel() : -1,
+            ],
         };
     }
 
@@ -351,32 +360,32 @@ class Creator {
                 player.armour ? player.armour.getId() : 114,
                 player.armour ? player.armour.getCount() : -1,
                 player.armour ? player.armour.getAbility() : -1,
-                player.armour ? player.armour.getAbilityLevel() : -1
+                player.armour ? player.armour.getAbilityLevel() : -1,
             ],
             weapon: [
                 player.weapon ? player.weapon.getId() : -1,
                 player.weapon ? player.weapon.getCount() : -1,
                 player.weapon ? player.weapon.getAbility() : -1,
-                player.weapon ? player.weapon.getAbilityLevel() : -1
+                player.weapon ? player.weapon.getAbilityLevel() : -1,
             ],
             pendant: [
                 player.pendant ? player.pendant.getId() : -1,
                 player.pendant ? player.pendant.getCount() : -1,
                 player.pendant ? player.pendant.getAbility() : -1,
-                player.pendant ? player.pendant.getAbilityLevel() : -1
+                player.pendant ? player.pendant.getAbilityLevel() : -1,
             ],
             ring: [
                 player.ring ? player.ring.getId() : -1,
                 player.ring ? player.ring.getCount() : -1,
                 player.ring ? player.ring.getAbility() : -1,
-                player.ring ? player.ring.getAbilityLevel() : -1
+                player.ring ? player.ring.getAbilityLevel() : -1,
             ],
             boots: [
                 player.boots ? player.boots.getId() : -1,
                 player.boots ? player.boots.getCount() : -1,
                 player.boots ? player.boots.getAbility() : -1,
-                player.boots ? player.boots.getAbilityLevel() : -1
-            ]
+                player.boots ? player.boots.getAbilityLevel() : -1,
+            ],
         };
     }
 }

@@ -1,7 +1,5 @@
 import * as _ from 'underscore';
-import World from '../game/world';
 import Messages from './messages';
-import Packets from './packets';
 import Player from '../game/entity/character/player/player';
 import Utils from '../util/utils';
 import config from '../../config';
@@ -97,7 +95,7 @@ class Network {
             player,
             new Messages.Handshake({
                 id: clientId,
-                development: config.devClient
+                development: config.devClient,
             })
         );
     }
@@ -130,8 +128,9 @@ class Network {
 
     pushSelectively(message, ignores) {
         _.each(this.packets, (packet: any) => {
-            if (ignores.indexOf(packet.id) < 0)
+            if (ignores.indexOf(packet.id) < 0) {
                 packet.push(message.serialize());
+            }
         });
     }
 
@@ -140,8 +139,9 @@ class Network {
      */
 
     pushToPlayer(player, message) {
-        if (player && player.instance in this.packets)
+        if (player && player.instance in this.packets) {
             this.packets[player.instance].push(message.serialize());
+        }
     }
 
     /**
@@ -167,11 +167,12 @@ class Network {
         if (!region) return;
 
         _.each(region.players, (playerInstance) => {
-            if (playerInstance !== ignoreId)
+            if (playerInstance !== ignoreId) {
                 this.pushToPlayer(
                     this.world.getEntityByInstance(playerInstance),
                     message
                 );
+            }
         });
     }
 

@@ -30,5 +30,5 @@
         "hideGenerator": true
     },
     "include": ["**/*.ts"],
-    "exclude": ["**/*.spec.ts"]
+    "exclude": ["**/*.spec.ts", "../client/**"]
 }

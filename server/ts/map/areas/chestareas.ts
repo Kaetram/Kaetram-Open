@@ -27,8 +27,9 @@ class ChestAreas {
             chestArea.cX = parseInt(m.tx);
             chestArea.cY = parseInt(m.ty);
 
-            if (m.tachievement)
+            if (m.tachievement) {
                 chestArea.achievement = parseInt(m.tachievement);
+            }
 
             this.chestAreas.push(chestArea);
 
@@ -45,8 +46,9 @@ class ChestAreas {
     }
 
     spawnChest(chestArea) {
-        if (new Date().getTime() - chestArea.lastSpawn < chestArea.spawnDelay)
+        if (new Date().getTime() - chestArea.lastSpawn < chestArea.spawnDelay) {
             return;
+        }
 
         chestArea.chest = this.world.spawnChest(
             chestArea.items,

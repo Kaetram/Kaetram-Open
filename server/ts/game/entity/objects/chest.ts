@@ -58,7 +58,7 @@ class Chest extends Entity {
 
         return {
             string: item,
-            count
+            count,
         };
     }
 

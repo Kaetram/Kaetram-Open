@@ -173,13 +173,13 @@ class World {
                 message: new Messages.Points({
                     id: entity.instance,
                     hitPoints: entity.getHitPoints(),
-                    mana: null
-                })
+                    mana: null,
+                }),
             },
             {
                 regionId: entity.region,
-                message: new Messages.Despawn(entity.instance)
-            }
+                message: new Messages.Despawn(entity.instance),
+            },
         ]);
 
         this.handleDeath(entity, true);
@@ -188,8 +188,9 @@ class World {
     handleDamage(attacker, target, damage) {
         if (!attacker || !target || isNaN(damage) || target.invincible) return;
 
-        if (target.type === 'player' && target.hitCallback)
+        if (target.type === 'player' && target.hitCallback) {
             target.hitCallback(attacker, damage);
+        }
 
         // Stop screwing with this - it's so the target retaliates.
 
@@ -201,14 +202,15 @@ class World {
             message: new Messages.Points({
                 id: target.instance,
                 hitPoints: target.getHitPoints(),
-                mana: null
-            })
+                mana: null,
+            }),
         });
 
         // If target has died...
         if (target.getHitPoints() < 1) {
-            if (target.type === 'mob')
+            if (target.type === 'mob') {
                 attacker.addExperience(Mobs.getXp(target.id));
+            }
 
             if (attacker.type === 'player') attacker.killCharacter(target);
 
@@ -221,13 +223,13 @@ class World {
                     regionId: target.region,
                     message: new Messages.Combat(Packets.CombatOpcode.Finish, {
                         attackerId: attacker.instance,
-                        targetId: target.instance
-                    })
+                        targetId: target.instance,
+                    }),
                 },
                 {
                     regionId: target.region,
-                    message: new Messages.Despawn(target.instance)
-                }
+                    message: new Messages.Despawn(target.instance),
+                },
             ]);
 
             this.handleDeath(target, false, attacker);
@@ -317,10 +319,11 @@ class World {
             position.x++;
 
             if (!info || info === 'null') {
-                if (this.debug)
+                if (this.debug) {
                     console.info(
                         `Unknown object spawned at: ${position.x} ${position.y}`
                     );
+                }
 
                 return;
             }
@@ -349,8 +352,9 @@ class World {
 
                 if (data.boss) mob.boss = data.boss;
 
-                if (Mobs.Properties[key].hiddenName)
+                if (Mobs.Properties[key].hiddenName) {
                     mob.hiddenName = Mobs.Properties[key].hiddenName;
+                }
 
                 mob.load();
 
@@ -367,8 +371,9 @@ class World {
                 this.addMob(mob);
             }
 
-            if (isNpc)
+            if (isNpc) {
                 this.addNPC(new NPC(info.id, instance, position.x, position.y));
+            }
 
             if (isItem) {
                 const item = this.createItem(
@@ -435,8 +440,9 @@ class World {
 
             this.removeChest(chest);
 
-            if (config.debug)
+            if (config.debug) {
                 console.info(`Opening chest at x: ${chest.x}, y: ${chest.y}`);
+            }
 
             const item = chest.getItem();
 
@@ -482,7 +488,7 @@ class World {
 
         item.onBlink(() => {
             this.push(Packets.PushOpcode.Broadcast, {
-                message: new Messages.Blink(item.instance)
+                message: new Messages.Blink(item.instance),
             });
         });
 
@@ -560,15 +566,17 @@ class World {
     }
 
     addEntity(entity, region?) {
-        if (entity.instance in this.entities)
+        if (entity.instance in this.entities) {
             console.info(`Entity ${entity.instance} already exists.`);
+        }
 
         this.entities[entity.instance] = entity;
 
         if (entity.type !== 'projectile') this.region.handle(entity, region);
 
-        if (entity.x > 0 && entity.y > 0)
+        if (entity.x > 0 && entity.y > 0) {
             this.getGrids().addToEntityGrid(entity, entity.x, entity.y);
+        }
 
         entity.onSetPosition(() => {
             this.getGrids().updateEntityPosition(entity);
@@ -586,9 +594,9 @@ class World {
                             Packets.CombatOpcode.Finish,
                             {
                                 attackerId: null,
-                                targetId: entity.instance
+                                targetId: entity.instance,
                             }
-                        )
+                        ),
                     },
                     {
                         message: new Messages.Movement(
@@ -598,10 +606,10 @@ class World {
                                 x: entity.x,
                                 y: entity.y,
                                 forced: false,
-                                teleport: false
+                                teleport: false,
                             }
-                        )
-                    }
+                        ),
+                    },
                 ]);
             }
         });
@@ -616,9 +624,9 @@ class World {
                         Packets.MovementOpcode.Stunned,
                         {
                             id: entity.instance,
-                            state: stun
+                            state: stun,
                         }
-                    )
+                    ),
                 });
             });
         }
@@ -673,8 +681,9 @@ class World {
     }
 
     removeEntity(entity) {
-        if (entity.instance in this.entities)
+        if (entity.instance in this.entities) {
             delete this.entities[entity.instance];
+        }
 
         if (entity.instance in this.mobs) delete this.mobs[entity.instance];
 
@@ -690,15 +699,16 @@ class World {
             if (
                 oEntity instanceof Character &&
                 oEntity.combat.hasAttacker(entity)
-            )
+            ) {
                 oEntity.combat.removeAttacker(entity);
+            }
         });
     }
 
     removeItem(item) {
         this.removeEntity(item);
         this.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Despawn(item.instance)
+            message: new Messages.Despawn(item.instance),
         });
 
         if (item.static) item.respawn();
@@ -707,7 +717,7 @@ class World {
     removePlayer(player) {
         this.push(Packets.PushOpcode.Regions, {
             regionId: player.region,
-            message: new Messages.Despawn(player.instance)
+            message: new Messages.Despawn(player.instance),
         });
 
         if (player.ready) player.save();
@@ -733,7 +743,7 @@ class World {
     removeChest(chest) {
         this.removeEntity(chest);
         this.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Despawn(chest.instance)
+            message: new Messages.Despawn(chest.instance),
         });
 
         if (chest.static) chest.respawn();
@@ -741,25 +751,31 @@ class World {
     }
 
     playerInWorld(username) {
-        for (const id in this.players)
-            if (this.players.hasOwnProperty(id))
+        for (const id in this.players) {
+            if (this.players.hasOwnProperty(id)) {
                 if (
                     this.players[id].username.toLowerCase() ===
                     username.toLowerCase()
-                )
+                ) {
                     return true;
+                }
+            }
+        }
 
         return false;
     }
 
     getPlayerByName(name) {
-        for (const id in this.players)
-            if (this.players.hasOwnProperty(id))
+        for (const id in this.players) {
+            if (this.players.hasOwnProperty(id)) {
                 if (
                     this.players[id].username.toLowerCase() ===
                     name.toLowerCase()
-                )
+                ) {
                     return this.players[id];
+                }
+            }
+        }
 
         return null;
     }

@@ -52,8 +52,9 @@ class TeamWar extends Minigame {
 
             this.buildTeams();
 
-            if (new Date().getTime() - this.lastSync > this.syncThreshold)
+            if (new Date().getTime() - this.lastSync > this.syncThreshold) {
                 this.synchronize();
+            }
 
             this.started = true;
         }, this.updateInterval);
@@ -119,8 +120,8 @@ class TeamWar extends Minigame {
             player,
             message: new Messages.Minigame(Packets.MinigameOpcode.TeamWar, {
                 opcode: Packets.MinigameOpcode.TeamWarOpcode.Countdown,
-                countdown: this.countdown
-            })
+                countdown: this.countdown,
+            }),
         });
     }
 
@@ -142,7 +143,7 @@ class TeamWar extends Minigame {
     getRedTeamSpawn() {
         return {
             x: 133 + this.getRandom(),
-            y: 471 + this.getRandom()
+            y: 471 + this.getRandom(),
         };
     }
 
@@ -150,7 +151,7 @@ class TeamWar extends Minigame {
     getBlueTeamSpawn() {
         return {
             x: 163 + this.getRandom(),
-            y: 499 + this.getRandom()
+            y: 499 + this.getRandom(),
         };
     }
 }

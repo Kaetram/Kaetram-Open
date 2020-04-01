@@ -106,12 +106,13 @@ class Map {
         this.ready = true;
 
         this.readyInterval = setInterval(() => {
-            if (!this.world.ready)
+            if (!this.world.ready) {
                 if (this.readyCallback) this.readyCallback();
                 else {
                     clearInterval(this.readyInterval);
                     this.readyInterval = null;
                 }
+            }
         }, 50);
     }
 
@@ -172,7 +173,7 @@ class Map {
                 portal: door.p ? door.p : 0,
                 level: door.l,
                 achievement: door.a,
-                rank: door.r
+                rank: door.r,
             };
         });
     }
@@ -185,7 +186,7 @@ class Map {
             this.staticEntities.push({
                 tileIndex,
                 string: entity.type,
-                roaming: entity.roaming
+                roaming: entity.roaming,
             });
         });
 
@@ -197,7 +198,7 @@ class Map {
                 string: data.string,
                 roaming: data.roaming,
                 miniboss: data.miniboss,
-                boss: data.boss
+                boss: data.boss,
             });
         });
     }
@@ -210,7 +211,7 @@ class Map {
 
         return {
             x,
-            y
+            y,
         };
     }
 
@@ -332,13 +333,16 @@ class Map {
         // )
         //     return this.tilesets[idx];
 
-        for (const id in this.tilesets)
-            if (this.tilesets.hasOwnProperty(id))
+        for (const id in this.tilesets) {
+            if (this.tilesets.hasOwnProperty(id)) {
                 if (
                     tileIndex > this.tilesets[id].firstGID - 1 &&
                     tileIndex < this.tilesets[id].lastGID + 1
-                )
+                ) {
                     return this.tilesets[id];
+                }
+            }
+        }
 
         return null;
     }

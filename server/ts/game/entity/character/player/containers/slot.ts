@@ -62,10 +62,11 @@ class Slot {
     decrement(amount) {
         this.count -= parseInt(amount);
 
-        if (this.count < 1)
+        if (this.count < 1) {
             console.error(
                 `[Slot] Item ${this.id} has a count below 1 -> count: ${this.count}`
             );
+        }
 
         this.verify();
     }
@@ -80,7 +81,7 @@ class Slot {
             string: this.string,
             count: this.count,
             ability: this.ability,
-            abilityLevel: this.abilityLevel
+            abilityLevel: this.abilityLevel,
         };
     }
 }
