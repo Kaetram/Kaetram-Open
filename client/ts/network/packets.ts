@@ -46,6 +46,10 @@ const Packets: { [key: string]: any } = {
     Overlay: 44,
     Camera: 45,
     Bubble: 46,
+<<<<<<< HEAD:client/ts/network/packets.ts
+=======
+    Client: 47
+>>>>>>> master:client/js/network/packets.js
 };
 
 Packets.IntroOpcode = {
