@@ -1131,6 +1131,26 @@ class Player extends Character {
         self.send(new Messages.Notification(Packets.NotificationOpcode.Text, message, colour));
     }
 
+    /**
+     * Sends a chat packet that can be used to
+     * show special messages to the player.
+     */
+
+    chat(source, text, colour, isGlobal, withBubble) {
+        let self = this;
+
+        if (!source || !text)
+            return;
+
+        self.send(new Messages.Chat({
+            name: source,
+            text: text,
+            colour: colour,
+            isGlobal: isGlobal,
+            withBubble: withBubble
+        }))
+    }
+
     stopMovement(force) {
         /**
          * Forcefully stopping the player will simply halt

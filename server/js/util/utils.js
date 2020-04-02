@@ -85,23 +85,31 @@ Utils.formatUsername = (username) => {
  * if necessary in the nearby future.
  */
 Utils.parseMessage = (message) => {
-    let messageBlocks = message.split('@');
 
-    if (messageBlocks.length % 2 === 0) {
-        log.warning('Improper message block format!');
-        log.warning('Ensure format follows @COLOUR@ format.');
-        return messageBlocks.join(' ');
+    try {
+
+        let messageBlocks = message.split('@');
+
+        if (messageBlocks.length % 2 === 0) {
+            log.warning('Improper message block format!');
+            log.warning('Ensure format follows @COLOUR@ format.');
+            return messageBlocks.join(' ');
+        }
+
+        _.each(messageBlocks, (block, index) => {
+            if (index % 2 !== 0) // we hit a colour code.
+                messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
+        });
+
+        let codeCount = (messageBlocks.length / 2) - 1;
+
+        for (let i = 0; i < codeCount; i++)
+            messageBlocks.push('</span>');
+
+        return messageBlocks.join('');
+
+    } catch(e) {
+        return '';
     }
 
-    _.each(messageBlocks, (block, index) => {
-        if (index % 2 !== 0) // we hit a colour code.
-            messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
-    });
-
-    let codeCount = (messageBlocks.length / 2) - 1;
-
-    for (let i = 0; i < codeCount; i++)
-        messageBlocks.push('</span>');
-
-    return messageBlocks.join('');
 };
