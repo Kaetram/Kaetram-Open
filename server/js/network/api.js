@@ -195,12 +195,12 @@ class API {
 
     sendPrivateMessage(source, target, text) {
         let self = this,
-            url = self.getUrl('privatemessage'),
+            url = self.getUrl('privateMessage'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
-                    source: source.username,
-                    target: target,
+                    source: Utils.formatUsername(source.username),
+                    target: Utils.formatUsername(target),
                     text: text
                 }
             };
@@ -210,6 +210,16 @@ class API {
             try {
 
                 let data = JSON.parse(body);
+
+                if (data.error) {
+                    source.notify(`Player @aquamarine@${target}@white@ is not online.`);
+                    return;
+                }
+
+                // No error has occurred.
+
+                // TODO - Add chat colours/format to config.
+                source.chat(`[To ${target}]`, text, 'aquamarine')
 
             } catch(e) {
                 log.error('Could not send privateMessage to hub.');
