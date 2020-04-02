@@ -1077,6 +1077,11 @@ class Player extends Character {
     sendMessage(playerName, message) {
         let self = this;
 
+        if (config.hubEnabled) {
+            self.world.api.sendPrivateMessage(self, playerName, message);
+            return;
+        }
+
         if (!self.world.isOnline(playerName)) {
             self.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
             return;
