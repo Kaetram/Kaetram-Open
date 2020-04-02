@@ -238,8 +238,6 @@ class Incoming {
             self.player.updateRegion(true);
         }
 
-        log.debug(self.player.new);
-
         if (self.player.new) {
             self.player.questsLoaded = true;
             self.player.achievementsLoaded = true;
@@ -420,8 +418,7 @@ class Incoming {
 
                 if (!self.player.moving) {
 
-                    if (config.debug)
-                        log.warning(`Did not receive movement start packet for ${self.player.username}.`);
+                    log.debug(`Did not receive movement start packet for ${self.player.username}.`);
 
                     self.player.incrementCheatScore(1);
                 }
@@ -684,11 +681,13 @@ class Incoming {
                 return;
             }
 
-            if (config.debug)
-                log.info(`${self.player.username} - ${text}`);
+            log.debug(`${self.player.username} - ${text}`);
 
             if (config.discordEnabled)
                 self.world.discord.sendMessage(self.player, text);
+
+            if (config.hubEnabled)
+                self.world.api.sendChat(Utils.formatUsername(self.player.username), text);
 
             self.world.push(Packets.PushOpcode.Regions, {
                 regionId: self.player.region,

@@ -70,8 +70,8 @@ class API {
 	handlePlayer(request, response) {
 		let self = this;
 
-        if (!request.body.token || request.body.token !== config.accessToken) {
-            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `token` specified for /player POST request.');
+        if (!self.verifyToken(self.body.accessToken)) {
+            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /player POST request.');
             return;
         }
 
@@ -95,8 +95,8 @@ class API {
     handleChat(request, response) {
         let self = this;
 
-        if (!request.body.token || request.body.token !== config.accessToken) {
-            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `token` specified for /chat POST request.');
+        if (!self.verifyToken(request.body.accessToken)) {
+            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /chat POST request.');
             return;
         }
 
@@ -112,8 +112,8 @@ class API {
 	handlePlayers(request, response) {
 		let self = this;
 
-		if (!request.query.token || request.query.token !== config.accessToken) {
-			self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `token` specified for /players GET request.');
+		if (!self.verifyToken(request.query.accessToken)) {
+			self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /players GET request.');
 			return;
 		}
 
@@ -128,7 +128,7 @@ class API {
 
     pingHub() {
         let self = this,
-            url = `http://${config.hubHost}:${config.hubPort}/ping`,
+            url = self.getUrl('ping'),
             data = {
                 form: {
                     serverId: config.serverId,
@@ -157,6 +157,34 @@ class API {
         });
     }
 
+    sendChat(source, text) {
+        let self = this,
+            url = self.getUrl('chat'),
+            data = {
+                form: {
+                    hubAccessToken: config.hubAccessToken,
+                    serverId: config.serverId,
+                    source: source,
+                    text: text
+                }
+            };
+
+        request.post(url, data, (error, response, body) => {
+
+            try {
+                let data = JSON.parse(body);
+
+                //TODO - Do something with this?
+
+            } catch (e) { log.error('Could not send message to hub.'); }
+
+        });
+    }
+
+    verifyToken(token) {
+        return token === config.accessToken;
+    }
+
     getPlayerData(player) {
         let self = this;
 
@@ -176,6 +204,10 @@ class API {
             lastLogin: player.lastLogin,
             mapVersion: player.mapVersion
         };
+    }
+
+    getUrl(path) {
+        return `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
     returnError(response, error, message) {
