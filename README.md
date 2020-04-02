@@ -1,4 +1,4 @@
-# Kaetram
+# Kaetram (Next)
 
 [![Version](https://img.shields.io/github/package-json/v/Veradictus/Kaetram-Open?style=flat-square)](https://github.com/Veradictus/Kaetram-Open)
 [![MPL-2.0 License](https://img.shields.io/github/license/Veradictus/Kaetram-Open?style=flat-square)](https://github.com/Veradictus/Kaetram-Open/blob/master/LICENSE)
@@ -9,6 +9,8 @@
 [![Fork This Repo](https://img.shields.io/github/forks/Veradictus/Kaetram-Open?style=social&icon=github)](https://github.com/Veradictus/Kaetram-Open/fork)
 [![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat-square)](https://discord.gg/MmbGAaw)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social&icon=reddit)](https://www.reddit.com/r/kaetram/)
+
+This repo is a fork of <https://github.com/Veradictus/Kaetram-Open> with the goal to add *modern* tools to enhance development in production (hence the `next`).
 
 Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game &ndash; BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.
 
