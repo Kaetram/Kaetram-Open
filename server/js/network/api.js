@@ -70,24 +70,24 @@ class API {
 	handlePlayer(request, response) {
 		let self = this;
 
-        if (!self.verifyToken(self.body.accessToken)) {
+        if (!self.verifyToken(request.body.accessToken)) {
             self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /player POST request.');
             return;
         }
 
-        let playerName = request.body.playerName;
+        let username = request.body.username;
 
-        if (!playerName) {
-            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'No `playerName` variable received.');
+        if (!username) {
+            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'No `username` variable received.');
             return;
         }
 
-        if (!self.world.isOnline(playerName)) {
-            self.returnError(response, APIConstants.PLAYER_NOT_ONLINE, `Player ${playerName} is not online.`);
+        if (!self.world.isOnline(username)) {
+            self.returnError(response, APIConstants.PLAYER_NOT_ONLINE, `Player ${username} is not online.`);
             return;
         }
 
-        let player = self.world.getPlayerByName(playerName);
+        let player = self.world.getPlayerByName(username);
 
         response.json(self.getPlayerData(player));
 	}
@@ -100,11 +100,23 @@ class API {
             return;
         }
 
-        let message = Utils.parseMessage(request.body.message),
+        let text = Utils.parseMessage(request.body.text),
             source = Utils.parseMessage(request.body.source),
-            colour = request.body.colour;
+            colour = request.body.colour,
+            username = request.body.username;
 
-        self.world.globalMessage(source, message, colour);
+        if (username) {
+            let player = self.world.getPlayerByName(username);
+
+            if (player)
+                player.chat(source, text, colour);
+
+            response.json({ status: 'success' });
+
+            return;
+        }
+
+        self.world.globalMessage(source, text, colour);
 
         response.json({ status: 'success' });
     }
@@ -177,6 +189,31 @@ class API {
                 //TODO - Do something with this?
 
             } catch (e) { log.error('Could not send message to hub.'); }
+
+        });
+    }
+
+    sendPrivateMessage(source, target, text) {
+        let self = this,
+            url = self.getUrl('privatemessage'),
+            data = {
+                form: {
+                    hubAccessToken: config.hubAccessToken,
+                    source: source.username,
+                    target: target,
+                    text: text
+                }
+            };
+
+        request.post(url, data, (error, response, body) => {
+
+            try {
+
+                let data = JSON.parse(body);
+
+            } catch(e) {
+                log.error('Could not send privateMessage to hub.');
+            }
 
         });
     }
