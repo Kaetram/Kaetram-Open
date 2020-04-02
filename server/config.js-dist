@@ -18,6 +18,7 @@ Config.hubEnabled = false;
 Config.hubHost = '127.0.0.1';
 Config.hubPort = '9526';
 Config.hubPing = 30000; // Ping every 30 seconds
+Config.hubAccessToken = ''; // Make sure it matches with the hub.
 
 // Database Configuration
 Config.database = 'mongodb'; // Used for multiple database support
