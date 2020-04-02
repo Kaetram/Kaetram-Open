@@ -21,9 +21,9 @@
     "doc": "cd server && typedoc --out ../docs ../server",
     "map": "cd tools/map && ts-node exportmap data/map-refactor.json",
     "fix": "gts fix",
-    "prepare": "npm.cmd run build",
-    "pretest": "npm.cmd run build",
-    "posttest": "npm.cmd run lint"
+    "prepare": "npm run build",
+    "pretest": "npm run build",
+    "posttest": "npm run lint"
   },
   "keywords": [
     "2d",
