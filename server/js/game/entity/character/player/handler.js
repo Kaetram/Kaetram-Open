@@ -31,7 +31,7 @@ class Handler {
 
         self.map = null;
         self.world = null;
-        self.player = null; 
+        self.player = null;
     }
 
     load() {

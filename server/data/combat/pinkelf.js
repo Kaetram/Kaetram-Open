@@ -2,7 +2,7 @@ let Combat = require('../../js/game/entity/character/combat/combat'),
     Hit = require('../../js/game/entity/character/combat/hit'),
     Modules = require('../../js/util/modules');
 
-class DeathKnight extends Combat {
+class PinkElf extends Combat {
 
     /**
      * This mob behaves as both as a mini-boss, and a normal entity.
@@ -23,14 +23,14 @@ class DeathKnight extends Combat {
         self.character.onLoad(() => {
 
             if (self.character.miniboss)
-                self.updateData(28, 230, 6, 20);
+                self.updateData(47, 800, 6, 12);
 
         });
 
         self.character.onDeath(() => {
 
             self.forEachAttacker((attacker) => {
-                attacker.finishAchievement(9);
+                attacker.finishAchievement(10);
             });
 
         });
@@ -57,4 +57,4 @@ class DeathKnight extends Combat {
 
 }
 
-module.exports = DeathKnight;
+module.exports = PinkElf;
