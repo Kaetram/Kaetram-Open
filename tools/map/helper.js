@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-let Log = require('log'),
-    log = new Log(Log.DEBUG),
+let Log = require('../../server/js/util/log'),
     worldClient = require('../../server/data/map/world_client'),
     worldServer = require('../../server/data/map/world_server');
 
@@ -13,8 +12,11 @@ class Helper {
         self.width = worldServer.width;
         self.height = worldServer.height;
 
-        self.getTileData(790, 36);
-        self.getTileData(790, 42);
+        self.getTileData(9, 300);
+
+        self.getTileData(10, 300);
+
+        self.getTileData(11, 300);
 
         //for (let i = 1; i < 5; i++)
         //    for (let j = 1; j < 5; j++)
