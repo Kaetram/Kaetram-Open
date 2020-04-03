@@ -235,5 +235,23 @@
 
     "x": 790,
     "y": 36
+  },
+
+  "11": {
+    "id": 11,
+    "requirement": "achievement",
+    "achievementId": 10,
+
+    "closedIds": {
+      "300009": { "data": [2359,3429], "isColliding": true },
+      "300010": { "data": [2492,3426], "isColliding": true },
+      "300011": { "data": [2422,6492,3429], "isColliding": true }
+    },
+
+    "openIds": {
+      "300009": { "data": [2359,4225], "isColliding": true },
+      "300010": { "data": [2492,4098], "isColliding": false },
+      "300011": { "data": [2422,6492,4099], "isColliding": true }
+    }
   }
 }
