@@ -18,56 +18,84 @@ define(['./packets', './messages'], function(Packets, Messages) {
             self.messages = new Messages(self.game.app);
         },
 
+        /**
+         * Asks the hub for a server to connect to.
+         * The connection assumes it is a hub, if it's not,
+         * we default to normal server connection.
+         */
+
+        getServer: function(callback) {
+            var self = this,
+                url = 'http://' + self.config.ip + ':' + self.config.port + '/server';
+
+            $.get(url).then(function(data) {
+                callback(data);
+            }).catch(function() {
+                callback('error');
+            });
+
+        },
+
         connect: function() {
-            var self = this, url;
+            var self = this;
 
-            if (self.config.ssl)
-                url = 'wss://' + self.config.ip;
-            else
-                url = 'ws://' + self.config.ip + ':' + self.config.port;
+            self.getServer(function(result) {
+                var url;
 
-            self.connection = null;
+                if (result === 'error') {
+                    if (self.config.ssl)
+                        url = 'wss://' + self.config.ip;
+                    else
+                        url = 'ws://' + self.config.ip + ':' + self.config.port;
+                } else {
+                    if (self.config.ssl)
+                        url = 'wss://' + result.host;
+                    else
+                        url = 'ws://' + result.host + ':' + result.port;
+                }
 
-            self.connection = io(url, {
-                forceNew: true,
-                reconnection: false
-            });
+                self.connection = io(url, {
+                    forceNew: true,
+                    reconnection: false
+                });
 
-            self.connection.on('connect_error', function() {
-                log.info('Failed to connect to: ' + self.config.ip);
+                self.connection.on('connect_error', function() {
+                    log.info('Failed to connect to: ' + self.config.ip);
 
-                self.listening = false;
+                    self.listening = false;
 
-                self.game.app.toggleLogin(false);
+                    self.game.app.toggleLogin(false);
 
-                if (self.game.isDebug())
-                    self.game.app.sendError(null, 'Couldn\'t connect to ' + self.config.ip + ':' + self.config.port);
-                else
-                    self.game.app.sendError(null, 'Could not connect to the game server.');
-            });
+                    if (self.game.isDebug())
+                        self.game.app.sendError(null, 'Couldn\'t connect to ' + self.config.ip + ':' + self.config.port);
+                    else
+                        self.game.app.sendError(null, 'Could not connect to the game server.');
+                });
 
-            self.connection.on('connect', function() {
-                self.listening = true;
+                self.connection.on('connect', function() {
+                    self.listening = true;
 
-		        log.info('Connection established...');
+    		        log.info('Connection established...');
 
-                self.game.app.updateLoader('Preparing Handshake');
+                    self.game.app.updateLoader('Preparing Handshake');
 
-                self.connection.emit('client', {
-                    gVer: self.config.version,
-                    cType: 'HTML5'
+                    self.connection.emit('client', {
+                        gVer: self.config.version,
+                        cType: 'HTML5'
+                    });
+                });
+
+                self.connection.on('message', function(message) {
+                    var actualMessage = message.message ? message.message : message;
+
+                    self.receive(actualMessage);
+                });
+
+                self.connection.on('disconnect', function() {
+                    self.game.handleDisconnection();
                 });
             });
 
-            self.connection.on('message', function(message) {
-                var actualMessage = message.message ? message.message : message;
-
-                self.receive(actualMessage);
-            });
-
-            self.connection.on('disconnect', function() {
-                self.game.handleDisconnection();
-            });
         },
 
         receive: function(message) {

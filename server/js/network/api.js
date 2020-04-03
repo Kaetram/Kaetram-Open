@@ -48,6 +48,7 @@ class API {
         router.get('/', (request, response) => {
             response.json({
                 name: config.name,
+                port: config.port, // Sends the server port.
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
                 playerCount: self.world.getPopulation()
