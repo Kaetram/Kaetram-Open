@@ -25,15 +25,15 @@ class MongoDB {
 
     getDatabase(callback, type) {
         let self = this,
-            URL= `mongodb://${self.host}:${self.port}/${self.database}`;
+            url = `mongodb://${self.host}:${self.port}/${self.database}`;
 
             if (config.mongoAuth)
-                URL = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
+                url = `mongodb://${self.user}:${self.password}@${self.host}:${self.port}/${self.database}`;
 
-            let client = new MongoClient(URL, {
-              useUnifiedTopology: true,
-              useNewUrlParser: true,
-              wtimeout: 5
+            let client = new MongoClient(url, {
+                useUnifiedTopology: true,
+                useNewUrlParser: true,
+                wtimeout: 5
             });
 
         if (self.connection) {
@@ -223,18 +223,6 @@ class MongoDB {
                 });
             });
         });
-    }
-
-    /* Primarily for debugging or should something go wrong. */
-
-    deleteGuilds() {
-        let self = this;
-
-        self.loader.getGuilds((guilds, collection) => {
-
-            _.each(guilds, (guild) => { collection.deleteOne({ name: guild.name }) })
-
-        }, true);
     }
 
 }
