@@ -95,12 +95,6 @@ class Main {
 
                     break;
 
-                case 'deleteGuilds':
-
-                    self.world.database.deleteGuilds();
-
-                    break;
-
                 case 'kill':
 
                     let username = blocks.join(' ');

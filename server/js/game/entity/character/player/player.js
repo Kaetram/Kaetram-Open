@@ -53,7 +53,6 @@ class Player extends Character {
 
         self.team = null;
         self.userAgent = null;
-        self.guild = null;
 		self.minigame = null;
 
         self.disconnectTimeout = null;

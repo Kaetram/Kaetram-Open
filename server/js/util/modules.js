@@ -97,15 +97,6 @@ let Modules = {
         Chinese: 6
     },
 
-    Guild: {
-        Ranks: {
-            Guest: 0,
-            Soldier: 1,
-            Corporal: 2,
-            General: 3
-        }
-    },
-
     Warps: {
         0: ['Mudwich', 65, 103, true, 1], //Starting Village
         1: ['Southorn', 41, 260, true, 25], //Ice World
