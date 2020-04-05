@@ -21,7 +21,6 @@ let _ = require('underscore'),
     Modules = require('../util/modules'),
     Shops = require('../controllers/shops'),
     Region = require('../region/region'),
-    Guilds = require('../controllers/guilds'),
     GlobalObjects = require('../controllers/globalobjects'),
     Network = require('../network/network'),
     API = require('../network/api');
@@ -98,7 +97,6 @@ class World {
         self.region = new Region(self);
         self.discord = new Discord(self);
         self.network = new Network(self);
-        self.guilds = new Guilds(self);
         self.globalObjects = new GlobalObjects(self);
 
         self.ready = true;
