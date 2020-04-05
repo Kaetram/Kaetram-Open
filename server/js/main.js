@@ -1,11 +1,8 @@
-let fs = require("fs"),
-    World = require('./game/world'),
+let World = require('./game/world'),
     WebSocket = require('./network/websocket'),
     Log = require('./util/log'),
     Parser = require('./util/parser'),
-    Database = require('./database/database'),
-    _ = require('underscore'),
-    Request = require('request');
+    Database = require('./database/database');
 
 config = require('../config')
 log = new Log();
