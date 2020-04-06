@@ -358,6 +358,7 @@ class Player extends Character {
 
         if (oldLevel !== self.level) {
             self.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(self.level));
+            self.healHitPoints(self.hitPoints.maxPoints);
 
             self.updateRegion();
         }
