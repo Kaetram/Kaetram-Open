@@ -4,7 +4,8 @@ config = { debugLevel: 'all', debug: true };
 
 let Log = require('../../server/js/util/log'),
     processMap = require('./processmap'),
-    fs = require("fs");
+    fs = require("fs")
+    _ = require('underscore');
 
 log = new Log();
 
@@ -42,6 +43,8 @@ class ExportMap {
         self.parse(data, worldServerJSON, 'server');
         self.parse(data, clientMapJSON, 'info', worldClient);
         self.parse(data, clientMapJS, 'info', worldClient, true);
+
+        self.copyTilesets();
     }
 
     parse(data, destination, mode, worldClient, isJS) {
@@ -66,11 +69,35 @@ class ExportMap {
         return map;
     }
 
+    copyTilesets() {
+        let self = this,
+            source = './data',
+            destination = '../../client/img/tilesets'
+
+        fs.readdir(source, (error, files) => {
+            if (error) {
+                log.error('Could not copy the tilesets...');
+                return;
+            }
+
+            _.each(files, (file) => {
+                if (file.startsWith('tilesheet-'))
+                    fs.copyFileSync(`${source}/${file}`, `${destination}/${file}`);
+            });
+
+            log.notice(`Finished copying tilesets to ${destination}/`);
+        });
+    }
+
 }
 
 String.prototype.format = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
+
+String.prototype.startsWith = function(str) {
+    return str.length > 0 && this.substring( 0, str.length ) === str;
+};
 
 module.exports = ExportMap;
 
