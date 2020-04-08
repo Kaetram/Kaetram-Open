@@ -7,7 +7,7 @@
   "VillageGirl": {
     "name": "Azaria",
     "id": 1,
-    "text": ["It's okay, I understand.", "Words aren't necessary."]
+    "text": ["Who are you?", "I feel as if we've met before, but I cannot remember."]
   },
 
   "Villager": {
