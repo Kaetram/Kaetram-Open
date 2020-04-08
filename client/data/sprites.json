@@ -9519,7 +9519,7 @@
     "offsetY": 0
   },
   {
-    "id": "item-bluesword",
+    "id": "item-icesword",
     "width": 16,
     "height": 16,
     "animations": {
@@ -14482,7 +14482,7 @@
     "offsetY": -20
   },
   {
-    "id": "bluesword",
+    "id": "icesword",
     "width": 48,
     "height": 48,
     "animations": {
