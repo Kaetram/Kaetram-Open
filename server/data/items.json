@@ -35,11 +35,25 @@
     "name":"Fire Sword"
   },
 
+  "IceSword": {
+    "id": 261,
+    "type":"weapon",
+    "attack":6,
+    "name":"Ice Sword"
+  },
+
   "GoldenSword": {
     "id":6,
     "type":"weapon",
     "attack":7,
     "name":"Golden Sword"
+  },
+
+  "PlatinumSword": {
+    "id": 262,
+    "type":"weapon",
+    "attack": 8,
+    "name":"Platinum Sword"
   },
 
   "SideSword": {
@@ -842,6 +856,13 @@
     "name":"Golden Armour"
   },
 
+  "PlatinumArmor": {
+    "id": 263,
+    "defense": 7,
+    "type":"armor",
+    "name":"Platinum Armour"
+  },
+
   "GreenArmor": {
     "id":120,
     "defense":7,
@@ -1332,7 +1353,7 @@
     "name":"Flask [+100 HP]",
     "storeCount": 10,
     "price": 150,
-    "stackable": 1,
+    "stackable": true,
     "edible": 1,
     "maxStackSize": 20,
     "plugin":"healthFlask",
@@ -1345,7 +1366,7 @@
     "name": "Mana Flask [+35 MP]",
     "storeCount": 10,
     "price": 200,
-    "stackable": 1,
+    "stackable": true,
     "edible": 1,
     "maxStackSize": 20,
     "plugin":"healthFlask",
@@ -1359,7 +1380,7 @@
     "name":"Burger [+200 HP]",
     "storeCount": 10,
     "price": 350,
-    "stackable": 1,
+    "stackable": true,
     "edible": 1,
     "maxStackSize": 5,
     "plugin":"healthFlask",
@@ -1373,7 +1394,7 @@
     "name":"Big Flask [+350 HP]",
     "storeCount": 10,
     "price": 600,
-    "stackable": 1,
+    "stackable": true,
     "edible": 1,
     "maxStackSize": 7,
     "plugin":"healthFlask",
@@ -1390,7 +1411,7 @@
     "id":195,
     "type":"object",
     "name":"Fire Potion",
-    "stackable": 1
+    "stackable": true
   },
 
   "Cake": {
@@ -1415,7 +1436,7 @@
     "id":199,
     "type":"object",
     "name":"Snow Potion",
-    "stackable": 1
+    "stackable": true
   },
 
   "Royalazalea": {
@@ -1434,7 +1455,7 @@
     "id":202,
     "type":"object",
     "name":"Gold",
-    "stackable": 1
+    "stackable": true
   },
 
   "MountSeaDragon": {
@@ -1785,35 +1806,35 @@
     "id": 253,
     "type": "object",
     "name": "Shard - Tier 1",
-    "stackable": 1
+    "stackable": true
   },
 
   "Shardt2": {
     "id": 254,
     "type": "object",
     "name": "Shard - Tier 2",
-    "stackable": 1
+    "stackable": true
   },
 
   "Shardt3": {
     "id": 255,
     "type": "object",
     "name": "Shard - Tier 3",
-    "stackable": 1
+    "stackable": true
   },
 
   "Shardt4": {
     "id": 256,
     "type": "object",
     "name": "Shard - Tier 4",
-    "stackable": 1
+    "stackable": true
   },
 
   "Shardt5": {
     "id": 257,
     "type": "object",
     "name": "Shard - Tier 5",
-    "stackable": 1
+    "stackable": true
   },
 
   "Ghost": {
