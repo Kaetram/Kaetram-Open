@@ -146,7 +146,8 @@ class API {
                 form: {
                     serverId: config.serverId,
                     accessToken: config.accessToken,
-                    port: config.apiPort
+                    port: config.apiPort,
+                    remoteServerHost: config.remoteServerHost
                 }
             };
 
