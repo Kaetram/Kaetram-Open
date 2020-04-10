@@ -20,6 +20,9 @@ Config.hubPort = '9526';
 Config.hubPing = 30000; // Ping every 30 seconds
 Config.hubAccessToken = ''; // Make sure it matches with the hub.
 
+Config.remoteServerHost = null; // The host sent to the hub, if null, hub will try to find the IP.
+// Not recommended to have as null for production environments.
+
 // Database Configuration
 Config.database = 'mongodb'; // Used for multiple database support
 Config.offlineMode = false; // Skip database checking upon login
