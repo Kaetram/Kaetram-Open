@@ -28,6 +28,9 @@ define(['./packets', './messages'], function(Packets, Messages) {
             var self = this,
                 url = 'http://' + self.config.ip + ':' + self.config.port + '/server';
 
+            if (self.config.ssl)
+                url = 'https://' + self.config.ip + '/server';
+
             $.get(url).then(function(data) {
                 callback(data);
             }).catch(function() {
