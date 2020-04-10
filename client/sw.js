@@ -211,7 +211,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "data/config.json",
-    "revision": "f4c47ce2ac421ace36ea07a6142a512a"
+    "revision": "60f95b2130583259a63a115044b8cead"
   },
   {
     "url": "data/config.json-dist",
@@ -219,15 +219,15 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "data/maps/map.js",
-    "revision": "a2842237d2d4ced3098a94a9b73f94a9"
+    "revision": "080f7c868a51381b06190b6e0f6dbf5a"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "cc36f1f3371a2200a64114677d3de477"
+    "revision": "251f90ea29d80c3900ff17e34b7a4348"
   },
   {
     "url": "data/sprites.json",
-    "revision": "43e53341648653d3201501bc6cd516ba"
+    "revision": "cd85d36559887a5b8e42eccefdef943a"
   },
   {
     "url": "favicon.ico",
@@ -812,6 +812,10 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/2/item-icerose.png",
     "revision": "a9b15611a957ef67f2f05bc81bb92ba9"
+  },
+  {
+    "url": "img/2/item-icesword.png",
+    "revision": "0ec3bb4c5ec0087febc27d13355c8d6f"
   },
   {
     "url": "img/2/item-ironbow.png",
@@ -1874,6 +1878,10 @@ workbox.precaching.precacheAndRoute([
     "revision": "f74a281ee31d6f6064f3a2ab525f0e9f"
   },
   {
+    "url": "img/3/item-icesword.png",
+    "revision": "9614d313567dbaaa283154e39129ee52"
+  },
+  {
     "url": "img/3/item-ironbow.png",
     "revision": "3c73b3cb83d84b652eb1e3975cfda4b1"
   },
@@ -2598,10 +2606,6 @@ workbox.precaching.precacheAndRoute([
     "revision": "20152fb869cb787c7f3bcfe23aef0ad6"
   },
   {
-    "url": "img/sprites/achievements.png",
-    "revision": "51f8eb3f00345bcad614c631dae1c4b0"
-  },
-  {
     "url": "img/sprites/adherer.png",
     "revision": "47d292a9b3a33f46f3ca11f12436f83f"
   },
@@ -2652,14 +2656,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/bamboospear.png",
     "revision": "c1e033511e0a5b97b94fe49376f7dbd4"
-  },
-  {
-    "url": "img/sprites/barsheet.png",
-    "revision": "18c89eaac769103c2e31122782229f2d"
-  },
-  {
-    "url": "img/sprites/basebarcontainer.png",
-    "revision": "eac5e2fb763ce02cf398f4e2ed23d8fa"
   },
   {
     "url": "img/sprites/bastardsword.png",
@@ -2716,10 +2712,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/bloodbow.png",
     "revision": "d88afaa12a88b688487c9b6d1c6892c7"
-  },
-  {
-    "url": "img/sprites/bloodsucking.png",
-    "revision": "fa73a064160f279f0a725ae1a416510c"
   },
   {
     "url": "img/sprites/bluearmor.png",
@@ -2800,10 +2792,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/burgerarmor.png",
     "revision": "e32ada7f74dde2fa5ca8c16f45e1ab88"
-  },
-  {
-    "url": "img/sprites/burningstrike.png",
-    "revision": "7dddd500b799dfaa9bd61ae17cc23578"
   },
   {
     "url": "img/sprites/butcherknife.png",
@@ -2896,10 +2884,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/criticaleffect.png",
     "revision": "95cb2b68277a65b0bba7656a918eb92c"
-  },
-  {
-    "url": "img/sprites/criticalstrike.png",
-    "revision": "33247be31fec35f055d0359986a26b8a"
   },
   {
     "url": "img/sprites/crystalarcherarmor.png",
@@ -3030,16 +3014,8 @@ workbox.precaching.precacheAndRoute([
     "revision": "e5f67fc7fde8ce43dc483640ae7139f4"
   },
   {
-    "url": "img/sprites/evasion.png",
-    "revision": "f318e9ca9c6878c552f83c2d4707b7a1"
-  },
-  {
     "url": "img/sprites/evilarmor.png",
     "revision": "a0760fe981d3a808f4d750d392d38c8a"
-  },
-  {
-    "url": "img/sprites/expbar.png",
-    "revision": "9a8b549657d8e507b7eafdfe6c53f5bb"
   },
   {
     "url": "img/sprites/explosion-boulder.png",
@@ -3112,10 +3088,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/fisherman.png",
     "revision": "9f5ae51e497d4967581694b05f17bfd6"
-  },
-  {
-    "url": "img/sprites/flaredance.png",
-    "revision": "4a01bd5863ef6b916680febd3c0bed51"
   },
   {
     "url": "img/sprites/flaredanceeffect.png",
@@ -3302,10 +3274,6 @@ workbox.precaching.precacheAndRoute([
     "revision": "4fb5e7d044a588e1cae53ceab4303c38"
   },
   {
-    "url": "img/sprites/heal.png",
-    "revision": "7b13c2b76990d25754e9eca9303d72e6"
-  },
-  {
     "url": "img/sprites/healactiveicon.png",
     "revision": "ae7657278ae78c52408d9a315f4f877c"
   },
@@ -3316,10 +3284,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/hellspider.png",
     "revision": "c1441a5d4c0b0e85675ee37de5322c85"
-  },
-  {
-    "url": "img/sprites/helpbutton.png",
-    "revision": "2d9cbeda34b4584ccd3fababaa4dd7fc"
   },
   {
     "url": "img/sprites/hermitcrab.png",
@@ -3336,10 +3300,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/hongcheolarmor.png",
     "revision": "096f5514c39fcb501433dfc2ce5b3132"
-  },
-  {
-    "url": "img/sprites/hpbar.png",
-    "revision": "8afff57c0d335c5d93aee96670d7aa88"
   },
   {
     "url": "img/sprites/huniarmor.png",
@@ -3382,16 +3342,16 @@ workbox.precaching.precacheAndRoute([
     "revision": "5f8837987784612dd0f5820956201606"
   },
   {
+    "url": "img/sprites/icesword.png",
+    "revision": "f8bb30857bda718f221c6e8e9091e93e"
+  },
+  {
     "url": "img/sprites/icevulture.png",
     "revision": "39532d58d89fd61a6581ee8a1d9a73ad"
   },
   {
     "url": "img/sprites/infectedguard.png",
     "revision": "ae6c75c0c18082a962729498561974e7"
-  },
-  {
-    "url": "img/sprites/inventory.png",
-    "revision": "e7bdddc0a689e39f37d68edbd7593831"
   },
   {
     "url": "img/sprites/ironbow.png",
@@ -3894,6 +3854,10 @@ workbox.precaching.precacheAndRoute([
     "revision": "c48b7c9897ae5af004acf68afde38e2a"
   },
   {
+    "url": "img/sprites/item-icesword.png",
+    "revision": "9614d313567dbaaa283154e39129ee52"
+  },
+  {
     "url": "img/sprites/item-ironbow.png",
     "revision": "05390c96037ec1c6e3a2eaf18daa8fab"
   },
@@ -4052,6 +4016,14 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/item-platearmor.png",
     "revision": "e9db5e1d3078d3edc62e8a04d7ff2a9e"
+  },
+  {
+    "url": "img/sprites/item-platinumarmor.png",
+    "revision": "2cb8cc3f531a6c882788ed333af45833"
+  },
+  {
+    "url": "img/sprites/item-platinumsword.png",
+    "revision": "3a200d37bbbadb013a1848e22b0f1bbd"
   },
   {
     "url": "img/sprites/item-plunger.png",
@@ -4454,10 +4426,6 @@ workbox.precaching.precacheAndRoute([
     "revision": "1bf263242b1723f8cfdf327996620c0b"
   },
   {
-    "url": "img/sprites/login.jpg",
-    "revision": "62047a94736525ae942a4973a8f1428d"
-  },
-  {
     "url": "img/sprites/loot.png",
     "revision": "eda1a53724f73d41d79ed16a8d394ae7"
   },
@@ -4542,16 +4510,8 @@ workbox.precaching.precacheAndRoute([
     "revision": "9fb70971b2675ecfa6212d95cc925863"
   },
   {
-    "url": "img/sprites/moreinventorybutton.png",
-    "revision": "9d2cc67c78ecd6995de9f66b08812921"
-  },
-  {
     "url": "img/sprites/morningstar.png",
     "revision": "c4a6054da17c1047d86ec3f97ffd2087"
-  },
-  {
-    "url": "img/sprites/newcharacter.jpg",
-    "revision": "8afbe1f5d483199f96c05915eaa89ed1"
   },
   {
     "url": "img/sprites/nightmareregion.png",
@@ -4660,6 +4620,14 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/platearmor.png",
     "revision": "dc17eda487e9533869e728e54d04e04e"
+  },
+  {
+    "url": "img/sprites/platinumarmor.png",
+    "revision": "341a33a11cb9af162429136d0831aa80"
+  },
+  {
+    "url": "img/sprites/platinumsword.png",
+    "revision": "1ab7951325744d5eef6e6532eb78262e"
   },
   {
     "url": "img/sprites/plunger.png",
@@ -4994,10 +4962,6 @@ workbox.precaching.precacheAndRoute([
     "revision": "6696bfd8036892dd1900dabb53f9f8e0"
   },
   {
-    "url": "img/sprites/skilllevel.png",
-    "revision": "68dca3e8f22a2ce6c0541fc826ff513e"
-  },
-  {
     "url": "img/sprites/skydinosaur.png",
     "revision": "2fd0871c35a27466f4698c956284d871"
   },
@@ -5072,10 +5036,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/sorcerer.png",
     "revision": "925c7fef239430c572c554c2b813f3f6"
-  },
-  {
-    "url": "img/sprites/soundbutton.png",
-    "revision": "786bf720e296f96c6d58bb74d2f9fb64"
   },
   {
     "url": "img/sprites/soybeanbug.png",
@@ -5256,18 +5216,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/sprites/wolfarmor.png",
     "revision": "b045d6ec3acdc2e8d1ddcfe0a338c81d"
-  },
-  {
-    "url": "img/sprites/wood.png",
-    "revision": "2069fec9506e5b41feac4eb834d85a5a"
-  },
-  {
-    "url": "img/sprites/wood2.png",
-    "revision": "aff44293a0561de2226cd7975a924567"
-  },
-  {
-    "url": "img/sprites/wood3.png",
-    "revision": "24eac44c43faf1f799eb2e5cc108e73f"
   },
   {
     "url": "img/sprites/woodenbow.png",
@@ -5595,7 +5543,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/network/socket.js",
-    "revision": "d5e12d19dea1a37a9c30ae75005de9b8"
+    "revision": "939c82180cd1ac619c66ac9cb5f570ec"
   },
   {
     "url": "js/renderer/bubbles/blob.js",
