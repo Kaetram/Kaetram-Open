@@ -57,7 +57,7 @@ class Doors {
                 return (quest && quest.hasDoorUnlocked(door)) ? 'open' : 'closed';
 
             case 'achievement':
-                let achievement = self.player.quests.achievements[door.achievementId];
+                let achievement = self.player.quests.getAchievement(door.achievementId);
 
                 return (achievement && achievement.isFinished()) ? 'open' : 'closed';
 
