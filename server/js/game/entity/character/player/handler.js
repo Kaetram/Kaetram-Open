@@ -109,11 +109,13 @@ class Handler {
             clearInterval(self.updateInterval);
             self.updateInterval = null;
 
-            if (config.discordEnabled)
-                self.world.discord.sendWebhook(self.player.username, 'has logged out!')
+            if (self.player.ready) {
+                if (config.discordEnabled)
+                    self.world.discord.sendWebhook(self.player.username, 'has logged out!')
 
-            if (config.hubEnabled)
-                self.world.api.sendChat(Utils.formatUsername(self.player.username), 'has logged out!');
+                if (config.hubEnabled)
+                    self.world.api.sendChat(Utils.formatUsername(self.player.username), 'has logged out!');
+            }
 
             self.world.removePlayer(self.player);
         });
