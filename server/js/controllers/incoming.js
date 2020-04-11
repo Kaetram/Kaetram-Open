@@ -245,6 +245,12 @@ class Incoming {
 
         self.player.save();
 
+        if (config.discordEnabled)
+            self.world.discord.sendWebhook(self.player.username, 'has logged in!')
+
+        if (config.hubEnabled)
+            self.world.api.sendChat(Utils.formatUsername(self.player.username), 'has logged in!');
+
         if (self.player.readyCallback)
             self.player.readyCallback();
 
@@ -684,10 +690,10 @@ class Incoming {
             log.debug(`${self.player.username} - ${text}`);
 
             if (config.discordEnabled)
-                self.world.discord.sendMessage(self.player, text);
+                self.world.discord.sendWebhook(self.player.username, text, true);
 
             if (config.hubEnabled)
-                self.world.api.sendChat(Utils.formatUsername(self.player.username), text);
+                self.world.api.sendChat(Utils.formatUsername(self.player.username), text, true);
 
             self.world.push(Packets.PushOpcode.Regions, {
                 regionId: self.player.region,
