@@ -6,6 +6,7 @@ let _ = require('underscore'),
     Packets = require('../../../../network/packets'),
     Npcs = require('../../../../util/npcs'),
     Hit = require('../combat/hit'),
+    Utils = require('../../../../util/utils'),
     Shops = require('../../../../util/shops');
 
 class Handler {
@@ -107,6 +108,12 @@ class Handler {
             /* Avoid a memory leak */
             clearInterval(self.updateInterval);
             self.updateInterval = null;
+
+            if (config.discordEnabled)
+                self.world.discord.sendWebhook(self.player.username, 'has logged out!')
+
+            if (config.hubEnabled)
+                self.world.api.sendChat(Utils.formatUsername(self.player.username), 'has logged out!');
 
             self.world.removePlayer(self.player);
         });

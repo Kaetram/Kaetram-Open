@@ -244,10 +244,8 @@ class Commands {
                     y = parseInt(blocks.shift()),
                     withAnimation = parseInt(blocks.shift())
 
-                log.info(withAnimation ? true : false);
-
                 if (x && y)
-                    self.player.teleport(x, y, false, withAnimation ? true : false);
+                    self.player.teleport(x, y, false, withAnimation);
 
                 return;
 
@@ -425,7 +423,15 @@ class Commands {
 
             case 'finishAchievement':
 
-                self.player.quests.achievements[0].finish();
+                self.player.quests.getAchievement(0).finish();
+
+                break;
+
+            case 'finishAllAchievements':
+
+                self.player.quests.forEachAchievement((achievement) => {
+                    self.player.finishAchievement(achievement.id);
+                });
 
                 break;
 
@@ -438,7 +444,7 @@ class Commands {
                     return;
                 }
 
-                self.player.quests.achievements[achievementId].setProgress(0);
+                self.player.quests.getAchievement(achievementId).setProgress(0);
                 self.player.updateRegion();
 
                 break;

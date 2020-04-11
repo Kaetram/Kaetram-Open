@@ -171,7 +171,7 @@ class API {
         });
     }
 
-    sendChat(source, text) {
+    sendChat(source, text, withArrow) {
         let self = this,
             url = self.getUrl('chat'),
             data = {
@@ -179,7 +179,8 @@ class API {
                     hubAccessToken: config.hubAccessToken,
                     serverId: config.serverId,
                     source: source,
-                    text: text
+                    text: text,
+                    withArrow: withArrow
                 }
             };
 
@@ -187,6 +188,9 @@ class API {
 
             try {
                 let data = JSON.parse(body);
+
+                if (data.status === 'error')
+                    console.log(data);
 
                 //TODO - Do something with this?
 

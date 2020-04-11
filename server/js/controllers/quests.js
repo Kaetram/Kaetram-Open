@@ -78,6 +78,15 @@ class Quests {
         return null;
     }
 
+    getAchievement(id) {
+        let self = this;
+
+        if (!self.achievements || !self.achievements[id])
+            return null;
+
+        return self.achievements[id];
+    }
+
     getQuests() {
         let self = this,
             ids = '',
