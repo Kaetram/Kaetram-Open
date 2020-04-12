@@ -17,7 +17,7 @@ Live Version - <https://kaetram.com>
 
 Join us on Discord - <https://discord.gg/MmbGAaw>
 
-Checkout Kaetram-Next for the TypeScript version of Kaetram - <https://github.com/lemueldls/Kaetram-Next>
+Check out Kaetram-Next for the TypeScript version of Kaetram - <https://github.com/lemueldls/Kaetram-Next>
 
 
 ![Demo](https://i.imgur.com/slnzrZB.png)
