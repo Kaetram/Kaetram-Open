@@ -5,6 +5,9 @@ class Points {
     constructor(points, maxPoints) {
         let self = this;
 
+        if (isNaN(points))
+            points = maxPoints;
+
         self.points = points;
         self.maxPoints = maxPoints;
     }
