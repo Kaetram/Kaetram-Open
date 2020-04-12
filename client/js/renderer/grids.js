@@ -11,7 +11,6 @@ define(function() {
 
             self.renderingGrid = [];
             self.pathingGrid = [];
-            self.entityGrid = [];
             self.itemGrid = [];
 
             self.load();
@@ -23,28 +22,17 @@ define(function() {
             for (var i = 0; i < self.map.height; i++) {
                 self.renderingGrid[i] = [];
                 self.pathingGrid[i] = [];
-                self.entityGrid[i] = [];
                 self.itemGrid[i] = [];
 
                 for (var j = 0; j < self.map.width; j++) {
                     self.renderingGrid[i][j] = {};
                     self.pathingGrid[i][j] = self.map.grid[i][j];
-                    self.entityGrid[i][j] = {};
                     self.itemGrid[i][j] = {};
                 }
             }
 
             if (self.map.game.isDebug())
                 log.info('Finished generating grids.');
-        },
-
-        checkPathingGrid: function(player, xRadius, yRadius) {
-            var self = this;
-
-            for (var y = player.gridY - yRadius; y < player.gridY + yRadius; y++)
-                for (var x = player.gridX - xRadius; x < player.gridX + xRadius; x++)
-                    if (!self.map.isColliding(x, y) && _.size(self.entityGrid[y][x] === 0))
-                        self.removeFromPathingGrid(x, y);
         },
 
         resetPathingGrid: function() {
@@ -72,13 +60,6 @@ define(function() {
             this.pathingGrid[y][x] = 1;
         },
 
-        addToEntityGrid: function(entity, x, y) {
-            var self = this;
-
-            if (entity && self.entityGrid[y][x])
-                self.entityGrid[y][x][entity.id] = entity;
-        },
-
         addToItemGrid: function(item, x, y) {
             var self = this;
 
@@ -101,13 +82,6 @@ define(function() {
             this.map.grid[y][x] = 0;
         },
 
-        removeFromEntityGrid: function(entity, x, y) {
-            var self = this;
-
-            if (entity && self.entityGrid[y][x] && entity.id in self.entityGrid[y][x])
-                delete self.entityGrid[y][x][entity.id];
-        },
-
         removeFromItemGrid: function(item, x, y) {
             var self = this;
 
@@ -119,12 +93,10 @@ define(function() {
             var self = this;
 
             if (entity) {
-                self.removeFromEntityGrid(entity, entity.gridX, entity.gridY);
                 self.removeFromPathingGrid(entity.gridX, entity.gridY);
                 self.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
 
                 if (entity.nextGridX > -1 && entity.nextGridY > -1) {
-                    self.removeFromEntityGrid(entity, entity.nextGridX, entity.nextGridY);
                     self.removeFromPathingGrid(entity.nextGridX, entity.nextGridY);
                 }
             }
