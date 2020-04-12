@@ -422,6 +422,9 @@ class Combat {
         let self = this,
             time = self.getTime();
 
+        if (!self.canHit())
+            return;
+
         if (character.isRanged() || hitInfo.isRanged) {
 
             let projectile = self.world.createProjectile([character, target], hitInfo);
@@ -538,6 +541,14 @@ class Combat {
         return this.isMob() || target.type === 'mob' || (this.isPlayer() && target.type === 'player' && target.pvp && this.character.pvp);
     }
 
+    canHit() {
+        let self = this,
+            currentTime = new Date().getTime(),
+            diff = currentTime - self.lastHit;
+
+        // 5 millisecond margin of error.
+        return diff + 5 > self.character.attackRate;
+    }
 
 }
 
