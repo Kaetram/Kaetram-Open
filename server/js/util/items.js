@@ -54,8 +54,12 @@ Items.stringToId = (name) => {
 };
 
 Items.getLevelRequirement = (name) => {
-    var level = 1,
-        item = Items.Data[name];
+    let level = 0;
+
+    if (!name)
+        return level;
+
+    let item = Items.Data[name];
 
     if (item && item.requirement)
         return item.requirement;
