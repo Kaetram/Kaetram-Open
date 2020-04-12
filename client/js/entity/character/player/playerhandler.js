@@ -31,7 +31,18 @@ define(function() {
                 if (self.player.dead || self.player.frozen)
                     return null;
 
-                var ignores = [self.player];
+                /**
+                 * If the position is the same as the player's current position
+                 * we will return nothing. Otherwise this will just create
+                 * a colliding tiles and will interfere with combat.
+                 */
+
+                var ignores = [];
+
+                if (self.player.gridX === x && self.player.gridY === y)
+                    return ignores;
+
+                ignores = [self.player];
 
                 if (!self.game.map.isColliding(x, y))
                     self.socket.send(Packets.Movement, [Packets.MovementOpcode.Request, x, y, self.player.gridX, self.player.gridY]);

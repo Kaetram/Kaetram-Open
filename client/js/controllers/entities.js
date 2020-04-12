@@ -323,13 +323,11 @@ define(['../renderer/grids', '../entity/objects/chest',
                 if (!entity)
                     return;
 
-                if (entity.type === 'player' || entity.type === 'mob' || entity.type === 'npc' || entity.type === 'chest') {
+                /*if (entity.type === 'player' || entity.type === 'mob' || entity.type === 'npc' || entity.type === 'chest') {
 
-                    self.grids.addToEntityGrid(entity, entity.gridX, entity.gridY);
-
-                    /*if (entity.type !== 'player' || entity.nonPathable)
-                          self.grids.addToPathingGrid(entity.gridX, entity.gridY);*/
-                }
+                    if (entity.type !== 'player' || entity.nonPathable)
+                          self.grids.addToPathingGrid(entity.gridX, entity.gridY);
+                }*/
 
                 if (entity.type === 'item')
                     self.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
@@ -343,16 +341,13 @@ define(['../renderer/grids', '../entity/objects/chest',
                 if (!entity)
                     return;
 
-                self.grids.entityGrid[entity.gridY][entity.gridX][entity.id] = entity;
-
                 self.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
 
-                if (entity.nextGridX > -1 && entity.nextGridY > -1) {
-                    self.grids.entityGrid[entity.nextGridY][entity.nextGridX][entity.id] = entity;
+                /*if (entity.nextGridX > -1 && entity.nextGridY > -1) {
 
-                    /*if (!(entity instanceof Player))
-                        self.grids.pathingGrid[entity.nextGridY][entity.nextGridX] = 1;*/
-                }
+                    if (!(entity instanceof Player))
+                        self.grids.pathingGrid[entity.nextGridY][entity.nextGridX] = 1;
+                }*/
             },
 
             unregisterPosition: function(entity) {

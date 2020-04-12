@@ -86,6 +86,9 @@ class Combat {
         if (self.started)
             return;
 
+        if (self.character.type === 'player')
+            log.debug('Starting player attack.');
+
         self.lastAction = new Date().getTime();
 
         self.attackLoop = setInterval(() => { self.parseAttack(); }, self.character.attackRate);
@@ -102,6 +105,9 @@ class Combat {
 
         if (!self.started)
             return;
+
+        if (self.character.type === 'player')
+            log.debug('Stopping player attack.');
 
         clearInterval(self.attackLoop);
         clearInterval(self.followLoop);
@@ -131,10 +137,8 @@ class Combat {
             self.sync();
 
             self.lastAction = self.getTime();
-
         } else
             self.queue.clear();
-
     }
 
     parseFollow() {
@@ -414,12 +418,9 @@ class Combat {
         character.setPosition(x, y);
     }
 
-    hit(character, target, hitInfo, force) {
+    hit(character, target, hitInfo) {
         let self = this,
             time = self.getTime();
-
-        if (time - self.lastHit < self.character.attackRate && !hitInfo.isAoE && !force)
-            return;
 
         if (character.isRanged() || hitInfo.isRanged) {
 
