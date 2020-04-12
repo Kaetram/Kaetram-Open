@@ -21,9 +21,14 @@ define(['./character/character'], function(Character) {
             if (self.isCharacter()) {
 
                 self.entity.onRequestPath(function(x, y) {
-                    var ignored = [self.entity];
+                    var ignores = [];
 
-                    return self.game.findPath(self.entity, x, y, ignored)
+                    if (self.entity.gridX === x && self.entity.gridY === y)
+                        return ignores;
+
+                    ignores = [self.entity];
+
+                    return self.game.findPath(self.entity, x, y, ignores)
                 });
 
                 self.entity.onBeforeStep(function() {
