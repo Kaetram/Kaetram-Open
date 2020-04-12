@@ -1773,7 +1773,7 @@
   "Sword1": {
     "id": 248,
     "type": "weapon",
-    "attack": 0,
+    "attack": 1,
     "name": "Sword",
     "requirement": 1
   },

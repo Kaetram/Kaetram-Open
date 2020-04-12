@@ -31,7 +31,7 @@ class Creator {
             self.savePlayerRegions(playerRegions, player);
             self.savePlayerAbilities(playerAbilities, player);
             self.savePlayerInventory(playerInventory, player, () => {
-                database.close();
+                log.debug(`Successfully saved all data for player ${player.username}.`);
             });
         });
     }
@@ -44,10 +44,10 @@ class Creator {
                 upsert: true
             }, (error, result) => {
                 if (error)
-                    throw error;
+                    log.error(`An error has occurred while saving player_data for ${player.username}!`);
 
-                if (result)
-                    log.debug('Player ' + player.username + ' data has been saved successfully.');
+                if (!result)
+                    log.error(`Could not save player_data for ${player.username}!`);
             });
         });
     }
@@ -60,10 +60,10 @@ class Creator {
             upsert: true
         }, (error, result) => {
             if (error)
-                throw error;
+                log.error(`An error has occurred while saving player_equipment for ${player.username}!`);
 
-            if (result)
-                log.debug('Player ' + player.username + ' equipment data has been saved successfully.');
+            if (!result)
+                log.error(`Could not save player_equipment for ${player.username}!`);
         });
     }
 
@@ -74,10 +74,10 @@ class Creator {
             upsert: true
         }, (error, result) => {
             if (error)
-                throw error;
+                log.error(`An error has occurred while saving player_quests for ${player.username}!`);
 
-            if (result)
-                log.debug('Player ' + player.username + ' quest data has been saved successfully.');
+            if (!result)
+                log.error(`Could not save player_quests for ${player.username}!`);
         });
 
     }
@@ -89,10 +89,10 @@ class Creator {
             upsert: true
         }, (error, result) => {
             if (error)
-                throw error;
+                log.error(`An error has occurred while saving player_achievements for ${player.username}!`);
 
-            if (result)
-                log.debug('Player ' + player.username + ' achievement data has been saved successfully.');
+            if (!result)
+                log.error(`Could not save player_achievements for ${player.username}!`);
         });
 
     }
@@ -104,10 +104,10 @@ class Creator {
             upsert: true
         }, (error, result) => {
             if (error)
-                throw error;
+                log.error(`An error has occurred while saving player_bank for ${player.username}!`);
 
-            if (result)
-                log.debug('Player ' + player.username + ' bank data has been saved successfully.');
+            if (!result)
+                log.error(`Could not save player_bank for ${player.username}!`);
         });
     }
 
@@ -117,10 +117,11 @@ class Creator {
         }, { $set: { regions: player.regionsLoaded.toString(), gameVersion: config.gver } }, {
             upsert: true
         }, (error, result) => {
-            if (error) throw error;
+            if (error)
+                log.error(`An error has occurred while saving player_regions for ${player.username}!`);
 
-            if (result)
-                log.debug('Player ' + player.username + ' regions data has been saved successfully.');
+            if (!result)
+                log.error(`Could not save player_regions for ${player.username}!`);
         });
     }
 
@@ -131,10 +132,10 @@ class Creator {
             upsert: true
         }, (error, result) => {
             if (error)
-                throw error;
+                log.error(`An error has occurred while saving player_abilities for ${player.username}!`);
 
-            if (result)
-                log.debug('Player ' + player.username + ' abilities data has been saved successfully.');
+            if (!result)
+                log.error(`Could not save player_abilities for ${player.username}!`);
         });
     }
 
@@ -145,10 +146,13 @@ class Creator {
             upsert: true
         }, (error, result) => {
             if (error)
-                throw error;
+                log.error(`An error has occurred while saving player_inventory for ${player.username}!`);
+
+            if (!result)
+                log.error(`Could not save player_inventory for ${player.username}!`);
 
             if (result)
-                log.debug('Player ' + player.username + ' inventory data has been saved successfully.');
+                callback();
         });
     }
 

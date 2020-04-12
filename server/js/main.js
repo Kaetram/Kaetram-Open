@@ -79,6 +79,8 @@ class Main {
             if (!command)
                 return;
 
+            let username, player;
+
             switch (command) {
 
                 case 'players':
@@ -97,14 +99,14 @@ class Main {
 
                 case 'kill':
 
-                    let username = blocks.join(' ');
+                    username = blocks.join(' ');
 
                     if (!self.world.isOnline(username)) {
                         log.info('Player is not logged in.');
                         return;
                     }
 
-                    let player = self.world.getPlayerByName(username);
+                    player = self.world.getPlayerByName(username);
 
                     if (!player) {
                         log.info('An error has occurred.');
@@ -150,6 +152,27 @@ class Main {
                         log.info('Server is now allowing connections.')
                     else
                         log.info('The server is not allowing connections.');
+
+                    break;
+
+                case 'give':
+
+                    let itemId = blocks.shift(),
+                        itemCount = parseInt(blocks.shift());
+
+                    username = blocks.join(' ');
+
+                    player = self.world.getPlayerByName(username);
+
+                    if (!player)
+                        return;
+
+                    player.inventory.add({
+                        id: itemId,
+                        count: itemCount,
+                        ability: -1,
+                        abilityLevel: -1
+                    });
 
                     break;
 

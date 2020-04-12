@@ -359,7 +359,6 @@ class Incoming {
                 }
 
                 self.player.send(new Messages.Equipment(Packets.EquipmentOpcode.Unequip, [type]));
-                self.player.sync();
 
                 break;
         }

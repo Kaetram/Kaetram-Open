@@ -449,8 +449,7 @@ class Player extends Character {
         if (!data || data === 'null')
             return;
 
-        if (config.debug)
-            log.info(`Equipping item - ${[string, count, ability, abilityLevel]}`);
+        log.debug(`Equipping item - ${[string, count, ability, abilityLevel]}`);
 
         if (Items.isArmour(string))
             type = Modules.Equipment.Armour;
@@ -517,8 +516,6 @@ class Player extends Character {
             abilityLevel: abilityLevel,
             power: power
         }));
-
-        self.sync();
     }
 
     updateRegion(force) {
@@ -975,8 +972,10 @@ class Player extends Character {
          * other special events and determine a spawn point.
          */
 
+        if (!self.finishedTutorial())
+            return self.getTutorial().getSpawn();
 
-        return self.finishedTutorial() ? { x: 325, y: 87 } : { x: 375, y: 41 };
+        return { x: 325, y: 87 };
     }
 
     getHit(target) {
