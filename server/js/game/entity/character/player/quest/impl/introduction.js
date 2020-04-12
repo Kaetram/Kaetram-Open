@@ -210,6 +210,15 @@ class Introduction extends Quest {
         return doorData[0] === destX && doorData[1] === destY;
     }
 
+    getSpawn() {
+        let self = this;
+
+        if (self.stage > 7)
+            return { x: 331, y: 12 };
+
+        return { x: 375, y: 41 };
+    }
+
     onFinishedLoading(callback) {
         this.finishedCallback = callback;
     }

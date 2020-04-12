@@ -14,6 +14,8 @@ class Weapon extends Equipment {
         self.level = Items.getWeaponLevel(name);
         self.ranged = Items.isArcherWeapon(name);
 
+        log.debug(`weapon level: ${self.level}`);
+
         self.breakable = false;
     }
 
