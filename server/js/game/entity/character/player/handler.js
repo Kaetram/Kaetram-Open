@@ -30,9 +30,9 @@ class Handler {
         clearInterval(self.updateInterval);
         self.updateInterval = null;
 
-        self.map = null;
-        self.world = null;
-        self.player = null;
+        // self.map = null;
+        // self.world = null;
+        // self.player = null;
     }
 
     load() {
@@ -79,9 +79,6 @@ class Handler {
              * Handles actions whenever the player
              * instance is hit by 'damage' amount
              */
-
-            if (!self.player)
-                return;
 
             if (self.player.combat.isRetaliating())
                 self.player.combat.begin(attacker);
