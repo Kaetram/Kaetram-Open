@@ -497,7 +497,7 @@ class Incoming {
             case Packets.MovementOpcode.Zone:
                 let direction = message.shift();
 
-                log.info('Player zoned - ' + direction);
+                log.debug(`Zoning detected, direction: ${direction}.`);
 
                 break;
         }
