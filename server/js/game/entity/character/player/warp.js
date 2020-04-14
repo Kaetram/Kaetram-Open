@@ -32,8 +32,6 @@ class Warp {
             y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2],
             levelRequirement = data[4];
 
-        log.info('Player Rights: ' + self.player.rights);
-
         if (!self.player.finishedTutorial()) {
             self.player.notify('You cannot warp while in this event.');
             return;
