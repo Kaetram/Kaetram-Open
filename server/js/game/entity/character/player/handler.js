@@ -80,6 +80,9 @@ class Handler {
              * instance is hit by 'damage' amount
              */
 
+            if (!self.player)
+                return;
+
             if (self.player.combat.isRetaliating())
                 self.player.combat.begin(attacker);
 
