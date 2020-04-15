@@ -10,5 +10,11 @@
     "y": 249,
     "type": "sign",
     "messages": ["Welcome to Southorn!"]
+  },
+  "180-15": {
+    "x": 180,
+    "y": 15,
+    "type": "sign",
+    "messages": ["Here lies the memory of Azaria.", ""]
   }
 }
