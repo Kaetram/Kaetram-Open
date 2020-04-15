@@ -99,7 +99,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "spawnDelay": 65000
   },
 
   "Ogre": {
@@ -742,12 +742,12 @@
   "HermitCrab": {
     "name": "Hermit Crab",
     "id": 42,
-    "drops": {"whitearcherarmor": 200, "sidesword": 400, "whitearmor": 200, "gold": 200},
-    "hitPoints": 300,
+    "drops": {"whitearcherarmor": 200, "sidesword": 400, "flask": 200, "gold": 200},
+    "hitPoints": 250,
     "armour": 10,
-    "weapon": 10,
+    "weapon": 4,
     "xp": 65,
-    "level": 24,
+    "level": 16,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
