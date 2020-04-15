@@ -493,6 +493,9 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         updateGridPosition: function() {
             var self = this;
 
+            if (!self.path || self.path.length < 1)
+                return;
+
             self.setGridPosition(self.path[self.step][0], self.path[self.step][1]);
         },
 
@@ -529,7 +532,7 @@ define(['../entity', '../../utils/transition', '../animation'], function(Entity,
         },
 
         hasNextStep: function() {
-            return (this.path.length - 1 > this.step);
+            return this.path && (this.path.length - 1 > this.step);
         },
 
         changedPath: function() {

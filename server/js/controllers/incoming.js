@@ -391,13 +391,19 @@ class Incoming {
                     selectedY = message.shift(),
                     pX = message.shift(),
                     pY = message.shift(),
-                    movementSpeed = message.shift();
+                    movementSpeed = message.shift(),
+                    targetId = message.shift();
 
                 if (!movementSpeed || movementSpeed != self.player.movementSpeed)
                     self.player.incrementCheatScore(1);
 
                 if (pX !== self.player.x || pY !== self.player.y || self.player.stunned || !self.preventNoClip(selectedX, selectedY))
                     return;
+
+                if (!targetId) {
+                    self.player.removeTarget();
+                    self.player.combat.stop();
+                }
 
                 self.player.moving = true;
 
@@ -518,7 +524,7 @@ class Incoming {
             opcode = message.shift(),
             instance = message.shift();
 
-		log.debug(`Target (opcode): ${instance} (${opcode})`);
+		log.debug(`Target [opcode]: ${instance} [${opcode}]`);
 
         switch (opcode) {
 
@@ -564,8 +570,7 @@ class Incoming {
 
             case Packets.TargetOpcode.None:
 
-                self.player.combat.stop();
-                self.player.removeTarget();
+                // Nothing do to here.
 
                 break;
 

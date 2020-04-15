@@ -62,7 +62,15 @@ define(function() {
                 if (self.game.isDebug())
                     log.info('Movement speed: ' + self.player.movementSpeed);
 
-                self.socket.send(Packets.Movement, [Packets.MovementOpcode.Started, self.input.selectedX, self.input.selectedY, self.player.gridX, self.player.gridY, self.player.movementSpeed]);
+                self.socket.send(Packets.Movement, [
+                        Packets.MovementOpcode.Started,
+                        self.input.selectedX,
+                        self.input.selectedY,
+                        self.player.gridX,
+                        self.player.gridY,
+                        self.player.movementSpeed,
+                        self.getTargetId()
+                    ]);
             });
 
             self.player.onStopPathing(function(x, y) {
@@ -106,16 +114,7 @@ define(function() {
             self.player.onBeforeStep(function() {
                 self.entities.unregisterPosition(self.player);
 
-                if (!self.isAttackable())
-                    return;
 
-                if (self.player.isRanged()) {
-                    if (self.player.getDistance(self.player.target) < 7)
-                        self.player.stop();
-                } else {
-                    self.input.selectedX = self.player.target.gridX;
-                    self.input.selectedY = self.player.target.gridY;
-                }
             });
 
             self.player.onStep(function() {
@@ -126,6 +125,17 @@ define(function() {
                     self.checkBounds();
 
                 self.socket.send(Packets.Movement, [Packets.MovementOpcode.Step, self.player.gridX, self.player.gridY]);
+
+                if (!self.isAttackable())
+                    return;
+
+                if (self.player.isRanged()) {
+                    if (self.player.getDistance(self.player.target) < 7)
+                        self.player.stop(true);
+                } else {
+                    self.input.selectedX = self.player.target.gridX;
+                    self.input.selectedY = self.player.target.gridY;
+                }
             });
 
             self.player.onSecondStep(function() {
