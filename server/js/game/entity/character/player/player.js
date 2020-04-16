@@ -1180,8 +1180,12 @@ class Player extends Character {
     }
 
     finishedAchievement(id) {
-        let self = this,
-            achievement = self.quests.getAchievement(id);
+        let self = this;
+
+        if (!self.quests)
+            return false;
+
+        let achievement = self.quests.getAchievement(id);
 
         if (!achievement)
             return true;
@@ -1190,8 +1194,12 @@ class Player extends Character {
     }
 
     finishAchievement(id) {
-        let self = this,
-            achievement = self.quests.getAchievement(id);
+        let self = this;
+
+        if (!self.quests)
+            return;
+
+        let achievement = self.quests.getAchievement(id);
 
         if (!achievement || achievement.isFinished())
             return;
