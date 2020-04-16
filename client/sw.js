@@ -211,7 +211,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "data/config.json",
-    "revision": "60f95b2130583259a63a115044b8cead"
+    "revision": "f4c47ce2ac421ace36ea07a6142a512a"
   },
   {
     "url": "data/config.json-dist",
@@ -219,11 +219,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "data/maps/map.js",
-    "revision": "080f7c868a51381b06190b6e0f6dbf5a"
+    "revision": "b8b5191afb14f04687c5f4aae79bffbe"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "251f90ea29d80c3900ff17e34b7a4348"
+    "revision": "f8525bf4fc8155feb0ebb0947b37757c"
   },
   {
     "url": "data/sprites.json",
@@ -5251,7 +5251,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "img/tilesets/tilesheet-1.png",
-    "revision": "41a6d892fc12d1d9fe53ab7a9e3f4952"
+    "revision": "2fb3daf8c5f6bd7df5ce2663d3c748b0"
   },
   {
     "url": "img/tilesets/tilesheet-2.png",
@@ -5303,7 +5303,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/controllers/entities.js",
-    "revision": "1c30c4f538015f22226cad1c91de7105"
+    "revision": "6624b1cecfc7e902c5751a1a0d9e2b74"
   },
   {
     "url": "js/controllers/info.js",
@@ -5311,7 +5311,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/controllers/input.js",
-    "revision": "307a194ae3a33734ea398d8b26d3f5d4"
+    "revision": "dd55d6f0fc7857ae24551a8d8dc8a461"
   },
   {
     "url": "js/controllers/interface.js",
@@ -5339,7 +5339,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/character/character.js",
-    "revision": "14560f349fc69c5a734e93964e4e8846"
+    "revision": "70cef9a385dd61ef2a95acece48d6ce2"
   },
   {
     "url": "js/entity/character/mob/mob.js",
@@ -5379,7 +5379,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/character/player/playerhandler.js",
-    "revision": "d811b6ce58df56cbbcda64d9f212b892"
+    "revision": "b5452c40b2e4f3aa9bc8f8e16653961c"
   },
   {
     "url": "js/entity/entity.js",
@@ -5387,7 +5387,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/entityhandler.js",
-    "revision": "cb7bb54cb1587499ed59fc6204ac2929"
+    "revision": "4b5a761e96fa89a8fcfa96f4d03c1f2e"
   },
   {
     "url": "js/entity/objects/chest.js",
@@ -5555,7 +5555,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/renderer/grids.js",
-    "revision": "a6871bbbb58cdaa8061b2da3876bc83e"
+    "revision": "3f5e1c4e209de224fc97627f7c3a82c1"
   },
   {
     "url": "js/renderer/infos/countdown.js",
@@ -5643,7 +5643,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "manifest.json",
-    "revision": "ff688b3ab8cde2cf27c59a2c7747c96d"
+    "revision": "afab9fb19b9cc67a29b265156708d651"
   },
   {
     "url": "robots.txt",
