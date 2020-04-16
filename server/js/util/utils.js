@@ -9,8 +9,6 @@ let Utils = {},
     _ = require('underscore'),
     Packets = require('../network/packets');
 
-module.exports = Utils;
-
 Utils.random = (range) => {
     return Math.floor(Math.random() * range);
 };
@@ -43,19 +41,25 @@ Utils.positionOffset = (radius) => {
 };
 
 /**
- * There is seriously no way two clients can end up with the same ID
+ * We are just using some incremental seeds to prevent ids/instances
+ * from ending up with the same numbers/variables.
  */
 
-Utils.generateClientId = () => {
-    return Utils.randomInt(0, 1000000) + Utils.randomInt(0, 40000) + Utils.randomInt(0, 9000);
-};
-
-Utils.generateInstance = (randomizer, id, modulo, posY) => {
-    return '' + randomizer + Utils.randomInt(0, id) + randomizer + Utils.randomInt(0, modulo) + (posY ? posY : 0);
-};
+Utils.idSeed = 0;
+Utils.clientSeed = 0;
+Utils.instanceSeed = 0;
+Utils.socketSeed = 0;
 
 Utils.generateRandomId = () => {
-    return '' + 1 + Utils.random(0, 200) + Utils.random(0, 20) + 2
+    return ++Utils.idSeed + '' + Utils.randomInt(0, 25000);
+};
+
+Utils.generateClientId = () => {
+    return ++Utils.clientSeed + '' + Utils.randomInt(0, 25000);
+};
+
+Utils.generateInstance = () => {
+    return ++Utils.instanceSeed + '' + Utils.randomInt(0, 25000);
 };
 
 Utils.validPacket = (packet) => {
@@ -113,3 +117,5 @@ Utils.parseMessage = (message) => {
     }
 
 };
+
+module.exports = Utils;

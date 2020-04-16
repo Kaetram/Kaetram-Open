@@ -256,7 +256,7 @@ class World {
             startY = attacker.y,
             type = attacker.getProjectile(),
             hit = null,
-            projectile = new Projectile(type, Utils.generateInstance(5, type, startX + startY));
+            projectile = new Projectile(type, Utils.generateInstance());
 
         projectile.setStart(startX, startY);
         projectile.setTarget(target);
@@ -299,7 +299,7 @@ class World {
                 return;
             }
 
-            let instance = Utils.generateInstance(isMob ? 2 : (isNpc ? 3 : 4), info.id + entities, position.x + entities, position.y);
+            let instance = Utils.generateInstance();
 
             if (isMob) {
                 let mob = new Mob(info.id, instance, position.x, position.y, self);
@@ -367,8 +367,7 @@ class World {
 
     spawnMob(id, x, y) {
         let self = this,
-            instance = Utils.generateInstance(2, id, x + id, y),
-            mob = new Mob(id, instance, x, y);
+            mob = new Mob(id, Utils.generateInstance(), x, y);
 
         if (!Mobs.exists(id))
             return;
@@ -381,8 +380,7 @@ class World {
     spawnChest(items, x, y, staticChest) {
         let self = this,
             chestCount = Object.keys(self.chests).length,
-            instance = Utils.generateInstance(5, 194, chestCount, x, y),
-            chest = new Chest(194, instance, x, y);
+            chest = new Chest(194, Utils.generateInstance(), x, y);
 
         chest.items = items;
 
@@ -427,8 +425,7 @@ class World {
 
     dropItem(id, count, x, y, ability, abilityLevel) {
         let self = this,
-            instance = Utils.generateInstance(4, id + (Object.keys(self.entities)).length, x, y),
-            item = self.createItem(id, instance, x, y, ability, abilityLevel);
+            item = self.createItem(id, Utils.generateInstance(), x, y, ability, abilityLevel);
 
         item.count = count;
         item.dropped = true;
