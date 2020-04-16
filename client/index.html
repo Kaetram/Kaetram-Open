@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="ltr" lang="en">
 <head>
     <meta charset="utf-8" />
     <link rel="manifest" href="manifest.json" />
@@ -313,7 +313,7 @@
                         <a class="clickable" target="_blank" href="http://www.dantilden.com">Dan Tilden</a>,
                         &amp; <a target="_blank" class="clickable" href="http://soundcloud.com/aaron-anderson-11">Aaron Krogh</a>
                     </p>
-                    <div id="close-about">
+                    <div class="close-about">
                         <span>-- Click anywhere to close --</span>
                     </div>
                 </article>
@@ -334,7 +334,7 @@
                             >GitHub Repository</a
                         >.
                     </p>
-                    <div id="close-about">
+                    <div class="close-about">
                         <span>-- Click anywhere to close --</span>
                     </div>
                 </article>
@@ -352,6 +352,23 @@
                 ><span class="loader__dot">.</span
                 ><span class="loader__dot">.</span>
             </div>
+
+            <button id="worlds-switch" title="Click to change worlds">
+                <b>World&nbsp;<span id="current-world-index">...</span></b>
+                |
+                <small id="current-world-count">0</small>
+                <br />
+                <span id="current-world-id">...</span>
+
+                <div id="worlds-popup">
+                    <table id="worlds-list" title="Join world">
+                        <tr>
+                            <th>Server ID</th>
+                            <th>Players</th>
+                        </tr>
+                    </table>
+                </div>
+            </button>
         </section>
     </div>
     <div id="container">

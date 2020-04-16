@@ -129,6 +129,38 @@ define(['jquery'], function($) {
                     self.game.resize();
             });
 
+            // Default Server ID
+            if (!window.localStorage.getItem('world')) window.localStorage.setItem('world', 'kaetram_server01');
+
+            $.get('https://hub.kaetram.com/all', function(servers) {
+                var serverIndex;
+                for (var i = 0; i < servers.length; i++) {
+                    var server = servers[i];
+
+                    var row = $(document.createElement('tr'));
+                    row.append($(document.createElement('td')).text(server.serverId))
+                    row.append($(document.createElement('td')).text(server.playerCount + '/' + server.maxPlayers));
+                    $('#worlds-list').append(row);
+                    row.click(function() {
+                        // TODO: This is when a server is clicked with the local `server` having the world data.
+                        // log.info(server);
+                    });
+
+                    if (server.serverId === window.localStorage.getItem('world')) {
+                        serverIndex = i;
+                    }
+                }
+                var currentWorld = servers[serverIndex];
+
+                $('#current-world-index').text(serverIndex);
+                $('#current-world-id').text(currentWorld.serverId);
+                $('#current-world-count').text(currentWorld.playerCount + '/' + currentWorld.maxPlayers);
+
+                $('#worlds-switch').click(function() {
+                    $('#worlds-popup').toggle();
+                });
+            });
+
             $.getJSON('data/config.json', function(json) {
                 self.config = json;
 

@@ -29,6 +29,7 @@ define(['jquery', './app', './game'], function($, App, Game) {
             app.sendStatus('Loading game');
 
             if (app.config.debug) log.info('Loading the main application...');
+            if (app.config.worldSwitch) $('#worlds-switch').show();
 
             game = new Game(app);
             app.setGame(game);
