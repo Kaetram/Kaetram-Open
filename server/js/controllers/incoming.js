@@ -238,7 +238,7 @@ class Incoming {
             self.player.updateRegion(true);
         }
 
-        if (self.player.new) {
+        if (self.player.new || config.offlineMode) {
             self.player.questsLoaded = true;
             self.player.achievementsLoaded = true;
         }

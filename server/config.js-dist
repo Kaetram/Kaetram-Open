@@ -1,4 +1,4 @@
-Config = {};
+let Config = {};
 
 // Connectivity/Hosting Configuration
 Config.name = 'Kaetram';
