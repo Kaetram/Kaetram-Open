@@ -30,20 +30,22 @@ class Quest {
     }
 
     finish() {
-        let self = this;
+        let self = this,
+            item = self.getItemReward();
 
-        if (self.hasItemReward()) {
-            let item = self.getItemReward();
+        if (item) {
+            if (self.hasInventorySpace(item.id, item.count))
+                self.player.inventory.add({
+                    id: item.id,
+                    count: item.count,
+                    ability: -1,
+                    abilityLevel: -1
+                });
+            else {
+                self.player.notify('You do not have enough space in your inventory.');
+                self.player.notify('Please make room prior to finishing the quest.');
 
-            if (item) {
-                if (self.hasInventorySpace(item.id, item.count))
-                    self.player.inventory.add(item.id, item.count);
-                else {
-                    self.player.notify('You do not have enough space in your inventory.');
-                    self.player.notify('Please make room prior to finishing the quest.');
-
-                    return;
-                }
+                return;
             }
         }
 
