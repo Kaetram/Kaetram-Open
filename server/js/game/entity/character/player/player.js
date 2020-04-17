@@ -145,8 +145,6 @@ class Player extends Character {
 
         self.handler.destroy();
 
-        self.connection = null;
-
         self.handler = null;
         self.inventory = null;
         self.abilities = null;
@@ -156,6 +154,8 @@ class Player extends Character {
         self.trade = null;
         self.doors = null;
         self.warp = null;
+
+        self.connection = null;
     }
 
     loadRegions(regions) {
@@ -871,6 +871,9 @@ class Player extends Character {
 
     timeout() {
         let self = this;
+
+        if (!self.connection)
+            return;
 
         self.connection.sendUTF8('timeout');
         self.connection.close('Player timed out.');
