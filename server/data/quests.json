@@ -127,13 +127,13 @@
     },
     "itemReward": {
       "id": 202,
-      "count": 500
+      "count": 300
     },
     "stages": 4,
     "conversations": {
       "2": {
         "0": ["Hoho! Heii", "Adventr, i ned hlp. Yu se.", "i lost me armur.",
-            "i wil giv u 200 gold if u find.", "its aboot ze siz of me body",
+            "i wil giv u 300 gold if u find.", "its aboot ze siz of me body",
             "and it made lether of."],
 
         "1": ["Plz, how progrs goin'?", "I ned lethr armur."],

@@ -19,21 +19,15 @@ class Inventory extends Container {
         this.owner.send(new Messages.Inventory(Packets.InventoryOpcode.Batch, [this.size, this.slots]));
     }
 
-    add(item, count) {
+    add(item) {
         let self = this;
 
-        if (!count)
-            count = -1;
-
-        if (count === -1)  //default to moving whole stack
-            count = parseInt(item.count);
-
-        if (!self.canHold(item.id, count)) {
+        if (!self.canHold(item.id, item.count)) {
             self.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, Constants.InventoryFull));
             return false;
         }
 
-        let slot = super.add(item.id, count, item.ability, item.abilityLevel);
+        let slot = super.add(item.id, item.count, item.ability, item.abilityLevel);
 
         if (!slot)
             return false;
