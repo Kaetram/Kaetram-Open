@@ -167,6 +167,7 @@ class Map {
                 string: data.string,
                 roaming: data.roaming,
                 miniboss: data.miniboss,
+                achievementId: data.achievementId,
                 boss: data.boss
             });
 

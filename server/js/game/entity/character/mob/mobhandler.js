@@ -1,5 +1,6 @@
 let Utils = require('../../../../util/utils'),
     Messages = require('../../../../network/messages'),
+    Mobs = require('../../../../util/mobs'),
     Packets = require('../../../../network/packets');
 
 class MobHandler {
@@ -8,6 +9,7 @@ class MobHandler {
         let self = this;
 
         self.mob = mob;
+        self.combat = mob.combat;
         self.world = world;
         self.map = world.map;
 
@@ -89,6 +91,28 @@ class MobHandler {
     loadCallbacks() {
         let self = this;
 
+        // Combat plugin has its own set of callbacks.
+        if (Mobs.hasCombatPlugin(self.mob.id))
+            return;
+
+        self.mob.onLoad(() => {
+
+            if (self.mob.miniboss)
+                self.mob.setMinibossData();
+
+        });
+
+        self.mob.onDeath(() => {
+
+            if (!self.mob.miniboss || !self.combat)
+                return;
+
+            self.combat.forEachAttacker((attacker) => {
+                if (attacker)
+                    attacker.finishAchievement(self.mob.achievementId);
+            });
+
+        });
 
         //TODO - Implement posion on Mobs
     }

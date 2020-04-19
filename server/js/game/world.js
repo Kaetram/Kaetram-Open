@@ -309,8 +309,12 @@ class World {
                 if (data.roaming)
                     mob.roaming = true;
 
-                if (data.miniboss)
+                if (data.miniboss) {
+                    if (data.achievementId)
+                        mob.achievementId = data.achievementId;
+
                     mob.miniboss = data.miniboss;
+                }
 
                 if (data.boss)
                     mob.boss = data.boss;

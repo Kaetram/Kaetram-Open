@@ -104,6 +104,17 @@
     "id": 11,
     "name": "Frozen Knighthood",
     "rewardType": "door"
-  }
+  },
 
+  "12": {
+    "id": 12,
+    "name": "Hermit Lifestyle",
+    "rewardType": "door"
+  },
+
+  "13": {
+    "id": 13,
+    "name": "Frozen Beach",
+    "rewardType": "door"
+  }
 }

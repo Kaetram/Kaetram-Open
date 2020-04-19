@@ -61,6 +61,23 @@ class Character extends Entity {
             self.combat = new Combat(self);
     }
 
+    setMinibossData() {
+        let self = this;
+
+        /* We only update the mob data once to prevent any issues. */
+
+        if (self.updated)
+            return;
+
+        self.level += Math.floor(self.level / 2);
+        self.maxHitPoints += Math.floor(self.maxHitPoints / 2);
+        self.hitPoints = self.maxHitPoints;
+        self.weaponLevel += 4;
+        self.armourLevel += 3;
+
+        self.updated = true;
+    }
+
     startHealing() {
         let self = this;
 

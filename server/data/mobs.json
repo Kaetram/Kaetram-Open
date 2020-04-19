@@ -192,18 +192,17 @@
     "name": "Death Knight",
     "id": 11,
     "drops": {"redsword": 20, "redarmor": 20, "morningstar": 80},
-    "hitPoints": 105,
+    "hitPoints": 145,
     "armour": 8,
     "weapon": 3,
     "xp": 35,
-    "level": 16,
+    "level": 21,
     "aggroRange": 4,
     "attackRange": 1,
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 65000,
-    "combatPlugin": "deathknight"
+    "spawnDelay": 65000
   },
 
   "Adherer": {
@@ -701,8 +700,7 @@
     "aggressive": true,
     "attackRate": 750,
     "movementSpeed": 400,
-    "spawnDelay": 35000,
-    "combatPlugin": "golem"
+    "spawnDelay": 35000
   },
 
   "GreenFish": {
@@ -742,12 +740,12 @@
   "HermitCrab": {
     "name": "Hermit Crab",
     "id": 42,
-    "drops": {"whitearcherarmor": 200, "sidesword": 400, "flask": 200, "gold": 200},
-    "hitPoints": 250,
+    "drops": {"flask": 200, "gold": 200},
+    "hitPoints": 155,
     "armour": 10,
     "weapon": 4,
     "xp": 65,
-    "level": 16,
+    "level": 15,
     "aggroRange": 1,
     "attackRange": 1,
     "aggressive": false,
@@ -1077,8 +1075,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000,
-    "combatPlugin": "pinkelf"
+    "spawnDelay": 35000
   },
 
   "PoisonSpider": {
