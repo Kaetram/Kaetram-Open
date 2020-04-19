@@ -2085,9 +2085,9 @@
     "name": "Ice Rat",
     "id": 131,
     "drops": null,
-    "hitPoints": 10,
-    "armour": 0,
-    "weapon": 4,
+    "hitPoints": 75,
+    "armour": 2,
+    "weapon": 5,
     "xp": 47,
     "level": 10,
     "aggroRange": 1,
@@ -2102,9 +2102,9 @@
     "name": "Frozen Bat",
     "id": 132,
     "drops": {"manaflask": 20, "flask": 50},
-    "hitPoints": 20,
-    "armour": 0,
-    "weapon": 5,
+    "hitPoints": 125,
+    "armour": 2,
+    "weapon": 6,
     "xp": 52,
     "level": 16,
     "aggroRange": 1,
@@ -2113,6 +2113,24 @@
     "attackRate": 1100,
     "movementSpeed": 350,
     "spawnDelay": 20000
+  },
+
+  "IceCrab": {
+    "name": "Ice Crab",
+    "id": 133,
+    "drops": {"bigflask": 50},
+    "hitPoints": 50,
+    "armour": 2,
+    "weapon": 3,
+    "xp": 8,
+    "level": 19,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "attackRate": 1200,
+    "movementSpeed": 300,
+    "spawnDelay": 20000
   }
+
 
 }
