@@ -253,5 +253,51 @@
       "300010": { "data": [2492,4098], "isColliding": false },
       "300011": { "data": [2422,6492,4099], "isColliding": true }
     }
+  },
+
+  "12": {
+    "id": 12,
+    "requirement": "achievement",
+    "achievementId": 12,
+
+    "closedIds": {
+      "149059": { "data": [980], "isColliding": false },
+      "150058": { "data": [1104], "isColliding": false },
+      "150059": { "data": [915], "isColliding": false },
+      "150060": { "data": [980], "isColliding": false }
+    },
+
+    "openIds": {
+      "149059": { "data": [980,1954], "isColliding": false },
+      "150058": { "data": [1104,2017], "isColliding": false },
+      "150059": { "data": [915,2018], "isColliding": false },
+      "150060": { "data": [980,2019], "isColliding": false }
+    },
+
+    "x": 59,
+    "y": 150
+  },
+
+  "13": {
+    "id": 13,
+    "requirement": "achievement",
+    "achievementId": 13,
+
+    "closedIds": {
+      "103884": { "data": [2812], "isColliding": false },
+      "104883": { "data": [2876], "isColliding": false },
+      "104884": { "data": [2812], "isColliding": false },
+      "104885": { "data": [3000], "isColliding": false }
+    },
+
+    "openIds": {
+      "103884": { "data": [2812,1954], "isColliding": false },
+      "104883": { "data": [2876,2017], "isColliding": false },
+      "104884": { "data": [2812,2018], "isColliding": false },
+      "104885": { "data": [3000,2019], "isColliding": false }
+    },
+
+    "x": 884,
+    "y": 104
   }
 }

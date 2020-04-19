@@ -1,6 +1,7 @@
 [
- { "string": "golem", "x": 203, "y": 77, "roaming": true, "miniboss": true, "achievement": 5 },
- { "string": "deathknight", "x": 790, "y": 35, "roaming": true, "miniboss": true, "achievement": 9 },
- { "string": "pinkelf", "x": 10, "y": 295, "roaming": true, "miniboss": true, "achievement": 10 },
- { "string": "iceknight", "x": 17, "y": 217, "roaming": true, "miniboss": true, "achievement": 11 }
+ { "string": "golem", "x": 203, "y": 77, "roaming": true, "miniboss": true, "achievementId": 5 },
+ { "string": "deathknight", "x": 790, "y": 35, "roaming": true, "miniboss": true, "achievementId": 9 },
+ { "string": "pinkelf", "x": 10, "y": 295, "roaming": true, "miniboss": true, "achievementId": 10 },
+ { "string": "iceknight", "x": 17, "y": 217, "roaming": true, "miniboss": true, "achievementId": 11 },
+ { "string": "hermitcrab", "x": 808, "y": 102, "roaming": true, "miniboss": true, "achievementId": 12 }
 ]
