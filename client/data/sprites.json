@@ -2800,6 +2800,56 @@
     "offsetY": -8
   },
   {
+    "id": "icecrab",
+    "width": 32,
+    "height": 32,
+    "idleSpeed": 300,
+    "animations": {
+      "death": {
+        "length": 8,
+        "row": 0
+      },
+      "atk_right": {
+        "length": 7,
+        "row": 1
+      },
+      "walk_right": {
+        "length": 6,
+        "row": 2
+      },
+      "idle_right": {
+        "length": 4,
+        "row": 3
+      },
+      "atk_up": {
+        "length": 8,
+        "row": 4
+      },
+      "idle_up": {
+        "length": 4,
+        "row": 5
+      },
+      "walk_up": {
+        "length": 6,
+        "row": 6
+      },
+      "atk_down": {
+        "length": 8,
+        "row": 7
+      },
+      "walk_down": {
+        "length": 6,
+        "row": 8
+      },
+      "idle_down": {
+        "length": 7,
+        "row": 9
+      }
+    },
+    "offsetX": -8,
+    "offsetY": -8
+  },
+  {
     "id": "criticaleffect",
     "width": 48,
     "height": 48,
