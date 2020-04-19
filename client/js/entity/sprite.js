@@ -76,6 +76,9 @@ define(['./animation'], function(Animation) {
 
             for (var name in self.animationData) {
                 if (self.animationData.hasOwnProperty(name)) {
+                    if (name === 'death') // Check if sprite has a death animation
+                        self.hasDeathAnimation = true;
+
                     var a = self.animationData[name];
 
                     animations[name] = new Animation(name, a.length, a.row, self.width, self.height);

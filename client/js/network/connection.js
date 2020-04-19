@@ -373,7 +373,8 @@ define(['./impl/teamwar'], function(TeamWar) {
 
                 entity.hitPoints = 0;
 
-                entity.setSprite(self.game.getSprite('death'));
+                if (!entity.sprite.hasDeathAnimation)
+                    entity.setSprite(self.game.getSprite('death'));
 
                 entity.animate('death', 120, 1, function() {
                     self.entities.unregisterPosition(entity);
