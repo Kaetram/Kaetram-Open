@@ -482,6 +482,7 @@
 }
 
 #shopContainer {
+    overflow-y: scroll;
     position: absolute;
     font-family: 'AdvoCut', sans-serif;
     top: 8%;
