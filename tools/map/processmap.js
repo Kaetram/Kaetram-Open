@@ -75,7 +75,7 @@ module.exports = function parse(json, options) {
     map.tilesize = self.json.tilewidth;
 
     let handleProperty = function(property, value, id) {
-        if (property === 'c')
+        if (property === 'c' || property === 'o')
             collisions[id] = true;
 
         if (mode === 'client' || mode === 'info') {
