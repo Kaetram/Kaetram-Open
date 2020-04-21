@@ -79,7 +79,6 @@ define(['jquery'], function($) {
         synchronize: function(tileData) {
             var self = this;
             // Use traditional for-loop instead of _
-
             for (var i = 0; i < tileData.length; i++) {
                 var tile = tileData[i],
                     collisionIndex = self.collisions.indexOf(tile.index),

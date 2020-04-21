@@ -64,6 +64,7 @@ class Handler {
             self.detectOverlay(x, y);
             self.detectCamera(x, y);
             self.detectLights(x, y);
+            self.detectClipping(x, y);
 
         });
 
@@ -258,6 +259,16 @@ class Handler {
                 self.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
             }
         });
+    }
+
+    detectClipping(x, y) {
+        let self = this,
+            isColliding = self.map.isColliding(x, y)
+
+        if (!isColliding)
+            return;
+
+        self.player.incoming.handleNoClip(x, y);
     }
 
     handlePoison() {

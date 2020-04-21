@@ -274,12 +274,15 @@ define(['./renderer/renderer', './utils/storage',
             $('#rememberMe').addClass('active');
         },
 
-        findPath: function(character, x, y, ignores) {
+        findPath: function(character, x, y, ignores, isObject) {
             var self = this,
                 grid = self.entities.grids.pathingGrid,
                 path = [];
 
-            if (self.map.isColliding(x, y) || !self.pathfinder || !character)
+            if (self.map.isColliding(x, y) && !self.map.isObject(x, y))
+                return path;
+
+            if (!self.pathfinder)
                 return path;
 
             if (ignores)
@@ -289,6 +292,9 @@ define(['./renderer/renderer', './utils/storage',
 
             if (ignores)
                 self.pathfinder.clearIgnores();
+
+            if (isObject)
+                path.pop(); // Remove the last path index
 
             return path;
         },

@@ -243,6 +243,22 @@ class Map {
         return this.objects.indexOf(id) > -1;
     }
 
+    isPositionObject(x, y) {
+        let self = this,
+            index = self.gridPositionToIndex(x, y) - 1,
+            tiles = ClientMap.data[index],
+            isObject = false;
+
+        if (tiles instanceof Array)
+            for (let i in tiles)
+                if (self.isObject(tiles[i]))
+                    isObject = true;
+        else
+            isObject = self.isObject(tiles);
+
+        return isObject;
+    }
+
     isDoor(x, y) {
         return !!this.doors[this.gridPositionToIndex(x, y)];
     }
