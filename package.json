@@ -14,7 +14,7 @@
     "dependencies": {
         "bcrypt": "^4.0.1",
         "connect": "^3.7.0",
-        "discord.js": "^12.1.1",
+        "discord.js": "^12.2.0",
         "express": "^4.17.1",
         "mongodb": "^3.5.6",
         "request": "^2.88.2",
