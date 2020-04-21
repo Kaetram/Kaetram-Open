@@ -1083,28 +1083,36 @@ class Incoming {
     preventNoClip(x, y) {
         let self = this,
             isMapColliding = self.world.map.isColliding(x, y),
-            isInstanceColliding = self.player.doors.hasCollision(x, y);
+            isInstanceColliding = self.player.doors.hasCollision(x, y),
+            isObject = self.world.map.isPositionObject(x, y);
+
+        if (isObject)
+            return true;
 
         if (isMapColliding || isInstanceColliding) {
-            self.player.stopMovement(true);
-            self.player.notify('We have detected no-clipping in your client. Please submit a bug report.');
-
-            x = self.player.previousX < 0 ? self.player.x : self.player.previousX;
-            y = self.player.previousY < 0 ? self.player.y : self.player.previousY;
-
-            if (self.world.map.isColliding(x, y)) {
-                let spawn = self.player.getSpawn();
-
-                x = spawn.x, y = spawn.y;
-            }
-
-            self.player.teleport(x, y, false, true);
-
-
+            self.handleNoClip(x, y);
             return false;
         }
 
         return true;
+    }
+
+    handleNoClip(x, y) {
+        let self = this;
+
+        self.player.stopMovement(true);
+        self.player.notify('We have detected no-clipping in your client. Please submit a bug report.');
+
+        x = self.player.previousX < 0 ? self.player.x : self.player.previousX;
+        y = self.player.previousY < 0 ? self.player.y : self.player.previousY;
+
+        if (self.world.map.isColliding(x, y)) {
+            let spawn = self.player.getSpawn();
+
+            x = spawn.x, y = spawn.y;
+        }
+
+        self.player.teleport(x, y, false, true);
     }
 
 }

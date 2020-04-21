@@ -34,18 +34,21 @@ define(function() {
                 /**
                  * If the position is the same as the player's current position
                  * we will return nothing. Otherwise this will just create
-                 * a colliding tiles and will interfere with combat.
+                 * a colliding tile and will interfere with combat.
                  */
 
-                var ignores = [];
+                var ignores = [], isObject = self.map.isObject(x, y);
 
                 if (self.player.gridX === x && self.player.gridY === y)
                     return ignores;
 
                 ignores = [self.player];
 
-                if (!self.game.map.isColliding(x, y))
+                if (!self.map.isColliding(x, y) && !isObject)
                     self.socket.send(Packets.Movement, [Packets.MovementOpcode.Request, x, y, self.player.gridX, self.player.gridY]);
+
+                if (isObject)
+                    ignores.push({ hasPath: function() { return false; }, gridX: x, gridY: y });
 
                 return self.game.findPath(self.player, x, y, ignores);
             });
