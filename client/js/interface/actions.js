@@ -7,15 +7,11 @@ define(['jquery'], function($) {
         init: function(intrfce) {
             var self = this;
 
-            self.interface = intrfce;
+            self.interface = interface;
 
             self.body = $('#actionContainer');
             self.drop = $('#dropDialog');
             self.dropInput = $('#dropCount');
-
-            self.pBody = $('#pActions');
-            self.follow = $('#follow');
-            self.trade = $('#tradeAction');
 
             self.activeClass = null;
 
@@ -40,20 +36,58 @@ define(['jquery'], function($) {
             });
         },
 
-        loadDefaults: function(activeClass) {
+        loadDefaults: function(activeClass, data) {
             var self = this;
 
+            self.reset();
             self.activeClass = activeClass;
+
+            if (data)
+                self.body.css({
+                    'left': data.mouseX - (self.body.width() / 2) + 'px',
+                    'top': data.mouseY + (self.body.height() / 2) + 'px'
+                });
 
             switch (self.activeClass) {
                 case 'inventory':
+
+                    self.body.css({
+                        bottom: '10%',
+                        left: '10%'
+                    });
+
                     var dropButton = $('<div id="drop" class="actionButton">Drop</div>');
 
                     self.add(dropButton);
 
                     break;
 
-                case 'profile':
+                case 'player':
+
+                    self.add(self.getFollowButton());
+
+                    if (data.pvp)
+                        self.add(self.getAttackButton());
+
+                    break;
+
+                case 'mob':
+
+                    self.add(self.getFollowButton());
+                    self.add(self.getAttackButton());
+
+                    break;
+
+                case 'npc':
+
+                    self.add(self.getFollowButton());
+                    self.add(self.getTalkButton());
+
+                    break;
+
+                case 'object':
+
+                    log.info('[loadDefaults] object.');
 
                     break;
             }
@@ -93,37 +127,8 @@ define(['jquery'], function($) {
             this.body.fadeIn('fast');
         },
 
-        showPlayerActions: function(player, mouseX, mouseY) {
-            var self = this;
-
-            if (!player)
-                return;
-
-            self.pBody.fadeIn('fast');
-            self.pBody.css({
-                'left': mouseX - (self.pBody.width() / 2) + 'px',
-                'top': mouseY + (self.pBody.height() / 2) + 'px'
-            });
-
-            self.follow.click(function() {
-                self.getPlayer().follow(player);
-
-                self.hidePlayerActions();
-            });
-
-            self.trade.click(function() {
-                self.getGame().tradeWith(player);
-
-                self.hidePlayerActions();
-            });
-        },
-
         hide: function() {
             this.body.fadeOut('slow');
-        },
-
-        hidePlayerActions: function() {
-            this.pBody.fadeOut('fast');
         },
 
         clear: function() {
@@ -154,6 +159,22 @@ define(['jquery'], function($) {
 
             self.dropInput.blur();
             self.dropInput.val('');
+        },
+
+        getAttackButton: function() {
+            return $('<div id="attack" class="actionButton">Attack</div>');
+        },
+
+        getFollowButton: function() {
+            return $('<div id="follow" class="actionButton">Follow</div>');
+        },
+
+        getTradeButton: function() {
+            return $('<div id="trade" class="actionButton">Trade</div>');
+        },
+
+        getTalkButton: function() {
+            return $('<div id="talkButton" class="actionButton">Talk</div>');
         },
 
         getButtons: function() {

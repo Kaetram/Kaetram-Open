@@ -187,7 +187,14 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                         return;
                     }
 
-                    self.click(self.getCoords());
+                    self.leftClick(self.getCoords());
+
+                    break;
+
+                case Modules.InputType.RightClick:
+
+
+                    self.rightClick();
 
                     break;
             }
@@ -258,11 +265,11 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                     log.info('---------------');
                 }
 
-                self.click(position);
+                self.leftClick(position);
             }
         },
 
-        click: function(position) {
+        leftClick: function(position) {
             var self = this,
                 player = self.getPlayer();
 
@@ -285,8 +292,6 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             if ((self.game.zoning && self.game.zoning.direction) || player.disableAction)
                 return;
 
-            self.getActions().hidePlayerActions();
-
             if (self.game.interface)
                 self.game.interface.hideAll();
 
@@ -298,37 +303,51 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 return;
             }
 
-            var entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX && position.y === player.gridY));
-
-            if (entity) {
+            if (self.entity) {
                 player.disableAction = true;
 
                 self.setAttackTarget();
 
-                if (self.isTargetable(entity))
-                    player.setTarget(entity);
+                if (self.isTargetable(self.entity))
+                    player.setTarget(self.entity);
 
-                if (player.getDistance(entity) < 7 && player.isRanged() && self.isAttackable(entity)) {
-                    self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
-                    player.lookAt(entity);
+                if (player.getDistance(self.entity) < 7 && player.isRanged() && self.isAttackable(self.entity)) {
+                    self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, self.entity.id]);
+                    player.lookAt(self.entity);
                     return;
                 }
 
-                if (entity.gridX === player.gridX && entity.gridY === player.gridY)
-                    self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
+                if (self.entity.gridX === player.gridX && self.entity.gridY === player.gridY)
+                    self.game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, self.entity.id]);
 
-                /*if (entity.type === 'player') {
-                    self.getActions().showPlayerActions(entity, self.mouse.x, self.mouse.y);
-                    return;
-                }*/
-
-                if (self.isTargetable(entity)) {
-                    player.follow(entity);
+                if (self.isTargetable(self.entity)) {
+                    player.follow(self.entity);
                     return;
                 }
             }
 
             player.go(position.x, position.y);
+
+        },
+
+        rightClick: function() {
+            var self = this;
+
+            if (self.entity) {
+
+                var actions = self.getActions();
+
+                actions.loadDefaults(self.entity.type, {
+                    mouseX: self.mouse.x,
+                    mouseY: self.mouse.y,
+                    pvp: self.entity.pvp
+                });
+
+                actions.show();
+
+            } else if (self.hovering === Modules.Hovering.Object) {
+                //TODO
+            }
 
         },
 
@@ -352,15 +371,14 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 return;
 
             var position = self.getCoords(),
-                player = self.getPlayer(),
-                entity = self.game.getEntityAt(position.x, position.y, player.gridX === position.x && player.gridY === position.y);
+                player = self.getPlayer();
 
-            self.overlay.update(entity);
+            // The entity we are currently hovering over.
+            self.entity = self.game.getEntityAt(position.x, position.y, player.gridX === position.x && player.gridY === position.y);
 
-            if (self.renderer.debugging)
-                self.hoveringEntity = entity;
+            self.overlay.update(self.entity);
 
-            if (!entity || (entity.id === player.id)) {
+            if (!self.entity || (self.entity.id === player.id)) {
                 if (self.map.isObject(position.x, position.y)) {
                     self.setCursor(self.cursors['talk']);
                     self.hovering = Modules.Hovering.Object;
@@ -369,7 +387,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                     self.hovering = null;
                 }
             } else {
-                switch (entity.type) {
+                switch (self.entity.type) {
                     case 'item':
                     case 'chest':
                         self.setCursor(self.cursors['loot']);
@@ -387,7 +405,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                         break;
 
                     case 'player':
-                        if (entity.pvp && self.game.pvp) {
+                        if (self.entity.pvp && self.game.pvp) {
                             self.setCursor(self.getAttackCursor());
                             self.hovering = Modules.Hovering.Player;
                         }

@@ -208,6 +208,15 @@ define(['jquery'], function($) {
                 self.game.input.moveCursor();
             });
 
+            $('body').on('contextmenu', '#canvas', function(event) {
+
+
+                if (self.game && self.game.input)
+                    self.game.input.handle(Modules.InputType.RightClick, event);
+
+                return false;
+            });
+
             self.canvas.click(function(event) {
                 if (!self.game || !self.game.started || event.button !== 0)
                     return;
