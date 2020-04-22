@@ -41,33 +41,33 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
                 case Modules.Hits.Mana:
                 case Modules.Hits.Experience:
                 case Modules.Hits.Poison:
-                        var amount = data.shift(),
-                            id = self.generateId(self.game.time, amount, x, y),
-                            text = '+', colour;
+                    var amount = data.shift(),
+                        id = self.generateId(self.game.time, amount, x, y),
+                        text = '+', colour;
 
-                        if (amount < 1 || !isInt(amount))
-                            return;
+                    if (amount < 1 || !isInt(amount))
+                        return;
 
-                        if (type !== Modules.Hits.Experience)
-                            text = '++';
+                    if (type !== Modules.Hits.Experience)
+                        text = '++';
 
-                        if (type === Modules.Hits.Poison)
-                            text = '--';
+                    if (type === Modules.Hits.Poison)
+                        text = '--';
 
-                        var splat = new Splat(id, type, text + amount, x, y, false);
+                    var splat = new Splat(id, type, text + amount, x, y, false);
 
-                        if (type === Modules.Hits.Heal)
-                            colour = Modules.DamageColours.healed;
-                        else if (type === Modules.Hits.Mana)
-                            colour = Modules.DamageColours.mana;
-                        else if (type === Modules.Hits.Experience)
-                            colour = Modules.DamageColours.exp;
-                        else if (type === Modules.Hits.Poison)
-                            colour = Modules.DamageColours.poison;
+                    if (type === Modules.Hits.Heal)
+                        colour = Modules.DamageColours.healed;
+                    else if (type === Modules.Hits.Mana)
+                        colour = Modules.DamageColours.mana;
+                    else if (type === Modules.Hits.Experience)
+                        colour = Modules.DamageColours.exp;
+                    else if (type === Modules.Hits.Poison)
+                        colour = Modules.DamageColours.poison;
 
-                        splat.setColours(colour.fill, colour.stroke);
+                    splat.setColours(colour.fill, colour.stroke);
 
-                        self.addInfo(splat);
+                    self.addInfo(splat);
 
                     break;
 
