@@ -91,7 +91,6 @@ define(['jquery', './container/container'], function($, Container) {
             if (slot.string === null || slot.count === -1 || slot.string === 'null')
                 return;
 
-            self.actions.reset();
             self.actions.loadDefaults('inventory');
 
             if (slot.edible)

@@ -12,7 +12,8 @@ Modules = {
 
     InputType: {
         Key: 0,
-        LeftClick: 1
+        LeftClick: 1,
+        RightClick: 2
     },
 
     Actions: {

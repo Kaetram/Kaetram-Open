@@ -81,15 +81,7 @@
     background-color: rgba(0, 0, 0, 0.1);
     position: absolute;
     display: none;
-    left: 20%;
-    top: 83%;
     cursor: hand;
-}
-
-#pActions {
-    background-color: rgba(0, 0, 0, 0.1);
-    position: absolute;
-    display: none;
 }
 
 .actionButton {
@@ -1393,11 +1385,6 @@
     }
 
     #actionContainer {
-        width: 128px;
-        height: 64px;
-    }
-
-    #pActions {
         width: 128px;
         height: 64px;
     }
