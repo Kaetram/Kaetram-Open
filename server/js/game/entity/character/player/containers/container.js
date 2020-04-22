@@ -48,7 +48,7 @@ class Container {
         let self = this;
 
         //log.info('Trying to pickup ' + count + ' x ' + id);
-        let maxStackSize = Items.maxStackSize(id)  === -1 ? Constants.MAX_STACK : Items.maxStackSize(id);
+        let maxStackSize = Items.maxStackSize(id) === -1 ? Constants.MAX_STACK : Items.maxStackSize(id);
 
         //log.info('Max stack size = ' + maxStackSize);
 
