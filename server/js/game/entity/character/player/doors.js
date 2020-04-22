@@ -118,7 +118,7 @@ class Doors {
     hasCollision(x, y) {
         let self = this,
             tiles = self.getAllTiles(),
-            tileIndex = self.world.map.gridPositionToIndex(x, y) - 1,
+            tileIndex = self.world.map.gridPositionToIndex(x, y),
             index = tiles.indexes.indexOf(tileIndex);
 
         /**

@@ -129,7 +129,9 @@ class Map {
                     break;
             }
 
-            self.doors[self.gridPositionToIndex(door.x, door.y)] = {
+            let index = self.gridPositionToIndex(door.x, door.y) + 1;
+
+            self.doors[index] = {
                 x: door.tx,
                 y: door.ty,
                 orientation: orientation,
@@ -160,7 +162,7 @@ class Map {
         });
 
         _.each(Spawns, (data) => {
-            let tileIndex = self.gridPositionToIndex(data.x - 1, data.y);
+            let tileIndex = self.gridPositionToIndex(data.x, data.y);
 
             self.staticEntities.push({
                 tileIndex: tileIndex,
@@ -189,7 +191,7 @@ class Map {
     }
 
     gridPositionToIndex(x, y) {
-        return (y * this.width) + x + 1;
+        return (y * this.width) + x;
     }
 
     getX(index, width) {
@@ -245,7 +247,7 @@ class Map {
 
     isPositionObject(x, y) {
         let self = this,
-            index = self.gridPositionToIndex(x, y) - 1,
+            index = self.gridPositionToIndex(x, y),
             tiles = ClientMap.data[index],
             isObject = false;
 
@@ -260,11 +262,11 @@ class Map {
     }
 
     isDoor(x, y) {
-        return !!this.doors[this.gridPositionToIndex(x, y)];
+        return !!this.doors[this.gridPositionToIndex(x, y) + 1];
     }
 
     getDoorDestination(x, y) {
-        return this.doors[this.gridPositionToIndex(x, y)];
+        return this.doors[this.gridPositionToIndex(x, y) + 1];
     }
 
     isValidPosition(x, y) {
@@ -285,7 +287,7 @@ class Map {
         if (self.isOutOfBounds(x, y))
             return false;
 
-        let tileIndex = self.gridPositionToIndex(x - 1, y);
+        let tileIndex = self.gridPositionToIndex(x, y);
 
         return self.collisions.indexOf(tileIndex) > -1;
     }
@@ -297,14 +299,14 @@ class Map {
         if (self.isOutOfBounds(x, y))
             return true;
 
-        let tileIndex = self.gridPositionToIndex(x - 1, y);
+        let tileIndex = self.gridPositionToIndex(x, y);
 
         return ClientMap.data[tileIndex] === 0;
     }
 
     getPlateauLevel(x, y) {
         let self = this,
-            index = self.gridPositionToIndex(x - 1, y);
+            index = self.gridPositionToIndex(x, y);
 
         if (!self.isPlateau(index))
             return 0;

@@ -373,7 +373,7 @@ class Commands {
                 if (!getTileX || !getTileY)
                     return;
 
-                let getTileIndex = self.world.region.gridPositionToIndex(getTileX - 1, getTileY);
+                let getTileIndex = self.world.region.gridPositionToIndex(getTileX, getTileY);
 
                 log.info('Tile Index: ' + getTileIndex);
                 log.info('Tile Info: ' + MapClient.data[getTileIndex]);
