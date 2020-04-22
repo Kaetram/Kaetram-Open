@@ -193,8 +193,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
                 case Modules.InputType.RightClick:
 
-
-                    self.rightClick();
+                    self.rightClick(self.getCoords());
 
                     break;
             }
@@ -303,6 +302,9 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 return;
             }
 
+            if (self.renderer.mobile)
+                self.entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX && position.y === player.gridY));
+
             if (self.entity) {
                 player.disableAction = true;
 
@@ -330,8 +332,11 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
         },
 
-        rightClick: function() {
+        rightClick: function(position) {
             var self = this;
+
+            if (self.renderer.mobile)
+                self.entity = self.game.getEntityAt(position.x, position.y, self.isSamePosition(position));
 
             if (self.entity) {
 
@@ -374,7 +379,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 player = self.getPlayer();
 
             // The entity we are currently hovering over.
-            self.entity = self.game.getEntityAt(position.x, position.y, player.gridX === position.x && player.gridY === position.y);
+            self.entity = self.game.getEntityAt(position.x, position.y, self.isSamePosition(position));
 
             self.overlay.update(self.entity);
 
@@ -521,6 +526,10 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
         isAttackable: function(entity) {
             return entity.type === 'mob' || (entity.type === 'player' && entity.pvp && this.game.pvp);
+        },
+
+        isSamePosition: function(position) {
+            return position.x === this.game.player.gridX && position.y === this.game.player.gridY;
         },
 
         getPlayer: function() {
