@@ -1,4 +1,5 @@
-let Objects = require('../util/objects');
+let Objects = require('../util/objects'),
+    Utils = require('../util/utils');
 
 class GlobalObjects {
 
@@ -9,8 +10,25 @@ class GlobalObjects {
 
     }
 
-    getObject(id) {
-        return Objects.getObject(id);
+    getData(id) {
+        let self = this,
+            object = Objects.getObject(id);
+
+        if (!object)
+            return null;
+
+        let position = Objects.getPosition(id);
+
+        object.id = id;
+
+        return {
+            object: object,
+            info: {
+                id: id,
+                x: position.x * 16,
+                y: (position.y * 16) + 8 // offset for the chat bubble
+            }
+        }
     }
 
     /**
@@ -26,6 +44,13 @@ class GlobalObjects {
         }
 
         let message = object.messages[player.talkIndex];
+
+        log.debug(message);
+
+        if (message && message.includes("@player@")) {
+            message = message.replace('@player@', '@red@' + Utils.formatUsername(player.username));
+            message = Utils.parseMessage(message);
+        }
 
         if (player.talkIndex > object.messages.length - 1)
             player.talkIndex = 0;

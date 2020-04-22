@@ -576,12 +576,12 @@ class Incoming {
 
             case Packets.TargetOpcode.Object:
 
-                let object = self.globalObjects.getObject(instance);
+                let data = self.globalObjects.getData(instance);
 
-                if (!object)
+                if (!data)
                     return;
 
-                let message = self.globalObjects.talk(object, self.player);
+                let message = self.globalObjects.talk(data.object, self.player);
 
                 self.world.push(Packets.PushOpcode.Player, {
                     player: self.player,
@@ -590,11 +590,7 @@ class Incoming {
                         text: message,
                         duration: 5000,
                         isObject: true,
-                        info: {
-                            id: instance,
-                            x: object.x * 16,
-                            y: (object.y * 16) + 8
-                        }
+                        info: data.info
                     })
                 });
 
