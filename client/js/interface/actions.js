@@ -4,7 +4,7 @@ define(['jquery'], function($) {
 
     return Class.extend({
 
-        init: function(intrfce) {
+        init: function(interface) {
             var self = this;
 
             self.interface = interface;
