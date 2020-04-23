@@ -806,15 +806,17 @@ class Incoming {
                     isBank = type === 'bank';
 
                 if (isBank) {
-                    let bankSlot = self.player.bank.slots[index];
+                    let bankSlot = self.player.bank.getInfo(index);
 
                     if (bankSlot.id < 1)
                         return;
 
-                    //Infinite stacks move all at onces, otherwise move one by one.
+                    //Infinite stacks move all at once, otherwise move one by one.
                     let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
 
-                    if (self.player.inventory.add(bankSlot, moveAmount))
+                    bankSlot.count = moveAmount;
+
+                    if (self.player.inventory.add(bankSlot))
                         self.player.bank.remove(bankSlot.id, moveAmount, index);
 
                 } else {
