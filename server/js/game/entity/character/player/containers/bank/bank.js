@@ -50,6 +50,22 @@ class Bank extends Container {
         self.owner.save();
     }
 
+
+    /**
+     * We return the slot data without the extra information.
+     */
+
+    getInfo(index) {
+        let slot = this.slots[index];
+
+        return {
+            id: slot.id,
+            count: slot.count,
+            ability: slot.ability,
+            abilityLevel: slot.abilityLevel
+        }
+    }
+
 }
 
 module.exports = Bank;

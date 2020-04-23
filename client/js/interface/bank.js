@@ -209,16 +209,17 @@ define(['jquery', './container/container'], function($, Container) {
             if (!item || !slot)
                 return;
 
+            var divItem = item.find('#bankSlot' + info.index);
+            
             slot.count -= info.count;
 
             if (slot.count < 1) {
-                var divItem = item.find('#bankSlot' + info.index);
-
                 divItem.find('#bankImage' + info.index).css('background-image', '');
                 divItem.find('#bankItemCount' + info.index).text('');
 
                 slot.empty();
-            }
+            } else
+                divItem.find('#bankItemCount' + info.index).text(slot.count);
         },
 
         addInventory: function(info) {

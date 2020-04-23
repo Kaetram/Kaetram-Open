@@ -1355,7 +1355,7 @@
     "price": 150,
     "stackable": true,
     "edible": 1,
-    "maxStackSize": 20,
+    "maxStackSize": 5,
     "plugin": "healthFlask",
     "customData": {"healAmount": 100}
   },
@@ -1368,7 +1368,7 @@
     "price": 200,
     "stackable": true,
     "edible": 1,
-    "maxStackSize": 20,
+    "maxStackSize": 5,
     "plugin": "healthFlask",
     "customData": {"manaAmount": 35}
 
@@ -1382,7 +1382,7 @@
     "price": 350,
     "stackable": true,
     "edible": 1,
-    "maxStackSize": 5,
+    "maxStackSize": 3,
     "plugin": "healthFlask",
     "customData": {"healAmount": 200}
 
@@ -1396,7 +1396,7 @@
     "price": 600,
     "stackable": true,
     "edible": 1,
-    "maxStackSize": 7,
+    "maxStackSize": 2,
     "plugin": "healthFlask",
     "customData": {"healAmount": 500}
   },

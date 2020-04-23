@@ -45,8 +45,6 @@ class GlobalObjects {
 
         let message = object.messages[player.talkIndex];
 
-        log.debug(message);
-
         if (message && message.includes("@player@")) {
             message = message.replace('@player@', '@red@' + Utils.formatUsername(player.username));
             message = Utils.parseMessage(message);
