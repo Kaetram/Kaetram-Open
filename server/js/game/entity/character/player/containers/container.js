@@ -151,8 +151,6 @@ class Container {
         let self = this,
             slot = self.slots[index];
 
-        log.debug(slot);
-
         if (!slot)
             return false;
 
