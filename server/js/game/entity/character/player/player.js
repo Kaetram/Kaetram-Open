@@ -463,7 +463,7 @@ class Player extends Character {
             type = Modules.Equipment.Boots;
 
         id = Items.stringToId(string);
-        power = Items.getLevelRequirement(string) / 2;
+        power = Items.getLevelRequirement(string);
 
         switch(type) {
             case Modules.Equipment.Armour:

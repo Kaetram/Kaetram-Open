@@ -48,28 +48,11 @@ define(['../entity/character/character'], function(Character) {
                             entity.movement.step(self.game.time);
 
                         if (entity.hasPath() && !entity.movement.inProgress) {
-                            var tick = Math.round(266 / entity.movementSpeed);
-
+                            
                             switch (entity.orientation) {
                                 case Modules.Orientation.Left:
-
-                                    entity.movement.start(self.game.time,
-                                        function(x) {
-                                            entity.x = x;
-                                            entity.moved();
-                                        },
-                                        function() {
-                                            entity.x = entity.movement.endValue;
-                                            entity.moved();
-                                            entity.nextStep();
-                                        },
-                                        entity.x - tick,
-                                        entity.x - 16,
-                                        entity.movementSpeed);
-
-                                    break;
-
                                 case Modules.Orientation.Right:
+                                    var isLeft = entity.orientation === Modules.Orientation.Left;
 
                                     entity.movement.start(self.game.time,
                                         function(x) {
@@ -81,31 +64,15 @@ define(['../entity/character/character'], function(Character) {
                                             entity.moved();
                                             entity.nextStep();
                                         },
-                                        entity.x + tick,
-                                        entity.x + 16,
+                                        entity.x + (isLeft ? -1 : 1),
+                                        entity.x + (isLeft ? -16 : 16),
                                         entity.movementSpeed);
 
                                     break;
 
                                 case Modules.Orientation.Up:
-
-                                    entity.movement.start(self.game.time,
-                                        function(y) {
-                                            entity.y = y;
-                                            entity.moved();
-                                        },
-                                        function() {
-                                            entity.y = entity.movement.endValue;
-                                            entity.moved();
-                                            entity.nextStep();
-                                        },
-                                        entity.y - tick,
-                                        entity.y - 16,
-                                        entity.movementSpeed);
-
-                                    break;
-
                                 case Modules.Orientation.Down:
+                                    var isUp = entity.orientation === Modules.Orientation.Up;
 
                                     entity.movement.start(self.game.time,
                                         function(y) {
@@ -117,8 +84,8 @@ define(['../entity/character/character'], function(Character) {
                                             entity.moved();
                                             entity.nextStep();
                                         },
-                                        entity.y + tick,
-                                        entity.y + 16,
+                                        entity.y + (isUp ? -1 : 1),
+                                        entity.y + (isUp ? -16 : 16),
                                         entity.movementSpeed);
 
                                     break;

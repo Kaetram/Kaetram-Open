@@ -85,17 +85,16 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         update: function() {
-            var self = this;
+            var self = this,
+                weaponPower = self.player.weapon.power,
+                armourPower = self.player.armour.power;
 
             self.level.text(self.player.level);
             self.experience.text(self.player.experience);
 
-            if (self.player.weapon.power)
-                self.weaponSlotInfo.text('+' + self.player.weapon.power);
-
-            if (self.player.armour.power)
-                self.armourSlotInfo.text('+' + self.player.armour.power);
-
+            self.weaponSlotInfo.text(weaponPower ? '+' + weaponPower : '');
+            self.armourSlotInfo.text(armourPower ? '+' + armourPower : '');
+            
             self.loadSlots();
         },
 
