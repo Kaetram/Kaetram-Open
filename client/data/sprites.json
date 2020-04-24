@@ -13468,7 +13468,7 @@
     "id": "rat",
     "width": 48,
     "height": 48,
-    "idleSpeed": 200,
+    "idleSpeed": 250,
     "animations": {
       "death": {
         "length": 4,
