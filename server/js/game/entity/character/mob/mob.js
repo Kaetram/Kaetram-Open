@@ -35,6 +35,7 @@ class Mob extends Character {
         self.aggroRange = self.data.aggroRange;
         self.aggressive = self.data.aggressive;
         self.attackRate = self.data.attackRate;
+        self.movementSpeed = self.data.movementSpeed;
 
         self.spawnLocation = [x, y];
 
@@ -82,7 +83,7 @@ class Mob extends Character {
         if (random > self.drops[item])
             return null;
 
-        let count = item === 'gold' ? self.level * 5 : 1;
+        let count = item === 'gold' ? Utils.randomInt(self.level, self.level * 5) : 1;
 
         return {
             id: Items.stringToId(item),
