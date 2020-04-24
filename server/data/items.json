@@ -556,7 +556,7 @@
 
   "WolfarcherArmor": {
     "id": 78,
-    "defense": 26,
+    "defense": 18,
     "type": "armorarcher",
     "name": "Wolf Archer Armour"
   },
@@ -949,7 +949,7 @@
 
   "WolfArmor": {
     "id": 132,
-    "defense": 34,
+    "defense": 20,
     "type": "armor",
     "name": "Wolf Armour"
   },
