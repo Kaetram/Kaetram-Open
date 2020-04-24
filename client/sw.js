@@ -195,11 +195,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "css/game.css",
-    "revision": "1c5301d456aed7d2d5d519743b4ea042"
+    "revision": "7e4247a7fdc8331a7b04541b0df8db31"
   },
   {
     "url": "css/interface.css",
-    "revision": "c52aef5a3765213934bfcd18dd3ea037"
+    "revision": "466e52970730187b040f11359b5f94e3"
   },
   {
     "url": "css/main.css",
@@ -207,27 +207,23 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "css/vars.css",
-    "revision": "2b4e5dc9f27a15224b06957c5148db21"
-  },
-  {
-    "url": "data/config.json",
-    "revision": "f4c47ce2ac421ace36ea07a6142a512a"
+    "revision": "957368f8271735ccc0f6209f1440e0cf"
   },
   {
     "url": "data/config.json-dist",
-    "revision": "d48b1c76d3e9f68f2b1ae5e3e699b3fc"
+    "revision": "c86f7bc59b1c380100b99136932b7032"
   },
   {
     "url": "data/maps/map.js",
-    "revision": "b8b5191afb14f04687c5f4aae79bffbe"
+    "revision": "353524b48bb6767cdc80f128637ac855"
   },
   {
     "url": "data/maps/map.json",
-    "revision": "f8525bf4fc8155feb0ebb0947b37757c"
+    "revision": "2883a30e94dffb2a2381c40be4a4eb41"
   },
   {
     "url": "data/sprites.json",
-    "revision": "cd85d36559887a5b8e42eccefdef943a"
+    "revision": "b00ce3879ff24abf0dc93cd7340580d6"
   },
   {
     "url": "favicon.ico",
@@ -3318,6 +3314,10 @@ workbox.precaching.precacheAndRoute([
     "revision": "48e867b18b00a0389dcfce1d55542ddc"
   },
   {
+    "url": "img/sprites/icecrab.png",
+    "revision": "6f141c369f6e4c9894b9e75a1f9d7cbc"
+  },
+  {
     "url": "img/sprites/iceelfnpc.png",
     "revision": "deee8de56591d9b1feefe3247dd750dc"
   },
@@ -5251,11 +5251,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "img/tilesets/tilesheet-1.png",
-    "revision": "2fb3daf8c5f6bd7df5ce2663d3c748b0"
+    "revision": "d102921c55ed9f6f705a2ebdcd8a20ae"
   },
   {
     "url": "img/tilesets/tilesheet-2.png",
-    "revision": "8b8f223a80816fe6ad4272744d0bef73"
+    "revision": "e6fbeb4423232f6efaccd349101d65b2"
   },
   {
     "url": "img/tilesets/tilesheet-3.png",
@@ -5279,11 +5279,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "ce7e43653c97b234e7dcf114749a8c46"
+    "revision": "7465035922c304e22d64f012d0e649be"
   },
   {
     "url": "js/app.js",
-    "revision": "f6f54a01013b221dd3d13b9df7032869"
+    "revision": "5b4840fc56e1e1759f495aa25a3052a7"
   },
   {
     "url": "js/build.js",
@@ -5307,11 +5307,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/controllers/info.js",
-    "revision": "d8d2346475dd5334fb8ce8562cddc26d"
+    "revision": "f26301e310badb4d2521d20111e9de37"
   },
   {
     "url": "js/controllers/input.js",
-    "revision": "dd55d6f0fc7857ae24551a8d8dc8a461"
+    "revision": "8375b3d2b64ca558d72ead0515a4a26c"
   },
   {
     "url": "js/controllers/interface.js",
@@ -5379,7 +5379,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/character/player/playerhandler.js",
-    "revision": "b5452c40b2e4f3aa9bc8f8e16653961c"
+    "revision": "f28fde6579b3c022cd045e0171128d1a"
   },
   {
     "url": "js/entity/entity.js",
@@ -5403,11 +5403,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/entity/sprite.js",
-    "revision": "e061f428a34281a96b168c23f98d3c4e"
+    "revision": "801b255501748ff86bf5fe5d9290cc3f"
   },
   {
     "url": "js/game.js",
-    "revision": "38a2b7a52bc234c3ba63c1e70818798c"
+    "revision": "db2d7af600009fc7c846b99a59e268d6"
   },
   {
     "url": "js/interface/abilities.js",
@@ -5415,11 +5415,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/interface/actions.js",
-    "revision": "a2ed0e3b61c8e9b4908bea04fa3ed50d"
+    "revision": "d10f13cb16c3212586d9823d28abe1b5"
   },
   {
     "url": "js/interface/bank.js",
-    "revision": "376658c354d0a8057c18cb5dce5bafbe"
+    "revision": "314c054bea67ed0f2e66d58934666d4f"
   },
   {
     "url": "js/interface/container/container.js",
@@ -5439,7 +5439,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/interface/inventory.js",
-    "revision": "b79573dcd539da376da7b8eb8d93bfef"
+    "revision": "1f037425666a8bafb07beb0d612be692"
   },
   {
     "url": "js/interface/profile/page.js",
@@ -5463,7 +5463,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/interface/profile/pages/state.js",
-    "revision": "c1db4e9856d06b229441f85e72b52ceb"
+    "revision": "cdf45ac1b16feac7923931fb452b57d9"
   },
   {
     "url": "js/interface/profile/profile.js",
@@ -5515,11 +5515,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/main.js",
-    "revision": "f4e97dea9a72b30b5c00dc0f565b9a29"
+    "revision": "f18d4c7f714150bfcc0829aeedd98e72"
   },
   {
     "url": "js/map/map.js",
-    "revision": "76aa4a68707320b72c36e2ef3b600e3a"
+    "revision": "3189c3ee0574a6f85e8ca755d8b9e2f8"
   },
   {
     "url": "js/map/mapworker.js",
@@ -5527,7 +5527,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/network/connection.js",
-    "revision": "6b419469dd24362b61377b6218a761c0"
+    "revision": "db4506d4cb00777db021b1d8c3112960"
   },
   {
     "url": "js/network/impl/teamwar.js",
@@ -5583,7 +5583,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/renderer/updater.js",
-    "revision": "45b202b4a302a84d831a3bdef9fb37f8"
+    "revision": "723b0613e96d897db2f6dcafbea09b0e"
   },
   {
     "url": "js/text.js",
@@ -5595,7 +5595,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "js/utils/modules.js",
-    "revision": "1fc7b4d3abc771630a9256166eeb1612"
+    "revision": "3b3182cd16e8f708503a403af0f2e04d"
   },
   {
     "url": "js/utils/pathfinder.js",
