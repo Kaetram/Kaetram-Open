@@ -226,6 +226,7 @@ class Incoming {
         self.player.sendEquipment();
         self.player.loadInventory();
         self.player.loadQuests();
+        self.player.loadBank();
 
         if (self.world.map.isOutOfBounds(self.player.x, self.player.y))
             self.player.setPosition(50, 89);

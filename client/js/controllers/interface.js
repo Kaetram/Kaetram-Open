@@ -21,6 +21,7 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
 
             self.inventory = null;
             self.profile = null;
+            self.bank = null;
             self.actions = null;
             self.enchant = null;
             self.shop = null;

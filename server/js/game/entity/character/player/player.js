@@ -188,7 +188,7 @@ class Player extends Character {
         }
 
         self.database.loader.getInventory(self, (ids, counts, skills, skillLevels) => {
-            if (ids === null && counts === null) {
+            if (ids === null || counts === null) {
                 self.inventory.loadEmpty();
                 return;
             }
@@ -198,8 +198,6 @@ class Player extends Character {
 
             self.inventory.load(ids, counts, skills, skillLevels);
             self.inventory.check();
-
-            self.loadBank();
         });
     }
 
@@ -212,6 +210,11 @@ class Player extends Character {
         }
 
         self.database.loader.getBank(self, (ids, counts, skills, skillLevels) => {
+            if (ids === null || counts === null) {
+                self.bank.loadEmpty();
+                return;
+            }
+
             if (ids.length !== self.bank.size)
                 self.save();
 
