@@ -621,7 +621,8 @@
     "id": 87,
     "type": "weaponarcher",
     "attack": 1,
-    "name": "Wooden Bow"
+    "name": "Wooden Bow",
+    "requirement": 1
   },
 
   "PlasticBow": {
