@@ -104,6 +104,11 @@ let Modules = {
         3: ['Aynor', 996, 204, true, 50],
         4: ['Crullfeld', 151, 21, true, 20], //Desert
         5: ['Patsow', 238, 159, true, 25] //Lava
+    },
+
+    Professions: {
+        Lumberjacking: 0,
+        Fishing: 1
     }
 
 };

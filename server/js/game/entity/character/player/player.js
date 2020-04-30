@@ -18,6 +18,7 @@ let Character = require('../character'),
     Quests = require('../../../../controllers/quests'),
     Inventory = require('./containers/inventory/inventory'),
     Abilities = require('./abilities/abilities'),
+    Professions = require('./professions/professions'),
     Bank = require('./containers/bank/bank'),
     Enchant = require('./enchant'),
     Utils = require('../../../../util/utils'),
@@ -62,6 +63,7 @@ class Player extends Character {
         self.handler = new Handler(self);
 
         self.inventory = new Inventory(self, 20);
+        self.professions = new Professions(self);
         self.abilities = new Abilities(self);
         self.enchant = new Enchant(self);
         self.bank = new Bank(self, 56);
