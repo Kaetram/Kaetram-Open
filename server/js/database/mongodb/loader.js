@@ -91,6 +91,27 @@ class Loader {
         });
     }
 
+    getProfessions(player, callback) {
+        let self = this;
+
+        self.database.getDatabase((database) => {
+            let professions = database.collection('player_professions'),
+                cursor = professions.find({ username: player.username });
+
+            cursor.toArray().then((professionsArray) => {
+                let info = professionsArray[0];
+
+                if (info && info.data) {
+                    if (info.username !== player.username)
+                        log.notice('[Loader] Mismatch in usernames whilst retrieving profession data for: ' + player.username);
+
+                    callback(info.data);
+                }
+
+            });
+        });
+    }
+
 }
 
 module.exports = Loader;

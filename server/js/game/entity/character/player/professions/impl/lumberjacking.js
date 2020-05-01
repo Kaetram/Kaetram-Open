@@ -1,9 +1,15 @@
-class Lumberjacking {
+let Profession = require('./profession');
 
-    constructor() {
+class Lumberjacking extends Profession {
+
+    constructor(id) {
+        super(id);
+
         let self = this;
 
-        
+
     }
 
 }
+
+module.exports = Lumberjacking;

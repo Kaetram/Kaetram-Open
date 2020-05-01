@@ -181,6 +181,20 @@ class Player extends Character {
             self.regionsLoaded = regions.regions.split(',');
     }
 
+    loadProfessions() {
+        let self = this;
+
+        if (config.offlineMode)
+            return;
+
+        self.database.loader.getProfessions(self, (info) => {
+            if (!info) // If this somehow happens.
+                return;
+
+            self.professions.update(info);
+        });
+    }
+
     loadInventory() {
         let self = this;
 

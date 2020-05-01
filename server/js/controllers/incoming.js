@@ -224,6 +224,8 @@ class Incoming {
         self.world.region.push(self.player);
 
         self.player.sendEquipment();
+        
+        self.player.loadProfessions();
         self.player.loadInventory();
         self.player.loadQuests();
         self.player.loadBank();
