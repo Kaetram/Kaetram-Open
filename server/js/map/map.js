@@ -35,6 +35,8 @@ class Map {
 
         self.version = map.version || 0;
 
+        self.clientMap = ClientMap;
+
         self.width = map.width;
         self.height = map.height;
         self.collisions = map.collisions;
@@ -250,7 +252,7 @@ class Map {
     getPositionObject(x, y) {
         let self = this,
             index = self.gridPositionToIndex(x, y),
-            tiles = ClientMap.data[index],
+            tiles = self.clientMap.data[index],
             objectId;
 
         if (tiles instanceof Array)
@@ -304,7 +306,7 @@ class Map {
 
         let tileIndex = self.gridPositionToIndex(x, y);
 
-        return ClientMap.data[tileIndex] === 0;
+        return self.clientMap.data[tileIndex] === 0;
     }
 
     getPlateauLevel(x, y) {
