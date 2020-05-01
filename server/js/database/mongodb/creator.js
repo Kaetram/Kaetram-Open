@@ -21,22 +21,24 @@ class Creator {
                 playerBank = database.collection('player_bank'),
                 playerRegions = database.collection('player_regions'),
                 playerAbilities = database.collection('player_abilities'),
+                playerProfessions = database.collection('player_professions'),
                 playerInventory = database.collection('player_inventory');
 
-            self.savePlayerData(playerData, player);
-            self.savePlayerEquipment(playerEquipment, player);
-            self.savePlayerQuests(playerQuests, player);
-            self.savePlayerAchievements(playerAchievements, player);
-            self.savePlayerBank(playerBank, player);
-            self.savePlayerRegions(playerRegions, player);
-            self.savePlayerAbilities(playerAbilities, player);
-            self.savePlayerInventory(playerInventory, player, () => {
+            self.saveData(playerData, player);
+            self.saveEquipment(playerEquipment, player);
+            self.saveQuests(playerQuests, player);
+            self.saveAchievements(playerAchievements, player);
+            self.saveBank(playerBank, player);
+            self.saveRegions(playerRegions, player);
+            self.saveAbilities(playerAbilities, player);
+            self.saveProfessions(playerProfessions, player);
+            self.saveInventory(playerInventory, player, () => {
                 log.debug(`Successfully saved all data for player ${player.username}.`);
             });
         });
     }
 
-    savePlayerData(collection, player) {
+    saveData(collection, player) {
         Creator.getPlayerData(player, (data) => {
             collection.updateOne({
                 username: player.username
@@ -52,7 +54,7 @@ class Creator {
         });
     }
 
-    savePlayerEquipment(collection, player) {
+    saveEquipment(collection, player) {
 
         collection.updateOne({
             username: player.username
@@ -67,7 +69,7 @@ class Creator {
         });
     }
 
-    savePlayerQuests(collection, player) {
+    saveQuests(collection, player) {
         collection.updateOne({
             username: player.username
         }, { $set: player.quests.getQuests() }, {
@@ -82,7 +84,7 @@ class Creator {
 
     }
 
-    savePlayerAchievements(collection, player) {
+    saveAchievements(collection, player) {
         collection.updateOne({
             username: player.username
         }, { $set: player.quests.getAchievements() }, {
@@ -97,7 +99,7 @@ class Creator {
 
     }
 
-    savePlayerBank(collection, player) {
+    saveBank(collection, player) {
         collection.updateOne({
             username: player.username
         }, { $set: player.bank.getArray() }, {
@@ -111,7 +113,7 @@ class Creator {
         });
     }
 
-    savePlayerRegions(collection, player) {
+    saveRegions(collection, player) {
         collection.updateOne({
             username: player.username
         }, { $set: { regions: player.regionsLoaded.toString(), gameVersion: config.gver } }, {
@@ -125,7 +127,7 @@ class Creator {
         });
     }
 
-    savePlayerAbilities(collection, player) {
+    saveAbilities(collection, player) {
         collection.updateOne({
             username: player.username
         }, { $set: player.abilities.getArray() }, {
@@ -139,7 +141,21 @@ class Creator {
         });
     }
 
-    savePlayerInventory(collection, player, callback) {
+    saveProfessions(collection, player) {
+        collection.updateOne({
+            username: player.username
+        }, { $set: player.professions.getArray() }, {
+            upsert: true
+        }, (error, result) => {
+            if (error)
+                log.error(`An error has occurred while saving player_professions for ${player.username}!`);
+
+            if (!result)
+                log.error(`Could not save player_professions for ${player.username}!`);
+        });
+    }
+
+    saveInventory(collection, player, callback) {
         collection.updateOne({
             username: player.username
         }, { $set: player.inventory.getArray() }, {
