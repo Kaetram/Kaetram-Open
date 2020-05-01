@@ -386,7 +386,9 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
 
             if (!self.entity || (self.entity.id === player.id)) {
                 if (self.map.isObject(position.x, position.y)) {
-                    self.setCursor(self.cursors['talk']);
+                    let cursor = self.map.getTileCursor(position.x, position.y);
+
+                    self.setCursor(self.cursors[cursor || 'talk']);
                     self.hovering = Modules.Hovering.Object;
                 } else {
                     self.setCursor(self.cursors['hand']);

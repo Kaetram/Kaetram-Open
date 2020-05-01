@@ -235,7 +235,8 @@ class Parser {
                 x: value.x,
                 y: value.y,
                 type: value.type,
-                messages: value.messages
+                messages: value.messages,
+                cursor: value.cursor
             };
 
             objectCounter++;

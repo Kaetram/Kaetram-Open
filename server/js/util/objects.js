@@ -18,4 +18,12 @@ Objects.getPosition = (id) => {
     }
 };
 
+Objects.getCursor = (id) => {
+    if (id in Objects.Data)
+        if (Objects.Data[id].cursor)
+            return Objects.Data[id].cursor;
+
+    return null;
+};
+
 module.exports = Objects;
