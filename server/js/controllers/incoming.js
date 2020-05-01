@@ -1067,10 +1067,9 @@ class Incoming {
     preventNoClip(x, y) {
         let self = this,
             isMapColliding = self.world.map.isColliding(x, y),
-            isInstanceColliding = self.player.doors.hasCollision(x, y),
-            isObject = self.world.map.isPositionObject(x, y);
+            isInstanceColliding = self.player.doors.hasCollision(x, y);
 
-        if (isObject)
+        if (self.world.map.getPositionObject(x, y))
             return true;
 
         if (isMapColliding || isInstanceColliding) {

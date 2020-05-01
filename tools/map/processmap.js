@@ -49,6 +49,8 @@ module.exports = function parse(json, options) {
         case 'server':
 
             map.objects = [];
+            map.cursors = {};
+            map.trees = {};
 
             map.tilesets = [];
             map.pvpAreas = [];
@@ -102,6 +104,13 @@ module.exports = function parse(json, options) {
 
         if (mode === 'server' && property === 'o')
             map.objects.push(id);
+
+        if (mode === 'server' && property === 'cursor')
+            map.cursors[id] = value;
+
+        if (mode === 'server' && property === 'tree')
+            map.trees[id] = value;
+
     };
 
     let handleAnimation = function(id, firstGID, tile) {

@@ -7,17 +7,29 @@ class GlobalObjects {
         let self = this;
 
         self.world = world;
+        self.map = world.map;
 
     }
 
-    getType(id) {
+    getInfo(id) {
         let self = this,
-            object = Objects.getObject(id);
+            position = Objects.getPosition(id),
+            objectId = self.map.getPositionObject(position.x, position.y);
+
+        if (objectId in self.map.trees)
+            return {
+                type: 'lumberjacking',
+                tree: self.map.trees[objectId]
+            };
+
+        let object = Objects.getObject(id);
 
         if (!object)
             return null;
 
-        return object.type;
+        return {
+            type: object.type
+        };
     }
 
     /**

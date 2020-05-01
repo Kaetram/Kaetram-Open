@@ -404,7 +404,7 @@ class Region {
                         let index = self.gridPositionToIndex(x - 1, y),
                             tileData = ClientMap.data[index],
                             isCollision = ClientMap.collisions.indexOf(index) > -1 || !tileData,
-                            isObject = false;
+                            objectId;
 
                         if (tileData !== 0) {
 
@@ -412,13 +412,13 @@ class Region {
 
                                 for (let j = 0; j < tileData.length; j++) {
                                     if (self.map.isObject(tileData[j])) {
-                                        isObject = true;
+                                        objectId = tileData[j];
                                         break;
                                     }
                                 }
                             } else
                                 if (self.map.isObject(tileData))
-                                    isObject = true;
+                                    objectId = tileData;
                         }
 
                         let info = {
@@ -431,10 +431,10 @@ class Region {
                         if (isCollision)
                             info.isCollision = isCollision;
 
-                        if (isObject) {
-                            info.isObject = isObject;
+                        if (objectId) {
+                            info.isObject = !!objectId;
 
-                            let cursor = Objects.getCursor(self.getObjectId(index))
+                            let cursor = self.getCursor(info.index, objectId);
 
                             if (cursor)
                                 info.cursor = cursor;
@@ -476,6 +476,20 @@ class Region {
 
     static regionIdToInstance(player, regionId) {
         return regionId + '-' + player.instance;
+    }
+
+    getCursor(tileIndex, tileId) {
+        let self = this;
+
+        if (tileId in self.map.cursors)
+            return self.map.cursors[tileId];
+
+        let cursor = Objects.getCursor(self.getObjectId(tileIndex));
+
+        if (!cursor)
+            return null;
+
+        return cursor;
     }
 
     getObjectId(tileIndex) {

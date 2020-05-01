@@ -47,6 +47,8 @@ class Map {
         self.lights = map.lights;
         self.plateau = map.plateau;
         self.objects = map.objects;
+        self.cursors = map.cursors;
+        self.trees = map.trees;
 
         self.zoneWidth = 25;
         self.zoneHeight = 20;
@@ -245,20 +247,21 @@ class Map {
         return this.objects.indexOf(id) > -1;
     }
 
-    isPositionObject(x, y) {
+    getPositionObject(x, y) {
         let self = this,
             index = self.gridPositionToIndex(x, y),
             tiles = ClientMap.data[index],
-            isObject = false;
+            objectId;
 
         if (tiles instanceof Array)
             for (let i in tiles)
                 if (self.isObject(tiles[i]))
-                    isObject = true;
+                    objectId = tiles[i];
         else
-            isObject = self.isObject(tiles);
+            if (self.isObject(tiles))
+                objectId = tiles;
 
-        return isObject;
+        return objectId;
     }
 
     isDoor(x, y) {
