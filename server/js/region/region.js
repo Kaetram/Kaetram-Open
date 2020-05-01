@@ -5,7 +5,6 @@ let _ = require('underscore'),
     Packets = require('../network/packets'),
     Player = require('../game/entity/character/player/player'),
     fs = require('fs'),
-    ClientMap = require('../../data/map/world_client.json'),
     map = 'server/data/map/world_client.json',
     Objects = require('../util/objects');
 
@@ -24,6 +23,8 @@ class Region {
 
         self.map = world.map;
         self.mapRegions = world.map.regions;
+
+        self.clientMap = self.map.clientMap;
 
         self.world = world;
 
@@ -73,7 +74,7 @@ class Region {
 
                 try {
 
-                    ClientMap = JSON.parse(data);
+                    self.clientMap = JSON.parse(data);
 
                     self.updateRegions();
 
@@ -90,8 +91,8 @@ class Region {
     load() {
         let self = this;
 
-        self.clientWidth = ClientMap.width;
-        self.clientHeight = ClientMap.height;
+        self.clientWidth = self.clientMap.width;
+        self.clientHeight = self.clientMap.height;
 
         self.mapRegions.forEachRegion((regionId) => {
             self.regions[regionId] = {
@@ -370,7 +371,7 @@ class Region {
         let self = this,
             index = self.gridPositionToIndex(x, y);
 
-        ClientMap.data[index] = newTile;
+        self.clientMap.data[index] = newTile;
 
         self.world.push(Packets.PushOpcode.Broadcast, {
             message: Region.getModify(index, newTile)
@@ -402,8 +403,8 @@ class Region {
                 for (let y = bounds.startY; y < bounds.endY; y++) {
                     for (let x = bounds.startX; x < bounds.endX; x++) {
                         let index = self.gridPositionToIndex(x - 1, y),
-                            tileData = ClientMap.data[index],
-                            isCollision = ClientMap.collisions.indexOf(index) > -1 || !tileData,
+                            tileData = self.clientMap.data[index],
+                            isCollision = self.clientMap.collisions.indexOf(index) > -1 || !tileData,
                             objectId;
 
                         if (tileData !== 0) {
