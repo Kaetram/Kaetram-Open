@@ -17274,6 +17274,17 @@
     }
   },
   {
+    "id": "axe_cursor",
+    "width": 14,
+    "height": 14,
+    "animations": {
+      "idle_down": {
+        "length": 1,
+        "row": 0
+      }
+    }
+  },
+  {
     "id": "target",
     "width": 16,
     "height": 16,

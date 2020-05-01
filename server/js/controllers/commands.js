@@ -36,7 +36,7 @@ class Commands {
     handlePlayerCommands(command, blocks) {
         let self = this;
 
-        switch(command) {
+        switch (command) {
 
             case 'players':
                 let population = self.world.getPopulation(),

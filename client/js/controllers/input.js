@@ -73,6 +73,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
             self.cursors['talk'] = self.game.getSprite('talk');
             self.cursors['spell'] = self.game.getSprite('spell');
             self.cursors['bow'] = self.game.getSprite('bow');
+            self.cursors['axe'] = self.game.getSprite('axe_cursor');
 
             self.newCursor = self.cursors['hand'];
             self.newTargetColour = 'rgba(255, 255, 255, 0.5)';

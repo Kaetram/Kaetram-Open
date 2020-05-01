@@ -18,7 +18,6 @@ class Incoming {
         self.player = player;
         self.connection = self.player.connection;
         self.world = self.player.world;
-        self.globalObjects = self.world.globalObjects;
         self.database = self.player.database;
         self.commands = new Commands(self.player);
 
@@ -37,7 +36,7 @@ class Incoming {
 
             self.player.refreshTimeout();
 
-            switch(packet) {
+            switch (packet) {
 
                 case Packets.Intro:
                     self.handleIntro(message);
@@ -224,7 +223,7 @@ class Incoming {
         self.world.region.push(self.player);
 
         self.player.sendEquipment();
-        
+
         self.player.loadProfessions();
         self.player.loadInventory();
         self.player.loadQuests();
@@ -579,23 +578,7 @@ class Incoming {
 
             case Packets.TargetOpcode.Object:
 
-                let data = self.globalObjects.getData(instance);
-
-                if (!data)
-                    return;
-
-                let message = self.globalObjects.talk(data.object, self.player);
-
-                self.world.push(Packets.PushOpcode.Player, {
-                    player: self.player,
-                    message: new Messages.Bubble({
-                        id: instance,
-                        text: message,
-                        duration: 5000,
-                        isObject: true,
-                        info: data.info
-                    })
-                });
+                self.player.handleObject(instance);
 
                 break;
         }
@@ -720,7 +703,7 @@ class Incoming {
         if (self.player.rights < 2)
             return;
 
-        switch(opcode) {
+        switch (opcode) {
             case Packets.CommandOpcode.CtrlClick:
                 let position = message.shift();
 
