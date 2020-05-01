@@ -13,6 +13,7 @@ define(['jquery'], function($) {
 
             self.data = [];
             self.objects = [];
+            self.cursorTiles = {}; // Global objects with custom cursors
             self.tilesets = [];
             self.rawTilesets = [];
             self.lastSyncData = []; // Prevent unnecessary sync data.
@@ -89,7 +90,7 @@ define(['jquery'], function($) {
                 if (tile.isCollision && collisionIndex < 0) // Adding new collision tileIndex
                     self.collisions.push(tile.index);
 
-                if (!tile.isCollision && collisionIndex > 0) { // Removing existing collision tileIndex
+                if (!tile.isCollision && collisionIndex > -1) { // Removing existing collision tileIndex
                     var position = self.indexToGridPosition(tile.index + 1);
 
                     self.collisions.splice(collisionIndex, 1);
@@ -100,9 +101,14 @@ define(['jquery'], function($) {
                 if (tile.isObject && objectIndex < 0)
                     self.objects.push(tile.index);
 
-                if (!tile.isObject && objectIndex > 0)
+                if (!tile.isObject && objectIndex > -1)
                     self.objects.splice(objectIndex, 1);
 
+                if (tile.cursor)
+                    self.cursorTiles[tile.index] = tile.cursor;
+
+                if (!tile.cursor && tile.index in self.cursorTiles)
+                    self.cursorTiles[tile.index] = null;
             }
 
             if (self.webGLMap)
@@ -386,6 +392,16 @@ define(['jquery'], function($) {
                 index = self.gridPositionToIndex(x, y) - 1;
 
             return this.objects.indexOf(index) > -1;
+        },
+
+        getTileCursor: function(x, y) {
+            var self = this,
+                index = self.gridPositionToIndex(x, y) - 1;
+
+            if (!(index in self.cursorTiles))
+                return null;
+
+            return self.cursorTiles[index];
         },
 
         isHighTile: function(id) {

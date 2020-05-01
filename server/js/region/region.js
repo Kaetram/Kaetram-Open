@@ -6,7 +6,8 @@ let _ = require('underscore'),
     Player = require('../game/entity/character/player/player'),
     fs = require('fs'),
     ClientMap = require('../../data/map/world_client.json'),
-    map = 'server/data/map/world_client.json';
+    map = 'server/data/map/world_client.json',
+    Objects = require('../util/objects');
 
 class Region {
 
@@ -387,7 +388,7 @@ class Region {
 
     getRegionData(region, player, force) {
         let self = this,
-            data = [];
+            data = [], cursor;
 
         if (!player)
             return data;
@@ -430,8 +431,14 @@ class Region {
                         if (isCollision)
                             info.isCollision = isCollision;
 
-                        if (isObject)
+                        if (isObject) {
                             info.isObject = isObject;
+
+                            let cursor = Objects.getCursor(self.getObjectId(index))
+
+                            if (cursor)
+                                info.cursor = cursor;
+                        }
 
                         data.push(info);
                     }
@@ -469,6 +476,13 @@ class Region {
 
     static regionIdToInstance(player, regionId) {
         return regionId + '-' + player.instance;
+    }
+
+    getObjectId(tileIndex) {
+        let self = this,
+            position = self.map.indexToGridPosition(tileIndex + 1);
+
+        return position.x + '-' + position.y;
     }
 
     gridPositionToIndex(x, y) {
