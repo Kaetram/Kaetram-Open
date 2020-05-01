@@ -607,14 +607,14 @@ class Player extends Character {
 
     handleObject(id) {
         let self = this,
-            type = self.globalObjects.getType(id);
+            info = self.globalObjects.getInfo(id);
 
-        if (!type)
+        if (!info)
             return;
 
         let data;
 
-        switch (type) {
+        switch (info.type) {
             case 'sign':
 
                 data = self.globalObjects.getSignData(id);
@@ -638,6 +638,8 @@ class Player extends Character {
                 break;
 
             case 'lumberjacking':
+
+                log.debug(`tree: ${info.tree}`);
 
                 break;
         }
