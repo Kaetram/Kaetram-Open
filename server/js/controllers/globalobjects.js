@@ -10,7 +10,22 @@ class GlobalObjects {
 
     }
 
-    getData(id) {
+    getType(id) {
+        let self = this,
+            object = Objects.getObject(id);
+
+        if (!object)
+            return null;
+
+        return object.type;
+    }
+
+    /**
+     * Used for objects that display text bubbles. Returns formatted
+     * position data for the client to display the bubble.
+     */
+
+    getSignData(id) {
         let self = this,
             object = Objects.getObject(id);
 

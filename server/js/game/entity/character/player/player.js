@@ -41,6 +41,8 @@ class Player extends Character {
 
         self.clientId = clientId;
 
+        self.globalObjects = world.globalObjects;
+
         self.incoming = new Incoming(self);
 
         self.ready = false;
@@ -484,7 +486,7 @@ class Player extends Character {
         id = Items.stringToId(string);
         power = Items.getLevelRequirement(string);
 
-        switch(type) {
+        switch (type) {
             case Modules.Equipment.Armour:
 
                 if (self.hasArmour() && self.armour.id !== 114)
@@ -598,6 +600,50 @@ class Player extends Character {
         self.world.cleanCombat(self);
     }
 
+    /**
+     * We route all object clicks through the player instance
+     * in order to organize data more neatly.
+     */
+
+    handleObject(id) {
+        let self = this,
+            type = self.globalObjects.getType(id);
+
+        if (!type)
+            return;
+
+        let data;
+
+        switch (type) {
+            case 'sign':
+
+                data = self.globalObjects.getSignData(id);
+
+                if (!data)
+                    return;
+
+                let message = self.globalObjects.talk(data.object, self);
+
+                self.world.push(Packets.PushOpcode.Player, {
+                    player: self,
+                    message: new Messages.Bubble({
+                        id: id,
+                        text: message,
+                        duration: 5000,
+                        isObject: true,
+                        info: data.info
+                    })
+                });
+
+                break;
+
+            case 'lumberjacking':
+
+                break;
+        }
+
+    }
+
     incrementCheatScore(amount) {
         let self = this;
 
@@ -662,7 +708,7 @@ class Player extends Character {
         self.cameraArea = camera;
 
         if (camera) {
-            switch(camera.type) {
+            switch (camera.type) {
                 case 'lockX':
                     self.send(new Messages.Camera(Packets.CameraOpcode.LockX));
                     break;

@@ -10,7 +10,7 @@ class Database {
         self.database = null;
         self.databaseType = databaseType;
 
-        switch(self.databaseType) {
+        switch (self.databaseType) {
             case 'mongo':
             case 'mongodb':
                 self.database = new MongoDB(config.mongoHost, config.mongoPort, config.mongoUser,

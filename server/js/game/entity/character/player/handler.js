@@ -136,7 +136,7 @@ class Handler {
                 return;
             }
 
-            switch(Npcs.getType(npc.id)) {
+            switch (Npcs.getType(npc.id)) {
                 case 'banker':
                     self.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
                     return;

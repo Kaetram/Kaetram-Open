@@ -49,7 +49,7 @@ class Doors {
         if (config.offlineMode)
             return true;
 
-        switch(door.requirement) {
+        switch (door.requirement) {
 
             case 'quest':
                 let quest = self.player.quests.getQuest(door.questId);
