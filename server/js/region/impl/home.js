@@ -1,7 +1,5 @@
 /* global module */
 
-let MapClient = require('../../../data/map/world_client');
-
 /**
  * Class used for storing hardcoded values and actions for a specific area
  * in the game.
@@ -15,6 +13,7 @@ class Home {
 
         self.region = region;
         self.map = region.map;
+        self.clientMap = self.map.clientMap;
 
         self.startRegion = '0-4';
         self.endRegion = '4-10';
@@ -39,7 +38,7 @@ class Home {
                 let tileIndex = self.region.gridPositionToIndex(x, y);
 
                 info.indexes.push(tileIndex);
-                info.data.push(MapClient.data[data]);
+                info.data.push(self.clientMap.data[data]);
                 info.collisions.push(self.map.isColliding(x, y));
             }
         }

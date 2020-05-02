@@ -266,6 +266,25 @@ class Map {
         return objectId;
     }
 
+    isTree(x, y) {
+        let self = this,
+            index = self.gridPositionToIndex(x, y) - 1,
+            tiles = self.clientMap.data[index];
+
+        log.debug('Received tiles: ' + tiles);
+        log.debug(tiles in self.trees);
+
+        if (tiles instanceof Array)
+            for (let i in tiles)
+                if (tiles[i] in self.trees)
+                    return tiles[i];
+
+        if (tiles in self.trees)
+            return tiles;
+
+        return null;
+    }
+
     isDoor(x, y) {
         return !!this.doors[this.gridPositionToIndex(x, y) + 1];
     }

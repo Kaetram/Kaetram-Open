@@ -639,7 +639,10 @@ class Player extends Character {
 
             case 'lumberjacking':
 
-                log.debug(`tree: ${info.tree}`);
+                let lumberjacking = self.professions.getProfession(Modules.Professions.Lumberjacking);
+
+                if (lumberjacking)
+                    lumberjacking.handle(id, info.tree);
 
                 break;
         }
