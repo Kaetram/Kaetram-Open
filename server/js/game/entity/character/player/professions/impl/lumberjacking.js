@@ -33,34 +33,30 @@ class Lumberjacking extends Profession {
     }
 
     destroyTree(id, treeId) {
-        let self = this;
+        let self = this,
+            position = self.idToPosition(id);
 
-        switch (treeId) {
+        if (!(id in self.trees))
+            self.trees[id] = {};
 
-            case Modules.Trees.Oak:
+        self.searchTree(position.x, position.y, id);
 
-                let position = self.idToPosition(id);
+        _.each(self.trees[id], (tile) => {
+            let tiles = self.map.clientMap.data[tile.index];
 
-                self.searchTree(position.x, position.y);
+            if (tiles instanceof Array)
+                tiles.splice(tiles.indexOf(tile.treeTile), 1);
 
-                console.log(self.trees);
-                console.log(Object.keys(self.trees).length);
+        });
 
-                _.each(self.trees, (tile) => {
-                    self.world.push(Packets.PushOpcode.Player, {
-                        player: self.player,
-                        message: new Messages.Region(Packets.RegionOpcode.Modify, {
-                            index: tile,
-                            data: []
-                        })
-                    });
-                });
+        // TODO - Update only players within the region instead of globally.
 
-                self.trees = {};
+        self.region.updateRegions();
 
-                break;
+        self.destroyedTrees[id] = self.trees[id];
 
-        }
+        self.trees[id] = {};
+
     }
 
     /**
@@ -70,34 +66,37 @@ class Lumberjacking extends Profession {
      * for the time being. The downside is that if trees are too
      * close together, the recursive function will 'leak' into
      * the tree not being removed.
+     * `refId` refers to the tree we are clicking. We use this
+     * variable to help organize trees that are queued.
      */
 
-    searchTree(x, y) {
-        let self = this;
+    searchTree(x, y, refId) {
+        let self = this,
+            treeTile = self.map.getTree(x, y);
 
-        if (self.isQueueFull())
-            return false;
-
-        if (!self.map.isTree(x, y))
+        if (!treeTile)
             return false;
 
         let id = x + '-' + y;
 
-        if (id in self.trees)
+        if (id in self.trees[refId])
             return false;
 
-        self.trees[id] = self.map.gridPositionToIndex(x, y) - 1;
+        self.trees[refId][id] = {
+            index: self.map.gridPositionToIndex(x, y) - 1,
+            treeTile: treeTile
+        };
 
-        if (self.searchTree(x + 1, y))
+        if (self.searchTree(x + 1, y, refId))
             return true;
 
-        if (self.searchTree(x - 1, y))
+        if (self.searchTree(x - 1, y, refId))
             return true;
 
-        if (self.searchTree(x, y + 1))
+        if (self.searchTree(x, y + 1, refId))
             return true;
 
-        if (self.searchTree(x, y - 1))
+        if (self.searchTree(x, y - 1, refId))
             return true;
 
         return false;
@@ -108,10 +107,6 @@ class Lumberjacking extends Profession {
         let split = id.split('-');
 
         return { x: parseInt(split[0]), y: parseInt(split[1]) };
-    }
-
-    isQueueFull() {
-        return Object.keys(this.trees).length > 21;
     }
 
     getQueueCount() {

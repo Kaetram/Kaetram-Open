@@ -266,13 +266,10 @@ class Map {
         return objectId;
     }
 
-    isTree(x, y) {
+    getTree(x, y) {
         let self = this,
             index = self.gridPositionToIndex(x, y) - 1,
             tiles = self.clientMap.data[index];
-
-        log.debug('Received tiles: ' + tiles);
-        log.debug(tiles in self.trees);
 
         if (tiles instanceof Array)
             for (let i in tiles)
