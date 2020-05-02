@@ -377,7 +377,7 @@ class Commands {
                 log.info('Tile Index: ' + getTileIndex);
                 log.info('Tile Info: ' + self.world.map.clientMap.data[getTileIndex]);
                 log.info('Actual Index: ' + self.world.map.getActualTileIndex(getTileIndex));
-                log.info('Tree? ' + self.world.map.isTree(getTileX, getTileY));
+                log.info('Tree? ' + self.world.map.getTree(getTileX, getTileY));
 
                 return;
 
