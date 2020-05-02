@@ -109,6 +109,10 @@ let Modules = {
     Professions: {
         Lumberjacking: 0,
         Fishing: 1
+    },
+
+    Trees: {
+        Oak: 1
     }
 
 };

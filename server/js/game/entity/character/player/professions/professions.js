@@ -7,6 +7,7 @@ class Professions {
         let self = this;
 
         self.player = player;
+        self.world = player.world;
 
         self.professions = {};
 
@@ -27,9 +28,10 @@ class Professions {
                 let ProfessionClass = require(`./impl/${profession}`),
                     id = Modules.Professions[profession];
 
-                self.professions[id] = new ProfessionClass(id);
+                self.professions[id] = new ProfessionClass(id, self.player);
             } catch(e) {
                 log.debug(`Could not load ${profession} profession.`);
+                log.error(e);
             }
 
         });

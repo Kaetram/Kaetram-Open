@@ -3,8 +3,7 @@
 let _ = require('underscore'),
     Messages = require('../network/messages'),
     Packets = require('../network/packets'),
-    Utils = require('../util/utils'),
-    MapClient = require('../../data/map/world_client');
+    Utils = require('../util/utils');
 
 class Commands {
 
@@ -373,11 +372,12 @@ class Commands {
                 if (!getTileX || !getTileY)
                     return;
 
-                let getTileIndex = self.world.region.gridPositionToIndex(getTileX, getTileY);
+                let getTileIndex = self.world.map.gridPositionToIndex(getTileX, getTileY);
 
                 log.info('Tile Index: ' + getTileIndex);
-                log.info('Tile Info: ' + MapClient.data[getTileIndex]);
+                log.info('Tile Info: ' + self.world.map.clientMap.data[getTileIndex]);
                 log.info('Actual Index: ' + self.world.map.getActualTileIndex(getTileIndex));
+                log.info('Tree? ' + self.world.map.isTree(getTileX, getTileY));
 
                 return;
 
