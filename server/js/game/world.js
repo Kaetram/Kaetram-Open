@@ -483,7 +483,10 @@ class World {
 
             });
 
-            self.region.updateRegions();
+            let position = self.map.idToPosition(key),
+                regionId = self.map.regions.regionIdFromPosition(position.x, position.y);
+
+            self.region.updateRegions(regionId);
 
             delete self.cutTrees[key];
         });
@@ -526,9 +529,9 @@ class World {
             }
         });
 
-        // TODO - Update only players within the region instead of globally.
+        let regionId = self.map.regions.regionIdFromPosition(position.x, position.y);
 
-        self.region.updateRegions();
+        self.region.updateRegions(regionId);
 
         self.trees[id] = {};
     }
