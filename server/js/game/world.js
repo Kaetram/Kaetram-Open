@@ -493,6 +493,14 @@ class World {
 
     }
 
+    /**
+     * We save trees we are about to destroy
+     * to the `self.trees` and once they are destroyed
+     * we pluck them into the `self.destroyedTrees`.
+     * We run a tick that re-spawns them after a while
+     * using the data from `self.trees`.
+     */
+
     destroyTree(id, treeId) {
         let self = this,
             position = self.map.idToPosition(id);
