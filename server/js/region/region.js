@@ -181,14 +181,27 @@ class Region {
         });
     }
 
-    updateRegions() {
-        let self = this;
+    // If `regionId` is not null, we update adjacent regions
+    updateRegions(regionId) {
+        let self = this
 
-        self.world.forEachPlayer((player) => {
-            player.regionsLoaded = [];
+        if (regionId)
+            self.mapRegions.forEachSurroundingRegion((regionId), (id) => {
+                let region = self.regions[id];
 
-            self.sendRegion(player, player.region, true);
-        });
+                _.each(region.players, (instance) => {
+                    let player = self.world.players[instance];
+
+                    if (player)
+                        self.sendRegion(player, player.region);
+                });
+            });
+        else
+            self.world.forEachPlayer((player) => {
+                player.regionsLoaded = [];
+
+                self.sendRegion(player, player.region, true);
+            });
     }
 
     sendRegion(player, region, force) {

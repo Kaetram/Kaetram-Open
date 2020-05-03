@@ -816,10 +816,7 @@ class Player extends Character {
             let position = self.map.indexToGridPosition(index + 1),
                 region = self.regions.regionIdFromPosition(position.x, position.y);
 
-            /*if (self.region !== region)
-                return;*/
-
-            if (!self.regions.isSurrounding(self.region, region))
+            if (self.region !== region)
                 return;
 
             let objectId = self.map.getPositionObject(position.x, position.y),
