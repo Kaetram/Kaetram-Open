@@ -188,7 +188,7 @@ class Regions {
     }
 
     isSurrounding(regionId, toRegionId) {
-        return this.getSurroundingRegions(regionId, 1, true).indexOf(regionId) > -1;
+        return this.getSurroundingRegions(regionId, 1, true).indexOf(toRegionId) > -1;
     }
 }
 
