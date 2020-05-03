@@ -112,8 +112,15 @@ let Modules = {
     },
 
     Trees: {
-        Oak: 0
-    }
+        Oak: 0,
+        Palm: 1
+    },
+
+    Actions: {
+        Idle: 0,
+        Attack: 1,
+        Walk: 2
+    },
 
 };
 

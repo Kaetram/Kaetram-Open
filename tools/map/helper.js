@@ -19,19 +19,19 @@ class Helper {
         self.width = worldServer.width;
         self.height = worldServer.height;
 
-        // Normal Tree Stump
-        self.getTileData(76, 100);
-        self.getTileData(77, 100);
-        self.getTileData(76, 101);
-        self.getTileData(77, 101);
+        // Palm Tree Stump
+        self.getTileData(45, 132);
+        self.getTileData(46, 132);
+        self.getTileData(45, 133);
+        self.getTileData(46, 133);
 
         log.debug('-----------');
 
-        // Cut Tree Stump
-        self.getTileData(74, 103);
-        self.getTileData(75, 103);
-        self.getTileData(74, 104);
-        self.getTileData(75, 104);
+        // Cut Palm Stump
+        self.getTileData(49, 136);
+        self.getTileData(50, 136);
+        self.getTileData(49, 137);
+        self.getTileData(50, 137);
 
         //for (let i = 1; i < 5; i++)
         //    for (let j = 1; j < 5; j++)

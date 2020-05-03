@@ -17,7 +17,7 @@ class Character extends Entity {
         self.movementSpeed = 250;
         self.attackRange = 1;
         self.attackRate = 1000;
-        self.healingRate = 25000;
+        self.healingRate = 10000;
 
         self.spawnDistance = 7;
 

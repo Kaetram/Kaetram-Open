@@ -493,6 +493,19 @@ class World {
 
     }
 
+    isTreeCut(id) {
+        let self = this;
+
+        if (id in self.cutTrees)
+            return true;
+
+        for (let i in self.cutTrees)
+            if (id in self.cutTrees[i])
+                return true;
+
+        return false;
+    }
+
     /**
      * We save trees we are about to destroy
      * to the `self.trees` and once they are destroyed
@@ -508,7 +521,7 @@ class World {
         if (!(id in self.trees))
             self.trees[id] = {};
 
-        self.searchTree(position.x, position.y, id);
+        self.searchTree(position.x + 1, position.y, id);
 
         self.cutTrees[id] = {
             data: {},
