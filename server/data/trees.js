@@ -1,10 +1,10 @@
 let Trees = {
 
     Regrowth: {
-        Oak: 60000
+        Oak: 15000
     },
 
-    StumpData: {
+    Stumps: {
         // Oak Tree Stump Mapping
         "846": "651",
         "847": "652",

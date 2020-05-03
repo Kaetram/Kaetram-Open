@@ -5,8 +5,7 @@ let _ = require('underscore'),
     Packets = require('../network/packets'),
     Player = require('../game/entity/character/player/player'),
     fs = require('fs'),
-    map = 'server/data/map/world_client.json',
-    Objects = require('../util/objects');
+    map = 'server/data/map/world_client.json';
 
 class Region {
 
@@ -195,13 +194,12 @@ class Region {
     sendRegion(player, region, force) {
         let self = this,
             tileData = self.getRegionData(region, player, force),
-            dynamicTiles = player.doors.getAllTiles();
-
+            dynamicTiles = self.getDynamicTiles(player);
 
         // Send dynamic tiles alongside the region
         for (let i = 0; i < tileData.length; i++) {
-            let primaryTile = tileData[i],
-                index = dynamicTiles.indexes.indexOf(primaryTile.index);
+            let tile = tileData[i],
+                index = dynamicTiles.indexes.indexOf(tile.index);
 
             if (index > -1) {
                 tileData[i].data = dynamicTiles.data[index];
@@ -217,11 +215,39 @@ class Region {
                 tileData[i].index = dynamicTiles.indexes[i];
                 tileData[i].data = dynamicTiles.data[i];
                 tileData[i].isCollision = dynamicTiles.collisions[i];
+
+                let data = dynamicTiles.objectData,
+                    index = tileData[i].index;
+
+                if (index in data) {
+                    tileData[i].isObject = data[index].isObject;
+
+                    if (data[index].cursor)
+                        tileData[i].cursor = data[index].cursor;
+                }
             }
 
         //No need to send empty data...
         if (tileData.length > 0)
             player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
+    }
+
+    // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
+    getDynamicTiles(player) {
+        let self = this,
+            dynamicTiles = player.doors.getAllTiles(),
+            trees = player.getSurroundingTrees();
+
+        // Start with the doors and append afterwards.
+
+        dynamicTiles.indexes.push.apply(dynamicTiles.indexes, trees.indexes);
+        dynamicTiles.data.push.apply(dynamicTiles.data, trees.data);
+        dynamicTiles.collisions.push.apply(dynamicTiles.collisions, trees.collisions);
+
+        if (trees.objectData)
+            dynamicTiles.objectData = trees.objectData;
+
+        return dynamicTiles;
     }
 
     sendSpawns(regionId) {
@@ -435,7 +461,7 @@ class Region {
                         if (objectId) {
                             info.isObject = !!objectId;
 
-                            let cursor = self.getCursor(info.index, objectId);
+                            let cursor = self.map.getCursor(info.index, objectId);
 
                             if (cursor)
                                 info.cursor = cursor;
@@ -477,27 +503,6 @@ class Region {
 
     static regionIdToInstance(player, regionId) {
         return regionId + '-' + player.instance;
-    }
-
-    getCursor(tileIndex, tileId) {
-        let self = this;
-
-        if (tileId in self.map.cursors)
-            return self.map.cursors[tileId];
-
-        let cursor = Objects.getCursor(self.getObjectId(tileIndex));
-
-        if (!cursor)
-            return null;
-
-        return cursor;
-    }
-
-    getObjectId(tileIndex) {
-        let self = this,
-            position = self.map.indexToGridPosition(tileIndex + 1);
-
-        return position.x + '-' + position.y;
     }
 
     gridPositionToIndex(x, y) {
