@@ -467,15 +467,12 @@ define(['./impl/teamwar'], function(TeamWar) {
             });
 
             self.messages.onAnimation(function(id, info) {
-                var entity = self.entities.get(id),
-                    animation = info.shift(),
-                    speed = info.shift(),
-                    count = info.shift();
+                var character = self.entities.get(id);
 
-                if (!entity)
+                if (!character)
                     return;
 
-                entity.animate(animation, speed, count);
+                character.performAction(character.orientation, info.action);
             });
 
             self.messages.onProjectile(function(opcode, info) {
