@@ -23,6 +23,7 @@ let _ = require('underscore'),
     Region = require('../region/region'),
     GlobalObjects = require('../controllers/globalobjects'),
     Network = require('../network/network'),
+    Trees = require('../../data/trees'),
     API = require('../network/api');
 
 class World {
@@ -46,6 +47,10 @@ class World {
         self.mobs = {};
         self.npcs = {};
         self.projectiles = {};
+
+        // Lumberjacking Variables
+        self.trees = {};
+        self.cutTrees = {};
 
         self.loadedRegions = false;
 
@@ -117,9 +122,17 @@ class World {
         };
 
         setIntervalAsync(async() => {
+
             self.network.parsePackets();
             self.region.parseRegions();
+
         }, update);
+
+        setIntervalAsync(async() => {
+
+            self.parseTrees();
+
+        }, config.treeTick || 1000);
 
         if (!config.hubEnabled)
             return;
@@ -451,6 +464,104 @@ class World {
         item.onDespawn(() => {
             self.removeItem(item);
         });
+    }
+
+    parseTrees() {
+        let self = this,
+            time = new Date().getTime(),
+            treeTypes = Object.keys(Modules.Trees);
+
+        _.each(self.cutTrees, (tree) => {
+            let type = treeType[tree.treeId];
+
+            if (time - tree.time < Trees.Regrowth[type])
+                return;
+
+            _.each(tree.data, (tile) => {
+                //self.map.clientMap.data[tile]
+            });
+        });
+
+    }
+
+    destroyTree(id, treeId) {
+        let self = this,
+            position = self.map.idToPosition(id);
+
+        if (!(id in self.trees))
+            self.trees[id] = {};
+
+        self.searchTree(position.x, position.y, id);
+
+        self.cutTrees[id] = {
+            data: self.trees[id],
+            time: new Date().getTime(),
+            treeId: treeId
+        };
+
+        _.each(self.trees[id], (tile) => {
+            let tiles = self.map.clientMap.data[tile.index];
+
+            // We do not remove tiles that do not have another tile behind them.
+            if (tiles instanceof Array) {
+                let index = tiles.indexOf(tile.treeTile);
+
+                // We map the uncut trunk to the cut trunk tile.
+                if (tile.treeTile in Trees)
+                    tiles[index] = Trees[tile.treeTile];
+                else
+                    tiles.splice(index, 1);
+            }
+        });
+
+        // TODO - Update only players within the region instead of globally.
+
+        self.region.updateRegions();
+
+        self.trees[id] = {};
+    }
+
+    /**
+     * We recursively look for a tree at a position, find all the
+     * tiles that are part of the tree, and remove those trees.
+     * Though this system is still quite rigid, it should function
+     * for the time being. The downside is that if trees are too
+     * close together, the recursive function will 'leak' into
+     * the tree not being removed.
+     * `refId` refers to the tree we are clicking. We use this
+     * variable to help organize trees that are queued.
+     */
+
+    searchTree(x, y, refId) {
+        let self = this,
+            treeTile = self.map.getTree(x, y);
+
+        if (!treeTile)
+            return false;
+
+        let id = x + '-' + y;
+
+        if (id in self.trees[refId])
+            return false;
+
+        self.trees[refId][id] = {
+            index: self.map.gridPositionToIndex(x, y) - 1,
+            treeTile: treeTile
+        };
+
+        if (self.searchTree(x + 1, y, refId))
+            return true;
+
+        if (self.searchTree(x - 1, y, refId))
+            return true;
+
+        if (self.searchTree(x, y + 1, refId))
+            return true;
+
+        if (self.searchTree(x, y - 1, refId))
+            return true;
+
+        return false;
     }
 
     push(type, info) {
