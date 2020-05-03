@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
+config = {
+    debug: true,
+    debugLevel: 'all'
+}
+
 let Log = require('../../server/js/util/log'),
     worldClient = require('../../server/data/map/world_client'),
     worldServer = require('../../server/data/map/world_server');
+
+log = new Log();
 
 class Helper {
 
@@ -12,11 +19,19 @@ class Helper {
         self.width = worldServer.width;
         self.height = worldServer.height;
 
-        self.getTileData(884, 103);
+        // Normal Tree Stump
+        self.getTileData(76, 100);
+        self.getTileData(77, 100);
+        self.getTileData(76, 101);
+        self.getTileData(77, 101);
 
-        self.getTileData(883, 104);
-        self.getTileData(884, 104);
-        self.getTileData(885, 104);
+        log.debug('-----------');
+
+        // Cut Tree Stump
+        self.getTileData(74, 103);
+        self.getTileData(75, 103);
+        self.getTileData(74, 104);
+        self.getTileData(75, 104);
 
         //for (let i = 1; i < 5; i++)
         //    for (let j = 1; j < 5; j++)

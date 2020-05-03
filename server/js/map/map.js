@@ -282,6 +282,13 @@ class Map {
         return null;
     }
 
+    // Transforms an object's `instance` or `id` into position
+    idToPosition(id) {
+        let split = id.split('-');
+
+        return { x: parseInt(split[0]), y: parseInt(split[1]) };
+    }
+
     isDoor(x, y) {
         return !!this.doors[this.gridPositionToIndex(x, y) + 1];
     }

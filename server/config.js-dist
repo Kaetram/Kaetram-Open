@@ -41,6 +41,7 @@ Config.development = false;
 Config.maxPlayers = 200; // Maximum number of players allowed on the server.
 Config.updateTime = 20; // 20 updates (ticks) per second.
 Config.gver = 1; // Game version
+Config.treeTick = 3000; // Check trees every 3 seconds.
 
 Config.administrators = []; // i.e. ['user1', 'user2', 'user3'] (case-insensitive)
 Config.moderators = [];
