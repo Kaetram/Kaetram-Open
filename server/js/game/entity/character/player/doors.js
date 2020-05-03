@@ -109,7 +109,7 @@ class Doors {
 
             allTiles.indexes.push.apply(allTiles.indexes, tiles.indexes);
             allTiles.data.push.apply(allTiles.data, tiles.data);
-            allTiles.collisions.push.apply(allTiles.collisions, tiles.collisions)
+            allTiles.collisions.push.apply(allTiles.collisions, tiles.collisions);
         });
 
         return allTiles;

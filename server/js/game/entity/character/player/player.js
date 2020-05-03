@@ -1,6 +1,7 @@
 /* global module */
 
-let Character = require('../character'),
+let _ = require('underscore'),
+    Character = require('../character'),
     Incoming = require('../../../../controllers/incoming'),
     Armour = require('./equipment/armour'),
     Weapon = require('./equipment/weapon'),
@@ -41,6 +42,8 @@ class Player extends Character {
 
         self.clientId = clientId;
 
+        self.map = world.map;
+        self.regions = world.map.regions;
         self.globalObjects = world.globalObjects;
 
         self.incoming = new Incoming(self);
@@ -168,8 +171,8 @@ class Player extends Character {
         if (!regions)
             return;
 
-        if (self.mapVersion !== self.world.map.version) {
-            self.mapVersion = self.world.map.version;
+        if (self.mapVersion !== self.map.version) {
+            self.mapVersion = self.map.version;
 
             self.save();
 
@@ -799,6 +802,44 @@ class Player extends Character {
         return this.quests.getQuest(Modules.Quests.Introduction);
     }
 
+    // We get dynamic trees surrounding the player
+    getSurroundingTrees() {
+        let self = this,
+            tiles = {
+                indexes: [],
+                data: [],
+                collisions: [],
+                objectData: {}
+            };
+
+        _.each(self.map.treeIndexes, (index) => {
+            let position = self.map.indexToGridPosition(index + 1),
+                region = self.regions.regionIdFromPosition(position.x, position.y);
+
+            /*if (self.region !== region)
+                return;*/
+
+            if (!self.regions.isSurrounding(self.region, region))
+                return;
+
+            let objectId = self.map.getPositionObject(position.x, position.y),
+                cursor = self.map.getCursor(index, objectId);
+
+            tiles.indexes.push(index);
+            tiles.data.push(self.map.clientMap.data[index]);
+            tiles.collisions.push(self.map.collisions.indexOf(index) > -1);
+
+            if (objectId)
+                tiles.objectData[index] = {
+                    isObject: !!objectId,
+                    cursor: cursor
+                };
+
+        });
+
+        return tiles;
+    }
+
     getMovementSpeed() {
         let self = this,
             itemMovementSpeed = Items.getMovementSpeed(self.armour.name),
@@ -889,7 +930,7 @@ class Player extends Character {
         if (self.dead)
             return;
 
-        if (self.world.map.isOutOfBounds(x, y)) {
+        if (self.map.isOutOfBounds(x, y)) {
             x = 50;
             y = 89;
         }

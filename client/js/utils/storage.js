@@ -54,7 +54,9 @@ define(function() {
 
                 map: {
                     regionData: [],
-                    collisions: []
+                    collisions: [],
+                    objects: [],
+                    cursorTiles: {}
                 }
             };
         },
@@ -105,11 +107,13 @@ define(function() {
             self.save();
         },
 
-        setRegionData: function(regionData, collisionData) {
+        setRegionData: function(regionData, collisionData, objects, cursorTiles) {
             var self = this;
 
             self.data.map.regionData = regionData;
             self.data.map.collisions = collisionData;
+            self.data.map.objects = objects;
+            self.data.map.cursorTiles = cursorTiles;
 
             self.save();
         },
@@ -128,6 +132,14 @@ define(function() {
 
         getCollisions: function() {
             return this.data.map.collisions;
+        },
+
+        getObjects: function() {
+            return this.data.map.objects;
+        },
+
+        getCursorTiles: function() {
+            return this.data.map.cursorTiles;
         }
 
     });

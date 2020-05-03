@@ -471,15 +471,21 @@ class World {
             time = new Date().getTime(),
             treeTypes = Object.keys(Modules.Trees);
 
-        _.each(self.cutTrees, (tree) => {
-            let type = treeType[tree.treeId];
+        _.each(self.cutTrees, (tree, key) => {
+            let type = treeTypes[tree.treeId];
 
             if (time - tree.time < Trees.Regrowth[type])
                 return;
 
             _.each(tree.data, (tile) => {
-                //self.map.clientMap.data[tile]
+
+                self.map.clientMap.data[tile.index] = tile.oldTiles;
+
             });
+
+            self.region.updateRegions();
+
+            delete self.cutTrees[key];
         });
 
     }
@@ -494,21 +500,27 @@ class World {
         self.searchTree(position.x, position.y, id);
 
         self.cutTrees[id] = {
-            data: self.trees[id],
+            data: {},
             time: new Date().getTime(),
             treeId: treeId
         };
 
-        _.each(self.trees[id], (tile) => {
+        _.each(self.trees[id], (tile, key) => {
             let tiles = self.map.clientMap.data[tile.index];
+
+            // Store the original tiles for respawning.
+            self.cutTrees[id].data[key] = {
+                oldTiles: [].concat(tiles), // concat to create a new array
+                index: tile.index
+            };
 
             // We do not remove tiles that do not have another tile behind them.
             if (tiles instanceof Array) {
                 let index = tiles.indexOf(tile.treeTile);
 
                 // We map the uncut trunk to the cut trunk tile.
-                if (tile.treeTile in Trees)
-                    tiles[index] = Trees[tile.treeTile];
+                if (tile.treeTile in Trees.Stumps)
+                    tiles[index] = Trees.Stumps[tile.treeTile];
                 else
                     tiles.splice(index, 1);
             }

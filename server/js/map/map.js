@@ -5,6 +5,7 @@ let _ = require('underscore'),
     Regions = require('./regions'),
     Utils = require('../util/utils'),
     Modules = require('../util/modules'),
+    Objects = require('../util/objects'),
     PVPAreas = require('./areas/pvpareas'),
     MusicAreas = require('./areas/musicareas'),
     ChestAreas = require('./areas/chestareas'),
@@ -51,6 +52,7 @@ class Map {
         self.objects = map.objects;
         self.cursors = map.cursors;
         self.trees = map.trees;
+        self.treeIndexes = map.treeIndexes;
 
         self.zoneWidth = 25;
         self.zoneHeight = 20;
@@ -264,6 +266,27 @@ class Map {
                 objectId = tiles;
 
         return objectId;
+    }
+
+    getCursor(tileIndex, tileId) {
+        let self = this;
+
+        if (tileId in self.cursors)
+            return self.cursors[tileId];
+
+        let cursor = Objects.getCursor(self.getObjectId(tileIndex));
+
+        if (!cursor)
+            return null;
+
+        return cursor;
+    }
+
+    getObjectId(tileIndex) {
+        let self = this,
+            position = self.indexToGridPosition(tileIndex + 1);
+
+        return position.x + '-' + position.y;
     }
 
     getTree(x, y) {

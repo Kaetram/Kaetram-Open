@@ -51,6 +51,7 @@ module.exports = function parse(json, options) {
             map.objects = [];
             map.cursors = {};
             map.trees = {};
+            map.treeIndexes = [];
 
             map.tilesets = [];
             map.pvpAreas = [];
@@ -152,7 +153,7 @@ module.exports = function parse(json, options) {
                 });
             }
 
-            _.each(tileset.tiles, function(tile) {
+            _.each(tileset.tiles, function(tile, index) {
                 let id = parseInt(tileset.firstgid) + parseInt(tile.id);
 
                 if (tile.animation && mode === 'info')
@@ -436,6 +437,9 @@ let parseLayer = function(layer) {
 
             if (tGid in collisions)
                 map.collisions.push(k);
+
+            if (mode === 'server' && tGid in map.trees)
+                map.treeIndexes.push(k);
         }
 
     }

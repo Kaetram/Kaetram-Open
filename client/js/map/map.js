@@ -445,13 +445,15 @@ define(['jquery'], function($) {
         saveRegionData: function() {
             var self = this;
 
-            self.game.storage.setRegionData(self.data, self.collisions);
+            self.game.storage.setRegionData(self.data, self.collisions, self.objects, self.cursorTiles);
         },
 
         loadRegionData: function() {
             var self = this,
                 regionData = self.game.storage.getRegionData(),
-                collisions = self.game.storage.getCollisions();
+                collisions = self.game.storage.getCollisions(),
+                objects = self.game.storage.getObjects(),
+                cursorTiles = self.game.storage.getCursorTiles();
 
             if (regionData.length < 1)
                 return;
@@ -460,6 +462,8 @@ define(['jquery'], function($) {
 
             self.data = regionData;
             self.collisions = collisions;
+            self.objects = objects;
+            self.cursorTiles = cursorTiles;
 
             self.updateCollisions();
         },
