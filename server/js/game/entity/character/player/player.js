@@ -814,9 +814,9 @@ class Player extends Character {
 
         _.each(self.map.treeIndexes, (index) => {
             let position = self.map.indexToGridPosition(index + 1),
-                region = self.regions.regionIdFromPosition(position.x, position.y);
+                treeRegion = self.regions.regionIdFromPosition(position.x, position.y);
 
-            if (self.region !== region)
+            if (!self.regions.isSurrounding(self.region, treeRegion))
                 return;
 
             let objectId = self.map.getPositionObject(position.x, position.y),
