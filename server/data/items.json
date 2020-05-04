@@ -16,7 +16,7 @@
   },
 
   "RustedAxe": {
-    "id": 2,
+    "id": 265,
     "type": "weapon",
     "attack": 4,
     "name": "Rusted Axe",
@@ -24,7 +24,7 @@
   },
 
   "FireAxe": {
-    "id": 2,
+    "id": 266,
     "type": "weapon",
     "attack": 5,
     "name": "Fire Axe",
@@ -32,7 +32,7 @@
   },
 
   "PoisonAxe": {
-    "id": 2,
+    "id": 267,
     "type": "weapon",
     "attack": 6,
     "name": "Poison Axe",
@@ -355,7 +355,7 @@
   },
 
   "CarnelianAxe": {
-    "id": 44,
+    "id": 268,
     "type": "weapon",
     "attack": 9,
     "name": "Carnelian Axe"
@@ -1889,6 +1889,14 @@
     "type": "armor",
     "defense": 20,
     "name": "Pickle Armour"
+  },
+
+  "Logs": {
+    "id": 264,
+    "type": "object",
+    "name": "Logs",
+    "stackable": true,
+    "maxStackSize": 1
   }
 
 }

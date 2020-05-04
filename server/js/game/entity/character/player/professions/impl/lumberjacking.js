@@ -3,6 +3,7 @@ let _ = require('underscore'),
     Messages = require('../../../../../../network/messages'),
     Profession = require('./profession'),
     Modules = require('../../../../../../util/modules'),
+    Formulas = require('../../../../../../util/formulas'),
     Utils = require('../../../../../../util/utils'),
     Trees = require('../../../../../../../data/trees');
 
@@ -35,16 +36,35 @@ class Lumberjacking extends Profession {
             if (!self.treeId || !self.treeObjectId)
                 return;
 
+            if (!self.player.inventory.canHold(Trees.Logs[self.treeId], 1)) {
+                self.player.notify('You do not have enough space in your inventory!');
+                self.stop();
+                return;
+            }
+
             self.player.sendToRegion(new Messages.Animation(self.player.instance, {
                 action: Modules.Actions.Attack
             }));
 
-            if (Utils.randomInt(0, Trees.Chances[self.treeId]) === 4)
-                self.world.destroyTree(self.treeObjectId, Modules.Trees[self.treeId]);
+            let probability = Formulas.getTreeChance(self.player, self.treeId);
+
+            if (Utils.randomInt(0, probability) === 2) {
+                self.player.inventory.add({
+                    id: Trees.Logs[self.treeId],
+                    count: 1
+                });
+
+                if (self.getTreeDestroyChance())
+                    self.world.destroyTree(self.treeObjectId, Modules.Trees[self.treeId]);
+            }
 
         }, self.tick);
 
         self.started = true;
+    }
+
+    getTreeDestroyChance() {
+        return Utils.randomInt(0, Trees.Chances[this.treeId]) === 2;
     }
 
     stop() {
