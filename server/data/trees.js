@@ -1,8 +1,25 @@
 let Trees = {
 
+    // The log ids of the tree
+    Logs: {
+        Oak: 264,
+        Palm: 264
+    },
+
+    // Get the level requirement of the tree
+    Levels: {
+        Oak: 1,
+        Palm: 5
+    },
+
+    Experience: {
+        Oak: 10,
+        Palm: 25
+    },
+
     // Chance of cutting a tree
     Chances: {
-        Oak: 5, // 1 in 5
+        Oak: 4, // 1 in 4
         Palm: 7 // 1 in 7
     },
 

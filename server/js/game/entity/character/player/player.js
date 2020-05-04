@@ -806,6 +806,15 @@ class Player extends Character {
         return this.professions.getProfession(Modules.Professions.Lumberjacking).getLevel();
     }
 
+    getWeaponLumberjackingLevel() {
+        let self = this;
+
+        if (!self.hasLumberjackingWeapon())
+            return -1;
+
+        return self.weapon.lumberjacking;
+    }
+
     // We get dynamic trees surrounding the player
     getSurroundingTrees() {
         let self = this,

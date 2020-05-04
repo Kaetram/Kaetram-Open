@@ -2,15 +2,24 @@
 
 let Formulas = {},
     Utils = require('./utils'),
-    Constants = require('./constants');
+    Constants = require('./constants'),
+    Trees = require('../../data/trees');
 
 Formulas.LevelExp = [];
 
 module.exports = Formulas;
 
 // Chances of getting logs from a tree.
-Formulas.getTreeChance = (player) => {
-    
+Formulas.getTreeChance = (player, treeId) => {
+    let lumberjackingLevel = player.getLumberjackingLevel(),
+        weaponLumberjackingLevel = player.getWeaponLumberjackingLevel(),
+        treeLevel = Trees.Levels[treeId],
+        probability = (treeLevel * 10) - (lumberjackingLevel * weaponLumberjackingLevel);
+
+    if (probability < 2)
+        probability = 2;
+
+    return probability;
 };
 
 Formulas.getDamage = (attacker, target, special) => {
