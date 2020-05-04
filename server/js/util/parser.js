@@ -127,7 +127,8 @@ class Parser {
                 maxStackSize: value.maxStackSize || -1,
                 plugin: value.plugin || null,
                 customData: value.customData || null,
-                requirement: value.requirement || null
+                requirement: value.requirement || null,
+                lumberjacking: value.lumberjacking || 0
             };
 
             Items.Ids[value.id] = Items.Data[key];

@@ -802,6 +802,10 @@ class Player extends Character {
         return this.quests.getQuest(Modules.Quests.Introduction);
     }
 
+    getLumberjackingLevel() {
+        return this.professions.getProfession(Modules.Professions.Lumberjacking).getLevel();
+    }
+
     // We get dynamic trees surrounding the player
     getSurroundingTrees() {
         let self = this,
@@ -1009,6 +1013,10 @@ class Player extends Character {
 
     hasWeapon() {
         return this.weapon && this.weapon.name !== 'null' && this.weapon.id !== -1;
+    }
+
+    hasLumberjackingWeapon() {
+        return this.weapon && this.weapon.lumberjacking > 0;
     }
 
     hasBreakableWeapon() {

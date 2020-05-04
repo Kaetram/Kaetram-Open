@@ -78,6 +78,13 @@ Items.getLevelRequirement = (name) => {
     return level * 2;
 };
 
+Items.getLumberjackingLevel = (weaponName) => {
+    if (Items.isWeapon(weaponName))
+        return Items.Data[weaponName].lumberjacking;
+
+    return -1;
+};
+
 Items.getWeaponLevel = (weaponName) => {
     if (Items.isWeapon(weaponName))
         return Items.Data[weaponName].attack;

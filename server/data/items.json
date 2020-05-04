@@ -11,7 +11,32 @@
     "id": 2,
     "type": "weapon",
     "attack": 3,
-    "name": "Axe"
+    "name": "Axe",
+    "lumberjacking": 1
+  },
+
+  "RustedAxe": {
+    "id": 2,
+    "type": "weapon",
+    "attack": 4,
+    "name": "Rusted Axe",
+    "lumberjacking": 2
+  },
+
+  "FireAxe": {
+    "id": 2,
+    "type": "weapon",
+    "attack": 5,
+    "name": "Fire Axe",
+    "lumberjacking": 3
+  },
+
+  "PoisonAxe": {
+    "id": 2,
+    "type": "weapon",
+    "attack": 6,
+    "name": "Poison Axe",
+    "lumberjacking": 4
   },
 
   "MorningStar": {
@@ -320,6 +345,20 @@
     "type": "weapon",
     "attack": 9,
     "name": "Cactus Axe"
+  },
+
+  "GoldAxe": {
+    "id": 44,
+    "type": "weapon",
+    "attack": 14,
+    "name": "Gold Axe"
+  },
+
+  "CarnelianAxe": {
+    "id": 44,
+    "type": "weapon",
+    "attack": 9,
+    "name": "Carnelian Axe"
   },
 
   "Devilkazyasword": {
