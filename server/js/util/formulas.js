@@ -8,6 +8,11 @@ Formulas.LevelExp = [];
 
 module.exports = Formulas;
 
+// Chances of getting logs from a tree.
+Formulas.getTreeChance = (player) => {
+    
+};
+
 Formulas.getDamage = (attacker, target, special) => {
 
     let maxDamage = Formulas.getMaxDamage(attacker, target, special),

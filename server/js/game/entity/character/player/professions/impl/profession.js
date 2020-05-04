@@ -1,4 +1,5 @@
-let Modules = require('../../../../../../util/modules');
+let Modules = require('../../../../../../util/modules'),
+    Formulas = require('../../../../../../util/formulas');
 
 class Profession {
 
@@ -7,7 +8,7 @@ class Profession {
 
         self.id = id;
         self.player = player;
-        
+
         self.world = player.world;
 
         self.map = self.world.map;
@@ -18,6 +19,10 @@ class Profession {
 
     load(data) {
         this.experience = data.experience;
+    }
+
+    getLevel() {
+        return Formulas.expToLevel(this.experience);
     }
 
     getData() {

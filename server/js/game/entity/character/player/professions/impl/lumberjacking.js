@@ -65,6 +65,11 @@ class Lumberjacking extends Profession {
     handle(id, treeId) {
         let self = this;
 
+        if (!self.player.hasLumberjackingWeapon()) {
+            self.player.notify('You do not have an axe to cut this tree with.');
+            return;
+        }
+
         self.treeId = treeId;
         self.treeObjectId = id;
 
