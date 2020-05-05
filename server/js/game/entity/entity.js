@@ -180,7 +180,7 @@ class Entity {
                 return '#cc3300';
 
             case 'achievementNpc':
-                return '#669900';
+                return '#33cc33';
 
             case 'area':
                 return '#00aa00';
