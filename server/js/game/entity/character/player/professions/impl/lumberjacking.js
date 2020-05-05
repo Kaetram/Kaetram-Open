@@ -10,7 +10,7 @@ let _ = require('underscore'),
 class Lumberjacking extends Profession {
 
     constructor(id, player) {
-        super(id, player);
+        super(id, player, 'Lumberjacking');
 
         let self = this;
 
@@ -28,7 +28,7 @@ class Lumberjacking extends Profession {
 
         self.cuttingInterval = setInterval(() => {
 
-            if (self.world.isTreeCut(self.treeObjectId)) {
+            if (!self.player || self.world.isTreeCut(self.treeObjectId)) {
                 self.stop();
                 return;
             }
@@ -49,6 +49,8 @@ class Lumberjacking extends Profession {
             let probability = Formulas.getTreeChance(self.player, self.treeId);
 
             if (Utils.randomInt(0, probability) === 2) {
+                self.addExperience(Trees.Experience[self.treeId]);
+
                 self.player.inventory.add({
                     id: Trees.Logs[self.treeId],
                     count: 1
@@ -92,6 +94,11 @@ class Lumberjacking extends Profession {
 
         self.treeId = treeId;
         self.treeObjectId = id;
+
+        if (self.level < Trees.Levels[self.treeId]) {
+            self.player.notify('Your Lumberjacking level is too low to cut this tree.');
+            return;
+        }
 
         self.start();
     }
