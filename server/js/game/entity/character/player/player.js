@@ -385,6 +385,8 @@ class Player extends Character {
             self.healHitPoints(self.hitPoints.maxPoints);
 
             self.updateRegion();
+
+            self.popup('Level Up!', `Congratulations, you are now level ${self.level}!`, '#ff6600');
         }
 
         let data = {
