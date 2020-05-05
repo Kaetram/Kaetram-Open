@@ -304,12 +304,13 @@ Messages.Heal = class {
 
 Messages.Experience = class {
 
-    constructor(info) {
+    constructor(opcode, info) {
+        this.opcode = opcode;
         this.info = info;
     }
 
     serialize() {
-        return [Packets.Experience, this.info];
+        return [Packets.Experience, this.opcode, this.info];
     }
 
 };

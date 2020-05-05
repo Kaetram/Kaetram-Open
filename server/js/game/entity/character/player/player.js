@@ -399,14 +399,14 @@ class Player extends Character {
          * know the experience of another player.. (yet).
          */
 
-        self.sendToAdjacentRegions(self.region, new Messages.Experience(data), self.instance);
+        self.sendToAdjacentRegions(self.region, new Messages.Experience(Packets.ExperienceOpcode.Combat, data), self.instance);
 
         data.amount = exp;
         data.experience = self.experience;
         data.nextExperience = self.nextExperience;
         data.prevExperience = self.prevExperience;
 
-        self.send(new Messages.Experience(data));
+        self.send(new Messages.Experience(Packets.ExperienceOpcode.Combat, data));
 
         self.sync();
     }

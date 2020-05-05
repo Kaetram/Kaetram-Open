@@ -355,10 +355,12 @@ define(function() {
         },
 
         receiveExperience: function(data) {
-            var self = this;
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
 
             if (self.experienceCallback)
-                self.experienceCallback(data.shift());
+                self.experienceCallback(opcode, info);
         },
 
         receiveDeath: function(data) {

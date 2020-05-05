@@ -1,6 +1,8 @@
 let Modules = require('../../../../../../util/modules'),
     Formulas = require('../../../../../../util/formulas'),
-    Constants = require('../../../../../../util/constants');
+    Constants = require('../../../../../../util/constants'),
+    Messages = require('../../../../../../network/messages'),
+    Packets = require('../../../../../../network/packets');
 
 class Profession {
 
@@ -18,6 +20,8 @@ class Profession {
 
         self.experience = 0;
         self.level = Formulas.expToLevel(self.experience);
+
+        self.targetId = null;
     }
 
     load(data) {
@@ -38,7 +42,16 @@ class Profession {
         if (oldLevel !== self.level)
             self.player.popup('Profession Level Up!', `Congratulations, your ${self.name} level is now ${self.level}.`, '#9933ff');
 
+        self.player.send(new Messages.Experience(Packets.ExperienceOpcode.Profession, {
+            id: self.player.instance,
+            amount: experience
+        }));
+
         self.player.save();
+    }
+
+    stop() {
+        return 'Not implemented.';
     }
 
     getLevel() {
@@ -49,6 +62,10 @@ class Profession {
             level = Constants.MAX_PROFESSION_LEVEL;
 
         return level;
+    }
+
+    isTarget() {
+        return this.player.target === this.targetId;
     }
 
     getData() {

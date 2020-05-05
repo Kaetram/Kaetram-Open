@@ -31,7 +31,8 @@ Modules = {
         LevelUp: 5,
         Critical: 6,
         Stun: 7,
-        Explosive: 8
+        Explosive: 8,
+        Profession: 9
     },
 
     Infos: {
@@ -122,6 +123,11 @@ Modules = {
         'poison': {
             fill: 'rgb(66, 183, 77)',
             stroke: 'rgb(50, 120 , 50)'
+        },
+
+        'profession': {
+            fill: 'rgb(204, 0, 153)',
+            stroke: 'rgb(153, 51, 153)'
         }
     },
 

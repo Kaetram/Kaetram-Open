@@ -67,6 +67,7 @@ class Handler {
         self.player.onDeath(() => {
 
             self.player.combat.stop();
+            self.player.professions.stopAll();
 
         });
 
