@@ -24,7 +24,9 @@ class Bank extends Container {
         let self = this;
 
         if (!self.canHold(id, count)) {
-            self.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'You do not have enough space in your bank.'));
+            self.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+                message: 'You do not have enough space in your bank.'
+            }));
             return false;
         }
 

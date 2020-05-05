@@ -23,7 +23,9 @@ class Inventory extends Container {
         let self = this;
 
         if (!self.canHold(item.id, item.count)) {
-            self.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, Constants.InventoryFull));
+            self.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+                message: Constants.InventoryFull
+            }));
             return false;
         }
 

@@ -19,6 +19,11 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
             self.fade = $('#notifyFade');
             self.done = $('#notifyDone');
 
+            self.notification = $('#notification');
+            self.title = $('#notificationTextTitle'); // notification title
+            self.description = $('#notificationTextDescription'); // notification description
+            self.notificationTimeout = null;
+
             self.inventory = null;
             self.profile = null;
             self.bank = null;
@@ -58,6 +63,7 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
             if (self.header)
                 self.header.resize();
 
+            self.resizeNotification();
         },
 
         loadInventory: function(size, data) {
@@ -236,6 +242,58 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
             self.bank.removeInventory(info);
         },
 
+        resizeNotification() {
+            var self = this;
+
+            if (self.isNotificationVisible())
+                self.notification.css('top', window.innerHeight - self.notification.height() + 'px');
+        },
+
+        showNotification(title, message, colour) {
+            var self = this,
+                top = window.innerHeight - self.notification.height();
+
+            if (self.isNotificationVisible()) {
+                self.hideNotification();
+
+                setTimeout(function() {
+                    self.showNotification(title, message, colour);
+                }, 700);
+
+                return;
+            }
+
+            self.title.css('colour', colour);
+
+            self.title.text(title);
+            self.description.text(message);
+
+            self.notification.addClass('active');
+            self.notification.css('top', top + 'px')
+
+            if (self.notificationTimeout)
+                return;
+
+            self.notificationTimeout = setTimeout(function() {
+
+                self.hideNotification();
+
+            }, 4000);
+        },
+
+        hideNotification() {
+            var self = this;
+
+            if (!self.isNotificationVisible())
+                return;
+
+            clearTimeout(self.notificationTimeout);
+            self.notificationTimeout = null;
+
+            self.notification.removeClass('active');
+            self.notification.css('top', '100%');
+        },
+
         displayNotify: function(message) {
             var self = this;
 
@@ -281,6 +339,10 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
 
         isConfirmVisible: function() {
             return this.confirm.css('display') === 'block';
+        },
+
+        isNotificationVisible() {
+            return this.notification.hasClass('active');
         }
 
     });

@@ -333,11 +333,10 @@ define(function() {
         receiveNotification: function(data) {
             var self = this,
                 opcode = data.shift(),
-                message = data.shift(),
-                colour = data.shift();
+                info = data.shift();
 
             if (self.notificationCallback)
-                self.notificationCallback(opcode, message, colour);
+                self.notificationCallback(opcode, info);
         },
 
         receiveBlink: function(data) {

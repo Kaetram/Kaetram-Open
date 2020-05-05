@@ -602,6 +602,7 @@
 #current-world-count {
     font-size: 0.75em;
 }
+
 #current-world-id {
     opacity: 0.8;
     font-size: 0.75em;
@@ -621,6 +622,7 @@
   position: absolute;
   margin-left: -80px;
 }
+
 #worlds-popup::after {
   content: "";
   position: absolute;
@@ -648,7 +650,7 @@
 
 #notification {
     position: absolute;
-    opacity: 0.9;
+    opacity: 0.8;
     top: 100%;
     left: 50%;
 
@@ -661,7 +663,6 @@
 }
 
 #notificationTextTitle {
-
     position: relative;
     top: 25%;
     font-family: 'AdvoCut', sans-serif;
