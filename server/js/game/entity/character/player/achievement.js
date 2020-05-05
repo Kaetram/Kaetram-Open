@@ -54,8 +54,10 @@ class Achievement {
                 text: npc.talk(self.data.text, self.player)
             }));
 
-            if (!self.isStarted() && self.player.talkIndex === 0)
+            if (!self.isStarted() && self.player.talkIndex === 0) {
+                self.player.popup('Achievement Discovered!', `You have discovered ${self.name} achievement.`, '#33cc33');
                 self.step();
+            }
         }
     }
 
@@ -93,6 +95,8 @@ class Achievement {
             name: self.name,
             isQuest: false
         }));
+
+        self.player.popup('Achievement Completed!', `You have completed ${self.name}!`, '#33cc33');
 
         if (npc && self.player.npcTalkCallback)
             self.player.npcTalkCallback(npc);

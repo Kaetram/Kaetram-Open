@@ -263,7 +263,7 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
                 return;
             }
 
-            self.title.css('colour', colour);
+            self.title.css('color', colour);
 
             self.title.text(title);
             self.description.text(message);

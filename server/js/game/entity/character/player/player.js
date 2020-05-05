@@ -1252,10 +1252,30 @@ class Player extends Character {
         self.save();
     }
 
+    popup(title, message, colour) {
+        let self = this;
+
+        if (!title)
+            return;
+
+        title = Utils.parseMessage(title);
+        message = Utils.parseMessage(message);
+
+        self.send(new Messages.Notification(Packets.NotificationOpcode.Popup, {
+            title: title,
+            message: message,
+            colour: colour
+        }));
+    }
+
     notify(message, colour) {
         let self = this;
 
         if (!message)
+            return;
+
+        // Prevent notify spams
+        if (new Date().getTime() - self.lastNotify < 250)
             return;
 
         message = Utils.parseMessage(message);
@@ -1264,6 +1284,8 @@ class Player extends Character {
             message: message,
             colour: colour
         }));
+
+        self.lastNotify = new Date().getTime();
     }
 
     /**
