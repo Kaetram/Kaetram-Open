@@ -585,7 +585,113 @@
     left: 70%;
 }
 
+#worlds-switch {
+    bottom: 5px;
+    left: 5px;
+    display: none;
+    position: fixed;
+    padding: 0.5em 1em;
+    color: white;
+    cursor: pointer;
+    font-size: 0.75em;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background: #d83a39;
+}
+
+#current-world-count {
+    font-size: 0.75em;
+}
+#current-world-id {
+    opacity: 0.8;
+    font-size: 0.75em;
+    text-align: justify;
+}
+
+#worlds-popup {
+  display: none;
+  z-index: 1;
+  bottom: 125%;
+  left: 62.5%;
+  background-color: #555;
+  color: #fff;
+  text-align: justify;
+  border-radius: 6px;
+  padding: 12px;
+  position: absolute;
+  margin-left: -80px;
+}
+#worlds-popup::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 33%;
+  margin-left: -25px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+#worlds-popup > table th {
+    border-bottom: 2px solid #eee;
+}
+#worlds-popup > table td {
+    padding: 12px 24px 10px 16px;
+    border-left: 2px solid #fff;
+}
+#worlds-popup > table tr:hover {
+    background: #333a;
+}
+#worlds-popup > table tr:hover:::after {
+    content: "Join";
+}
+
+#notification {
+    position: absolute;
+    opacity: 0.9;
+    top: 100%;
+    left: 50%;
+
+    pointer-events: none;
+    -moz-transition:0.7s top ease;
+    -webkit-transition:0.7s top ease;
+    -o-transition:0.7s top ease;
+    -ms-transition:0.7s top ease;
+    transition:0.7s top ease;
+}
+
+#notificationTextTitle {
+
+    position: relative;
+    top: 25%;
+    font-family: 'AdvoCut', sans-serif;
+    font-size: 20px;
+    text-shadow: 2px 2px #0e0a00;
+    text-align: center;
+    color: #45ebfc;
+}
+
+#notificationTextDescription {
+    position: relative;
+    top: 25%;
+    font-family: 'AdvoCut', sans-serif;
+    font-size: 14px;
+    text-shadow: 2px 2px #0e0a00;
+    text-align: center;
+    color: white;
+
+    margin-top: 10px;
+}
+
 @media only screen and (min-width: 1501px) {
+
+    #notification {
+        width: 648px;
+        height: 102px;
+        background: url('../img/3/spritesheet.png') no-repeat;
+
+        margin-left: -344px;
+    }
 
     #chatButton {
         position: relative;
@@ -1227,6 +1333,22 @@
 }
 
 @media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
+
+    #notification {
+        width: 432px;
+        height: 68px;
+        background: url('../img/2/spritesheet.png') no-repeat;
+
+        margin-left: -216px;
+    }
+
+    #notificationTextTitle {
+        font-size: 18px;
+    }
+
+    #notificationTextDescription {
+        font-size: 12px;
+    }
 
     #chatButton {
         position: relative;
