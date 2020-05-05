@@ -305,7 +305,9 @@ class Incoming {
                 let type = message.shift();
 
                 if (!self.player.inventory.hasSpace()) {
-                    self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'You do not have enough space in your inventory.'));
+                    self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+                        message: 'You do not have enough space in your inventory.'
+                    }));
                     return;
                 }
 
@@ -664,12 +666,16 @@ class Incoming {
         else {
 
             if (self.player.isMuted()) {
-                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'You are currently muted.'));
+                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+                    message: 'You are currently muted.'
+                }));
                 return;
             }
 
             if (!self.player.canTalk) {
-                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'You are not allowed to talk for the duration of this event.'));
+                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+                    message: 'You are not allowed to talk for the duration of this event.'
+                }));
                 return;
             }
 

@@ -672,24 +672,30 @@ define(['./impl/teamwar'], function(TeamWar) {
 
             });
 
-            self.messages.onNotification(function(opcode, message, colour) {
+            self.messages.onNotification(function(opcode, info) {
 
                 switch (opcode) {
                     case Packets.NotificationOpcode.Ok:
 
-                        self.interface.displayNotify(message);
+                        self.interface.displayNotify(info.message);
 
                         break;
 
                     case Packets.NotificationOpcode.YesNo:
 
-                        self.interface.displayConfirm(message);
+                        self.interface.displayConfirm(info.message);
 
                         break;
 
                     case Packets.NotificationOpcode.Text:
 
-                        self.input.chatHandler.add('WORLD', message, colour);
+                        self.input.chatHandler.add('WORLD', info.message, info.colour);
+
+                        break;
+
+                    case Packets.NotificationOpcode.Popup:
+
+                        self.interface.showNotification(info.title, info.message, info.colour);
 
                         break;
                 }

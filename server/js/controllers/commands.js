@@ -58,7 +58,9 @@ class Commands {
 
             case 'coords':
 
-                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, 'x: ' + self.player.x + ' y: ' + self.player.y));
+                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+                    message: 'x: ' + self.player.x + ' y: ' + self.player.y
+                }));
 
                 return;
 
@@ -501,6 +503,16 @@ class Commands {
                 self.player.send(new Messages.Command({
                     command: 'toggleheal'
                 }));
+                break;
+
+            case 'popup':
+
+                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Popup, {
+                    title: 'New Quest Found!',
+                    message: 'New quest has been discovered!',
+                    colour: '#00000'
+                }));
+
                 break;
 
 

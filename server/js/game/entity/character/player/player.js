@@ -1260,7 +1260,10 @@ class Player extends Character {
 
         message = Utils.parseMessage(message);
 
-        self.send(new Messages.Notification(Packets.NotificationOpcode.Text, message, colour));
+        self.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+            message: message,
+            colour: colour
+        }));
     }
 
     /**

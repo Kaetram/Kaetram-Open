@@ -126,7 +126,8 @@ Packets.QuestOpcode = {
 Packets.NotificationOpcode = {
     Ok: 0,
     YesNo: 1,
-    Text: 2
+    Text: 2,
+    Popup: 3
 };
 
 Packets.NPCOpcode = {
