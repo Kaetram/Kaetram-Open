@@ -740,36 +740,52 @@ define(['./impl/teamwar'], function(TeamWar) {
                 entity.triggerHealthBar();
             });
 
-            self.messages.onExperience(function(info) {
+            self.messages.onExperience(function(opcode, info) {
                 var entity = self.entities.get(info.id);
 
-                if (!entity || entity.type !== 'player')
-                    return;
+                switch (opcode) {
+                    case Packets.ExperienceOpcode.Combat:
 
-                /**
-                 * We only receive level information about other entities.
-                 */
-                if (entity.level !== info.level) {
+                        if (!entity || entity.type !== 'player')
+                            return;
 
-                    entity.level = info.level;
-                    self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
+                        /**
+                         * We only receive level information about other entities.
+                         */
+                        if (entity.level !== info.level) {
 
+                            entity.level = info.level;
+                            self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
+
+                        }
+
+                        /**
+                         * When we receive experience information about our own player
+                         * we update the experience bar and create an info.
+                         */
+
+                        if (entity.id === self.game.player.id) {
+
+                            if (info.id === self.game.player.id)
+                                self.game.player.setExperience(info.experience, info.nextExperience, info.prevExperience);
+
+                            self.info.create(Modules.Hits.Experience, [info.amount], entity.x, entity.y);
+                        }
+
+                        self.interface.profile.update();
+
+                        break;
+
+                    case Packets.ExperienceOpcode.Profession:
+
+                        if (!entity || entity.type !== 'player')
+                            return;
+
+                        if (entity.id === self.game.player.id)
+                            self.info.create(Modules.Hits.Profession, [info.amount], entity.x, entity.y);
+
+                        break;
                 }
-
-                /**
-                 * When we receive experience information about our own player
-                 * we update the experience bar and create an info.
-                 */
-
-                if (entity.id === self.game.player.id) {
-
-                    if (info.id === self.game.player.id)
-                        self.game.player.setExperience(info.experience, info.nextExperience, info.prevExperience);
-
-                    self.info.create(Modules.Hits.Experience, [info.amount], entity.x, entity.y);
-                }
-
-                self.interface.profile.update();
 
             });
 

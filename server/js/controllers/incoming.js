@@ -580,6 +580,7 @@ class Incoming {
 
             case Packets.TargetOpcode.Object:
 
+                self.player.setTarget(instance);
                 self.player.handleObject(instance);
 
                 break;

@@ -57,6 +57,20 @@ class Professions {
         return self.professions[id];
     }
 
+    stopAll() {
+        var self = this;
+
+        self.forEachProfession((profession) => {
+            profession.stop();
+        });
+    }
+
+    forEachProfession(callback) {
+        _.each(this.professions, (profession) => {
+            callback(profession);
+        });
+    }
+
     getArray() {
         let self = this,
             data = {};

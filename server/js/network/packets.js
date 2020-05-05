@@ -132,6 +132,11 @@ Packets.NotificationOpcode = {
     Popup: 3
 };
 
+Packets.ExperienceOpcode = {
+    Combat: 0,
+    Profession: 1
+};
+
 Packets.NPCOpcode = {
     Talk: 0,
     Store: 1,

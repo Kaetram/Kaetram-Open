@@ -40,6 +40,7 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
                 case Modules.Hits.Heal:
                 case Modules.Hits.Mana:
                 case Modules.Hits.Experience:
+                case Modules.Hits.Profession:
                 case Modules.Hits.Poison:
                     var amount = data.shift(),
                         id = self.generateId(self.game.time, amount, x, y),
@@ -48,7 +49,7 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
                     if (amount < 1 || !isInt(amount))
                         return;
 
-                    if (type !== Modules.Hits.Experience)
+                    if (type !== Modules.Hits.Experience && type !== Modules.Hits.Profession)
                         text = '++';
 
                     if (type === Modules.Hits.Poison)
@@ -64,6 +65,8 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
                         colour = Modules.DamageColours.exp;
                     else if (type === Modules.Hits.Poison)
                         colour = Modules.DamageColours.poison;
+                    else if (type === Modules.Hits.Profession)
+                        colour = Modules.DamageColours.profession;
 
                     splat.setColours(colour.fill, colour.stroke);
 

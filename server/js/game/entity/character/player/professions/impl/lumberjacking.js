@@ -28,37 +28,41 @@ class Lumberjacking extends Profession {
 
         self.cuttingInterval = setInterval(() => {
 
-            if (!self.player || self.world.isTreeCut(self.treeObjectId)) {
-                self.stop();
-                return;
-            }
+            try {
 
-            if (!self.treeId || !self.treeObjectId)
-                return;
+                if (!self.player || !self.isTarget() || self.world.isTreeCut(self.targetId)) {
+                    self.stop();
+                    return;
+                }
 
-            if (!self.player.inventory.canHold(Trees.Logs[self.treeId], 1)) {
-                self.player.notify('You do not have enough space in your inventory!');
-                self.stop();
-                return;
-            }
+                if (!self.treeId || !self.targetId)
+                    return;
 
-            self.player.sendToRegion(new Messages.Animation(self.player.instance, {
-                action: Modules.Actions.Attack
-            }));
+                if (!self.player.inventory.canHold(Trees.Logs[self.treeId], 1)) {
+                    self.player.notify('You do not have enough space in your inventory!');
+                    self.stop();
+                    return;
+                }
 
-            let probability = Formulas.getTreeChance(self.player, self.treeId);
+                self.player.sendToRegion(new Messages.Animation(self.player.instance, {
+                    action: Modules.Actions.Attack
+                }));
 
-            if (Utils.randomInt(0, probability) === 2) {
-                self.addExperience(Trees.Experience[self.treeId]);
+                let probability = Formulas.getTreeChance(self.player, self.treeId);
 
-                self.player.inventory.add({
-                    id: Trees.Logs[self.treeId],
-                    count: 1
-                });
+                if (Utils.randomInt(0, probability) === 2) {
+                    self.addExperience(Trees.Experience[self.treeId]);
 
-                if (self.getTreeDestroyChance())
-                    self.world.destroyTree(self.treeObjectId, Modules.Trees[self.treeId]);
-            }
+                    self.player.inventory.add({
+                        id: Trees.Logs[self.treeId],
+                        count: 1
+                    });
+
+                    if (self.getTreeDestroyChance())
+                        self.world.destroyTree(self.targetId, Modules.Trees[self.treeId]);
+                }
+
+            } catch (e) {}
 
         }, self.tick);
 
@@ -76,7 +80,7 @@ class Lumberjacking extends Profession {
             return;
 
         self.treeId = null;
-        self.treeObjectId = null;
+        self.targetId = null;
 
         clearInterval(self.cuttingInterval);
         self.cuttingInterval = null;
@@ -93,7 +97,7 @@ class Lumberjacking extends Profession {
         }
 
         self.treeId = treeId;
-        self.treeObjectId = id;
+        self.targetId = id;
 
         if (self.level < Trees.Levels[self.treeId]) {
             self.player.notify('Your Lumberjacking level is too low to cut this tree.');
