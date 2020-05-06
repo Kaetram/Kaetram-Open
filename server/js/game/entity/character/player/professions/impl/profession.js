@@ -64,6 +64,35 @@ class Profession {
         return level;
     }
 
+    sync() {
+        let self = this;
+
+        self.player.sendToAdjacentRegions(self.player.region, new Messages.Sync({
+            id: self.player.instance,
+            orientation: self.getOrientation()
+        }))
+    }
+
+    getOrientation() {
+        let self = this;
+
+        if (!self.targetId)
+            return Modules.Orientation.Up;
+
+        let position = self.map.idToPosition(self.targetId);
+
+        if (position.x > self.player.x)
+            return Modules.Orientation.Right;
+        else if (position.x < self.player.x)
+            return Modules.Orientation.Left;
+        else if (position.y > self.player.y)
+            return Modules.Orientation.Down;
+        else (position.y < self.player.y)
+            return Modules.Orientation.Up;
+
+        return Modules.Orientation.Up;
+    }
+
     isTarget() {
         return this.player.target === this.targetId;
     }

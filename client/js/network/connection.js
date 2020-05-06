@@ -173,10 +173,17 @@ define(['./impl/teamwar'], function(TeamWar) {
                         data.weapon.string, data.weapon.count, data.weapon.ability,
                         data.weapon.abilityLevel, data.weapon.power);
 
-                entity.attackRange = data.attackRange;
-                entity.setPoison(data.poison);
+                if (data.attackRange)
+                    entity.attackRange = data.attackRange;
 
-                entity.movementSpeed = data.movementSpeed;
+                if (data.poison)
+                    entity.setPoison(data.poison);
+
+                if (data.movementSpeed)
+                    entity.movementSpeed = data.movementSpeed;
+
+                if (data.orientation !== undefined)
+                    entity.orientation = data.orientation;
 
                 self.interface.profile.update();
             });

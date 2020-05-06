@@ -44,6 +44,7 @@ class Lumberjacking extends Profession {
                     return;
                 }
 
+                self.sync();
                 self.player.sendToRegion(new Messages.Animation(self.player.instance, {
                     action: Modules.Actions.Attack
                 }));
