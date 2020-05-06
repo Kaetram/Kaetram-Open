@@ -1896,7 +1896,8 @@
     "type": "object",
     "name": "Logs",
     "stackable": true,
-    "maxStackSize": 1
+    "maxStackSize": 1,
+    "price": 10
   }
 
 }
