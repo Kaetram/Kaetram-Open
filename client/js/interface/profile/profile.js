@@ -1,8 +1,9 @@
 /* global log, _, Packets */
 
 define(['jquery', './pages/state', './pages/ability',
-        './pages/settings', './pages/quest', './pages/guild'],
-        function($, State, Ability, Settings, Quest, Guild) {
+        './pages/settings', './pages/quest', './pages/guild',
+        './pages/professions'],
+        function($, State, Ability, Settings, Quest, Guild, Professions) {
 
     return Class.extend({
 
@@ -46,12 +47,13 @@ define(['jquery', './pages/state', './pages/ability',
             });
 
             self.state = new State(self.game);
-            self.ability = new Ability(self.game);
+            self.professions = new Professions(self.game);
+            //self.ability = new Ability(self.game);
             self.settings = new Settings(self.game);
             self.quests = new Quest(self.game);
             self.guild = new Guild(self.game);
 
-            self.pages.push(self.state, self.quests, self.guild, self.ability);
+            self.pages.push(self.state, self.quests, self.guild, self.professions);
 
             self.activePage = self.state;
 
