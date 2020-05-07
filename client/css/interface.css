@@ -860,6 +860,11 @@
         display: none;
     }
 
+    #professionsPage {
+        background: url('../img/2/characterdialogsheet.png') -744px -651px;
+        display: none;
+    }
+
     .profileSlot {
         background-position: 0 0;
         position: absolute;
@@ -1559,6 +1564,11 @@
         display: none;
     }
 
+    #professionsPage {
+        background: url('../img/2/characterdialogsheet.png') -496px -434px;
+        display: none;
+    }
+
     .profileSlot {
         background-position: 0 0;
         position: absolute;
@@ -2211,6 +2221,11 @@
 
     #guildPage {
         background: url('../img/1/characterdialogsheet.png') -496px 0;
+        display: none;
+    }
+
+    #professionsPage {
+        background: url('../img/2/characterdialogsheet.png') -248px -217px;
         display: none;
     }
 
