@@ -25,7 +25,7 @@ class Professions {
 
         _.each(pList, (profession) => {
             try {
-                let ProfessionClass = require(`./impl/${profession}`),
+                let ProfessionClass = require(`./impl/${profession.toLowerCase()}`),
                     id = Modules.Professions[profession];
 
                 self.professions[id] = new ProfessionClass(id, self.player);
