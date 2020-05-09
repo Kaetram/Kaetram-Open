@@ -333,6 +333,10 @@ function($, Inventory, Profile, Actions, Bank, Enchant, Warp, Shop, Header) {
             return this.profile.quests;
         },
 
+        getProfessionPage: function() {
+            return this.profile.professions;
+        },
+
         isNotifyVisible: function() {
             return this.notify.css('display') === 'block';
         },

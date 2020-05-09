@@ -1,5 +1,7 @@
 let _ = require('underscore'),
-    Modules = require('../../../../../util/modules');
+    Modules = require('../../../../../util/modules'),
+    Messages = require('../../../../../network/messages'),
+    Packets = require('../../../../../network/packets');
 
 class Professions {
 
@@ -33,8 +35,8 @@ class Professions {
                 log.debug(`Could not load ${profession} profession.`);
                 log.error(e);
             }
-
         });
+
     }
 
     update(info) {
@@ -69,6 +71,26 @@ class Professions {
         _.each(this.professions, (profession) => {
             callback(profession);
         });
+    }
+
+    /**
+     * This is the data we send to the client in order
+     * to load the professions profile tab.
+     */
+
+    getInfo() {
+        let self = this,
+            data = [];
+
+        _.each(self.professions, (profession) => {
+            data.push({
+                id: profession.id,
+                name: profession.name,
+                level: profession.level
+            });
+        });
+
+        return data;
     }
 
     getArray() {

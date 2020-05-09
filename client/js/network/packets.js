@@ -46,7 +46,8 @@ Packets = {
     Overlay: 44,
     Camera: 45,
     Bubble: 46,
-    Client: 47
+    Client: 47,
+    Profession: 48
 };
 
 Packets.IntroOpcode = {
@@ -219,4 +220,9 @@ Packets.CameraOpcode = {
 
 Packets.CommandOpcode = {
     CtrlClick: 0
+};
+
+Packets.ProfessionOpcode = {
+    Batch: 0,
+    Update: 1
 };

@@ -1195,6 +1195,17 @@ class Player extends Character {
         self.send(new Messages.Equipment(Packets.EquipmentOpcode.Batch, info));
     }
 
+    sendProfessions() {
+        let self = this;
+
+        if (!self.professions)
+            return;
+
+        self.send(new Messages.Profession(Packets.ProfessionOpcode.Batch, {
+            data: self.professions.getInfo()
+        }));
+    }
+
     sendToSpawn() {
         let self = this,
             position = self.getSpawn();

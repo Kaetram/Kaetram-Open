@@ -1173,6 +1173,27 @@ define(['./impl/teamwar'], function(TeamWar) {
                 self.bubble.setTo(info.info);
 
             });
+
+            self.messages.onProfession(function(opcode, info) {
+
+                switch (opcode) {
+
+                    case Packets.ProfessionOpcode.Batch:
+
+                        self.interface.getProfessionPage().load(info.data);
+
+                        break;
+
+                    case Packets.ProfessionOpcode.Update:
+
+                        self.interface.getProfessionPage().sync(info);
+
+                        break;
+
+                }
+
+            });
+
         }
 
     });
