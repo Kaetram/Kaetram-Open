@@ -177,7 +177,7 @@ define(['jquery', '../page'], function($, Page) {
         },
 
         getName: function(isQuest, id) {
-            return $('<div id="' + (isQuest ? 'quest' : 'achievement') + id + 'name" class="questName"></div>')
+            return $('<div id="' + (isQuest ? 'quest' : 'achievement') + id + 'name" class="questName"></div>');
         }
 
     });

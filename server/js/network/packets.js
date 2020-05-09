@@ -48,7 +48,8 @@ let Packets = {
     Overlay: 44,
     Camera: 45,
     Bubble: 46,
-    Client: 47
+    Client: 47,
+    Profession: 48
 };
 
 Packets.IntroOpcode = {
@@ -233,6 +234,11 @@ Packets.PushOpcode = {
 
 Packets.CommandOpcode = {
     CtrlClick: 0
+};
+
+Packets.ProfessionOpcode = {
+    Batch: 0,
+    Update: 1
 };
 
 module.exports = Packets;

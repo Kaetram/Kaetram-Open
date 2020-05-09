@@ -494,4 +494,17 @@ Messages.Bubble = class {
 
 };
 
+Messages.Profession = class {
+
+    constructor(opcode, info) {
+        this.opcode = opcode;
+        this.info = info;
+    }
+
+    serialize() {
+        return [Packets.Profession, this.opcode, this.info];
+    }
+
+};
+
 module.exports = Messages;

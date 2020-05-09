@@ -62,6 +62,7 @@ define(function() {
             self.messages[Packets.Overlay] = self.receiveOverlay;
             self.messages[Packets.Camera] = self.receiveCamera;
             self.messages[Packets.Bubble] = self.receiveBubble;
+            self.messages[Packets.Profession] = self.receiveProfession;
 
         },
 
@@ -479,11 +480,20 @@ define(function() {
         },
 
         receiveBubble: function(data) {
-            let self = this,
+            var self = this,
                 info = data.shift();
 
             if (self.bubbleCallback)
                 self.bubbleCallback(info);
+        },
+
+        receiveProfession: function(data) {
+            var self = this,
+                opcode = data.shift(),
+                info = data.shift();
+
+            if (self.professionCallback)
+                self.professionCallback(opcode, info);
         },
 
         /**
@@ -644,6 +654,10 @@ define(function() {
 
         onBubble: function(callback) {
             this.bubbleCallback = callback;
+        },
+
+        onProfession: function(callback) {
+            this.professionCallback = callback;
         }
 
     });

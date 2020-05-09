@@ -223,6 +223,7 @@ class Incoming {
         self.world.region.push(self.player);
 
         self.player.sendEquipment();
+        self.player.sendProfessions();
 
         self.player.loadProfessions();
         self.player.loadInventory();
