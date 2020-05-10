@@ -34,7 +34,7 @@ define(['jquery', './container/container'], function($, Container) {
                 var itemSlot = $('<div id="slot' + i + '" class="itemSlot"></div>');
 
                 if (item.string !== 'null')
-                    itemSlot.css('background-image', self.container.getImageFormat(self.getScale(), item.string));
+                    itemSlot.css('background-image', self.container.getImageFormat(item.string));
 
                 itemSlot.css('background-size', '600%');
 
@@ -209,7 +209,7 @@ define(['jquery', './container/container'], function($, Container) {
 
             var cssSlot = item.find('#slot' + info.index);
 
-            cssSlot.css('background-image', self.container.getImageFormat(self.getScale(), slot.string));
+            cssSlot.css('background-image', self.container.getImageFormat(slot.string));
 
             cssSlot.css('background-size', '600%');
 
@@ -258,7 +258,7 @@ define(['jquery', './container/container'], function($, Container) {
                 if (Detect.isMobile())
                     item.css('background-size', '600%');
                 else
-                    item.css('background-image', self.container.getImageFormat(self.getScale(), slot.string));
+                    item.css('background-image', self.container.getImageFormat(slot.string));
             }
 
         },

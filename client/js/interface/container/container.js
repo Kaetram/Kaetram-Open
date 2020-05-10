@@ -35,11 +35,8 @@ define(['./slot'], function(Slot) {
             return -1;
         },
 
-        getImageFormat: function(scale, name) {
-            if (scale === 1)
-                scale = 2;
-
-            return 'url("img/' + scale + '/item-' + name + '.png")';
+        getImageFormat: function(name) {
+            return 'url("img/sprites/item-' + name + '.png")';
         }
 
     });
