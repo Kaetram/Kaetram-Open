@@ -163,6 +163,8 @@ Formulas.prevExp = (experience) => {
     for (let i = Constants.MAX_LEVEL; i > 0; i--)
         if (experience > Formulas.LevelExp[i])
             return Formulas.LevelExp[i];
+
+    return 0;
 };
 
 Formulas.expToLevel = (experience) => {

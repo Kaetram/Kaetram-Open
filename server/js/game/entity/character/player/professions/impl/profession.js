@@ -19,6 +19,9 @@ class Profession {
         self.region = self.world.region;
 
         self.experience = 0;
+        self.nextExperience = Formulas.nextExp(self.experience);
+        self.prevExperience = Formulas.prevExp(self.experience);
+
         self.level = Formulas.expToLevel(self.experience);
 
         self.targetId = null;
@@ -47,6 +50,12 @@ class Profession {
             amount: experience
         }));
 
+        self.player.send(new Messages.Profession(Packets.ProfessionOpcode.Update, {
+            id: self.id,
+            level: self.level,
+            percentage: self.getPercentage()
+        }));
+
         self.player.save();
     }
 
@@ -73,6 +82,18 @@ class Profession {
         }))
     }
 
+    isTarget() {
+        return this.player.target === this.targetId;
+    }
+
+    getPercentage() {
+        let self = this,
+            experience = self.experience - self.prevExperience,
+            nextExperience = self.nextExperience - self.prevExperience;
+
+        return (experience / nextExperience * 100).toFixed(2);
+    }
+
     getOrientation() {
         let self = this;
 
@@ -91,10 +112,6 @@ class Profession {
             return Modules.Orientation.Up;
 
         return Modules.Orientation.Up;
-    }
-
-    isTarget() {
-        return this.player.target === this.targetId;
     }
 
     getData() {
