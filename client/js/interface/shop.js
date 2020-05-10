@@ -86,7 +86,7 @@ define(['jquery', './container/container'], function($, Container) {
             });
 
             self.sellSlotReturn.css({
-                'background-image': self.container.getImageFormat(self.getScale(), info.currency),
+                'background-image': self.container.getImageFormat(info.currency),
                 'background-size': self.sellSlot.css('background-size')
             });
 

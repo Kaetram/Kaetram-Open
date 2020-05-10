@@ -36,11 +36,8 @@ define(['jquery'], function($) {
             //log.info('Uninitialized.');
         },
 
-        getImageFormat: function(scale, name) {
-            if (!name || name === 'null')
-                return '';
-
-            return 'url("img/' + scale + '/item-' + name + '.png")';
+        getImageFormat: function(name) {
+            return 'url("img/sprites/item-' + name + '.png")';
         }
 
     });

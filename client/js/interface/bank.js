@@ -42,7 +42,7 @@ define(['jquery', './container/container'], function($, Container) {
                 var image = $('<div id="bankImage' + i + '" class="bankImage"></div>');
 
                 if (item.string)
-                    image.css('background-image', self.container.getImageFormat(self.getScale(), item.string));
+                    image.css('background-image', self.container.getImageFormat(item.string));
 
                 slot.click(function(event) {
                     self.click('bank', event);
@@ -88,7 +88,7 @@ define(['jquery', './container/container'], function($, Container) {
                 var slotImage = $('<div id="inventoryImage' + j + '" class="bankImage"></div>');
 
                 if (iItem.string)
-                    slotImage.css('background-image', self.container.getImageFormat(self.getScale(), iItem.string));
+                    slotImage.css('background-image', self.container.getImageFormat(iItem.string));
 
                 iSlot.click(function(event) {
                     self.click('inventory', event);
@@ -146,7 +146,7 @@ define(['jquery', './container/container'], function($, Container) {
                 if (Detect.isMobile())
                     image.css('background-size', '600%');
                 else
-                    image.css('background-image', self.container.getImageFormat(self.getScale(), slot.string));
+                    image.css('background-image', self.container.getImageFormat(slot.string));
             }
 
             for (var j = 0; j < inventoryList.length; j++) {
@@ -162,7 +162,7 @@ define(['jquery', './container/container'], function($, Container) {
                 if (Detect.isMobile())
                     iImage.css('background-size', '600%');
                 else
-                    iImage.css('background-image', self.container.getImageFormat(self.getScale(), iSlot.string));
+                    iImage.css('background-image', self.container.getImageFormat(iSlot.string));
             }
 
         },
@@ -192,7 +192,7 @@ define(['jquery', './container/container'], function($, Container) {
                 cssSlot = bankSlot.find('#bankImage' + info.index),
                 count = bankSlot.find('#bankItemCount' + info.index);
 
-            cssSlot.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
+            cssSlot.css('background-image', self.container.getImageFormat(info.string));
 
             if (Detect.isMobile())
                 cssSlot.css('background-size', '600%');
@@ -210,7 +210,7 @@ define(['jquery', './container/container'], function($, Container) {
                 return;
 
             var divItem = item.find('#bankSlot' + info.index);
-            
+
             slot.count -= info.count;
 
             if (slot.count < 1) {
@@ -232,7 +232,7 @@ define(['jquery', './container/container'], function($, Container) {
             var slot = item.find('#bankInventorySlot' + info.index),
                 image = slot.find('#inventoryImage' + info.index);
 
-            image.css('background-image', self.container.getImageFormat(self.getScale(), info.string));
+            image.css('background-image', self.container.getImageFormat(info.string));
 
             if (Detect.isMobile())
                 image.css('background-size', '600%');

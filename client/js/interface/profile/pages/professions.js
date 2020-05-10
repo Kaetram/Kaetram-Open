@@ -40,8 +40,6 @@ define(['jquery', '../page'], function($, Page) {
         sync: function(info) {
             var self = this;
 
-            log.info(info);
-
             if (!info)
                 return;
 
