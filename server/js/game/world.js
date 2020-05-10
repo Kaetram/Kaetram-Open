@@ -521,7 +521,7 @@ class World {
         if (!(id in self.trees))
             self.trees[id] = {};
 
-        self.searchTree(position.x + 1, position.y, id);
+        self.searchTree(position.x + 1, position.y, id, self.trees);
 
         self.cutTrees[id] = {
             data: {},
@@ -568,7 +568,7 @@ class World {
      * variable to help organize trees that are queued.
      */
 
-    searchTree(x, y, refId) {
+    searchTree(x, y, refId, data) {
         let self = this,
             treeTile = self.map.getTree(x, y);
 
@@ -577,24 +577,24 @@ class World {
 
         let id = x + '-' + y;
 
-        if (id in self.trees[refId])
+        if (id in data[refId])
             return false;
 
-        self.trees[refId][id] = {
+        data[refId][id] = {
             index: self.map.gridPositionToIndex(x, y) - 1,
             treeTile: treeTile
         };
 
-        if (self.searchTree(x + 1, y, refId))
+        if (self.searchTree(x + 1, y, refId, data))
             return true;
 
-        if (self.searchTree(x - 1, y, refId))
+        if (self.searchTree(x - 1, y, refId, data))
             return true;
 
-        if (self.searchTree(x, y + 1, refId))
+        if (self.searchTree(x, y + 1, refId, data))
             return true;
 
-        if (self.searchTree(x, y - 1, refId))
+        if (self.searchTree(x, y - 1, refId, data))
             return true;
 
         return false;
