@@ -101,7 +101,7 @@ class Lumberjacking extends Profession {
         self.targetId = id;
 
         if (self.level < Trees.Levels[self.treeId]) {
-            self.player.notify('Your Lumberjacking level is too low to cut this tree.');
+            self.player.notify(`You must be at least level ${Trees.Levels[self.treeId]} to cut this tree!`);
             return;
         }
 

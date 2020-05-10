@@ -110,8 +110,6 @@ class Profession {
             return Modules.Orientation.Down;
         else (position.y < self.player.y)
             return Modules.Orientation.Up;
-
-        return Modules.Orientation.Up;
     }
 
     getData() {
