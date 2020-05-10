@@ -70,12 +70,12 @@ define(['jquery', '../renderer/pointers/pointer'], function($, Pointer) {
             var self = this;
 
             element.css({
-                'width': (16 + 16 * self.scale) + 'px',
-                'height': (16 + 16 * self.scale) + 'px',
+                'width': '64px',
+                'height': '64px',
                 'margin': 'inherit',
-                'margin-top': '-' + (6 * self.scale) + 'px',
-                'top': (10 * self.scale) + 'px',
-                'background': 'url("img/' + self.scale + '/pointer.png")'
+                'margin-top': '-18px',
+                'top': '30px',
+                'background': 'url("img/sprites/pointer.png")'
             });
         },
 
