@@ -4,11 +4,10 @@ define(['./animation'], function(Animation) {
 
     return Class.extend({
 
-        init: function(sprite, scale) {
+        init: function(sprite) {
             var self = this;
 
             self.sprite = sprite;
-            self.scale = scale;
 
             self.id = sprite.id;
 
@@ -61,10 +60,8 @@ define(['./animation'], function(Animation) {
             self.idleSpeed = sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
         },
 
-        update: function(newScale) {
+        update: function() {
             var self = this;
-
-            self.scale = newScale;
 
             self.loadSprite();
             self.load();

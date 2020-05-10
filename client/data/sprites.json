@@ -7612,6 +7612,45 @@
     "offsetY": 0
   },
   {
+    "id": "item-palmlogs",
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-icelogs",
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
+    "id": "item-icepalmlogs",
+    "width": 16,
+    "height": 16,
+    "animations": {
+      "idle": {
+        "length": 6,
+        "row": 0
+      }
+    },
+    "offsetX": 0,
+    "offsetY": 0
+  },
+  {
     "id": "item-pickle",
     "width": 8,
     "height": 16,

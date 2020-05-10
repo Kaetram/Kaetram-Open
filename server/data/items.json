@@ -15,30 +15,6 @@
     "lumberjacking": 1
   },
 
-  "RustedAxe": {
-    "id": 265,
-    "type": "weapon",
-    "attack": 4,
-    "name": "Rusted Axe",
-    "lumberjacking": 2
-  },
-
-  "FireAxe": {
-    "id": 266,
-    "type": "weapon",
-    "attack": 5,
-    "name": "Fire Axe",
-    "lumberjacking": 3
-  },
-
-  "PoisonAxe": {
-    "id": 267,
-    "type": "weapon",
-    "attack": 6,
-    "name": "Poison Axe",
-    "lumberjacking": 4
-  },
-
   "MorningStar": {
     "id": 3,
     "type": "weapon",
@@ -60,25 +36,11 @@
     "name": "Fire Sword"
   },
 
-  "IceSword": {
-    "id": 261,
-    "type": "weapon",
-    "attack": 6,
-    "name": "Ice Sword"
-  },
-
   "GoldenSword": {
     "id": 6,
     "type": "weapon",
     "attack": 7,
     "name": "Golden Sword"
-  },
-
-  "PlatinumSword": {
-    "id": 262,
-    "type": "weapon",
-    "attack": 8,
-    "name": "Platinum Sword"
   },
 
   "SideSword": {
@@ -344,21 +306,16 @@
     "id": 44,
     "type": "weapon",
     "attack": 9,
-    "name": "Cactus Axe"
+    "name": "Cactus Axe",
+    "lumberjacking": 6
   },
 
   "GoldAxe": {
     "id": 44,
     "type": "weapon",
     "attack": 14,
-    "name": "Gold Axe"
-  },
-
-  "CarnelianAxe": {
-    "id": 268,
-    "type": "weapon",
-    "attack": 9,
-    "name": "Carnelian Axe"
+    "name": "Gold Axe",
+    "lumberjacking": 7
   },
 
   "Devilkazyasword": {
@@ -882,25 +839,11 @@
     "name": "Ruby Armour"
   },
 
-  "BlueArmor": {
-    "id": 260,
-    "defense": 6,
-    "type": "armor",
-    "name": "Crystal Armour"
-  },
-
   "GoldenArmor": {
     "id": 119,
     "defense": 6,
     "type": "armor",
     "name": "Golden Armour"
-  },
-
-  "PlatinumArmor": {
-    "id": 263,
-    "defense": 7,
-    "type": "armor",
-    "name": "Platinum Armour"
   },
 
   "GreenArmor": {
@@ -1891,6 +1834,34 @@
     "name": "Pickle Armour"
   },
 
+  "BlueArmor": {
+    "id": 260,
+    "defense": 6,
+    "type": "armor",
+    "name": "Crystal Armour"
+  },
+
+  "IceSword": {
+    "id": 261,
+    "type": "weapon",
+    "attack": 6,
+    "name": "Ice Sword"
+  },
+
+  "PlatinumSword": {
+    "id": 262,
+    "type": "weapon",
+    "attack": 8,
+    "name": "Platinum Sword"
+  },
+
+  "PlatinumArmor": {
+    "id": 263,
+    "defense": 7,
+    "type": "armor",
+    "name": "Platinum Armour"
+  },
+
   "Logs": {
     "id": 264,
     "type": "object",
@@ -1898,6 +1869,65 @@
     "stackable": true,
     "maxStackSize": 1,
     "price": 10
+  },
+
+  "RustedAxe": {
+    "id": 265,
+    "type": "weapon",
+    "attack": 4,
+    "name": "Rusted Axe",
+    "lumberjacking": 2
+  },
+
+  "FireAxe": {
+    "id": 266,
+    "type": "weapon",
+    "attack": 5,
+    "name": "Fire Axe",
+    "lumberjacking": 3
+  },
+
+  "PoisonAxe": {
+    "id": 267,
+    "type": "weapon",
+    "attack": 6,
+    "name": "Poison Axe",
+    "lumberjacking": 4
+  },
+
+  "CarnelianAxe": {
+    "id": 268,
+    "type": "weapon",
+    "attack": 9,
+    "name": "Carnelian Axe",
+    "lumberjacking": 8
+  },
+
+  "PalmLogs": {
+    "id": 269,
+    "type": "object",
+    "name": "Palm Logs",
+    "stackable": true,
+    "maxStackSize": 1,
+    "price": 25
+  },
+
+  "IceLogs": {
+    "id": 270,
+    "type": "object",
+    "name": "Ice Logs",
+    "stackable": true,
+    "maxStackSize": 1,
+    "price": 35
+  },
+
+  "IcePalmLogs": {
+    "id": 271,
+    "type": "object",
+    "name": "Ice Palm Logs",
+    "stackable": true,
+    "maxStackSize": 1,
+    "price": 50
   }
 
 }

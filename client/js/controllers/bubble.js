@@ -49,7 +49,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
                 return;
 
             var scale = self.game.renderer.getScale(),
-                tileSize = 16 * scale,
+                tileSize = 48, // 16 * scale
                 x = (info.x - self.game.getCamera().x) * scale,
                 width = parseInt(bubble.element.css('width')) + 24,
                 offset = (width / 2) - (tileSize / 2),
@@ -57,7 +57,7 @@ define(['jquery', '../renderer/bubbles/blob'], function($, Blob) {
 
             y = ((info.y - self.game.getCamera().y) * scale) - (tileSize * 2) - offsetY;
 
-            bubble.element.css('left', x - offset + (2 + self.game.renderer.scale) + 'px');
+            bubble.element.css('left', (x - offset + 3) + 'px');
             bubble.element.css('top', y + 'px');
         },
 
