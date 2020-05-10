@@ -1,7 +1,6 @@
 let _ = require('underscore'),
     Modules = require('../../../../../util/modules'),
-    Messages = require('../../../../../network/messages'),
-    Packets = require('../../../../../network/packets');
+    Formulas = require('../../../../../util/formulas');
 
 class Professions {
 
@@ -86,7 +85,8 @@ class Professions {
             data.push({
                 id: profession.id,
                 name: profession.name,
-                level: profession.level
+                level: profession.level,
+                percentage: profession.getPercentage()
             });
         });
 

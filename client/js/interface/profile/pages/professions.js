@@ -17,13 +17,15 @@ define(['jquery', '../page'], function($, Page) {
         load: function(professions) {
             var self = this;
 
-            log.info(professions);
-
             _.each(professions, function(profession) {
                 var item = self.getItem(profession.id),
-                    name = self.getName(profession.id);
+                    name = self.getName(profession.id),
+                    info = $('<p></p>')
 
                 name.text(profession.name);
+                info.text('Level ' + profession.level + ' | ' + profession.percentage + '%');
+
+                name.append(info);
 
                 item.append(name);
 
@@ -35,19 +37,23 @@ define(['jquery', '../page'], function($, Page) {
             });
         },
 
-        sync: function(data) {
+        sync: function(info) {
             var self = this;
 
-            log.info('Received profession data');
-            log.info(data);
+            log.info(info);
+
+            if (!info)
+                return;
+
+            $('#professionName' + info.id).find('p').text('Level ' + info.level + ' | ' + info.percentage + '%');
         },
 
         getItem: function(id) {
-            return $('<div id="profession' + id + '" class="professionItem"></div>');
+            return $('<div id="professionItem' + id + '" class="professionItem"></div>');
         },
 
         getName: function(id) {
-            return $('<div id="profession' + id + '" class="professionName"></div>');
+            return $('<div id="professionName' + id + '" class="professionName"></div>');
         }
 
     });

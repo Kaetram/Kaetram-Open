@@ -411,6 +411,7 @@
     margin-top: 3px;
     color: white;
     z-index: 1;
+    background-color: rgb(51, 153, 255, 0.4);
 }
 
 #achievementCount, #questCount {
