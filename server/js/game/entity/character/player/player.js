@@ -197,6 +197,8 @@ class Player extends Character {
                 return;
 
             self.professions.update(info);
+
+            self.sendProfessions();
         });
     }
 

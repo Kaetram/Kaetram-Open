@@ -159,7 +159,7 @@ define(['jquery', './container/container'], function($, Container) {
                 itemName = $('<div id="shopItemName' + i + '" class="shopItemName"></div>');
                 itemBuy = $('<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>');
 
-                itemImage.css('background-image', self.container.getImageFormat(1, string));
+                itemImage.css('background-image', self.container.getImageFormat(string));
                 itemCount.html(count);
                 itemPrice.html(price + 'g');
                 itemName.html(name);

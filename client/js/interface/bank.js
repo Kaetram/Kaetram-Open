@@ -48,9 +48,6 @@ define(['jquery', './container/container'], function($, Container) {
                     self.click('bank', event);
                 });
 
-                if (Detect.isMobile())
-                    image.css('background-size', '600%');
-
                 var count = item.count;
 
                 if (count > 999999)
@@ -93,9 +90,6 @@ define(['jquery', './container/container'], function($, Container) {
                 iSlot.click(function(event) {
                     self.click('inventory', event);
                 });
-
-                if (Detect.isMobile())
-                    slotImage.css('background-size', '600%');
 
                 var count = iItem.count;
 
@@ -143,10 +137,7 @@ define(['jquery', './container/container'], function($, Container) {
                     'margin-left': '0'
                 });
 
-                if (Detect.isMobile())
-                    image.css('background-size', '600%');
-                else
-                    image.css('background-image', self.container.getImageFormat(slot.string));
+                image.css('background-image', self.container.getImageFormat(slot.string));
             }
 
             for (var j = 0; j < inventoryList.length; j++) {
@@ -159,10 +150,7 @@ define(['jquery', './container/container'], function($, Container) {
                     'margin-bottom': (6 * self.getScale()) + 'px'
                 });
 
-                if (Detect.isMobile())
-                    iImage.css('background-size', '600%');
-                else
-                    iImage.css('background-image', self.container.getImageFormat(iSlot.string));
+                iImage.css('background-image', self.container.getImageFormat(iSlot.string));
             }
 
         },
@@ -194,7 +182,7 @@ define(['jquery', './container/container'], function($, Container) {
 
             cssSlot.css('background-image', self.container.getImageFormat(info.string));
 
-            if (Detect.isMobile())
+            if (self.scale < 3)
                 cssSlot.css('background-size', '600%');
 
             if (slot.count > 1)
@@ -233,9 +221,6 @@ define(['jquery', './container/container'], function($, Container) {
                 image = slot.find('#inventoryImage' + info.index);
 
             image.css('background-image', self.container.getImageFormat(info.string));
-
-            if (Detect.isMobile())
-                image.css('background-size', '600%');
 
             if (info.count > 1)
                 slot.find('#inventoryItemCount' + info.index).text(info.count);

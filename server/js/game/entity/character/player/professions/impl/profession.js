@@ -19,16 +19,21 @@ class Profession {
         self.region = self.world.region;
 
         self.experience = 0;
-        self.nextExperience = Formulas.nextExp(self.experience);
-        self.prevExperience = Formulas.prevExp(self.experience);
-
-        self.level = Formulas.expToLevel(self.experience);
 
         self.targetId = null;
     }
 
     load(data) {
-        this.experience = data.experience;
+        let self = this;
+
+        self.experience = data.experience;
+
+        log.debug(self.experience);
+
+        self.level = Formulas.expToLevel(self.experience);
+
+        self.nextExperience = Formulas.nextExp(self.experience);
+        self.prevExperience = Formulas.prevExp(self.experience);
     }
 
     addExperience(experience) {
@@ -39,6 +44,7 @@ class Profession {
         let oldLevel = self.level;
 
         self.level = Formulas.expToLevel(self.experience);
+
         self.nextExperience = Formulas.nextExp(self.experience);
         self.prevExperience = Formulas.prevExp(self.experience);
 
