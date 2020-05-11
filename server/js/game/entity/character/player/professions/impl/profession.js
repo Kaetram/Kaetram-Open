@@ -28,8 +28,6 @@ class Profession {
 
         self.experience = data.experience;
 
-        log.debug(self.experience);
-
         self.level = Formulas.expToLevel(self.experience);
 
         self.nextExperience = Formulas.nextExp(self.experience);
