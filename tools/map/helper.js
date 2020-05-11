@@ -20,18 +20,8 @@ class Helper {
         self.height = worldServer.height;
 
         // Palm Tree Stump
-        self.getTileData(45, 132);
-        self.getTileData(46, 132);
-        self.getTileData(45, 133);
-        self.getTileData(46, 133);
-
-        log.debug('-----------');
-
-        // Cut Palm Stump
-        self.getTileData(49, 136);
-        self.getTileData(50, 136);
-        self.getTileData(49, 137);
-        self.getTileData(50, 137);
+        self.getTileData(167, 263);
+        self.getTileData(167, 264);
 
         //for (let i = 1; i < 5; i++)
         //    for (let j = 1; j < 5; j++)

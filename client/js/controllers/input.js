@@ -265,11 +265,11 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                     log.info('---------------');
                 }
 
-                self.leftClick(position);
+                self.leftClick(position, true);
             }
         },
 
-        leftClick: function(position) {
+        leftClick: function(position, keyMovement) {
             var self = this,
                 player = self.getPlayer();
 
@@ -303,7 +303,7 @@ define(['jquery', '../entity/animation', './chat', './overlay'], function($, Ani
                 return;
             }
 
-            if (self.renderer.mobile)
+            if (self.renderer.mobile || keyMovement)
                 self.entity = self.game.getEntityAt(position.x, position.y, (position.x === player.gridX && position.y === player.gridY));
 
             if (self.entity) {
