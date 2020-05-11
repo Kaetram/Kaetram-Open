@@ -44,18 +44,20 @@ define(['../utils/queue', '../renderer/infos/splat', '../renderer/infos/countdow
                 case Modules.Hits.Poison:
                     var amount = data.shift(),
                         id = self.generateId(self.game.time, amount, x, y),
-                        text = '+', colour;
+                        prefix = '+', colour, suffix = '';
 
                     if (amount < 1 || !isInt(amount))
                         return;
 
                     if (type !== Modules.Hits.Experience && type !== Modules.Hits.Profession)
-                        text = '++';
+                        prefix = '++';
+                    else
+                        suffix = ' EXP';
 
                     if (type === Modules.Hits.Poison)
-                        text = '--';
+                        prefix = '--';
 
-                    var splat = new Splat(id, type, text + amount, x, y, false);
+                    var splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
 
                     if (type === Modules.Hits.Heal)
                         colour = Modules.DamageColours.healed;

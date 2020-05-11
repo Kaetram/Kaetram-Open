@@ -117,7 +117,7 @@ Modules = {
 
         'exp': {
             fill: 'rgb(80, 180, 255)',
-            stroke: 'rgb(50, 180, 255)'
+            stroke: 'rgb(15, 85, 138)'
         },
 
         'poison': {
@@ -127,7 +127,7 @@ Modules = {
 
         'profession': {
             fill: 'rgb(204, 0, 153)',
-            stroke: 'rgb(153, 51, 153)'
+            stroke: 'rgb(112, 17, 112)'
         }
     },
 
