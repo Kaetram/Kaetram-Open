@@ -9,6 +9,7 @@
     "scripts": {
         "start": "node server/js/main",
         "build": "gulp",
+        "helper": "cd tools/map && node helper",
         "map": "cd tools/map && node exportmap data/map-refactor.json"
     },
     "dependencies": {

@@ -113,7 +113,9 @@ let Modules = {
 
     Trees: {
         Oak: 0,
-        Palm: 1
+        Palm: 1,
+        IceOak: 2,
+        IcePalm: 3
     },
 
     Actions: {

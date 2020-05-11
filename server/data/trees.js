@@ -10,29 +10,39 @@ let Trees = {
     // The log ids of the tree
     Logs: {
         Oak: 264,
-        Palm: 269
+        Palm: 269,
+        IceOak: 270,
+        IcePalm: 271
     },
 
     // Get the level requirement of the tree
     Levels: {
         Oak: 1,
-        Palm: 5
+        Palm: 5,
+        IceOak: 20,
+        IcePalm: 25
     },
 
     Experience: {
         Oak: 10,
-        Palm: 25
+        Palm: 25,
+        IceOak: 70,
+        IcePalm: 105
     },
 
     // Chance of cutting a tree
     Chances: {
-        Oak: 4, // 1 in 4
-        Palm: 7 // 1 in 7
+        Oak: 3, // 1 in 3
+        Palm: 5, // 1 in 5
+        IceOak: 5, // 1 in 5,
+        IcePalm: 7  // 1 in 7
     },
 
     Regrowth: {
         Oak: 15000,
-        Palm: 30000
+        Palm: 30000,
+        IceOak: 60000,
+        IcePalm: 72000
     },
 
     // TODO - Move this to the tilemap instead?
@@ -58,8 +68,25 @@ let Trees = {
         "2134": "2035",
         "2135": "2036",
         "2198": "2099",
-        "2199": "2100"
-        //Next...
+        "2199": "2100",
+
+        // Ice Oak
+
+        "2742": "2173",
+        "2743": "2174",
+        "2806": "2237",
+        "2807": "2238",
+
+        "3171": "2175",
+        "3235": "2239",
+
+        "6035": "2301",
+        "6099": "2365",
+
+        // Ice Palm
+
+        "6594": "2176",
+        "6658": "2240"
     }
 
 };
