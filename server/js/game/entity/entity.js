@@ -174,10 +174,10 @@ class Entity {
 
         switch (self.specialState) {
             case 'boss':
-                return '#660033';
+                return '#F60404';
 
             case 'miniboss':
-                return '#cc3300';
+                return '#ffbf00';
 
             case 'achievementNpc':
                 return '#33cc33';

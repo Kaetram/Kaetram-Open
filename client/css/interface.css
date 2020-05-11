@@ -415,6 +415,8 @@
     color: white;
     z-index: 1;
     background-color: rgb(51, 153, 255, 0.4);
+
+    font-size: 22px;
 }
 
 #achievementCount, #questCount {

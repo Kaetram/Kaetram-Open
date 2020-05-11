@@ -590,7 +590,7 @@ define(['jquery', './camera', './tile',
 
             var barLength = 16,
                 healthX = entity.x * self.superScaling - barLength / 2 + 8,
-                healthY = (entity.y - 6) * self.superScaling,
+                healthY = (entity.y - (entity.sprite.height / 4)) * self.superScaling,
                 healthWidth = Math.round(entity.hitPoints / entity.maxHitPoints * barLength * self.superScaling),
                 healthHeight = 2 * self.superScaling;
 
@@ -629,7 +629,7 @@ define(['jquery', './camera', './tile',
 
             if (!entity.hasCounter) {
                 var x = entity.x + 8;
-                var y = entity.y - 10;
+                var y = entity.y - Math.floor(entity.sprite.height / 3);
 
                 if (self.drawNames && entity instanceof Character)
                     self.drawText(entity.name, x, (self.drawLevels && entity.type !== 'npc') ? y - 8 : y, true, colour, '#000');
