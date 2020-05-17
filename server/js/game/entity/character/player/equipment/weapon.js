@@ -14,6 +14,7 @@ class Weapon extends Equipment {
         self.level = Items.getWeaponLevel(name);
         self.ranged = Items.isArcherWeapon(name);
         self.lumberjacking = Items.getLumberjackingLevel(name);
+        self.mining = Items.getMiningLevel(name);
 
         self.breakable = false;
     }

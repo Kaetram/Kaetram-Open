@@ -1,11 +1,11 @@
 let _ = require('underscore'),
+    Profession = require('./profession'),
     Packets = require('../../../../../../network/packets'),
     Messages = require('../../../../../../network/messages'),
-    Profession = require('./profession'),
     Modules = require('../../../../../../util/modules'),
     Formulas = require('../../../../../../util/formulas'),
     Utils = require('../../../../../../util/utils'),
-    Trees = require('../../../../../../../data/trees');
+    Trees = require('../../../../../../../data/professions/trees');
 
 class Lumberjacking extends Profession {
 
@@ -70,10 +70,6 @@ class Lumberjacking extends Profession {
         self.started = true;
     }
 
-    getTreeDestroyChance() {
-        return Utils.randomInt(0, Trees.Chances[this.treeId]) === 2;
-    }
-
     stop() {
         let self = this;
 
@@ -106,6 +102,10 @@ class Lumberjacking extends Profession {
         }
 
         self.start();
+    }
+
+    getTreeDestroyChance() {
+        return Utils.randomInt(0, Trees.Chances[this.treeId]) === 2;
     }
 
     getQueueCount() {

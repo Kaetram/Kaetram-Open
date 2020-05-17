@@ -108,7 +108,8 @@ let Modules = {
 
     Professions: {
         Lumberjacking: 0,
-        Fishing: 1
+        Fishing: 1,
+        Mining: 2
     },
 
     Trees: {

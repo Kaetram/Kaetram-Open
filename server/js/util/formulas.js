@@ -3,7 +3,7 @@
 let Formulas = {},
     Utils = require('./utils'),
     Constants = require('./constants'),
-    Trees = require('../../data/trees');
+    Trees = require('../../data/professions/trees');
 
 Formulas.LevelExp = [];
 

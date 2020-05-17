@@ -23,7 +23,7 @@ let _ = require('underscore'),
     Region = require('../region/region'),
     GlobalObjects = require('../controllers/globalobjects'),
     Network = require('../network/network'),
-    Trees = require('../../data/trees'),
+    Trees = require('../../data/professions/trees'),
     API = require('../network/api');
 
 class World {

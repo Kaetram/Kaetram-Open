@@ -819,6 +819,15 @@ class Player extends Character {
         return self.weapon.lumberjacking;
     }
 
+    getWeaponMiningLevel() {
+        let self = this;
+
+        if (!self.hasMiningWeapon())
+            return -1;
+
+        return self.weapon.mining;
+    }
+
     // We get dynamic trees surrounding the player
     getSurroundingTrees() {
         let self = this,
@@ -1030,6 +1039,10 @@ class Player extends Character {
 
     hasLumberjackingWeapon() {
         return this.weapon && this.weapon.lumberjacking > 0;
+    }
+
+    hasMiningWeapon() {
+        return this.weapon && this.weapon.mining > 0;
     }
 
     hasBreakableWeapon() {

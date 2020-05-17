@@ -128,7 +128,8 @@ class Parser {
                 plugin: value.plugin || null,
                 customData: value.customData || null,
                 requirement: value.requirement || null,
-                lumberjacking: value.lumberjacking || 0
+                lumberjacking: value.lumberjacking || 0,
+                mining: value.mining || 0
             };
 
             Items.Ids[value.id] = Items.Data[key];

@@ -85,6 +85,13 @@ Items.getLumberjackingLevel = (weaponName) => {
     return -1;
 };
 
+Items.getMiningLevel = (weaponName) => {
+    if (Items.isWeapon(weaponName))
+        return Items.Data[weaponName].mining;
+
+    return -1;
+};
+
 Items.getWeaponLevel = (weaponName) => {
     if (Items.isWeapon(weaponName))
         return Items.Data[weaponName].attack;
