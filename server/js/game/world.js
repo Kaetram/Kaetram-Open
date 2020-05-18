@@ -24,6 +24,7 @@ let _ = require('underscore'),
     GlobalObjects = require('../controllers/globalobjects'),
     Network = require('../network/network'),
     Trees = require('../../data/professions/trees'),
+    Rocks = require('../../data/professions/rocks'),
     API = require('../network/api');
 
 class World {
@@ -51,6 +52,10 @@ class World {
         // Lumberjacking Variables
         self.trees = {};
         self.cutTrees = {};
+
+        // Mining Variables
+        self.rocks = {};
+        self.depletedRocks = {};
 
         self.loadedRegions = false;
 
@@ -493,6 +498,32 @@ class World {
 
     }
 
+    parseRocks() {
+        let self = this,
+            time = new Date().getTime(),
+            rockTypes = Object.keys(Modules.Rocks);
+
+        _.each(self.depletedRocks, (rock, key) => {
+            let type = rockTypes[rock.rockId];
+
+            if (time - rock.time < Rocks.Respawn[type])
+                return;
+
+            _.each(rock.data, (tile) => {
+
+                self.map.clientMap.data[tile.index] = tile.oldTiles;
+
+            });
+
+            let position = self.map.idToPosition(key),
+                regionId = self.map.regions.regionIdFromPosition(position.x, position.y);
+
+            self.region.updateRegions(regionId);
+
+            delete self.depletedRocks[key];
+        });
+    }
+
     isTreeCut(id) {
         let self = this;
 
@@ -501,6 +532,19 @@ class World {
 
         for (let i in self.cutTrees)
             if (id in self.cutTrees[i])
+                return true;
+
+        return false;
+    }
+
+    isRockDepleted(id) {
+        let self = this;
+
+        if (id in self.depletedRocks)
+            return true;
+
+        for (let i in self.depletedRocks)
+            if (id in self.depletedRocks[i])
                 return true;
 
         return false;
@@ -521,7 +565,7 @@ class World {
         if (!(id in self.trees))
             self.trees[id] = {};
 
-        self.searchTree(position.x + 1, position.y, id, self.trees);
+        self.search(position.x + 1, position.y, id, self.trees, 'tree');
 
         self.cutTrees[id] = {
             data: {},
@@ -540,11 +584,11 @@ class World {
 
             // We do not remove tiles that do not have another tile behind them.
             if (tiles instanceof Array) {
-                let index = tiles.indexOf(tile.treeTile);
+                let index = tiles.indexOf(tile.objectTile);
 
                 // We map the uncut trunk to the cut trunk tile.
-                if (tile.treeTile in Trees.Stumps)
-                    tiles[index] = Trees.Stumps[tile.treeTile];
+                if (tile.objectTile in Trees.Stumps)
+                    tiles[index] = Trees.Stumps[tile.objectTile];
                 else
                     tiles.splice(index, 1);
             }
@@ -557,22 +601,36 @@ class World {
         self.trees[id] = {};
     }
 
+
     /**
-     * We recursively look for a tree at a position, find all the
-     * tiles that are part of the tree, and remove those trees.
-     * Though this system is still quite rigid, it should function
-     * for the time being. The downside is that if trees are too
-     * close together, the recursive function will 'leak' into
-     * the tree not being removed.
-     * `refId` refers to the tree we are clicking. We use this
-     * variable to help organize trees that are queued.
+     * The following functions recursively iterate through tiles of
+     * a certain type. For example, we can look for all the tree tiles,
+     * given a starting tile, and we stop when all tiles are detected.
+     * Because this method is not exactly perfect, trees have to be
+     * placed one tile apart such that the algorithm does not 'leak'
+     * and cut both trees.
+     * `refId` - The intial object we click on.
+     * `data` - The array we are working with.
+     * `type` - The type of tile we are looking for.
      */
 
-    searchTree(x, y, refId, data) {
-        let self = this,
-            treeTile = self.map.getTree(x, y);
+    getSearchTile(type, x, y) {
+        let self = this;
 
-        if (!treeTile)
+        switch (type) {
+            case 'tree':
+                return self.map.getTree(x, y);
+
+            case 'rock':
+                return self.map.getRock(x, y);
+        }
+    }
+
+    search(x, y, refId, data, type) {
+        let self = this,
+            objectTile = self.getSearchTile(type, x, y);
+
+        if (!objectTile)
             return false;
 
         let id = x + '-' + y;
@@ -582,19 +640,19 @@ class World {
 
         data[refId][id] = {
             index: self.map.gridPositionToIndex(x, y) - 1,
-            treeTile: treeTile
+            objectTile: objectTile
         };
 
-        if (self.searchTree(x + 1, y, refId, data))
+        if (self.search(x + 1, y, refId, data, type))
             return true;
 
-        if (self.searchTree(x - 1, y, refId, data))
+        if (self.search(x - 1, y, refId, data, type))
             return true;
 
-        if (self.searchTree(x, y + 1, refId, data))
+        if (self.search(x, y + 1, refId, data, type))
             return true;
 
-        if (self.searchTree(x, y - 1, refId, data))
+        if (self.search(x, y - 1, refId, data, type))
             return true;
 
         return false;

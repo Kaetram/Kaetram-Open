@@ -28,7 +28,11 @@ class Mining extends Profession {
 
         self.miningInterval = setInterval(() => {
 
+            try {
 
+
+
+            } catch (e) {}
 
         }, self.tick);
 

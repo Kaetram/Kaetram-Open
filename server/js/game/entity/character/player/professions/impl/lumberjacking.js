@@ -96,12 +96,14 @@ class Lumberjacking extends Profession {
         self.treeId = treeId;
         self.targetId = id;
 
+        self.world.destroyTree(self.targetId, Modules.Trees[self.treeId]);
+
         if (self.level < Trees.Levels[self.treeId]) {
             self.player.notify(`You must be at least level ${Trees.Levels[self.treeId]} to cut this tree!`);
             return;
         }
 
-        self.start();
+        //self.start();
     }
 
     getTreeDestroyChance() {
