@@ -50,8 +50,12 @@ module.exports = function parse(json, options) {
 
             map.objects = [];
             map.cursors = {};
+
             map.trees = {};
             map.treeIndexes = [];
+
+            map.rocks = {};
+            map.rockIndexes = [];
 
             map.tilesets = [];
             map.pvpAreas = [];
@@ -111,6 +115,9 @@ module.exports = function parse(json, options) {
 
         if (mode === 'server' && property === 'tree')
             map.trees[id] = value;
+
+        if (mode === 'server' && property === 'rock')
+            map.rocks[id] = value;
 
     };
 
@@ -440,6 +447,10 @@ let parseLayer = function(layer) {
 
             if (mode === 'server' && tGid in map.trees)
                 map.treeIndexes.push(k);
+
+            if (mode === 'server' && tGid in map.rocks)
+                map.rockIndexes.push(k);
+                
         }
 
     }

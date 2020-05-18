@@ -51,8 +51,14 @@ class Map {
         self.plateau = map.plateau;
         self.objects = map.objects;
         self.cursors = map.cursors;
+
+        // Lumberjacking
         self.trees = map.trees;
         self.treeIndexes = map.treeIndexes;
+
+        // Mining
+        self.rocks = map.rocks;
+        self.rockIndexes = map.rockIndexes;
 
         self.zoneWidth = 25;
         self.zoneHeight = 20;
@@ -289,20 +295,28 @@ class Map {
         return position.x + '-' + position.y;
     }
 
-    getTree(x, y) {
+    getObject(x, y, data) {
         let self = this,
             index = self.gridPositionToIndex(x, y) - 1,
             tiles = self.clientMap.data[index];
 
         if (tiles instanceof Array)
             for (let i in tiles)
-                if (tiles[i] in self.trees)
+                if (tiles[i] in data)
                     return tiles[i];
 
-        if (tiles in self.trees)
+        if (tiles in data)
             return tiles;
 
         return null;
+    }
+
+    getTree(x, y) {
+        return this.getObject(x, y, this.trees);
+    }
+
+    getRock(x, y) {
+        return this.getObject(x, y, this.rocks);
     }
 
     // Transforms an object's `instance` or `id` into position

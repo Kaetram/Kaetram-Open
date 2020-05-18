@@ -119,6 +119,10 @@ let Modules = {
         IcePalm: 3
     },
 
+    Rocks: {
+        BlueSteel: 0
+    },
+
     Actions: {
         Idle: 0,
         Attack: 1,
