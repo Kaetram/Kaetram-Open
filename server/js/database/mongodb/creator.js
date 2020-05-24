@@ -22,6 +22,7 @@ class Creator {
                 playerRegions = database.collection('player_regions'),
                 playerAbilities = database.collection('player_abilities'),
                 playerProfessions = database.collection('player_professions'),
+                playerFriends = database.collection('player_friends'),
                 playerInventory = database.collection('player_inventory');
 
             self.saveData(playerData, player);
@@ -32,6 +33,7 @@ class Creator {
             self.saveRegions(playerRegions, player);
             self.saveAbilities(playerAbilities, player);
             self.saveProfessions(playerProfessions, player);
+            self.saveFriends(playerFriends, player);
             self.saveInventory(playerInventory, player, () => {
                 log.debug(`Successfully saved all data for player ${player.username}.`);
             });
@@ -145,6 +147,20 @@ class Creator {
         collection.updateOne({
             username: player.username
         }, { $set: player.professions.getArray() }, {
+            upsert: true
+        }, (error, result) => {
+            if (error)
+                log.error(`An error has occurred while saving player_professions for ${player.username}!`);
+
+            if (!result)
+                log.error(`Could not save player_professions for ${player.username}!`);
+        });
+    }
+
+    saveFriends(collection, player) {
+        collection.updateOne({
+            username: player.username
+        }, { $set: player.friends.getArray() }, {
             upsert: true
         }, (error, result) => {
             if (error)

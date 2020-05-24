@@ -112,6 +112,26 @@ class Loader {
         });
     }
 
+    getFriends(player, callback) {
+        let self = this;
+
+        self.database.getDatabase((database) => {
+            let friends = database.collection('player_friends'),
+                cursor = friends.find({ username: player.username });
+
+            cursor.toArray().then((friendsArray) => {
+                let info = friendsArray[0];
+
+                if (info && info.friends) {
+                    if (info.username !== player.username)
+                        log.notice('[Loader] Mismatch in usernames whilst retrieving friends data for: ' + player.username);
+
+                    callback(info.friends);
+                }
+            });
+        });
+    }
+
 }
 
 module.exports = Loader;
