@@ -27,7 +27,8 @@ let _ = require('underscore'),
     Hit = require('../combat/hit'),
     Trade = require('./trade'),
     Warp = require('./warp'),
-    Doors = require('./doors');
+    Doors = require('./doors'),
+    Friends = require('./friends');
 
 class Player extends Character {
 
@@ -70,6 +71,7 @@ class Player extends Character {
         self.inventory = new Inventory(self, 20);
         self.professions = new Professions(self);
         self.abilities = new Abilities(self);
+        self.friends = new Friends(self);
         self.enchant = new Enchant(self);
         self.bank = new Bank(self, 56);
         self.quests = new Quests(self);
@@ -199,6 +201,21 @@ class Player extends Character {
             self.professions.update(info);
 
             self.sendProfessions();
+        });
+    }
+
+    loadFriends() {
+        let self = this;
+
+        if (config.offlineMode)
+            return;
+
+        self.database.loader.getFriends(self, (info) => {
+            if (!info)
+                return;
+
+            self.friends.update(info);
+
         });
     }
 
