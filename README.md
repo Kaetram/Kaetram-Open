@@ -88,7 +88,15 @@ npm run map
 - Have a consistent storyline that goes with the game.
 - Implement special abilities and weapon perks.
 - Improve anti-cheating detections.
-- Add minigames
+- Add PvP
+- Add minigames (PvP, Capture the Flag, Hold the Base)
+- Improve client/server syncronization for all players
+- Add player trading abilities
+- Transition to a more suitable WebGL framework
+- Add friends list
+- Improve the enchanting system
+- Make bosses more responsive
+- All trees in the world must be cuttable
 
 #### Code-base Development
 
