@@ -15,6 +15,10 @@ class Ability {
         self.data = Abilities.Data[name];
     }
 
+    setLevel(level) {
+        this.level = level;
+    }
+
 }
 
 module.exports = Ability;

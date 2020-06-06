@@ -48,7 +48,8 @@ let Modules = {
         Smash: 2,
         Tornado: 3,
         Run: 4,
-        Call: 5
+        Call: 5,
+        Evasion: 6
     },
 
     Enchantment: {
