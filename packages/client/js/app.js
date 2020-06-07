@@ -1,552 +1,547 @@
-/* global log, Class, Detect, Modules */
+import $ from 'jquery';
 
-define(['jquery'], function($) {
+export default class App {
+    constructor() {
+        var self = this;
 
-    return Class.extend({
+        self.config = null;
 
-        init: function() {
-            var self = this;
+        self.body = $('body');
+        self.parchment = $('#parchment');
+        self.container = $('#container');
+        self.window = $(window);
+        self.canvas = $('#canvas');
+        self.border = $('#border');
 
-            self.config = null;
+        self.intro = $('#intro');
 
-            self.body = $('body');
-            self.parchment = $('#parchment');
-            self.container = $('#container');
-            self.window = $(window);
-            self.canvas = $('#canvas');
-            self.border = $('#border');
+        self.loginButton = $('#login');
+        self.createButton = $('#play');
+        self.registerButton = $('#newCharacter');
+        self.helpButton = $('#helpButton');
+        self.cancelButton = $('#cancelButton');
+        self.yes = $('#yes');
+        self.no = $('#no');
+        self.loading = $('.loader');
 
-            self.intro = $('#intro');
+        self.respawn = $('#respawn');
 
-            self.loginButton = $('#login');
-            self.createButton = $('#play');
-            self.registerButton = $('#newCharacter');
-            self.helpButton = $('#helpButton');
-            self.cancelButton = $('#cancelButton');
-            self.yes = $('#yes');
-            self.no = $('#no');
-            self.loading = $('.loader');
+        self.rememberMe = $('#rememberMe');
+        self.guest = $('#guest');
 
-            self.respawn = $('#respawn');
+        self.about = $('#toggle-about');
+        self.credits = $('#toggle-credits');
+        self.discord = $('#toggle-discord');
+        self.git = $('#toggle-git');
 
-            self.rememberMe = $('#rememberMe');
-            self.guest = $('#guest');
+        self.footer = $('footer');
 
-            self.about = $('#toggle-about');
-            self.credits = $('#toggle-credits');
-            self.discord = $('#toggle-discord');
-            self.git = $('#toggle-git');
+        self.loginFields = [];
+        self.registerFields = [];
 
-            self.footer = $('footer');
+        self.game = null;
+        self.parchmentAnimating = false;
+        self.loggingIn = false;
 
-            self.loginFields = [];
-            self.registerFields = [];
+        self.sendStatus('Initializing the main app');
 
-            self.game = null;
-            self.parchmentAnimating = false;
-            self.loggingIn = false;
+        self.updateOrientation();
+        self.load();
 
-            self.sendStatus('Initializing the main app');
+    }
 
-            self.updateOrientation();
-            self.load();
+    load() {
+        var self = this;
 
-        },
+        self.loginButton.click(function() {
+            self.login();
+        });
 
-        load: function() {
-            var self = this;
+        self.createButton.click(function() {
+            self.login();
+        });
 
-            self.loginButton.click(function() {
-                self.login();
-            });
+        self.registerButton.click(function() {
+            self.openScroll('loadCharacter', 'createCharacter');
+        });
 
-            self.createButton.click(function() {
-                self.login();
-            });
+        self.cancelButton.click(function() {
+            self.openScroll('createCharacter', 'loadCharacter');
+        });
 
-            self.registerButton.click(function() {
-                self.openScroll('loadCharacter', 'createCharacter');
-            });
+        self.parchment.click(function() {
+            if (self.parchment.hasClass('about') || self.parchment.hasClass('credits') || self.parchment.hasClass('git')) {
 
-            self.cancelButton.click(function() {
-                self.openScroll('createCharacter', 'loadCharacter');
-            });
+                self.parchment.removeClass('about credits git');
+                self.displayScroll('loadCharacter');
 
-            self.parchment.click(function() {
-                if (self.parchment.hasClass('about') || self.parchment.hasClass('credits') || self.parchment.hasClass('git')) {
+            }
+        });
 
-                    self.parchment.removeClass('about credits git');
-                    self.displayScroll('loadCharacter');
+        self.about.click(function() {
+            self.displayScroll('about');
+        });
 
+        self.credits.click(function() {
+            self.displayScroll('credits');
+        });
+
+        self.discord.click(function() {
+            window.open('https://discord.gg/MmbGAaw');
+        });
+
+        self.git.click(function() {
+            self.displayScroll('git');
+        });
+
+        self.rememberMe.click(function() {
+            if (!self.game || !self.game.storage)
+                return;
+
+            var active = self.rememberMe.hasClass('active');
+
+            self.rememberMe.toggleClass('active');
+
+            self.game.storage.toggleRemember(!active);
+        });
+
+        self.guest.click(function() {
+            if (!self.game)
+                return;
+
+            self.guest.toggleClass('active');
+        });
+
+        self.respawn.click(function() {
+            if (!self.game || !self.game.player || !self.game.player.dead)
+                return;
+
+            self.game.respawn();
+        });
+
+        window.scrollTo(0, 1);
+
+        self.window.resize(function() {
+            if (self.game)
+                self.game.resize();
+        });
+
+        // Default Server ID
+        if (!window.localStorage.getItem('world')) window.localStorage.setItem('world', 'kaetram_server01');
+
+        $.get('https://hub.kaetram.com/all', function(servers) {
+            var serverIndex;
+            for (var i = 0; i < servers.length; i++) {
+                var server = servers[i];
+
+                var row = $(document.createElement('tr'));
+                row.append($(document.createElement('td')).text(server.serverId))
+                row.append($(document.createElement('td')).text(server.playerCount + '/' + server.maxPlayers));
+                $('#worlds-list').append(row);
+                row.click(function() {
+                    // TODO: This is when a server is clicked with the local `server` having the world data.
+                    // log.info(server);
+                });
+
+                if (server.serverId === window.localStorage.getItem('world')) {
+                    serverIndex = i;
                 }
+            }
+            var currentWorld = servers[serverIndex];
+
+            $('#current-world-index').text(serverIndex);
+            $('#current-world-id').text(currentWorld.serverId);
+            $('#current-world-count').text(currentWorld.playerCount + '/' + currentWorld.maxPlayers);
+
+            $('#worlds-switch').click(function() {
+                $('#worlds-popup').toggle();
             });
+        });
 
-            self.about.click(function() {
-                self.displayScroll('about');
-            });
+        $.getJSON('data/config.json', function(json) {
+            self.config = json;
 
-            self.credits.click(function() {
-                self.displayScroll('credits');
-            });
+            if (self.readyCallback)
+                self.readyCallback();
+        });
 
-            self.discord.click(function() {
-                window.open('https://discord.gg/MmbGAaw');
-            });
+        $(document).bind('keydown', function(e) {
+            if (e.which === Modules.Keys.Enter)
+                return false;
+        });
 
-            self.git.click(function() {
-                self.displayScroll('git');
-            });
+        $(document).keydown(function(e) {
+            var key = e.which || e.keyCode || 0;
 
-            self.rememberMe.click(function() {
-                if (!self.game || !self.game.storage)
-                    return;
+            if (!self.game)
+                return;
 
-                var active = self.rememberMe.hasClass('active');
+            self.body.focus();
 
-                self.rememberMe.toggleClass('active');
+            if (key === Modules.Keys.Enter && !self.game.started) {
+                self.login();
+                return;
+            }
 
-                self.game.storage.toggleRemember(!active);
-            });
+            if (self.game.started)
+                self.game.handleInput(Modules.InputType.Key, key);
 
-            self.guest.click(function() {
-                if (!self.game)
-                    return;
+        });
 
-                self.guest.toggleClass('active');
-            });
+        $(document).keyup(function(e) {
+            var key = e.which;
 
-            self.respawn.click(function() {
-                if (!self.game || !self.game.player || !self.game.player.dead)
-                    return;
+            if (!self.game || !self.game.started)
+                return;
 
-                self.game.respawn();
-            });
+            self.game.input.keyUp(key);
+        });
+
+        $(document).mousemove(function(event) {
+            if (!self.game || !self.game.input || !self.game.started || event.target.id !== 'textCanvas')
+                return;
+
+            self.game.input.setCoords(event);
+            self.game.input.moveCursor();
+        });
+
+        $('body').on('contextmenu', '#canvas', function(event) {
+
+
+            if (self.game && self.game.input)
+                self.game.input.handle(Modules.InputType.RightClick, event);
+
+            return false;
+        });
+
+        self.canvas.click(function(event) {
+            if (!self.game || !self.game.started || event.button !== 0)
+                return;
 
             window.scrollTo(0, 1);
 
-            self.window.resize(function() {
-                if (self.game)
-                    self.game.resize();
-            });
+            self.game.input.handle(Modules.InputType.LeftClick, event);
 
-            // Default Server ID
-            if (!window.localStorage.getItem('world')) window.localStorage.setItem('world', 'kaetram_server01');
+        });
 
-            $.get('https://hub.kaetram.com/all', function(servers) {
-                var serverIndex;
-                for (var i = 0; i < servers.length; i++) {
-                    var server = servers[i];
+        $('input[type="range"]').on('input', function() {
+            self.updateRange($(this));
+        });
 
-                    var row = $(document.createElement('tr'));
-                    row.append($(document.createElement('td')).text(server.serverId))
-                    row.append($(document.createElement('td')).text(server.playerCount + '/' + server.maxPlayers));
-                    $('#worlds-list').append(row);
-                    row.click(function() {
-                        // TODO: This is when a server is clicked with the local `server` having the world data.
-                        // log.info(server);
-                    });
+    }
 
-                    if (server.serverId === window.localStorage.getItem('world')) {
-                        serverIndex = i;
-                    }
-                }
-                var currentWorld = servers[serverIndex];
+    login() {
+        var self = this;
 
-                $('#current-world-index').text(serverIndex);
-                $('#current-world-id').text(currentWorld.serverId);
-                $('#current-world-count').text(currentWorld.playerCount + '/' + currentWorld.maxPlayers);
+        if (self.loggingIn || !self.game || !self.game.loaded || self.statusMessage || !self.verifyForm())
+            return;
 
-                $('#worlds-switch').click(function() {
-                    $('#worlds-popup').toggle();
-                });
-            });
+        self.toggleLogin(true);
+        self.game.connect();
 
-            $.getJSON('data/config.json', function(json) {
-                self.config = json;
+        install();
+    }
 
-                if (self.readyCallback)
-                    self.readyCallback();
-            });
+    fadeMenu() {
+        var self = this;
 
-            $(document).bind('keydown', function(e) {
-                if (e.which === Modules.Keys.Enter)
-                    return false;
-            });
+        self.updateLoader(null);
 
-            $(document).keydown(function(e) {
-                var key = e.which || e.keyCode || 0;
+        setTimeout(function() {
+            self.body.addClass('game');
+            self.body.addClass('started');
 
-                if (!self.game)
-                    return;
+            self.body.removeClass('intro');
 
-                self.body.focus();
+            self.footer.hide();
 
-                if (key === Modules.Keys.Enter && !self.game.started) {
-                    self.login();
-                    return;
-                }
+        }, 500);
+    }
 
-                if (self.game.started)
-                    self.game.handleInput(Modules.InputType.Key, key);
+    showMenu() {
+        var self = this;
 
-            });
+        self.body.removeClass('game');
+        self.body.removeClass('started');
+        self.body.addClass('intro');
 
-            $(document).keyup(function(e) {
-                var key = e.which;
+        self.footer.show();
+    }
 
-                if (!self.game || !self.game.started)
-                    return;
+    showDeath() {
 
-                self.game.input.keyUp(key);
-            });
+    }
 
-            $(document).mousemove(function(event) {
-                if (!self.game || !self.game.input || !self.game.started || event.target.id !== 'textCanvas')
-                    return;
+    openScroll(origin, destination) {
+        var self = this;
 
-                self.game.input.setCoords(event);
-                self.game.input.moveCursor();
-            });
+        if (!destination || self.loggingIn)
+            return;
 
-            $('body').on('contextmenu', '#canvas', function(event) {
+        self.cleanErrors();
 
-
-                if (self.game && self.game.input)
-                    self.game.input.handle(Modules.InputType.RightClick, event);
-
-                return false;
-            });
-
-            self.canvas.click(function(event) {
-                if (!self.game || !self.game.started || event.button !== 0)
-                    return;
-
-                window.scrollTo(0, 1);
-
-                self.game.input.handle(Modules.InputType.LeftClick, event);
-
-            });
-
-            $('input[type="range"]').on('input', function() {
-                self.updateRange($(this));
-            });
-
-        },
-
-        login: function() {
-            var self = this;
-
-            if (self.loggingIn || !self.game || !self.game.loaded || self.statusMessage || !self.verifyForm())
+        if (!Detect.isMobile()) {
+            if (self.parchmentAnimating)
                 return;
 
-            self.toggleLogin(true);
-            self.game.connect();
+            self.parchmentAnimating = true;
 
-            install();
-        },
-
-        fadeMenu: function() {
-            var self = this;
-
-            self.updateLoader(null);
+            self.parchment.toggleClass('animate').removeClass(origin);
 
             setTimeout(function() {
-                self.body.addClass('game');
-                self.body.addClass('started');
 
-                self.body.removeClass('intro');
+                self.parchment.toggleClass('animate').addClass(destination);
+                self.parchmentAnimating = false;
 
-                self.footer.hide();
+            }, Detect.isTablet() ? 0 : 1000);
 
-            }, 500);
-        },
+        } else
+            self.parchment.removeClass(origin).addClass(destination);
+    }
 
-        showMenu: function() {
-            var self = this;
+    displayScroll(content) {
+        var self = this,
+            state = self.parchment.attr('class');
 
-            self.body.removeClass('game');
-            self.body.removeClass('started');
-            self.body.addClass('intro');
+        if (self.game.started) {
 
-            self.footer.show();
-        },
+            self.parchment.removeClass().addClass(content);
 
-        showDeath: function() {
+            self.body.removeClass('credits legal about').toggleClass(content);
 
-        },
+            if (self.game.player)
+                self.body.toggleClass('death');
 
-        openScroll: function(origin, destination) {
-            var self = this;
+            if (content !== 'about')
+                self.helpButton.removeClass('active');
 
-            if (!destination || self.loggingIn)
-                return;
+        } else if (state !== 'animate')
+            self.openScroll(state, state === content ? 'loadCharacter' : content);
 
-            self.cleanErrors();
+    }
 
-            if (!Detect.isMobile()) {
-                if (self.parchmentAnimating)
-                    return;
+    verifyForm() {
+        var self = this,
+            activeForm = self.getActiveForm();
 
-                self.parchmentAnimating = true;
+        if (activeForm === 'null')
+            return;
 
-                self.parchment.toggleClass('animate').removeClass(origin);
+        switch (activeForm) {
 
-                setTimeout(function() {
+            case 'loadCharacter':
 
-                    self.parchment.toggleClass('animate').addClass(destination);
-                    self.parchmentAnimating = false;
+                var nameInput = $('#loginNameInput'),
+                    passwordInput = $('#loginPasswordInput');
 
-                }, Detect.isTablet() ? 0 : 1000);
+                if (self.loginFields.length === 0)
+                    self.loginFields = [nameInput, passwordInput];
 
-            } else
-                self.parchment.removeClass(origin).addClass(destination);
-        },
+                if (!nameInput.val() && !self.isGuest()) {
+                    self.sendError(nameInput, 'Please enter a username.');
+                    return false;
+                }
 
-        displayScroll: function(content) {
-            var self = this,
-                state = self.parchment.attr('class');
+                if (!passwordInput.val() && !self.isGuest()) {
+                    self.sendError(passwordInput, 'Please enter a password.');
+                    return false;
+                }
 
-            if (self.game.started) {
+                break;
 
-                self.parchment.removeClass().addClass(content);
+            case 'createCharacter':
 
-                self.body.removeClass('credits legal about').toggleClass(content);
+                var characterName = $('#registerNameInput'),
+                    registerPassword = $('#registerPasswordInput'),
+                    registerPasswordConfirmation = $('#registerPasswordConfirmationInput'),
+                    email = $('#registerEmailInput');
 
-                if (self.game.player)
-                    self.body.toggleClass('death');
+                if (self.registerFields.length === 0)
+                    self.registerFields = [characterName, registerPassword, registerPasswordConfirmation, email];
 
-                if (content !== 'about')
-                    self.helpButton.removeClass('active');
+                if (!characterName.val()) {
+                    self.sendError(characterName, 'A username is necessary you silly.');
+                    return false;
+                }
 
-            } else if (state !== 'animate')
-                self.openScroll(state, state === content ? 'loadCharacter' : content);
+                if (!registerPassword.val()) {
+                    self.sendError(registerPassword, 'You must enter a password.');
+                    return false;
+                }
 
-        },
+                if (registerPasswordConfirmation.val() !== registerPassword.val()) {
+                    self.sendError(registerPasswordConfirmation, 'The passwords do not match!');
+                    return false;
+                }
 
-        verifyForm: function() {
-            var self = this,
-                activeForm = self.getActiveForm();
+                if (!email.val() || !self.verifyEmail(email.val())) {
+                    self.sendError(email, 'An email is required!');
+                    return false;
+                }
 
-            if (activeForm === 'null')
-                return;
-
-            switch (activeForm) {
-
-                case 'loadCharacter':
-
-                    var nameInput = $('#loginNameInput'),
-                        passwordInput = $('#loginPasswordInput');
-
-                    if (self.loginFields.length === 0)
-                        self.loginFields = [nameInput, passwordInput];
-
-                    if (!nameInput.val() && !self.isGuest()) {
-                        self.sendError(nameInput, 'Please enter a username.');
-                        return false;
-                    }
-
-                    if (!passwordInput.val() && !self.isGuest()) {
-                        self.sendError(passwordInput, 'Please enter a password.');
-                        return false;
-                    }
-
-                    break;
-
-                case 'createCharacter':
-
-                    var characterName = $('#registerNameInput'),
-                        registerPassword = $('#registerPasswordInput'),
-                        registerPasswordConfirmation = $('#registerPasswordConfirmationInput'),
-                        email = $('#registerEmailInput');
-
-                    if (self.registerFields.length === 0)
-                        self.registerFields = [characterName, registerPassword, registerPasswordConfirmation, email];
-
-                    if (!characterName.val()) {
-                        self.sendError(characterName, 'A username is necessary you silly.');
-                        return false;
-                    }
-
-                    if (!registerPassword.val()) {
-                        self.sendError(registerPassword, 'You must enter a password.');
-                        return false;
-                    }
-
-                    if (registerPasswordConfirmation.val() !== registerPassword.val()) {
-                        self.sendError(registerPasswordConfirmation, 'The passwords do not match!');
-                        return false;
-                    }
-
-                    if (!email.val() || !self.verifyEmail(email.val())) {
-                        self.sendError(email, 'An email is required!');
-                        return false;
-                    }
-
-                    break;
-            }
-
-            return true;
-        },
-
-        verifyEmail: function(email) {
-            return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
-        },
-
-        sendStatus: function(message) {
-            var self = this;
-
-            self.cleanErrors();
-
-            self.statusMessage = message;
-
-            if (!message)
-                return;
-
-            $('<span></span>', {
-                'class': 'status blink',
-                text: message
-            }).appendTo('.validation-summary');
-
-            $('.status').append('<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>');
-        },
-
-        sendError: function(field, error) {
-            this.cleanErrors();
-
-            $('<span></span>', {
-                'class': 'validation-error blink',
-                text: error
-            }).appendTo('.validation-summary');
-
-            if (!field)
-                return;
-
-            field.addClass('field-error').select();
-            field.bind('keypress', function(event) {
-                field.removeClass('field-error');
-
-                $('.validation-error').remove();
-
-                $(this).unbind(event);
-            });
-        },
-
-        cleanErrors: function() {
-            var self = this,
-                activeForm = self.getActiveForm(),
-                fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
-
-            for (var i = 0; i < fields.length; i++)
-                fields[i].removeClass('field-error');
-
-            $('.validation-error').remove();
-            $('.status').remove();
-        },
-
-        getActiveForm: function() {
-            return this.parchment[0].className;
-        },
-
-        isRegistering: function() {
-            return this.getActiveForm() === 'createCharacter';
-        },
-
-        isGuest: function() {
-            return this.guest.hasClass('active');
-        },
-
-        setGame: function(game) {
-            this.game = game;
-        },
-
-        hasWorker: function() {
-            return !!window.Worker;
-        },
-
-        getScaleFactor: function() {
-            return 3;
-        },
-
-        getUIScale: function() {
-            var width = window.innerWidth,
-                height = window.innerHeight;
-
-            return width <= 1000 ? 1 : ((width <= 1500 || height <= 870) ? 2 : 3);
-        },
-
-        revertLoader: function() {
-            this.updateLoader('Connecting');
-        },
-
-        updateLoader: function(message) {
-            var self = this;
-
-            if (!message) {
-                self.loading.html('');
-                return;
-            }
-
-            var dots = '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
-            self.loading.html(message + dots);
-        },
-
-        toggleLogin: function(toggle) {
-            var self = this;
-
-            self.revertLoader();
-
-            self.toggleTyping(toggle);
-
-            self.loggingIn = toggle;
-
-            if (toggle) {
-                self.loading.removeAttr('hidden');
-
-                self.loginButton.addClass('disabled');
-                self.registerButton.addClass('disabled');
-
-            } else {
-                self.loading.attr('hidden', true);
-
-                self.loginButton.removeClass('disabled');
-                self.registerButton.removeClass('disabled');
-            }
-        },
-
-        toggleTyping: function(state) {
-            var self = this;
-
-            if (self.loginFields)
-                _.each(self.loginFields, function(field) { field.prop('readonly', state); });
-
-            if (self.registerFields)
-                _.each(self.registerFields, function(field) { field.prop('readOnly', state); });
-        },
-
-        updateRange: function(obj) {
-            var self = this,
-                val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
-
-            obj.css('background-image',
-                '-webkit-gradient(linear, left top, right top, '
-                + 'color-stop(' + val + ', #4d4d4d), '
-                + 'color-stop(' + val + ', #C5C5C5)'
-                + ')'
-            );
-        },
-
-        updateOrientation: function() {
-            this.orientation = this.getOrientation();
-        },
-
-        getOrientation: function() {
-            return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-        },
-
-        onReady: function(callback) {
-            this.readyCallback = callback;
+                break;
         }
 
-    });
+        return true;
+    }
 
-});
+    verifyEmail(email) {
+        return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
+    }
+
+    sendStatus(message) {
+        var self = this;
+
+        self.cleanErrors();
+
+        self.statusMessage = message;
+
+        if (!message)
+            return;
+
+        $('<span></span>', {
+            'class': 'status blink',
+            text: message
+        }).appendTo('.validation-summary');
+
+        $('.status').append('<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>');
+    }
+
+    sendError(field, error) {
+        this.cleanErrors();
+
+        $('<span></span>', {
+            'class': 'validation-error blink',
+            text: error
+        }).appendTo('.validation-summary');
+
+        if (!field)
+            return;
+
+        field.addClass('field-error').select();
+        field.bind('keypress', function(event) {
+            field.removeClass('field-error');
+
+            $('.validation-error').remove();
+
+            $(this).unbind(event);
+        });
+    }
+
+    cleanErrors() {
+        var self = this,
+            activeForm = self.getActiveForm(),
+            fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
+
+        for (var i = 0; i < fields.length; i++)
+            fields[i].removeClass('field-error');
+
+        $('.validation-error').remove();
+        $('.status').remove();
+    }
+
+    getActiveForm() {
+        return this.parchment[0].className;
+    }
+
+    isRegistering() {
+        return this.getActiveForm() === 'createCharacter';
+    }
+
+    isGuest() {
+        return this.guest.hasClass('active');
+    }
+
+    setGame(game) {
+        this.game = game;
+    }
+
+    hasWorker() {
+        return !!window.Worker;
+    }
+
+    getScaleFactor() {
+        return 3;
+    }
+
+    getUIScale() {
+        var width = window.innerWidth,
+            height = window.innerHeight;
+
+        return width <= 1000 ? 1 : ((width <= 1500 || height <= 870) ? 2 : 3);
+    }
+
+    revertLoader() {
+        this.updateLoader('Connecting');
+    }
+
+    updateLoader(message) {
+        var self = this;
+
+        if (!message) {
+            self.loading.html('');
+            return;
+        }
+
+        var dots = '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
+        self.loading.html(message + dots);
+    }
+
+    toggleLogin(toggle) {
+        var self = this;
+
+        self.revertLoader();
+
+        self.toggleTyping(toggle);
+
+        self.loggingIn = toggle;
+
+        if (toggle) {
+            self.loading.removeAttr('hidden');
+
+            self.loginButton.addClass('disabled');
+            self.registerButton.addClass('disabled');
+
+        } else {
+            self.loading.attr('hidden', true);
+
+            self.loginButton.removeClass('disabled');
+            self.registerButton.removeClass('disabled');
+        }
+    }
+
+    toggleTyping(state) {
+        var self = this;
+
+        if (self.loginFields)
+            _.each(self.loginFields, function(field) { field.prop('readonly', state); });
+
+        if (self.registerFields)
+            _.each(self.registerFields, function(field) { field.prop('readOnly', state); });
+    }
+
+    updateRange(obj) {
+        var self = this,
+            val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
+
+        obj.css('background-image',
+            '-webkit-gradient(linear, left top, right top, '
+            + 'color-stop(' + val + ', #4d4d4d), '
+            + 'color-stop(' + val + ', #C5C5C5)'
+            + ')'
+        );
+    }
+
+    updateOrientation() {
+        this.orientation = this.getOrientation();
+    }
+
+    getOrientation() {
+        return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+    }
+
+    onReady(callback) {
+        this.readyCallback = callback;
+    }
+
+}
