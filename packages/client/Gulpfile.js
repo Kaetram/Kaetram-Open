@@ -6,9 +6,9 @@ const workbox = require('workbox-build');
 
 task('generate-sw', async () => {
     const build = await workbox.injectManifest({
-        swSrc: path.resolve(__dirname, './client/workbox-sw.js'),
-        swDest: path.resolve(__dirname, './client/sw.js'),
-        globDirectory: path.resolve(__dirname, './client/'),
+        swSrc: path.resolve(__dirname, './workbox-sw.js'),
+        swDest: path.resolve(__dirname, './sw.js'),
+        globDirectory: path.resolve(__dirname, './'),
         globPatterns: [
             '**/*.{mp3,css,json,json-dist,js,ico,eot,svg,ttf,woff,png,gif,jpg,html,txt,xml}'
         ],

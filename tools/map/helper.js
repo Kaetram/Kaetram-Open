@@ -5,9 +5,9 @@ config = {
     debugLevel: 'all'
 }
 
-let Log = require('../../server/js/util/log'),
-    worldClient = require('../../server/data/map/world_client'),
-    worldServer = require('../../server/data/map/world_server');
+let Log = require('../../packages/server/js/util/log'),
+    worldClient = require('../../packages/server/data/map/world_client'),
+    worldServer = require('../../packages/server/data/map/world_server');
 
 log = new Log();
 
