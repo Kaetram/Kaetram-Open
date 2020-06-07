@@ -1,64 +1,17 @@
 {
     "name": "kaetram",
     "version": "1.2.1",
-    "private": false,
+    "private": true,
     "author": "Veradictus",
     "main": "server/js/main.js",
     "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
     "homepage": "https://kaetram.com/",
     "scripts": {
-        "start": "node server/js/main",
-        "build": "gulp",
         "helper": "cd tools/map && node helper",
         "map": "cd tools/map && node exportmap data/map-refactor.json"
     },
-    "dependencies": {
-        "bcrypt": "^4.0.1",
-        "connect": "^3.7.0",
-        "discord.js": "^12.2.0",
-        "express": "^4.17.1",
-        "mongodb": "^3.5.6",
-        "request": "^2.88.2",
-        "sanitizer": "^0.1.3",
-        "serve-static": "^1.14.1",
-        "socket.io": "^2.3.0",
-        "underscore": "^1.10.2",
-        "url": "^0.11.0"
-    },
+    "license": "MPL-2.0",
     "devDependencies": {
-        "gulp": "^4.0.2",
-        "morgan": "^1.10.0",
-        "socket.io-client": "^2.3.0",
-        "workbox-build": "^5.1.3"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Veradictus/Kaetram-Open.git"
-    },
-    "bugs": {
-        "url": "https://github.com/Veradictus/Kaetram-Open/issues"
-    },
-    "keywords": [
-        "2d",
-        "2d-game",
-        "browserquest",
-        "demo",
-        "game",
-        "game-2d",
-        "game-development",
-        "game-engine",
-        "game-server",
-        "gamedev",
-        "html5",
-        "html5-canvas",
-        "html5-game",
-        "mmo",
-        "multiplayer",
-        "open-source",
-        "region",
-        "rendering-engine",
-        "taptapadventure",
-        "tileset"
-    ],
-    "license": "MPL-2.0"
+        "lerna": "^3.13.1"
+    }
 }
