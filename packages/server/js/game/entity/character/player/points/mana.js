@@ -9,21 +9,17 @@ class Mana extends Points {
     }
 
     setMana(mana) {
-        let self = this;
+        this.points = mana;
 
-        self.points = mana;
-
-        if (self.manaCallback)
-            self.manaCallback();
+        if (this.manaCallback)
+            this.manaCallback();
     }
 
     setMaxMana(maxMana) {
-        let self = this;
+        this.maxPoints = maxMana;
 
-        self.maxPoints = maxMana;
-
-        if (self.maxManaCallback)
-            self.maxManaCallback();
+        if (this.maxManaCallback)
+            this.maxManaCallback();
     }
 
     getMana() {

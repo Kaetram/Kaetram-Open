@@ -7,16 +7,13 @@ let _ = require('underscore'),
 class OverlayAreas {
 
     constructor() {
-        let self = this;
+        this.overlayAreas = [];
 
-        self.overlayAreas = [];
-
-        self.load();
+        this.load();
     }
 
     load() {
-        let self = this,
-            list = map.overlayAreas;
+        let list = map.overlayAreas;
 
         _.each(list, (o) => {
             let overlayArea = new Area(o.id, o.x, o.y, o.width, o.height);
@@ -27,10 +24,10 @@ class OverlayAreas {
             if (o.fog)
                 overlayArea.fog = o.fog;
 
-            self.overlayAreas.push(overlayArea);
+            this.overlayAreas.push(overlayArea);
         });
 
-        log.info('Loaded ' + self.overlayAreas.length + ' overlay areas.');
+        log.info('Loaded ' + this.overlayAreas.length + ' overlay areas.');
     }
 
 }

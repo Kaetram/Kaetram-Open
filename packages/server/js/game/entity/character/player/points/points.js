@@ -3,22 +3,18 @@
 class Points {
 
     constructor(points, maxPoints) {
-        let self = this;
-
         if (isNaN(points))
             points = maxPoints;
 
-        self.points = points;
-        self.maxPoints = maxPoints;
+        this.points = points;
+        this.maxPoints = maxPoints;
     }
 
     heal(amount) {
-        let self = this;
+        this.setPoints(this.points + amount);
 
-        self.setPoints(self.points + amount);
-
-        if (self.healCallback)
-            self.healCallback();
+        if (this.healCallback)
+            this.healCallback();
     }
 
     increment(amount) {
@@ -30,12 +26,10 @@ class Points {
     }
 
     setPoints(points) {
-        let self = this;
+        this.points = points;
 
-        self.points = points;
-
-        if (self.points >= self.maxPoints)
-            self.points = self.maxPoints;
+        if (this.points >= this.maxPoints)
+            this.points = this.maxPoints;
     }
 
     setMaxPoints(maxPoints) {

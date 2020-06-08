@@ -13,77 +13,73 @@ class Mob extends Character {
     constructor(id, instance, x, y, world) {
         super(id, 'mob', instance, x, y);
 
-        let self = this;
 
         if (!Mobs.exists(id))
             return;
 
-        self.world = world;
+        this.world = world;
 
-        self.data = Mobs.Ids[self.id];
-        self.hitPoints = self.data.hitPoints;
-        self.maxHitPoints = self.data.hitPoints;
-        self.drops = self.data.drops;
+        this.data = Mobs.Ids[this.id];
+        this.hitPoints = this.data.hitPoints;
+        this.maxHitPoints = this.data.hitPoints;
+        this.drops = this.data.drops;
 
-        self.respawnDelay = self.data.spawnDelay;
+        this.respawnDelay = this.data.spawnDelay;
 
-        self.level = self.data.level;
+        this.level = this.data.level;
 
-        self.armourLevel = self.data.armour;
-        self.weaponLevel = self.data.weapon;
-        self.attackRange = self.data.attackRange;
-        self.aggroRange = self.data.aggroRange;
-        self.aggressive = self.data.aggressive;
-        self.attackRate = self.data.attackRate;
-        self.movementSpeed = self.data.movementSpeed;
+        this.armourLevel = this.data.armour;
+        this.weaponLevel = this.data.weapon;
+        this.attackRange = this.data.attackRange;
+        this.aggroRange = this.data.aggroRange;
+        this.aggressive = this.data.aggressive;
+        this.attackRate = this.data.attackRate;
+        this.movementSpeed = this.data.movementSpeed;
 
-        self.spawnLocation = [x, y];
+        this.spawnLocation = [x, y];
 
-        self.dead = false;
-        self.boss = false;
-        self.static = false;
-        self.hiddenName = false;
+        this.dead = false;
+        this.boss = false;
+        this.static = false;
+        this.hiddenName = false;
 
-        self.roaming = false;
-        self.maxRoamingDistance = 3;
+        this.roaming = false;
+        this.maxRoamingDistance = 3;
 
-        self.projectileName = self.getProjectileName();
+        this.projectileName = this.getProjectileName();
     }
 
     load() {
-        let self = this;
 
-        self.handler = new MobHandler(self, self.world);
+        this.handler = new MobHandler(this, this.world);
 
-        if (self.loadCallback)
-            self.loadCallback();
+        if (this.loadCallback)
+            this.loadCallback();
     }
 
     refresh() {
-        let self = this;
 
-        self.hitPoints = self.data.hitPoints;
-        self.maxHitPoints = self.data.hitPoints;
+        this.hitPoints = this.data.hitPoints;
+        this.maxHitPoints = this.data.hitPoints;
 
-        if (self.refreshCallback)
-            self.refreshCallback();
+        if (this.refreshCallback)
+            this.refreshCallback();
 
     }
 
     getDrop() {
-        let self = this;
 
-        if (!self.drops)
+        if (!this.drops)
             return null;
 
         let random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
-            dropObjects = Object.keys(self.drops),
+            dropObjects = Object.keys(this.drops),
             item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
 
-        if (random > self.drops[item])
+        if (random > this.drops[item])
             return null;
 
-        let count = item === 'gold' ? Utils.randomInt(self.level, self.level * 5) : 1;
+        let count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
 
         return {
             id: Items.stringToId(item),
@@ -96,41 +92,38 @@ class Mob extends Character {
     }
 
     canAggro(player) {
-        let self = this;
 
-        if (self.hasTarget())
+        if (this.hasTarget())
           return false;
 
-        if (!self.aggressive)
+        if (!this.aggressive)
           return false;
 
-        if ((Math.floor(self.level * 1.5) < player.level) && !self.alwaysAggressive)
+        if ((Math.floor(this.level * 1.5) < player.level) && !this.alwaysAggressive)
           return false;
 
         if (!player.hasAggressionTimer())
           return false;
 
-        return self.isNear(player, self.aggroRange);
+        return this.isNear(player, this.aggroRange);
     }
 
     destroy() {
-        let self = this;
 
-        self.dead = true;
-        self.clearTarget();
-        self.resetPosition();
-        self.respawn();
+        this.dead = true;
+        this.clearTarget();
+        this.resetPosition();
+        this.respawn();
 
-        if (self.area)
-            self.area.removeEntity(self);
+        if (this.area)
+            this.area.removeEntity(this);
     }
 
     return() {
-        let self = this;
 
-        self.clearTarget();
-        self.resetPosition();
-        self.setPosition(self.x, self.y);
+        this.clearTarget();
+        this.resetPosition();
+        this.setPosition(this.x, this.y);
     }
 
     isRanged() {
@@ -150,15 +143,13 @@ class Mob extends Character {
     }
 
     addToChestArea(chestAreas) {
-        let self = this,
-            area = _.find(chestAreas, (area) => { return area.contains(self.x, self.y); });
+        let area = _.find(chestAreas, (area) => { return area.contains(this.x, this.y); });
 
         if (area)
-            area.addEntity(self);
+            area.addEntity(this);
     }
 
     respawn() {
-        let self = this;
 
         /**
          * Some entities are static (only spawned once during an event)
@@ -166,25 +157,24 @@ class Mob extends Character {
          * so the resawning script is handled elsewhere.
          */
 
-        if (!self.static || self.respawnDelay === -1)
+        if (!this.static || this.respawnDelay === -1)
             return;
 
         setTimeout(() => {
-            if (self.respawnCallback)
-                self.respawnCallback();
+            if (this.respawnCallback)
+                this.respawnCallback();
 
-        }, self.respawnDelay);
+        }, this.respawnDelay);
     }
 
     getState() {
-        let self = this,
-            base = super.getState();
+        let base = super.getState();
 
-        base.hitPoints = self.hitPoints;
-        base.maxHitPoints = self.maxHitPoints;
-        base.attackRange = self.attackRange;
-        base.level = self.level;
-        base.hiddenName = self.hiddenName; // TODO - Just don't send name when hiddenName present.
+        base.hitPoints = this.hitPoints;
+        base.maxHitPoints = this.maxHitPoints;
+        base.attackRange = this.attackRange;
+        base.level = this.level;
+        base.hiddenName = this.hiddenName; // TODO - Just don't send name when hiddenName present.
 
         return base;
     }
@@ -195,9 +185,8 @@ class Mob extends Character {
     }
 
     resetPosition() {
-        let self = this;
 
-        self.setPosition(self.spawnLocation[0], self.spawnLocation[1]);
+        this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
     onLoad(callback) {

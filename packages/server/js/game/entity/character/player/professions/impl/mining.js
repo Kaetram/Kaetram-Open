@@ -12,21 +12,17 @@ class Mining extends Profession {
     constructor(id, player) {
         super(id, player, 'Mining');
 
-        let self = this;
+        this.tick = 1000;
 
-        self.tick = 1000;
-
-        self.miningInterval = null;
-        self.started = false;
+        this.miningInterval = null;
+        this.started = false;
     }
 
     start() {
-        let self = this;
-
-        if (self.started)
+        if (this.started)
             return;
 
-        self.miningInterval = setInterval(() => {
+        this.miningInterval = setInterval(() => {
 
             try {
 
@@ -34,43 +30,39 @@ class Mining extends Profession {
 
             } catch (e) {}
 
-        }, self.tick);
+        }, this.tick);
 
-        self.started = true;
+        this.started = true;
     }
 
     stop() {
-        let self = this;
-
-        if (!self.started)
+        if (!this.started)
             return;
 
-        self.rockId = null;
-        self.targetId = null;
+        this.rockId = null;
+        this.targetId = null;
 
-        clearInterval(self.miningInterval);
-        self.miningInterval = null;
+        clearInterval(this.miningInterval);
+        this.miningInterval = null;
 
-        self.started = false;
+        this.started = false;
     }
 
     handle(id, rockId) {
-        let self = this;
-
-        if (!self.player.hasMiningWeapon()) {
-            self.player.notify('You do not have a pickaxe to mine this rock with.');
+        if (!this.player.hasMiningWeapon()) {
+            this.player.notify('You do not have a pickaxe to mine this rock with.');
             return;
         }
 
-        self.rockId = rockId;
-        self.targetId = id;
+        this.rockId = rockId;
+        this.targetId = id;
 
-        if (self.level < Rocks.Levels[self.rockId]) {
-            self.player.notify(`You must be at least level ${Rocks.Levels[self.rockId]} to mine this rock.`);
+        if (this.level < Rocks.Levels[this.rockId]) {
+            this.player.notify(`You must be at least level ${Rocks.Levels[this.rockId]} to mine this rock.`);
             return;
         }
 
-        self.start();
+        this.start();
     }
 
     getRockDestroyChance() {

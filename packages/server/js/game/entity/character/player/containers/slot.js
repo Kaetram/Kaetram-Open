@@ -5,68 +5,62 @@ let Items = require('../../../../../util/items');
 class Slot {
 
     constructor(index) {
-        let self = this;
 
-        self.index = index;
+        this.index = index;
 
-        self.id = -1;
-        self.count = -1;
-        self.ability = -1;
-        self.abilityLevel = -1;
+        this.id = -1;
+        this.count = -1;
+        this.ability = -1;
+        this.abilityLevel = -1;
 
-        self.string = null;
+        this.string = null;
     }
 
     load(id, count, ability, abilityLevel) {
-        let self = this;
 
-        self.id = parseInt(id);
-        self.count = parseInt(count);
-        self.ability = parseInt(ability);
-        self.abilityLevel = parseInt(abilityLevel);
+        this.id = parseInt(id);
+        this.count = parseInt(count);
+        this.ability = parseInt(ability);
+        this.abilityLevel = parseInt(abilityLevel);
 
-        self.string = Items.idToString(self.id);
-        self.edible = Items.isEdible(self.id);
-        self.equippable = Items.isEquippable(self.string);
+        this.string = Items.idToString(this.id);
+        this.edible = Items.isEdible(this.id);
+        this.equippable = Items.isEquippable(this.string);
 
-        self.verify();
+        this.verify();
     }
 
     empty() {
-        let self = this;
 
-        self.id = -1;
-        self.count = -1;
-        self.ability = -1;
-        self.abilityLevel = -1;
+        this.id = -1;
+        this.count = -1;
+        this.ability = -1;
+        this.abilityLevel = -1;
 
-        self.string = null;
+        this.string = null;
     }
 
     increment(amount) {
-        let self = this;
 
-        self.count += parseInt(amount);
+        this.count += parseInt(amount);
 
-        self.verify();
+        this.verify();
     }
 
     decrement(amount) {
-        let self = this;
 
-        self.count -= parseInt(amount);
+        this.count -= parseInt(amount);
 
-        if (self.count < 1)
-            log.error('[Slot] Item ' + self.id + ' has a count below 1 -> count: ' + self.count);
+        if (this.count < 1)
+            log.error('[Slot] Item ' + this.id + ' has a count below 1 -> count: ' + this.count);
 
-        self.verify();
+        this.verify();
     }
 
     verify() {
-        let self = this;
 
-        if (isNaN(self.count) || self.count < 1)
-            self.count = 1;
+        if (isNaN(this.count) || this.count < 1)
+            this.count = 1;
     }
 
     getData() {

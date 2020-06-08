@@ -19,83 +19,77 @@ let _ = require('underscore'),
 class Map {
 
     constructor(world) {
-        let self = this;
+        this.world = world;
 
-        self.world = world;
+        this.ready = false;
 
-        self.ready = false;
+        this.load();
 
-        self.load();
-
-        self.regions = new Regions(self);
-        self.grids = new Grids(self);
+        this.regions = new Regions(this);
+        this.grids = new Grids(this);
     }
 
     load() {
-        let self = this;
+        this.version = map.version || 0;
 
-        self.version = map.version || 0;
+        this.clientMap = ClientMap;
 
-        self.clientMap = ClientMap;
+        this.width = map.width;
+        this.height = map.height;
+        this.collisions = map.collisions;
+        this.chestAreas = map.chestAreas;
+        this.chests = map.chests;
 
-        self.width = map.width;
-        self.height = map.height;
-        self.collisions = map.collisions;
-        self.chestAreas = map.chestAreas;
-        self.chests = map.chests;
+        this.loadStaticEntities();
 
-        self.loadStaticEntities();
-
-        self.tilesets = map.tilesets;
-        self.lights = map.lights;
-        self.plateau = map.plateau;
-        self.objects = map.objects;
-        self.cursors = map.cursors;
+        this.tilesets = map.tilesets;
+        this.lights = map.lights;
+        this.plateau = map.plateau;
+        this.objects = map.objects;
+        this.cursors = map.cursors;
 
         // Lumberjacking
-        self.trees = map.trees;
-        self.treeIndexes = map.treeIndexes;
+        this.trees = map.trees;
+        this.treeIndexes = map.treeIndexes;
 
         // Mining
-        self.rocks = map.rocks;
-        self.rockIndexes = map.rockIndexes;
+        this.rocks = map.rocks;
+        this.rockIndexes = map.rockIndexes;
 
-        self.zoneWidth = 25;
-        self.zoneHeight = 20;
+        this.zoneWidth = 25;
+        this.zoneHeight = 20;
 
         /**
          * These are temporarily hardcoded,
          * but we will use a dynamic approach.
          */
-        self.regionWidth = 40;
-        self.regionHeight = 20;
+        this.regionWidth = 40;
+        this.regionHeight = 20;
 
-        self.areas = {};
+        this.areas = {};
 
-        self.loadAreas();
-        self.loadDoors();
+        this.loadAreas();
+        this.loadDoors();
 
-        self.ready = true;
+        this.ready = true;
 
-        self.readyInterval = setInterval(() => {
-            if (!self.world.ready)
-                if (self.readyCallback)
-                    self.readyCallback();
+        this.readyInterval = setInterval(() => {
+            if (!this.world.ready)
+                if (this.readyCallback)
+                    this.readyCallback();
             else {
-                clearInterval(self.readyInterval);
-                self.readyInterval = null;
+                clearInterval(this.readyInterval);
+                this.readyInterval = null;
             }
 
         }, 50);
     }
 
     loadAreas() {
-        let self = this;
-
         /**
-         * The structure for the new self.areas is as follows:
+         * The structure for the new this.areas is as follows:
          *
-         * self.areas = {
+         * this.areas = {
          *      pvpAreas = {
          *          allPvpAreas
          *      },
@@ -108,17 +102,15 @@ class Map {
          * }
          */
 
-        self.areas['PVP'] = new PVPAreas();
-        self.areas['Music'] = new MusicAreas();
-        self.areas['Chests'] = new ChestAreas(self.world);
-        self.areas['Overlays'] = new OverlayAreas();
-        self.areas['Cameras'] = new CameraAreas();
+        this.areas['PVP'] = new PVPAreas();
+        this.areas['Music'] = new MusicAreas();
+        this.areas['Chests'] = new ChestAreas(this.world);
+        this.areas['Overlays'] = new OverlayAreas();
+        this.areas['Cameras'] = new CameraAreas();
     }
 
     loadDoors() {
-        let self = this;
-
-        self.doors = {};
+        this.doors = {};
 
         _.each(map.doors, (door) => {
             let orientation;
@@ -141,9 +133,9 @@ class Map {
                     break;
             }
 
-            let index = self.gridPositionToIndex(door.x, door.y) + 1;
+            let index = this.gridPositionToIndex(door.x, door.y) + 1;
 
-            self.doors[index] = {
+            this.doors[index] = {
                 x: door.tx,
                 y: door.ty,
                 orientation: orientation,
@@ -159,13 +151,11 @@ class Map {
     }
 
     loadStaticEntities() {
-        let self = this;
-
-        self.staticEntities = [];
+        this.staticEntities = [];
 
         // Legacy static entities (from Tiled);
         _.each(map.staticEntities, (entity, tileIndex) => {
-            self.staticEntities.push({
+            this.staticEntities.push({
                 tileIndex: tileIndex,
                 string: entity.type,
                 roaming: entity.roaming
@@ -174,9 +164,9 @@ class Map {
         });
 
         _.each(Spawns, (data) => {
-            let tileIndex = self.gridPositionToIndex(data.x, data.y);
+            let tileIndex = this.gridPositionToIndex(data.x, data.y);
 
-            self.staticEntities.push({
+            this.staticEntities.push({
                 tileIndex: tileIndex,
                 string: data.string,
                 roaming: data.roaming,
@@ -189,12 +179,10 @@ class Map {
     }
 
     indexToGridPosition(tileIndex) {
-        let self = this;
-
         tileIndex -= 1;
 
-        let x = self.getX(tileIndex + 1, self.width),
-            y = Math.floor(tileIndex / self.width);
+        let x = this.getX(tileIndex + 1, this.width),
+            y = Math.floor(tileIndex / this.width);
 
         return {
             x: x,
@@ -214,14 +202,13 @@ class Map {
     }
 
     getRandomPosition(area) {
-        let self = this,
-            pos = {},
+        let pos = {},
             valid = false;
 
         while (!valid) {
             pos.x = area.x + Utils.randomInt(0, area.width + 1);
             pos.y = area.y + Utils.randomInt(0, area.height + 1);
-            valid = self.isValidPosition(pos.x, pos.y);
+            valid = this.isValidPosition(pos.x, pos.y);
         }
 
         return pos;
@@ -232,23 +219,20 @@ class Map {
     }
 
     inTutorialArea(entity) {
-        let self = this;
-
         if (entity.x === -1 || entity.y === -1)
             return true;
 
-        return self.inArea(entity.x, entity.y, 370, 36, 10, 10) ||
-                self.inArea(entity.x, entity.y, 312, 11, 25, 22) ||
-                self.inArea(entity.x, entity.y, 399, 18, 20, 15);
+        return this.inArea(entity.x, entity.y, 370, 36, 10, 10) ||
+                this.inArea(entity.x, entity.y, 312, 11, 25, 22) ||
+                this.inArea(entity.x, entity.y, 399, 18, 20, 15);
     }
 
     nearLight(light, x, y) {
-        let self = this,
-            diff = Math.round(light.distance / 16),
-            startX = light.x - self.zoneWidth - diff,
-            startY = light.y - self.zoneHeight - diff,
-            endX = light.x + self.zoneWidth + diff,
-            endY = light.y + self.zoneHeight + diff;
+        let diff = Math.round(light.distance / 16),
+            startX = light.x - this.zoneWidth - diff,
+            startY = light.y - this.zoneHeight - diff,
+            endX = light.x + this.zoneWidth + diff,
+            endY = light.y + this.zoneHeight + diff;
 
         return x > startX && y > startY && x < endX && y < endY;
     }
@@ -258,29 +242,26 @@ class Map {
     }
 
     getPositionObject(x, y) {
-        let self = this,
-            index = self.gridPositionToIndex(x, y),
-            tiles = self.clientMap.data[index],
+        let index = this.gridPositionToIndex(x, y),
+            tiles = this.clientMap.data[index],
             objectId;
 
         if (tiles instanceof Array)
             for (let i in tiles)
-                if (self.isObject(tiles[i]))
+                if (this.isObject(tiles[i]))
                     objectId = tiles[i];
         else
-            if (self.isObject(tiles))
+            if (this.isObject(tiles))
                 objectId = tiles;
 
         return objectId;
     }
 
     getCursor(tileIndex, tileId) {
-        let self = this;
+        if (tileId in this.cursors)
+            return this.cursors[tileId];
 
-        if (tileId in self.cursors)
-            return self.cursors[tileId];
-
-        let cursor = Objects.getCursor(self.getObjectId(tileIndex));
+        let cursor = Objects.getCursor(this.getObjectId(tileIndex));
 
         if (!cursor)
             return null;
@@ -289,16 +270,14 @@ class Map {
     }
 
     getObjectId(tileIndex) {
-        let self = this,
-            position = self.indexToGridPosition(tileIndex + 1);
+        let position = this.indexToGridPosition(tileIndex + 1);
 
         return position.x + '-' + position.y;
     }
 
     getObject(x, y, data) {
-        let self = this,
-            index = self.gridPositionToIndex(x, y) - 1,
-            tiles = self.clientMap.data[index];
+        let index = this.gridPositionToIndex(x, y) - 1,
+            tiles = this.clientMap.data[index];
 
         if (tiles instanceof Array)
             for (let i in tiles)
@@ -347,41 +326,35 @@ class Map {
     }
 
     isColliding(x, y) {
-        let self = this;
-
-        if (self.isOutOfBounds(x, y))
+        if (this.isOutOfBounds(x, y))
             return false;
 
-        let tileIndex = self.gridPositionToIndex(x, y);
+        let tileIndex = this.gridPositionToIndex(x, y);
 
-        return self.collisions.indexOf(tileIndex) > -1;
+        return this.collisions.indexOf(tileIndex) > -1;
     }
 
     /* For preventing NPCs from roaming in null areas. */
     isEmpty(x, y) {
-        let self = this;
-
-        if (self.isOutOfBounds(x, y))
+        if (this.isOutOfBounds(x, y))
             return true;
 
-        let tileIndex = self.gridPositionToIndex(x, y);
+        let tileIndex = this.gridPositionToIndex(x, y);
 
-        return self.clientMap.data[tileIndex] === 0;
+        return this.clientMap.data[tileIndex] === 0;
     }
 
     getPlateauLevel(x, y) {
-        let self = this,
-            index = self.gridPositionToIndex(x, y);
+        let index = this.gridPositionToIndex(x, y);
 
-        if (!self.isPlateau(index))
+        if (!this.isPlateau(index))
             return 0;
 
-        return self.plateau[index];
+        return this.plateau[index];
     }
 
     getActualTileIndex(tileIndex) {
-        let self = this,
-            tileset = self.getTileset(tileIndex);
+        let tileset = this.getTileset(tileIndex);
 
         if (!tileset)
             return;
@@ -390,18 +363,17 @@ class Map {
     }
 
     getTileset(tileIndex) {
-        let self = this;
         /**
-         * if (id > self.tilesets[idx].firstGID - 1 &&
-         id < self.tilesets[idx].lastGID + 1)
-         return self.tilesets[idx];
+         if (id > this.tilesets[idx].firstGID - 1 &&
+         id < this.tilesets[idx].lastGID + 1)
+            return this.tilesets[idx];
          */
 
-        for (let id in self.tilesets)
-            if (self.tilesets.hasOwnProperty(id))
-                if (tileIndex > self.tilesets[id].firstGID - 1 &&
-                    tileIndex < self.tilesets[id].lastGID + 1)
-                    return self.tilesets[id];
+        for (let id in this.tilesets)
+            if (this.tilesets.hasOwnProperty(id))
+                if (tileIndex > this.tilesets[id].firstGID - 1 &&
+                    tileIndex < this.tilesets[id].lastGID + 1)
+                    return this.tilesets[id];
 
         return null;
     }

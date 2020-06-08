@@ -4,22 +4,19 @@ let Objects = require('../util/objects'),
 class GlobalObjects {
 
     constructor(world) {
-        let self = this;
-
-        self.world = world;
-        self.map = world.map;
+        this.world = world;
+        this.map = world.map;
 
     }
 
     getInfo(id) {
-        let self = this,
-            position = Objects.getPosition(id),
-            objectId = self.map.getPositionObject(position.x, position.y);
+        let position = Objects.getPosition(id),
+            objectId = this.map.getPositionObject(position.x, position.y);
 
-        if (objectId in self.map.trees)
+        if (objectId in this.map.trees)
             return {
                 type: 'lumberjacking',
-                tree: self.map.trees[objectId]
+                tree: this.map.trees[objectId]
             };
 
         let object = Objects.getObject(id);
@@ -38,8 +35,7 @@ class GlobalObjects {
      */
 
     getSignData(id) {
-        let self = this,
-            object = Objects.getObject(id);
+        let object = Objects.getObject(id);
 
         if (!object)
             return null;
@@ -63,7 +59,6 @@ class GlobalObjects {
      */
 
     talk(object, player) {
-        let self = this;
 
         if (player.npcTalk !== object.id) {
             player.npcTalk = object.id;

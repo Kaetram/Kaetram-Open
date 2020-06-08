@@ -10,40 +10,35 @@ let _ = require('underscore'),
 class Quests {
 
     constructor(player) {
-        let self = this;
+        this.player = player;
 
-        self.player = player;
+        this.quests = {};
+        this.achievements = {};
 
-        self.quests = {};
-        self.achievements = {};
-
-        self.load();
+        this.load();
     }
 
     load() {
-        let self = this,
-            questCount = 0;
+        let questCount = 0;
 
         _.each(QuestData, (quest) => {
 
             if (questCount === 0)
-                self.quests[quest.id] = new Introduction(self.player, quest);
+                this.quests[quest.id] = new Introduction(this.player, quest);
             else if (questCount === 1)
-                self.quests[quest.id] = new BulkySituation(self.player, quest);
+                this.quests[quest.id] = new BulkySituation(this.player, quest);
 
             questCount++;
         });
 
         _.each(AchievementData, (achievement) => {
-            self.achievements[achievement.id] = new Achievement(achievement.id, self.player);
+            this.achievements[achievement.id] = new Achievement(achievement.id, this.player);
         });
     }
 
     updateQuests(ids, stages) {
-        let self = this;
-
         if (!ids || !stages) {
-            _.each(self.quests, (quest) => {
+            _.each(this.quests, (quest) => {
                 quest.load(0);
             });
 
@@ -51,49 +46,42 @@ class Quests {
         }
 
         for (let id = 0; id < ids.length; id++)
-            if (!isNaN(parseInt(ids[id])) && self.quests[id])
-                self.quests[id].load(stages[id]);
+            if (!isNaN(parseInt(ids[id])) && this.quests[id])
+                this.quests[id].load(stages[id]);
 
-        if (self.questsReadyCallback)
-            self.questsReadyCallback();
+        if (this.questsReadyCallback)
+            this.questsReadyCallback();
     }
 
     updateAchievements(ids, progress) {
-        let self = this;
-
         for (let id = 0; id < ids.length; id++)
-            if (!isNaN(parseInt(ids[id])) && self.achievements[id])
-                self.achievements[id].setProgress(progress[id], true);
+            if (!isNaN(parseInt(ids[id])) && this.achievements[id])
+                this.achievements[id].setProgress(progress[id], true);
 
-        if (self.achievementsReadyCallback)
-            self.achievementsReadyCallback();
+        if (this.achievementsReadyCallback)
+            this.achievementsReadyCallback();
     }
 
     getQuest(id) {
-        let self = this;
-
-        if (id in self.quests)
-            return self.quests[id];
+        if (id in this.quests)
+            return this.quests[id];
 
         return null;
     }
 
     getAchievement(id) {
-        let self = this;
-
-        if (!self.achievements || !self.achievements[id])
+        if (!this.achievements || !this.achievements[id])
             return null;
 
-        return self.achievements[id];
+        return this.achievements[id];
     }
 
     getQuests() {
-        let self = this,
-            ids = '',
+        let ids = '',
             stages = '';
 
-        for (let id = 0; id < self.getQuestSize(); id++) {
-            var quest = self.quests[id];
+        for (let id = 0; id < this.getQuestSize(); id++) {
+            let quest = this.quests[id];
 
             ids += id + ' ';
             stages += quest.stage + ' ';
@@ -101,34 +89,32 @@ class Quests {
         }
 
         return {
-            username: self.player.username,
+            username: this.player.username,
             ids: ids,
             stages: stages
         }
     }
 
     getAchievements() {
-        let self = this,
-            ids = '',
+        let ids = '',
             progress = '';
 
-        for (let id = 0; id < self.getAchievementSize(); id++) {
+        for (let id = 0; id < this.getAchievementSize(); id++) {
             ids += id + ' ';
-            progress += self.achievements[id].progress + ' '
+            progress += this.achievements[id].progress + ' '
         }
 
         return {
-            username: self.player.username,
+            username: this.player.username,
             ids: ids,
             progress: progress
         }
     }
 
     getAchievementData() {
-        let self = this,
-            achievements = [];
+        let achievements = [];
 
-        self.forEachAchievement((achievement) => {
+        this.forEachAchievement((achievement) => {
             achievements.push(achievement.getInfo());
         });
 
@@ -138,10 +124,9 @@ class Quests {
     }
 
     getQuestData() {
-        let self = this,
-            quests = [];
+        let quests = [];
 
-        self.forEachQuest((quest) => {
+        this.forEachQuest((quest) => {
             quests.push(quest.getInfo());
         });
 
@@ -163,24 +148,22 @@ class Quests {
     }
 
     getQuestsCompleted() {
-        let self = this,
-            count = 0;
+        let count = 0;
 
-        for (let id in self.quests)
-            if (self.quests.hasOwnProperty(id))
-                if (self.quests[id].isFinished())
+        for (let id in this.quests)
+            if (this.quests.hasOwnProperty(id))
+                if (this.quests[id].isFinished())
                     count++;
 
         return count;
     }
 
     getAchievementsCompleted() {
-        let self = this,
-            count = 0;
+        let count = 0;
 
-        for (let id in self.achievements)
-            if (self.achievements.hasOwnProperty(id))
-                if (self.achievements[id].isFinished())
+        for (let id in this.achievements)
+            if (this.achievements.hasOwnProperty(id))
+                if (this.achievements[id].isFinished())
                     count++;
 
         return count;
@@ -195,17 +178,15 @@ class Quests {
     }
 
     getQuestByNPC(npc) {
-        let self = this;
-
         /**
          * Iterate through the quest list in the order it has been
          * added so that NPC's that are required by multiple quests
          * follow the proper order.
          */
 
-        for (let id in self.quests) {
-            if (self.quests.hasOwnProperty(id)) {
-                let quest = self.quests[id];
+        for (let id in this.quests) {
+            if (this.quests.hasOwnProperty(id)) {
+                let quest = this.quests[id];
 
                 if (quest.hasNPC(npc.id))
                     return quest;
@@ -216,36 +197,33 @@ class Quests {
     }
 
     getAchievementByNPC(npc) {
-        let self = this;
 
-        for (let id in self.achievements)
-            if (self.achievements.hasOwnProperty(id))
-                if (self.achievements[id].data.npc === npc.id && !self.achievements[id].isFinished())
-                    return self.achievements[id];
+        for (let id in this.achievements)
+            if (this.achievements.hasOwnProperty(id))
+                if (this.achievements[id].data.npc === npc.id && !this.achievements[id].isFinished())
+                    return this.achievements[id];
 
         return null;
     }
 
     getAchievementByMob(mob) {
-        let self = this;
 
-        for (let id in self.achievements)
-            if (self.achievements.hasOwnProperty(id))
-                if (self.achievements[id].data.mob === mob.id)
-                    return self.achievements[id];
+        for (let id in this.achievements)
+            if (this.achievements.hasOwnProperty(id))
+                if (this.achievements[id].data.mob === mob.id)
+                    return this.achievements[id];
 
         return null;
     }
 
     isQuestMob(mob) {
-        let self = this;
 
         if (mob.type !== 'mob')
             return false;
 
-        for (let id in self.quests) {
-            if (self.quests.hasOwnProperty(id)) {
-                let quest = self.quests[id];
+        for (let id in this.quests) {
+            if (this.quests.hasOwnProperty(id)) {
+                let quest = this.quests[id];
 
                 if (!quest.isFinished() && quest.hasMob(mob.id))
                     return true;
@@ -256,28 +234,25 @@ class Quests {
     }
 
     isAchievementMob(mob) {
-        let self = this;
-
         if (mob.type !== 'mob')
             return false;
 
-        for (let id in self.achievements)
-            if (self.achievements.hasOwnProperty(id))
-                if (self.achievements[id].data.mob === mob.id && !self.achievements[id].isFinished())
+        for (let id in this.achievements)
+            if (this.achievements.hasOwnProperty(id))
+                if (this.achievements[id].data.mob === mob.id && !this.achievements[id].isFinished())
                     return true;
 
         return false;
     }
 
     isQuestNPC(npc) {
-        let self = this;
 
         if (npc.type !== 'npc')
             return false;
 
-        for (let id in self.quests) {
-            if (self.quests.hasOwnProperty(id)) {
-                let quest = self.quests[id];
+        for (let id in this.quests) {
+            if (this.quests.hasOwnProperty(id)) {
+                let quest = this.quests[id];
 
                 if (!quest.isFinished() && quest.hasNPC(npc.id))
                     return true;
@@ -288,14 +263,13 @@ class Quests {
     }
 
     isAchievementNPC(npc) {
-        let self = this;
 
         if (npc.type !== 'npc')
             return false;
 
-        for (let id in self.achievements)
-            if (self.achievements.hasOwnProperty(id))
-                if (self.achievements[id].data.npc === npc.id && !self.achievements[id].isFinished())
+        for (let id in this.achievements)
+            if (this.achievements.hasOwnProperty(id))
+                if (this.achievements[id].data.npc === npc.id && !this.achievements[id].isFinished())
                     return true;
 
         return false;

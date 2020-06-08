@@ -19,23 +19,19 @@ let _ = require('underscore'),
 class Parser {
 
     constructor() {
-        let self = this;
+        this.load();
 
-        self.load();
-
-        self.loadMobData();
-        self.loadNPCData();
-        self.loadItemData();
-        self.loadAbilityData();
-        self.loadShops();
-        self.loadLevels();
-        self.loadObjects();
+        this.loadMobData();
+        this.loadNPCData();
+        this.loadItemData();
+        this.loadAbilityData();
+        this.loadShops();
+        this.loadLevels();
+        this.loadObjects();
     }
 
     load() {
-        let self = this;
-
-        self.onReady(() => {
+        this.onReady(() => {
             Mobs.Plugins = require ('../util/plugins')(__dirname + '/../../data/combat/');
 
             log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
@@ -216,8 +212,6 @@ class Parser {
     **/
 
     loadLevels() {
-        let self = this;
-
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
@@ -228,8 +222,7 @@ class Parser {
     }
 
     loadObjects() {
-        let self = this,
-            objectCounter = 0;
+        let objectCounter = 0;
 
         _.each(ObjectData, (value, key) => {
 
@@ -246,8 +239,8 @@ class Parser {
 
         log.info('Finished loading ' + objectCounter + ' global objects.');
 
-        if (self.readyCallback)
-            self.readyCallback();
+        if (this.readyCallback)
+            this.readyCallback();
     }
 
     onReady(callback) {

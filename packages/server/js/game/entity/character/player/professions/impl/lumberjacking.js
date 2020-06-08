@@ -12,98 +12,90 @@ class Lumberjacking extends Profession {
     constructor(id, player) {
         super(id, player, 'Lumberjacking');
 
-        let self = this;
+        this.tick = 1000;
 
-        self.tick = 1000;
-
-        self.cuttingInterval = null;
-        self.started = false;
+        this.cuttingInterval = null;
+        this.started = false;
     }
 
     start() {
-        let self = this;
-
-        if (self.started)
+        if (this.started)
             return;
 
-        self.cuttingInterval = setInterval(() => {
+        this.cuttingInterval = setInterval(() => {
 
             try {
 
-                if (!self.player || !self.isTarget() || self.world.isTreeCut(self.targetId)) {
-                    self.stop();
+                if (!this.player || !this.isTarget() || this.world.isTreeCut(this.targetId)) {
+                    this.stop();
                     return;
                 }
 
-                if (!self.treeId || !self.targetId)
+                if (!this.treeId || !this.targetId)
                     return;
 
-                if (!self.player.inventory.canHold(Trees.Logs[self.treeId], 1)) {
-                    self.player.notify('You do not have enough space in your inventory!');
-                    self.stop();
+                if (!this.player.inventory.canHold(Trees.Logs[this.treeId], 1)) {
+                    this.player.notify('You do not have enough space in your inventory!');
+                    this.stop();
                     return;
                 }
 
-                self.sync();
-                self.player.sendToRegion(new Messages.Animation(self.player.instance, {
+                this.sync();
+                this.player.sendToRegion(new Messages.Animation(this.player.instance, {
                     action: Modules.Actions.Attack
                 }));
 
-                let probability = Formulas.getTreeChance(self.player, self.treeId);
+                let probability = Formulas.getTreeChance(this.player, this.treeId);
 
                 if (Utils.randomInt(0, probability) === 2) {
-                    self.addExperience(Trees.Experience[self.treeId]);
+                    this.addExperience(Trees.Experience[this.treeId]);
 
-                    self.player.inventory.add({
-                        id: Trees.Logs[self.treeId],
+                    this.player.inventory.add({
+                        id: Trees.Logs[this.treeId],
                         count: 1
                     });
 
-                    if (self.getTreeDestroyChance())
-                        self.world.destroyTree(self.targetId, Modules.Trees[self.treeId]);
+                    if (this.getTreeDestroyChance())
+                        this.world.destroyTree(this.targetId, Modules.Trees[this.treeId]);
                 }
 
             } catch (e) {}
 
-        }, self.tick);
+        }, this.tick);
 
-        self.started = true;
+        this.started = true;
     }
 
     stop() {
-        let self = this;
-
-        if (!self.started)
+        if (!this.started)
             return;
 
-        self.treeId = null;
-        self.targetId = null;
+        this.treeId = null;
+        this.targetId = null;
 
-        clearInterval(self.cuttingInterval);
-        self.cuttingInterval = null;
+        clearInterval(this.cuttingInterval);
+        this.cuttingInterval = null;
 
-        self.started = false;
+        this.started = false;
     }
 
     handle(id, treeId) {
-        let self = this;
-
-        if (!self.player.hasLumberjackingWeapon()) {
-            self.player.notify('You do not have an axe to cut this tree with.');
+        if (!this.player.hasLumberjackingWeapon()) {
+            this.player.notify('You do not have an axe to cut this tree with.');
             return;
         }
 
-        self.treeId = treeId;
-        self.targetId = id;
+        this.treeId = treeId;
+        this.targetId = id;
 
-        self.world.destroyTree(self.targetId, Modules.Trees[self.treeId]);
+        this.world.destroyTree(this.targetId, Modules.Trees[this.treeId]);
 
-        if (self.level < Trees.Levels[self.treeId]) {
-            self.player.notify(`You must be at least level ${Trees.Levels[self.treeId]} to cut this tree!`);
+        if (this.level < Trees.Levels[this.treeId]) {
+            this.player.notify(`You must be at least level ${Trees.Levels[this.treeId]} to cut this tree!`);
             return;
         }
 
-        //self.start();
+        //this.start();
     }
 
     getTreeDestroyChance() {

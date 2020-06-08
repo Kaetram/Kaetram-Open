@@ -9,20 +9,17 @@ let _ = require('underscore'),
 class Shops {
 
     constructor(world) {
-        let self = this;
+        this.world = world;
 
-        self.world = world;
+        this.interval = 60000;
+        this.shopInterval = null;
 
-        self.interval = 60000;
-        self.shopInterval = null;
-
-        self.load();
+        this.load();
     }
 
     load() {
-        let self = this;
 
-        self.shopInterval = setInterval(() => {
+        this.shopInterval = setInterval(() => {
 
             _.each(ShopData.Data, (info) => {
 
@@ -32,24 +29,21 @@ class Shops {
 
             });
 
-        }, self.interval);
+        }, this.interval);
     }
 
     open(player, npcId) {
-        let self = this;
 
         player.send(new Messages.Shop(Packets.ShopOpcode.Open, {
             instance: player.instance,
             npcId: npcId,
-            shopData: self.getShopData(npcId)
+            shopData: this.getShopData(npcId)
         }));
-
     }
 
     buy(player, npcId, buyId, count) {
-        let self = this,
-            cost = ShopData.getCost(npcId, buyId, count),
-            currency = self.getCurrency(npcId),
+        let cost = ShopData.getCost(npcId, buyId, count),
+            currency = this.getCurrency(npcId),
             stock = ShopData.getStock(npcId, buyId);
 
         if (!cost || !currency || !stock) {
@@ -87,12 +81,11 @@ class Shops {
 
         ShopData.decrement(npcId, buyId, count);
 
-        self.refresh(npcId);
+        this.refresh(npcId);
     }
 
     sell(player, npcId, slotId) {
-        let self = this,
-            item = player.inventory.slots[slotId],
+        let item = player.inventory.slots[slotId],
             shop = ShopData.Ids[npcId];
 
         if (!shop || !item) {
@@ -105,8 +98,8 @@ class Shops {
             return;
         }
 
-        let currency = self.getCurrency(npcId),
-            price = self.getSellPrice(npcId, item.id, item.count);
+        let currency = this.getCurrency(npcId),
+            price = this.getSellPrice(npcId, item.id, item.count);
 
         ShopData.increment(npcId, item.id, item.count);
 
@@ -116,14 +109,13 @@ class Shops {
             count: price
         });
 
-        self.remove(player);
-        self.refresh(npcId);
+        this.remove(player);
+        this.refresh(npcId);
 
     }
 
     remove(player) {
-        let self = this,
-            selectedItem = player.selectedShopItem;
+        let selectedItem = player.selectedShopItem;
 
         if (!selectedItem)
             return;
@@ -137,10 +129,8 @@ class Shops {
     }
 
     refresh(shop) {
-        let self = this;
-
-        self.world.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Shop(Packets.ShopOpcode.Refresh, self.getShopData(shop))
+        this.world.push(Packets.PushOpcode.Broadcast, {
+            message: new Messages.Shop(Packets.ShopOpcode.Refresh, this.getShopData(shop))
         });
     }
 
@@ -168,8 +158,7 @@ class Shops {
     }
 
     getShopData(npcId) {
-        let self = this,
-            shop = ShopData.Ids[npcId];
+        let shop = ShopData.Ids[npcId];
 
         if (!shop || !_.isArray(shop.items))
             return;

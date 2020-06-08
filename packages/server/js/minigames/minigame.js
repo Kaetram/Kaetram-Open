@@ -3,10 +3,8 @@
 class Minigame {
 
     constructor(id, name) {
-        let self = this;
-
-        self.id = id;
-        self.name = name;
+        this.id = id;
+        this.name = name;
     }
 
     getId() {

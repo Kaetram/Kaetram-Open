@@ -18,9 +18,7 @@ class API {
      */
 
     constructor(world) {
-        let self = this;
-
-        self.world = world;
+        this.world = world;
 
         if (!config.apiEnabled)
             return;
@@ -32,7 +30,7 @@ class API {
 
         let router = express.Router();
 
-        self.handle(router);
+        this.handle(router);
 
         app.use('/', router);
 
@@ -43,61 +41,55 @@ class API {
     }
 
     handle(router) {
-        let self = this;
-
         router.get('/', (request, response) => {
             response.json({
                 name: config.name,
                 port: config.port, // Sends the server port.
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
-                playerCount: self.world.getPopulation()
+                playerCount: this.world.getPopulation()
             });
         });
 
 		router.post('/player', (request, response) => {
-			self.handlePlayer(request, response);
+			this.handlePlayer(request, response);
 		});
 
         router.post('/chat', (request, response) => {
-            self.handleChat(request, response);
+            this.handleChat(request, response);
         });
 
         router.get('/players', (request, response) => {
-			self.handlePlayers(request, response);
+			this.handlePlayers(request, response);
 		});
     }
 
 	handlePlayer(request, response) {
-		let self = this;
-
-        if (!self.verifyToken(request.body.accessToken)) {
-            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /player POST request.');
+        if (!this.verifyToken(request.body.accessToken)) {
+            this.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /player POST request.');
             return;
         }
 
         let username = request.body.username;
 
         if (!username) {
-            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'No `username` variable received.');
+            this.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'No `username` variable received.');
             return;
         }
 
-        if (!self.world.isOnline(username)) {
-            self.returnError(response, APIConstants.PLAYER_NOT_ONLINE, `Player ${username} is not online.`);
+        if (!this.world.isOnline(username)) {
+            this.returnError(response, APIConstants.PLAYER_NOT_ONLINE, `Player ${username} is not online.`);
             return;
         }
 
-        let player = self.world.getPlayerByName(username);
+        let player = this.world.getPlayerByName(username);
 
-        response.json(self.getPlayerData(player));
+        response.json(this.getPlayerData(player));
 	}
 
     handleChat(request, response) {
-        let self = this;
-
-        if (!self.verifyToken(request.body.accessToken)) {
-            self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /chat POST request.');
+        if (!this.verifyToken(request.body.accessToken)) {
+            this.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /chat POST request.');
             return;
         }
 
@@ -107,7 +99,7 @@ class API {
             username = request.body.username;
 
         if (username) {
-            let player = self.world.getPlayerByName(username);
+            let player = this.world.getPlayerByName(username);
 
             if (player)
                 player.chat(source, text, colour);
@@ -117,31 +109,28 @@ class API {
             return;
         }
 
-        self.world.globalMessage(source, text, colour);
+        this.world.globalMessage(source, text, colour);
 
         response.json({ status: 'success' });
     }
 
 	handlePlayers(request, response) {
-		let self = this;
-
-		if (!self.verifyToken(request.query.accessToken)) {
-			self.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /players GET request.');
+		if (!this.verifyToken(request.query.accessToken)) {
+			this.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /players GET request.');
 			return;
 		}
 
 		let players = {};
 
-		_.each(self.world.players, (player) => {
-			players[player.username] = self.getPlayerData(player);
+		_.each(this.world.players, (player) => {
+			players[player.username] = this.getPlayerData(player);
 		});
 
 		response.json(players);
 	}
 
     pingHub() {
-        let self = this,
-            url = self.getUrl('ping'),
+        let url = this.getUrl('ping'),
             data = {
                 form: {
                     serverId: config.serverId,
@@ -157,23 +146,22 @@ class API {
                 let data = JSON.parse(body);
 
                 if (data.status === 'success') {
-                    if (!self.hubConnected) {
+                    if (!this.hubConnected) {
                         log.notice('Connected to Kaetram Hub successfully!');
-                        self.hubConnected = true;
+                        this.hubConnected = true;
                     }
                 }
 
             } catch (e) {
                 log.error('Could not connect to Kaetram Hub.');
-                self.hubConnected = false;
+                this.hubConnected = false;
             }
 
         });
     }
 
     sendChat(source, text, withArrow) {
-        let self = this,
-            url = self.getUrl('chat'),
+        let url = this.getUrl('chat'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
@@ -200,8 +188,7 @@ class API {
     }
 
     sendPrivateMessage(source, target, text) {
-        let self = this,
-            url = self.getUrl('privateMessage'),
+        let url = this.getUrl('privateMessage'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
@@ -239,8 +226,6 @@ class API {
     }
 
     getPlayerData(player) {
-        let self = this;
-
         if (!player)
             return {};
 

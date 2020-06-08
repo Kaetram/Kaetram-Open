@@ -7,25 +7,23 @@ let Mobs = require('../../util/mobs'),
 class Entity {
 
     constructor(id, type, instance, x, y) {
-        let self = this;
+        this.id = id;
+        this.type = type;
+        this.instance = instance;
 
-        self.id = id;
-        self.type = type;
-        self.instance = instance;
+        this.x = x;
+        this.y = y;
 
-        self.x = x;
-        self.y = y;
+        this.oldX = x;
+        this.oldY = y;
 
-        self.oldX = x;
-        self.oldY = y;
+        this.combat = null;
 
-        self.combat = null;
+        this.dead = false;
+        this.recentRegions = [];
 
-        self.dead = false;
-        self.recentRegions = [];
-
-        self.invisibles = {}; // For Entity Instances
-        self.invisiblesIds = []; // For Entity IDs
+        this.invisibles = {}; // For Entity Instances
+        this.invisiblesIds = []; // For Entity IDs
     }
 
     talk() {
@@ -37,36 +35,30 @@ class Entity {
     }
 
     getDistance(entity) {
-        let self = this,
-            x = Math.abs(self.x - entity.x),
-            y = Math.abs(self.y - entity.y);
+        let x = Math.abs(this.x - entity.x),
+            y = Math.abs(this.y - entity.y);
 
         return x > y ? x : y;
     }
 
     getCoordDistance(toX, toY) {
-        let self = this,
-            x = Math.abs(self.x - toX),
-            y = Math.abs(self.y - toY);
+        let x = Math.abs(this.x - toX),
+            y = Math.abs(this.y - toY);
 
         return x > y ? x : y;
     }
 
     setPosition(x, y) {
-        let self = this;
+        this.x = x;
+        this.y = y;
 
-        self.x = x;
-        self.y = y;
-
-        if (self.setPositionCallback)
-            self.setPositionCallback();
+        if (this.setPositionCallback)
+            this.setPositionCallback();
     }
 
     updatePosition() {
-        let self = this;
-
-        self.oldX = self.x;
-        self.oldY = self.y;
+        this.oldX = this.x;
+        this.oldY = this.y;
     }
 
     /**
@@ -76,9 +68,8 @@ class Entity {
      */
 
     isNear(entity, distance) {
-        let self = this,
-            dx = Math.abs(self.x - entity.x),
-            dy = Math.abs(self.y - entity.y);
+        let dx = Math.abs(this.x - entity.x),
+            dy = Math.abs(this.y - entity.y);
 
         return dx <= distance && dy <= distance;
     }
@@ -128,11 +119,10 @@ class Entity {
     }
 
     removeInvisibleId(entityId) {
-        let self = this,
-            index = self.invisiblesIds.indexOf(entityId);
+        let index = this.invisiblesIds.indexOf(entityId);
 
         if (index > -1)
-            self.invisiblesIds.splice(index, 1);
+            this.invisiblesIds.splice(index, 1);
     }
 
     hasInvisible(entity) {
@@ -148,31 +138,28 @@ class Entity {
     }
 
     getState() {
-        let self = this,
-            string = self.isMob() ? Mobs.idToString(self.id) : (self.isNPC() ? NPCs.idToString(self.id) : Items.idToString(self.id)),
-            name = self.isMob() ? Mobs.idToName(self.id) : (self.isNPC() ? NPCs.idToName(self.id) : Items.idToName(self.id)),
+        let string = this.isMob() ? Mobs.idToString(this.id) : (this.isNPC() ? NPCs.idToString(this.id) : Items.idToString(this.id)),
+            name = this.isMob() ? Mobs.idToName(this.id) : (this.isNPC() ? NPCs.idToName(this.id) : Items.idToName(this.id)),
             data = {
-                type: self.type,
-                id: self.instance,
+                type: this.type,
+                id: this.instance,
                 string: string,
                 name: name,
-                x: self.x,
-                y: self.y
+                x: this.x,
+                y: this.y
             };
 
-        if (self.specialState)
-            data.nameColour = self.getNameColour();
+        if (this.specialState)
+            data.nameColour = this.getNameColour();
 
-        if (self.customScale)
-            data.customScale = self.customScale;
+        if (this.customScale)
+            data.customScale = this.customScale;
 
         return data;
     }
 
     getNameColour() {
-        let self = this;
-
-        switch (self.specialState) {
+        switch (this.specialState) {
             case 'boss':
                 return '#F60404';
 

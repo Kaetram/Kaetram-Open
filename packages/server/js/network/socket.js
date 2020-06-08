@@ -2,12 +2,10 @@
 
 class Socket {
     constructor(port) {
-        let self = this;
+        this.port = port;
 
-        self.port = port;
-
-        self._connections = {};
-        self._counter = 0;
+        this._connections = {};
+        this._counter = 0;
     }
 
     addConnection(connection) {

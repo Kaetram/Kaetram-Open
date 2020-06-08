@@ -7,24 +7,21 @@ let _ = require('underscore'),
 class PVPAreas {
 
     constructor() {
-        let self = this;
+        this.pvpAreas = [];
 
-        self.pvpAreas = [];
-
-        self.load();
+        this.load();
     }
 
     load() {
-        let self = this,
-            list = map.pvpAreas;
+        let list = map.pvpAreas;
 
         _.each(list, (p) => {
             let pvpArea = new Area(p.id, p.x, p.y, p.width, p.height);
 
-            self.pvpAreas.push(pvpArea);
+            this.pvpAreas.push(pvpArea);
         });
 
-        log.info('Loaded ' + self.pvpAreas.length + ' PVP areas.');
+        log.info('Loaded ' + this.pvpAreas.length + ' PVP areas.');
     }
 
 }
