@@ -3,97 +3,82 @@
 let Modules = require('../../../../util/modules');
 
 class Trade {
-    
+
     constructor(player) {
-        let self = this;
-        
-        self.player = player;
-        self.oPlayer = null;
-        
-        self.requestee = null;
-        
-        self.state = null;
-        self.subState = null;
-        
-        self.playerItems = [];
-        self.oPlayerItems = [];
+        this.player = player;
+        this.oPlayer = null;
+
+        this.requestee = null;
+
+        this.state = null;
+        this.subState = null;
+
+        this.playerItems = [];
+        this.oPlayerItems = [];
     }
 
     start() {
-        let self = this;
-
-        self.oPlayer = self.requestee;
-        self.state = Modules.Trade.Started;
+        this.oPlayer = this.requestee;
+        this.state = Modules.Trade.Started;
     }
 
     stop() {
-        let self = this;
+        this.oPlayer = null;
+        this.state = null;
+        this.subState = null;
+        this.requestee = null;
 
-        self.oPlayer = null;
-        self.state = null;
-        self.subState = null;
-        self.requestee = null;
-
-        self.playerItems = [];
-        self.oPlayerItems = [];
+        this.playerItems = [];
+        this.oPlayerItems = [];
     }
 
     finalize() {
-        let self = this;
-
-        if (!self.player.inventory.containsSpaces(self.oPlayerItems.length))
+        if (!this.player.inventory.containsSpaces(this.oPlayerItems.length))
             return;
 
-        for (let i in self.oPlayerItems) {
-            let item = self.oPlayerItems[i];
+        for (let i in this.oPlayerItems) {
+            let item = this.oPlayerItems[i];
 
             if (!item || item.id === -1)
                 continue;
 
-            self.oPlayer.inventory.remove(item.id, item.count, item.index);
-            self.player.inventory.add(item);
+            this.oPlayer.inventory.remove(item.id, item.count, item.index);
+            this.player.inventory.add(item);
         }
     }
 
     select(slot) {
-        let self = this,
-            item = self.player.inventory.slots[slot];
+        let item = this.player.inventory.slots[slot];
 
-        if (!item || item.id === -1 || self.playerItems.indexOf(item) < 0)
+        if (!item || item.id === -1 || this.playerItems.indexOf(item) < 0)
             return;
 
-        self.playerItems.push(item);
+        this.playerItems.push(item);
     }
 
     request(oPlayer) {
-        let self = this;
+        this.requestee = oPlayer;
 
-        self.requestee = oPlayer;
-
-        if (oPlayer.trade.getRequestee() === self.player.instance)
-            self.start();
+        if (oPlayer.trade.getRequestee() === this.player.instance)
+            this.start();
 
 
     }
 
     accept() {
-        let self = this;
+        this.subState = Modules.Trade.Accepted;
 
-        self.subState = Modules.Trade.Accepted;
-
-        if (self.oPlayer.trade.subState === Modules.Trade.Accepted) {
-            self.finalize();
-            self.oPlayer.trade.finalize();
+        if (this.oPlayer.trade.subState === Modules.Trade.Accepted) {
+            this.finalize();
+            this.oPlayer.trade.finalize();
         }
     }
 
     getRequestee() {
-        let self = this;
-
-        if (!self.requestee)
+        if (!this.requestee)
             return null;
 
-        return self.requestee.instance;
+        return this.requestee.instance;
     }
 
     decline() {
@@ -103,7 +88,7 @@ class Trade {
     isStarted() {
         return this.state !== null;
     }
-    
+
 }
 
 module.exports = Trade;

@@ -7,60 +7,56 @@ let Modules = require('../../../../../../util/modules'),
 class Profession {
 
     constructor(id, player, name) {
-        let self = this;
 
-        self.id = id;
-        self.player = player;
-        self.name = name; // The profession name
+        this.id = id;
+        this.player = player;
+        this.name = name; // The profession name
 
-        self.world = player.world;
+        this.world = player.world;
 
-        self.map = self.world.map;
-        self.region = self.world.region;
+        this.map = this.world.map;
+        this.region = this.world.region;
 
-        self.experience = 0;
+        this.experience = 0;
 
-        self.targetId = null;
+        this.targetId = null;
     }
 
     load(data) {
-        let self = this;
 
-        self.experience = data.experience;
+        this.experience = data.experience;
 
-        self.level = Formulas.expToLevel(self.experience);
+        this.level = Formulas.expToLevel(this.experience);
 
-        self.nextExperience = Formulas.nextExp(self.experience);
-        self.prevExperience = Formulas.prevExp(self.experience);
+        this.nextExperience = Formulas.nextExp(this.experience);
+        this.prevExperience = Formulas.prevExp(this.experience);
     }
 
     addExperience(experience) {
-        var self = this;
+        this.experience += experience;
 
-        self.experience += experience;
+        let oldLevel = this.level;
 
-        let oldLevel = self.level;
+        this.level = Formulas.expToLevel(this.experience);
 
-        self.level = Formulas.expToLevel(self.experience);
+        this.nextExperience = Formulas.nextExp(this.experience);
+        this.prevExperience = Formulas.prevExp(this.experience);
 
-        self.nextExperience = Formulas.nextExp(self.experience);
-        self.prevExperience = Formulas.prevExp(self.experience);
+        if (oldLevel !== this.level)
+            this.player.popup('Profession Level Up!', `Congratulations, your ${this.name} level is now ${this.level}.`, '#9933ff');
 
-        if (oldLevel !== self.level)
-            self.player.popup('Profession Level Up!', `Congratulations, your ${self.name} level is now ${self.level}.`, '#9933ff');
-
-        self.player.send(new Messages.Experience(Packets.ExperienceOpcode.Profession, {
-            id: self.player.instance,
+        this.player.send(new Messages.Experience(Packets.ExperienceOpcode.Profession, {
+            id: this.player.instance,
             amount: experience
         }));
 
-        self.player.send(new Messages.Profession(Packets.ProfessionOpcode.Update, {
-            id: self.id,
-            level: self.level,
-            percentage: self.getPercentage()
+        this.player.send(new Messages.Profession(Packets.ProfessionOpcode.Update, {
+            id: this.id,
+            level: this.level,
+            percentage: this.getPercentage()
         }));
 
-        self.player.save();
+        this.player.save();
     }
 
     stop() {
@@ -68,8 +64,7 @@ class Profession {
     }
 
     getLevel() {
-        let self = this,
-            level = Formulas.expToLevel(self.experience);
+        let level = Formulas.expToLevel(this.experience);
 
         if (level > Constants.MAX_PROFESSION_LEVEL)
             level = Constants.MAX_PROFESSION_LEVEL;
@@ -78,11 +73,10 @@ class Profession {
     }
 
     sync() {
-        let self = this;
 
-        self.player.sendToAdjacentRegions(self.player.region, new Messages.Sync({
-            id: self.player.instance,
-            orientation: self.getOrientation()
+        this.player.sendToAdjacentRegions(this.player.region, new Messages.Sync({
+            id: this.player.instance,
+            orientation: this.getOrientation()
         }))
     }
 
@@ -91,28 +85,26 @@ class Profession {
     }
 
     getPercentage() {
-        let self = this,
-            experience = self.experience - self.prevExperience,
-            nextExperience = self.nextExperience - self.prevExperience;
+        let experience = this.experience - this.prevExperience,
+            nextExperience = this.nextExperience - this.prevExperience;
 
         return (experience / nextExperience * 100).toFixed(2);
     }
 
     getOrientation() {
-        let self = this;
 
-        if (!self.targetId)
+        if (!this.targetId)
             return Modules.Orientation.Up;
 
-        let position = self.map.idToPosition(self.targetId);
+        let position = this.map.idToPosition(this.targetId);
 
-        if (position.x > self.player.x)
+        if (position.x > this.player.x)
             return Modules.Orientation.Right;
-        else if (position.x < self.player.x)
+        else if (position.x < this.player.x)
             return Modules.Orientation.Left;
-        else if (position.y > self.player.y)
+        else if (position.y > this.player.y)
             return Modules.Orientation.Down;
-        else (position.y < self.player.y)
+        else (position.y < this.player.y)
             return Modules.Orientation.Up;
     }
 

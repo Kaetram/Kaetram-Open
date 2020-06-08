@@ -6,19 +6,15 @@ let Modules = require('../../../../util/modules'),
 class Warp {
 
     constructor(player) {
-        let self = this;
+        this.player = player;
 
-        self.player = player;
-
-        self.lastWarp = 0;
-        self.warpTimeout = 30000;
+        this.lastWarp = 0;
+        this.warpTimeout = 30000;
     }
 
     warp(id) {
-        let self = this;
-
-        if (!self.isCooldown()) {
-            self.player.notify('You must wait another ' + self.getDuration() + ' to warp.');
+        if (!this.isCooldown()) {
+            this.player.notify('You must wait another ' + this.getDuration() + ' to warp.');
             return;
         }
 
@@ -32,31 +28,29 @@ class Warp {
             y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2],
             levelRequirement = data[4];
 
-        if (!self.player.finishedTutorial()) {
-            self.player.notify('You cannot warp while in this event.');
+        if (!this.player.finishedTutorial()) {
+            this.player.notify('You cannot warp while in this event.');
             return;
         }
 
-        if (self.hasRequirement()) {
-            self.player.notify('You must be at least level ' + levelRequirement + ' to warp here!');
+        if (this.hasRequirement()) {
+            this.player.notify('You must be at least level ' + levelRequirement + ' to warp here!');
             return;
         }
 
-        self.player.teleport(x, y, false, true);
+        this.player.teleport(x, y, false, true);
 
-        self.player.notify('You have been warped to ' + name);
+        this.player.notify('You have been warped to ' + name);
 
-        self.lastWarp = new Date().getTime();
+        this.lastWarp = new Date().getTime();
     }
 
     setLastWarp(lastWarp) {
-        let self = this;
-
         if (isNaN(lastWarp)) {
-            self.lastWarp = 0;
-            self.player.save();
+            this.lastWarp = 0;
+            this.player.save();
         } else
-            self.lastWarp = lastWarp;
+            this.lastWarp = lastWarp;
 
     }
 
@@ -69,8 +63,7 @@ class Warp {
     }
 
     getDuration() {
-        let self = this,
-            difference = this.warpTimeout - self.getDifference();
+        let difference = this.warpTimeout - this.getDifference();
 
         if (!difference)
             return '5 minutes';

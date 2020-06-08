@@ -8,44 +8,40 @@ let _ = require('underscore'),
 class Container {
 
     constructor(type, owner, size) {
-        let self = this;
 
-        self.type = type;
-        self.owner = owner;
-        self.size = size;
+        this.type = type;
+        this.owner = owner;
+        this.size = size;
 
-        self.slots = [];
+        this.slots = [];
 
-        for (let i = 0; i < self.size; i++)
-            self.slots.push(new Slot(i));
+        for (let i = 0; i < this.size; i++)
+            this.slots.push(new Slot(i));
     }
 
     load(ids, counts, abilities, abilityLevels) {
-        let self = this;
 
         /**
          * Fill each slot with manual data or the database
          */
 
-        if (ids.length !== self.slots.length)
-            log.error('[' + self.type + '] Mismatch in container size.');
+        if (ids.length !== this.slots.length)
+            log.error('[' + this.type + '] Mismatch in container size.');
 
-        for (let i = 0; i < self.slots.length; i++)
-            self.slots[i].load(ids[i], counts[i], abilities[i], abilityLevels[i]);
+        for (let i = 0; i < this.slots.length; i++)
+            this.slots[i].load(ids[i], counts[i], abilities[i], abilityLevels[i]);
     }
 
     loadEmpty() {
-        let self = this,
-            data = [];
+        let data = [];
 
-        for (let i = 0; i < self.size; i++)
+        for (let i = 0; i < this.size; i++)
             data.push(-1);
 
-        self.load(data, data, data, data);
+        this.load(data, data, data, data);
     }
 
     add(id, count, ability, abilityLevel) {
-        let self = this;
 
         //log.info('Trying to pickup ' + count + ' x ' + id);
         let maxStackSize = Items.maxStackSize(id) === -1 ? Constants.MAX_STACK : Items.maxStackSize(id);
@@ -56,23 +52,23 @@ class Container {
             return null;
 
         if (!Items.isStackable(id)) {
-            if (self.hasSpace()) {
-                let nsSlot = self.slots[self.getEmptySlot()]; //non-stackable slot
+            if (this.hasSpace()) {
+                let nsSlot = this.slots[this.getEmptySlot()]; //non-stackable slot
 
                 nsSlot.load(id, count, ability, abilityLevel);
 
                 return nsSlot;
             }
         } else {
-            if (maxStackSize === -1 || self.type === 'Bank') {
-                let sSlot = self.getSlot(id);
+            if (maxStackSize === -1 || this.type === 'Bank') {
+                let sSlot = this.getSlot(id);
 
                 if (sSlot) {
                     sSlot.increment(count);
                     return sSlot;
                 } else {
-                    if (self.hasSpace()) {
-                        let slot = self.slots[self.getEmptySlot()];
+                    if (this.hasSpace()) {
+                        let slot = this.slots[this.getEmptySlot()];
 
                         slot.load(id, count, ability, abilityLevel);
 
@@ -84,9 +80,9 @@ class Container {
 
                 let remainingItems = count;
 
-                for (let i = 0; i < self.slots.length; i++) {
-                    if (self.slots[i].id === id) {
-                        let rSlot = self.slots[i];
+                for (let i = 0; i < this.slots.length; i++) {
+                    if (this.slots[i].id === id) {
+                        let rSlot = this.slots[i];
 
                         let available = maxStackSize - rSlot.count;
 
@@ -105,8 +101,8 @@ class Container {
                     }
                 }
 
-                if (remainingItems > 0 && self.hasSpace()) {
-                    let rrSlot = self.slots[self.getEmptySlot()];
+                if (remainingItems > 0 && this.hasSpace()) {
+                    let rrSlot = this.slots[this.getEmptySlot()];
 
 
                     rrSlot.load(id, remainingItems, ability, abilityLevel);
@@ -118,17 +114,16 @@ class Container {
     }
 
     canHold(id, count) {
-        let self = this;
 
         if (!Items.isStackable(id))
-            return self.hasSpace();
+            return this.hasSpace();
 
-        if (self.hasSpace())
+        if (this.hasSpace())
             return true;
 
         let maxStackSize = Items.maxStackSize(id);
 
-        if ((self.type === 'Bank' || maxStackSize === -1) && self.contains(id))
+        if ((this.type === 'Bank' || maxStackSize === -1) && this.contains(id))
             return true;
 
         if (maxStackSize !== -1 && count > maxStackSize)
@@ -136,9 +131,9 @@ class Container {
 
         let remainingSpace = 0;
 
-        for (let i = 0; i < self.slots.length; i++)
-            if (self.slots[i].id === id)
-                remainingSpace += (maxStackSize - self.slots[i].count);
+        for (let i = 0; i < this.slots.length; i++)
+            if (this.slots[i].id === id)
+                remainingSpace += (maxStackSize - this.slots[i].count);
 
         return remainingSpace >= count;
     }
@@ -148,8 +143,7 @@ class Container {
          * Perform item validity prior to calling the method.
          */
 
-        let self = this,
-            slot = self.slots[index];
+        let slot = this.slots[index];
 
         if (!slot)
             return false;
@@ -166,23 +160,21 @@ class Container {
     }
 
     getSlot(id) {
-        let self = this;
 
-        for (let i = 0; i < self.slots.length; i++)
-            if (self.slots[i].id === id)
-                return self.slots[i];
+        for (let i = 0; i < this.slots.length; i++)
+            if (this.slots[i].id === id)
+                return this.slots[i];
 
         return null;
     }
 
     contains(id, count) {
-        let self = this;
 
         if (!count || count === 'undefined')
             count = 1;
 
-        for (let index in self.slots) {
-            let slot = self.slots[index];
+        for (let index in this.slots) {
+            let slot = this.slots[index];
 
             if (slot.id === id)
                 return slot.count >= count;
@@ -192,12 +184,11 @@ class Container {
     }
 
     containsSpaces(count) {
-        let self = this,
-            emptySpaces = [];
+        let emptySpaces = [];
 
-        for (let i = 0; i < self.slots.length; i++)
-            if (self.slots[i].id === -1)
-                emptySpaces.push(self.slots[i]);
+        for (let i = 0; i < this.slots.length; i++)
+            if (this.slots[i].id === -1)
+                emptySpaces.push(this.slots[i]);
 
         return emptySpaces.length === count;
     }
@@ -207,62 +198,57 @@ class Container {
     }
 
     getEmptySlot() {
-        let self = this;
 
-        for (let i = 0; i < self.slots.length; i++)
-            if (self.slots[i].id === -1)
+        for (let i = 0; i < this.slots.length; i++)
+            if (this.slots[i].id === -1)
                 return i;
 
         return -1;
     }
 
     getIndex(id) {
-        let self = this;
 
         /**
          * Used when the index is not determined,
          * returns the first item found based on the id.
          */
 
-        for (let i = 0; i < self.slots.length; i++)
-            if (self.slots[i].id === id)
+        for (let i = 0; i < this.slots.length; i++)
+            if (this.slots[i].id === id)
                 return i;
 
         return -1;
     }
 
     check() {
-        let self = this;
 
-        _.each(self.slots, (slot) => {
+        _.each(this.slots, (slot) => {
             if (isNaN(slot.id))
                 slot.empty();
         });
     }
 
     forEachSlot(callback) {
-        let self = this;
 
-        for (let i = 0; i < self.slots.length; i++)
-            callback(self.slots[i]);
+        for (let i = 0; i < this.slots.length; i++)
+            callback(this.slots[i]);
     }
 
     getArray() {
-        let self = this,
-            ids = '',
+        let ids = '',
             counts = '',
             abilities = '',
             abilityLevels = '';
 
-        for (let i = 0; i < self.slots.length; i++) {
-            ids += self.slots[i].id + ' ';
-            counts += self.slots[i].count + ' ';
-            abilities += self.slots[i].ability + ' ';
-            abilityLevels += self.slots[i].abilityLevel + ' ';
+        for (let i = 0; i < this.slots.length; i++) {
+            ids += this.slots[i].id + ' ';
+            counts += this.slots[i].count + ' ';
+            abilities += this.slots[i].ability + ' ';
+            abilityLevels += this.slots[i].abilityLevel + ' ';
         }
 
         return {
-            username: self.owner.username,
+            username: this.owner.username,
             ids: ids.slice(0, -1),
             counts: counts.slice(0, -1),
             abilities: abilities.slice(0, -1),

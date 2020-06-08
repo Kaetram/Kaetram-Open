@@ -8,72 +8,65 @@ let World = require('../game/world'),
 class Network {
 
     constructor(world) {
-        let self = this;
+        this.world = world;
+        this.database = world.database;
+        this.socket = world.socket;
+        this.region = world.region;
+        this.map = world.map;
 
-        self.world = world;
-        self.database = world.database;
-        self.socket = world.socket;
-        self.region = world.region;
-        self.map = world.map;
+        this.packets = {};
 
-        self.packets = {};
+        this.differenceThreshold = 4000;
 
-        self.differenceThreshold = 4000;
-
-        self.load();
+        this.load();
     }
 
     load() {
-        let self = this;
-
-        self.world.onPlayerConnection((connection) => {
-            self.handlePlayerConnection(connection);
+        this.world.onPlayerConnection((connection) => {
+            this.handlePlayerConnection(connection);
         });
 
-        self.world.onPopulationChange(() => {
-            self.handlePopulationChange();
+        this.world.onPopulationChange(() => {
+            this.handlePopulationChange();
         });
     }
 
     parsePackets() {
-        let self = this;
-
         /**
          * This parses through the packet pool and sends them
          */
 
-        for (let id in self.packets) {
-            if (self.packets[id].length > 0 && self.packets.hasOwnProperty(id)) {
-                let conn = self.socket.getConnection(id);
+        for (let id in this.packets) {
+            if (this.packets[id].length > 0 && this.packets.hasOwnProperty(id)) {
+                let conn = this.socket.getConnection(id);
 
                 if (conn) {
-                    conn.send(self.packets[id]);
-                    self.packets[id] = [];
-                    self.packets[id].id = id;
+                    conn.send(this.packets[id]);
+                    this.packets[id] = [];
+                    this.packets[id].id = id;
                 } else
-                    delete self.socket.getConnection(id);
+                    delete this.socket.getConnection(id);
             }
         }
     }
 
     handlePlayerConnection(connection) {
-        let self = this,
-            clientId = Utils.generateClientId(),
-            player = new Player(self.world, self.database, connection, clientId),
-            timeDifference = new Date().getTime() - self.getSocketTime(connection);
+        let clientId = Utils.generateClientId(),
+            player = new Player(this.world, this.database, connection, clientId),
+            timeDifference = new Date().getTime() - this.getSocketTime(connection);
 
-        if (!config.debug && timeDifference - self.differenceThreshold < 5000) {
+        if (!config.debug && timeDifference - this.differenceThreshold < 5000) {
             connection.sendUTF8('toofast');
             connection.close('Logging in too fast.');
 
             return;
         }
 
-        self.socket.ips[connection.socket.conn.remoteAddress] = new Date().getTime();
+        this.socket.ips[connection.socket.conn.remoteAddress] = new Date().getTime();
 
-        self.addToPackets(player);
+        this.addToPackets(player);
 
-        self.pushToPlayer(player, new Messages.Handshake({
+        this.pushToPlayer(player, new Messages.Handshake({
             id: clientId,
             development: config.devClient
         }));
@@ -96,9 +89,7 @@ class Network {
      */
 
     pushBroadcast(message) {
-        let self = this;
-
-        _.each(self.packets, (packet) => {
+        _.each(this.packets, (packet) => {
             packet.push(message.serialize());
         });
     }
@@ -108,9 +99,7 @@ class Network {
      */
 
     pushSelectively(message, ignores) {
-        let self = this;
-
-        _.each(self.packets, (packet) => {
+        _.each(this.packets, (packet) => {
             if (ignores.indexOf(packet.id) < 0)
                 packet.push(message.serialize());
         });
@@ -130,10 +119,8 @@ class Network {
      */
 
     pushToPlayers(players, message) {
-        let self = this;
-
         _.each(players, (playerInstance) => {
-            self.pushToPlayer(self.world.getPlayerByInstance(playerInstance), message);
+            this.pushToPlayer(this.world.getPlayerByInstance(playerInstance), message);
         });
     }
 
@@ -142,14 +129,13 @@ class Network {
      */
 
     pushToRegion(regionId, message, ignoreId) {
-        let self = this,
-            region = self.region.regions[regionId];
+        let region = this.region.regions[regionId];
 
         if (!region) return;
 
         _.each(region.players, (playerInstance) => {
             if (playerInstance !== ignoreId)
-                self.pushToPlayer(self.world.getEntityByInstance(playerInstance), message);
+                this.pushToPlayer(this.world.getEntityByInstance(playerInstance), message);
         });
     }
 
@@ -161,10 +147,8 @@ class Network {
      */
 
     pushToAdjacentRegions(regionId, message, ignoreId) {
-        let self = this;
-
-        self.map.regions.forEachSurroundingRegion(regionId, (id) => {
-            self.pushToRegion(id, message, ignoreId);
+        this.map.regions.forEachSurroundingRegion(regionId, (id) => {
+            this.pushToRegion(id, message, ignoreId);
         });
     }
 
@@ -173,13 +157,11 @@ class Network {
      */
 
     pushToNameArray(names, message) {
-        let self = this;
-
         _.each(names, (name) => {
-            let player = self.world.getPlayerByName(name);
+            let player = this.world.getPlayerByName(name);
 
             if (player)
-                self.pushToPlayer(player, message);
+                this.pushToPlayer(player, message);
         });
     }
 
@@ -188,10 +170,8 @@ class Network {
      */
 
     pushToOldRegions(player, message) {
-        let self = this;
-
         _.each(player.recentRegions, (id) => {
-            self.pushToRegion(id, message);
+            this.pushToRegion(id, message);
         });
 
         player.recentRegions = [];

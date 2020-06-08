@@ -9,111 +9,104 @@ class Introduction extends Quest {
     constructor(player, data) {
         super(player, data);
 
-        let self = this;
+        this.player = player;
+        this.data = data;
 
-        self.player = player;
-        self.data = data;
-
-        self.lastNPC = null;
+        this.lastNPC = null;
     }
 
     load(stage) {
-        let self = this;
-
-        if (!self.player.inTutorial()) {
-            self.setStage(9999);
-            self.update();
+        if (!this.player.inTutorial()) {
+            this.setStage(9999);
+            this.update();
             return;
         }
 
         super.load(stage);
 
-        self.updatePointers();
-        self.toggleChat();
+        this.updatePointers();
+        this.toggleChat();
 
-        if (self.stage > 9998)
+        if (this.stage > 9998)
             return;
 
-        self.loadCallbacks();
+        this.loadCallbacks();
     }
 
     loadCallbacks() {
-        let self = this;
+        this.onNPCTalk((npc) => {
 
-        self.onNPCTalk((npc) => {
+            let conversation = this.getConversation(npc.id);
 
-            let conversation = self.getConversation(npc.id);
+            this.lastNPC = npc;
 
-            self.lastNPC = npc;
-
-            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
+            this.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: npc.talk(conversation, self.player)
+                text: npc.talk(conversation, this.player)
             }));
 
-            if (self.player.talkIndex === 0)
-                self.progress('talk');
+            if (this.player.talkIndex === 0)
+                this.progress('talk');
 
         });
 
-        self.player.onReady(() => {
+        this.player.onReady(() => {
 
-            self.updatePointers();
+            this.updatePointers();
 
         });
 
-        self.player.onDoor((destX, destY) => {
-            if (self.getTask() !== 'door') {
-                self.player.notify('You cannot go through this door yet.');
+        this.player.onDoor((destX, destY) => {
+            if (this.getTask() !== 'door') {
+                this.player.notify('You cannot go through this door yet.');
                 return;
             }
 
-            if (!self.verifyDoor(self.player.x, self.player.y))
-                self.player.notify('You are not supposed to go through here.');
+            if (!this.verifyDoor(this.player.x, this.player.y))
+                this.player.notify('You are not supposed to go through here.');
             else {
-                self.progress('door');
-                self.player.teleport(destX, destY, false);
+                this.progress('door');
+                this.player.teleport(destX, destY, false);
             }
         });
 
-        self.player.onInventory((isOpen) => {
+        this.player.onInventory((isOpen) => {
 
-            if (isOpen && self.stage === 1)
-                self.progress('click');
-
-        });
-
-        self.player.onProfile((isOpen) => {
-
-            if (isOpen && self.stage === 3)
-                self.progress('click');
+            if (isOpen && this.stage === 1)
+                this.progress('click');
 
         });
 
-        self.player.onWarp((isOpen) => {
+        this.player.onProfile((isOpen) => {
 
-            if (isOpen && self.stage === 5)
-                self.progress('click');
+            if (isOpen && this.stage === 3)
+                this.progress('click');
 
         });
 
-        self.player.onKill((character) => {
-            if (self.data.kill[self.stage] === character.id)
-                self.progress('kill');
+        this.player.onWarp((isOpen) => {
+
+            if (isOpen && this.stage === 5)
+                this.progress('click');
+
+        });
+
+        this.player.onKill((character) => {
+            if (this.data.kill[this.stage] === character.id)
+                this.progress('kill');
 
         });
 
     }
 
     progress(type) {
-        let self = this,
-            task = self.data.task[self.stage];
+        let task = this.data.task[this.stage];
 
         if (!task || task !== type)
             return;
 
-        if (self.stage === self.data.stages) {
-            self.finish();
+        if (this.stage === this.data.stages) {
+            this.finish();
             return;
         }
 
@@ -121,16 +114,16 @@ class Introduction extends Quest {
 
             case 'door':
 
-                if (self.stage === 7)
-                    self.player.inventory.add({
+                if (this.stage === 7)
+                    this.player.inventory.add({
                         id: 248,
                         count: 1,
                         ability: -1,
                         abilityLevel: -1
                     });
 
-                else if (self.stage === 15)
-                    self.player.inventory.add({
+                else if (this.stage === 15)
+                    this.player.inventory.add({
                         id: 87,
                         count: 1,
                         ability: -1,
@@ -142,22 +135,22 @@ class Introduction extends Quest {
 
         }
 
-        self.stage++;
+        this.stage++;
 
-        self.clearPointers();
-        self.resetTalkIndex();
+        this.clearPointers();
+        this.resetTalkIndex();
 
-        self.update();
-        self.updatePointers();
+        this.update();
+        this.updatePointers();
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
-            id: self.id,
-            stage: self.stage,
+        this.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
+            id: this.id,
+            stage: this.stage,
             isQuest: true
         }));
 
-        if (self.getTask() === 'door')
-            self.player.updateRegion();
+        if (this.getTask() === 'door')
+            this.player.updateRegion();
     }
 
     isFinished() {
@@ -169,40 +162,33 @@ class Introduction extends Quest {
     }
 
     setStage(stage) {
-        let self = this;
-
         super.setStage(stage);
 
-        self.clearPointers();
+        this.clearPointers();
     }
 
     finish() {
-        let self = this;
-
-        self.toggleChat();
+        this.toggleChat();
         super.finish();
     }
 
     hasDoorUnlocked(door) {
-        let self = this;
-
         switch (door.id) {
             case 0:
-                return self.stage > 6;
+                return this.stage > 6;
 
             case 6:
-                return self.stage > 14;
+                return this.stage > 14;
 
             case 7:
-                return self.stage > 22;
+                return this.stage > 22;
         }
 
         return false;
     }
 
     verifyDoor(destX, destY) {
-        let self = this,
-            doorData = self.data.doors[self.stage];
+        let doorData = this.data.doors[this.stage];
 
         if (!doorData)
             return;
@@ -211,9 +197,7 @@ class Introduction extends Quest {
     }
 
     getSpawn() {
-        let self = this;
-
-        if (self.stage > 7)
+        if (this.stage > 7)
             return { x: 331, y: 12 };
 
         return { x: 375, y: 41 };

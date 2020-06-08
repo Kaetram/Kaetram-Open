@@ -35,101 +35,99 @@ class Player extends Character {
     constructor(world, database, connection, clientId) {
         super(-1, 'player', connection.id, -1, -1);
 
-        let self = this;
 
-        self.world = world;
-        self.database = database;
-        self.connection = connection;
+        this.world = world;
+        this.database = database;
+        this.connection = connection;
 
-        self.clientId = clientId;
+        this.clientId = clientId;
 
-        self.map = world.map;
-        self.regions = world.map.regions;
-        self.globalObjects = world.globalObjects;
+        this.map = world.map;
+        this.regions = world.map.regions;
+        this.globalObjects = world.globalObjects;
 
-        self.incoming = new Incoming(self);
+        this.incoming = new Incoming(this);
 
-        self.ready = false;
+        this.ready = false;
 
-        self.moving = false;
-        self.potentialPosition = null;
-        self.futurePosition = null;
+        this.moving = false;
+        this.potentialPosition = null;
+        this.futurePosition = null;
 
-        self.regionPosition = null;
-        self.newRegion = false;
+        this.regionPosition = null;
+        this.newRegion = false;
 
-        self.team = null;
-        self.userAgent = null;
-		self.minigame = null;
+        this.team = null;
+        this.userAgent = null;
+		this.minigame = null;
 
-        self.disconnectTimeout = null;
-        self.timeoutDuration = 1000 * 60 * 10; //10 minutes
-        self.lastRegionChange = new Date().getTime();
+        this.disconnectTimeout = null;
+        this.timeoutDuration = 1000 * 60 * 10; //10 minutes
+        this.lastRegionChange = new Date().getTime();
 
-        self.handler = new Handler(self);
+        this.handler = new Handler(this);
 
-        self.inventory = new Inventory(self, 20);
-        self.professions = new Professions(self);
-        self.abilities = new Abilities(self);
-        self.friends = new Friends(self);
-        self.enchant = new Enchant(self);
-        self.bank = new Bank(self, 56);
-        self.quests = new Quests(self);
-        self.trade = new Trade(self);
-        self.doors = new Doors(self);
-        self.warp = new Warp(self);
+        this.inventory = new Inventory(this, 20);
+        this.professions = new Professions(this);
+        this.abilities = new Abilities(this);
+        this.friends = new Friends(this);
+        this.enchant = new Enchant(this);
+        this.bank = new Bank(this, 56);
+        this.quests = new Quests(this);
+        this.trade = new Trade(this);
+        this.doors = new Doors(this);
+        this.warp = new Warp(this);
 
-        self.introduced = false;
-        self.currentSong = null;
-        self.acceptedTrade = false;
-        self.invincible = false;
-        self.noDamage = false;
-        self.isGuest = false;
+        this.introduced = false;
+        this.currentSong = null;
+        this.acceptedTrade = false;
+        this.invincible = false;
+        this.noDamage = false;
+        this.isGuest = false;
 
-        self.pvp = false;
+        this.pvp = false;
 
-        self.canTalk = true;
+        this.canTalk = true;
 
-        self.instanced = false;
-        self.visible = true;
+        this.instanced = false;
+        this.visible = true;
 
-        self.talkIndex = 0;
-        self.cheatScore = 0;
-        self.defaultMovementSpeed = 250; // For fallback.
+        this.talkIndex = 0;
+        this.cheatScore = 0;
+        this.defaultMovementSpeed = 250; // For fallback.
 
-        self.regionsLoaded = [];
-        self.lightsLoaded = [];
+        this.regionsLoaded = [];
+        this.lightsLoaded = [];
 
-        self.npcTalk = null;
+        this.npcTalk = null;
     }
 
     load(data) {
-        let self = this;
 
-        self.kind = data.kind;
-        self.rights = data.rights;
-        self.experience = data.experience;
-        self.ban = data.ban;
-        self.mute = data.mute;
-        self.membership = data.membership;
-        self.lastLogin = data.lastLogin;
-        self.pvpKills = data.pvpKills;
-        self.pvpDeaths = data.pvpDeaths;
-        self.orientation = data.orientation;
-        self.mapVersion = data.mapVersion;
+        this.kind = data.kind;
+        this.rights = data.rights;
+        this.experience = data.experience;
+        this.ban = data.ban;
+        this.mute = data.mute;
+        this.membership = data.membership;
+        this.lastLogin = data.lastLogin;
+        this.pvpKills = data.pvpKills;
+        this.pvpDeaths = data.pvpDeaths;
+        this.orientation = data.orientation;
+        this.mapVersion = data.mapVersion;
 
-        self.warp.setLastWarp(data.lastWarp);
+        this.warp.setLastWarp(data.lastWarp);
 
-        self.level = Formulas.expToLevel(self.experience);
-        self.nextExperience = Formulas.nextExp(self.experience);
-        self.prevExperience = Formulas.prevExp(self.experience);
-        self.hitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(self.level));
-        self.mana = new Mana(data.mana, Formulas.getMaxMana(self.level));
+        this.level = Formulas.expToLevel(this.experience);
+        this.nextExperience = Formulas.nextExp(this.experience);
+        this.prevExperience = Formulas.prevExp(this.experience);
+        this.hitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(this.level));
+        this.mana = new Mana(data.mana, Formulas.getMaxMana(this.level));
 
         if (data.invisibleIds)
-            self.invisiblesIds = data.invisibleIds.split(' ');
+            this.invisiblesIds = data.invisibleIds.split(' ');
 
-        self.userAgent = data.userAgent;
+        this.userAgent = data.userAgent;
 
         let armour = data.armour,
             weapon = data.weapon,
@@ -137,154 +135,147 @@ class Player extends Character {
             ring = data.ring,
             boots = data.boots;
 
-        self.setPosition(data.x, data.y);
-        self.setArmour(armour[0], armour[1], armour[2], armour[3]);
-        self.setWeapon(weapon[0], weapon[1], weapon[2], weapon[3]);
-        self.setPendant(pendant[0], pendant[1], pendant[2], pendant[3]);
-        self.setRing(ring[0], ring[1], ring[2], ring[3]);
-        self.setBoots(boots[0], boots[1], boots[2], boots[3]);
+        this.setPosition(data.x, data.y);
+        this.setArmour(armour[0], armour[1], armour[2], armour[3]);
+        this.setWeapon(weapon[0], weapon[1], weapon[2], weapon[3]);
+        this.setPendant(pendant[0], pendant[1], pendant[2], pendant[3]);
+        this.setRing(ring[0], ring[1], ring[2], ring[3]);
+        this.setBoots(boots[0], boots[1], boots[2], boots[3]);
     }
 
     destroy() {
-        let self = this;
 
-        clearTimeout(self.disconnectTimeout);
+        clearTimeout(this.disconnectTimeout);
 
-        self.disconnectTimeout = null;
+        this.disconnectTimeout = null;
 
-        self.handler.destroy();
+        this.handler.destroy();
 
-        self.handler = null;
-        self.inventory = null;
-        self.abilities = null;
-        self.enchant = null;
-        self.bank = null;
-        self.quests = null;
-        self.trade = null;
-        self.doors = null;
-        self.warp = null;
+        this.handler = null;
+        this.inventory = null;
+        this.abilities = null;
+        this.enchant = null;
+        this.bank = null;
+        this.quests = null;
+        this.trade = null;
+        this.doors = null;
+        this.warp = null;
 
-        self.connection = null;
+        this.connection = null;
     }
 
     loadRegions(regions) {
-        let self = this;
 
         if (!regions)
             return;
 
-        if (self.mapVersion !== self.map.version) {
-            self.mapVersion = self.map.version;
+        if (this.mapVersion !== this.map.version) {
+            this.mapVersion = this.map.version;
 
-            self.save();
+            this.save();
 
             if (config.debug)
-                log.info(`Updated map version for ${self.username}`);
+                log.info(`Updated map version for ${this.username}`);
 
             return;
         }
 
         if (regions.gameVersion === config.gver)
-            self.regionsLoaded = regions.regions.split(',');
+            this.regionsLoaded = regions.regions.split(',');
     }
 
     loadProfessions() {
-        let self = this;
 
         if (config.offlineMode)
             return;
 
-        self.database.loader.getProfessions(self, (info) => {
+        this.database.loader.getProfessions(this, (info) => {
             if (!info) // If this somehow happens.
                 return;
 
-            self.professions.update(info);
+            this.professions.update(info);
 
-            self.sendProfessions();
+            this.sendProfessions();
         });
     }
 
     loadFriends() {
-        let self = this;
 
         if (config.offlineMode)
             return;
 
-        self.database.loader.getFriends(self, (info) => {
+        this.database.loader.getFriends(this, (info) => {
             if (!info)
                 return;
 
-            self.friends.update(info);
+            this.friends.update(info);
 
         });
     }
 
     loadInventory() {
-        let self = this;
 
         if (config.offlineMode) {
-            self.inventory.loadEmpty();
+            this.inventory.loadEmpty();
             return;
         }
 
-        self.database.loader.getInventory(self, (ids, counts, skills, skillLevels) => {
+        this.database.loader.getInventory(this, (ids, counts, skills, skillLevels) => {
             if (ids === null || counts === null) {
-                self.inventory.loadEmpty();
+                this.inventory.loadEmpty();
                 return;
             }
 
-            if (ids.length !== self.inventory.size)
-                self.save();
+            if (ids.length !== this.inventory.size)
+                this.save();
 
-            self.inventory.load(ids, counts, skills, skillLevels);
-            self.inventory.check();
+            this.inventory.load(ids, counts, skills, skillLevels);
+            this.inventory.check();
         });
     }
 
     loadBank() {
-        let self = this;
 
         if (config.offlineMode) {
-            self.bank.loadEmpty();
+            this.bank.loadEmpty();
             return;
         }
 
-        self.database.loader.getBank(self, (ids, counts, skills, skillLevels) => {
+        this.database.loader.getBank(this, (ids, counts, skills, skillLevels) => {
             if (ids === null || counts === null) {
-                self.bank.loadEmpty();
+                this.bank.loadEmpty();
                 return;
             }
 
-            if (ids.length !== self.bank.size)
-                self.save();
+            if (ids.length !== this.bank.size)
+                this.save();
 
-            self.bank.load(ids, counts, skills, skillLevels);
-            self.bank.check();
+            this.bank.load(ids, counts, skills, skillLevels);
+            this.bank.check();
         });
     }
 
     loadQuests() {
-        let self = this;
 
         if (config.offlineMode)
             return;
 
-        self.database.loader.getAchievements(self, (ids, progress) => {
+        this.database.loader.getAchievements(this, (ids, progress) => {
             ids.pop();
             progress.pop();
 
-            if (self.quests.getAchievementSize() !== ids.length) {
+            if (this.quests.getAchievementSize() !== ids.length) {
                 log.info('Mismatch in achievements data.');
 
-                self.save();
+                this.save();
             }
 
-            self.quests.updateAchievements(ids, progress);
+            this.quests.updateAchievements(ids, progress);
         });
 
-        self.database.loader.getQuests(self, (ids, stages) => {
+        this.database.loader.getQuests(this, (ids, stages) => {
             if (!ids || !stages) {
-                self.quests.updateQuests(ids, stages);
+                this.quests.updateQuests(ids, stages);
                 return;
             }
 
@@ -293,124 +284,121 @@ class Player extends Character {
             ids.pop();
             stages.pop();
 
-            if (self.quests.getQuestSize() !== ids.length) {
+            if (this.quests.getQuestSize() !== ids.length) {
                 log.info('Mismatch in quest data.');
 
-                self.save();
+                this.save();
             }
 
-            self.quests.updateQuests(ids, stages);
+            this.quests.updateQuests(ids, stages);
         });
 
-        self.quests.onAchievementsReady(() => {
+        this.quests.onAchievementsReady(() => {
 
-            self.send(new Messages.Quest(Packets.QuestOpcode.AchievementBatch, self.quests.getAchievementData()));
+            this.send(new Messages.Quest(Packets.QuestOpcode.AchievementBatch, this.quests.getAchievementData()));
 
             /* Update region here because we receive quest info */
-            if (self.questsLoaded)
-                self.updateRegion();
+            if (this.questsLoaded)
+                this.updateRegion();
 
-            self.achievementsLoaded = true;
+            this.achievementsLoaded = true;
         });
 
-        self.quests.onQuestsReady(() => {
+        this.quests.onQuestsReady(() => {
 
-            self.send(new Messages.Quest(Packets.QuestOpcode.QuestBatch, self.quests.getQuestData()));
+            this.send(new Messages.Quest(Packets.QuestOpcode.QuestBatch, this.quests.getQuestData()));
 
             /* Update region here because we receive quest info */
-            if (self.achievementsLoaded)
-                self.updateRegion();
+            if (this.achievementsLoaded)
+                this.updateRegion();
 
-            self.questsLoaded = true;
+            this.questsLoaded = true;
         });
 
     }
 
     intro() {
-        let self = this;
 
-        if (self.ban > new Date()) {
-            self.connection.sendUTF8('ban');
-            self.connection.close('Player: ' + self.username + ' is banned.');
+        if (this.ban > new Date()) {
+            this.connection.sendUTF8('ban');
+            this.connection.close('Player: ' + this.username + ' is banned.');
         }
 
-        if (self.x <= 0 || self.y <= 0)
-            self.sendToSpawn();
+        if (this.x <= 0 || this.y <= 0)
+            this.sendToSpawn();
 
-        if (self.hitPoints.getHitPoints() < 0)
-            self.hitPoints.setHitPoints(self.getMaxHitPoints());
+        if (this.hitPoints.getHitPoints() < 0)
+            this.hitPoints.setHitPoints(this.getMaxHitPoints());
 
-        if (self.mana.getMana() < 0)
-            self.mana.setMana(self.mana.getMaxMana());
+        if (this.mana.getMana() < 0)
+            this.mana.setMana(this.mana.getMaxMana());
 
-        self.verifyRights();
+        this.verifyRights();
 
         let info = {
-            instance: self.instance,
-            username: Utils.formatUsername(self.username),
-            x: self.x,
-            y: self.y,
-            kind: self.kind,
-            rights: self.rights,
-            hitPoints: self.hitPoints.getData(),
-            mana: self.mana.getData(),
-            experience: self.experience,
-            nextExperience: self.nextExperience,
-            prevExperience: self.prevExperience,
-            level: self.level,
-            lastLogin: self.lastLogin,
-            pvpKills: self.pvpKills,
-            pvpDeaths: self.pvpDeaths,
-            orientation: self.orientation,
-            movementSpeed: self.getMovementSpeed()
+            instance: this.instance,
+            username: Utils.formatUsername(this.username),
+            x: this.x,
+            y: this.y,
+            kind: this.kind,
+            rights: this.rights,
+            hitPoints: this.hitPoints.getData(),
+            mana: this.mana.getData(),
+            experience: this.experience,
+            nextExperience: this.nextExperience,
+            prevExperience: this.prevExperience,
+            level: this.level,
+            lastLogin: this.lastLogin,
+            pvpKills: this.pvpKills,
+            pvpDeaths: this.pvpDeaths,
+            orientation: this.orientation,
+            movementSpeed: this.getMovementSpeed()
         };
 
-        self.regionPosition = [self.x, self.y];
+        this.regionPosition = [this.x, this.y];
 
         /**
          * Send player data to client here
          */
 
-        self.world.addPlayer(self);
+        this.world.addPlayer(this);
 
-        self.send(new Messages.Welcome(info));
+        this.send(new Messages.Welcome(info));
     }
 
     verifyRights() {
-        let self = this;
 
-        if (config.moderators.indexOf(self.username.toLowerCase()) > -1)
-            self.rights = 1;
+        if (config.moderators.indexOf(this.username.toLowerCase()) > -1)
+            this.rights = 1;
 
-        if (config.administrators.indexOf(self.username.toLowerCase()) > -1 ||
+        if (config.administrators.indexOf(this.username.toLowerCase()) > -1 ||
             config.offlineMode)
-            self.rights = 2;
+            this.rights = 2;
 
     }
 
     addExperience(exp) {
-        let self = this;
 
-        self.experience += exp;
+        this.experience += exp;
 
-        let oldLevel = self.level;
+        let oldLevel = this.level;
 
-        self.level = Formulas.expToLevel(self.experience);
-        self.nextExperience = Formulas.nextExp(self.experience);
-        self.prevExperience = Formulas.prevExp(self.experience);
+        this.level = Formulas.expToLevel(this.experience);
+        this.nextExperience = Formulas.nextExp(this.experience);
+        this.prevExperience = Formulas.prevExp(this.experience);
 
-        if (oldLevel !== self.level) {
-            self.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(self.level));
-            self.healHitPoints(self.hitPoints.maxPoints);
+        if (oldLevel !== this.level) {
+            this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
+            this.healHitPoints(this.hitPoints.maxPoints);
 
-            self.updateRegion();
+            this.updateRegion();
 
-            self.popup('Level Up!', `Congratulations, you are now level ${self.level}!`, '#ff6600');
+            this.popup('Level Up!', `Congratulations, you are now level ${this.level}!`, '#ff6600');
         }
 
         let data = {
-            id: self.instance,
-            level: self.level
+            id: this.instance,
+            level: this.level
         };
 
         /**
@@ -418,77 +406,72 @@ class Player extends Character {
          * know the experience of another player.. (yet).
          */
 
-        self.sendToAdjacentRegions(self.region, new Messages.Experience(Packets.ExperienceOpcode.Combat, data), self.instance);
+        this.sendToAdjacentRegions(this.region, new Messages.Experience(Packets.ExperienceOpcode.Combat, data), this.instance);
 
         data.amount = exp;
-        data.experience = self.experience;
-        data.nextExperience = self.nextExperience;
-        data.prevExperience = self.prevExperience;
+        data.experience = this.experience;
+        data.nextExperience = this.nextExperience;
+        data.prevExperience = this.prevExperience;
 
-        self.send(new Messages.Experience(Packets.ExperienceOpcode.Combat, data));
+        this.send(new Messages.Experience(Packets.ExperienceOpcode.Combat, data));
 
-        self.sync();
+        this.sync();
     }
 
     heal(amount) {
-        let self = this;
 
         /**
          * Passed from the superclass...
          */
 
-        if (!self.hitPoints || !self.mana)
+        if (!this.hitPoints || !this.mana)
             return;
 
-        self.hitPoints.heal(amount);
-        self.mana.heal(amount);
+        this.hitPoints.heal(amount);
+        this.mana.heal(amount);
 
-        self.sync();
+        this.sync();
     }
 
     healHitPoints(amount) {
-        let self = this,
-            type = 'health';
+        let type = 'health';
 
-        self.hitPoints.heal(amount);
+        this.hitPoints.heal(amount);
 
-        self.sync();
+        this.sync();
 
-        self.sendToAdjacentRegions(self.region, new Messages.Heal({
-            id: self.instance,
+        this.sendToAdjacentRegions(this.region, new Messages.Heal({
+            id: this.instance,
             type: type,
             amount: amount
         }));
     }
 
     healManaPoints(amount) {
-        let self = this,
-            type = 'mana';
+        let type = 'mana';
 
-        self.mana.heal(amount);
+        this.mana.heal(amount);
 
-        self.sync();
+        this.sync();
 
-        self.sendToAdjacentRegions(self.region, new Messages.Heal({
-            id: self.instance,
+        this.sendToAdjacentRegions(this.region, new Messages.Heal({
+            id: this.instance,
             type: type,
             amount: amount
         }));
     }
 
     eat(id) {
-        let self = this,
-            item = Items.getPlugin(id);
+        let item = Items.getPlugin(id);
 
         if (!item)
             return;
 
-        new (item)(id).onUse(self);
+        new (item)(id).onUse(this);
     }
 
     equip(string, count, ability, abilityLevel) {
-        let self = this,
-            data = Items.getData(string),
+        let data = Items.getData(string),
             type, id, power;
 
         if (!data || data === 'null')
@@ -513,46 +496,46 @@ class Player extends Character {
         switch (type) {
             case Modules.Equipment.Armour:
 
-                if (self.hasArmour() && self.armour.id !== 114)
-                    self.inventory.add(self.armour.getItem());
+                if (this.hasArmour() && this.armour.id !== 114)
+                    this.inventory.add(this.armour.getItem());
 
-                self.setArmour(id, count, ability, abilityLevel, power);
+                this.setArmour(id, count, ability, abilityLevel, power);
                 break;
 
             case Modules.Equipment.Weapon:
 
-                if (self.hasWeapon())
-                    self.inventory.add(self.weapon.getItem());
+                if (this.hasWeapon())
+                    this.inventory.add(this.weapon.getItem());
 
-                self.setWeapon(id, count, ability, abilityLevel, power);
+                this.setWeapon(id, count, ability, abilityLevel, power);
                 break;
 
             case Modules.Equipment.Pendant:
 
-                if (self.hasPendant())
-                    self.inventory.add(self.pendant.getItem());
+                if (this.hasPendant())
+                    this.inventory.add(this.pendant.getItem());
 
-                self.setPendant(id, count, ability, abilityLevel, power);
+                this.setPendant(id, count, ability, abilityLevel, power);
                 break;
 
             case Modules.Equipment.Ring:
 
-                if (self.hasRing())
-                    self.inventory.add(self.ring.getItem());
+                if (this.hasRing())
+                    this.inventory.add(this.ring.getItem());
 
-                self.setRing(id, count, ability, abilityLevel, power);
+                this.setRing(id, count, ability, abilityLevel, power);
                 break;
 
             case Modules.Equipment.Boots:
 
-                if (self.hasBoots())
-                    self.inventory.add(self.boots.getItem());
+                if (this.hasBoots())
+                    this.inventory.add(this.boots.getItem());
 
-                self.setBoots(id, count, ability, abilityLevel, power);
+                this.setBoots(id, count, ability, abilityLevel, power);
                 break;
         }
 
-        self.send(new Messages.Equipment(Packets.EquipmentOpcode.Equip, {
+        this.send(new Messages.Equipment(Packets.EquipmentOpcode.Equip, {
             type: type,
             name: Items.idToName(id),
             string: string,
@@ -568,8 +551,7 @@ class Player extends Character {
     }
 
     isInvisible(instance) {
-        let self = this,
-            entity = self.world.getEntityByInstance(instance);
+        let entity = this.world.getEntityByInstance(instance);
 
         if (!entity)
             return false;
@@ -582,14 +564,13 @@ class Player extends Character {
     }
 
     canEquip(string) {
-        let self = this,
-            requirement = Items.getLevelRequirement(string);
+        let requirement = Items.getLevelRequirement(string);
 
         if (requirement > Constants.MAX_LEVEL)
             requirement = Constants.MAX_LEVEL;
 
-        if (requirement > self.level) {
-            self.notify('You must be at least level ' + requirement + ' to equip this.');
+        if (requirement > this.level) {
+            this.notify('You must be at least level ' + requirement + ' to equip this.');
             return false;
         }
 
@@ -597,31 +578,28 @@ class Player extends Character {
     }
 
     die() {
-        let self = this;
+        this.dead = true;
 
-        self.dead = true;
+        if (this.deathCallback)
+            this.deathCallback();
 
-        if (self.deathCallback)
-            self.deathCallback();
-
-        self.send(new Messages.Death(self.instance));
+        this.send(new Messages.Death(this.instance));
     }
 
     teleport(x, y, isDoor, animate) {
-        let self = this;
 
-        if (self.teleportCallback)
-            self.teleportCallback(x, y, isDoor);
+        if (this.teleportCallback)
+            this.teleportCallback(x, y, isDoor);
 
-        self.sendToAdjacentRegions(self.region, new Messages.Teleport({
-            id: self.instance,
+        this.sendToAdjacentRegions(this.region, new Messages.Teleport({
+            id: this.instance,
             x: x,
             y: y,
             withAnimation: animate
         }));
 
-        self.setPosition(x, y);
-        self.world.cleanCombat(self);
+        this.setPosition(x, y);
+        this.world.cleanCombat(this);
     }
 
     /**
@@ -630,8 +608,7 @@ class Player extends Character {
      */
 
     handleObject(id) {
-        let self = this,
-            info = self.globalObjects.getInfo(id);
+        let info = this.globalObjects.getInfo(id);
 
         if (!info)
             return;
@@ -641,15 +618,15 @@ class Player extends Character {
         switch (info.type) {
             case 'sign':
 
-                data = self.globalObjects.getSignData(id);
+                data = this.globalObjects.getSignData(id);
 
                 if (!data)
                     return;
 
-                let message = self.globalObjects.talk(data.object, self);
+                let message = this.globalObjects.talk(data.object, this);
 
-                self.world.push(Packets.PushOpcode.Player, {
-                    player: self,
+                this.world.push(Packets.PushOpcode.Player, {
+                    player: this,
                     message: new Messages.Bubble({
                         id: id,
                         text: message,
@@ -663,7 +640,7 @@ class Player extends Character {
 
             case 'lumberjacking':
 
-                let lumberjacking = self.professions.getProfession(Modules.Professions.Lumberjacking);
+                let lumberjacking = this.professions.getProfession(Modules.Professions.Lumberjacking);
 
                 if (lumberjacking)
                     lumberjacking.handle(id, info.tree);
@@ -674,102 +651,96 @@ class Player extends Character {
     }
 
     incrementCheatScore(amount) {
-        let self = this;
 
-        if (self.combat.started)
+        if (this.combat.started)
             return;
 
-        self.cheatScore += amount;
+        this.cheatScore += amount;
 
-        if (self.cheatScoreCallback)
-            self.cheatScoreCallback();
+        if (this.cheatScoreCallback)
+            this.cheatScoreCallback();
     }
 
     updatePVP(pvp, permanent) {
-        let self = this;
 
         /**
          * No need to update if the state is the same
          */
 
-        if (!self.region)
+        if (!this.region)
             return;
 
-        if (self.pvp === pvp || self.permanentPVP)
+        if (this.pvp === pvp || this.permanentPVP)
             return;
 
-        if (self.pvp && !pvp)
-            self.notify('You are no longer in a PvP zone!');
+        if (this.pvp && !pvp)
+            this.notify('You are no longer in a PvP zone!');
         else
-            self.notify('You have entered a PvP zone!');
+            this.notify('You have entered a PvP zone!');
 
-        self.pvp = pvp;
-        self.permanentPVP = permanent;
+        this.pvp = pvp;
+        this.permanentPVP = permanent;
 
-        self.sendToAdjacentRegions(self.region, new Messages.PVP(self.instance, self.pvp));
+        this.sendToAdjacentRegions(this.region, new Messages.PVP(this.instance, this.pvp));
     }
 
     updateOverlay(overlay) {
-        let self = this;
 
-        if (self.overlayArea === overlay)
+        if (this.overlayArea === overlay)
             return;
 
-        self.overlayArea = overlay;
+        this.overlayArea = overlay;
 
         if (overlay && overlay.id) {
-            self.lightsLoaded = [];
+            this.lightsLoaded = [];
 
-            self.send(new Messages.Overlay(Packets.OverlayOpcode.Set, {
+            this.send(new Messages.Overlay(Packets.OverlayOpcode.Set, {
                 image: overlay.fog ? overlay.fog : 'empty',
                 colour: 'rgba(0,0,0,' + overlay.darkness + ')'
             }));
         } else
-            self.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
+            this.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
     }
 
     updateCamera(camera) {
-        let self = this;
 
-        if (self.cameraArea === camera)
+        if (this.cameraArea === camera)
             return;
 
-        self.cameraArea = camera;
+        this.cameraArea = camera;
 
         if (camera) {
             switch (camera.type) {
                 case 'lockX':
-                    self.send(new Messages.Camera(Packets.CameraOpcode.LockX));
+                    this.send(new Messages.Camera(Packets.CameraOpcode.LockX));
                     break;
 
                 case 'lockY':
-                    self.send(new Messages.Camera(Packets.CameraOpcode.LockY));
+                    this.send(new Messages.Camera(Packets.CameraOpcode.LockY));
                     break;
 
                 case 'player':
-                    self.send(new Messages.Camera(Packets.CameraOpcode.Player));
+                    this.send(new Messages.Camera(Packets.CameraOpcode.Player));
                     break;
             }
 
         } else
-            self.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
+            this.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
     }
 
     updateMusic(song) {
-        let self = this;
 
-        self.currentSong = song;
+        this.currentSong = song;
 
-        self.send(new Messages.Audio(song));
+        this.send(new Messages.Audio(song));
     }
 
     revertPoints() {
-        let self = this;
 
-        self.hitPoints.setHitPoints(self.hitPoints.getMaxHitPoints());
-        self.mana.setMana(self.mana.getMaxMana());
+        this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
+        this.mana.setMana(this.mana.getMaxMana());
 
-        self.sync();
+        this.sync();
     }
 
     applyDamage(damage) {
@@ -777,30 +748,27 @@ class Player extends Character {
     }
 
     toggleProfile(state) {
-        let self = this;
 
-        self.profileDialogOpen = state;
+        this.profileDialogOpen = state;
 
-        if (self.profileToggleCallback)
-            self.profileToggleCallback(state);
+        if (this.profileToggleCallback)
+            this.profileToggleCallback(state);
     }
 
     toggleInventory(state) {
-        let self = this;
 
-        self.inventoryOpen = state;
+        this.inventoryOpen = state;
 
-        if (self.inventoryToggleCallback)
-            self.inventoryToggleCallback(state);
+        if (this.inventoryToggleCallback)
+            this.inventoryToggleCallback(state);
     }
 
     toggleWarp(state) {
-        let self = this;
 
-        self.warpOpen = state;
+        this.warpOpen = state;
 
-        if (self.warpToggleCallback)
-            self.warpToggleCallback(state);
+        if (this.warpToggleCallback)
+            this.warpToggleCallback(state);
     }
 
     getMana() {
@@ -828,46 +796,43 @@ class Player extends Character {
     }
 
     getWeaponLumberjackingLevel() {
-        let self = this;
 
-        if (!self.hasLumberjackingWeapon())
+        if (!this.hasLumberjackingWeapon())
             return -1;
 
-        return self.weapon.lumberjacking;
+        return this.weapon.lumberjacking;
     }
 
     getWeaponMiningLevel() {
-        let self = this;
 
-        if (!self.hasMiningWeapon())
+        if (!this.hasMiningWeapon())
             return -1;
 
-        return self.weapon.mining;
+        return this.weapon.mining;
     }
 
     // We get dynamic trees surrounding the player
     getSurroundingTrees() {
-        let self = this,
-            tiles = {
+        let tiles = {
                 indexes: [],
                 data: [],
                 collisions: [],
                 objectData: {}
             };
 
-        _.each(self.map.treeIndexes, (index) => {
-            let position = self.map.indexToGridPosition(index + 1),
-                treeRegion = self.regions.regionIdFromPosition(position.x, position.y);
+        _.each(this.map.treeIndexes, (index) => {
+            let position = this.map.indexToGridPosition(index + 1),
+                treeRegion = this.regions.regionIdFromPosition(position.x, position.y);
 
-            if (!self.regions.isSurrounding(self.region, treeRegion))
+            if (!this.regions.isSurrounding(this.region, treeRegion))
                 return;
 
-            let objectId = self.map.getPositionObject(position.x, position.y),
-                cursor = self.map.getCursor(index, objectId);
+            let objectId = this.map.getPositionObject(position.x, position.y),
+                cursor = this.map.getCursor(index, objectId);
 
             tiles.indexes.push(index);
-            tiles.data.push(self.map.clientMap.data[index]);
-            tiles.collisions.push(self.map.collisions.indexOf(index) > -1);
+            tiles.data.push(this.map.clientMap.data[index]);
+            tiles.collisions.push(this.map.collisions.indexOf(index) > -1);
 
             if (objectId)
                 tiles.objectData[index] = {
@@ -881,18 +846,17 @@ class Player extends Character {
     }
 
     getMovementSpeed() {
-        let self = this,
-            itemMovementSpeed = Items.getMovementSpeed(self.armour.name),
-            movementSpeed = itemMovementSpeed || self.defaultMovementSpeed;
+        let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
+            movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
 
         /*
          * Here we can handle equipment/potions/abilities that alter
          * the player's movement speed. We then just broadcast it.
          */
 
-        self.movementSpeed = movementSpeed;
+        this.movementSpeed = movementSpeed;
 
-        return self.movementSpeed;
+        return this.movementSpeed;
     }
 
     /**
@@ -900,61 +864,55 @@ class Player extends Character {
      */
 
     setArmour(id, count, ability, abilityLevel) {
-        let self = this;
 
         if (!id)
             return;
 
-        self.armour = new Armour(Items.idToString(id), id, count, ability, abilityLevel);
+        this.armour = new Armour(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
     breakWeapon() {
-        let self = this;
 
-        self.notify('Your weapon has been broken.');
+        this.notify('Your weapon has been broken.');
 
-        self.setWeapon(-1, 0, 0, 0);
+        this.setWeapon(-1, 0, 0, 0);
 
-        self.sendEquipment();
+        this.sendEquipment();
     }
 
     setWeapon(id, count, ability, abilityLevel) {
-        let self = this;
 
         if (!id)
             return;
 
-        self.weapon = new Weapon(Items.idToString(id), id, count, ability, abilityLevel);
+        this.weapon = new Weapon(Items.idToString(id), id, count, ability, abilityLevel);
 
-        if (self.weapon.ranged)
-            self.attackRange = 7;
+        if (this.weapon.ranged)
+            this.attackRange = 7;
     }
 
     setPendant(id, count, ability, abilityLevel) {
-        let self = this;
 
         if (!id)
             return;
 
-        self.pendant = new Pendant(Items.idToString(id), id, count, ability, abilityLevel);
+        this.pendant = new Pendant(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
     setRing(id, count, ability, abilityLevel) {
-        let self = this;
 
         if (!id)
             return;
 
-        self.ring = new Ring(Items.idToString(id), id, count, ability, abilityLevel);
+        this.ring = new Ring(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
     setBoots(id, count, ability, abilityLevel) {
-        let self = this;
 
         if (!id)
             return;
 
-        self.boots = new Boots(Items.idToString(id), id, count, ability, abilityLevel);
+        this.boots = new Boots(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
     guessPosition(x, y) {
@@ -965,34 +923,32 @@ class Player extends Character {
     }
 
     setPosition(x, y) {
-        let self = this;
 
-        if (self.dead)
+        if (this.dead)
             return;
 
-        if (self.map.isOutOfBounds(x, y)) {
+        if (this.map.isOutOfBounds(x, y)) {
             x = 50;
             y = 89;
         }
 
         super.setPosition(x, y);
 
-        self.sendToAdjacentRegions(self.region, new Messages.Movement(Packets.MovementOpcode.Move, {
-            id: self.instance,
+        this.sendToAdjacentRegions(this.region, new Messages.Movement(Packets.MovementOpcode.Move, {
+            id: this.instance,
             x: x,
             y: y,
             forced: false,
             teleport: false
-        }), self.instance);
+        }), this.instance);
     }
 
     setOrientation(orientation) {
-        let self = this;
 
-        self.orientation = orientation;
+        this.orientation = orientation;
 
-        if (self.orientationCallback) // Will be necessary in the future.
-            self.orientationCallback;
+        if (this.orientationCallback) // Will be necessary in the future.
+            this.orientationCallback;
     }
 
     setFuturePosition(x, y) {
@@ -1021,25 +977,23 @@ class Player extends Character {
     }
 
     timeout() {
-        let self = this;
 
-        if (!self.connection)
+        if (!this.connection)
             return;
 
-        self.connection.sendUTF8('timeout');
-        self.connection.close('Player timed out.');
+        this.connection.sendUTF8('timeout');
+        this.connection.close('Player timed out.');
     }
 
     refreshTimeout() {
-        let self = this;
 
-        clearTimeout(self.disconnectTimeout);
+        clearTimeout(this.disconnectTimeout);
 
-        self.disconnectTimeout = setTimeout(() => {
+        this.disconnectTimeout = setTimeout(() => {
 
-            self.timeout();
+            this.timeout();
 
-        }, self.timeoutDuration);
+        }, this.timeoutDuration);
     }
 
     /**
@@ -1095,29 +1049,28 @@ class Player extends Character {
     }
 
     getState() {
-        let self = this;
 
         return {
-            type: self.type,
-            id: self.instance,
-            name: Utils.formatUsername(self.username),
-            x: self.x,
-            y: self.y,
-            rights: self.rights,
-            level: self.level,
-            pvp: self.pvp,
-            pvpKills: self.pvpKills,
-            pvpDeaths: self.pvpDeaths,
-            attackRange: self.attackRange,
-            orientation: self.orientation,
-            hitPoints: self.hitPoints.getData(),
-            movementSpeed: self.getMovementSpeed(),
-            mana: self.mana.getData(),
-            armour: self.armour.getData(),
-            weapon: self.weapon.getData(),
-            pendant: self.pendant.getData(),
-            ring: self.ring.getData(),
-            boots: self.boots.getData()
+            type: this.type,
+            id: this.instance,
+            name: Utils.formatUsername(this.username),
+            x: this.x,
+            y: this.y,
+            rights: this.rights,
+            level: this.level,
+            pvp: this.pvp,
+            pvpKills: this.pvpKills,
+            pvpDeaths: this.pvpDeaths,
+            attackRange: this.attackRange,
+            orientation: this.orientation,
+            hitPoints: this.hitPoints.getData(),
+            movementSpeed: this.getMovementSpeed(),
+            mana: this.mana.getData(),
+            armour: this.armour.getData(),
+            weapon: this.weapon.getData(),
+            pendant: this.pendant.getData(),
+            ring: this.ring.getData(),
+            boots: this.boots.getData()
         };
     }
 
@@ -1126,30 +1079,28 @@ class Player extends Character {
     }
 
     getSpawn() {
-        let self = this,
-            position;
+        let position;
 
         /**
          * Here we will implement functions from quests and
          * other special events and determine a spawn point.
          */
 
-        if (!self.finishedTutorial())
-            return self.getTutorial().getSpawn();
+        if (!this.finishedTutorial())
+            return this.getTutorial().getSpawn();
 
         return { x: 325, y: 87 };
     }
 
     getHit(target) {
-        let self = this;
 
-        let defaultDamage = Formulas.getDamage(self, target),
-            isSpecial = 100 - self.weapon.abilityLevel < Utils.randomInt(0, 100);
+        let defaultDamage = Formulas.getDamage(this, target),
+            isSpecial = 100 - this.weapon.abilityLevel < Utils.randomInt(0, 100);
 
-        if (!self.hasSpecialAttack() || !isSpecial)
+        if (!this.hasSpecialAttack() || !isSpecial)
             return new Hit(Modules.Hits.Damage, defaultDamage);
 
-        switch (self.weapon.ability) {
+        switch (this.weapon.ability) {
 
             case Modules.Enchantment.Critical:
 
@@ -1159,7 +1110,7 @@ class Player extends Character {
                  * out of hand, it's easier to buff than to nerf..
                  */
 
-                let multiplier = 1.00 + self.weapon.abilityLevel,
+                let multiplier = 1.00 + this.weapon.abilityLevel,
                     damage = defaultDamage * multiplier;
 
                 return new Hit(Modules.Hits.Critical, damage);
@@ -1174,10 +1125,9 @@ class Player extends Character {
     }
 
     isMuted() {
-        let self = this,
-            time = new Date().getTime();
+        let time = new Date().getTime();
 
-        return self.mute - time > 0;
+        return this.mute - time > 0;
     }
 
     isRanged() {
@@ -1215,90 +1165,84 @@ class Player extends Character {
     }
 
     sendEquipment() {
-        let self = this,
-            info = {
-                armour: self.armour.getData(),
-                weapon: self.weapon.getData(),
-                pendant: self.pendant.getData(),
-                ring: self.ring.getData(),
-                boots: self.boots.getData()
+        let info = {
+                armour: this.armour.getData(),
+                weapon: this.weapon.getData(),
+                pendant: this.pendant.getData(),
+                ring: this.ring.getData(),
+                boots: this.boots.getData()
             };
 
-        self.send(new Messages.Equipment(Packets.EquipmentOpcode.Batch, info));
+        this.send(new Messages.Equipment(Packets.EquipmentOpcode.Batch, info));
     }
 
     sendProfessions() {
-        let self = this;
 
-        if (!self.professions)
+        if (!this.professions)
             return;
 
-        self.send(new Messages.Profession(Packets.ProfessionOpcode.Batch, {
-            data: self.professions.getInfo()
+        this.send(new Messages.Profession(Packets.ProfessionOpcode.Batch, {
+            data: this.professions.getInfo()
         }));
     }
 
     sendToSpawn() {
-        let self = this,
-            position = self.getSpawn();
+        let position = this.getSpawn();
 
-        self.x = position.x;
-        self.y = position.y;
+        this.x = position.x;
+        this.y = position.y;
     }
 
     sendMessage(playerName, message) {
-        let self = this;
 
         if (config.hubEnabled) {
-            self.world.api.sendPrivateMessage(self, playerName, message);
+            this.world.api.sendPrivateMessage(this, playerName, message);
             return;
         }
 
-        if (!self.world.isOnline(playerName)) {
-            self.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
+        if (!this.world.isOnline(playerName)) {
+            this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
             return;
         }
 
-        let otherPlayer = self.world.getPlayerByName(playerName),
+        let otherPlayer = this.world.getPlayerByName(playerName),
             oFormattedName = Utils.formatUsername(playerName), // Formated username of the other player.
-            formattedName = Utils.formatUsername(self.username); // Formatted username of current instance.
+            formattedName = Utils.formatUsername(this.username); // Formatted username of current instance.
 
         otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
-        self.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
+        this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
     }
 
     sync() {
-        let self = this;
 
         /**
          * Function to be used for syncing up health,
          * mana, exp, and other variables
          */
 
-        if (!self.hitPoints || !self.mana)
+        if (!this.hitPoints || !this.mana)
             return;
 
         let info = {
-            id: self.instance,
-            attackRange: self.attackRange,
-            hitPoints: self.getHitPoints(),
-            maxHitPoints: self.getMaxHitPoints(),
-            mana: self.mana.getMana(),
-            maxMana: self.mana.getMaxMana(),
-            level: self.level,
-            armour: self.armour.getString(),
-            weapon: self.weapon.getData(),
-            poison: !!self.poison,
-            movementSpeed: self.getMovementSpeed()
+            id: this.instance,
+            attackRange: this.attackRange,
+            hitPoints: this.getHitPoints(),
+            maxHitPoints: this.getMaxHitPoints(),
+            mana: this.mana.getMana(),
+            maxMana: this.mana.getMaxMana(),
+            level: this.level,
+            armour: this.armour.getString(),
+            weapon: this.weapon.getData(),
+            poison: !!this.poison,
+            movementSpeed: this.getMovementSpeed()
         };
 
-        self.sendToAdjacentRegions(self.region, new Messages.Sync(info));
+        this.sendToAdjacentRegions(this.region, new Messages.Sync(info));
 
-        self.save();
+        this.save();
     }
 
     popup(title, message, colour) {
-        let self = this;
 
         if (!title)
             return;
@@ -1306,7 +1250,7 @@ class Player extends Character {
         title = Utils.parseMessage(title);
         message = Utils.parseMessage(message);
 
-        self.send(new Messages.Notification(Packets.NotificationOpcode.Popup, {
+        this.send(new Messages.Notification(Packets.NotificationOpcode.Popup, {
             title: title,
             message: message,
             colour: colour
@@ -1314,23 +1258,22 @@ class Player extends Character {
     }
 
     notify(message, colour) {
-        let self = this;
 
         if (!message)
             return;
 
         // Prevent notify spams
-        if (new Date().getTime() - self.lastNotify < 250)
+        if (new Date().getTime() - this.lastNotify < 250)
             return;
 
         message = Utils.parseMessage(message);
 
-        self.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+        this.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
             message: message,
             colour: colour
         }));
 
-        self.lastNotify = new Date().getTime();
+        this.lastNotify = new Date().getTime();
     }
 
     /**
@@ -1339,12 +1282,11 @@ class Player extends Character {
      */
 
     chat(source, text, colour, isGlobal, withBubble) {
-        let self = this;
 
         if (!source || !text)
             return;
 
-        self.send(new Messages.Chat({
+        this.send(new Messages.Chat({
             name: source,
             text: text,
             colour: colour,
@@ -1360,30 +1302,27 @@ class Player extends Character {
          * being transported elsewhere.
          */
 
-        let self = this;
 
-        self.send(new Messages.Movement(Packets.MovementOpcode.Stop, {
-            instance: self.instance,
+        this.send(new Messages.Movement(Packets.MovementOpcode.Stop, {
+            instance: this.instance,
             force: force
         }));
     }
 
     finishedTutorial() {
-        let self = this;
 
-        if (!self.quests || !config.tutorialEnabled)
+        if (!this.quests || !config.tutorialEnabled)
             return true;
 
-        return self.quests.getQuest(0).isFinished();
+        return this.quests.getQuest(0).isFinished();
     }
 
     finishedAchievement(id) {
-        let self = this;
 
-        if (!self.quests)
+        if (!this.quests)
             return false;
 
-        let achievement = self.quests.getAchievement(id);
+        let achievement = this.quests.getAchievement(id);
 
         if (!achievement)
             return true;
@@ -1392,12 +1331,11 @@ class Player extends Character {
     }
 
     finishAchievement(id) {
-        let self = this;
 
-        if (!self.quests)
+        if (!this.quests)
             return;
 
-        let achievement = self.quests.getAchievement(id);
+        let achievement = this.quests.getAchievement(id);
 
         if (!achievement || achievement.isFinished())
             return;
@@ -1406,24 +1344,22 @@ class Player extends Character {
     }
 
     checkRegions() {
-        let self = this;
 
-        if (!self.regionPosition)
+        if (!this.regionPosition)
             return;
 
-        let diffX = Math.abs(self.regionPosition[0] - self.x),
-            diffY = Math.abs(self.regionPosition[1] - self.y);
+        let diffX = Math.abs(this.regionPosition[0] - this.x),
+            diffY = Math.abs(this.regionPosition[1] - this.y);
 
         if (diffX >= 10 || diffY >= 10) {
-            self.regionPosition = [self.x, self.y];
+            this.regionPosition = [this.x, this.y];
 
-            if (self.regionCallback)
-                self.regionCallback();
+            if (this.regionCallback)
+                this.regionCallback();
         }
     }
 
     movePlayer() {
-        let self = this;
 
         /**
          * Server-sided callbacks towards movement should
@@ -1433,35 +1369,32 @@ class Player extends Character {
          * If they are not within the bounds, apply the according punishment.
          */
 
-        self.send(new Messages.Movement(Packets.MovementOpcode.Started));
+        this.send(new Messages.Movement(Packets.MovementOpcode.Started));
     }
 
     walkRandomly() {
-        let self = this;
 
         setInterval(() => {
-            self.setPosition(self.x + Utils.randomInt(-5, 5), self.y + Utils.randomInt(-5, 5));
+            this.setPosition(this.x + Utils.randomInt(-5, 5), this.y + Utils.randomInt(-5, 5));
         }, 2000);
 
     }
 
     killCharacter(character) {
-        let self = this;
 
-        if (self.killCallback)
-            self.killCallback(character);
+        if (this.killCallback)
+            this.killCallback(character);
     }
 
     save() {
-        let self = this;
 
-        if (config.offlineMode || self.isGuest)
+        if (config.offlineMode || this.isGuest)
             return;
 
-        if ((!self.questsLoaded || !self.achievementsLoaded) && !self.new)
+        if ((!this.questsLoaded || !this.achievementsLoaded) && !this.new)
             return;
 
-        self.database.creator.save(self);
+        this.database.creator.save(this);
     }
 
     inTutorial() {

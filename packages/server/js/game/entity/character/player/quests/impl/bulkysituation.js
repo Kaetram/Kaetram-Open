@@ -9,82 +9,75 @@ class BulkySituation extends Quest {
     constructor(player, data) {
         super(player, data);
 
-        let self = this;
+        this.player = player;
+        this.data = data;
 
-        self.player = player;
-        self.data = data;
-
-        self.lastNPC = null;
+        this.lastNPC = null;
     }
 
     load(stage) {
-        let self = this;
-
         super.load(stage);
 
-        if (self.stage > 9998)
+        if (this.stage > 9998)
             return;
 
-        self.loadCallbacks();
+        this.loadCallbacks();
     }
 
     loadCallbacks() {
-        let self = this;
+        this.onNPCTalk((npc) => {
 
-        self.onNPCTalk((npc) => {
-
-            if (self.hasRequirement()) {
-                self.progress('item');
+            if (this.hasRequirement()) {
+                this.progress('item');
                 return;
             }
 
-            let conversation = self.getConversation(npc.id);
+            let conversation = this.getConversation(npc.id);
 
-            self.lastNPC = npc;
+            this.lastNPC = npc;
 
-            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
+            this.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: npc.talk(conversation, self.player)
+                text: npc.talk(conversation, this.player)
             }));
 
-            if (self.player.talkIndex === 0)
-                self.progress('talk');
+            if (this.player.talkIndex === 0)
+                this.progress('talk');
 
         });
 
     }
 
     progress(type) {
-        let self = this,
-            task = self.data.task[self.stage];
+        let task = this.data.task[this.stage];
 
         if (!task || task !== type)
             return;
 
-        if (self.stage === self.data.stages) {
-            self.finish();
+        if (this.stage === this.data.stages) {
+            this.finish();
             return;
         }
 
         switch (type) {
             case 'item':
 
-                self.player.inventory.remove(self.getItem(), 1);
+                this.player.inventory.remove(this.getItem(), 1);
 
                 break;
         }
 
-        self.resetTalkIndex();
+        this.resetTalkIndex();
 
-        self.stage++;
+        this.stage++;
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
-            id: self.id,
-            stage: self.stage,
+        this.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
+            id: this.id,
+            stage: this.stage,
             isQuest: true
         }));
 
-        self.update();
+        this.update();
     }
 
     finish() {

@@ -7,9 +7,8 @@ class Loader {
     }
 
     getInventory(player, callback) {
-        let self = this;
 
-        self.database.getDatabase((database) => {
+        this.database.getDatabase((database) => {
             let inventory = database.collection('player_inventory'),
                 cursor = inventory.find({ username: player.username });
 
@@ -29,9 +28,8 @@ class Loader {
     }
 
     getBank(player, callback) {
-        let self = this;
 
-        self.database.getDatabase((database) => {
+        this.database.getDatabase((database) => {
             let bank = database.collection('player_bank'),
                 cursor = bank.find({ username: player.username });
 
@@ -50,9 +48,8 @@ class Loader {
     }
 
     getQuests(player, callback) {
-        let self = this;
 
-        self.database.getDatabase((database) => {
+        this.database.getDatabase((database) => {
             let quests = database.collection('player_quests'),
                 cursor = quests.find({ username: player.username });
 
@@ -71,9 +68,8 @@ class Loader {
     }
 
     getAchievements(player, callback) {
-        let self = this;
 
-        self.database.getDatabase((database) => {
+        this.database.getDatabase((database) => {
             let achievements = database.collection('player_achievements'),
                 cursor = achievements.find({ username: player.username });
 
@@ -92,9 +88,8 @@ class Loader {
     }
 
     getProfessions(player, callback) {
-        let self = this;
 
-        self.database.getDatabase((database) => {
+        this.database.getDatabase((database) => {
             let professions = database.collection('player_professions'),
                 cursor = professions.find({ username: player.username });
 
@@ -113,9 +108,8 @@ class Loader {
     }
 
     getFriends(player, callback) {
-        let self = this;
 
-        self.database.getDatabase((database) => {
+        this.database.getDatabase((database) => {
             let friends = database.collection('player_friends'),
                 cursor = friends.find({ username: player.username });
 
