@@ -1,45 +1,27 @@
-define(['./equipment'], function(Equipment) {
+import Equipment from './equipment';
 
-    return Equipment.extend({
+export default class Weapon extends Equipment {
+    constructor(name, string, count, ability, abilityLevel, power) {
+        super(name, string, count, ability, abilityLevel, power);
 
-        init: function(name, string, count, ability, abilityLevel, power) {
-            var self = this;
+        this.level = -1;
+        this.damage = -1;
+        this.ranged = string && string.includes('bow');
+    }
 
-            self._super(name, string, count, ability, abilityLevel, power);
+    setDamage(damage) {
+        this.damage = damage;
+    }
 
-            self.level = -1;
-            self.damage = -1;
-            self.ranged = string && string.includes('bow');
-        },
+    setLevel(level) {
+        this.level = level;
+    }
 
-        exists: function() {
-            return this._super();
-        },
+    getDamage() {
+        return this.damage;
+    }
 
-        setDamage: function(damage) {
-            this.damage = damage;
-        },
-
-        setLevel: function(level) {
-            this.level = level;
-        },
-
-        getDamage: function() {
-            return this.damage;
-        },
-
-        getLevel: function() {
-            return this.level;
-        },
-
-        getString: function() {
-            return this._super();
-        },
-
-        update: function(name, string, count, ability, abilityLevel, power) {
-            this._super(name, string, count, ability, abilityLevel, power);
-        }
-
-    });
-
-});
+    getLevel() {
+        return this.level;
+    }
+}
