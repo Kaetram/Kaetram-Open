@@ -54,7 +54,7 @@ Config.discordWebhookId = '';
 Config.discordWebhookToken = '';
 
 // Debugging
-Config.debug = false;
+Config.debug = false; // Will print out more debugging info from log
 Config.debugLevel = 'all';
 Config.fsDebugging = false; // filestream debugging -> Write to a filestream instead of stdout.
 Config.allowConnectionsToggle = false; // Used closing/opening connections
