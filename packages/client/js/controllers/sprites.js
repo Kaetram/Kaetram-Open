@@ -1,64 +1,58 @@
-/* global log, _ */
+import _ from 'underscore';
+import $ from 'jquery';
+import log from '../lib/log';
+import Sprite from '../entity/sprite';
+import Animation from '../entity/animation';
 
-define(['../entity/sprite', '../entity/animation'], function(Sprite, Animation) {
-    /**
-     * Class responsible for loading all the necessary sprites from the JSON.
-     */
+export default class SpritesController {
+    constructor(renderer) {
+        var self = this;
 
-    return Class.extend({
+        self.renderer = renderer;
 
-        init: function(renderer) {
-            var self = this;
+        self.sprites = {};
 
-            self.renderer = renderer;
+        self.sparksAnimation = null;
 
-            self.sprites = {};
+        $.getJSON('data/sprites.json', function (json) {
+            self.load(json);
+        });
 
-            self.sparksAnimation = null;
+        self.loadAnimations();
+    }
 
-            $.getJSON('data/sprites.json', function(json) {
-                self.load(json);
-            });
+    load(spriteData) {
+        var self = this;
 
-            self.loadAnimations();
-        },
+        _.each(spriteData, function (sprite) {
+            self.sprites[sprite.id] = new Sprite(sprite);
+        });
 
-        load: function(spriteData) {
-            var self = this;
+        if (self.renderer.game.isDebug())
+            log.info('Finished loading sprite data...');
 
-            _.each(spriteData, function(sprite) {
-                self.sprites[sprite.id] = new Sprite(sprite);
-            });
+        if (self.loadedSpritesCallback) self.loadedSpritesCallback();
+    }
 
-            if (self.renderer.game.isDebug())
-                log.info('Finished loading sprite data...');
+    loadAnimations() {
+        var self = this;
 
-            if (self.loadedSpritesCallback)
-                self.loadedSpritesCallback();
-        },
+        self.sparksAnimation = new Animation('idle_down', 6, 0, 16, 16);
+        self.sparksAnimation.setSpeed(120);
+    }
 
-        loadAnimations: function() {
-            var self = this;
+    updateSprites() {
+        var self = this;
 
-            self.sparksAnimation = new Animation('idle_down', 6, 0, 16, 16);
-            self.sparksAnimation.setSpeed(120);
-        },
+        _.each(self.sprites, function (sprite) {
+            sprite.update();
+        });
 
-        updateSprites: function() {
-            var self = this;
+        if (self.renderer.game.isDebug())
+            log.info('Sprites updated upon scaling.');
+    }
 
-            _.each(self.sprites, function(sprite) {
-                sprite.update();
-            });
-
-            if (self.renderer.game.isDebug())
-                log.info('Sprites updated upon scaling.');
-        },
-
-        onLoadedSprites: function(callback) {
-            this.loadedSpritesCallback = callback;
-        }
-
-    });
-
-});
+    onLoadedSprites(callback) {
+        this.loadedSpritesCallback = callback;
+    }
+}
