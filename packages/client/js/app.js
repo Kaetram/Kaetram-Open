@@ -1,4 +1,9 @@
 import $ from 'jquery';
+import _ from 'underscore';
+
+import Modules from './utils/modules';
+import * as Detect from './utils/detect';
+import { install } from '../lib/pwa';
 
 export default class App {
     constructor() {
@@ -47,56 +52,56 @@ export default class App {
 
         self.updateOrientation();
         self.load();
-
     }
 
     load() {
         var self = this;
 
-        self.loginButton.click(function() {
+        self.loginButton.click(function () {
             self.login();
         });
 
-        self.createButton.click(function() {
+        self.createButton.click(function () {
             self.login();
         });
 
-        self.registerButton.click(function() {
+        self.registerButton.click(function () {
             self.openScroll('loadCharacter', 'createCharacter');
         });
 
-        self.cancelButton.click(function() {
+        self.cancelButton.click(function () {
             self.openScroll('createCharacter', 'loadCharacter');
         });
 
-        self.parchment.click(function() {
-            if (self.parchment.hasClass('about') || self.parchment.hasClass('credits') || self.parchment.hasClass('git')) {
-
+        self.parchment.click(function () {
+            if (
+                self.parchment.hasClass('about') ||
+                self.parchment.hasClass('credits') ||
+                self.parchment.hasClass('git')
+            ) {
                 self.parchment.removeClass('about credits git');
                 self.displayScroll('loadCharacter');
-
             }
         });
 
-        self.about.click(function() {
+        self.about.click(function () {
             self.displayScroll('about');
         });
 
-        self.credits.click(function() {
+        self.credits.click(function () {
             self.displayScroll('credits');
         });
 
-        self.discord.click(function() {
+        self.discord.click(function () {
             window.open('https://discord.gg/MmbGAaw');
         });
 
-        self.git.click(function() {
+        self.git.click(function () {
             self.displayScroll('git');
         });
 
-        self.rememberMe.click(function() {
-            if (!self.game || !self.game.storage)
-                return;
+        self.rememberMe.click(function () {
+            if (!self.game || !self.game.storage) return;
 
             var active = self.rememberMe.hasClass('active');
 
@@ -105,14 +110,13 @@ export default class App {
             self.game.storage.toggleRemember(!active);
         });
 
-        self.guest.click(function() {
-            if (!self.game)
-                return;
+        self.guest.click(function () {
+            if (!self.game) return;
 
             self.guest.toggleClass('active');
         });
 
-        self.respawn.click(function() {
+        self.respawn.click(function () {
             if (!self.game || !self.game.player || !self.game.player.dead)
                 return;
 
@@ -121,24 +125,30 @@ export default class App {
 
         window.scrollTo(0, 1);
 
-        self.window.resize(function() {
-            if (self.game)
-                self.game.resize();
+        self.window.resize(function () {
+            if (self.game) self.game.resize();
         });
 
         // Default Server ID
-        if (!window.localStorage.getItem('world')) window.localStorage.setItem('world', 'kaetram_server01');
+        if (!window.localStorage.getItem('world'))
+            window.localStorage.setItem('world', 'kaetram_server01');
 
-        $.get('https://hub.kaetram.com/all', function(servers) {
+        $.get('https://hub.kaetram.com/all', function (servers) {
             var serverIndex;
             for (var i = 0; i < servers.length; i++) {
                 var server = servers[i];
 
                 var row = $(document.createElement('tr'));
-                row.append($(document.createElement('td')).text(server.serverId))
-                row.append($(document.createElement('td')).text(server.playerCount + '/' + server.maxPlayers));
+                row.append(
+                    $(document.createElement('td')).text(server.serverId)
+                );
+                row.append(
+                    $(document.createElement('td')).text(
+                        server.playerCount + '/' + server.maxPlayers
+                    )
+                );
                 $('#worlds-list').append(row);
-                row.click(function() {
+                row.click(function () {
                     // TODO: This is when a server is clicked with the local `server` having the world data.
                     // log.info(server);
                 });
@@ -151,30 +161,29 @@ export default class App {
 
             $('#current-world-index').text(serverIndex);
             $('#current-world-id').text(currentWorld.serverId);
-            $('#current-world-count').text(currentWorld.playerCount + '/' + currentWorld.maxPlayers);
+            $('#current-world-count').text(
+                currentWorld.playerCount + '/' + currentWorld.maxPlayers
+            );
 
-            $('#worlds-switch').click(function() {
+            $('#worlds-switch').click(function () {
                 $('#worlds-popup').toggle();
             });
         });
 
-        $.getJSON('data/config.json', function(json) {
+        $.getJSON('data/config.json', function (json) {
             self.config = json;
 
-            if (self.readyCallback)
-                self.readyCallback();
+            if (self.readyCallback) self.readyCallback();
         });
 
-        $(document).bind('keydown', function(e) {
-            if (e.which === Modules.Keys.Enter)
-                return false;
+        $(document).bind('keydown', function (e) {
+            if (e.which === Modules.Keys.Enter) return false;
         });
 
-        $(document).keydown(function(e) {
+        $(document).keydown(function (e) {
             var key = e.which || e.keyCode || 0;
 
-            if (!self.game)
-                return;
+            if (!self.game) return;
 
             self.body.focus();
 
@@ -185,55 +194,59 @@ export default class App {
 
             if (self.game.started)
                 self.game.handleInput(Modules.InputType.Key, key);
-
         });
 
-        $(document).keyup(function(e) {
+        $(document).keyup(function (e) {
             var key = e.which;
 
-            if (!self.game || !self.game.started)
-                return;
+            if (!self.game || !self.game.started) return;
 
             self.game.input.keyUp(key);
         });
 
-        $(document).mousemove(function(event) {
-            if (!self.game || !self.game.input || !self.game.started || event.target.id !== 'textCanvas')
+        $(document).mousemove(function (event) {
+            if (
+                !self.game ||
+                !self.game.input ||
+                !self.game.started ||
+                event.target.id !== 'textCanvas'
+            )
                 return;
 
             self.game.input.setCoords(event);
             self.game.input.moveCursor();
         });
 
-        $('body').on('contextmenu', '#canvas', function(event) {
-
-
+        $('body').on('contextmenu', '#canvas', function (event) {
             if (self.game && self.game.input)
                 self.game.input.handle(Modules.InputType.RightClick, event);
 
             return false;
         });
 
-        self.canvas.click(function(event) {
-            if (!self.game || !self.game.started || event.button !== 0)
-                return;
+        self.canvas.click(function (event) {
+            if (!self.game || !self.game.started || event.button !== 0) return;
 
             window.scrollTo(0, 1);
 
             self.game.input.handle(Modules.InputType.LeftClick, event);
-
         });
 
-        $('input[type="range"]').on('input', function() {
+        $('input[type="range"]').on('input', function () {
             self.updateRange($(this));
         });
-
     }
 
     login() {
         var self = this;
 
-        if (self.loggingIn || !self.game || !self.game.loaded || self.statusMessage || !self.verifyForm())
+        if (
+            self.loggingIn ||
+            !self.game ||
+            !self.game.loaded ||
+            self.statusMessage ||
+            !self.verifyForm()
+        )
             return;
 
         self.toggleLogin(true);
@@ -247,14 +260,13 @@ export default class App {
 
         self.updateLoader(null);
 
-        setTimeout(function() {
+        setTimeout(function () {
             self.body.addClass('game');
             self.body.addClass('started');
 
             self.body.removeClass('intro');
 
             self.footer.hide();
-
         }, 500);
     }
 
@@ -268,35 +280,30 @@ export default class App {
         self.footer.show();
     }
 
-    showDeath() {
-
-    }
+    showDeath() {}
 
     openScroll(origin, destination) {
         var self = this;
 
-        if (!destination || self.loggingIn)
-            return;
+        if (!destination || self.loggingIn) return;
 
         self.cleanErrors();
 
         if (!Detect.isMobile()) {
-            if (self.parchmentAnimating)
-                return;
+            if (self.parchmentAnimating) return;
 
             self.parchmentAnimating = true;
 
             self.parchment.toggleClass('animate').removeClass(origin);
 
-            setTimeout(function() {
-
-                self.parchment.toggleClass('animate').addClass(destination);
-                self.parchmentAnimating = false;
-
-            }, Detect.isTablet() ? 0 : 1000);
-
-        } else
-            self.parchment.removeClass(origin).addClass(destination);
+            setTimeout(
+                function () {
+                    self.parchment.toggleClass('animate').addClass(destination);
+                    self.parchmentAnimating = false;
+                },
+                Detect.isTablet() ? 0 : 1000
+            );
+        } else self.parchment.removeClass(origin).addClass(destination);
     }
 
     displayScroll(content) {
@@ -304,33 +311,28 @@ export default class App {
             state = self.parchment.attr('class');
 
         if (self.game.started) {
-
             self.parchment.removeClass().addClass(content);
 
             self.body.removeClass('credits legal about').toggleClass(content);
 
-            if (self.game.player)
-                self.body.toggleClass('death');
+            if (self.game.player) self.body.toggleClass('death');
 
-            if (content !== 'about')
-                self.helpButton.removeClass('active');
-
+            if (content !== 'about') self.helpButton.removeClass('active');
         } else if (state !== 'animate')
-            self.openScroll(state, state === content ? 'loadCharacter' : content);
-
+            self.openScroll(
+                state,
+                state === content ? 'loadCharacter' : content
+            );
     }
 
     verifyForm() {
         var self = this,
             activeForm = self.getActiveForm();
 
-        if (activeForm === 'null')
-            return;
+        if (activeForm === 'null') return;
 
         switch (activeForm) {
-
             case 'loadCharacter':
-
                 var nameInput = $('#loginNameInput'),
                     passwordInput = $('#loginPasswordInput');
 
@@ -350,27 +352,45 @@ export default class App {
                 break;
 
             case 'createCharacter':
-
                 var characterName = $('#registerNameInput'),
                     registerPassword = $('#registerPasswordInput'),
-                    registerPasswordConfirmation = $('#registerPasswordConfirmationInput'),
+                    registerPasswordConfirmation = $(
+                        '#registerPasswordConfirmationInput'
+                    ),
                     email = $('#registerEmailInput');
 
                 if (self.registerFields.length === 0)
-                    self.registerFields = [characterName, registerPassword, registerPasswordConfirmation, email];
+                    self.registerFields = [
+                        characterName,
+                        registerPassword,
+                        registerPasswordConfirmation,
+                        email,
+                    ];
 
                 if (!characterName.val()) {
-                    self.sendError(characterName, 'A username is necessary you silly.');
+                    self.sendError(
+                        characterName,
+                        'A username is necessary you silly.'
+                    );
                     return false;
                 }
 
                 if (!registerPassword.val()) {
-                    self.sendError(registerPassword, 'You must enter a password.');
+                    self.sendError(
+                        registerPassword,
+                        'You must enter a password.'
+                    );
                     return false;
                 }
 
-                if (registerPasswordConfirmation.val() !== registerPassword.val()) {
-                    self.sendError(registerPasswordConfirmation, 'The passwords do not match!');
+                if (
+                    registerPasswordConfirmation.val() !==
+                    registerPassword.val()
+                ) {
+                    self.sendError(
+                        registerPasswordConfirmation,
+                        'The passwords do not match!'
+                    );
                     return false;
                 }
 
@@ -386,7 +406,9 @@ export default class App {
     }
 
     verifyEmail(email) {
-        return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
+        return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+            email
+        );
     }
 
     sendStatus(message) {
@@ -396,30 +418,30 @@ export default class App {
 
         self.statusMessage = message;
 
-        if (!message)
-            return;
+        if (!message) return;
 
         $('<span></span>', {
-            'class': 'status blink',
-            text: message
+            class: 'status blink',
+            text: message,
         }).appendTo('.validation-summary');
 
-        $('.status').append('<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>');
+        $('.status').append(
+            '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>'
+        );
     }
 
     sendError(field, error) {
         this.cleanErrors();
 
         $('<span></span>', {
-            'class': 'validation-error blink',
-            text: error
+            class: 'validation-error blink',
+            text: error,
         }).appendTo('.validation-summary');
 
-        if (!field)
-            return;
+        if (!field) return;
 
         field.addClass('field-error').select();
-        field.bind('keypress', function(event) {
+        field.bind('keypress', function (event) {
             field.removeClass('field-error');
 
             $('.validation-error').remove();
@@ -431,7 +453,10 @@ export default class App {
     cleanErrors() {
         var self = this,
             activeForm = self.getActiveForm(),
-            fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
+            fields =
+                activeForm === 'loadCharacter'
+                    ? self.loginFields
+                    : self.registerFields;
 
         for (var i = 0; i < fields.length; i++)
             fields[i].removeClass('field-error');
@@ -468,7 +493,7 @@ export default class App {
         var width = window.innerWidth,
             height = window.innerHeight;
 
-        return width <= 1000 ? 1 : ((width <= 1500 || height <= 870) ? 2 : 3);
+        return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
     }
 
     revertLoader() {
@@ -483,7 +508,8 @@ export default class App {
             return;
         }
 
-        var dots = '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
+        var dots =
+            '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
         self.loading.html(message + dots);
     }
 
@@ -501,7 +527,6 @@ export default class App {
 
             self.loginButton.addClass('disabled');
             self.registerButton.addClass('disabled');
-
         } else {
             self.loading.attr('hidden', true);
 
@@ -514,21 +539,32 @@ export default class App {
         var self = this;
 
         if (self.loginFields)
-            _.each(self.loginFields, function(field) { field.prop('readonly', state); });
+            _.each(self.loginFields, function (field) {
+                field.prop('readonly', state);
+            });
 
         if (self.registerFields)
-            _.each(self.registerFields, function(field) { field.prop('readOnly', state); });
+            _.each(self.registerFields, function (field) {
+                field.prop('readOnly', state);
+            });
     }
 
     updateRange(obj) {
         var self = this,
-            val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
+            val =
+                (obj.val() - obj.attr('min')) /
+                (obj.attr('max') - obj.attr('min'));
 
-        obj.css('background-image',
-            '-webkit-gradient(linear, left top, right top, '
-            + 'color-stop(' + val + ', #4d4d4d), '
-            + 'color-stop(' + val + ', #C5C5C5)'
-            + ')'
+        obj.css(
+            'background-image',
+            '-webkit-gradient(linear, left top, right top, ' +
+                'color-stop(' +
+                val +
+                ', #4d4d4d), ' +
+                'color-stop(' +
+                val +
+                ', #C5C5C5)' +
+                ')'
         );
     }
 
@@ -537,11 +573,12 @@ export default class App {
     }
 
     getOrientation() {
-        return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+        return window.innerHeight > window.innerWidth
+            ? 'portrait'
+            : 'landscape';
     }
 
     onReady(callback) {
         this.readyCallback = callback;
     }
-
 }
