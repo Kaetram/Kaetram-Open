@@ -3,15 +3,14 @@
 class Hit {
 
     constructor(type, damage) {
-        let self = this;
 
-        self.type = type;
-        self.damage = damage;
+        this.type = type;
+        this.damage = damage;
 
-        self.ranged = false;
-        self.aoe = false;
-        self.terror = false;
-        self.poison = false;
+        this.ranged = false;
+        this.aoe = false;
+        this.terror = false;
+        this.poison = false;
 
     }
 

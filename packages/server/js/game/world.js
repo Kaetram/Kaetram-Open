@@ -30,43 +30,39 @@ let _ = require('underscore'),
 class World {
 
     constructor(socket, database) {
-        let self = this;
+        this.socket = socket;
+        this.database = database;
 
-        self.socket = socket;
-        self.database = database;
+        this.maxPlayers = config.maxPlayers;
+        this.updateTime = config.updateTime;
 
-        self.maxPlayers = config.maxPlayers;
-        self.updateTime = config.updateTime;
+        this.debug = false;
+        this.allowConnections = false;
 
-        self.debug = false;
-        self.allowConnections = false;
-
-        self.players = {};
-        self.entities = {};
-        self.items = {};
-        self.chests = {};
-        self.mobs = {};
-        self.npcs = {};
-        self.projectiles = {};
+        this.players = {};
+        this.entities = {};
+        this.items = {};
+        this.chests = {};
+        this.mobs = {};
+        this.npcs = {};
+        this.projectiles = {};
 
         // Lumberjacking Variables
-        self.trees = {};
-        self.cutTrees = {};
+        this.trees = {};
+        this.cutTrees = {};
 
         // Mining Variables
-        self.rocks = {};
-        self.depletedRocks = {};
+        this.rocks = {};
+        this.depletedRocks = {};
 
-        self.loadedRegions = false;
+        this.loadedRegions = false;
 
-        self.ready = false;
+        this.ready = false;
 
-        self.malformTimeout = null;
+        this.malformTimeout = null;
     }
 
     load(onWorldLoad) {
-        let self = this;
-
         log.info('************ World Information ***********');
 
         /**
@@ -76,15 +72,15 @@ class World {
          * whatever new map we have created server sided. Cleaner and nicer.
          */
 
-        self.map = new Map(self);
-        self.map.isReady(() => {
+        this.map = new Map(this);
+        this.map.isReady(() => {
 
             log.info('The map has been successfully loaded!');
 
-            self.loaded();
+            this.loaded();
 
-            self.spawnChests();
-            self.spawnEntities();
+            this.spawnChests();
+            this.spawnEntities();
 
             setTimeout(onWorldLoad, 100);
 
@@ -93,32 +89,29 @@ class World {
     }
 
     loaded() {
-        let self = this;
-
         /**
          * The following are all globally based 'plugins'. We load them
          * in a batch here in order to keep it organized and neat.
          */
 
-        self.minigames = new Minigames(self);
+        this.minigames = new Minigames(this);
 
-        self.api = new API(self);
-        self.shops = new Shops(self);
-        self.region = new Region(self);
-        self.discord = new Discord(self);
-        self.network = new Network(self);
-        self.globalObjects = new GlobalObjects(self);
+        this.api = new API(this);
+        this.shops = new Shops(this);
+        this.region = new Region(this);
+        this.discord = new Discord(this);
+        this.network = new Network(this);
+        this.globalObjects = new GlobalObjects(this);
 
-        self.ready = true;
+        this.ready = true;
 
-        self.tick();
+        this.tick();
 
         log.info('******************************************');
     }
 
     async tick() {
-        let self = this,
-            update = 1000 / self.updateTime;
+        let update = 1000 / this.updateTime;
 
         const setIntervalAsync = (fn, ms) => {
             fn().then(() => {
@@ -128,14 +121,14 @@ class World {
 
         setIntervalAsync(async() => {
 
-            self.network.parsePackets();
-            self.region.parseRegions();
+            this.network.parsePackets();
+            this.region.parseRegions();
 
         }, update);
 
         setIntervalAsync(async() => {
 
-            self.parseTrees();
+            this.parseTrees();
 
         }, config.treeTick || 1000);
 
@@ -147,7 +140,7 @@ class World {
 
         setIntervalAsync(async() => {
 
-            self.api.pingHub();
+            this.api.pingHub();
 
         }, config.hubPing);
     }
@@ -157,11 +150,9 @@ class World {
      ****************************/
 
     kill(entity) {
-        let self = this;
-
         entity.applyDamage(entity.hitPoints);
 
-        self.push(Packets.PushOpcode.Regions, [{
+        this.push(Packets.PushOpcode.Regions, [{
             regionId: entity.region,
             message: new Messages.Points({
                 id: entity.instance,
@@ -173,12 +164,10 @@ class World {
             message: new Messages.Despawn(entity.instance)
         }]);
 
-        self.handleDeath(entity, true);
+        this.handleDeath(entity, true);
     }
 
     handleDamage(attacker, target, damage) {
-        let self = this;
-
         if (!attacker || !target || isNaN(damage) || target.invincible)
             return;
 
@@ -190,7 +179,7 @@ class World {
         target.hit(attacker);
         target.applyDamage(damage, attacker);
 
-        self.push(Packets.PushOpcode.Regions, {
+        this.push(Packets.PushOpcode.Regions, {
             regionId: target.region,
             message: new Messages.Points({
                 id: target.instance,
@@ -211,7 +200,7 @@ class World {
                 attacker.removeTarget();
             });
 
-            self.push(Packets.PushOpcode.Regions, [{
+            this.push(Packets.PushOpcode.Regions, [{
                 regionId: target.region,
                 message: new Messages.Combat(Packets.CombatOpcode.Finish, {
                     attackerId: attacker.instance,
@@ -222,14 +211,12 @@ class World {
                 message: new Messages.Despawn(target.instance)
             }]);
 
-            self.handleDeath(target, false, attacker);
+            this.handleDeath(target, false, attacker);
 
         }
     }
 
     handleDeath(character, ignoreDrops, lastAttacker) {
-        let self = this;
-
         if (!character)
             return;
 
@@ -243,7 +230,7 @@ class World {
             if (character.deathCallback)
                 character.deathCallback();
 
-            self.removeEntity(character);
+            this.removeEntity(character);
 
             character.dead = true;
 
@@ -255,7 +242,7 @@ class World {
                 let drop = character.getDrop();
 
                 if (drop)
-                    self.dropItem(drop.id, drop.count, deathX, deathY);
+                    this.dropItem(drop.id, drop.count, deathX, deathY);
             }
 
         } else if (character.type === 'player')
@@ -263,8 +250,7 @@ class World {
     }
 
     createProjectile(info) {
-        let self = this,
-            attacker = info.shift(),
+        let attacker = info.shift(),
             target = info.shift();
 
         if (!attacker || !target)
@@ -287,7 +273,7 @@ class World {
 
         projectile.owner = attacker;
 
-        self.addProjectile(projectile, projectile.owner.region);
+        this.addProjectile(projectile, projectile.owner.region);
 
         return projectile;
     }
@@ -298,21 +284,20 @@ class World {
     }
 
     spawnEntities() {
-        let self = this,
-            entities = 0;
+        let entities = 0;
 
-        _.each(self.map.staticEntities, (data) => {
+        _.each(this.map.staticEntities, (data) => {
             let key = data.string,
                 isMob = !!Mobs.Properties[key],
                 isNpc = !!NPCs.Properties[key],
                 isItem = !!Items.Data[key],
                 info = isMob ? Mobs.Properties[key] : (isNpc ? NPCs.Properties[key] : isItem ? Items.getData(key) : null),
-                position = self.map.indexToGridPosition(data.tileIndex);
+                position = this.map.indexToGridPosition(data.tileIndex);
 
             position.x++;
 
             if (!info || info === 'null') {
-                if (self.debug) log.info('Unknown object spawned at: ' + position.x + ' ' + position.y);
+                if (this.debug) log.info('Unknown object spawned at: ' + position.x + ' ' + position.y);
 
                 return;
             }
@@ -320,7 +305,7 @@ class World {
             let instance = Utils.generateInstance();
 
             if (isMob) {
-                let mob = new Mob(info.id, instance, position.x, position.y, self);
+                let mob = new Mob(info.id, instance, position.x, position.y, this);
 
                 mob.static = true;
 
@@ -350,58 +335,55 @@ class World {
 
                     mob.refresh();
 
-                    self.addMob(mob);
+                    this.addMob(mob);
 
                 });
 
-                self.addMob(mob);
+                this.addMob(mob);
             }
 
             if (isNpc)
-                self.addNPC(new NPC(info.id, instance, position.x, position.y));
+                this.addNPC(new NPC(info.id, instance, position.x, position.y));
 
             if (isItem) {
-                let item = self.createItem(info.id, instance, position.x, position.y);
+                let item = this.createItem(info.id, instance, position.x, position.y);
                 item.static = true;
-                self.addItem(item);
+                this.addItem(item);
             }
 
 
             entities++;
         });
 
-        log.info('Spawned ' + Object.keys(self.entities).length + ' entities!');
+        log.info('Spawned ' + Object.keys(this.entities).length + ' entities!');
     }
 
     spawnChests() {
-        let self = this,
-            chests = 0;
+        let chests = 0;
 
-        _.each(self.map.chests, (info) => {
+        _.each(this.map.chests, (info) => {
 
-            self.spawnChest(info.i, info.x, info.y, true);
+            this.spawnChest(info.i, info.x, info.y, true);
 
             chests++;
         });
 
-        log.info('Spawned ' + Object.keys(self.chests).length + ' static chests');
+        log.info('Spawned ' + Object.keys(this.chests).length + ' static chests');
     }
 
     spawnMob(id, x, y) {
-        let self = this,
-            mob = new Mob(id, Utils.generateInstance(), x, y);
+        let mob = new Mob(id, Utils.generateInstance(), x, y);
 
         if (!Mobs.exists(id))
             return;
 
-        self.addMob(mob);
+        this.addMob(mob);
 
         return mob;
     }
 
     spawnChest(items, x, y, staticChest) {
-        let self = this,
-            chestCount = Object.keys(self.chests).length,
+        let chestCount = Object.keys(this.chests).length,
             chest = new Chest(194, Utils.generateInstance(), x, y);
 
         chest.items = items;
@@ -410,7 +392,7 @@ class World {
 
             chest.static = staticChest;
 
-            chest.onRespawn(self.addChest.bind(self, chest));
+            chest.onRespawn(this.addChest.bind(this, chest));
 
         }
 
@@ -422,7 +404,7 @@ class World {
              * cooldown prior to respawning and voila.
              */
 
-            self.removeChest(chest);
+            this.removeChest(chest);
 
             if (config.debug)
                 log.info(`Opening chest at x: ${chest.x}, y: ${chest.y}`);
@@ -432,11 +414,11 @@ class World {
             if (!item)
                 return;
 
-            self.dropItem(Items.stringToId(item.string), item.count, chest.x, chest.y);
+            this.dropItem(Items.stringToId(item.string), item.count, chest.x, chest.y);
 
         });
 
-        self.addChest(chest);
+        this.addChest(chest);
 
         return chest;
     }
@@ -446,13 +428,12 @@ class World {
     }
 
     dropItem(id, count, x, y, ability, abilityLevel) {
-        let self = this,
-            item = self.createItem(id, Utils.generateInstance(), x, y, ability, abilityLevel);
+        let item = this.createItem(id, Utils.generateInstance(), x, y, ability, abilityLevel);
 
         item.count = count;
         item.dropped = true;
 
-        self.addItem(item);
+        this.addItem(item);
         item.despawn();
 
         if (config.debug) {
@@ -461,22 +442,21 @@ class World {
         }
 
         item.onBlink(() => {
-            self.push(Packets.PushOpcode.Broadcast, {
+            this.push(Packets.PushOpcode.Broadcast, {
                 message: new Messages.Blink(item.instance)
             });
         });
 
         item.onDespawn(() => {
-            self.removeItem(item);
+            this.removeItem(item);
         });
     }
 
     parseTrees() {
-        let self = this,
-            time = new Date().getTime(),
+        let time = new Date().getTime(),
             treeTypes = Object.keys(Modules.Trees);
 
-        _.each(self.cutTrees, (tree, key) => {
+        _.each(this.cutTrees, (tree, key) => {
             let type = treeTypes[tree.treeId];
 
             if (time - tree.time < Trees.Regrowth[type])
@@ -484,26 +464,25 @@ class World {
 
             _.each(tree.data, (tile) => {
 
-                self.map.clientMap.data[tile.index] = tile.oldTiles;
+                this.map.clientMap.data[tile.index] = tile.oldTiles;
 
             });
 
-            let position = self.map.idToPosition(key),
-                regionId = self.map.regions.regionIdFromPosition(position.x, position.y);
+            let position = this.map.idToPosition(key),
+                regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
 
-            self.region.updateRegions(regionId);
+            this.region.updateRegions(regionId);
 
-            delete self.cutTrees[key];
+            delete this.cutTrees[key];
         });
 
     }
 
     parseRocks() {
-        let self = this,
-            time = new Date().getTime(),
+        let time = new Date().getTime(),
             rockTypes = Object.keys(Modules.Rocks);
 
-        _.each(self.depletedRocks, (rock, key) => {
+        _.each(this.depletedRocks, (rock, key) => {
             let type = rockTypes[rock.rockId];
 
             if (time - rock.time < Rocks.Respawn[type])
@@ -511,40 +490,36 @@ class World {
 
             _.each(rock.data, (tile) => {
 
-                self.map.clientMap.data[tile.index] = tile.oldTiles;
+                this.map.clientMap.data[tile.index] = tile.oldTiles;
 
             });
 
-            let position = self.map.idToPosition(key),
-                regionId = self.map.regions.regionIdFromPosition(position.x, position.y);
+            let position = this.map.idToPosition(key),
+                regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
 
-            self.region.updateRegions(regionId);
+            this.region.updateRegions(regionId);
 
-            delete self.depletedRocks[key];
+            delete this.depletedRocks[key];
         });
     }
 
     isTreeCut(id) {
-        let self = this;
-
-        if (id in self.cutTrees)
+        if (id in this.cutTrees)
             return true;
 
-        for (let i in self.cutTrees)
-            if (id in self.cutTrees[i])
+        for (let i in this.cutTrees)
+            if (id in this.cutTrees[i])
                 return true;
 
         return false;
     }
 
     isRockDepleted(id) {
-        let self = this;
-
-        if (id in self.depletedRocks)
+        if (id in this.depletedRocks)
             return true;
 
-        for (let i in self.depletedRocks)
-            if (id in self.depletedRocks[i])
+        for (let i in this.depletedRocks)
+            if (id in this.depletedRocks[i])
                 return true;
 
         return false;
@@ -552,32 +527,31 @@ class World {
 
     /**
      * We save trees we are about to destroy
-     * to the `self.trees` and once they are destroyed
-     * we pluck them into the `self.destroyedTrees`.
+     * to the `this.trees` and once they are destroyed
+     * we pluck them into the `this.destroyedTrees`.
      * We run a tick that re-spawns them after a while
-     * using the data from `self.trees`.
+     * using the data from `this.trees`.
      */
 
     destroyTree(id, treeId) {
-        let self = this,
-            position = self.map.idToPosition(id);
+        let position = this.map.idToPosition(id);
 
-        if (!(id in self.trees))
-            self.trees[id] = {};
+        if (!(id in this.trees))
+            this.trees[id] = {};
 
-        self.search(position.x + 1, position.y, id, self.trees, 'tree');
+        this.search(position.x + 1, position.y, id, this.trees, 'tree');
 
-        self.cutTrees[id] = {
+        this.cutTrees[id] = {
             data: {},
             time: new Date().getTime(),
             treeId: treeId
         };
 
-        _.each(self.trees[id], (tile, key) => {
-            let tiles = self.map.clientMap.data[tile.index];
+        _.each(this.trees[id], (tile, key) => {
+            let tiles = this.map.clientMap.data[tile.index];
 
             // Store the original tiles for respawning.
-            self.cutTrees[id].data[key] = {
+            this.cutTrees[id].data[key] = {
                 oldTiles: [].concat(tiles), // concat to create a new array
                 index: tile.index
             };
@@ -594,11 +568,11 @@ class World {
             }
         });
 
-        let regionId = self.map.regions.regionIdFromPosition(position.x, position.y);
+        let regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
 
-        self.region.updateRegions(regionId);
+        this.region.updateRegions(regionId);
 
-        self.trees[id] = {};
+        this.trees[id] = {};
     }
 
 
@@ -615,20 +589,17 @@ class World {
      */
 
     getSearchTile(type, x, y) {
-        let self = this;
-
         switch (type) {
             case 'tree':
-                return self.map.getTree(x, y);
+                return this.map.getTree(x, y);
 
             case 'rock':
-                return self.map.getRock(x, y);
+                return this.map.getRock(x, y);
         }
     }
 
     search(x, y, refId, data, type) {
-        let self = this,
-            objectTile = self.getSearchTile(type, x, y);
+        let objectTile = this.getSearchTile(type, x, y);
 
         if (!objectTile)
             return false;
@@ -639,30 +610,28 @@ class World {
             return false;
 
         data[refId][id] = {
-            index: self.map.gridPositionToIndex(x, y) - 1,
+            index: this.map.gridPositionToIndex(x, y) - 1,
             objectTile: objectTile
         };
 
-        if (self.search(x + 1, y, refId, data, type))
+        if (this.search(x + 1, y, refId, data, type))
             return true;
 
-        if (self.search(x - 1, y, refId, data, type))
+        if (this.search(x - 1, y, refId, data, type))
             return true;
 
-        if (self.search(x, y + 1, refId, data, type))
+        if (this.search(x, y + 1, refId, data, type))
             return true;
 
-        if (self.search(x, y - 1, refId, data, type))
+        if (this.search(x, y - 1, refId, data, type))
             return true;
 
         return false;
     }
 
     push(type, info) {
-        let self = this;
-
         if (_.isArray(info)) {
-            _.each(info, (i) => { self.push(type, i); });
+            _.each(info, (i) => { this.push(type, i); });
             return;
         }
 
@@ -675,49 +644,49 @@ class World {
         switch (type) {
             case Packets.PushOpcode.Broadcast:
 
-                self.network.pushBroadcast(info.message);
+                this.network.pushBroadcast(info.message);
 
                 break;
 
             case Packets.PushOpcode.Selectively:
 
-                self.network.pushSelectively(info.message, info.ignores);
+                this.network.pushSelectively(info.message, info.ignores);
 
                 break;
 
             case Packets.PushOpcode.Player:
 
-                self.network.pushToPlayer(info.player, info.message);
+                this.network.pushToPlayer(info.player, info.message);
 
                 break;
 
             case Packets.PushOpcode.Players:
 
-                self.network.pushToPlayers(info.players, info.message);
+                this.network.pushToPlayers(info.players, info.message);
 
                 break;
 
             case Packets.PushOpcode.Region:
 
-                self.network.pushToRegion(info.regionId, info.message, info.ignoreId);
+                this.network.pushToRegion(info.regionId, info.message, info.ignoreId);
 
                 break;
 
             case Packets.PushOpcode.Regions:
 
-                self.network.pushToAdjacentRegions(info.regionId, info.message, info.ignoreId);
+                this.network.pushToAdjacentRegions(info.regionId, info.message, info.ignoreId);
 
                 break;
 
             case Packets.PushOpcode.NameArray:
 
-                self.network.pushToNameArray(info.names, info.message);
+                this.network.pushToNameArray(info.names, info.message);
 
                 break;
 
             case Packets.PushOpcode.OldRegions:
 
-                self.network.pushToOldRegions(info.player, info.message);
+                this.network.pushToOldRegions(info.player, info.message);
 
                 break;
 
@@ -725,22 +694,20 @@ class World {
     }
 
     addEntity(entity, region) {
-        let self = this;
-
-        if (entity.instance in self.entities)
+        if (entity.instance in this.entities)
             log.info('Entity ' + entity.instance + ' already exists.');
 
-        self.entities[entity.instance] = entity;
+        this.entities[entity.instance] = entity;
 
         if (entity.type !== 'projectile')
-            self.region.handle(entity, region);
+            this.region.handle(entity, region);
 
         if (entity.x > 0 && entity.y > 0)
-            self.getGrids().addToEntityGrid(entity, entity.x, entity.y);
+            this.getGrids().addToEntityGrid(entity, entity.x, entity.y);
 
         entity.onSetPosition(() => {
 
-            self.getGrids().updateEntityPosition(entity);
+            this.getGrids().updateEntityPosition(entity);
 
             if (entity.isMob() && entity.isOutsideSpawn()) {
 
@@ -750,7 +717,7 @@ class World {
 
                 entity.return();
 
-                self.push(Packets.PushOpcode.Broadcast, [{
+                this.push(Packets.PushOpcode.Broadcast, [{
                     message: new Messages.Combat(Packets.CombatOpcode.Finish, {
                         attackerId: null,
                         targetId: entity.instance
@@ -771,11 +738,11 @@ class World {
 
         if (entity instanceof Character) {
 
-            entity.getCombat().setWorld(self);
+            entity.getCombat().setWorld(this);
 
             entity.onStunned((stun) => {
 
-                self.push(Packets.PushOpcode.Regions, {
+                this.push(Packets.PushOpcode.Regions, {
                     regionId: entity.region,
                     message: new Messages.Movement(Packets.MovementOpcode.Stunned, {
                         id: entity.instance,
@@ -789,34 +756,28 @@ class World {
     }
 
     addPlayer(player) {
-        let self = this;
+        this.addEntity(player);
+        this.players[player.instance] = player;
 
-        self.addEntity(player);
-        self.players[player.instance] = player;
-
-        if (self.populationCallback)
-            self.populationCallback();
+        if (this.populationCallback)
+            this.populationCallback();
     }
 
     addNPC(npc, region) {
-        let self = this;
-
-        self.addEntity(npc, region);
-        self.npcs[npc.instance] = npc;
+        this.addEntity(npc, region);
+        this.npcs[npc.instance] = npc;
     }
 
     addMob(mob, region) {
-        let self = this;
-
         if (!Mobs.exists(mob.id)) {
             log.error('Cannot spawn mob. ' + mob.id + ' does not exist.');
             return;
         }
 
-        self.addEntity(mob, region);
-        self.mobs[mob.instance] = mob;
+        this.addEntity(mob, region);
+        this.mobs[mob.instance] = mob;
 
-        mob.addToChestArea(self.getChestAreas());
+        mob.addToChestArea(this.getChestAreas());
 
         mob.onHit((attacker) => {
             if (mob.isDead() || mob.combat.started)
@@ -827,49 +788,39 @@ class World {
     }
 
     addItem(item, region) {
-        let self = this;
-
         if (item.static)
-            item.onRespawn(self.addItem.bind(self, item));
+            item.onRespawn(this.addItem.bind(this, item));
 
-        self.addEntity(item, region);
-        self.items[item.instance] = item;
+        this.addEntity(item, region);
+        this.items[item.instance] = item;
     }
 
     addProjectile(projectile, region) {
-        let self = this;
-
-        self.addEntity(projectile, region);
-        self.projectiles[projectile.instance] = projectile;
+        this.addEntity(projectile, region);
+        this.projectiles[projectile.instance] = projectile;
     }
 
     addChest(chest, region) {
-        let self = this;
-
-        self.addEntity(chest, region);
-        self.chests[chest.instance] = chest;
+        this.addEntity(chest, region);
+        this.chests[chest.instance] = chest;
     }
 
     removeEntity(entity) {
-        let self = this;
+        if (entity.instance in this.entities)
+            delete this.entities[entity.instance];
 
-        if (entity.instance in self.entities)
-            delete self.entities[entity.instance];
+        if (entity.instance in this.mobs)
+            delete this.mobs[entity.instance];
 
-        if (entity.instance in self.mobs)
-            delete self.mobs[entity.instance];
+        if (entity.instance in this.items)
+            delete this.items[entity.instance];
 
-        if (entity.instance in self.items)
-            delete self.items[entity.instance];
+        this.getGrids().removeFromEntityGrid(entity, entity.x, entity.y);
 
-        self.getGrids().removeFromEntityGrid(entity, entity.x, entity.y);
-
-        self.region.remove(entity);
+        this.region.remove(entity);
     }
 
     cleanCombat(entity) {
-        let self = this;
-
         _.each(this.entities, (oEntity) => {
             if (oEntity instanceof Character && oEntity.combat.hasAttacker(entity))
                 oEntity.combat.removeAttacker(entity);
@@ -878,10 +829,8 @@ class World {
     }
 
     removeItem(item) {
-        let self = this;
-
-        self.removeEntity(item);
-        self.push(Packets.PushOpcode.Broadcast, {
+        this.removeEntity(item);
+        this.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Despawn(item.instance)
         });
 
@@ -890,9 +839,7 @@ class World {
     }
 
     removePlayer(player) {
-        let self = this;
-
-        self.push(Packets.PushOpcode.Regions, {
+        this.push(Packets.PushOpcode.Regions, {
             regionId: player.region,
             message: new Messages.Despawn(player.instance)
         });
@@ -900,49 +847,43 @@ class World {
         if (player.ready)
             player.save();
 
-        if (self.populationCallback)
-            self.populationCallback();
+        if (this.populationCallback)
+            this.populationCallback();
 
-        self.removeEntity(player);
+        this.removeEntity(player);
 
-        self.cleanCombat(player);
+        this.cleanCombat(player);
 
         if (player.isGuest)
-            self.database.delete(player);
+            this.database.delete(player);
 
-        delete self.players[player.instance];
-        delete self.network.packets[player.instance];
+        delete this.players[player.instance];
+        delete this.network.packets[player.instance];
 
         player.destroy();
         player = null;
     }
 
     removeProjectile(projectile) {
-        let self = this;
+        this.removeEntity(projectile);
 
-        self.removeEntity(projectile);
-
-        delete self.projectiles[projectile.instance];
+        delete this.projectiles[projectile.instance];
     }
 
     removeChest(chest) {
-        let self = this;
-
-        self.removeEntity(chest);
-        self.push(Packets.PushOpcode.Broadcast, {
+        this.removeEntity(chest);
+        this.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Despawn(chest.instance)
         });
 
         if (chest.static)
             chest.respawn();
         else
-            delete self.chests[chest.instance];
+            delete this.chests[chest.instance];
     }
 
     globalMessage(source, message, colour, isGlobal, withBubble) {
-        let self = this;
-
-        self.push(Packets.PushOpcode.Broadcast, {
+        this.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Chat({
                 name: source,
                 text: message,
@@ -954,23 +895,19 @@ class World {
     }
 
     isOnline(username) {
-        let self = this;
-
-        for (let id in self.players)
-            if (self.players.hasOwnProperty(id))
-                if (self.players[id].username.toLowerCase() === username.toLowerCase())
+        for (let id in this.players)
+            if (this.players.hasOwnProperty(id))
+                if (this.players[id].username.toLowerCase() === username.toLowerCase())
                     return true;
 
         return false;
     }
 
     getPlayerByName(name) {
-        let self = this;
-
-        for (let id in self.players)
-            if (self.players.hasOwnProperty(id))
-                if (self.players[id].username.toLowerCase() === name.toLowerCase())
-                    return self.players[id];
+        for (let id in this.players)
+            if (this.players.hasOwnProperty(id))
+                if (this.players[id].username.toLowerCase() === name.toLowerCase())
+                    return this.players[id];
 
         return null;
     }
@@ -980,10 +917,8 @@ class World {
     }
 
     getPlayerByInstance(instance) {
-        let self = this;
-
-        if (instance in self.players)
-            return self.players[instance];
+        if (instance in this.players)
+            return this.players[instance];
 
         return null;
     }

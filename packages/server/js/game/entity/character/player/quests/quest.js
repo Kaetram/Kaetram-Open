@@ -8,69 +8,60 @@ let Messages = require('../../../../../network/messages'),
 class Quest {
 
     constructor(player, data) {
-        let self = this;
+        this.player = player;
+        this.data = data;
 
-        self.player = player;
-        self.data = data;
+        this.id = data.id;
+        this.name = data.name;
+        this.description = data.description;
 
-        self.id = data.id;
-        self.name = data.name;
-        self.description = data.description;
-
-        self.stage = 0;
+        this.stage = 0;
     }
 
     load(stage) {
-        let self = this;
-
         if (!stage)
-            self.update();
+            this.update();
         else
-            self.stage = parseInt(stage);
+            this.stage = parseInt(stage);
     }
 
     finish() {
-        let self = this,
-            item = self.getItemReward();
+        let item = this.getItemReward();
 
         if (item) {
-            if (self.hasInventorySpace(item.id, item.count))
-                self.player.inventory.add({
+            if (this.hasInventorySpace(item.id, item.count))
+                this.player.inventory.add({
                     id: item.id,
                     count: item.count,
                     ability: -1,
                     abilityLevel: -1
                 });
             else {
-                self.player.notify('You do not have enough space in your inventory.');
-                self.player.notify('Please make room prior to finishing the quest.');
+                this.player.notify('You do not have enough space in your inventory.');
+                this.player.notify('Please make room prior to finishing the quest.');
 
                 return;
             }
         }
 
-        self.setStage(9999);
+        this.setStage(9999);
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Finish, {
-            id: self.id,
+        this.player.send(new Messages.Quest(Packets.QuestOpcode.Finish, {
+            id: this.id,
             isQuest: true
         }));
 
-        self.update();
+        this.update();
     }
 
     setStage(stage) {
-        let self = this;
-
-        self.stage = stage;
-        self.update();
+        this.stage = stage;
+        this.update();
     }
 
     triggerTalk(npc) {
-        let self = this;
-
-        if (self.npcTalkCallback)
-            self.npcTalkCallback(npc);
+        if (this.npcTalkCallback)
+            this.npcTalkCallback(npc);
     }
 
     update() {
@@ -78,22 +69,19 @@ class Quest {
     }
 
     getConversation(id) {
-        let self = this,
-            conversation = self.data.conversations[id];
+        let conversation = this.data.conversations[id];
 
-        if (!conversation || !conversation[self.stage])
+        if (!conversation || !conversation[this.stage])
             return [''];
 
-        return conversation[self.stage];
+        return conversation[this.stage];
     }
 
     updatePointers() {
-        let self = this;
-
-        if (!self.data.pointers)
+        if (!this.data.pointers)
             return;
 
-        let pointer = self.data.pointers[self.stage];
+        let pointer = this.data.pointers[this.stage];
 
         if (!pointer)
             return;
@@ -101,12 +89,12 @@ class Quest {
         let opcode = pointer[0];
 
         if (opcode === 4)
-            self.player.send(new Messages.Pointer(opcode, {
+            this.player.send(new Messages.Pointer(opcode, {
                 id: Utils.generateRandomId(),
                 button: pointer[1]
             }));
         else
-            self.player.send(new Messages.Pointer(opcode, {
+            this.player.send(new Messages.Pointer(opcode, {
                 id: Utils.generateRandomId(),
                 x: pointer[1],
                 y: pointer[2]
@@ -115,14 +103,12 @@ class Quest {
     }
 
     forceTalk(npc, message) {
-        let self = this;
-
         if (!npc)
             return;
 
-        self.player.talkIndex = 0;
+        this.player.talkIndex = 0;
 
-        self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
+        this.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
             id: npc.instance,
             text: message
         }));
@@ -145,12 +131,10 @@ class Quest {
     }
 
     hasMob(mob) {
-        let self = this;
-
-        if (!self.data.mobs)
+        if (!this.data.mobs)
             return;
 
-        return self.data.mobs.indexOf(mob.id) > -1;
+        return this.data.mobs.indexOf(mob.id) > -1;
     }
 
     hasNPC(id) {

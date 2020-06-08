@@ -5,19 +5,16 @@ let _ = require('underscore'),
 class Professions {
 
     constructor(player) {
-        let self = this;
+        this.player = player;
+        this.world = player.world;
 
-        self.player = player;
-        self.world = player.world;
+        this.professions = {};
 
-        self.professions = {};
-
-        self.load();
+        this.load();
     }
 
     load() {
-        let self = this,
-            pList = Object.keys(Modules.Professions); // professions enum list
+        let pList = Object.keys(Modules.Professions); // professions enum list
 
         /**
         * We are accessing all the professions in the Modules.Professions
@@ -29,7 +26,7 @@ class Professions {
                 let ProfessionClass = require(`./impl/${profession.toLowerCase()}`),
                     id = Modules.Professions[profession];
 
-                self.professions[id] = new ProfessionClass(id, self.player);
+                this.professions[id] = new ProfessionClass(id, this.player);
             } catch(e) {
                 log.debug(`Could not load ${profession} profession.`);
                 log.error(e);
@@ -39,29 +36,23 @@ class Professions {
     }
 
     update(info) {
-        let self = this;
-
         _.each(info, (data, id) => {
-            if (!(id in self.professions))
+            if (!(id in this.professions))
                 return;
 
-            self.professions[id].load(data);
+            this.professions[id].load(data);
         });
     }
 
     getProfession(id) {
-        let self = this;
-
-        if (!(id in self.professions))
+        if (!(id in this.professions))
             return null;
 
-        return self.professions[id];
+        return this.professions[id];
     }
 
     stopAll() {
-        var self = this;
-
-        self.forEachProfession((profession) => {
+        this.forEachProfession((profession) => {
             profession.stop();
         });
     }
@@ -78,10 +69,9 @@ class Professions {
      */
 
     getInfo() {
-        let self = this,
-            data = [];
+        let data = [];
 
-        _.each(self.professions, (profession) => {
+        _.each(this.professions, (profession) => {
             data.push({
                 id: profession.id,
                 name: profession.name,
@@ -94,15 +84,14 @@ class Professions {
     }
 
     getArray() {
-        let self = this,
-            data = {};
+        let data = {};
 
-        _.each(self.professions, (profession) => {
+        _.each(this.professions, (profession) => {
             data[profession.id] = profession.getData();
         });
 
         return {
-            username: self.player.username,
+            username: this.player.username,
             data: data
         }
     }

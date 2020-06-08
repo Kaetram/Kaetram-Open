@@ -1,11 +1,9 @@
 class Friends {
 
 	constructor(player) {
-		let self = this;
+		this.player = player;
 
-		self.player = player;
-
-		self.friends = {};
+		this.friends = {};
 	}
 
 	update(info) {
@@ -13,14 +11,12 @@ class Friends {
 	}
 
 	add(username) {
-		let self = this;
-
-		if (username in self.friends) {
-			self.player.notify('That player is already in your friends list.');
+		if (username in this.friends) {
+			this.player.notify('That player is already in your friends list.');
 			return;
 		}
 
-		self.friends[username] = 'offline';
+		this.friends[username] = 'offline';
 	}
 
 	remove(username) {

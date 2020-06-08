@@ -8,67 +8,63 @@ let _ = require('underscore'),
 class Commands {
 
     constructor(player) {
-        let self = this;
-
-        self.player = player;
-        self.world = player.world;
+        this.player = player;
+        this.world = player.world;
     }
 
     parse(rawText) {
-        let self = this,
-            blocks = rawText.substring(1).split(' ');
+        let blocks = rawText.substring(1).split(' ');
 
         if (blocks.length < 1)
             return;
 
         let command = blocks.shift();
 
-        self.handlePlayerCommands(command, blocks);
+        this.handlePlayerCommands(command, blocks);
 
-        if (self.player.rights > 0)
-            self.handleModeratorCommands(command, blocks);
+        if (this.player.rights > 0)
+            this.handleModeratorCommands(command, blocks);
 
-        if (self.player.rights > 1)
-            self.handleAdminCommands(command, blocks);
+        if (this.player.rights > 1)
+            this.handleAdminCommands(command, blocks);
     }
 
     handlePlayerCommands(command, blocks) {
-        let self = this;
 
         switch (command) {
 
             case 'players':
-                let population = self.world.getPopulation(),
+                let population = this.world.getPopulation(),
                     singular = population === 1;
 
-                if (self.player.rights > 1)
-                    _.each(self.world.players, (player) => {
-                        self.player.notify(player.username);
+                if (this.player.rights > 1)
+                    _.each(this.world.players, (player) => {
+                        this.player.notify(player.username);
                     });
 
-                self.player.notify(`There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`);
+                this.player.notify(`There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`);
 
                 return;
 
             case 'tutstage':
 
-                log.info(self.player.getTutorial().stage);
+                log.info(this.player.getTutorial().stage);
 
                 return;
 
             case 'coords':
 
-                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
-                    message: 'x: ' + self.player.x + ' y: ' + self.player.y
+                this.player.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+                    message: 'x: ' + this.player.x + ' y: ' + this.player.y
                 }));
 
                 return;
 
             case 'progress':
 
-                let tutorialQuest = self.player.getTutorial();
+                let tutorialQuest = this.player.getTutorial();
 
-                self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
+                this.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
                     id: tutorialQuest.id,
                     stage: tutorialQuest.stage
                 }));
@@ -77,8 +73,8 @@ class Commands {
 
             case 'global':
 
-                self.world.globalMessage(
-                    self.player.username,
+                this.world.globalMessage(
+                    this.player.username,
                     blocks.join(' '),
                     'rgba(191, 191, 63, 1.0)',
                     true,
@@ -87,23 +83,23 @@ class Commands {
                 return;
 
             case 'region':
-                log.info(self.player.region);
+                log.info(this.player.region);
                 return;
 
             case 'getintroduction':
-                log.info(self.player.quests.getQuest(0).getStage());
+                log.info(this.player.quests.getQuest(0).getStage());
                 return;
 
             case 'resetintro':
-                let introduction = self.player.quests.getQuest(0);
+                let introduction = this.player.quests.getQuest(0);
 
                 introduction.setStage(0);
                 introduction.clearPointers();
                 introduction.update();
                 introduction.updatePointers();
 
-                self.player.updateRegion();
-                self.player.save();
+                this.player.updateRegion();
+                this.player.save();
 
                 return;
 
@@ -113,21 +109,20 @@ class Commands {
                 let otherPlayer = blocks.shift(),
                     message = blocks.join(' ');
 
-                self.player.sendMessage(otherPlayer, message);
+                this.player.sendMessage(otherPlayer, message);
 
                 return;
 
             case 'ping':
 
-                self.player.pingTime = new Date().getTime();
-                self.player.send(new Messages.Network(Packets.NetworkOpcode.Ping));
+                this.player.pingTime = new Date().getTime();
+                this.player.send(new Messages.Network(Packets.NetworkOpcode.Ping));
 
                 break;
         }
     }
 
     handleModeratorCommands(command, blocks) {
-        let self = this;
 
         switch (command) {
 
@@ -136,7 +131,7 @@ class Commands {
 
                 let duration = blocks.shift(),
                     targetName = blocks.join(' '),
-                    user = self.world.getPlayerByName(targetName);
+                    user = this.world.getPlayerByName(targetName);
 
                 if (!user)
                     return;
@@ -163,7 +158,7 @@ class Commands {
             case 'unmute':
 
                 let uTargetName = blocks.join(' '),
-                    uUser = self.world.getPlayerByName(uTargetName);
+                    uUser = this.world.getPlayerByName(uTargetName);
 
                 if (!uTargetName)
                     return;
@@ -178,8 +173,7 @@ class Commands {
     }
 
     handleAdminCommands(command, blocks) {
-        let self = this,
-            username, player;
+        let username, player;
 
         switch (command) {
 
@@ -193,7 +187,7 @@ class Commands {
                 if (!spawnId || !count)
                     return;
 
-                self.player.inventory.add({
+                this.player.inventory.add({
                     id: spawnId,
                     count: count,
                     ability: ability ? ability : -1,
@@ -204,7 +198,7 @@ class Commands {
 
             case 'maxhealth':
 
-                self.player.notify('Max health is ' + self.player.hitPoints.getMaxHitPoints());
+                this.player.notify('Max health is ' + this.player.hitPoints.getMaxHitPoints());
 
                 return;
 
@@ -223,19 +217,19 @@ class Commands {
                 if (!dCount)
                     dCount = 1;
 
-                self.world.dropItem(id, dCount, self.player.x, self.player.y);
+                this.world.dropItem(id, dCount, this.player.x, this.player.y);
 
                 return;
 
             case 'ghost':
 
-                self.player.equip('ghost', 1, -1, -1);
+                this.player.equip('ghost', 1, -1, -1);
 
                 return;
 
             case 'notify':
 
-                self.player.notify('Hello!!!');
+                this.player.notify('Hello!!!');
 
                 return;
 
@@ -246,27 +240,27 @@ class Commands {
                     withAnimation = parseInt(blocks.shift())
 
                 if (x && y)
-                    self.player.teleport(x, y, false, withAnimation);
+                    this.player.teleport(x, y, false, withAnimation);
 
                 return;
 
             case 'teletome':
 
                 username = blocks.join(' ');
-                player = self.world.getPlayerByName(username);
+                player = this.world.getPlayerByName(username);
 
                 if (player)
-                    player.teleport(self.player.x, self.player.y);
+                    player.teleport(this.player.x, this.player.y);
 
                 return;
 
             case 'teleto':
 
                 username = blocks.join(' ');
-                player = self.world.getPlayerByName(username);
+                player = this.world.getPlayerByName(username);
 
                 if (player)
-                    self.player.teleport(player.x, player.y);
+                    this.player.teleport(player.x, player.y);
 
                 return;
 
@@ -274,7 +268,7 @@ class Commands {
 
                 log.info('invincinil');
 
-                self.player.invincible = !self.player.invincible;
+                this.player.invincible = !this.player.invincible;
 
                 return;
 
@@ -282,7 +276,7 @@ class Commands {
 
                 let npcId = parseInt(blocks.shift());
 
-                self.world.spawnMob(npcId, self.player.x, self.player.y);
+                this.world.spawnMob(npcId, this.player.x, this.player.y);
 
                 return;
 
@@ -295,8 +289,8 @@ class Commands {
                     if (!posX || !posY)
                         return;
 
-                    self.player.send(new Messages.Pointer(Packets.PointerOpcode.Location, {
-                        id: self.player.instance,
+                    this.player.send(new Messages.Pointer(Packets.PointerOpcode.Location, {
+                        id: this.player.instance,
                         x: posX,
                         y: posY
                     }));
@@ -306,7 +300,7 @@ class Commands {
                     if (!instance)
                         return;
 
-                    self.player.send(new Messages.Pointer(Packets.PointerOpcode.NPC, {
+                    this.player.send(new Messages.Pointer(Packets.PointerOpcode.NPC, {
                         id: instance
                     }));
                 }
@@ -315,8 +309,8 @@ class Commands {
 
             case 'teleall':
 
-                _.each(self.world.players, (player) => {
-                    player.teleport(self.player.x, self.player.y);
+                _.each(this.world.players, (player) => {
+                    player.teleport(this.player.x, this.player.y);
                 });
 
                 return;
@@ -328,7 +322,7 @@ class Commands {
                 if (!radius)
                     radius = 1;
 
-                self.player.combat.dealAoE(radius);
+                this.player.combat.dealAoE(radius);
 
                 return;
 
@@ -339,7 +333,7 @@ class Commands {
                 if (!exp)
                     return;
 
-                self.player.addExperience(exp);
+                this.player.addExperience(exp);
 
                 return;
 
@@ -352,12 +346,12 @@ class Commands {
                 if (!tileX || !tileY)
                     return;
 
-                let tileIndex = self.world.region.gridPositionToIndex(tileX - 1, tileY);
+                let tileIndex = this.world.region.gridPositionToIndex(tileX - 1, tileY);
 
                 log.info('Sending Tile: ' + tileIndex);
 
-                self.world.push(Packets.PushOpcode.Player, {
-                    player: self.player,
+                this.world.push(Packets.PushOpcode.Player, {
+                    player: this.player,
                     message: new Messages.Region(Packets.RegionOpcode.Modify, {
                         index: tileIndex,
                         data: tileInfo
@@ -374,65 +368,65 @@ class Commands {
                 if (!getTileX || !getTileY)
                     return;
 
-                let getTileIndex = self.world.map.gridPositionToIndex(getTileX, getTileY);
+                let getTileIndex = this.world.map.gridPositionToIndex(getTileX, getTileY);
 
                 log.info('Tile Index: ' + getTileIndex);
-                log.info('Tile Info: ' + self.world.map.clientMap.data[getTileIndex]);
-                log.info('Actual Index: ' + self.world.map.getActualTileIndex(getTileIndex));
-                log.info('Tree? ' + self.world.map.getTree(getTileX, getTileY));
+                log.info('Tile Info: ' + this.world.map.clientMap.data[getTileIndex]);
+                log.info('Actual Index: ' + this.world.map.getActualTileIndex(getTileIndex));
+                log.info('Tree? ' + this.world.map.getTree(getTileX, getTileY));
 
                 return;
 
             case 'instance':
-                self.world.region.createInstance(self.player, self.player.region);
+                this.world.region.createInstance(this.player, this.player.region);
                 return;
 
             case 'checkregion':
-                self.player.notify('Current Region: ' + self.player.region);
+                this.player.notify('Current Region: ' + this.player.region);
                 return;
 
             case 'deinstance':
-                self.world.region.deleteInstance(self.player);
+                this.world.region.deleteInstance(this.player);
                 return;
 
             case 'debug':
-                self.player.send(new Messages.Command({
+                this.player.send(new Messages.Command({
                     command: 'debug'
                 }));
                 return;
 
             case 'addexperience':
-                self.player.addExperience(parseInt(blocks.shift()));
+                this.player.addExperience(parseInt(blocks.shift()));
                 return;
 
             case 'attackrange':
-                log.info(self.player.attackRange);
+                log.info(this.player.attackRange);
                 return;
 
             case 'resetregions':
                 log.info('Resetting regions...');
 
-                self.player.regionsLoaded = [];
-                self.player.updateRegion();
+                this.player.regionsLoaded = [];
+                this.player.updateRegion();
 
                 return;
 
             case 'finishQuest':
 
-                self.player.quests.getQuest(1).finish();
+                this.player.quests.getQuest(1).finish();
 
                 break;
 
             case 'finishAchievement':
 
-                self.player.quests.getAchievement(0).finish();
+                this.player.quests.getAchievement(0).finish();
 
                 break;
 
             case 'finishAllAchievements':
 
-                self.player.quests.forEachAchievement((achievement) => {
-                    self.player.finishAchievement(achievement.id);
+                this.player.quests.forEachAchievement((achievement) => {
+                    this.player.finishAchievement(achievement.id);
                 });
 
                 break;
@@ -442,20 +436,20 @@ class Commands {
                 let achievementId = parseInt(blocks.shift());
 
                 if (!achievementId) {
-                    self.player.notify('Invalid command format. /resetAchievement <achievementId>');
+                    this.player.notify('Invalid command format. /resetAchievement <achievementId>');
                     return;
                 }
 
-                self.player.quests.getAchievement(achievementId).setProgress(0);
-                self.player.updateRegion();
+                this.player.quests.getAchievement(achievementId).setProgress(0);
+                this.player.updateRegion();
 
                 break;
 
             case 'clear':
 
-                self.player.inventory.forEachSlot((slot) => {
+                this.player.inventory.forEachSlot((slot) => {
                     if (slot !== -1) {
-                        self.player.inventory.remove(slot.id, slot.count);
+                        this.player.inventory.remove(slot.id, slot.count);
                     }
                 });
 
@@ -463,13 +457,13 @@ class Commands {
 
             case 'timeout':
 
-                self.player.timeout();
+                this.player.timeout();
 
                 break;
 
             case 'togglepvp':
 
-                self.world.forEachPlayer((player) => {
+                this.world.forEachPlayer((player) => {
                     player.updatePVP(true, true);
                 });
 
@@ -477,7 +471,7 @@ class Commands {
 
             case 'die':
 
-                self.world.handleDeath(self.player);
+                this.world.handleDeath(this.player);
 
                 break;
 
@@ -486,28 +480,28 @@ class Commands {
                 let movementSpeed = parseInt(blocks.shift());
 
                 if (!movementSpeed) {
-                    self.player.notify('No movement speed specified.');
+                    this.player.notify('No movement speed specified.');
                     return;
                 }
 
                 if (movementSpeed < 75) // Just to not break stuff.
                     movementSpeed = 75;
 
-                self.player.defaultMovementSpeed = movementSpeed;
+                this.player.defaultMovementSpeed = movementSpeed;
 
-                self.player.sync();
+                this.player.sync();
 
                 break;
 
             case 'toggleheal':
-                self.player.send(new Messages.Command({
+                this.player.send(new Messages.Command({
                     command: 'toggleheal'
                 }));
                 break;
 
             case 'popup':
 
-                self.player.send(new Messages.Notification(Packets.NotificationOpcode.Popup, {
+                this.player.send(new Messages.Notification(Packets.NotificationOpcode.Popup, {
                     title: 'New Quest Found!',
                     message: 'New quest has been discovered!',
                     colour: '#00000'

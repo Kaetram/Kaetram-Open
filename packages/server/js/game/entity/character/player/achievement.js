@@ -8,98 +8,94 @@ let Data = require('../../../../../data/achievements'),
 class Achievement {
 
     constructor(id, player) {
-        let self = this;
 
-        self.id = id;
-        self.player = player;
+        this.id = id;
+        this.player = player;
 
-        self.progress = 0;
+        this.progress = 0;
 
-        self.data = Data[self.id];
+        this.data = Data[this.id];
 
-        self.name = self.data.name;
-        self.description = self.data.description;
+        this.name = this.data.name;
+        this.description = this.data.description;
 
-        self.discovered = false;
+        this.discovered = false;
     }
 
     step() {
-        let self = this;
 
-        if (self.isThreshold())
+        if (this.isThreshold())
             return;
 
-        self.progress++;
+        this.progress++;
 
-        self.update();
+        this.update();
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
-            id: self.id,
-            name: self.name,
-            progress: self.progress,
-            count: self.data.count,
+        this.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
+            id: this.id,
+            name: this.name,
+            progress: this.progress,
+            count: this.data.count,
             isQuest: false
         }));
     }
 
     converse(npc) {
-        let self = this;
 
-        if (self.isThreshold() || self.hasItem())
-            self.finish(npc);
+        if (this.isThreshold() || this.hasItem())
+            this.finish(npc);
         else {
 
-            self.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
+            this.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: npc.talk(self.data.text, self.player)
+                text: npc.talk(this.data.text, this.player)
             }));
 
-            if (!self.isStarted() && self.player.talkIndex === 0) {
-                self.player.popup('Achievement Discovered!', `You have discovered ${self.name} achievement.`, '#33cc33');
-                self.step();
+            if (!this.isStarted() && this.player.talkIndex === 0) {
+                this.player.popup('Achievement Discovered!', `You have discovered ${this.name} achievement.`, '#33cc33');
+                this.step();
             }
         }
     }
 
     finish(npc) {
-        let self = this,
-            rewardType = self.data.rewardType;
+        let rewardType = this.data.rewardType;
 
         switch (rewardType) {
             case Modules.Achievements.Rewards.Item:
 
-                if (!self.player.inventory.hasSpace()) {
-                    self.player.notify('You do not have enough space in your inventory to finish this achievement.');
+                if (!this.player.inventory.hasSpace()) {
+                    this.player.notify('You do not have enough space in your inventory to finish this achievement.');
                     return;
                 }
 
-                self.player.inventory.add({
-                    id: self.data.item,
-                    count: self.data.itemCount
+                this.player.inventory.add({
+                    id: this.data.item,
+                    count: this.data.itemCount
                 });
 
                 break;
 
             case Modules.Achievements.Rewards.Experience:
 
-                self.player.addExperience(self.data.reward);
+                this.player.addExperience(this.data.reward);
 
                 break;
         }
 
-        self.setProgress(9999);
-        self.update();
+        this.setProgress(9999);
+        this.update();
 
-        self.player.send(new Messages.Quest(Packets.QuestOpcode.Finish, {
-            id: self.id,
-            name: self.name,
+        this.player.send(new Messages.Quest(Packets.QuestOpcode.Finish, {
+            id: this.id,
+            name: this.name,
             isQuest: false
         }));
 
-        self.player.popup('Achievement Completed!', `You have completed ${self.name}!`, '#33cc33');
+        this.player.popup('Achievement Completed!', `You have completed ${this.name}!`, '#33cc33');
 
-        if (npc && self.player.npcTalkCallback)
-            self.player.npcTalkCallback(npc);
+        if (npc && this.player.npcTalkCallback)
+            this.player.npcTalkCallback(npc);
     }
 
     update() {
@@ -111,10 +107,9 @@ class Achievement {
     }
 
     hasItem() {
-        let self = this;
 
-        if (self.data.type === Modules.Achievements.Type.Scavenge && self.player.inventory.contains(self.data.item)) {
-            self.player.inventory.remove(self.data.item, self.data.itemCount);
+        if (this.data.type === Modules.Achievements.Type.Scavenge && this.player.inventory.contains(this.data.item)) {
+            this.player.inventory.remove(this.data.item, this.data.itemCount);
 
             return true;
         }
@@ -123,12 +118,11 @@ class Achievement {
     }
 
     setProgress(progress, skipRegion) {
-        let self = this;
 
-        self.progress = parseInt(progress);
+        this.progress = parseInt(progress);
 
-        if (self.data.rewardType === 'door' && !skipRegion)
-            self.player.updateRegion();
+        if (this.data.rewardType === 'door' && !skipRegion)
+            this.player.updateRegion();
     }
 
     isStarted() {

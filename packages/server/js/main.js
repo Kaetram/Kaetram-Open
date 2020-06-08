@@ -10,47 +10,45 @@ log = new Log();
 class Main {
 
     constructor() {
-        let self = this;
-
         log.info('Initializing ' + config.name + ' game engine...');
 
-        self.webSocket = new WebSocket(config.host, config.port, config.gver);
-        self.database = new Database(config.database);
-        self.parser = new Parser();
-        self.world = null;
+        this.webSocket = new WebSocket(config.host, config.port, config.gver);
+        this.database = new Database(config.database);
+        this.parser = new Parser();
+        this.world = null;
 
-        self.webSocket.onWebSocketReady(() => {
+        this.webSocket.onWebSocketReady(() => {
             /**
              * Initialize the world after we have finished loading
              * the websocket.
              */
 
-             let onWorldLoad = function() {
+             let onWorldLoad = () => {
                  log.notice(`World has successfully been created.`);
 
                  if (!config.allowConnectionsToggle)
-                     self.world.allowConnections = true;
+                     this.world.allowConnections = true;
 
-                 var host = config.host === '0.0.0.0' ? 'localhost' : config.host;
+                 let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
                  log.notice('Connect locally via http://' + host + ':' + config.port);
              };
 
-             self.world = new World(self.webSocket, self.getDatabase());
+             this.world = new World(this.webSocket, this.getDatabase());
 
-             self.world.load(onWorldLoad);
+             this.world.load(onWorldLoad);
         });
 
-        self.webSocket.onConnect((connection) => {
+        this.webSocket.onConnect((connection) => {
 
-            if (self.world.allowConnections) {
+            if (this.world.allowConnections) {
 
-                if (self.world.isFull()) {
+                if (this.world.isFull()) {
                     log.info('All the worlds are currently full. Please try again later.');
 
                     connection.sendUTF8('full');
                     connection.close();
                 } else
-                    self.world.playerConnectCallback(connection);
+                    this.world.playerConnectCallback(connection);
 
             } else {
                 connection.sendUTF8('disallowed');
@@ -59,12 +57,11 @@ class Main {
 
         });
 
-        self.loadConsole();
+        this.loadConsole();
     }
 
     loadConsole() {
-        let self = this,
-            stdin = process.openStdin();
+        let stdin = process.openStdin();
 
         stdin.addListener('data', (data) => {
             let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
@@ -85,13 +82,13 @@ class Main {
 
                 case 'players':
 
-                    log.info(`There are a total of ${self.getPopulation()} player(s) logged in.`);
+                    log.info(`There are a total of ${this.getPopulation()} player(s) logged in.`);
 
                     break;
 
                 case 'registered':
 
-                    self.world.database.registeredCount((count) => {
+                    this.world.database.registeredCount((count) => {
                         log.info(`There are ${count} users registered.`);
                     });
 
@@ -101,19 +98,19 @@ class Main {
 
                     username = blocks.join(' ');
 
-                    if (!self.world.isOnline(username)) {
+                    if (!this.world.isOnline(username)) {
                         log.info('Player is not logged in.');
                         return;
                     }
 
-                    player = self.world.getPlayerByName(username);
+                    player = this.world.getPlayerByName(username);
 
                     if (!player) {
                         log.info('An error has occurred.');
                         return;
                     }
 
-                    self.world.kill(player);
+                    this.world.kill(player);
 
                     break;
 
@@ -138,7 +135,7 @@ class Main {
                      * in.
                      */
 
-                    self.world.database.resetPositions(newX, newY, (result) => {
+                    this.world.database.resetPositions(newX, newY, (result) => {
                         log.info(result);
                     });
 
@@ -146,9 +143,9 @@ class Main {
 
                 case 'allowConnections':
 
-                    self.world.allowConnections = !self.world.allowConnections;
+                    this.world.allowConnections = !this.world.allowConnections;
 
-                    if (self.world.allowConnections)
+                    if (this.world.allowConnections)
                         log.info('Server is now allowing connections.')
                     else
                         log.info('The server is not allowing connections.');
@@ -162,7 +159,7 @@ class Main {
 
                     username = blocks.join(' ');
 
-                    player = self.world.getPlayerByName(username);
+                    player = this.world.getPlayerByName(username);
 
                     if (!player)
                         return;

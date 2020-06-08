@@ -10,8 +10,6 @@ let DiscordJS = require('discord.js'),
 class Discord {
 
     constructor(world) {
-        let self = this;
-
         if (!config.discordEnabled)
             return;
 
@@ -21,16 +19,16 @@ class Discord {
             return;
         }
 
-        self.world = world;
+        this.world = world;
 
-        self.client = new DiscordJS.Client();
-        self.webhook = new DiscordJS.WebhookClient(config.discordWebhookId, config.discordWebhookToken);
+        this.client = new DiscordJS.Client();
+        this.webhook = new DiscordJS.WebhookClient(config.discordWebhookId, config.discordWebhookToken);
 
-        self.client.on('ready', () => {
+        this.client.on('ready', () => {
             log.notice('Successfully connected to the Discord server.');
         });
 
-        self.client.on('message', (message) => {
+        this.client.on('message', (message) => {
             if (message.author.id === config.discordWebhookId)
                 return;
 
@@ -40,10 +38,10 @@ class Discord {
             let source = `[Discord | ${message.author.username}]`,
                 text = Utils.parseMessage('@goldenrod@' + message.content);
 
-            self.world.globalMessage(source, text, 'tomato');
+            this.world.globalMessage(source, text, 'tomato');
         });
 
-        self.client.login(config.discordBotToken);
+        this.client.login(config.discordBotToken);
     }
 
     /**
@@ -51,14 +49,12 @@ class Discord {
      */
 
     sendWebhook(source, message, withArrow) {
-        let self = this;
-
         if (!config.discordEnabled)
             return;
 
         let formattedSource = Utils.formatUsername(source);
 
-        self.webhook.send(`**[Kaetram]** ${formattedSource}${withArrow ? ' »' : ''} ${message}`)
+        this.webhook.send(`**[Kaetram]** ${formattedSource}${withArrow ? ' »' : ''} ${message}`)
     }
 
 }

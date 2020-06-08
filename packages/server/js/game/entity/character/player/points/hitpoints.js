@@ -9,21 +9,17 @@ class HitPoints extends Points {
     }
 
     setHitPoints(hitPoints) {
-        let self = this;
-
         super.setPoints(hitPoints);
 
-        if (self.hitPointsCallback)
-            self.hitPointsCallback();
+        if (this.hitPointsCallback)
+            this.hitPointsCallback();
     }
 
     setMaxHitPoints(maxHitPoints) {
-        let self = this;
-
         super.setMaxPoints(maxHitPoints);
 
-        if (self.maxHitPointsCallback)
-            self.maxHitPointsCallback();
+        if (this.maxHitPointsCallback)
+            this.maxHitPointsCallback();
     }
 
     getHitPoints() {

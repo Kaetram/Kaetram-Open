@@ -4,17 +4,16 @@ let _ = require('underscore'),
     AbilityInfo = require('../../../../../util/abilities');
 
 class Abilities {
-    
+
     constructor(player) {
-        let self = this;
-        
-        self.player = player;
-        
-        self.abilities = {};
-        
-        self.shortcuts = [];
-        
-        self.shortcutSize = 5;
+
+        this.player = player;
+
+        this.abilities = {};
+
+        this.shortcuts = [];
+
+        this.shortcutSize = 5;
     }
 
     addAbility(ability) {
@@ -22,21 +21,19 @@ class Abilities {
     }
 
     addShortcut(ability) {
-        let self = this;
 
-        if (self.shortcutSize >= 5)
+        if (this.shortcutSize >= 5)
             return;
 
-        self.shortcuts.push(ability.name);
+        this.shortcuts.push(ability.name);
     }
 
     removeAbility(ability) {
-        let self = this;
 
-        if (self.isShortcut(ability))
-            self.removeShortcut(self.shortcuts.indexOf(ability.name));
+        if (this.isShortcut(ability))
+            this.removeShortcut(this.shortcuts.indexOf(ability.name));
 
-        delete self.abilities[ability.name];
+        delete this.abilities[ability.name];
     }
 
     removeShortcut(index) {
@@ -58,24 +55,23 @@ class Abilities {
     }
 
     getArray() {
-        let self = this,
-            abilities = '',
+        let abilities = '',
             abilityLevels = '',
-            shortcuts = self.shortcuts.toString();
+            shortcuts = this.shortcuts.toString();
 
-        _.each(self.abilities, (ability) => {
+        _.each(this.abilities, (ability) => {
             abilities += ability.name;
             abilityLevels += ability.level;
         });
 
         return {
-            username: self.player.username,
+            username: this.player.username,
             abilities: abilities,
             abilityLevels: abilityLevels,
             shortcuts: shortcuts
         }
     }
-    
+
 }
 
 module.exports = Abilities;

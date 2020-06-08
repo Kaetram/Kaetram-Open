@@ -5,14 +5,13 @@ let Abilities = require('../../../../../../util/abilities');
 class Ability {
 
     constructor(name, type) {
-        let self = this;
 
-        self.name = name;
-        self.type = type;
+        this.name = name;
+        this.type = type;
 
-        self.level = -1;
+        this.level = -1;
 
-        self.data = Abilities.Data[name];
+        this.data = Abilities.Data[name];
     }
 
     setLevel(level) {
