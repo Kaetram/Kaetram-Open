@@ -1,31 +1,9 @@
-define(['../character'], function(Character) {
+import Character from '../character';
 
-    return Character.extend({
+export default class NCP extends Character {
+    constructor(id, kind) {
+        super(id, kind);
 
-        init: function(id, kind) {
-            var self = this;
-
-            self._super(id, kind);
-
-            self.type = 'npc';
-        },
-
-        idle: function() {
-            this._super();
-        },
-
-        setSprite: function(sprite) {
-            this._super(sprite);
-        },
-
-        setName: function(name) {
-            this._super(name);
-        },
-
-        setGridPosition: function(x, y) {
-            this._super(x, y);
-        }
-
-    });
-
-});
+        this.type = 'npc';
+    }
+}
