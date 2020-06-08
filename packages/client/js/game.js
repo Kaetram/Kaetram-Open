@@ -17,6 +17,10 @@ import Pointer from './controllers/pointer';
 import Overlay from './renderer/overlay';
 import Connection from './network/connection';
 import _ from 'underscore';
+import $ from 'jquery';
+import * as Detect from './utils/detect';
+import Packets from './network/packets';
+import Modules from './utils/modules';
 
 export default class Game {
     constructor(app) {

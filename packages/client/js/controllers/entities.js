@@ -1,391 +1,414 @@
-/* global log, _, Modules, Packets */
+import _ from 'underscore';
+import Modules from '../utils/modules';
+import Packets from '../network/packets';
 
-define(['../renderer/grids', '../entity/objects/chest',
-        '../entity/character/character', '../entity/character/player/player',
-        '../entity/objects/item', './sprites', '../entity/character/mob/mob',
-        '../entity/character/npc/npc', '../entity/objects/projectile'],
-    function(Grids, Chest, Character, Player, Item, Sprites, Mob, NPC, Projectile) {
+import Grids from '../renderer/grids';
+import Chest from '../entity/objects/chest';
+import Player from '../entity/character/player/player';
+import Item from '../entity/objects/item';
+import Sprites from './sprites';
+import Mob from '../entity/character/mob/mob';
+import NPC from '../entity/character/npc/npc';
+import Projectile from '../entity/objects/projectile';
 
-        return Class.extend({
+export default class EntitiesController {
+    constructor(game) {
+        var self = this;
 
-            init: function(game) {
-                var self = this;
+        self.game = game;
+        self.renderer = game.renderer;
 
-                self.game = game;
-                self.renderer = game.renderer;
+        self.grids = null;
+        self.sprites = null;
 
-                self.grids = null;
-                self.sprites = null;
+        self.entities = {};
+        self.decrepit = {};
+    }
 
-                self.entities = {};
-                self.decrepit = {};
-            },
+    load() {
+        var self = this;
 
-            load: function() {
-                var self = this;
+        self.game.app.sendStatus('Loading sprites');
 
-                self.game.app.sendStatus('Loading sprites');
+        if (!self.sprites) {
+            self.sprites = new Sprites(self.game.renderer);
 
-                if (!self.sprites) {
-                    self.sprites = new Sprites(self.game.renderer);
+            self.sprites.onLoadedSprites(function () {
+                self.game.input.loadCursors();
+            });
+        }
 
-                    self.sprites.onLoadedSprites(function() {
-                        self.game.input.loadCursors();
-                    });
-                }
+        self.game.app.sendStatus('Loading grids');
 
-                self.game.app.sendStatus('Loading grids');
+        if (!self.grids) self.grids = new Grids(self.game.map);
+    }
 
-                if (!self.grids)
-                    self.grids = new Grids(self.game.map);
-            },
+    update() {
+        var self = this;
 
-            update: function() {
-                var self = this;
+        if (self.sprites) self.sprites.updateSprites();
+    }
 
-                if (self.sprites)
-                    self.sprites.updateSprites();
-            },
+    create(info) {
+        var self = this,
+            entity;
 
-            create: function(info) {
-                var self = this,
-                    entity;
+        if (self.isPlayer(info.id)) return;
 
-                if (self.isPlayer(info.id))
-                    return;
+        if (info.id in self.entities)
+            // Don't initialize things twice.
+            return;
 
-                if (info.id in self.entities) // Don't initialize things twice.
-                    return;
-
-                switch (info.type) {
-
-                    case 'chest':
-
-                        /**
-                         * Here we will parse the different types of chests..
-                         * We can go Dark Souls style and implement mimics
-                         * the proper way -ahem- Kaetram V1.0
-                         */
-
-                        var chest = new Chest(info.id, info.string);
-
-                        entity = chest;
-
-                        break;
-
-                    case 'npc':
-
-                        var npc = new NPC(info.id, info.string);
-
-                        entity = npc;
-
-                        break;
-
-                    case 'item':
-
-                        var item = new Item(info.id, info.string, info.count, info.ability, info.abilityLevel);
-
-                        entity = item;
-
-                        break;
-
-                    case 'mob':
-
-                        var mob = new Mob(info.id, info.string);
-
-                        mob.setHitPoints(info.hitPoints);
-                        mob.setMaxHitPoints(info.maxHitPoints);
-
-                        mob.attackRange = info.attackRange;
-                        mob.level = info.level;
-                        mob.hiddenName = info.hiddenName;
-                        mob.movementSpeed = info.movementSpeed;
-
-                        entity = mob;
-
-                        break;
-
-                    case 'projectile':
-                        var attacker = self.get(info.characterId),
-                            target = self.get(info.targetId);
-
-                        if (!attacker || !target)
-                            return;
-
-                        attacker.lookAt(target);
-
-                        var projectile = new Projectile(info.id, info.projectileType, attacker);
-
-                        projectile.name = info.name;
-
-                        projectile.setStart(attacker.x, attacker.y);
-                        projectile.setTarget(target);
-
-                        projectile.setSprite(self.getSprite(projectile.name));
-                        projectile.setAnimation('travel', projectile.getSpeed());
-
-                        projectile.angled = true;
-                        projectile.type = info.type;
-
-                        /**
-                         * Move this into the external overall function
-                         */
-
-                        projectile.onImpact(function() {
-                            /**
-                             * The data in the projectile is only for rendering purposes
-                             * there is nothing you can change for the actual damage output here.
-                             */
-
-                            if (self.isPlayer(projectile.owner.id) || self.isPlayer(target.id))
-                                self.game.socket.send(Packets.Projectile, [Packets.ProjectileOpcode.Impact, info.id, target.id]);
-
-                            if (info.hitType === Modules.Hits.Explosive)
-                                target.explosion = true;
-
-                            self.game.info.create(Modules.Hits.Damage, [info.damage, self.isPlayer(target.id)], target.x, target.y);
-
-                            target.triggerHealthBar();
-
-                            self.unregisterPosition(projectile);
-                            delete self.entities[projectile.getId()];
-
-                        });
-
-                        self.addEntity(projectile);
-
-                        attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-                        attacker.triggerHealthBar();
-
-                        return;
-
-                    case 'player':
-
-                        var player = new Player();
-
-                        player.setId(info.id);
-                        player.setName(info.name);
-                        player.setGridPosition(info.x, info.y);
-
-                        player.rights = info.rights;
-                        player.level = info.level;
-                        player.pvp = info.pvp;
-                        player.pvpKills = info.pvpKills;
-                        player.pvpDeaths = info.pvpDeaths;
-                        player.attackRange = info.attackRange;
-                        player.orientation = info.orientation ? info.orientation : 0;
-                        player.type = info.type;
-                        player.movementSpeed = info.movementSpeed;
-
-                        var hitPointsData = info.hitPoints,
-                            manaData = info.mana,
-                            equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
-
-                        player.setHitPoints(hitPointsData[0]);
-                        player.setMaxHitPoints(hitPointsData[1]);
-
-                        player.setMana(manaData[0]);
-                        player.setMaxMana(manaData[1]);
-
-                        player.setSprite(self.getSprite(info.armour.string));
-                        player.idle();
-
-                        _.each(equipments, function(equipment) {
-                            player.setEquipment(equipment.type, equipment.name,
-                                equipment.string, equipment.count, equipment.ability,
-                                equipment.abilityLevel);
-                        });
-
-                        player.loadHandler(self.game);
-
-                        self.addEntity(player);
-
-                        return;
-                }
-
-                if (!entity)
-                    return;
-
-                var sprite = self.getSprite(info.type === 'item' ? 'item-' + info.string : info.string);
-
-                entity.setGridPosition(info.x, info.y);
-                entity.setName(info.name);
-
-                entity.setSprite(sprite);
-
-                entity.setIdleSpeed(sprite.idleSpeed);
-
-                entity.idle();
-                entity.type = info.type;
-
-                if (info.nameColour)
-                    entity.nameColour = info.nameColour;
-
-                if (info.customScale)
-                    entity.customScale = info.customScale;
-
-                self.addEntity(entity);
-
-                if (info.type !== 'item' && entity.handler) {
-                    entity.handler.setGame(self.game);
-                    entity.handler.load();
-                }
-
+        switch (info.type) {
+            case 'chest':
                 /**
-                 * Get ready for errors!
+                 * Here we will parse the different types of chests..
+                 * We can go Dark Souls style and implement mimics
+                 * the proper way -ahem- Kaetram V1.0
                  */
 
-            },
+                var chest = new Chest(info.id, info.string);
 
-            isPlayer: function(id) {
-                return this.game.player.id === id;
-            },
+                entity = chest;
 
-            get: function(id) {
-                var self = this;
+                break;
 
-                if (id in self.entities)
-                    return self.entities[id];
+            case 'npc':
+                var npc = new NPC(info.id, info.string);
 
-                return null;
-            },
+                entity = npc;
 
-            exists: function(id) {
-                return id in this.entities;
-            },
+                break;
 
-            removeEntity: function(entity) {
-                var self = this;
+            case 'item':
+                var item = new Item(
+                    info.id,
+                    info.string,
+                    info.count,
+                    info.ability,
+                    info.abilityLevel
+                );
 
-                self.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
-                self.grids.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
+                entity = item;
 
-                delete self.entities[entity.id];
-            },
+                break;
 
-            clean: function(ids) {
-                var self = this;
+            case 'mob':
+                var mob = new Mob(info.id, info.string);
 
-                ids = ids[0];
+                mob.setHitPoints(info.hitPoints);
+                mob.setMaxHitPoints(info.maxHitPoints);
 
-                _.each(self.entities, function(entity) {
-                    if (ids) {
-                        if (ids.indexOf(parseInt(entity.id)) < 0 && entity.id !== self.game.player.id)
-                            self.removeEntity(entity);
-                    } else
-                        if (entity.id !== self.game.player.id)
-                            self.removeEntity(entity);
+                mob.attackRange = info.attackRange;
+                mob.level = info.level;
+                mob.hiddenName = info.hiddenName;
+                mob.movementSpeed = info.movementSpeed;
+
+                entity = mob;
+
+                break;
+
+            case 'projectile':
+                var attacker = self.get(info.characterId),
+                    target = self.get(info.targetId);
+
+                if (!attacker || !target) return;
+
+                attacker.lookAt(target);
+
+                var projectile = new Projectile(
+                    info.id,
+                    info.projectileType,
+                    attacker
+                );
+
+                projectile.name = info.name;
+
+                projectile.setStart(attacker.x, attacker.y);
+                projectile.setTarget(target);
+
+                projectile.setSprite(self.getSprite(projectile.name));
+                projectile.setAnimation('travel', projectile.getSpeed());
+
+                projectile.angled = true;
+                projectile.type = info.type;
+
+                /**
+                 * Move this into the external overall function
+                 */
+
+                projectile.onImpact(function () {
+                    /**
+                     * The data in the projectile is only for rendering purposes
+                     * there is nothing you can change for the actual damage output here.
+                     */
+
+                    if (
+                        self.isPlayer(projectile.owner.id) ||
+                        self.isPlayer(target.id)
+                    )
+                        self.game.socket.send(Packets.Projectile, [
+                            Packets.ProjectileOpcode.Impact,
+                            info.id,
+                            target.id,
+                        ]);
+
+                    if (info.hitType === Modules.Hits.Explosive)
+                        target.explosion = true;
+
+                    self.game.info.create(
+                        Modules.Hits.Damage,
+                        [info.damage, self.isPlayer(target.id)],
+                        target.x,
+                        target.y
+                    );
+
+                    target.triggerHealthBar();
+
+                    self.unregisterPosition(projectile);
+                    delete self.entities[projectile.getId()];
                 });
 
-                self.grids.resetPathingGrid();
-            },
+                self.addEntity(projectile);
 
-            clearPlayers: function(exception) {
-                var self = this;
+                attacker.performAction(
+                    attacker.orientation,
+                    Modules.Actions.Attack
+                );
+                attacker.triggerHealthBar();
 
-                _.each(self.entities, function(entity) {
-                    if (entity.id !== exception.id && entity.type === 'player')
-                        self.removeEntity(entity);
+                return;
+
+            case 'player':
+                var player = new Player();
+
+                player.setId(info.id);
+                player.setName(info.name);
+                player.setGridPosition(info.x, info.y);
+
+                player.rights = info.rights;
+                player.level = info.level;
+                player.pvp = info.pvp;
+                player.pvpKills = info.pvpKills;
+                player.pvpDeaths = info.pvpDeaths;
+                player.attackRange = info.attackRange;
+                player.orientation = info.orientation ? info.orientation : 0;
+                player.type = info.type;
+                player.movementSpeed = info.movementSpeed;
+
+                var hitPointsData = info.hitPoints,
+                    manaData = info.mana,
+                    equipments = [
+                        info.armour,
+                        info.weapon,
+                        info.pendant,
+                        info.ring,
+                        info.boots,
+                    ];
+
+                player.setHitPoints(hitPointsData[0]);
+                player.setMaxHitPoints(hitPointsData[1]);
+
+                player.setMana(manaData[0]);
+                player.setMaxMana(manaData[1]);
+
+                player.setSprite(self.getSprite(info.armour.string));
+                player.idle();
+
+                _.each(equipments, function (equipment) {
+                    player.setEquipment(
+                        equipment.type,
+                        equipment.name,
+                        equipment.string,
+                        equipment.count,
+                        equipment.ability,
+                        equipment.abilityLevel
+                    );
                 });
 
-                self.grids.resetPathingGrid();
-            },
+                player.loadHandler(self.game);
 
-            addEntity: function(entity) {
-                var self = this;
+                self.addEntity(player);
 
-                if (self.entities[entity.id])
-                    return;
+                return;
+        }
 
-                self.entities[entity.id] = entity;
-                self.registerPosition(entity);
+        if (!entity) return;
 
-                if (!(entity instanceof Item && entity.dropped) && !self.renderer.isPortableDevice())
-                    entity.fadeIn(self.game.time);
+        var sprite = self.getSprite(
+            info.type === 'item' ? 'item-' + info.string : info.string
+        );
 
-            },
+        entity.setGridPosition(info.x, info.y);
+        entity.setName(info.name);
 
-            removeItem: function(item) {
-                var self = this;
+        entity.setSprite(sprite);
 
-                if (!item)
-                    return;
+        entity.setIdleSpeed(sprite.idleSpeed);
 
-                self.grids.removeFromItemGrid(item, item.gridX, item.gridY);
-                self.grids.removeFromRenderingGrid(item, item.gridX, item.gridY);
+        entity.idle();
+        entity.type = info.type;
 
-                delete self.entities[item.id];
-            },
+        if (info.nameColour) entity.nameColour = info.nameColour;
 
-            registerPosition: function(entity) {
-                var self = this;
+        if (info.customScale) entity.customScale = info.customScale;
 
-                if (!entity)
-                    return;
+        self.addEntity(entity);
 
-                /*if (entity.type === 'player' || entity.type === 'mob' || entity.type === 'npc' || entity.type === 'chest') {
+        if (info.type !== 'item' && entity.handler) {
+            entity.handler.setGame(self.game);
+            entity.handler.load();
+        }
+
+        /**
+         * Get ready for errors!
+         */
+    }
+
+    isPlayer(id) {
+        return this.game.player.id === id;
+    }
+
+    get(id) {
+        var self = this;
+
+        if (id in self.entities) return self.entities[id];
+
+        return null;
+    }
+
+    exists(id) {
+        return id in this.entities;
+    }
+
+    removeEntity(entity) {
+        var self = this;
+
+        self.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
+        self.grids.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
+
+        delete self.entities[entity.id];
+    }
+
+    clean(ids) {
+        var self = this;
+
+        ids = ids[0];
+
+        _.each(self.entities, function (entity) {
+            if (ids) {
+                if (
+                    ids.indexOf(parseInt(entity.id)) < 0 &&
+                    entity.id !== self.game.player.id
+                )
+                    self.removeEntity(entity);
+            } else if (entity.id !== self.game.player.id) self.removeEntity(entity);
+        });
+
+        self.grids.resetPathingGrid();
+    }
+
+    clearPlayers(exception) {
+        var self = this;
+
+        _.each(self.entities, function (entity) {
+            if (entity.id !== exception.id && entity.type === 'player')
+                self.removeEntity(entity);
+        });
+
+        self.grids.resetPathingGrid();
+    }
+
+    addEntity(entity) {
+        var self = this;
+
+        if (self.entities[entity.id]) return;
+
+        self.entities[entity.id] = entity;
+        self.registerPosition(entity);
+
+        if (
+            !(entity instanceof Item && entity.dropped) &&
+            !self.renderer.isPortableDevice()
+        )
+            entity.fadeIn(self.game.time);
+    }
+
+    removeItem(item) {
+        var self = this;
+
+        if (!item) return;
+
+        self.grids.removeFromItemGrid(item, item.gridX, item.gridY);
+        self.grids.removeFromRenderingGrid(item, item.gridX, item.gridY);
+
+        delete self.entities[item.id];
+    }
+
+    registerPosition(entity) {
+        var self = this;
+
+        if (!entity) return;
+
+        /*if (entity.type === 'player' || entity.type === 'mob' || entity.type === 'npc' || entity.type === 'chest') {
 
                     if (entity.type !== 'player' || entity.nonPathable)
                           self.grids.addToPathingGrid(entity.gridX, entity.gridY);
                 }*/
 
-                if (entity.type === 'item')
-                    self.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
+        if (entity.type === 'item')
+            self.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
 
-                self.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
-            },
+        self.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
+    }
 
-            registerDuality: function(entity) {
-                var self = this;
+    registerDuality(entity) {
+        var self = this;
 
-                if (!entity)
-                    return;
+        if (!entity) return;
 
-                self.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
+        self.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
 
-                /*if (entity.nextGridX > -1 && entity.nextGridY > -1) {
+        /*if (entity.nextGridX > -1 && entity.nextGridY > -1) {
 
                     if (!(entity instanceof Player))
                         self.grids.pathingGrid[entity.nextGridY][entity.nextGridX] = 1;
                 }*/
-            },
+    }
 
-            unregisterPosition: function(entity) {
-                var self = this;
+    unregisterPosition(entity) {
+        var self = this;
 
-                if (!entity)
-                    return;
+        if (!entity) return;
 
-                self.grids.removeEntity(entity);
-            },
+        self.grids.removeEntity(entity);
+    }
 
-            getSprite: function(name) {
-                return this.sprites.sprites[name];
-            },
+    getSprite(name) {
+        return this.sprites.sprites[name];
+    }
 
-            getAll: function() {
-                return this.entities;
-            },
+    getAll() {
+        return this.entities;
+    }
 
-            forEachEntity: function(callback) {
-                _.each(this.entities, function(entity) { callback(entity) }) ;
-            },
-
-            forEachEntityAround: function(x, y, radius, callback) {
-                var self = this;
-
-                for (var i = x - radius, max_i = x + radius; i <= max_i; i++) {
-                    for (var j = y - radius, max_j = y + radius; j <= max_j; j++) {
-                        if (self.map.isOutOfBounds(i, j))
-                            continue;
-
-                        _.each(self.grids.renderingGrid[j][i], function(entity) {
-                            callback(entity);
-                        })
-                    }
-                }
-            }
-
+    forEachEntity(callback) {
+        _.each(this.entities, function (entity) {
+            callback(entity);
         });
+    }
 
-    });
+    forEachEntityAround(x, y, radius, callback) {
+        var self = this;
+
+        for (var i = x - radius, max_i = x + radius; i <= max_i; i++) {
+            for (var j = y - radius, max_j = y + radius; j <= max_j; j++) {
+                if (self.map.isOutOfBounds(i, j)) continue;
+
+                _.each(self.grids.renderingGrid[j][i], function (entity) {
+                    callback(entity);
+                });
+            }
+        }
+    }
+}
