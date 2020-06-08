@@ -21,7 +21,7 @@ class WebSocket extends Socket {
         this.ips = {};
 
         let app = connect();
-        app.use(serve('client', {'index': ['index.html']}), null);
+        app.use(serve('../client', {'index': ['index.html']}), null);
 
         let readyWebSocket = (port) => {
             log.info('Server is now listening on: ' + port);
