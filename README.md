@@ -38,6 +38,7 @@ BQ was intended as an experiment to showcase HTML5 capabilities, since then, tec
 - Supports RESTful API.
 - Discord server integration.
 - Cross-server private messaging and interactions.
+- Lerna monorepo packaging
 - And much more
 
 ### Regions
