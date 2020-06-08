@@ -1,58 +1,24 @@
-define(['../character'], function(Character) {
+import Character from '../character';
 
-    return Character.extend({
+export default class Mob extends Character {
+    constructor(id, kind) {
+        super(id, kind);
 
-        init: function(id, kind) {
-            var self = this;
+        this.name = name;
 
-            self._super(id, kind);
+        this.hitPoints = -1;
+        this.maxHitPoints = -1;
 
-            self.name = name;
+        this.hiddenName = false;
 
-            self.hitPoints = -1;
-            self.maxHitPoints = -1;
+        this.type = 'mob';
+    }
 
-            self.hiddenName = false;
+    hasShadow() {
+        return !this.hiddenName;
+    }
 
-            self.type = 'mob';
-        },
-
-        setHitPoints: function(hitPoints) {
-            this._super(hitPoints);
-        },
-
-        setMaxHitPoints: function(maxHitPoints) {
-            this._super(maxHitPoints);
-        },
-
-        idle: function() {
-            this._super();
-        },
-
-        performAction: function(orientation, action) {
-            this._super(orientation, action);
-        },
-
-        setSprite: function(sprite) {
-            this._super(sprite);
-        },
-
-        setName: function(name) {
-            this.name = name;
-        },
-
-        setGridPosition: function(x, y) {
-            this._super(x, y);
-        },
-
-        hasShadow: function() {
-            return !this.hiddenName;
-        },
-
-        drawNames: function() {
-            return !this.hiddenName;
-        }
-
-    });
-
-});
+    drawNames() {
+        return !this.hiddenName;
+    }
+}
