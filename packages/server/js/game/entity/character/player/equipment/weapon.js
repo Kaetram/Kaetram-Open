@@ -9,14 +9,12 @@ class Weapon extends Equipment {
     constructor(name, id, count, ability, abilityLevel) {
         super(name, id, count, ability, abilityLevel);
 
-        let self = this;
+        this.level = Items.getWeaponLevel(name);
+        this.ranged = Items.isArcherWeapon(name);
+        this.lumberjacking = Items.getLumberjackingLevel(name);
+        this.mining = Items.getMiningLevel(name);
 
-        self.level = Items.getWeaponLevel(name);
-        self.ranged = Items.isArcherWeapon(name);
-        self.lumberjacking = Items.getLumberjackingLevel(name);
-        self.mining = Items.getMiningLevel(name);
-
-        self.breakable = false;
+        this.breakable = false;
     }
 
     getBaseAmplifier() {

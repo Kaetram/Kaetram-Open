@@ -7,27 +7,24 @@ let _ = require('underscore'),
 class CameraAreas {
 
     constructor() {
-        let self = this;
+        this.cameraAreas = [];
 
-        self.cameraAreas = [];
-
-        self.load();
+        this.load();
     }
 
     load() {
-        let self = this,
-            list = map.cameraAreas;
+        let list = map.cameraAreas;
 
         _.each(list, (o) => {
             let cameraArea = new Area(o.id, o.x, o.y, o.width, o.height);
 
             cameraArea.type = o.type;
 
-            self.cameraAreas.push(cameraArea);
+            this.cameraAreas.push(cameraArea);
 
         });
 
-        log.info('Loaded ' + self.cameraAreas.length + ' camera areas.');
+        log.info('Loaded ' + this.cameraAreas.length + ' camera areas.');
     }
 
 }

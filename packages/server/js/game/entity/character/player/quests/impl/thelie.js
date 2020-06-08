@@ -8,15 +8,11 @@ class Thelie extends Quest {
     constructor(player, data) {
         super(player, data);
 
-        let self = this;
-
-        self.player = player;
-        self.data = data;
+        this.player = player;
+        this.data = data;
     }
 
     load(stage) {
-        let self = this;
-
         super.load(stage);
     }
 

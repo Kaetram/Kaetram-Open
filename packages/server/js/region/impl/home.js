@@ -9,20 +9,17 @@
 class Home {
 
     constructor(region) {
-        let self = this;
+        this.region = region;
+        this.map = region.map;
+        this.clientMap = this.map.clientMap;
 
-        self.region = region;
-        self.map = region.map;
-        self.clientMap = self.map.clientMap;
-
-        self.startRegion = '0-4';
-        self.endRegion = '4-10';
+        this.startRegion = '0-4';
+        this.endRegion = '4-10';
     }
 
     get() {
-        let self = this,
-            startPosition = self.region.getRegionBounds(self.startRegion),
-            endPosition = self.region.getRegionBounds(self.endRegion),
+        let startPosition = this.region.getRegionBounds(this.startRegion),
+            endPosition = this.region.getRegionBounds(this.endRegion),
             info = {
                 indexes: [],
                 data: [],
@@ -35,11 +32,11 @@ class Home {
 
         for (let y = startPosition.startY; y < endPosition.endY; y++) {
             for (let x = startPosition.startX; x < endPosition.endX; x++) {
-                let tileIndex = self.region.gridPositionToIndex(x, y);
+                let tileIndex = this.region.gridPositionToIndex(x, y);
 
                 info.indexes.push(tileIndex);
-                info.data.push(self.clientMap.data[data]);
-                info.collisions.push(self.map.isColliding(x, y));
+                info.data.push(this.clientMap.data[data]);
+                info.collisions.push(this.map.isColliding(x, y));
             }
         }
     }

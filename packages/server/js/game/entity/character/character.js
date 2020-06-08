@@ -10,123 +10,113 @@ class Character extends Entity {
     constructor(id, type, instance, x, y) {
         super(id, type, instance, x, y);
 
-        let self = this;
+        this.level = -1;
 
-        self.level = -1;
+        this.movementSpeed = 250;
+        this.attackRange = 1;
+        this.attackRate = 1000;
+        this.healingRate = 10000;
 
-        self.movementSpeed = 250;
-        self.attackRange = 1;
-        self.attackRate = 1000;
-        self.healingRate = 10000;
+        this.spawnDistance = 7;
 
-        self.spawnDistance = 7;
+        this.previousX = -1;
+        this.previousY = -1;
 
-        self.previousX = -1;
-        self.previousY = -1;
-
-        self.hitPoints = -1;
-        self.maxHitPoints = -1;
+        this.hitPoints = -1;
+        this.maxHitPoints = -1;
 
         /* States */
-        self.dead = false;
-        self.poison = false;
-        self.aggressive = false;
-        self.aggroRange = 2;
+        this.dead = false;
+        this.poison = false;
+        this.aggressive = false;
+        this.aggroRange = 2;
 
-        self.target = null;
-        self.potentialTarget = null;
+        this.target = null;
+        this.potentialTarget = null;
 
-        self.stunTimeout = null;
+        this.stunTimeout = null;
 
-        self.projectile = Modules.Projectiles.Arrow;
-        self.projectileName = 'projectile-pinearrow';
+        this.projectile = Modules.Projectiles.Arrow;
+        this.projectileName = 'projectile-pinearrow';
 
-        self.healingInterval = null;
+        this.healingInterval = null;
 
-        self.loadCombat();
-        self.startHealing();
+        this.loadCombat();
+        this.startHealing();
     }
 
     loadCombat() {
-        let self = this;
-
         /**
          * Ternary could be used here, but readability
          * would become nonexistent.
          */
 
-        if (Mobs.hasCombatPlugin(self.id))
-            self.combat = new (Mobs.isNewCombatPlugin(self.id))(self);
+        if (Mobs.hasCombatPlugin(this.id))
+            this.combat = new (Mobs.isNewCombatPlugin(this.id))(this);
         else
-            self.combat = new Combat(self);
+            this.combat = new Combat(this);
     }
 
     setMinibossData() {
-        let self = this;
 
         /* We only update the mob data once to prevent any issues. */
 
-        if (self.updated)
+        if (this.updated)
             return;
 
-        self.level += Math.floor(self.level / 2);
-        self.maxHitPoints += Math.floor(self.maxHitPoints / 2);
-        self.hitPoints = self.maxHitPoints;
-        self.weaponLevel += 4;
-        self.armourLevel += 3;
+        this.level += Math.floor(this.level / 2);
+        this.maxHitPoints += Math.floor(this.maxHitPoints / 2);
+        this.hitPoints = this.maxHitPoints;
+        this.weaponLevel += 4;
+        this.armourLevel += 3;
 
-        self.updated = true;
+        this.updated = true;
     }
 
     startHealing() {
-        let self = this;
 
-        self.healingInterval = setInterval(() => {
+        this.healingInterval = setInterval(() => {
 
-            if (self.dead)
+            if (this.dead)
                 return;
 
-            if (self.combat.started)
+            if (this.combat.started)
                 return;
 
-            if (self.poison)
+            if (this.poison)
                 return;
 
-            self.heal(1);
+            this.heal(1);
 
-        }, self.healingRate);
+        }, this.healingRate);
     }
 
     stopHealing() {
-        let self = this;
 
-        clearInterval(self.healingInterval);
-        self.healingInterval = null;
+        clearInterval(this.healingInterval);
+        this.healingInterval = null;
     }
 
     setStun(stun) {
-        let self = this;
 
-        self.stunned = stun;
+        this.stunned = stun;
 
-        if (self.stunCallback)
-            self.stunCallback(stun);
+        if (this.stunCallback)
+            this.stunCallback(stun);
     }
 
     hit(attacker) {
-        let self = this;
 
-        if (self.hitCallback)
-            self.hitCallback(attacker);
+        if (this.hitCallback)
+            this.hitCallback(attacker);
     }
 
     heal(amount) {
-        let self = this;
 
-        self.setHitPoints(self.hitPoints + amount);
+        this.setHitPoints(this.hitPoints + amount);
 
-        if (self.hitPoints >= self.maxHitPoints)
-            self.hitPoints = self.maxHitPoints;
+        if (this.hitPoints >= this.maxHitPoints)
+            this.hitPoints = this.maxHitPoints;
     }
 
     addExperience() {
@@ -138,12 +128,11 @@ class Character extends Entity {
     }
 
     applyDamage(damage, attacker) {
-        let self = this;
 
-        self.hitPoints -= damage;
+        this.hitPoints -= damage;
 
-        if (self.damagedCallback)
-            self.damagedCallback(damage, attacker);
+        if (this.damagedCallback)
+            this.damagedCallback(damage, attacker);
     }
 
     isDead() {
@@ -163,24 +152,22 @@ class Character extends Entity {
     }
 
     setPosition(x, y) {
-        let self = this;
 
-        self.previousX = self.x;
-        self.previousY = self.y;
+        this.previousX = this.x;
+        this.previousY = this.y;
 
         super.setPosition(x, y);
 
-        if (self.movementCallback)
-            self.movementCallback(x, y);
+        if (this.movementCallback)
+            this.movementCallback(x, y);
     }
 
     setTarget(target) {
-        let self = this;
 
-        self.target = target;
+        this.target = target;
 
-        if (self.targetCallback)
-            self.targetCallback(target);
+        if (this.targetCallback)
+            this.targetCallback(target);
     }
 
     setPotentialTarget(potentialTarget) {
@@ -188,21 +175,19 @@ class Character extends Entity {
     }
 
     setHitPoints(hitPoints) {
-        let self = this;
 
-        self.hitPoints = hitPoints;
+        this.hitPoints = hitPoints;
 
-        if (self.hitPointsCallback)
-            self.hitPointsCallback();
+        if (this.hitPointsCallback)
+            this.hitPointsCallback();
     }
 
     setPoison(poison) {
-        let self = this;
 
-        self.poison = poison;
+        this.poison = poison;
 
-        if (self.poisonCallback)
-            self.poisonCallback(poison);
+        if (this.poisonCallback)
+            this.poisonCallback(poison);
     }
 
     getProjectile() {
@@ -218,10 +203,9 @@ class Character extends Entity {
     }
 
     getState() {
-        let self = this,
-            state = super.getState();
+        let state = super.getState();
 
-        state.movementSpeed = self.movementSpeed;
+        state.movementSpeed = this.movementSpeed;
 
         return state;
     }
@@ -231,12 +215,11 @@ class Character extends Entity {
     }
 
     removeTarget() {
-        let self = this;
 
-        if (self.removeTargetCallback)
-            self.removeTargetCallback();
+        if (this.removeTargetCallback)
+            this.removeTargetCallback();
 
-        self.clearTarget();
+        this.clearTarget();
     }
 
     hasTarget() {

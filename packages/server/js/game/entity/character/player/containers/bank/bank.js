@@ -21,10 +21,9 @@ class Bank extends Container {
     }
 
     add(id, count, ability, abilityLevel) {
-        let self = this;
 
-        if (!self.canHold(id, count)) {
-            self.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
+        if (!this.canHold(id, count)) {
+            this.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
                 message: 'You do not have enough space in your bank.'
             }));
             return false;
@@ -32,24 +31,23 @@ class Bank extends Container {
 
         let slot = super.add(id, parseInt(count), ability, abilityLevel);
 
-        self.owner.send(new Messages.Bank(Packets.BankOpcode.Add, slot));
-        self.owner.save();
+        this.owner.send(new Messages.Bank(Packets.BankOpcode.Add, slot));
+        this.owner.save();
 
         return true;
     }
 
     remove(id, count, index) {
-        let self = this;
 
         if (!super.remove(index, id, count))
             return;
 
-        self.owner.send(new Messages.Bank(Packets.BankOpcode.Remove, {
+        this.owner.send(new Messages.Bank(Packets.BankOpcode.Remove, {
             index: parseInt(index),
             count: count
         }));
 
-        self.owner.save();
+        this.owner.save();
     }
 
 

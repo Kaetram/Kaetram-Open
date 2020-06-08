@@ -9,9 +9,8 @@ class Creator {
     }
 
     save(player) {
-        let self = this;
 
-        self.database.getDatabase((database) => {
+        this.database.getDatabase((database) => {
             /* Handle the player databases */
 
             let playerData = database.collection('player_data'),
@@ -25,16 +24,16 @@ class Creator {
                 playerFriends = database.collection('player_friends'),
                 playerInventory = database.collection('player_inventory');
 
-            self.saveData(playerData, player);
-            self.saveEquipment(playerEquipment, player);
-            self.saveQuests(playerQuests, player);
-            self.saveAchievements(playerAchievements, player);
-            self.saveBank(playerBank, player);
-            self.saveRegions(playerRegions, player);
-            self.saveAbilities(playerAbilities, player);
-            self.saveProfessions(playerProfessions, player);
-            self.saveFriends(playerFriends, player);
-            self.saveInventory(playerInventory, player, () => {
+            this.saveData(playerData, player);
+            this.saveEquipment(playerEquipment, player);
+            this.saveQuests(playerQuests, player);
+            this.saveAchievements(playerAchievements, player);
+            this.saveBank(playerBank, player);
+            this.saveRegions(playerRegions, player);
+            this.saveAbilities(playerAbilities, player);
+            this.saveProfessions(playerProfessions, player);
+            this.saveFriends(playerFriends, player);
+            this.saveInventory(playerInventory, player, () => {
                 log.debug(`Successfully saved all data for player ${player.username}.`);
             });
         });

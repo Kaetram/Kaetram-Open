@@ -6,9 +6,7 @@ class Fishing extends Profession {
     constructor(id, player) {
         super(id, player, 'Fishing');
 
-        let self = this;
-
-        self.tick = 1000;
+        this.tick = 1000;
     }
 
 }
