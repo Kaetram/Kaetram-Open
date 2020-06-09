@@ -1,11 +1,11 @@
 /* global module */
 
-let _ = require('underscore'),
-    Container = require('../container'),
-    Messages = require('../../../../../../network/messages'),
-    Packets = require('../../../../../../network/packets'),
-    Constants = require('./constants'),
-    Items = require('../../../../../../util/items');
+import _ from 'underscore';
+    import Container from '../container';
+    import Messages from '../../../../../../network/messages';
+    import Packets from '../../../../../../network/packets';
+    import Constants from './constants';
+    import Items from '../../../../../../util/items';
 
 class Inventory extends Container {
 

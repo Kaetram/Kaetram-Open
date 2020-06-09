@@ -1,5 +1,5 @@
-let _ = require('underscore'),
-    Profession = require('./profession');
+import _ from 'underscore';
+    import Profession from './profession';
 
 class Fishing extends Profession {
 

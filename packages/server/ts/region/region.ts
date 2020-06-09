@@ -1,11 +1,15 @@
 /* global module */
 
-let _ = require('underscore'),
-    Messages = require('../network/messages'),
-    Packets = require('../network/packets'),
-    Player = require('../game/entity/character/player/player'),
-    fs = require('fs'),
-    map = 'server/data/map/world_client.json';
+import _ from 'underscore';
+    import Messages from '../network/messages';
+    import Packets from '../network/packets';
+    import Player from '../game/entity/character/player/player';
+    import * as fs from 'fs';
+    import log from "../util/log";
+import * as path from 'path';
+    import config from "../../config";
+
+const map = path.resolve(__dirname, '../../data/map/world_client.json');
 
 class Region {
 

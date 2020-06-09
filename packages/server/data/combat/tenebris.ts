@@ -1,7 +1,7 @@
-let Combat = require('../../js/game/entity/character/combat/combat'),
-    Messages = require('../../js/network/messages'),
-    Packets = require('../../js/network/packets'),
-    Utils = require('../../js/util/utils');
+import Combat from '../../ts/game/entity/character/combat/combat';
+    import Messages from '../../ts/network/messages';
+    import Packets from '../../ts/network/packets';
+    import Utils from '../../ts/util/utils';
 
 class Tenebris extends Combat {
 
@@ -98,7 +98,7 @@ class Tenebris extends Combat {
                 withAnimation: true
             })
         });
-        
+
     }
 
     removeIllusions() {

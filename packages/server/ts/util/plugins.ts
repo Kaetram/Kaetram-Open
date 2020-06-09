@@ -1,7 +1,7 @@
 /* global module */
 
-let fs = require('fs'),
-    Filter = /^([^\\.].*)\.js$/;
+import * as fs from 'fs';
+const Filter = /^([^\\.].*)\.js$/;
 
 function identity(val) {
     return val;
@@ -12,11 +12,11 @@ export default function requireItems(directory) {
         modules = {},
         resolve = identity;
 
-    files.forEach((file) => {
+    files.forEach(async (file) => {
         let match = file.match(Filter);
 
         if (match)
-            modules[match[1]] = resolve(require(directory + file));
+            modules[match[1]] = resolve((await import(directory + file)).default);
 
     });
 

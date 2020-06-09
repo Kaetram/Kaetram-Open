@@ -1,7 +1,7 @@
 /* global module */
 
-let Minigame = require('../minigame'),
-    Utils = require('../../util/utils');
+import Minigame from '../minigame';
+    import Utils from '../../util/utils';
 
 class TeamWar extends Minigame {
 

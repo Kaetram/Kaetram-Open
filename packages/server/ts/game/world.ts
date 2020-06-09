@@ -29,6 +29,8 @@ import Database from '../database/database';
 import Player from './entity/character/player/player';
 import Entity from './entity/entity';
 import API from '../network/api';
+import config from "../../config";
+import log from "../util/log";
 
 class World {
 

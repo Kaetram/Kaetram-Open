@@ -8,8 +8,6 @@
 import _ from 'underscore';
 import Packets from '../network/packets';
 
-declare let idSeed, clientSeed, instanceSeed, socketSeed;
-
 export default {
 
     random(range) {
@@ -44,21 +42,21 @@ export default {
      * from ending up with the same numbers/variables.
      */
 
-    idSeed = 0,
-    clientSeed = 0,
-    instanceSeed = 0,
-    socketSeed = 0,
+    idSeed: 0,
+    clientSeed: 0,
+    instanceSeed: 0,
+    socketSeed: 0,
 
     generateRandomId() {
-        return ++idSeed + '' + this.randomInt(0, 25000);
+        return ++this.idSeed + '' + this.randomInt(0, 25000);
     },
 
     generateClientId() {
-        return ++clientSeed + '' + this.randomInt(0, 25000);
+        return ++this.clientSeed + '' + this.randomInt(0, 25000);
     },
 
     generateInstance() {
-        return ++instanceSeed + '' + this.randomInt(0, 25000);
+        return ++this.instanceSeed + '' + this.randomInt(0, 25000);
     },
 
     validPacket(packet) {
@@ -104,7 +102,7 @@ export default {
                     messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
             });
 
-            let codeCount(messageBlocks.length / 2) - 1;
+            let codeCount = (messageBlocks.length / 2) - 1;
 
             for (let i = 0; i < codeCount; i++)
                 messageBlocks.push('</span>');

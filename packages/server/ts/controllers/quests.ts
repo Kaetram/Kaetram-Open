@@ -1,11 +1,11 @@
 /* global module */
 
-let _ = require('underscore'),
-    Introduction = require('../game/entity/character/player/quests/impl/introduction'),
-    BulkySituation = require('../game/entity/character/player/quests/impl/bulkysituation'),
-    QuestData = require('../../data/quests.json'),
-    AchievementData = require('../../data/achievements.json'),
-    Achievement = require('../game/entity/character/player/achievement');
+import _ from 'underscore';
+    import Introduction from '../game/entity/character/player/quests/impl/introduction';
+    import BulkySituation from '../game/entity/character/player/quests/impl/bulkysituation';
+    import QuestData from '../../data/quests.json';
+    import AchievementData from '../../data/achievements.json';
+    import Achievement from '../game/entity/character/player/achievement';
 
 class Quests {
 

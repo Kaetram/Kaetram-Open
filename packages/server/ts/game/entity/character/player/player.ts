@@ -1,34 +1,35 @@
 /* global module */
 
-let _ = require('underscore'),
-    Character = require('../character'),
-    Incoming = require('../../../../controllers/incoming'),
-    Armour = require('./equipment/armour'),
-    Weapon = require('./equipment/weapon'),
-    Pendant = require('./equipment/pendant'),
-    Ring = require('./equipment/ring'),
-    Boots = require('./equipment/boots'),
-    Items = require('../../../../util/items'),
-    Messages = require('../../../../network/messages'),
-    Formulas = require('../../../../util/formulas'),
-    HitPoints = require('./points/hitpoints'),
-    Mana = require('./points/mana'),
-    Packets = require('../../../../network/packets'),
-    Modules = require('../../../../util/modules'),
-    Handler = require('./handler'),
-    Quests = require('../../../../controllers/quests'),
-    Inventory = require('./containers/inventory/inventory'),
-    Abilities = require('./abilities/abilities'),
-    Professions = require('./professions/professions'),
-    Bank = require('./containers/bank/bank'),
-    Enchant = require('./enchant'),
-    Utils = require('../../../../util/utils'),
-    Constants = require('../../../../util/constants'),
-    Hit = require('../combat/hit'),
-    Trade = require('./trade'),
-    Warp = require('./warp'),
-    Doors = require('./doors'),
-    Friends = require('./friends');
+import _ from 'underscore';
+    import Character from '../character';
+    import Incoming from '../../../../controllers/incoming';
+    import Armour from './equipment/armour';
+    import Weapon from './equipment/weapon';
+    import Pendant from './equipment/pendant';
+    import Ring from './equipment/ring';
+    import Boots from './equipment/boots';
+    import Items from '../../../../util/items';
+    import Messages from '../../../../network/messages';
+    import Formulas from '../../../../util/formulas';
+    import HitPoints from './points/hitpoints';
+    import Mana from './points/mana';
+    import Packets from '../../../../network/packets';
+    import Modules from '../../../../util/modules';
+    import Handler from './handler';
+    import Quests from '../../../../controllers/quests';
+    import Inventory from './containers/inventory/inventory';
+    import Abilities from './abilities/abilities';
+    import Professions from './professions/professions';
+    import Bank from './containers/bank/bank';
+    import Enchant from './enchant';
+    import Utils from '../../../../util/utils';
+    import Constants from '../../../../util/constants';
+    import Hit from '../combat/hit';
+    import Trade from './trade';
+    import Warp from './warp';
+    import Doors from './doors';
+    import Friends from './friends';
+    import config from "../../../../../config";
 
 class Player extends Character {
 

@@ -1,6 +1,6 @@
 /* global module */
 
-let Modules = require('../../../../util/modules');
+import Modules from '../../../../util/modules';
 
 class Trade {
 

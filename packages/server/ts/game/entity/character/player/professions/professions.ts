@@ -1,6 +1,7 @@
-let _ = require('underscore'),
-    Modules = require('../../../../../util/modules'),
-    Formulas = require('../../../../../util/formulas');
+import _ from 'underscore';
+    import Modules from '../../../../../util/modules';
+import Formulas from '../../../../../util/formulas';
+import log from "../../../../../util/log";
 
 class Professions {
 
@@ -21,9 +22,9 @@ class Professions {
         * enum. We use the key to generate the profession class instance.
         */
 
-        _.each(pList, (profession) => {
+        _.each(pList, async (profession) => {
             try {
-                let ProfessionClass = require(`./impl/${profession.toLowerCase()}`),
+                let ProfessionClass = (await import(`./impl/${profession.toLowerCase()}`)).default,
                     id = Modules.Professions[profession];
 
                 this.professions[id] = new ProfessionClass(id, this.player);

@@ -1,20 +1,20 @@
 /* global module */
 
-let _ = require('underscore'),
-    Grids = require('./grids'),
-    Regions = require('./regions'),
-    Utils = require('../util/utils'),
-    Modules = require('../util/modules'),
-    Objects = require('../util/objects'),
-    PVPAreas = require('./areas/pvpareas'),
-    MusicAreas = require('./areas/musicareas'),
-    ChestAreas = require('./areas/chestareas'),
-    map = require('../../data/map/world_server'),
-    Spawns = require('../../data/spawns'),
-    OverlayAreas = require('./areas/overlayareas'),
-    CameraAreas = require('./areas/cameraareas'),
-    Mobs = require('../util/mobs'),
-    ClientMap = require('../../data/map/world_client');
+import _ from 'underscore';
+    import Grids from './grids';
+    import Regions from './regions';
+    import Utils from '../util/utils';
+    import Modules from '../util/modules';
+    import Objects from '../util/objects';
+    import PVPAreas from './areas/pvpareas';
+    import MusicAreas from './areas/musicareas';
+    import ChestAreas from './areas/chestareas';
+    import * as map from '../../data/map/world_server.json';
+    import * as Spawns from '../../data/spawns.json';
+    import OverlayAreas from './areas/overlayareas';
+    import CameraAreas from './areas/cameraareas';
+    import Mobs from '../util/mobs';
+    import * as ClientMap from '../../data/map/world_client.json';
 
 class Map {
 

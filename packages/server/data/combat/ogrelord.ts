@@ -1,9 +1,9 @@
-let Combat = require('../../js/game/entity/character/combat/combat'),
-    Messages = require('../../js/network/messages'),
-    Packets = require('../../js/network/packets'),
-    Modules = require('../../js/util/modules'),
-    Utils = require('../../js/util/utils'),
-    _ = require('underscore');
+import Combat from '../../ts/game/entity/character/combat/combat';
+    import Messages from '../../ts/network/messages';
+    import Packets from '../../ts/network/packets';
+    import Modules from '../../ts/util/modules';
+    import Utils from '../../ts/util/utils';
+    import _ from 'underscore';
 
 class OgreLord extends Combat {
 
