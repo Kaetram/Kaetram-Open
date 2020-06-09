@@ -1,6 +1,10 @@
 /* global module */
 
+import MongoDB from './mongodb';
+
 class Loader {
+
+    database: MongoDB;
 
     constructor(database) {
         this.database = database;

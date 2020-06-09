@@ -1,12 +1,23 @@
 /* global module */
 
-import { MongoClient } from 'mongodb';
+import * as _ from 'underscore';
+import * as bcrypt from 'bcrypt';
+import { MongoClient, Db } from 'mongodb';
 import Loader from './loader';
-    import Creator from './creator';
-    import * as bcrypt from 'bcrypt';
-    import * as _ from 'underscore';
+import Creator from './creator';
 
 class MongoDB {
+
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    database: string;
+
+    loader: Loader;
+    creator: Creator;
+
+    connection: Db;
 
     constructor(host, port, user, password, database) {
 
@@ -22,7 +33,7 @@ class MongoDB {
         this.connection = null;
     }
 
-    getDatabase(callback, type) {
+    getDatabase(callback, type?) {
         let url = `mongodb://${this.host}:${this.port}/${this.database}`;
 
             if (config.mongoAuth)
@@ -194,7 +205,7 @@ class MongoDB {
                 cursor = collection.find();
 
             cursor.toArray().then((playerList) => {
-                _.each(playerList, (playerInfo) => {
+                _.each(playerList, (playerInfo: any) => {
                     delete playerInfo._id;
 
                     playerInfo.x = newX;

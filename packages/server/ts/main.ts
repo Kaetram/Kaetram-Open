@@ -4,12 +4,13 @@ import Database from './database/database';
 import log from './util/log';
 import Parser from './util/parser';
 import Config from '../config';
+import Globals from './util/globals';
 
 const config = Config;
 
 class Main {
     webSocket: WebSocket;
-    database: Database;
+    database: any;
     parser: Parser;
     world: World;
 
@@ -17,7 +18,7 @@ class Main {
         log.info('Initializing ' + config.name + ' game engine...');
 
         this.webSocket = new WebSocket(config.host, config.port, config.gver);
-        this.database = new Database(config.database);
+        this.database = new Database(config.database).getDatabase();
         this.parser = new Parser();
         this.world = null;
 
@@ -37,7 +38,7 @@ class Main {
                  log.notice('Connect locally via http://' + host + ':' + config.port);
              };
 
-             this.world = new World(this.webSocket, this.getDatabase());
+             this.world = new World(this.webSocket, this.database);
 
              this.world.load(onWorldLoad);
         });
@@ -92,7 +93,7 @@ class Main {
 
                 case 'registered':
 
-                    this.world.database.registeredCount((count) => {
+                    this.database.registeredCount((count) => {
                         log.info(`There are ${count} users registered.`);
                     });
 
@@ -139,7 +140,7 @@ class Main {
                      * in.
                      */
 
-                    this.world.database.resetPositions(newX, newY, (result) => {
+                    this.database.resetPositions(newX, newY, (result) => {
                         log.info(result);
                     });
 
@@ -179,10 +180,6 @@ class Main {
 
             }
         });
-    }
-
-    getDatabase() {
-        return this.database.getDatabase();
     }
 
     getPopulation() {
