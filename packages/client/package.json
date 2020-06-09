@@ -17,6 +17,7 @@
         "workbox-build": "^5.1.3"
     },
     "dependencies": {
+        "gl-tiled": "^1.0.0",
         "jquery": "^3.5.1",
         "underscore": "^1.10.2"
     }

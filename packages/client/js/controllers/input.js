@@ -4,7 +4,7 @@ import log from '../lib/log';
 import Animation from '../entity/animation';
 import Chat from './chat';
 import Overlay from './overlay';
-import * as Packets from '../network/packets';
+import Packets from '../network/packets';
 
 export default class InputController {
     constructor(game) {

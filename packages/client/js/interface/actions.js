@@ -1,10 +1,11 @@
 import $ from 'jquery';
+import log from '../lib/log';
 
 export default class Actions {
-    constructor(interface) {
+    constructor(menu) {
         var self = this;
 
-        self.interface = interface;
+        self.menu = menu;
 
         self.body = $('#actionContainer');
         self.drop = $('#dropDialog');
@@ -24,12 +25,12 @@ export default class Actions {
 
         dropAccept.click(function (event) {
             if (self.activeClass === 'inventory')
-                self.interface.inventory.clickAction(event);
+                self.menu.inventory.clickAction(event);
         });
 
         dropCancel.click(function (event) {
             if (self.activeClass === 'inventory')
-                self.interface.inventory.clickAction(event);
+                self.menu.inventory.clickAction(event);
         });
     }
 
@@ -93,7 +94,7 @@ export default class Actions {
 
         button.click(function (event) {
             if (self.activeClass === 'inventory')
-                self.interface.inventory.clickAction(event);
+                self.menu.inventory.clickAction(event);
         });
 
         if (misc) self.miscButton = button;
@@ -172,11 +173,11 @@ export default class Actions {
     }
 
     getGame() {
-        return this.interface.game;
+        return this.menu.game;
     }
 
     getPlayer() {
-        return this.interface.game.player;
+        return this.menu.game.player;
     }
 
     isVisible() {

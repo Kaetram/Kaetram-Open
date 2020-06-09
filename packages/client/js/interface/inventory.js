@@ -1,12 +1,14 @@
 import $ from 'jquery';
 import Container from './container/container';
+import Packets from '../network/packets';
+import * as Detect from '../utils/detect';
 
 export default class Inventory {
     constructor(game, size) {
         var self = this;
 
         self.game = game;
-        self.actions = game.interface.actions;
+        self.actions = game.menu.actions;
 
         self.body = $('#inventory');
         self.button = $('#inventoryButton');
@@ -78,7 +80,7 @@ export default class Inventory {
     open() {
         var self = this;
 
-        self.game.interface.hideAll();
+        self.game.menu.hideAll();
 
         if (self.isVisible()) self.hide();
         else self.display();
