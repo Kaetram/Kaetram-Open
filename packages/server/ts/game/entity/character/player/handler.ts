@@ -1,15 +1,15 @@
 /* global module */
 
 import _ from 'underscore';
-    import Messages from '../../../../network/messages';
-    import Modules from '../../../../util/modules';
-    import Packets from '../../../../network/packets';
-    import Npcs from '../../../../util/npcs';
-    import Hit from '../combat/hit';
-    import Utils from '../../../../util/utils';
-    import Shops from '../../../../util/shops';
-    import log from "../../../../util/log";
-    import config from "../../../../../config";
+import Messages from '../../../../network/messages';
+import Modules from '../../../../util/modules';
+import Packets from '../../../../network/packets';
+import Npcs from '../../../../util/npcs';
+import Hit from '../combat/hit';
+import Utils from '../../../../util/utils';
+import Shops from '../../../../util/shops';
+import log from "../../../../util/log";
+import config from "../../../../../config";
 
 class Handler {
 

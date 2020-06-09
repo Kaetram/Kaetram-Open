@@ -1,8 +1,8 @@
 import World from '../game/world';
-    import Messages from './messages';
-    import Packets from './packets';
-    import Player from '../game/entity/character/player/player';
-    import Utils from '../util/utils';
+import Messages from './messages';
+import Packets from './packets';
+import Player from '../game/entity/character/player/player';
+import Utils from '../util/utils';
 import _ from 'underscore';
 import config from "../../config";
 

@@ -1,8 +1,8 @@
 /* global module */
 
 import Mobs from '../../util/mobs';
-    import Items from '../../util/items';
-    import NPCs from '../../util/npcs';
+import Items from '../../util/items';
+import NPCs from '../../util/npcs';
 
 class Entity {
 

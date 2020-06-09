@@ -1,9 +1,9 @@
 /* global module */
 
 import _ from 'underscore';
-    import Slot from './slot';
-    import Items from '../../../../../util/items';
-    import Constants from '../../../../../util/constants';
+import Slot from './slot';
+import Items from '../../../../../util/items';
+import Constants from '../../../../../util/constants';
 
 class Container {
 

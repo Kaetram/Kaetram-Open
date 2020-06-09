@@ -1,7 +1,7 @@
 /* global module */
 
 import Modules from '../../../../util/modules';
-    import Utils from '../../../../util/utils';
+import Utils from '../../../../util/utils';
 
 class Warp {
 

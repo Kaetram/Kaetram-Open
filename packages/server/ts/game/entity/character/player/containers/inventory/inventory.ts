@@ -1,11 +1,11 @@
 /* global module */
 
 import _ from 'underscore';
-    import Container from '../container';
-    import Messages from '../../../../../../network/messages';
-    import Packets from '../../../../../../network/packets';
-    import Constants from './constants';
-    import Items from '../../../../../../util/items';
+import Container from '../container';
+import Messages from '../../../../../../network/messages';
+import Packets from '../../../../../../network/packets';
+import Constants from './constants';
+import Items from '../../../../../../util/items';
 
 class Inventory extends Container {
 
