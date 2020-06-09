@@ -228,7 +228,7 @@ class Parser {
     loadObjects() {
         let objectCounter = 0;
 
-        _.each(ObjectData, (value, key) => {
+        _.each(ObjectData, (value: any, key) => {
 
             Objects.Data[key] = {
                 x: value.x,
