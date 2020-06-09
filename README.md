@@ -10,17 +10,17 @@
 [![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat)](https://discord.gg/MmbGAaw)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social&icon=reddit)](https://www.reddit.com/r/kaetram/)
 
-Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive. This project is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest (BQ). This game uses original BQ assets as well as custom-made ones. The entire code-base has been written from scratch, using more modern approaches.
+Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive. This project is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game&mdash;BrowserQuest (BQ). This game uses original BQ assets as well as custom-made ones. The entire code-base has been written from scratch, using more modern approaches.
 
-Live Version - <https://kaetram.com>
+Live Version &ndash; <https://kaetram.com>
 
-Join us on Discord - <https://discord.gg/MmbGAaw>
+Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
-Patreon - <https://www.patreon.com/kaetram>
+Patreon &ndash; <https://www.patreon.com/kaetram>
 
-![Demo](https://i.imgur.com/slnzrZB.png)
-![Demo1](https://i.imgur.com/jS5d3oq.png)
-![Demo2](https://i.imgur.com/cZTFqnd.png)
+![Demo1](https://i.imgur.com/slnzrZB.png)
+![Demo2](https://i.imgur.com/jS5d3oq.png)
+![Demo3](https://i.imgur.com/cZTFqnd.png)
 
 ## Features
 
