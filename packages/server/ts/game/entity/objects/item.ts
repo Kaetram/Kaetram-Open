@@ -1,6 +1,6 @@
 /* global module */
 
-let Entity = require('../entity');
+import Entity from '../entity';
 
 class Item extends Entity {
 

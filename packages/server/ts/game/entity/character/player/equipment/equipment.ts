@@ -1,6 +1,6 @@
 /* global module */
 
-let Items = require('../../../../../util/items');
+import Items from '../../../../../util/items';
 
 class Equipment {
 

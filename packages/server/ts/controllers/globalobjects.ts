@@ -1,5 +1,5 @@
-let Objects = require('../util/objects'),
-    Utils = require('../util/utils');
+import Objects from '../util/objects';
+    import Utils from '../util/utils';
 
 class GlobalObjects {
 

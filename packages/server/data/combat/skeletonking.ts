@@ -1,6 +1,6 @@
-let Combat = require('../../js/game/entity/character/combat/combat'),
-    Utils = require('../../js/util/utils'),
-    _ = require('underscore');
+import Combat from '../../ts/game/entity/character/combat/combat';
+    import Utils from '../../ts/util/utils';
+    import _ from 'underscore';
 
 class SkeletonKing extends Combat {
 

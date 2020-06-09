@@ -1,9 +1,9 @@
 /* global module */
 
-let Entity = require('../entity'),
-    Modules = require('../../../util/modules'),
-    Mobs = require('../../../util/mobs'),
-    Combat = require('./combat/combat');
+import Entity from '../entity';
+    import Modules from '../../../util/modules';
+    import Mobs from '../../../util/mobs';
+    import Combat from './combat/combat';
 
 class Character extends Entity {
 

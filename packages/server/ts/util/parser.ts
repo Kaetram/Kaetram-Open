@@ -3,6 +3,7 @@
 import _ from 'underscore';
 import Mobs from './mobs';
 import NPCs from './npcs';
+import log from "./log";
 import Items from './items';
 import Abilities from './abilities';
 import Shops from './shops';
@@ -34,8 +35,8 @@ class Parser {
     }
 
     load() {
-        this.onReady(() => {
-            Mobs.Plugins = require ('../util/plugins')(__dirname + '/../../data/combat/');
+        this.onReady(async () => {
+            Mobs.Plugins = (await import('../util/plugins')).default(__dirname + '/../../data/combat/');
 
             log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
             log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
@@ -103,7 +104,7 @@ class Parser {
     loadItemData() {
         let itemCounter = 0;
 
-        _.each(ItemData, (value, key) => {
+        _.each(ItemData, async (value, key) => {
             key = key.toLowerCase();
 
             Items.Data[key] = {
@@ -134,7 +135,7 @@ class Parser {
             Items.Ids[value.id] = Items.Data[key];
 
             if (value.plugin)
-                Items.Plugins[value.id] = require('../../data/items/' + value.plugin);
+                Items.Plugins[value.id] = (await import('../../data/items/' + value.plugin)).default;
 
             itemCounter++;
         });

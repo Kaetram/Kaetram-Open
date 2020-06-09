@@ -1,6 +1,6 @@
 /* global module */
 
-let Ability = require('./ability');
+import Ability from './ability';
 
 class IceStrike extends Ability {
 

@@ -1,12 +1,11 @@
 import World from './game/world';
 import WebSocket from './network/websocket';
 import Database from './database/database';
-import Log from './util/log';
+import log from './util/log';
 import Parser from './util/parser';
 import Config from '../config';
 
-log = new Log();
-config = Config;
+const config = Config;
 
 class Main {
     webSocket: WebSocket;

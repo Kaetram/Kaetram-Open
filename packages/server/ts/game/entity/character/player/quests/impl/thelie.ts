@@ -1,7 +1,7 @@
 /* global module */
 
-let Quest = require('../quest'),
-    Packets = require('../../../../../network/packets');
+import Quest from '../quest';
+    import Packets from '../../../../../network/packets';
 
 class Thelie extends Quest {
 

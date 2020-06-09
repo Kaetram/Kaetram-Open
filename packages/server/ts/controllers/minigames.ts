@@ -1,6 +1,8 @@
 /* global module */
 
-let TeamWar = require('../minigames/impl/teamwar');
+
+import log from "../util/log";
+import TeamWar from '../minigames/impl/teamwar';
 
 class Minigames {
 

@@ -1,5 +1,8 @@
-let DiscordJS = require('discord.js'),
-    Utils = require('../util/utils');
+import DiscordJS from 'discord.js';
+import Utils from '../util/utils';
+
+import log from "../util/log";
+import config from "../../config";
 
 /**
  * This class will be used in Kaetram-Hub as well.

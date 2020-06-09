@@ -1,10 +1,10 @@
 /* global module */
 
-let _ = require('underscore'),
-    ShopData = require('../util/shops'),
-    Items = require('../util/items'),
-    Messages = require('../network/messages'),
-    Packets = require('../network/packets');
+import _ from 'underscore';
+    import ShopData from '../util/shops';
+    import Items from '../util/items';
+    import Messages from '../network/messages';
+    import Packets from '../network/packets';
 
 class Shops {
 

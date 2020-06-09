@@ -1,6 +1,6 @@
 /* global module */
 
-let _ = require('underscore');
+import _ from 'underscore';
 
 class Grids {
 

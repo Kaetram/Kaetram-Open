@@ -1,4 +1,5 @@
-let fs = require('fs');
+import * as fs from 'fs';
+import config from "../../config";
 
 class Log {
 
@@ -106,4 +107,4 @@ class Log {
 
 }
 
-export default Log;
+export default new Log();

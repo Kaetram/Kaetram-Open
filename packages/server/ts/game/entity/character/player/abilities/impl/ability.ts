@@ -1,6 +1,6 @@
 /* global module */
 
-let Abilities = require('../../../../../../util/abilities');
+import Abilities from '../../../../../../util/abilities';
 
 class Ability {
 
