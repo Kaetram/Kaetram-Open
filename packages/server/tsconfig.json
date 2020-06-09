@@ -1,26 +1,30 @@
 {
     "compilerOptions": {
+        "strict": true,
         "allowJs": false,
         "module": "commonjs",
-
         "target": "esnext",
+
         "types": ["node"],
         "rootDir": "./",
         "outDir": "./dist",
+        "importHelpers": true,
         "incremental": true,
         "allowUmdGlobalAccess": true,
         "moduleResolution": "node",
-        "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
+
+        "noImplicitAny": false,
+        "strictNullChecks": false,
+
         "sourceMap": false,
         "resolveJsonModule": true,
-
         "esModuleInterop": false,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": false,
-        "typeRoots": ["ts/util/globals.d.ts"]
+        "typeRoots": ["./ts/util/globals.d.ts"]
     },
     "typedocOptions ": {
         "inputFiles": ["./"],
@@ -32,5 +36,5 @@
         "hideGenerator": true
     },
     "include": ["**/*.ts"],
-    "exclude": ["../client/**"]
+    "exclude": ["node_modules/**", "../client/**"]
 }

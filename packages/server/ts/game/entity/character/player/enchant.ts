@@ -1,11 +1,11 @@
 /* global module */
 
-let _ = require('underscore'),
-    Items = require('../../../../util/items'),
-    Messages = require('../../../../network/messages'),
-    Packets = require('../../../../network/packets'),
-    Utils = require('../../../../util/utils'),
-    Modules = require('../../../../util/modules');
+import _ from 'underscore';
+    import Items from '../../../../util/items';
+    import Messages from '../../../../network/messages';
+    import Packets from '../../../../network/packets';
+    import Utils from '../../../../util/utils';
+    import Modules from '../../../../util/modules';
 
 class Enchant {
 

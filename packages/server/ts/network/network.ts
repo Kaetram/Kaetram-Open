@@ -1,9 +1,10 @@
-let World = require('../game/world'),
-    Messages = require('./messages'),
-    Packets = require('./packets'),
-    Player = require('../game/entity/character/player/player'),
-    Utils = require('../util/utils'),
-    _ = require('underscore');
+import World from '../game/world';
+    import Messages from './messages';
+    import Packets from './packets';
+    import Player from '../game/entity/character/player/player';
+    import Utils from '../util/utils';
+import _ from 'underscore';
+import config from "../../config";
 
 class Network {
 

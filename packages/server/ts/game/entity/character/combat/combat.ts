@@ -1,14 +1,14 @@
 /* global module */
 
-let _ = require('underscore'),
-    Hit = require('./hit'),
-    CombatQueue = require('./combatqueue'),
-    Utils = require('../../../../util/utils'),
-    Formulas = require('../../../../util/formulas'),
-    Modules = require('../../../../util/modules'),
-    Messages = require('../../../../network/messages'),
-    Character = require('../character'),
-    Packets = require('../../../../network/packets');
+import _ from 'underscore';
+    import Hit from './hit';
+    import CombatQueue from './combatqueue';
+    import Utils from '../../../../util/utils';
+    import Formulas from '../../../../util/formulas';
+    import Modules from '../../../../util/modules';
+    import Messages from '../../../../network/messages';
+    import Character from '../character';
+    import Packets from '../../../../network/packets';
 
 class Combat {
 

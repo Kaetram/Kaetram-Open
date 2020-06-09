@@ -1,4 +1,4 @@
-let Combat = require('../../js/game/entity/character/combat/combat');
+import Combat from '../../ts/game/entity/character/combat/combat';
 
 /*
  * The default superclass for combat-related plugins.

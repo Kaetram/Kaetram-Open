@@ -1,7 +1,7 @@
 /* global module */
 
-let Entity = require('../entity'),
-    Utils = require('../../../util/utils');
+import Entity from '../entity';
+    import Utils from '../../../util/utils';
 
 class Chest extends Entity {
 

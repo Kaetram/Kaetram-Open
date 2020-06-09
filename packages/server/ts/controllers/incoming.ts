@@ -1,14 +1,16 @@
 /* global module */
 
-let Packets = require('../network/packets'),
-    Request = require('request'),
-    _ = require('underscore'),
-    Messages = require('../network/messages'),
-    sanitizer = require('sanitizer'),
-    Commands = require('./commands'),
-    Items = require('../util/items'),
-    Creator = require('../database/mongodb/creator'),
-    Utils = require('../util/utils');
+import Packets from '../network/packets';
+    import Request from 'request';
+    import _ from 'underscore';
+    import Messages from '../network/messages';
+    import sanitizer from 'sanitizer';
+    import Commands from './commands';
+    import Items from '../util/items';
+    import Creator from '../database/mongodb/creator';
+    import Utils from '../util/utils';
+    import log from "../util/log";
+    import config from "../../config";
 
 class Incoming {
 

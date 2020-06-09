@@ -1,8 +1,8 @@
-let Combat = require('../../js/game/entity/character/combat/combat'),
-    Utils = require('../../js/util/utils'),
-    Messages = require('../../js/network/messages'),
-    Packets = require('../../js/network/packets'),
-    Modules = require('../../js/util/modules');
+import Combat from '../../ts/game/entity/character/combat/combat';
+    import Utils from '../../ts/util/utils';
+    import Messages from '../../ts/network/messages';
+    import Packets from '../../ts/network/packets';
+    import Modules from '../../ts/util/modules';
 
 class PirateCaptain extends Combat {
 

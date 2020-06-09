@@ -1,7 +1,7 @@
 /* global module */
 
-let _ = require('underscore'),
-    map = require('../../data/map/world_server');
+import _ from 'underscore';
+    import * as map from '../../data/map/world_server.json';
 
 class Regions {
 

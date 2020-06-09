@@ -1,7 +1,7 @@
 /* global module */
 
-let Modules = require('../../../../util/modules'),
-    Utils = require('../../../../util/utils');
+import Modules from '../../../../util/modules';
+    import Utils from '../../../../util/utils';
 
 class Warp {
 

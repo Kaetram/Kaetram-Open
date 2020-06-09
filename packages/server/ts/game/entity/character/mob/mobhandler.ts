@@ -1,7 +1,7 @@
-let Utils = require('../../../../util/utils'),
-    Messages = require('../../../../network/messages'),
-    Mobs = require('../../../../util/mobs'),
-    Packets = require('../../../../network/packets');
+import Utils from '../../../../util/utils';
+    import Messages from '../../../../network/messages';
+    import Mobs from '../../../../util/mobs';
+    import Packets from '../../../../network/packets';
 
 class MobHandler {
 

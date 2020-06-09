@@ -1,6 +1,6 @@
 /* global module */
 
-let bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
 class Creator {
 

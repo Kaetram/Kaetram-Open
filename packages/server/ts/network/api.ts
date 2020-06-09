@@ -1,9 +1,10 @@
-let express = require('express'),
-    bodyParser = require('body-parser'),
-    request = require('request'),
-    _ = require('underscore'),
-    APIConstants = require('../util/apiconstants'),
-    Utils = require('../util/utils');
+import * as express from 'express';
+    import * as bodyParser from 'body-parser';
+    import * as request from 'request';
+    import * as _ from 'underscore';
+    import APIConstants from '../util/apiconstants';
+import Utils from '../util/utils';
+import config from "../../config";
 
 class API {
 

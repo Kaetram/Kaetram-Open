@@ -1,12 +1,12 @@
 /* global module */
 
-let _ = require('underscore'),
-    Character = require('../character'),
-    Mobs = require('../../../../util/mobs'),
-    Utils = require('../../../../util/utils'),
-    Items = require('../../../../util/items'),
-    Constants = require('../../../../util/constants'),
-    MobHandler = require('./mobhandler');
+import _ from 'underscore';
+    import Character from '../character';
+    import Mobs from '../../../../util/mobs';
+    import Utils from '../../../../util/utils';
+    import Items from '../../../../util/items';
+    import Constants from '../../../../util/constants';
+    import MobHandler from './mobhandler';
 
 class Mob extends Character {
 

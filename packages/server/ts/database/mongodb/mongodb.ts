@@ -1,10 +1,10 @@
 /* global module */
 
-let MongoClient = require('mongodb').MongoClient,
-    Loader = require('./loader'),
-    Creator = require('./creator'),
-    bcrypt = require('bcrypt'),
-    _ = require('underscore');
+import { MongoClient } from 'mongodb';
+import Loader from './loader';
+    import Creator from './creator';
+    import * as bcrypt from 'bcrypt';
+    import * as _ from 'underscore';
 
 class MongoDB {
 

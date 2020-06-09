@@ -1,6 +1,6 @@
 /* global module */
 
-let Points = require('./points');
+import Points from './points';
 
 class HitPoints extends Points {
 
