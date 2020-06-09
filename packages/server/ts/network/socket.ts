@@ -1,6 +1,10 @@
 /* global module */
 
 class Socket {
+    port: number;
+    _connections: {};
+    _counter: number;
+
     constructor(port) {
         this.port = port;
 
