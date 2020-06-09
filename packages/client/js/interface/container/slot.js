@@ -1,57 +1,50 @@
-define(function() {
+export default class Slot {
+    constructor(index) {
+        var self = this;
 
-    return Class.extend({
+        self.index = index;
 
-        init: function(index) {
-            var self = this;
+        self.string = null;
+        self.count = -1;
+        self.ability = -1;
+        self.abilityLevel = -1;
 
-            self.index = index;
+        self.edible = false;
+        self.equippable = false;
+    }
 
-            self.string = null;
-            self.count = -1;
-            self.ability = -1;
-            self.abilityLevel = -1;
+    load(string, count, ability, abilityLevel, edible, equippable) {
+        var self = this;
+        self.string = string;
+        self.count = count;
+        self.ability = ability;
+        self.abilityLevel = abilityLevel;
 
-            self.edible = false;
-            self.equippable = false;
-        },
+        self.edible = edible;
+        self.equippable = equippable;
+    }
 
-        load: function(string, count, ability, abilityLevel, edible, equippable) {
-            var self = this;
+    empty() {
+        var self = this;
 
-            self.string = string;
-            self.count = count;
-            self.ability = ability;
-            self.abilityLevel = abilityLevel;
+        self.string = null;
+        self.count = -1;
+        self.ability = -1;
+        self.abilityLevel = -1;
 
-            self.edible = edible;
-            self.equippable = equippable;
-        },
+        self.edible = false;
+        self.equippable = false;
+    }
 
-        empty: function() {
-            var self = this;
+    isEmpty() {
+        return !this.string || this.count < 1;
+    }
 
-            self.string = null;
-            self.count = -1;
-            self.ability = -1;
-            self.abilityLevel = -1;
+    setCount(count) {
+        this.count = count;
+    }
 
-            self.edible = false;
-            self.equippable = false;
-        },
-
-        isEmpty: function() {
-            return !this.string || this.count < 1;
-        },
-
-        setCount: function(count) {
-            this.count = count;
-        },
-
-        setString: function(string) {
-            this.string = string
-        }
-
-    });
-
-});
+    setString(string) {
+        this.string = string;
+    }
+}

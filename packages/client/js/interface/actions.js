@@ -1,198 +1,185 @@
-/* global _, log */
+import $ from 'jquery';
 
-define(['jquery'], function($) {
+export default class Actions {
+    constructor(interface) {
+        var self = this;
 
-    return Class.extend({
+        self.interface = interface;
 
-        init: function(interface) {
-            var self = this;
+        self.body = $('#actionContainer');
+        self.drop = $('#dropDialog');
+        self.dropInput = $('#dropCount');
 
-            self.interface = interface;
+        self.activeClass = null;
 
-            self.body = $('#actionContainer');
-            self.drop = $('#dropDialog');
-            self.dropInput = $('#dropCount');
+        self.miscButton = null;
 
-            self.activeClass = null;
+        self.load();
+    }
 
-            self.miscButton = null;
+    load() {
+        var self = this,
+            dropAccept = $('#dropAccept'),
+            dropCancel = $('#dropCancel');
 
-            self.load();
-        },
+        dropAccept.click(function (event) {
+            if (self.activeClass === 'inventory')
+                self.interface.inventory.clickAction(event);
+        });
 
-        load: function() {
-            var self = this,
-                dropAccept = $('#dropAccept'),
-                dropCancel = $('#dropCancel');
+        dropCancel.click(function (event) {
+            if (self.activeClass === 'inventory')
+                self.interface.inventory.clickAction(event);
+        });
+    }
 
-            dropAccept.click(function(event) {
-                if (self.activeClass === 'inventory')
-                    self.interface.inventory.clickAction(event);
+    loadDefaults(activeClass, data) {
+        var self = this;
+
+        self.reset();
+        self.activeClass = activeClass;
+
+        if (data)
+            self.body.css({
+                left: data.mouseX - self.body.width() / 2 + 'px',
+                top: data.mouseY + self.body.height() / 2 + 'px',
             });
 
-            dropCancel.click(function(event) {
-                if (self.activeClass === 'inventory')
-                    self.interface.inventory.clickAction(event);
-            });
-        },
-
-        loadDefaults: function(activeClass, data) {
-            var self = this;
-
-            self.reset();
-            self.activeClass = activeClass;
-
-            if (data)
+        switch (self.activeClass) {
+            case 'inventory':
                 self.body.css({
-                    'left': data.mouseX - (self.body.width() / 2) + 'px',
-                    'top': data.mouseY + (self.body.height() / 2) + 'px'
+                    bottom: '10%',
+                    left: '10%',
                 });
 
-            switch (self.activeClass) {
-                case 'inventory':
+                var dropButton = $(
+                    '<div id="drop" class="actionButton">Drop</div>'
+                );
 
-                    self.body.css({
-                        bottom: '10%',
-                        left: '10%'
-                    });
+                self.add(dropButton);
 
-                    var dropButton = $('<div id="drop" class="actionButton">Drop</div>');
+                break;
 
-                    self.add(dropButton);
+            case 'player':
+                self.add(self.getFollowButton());
 
-                    break;
+                if (data.pvp) self.add(self.getAttackButton());
 
-                case 'player':
+                break;
 
-                    self.add(self.getFollowButton());
+            case 'mob':
+                self.add(self.getFollowButton());
+                self.add(self.getAttackButton());
 
-                    if (data.pvp)
-                        self.add(self.getAttackButton());
+                break;
 
-                    break;
+            case 'npc':
+                self.add(self.getFollowButton());
+                self.add(self.getTalkButton());
 
-                case 'mob':
+                break;
 
-                    self.add(self.getFollowButton());
-                    self.add(self.getAttackButton());
+            case 'object':
+                log.info('[loadDefaults] object.');
 
-                    break;
-
-                case 'npc':
-
-                    self.add(self.getFollowButton());
-                    self.add(self.getTalkButton());
-
-                    break;
-
-                case 'object':
-
-                    log.info('[loadDefaults] object.');
-
-                    break;
-            }
-        },
-
-        add: function(button, misc) {
-            var self = this;
-
-            self.body.find('ul').prepend($('<li></li>').append(button));
-
-            button.click(function(event) {
-                if (self.activeClass === 'inventory')
-                    self.interface.inventory.clickAction(event);
-
-            });
-
-            if (misc)
-                self.miscButton = button;
-        },
-
-        removeMisc: function() {
-            var self = this;
-
-            self.miscButton.remove();
-            self.miscButton = null;
-        },
-
-        reset: function() {
-            var self = this,
-                buttons = self.getButtons();
-
-            for (var i = 0; i < buttons.length; i++)
-                $(buttons[i]).remove();
-        },
-
-        show: function() {
-            this.body.fadeIn('fast');
-        },
-
-        hide: function() {
-            this.body.fadeOut('slow');
-        },
-
-        clear: function() {
-            var self = this;
-
-            $('#dropAccept').unbind('click');
-            $('#dropCancel').unbind('click');
-
-            self.trade.unbind('click');
-            self.follow.unbind('click');
-        },
-
-        displayDrop: function(activeClass) {
-            var self = this;
-
-            self.activeClass = activeClass;
-
-            self.drop.fadeIn('fast');
-
-            self.dropInput.focus();
-            self.dropInput.select();
-        },
-
-        hideDrop: function() {
-            var self = this;
-
-            self.drop.fadeOut('slow');
-
-            self.dropInput.blur();
-            self.dropInput.val('');
-        },
-
-        getAttackButton: function() {
-            return $('<div id="attack" class="actionButton">Attack</div>');
-        },
-
-        getFollowButton: function() {
-            return $('<div id="follow" class="actionButton">Follow</div>');
-        },
-
-        getTradeButton: function() {
-            return $('<div id="trade" class="actionButton">Trade</div>');
-        },
-
-        getTalkButton: function() {
-            return $('<div id="talkButton" class="actionButton">Talk</div>');
-        },
-
-        getButtons: function() {
-            return this.body.find('ul').find('li');
-        },
-
-        getGame: function() {
-            return this.interface.game;
-        },
-
-        getPlayer: function() {
-            return this.interface.game.player;
-        },
-
-        isVisible: function() {
-            return this.body.css('display') === 'block';
+                break;
         }
+    }
 
-    });
+    add(button, misc) {
+        var self = this;
 
-});
+        self.body.find('ul').prepend($('<li></li>').append(button));
+
+        button.click(function (event) {
+            if (self.activeClass === 'inventory')
+                self.interface.inventory.clickAction(event);
+        });
+
+        if (misc) self.miscButton = button;
+    }
+
+    removeMisc() {
+        var self = this;
+
+        self.miscButton.remove();
+        self.miscButton = null;
+    }
+
+    reset() {
+        var self = this,
+            buttons = self.getButtons();
+
+        for (var i = 0; i < buttons.length; i++) $(buttons[i]).remove();
+    }
+
+    show() {
+        this.body.fadeIn('fast');
+    }
+
+    hide() {
+        this.body.fadeOut('slow');
+    }
+
+    clear() {
+        var self = this;
+
+        $('#dropAccept').unbind('click');
+        $('#dropCancel').unbind('click');
+
+        self.trade.unbind('click');
+        self.follow.unbind('click');
+    }
+
+    displayDrop(activeClass) {
+        var self = this;
+
+        self.activeClass = activeClass;
+
+        self.drop.fadeIn('fast');
+
+        self.dropInput.focus();
+        self.dropInput.select();
+    }
+
+    hideDrop() {
+        var self = this;
+
+        self.drop.fadeOut('slow');
+
+        self.dropInput.blur();
+        self.dropInput.val('');
+    }
+
+    getAttackButton() {
+        return $('<div id="attack" class="actionButton">Attack</div>');
+    }
+
+    getFollowButton() {
+        return $('<div id="follow" class="actionButton">Follow</div>');
+    }
+
+    getTradeButton() {
+        return $('<div id="trade" class="actionButton">Trade</div>');
+    }
+
+    getTalkButton() {
+        return $('<div id="talkButton" class="actionButton">Talk</div>');
+    }
+
+    getButtons() {
+        return this.body.find('ul').find('li');
+    }
+
+    getGame() {
+        return this.interface.game;
+    }
+
+    getPlayer() {
+        return this.interface.game.player;
+    }
+
+    isVisible() {
+        return this.body.css('display') === 'block';
+    }
+}

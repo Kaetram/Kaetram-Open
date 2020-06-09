@@ -1,44 +1,45 @@
-define(['./slot'], function(Slot) {
+import Slot from './slot';
 
-    return Class.extend({
+export default class Container {
+    constructor(size) {
+        var self = this;
 
-        init: function(size) {
-            var self = this;
+        self.size = size;
 
-            self.size = size;
+        self.slots = [];
 
-            self.slots = [];
+        for (var i = 0; i < self.size; i++) self.slots.push(new Slot(i));
+    }
 
-            for (var i = 0; i < self.size; i++)
-                self.slots.push(new Slot(i));
-        },
+    setSlot(index, info) {
+        var self = this;
 
-        setSlot: function(index, info) {
-            var self = this;
+        /**
+         * We receive information from the server here,
+         * so we mustn't do any calculations. Instead,
+         * we just modify the container directly.
+         */
 
-            /**
-             * We receive information from the server here,
-             * so we mustn't do any calculations. Instead,
-             * we just modify the container directly.
-             */
+        self.slots[index].load(
+            info.string,
+            info.count,
+            info.ability,
+            info.abilityLevel,
+            info.edible,
+            info.equippable
+        );
+    }
 
-            self.slots[index].load(info.string, info.count, info.ability, info.abilityLevel, info.edible, info.equippable);
-        },
+    getEmptySlot() {
+        var self = this;
 
-        getEmptySlot: function() {
-            var self = this;
+        for (var i = 0; i < self.slots; i++)
+            if (!self.slots[i].string) return i;
 
-            for (var i = 0; i < self.slots; i++)
-                if (!self.slots[i].string)
-                    return i;
+        return -1;
+    }
 
-            return -1;
-        },
-
-        getImageFormat: function(name) {
-            return 'url("img/sprites/item-' + name + '.png")';
-        }
-
-    });
-
-});
+    getImageFormat(name) {
+        return 'url("img/sprites/item-' + name + '.png")';
+    }
+}
