@@ -1,164 +1,159 @@
-/* global log, _, Packets */
+import $ from 'jquery';
+import _ from 'underscore';
+import State from './pages/state';
+import Settings from './pages/settings';
+import Quest from './pages/quest';
+import Guild from './pages/guild';
+import Professions from './pages/professions';
+import Packets from '../../network/packets';
 
-define(['jquery', './pages/state', './pages/ability',
-        './pages/settings', './pages/quest', './pages/guild',
-        './pages/professions'],
-        function($, State, Ability, Settings, Quest, Guild, Professions) {
+export default class Profile {
+    constructor(game) {
+        var self = this;
 
-    return Class.extend({
+        self.game = game;
 
-        init: function(game) {
-            var self = this;
+        self.body = $('#profileDialog');
+        self.button = $('#profileButton');
 
-            self.game = game;
+        self.next = $('#next');
+        self.previous = $('#previous');
 
-            self.body = $('#profileDialog');
-            self.button = $('#profileButton');
+        self.activePage = null;
+        self.activeIndex = 0;
+        self.pages = [];
 
-            self.next = $('#next');
-            self.previous = $('#previous');
+        self.load();
+    }
 
-            self.activePage = null;
-            self.activeIndex = 0;
-            self.pages = [];
+    load() {
+        var self = this;
 
-            self.load();
-        },
+        self.button.click(function () {
+            self.open();
+        });
 
-        load: function() {
-            var self = this;
+        self.next.click(function () {
+            if (self.activeIndex + 1 < self.pages.length)
+                self.setPage(self.activeIndex + 1);
+            else self.next.removeClass('enabled');
+        });
 
-            self.button.click(function() {
-                self.open();
-            });
+        self.previous.click(function () {
+            if (self.activeIndex > 0) self.setPage(self.activeIndex - 1);
+            else self.previous.removeClass('enabled');
+        });
 
-            self.next.click(function() {
-                if (self.activeIndex + 1 < self.pages.length)
-                    self.setPage(self.activeIndex + 1);
-                else
-                    self.next.removeClass('enabled');
-            });
+        self.state = new State(self.game);
+        self.professions = new Professions(self.game);
+        //self.ability = new Ability(self.game);
+        self.settings = new Settings(self.game);
+        self.quests = new Quest(self.game);
+        self.guild = new Guild(self.game);
 
-            self.previous.click(function() {
-                if (self.activeIndex > 0)
-                    self.setPage(self.activeIndex - 1);
-                else
-                    self.previous.removeClass('enabled');
-            });
+        self.pages.push(self.state, self.professions, self.quests, self.guild);
 
-            self.state = new State(self.game);
-            self.professions = new Professions(self.game);
-            //self.ability = new Ability(self.game);
-            self.settings = new Settings(self.game);
-            self.quests = new Quest(self.game);
-            self.guild = new Guild(self.game);
+        self.activePage = self.state;
 
-            self.pages.push(self.state, self.professions, self.quests, self.guild);
+        if (self.activeIndex === 0 && self.activeIndex !== self.pages.length)
+            self.next.addClass('enabled');
+    }
 
-            self.activePage = self.state;
+    open() {
+        var self = this;
 
-            if (self.activeIndex === 0 && self.activeIndex !== self.pages.length)
-                self.next.addClass('enabled');
-        },
+        self.game.menu.hideAll();
+        self.settings.hide();
 
-        open: function() {
-            var self = this;
-
-            self.game.interface.hideAll();
-            self.settings.hide();
-
-            if (self.isVisible()) {
-                self.hide();
-                self.button.removeClass('active');
-
-            } else {
-                self.show();
-                self.button.addClass('active');
-            }
-
-            if (!self.activePage.loaded)
-                self.activePage.load();
-
-            self.game.socket.send(Packets.Click, ['profile', self.button.hasClass('active')]);
-
-        },
-
-        update: function() {
-            var self = this;
-
-            _.each(self.pages, function(page) { page.update(); });
-        },
-
-        resize: function() {
-            var self = this;
-
-            _.each(self.pages, function(page) { page.resize(); });
-        },
-
-        setPage: function(index) {
-            var self = this,
-                page = self.pages[index];
-
-            self.clear();
-
-            if (page.isVisible())
-                return;
-
-            self.activePage = page;
-            self.activeIndex = index;
-
-            if (self.activeIndex + 1 === self.pages.length)
-                self.next.removeClass('enabled');
-            else if (self.activeIndex === 0)
-                self.previous.removeClass('enabled');
-            else {
-                self.previous.addClass('enabled');
-                self.next.addClass('enabled');
-            }
-
-            page.show();
-        },
-
-        show: function() {
-            var self = this;
-
-            self.body.fadeIn('slow');
-            self.button.addClass('active');
-        },
-
-        hide: function() {
-            var self = this;
-
-            self.body.fadeOut('fast');
+        if (self.isVisible()) {
+            self.hide();
             self.button.removeClass('active');
-
-            if (self.settings)
-                self.settings.hide();
-        },
-
-        clean: function() {
-            var self = this;
-
-            self.button.unbind('click');
-            self.next.unbind('click');
-            self.previous.unbind('click');
-
-            self.quests.clear();
-            self.settings.clear();
-            self.state.clear();
-        },
-
-        isVisible: function() {
-            return this.body.css('display') === 'block';
-        },
-
-        clear: function() {
-            var self = this;
-
-            if (self.activePage)
-                self.activePage.hide();
+        } else {
+            self.show();
+            self.button.addClass('active');
         }
 
-    });
+        if (!self.activePage.loaded) self.activePage.load();
 
-});
+        self.game.socket.send(Packets.Click, [
+            'profile',
+            self.button.hasClass('active'),
+        ]);
+    }
+
+    update() {
+        var self = this;
+
+        _.each(self.pages, function (page) {
+            page.update();
+        });
+    }
+
+    resize() {
+        var self = this;
+
+        _.each(self.pages, function (page) {
+            page.resize();
+        });
+    }
+
+    setPage(index) {
+        var self = this,
+            page = self.pages[index];
+
+        self.clear();
+
+        if (page.isVisible()) return;
+
+        self.activePage = page;
+        self.activeIndex = index;
+
+        if (self.activeIndex + 1 === self.pages.length)
+            self.next.removeClass('enabled');
+        else if (self.activeIndex === 0) self.previous.removeClass('enabled');
+        else {
+            self.previous.addClass('enabled');
+            self.next.addClass('enabled');
+        }
+
+        page.show();
+    }
+
+    show() {
+        var self = this;
+
+        self.body.fadeIn('slow');
+        self.button.addClass('active');
+    }
+
+    hide() {
+        var self = this;
+
+        self.body.fadeOut('fast');
+        self.button.removeClass('active');
+
+        if (self.settings) self.settings.hide();
+    }
+
+    clean() {
+        var self = this;
+
+        self.button.unbind('click');
+        self.next.unbind('click');
+        self.previous.unbind('click');
+
+        self.quests.clear();
+        self.settings.clear();
+        self.state.clear();
+    }
+
+    isVisible() {
+        return this.body.css('display') === 'block';
+    }
+
+    clear() {
+        var self = this;
+
+        if (self.activePage) self.activePage.hide();
+    }
+}

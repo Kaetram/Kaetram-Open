@@ -1,9 +1,12 @@
 import $ from 'jquery';
+import Packets from '../network/packets';
+import log from '../lib/log';
+import * as Detect from '../utils/detect';
 
 export default class Enchant {
-    constructor(game, interface) {
+    constructor(game, menu) {
         this.game = game;
-        this.interface = interface;
+        this.menu = menu;
 
         this.body = $('#enchant');
         this.container = $('#enchantContainer');
@@ -32,7 +35,7 @@ export default class Enchant {
     load() {
         var self = this,
             list = self.getSlots(),
-            inventoryList = self.interface.bank.getInventoryList();
+            inventoryList = self.menu.bank.getInventoryList();
 
         list.empty();
 
@@ -151,11 +154,11 @@ export default class Enchant {
     }
 
     getInventorySize() {
-        return this.interface.inventory.getSize();
+        return this.menu.inventory.getSize();
     }
 
     getItemSlot(index) {
-        return this.interface.inventory.container.slots[index];
+        return this.menu.inventory.container.slots[index];
     }
 
     display() {
