@@ -1,106 +1,96 @@
-/* global _, Modules */
+import $ from 'jquery';
 
-define(['jquery'], function($) {
+export default class Wrap {
+    constructor(game) {
+        this.game = game;
 
-    return Class.extend({
+        this.mapFrame = $('#mapFrame');
+        this.button = $('#warpButton');
+        this.close = $('#closeMapFrame');
 
-        init: function(game) {
-            var self = this;
+        this.warpCount = 0;
 
-            self.game = game;
+        this.load();
+    }
 
-            self.mapFrame = $('#mapFrame');
-            self.button = $('#warpButton');
-            self.close = $('#closeMapFrame');
+    load() {
+        var self = this;
 
-            self.warpCount = 0;
+        self.button.click(function () {
+            self.open();
+        });
 
-            self.load();
-        },
+        self.close.click(function () {
+            self.hide();
+        });
 
-        load: function() {
-            var self = this;
+        for (var i = 1; i < 7; i++) {
+            var warp = self.mapFrame.find('#warp' + i);
 
-            self.button.click(function() {
-                self.open();
-            });
+            if (warp) {
+                warp.click(function (event) {
+                    self.hide();
 
-            self.close.click(function() {
-                self.hide();
-            });
-
-            for (var i = 1; i < 7; i++) {
-                var warp = self.mapFrame.find('#warp' + i);
-
-                if (warp) {
-                    warp.click(function(event) {
-
-                        self.hide();
-
-                        self.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);
-
-                    });
-                }
-
-                self.warpCount++;
+                    self.game.socket.send(Packets.Warp, [
+                        event.currentTarget.id.substring(4),
+                    ]);
+                });
             }
 
-        },
-
-        open: function() {
-            var self = this;
-
-            self.game.interface.hideAll();
-
-            self.toggle();
-
-            self.game.socket.send(Packets.Click, ['warp', self.button.hasClass('active')]);
-        },
-
-        toggle: function() {
-            var self = this;
-
-            /**
-             * Just so it fades out nicely.
-             */
-
-            if (self.isVisible())
-                self.hide();
-            else
-                self.display();
-        },
-
-        isVisible: function() {
-            return this.mapFrame.css('display') === 'block';
-        },
-
-        display: function() {
-            var self = this;
-
-            self.mapFrame.fadeIn('slow');
-            self.button.addClass('active');
-        },
-
-        hide: function() {
-            var self = this;
-
-            self.mapFrame.fadeOut('fast');
-            self.button.removeClass('active');
-        },
-
-        clear: function() {
-            var self = this;
-
-            for (var i = 0; i < self.warpCount; i++)
-                self.mapFrame.find('#warp' + i).unbind('click');
-
-            if (self.close)
-                self.close.unbind('click');
-
-            if (self.button)
-                self.button.unbind('click');
+            self.warpCount++;
         }
+    }
 
-    });
+    open() {
+        var self = this;
 
-});
+        self.game.interface.hideAll();
+
+        self.toggle();
+
+        self.game.socket.send(Packets.Click, [
+            'warp',
+            self.button.hasClass('active'),
+        ]);
+    }
+
+    toggle() {
+        var self = this;
+
+        /**
+         * Just so it fades out nicely.
+         */
+
+        if (self.isVisible()) self.hide();
+        else self.display();
+    }
+
+    isVisible() {
+        return this.mapFrame.css('display') === 'block';
+    }
+
+    display() {
+        var self = this;
+
+        self.mapFrame.fadeIn('slow');
+        self.button.addClass('active');
+    }
+
+    hide() {
+        var self = this;
+
+        self.mapFrame.fadeOut('fast');
+        self.button.removeClass('active');
+    }
+
+    clear() {
+        var self = this;
+
+        for (var i = 0; i < self.warpCount; i++)
+            self.mapFrame.find('#warp' + i).unbind('click');
+
+        if (self.close) self.close.unbind('click');
+
+        if (self.button) self.button.unbind('click');
+    }
+}
