@@ -35,6 +35,7 @@
         "name": "Kaetram",
         "hideGenerator": true
     },
+    "typeRoots": ["ts/util/globals.d.ts"],
     "include": ["**/*.ts"],
     "exclude": ["node_modules/**", "../client/**"]
 }
