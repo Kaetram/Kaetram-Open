@@ -1,7 +1,7 @@
 /* global module */
 
 import _ from 'underscore';
-    import * as map from '../../data/map/world_server.json';
+import * as map from '../../data/map/world_server.json';
 
 class Regions {
 

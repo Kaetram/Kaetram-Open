@@ -1,8 +1,8 @@
 /* global module */
 
 import Quest from '../quest';
-    import Packets from '../../../../../../network/packets';
-    import Messages from '../../../../../../network/messages';
+import Packets from '../../../../../../network/packets';
+import Messages from '../../../../../../network/messages';
 
 class BulkySituation extends Quest {
 

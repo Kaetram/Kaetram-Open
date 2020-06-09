@@ -1,9 +1,9 @@
 /* global module */
 
 import _ from 'underscore';
-    import Messages from '../network/messages';
-    import Packets from '../network/packets';
-    import Utils from '../util/utils';
+import Messages from '../network/messages';
+import Packets from '../network/packets';
+import Utils from '../util/utils';
 
 class Commands {
 

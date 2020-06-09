@@ -1,7 +1,7 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
-    import Messages from '../../ts/network/messages';
-    import Packets from '../../ts/network/packets';
-    import Utils from '../../ts/util/utils';
+import Messages from '../../ts/network/messages';
+import Packets from '../../ts/network/packets';
+import Utils from '../../ts/util/utils';
 
 class Tenebris extends Combat {
 
