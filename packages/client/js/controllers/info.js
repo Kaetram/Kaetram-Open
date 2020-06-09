@@ -3,7 +3,7 @@ import Modules from '../utils/modules';
 import Queue from '../utils/queue';
 import Splat from '../renderer/infos/splat';
 import Countdown from '../renderer/infos/countdown';
-import isInt from '../utils/util';
+import { isInt } from '../utils/util';
 
 export default class InfoController {
     constructor(game) {

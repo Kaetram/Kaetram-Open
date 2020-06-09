@@ -9,7 +9,7 @@ import Warp from '../interface/warp';
 import Shop from '../interface/shop';
 import Header from '../interface/header';
 
-export default class InterfaceController {
+export default class MenuController {
     constructor(game) {
         var self = this;
 

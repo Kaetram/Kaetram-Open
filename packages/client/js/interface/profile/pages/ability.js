@@ -1,15 +1,9 @@
-define(['jquery', '../page'], function($, Page) {
+import Page from '../page';
 
-    return Page.extend({
+export default class Ability extends Page {
+    constructor(game) {
+        super('#skillPage');
 
-        init: function(game) {
-            var self = this;
-
-            self._super('#skillPage');
-
-            self.game = game;
-        }
-
-    });
-
-});
+        this.game = game;
+    }
+}

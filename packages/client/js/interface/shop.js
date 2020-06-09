@@ -1,8 +1,9 @@
 import $ from 'jquery';
 import Container from './container/container';
+import Packets from '../network/packets';
 
 export default class Shop {
-    constructor(game, interface) {
+    constructor(game, menu) {
         var self = this;
 
         self.game = game;
@@ -25,7 +26,7 @@ export default class Shop {
         self.confirmSell = $('#confirmSell');
 
         self.player = game.player;
-        self.interface = interface;
+        self.menu = menu;
 
         self.container = null;
         self.data = null;
@@ -217,8 +218,8 @@ export default class Shop {
             self.getShopList().append(listItem);
         }
 
-        var inventoryItems = self.interface.bank.getInventoryList(),
-            inventorySize = self.interface.inventory.getSize();
+        var inventoryItems = self.menu.bank.getInventoryList(),
+            inventorySize = self.menu.inventory.getSize();
 
         for (var j = 0; j < inventorySize; j++) {
             var item = $(inventoryItems[j]).clone(),

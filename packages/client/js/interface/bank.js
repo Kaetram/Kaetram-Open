@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import Container from './container/container';
+import Packets from '../network/packets';
 
 export default class Bank {
     constructor(game, inventoryContainer, size) {
