@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "allowJs": false,
+        "module": "commonjs",
+
+        "target": "esnext",
+        "types": ["node"],
+        "rootDir": "./",
+        "outDir": "./dist",
+        "incremental": true,
+        "allowUmdGlobalAccess": true,
+        "moduleResolution": "node",
+        "noImplicitAny": false,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": false,
+        "resolveJsonModule": true,
+
+        "esModuleInterop": false,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": false,
+        "typeRoots": ["ts/util/globals.d.ts"]
+    },
+    "typedocOptions ": {
+        "inputFiles": ["./"],
+        "mode": "modules",
+        "out": "../docs",
+        "entryPoint": "./ts/main",
+        "theme": "default",
+        "name": "Kaetram",
+        "hideGenerator": true
+    },
+    "include": ["**/*.ts"],
+    "exclude": ["../client/**"]
+}
