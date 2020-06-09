@@ -1,100 +1,97 @@
-define(['jquery', './container/container'], function($, Container) {
+import $ from 'jquery';
 
-    return Class.extend({
+export default class Header {
+    constructor(game, interface) {
+        var self = this;
 
-        init: function(game, interface) {
-            var self = this;
+        self.game = game;
+        self.player = game.player;
 
-            self.game = game;
-            self.player = game.player;
+        self.health = $('#health');
+        self.healthBar = $('#healthBar');
+        self.healthBarText = $('#healthBarText');
 
-            self.health = $('#health');
-            self.healthBar = $('#healthBar');
-            self.healthBarText = $('#healthBarText');
+        self.exp = $('#exp');
+        self.expBar = $('#expBar');
 
-            self.exp = $('#exp');
-            self.expBar = $('#expBar');
+        self.load();
+    }
 
-            self.load();
-        },
+    load() {
+        var self = this;
 
-        load: function() {
-            var self = this;
-
-            self.player.onHitPoints(function() {
-                self.calculateHealthBar();
-            });
-
-            self.player.onMaxHitPoints(function() {
-                self.calculateHealthBar();
-            });
-
-            self.player.onExperience(function() {
-                self.calculateExpBar();
-            });
-
-        },
-
-        calculateHealthBar: function() {
-            var self = this,
-                scale = self.getScale(),
-                width = self.healthBar.width();
-
-            //11 is due to the offset of the #health in the #healthBar
-            var diff = Math.floor(width * (self.player.hitPoints / self.player.maxHitPoints) - (11 * scale)),
-                prevWidth = self.health.width();
-
-            if (self.player.poison)
-                self.toggle('poison');
-            else
-                self.toggle(diff - 1 > prevWidth ? 'green' : 'white');
-
-            if (diff > width)
-                diff = width;
-
-            self.health.css('width', diff + 'px');
-            self.healthBarText.text(self.player.hitPoints + '/' + self.player.maxHitPoints);
-        },
-
-        calculateExpBar: function() {
-            var self = this,
-                scale = self.getScale(),
-                width = self.expBar.width();
-
-            var experience = self.player.experience - self.player.prevExperience,
-                nextExperience = self.player.nextExperience - self.player.prevExperience,
-                diff = Math.floor(width * (experience / nextExperience));
-
-            self.exp.css('width', diff + 'px');
-        },
-
-        resize: function() {
-            var self = this;
-
+        self.player.onHitPoints(function () {
             self.calculateHealthBar();
+        });
+
+        self.player.onMaxHitPoints(function () {
+            self.calculateHealthBar();
+        });
+
+        self.player.onExperience(function () {
             self.calculateExpBar();
-        },
+        });
+    }
 
-        getScale: function() {
-            var self = this,
-                scale = self.game.app.getUIScale();
+    calculateHealthBar() {
+        var self = this,
+            scale = self.getScale(),
+            width = self.healthBar.width();
 
-            if (scale < 2)
-                scale = 2;
+        //11 is due to the offset of the #health in the #healthBar
+        var diff = Math.floor(
+                width * (self.player.hitPoints / self.player.maxHitPoints) -
+                    11 * scale
+            ),
+            prevWidth = self.health.width();
 
-            return scale;
-        },
+        if (self.player.poison) self.toggle('poison');
+        else self.toggle(diff - 1 > prevWidth ? 'green' : 'white');
 
-        toggle: function(tClass) {
-            let self = this;
+        if (diff > width) diff = width;
 
-            self.health.addClass(tClass);
+        self.health.css('width', diff + 'px');
+        self.healthBarText.text(
+            self.player.hitPoints + '/' + self.player.maxHitPoints
+        );
+    }
 
-            setTimeout(function() {
-                self.health.removeClass(tClass);
-            }, 500);
-        }
+    calculateExpBar() {
+        var self = this,
+            scale = self.getScale(),
+            width = self.expBar.width();
 
-    });
+        var experience = self.player.experience - self.player.prevExperience,
+            nextExperience =
+                self.player.nextExperience - self.player.prevExperience,
+            diff = Math.floor(width * (experience / nextExperience));
 
-});
+        self.exp.css('width', diff + 'px');
+    }
+
+    resize() {
+        var self = this;
+
+        self.calculateHealthBar();
+        self.calculateExpBar();
+    }
+
+    getScale() {
+        var self = this,
+            scale = self.game.app.getUIScale();
+
+        if (scale < 2) scale = 2;
+
+        return scale;
+    }
+
+    toggle(tClass) {
+        let self = this;
+
+        self.health.addClass(tClass);
+
+        setTimeout(function () {
+            self.health.removeClass(tClass);
+        }, 500);
+    }
+}

@@ -1,277 +1,300 @@
-define(['jquery', './container/container'], function($, Container) {
+import $ from 'jquery';
+import Container from './container/container';
 
-    return Class.extend({
+export default class Shop {
+    constructor(game, interface) {
+        var self = this;
 
-        init: function(game, interface) {
-            var self = this;
+        self.game = game;
 
-            self.game = game;
-
-            self.body = $('#shop');
-            self.shop = $('#shopContainer');
-            self.inventory = $('#shopInventorySlots');
-
-            /**
-             * sellSlot represents what the player currently has queued for sale
-             * and sellSlotReturn shows the currency the player is receiving.
-             * The reason for this is because shops are written such that
-             * they can handle different currencies.
-             */
-
-            self.sellSlot = $('#shopSellSlot');
-            self.sellSlotReturn = $('#shopSellSlotReturn');
-            self.sellSlotReturnText = $('#shopSellSlotReturnText');
-
-            self.confirmSell = $('#confirmSell');
-
-            self.player = game.player;
-            self.interface = interface;
-
-            self.container = null;
-            self.data = null;
-
-            self.openShop = -1;
-
-            self.items = [];
-            self.counts = [];
-
-            self.close = $('#closeShop');
-
-            self.close.css('left', '97%');
-            self.close.click(function() {
-                self.hide();
-            });
-
-            self.sellSlot.click(function() {
-                self.remove();
-            });
-
-            self.confirmSell.click(function() {
-                self.sell();
-            });
-        },
-
-        buy: function(event) {
-            var self = this,
-                id = event.currentTarget.id.substring(11);
-
-            self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
-        },
-
-        sell: function() {
-            // The server will handle the selected item and verifications.
-            this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Sell, this.openShop]);
-        },
-
-        select: function(event) {
-            var self = this,
-                id = event.currentTarget.id.substring(17);
-
-            self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, self.openShop, id]);
-        },
-
-        remove: function() {
-            this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
-        },
-
-        move: function(info) {
-            var self = this,
-                inventorySlot = self.getInventoryList().find('#shopInventorySlot' + info.slotId),
-                slotImage = inventorySlot.find('#inventoryImage' + info.slotId),
-                slotText = inventorySlot.find('#inventoryItemCount' + info.slotId);
-
-            self.sellSlot.css({
-                'background-image': slotImage.css('background-image'),
-                'background-size': slotImage.css('background-size')
-            });
-
-            self.sellSlotReturn.css({
-                'background-image': self.container.getImageFormat(info.currency),
-                'background-size': self.sellSlot.css('background-size')
-            });
-
-            self.sellSlotReturnText.text(info.price);
-
-            slotImage.css('background-image', '');
-            slotText.text('');
-
-        },
-
-        moveBack: function(index) {
-            var self = this,
-                inventorySlot = self.getInventoryList().find('#shopInventorySlot' + index);
-
-            inventorySlot.find('#inventoryImage' + index).css('background-image', self.sellSlot.css('background-image'));
-
-            self.sellSlot.css('background-image', '');
-            self.sellSlotReturn.css('background-image', '');
-            self.sellSlotReturnText.text('');
-
-
-        },
+        self.body = $('#shop');
+        self.shop = $('#shopContainer');
+        self.inventory = $('#shopInventorySlots');
 
         /**
-         * The shop file is already built to support full de-initialization of objects when
-         * we receive an update about the stocks. So we just use that whenever we want to resize.
-         * This is just a temporary fix, in reality, we do not want anyone to actually see the shop
-         * do a full refresh when they buy an item or someone else buys an item.
+         * sellSlot represents what the player currently has queued for sale
+         * and sellSlotReturn shows the currency the player is receiving.
+         * The reason for this is because shops are written such that
+         * they can handle different currencies.
          */
 
-        resize: function() {
-            var self = this;
+        self.sellSlot = $('#shopSellSlot');
+        self.sellSlotReturn = $('#shopSellSlotReturn');
+        self.sellSlotReturnText = $('#shopSellSlotReturnText');
 
-            self.getInventoryList().empty();
-            self.getShopList().empty();
+        self.confirmSell = $('#confirmSell');
 
-            self.update(self.data);
-        },
+        self.player = game.player;
+        self.interface = interface;
 
-        update: function(data) {
-            var self = this;
+        self.container = null;
+        self.data = null;
 
-            self.reset();
+        self.openShop = -1;
 
-            self.container = new Container(data.strings.length);
+        self.items = [];
+        self.counts = [];
 
-            //Update the global data to current revision
-            self.data = data;
+        self.close = $('#closeShop');
 
-            self.load();
-        },
+        self.close.css('left', '97%');
+        self.close.click(function () {
+            self.hide();
+        });
 
-        load: function() {
-            var self = this;
+        self.sellSlot.click(function () {
+            self.remove();
+        });
 
-            for (var i = 0; i < self.container.size; i++) {
-                var shopItem = $('<div id="shopItem' + i + '" class="shopItem"></div>'),
-                    string = self.data.strings[i],
-                    name = self.data.names[i],
-                    count = self.data.counts[i],
-                    price = self.data.prices[i],
-                    itemImage, itemCount, itemPrice, itemName, itemBuy;
+        self.confirmSell.click(function () {
+            self.sell();
+        });
+    }
 
-                if (!string || !name || !count)
-                    continue;
+    buy(event) {
+        var self = this,
+            id = event.currentTarget.id.substring(11);
 
-                itemImage = $('<div id="shopItemImage' + i + '" class="shopItemImage"></div>');
-                itemCount = $('<div id="shopItemCount' + i + '" class="shopItemCount"></div>');
-                itemPrice = $('<div id="shopItemPrice' + i + '" class="shopItemPrice"></div>');
-                itemName = $('<div id="shopItemName' + i + '" class="shopItemName"></div>');
-                itemBuy = $('<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>');
+        self.game.socket.send(Packets.Shop, [
+            Packets.ShopOpcode.Buy,
+            self.openShop,
+            id,
+            1,
+        ]);
+    }
 
-                itemImage.css('background-image', self.container.getImageFormat(string));
-                itemCount.html(count);
-                itemPrice.html(price + 'g');
-                itemName.html(name);
-                itemBuy.html('Buy');
+    sell() {
+        // The server will handle the selected item and verifications.
+        this.game.socket.send(Packets.Shop, [
+            Packets.ShopOpcode.Sell,
+            this.openShop,
+        ]);
+    }
 
-                self.container.setSlot(i, {
-                    string: string,
-                    count: count
-                });
+    select(event) {
+        var self = this,
+            id = event.currentTarget.id.substring(17);
 
-                // Bind the itemBuy to the local buy function.
-                itemBuy.click(function(event) {
-                    self.buy(event);
-                });
+        self.game.socket.send(Packets.Shop, [
+            Packets.ShopOpcode.Select,
+            self.openShop,
+            id,
+        ]);
+    }
 
-                var listItem = $('<li></li>');
+    remove() {
+        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
+    }
 
-                shopItem.append(itemImage, itemCount, itemPrice, itemName, itemBuy);
+    move(info) {
+        var self = this,
+            inventorySlot = self
+                .getInventoryList()
+                .find('#shopInventorySlot' + info.slotId),
+            slotImage = inventorySlot.find('#inventoryImage' + info.slotId),
+            slotText = inventorySlot.find('#inventoryItemCount' + info.slotId);
 
-                listItem.append(shopItem);
+        self.sellSlot.css({
+            'background-image': slotImage.css('background-image'),
+            'background-size': slotImage.css('background-size'),
+        });
 
-                self.getShopList().append(listItem);
-            }
+        self.sellSlotReturn.css({
+            'background-image': self.container.getImageFormat(info.currency),
+            'background-size': self.sellSlot.css('background-size'),
+        });
 
-            var inventoryItems = self.interface.bank.getInventoryList(),
-                inventorySize = self.interface.inventory.getSize();
+        self.sellSlotReturnText.text(info.price);
 
-            for (var j = 0; j < inventorySize; j++) {
-                var item = $(inventoryItems[j]).clone(),
-                    slot = item.find('#bankInventorySlot' + j);
+        slotImage.css('background-image', '');
+        slotText.text('');
+    }
 
-                slot.attr('id', 'shopInventorySlot' + j);
+    moveBack(index) {
+        var self = this,
+            inventorySlot = self
+                .getInventoryList()
+                .find('#shopInventorySlot' + index);
 
-                slot.click(function(event) {
-                    self.select(event);
-                });
+        inventorySlot
+            .find('#inventoryImage' + index)
+            .css('background-image', self.sellSlot.css('background-image'));
 
-                self.getInventoryList().append(slot);
-            }
-        },
+        self.sellSlot.css('background-image', '');
+        self.sellSlotReturn.css('background-image', '');
+        self.sellSlotReturnText.text('');
+    }
 
-        reset: function() {
-            var self = this;
+    /**
+     * The shop file is already built to support full de-initialization of objects when
+     * we receive an update about the stocks. So we just use that whenever we want to resize.
+     * This is just a temporary fix, in reality, we do not want anyone to actually see the shop
+     * do a full refresh when they buy an item or someone else buys an item.
+     */
 
-            self.items = [];
-            self.counts = [];
+    resize() {
+        var self = this;
 
-            self.container = null;
+        self.getInventoryList().empty();
+        self.getShopList().empty();
 
-            self.getShopList().empty();
-            self.getInventoryList().empty();
-        },
+        self.update(self.data);
+    }
 
-        open: function(id) {
-            var self = this;
+    update(data) {
+        var self = this;
 
-            if (!id)
-                return;
+        self.reset();
 
-            self.openShop = id;
+        self.container = new Container(data.strings.length);
 
-            self.body.fadeIn('slow');
-        },
+        //Update the global data to current revision
+        self.data = data;
 
-        hide: function() {
-            var self = this;
+        self.load();
+    }
 
-            self.openShop = -1;
+    load() {
+        var self = this;
 
-            self.body.fadeOut('fast');
-        },
+        for (var i = 0; i < self.container.size; i++) {
+            var shopItem = $(
+                    '<div id="shopItem' + i + '" class="shopItem"></div>'
+                ),
+                string = self.data.strings[i],
+                name = self.data.names[i],
+                count = self.data.counts[i],
+                price = self.data.prices[i],
+                itemImage,
+                itemCount,
+                itemPrice,
+                itemName,
+                itemBuy;
 
-        clear: function() {
-            var self = this;
+            if (!string || !name || !count) continue;
 
-            if (self.shop)
-                self.shop.find('ul').empty();
+            itemImage = $(
+                '<div id="shopItemImage' + i + '" class="shopItemImage"></div>'
+            );
+            itemCount = $(
+                '<div id="shopItemCount' + i + '" class="shopItemCount"></div>'
+            );
+            itemPrice = $(
+                '<div id="shopItemPrice' + i + '" class="shopItemPrice"></div>'
+            );
+            itemName = $(
+                '<div id="shopItemName' + i + '" class="shopItemName"></div>'
+            );
+            itemBuy = $(
+                '<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>'
+            );
 
-            if (self.inventory)
-                self.inventory.find('ul').empty();
+            itemImage.css(
+                'background-image',
+                self.container.getImageFormat(string)
+            );
+            itemCount.html(count);
+            itemPrice.html(price + 'g');
+            itemName.html(name);
+            itemBuy.html('Buy');
 
-            if (self.close)
-                self.close.unbind('click');
+            self.container.setSlot(i, {
+                string: string,
+                count: count,
+            });
 
-            if (self.sellSlot)
-                self.sellSlot.unbind('click');
+            // Bind the itemBuy to the local buy function.
+            itemBuy.click(function (event) {
+                self.buy(event);
+            });
 
-            if (self.confirmSell)
-                self.confirmSell.unbind('click');
-        },
+            var listItem = $('<li></li>');
 
-        getScale: function() {
-            return this.game.renderer.getScale();
-        },
+            shopItem.append(itemImage, itemCount, itemPrice, itemName, itemBuy);
 
-        isVisible: function() {
-            return this.body.css('display') === 'block';
-        },
+            listItem.append(shopItem);
 
-        isShopOpen: function(shopId) {
-            return this.isVisible() && this.openShop === shopId;
-        },
-
-        getShopList: function() {
-            return this.shop.find('ul');
-        },
-
-        getInventoryList: function() {
-            return this.inventory.find('ul');
+            self.getShopList().append(listItem);
         }
 
-    });
+        var inventoryItems = self.interface.bank.getInventoryList(),
+            inventorySize = self.interface.inventory.getSize();
 
+        for (var j = 0; j < inventorySize; j++) {
+            var item = $(inventoryItems[j]).clone(),
+                slot = item.find('#bankInventorySlot' + j);
 
-});
+            slot.attr('id', 'shopInventorySlot' + j);
+
+            slot.click(function (event) {
+                self.select(event);
+            });
+
+            self.getInventoryList().append(slot);
+        }
+    }
+
+    reset() {
+        var self = this;
+
+        self.items = [];
+        self.counts = [];
+
+        self.container = null;
+
+        self.getShopList().empty();
+        self.getInventoryList().empty();
+    }
+
+    open(id) {
+        var self = this;
+
+        if (!id) return;
+
+        self.openShop = id;
+
+        self.body.fadeIn('slow');
+    }
+
+    hide() {
+        var self = this;
+
+        self.openShop = -1;
+
+        self.body.fadeOut('fast');
+    }
+
+    clear() {
+        var self = this;
+
+        if (self.shop) self.shop.find('ul').empty();
+
+        if (self.inventory) self.inventory.find('ul').empty();
+
+        if (self.close) self.close.unbind('click');
+
+        if (self.sellSlot) self.sellSlot.unbind('click');
+
+        if (self.confirmSell) self.confirmSell.unbind('click');
+    }
+
+    getScale() {
+        return this.game.renderer.getScale();
+    }
+
+    isVisible() {
+        return this.body.css('display') === 'block';
+    }
+
+    isShopOpen(shopId) {
+        return this.isVisible() && this.openShop === shopId;
+    }
+
+    getShopList() {
+        return this.shop.find('ul');
+    }
+
+    getInventoryList() {
+        return this.inventory.find('ul');
+    }
+}
