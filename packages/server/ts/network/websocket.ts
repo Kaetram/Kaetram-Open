@@ -1,14 +1,14 @@
 /* global module */
 
-let Socket = require('./socket'),
-    Connection = require('./connection'),
-    connect = require('connect'),
-    serve = require('serve-static'),
-    request = require('request'),
-    SocketIO = require('socket.io'),
-    http = require('http'),
-    https = require('https'),
-    Utils = require('../util/utils');
+import Socket from './socket';
+
+import Connection from './connection';
+import connect from 'connect';
+import serve from 'serve-static';
+import SocketIO from 'socket.io';
+import http from 'http';
+import https from 'https';
+import Utils from '../util/utils';
 
 class WebSocket extends Socket {
 

@@ -103,7 +103,7 @@ class Parser {
     loadItemData() {
         let itemCounter = 0;
 
-        _.each(ItemData, (value, key) => {
+        _.each(ItemData, (value: any, key) => {
             key = key.toLowerCase();
 
             Items.Data[key] = {
@@ -227,7 +227,7 @@ class Parser {
     loadObjects() {
         let objectCounter = 0;
 
-        _.each(ObjectData, (value, key) => {
+        _.each(ObjectData, (value: any, key) => {
 
             Objects.Data[key] = {
                 x: value.x,

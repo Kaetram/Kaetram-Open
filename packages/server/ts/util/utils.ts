@@ -104,7 +104,7 @@ export default {
                     messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
             });
 
-            let codeCount(messageBlocks.length / 2) - 1;
+            let codeCount = (messageBlocks.length / 2) - 1;
 
             for (let i = 0; i < codeCount; i++)
                 messageBlocks.push('</span>');
