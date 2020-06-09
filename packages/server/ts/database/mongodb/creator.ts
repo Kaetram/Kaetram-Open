@@ -1,8 +1,11 @@
 /* global module */
 
-let bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
+import MongoDB from './mongodb';
 
 class Creator {
+
+    database: MongoDB;
 
     constructor(database) {
         this.database = database;

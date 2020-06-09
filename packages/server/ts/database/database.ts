@@ -4,6 +4,9 @@ let MongoDB = require('./mongodb/mongodb');
 
 class Database {
 
+    database: any;
+    databaseType: string;
+
     constructor(databaseType) {
         this.database = null;
         this.databaseType = databaseType;
@@ -21,7 +24,7 @@ class Database {
         }
     }
 
-    getDatabase() {
+    getDatabase(): any {
 
         if (!this.database)
             log.error('[Database] No database is currently present. It is advised against proceeding in this state.');
