@@ -1,9 +1,9 @@
 /* global module */
 
 import Entity from '../entity';
-    import Modules from '../../../util/modules';
-    import Mobs from '../../../util/mobs';
-    import Combat from './combat/combat';
+import Modules from '../../../util/modules';
+import Mobs from '../../../util/mobs';
+import Combat from './combat/combat';
 
 class Character extends Entity {
 

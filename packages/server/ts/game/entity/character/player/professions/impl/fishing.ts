@@ -1,5 +1,5 @@
 import _ from 'underscore';
-    import Profession from './profession';
+import Profession from './profession';
 
 class Fishing extends Profession {
 

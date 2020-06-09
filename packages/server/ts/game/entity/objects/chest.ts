@@ -1,7 +1,7 @@
 /* global module */
 
 import Entity from '../entity';
-    import Utils from '../../../util/utils';
+import Utils from '../../../util/utils';
 
 class Chest extends Entity {
 
