@@ -1,45 +1,37 @@
-/* global log */
+import $ from 'jquery';
 
-define(['jquery'], function($) {
+export default class Page {
+    constructor(element) {
+        this.body = $(element);
 
-    return Class.extend({
+        this.loaded = false;
+    }
 
-        init: function(element) {
-            var self = this;
+    show() {
+        this.body.fadeIn('slow');
+    }
 
-            self.body = $(element);
+    hide() {
+        this.body.fadeOut('slow');
+    }
 
-            self.loaded = false;
-        },
+    isVisible() {
+        return this.body.css('display') === 'block';
+    }
 
-        show: function() {
-            this.body.fadeIn('slow');
-        },
+    load() {
+        //log.info('Uninitialized.');
+    }
 
-        hide: function() {
-            this.body.fadeOut('slow');
-        },
+    resize() {
+        //log.info('Uninitialized.');
+    }
 
-        isVisible: function() {
-            return this.body.css('display') === 'block';
-        },
+    update() {
+        //log.info('Uninitialized.');
+    }
 
-        load: function() {
-            //log.info('Uninitialized.');
-        },
-
-        resize: function() {
-            //log.info('Uninitialized.');
-        },
-
-        update: function() {
-            //log.info('Uninitialized.');
-        },
-
-        getImageFormat: function(name) {
-            return 'url("img/sprites/item-' + name + '.png")';
-        }
-
-    });
-
-});
+    getImageFormat(name) {
+        return 'url("img/sprites/item-' + name + '.png")';
+    }
+}

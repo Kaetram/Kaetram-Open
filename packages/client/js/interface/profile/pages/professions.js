@@ -1,59 +1,66 @@
-define(['jquery', '../page'], function($, Page) {
+import Page from '../page';
+import $ from 'jquery';
+import _ from 'underscore';
 
-    return Page.extend({
+export default class Professions extends Page {
+    constructor(game) {
+        super('#professionsPage');
 
-        init: function(game) {
-            var self = this;
+        this.professions = $('#professionsList');
 
-            self._super('#professionsPage');
+        this.professionsList = this.professions.find('ul');
 
-            self.professions = $('#professionsList');
+        this.game = game;
+    }
 
-            self.professionsList = self.professions.find('ul');
+    load(professions) {
+        var self = this;
 
-            self.game = game;
-        },
+        _.each(professions, function (profession) {
+            var item = self.getItem(profession.id),
+                name = self.getName(profession.id),
+                info = $('<p></p>');
 
-        load: function(professions) {
-            var self = this;
+            name.text(profession.name);
+            info.text(
+                'Level ' +
+                    profession.level +
+                    ' | ' +
+                    profession.percentage +
+                    '%'
+            );
 
-            _.each(professions, function(profession) {
-                var item = self.getItem(profession.id),
-                    name = self.getName(profession.id),
-                    info = $('<p></p>')
+            name.append(info);
 
-                name.text(profession.name);
-                info.text('Level ' + profession.level + ' | ' + profession.percentage + '%');
+            item.append(name);
 
-                name.append(info);
+            var listItem = $('<li></li>');
 
-                item.append(name);
+            listItem.append(item);
 
-                var listItem = $('<li></li>')
+            self.professionsList.append(listItem);
+        });
+    }
 
-                listItem.append(item);
+    sync(info) {
+        var self = this;
 
-                self.professionsList.append(listItem);
-            });
-        },
+        if (!info) return;
 
-        sync: function(info) {
-            var self = this;
+        $('#professionName' + info.id)
+            .find('p')
+            .text('Level ' + info.level + ' | ' + info.percentage + '%');
+    }
 
-            if (!info)
-                return;
+    getItem(id) {
+        return $(
+            '<div id="professionItem' + id + '" class="professionItem"></div>'
+        );
+    }
 
-            $('#professionName' + info.id).find('p').text('Level ' + info.level + ' | ' + info.percentage + '%');
-        },
-
-        getItem: function(id) {
-            return $('<div id="professionItem' + id + '" class="professionItem"></div>');
-        },
-
-        getName: function(id) {
-            return $('<div id="professionName' + id + '" class="professionName"></div>');
-        }
-
-    });
-
-});
+    getName(id) {
+        return $(
+            '<div id="professionName' + id + '" class="professionName"></div>'
+        );
+    }
+}

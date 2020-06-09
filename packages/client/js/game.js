@@ -11,7 +11,7 @@ import Pathfinder from './utils/pathfinder';
 import Zoning from './controllers/zoning';
 import Info from './controllers/info';
 import Bubble from './controllers/bubble';
-import Interface from './controllers/interface';
+import Interface from './controllers/menu';
 import Audio from './controllers/audio';
 import Pointer from './controllers/pointer';
 import Overlay from './renderer/overlay';

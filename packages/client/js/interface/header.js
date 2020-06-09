@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 export default class Header {
-    constructor(game, interface) {
+    constructor(game, menu) {
         var self = this;
 
         self.game = game;
