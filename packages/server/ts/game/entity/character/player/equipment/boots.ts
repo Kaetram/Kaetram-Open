@@ -1,8 +1,8 @@
 /* global module */
 
 import Equipment from './equipment';
-    import Items from '../../../../../util/items';
-    import Modules from '../../../../../util/modules';
+import Items from '../../../../../util/items';
+import Modules from '../../../../../util/modules';
 
 class Boots extends Equipment {
 

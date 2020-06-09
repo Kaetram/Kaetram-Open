@@ -1,7 +1,7 @@
 /* global module */
 
 import _ from 'underscore';
-    import AbilityInfo from '../../../../../util/abilities';
+import AbilityInfo from '../../../../../util/abilities';
 
 class Abilities {
 

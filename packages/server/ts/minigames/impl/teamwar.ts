@@ -1,7 +1,7 @@
 /* global module */
 
 import Minigame from '../minigame';
-    import Utils from '../../util/utils';
+import Utils from '../../util/utils';
 
 class TeamWar extends Minigame {
 

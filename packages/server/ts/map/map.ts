@@ -1,20 +1,20 @@
 /* global module */
 
 import _ from 'underscore';
-    import Grids from './grids';
-    import Regions from './regions';
-    import Utils from '../util/utils';
-    import Modules from '../util/modules';
-    import Objects from '../util/objects';
-    import PVPAreas from './areas/pvpareas';
-    import MusicAreas from './areas/musicareas';
-    import ChestAreas from './areas/chestareas';
-    import * as map from '../../data/map/world_server.json';
-    import * as Spawns from '../../data/spawns.json';
-    import OverlayAreas from './areas/overlayareas';
-    import CameraAreas from './areas/cameraareas';
-    import Mobs from '../util/mobs';
-    import * as ClientMap from '../../data/map/world_client.json';
+import Grids from './grids';
+import Regions from './regions';
+import Utils from '../util/utils';
+import Modules from '../util/modules';
+import Objects from '../util/objects';
+import PVPAreas from './areas/pvpareas';
+import MusicAreas from './areas/musicareas';
+import ChestAreas from './areas/chestareas';
+import * as map from '../../data/map/world_server.json';
+import * as Spawns from '../../data/spawns.json';
+import OverlayAreas from './areas/overlayareas';
+import CameraAreas from './areas/cameraareas';
+import Mobs from '../util/mobs';
+import * as ClientMap from '../../data/map/world_client.json';
 
 class Map {
 

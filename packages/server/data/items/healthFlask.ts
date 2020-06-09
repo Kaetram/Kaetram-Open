@@ -1,7 +1,7 @@
 /* global module */
 
 import Items from '../../ts/util/items';
-    import Utils from '../../ts/util/utils';
+import Utils from '../../ts/util/utils';
 
 class HealthFlask {
 
