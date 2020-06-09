@@ -1,5 +1,7 @@
 /* global module */
 
+import log from "../util/log";
+
 class Connection {
 
     constructor(id, connection, server) {

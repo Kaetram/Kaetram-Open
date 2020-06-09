@@ -1,9 +1,9 @@
 /* global module */
 
-let Messages = require('../../../../../network/messages'),
-    Packets = require('../../../../../network/packets'),
-    Utils = require('../../../../../util/utils'),
-    _ = require('underscore');
+import Messages from '../../../../../network/messages';
+    import Packets from '../../../../../network/packets';
+    import Utils from '../../../../../util/utils';
+    import _ from 'underscore';
 
 class Quest {
 

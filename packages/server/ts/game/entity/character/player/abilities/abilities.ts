@@ -1,7 +1,7 @@
 /* global module */
 
-let _ = require('underscore'),
-    AbilityInfo = require('../../../../../util/abilities');
+import _ from 'underscore';
+    import AbilityInfo from '../../../../../util/abilities';
 
 class Abilities {
 

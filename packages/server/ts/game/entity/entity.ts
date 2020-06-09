@@ -1,8 +1,8 @@
 /* global module */
 
-let Mobs = require('../../util/mobs'),
-    Items = require('../../util/items'),
-    NPCs = require('../../util/npcs');
+import Mobs from '../../util/mobs';
+    import Items from '../../util/items';
+    import NPCs from '../../util/npcs';
 
 class Entity {
 

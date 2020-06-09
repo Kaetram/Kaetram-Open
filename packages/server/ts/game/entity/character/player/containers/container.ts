@@ -1,9 +1,9 @@
 /* global module */
 
-let _ = require('underscore'),
-    Slot = require('./slot'),
-    Items = require('../../../../../util/items'),
-    Constants = require('../../../../../util/constants');
+import _ from 'underscore';
+    import Slot from './slot';
+    import Items from '../../../../../util/items';
+    import Constants from '../../../../../util/constants';
 
 class Container {
 

@@ -1,8 +1,8 @@
 /* global module */
 
-let Quest = require('../quest'),
-    Packets = require('../../../../../../network/packets'),
-    Messages = require('../../../../../../network/messages');
+import Quest from '../quest';
+    import Packets from '../../../../../../network/packets';
+    import Messages from '../../../../../../network/messages';
 
 class Introduction extends Quest {
 

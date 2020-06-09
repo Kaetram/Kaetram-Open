@@ -1,8 +1,8 @@
-let Modules = require('../../../../../../util/modules'),
-    Formulas = require('../../../../../../util/formulas'),
-    Constants = require('../../../../../../util/constants'),
-    Messages = require('../../../../../../network/messages'),
-    Packets = require('../../../../../../network/packets');
+import Modules from '../../../../../../util/modules';
+    import Formulas from '../../../../../../util/formulas';
+    import Constants from '../../../../../../util/constants';
+    import Messages from '../../../../../../network/messages';
+    import Packets from '../../../../../../network/packets';
 
 class Profession {
 
