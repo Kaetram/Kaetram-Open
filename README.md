@@ -1,15 +1,14 @@
 # Kaetram
 
-[![Version](https://img.shields.io/github/package-json/v/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open)
-[![Open Issues](https://img.shields.io/github/issues/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open/issues)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com%2F)](https://kaetram.com/)
-[![Fork This Repo](https://img.shields.io/github/forks/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open/fork)
-[![Star This Repo](https://img.shields.io/github/stars/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open)
-[![Watch This Repo](https://img.shields.io/github/watchers/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open)
-[![MPL-2.0 License](https://img.shields.io/github/license/Veradictus/Kaetram-Open)](https://github.com/Veradictus/Kaetram-Open/blob/master/LICENSE)
-[![Discord](https://img.shields.io/discord/583033499741847574)](https://discord.gg/MmbGAaw)
-[![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social)](https://www.reddit.com/r/kaetram/)
-[![Send Tip](https://img.shields.io/static/v1?label=BAT&message=Send%20a%20Tip&style=flat&logo=brave&color=fb542b)]()
+[![Version](https://img.shields.io/github/package-json/v/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open)
+[![MPL-2.0 License](https://img.shields.io/github/license/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open/blob/master/LICENSE)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com%2F&style=flat)](https://kaetram.com/)
+[![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open/issues)
+[![Watch This Repo](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription)
+[![Star This Repo](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers)
+[![Fork This Repo](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork)
+[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat)](https://discord.gg/MmbGAaw)
+[![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/kaetram?style=social&icon=reddit)](https://www.reddit.com/r/kaetram/)
 
 Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive. This project is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest (BQ). This game uses original BQ assets as well as custom-made ones. The entire code-base has been written from scratch, using more modern approaches.
 
@@ -17,10 +16,7 @@ Live Version - <https://kaetram.com>
 
 Join us on Discord - <https://discord.gg/MmbGAaw>
 
-Patreon - https://www.patreon.com/kaetram
-
-Check out Kaetram-Next for the TypeScript version of Kaetram - <https://github.com/lemueldls/Kaetram-Next>
-
+Patreon - <https://www.patreon.com/kaetram>
 
 ![Demo](https://i.imgur.com/slnzrZB.png)
 ![Demo1](https://i.imgur.com/jS5d3oq.png)
@@ -82,7 +78,7 @@ npm run map
 
 ## TODO
 
-#### Gameplay
+### Gameplay
 
 - Finalize the new map.
 - Polish mob attributes.
@@ -99,11 +95,11 @@ npm run map
 - Make bosses more responsive
 - All trees in the world must be cuttable
 
-#### Code-base Development
+### Code-base Development
 
 - Write documentation outlining the entirety of the source code.
 - Improvements and optimizations to the lighting system.
 
-#### Miscellaneous
+### Miscellaneous
 
 - Add (continue) to NPC talking -- spacebar when talking
