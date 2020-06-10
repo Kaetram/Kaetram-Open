@@ -1,68 +1,58 @@
-define(function() {
+import Modules from '../../utils/modules';
 
-    return Class.extend({
+export default class Pointer {
+    constructor(id, element, type) {
+        var self = this;
 
-        init: function(id, element, type) {
-            var self = this;
+        self.id = id;
+        self.element = element;
+        self.type = type;
 
-            self.id = id;
-            self.element = element;
-            self.type = type;
+        self.blinkInterval = null;
+        self.visible = true;
 
-            self.blinkInterval = null;
-            self.visible = true;
+        self.x = -1;
+        self.y = -1;
 
-            self.x = -1;
-            self.y = -1;
+        self.load();
+    }
 
-            self.load();
-        },
+    load() {
+        var self = this;
 
-        load: function() {
-            var self = this;
+        self.blinkInterval = setInterval(function () {
+            if (self.visible) self.hide();
+            else self.show();
 
-            self.blinkInterval = setInterval(function() {
-                if (self.visible)
-                    self.hide();
-                else
-                    self.show();
+            self.visible = !self.visible;
+        }, 600);
+    }
 
-                self.visible = !self.visible;
-            }, 600);
-        },
+    destroy() {
+        var self = this;
 
-        destroy: function() {
-            var self = this;
+        clearInterval(self.blinkInterval);
 
-            clearInterval(self.blinkInterval);
+        if (self.type === Modules.Pointers.Button) self.hide();
+        else self.element.remove();
+    }
 
-            if (self.type === Modules.Pointers.Button)
-                self.hide();
-            else
-                self.element.remove();
-        },
+    setPosition(x, y) {
+        var self = this;
 
-        setPosition: function(x, y) {
-            var self = this;
+        self.x = x;
+        self.y = y;
+    }
 
-            self.x = x;
-            self.y = y;
-        },
+    show() {
+        if (this.type === Modules.Pointers.Button)
+            this.element.addClass('active');
+        else this.element.css('display', 'block');
+    }
 
-        show: function() {
-            if (this.type === Modules.Pointers.Button)
-                this.element.addClass('active');
-            else
-                this.element.css('display', 'block');
-        },
-
-        hide: function() {
-            if (this.type === Modules.Pointers.Button)
-                this.element.removeClass('active');
-            else
-                this.element.css('display', 'none');
-        }
-
-    });
-
-});
+    hide() {
+        if (this.type === Modules.Pointers.Button)
+            this.element.removeClass('active');
+        else this.element.css('display', 'none');
+    }
+}

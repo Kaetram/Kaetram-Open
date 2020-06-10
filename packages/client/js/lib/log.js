@@ -1,3 +1,5 @@
+import printStackTrace from '../lib/stacktrace';
+
 var Logger = function (level) {
     this.level = level;
 };

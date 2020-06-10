@@ -1,69 +1,60 @@
-/* global Modules */
+import Modules from '../../utils/modules';
 
-define(function() {
+export default class Splat {
+    constructor(id, type, text, x, y, statique) {
+        var self = this;
 
-    return Class.extend({
+        self.id = id;
+        self.type = type;
+        self.text = text;
+        self.x = x;
+        self.y = y;
 
-        init: function(id, type, text, x, y, statique) {
-            var self = this;
+        self.statique = statique;
 
-            self.id = id;
-            self.type = type;
-            self.text = text;
-            self.x = x;
-            self.y = y;
+        self.opacity = 1.0;
+        self.lastTime = 0;
+        self.speed = 100;
 
-            self.statique = statique;
+        self.updateSpeed = type === Modules.Hits.Heal ? 2 : 1;
+        self.duration = type === Modules.Hits.Heal ? 400 : 1000;
+    }
 
-            self.opacity = 1.0;
-            self.lastTime = 0;
-            self.speed = 100;
+    setColours(fill, stroke) {
+        this.fill = fill;
+        this.stroke = stroke;
+    }
 
-            self.updateSpeed = type === Modules.Hits.Heal ? 2 : 1;
-            self.duration = type === Modules.Hits.Heal ? 400 : 1000;
-        },
+    setDuration(duration) {
+        this.duration = duration;
+    }
 
-        setColours: function(fill, stroke) {
-            this.fill = fill;
-            this.stroke = stroke;
-        },
+    tick() {
+        var self = this;
 
-        setDuration: function(duration) {
-            this.duration = duration;
-        },
+        if (!self.statique) self.y -= self.updateSpeed;
 
-        tick: function() {
-            var self = this;
+        self.opacity -= 70 / self.duration;
 
-            if (!self.statique)
-                self.y -= self.updateSpeed;
+        if (self.opacity < 0) self.destroy();
+    }
 
-            self.opacity -= 70 / self.duration;
+    update(time) {
+        var self = this;
 
-            if (self.opacity < 0)
-                self.destroy();
-        },
-
-        update: function(time) {
-            var self = this;
-
-            if (time - self.lastTime > self.speed) {
-                self.lastTime = time;
-                self.tick();
-            }
-        },
-
-        destroy: function() {
-            var self = this;
-
-            if (self.destroyCallback)
-                self.destroyCallback(self.id);
-        },
-
-        onDestroy: function(callback) {
-            this.destroyCallback = callback;
+        if (time - self.lastTime > self.speed) {
+            self.lastTime = time;
+            self.tick();
         }
+    }
 
-    });
+    destroy() {
+        var self = this;
 
-});
+        if (self.destroyCallback) self.destroyCallback(self.id);
+    }
+
+    onDestroy(callback) {
+        this.destroyCallback = callback;
+    }
+}
