@@ -9,10 +9,18 @@ import Commands from './commands';
 import Items from '../util/items';
 import Creator from '../database/mongodb/creator';
 import Utils from '../util/utils';
+import Player from '../game/entity/character/player/player';
+import World from '../game/world';
 import log from "../util/log";
 import config from "../../config";
 
 class Incoming {
+
+    player: Player;
+    connection: any;
+    world: World;
+    database: any;
+    commands: any;
 
     constructor(player) {
 

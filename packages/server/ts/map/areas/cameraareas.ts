@@ -7,6 +7,8 @@ import * as map from '../../../data/map/world_server.json';
 
 class CameraAreas {
 
+    cameraAreas: any;
+
     constructor() {
         this.cameraAreas = [];
 
@@ -17,7 +19,7 @@ class CameraAreas {
         let list = map.cameraAreas;
 
         _.each(list, (o) => {
-            let cameraArea = new Area(o.id, o.x, o.y, o.width, o.height);
+            let cameraArea: any = new Area(o.id, o.x, o.y, o.width, o.height);
 
             cameraArea.type = o.type;
 
