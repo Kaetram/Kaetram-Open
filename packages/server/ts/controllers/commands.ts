@@ -3,9 +3,14 @@
 import _ from 'underscore';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
+import World from '../game/world';
+import Player from '../game/entity/character/player/player';
 import Utils from '../util/utils';
 
 class Commands {
+
+    player: Player;
+    world: World;
 
     constructor(player) {
         this.player = player;

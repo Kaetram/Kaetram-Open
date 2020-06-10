@@ -2,6 +2,26 @@
 
 class Area {
 
+    id: number;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+
+    entities: any;
+    chest: any;
+    items: any;
+
+    hasRespawned: boolean;
+
+    maxEntities: number;
+    spawnDelay: number;
+
+    spawnCallback: Function;
+    emptyCallback: Function;
+
+    achievement: any;
+
     constructor(id, x, y, width, height) {
         this.id = id;
 
