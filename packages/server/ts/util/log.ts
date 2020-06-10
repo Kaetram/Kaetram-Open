@@ -107,4 +107,6 @@ class Log {
 
 }
 
-export default new Log();
+const log = new Log();
+
+export default log;

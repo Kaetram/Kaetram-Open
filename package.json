@@ -7,6 +7,11 @@
     "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
     "homepage": "https://kaetram.com/",
     "scripts": {
+        "install": "lerna bootstrap",
+        "start": "",
+        "dev": "lerna run --parallel dev",
+        "build": "",
+        "test": "",
         "helper": "cd tools/map && node helper",
         "map": "cd tools/map && node exportmap data/map-refactor.json"
     },
