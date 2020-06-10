@@ -258,7 +258,7 @@ class World {
         }
     }
 
-    handleDeath(character, ignoreDrops, lastAttacker) {
+    handleDeath(character, ignoreDrops?, lastAttacker?) {
         if (!character)
             return;
 
@@ -469,7 +469,7 @@ class World {
         return new Item(id, instance, x, y, ability, abilityLevel);
     }
 
-    dropItem(id, count, x, y, ability, abilityLevel) {
+    dropItem(id, count, x, y, ability?, abilityLevel?) {
         let item = this.createItem(id, Utils.generateInstance(), x, y, ability, abilityLevel);
 
         item.count = count;
