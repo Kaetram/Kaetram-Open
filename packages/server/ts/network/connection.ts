@@ -1,15 +1,25 @@
 /* global module */
 
 import log from "../util/log";
+import WebSocket from './websocket';
+import { SocketIO } from 'socket.io';
 
 class Connection {
 
-    constructor(id, connection, server) {
+    public id: string;
+    public socket: SocketIO;
+    public _server: WebSocket;
+
+    listenCallback: Function;
+    closeCallback: Function;
+
+    constructor(id: string, socket: SocketIO, server: WebSocket) {
+
         this.id = id;
-        this.socket = connection;
+        this.socket = socket;
         this._server = server;
 
-        this.socket.on('message', (message) => {
+        this.socket.on('message', (message: any) => {
             if (this.listenCallback)
                 this.listenCallback(JSON.parse(message));
         });
@@ -20,27 +30,27 @@ class Connection {
             if (this.closeCallback)
                 this.closeCallback();
 
-            delete this._server.removeConnection(this.id);
+            this._server.removeConnection(this.id);
         });
     }
 
-    listen(callback) {
+    listen(callback: Function) {
         this.listenCallback = callback;
     }
 
-    onClose(callback) {
+    onClose(callback: Function) {
         this.closeCallback = callback;
     }
 
-    send(message) {
+    send(message: any) {
         this.sendUTF8(JSON.stringify(message));
     }
 
-    sendUTF8(data) {
+    sendUTF8(data: any) {
         this.socket.send(data);
     }
 
-    close(reason) {
+    close(reason: any) {
         if (reason)
             log.info('[Connection] Closing - ' + reason);
 

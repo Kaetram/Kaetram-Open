@@ -1,11 +1,15 @@
 /* global module */
 
 import Packets from './packets';
-const Messages = {};
+import Entity from '../game/entity/entity';
+
+const Messages: any = {};
 
 Messages.Handshake = class {
 
-    constructor(info) {
+    info: any;
+
+    constructor(info: any) {
         this.info = info;
     }
 
@@ -16,8 +20,10 @@ Messages.Handshake = class {
 
 Messages.Welcome = class {
 
-    constructor(data) {
-        this.info = data; //array of info
+    info: any
+
+    constructor(info: any) {
+        this.info = info; //array of info
     }
 
     serialize() {
@@ -27,7 +33,9 @@ Messages.Welcome = class {
 
 Messages.Spawn = class {
 
-    constructor(entity) {
+    entity: Entity;
+
+    constructor(entity: Entity) {
         this.entity = entity;
     }
 
@@ -39,7 +47,9 @@ Messages.Spawn = class {
 
 Messages.List = class {
 
-    constructor(list) {
+    list: any;
+
+    constructor(list: any) {
         this.list = list;
     }
 
@@ -50,8 +60,10 @@ Messages.List = class {
 
 Messages.Sync = class {
 
-    constructor(data) {
-        this.info = data;
+    info: any;
+
+    constructor(info: any) {
+        this.info = info;
     }
 
     serialize() {
@@ -62,7 +74,10 @@ Messages.Sync = class {
 
 Messages.Equipment = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -75,7 +90,10 @@ Messages.Equipment = class {
 
 Messages.Movement = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -87,7 +105,9 @@ Messages.Movement = class {
 
 Messages.Teleport = class {
 
-    constructor(info) {
+    info: any;
+
+    constructor(info: any) {
         this.info = info;
     }
 
@@ -99,7 +119,9 @@ Messages.Teleport = class {
 
 Messages.Despawn = class {
 
-    constructor(id) {
+    id: any;
+
+    constructor(id: any) {
         this.id = id;
     }
 
@@ -111,9 +133,12 @@ Messages.Despawn = class {
 
 Messages.Animation = class {
 
-    constructor(id, data) {
+    id: any;
+    info: any;
+
+    constructor(id: any, info: any) {
         this.id = id;
-        this.info = data;
+        this.info = info;
     }
 
     serialize() {
@@ -125,7 +150,10 @@ Messages.Animation = class {
 // TODO - Revise this when going over combat.
 Messages.Combat = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -138,9 +166,12 @@ Messages.Combat = class {
 
 Messages.Projectile = class {
 
-    constructor(opcode, data) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
-        this.info = data;
+        this.info = info;
     }
 
     serialize() {
@@ -151,7 +182,9 @@ Messages.Projectile = class {
 
 Messages.Population = class {
 
-    constructor(playerCount) {
+    playerCount: number;
+
+    constructor(playerCount: number) {
         this.playerCount = playerCount
     }
 
@@ -163,8 +196,10 @@ Messages.Population = class {
 
 Messages.Points = class {
 
-    constructor(data) {
-        this.info = data;
+    info: any;
+
+    constructor(info: any) {
+        this.info = info;
     }
 
     serialize() {
@@ -175,7 +210,9 @@ Messages.Points = class {
 
 Messages.Network = class {
 
-    constructor(opcode) {
+    opcode: any;
+
+    constructor(opcode: any) {
         this.opcode = opcode;
     }
 
@@ -186,8 +223,10 @@ Messages.Network = class {
 
 Messages.Chat = class {
 
-    constructor(data) {
-        this.info = data;
+    info: any;
+
+    constructor(info: any) {
+        this.info = info;
     }
 
     serialize() {
@@ -198,8 +237,10 @@ Messages.Chat = class {
 
 Messages.Command = class {
 
-    constructor(data) {
-        this.info = data;
+    info: any;
+
+    constructor(info: any) {
+        this.info = info;
     }
 
     serialize() {
@@ -215,9 +256,12 @@ Messages.Command = class {
 
 Messages.Inventory = class {
 
-    constructor(opcode, data) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
-        this.info = data;
+        this.info = info;
     }
 
     serialize() {
@@ -228,9 +272,12 @@ Messages.Inventory = class {
 
 Messages.Bank = class {
 
-    constructor(opcode, data) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
-        this.info = data;
+        this.info = info;
     }
 
     serialize() {
@@ -241,9 +288,12 @@ Messages.Bank = class {
 
 Messages.Ability = class {
 
-    constructor(opcode, data) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
-        this.info = data;
+        this.info = info;
     }
 
     serialize() {
@@ -254,9 +304,12 @@ Messages.Ability = class {
 
 Messages.Quest = class {
 
-    constructor(opcode, data) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
-        this.info = data;
+        this.info = info;
     }
 
     serialize() {
@@ -267,7 +320,10 @@ Messages.Quest = class {
 
 Messages.Notification = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -280,7 +336,9 @@ Messages.Notification = class {
 
 Messages.Blink = class {
 
-    constructor(instance) {
+    instance: string;
+
+    constructor(instance: string) {
         this.instance = instance;
     }
 
@@ -292,7 +350,9 @@ Messages.Blink = class {
 
 Messages.Heal = class {
 
-    constructor(info) {
+    info: any;
+
+    constructor(info: any) {
         this.info = info;
     }
 
@@ -304,7 +364,10 @@ Messages.Heal = class {
 
 Messages.Experience = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -317,7 +380,9 @@ Messages.Experience = class {
 
 Messages.Death = class {
 
-    constructor(id) {
+    id: string;
+
+    constructor(id: any) {
         this.id = id;
     }
 
@@ -329,7 +394,9 @@ Messages.Death = class {
 
 Messages.Audio = class {
 
-    constructor(song) {
+    song: string;
+
+    constructor(song: string) {
         this.song = song;
     }
 
@@ -341,7 +408,10 @@ Messages.Audio = class {
 
 Messages.NPC = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -354,7 +424,11 @@ Messages.NPC = class {
 
 Messages.Respawn = class {
 
-    constructor(instance, x, y) {
+    instance: string;
+    x: number;
+    y: number;
+
+    constructor(instance: string, x: number, y: number) {
         this.instance = instance;
         this.x = x;
         this.y = y;
@@ -368,7 +442,10 @@ Messages.Respawn = class {
 
 Messages.Enchant = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -381,7 +458,10 @@ Messages.Enchant = class {
 
 Messages.Guild = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -394,7 +474,10 @@ Messages.Guild = class {
 
 Messages.Pointer = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -407,7 +490,10 @@ Messages.Pointer = class {
 
 Messages.PVP = class {
 
-    constructor(id, pvp) {
+    id: string;
+    pvp: boolean;
+
+    constructor(id: string, pvp: boolean) {
         this.id = id;
         this.pvp = pvp;
     }
@@ -420,7 +506,10 @@ Messages.PVP = class {
 
 Messages.Shop = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -433,7 +522,10 @@ Messages.Shop = class {
 
 Messages.Minigame = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -446,7 +538,10 @@ Messages.Minigame = class {
 
 Messages.Region = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -458,7 +553,10 @@ Messages.Region = class {
 
 Messages.Overlay = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -471,7 +569,10 @@ Messages.Overlay = class {
 
 Messages.Camera = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }
@@ -484,7 +585,9 @@ Messages.Camera = class {
 
 Messages.Bubble = class {
 
-    constructor(info) {
+    info: any;
+
+    constructor(info: any) {
         this.info = info;
     }
 
@@ -496,7 +599,10 @@ Messages.Bubble = class {
 
 Messages.Profession = class {
 
-    constructor(opcode, info) {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
         this.opcode = opcode;
         this.info = info;
     }

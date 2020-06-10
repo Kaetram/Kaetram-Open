@@ -1,11 +1,11 @@
 import _ from 'underscore';
-    import Profession from './profession';
-    import Packets from '../../../../../../network/packets';
-    import Messages from '../../../../../../network/messages';
-    import Modules from '../../../../../../util/modules';
-    import Formulas from '../../../../../../util/formulas';
-    import Utils from '../../../../../../util/utils';
-    import Rocks from '../../../../../../../data/professions/rocks';
+import Profession from './profession';
+import Packets from '../../../../../../network/packets';
+import Messages from '../../../../../../network/messages';
+import Modules from '../../../../../../util/modules';
+import Formulas from '../../../../../../util/formulas';
+import Utils from '../../../../../../util/utils';
+import Rocks from '../../../../../../../data/professions/rocks';
 
 class Mining extends Profession {
 
