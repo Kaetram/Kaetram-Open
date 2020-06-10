@@ -1,26 +1,20 @@
-define(function() {
+export default class Timer {
+    constructor(start, duration) {
+        var self = this;
 
-    return Class.extend({
+        self.time = start;
+        self.duration = duration;
+    }
 
-        init: function(start, duration) {
-            var self = this;
+    isOver(time) {
+        var self = this,
+            over = false;
 
-            self.time = start;
-            self.duration = duration;
-        },
-
-        isOver: function(time) {
-            var self = this,
-                over = false;
-
-            if (time - self.time > self.duration) {
-                over = true;
-                self.time = time;
-            }
-
-            return over;
+        if (time - self.time > self.duration) {
+            over = true;
+            self.time = time;
         }
 
-    });
-
-});
+        return over;
+    }
+}
