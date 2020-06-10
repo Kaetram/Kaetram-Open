@@ -1,6 +1,7 @@
-import Packets from './packets';
+import $ from 'jquery';
 import Messages from './messages';
 import log from '../lib/log';
+import io from 'socket.io-client';
 
 export default class Socket {
     constructor(game) {
