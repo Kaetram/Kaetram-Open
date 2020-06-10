@@ -1,14 +1,25 @@
+import _ from 'underscore';
 import World from '../game/world';
+import Database from '../database/database';
 import Messages from './messages';
-import Packets from './packets';
+import Region from '../region/region';
+import Map from '../map/map';
 import Player from '../game/entity/character/player/player';
 import Utils from '../util/utils';
-import _ from 'underscore';
 import config from "../../config";
 
 class Network {
 
-    constructor(world) {
+    world: World;
+    database: Database;
+    socket: any;
+    region: Region;
+    map: Map;
+
+    packets: any;
+    differenceThreshold: number;
+
+    constructor(world: World) {
         this.world = world;
         this.database = world.database;
         this.socket = world.socket;
@@ -23,7 +34,7 @@ class Network {
     }
 
     load() {
-        this.world.onPlayerConnection((connection) => {
+        this.world.onPlayerConnection((connection: any) => {
             this.handlePlayerConnection(connection);
         });
 
@@ -46,12 +57,12 @@ class Network {
                     this.packets[id] = [];
                     this.packets[id].id = id;
                 } else
-                    delete this.socket.getConnection(id);
+                    this.socket.removeConnection(id);
             }
         }
     }
 
-    handlePlayerConnection(connection) {
+    handlePlayerConnection(connection: any) {
         let clientId = Utils.generateClientId(),
             player = new Player(this.world, this.database, connection, clientId),
             timeDifference = new Date().getTime() - this.getSocketTime(connection);
@@ -77,7 +88,7 @@ class Network {
         this.pushBroadcast(new Messages.Population(this.world.getPopulation()));
     }
 
-    addToPackets(player) {
+    addToPackets(player: Player) {
         this.packets[player.instance] = [];
     }
 
@@ -90,7 +101,7 @@ class Network {
      */
 
     pushBroadcast(message) {
-        _.each(this.packets, (packet) => {
+        _.each(this.packets, (packet: any) => {
             packet.push(message.serialize());
         });
     }
@@ -99,8 +110,8 @@ class Network {
      * Broadcast a message to everyone with exceptions.
      */
 
-    pushSelectively(message, ignores) {
-        _.each(this.packets, (packet) => {
+    pushSelectively(message, ignores?) {
+        _.each(this.packets, (packet: any) => {
             if (ignores.indexOf(packet.id) < 0)
                 packet.push(message.serialize());
         });
@@ -129,7 +140,7 @@ class Network {
      * Send a message to the region the player is currently in.
      */
 
-    pushToRegion(regionId, message, ignoreId) {
+    pushToRegion(regionId, message, ignoreId?) {
         let region = this.region.regions[regionId];
 
         if (!region) return;
@@ -147,7 +158,7 @@ class Network {
      * G  G  G
      */
 
-    pushToAdjacentRegions(regionId, message, ignoreId) {
+    pushToAdjacentRegions(regionId, message, ignoreId?) {
         this.map.regions.forEachSurroundingRegion(regionId, (id) => {
             this.pushToRegion(id, message, ignoreId);
         });

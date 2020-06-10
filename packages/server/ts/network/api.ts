@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as request from 'request';
 import * as _ from 'underscore';
+import World from '../game/world';
 import APIConstants from '../util/apiconstants';
 import Utils from '../util/utils';
 import config from "../../config";
@@ -18,7 +19,10 @@ class API {
      * the simplicity of the current API.
      */
 
-    constructor(world) {
+     world: World;
+
+    constructor(world: World) {
+
         this.world = world;
 
         if (!config.apiEnabled)

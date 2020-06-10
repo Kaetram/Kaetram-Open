@@ -12,7 +12,17 @@ import Utils from '../util/utils';
 
 class WebSocket extends Socket {
 
-    constructor(host, port, version) {
+    host: string;
+    version: string;
+    ips: {};
+
+    httpServer: http.Server | https.Server;
+    io: SocketIO;
+
+    public connectionCallback: any;
+    public webSocketReadyCallback: any;
+
+    constructor(host: string, port: number, version: string) {
         super(port);
 
         this.host = host;
@@ -23,7 +33,7 @@ class WebSocket extends Socket {
         let app = connect();
         app.use(serve('../client', {'index': ['index.html']}), null);
 
-        let readyWebSocket = (port) => {
+        let readyWebSocket = (port: number) => {
             log.info('Server is now listening on: ' + port);
 
             if (this.webSocketReadyCallback)
@@ -37,7 +47,7 @@ class WebSocket extends Socket {
         });
 
         this.io = new SocketIO(this.httpServer);
-        this.io.on('connection', (socket) => {
+        this.io.on('connection', (socket: any) => {
             if (socket.handshake.headers['cf-connecting-ip'])
                 socket.conn.remoteAddress = socket.handshake.headers['cf-connecting-ip'];
 
@@ -45,7 +55,7 @@ class WebSocket extends Socket {
 
             let client = new Connection(this.createId(), socket, this);
 
-            socket.on('client', (data) => {
+            socket.on('client', (data: any) => {
                 if (data.gVer !== this.version) {
                     client.sendUTF8('updated');
                     client.close('Wrong client version - expected ' + this.version + ' received ' + data.gVer);
@@ -63,11 +73,11 @@ class WebSocket extends Socket {
         return '1' + Utils.random(9999) + '' + this._counter++;
     }
 
-    onConnect(callback) {
+    onConnect(callback: Function) {
         this.connectionCallback = callback;
     }
 
-    onWebSocketReady(callback) {
+    onWebSocketReady(callback: Function) {
         this.webSocketReadyCallback = callback;
     }
 }
