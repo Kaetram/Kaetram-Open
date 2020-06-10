@@ -1,12 +1,16 @@
 import Objects from '../util/objects';
-    import Utils from '../util/utils';
+import Utils from '../util/utils';
+import Map from '../map/map';
+import World from '../game/world';
 
 class GlobalObjects {
+
+    world: World;
+    map: Map;
 
     constructor(world) {
         this.world = world;
         this.map = world.map;
-
     }
 
     getInfo(id) {

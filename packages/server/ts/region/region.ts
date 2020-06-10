@@ -1,13 +1,16 @@
 /* global module */
 
 import _ from 'underscore';
-    import Messages from '../network/messages';
-    import Packets from '../network/packets';
-    import Player from '../game/entity/character/player/player';
-    import * as fs from 'fs';
-    import log from "../util/log";
+import Messages from '../network/messages';
+import Packets from '../network/packets';
+import Player from '../game/entity/character/player/player';
+import Map from '../map/map';
+import Regions from '../map/regions';
+import World from '../game/world';
+import * as fs from 'fs';
+import log from "../util/log";
 import * as path from 'path';
-    import config from "../../config";
+import config from "../../config";
 
 const map = path.resolve(__dirname, '../../data/map/world_client.json');
 
@@ -20,6 +23,13 @@ class Region {
      * instanced areas where other entities will not be pushed to surrounding
      * players, even if they share the same coordinates.
      */
+
+    map: Map;
+    mapRegions: Regions;
+
+    clientMap: any;
+
+    world: World;
 
     constructor(world) {
         this.map = world.map;

@@ -1,8 +1,8 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
-    import Packets from '../../ts/network/packets';
-    import Messages from '../../ts/network/messages';
-    import Utils from '../../ts/util/utils';
-    import _ from 'underscore';
+import Packets from '../../ts/network/packets';
+import Messages from '../../ts/network/messages';
+import Utils from '../../ts/util/utils';
+import _ from 'underscore';
 
 class QueenAnt extends Combat {
 

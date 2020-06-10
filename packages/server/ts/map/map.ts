@@ -1,22 +1,62 @@
 /* global module */
 
 import _ from 'underscore';
-    import Grids from './grids';
-    import Regions from './regions';
-    import Utils from '../util/utils';
-    import Modules from '../util/modules';
-    import Objects from '../util/objects';
-    import PVPAreas from './areas/pvpareas';
-    import MusicAreas from './areas/musicareas';
-    import ChestAreas from './areas/chestareas';
-    import * as map from '../../data/map/world_server.json';
-    import * as Spawns from '../../data/spawns.json';
-    import OverlayAreas from './areas/overlayareas';
-    import CameraAreas from './areas/cameraareas';
-    import Mobs from '../util/mobs';
-    import * as ClientMap from '../../data/map/world_client.json';
+import Grids from './grids';
+import Regions from './regions';
+import Utils from '../util/utils';
+import Modules from '../util/modules';
+import Objects from '../util/objects';
+import PVPAreas from './areas/pvpareas';
+import MusicAreas from './areas/musicareas';
+import ChestAreas from './areas/chestareas';
+import OverlayAreas from './areas/overlayareas';
+import CameraAreas from './areas/cameraareas';
+import World from '../game/entity/character/player/player';
+import * as map from '../../data/map/world_server.json';
+import * as Spawns from '../../data/spawns.json';
+import * as ClientMap from '../../data/map/world_client.json';
 
 class Map {
+
+    world: World;
+    ready: boolean;
+
+    regions: Regions;
+    grids: Grids;
+
+    version: number;
+    clientMap: any;
+    width: number;
+    height: number;
+
+    collisions: any;
+    chestAreas: any;
+    chests: any;
+    tilesets: any;
+    lights: any;
+    plateau: any;
+    objects: any;
+    cursors: any;
+    doors: any;
+
+    trees: any;
+    treeIndexes: any;
+
+    rocks: any;
+    rockIndexes: any;
+
+    zoneWidth: number;
+    zoneHeight: number;
+
+    regionWidth: number;
+    regionHeight: number;
+
+    areas: any;
+
+    staticEntities: any;
+
+    readyInterval: any;
+    readyCallback: Function;
 
     constructor(world) {
         this.world = world;
@@ -112,7 +152,7 @@ class Map {
     loadDoors() {
         this.doors = {};
 
-        _.each(map.doors, (door) => {
+        _.each(map.doors, (door: any) => {
             let orientation;
 
             switch (door.o) {
@@ -202,7 +242,7 @@ class Map {
     }
 
     getRandomPosition(area) {
-        let pos = {},
+        let pos: any = {},
             valid = false;
 
         while (!valid) {
@@ -314,7 +354,7 @@ class Map {
     }
 
     isValidPosition(x, y) {
-        return isInt(x) && isInt(y) && !this.isOutOfBounds(x, y) && !this.isColliding(x, y);
+        return Number.isInteger(x) && Number.isInteger(y) && !this.isOutOfBounds(x, y) && !this.isColliding(x, y);
     }
 
     isOutOfBounds(x, y) {

@@ -258,7 +258,7 @@ class World {
         }
     }
 
-    handleDeath(character, ignoreDrops, lastAttacker) {
+    handleDeath(character, ignoreDrops?, lastAttacker?) {
         if (!character)
             return;
 
@@ -469,7 +469,7 @@ class World {
         return new Item(id, instance, x, y, ability, abilityLevel);
     }
 
-    dropItem(id, count, x, y, ability, abilityLevel) {
+    dropItem(id, count, x, y, ability?, abilityLevel?) {
         let item = this.createItem(id, Utils.generateInstance(), x, y, ability, abilityLevel);
 
         item.count = count;
@@ -924,7 +924,7 @@ class World {
             delete this.chests[chest.instance];
     }
 
-    globalMessage(source, message, colour, isGlobal, withBubble) {
+    globalMessage(source: any, message: any, colour?: string, isGlobal?: boolean, withBubble?: boolean) {
         this.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Chat({
                 name: source,
@@ -936,7 +936,7 @@ class World {
         });
     }
 
-    isOnline(username) {
+    isOnline(username: string) {
         for (let id in this.players)
             if (this.players.hasOwnProperty(id))
                 if (this.players[id].username.toLowerCase() === username.toLowerCase())
@@ -945,10 +945,10 @@ class World {
         return false;
     }
 
-    getPlayerByName(name) {
+    getPlayerByName(username: string) {
         for (let id in this.players)
             if (this.players.hasOwnProperty(id))
-                if (this.players[id].username.toLowerCase() === name.toLowerCase())
+                if (this.players[id].username.toLowerCase() === username.toLowerCase())
                     return this.players[id];
 
         return null;
@@ -958,14 +958,14 @@ class World {
         return this.getPopulation() >= this.maxPlayers;
     }
 
-    getPlayerByInstance(instance) {
+    getPlayerByInstance(instance: string) {
         if (instance in this.players)
             return this.players[instance];
 
         return null;
     }
 
-    forEachPlayer(callback) {
+    forEachPlayer(callback: Function) {
         _.each(this.players, (player) => {
             callback(player);
         });
@@ -999,11 +999,11 @@ class World {
         return _.size(this.players);
     }
 
-    onPlayerConnection(callback) {
+    onPlayerConnection(callback: Function) {
         this.playerConnectCallback = callback;
     }
 
-    onPopulationChange(callback) {
+    onPopulationChange(callback: Function) {
         this.populationCallback = callback;
     }
 

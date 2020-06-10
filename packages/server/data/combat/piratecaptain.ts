@@ -1,8 +1,8 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
-    import Utils from '../../ts/util/utils';
-    import Messages from '../../ts/network/messages';
-    import Packets from '../../ts/network/packets';
-    import Modules from '../../ts/util/modules';
+import Utils from '../../ts/util/utils';
+import Messages from '../../ts/network/messages';
+import Packets from '../../ts/network/packets';
+import Modules from '../../ts/util/modules';
 
 class PirateCaptain extends Combat {
 

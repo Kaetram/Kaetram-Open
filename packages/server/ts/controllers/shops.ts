@@ -1,10 +1,10 @@
 /* global module */
 
 import _ from 'underscore';
-    import ShopData from '../util/shops';
-    import Items from '../util/items';
-    import Messages from '../network/messages';
-    import Packets from '../network/packets';
+import ShopData from '../util/shops';
+import Items from '../util/items';
+import Messages from '../network/messages';
+import Packets from '../network/packets';
 
 class Shops {
 

@@ -1,12 +1,12 @@
 /* global module */
 
 import _ from 'underscore';
-    import Character from '../character';
-    import Mobs from '../../../../util/mobs';
-    import Utils from '../../../../util/utils';
-    import Items from '../../../../util/items';
-    import Constants from '../../../../util/constants';
-    import MobHandler from './mobhandler';
+import Character from '../character';
+import Mobs from '../../../../util/mobs';
+import Utils from '../../../../util/utils';
+import Items from '../../../../util/items';
+import Constants from '../../../../util/constants';
+import MobHandler from './mobhandler';
 
 class Mob extends Character {
 
