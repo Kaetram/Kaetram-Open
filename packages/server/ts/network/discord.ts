@@ -1,5 +1,6 @@
-import DiscordJS from 'discord.js';
+import { Client, WebhookClient} from 'discord.js';
 import Utils from '../util/utils';
+import World from '../game/world';
 
 import log from "../util/log";
 import config from "../../config";
@@ -12,7 +13,11 @@ import config from "../../config";
 
 class Discord {
 
-    constructor(world) {
+    world: World;
+    client: Client;
+    webhook: WebhookClient;
+
+    constructor(world: World) {
         if (!config.discordEnabled)
             return;
 
@@ -24,8 +29,8 @@ class Discord {
 
         this.world = world;
 
-        this.client = new DiscordJS.Client();
-        this.webhook = new DiscordJS.WebhookClient(config.discordWebhookId, config.discordWebhookToken);
+        this.client = new Client();
+        this.webhook = new WebhookClient(config.discordWebhookId, config.discordWebhookToken);
 
         this.client.on('ready', () => {
             log.notice('Successfully connected to the Discord server.');
@@ -51,7 +56,7 @@ class Discord {
      * Sends a message to the Discord server using the webhook.
      */
 
-    sendWebhook(source, message, withArrow) {
+    sendWebhook(source: any, message: any, withArrow?: any) {
         if (!config.discordEnabled)
             return;
 
