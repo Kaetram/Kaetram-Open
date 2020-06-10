@@ -22,11 +22,29 @@ Patreon &ndash; <https://www.patreon.com/kaetram>
 ![Demo2](https://i.imgur.com/jS5d3oq.png)
 ![Demo3](https://i.imgur.com/cZTFqnd.png)
 
+## Table of Contents
+
+- [Kaetram](#kaetram)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+    - [Regions](#regions)
+    - [Tilemap](#tilemap)
+    - [Kaetram Hub](#kaetram-hub)
+    - [Prerequisites](#prerequisites)
+      - [NOTE: Node.js](#note-nodejs)
+      - [NOTE: MongoDB](#note-mongodb)
+    - [Installing and Running](#installing-and-running)
+  - [Map Parsing](#map-parsing)
+  - [TODO](#todo)
+    - [Gameplay](#gameplay)
+    - [Code-base Development](#code-base-development)
+    - [Miscellaneous](#miscellaneous)
+
 ## Features
 
 BQ was intended as an experiment to showcase HTML5 capabilities, since then, technology has only served to advance. Kaetram contains a lot of ideas and features that builds on top of its predecesor, a couple are:
 
-- Multiplayer using Socket.IO
+- Multiplayer using [Socket.IO](https://socket.io)
 - Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles)
 - Region system (client receives only necessary data and saves it)
 - Questing and achievements system.
@@ -43,13 +61,41 @@ The region system sends data to the client according to the map data of the serv
 
 ### Tilemap
 
-Kaetram is built with modularity in mind, as such, the client supports multiple tileset parsing. The tilemap can easily be constructed using [Tiled Map Editor](https://www.mapeditor.org/). Using our map parsing tool located in `tools/map/exportmap.js` you can easily export your creation to both the client and the server.
+Kaetram is built with modularity in mind, as such, the client supports multiple tileset parsing. The tilemap can easily be constructed using [Tiled Map Editor](https://www.mapeditor.org/). Using our map parsing tool located in [`tools/map/exportmap.js`](tools/map/exportmap.js) you can easily export your creation to both the client and the server.
 
 ### Kaetram Hub
 
 There is also support for a hub server. This can help connect servers across one another, allowing players to interact with their friends across them in a variety of ways (private messaging and guilds). Furthermore, the hub serves as a gateway for determining what server to place players in. If a server is full, it simply returns another server that has room for the player.
 
-## Installing and Running
+### Prerequisites
+
+You must first [install Node.js](https://nodejs.org/en/download/) to run the
+server, and [install MongoDB](https://www.mongodb.com/download-center/community)
+database to store user data.
+
+#### NOTE: Node.js
+
+> Node.js version must be greater than or equal to `10.0.0` as anything under
+> this version would interpret something like `catch {}` instead of the usual
+> `catch (err) {}` as a Syntax Error. _This error is not in this codebase, it's
+> in one of the necessary node modules currently installed_
+
+#### NOTE: MongoDB
+
+> MongoDB is a requirement for Kaetram to run with all the features enabled, but
+> you can still run your own limited version if you do not want to install
+> MongoDB. To do this, set `Config.offlineMode = true` in the server
+> configuration. _If you do choose to install MongoDB, a user is not necessary,
+> but you can enable authentication with the `Config.mongoAuth` variable in the
+> [server configuration](packages/server/config.ts)._
+
+After installing Node.js, install all packages by running
+
+```console
+npm install
+```
+
+### Installing and Running
 
 Before starting Kaetram, there is some configuration that must be done. In `server/` directory, rename `config.js-dist` to `config.js`. Modify the file as to fit your needs. Similar procedure for the `client/data` directory, simply rename `config.json-dist` to `config.json`. Make sure the settings in the client match those in the server.
 
@@ -57,9 +103,10 @@ MongoDB is a requirement for Kaetram to run with all the features enabled, but y
 
 If you do choose to install MongoDB, a user is not necessary, but you can enable authentication with the `mongoAuth` variable in the server configuration.
 
+As of now a production build is not available so for running a development server, run
+
 ```console
-npm install
-npm start
+npm run dev
 ```
 
 ## Map Parsing
