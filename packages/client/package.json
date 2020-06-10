@@ -7,11 +7,14 @@
     "main": "./js/main.js",
     "scripts": {
         "build": "gulp",
+        "start": "http-server",
+        "dev": "http-server",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "license": "MPL-2.0",
     "devDependencies": {
         "gulp": "^4.0.2",
+        "http-server": "^0.12.3",
         "workbox-build": "^5.1.3"
     }
 }

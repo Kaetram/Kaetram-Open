@@ -24,7 +24,7 @@
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": false,
-        "typeRoots": ["./ts/util/globals.d.ts"]
+        "typeRoots": ["./typings"]
     },
     "typedocOptions ": {
         "inputFiles": ["./"],
@@ -35,7 +35,6 @@
         "name": "Kaetram",
         "hideGenerator": true
     },
-    "typeRoots": ["ts/util/globals.d.ts"],
     "include": ["**/*.ts"],
-    "exclude": ["node_modules/**", "../client/**"]
+    "exclude": ["node_modules/"]
 }
