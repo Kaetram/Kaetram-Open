@@ -7,6 +7,8 @@ import * as map from '../../../data/map/world_server.json';
 
 class MusicAreas {
 
+    musicAreas: any;
+
     constructor() {
         this.musicAreas = [];
 

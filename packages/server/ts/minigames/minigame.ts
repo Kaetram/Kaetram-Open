@@ -2,7 +2,10 @@
 
 class Minigame {
 
-    constructor(id, name) {
+    id: number;
+    name: string;
+
+    constructor(id: number, name: string) {
         this.id = id;
         this.name = name;
     }
@@ -16,7 +19,7 @@ class Minigame {
     }
 
 	// Used to mark if `player` is in a minigame instance.
-	getState() {
+	getState(): any {
 		return {
 			id: this.id,
 			name: this.name

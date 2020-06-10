@@ -1,11 +1,31 @@
 /* global module */
 
+import _ from 'underscore';
+import Packets from '../../network/packets';
+import Messages from '../../network/messages';
 import Minigame from '../minigame';
 import Utils from '../../util/utils';
+import World from '../../game/world';
+import Player from '../../game/entity/character/player/player';
 
 class TeamWar extends Minigame {
 
-    constructor(world) {
+    world: World;
+
+    lobby: any;
+    redTeam: any;
+    blueTeam: any;
+
+    updateInterval: any;
+
+    started: boolean;
+
+    countdown: number;
+    updateTick: number;
+    lastSync: number;
+    syncThreshold: number;
+
+    constructor(world: World) {
         super(0, 'TeamWar');
 
         this.world = world;
@@ -18,7 +38,7 @@ class TeamWar extends Minigame {
         this.started = false;
 
         this.countdown = 120;
-        this.updateInterval = 1000;
+        this.updateTick = 1000;
         this.lastSync = new Date().getTime();
         this.syncThreshold = 10000;
 
@@ -38,14 +58,14 @@ class TeamWar extends Minigame {
 
             this.started = true;
 
-        }, this.updateInterval);
+        }, this.updateTick);
     }
 
     start() {
 
     }
 
-    add(player) {
+    add(player: Player) {
         if (this.lobby.indexOf(player) > -1)
             return;
 
@@ -114,7 +134,7 @@ class TeamWar extends Minigame {
 	}
 
     // Used for radius
-    getRandom(radius) {
+    getRandom(radius?) {
         return Utils.randomInt(0, radius || 4);
     }
 
@@ -149,7 +169,7 @@ class TeamWar extends Minigame {
     }
 
 	// Expand on the super `getState()`
-	getState(player) {
+	getState(player?) {
 		let state = super.getState();
 
 		// Player can only be in team `red`, `blue`, or `lobby`.
