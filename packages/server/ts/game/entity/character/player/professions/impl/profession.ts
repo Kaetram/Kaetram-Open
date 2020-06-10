@@ -1,8 +1,8 @@
 import Modules from '../../../../../../util/modules';
-    import Formulas from '../../../../../../util/formulas';
-    import Constants from '../../../../../../util/constants';
-    import Messages from '../../../../../../network/messages';
-    import Packets from '../../../../../../network/packets';
+import Formulas from '../../../../../../util/formulas';
+import Constants from '../../../../../../util/constants';
+import Messages from '../../../../../../network/messages';
+import Packets from '../../../../../../network/packets';
 
 class Profession {
 

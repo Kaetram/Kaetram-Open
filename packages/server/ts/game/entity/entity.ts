@@ -1,10 +1,32 @@
 /* global module */
 
 import Mobs from '../../util/mobs';
-    import Items from '../../util/items';
-    import NPCs from '../../util/npcs';
+import Items from '../../util/items';
+import NPCs from '../../util/npcs';
+import Combat from './character/combat/combat';
 
 class Entity {
+
+    id: string;
+    type: any;
+    instance: string;
+
+    x: number;
+    y: number;
+    oldX: number;
+    oldY: number;
+
+    combat: Combat;
+
+    dead: boolean;
+    recentRegions: any;
+    invisibles: any;
+    invisiblesIds: any;
+
+    setPositionCallback: Function;
+
+    specialState: any;
+    customScale: any;
 
     constructor(id, type, instance, x, y) {
         this.id = id;
@@ -140,7 +162,7 @@ class Entity {
     getState() {
         let string = this.isMob() ? Mobs.idToString(this.id) : (this.isNPC() ? NPCs.idToString(this.id) : Items.idToString(this.id)),
             name = this.isMob() ? Mobs.idToName(this.id) : (this.isNPC() ? NPCs.idToName(this.id) : Items.idToName(this.id)),
-            data = {
+            data: any = {
                 type: this.type,
                 id: this.instance,
                 string: string,

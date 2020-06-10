@@ -1,8 +1,13 @@
 /* global module */
 
 import _ from 'underscore';
+import Map from './map';
+import Entity from '../game/entity/entity';
 
 class Grids {
+
+    map: Map;
+    entityGrid: any;
 
     constructor(map) {
         this.map = map;
@@ -53,7 +58,7 @@ class Grids {
                 let pos = this.entityGrid[entity.y + i][entity.x + j];
 
                 if (_.size(pos) > 0) {
-                    _.each(pos,  (pEntity) => {
+                    _.each(pos,  (pEntity: Entity) => {
 
                         if (!include && pEntity.instance !== entity.instance)
                             entities.push(pEntity);

@@ -1,14 +1,14 @@
 /* global module */
 
 import _ from 'underscore';
-    import Hit from './hit';
-    import CombatQueue from './combatqueue';
-    import Utils from '../../../../util/utils';
-    import Formulas from '../../../../util/formulas';
-    import Modules from '../../../../util/modules';
-    import Messages from '../../../../network/messages';
-    import Character from '../character';
-    import Packets from '../../../../network/packets';
+import Hit from './hit';
+import CombatQueue from './combatqueue';
+import Utils from '../../../../util/utils';
+import Formulas from '../../../../util/formulas';
+import Modules from '../../../../util/modules';
+import Messages from '../../../../network/messages';
+import Character from '../character';
+import Packets from '../../../../network/packets';
 
 class Combat {
 

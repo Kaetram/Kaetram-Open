@@ -1,9 +1,24 @@
 /* global module */
 
 import _ from 'underscore';
-    import * as map from '../../data/map/world_server.json';
+import * as map from '../../data/map/world_server.json';
+
+import Map from './map';
 
 class Regions {
+
+    map: Map;
+
+    width: number;
+    height: number;
+
+    zoneWidth: number;
+    zoneHeight: number;
+
+    regionWidth: number;
+    regionHeight: number;
+
+    linkedRegions: {};
 
     constructor(map) {
         this.map = map;
@@ -54,7 +69,7 @@ class Regions {
     // y y x y x
     // y y x y y
 
-    getSurroundingRegions(id, offset = 1, stringFormat) {
+    getSurroundingRegions(id, offset = 1, stringFormat?) {
         let position = this.regionIdToPosition(id),
             x = position.x, y = position.y;
 
@@ -83,7 +98,7 @@ class Regions {
         return stringFormat ? this.regionsToCoordinates(list) : list;
     }
 
-    getAdjacentRegions(id, offset, stringFormat) {
+    getAdjacentRegions(id, offset, stringFormat?) {
         let surroundingRegions = this.getSurroundingRegions(id, offset);
 
         /**
@@ -166,7 +181,7 @@ class Regions {
     regionsToCoordinates(regions) {
         let stringList = [];
 
-        _.each(regions, (region) => {
+        _.each(regions, (region: any) => {
             stringList.push(region.x + '-' + region.y);
         });
 

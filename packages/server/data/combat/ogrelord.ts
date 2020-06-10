@@ -1,9 +1,9 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
-    import Messages from '../../ts/network/messages';
-    import Packets from '../../ts/network/packets';
-    import Modules from '../../ts/util/modules';
-    import Utils from '../../ts/util/utils';
-    import _ from 'underscore';
+import Messages from '../../ts/network/messages';
+import Packets from '../../ts/network/packets';
+import Modules from '../../ts/util/modules';
+import Utils from '../../ts/util/utils';
+import _ from 'underscore';
 
 class OgreLord extends Combat {
 

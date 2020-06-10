@@ -1,9 +1,9 @@
 /* global module */
 
 import Data from '../../../../../data/achievements';
-    import Messages from '../../../../network/messages';
-    import Packets from '../../../../network/packets';
-    import Modules from '../../../../util/modules';
+import Messages from '../../../../network/messages';
+import Packets from '../../../../network/packets';
+import Modules from '../../../../util/modules';
 
 class Achievement {
 

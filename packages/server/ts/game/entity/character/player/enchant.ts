@@ -1,11 +1,11 @@
 /* global module */
 
 import _ from 'underscore';
-    import Items from '../../../../util/items';
-    import Messages from '../../../../network/messages';
-    import Packets from '../../../../network/packets';
-    import Utils from '../../../../util/utils';
-    import Modules from '../../../../util/modules';
+import Items from '../../../../util/items';
+import Messages from '../../../../network/messages';
+import Packets from '../../../../network/packets';
+import Utils from '../../../../util/utils';
+import Modules from '../../../../util/modules';
 
 class Enchant {
 

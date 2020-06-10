@@ -1,9 +1,9 @@
 /* global module */
 
 import _ from 'underscore';
-    import DoorData from '../../../../../data/doors';
-    import Messages from '../../../../network/messages';
-    import Packets from '../../../../network/packets';
+import DoorData from '../../../../../data/doors';
+import Messages from '../../../../network/messages';
+import Packets from '../../../../network/packets';
 
 class Doors {
 
