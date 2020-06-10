@@ -9,6 +9,8 @@ import * as SocketIO from 'socket.io';
 import * as http from 'http';
 import * as https from 'https';
 import Utils from '../util/utils';
+import config from "../../config";
+import log from "../util/log";
 
 class WebSocket extends Socket {
 
