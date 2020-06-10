@@ -1,133 +1,128 @@
-/* global log */
+import Packets from './packets';
+import Messages from './messages';
+import log from '../lib/log';
 
-define(['./packets', './messages'], function(Packets, Messages) {
+export default class Socket {
+    constructor(game) {
+        var self = this;
 
-    return Class.extend({
+        self.game = game;
+        self.config = self.game.app.config;
+        self.connection = null;
 
-        init: function(game) {
-            var self = this;
+        self.listening = false;
 
-            self.game = game;
-            self.config = self.game.app.config;
-            self.connection = null;
+        self.disconnected = false;
 
-            self.listening = false;
+        self.messages = new Messages(self.game.app);
+    }
 
-            self.disconnected = false;
+    /**
+     * Asks the hub for a server to connect to.
+     * The connection assumes it is a hub, if it's not,
+     * we default to normal server connection.
+     */
 
-            self.messages = new Messages(self.game.app);
-        },
+    getServer(callback) {
+        var self = this,
+            url =
+                'http://' + self.config.ip + ':' + self.config.port + '/server';
 
-        /**
-         * Asks the hub for a server to connect to.
-         * The connection assumes it is a hub, if it's not,
-         * we default to normal server connection.
-         */
+        if (self.config.ssl) url = 'https://' + self.config.ip + '/server';
 
-        getServer: function(callback) {
-            var self = this,
-                url = 'http://' + self.config.ip + ':' + self.config.port + '/server';
-
-            if (self.config.ssl)
-                url = 'https://' + self.config.ip + '/server';
-
-            $.get(url).then(function(data) {
+        $.get(url)
+            .then(function (data) {
                 callback(data);
-            }).catch(function() {
+            })
+            .catch(function () {
                 callback('error');
             });
+    }
 
-        },
+    connect() {
+        var self = this;
 
-        connect: function() {
-            var self = this;
+        self.getServer(function (result) {
+            var url;
 
-            self.getServer(function(result) {
-                var url;
+            if (result === 'error') {
+                if (self.config.ssl) url = 'wss://' + self.config.ip;
+                else url = 'ws://' + self.config.ip + ':' + self.config.port;
+            } else {
+                if (self.config.ssl) url = 'wss://' + result.host;
+                else url = 'ws://' + result.host + ':' + result.port;
+            }
 
-                if (result === 'error') {
-                    if (self.config.ssl)
-                        url = 'wss://' + self.config.ip;
-                    else
-                        url = 'ws://' + self.config.ip + ':' + self.config.port;
-                } else {
-                    if (self.config.ssl)
-                        url = 'wss://' + result.host;
-                    else
-                        url = 'ws://' + result.host + ':' + result.port;
-                }
+            self.connection = io(url, {
+                forceNew: true,
+                reconnection: false,
+            });
 
-                self.connection = io(url, {
-                    forceNew: true,
-                    reconnection: false
-                });
+            self.connection.on('connect_error', function () {
+                log.info('Failed to connect to: ' + self.config.ip);
 
-                self.connection.on('connect_error', function() {
-                    log.info('Failed to connect to: ' + self.config.ip);
+                self.listening = false;
 
-                    self.listening = false;
+                self.game.app.toggleLogin(false);
 
-                    self.game.app.toggleLogin(false);
+                if (self.game.isDebug())
+                    self.game.app.sendError(
+                        null,
+                        "Couldn't connect to " +
+                            self.config.ip +
+                            ':' +
+                            self.config.port
+                    );
+                else
+                    self.game.app.sendError(
+                        null,
+                        'Could not connect to the game server.'
+                    );
+            });
 
-                    if (self.game.isDebug())
-                        self.game.app.sendError(null, 'Couldn\'t connect to ' + self.config.ip + ':' + self.config.port);
-                    else
-                        self.game.app.sendError(null, 'Could not connect to the game server.');
-                });
+            self.connection.on('connect', function () {
+                self.listening = true;
 
-                self.connection.on('connect', function() {
-                    self.listening = true;
+                log.info('Connection established...');
 
-    		        log.info('Connection established...');
+                self.game.app.updateLoader('Preparing Handshake');
 
-                    self.game.app.updateLoader('Preparing Handshake');
-
-                    self.connection.emit('client', {
-                        gVer: self.config.version,
-                        cType: 'HTML5'
-                    });
-                });
-
-                self.connection.on('message', function(message) {
-                    var actualMessage = message.message ? message.message : message;
-
-                    self.receive(actualMessage);
-                });
-
-                self.connection.on('disconnect', function() {
-                    self.game.handleDisconnection();
+                self.connection.emit('client', {
+                    gVer: self.config.version,
+                    cType: 'HTML5',
                 });
             });
 
-        },
+            self.connection.on('message', function (message) {
+                var actualMessage = message.message ? message.message : message;
 
-        receive: function(message) {
-            var self = this;
+                self.receive(actualMessage);
+            });
 
-            if (!self.listening)
-                return;
+            self.connection.on('disconnect', function () {
+                self.game.handleDisconnection();
+            });
+        });
+    }
 
-            if (message.startsWith('[')) {
-                var data = JSON.parse(message);
+    receive(message) {
+        var self = this;
 
-                if (data.length > 1)
-                    self.messages.handleBulkData(data);
-                else
-                    self.messages.handleData(JSON.parse(message).shift());
+        if (!self.listening) return;
 
-            } else
-                self.messages.handleUTF8(message);
+        if (message.startsWith('[')) {
+            var data = JSON.parse(message);
 
-        },
+            if (data.length > 1) self.messages.handleBulkData(data);
+            else self.messages.handleData(JSON.parse(message).shift());
+        } else self.messages.handleUTF8(message);
+    }
 
-        send: function(packet, data) {
-            var self = this,
-                json = JSON.stringify([packet, data]);
+    send(packet, data) {
+        var self = this,
+            json = JSON.stringify([packet, data]);
 
-            if (self.connection && self.connection.connected)
-                self.connection.send(json);
-        }
-
-    });
-
-});
+        if (self.connection && self.connection.connected)
+            self.connection.send(json);
+    }
+}
