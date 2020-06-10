@@ -4,7 +4,6 @@ import Database from './database/database';
 import log from './util/log';
 import Parser from './util/parser';
 import Config from '../config';
-import Globals from './util/globals';
 
 const config = Config;
 

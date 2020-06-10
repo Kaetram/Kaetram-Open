@@ -1,10 +1,12 @@
 import path from "path";
 import dotenv from "dotenv";
+import { Configuration } from "webpack";
 
 dotenv.config();
 const inProduction = process.env.NODE_ENV === "production";
 
-export default {
+const Config: Configuration = {
+  target: "node",
   context: path.resolve(__dirname, "./ts"),
   entry: "./main.ts",
   devtool: inProduction ? "source-map" : "inline-source-map",
@@ -20,7 +22,7 @@ export default {
     ]
   },
   resolve: {
-    extensions: [".ts", ".js", ".json"]
+    extensions: [".ts", ".js"]
   },
   output: {
     filename: "[name].js",
@@ -28,3 +30,4 @@ export default {
   }
 }
 
+export default Config;
