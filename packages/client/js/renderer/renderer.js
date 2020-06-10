@@ -1,11 +1,12 @@
-/* global _, m4, log, Detect */
-
 import $ from 'jquery';
 import Camera from './camera';
 import Tile from './tile';
 import Character from '../entity/character/character';
 import Item from '../entity/objects/item';
 import Modules from '../utils/modules';
+import Illuminated from '../../lib/illuminated';
+import * as Detect from '../utils/detect';
+import _ from 'underscore';
 
 export default class Renderer {
     constructor(
@@ -1534,7 +1535,7 @@ export default class Renderer {
             let object = objects[i];
 
             parsedObjects.push(
-                new RectangleObject({
+                new Illuminated.RectangleObject({
                     topleft: new Vec2(object.x, object.y),
                     bottomright: new Vec2(
                         object.x + self.tileSize,
@@ -1584,7 +1585,7 @@ export default class Renderer {
     removeNonRelativeLights() {
         var self = this;
 
-        _.each(self.lightings, function (lighting) {
+        _.each(self.lightings, (lighting, i) => {
             if (!lighting.light.relative) {
                 self.lightings.splice(i, 1);
                 self.darkMask.lights.splice(i, 1);
@@ -1696,10 +1697,10 @@ export default class Renderer {
     }
 }
 
-var DarkMask = illuminated.DarkMask,
-    Lamp = illuminated.Lamp,
-    Lighting = illuminated.Lighting,
-    Vec2 = illuminated.Vec2;
+var DarkMask = Illuminated.DarkMask,
+    Lamp = Illuminated.Lamp,
+    Lighting = Illuminated.Lighting,
+    Vec2 = Illuminated.Vec2;
 
 const HORIZONTAL_FLIP_FLAG = 0x80000000,
     VERTICAL_FLIP_FLAG = 0x40000000,

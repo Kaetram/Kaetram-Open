@@ -1,7 +1,8 @@
-/* global log, Detect */
 import $ from 'jquery';
 import App from './app';
 import Game from './game';
+import log from './lib/log';
+import * as Detect from './utils/detect';
 
 var app, body, chatInput, game;
 
