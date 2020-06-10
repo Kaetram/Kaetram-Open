@@ -2,10 +2,14 @@
 
 import _ from 'underscore';
 import Area from '../area';
+import World from '../../game/world';
 import log from "../../util/log";
-    import * as map from '../../../data/map/world_server.json';
+import * as map from '../../../data/map/world_server.json';
 
 class ChestAreas {
+
+    world: World;
+    chestAreas: any;
 
     constructor(world) {
         this.world = world;
@@ -16,8 +20,8 @@ class ChestAreas {
     }
 
     load() {
-        _.each(map.chestAreas, (m) => {
-            let chestArea = new Area(m.id, m.x, m.y, m.width, m.height);
+        _.each(map.chestAreas, (m: any) => {
+            let chestArea: any = new Area(m.id, m.x, m.y, m.width, m.height);
 
             chestArea.maxEntities = m.entities || 0;
             chestArea.items = m.titems.split(',');

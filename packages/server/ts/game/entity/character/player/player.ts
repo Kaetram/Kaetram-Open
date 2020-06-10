@@ -1,35 +1,35 @@
 /* global module */
 
 import _ from 'underscore';
-    import Character from '../character';
-    import Incoming from '../../../../controllers/incoming';
-    import Armour from './equipment/armour';
-    import Weapon from './equipment/weapon';
-    import Pendant from './equipment/pendant';
-    import Ring from './equipment/ring';
-    import Boots from './equipment/boots';
-    import Items from '../../../../util/items';
-    import Messages from '../../../../network/messages';
-    import Formulas from '../../../../util/formulas';
-    import HitPoints from './points/hitpoints';
-    import Mana from './points/mana';
-    import Packets from '../../../../network/packets';
-    import Modules from '../../../../util/modules';
-    import Handler from './handler';
-    import Quests from '../../../../controllers/quests';
-    import Inventory from './containers/inventory/inventory';
-    import Abilities from './abilities/abilities';
-    import Professions from './professions/professions';
-    import Bank from './containers/bank/bank';
-    import Enchant from './enchant';
-    import Utils from '../../../../util/utils';
-    import Constants from '../../../../util/constants';
-    import Hit from '../combat/hit';
-    import Trade from './trade';
-    import Warp from './warp';
-    import Doors from './doors';
-    import Friends from './friends';
-    import config from "../../../../../config";
+import Character from '../character';
+import Incoming from '../../../../controllers/incoming';
+import Armour from './equipment/armour';
+import Weapon from './equipment/weapon';
+import Pendant from './equipment/pendant';
+import Ring from './equipment/ring';
+import Boots from './equipment/boots';
+import Items from '../../../../util/items';
+import Messages from '../../../../network/messages';
+import Formulas from '../../../../util/formulas';
+import HitPoints from './points/hitpoints';
+import Mana from './points/mana';
+import Packets from '../../../../network/packets';
+import Modules from '../../../../util/modules';
+import Handler from './handler';
+import Quests from '../../../../controllers/quests';
+import Inventory from './containers/inventory/inventory';
+import Abilities from './abilities/abilities';
+import Professions from './professions/professions';
+import Bank from './containers/bank/bank';
+import Enchant from './enchant';
+import Utils from '../../../../util/utils';
+import Constants from '../../../../util/constants';
+import Hit from '../combat/hit';
+import Trade from './trade';
+import Warp from './warp';
+import Doors from './doors';
+import Friends from './friends';
+import config from "../../../../../config";
 
 class Player extends Character {
 

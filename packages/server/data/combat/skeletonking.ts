@@ -1,6 +1,6 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
-    import Utils from '../../ts/util/utils';
-    import _ from 'underscore';
+import Utils from '../../ts/util/utils';
+import _ from 'underscore';
 
 class SkeletonKing extends Combat {
 

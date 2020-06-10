@@ -1,18 +1,26 @@
 /* global module */
 
 import Packets from '../network/packets';
-    import Request from 'request';
-    import _ from 'underscore';
-    import Messages from '../network/messages';
-    import sanitizer from 'sanitizer';
-    import Commands from './commands';
-    import Items from '../util/items';
-    import Creator from '../database/mongodb/creator';
-    import Utils from '../util/utils';
-    import log from "../util/log";
-    import config from "../../config";
+import Request from 'request';
+import _ from 'underscore';
+import Messages from '../network/messages';
+import sanitizer from 'sanitizer';
+import Commands from './commands';
+import Items from '../util/items';
+import Creator from '../database/mongodb/creator';
+import Utils from '../util/utils';
+import Player from '../game/entity/character/player/player';
+import World from '../game/world';
+import log from "../util/log";
+import config from "../../config";
 
 class Incoming {
+
+    player: Player;
+    connection: any;
+    world: World;
+    database: any;
+    commands: any;
 
     constructor(player) {
 

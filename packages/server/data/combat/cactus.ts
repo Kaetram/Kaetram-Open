@@ -1,6 +1,6 @@
-    import Combat from '../../ts/game/entity/character/combat/combat';
-    import Hit from '../../ts/game/entity/character/combat/hit';
-    import Modules from '../../ts/util/modules';
+import Combat from '../../ts/game/entity/character/combat/combat';
+import Hit from '../../ts/game/entity/character/combat/hit';
+import Modules from '../../ts/util/modules';
 
 class Cactus extends Combat {
 

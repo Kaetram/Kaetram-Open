@@ -1,5 +1,5 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
-    import Modules from '../../ts/util/modules';
+import Modules from '../../ts/util/modules';
 
 class GreatSquid extends Combat {
 
