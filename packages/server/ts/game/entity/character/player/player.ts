@@ -104,11 +104,13 @@ class Player extends Character {
     public npcTalk: any;
 
     public username: string;
+    public password: string;
+    public email: string;
 
     public kind: any; // TO REMOVE;
     public rights: number;
     public experience: number;
-    public ban: Date;
+    public ban: number;
     public mute: number;
     public membership: number; // TO REMOVE;
     public lastLogin: number;
@@ -132,6 +134,12 @@ class Player extends Character {
     public overlayArea: Area;
 
     public permanentPVP: boolean;
+    public movementStart: number;
+
+    public pingTime: any;
+
+    public regionWidth: number;
+    public regionHeight: number;
 
     questsLoaded: boolean;
     achievementsLoaded: boolean;
@@ -141,6 +149,8 @@ class Player extends Character {
     public profileDialogOpen: boolean;
     public inventoryOpen: boolean;
     public warpOpen: boolean;
+
+    public selectedShopItem: any;
 
     public deathCallback: Function;
     public teleportCallback: Function;
@@ -442,7 +452,7 @@ class Player extends Character {
 
     intro() {
 
-        if (this.ban > new Date()) {
+        if (this.ban > new Date().getTime()) {
             this.connection.sendUTF8('ban');
             this.connection.close('Player: ' + this.username + ' is banned.');
         }

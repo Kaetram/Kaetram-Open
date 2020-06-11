@@ -244,7 +244,7 @@ class Combat {
         })
     }
 
-    dealAoE(radius: number, hasTerror: boolean) {
+    dealAoE(radius?: number, hasTerror?: boolean) {
 
         /**
          * TODO - Find a way to implement special effects without hardcoding them.

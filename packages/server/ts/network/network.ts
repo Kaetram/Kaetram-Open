@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import World from '../game/world';
-import Database from '../database/database';
+import MongoDB from '../database/mongodb/mongodb';
 import Messages from './messages';
 import Region from '../region/region';
 import Map from '../map/map';
@@ -11,7 +11,7 @@ import config from "../../config";
 class Network {
 
     world: World;
-    database: Database;
+    database: MongoDB;
     socket: any;
     region: Region;
     map: Map;
@@ -131,8 +131,8 @@ class Network {
      */
 
     pushToPlayers(players, message) {
-        _.each(players, (playerInstance) => {
-            this.pushToPlayer(this.world.getPlayerByInstance(playerInstance), message);
+        _.each(players, (instance: string) => {
+            this.pushToPlayer(this.world.getPlayerByInstance(instance), message);
         });
     }
 
@@ -140,14 +140,14 @@ class Network {
      * Send a message to the region the player is currently in.
      */
 
-    pushToRegion(regionId, message, ignoreId?) {
+    pushToRegion(regionId: string, message: any, ignoreId?: string) {
         let region = this.region.regions[regionId];
 
         if (!region) return;
 
-        _.each(region.players, (playerInstance) => {
-            if (playerInstance !== ignoreId)
-                this.pushToPlayer(this.world.getEntityByInstance(playerInstance), message);
+        _.each(region.players, (instance: string) => {
+            if (instance !== ignoreId)
+                this.pushToPlayer(this.world.getEntityByInstance(instance), message);
         });
     }
 
@@ -169,7 +169,7 @@ class Network {
      */
 
     pushToNameArray(names, message) {
-        _.each(names, (name) => {
+        _.each(names, (name: string) => {
             let player = this.world.getPlayerByName(name);
 
             if (player)
@@ -182,7 +182,7 @@ class Network {
      */
 
     pushToOldRegions(player, message) {
-        _.each(player.recentRegions, (id) => {
+        _.each(player.recentRegions, (id: string) => {
             this.pushToRegion(id, message);
         });
 

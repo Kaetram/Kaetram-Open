@@ -3,7 +3,6 @@
 import _ from 'underscore';
 import Mobs from './mobs';
 import NPCs from './npcs';
-import log from "./log";
 import Items from './items';
 import Abilities from './abilities';
 import Shops from './shops';
@@ -46,7 +45,7 @@ class Parser {
     loadMobData() {
         let mobCounter = 0;
 
-        _.each(MobData, (value, key) => {
+        _.each(MobData, (value: any, key) => {
             key = key.toLowerCase();
 
             Mobs.Properties[key] = {
@@ -82,7 +81,7 @@ class Parser {
     loadNPCData() {
         let npcCounter = 0;
 
-        _.each(NPCData, (value, key) => {
+        _.each(NPCData, (value: any, key) => {
             key = key.toLowerCase();
 
             NPCs.Properties[key] = {
@@ -104,7 +103,7 @@ class Parser {
     loadItemData() {
         let itemCounter = 0;
 
-        _.each(ItemData, async (value, key) => {
+        _.each(ItemData, async (value: any, key) => {
             key = key.toLowerCase();
 
             Items.Data[key] = {

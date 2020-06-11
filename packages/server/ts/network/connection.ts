@@ -1,6 +1,5 @@
 /* global module */
 
-import log from "../util/log";
 import WebSocket from './websocket';
 import { SocketIO } from 'socket.io';
 

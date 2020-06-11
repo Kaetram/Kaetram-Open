@@ -12,6 +12,7 @@ import ChestAreas from './areas/chestareas';
 import OverlayAreas from './areas/overlayareas';
 import CameraAreas from './areas/cameraareas';
 import World from '../game/entity/character/player/player';
+import Entity from '../game/entity/entity';
 import * as map from '../../data/map/world_server.json';
 import * as Spawns from '../../data/spawns.json';
 import * as ClientMap from '../../data/map/world_client.json';
@@ -194,7 +195,7 @@ class Map {
         this.staticEntities = [];
 
         // Legacy static entities (from Tiled);
-        _.each(map.staticEntities, (entity, tileIndex) => {
+        _.each(map.staticEntities, (entity: any, tileIndex) => {
             this.staticEntities.push({
                 tileIndex: tileIndex,
                 string: entity.type,
