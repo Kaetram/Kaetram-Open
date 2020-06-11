@@ -1,13 +1,9 @@
 import World from './game/world';
 import WebSocket from './network/websocket';
 import Database from './database/database';
-import Log from './util/log';
+import log from './util/log';
 import Parser from './util/parser';
-import Config from '../config';
-import globals from './util/globals';
-
-log = new Log();
-config = Config;
+import config from '../config';
 
 class Main {
     webSocket: WebSocket;
@@ -29,38 +25,38 @@ class Main {
              * the websocket.
              */
 
-             let onWorldLoad = () => {
-                 log.notice(`World has successfully been created.`);
+            let onWorldLoad = () => {
+                log.notice(`World has successfully been created.`);
 
-                 if (!config.allowConnectionsToggle)
-                     this.world.allowConnections = true;
+                if (!config.allowConnectionsToggle)
+                    this.world.allowConnections = true;
 
-                 let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
-                 log.notice('Connect locally via http://' + host + ':' + config.port);
-             };
+                let host =
+                    config.host === '0.0.0.0' ? 'localhost' : config.host;
+                log.notice(
+                    'Connect locally via http://' + host + ':' + config.port
+                );
+            };
 
-             this.world = new World(this.webSocket, this.database);
+            this.world = new World(this.webSocket, this.database);
 
-             this.world.load(onWorldLoad);
+            this.world.load(onWorldLoad);
         });
 
         this.webSocket.onConnect((connection) => {
-
             if (this.world.allowConnections) {
-
                 if (this.world.isFull()) {
-                    log.info('All the worlds are currently full. Please try again later.');
+                    log.info(
+                        'All the worlds are currently full. Please try again later.'
+                    );
 
                     connection.sendUTF8('full');
                     connection.close();
-                } else
-                    this.world.playerConnectCallback(connection);
-
+                } else this.world.playerConnectCallback(connection);
             } else {
                 connection.sendUTF8('disallowed');
                 connection.close();
             }
-
         });
 
         this.loadConsole();
@@ -73,27 +69,24 @@ class Main {
             let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
                 type = message.charAt(0);
 
-            if (type !== '/')
-                return;
+            if (type !== '/') return;
 
             let blocks = message.substring(1).split(' '),
                 command = blocks.shift();
 
-            if (!command)
-                return;
+            if (!command) return;
 
             let username, player;
 
             switch (command) {
-
                 case 'players':
-
-                    log.info(`There are a total of ${this.getPopulation()} player(s) logged in.`);
+                    log.info(
+                        `There are a total of ${this.getPopulation()} player(s) logged in.`
+                    );
 
                     break;
 
                 case 'registered':
-
                     this.database.registeredCount((count) => {
                         log.info(`There are ${count} users registered.`);
                     });
@@ -101,7 +94,6 @@ class Main {
                     break;
 
                 case 'kill':
-
                     username = blocks.join(' ');
 
                     if (!this.world.isOnline(username)) {
@@ -121,14 +113,15 @@ class Main {
                     break;
 
                 case 'resetPositions':
-
                     let newX = parseInt(blocks.shift()),
                         newY = parseInt(blocks.shift());
 
                     //x: 325, y: 87
 
                     if (!newX || !newY) {
-                        log.info('Invalid command parameters. Expected: /resetPositions <newX> <newY>');
+                        log.info(
+                            'Invalid command parameters. Expected: /resetPositions <newX> <newY>'
+                        );
                         return;
                     }
 
@@ -148,18 +141,15 @@ class Main {
                     break;
 
                 case 'allowConnections':
-
                     this.world.allowConnections = !this.world.allowConnections;
 
                     if (this.world.allowConnections)
-                        log.info('Server is now allowing connections.')
-                    else
-                        log.info('The server is not allowing connections.');
+                        log.info('Server is now allowing connections.');
+                    else log.info('The server is not allowing connections.');
 
                     break;
 
                 case 'give':
-
                     let itemId = blocks.shift(),
                         itemCount = parseInt(blocks.shift());
 
@@ -167,18 +157,16 @@ class Main {
 
                     player = this.world.getPlayerByName(username);
 
-                    if (!player)
-                        return;
+                    if (!player) return;
 
                     player.inventory.add({
                         id: itemId,
                         count: itemCount,
                         ability: -1,
-                        abilityLevel: -1
+                        abilityLevel: -1,
                     });
 
                     break;
-
             }
         });
     }
@@ -186,7 +174,6 @@ class Main {
     getPopulation() {
         return this.world.getPopulation();
     }
-
 }
 
 export default Main;

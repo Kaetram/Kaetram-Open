@@ -1,6 +1,6 @@
-/* global module */
-
 import Socket from './socket';
+import log from '../util/log';
+import config from '../../config';
 
 import Connection from './connection';
 import * as connect from 'connect';

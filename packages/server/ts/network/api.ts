@@ -5,10 +5,10 @@ import * as _ from 'underscore';
 import World from '../game/world';
 import APIConstants from '../util/apiconstants';
 import Utils from '../util/utils';
-import config from "../../config";
+import config from '../../config';
+import log from '../util/log';
 
 class API {
-
     /**
      * API will have a variety of uses. Including communication
      * between multiple worlds (planned for the future).
@@ -23,11 +23,9 @@ class API {
     hubConnected: boolean;
 
     constructor(world: World) {
-
         this.world = world;
 
-        if (!config.apiEnabled)
-            return;
+        if (!config.apiEnabled) return;
 
         let app = express();
 
@@ -43,7 +41,6 @@ class API {
         app.listen(config.apiPort, () => {
             log.notice(config.name + ' API has successfully initialized.');
         });
-
     }
 
     handle(router) {
@@ -53,49 +50,65 @@ class API {
                 port: config.port, // Sends the server port.
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
-                playerCount: this.world.getPopulation()
+                playerCount: this.world.getPopulation(),
             });
         });
 
-		router.post('/player', (request, response) => {
-			this.handlePlayer(request, response);
-		});
+        router.post('/player', (request, response) => {
+            this.handlePlayer(request, response);
+        });
 
         router.post('/chat', (request, response) => {
             this.handleChat(request, response);
         });
 
         router.get('/players', (request, response) => {
-			this.handlePlayers(request, response);
-		});
+            this.handlePlayers(request, response);
+        });
     }
 
-	handlePlayer(request, response) {
+    handlePlayer(request, response) {
         if (!this.verifyToken(request.body.accessToken)) {
-            this.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /player POST request.');
+            this.returnError(
+                response,
+                APIConstants.MALFORMED_PARAMETERS,
+                'Invalid `accessToken` specified for /player POST request.'
+            );
             return;
         }
 
         let username = request.body.username;
 
         if (!username) {
-            this.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'No `username` variable received.');
+            this.returnError(
+                response,
+                APIConstants.MALFORMED_PARAMETERS,
+                'No `username` variable received.'
+            );
             return;
         }
 
         if (!this.world.isOnline(username)) {
-            this.returnError(response, APIConstants.PLAYER_NOT_ONLINE, `Player ${username} is not online.`);
+            this.returnError(
+                response,
+                APIConstants.PLAYER_NOT_ONLINE,
+                `Player ${username} is not online.`
+            );
             return;
         }
 
         let player = this.world.getPlayerByName(username);
 
         response.json(this.getPlayerData(player));
-	}
+    }
 
     handleChat(request, response) {
         if (!this.verifyToken(request.body.accessToken)) {
-            this.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /chat POST request.');
+            this.returnError(
+                response,
+                APIConstants.MALFORMED_PARAMETERS,
+                'Invalid `accessToken` specified for /chat POST request.'
+            );
             return;
         }
 
@@ -107,8 +120,7 @@ class API {
         if (username) {
             let player = this.world.getPlayerByName(username);
 
-            if (player)
-                player.chat(source, text, colour);
+            if (player) player.chat(source, text, colour);
 
             response.json({ status: 'success' });
 
@@ -120,20 +132,24 @@ class API {
         response.json({ status: 'success' });
     }
 
-	handlePlayers(request, response) {
-		if (!this.verifyToken(request.query.accessToken)) {
-			this.returnError(response, APIConstants.MALFORMED_PARAMETERS, 'Invalid `accessToken` specified for /players GET request.');
-			return;
-		}
+    handlePlayers(request, response) {
+        if (!this.verifyToken(request.query.accessToken)) {
+            this.returnError(
+                response,
+                APIConstants.MALFORMED_PARAMETERS,
+                'Invalid `accessToken` specified for /players GET request.'
+            );
+            return;
+        }
 
-		let players = {};
+        let players = {};
 
-		_.each(this.world.players, (player) => {
-			players[player.username] = this.getPlayerData(player);
-		});
+        _.each(this.world.players, (player) => {
+            players[player.username] = this.getPlayerData(player);
+        });
 
-		response.json(players);
-	}
+        response.json(players);
+    }
 
     pingHub() {
         let url = this.getUrl('ping'),
@@ -142,12 +158,11 @@ class API {
                     serverId: config.serverId,
                     accessToken: config.accessToken,
                     port: config.apiPort,
-                    remoteServerHost: config.remoteServerHost
-                }
+                    remoteServerHost: config.remoteServerHost,
+                },
             };
 
         request.post(url, data, (error, response, body) => {
-
             try {
                 let data = JSON.parse(body);
 
@@ -157,12 +172,10 @@ class API {
                         this.hubConnected = true;
                     }
                 }
-
             } catch (e) {
                 log.error('Could not connect to Kaetram Hub.');
                 this.hubConnected = false;
             }
-
         });
     }
 
@@ -174,22 +187,20 @@ class API {
                     serverId: config.serverId,
                     source: source,
                     text: text,
-                    withArrow: withArrow
-                }
+                    withArrow: withArrow,
+                },
             };
 
         request.post(url, data, (error, response, body) => {
-
             try {
                 let data = JSON.parse(body);
 
-                if (data.status === 'error')
-                    console.log(data);
+                if (data.status === 'error') console.log(data);
 
                 //TODO - Do something with this?
-
-            } catch (e) { log.error('Could not send message to hub.'); }
-
+            } catch (e) {
+                log.error('Could not send message to hub.');
+            }
         });
     }
 
@@ -200,30 +211,28 @@ class API {
                     hubAccessToken: config.hubAccessToken,
                     source: Utils.formatUsername(source.username),
                     target: Utils.formatUsername(target),
-                    text: text
-                }
+                    text: text,
+                },
             };
 
         request.post(url, data, (error, response, body) => {
-
             try {
-
                 let data = JSON.parse(body);
 
                 if (data.error) {
-                    source.notify(`Player @aquamarine@${target}@white@ is not online.`);
+                    source.notify(
+                        `Player @aquamarine@${target}@white@ is not online.`
+                    );
                     return;
                 }
 
                 // No error has occurred.
 
                 // TODO - Add chat colours/format to config.
-                source.chat(`[To ${target}]`, text, 'aquamarine')
-
-            } catch(e) {
+                source.chat(`[To ${target}]`, text, 'aquamarine');
+            } catch (e) {
                 log.error('Could not send privateMessage to hub.');
             }
-
         });
     }
 
@@ -232,8 +241,7 @@ class API {
     }
 
     getPlayerData(player) {
-        if (!player)
-            return {};
+        if (!player) return {};
 
         return {
             serverId: config.serverId,
@@ -246,7 +254,7 @@ class API {
             pvpKills: player.pvpKills,
             orientation: player.orientation,
             lastLogin: player.lastLogin,
-            mapVersion: player.mapVersion
+            mapVersion: player.mapVersion,
         };
     }
 
@@ -257,10 +265,9 @@ class API {
     returnError(response, error, message) {
         response.json({
             error: error,
-            message: message
+            message: message,
         });
     }
-
 }
 
 export default API;

@@ -3,9 +3,9 @@ import Modules from '../../../../../util/modules';
 import Player from '../player';
 import World from '../../../../world';
 import Profession from './impl/profession';
+import log from '../../../../../util/log';
 
 class Professions {
-
     player: Player;
     world: World;
 
@@ -24,36 +24,35 @@ class Professions {
         let pList = Object.keys(Modules.Professions); // professions enum list
 
         /**
-        * We are accessing all the professions in the Modules.Professions
-        * enum. We use the key to generate the profession class instance.
-        */
+         * We are accessing all the professions in the Modules.Professions
+         * enum. We use the key to generate the profession class instance.
+         */
 
         _.each(pList, async (profession) => {
             try {
-                let ProfessionClass = (await import(`./impl/${profession.toLowerCase()}`)).default,
+                let ProfessionClass = (
+                        await import(`./impl/${profession.toLowerCase()}`)
+                    ).default,
                     id = Modules.Professions[profession];
 
                 this.professions[id] = new ProfessionClass(id, this.player);
-            } catch(e) {
+            } catch (e) {
                 log.debug(`Could not load ${profession} profession.`);
                 log.error(e);
             }
         });
-
     }
 
     update(info: any) {
         _.each(info, (data, id) => {
-            if (!(id in this.professions))
-                return;
+            if (!(id in this.professions)) return;
 
             this.professions[id].load(data);
         });
     }
 
     getProfession(id: number) {
-        if (!(id in this.professions))
-            return null;
+        if (!(id in this.professions)) return null;
 
         return this.professions[id];
     }
@@ -83,7 +82,7 @@ class Professions {
                 id: profession.id,
                 name: profession.name,
                 level: profession.level,
-                percentage: profession.getPercentage()
+                percentage: profession.getPercentage(),
             });
         });
 
@@ -99,10 +98,9 @@ class Professions {
 
         return {
             username: this.player.username,
-            data: data
-        }
+            data: data,
+        };
     }
-
 }
 
 export default Professions;

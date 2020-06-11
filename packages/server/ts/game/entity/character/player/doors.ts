@@ -1,5 +1,4 @@
-/* global module */
-
+import config from '../../../../../config';
 import _ from 'underscore';
 import DoorData from '../../../../../data/doors.json';
 import World from '../../../world';
