@@ -1,54 +1,46 @@
-/* global log */
+import log from '../lib/log';
 
-define(function() {
+export default class Overlay {
+    constructor(game) {
+        var self = this;
 
-    return Class.extend({
+        self.game = game;
 
-        init: function(game) {
-            var self = this;
+        self.overlays = {};
+        self.currentOverlay = null;
 
-            self.game = game;
+        self.load();
+    }
 
-            self.overlays = {};
-            self.currentOverlay = null;
+    load() {
+        var self = this;
 
-            self.load();
-        },
+        self.overlays['fog.png'] = self.loadOverlay('fog.png');
+    }
 
-        load: function() {
-            var self = this;
+    loadOverlay(overlayName) {
+        var self = this,
+            overlay = new Image();
 
-            self.overlays['fog.png'] = self.loadOverlay('fog.png');
-        },
+        overlay.crossOrigin = 'Anonymous';
+        overlay.src = 'img/overlays/' + overlayName;
 
-        loadOverlay: function(overlayName) {
-            var self = this,
-                overlay = new Image();
+        overlay.onload = function () {
+            if (self.game.isDebug()) log.info('Loaded ' + overlayName);
+        };
 
-            overlay.crossOrigin = 'Anonymous';
-            overlay.src = 'img/overlays/' + overlayName;
+        return overlay;
+    }
 
-            overlay.onload = function() {
-                if (self.game.isDebug())
-                    log.info('Loaded ' + overlayName);
-            };
+    updateOverlay(overlay) {
+        var self = this;
 
-            return overlay;
-        },
+        if (overlay in self.overlays)
+            self.currentOverlay = self.overlays[overlay];
+        else self.currentOverlay = overlay;
+    }
 
-        updateOverlay(overlay) {
-            var self = this;
-
-            if (overlay in self.overlays)
-                self.currentOverlay = self.overlays[overlay];
-            else
-                self.currentOverlay = overlay;
-        },
-
-        getFog: function() {
-            return this.currentOverlay;
-        }
-
-    });
-
-});
+    getFog() {
+        return this.currentOverlay;
+    }
+}
