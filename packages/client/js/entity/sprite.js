@@ -1,145 +1,156 @@
-/* global log, _ */
+import Animation from './animation';
+import log from '../lib/log';
 
-define(['./animation'], function(Animation) {
+export default class Sprite {
+    constructor(sprite) {
+        var self = this;
 
-    return Class.extend({
+        self.sprite = sprite;
 
-        init: function(sprite) {
-            var self = this;
+        self.id = sprite.id;
 
-            self.sprite = sprite;
+        self.loaded = false;
+        self.loadHurt = false;
 
-            self.id = sprite.id;
+        self.offsetX = 0;
+        self.offsetY = 0;
+        self.offsetAngle = 0;
 
-            self.loaded = false;
-            self.loadHurt = false;
+        self.hurtSprite = {
+            loaded: false,
+        };
 
-            self.offsetX = 0;
-            self.offsetY = 0;
-            self.offsetAngle = 0;
+        self.loadSprite();
+    }
 
-            self.hurtSprite = {
-                loaded: false
-            };
+    load() {
+        var self = this;
 
-            self.loadSprite();
-        },
+        self.image = new Image();
+        self.image.crossOrigin = 'Anonymous';
+        self.image.src = self.filepath;
 
-        load: function() {
-            var self = this;
+        self.image.onload = function () {
+            self.loaded = true;
 
-            self.image = new Image();
-            self.image.crossOrigin = 'Anonymous';
-            self.image.src = self.filepath;
+            if (self.loadHurt) self.createHurtSprite();
 
-            self.image.onload = function() {
-                self.loaded = true;
+            if (self.loadCallback) self.loadCallback();
+        };
+    }
 
-                if (self.loadHurt)
-                    self.createHurtSprite();
+    loadSprite() {
+        var self = this,
+            sprite = self.sprite;
 
-                if (self.loadCallback)
-                    self.loadCallback();
-            };
-        },
+        self.filepath = 'img/sprites/' + self.id + '.png';
+        self.animationData = sprite.animations;
 
-        loadSprite: function() {
-            var self = this,
-                sprite = self.sprite;
+        self.width = sprite.width;
+        self.height = sprite.height;
 
-            self.filepath = 'img/sprites/' + self.id + '.png';
-            self.animationData = sprite.animations;
+        self.offsetX = sprite.offsetX !== undefined ? sprite.offsetX : -16;
+        self.offsetY = sprite.offsetY !== undefined ? sprite.offsetY : -16;
+        self.offfsetAngle =
+            sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
 
-            self.width = sprite.width;
-            self.height = sprite.height;
+        self.idleSpeed =
+            sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
+    }
 
-            self.offsetX = sprite.offsetX !== undefined ? sprite.offsetX : -16;
-            self.offsetY = sprite.offsetY !== undefined ? sprite.offsetY : -16;
-            self.offfsetAngle = sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
+    update() {
+        var self = this;
 
-            self.idleSpeed = sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
-        },
+        self.loadSprite();
+        self.load();
+    }
 
-        update: function() {
-            var self = this;
+    createAnimations() {
+        var self = this,
+            animations = {};
 
-            self.loadSprite();
-            self.load();
-        },
+        for (var name in self.animationData) {
+            if (self.animationData.hasOwnProperty(name)) {
+                if (name === 'death')
+                    // Check if sprite has a death animation
+                    self.hasDeathAnimation = true;
 
-        createAnimations: function() {
-            var self = this,
-                animations = {};
+                var a = self.animationData[name];
 
-            for (var name in self.animationData) {
-                if (self.animationData.hasOwnProperty(name)) {
-                    if (name === 'death') // Check if sprite has a death animation
-                        self.hasDeathAnimation = true;
-
-                    var a = self.animationData[name];
-
-                    animations[name] = new Animation(name, a.length, a.row, self.width, self.height);
-                }
+                animations[name] = new Animation(
+                    name,
+                    a.length,
+                    a.row,
+                    self.width,
+                    self.height
+                );
             }
-
-            return animations;
-        },
-
-        /**
-         * This is when an entity gets hit, they turn red then white.
-         */
-
-        createHurtSprite: function() {
-            var self = this;
-
-            if (!self.loaded)
-                self.load();
-
-            if (self.hurtSprite.loaded)
-                return;
-
-            var canvas = document.createElement('canvas'),
-                context = canvas.getContext('2d'),
-                spriteData, data;
-
-            canvas.width = self.image.width;
-            canvas.height = self.image.height;
-
-            try {
-                context.drawImage(self.image, 0, 0, self.image.width, self.image.height);
-
-                spriteData = context.getImageData(0, 0, self.image.width, self.image.height);
-                data = spriteData.data;
-
-                for (var i = 0; i < data.length; i += 4) {
-                    data[i] = 255;
-                    data[i + 1] = data[i + 2] = 75;
-                }
-
-                spriteData.data = data;
-
-                context.putImageData(spriteData, 0, 0);
-
-                self.hurtSprite = {
-                    image: canvas,
-                    loaded: true,
-                    offsetX: self.offsetX,
-                    offsetY: self.offsetY,
-                    width: self.width,
-                    height: self.height,
-                    type: 'hurt'
-                }
-
-            } catch (e) {
-                log.error('Could not load hurt sprite.');
-                log.error(e);
-            }
-        },
-
-        onLoad: function(callback) {
-            this.loadCallback = callback;
         }
 
-    });
+        return animations;
+    }
 
-});
+    /**
+     * This is when an entity gets hit, they turn red then white.
+     */
+
+    createHurtSprite() {
+        var self = this;
+
+        if (!self.loaded) self.load();
+
+        if (self.hurtSprite.loaded) return;
+
+        var canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d'),
+            spriteData,
+            data;
+
+        canvas.width = self.image.width;
+        canvas.height = self.image.height;
+
+        try {
+            context.drawImage(
+                self.image,
+                0,
+                0,
+                self.image.width,
+                self.image.height
+            );
+
+            spriteData = context.getImageData(
+                0,
+                0,
+                self.image.width,
+                self.image.height
+            );
+            data = spriteData.data;
+
+            for (var i = 0; i < data.length; i += 4) {
+                data[i] = 255;
+                data[i + 1] = data[i + 2] = 75;
+            }
+
+            spriteData.data = data;
+
+            context.putImageData(spriteData, 0, 0);
+
+            self.hurtSprite = {
+                image: canvas,
+                loaded: true,
+                offsetX: self.offsetX,
+                offsetY: self.offsetY,
+                width: self.width,
+                height: self.height,
+                type: 'hurt',
+            };
+        } catch (e) {
+            log.error('Could not load hurt sprite.');
+            log.error(e);
+        }
+    }
+
+    onLoad(callback) {
+        this.loadCallback = callback;
+    }
+}

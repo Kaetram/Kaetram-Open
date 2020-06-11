@@ -1,5 +1,5 @@
 /** @format */
-
+//
 const path = require('path');
 const { task, series } = require('gulp');
 const workbox = require('workbox-build');
@@ -10,9 +10,9 @@ task('generate-sw', async () => {
         swDest: path.resolve(__dirname, './sw.js'),
         globDirectory: path.resolve(__dirname, './'),
         globPatterns: [
-            '**/*.{mp3,css,json,json-dist,js,ico,eot,svg,ttf,woff,png,gif,jpg,html,txt,xml}'
+            '**/*.{mp3,css,json,json-dist,js,ico,eot,svg,ttf,woff,png,gif,jpg,html,txt,xml}',
         ],
-        maximumFileSizeToCacheInBytes: 5e6
+        maximumFileSizeToCacheInBytes: 5e6,
     });
     const { count, size, warnings } = build;
 

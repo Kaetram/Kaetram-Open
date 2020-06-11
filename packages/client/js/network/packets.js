@@ -1,4 +1,4 @@
-Packets = {
+export default {
     Handshake: 0,
     Intro: 1,
     Welcome: 2,
@@ -47,182 +47,182 @@ Packets = {
     Camera: 45,
     Bubble: 46,
     Client: 47,
-    Profession: 48
-};
+    Profession: 48,
 
-Packets.IntroOpcode = {
-    Login: 0,
-    Register: 1,
-    Guest: 2
-};
+    IntroOpcode: {
+        Login: 0,
+        Register: 1,
+        Guest: 2,
+    },
 
-Packets.EquipmentOpcode = {
-    Batch: 0,
-    Equip: 1,
-    Unequip: 2
-};
+    EquipmentOpcode: {
+        Batch: 0,
+        Equip: 1,
+        Unequip: 2,
+    },
 
-Packets.MovementOpcode = {
-    Request: 0,
-    Started: 1,
-    Step: 2,
-    Stop: 3,
-    Move: 4,
-    Orientate: 5,
-    Follow: 6,
-    Entity: 7,
-    Freeze: 8,
-    Stunned: 9,
-    Zone: 10
-};
+    MovementOpcode: {
+        Request: 0,
+        Started: 1,
+        Step: 2,
+        Stop: 3,
+        Move: 4,
+        Orientate: 5,
+        Follow: 6,
+        Entity: 7,
+        Freeze: 8,
+        Stunned: 9,
+        Zone: 10,
+    },
 
-Packets.TargetOpcode = {
-    Talk: 0,
-    Attack: 1,
-    None: 2,
-    Object: 3
-};
+    TargetOpcode: {
+        Talk: 0,
+        Attack: 1,
+        None: 2,
+        Object: 3,
+    },
 
-Packets.CombatOpcode = {
-    Initiate: 0,
-    Hit: 1,
-    Finish: 2,
-    Sync: 3
-};
+    CombatOpcode: {
+        Initiate: 0,
+        Hit: 1,
+        Finish: 2,
+        Sync: 3,
+    },
 
-Packets.ProjectileOpcode = {
-    Static: 0,
-    Dynamic: 1,
-    Create: 2,
-    Update: 3,
-    Impact: 4
-};
+    ProjectileOpcode: {
+        Static: 0,
+        Dynamic: 1,
+        Create: 2,
+        Update: 3,
+        Impact: 4,
+    },
 
-Packets.NetworkOpcode = {
-    Ping: 0,
-    Pong: 1
-};
+    NetworkOpcode: {
+        Ping: 0,
+        Pong: 1,
+    },
 
-Packets.InventoryOpcode = {
-    Batch: 0,
-    Add: 1,
-    Remove: 2,
-    Select: 3
-};
+    InventoryOpcode: {
+        Batch: 0,
+        Add: 1,
+        Remove: 2,
+        Select: 3,
+    },
 
-Packets.BankOpcode = {
-    Batch: 0,
-    Add: 1,
-    Remove: 2,
-    Select: 3
-};
+    BankOpcode: {
+        Batch: 0,
+        Add: 1,
+        Remove: 2,
+        Select: 3,
+    },
 
-Packets.QuestOpcode = {
-    QuestBatch: 0,
-    AchievementBatch: 1,
-    Progress: 2,
-    Finish: 3
-};
+    QuestOpcode: {
+        QuestBatch: 0,
+        AchievementBatch: 1,
+        Progress: 2,
+        Finish: 3,
+    },
 
-Packets.NotificationOpcode = {
-    Ok: 0,
-    YesNo: 1,
-    Text: 2,
-    Popup: 3
-};
+    NotificationOpcode: {
+        Ok: 0,
+        YesNo: 1,
+        Text: 2,
+        Popup: 3,
+    },
 
-Packets.ExperienceOpcode = {
-    Combat: 0,
-    Profession: 1
-};
+    ExperienceOpcode: {
+        Combat: 0,
+        Profession: 1,
+    },
 
-Packets.NPCOpcode = {
-    Talk: 0,
-    Store: 1,
-    Bank: 2,
-    Enchant: 3,
-    Countdown: 4
-};
+    NPCOpcode: {
+        Talk: 0,
+        Store: 1,
+        Bank: 2,
+        Enchant: 3,
+        Countdown: 4,
+    },
 
-Packets.TradeOpcode = {
-    Request: 1,
-    Accept: 2,
-    Decline: 3
-};
+    TradeOpcode: {
+        Request: 1,
+        Accept: 2,
+        Decline: 3,
+    },
 
-Packets.EnchantOpcode = {
-    Select: 0,
-    Remove: 1,
-    Enchant: 2,
-    Update: 3
-};
+    EnchantOpcode: {
+        Select: 0,
+        Remove: 1,
+        Enchant: 2,
+        Update: 3,
+    },
 
-Packets.GuildOpcode = {
-    Create: 0,
-    Join: 1,
-    Leave: 2,
-    Rank: 3,
-    Loot: 4
-};
+    GuildOpcode: {
+        Create: 0,
+        Join: 1,
+        Leave: 2,
+        Rank: 3,
+        Loot: 4,
+    },
 
-Packets.PointerOpcode = {
-    Location: 0,
-    NPC: 1,
-    Relative: 2,
-    Remove: 3,
-    Button: 4
-};
+    PointerOpcode: {
+        Location: 0,
+        NPC: 1,
+        Relative: 2,
+        Remove: 3,
+        Button: 4,
+    },
 
-Packets.ShopOpcode = {
-    Open: 0,
-    Buy: 1,
-    Sell: 2,
-    Refresh: 3,
-    Select: 4,
-    Remove: 5
-};
+    ShopOpcode: {
+        Open: 0,
+        Buy: 1,
+        Sell: 2,
+        Refresh: 3,
+        Select: 4,
+        Remove: 5,
+    },
 
-Packets.MinigameOpcode = {
-    TeamWar: 1,
+    MinigameOpcode: {
+        TeamWar: 1,
 
-    TeamWarOpcode: {
-        Enter: 0,
-        Team: 1,
-        Red: 2,
-        Blue: 3,
-        Leave: 4,
-        Countdown: 5
-    }
-};
+        TeamWarOpcode: {
+            Enter: 0,
+            Team: 1,
+            Red: 2,
+            Blue: 3,
+            Leave: 4,
+            Countdown: 5,
+        },
+    },
 
-Packets.RegionOpcode  = {
-    Render: 0,
-    Modify: 1,
-    Collision: 2,
-    Update: 3,
-    Reset: 4
-};
+    RegionOpcode: {
+        Render: 0,
+        Modify: 1,
+        Collision: 2,
+        Update: 3,
+        Reset: 4,
+    },
 
-Packets.OverlayOpcode = {
-    Set: 0,
-    Remove: 1,
-    Lamp: 2,
-    RemoveLamps: 3,
-    Darkness: 4
-};
+    OverlayOpcode: {
+        Set: 0,
+        Remove: 1,
+        Lamp: 2,
+        RemoveLamps: 3,
+        Darkness: 4,
+    },
 
-Packets.CameraOpcode = {
-    LockX: 0,
-    LockY: 1,
-    FreeFlow: 2,
-    Player: 3
-};
+    CameraOpcode: {
+        LockX: 0,
+        LockY: 1,
+        FreeFlow: 2,
+        Player: 3,
+    },
 
-Packets.CommandOpcode = {
-    CtrlClick: 0
-};
+    CommandOpcode: {
+        CtrlClick: 0,
+    },
 
-Packets.ProfessionOpcode = {
-    Batch: 0,
-    Update: 1
+    ProfessionOpcode: {
+        Batch: 0,
+        Update: 1,
+    },
 };

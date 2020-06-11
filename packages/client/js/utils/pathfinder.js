@@ -1,102 +1,99 @@
-/* global _, log */
+import _ from 'underscore';
+import AStar from '../lib/astar';
 
-define(['../lib/astar'], function(AStar) {
+export default class PathFinder {
+    constructor(width, height) {
+        var self = this;
 
-    return Class.extend({
+        self.width = width;
+        self.height = height;
 
-        init: function(width, height) {
-            var self = this;
+        self.mode = 'DEFAULT';
 
-            self.width = width;
-            self.height = height;
+        self.grid = null;
+        self.blankGrid = [];
+        self.ignores = [];
 
-            self.mode = 'DEFAULT';
+        self.load();
+    }
 
-            self.grid = null;
-            self.blankGrid = [];
-            self.ignores = [];
+    load() {
+        var self = this;
 
-            self.load();
-        },
+        for (var i = 0; i < self.height; i++) {
+            self.blankGrid[i] = [];
 
-        load: function() {
-            var self = this;
-
-            for (var i = 0; i < self.height; i++) {
-                self.blankGrid[i] = [];
-
-                for (var j = 0; j < self.width; j++)
-                    self.blankGrid[i][j] = 0;
-            }
-
-            //log.info('Successfully loaded the pathfinder!');
-        },
-
-        find: function(grid, entity, x, y, incomplete) {
-            var self = this,
-                start = [entity.gridX, entity.gridY],
-                end = [x, y], path;
-
-            self.grid = grid;
-            self.applyIgnore(true);
-
-            path = AStar(self.grid, start, end, self.mode);
-
-            if (path.length === 0 && incomplete)
-                path = self.findIncomplete(start, end);
-
-            return path;
-        },
-
-        findIncomplete: function(start, end) {
-            var self = this,
-                incomplete = [],
-                perfect, x, y;
-
-            perfect = AStar(self.blankGrid, start, end, self.mode);
-
-            for (var i = perfect.length - 1; i > 0; i--) {
-                x = perfect[i][0];
-                y = perfect[i][1];
-
-                if (self.grid[y][x] === 0) {
-                    incomplete = AStar(self.grid, start, [x. y], self.mode);
-                    break;
-                }
-            }
-
-            return incomplete;
-        },
-
-        applyIgnore: function(ignored) {
-            var self = this,
-                x, y, g;
-
-            _.each(self.ignores, function(entity) {
-                x = entity.hasPath() ? entity.nextGridX : entity.gridX;
-                y = entity.hasPath() ? entity.nextGridY : entity.gridY;
-
-                if (x >= 0 && y >= 0)
-                    self.grid[y][x] = ignored ? 0 : 1
-            });
-        },
-
-        ignoreEntity: function(entity) {
-            var self = this;
-
-            if (!entity)
-                return;
-
-            self.ignores.push(entity);
-        },
-
-        clearIgnores: function() {
-            var self = this;
-
-            self.applyIgnore(false);
-            self.ignores = [];
+            for (var j = 0; j < self.width; j++) self.blankGrid[i][j] = 0;
         }
 
-    });
+        //log.info('Successfully loaded the pathfinder!');
+    }
 
-});
+    find(grid, entity, x, y, incomplete) {
+        var self = this,
+            start = [entity.gridX, entity.gridY],
+            end = [x, y],
+            path;
+
+        self.grid = grid;
+        self.applyIgnore(true);
+
+        path = AStar(self.grid, start, end, self.mode);
+
+        if (path.length === 0 && incomplete)
+            path = self.findIncomplete(start, end);
+
+        return path;
+    }
+
+    findIncomplete(start, end) {
+        var self = this,
+            incomplete = [],
+            perfect,
+            x,
+            y;
+
+        perfect = AStar(self.blankGrid, start, end, self.mode);
+
+        for (var i = perfect.length - 1; i > 0; i--) {
+            x = perfect[i][0];
+            y = perfect[i][1];
+
+            if (self.grid[y][x] === 0) {
+                incomplete = AStar(self.grid, start, [x.y], self.mode);
+                break;
+            }
+        }
+
+        return incomplete;
+    }
+
+    applyIgnore(ignored) {
+        var self = this,
+            x,
+            y,
+            g;
+
+        _.each(self.ignores, function (entity) {
+            x = entity.hasPath() ? entity.nextGridX : entity.gridX;
+            y = entity.hasPath() ? entity.nextGridY : entity.gridY;
+
+            if (x >= 0 && y >= 0) self.grid[y][x] = ignored ? 0 : 1;
+        });
+    }
+
+    ignoreEntity(entity) {
+        var self = this;
+
+        if (!entity) return;
+
+        self.ignores.push(entity);
+    }
+
+    clearIgnores() {
+        var self = this;
+
+        self.applyIgnore(false);
+        self.ignores = [];
+    }
+}

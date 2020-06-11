@@ -1,19 +1,7 @@
-define(function() {
+import log from '../../lib/log';
 
-    return Class.extend({
-
-        init: function(game) {
-            var self = this;
-
-
-        },
-
-        handle: function(info) {
-            var self = this;
-
-            log.info(info);
-        }
-
-    });
-
-});
+export default class TeamWar {
+    handle(info) {
+        log.info(info);
+    }
+}
