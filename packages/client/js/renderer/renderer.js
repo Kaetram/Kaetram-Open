@@ -222,7 +222,7 @@ export default class Renderer {
 
                 if (self.camera) self.camera.centreOn(self.game.player);
 
-                if (self.game.interface) self.game.interface.resize();
+                if (self.game.menu) self.game.menu.resize();
 
                 self.stopRendering = false;
                 self.resizeTimeout = null;
