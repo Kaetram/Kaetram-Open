@@ -13,25 +13,5 @@
     "singleQuote": true,
     "tabWidth": 4,
     "trailingComma": "es5",
-    "useTabs": false,
-    "overrides": [
-        {
-            "files": ["*.json", ".*rc"],
-            "options": {
-                "parser": "json"
-            }
-        },
-        {
-            "files": "*.js",
-            "options": {
-                "parser": "babel"
-            }
-        },
-        {
-            "files": "*.ts",
-            "options": {
-                "parser": "typescript"
-            }
-        }
-    ]
+    "useTabs": false
 }
