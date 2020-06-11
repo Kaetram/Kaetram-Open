@@ -2,10 +2,24 @@ import Utils from '../../../../util/utils';
 import Messages from '../../../../network/messages';
 import Mobs from '../../../../util/mobs';
 import Packets from '../../../../network/packets';
+import Combat from '../combat/combat';
+import World from '../../../world';
+import Mob from './mob';
+import Map from '../../../../map/map';
+import Character from '../character';
 
 class MobHandler {
 
-    constructor(mob, world) {
+    mob: Mob;
+    combat: Combat;
+    world: World;
+    map: Map;
+
+    roamingInterval: any;
+    spawnLocation: any;
+    maxRoamingDistance: number;
+
+    constructor(mob: Mob, world: World) {
 
         this.mob = mob;
         this.combat = mob.combat;
@@ -104,7 +118,7 @@ class MobHandler {
             if (!this.mob.miniboss || !this.combat)
                 return;
 
-            this.combat.forEachAttacker((attacker) => {
+            this.combat.forEachAttacker((attacker: Character) => {
                 if (attacker)
                     attacker.finishAchievement(this.mob.achievementId);
             });
@@ -114,7 +128,7 @@ class MobHandler {
         //TODO - Implement posion on Mobs
     }
 
-    forceTalk(message) {
+    forceTalk(message: string) {
         if (!this.world)
             return;
 
