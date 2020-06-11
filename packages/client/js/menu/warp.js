@@ -45,7 +45,7 @@ export default class Wrap {
     open() {
         var self = this;
 
-        self.game.interface.hideAll();
+        self.game.menu.hideAll();
 
         self.toggle();
 
