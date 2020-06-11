@@ -136,7 +136,7 @@ class Commands {
 
                 let duration = blocks.shift(),
                     targetName = blocks.join(' '),
-                    user = this.world.getPlayerByName(targetName);
+                    user: Player = this.world.getPlayerByName(targetName);
 
                 if (!user)
                     return;
@@ -152,7 +152,7 @@ class Commands {
                     user.ban = timeFrame;
                     user.save();
 
-                    user.sendUTF8('ban');
+                    user.connection.sendUTF8('ban');
                     user.connection.close('banned');
                 }
 
@@ -245,7 +245,7 @@ class Commands {
                     withAnimation = parseInt(blocks.shift())
 
                 if (x && y)
-                    this.player.teleport(x, y, false, withAnimation);
+                    this.player.teleport(x, y, false, !!withAnimation);
 
                 return;
 

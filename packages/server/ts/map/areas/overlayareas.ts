@@ -2,7 +2,6 @@
 
 import _ from 'underscore';
 import Area from '../area';
-import log from "../../util/log";
 import * as map from '../../../data/map/world_server.json';
 
 class OverlayAreas {

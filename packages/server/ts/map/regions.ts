@@ -20,7 +20,7 @@ class Regions {
 
     linkedRegions: {};
 
-    constructor(map) {
+    constructor(map: Map) {
         this.map = map;
 
         this.width = this.map.width;
@@ -52,24 +52,13 @@ class Regions {
         });
     }
 
-    /**
-     * This is a dynamic approach for getting player regions.
-     * What we are doing is building surrounding regions according
-     * to the player
-     */
-
-    getDynamicRegions(player) {
-
-
-    }
-
     // y y x y y
     // y y x y y
     // y x x x y
     // y y x y x
     // y y x y y
 
-    getSurroundingRegions(id, offset = 1, stringFormat?) {
+    getSurroundingRegions(id: string, offset = 1, stringFormat?: boolean) {
         let position = this.regionIdToPosition(id),
             x = position.x, y = position.y;
 
@@ -98,7 +87,7 @@ class Regions {
         return stringFormat ? this.regionsToCoordinates(list) : list;
     }
 
-    getAdjacentRegions(id, offset, stringFormat?) {
+    getAdjacentRegions(id: string, offset: number, stringFormat?: boolean) {
         let surroundingRegions = this.getSurroundingRegions(id, offset);
 
         /**
@@ -129,13 +118,13 @@ class Regions {
         return stringFormat ? this.regionsToCoordinates(adjacentRegions) : adjacentRegions;
     }
 
-    forEachRegion(callback) {
+    forEachRegion(callback: Function) {
         for (let x = 0; x < this.regionWidth; x++)
             for (let y = 0; y < this.regionHeight; y++)
                 callback(x + '-' + y)
     }
 
-    forEachSurroundingRegion(regionId, callback, offset) {
+    forEachSurroundingRegion(regionId: string, callback: Function, offset?: number) {
         if (!regionId)
             return;
 
@@ -144,7 +133,7 @@ class Regions {
         });
     }
 
-    forEachAdjacentRegion(regionId, callback, offset) {
+    forEachAdjacentRegion(regionId: string, callback: Function, offset?: number) {
         if (!regionId)
             return;
 
@@ -153,11 +142,11 @@ class Regions {
         });
     }
 
-    regionIdFromPosition(x, y) {
+    regionIdFromPosition(x: number, y: number) {
         return (Math.floor(x / this.zoneWidth) + '-' + (Math.floor(y / this.zoneHeight)));
     }
 
-    regionIdToPosition(id) {
+    regionIdToPosition(id: string) {
         let position = id.split('-');
 
         return {
@@ -166,7 +155,7 @@ class Regions {
         }
     }
 
-    regionIdToCoordinates(id) {
+    regionIdToCoordinates(id: string) {
         let position = id.split('-');
 
         return {
@@ -178,7 +167,7 @@ class Regions {
     /**
      * Converts an array of regions from object type to string format.
      */
-    regionsToCoordinates(regions) {
+    regionsToCoordinates(regions: any) {
         let stringList = [];
 
         _.each(regions, (region: any) => {
@@ -188,7 +177,7 @@ class Regions {
         return stringList;
     }
 
-    isSurrounding(regionId, toRegionId) {
+    isSurrounding(regionId: string, toRegionId: string) {
         return this.getSurroundingRegions(regionId, 1, true).indexOf(toRegionId) > -1;
     }
 }
