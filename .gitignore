@@ -1,5 +1,6 @@
 **/config.json
 **/config.js
+**/config.ts
 test.js
 
 packages/server/js
