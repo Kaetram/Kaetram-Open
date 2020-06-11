@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'underscore';
 import Mobs from './mobs';
 import NPCs from './npcs';
@@ -9,6 +7,8 @@ import Shops from './shops';
 import Objects from './objects';
 import Formulas from './formulas';
 import Constants from './constants';
+import log from '../util/log';
+
 
 import NPCData from '../../data/npcs.json';
 import ItemData from '../../data/items.json';

@@ -1,5 +1,3 @@
-/* global module */
-
 /**
  * This package is used for creating functions used all throughout the
  * game server.
@@ -7,19 +5,18 @@
 
 import _ from 'underscore';
 import Packets from '../network/packets';
+import log from '../util/log';
 
 export default {
-
     random(range) {
         return Math.floor(Math.random() * range);
     },
 
     randomRange(min, max) {
-        return min + (Math.random() * (max - min));
+        return min + Math.random() * (max - min);
     },
 
     randomInt(min, max) {
-
         return min + Math.floor(Math.random() * (max - min + 1));
     },
 
@@ -33,8 +30,8 @@ export default {
     positionOffset(radius) {
         return {
             x: this.randomInt(0, radius),
-            y: this.randomInt(0, radius)
-        }
+            y: this.randomInt(0, radius),
+        };
     },
 
     /**
@@ -64,19 +61,22 @@ export default {
             filtered = [];
 
         for (let i = 0; i < keys.length; i++)
-            if (!keys[i].endsWith('Opcode'))
-                filtered.push(keys[i]);
+            if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
 
-        return packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1;
+        return (
+            packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1
+        );
     },
 
     getCurrentEpoch() {
-        return (new Date).getTime();
+        return new Date().getTime();
     },
 
     formatUsername(username) {
         return username.replace(/\w\S*/g, (string) => {
-            return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
+            return (
+                string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
+            );
         });
     },
 
@@ -86,9 +86,7 @@ export default {
      * if necessary in the nearby future.
      */
     parseMessage(message) {
-
         try {
-
             let messageBlocks = message.split('@');
 
             if (messageBlocks.length % 2 === 0) {
@@ -98,21 +96,20 @@ export default {
             }
 
             _.each(messageBlocks, (block, index) => {
-                if (index % 2 !== 0) // we hit a colour code.
-                    messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
+                if (index % 2 !== 0)
+                    // we hit a colour code.
+                    messageBlocks[
+                        index
+                    ] = `<span style="color:${messageBlocks[index]};">`;
             });
 
-            let codeCount = (messageBlocks.length / 2) - 1;
+            let codeCount = messageBlocks.length / 2 - 1;
 
-            for (let i = 0; i < codeCount; i++)
-                messageBlocks.push('</span>');
+            for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
 
             return messageBlocks.join('');
-
-        } catch(e) {
+        } catch (e) {
             return '';
         }
-
-    }
-
-}
+    },
+};

@@ -1,13 +1,14 @@
 /* global module */
 
-import * as _ from 'underscore';
+import _ from 'underscore';
 import * as bcrypt from 'bcrypt';
+import log from '../../util/log';
+import config from '../../../config';
 import { MongoClient, Db } from 'mongodb';
 import Loader from './loader';
 import Creator from './creator';
 
 class MongoDB {
-
     host: string;
     port: number;
     user: string;
@@ -20,7 +21,6 @@ class MongoDB {
     connection: Db;
 
     constructor(host, port, user, password, database) {
-
         this.host = host;
         this.port = port;
         this.user = user;
@@ -36,14 +36,14 @@ class MongoDB {
     getDatabase(callback, type?) {
         let url = `mongodb://${this.host}:${this.port}/${this.database}`;
 
-            if (config.mongoAuth)
-                url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
+        if (config.mongoAuth)
+            url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
 
-            let client = new MongoClient(url, {
-                useUnifiedTopology: true,
-                useNewUrlParser: true,
-                wtimeout: 5
-            });
+        let client = new MongoClient(url, {
+            useUnifiedTopology: true,
+            useNewUrlParser: true,
+            wtimeout: 5,
+        });
 
         if (this.connection) {
             callback(this.connection);
@@ -61,22 +61,24 @@ class MongoDB {
 
             callback(this.connection);
         });
-
     }
 
     login(player) {
-
         this.getDatabase((database) => {
-            let dataCursor = database.collection('player_data').find({ username: player.username }),
-                equipmentCursor = database.collection('player_equipment').find({ username: player.username }),
-                regionsCursor = database.collection('player_regions').find({ username: player.username });
+            let dataCursor = database
+                    .collection('player_data')
+                    .find({ username: player.username }),
+                equipmentCursor = database
+                    .collection('player_equipment')
+                    .find({ username: player.username }),
+                regionsCursor = database
+                    .collection('player_regions')
+                    .find({ username: player.username });
 
             dataCursor.toArray().then((playerData) => {
                 equipmentCursor.toArray().then((equipmentData) => {
                     regionsCursor.toArray().then((regionData) => {
-
-                        if (playerData.length === 0)
-                            this.register(player);
+                        if (playerData.length === 0) this.register(player);
                         else {
                             let playerInfo = playerData[0],
                                 equipmentInfo = equipmentData[0],
@@ -93,46 +95,50 @@ class MongoDB {
 
                             player.intro();
                         }
-
                     });
                 });
-            })
+            });
         });
     }
 
     verify(player, callback) {
-
         this.getDatabase((database) => {
-            let dataCursor = database.collection('player_data').find({ username: player.username });
+            let dataCursor = database
+                .collection('player_data')
+                .find({ username: player.username });
 
             dataCursor.toArray().then((data) => {
-                if (data.length === 0)
-                    callback({ status: 'error' });
+                if (data.length === 0) callback({ status: 'error' });
                 else {
                     let info = data[0];
 
-                    bcrypt.compare(player.password, info.password, (error, result) => {
-                        if (error) throw error;
+                    bcrypt.compare(
+                        player.password,
+                        info.password,
+                        (error, result) => {
+                            if (error) throw error;
 
-                        if (result)
-                            callback({ status: 'success' });
-                        else
-                            callback({ status: 'error' });
-                    });
+                            if (result) callback({ status: 'success' });
+                            else callback({ status: 'error' });
+                        }
+                    );
                 }
-            })
+            });
         });
     }
 
     register(player) {
-
         this.getDatabase((database) => {
             let playerData = database.collection('player_data'),
                 cursor = playerData.find({ username: player.username });
 
             cursor.toArray().then((info) => {
                 if (info.length === 0) {
-                    log.notice('No player data found for ' + player.username + '. Creating user.');
+                    log.notice(
+                        'No player data found for ' +
+                            player.username +
+                            '. Creating user.'
+                    );
 
                     player.new = true;
 
@@ -144,62 +150,72 @@ class MongoDB {
     }
 
     exists(player, callback) {
-
         this.getDatabase((database) => {
             let playerData = database.collection('player_data'),
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
-            log.debug('Looking for - ' + player.email +' or ' + player.username);
+            log.debug(
+                'Looking for - ' + player.email + ' or ' + player.username
+            );
 
             emailCursor.toArray().then((emailArray) => {
                 if (emailArray.length === 0) {
                     usernameCursor.toArray().then((usernameArray) => {
                         if (usernameArray.length === 0)
                             callback({ exists: false });
-                        else
-                            callback({ exists: true, type: 'user' });
+                        else callback({ exists: true, type: 'user' });
                     });
-                } else
-                    callback({ exists: true, type: 'email' });
+                } else callback({ exists: true, type: 'email' });
             });
         });
     }
 
     delete(player) {
-
         this.getDatabase((database) => {
-            let collections = ['player_data', 'player_equipment', 'player_inventory', 'player_abilities', 'player_bank', 'player_quests', 'player_achievements'];
+            let collections = [
+                'player_data',
+                'player_equipment',
+                'player_inventory',
+                'player_abilities',
+                'player_bank',
+                'player_quests',
+                'player_achievements',
+            ];
 
             _.each(collections, (col) => {
                 let collection = database.collection(col);
 
-                collection.deleteOne({
-                    username: player.username
-                }, (error, result) => {
-                    if (error) throw error;
+                collection.deleteOne(
+                    {
+                        username: player.username,
+                    },
+                    (error, result) => {
+                        if (error) throw error;
 
-                    if (result)
-                        log.notice('Player ' + player.username + ' has been deleted.')
-                })
+                        if (result)
+                            log.notice(
+                                'Player ' +
+                                    player.username +
+                                    ' has been deleted.'
+                            );
+                    }
+                );
             });
         });
     }
 
     registeredCount(callback) {
-
         this.getDatabase((database) => {
             let collection = database.collection('player_data');
 
             collection.countDocuments().then((count) => {
                 callback(count);
             });
-
         });
     }
 
     resetPositions(newX, newY, callback) {
-
         this.getDatabase((database) => {
             let collection = database.collection('player_data'),
                 cursor = collection.find();
@@ -211,22 +227,25 @@ class MongoDB {
                     playerInfo.x = newX;
                     playerInfo.y = newY;
 
-                    collection.updateOne({
-                        username: playerInfo.username
-                    }, { $set: playerInfo }, {
-                        upsert: true
-                    }, (error, result) => {
-                        if (error)
-                            throw error;
+                    collection.updateOne(
+                        {
+                            username: playerInfo.username,
+                        },
+                        { $set: playerInfo },
+                        {
+                            upsert: true,
+                        },
+                        (error, result) => {
+                            if (error) throw error;
 
-                        if (result)
-                            callback('Successfully updated positions.');
-                    });
+                            if (result)
+                                callback('Successfully updated positions.');
+                        }
+                    );
                 });
             });
         });
     }
-
 }
 
 export default MongoDB;

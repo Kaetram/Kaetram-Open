@@ -1,7 +1,6 @@
-/* global module */
-
 import _ from 'underscore';
 import Slot from './slot';
+import log from '../../../../../util/log';
 import Items from '../../../../../util/items';
 import Constants from '../../../../../util/constants';
 import Player from '../player';

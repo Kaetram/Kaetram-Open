@@ -1,5 +1,4 @@
-/* global module */
-
+import log from '../../../../../util/log';
 import Items from '../../../../../util/items';
 
 class Slot {
