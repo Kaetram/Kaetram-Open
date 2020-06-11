@@ -4,7 +4,28 @@ import Entity from '../entity';
 
 class Item extends Entity {
 
-    constructor(id, instance, x, y, ability, abilityLevel) {
+    static: boolean;
+    dropped: boolean;
+    shard: boolean;
+
+    count: number;
+    ability: number;
+    abilityLevel: number;
+    tier: number;
+
+    respawnTime: number;
+    despawnDuration: number;
+    blinkDelay: number;
+    despawnDelay: number;
+
+    blinkTimeout: any;
+    despawnTimeout: any;
+
+    blinkCallback: Function;
+    respawnCallback: Function;
+    despawnCallback: Function;
+
+    constructor(id: number, instance: string, x: number, y: number, ability?: number, abilityLevel?: number) {
         super(id, 'item', instance, x, y);
 
         this.static = false;
@@ -79,27 +100,27 @@ class Item extends Entity {
         return state;
     }
 
-    setCount(count) {
+    setCount(count: number) {
         this.count = count;
     }
 
-    setAbility(ability) {
+    setAbility(ability: number) {
         this.ability = ability;
     }
 
-    setAbilityLevel(abilityLevel) {
+    setAbilityLevel(abilityLevel: number) {
         this.abilityLevel = abilityLevel;
     }
 
-    onRespawn(callback) {
+    onRespawn(callback: Function) {
         this.respawnCallback = callback;
     }
 
-    onBlink(callback) {
+    onBlink(callback: Function) {
         this.blinkCallback = callback;
     }
 
-    onDespawn(callback) {
+    onDespawn(callback: Function) {
         this.despawnCallback = callback;
     }
 

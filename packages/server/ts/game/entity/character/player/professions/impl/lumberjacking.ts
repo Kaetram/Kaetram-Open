@@ -1,15 +1,24 @@
 import _ from 'underscore';
 import Profession from './profession';
-import Packets from '../../../../../../network/packets';
 import Messages from '../../../../../../network/messages';
 import Modules from '../../../../../../util/modules';
 import Formulas from '../../../../../../util/formulas';
 import Utils from '../../../../../../util/utils';
 import Trees from '../../../../../../../data/professions/trees';
+import Player from '../../player';
 
 class Lumberjacking extends Profession {
 
-    constructor(id, player) {
+    tick: number;
+
+    cuttingInterval: any;
+    started: boolean;
+
+    treeId: any; // TODO
+
+    queuedTrees: any;
+
+    constructor(id: number, player: Player) {
         super(id, player, 'Lumberjacking');
 
         this.tick = 1000;
@@ -79,7 +88,8 @@ class Lumberjacking extends Profession {
         this.started = false;
     }
 
-    handle(id, treeId) {
+    // TODO
+    handle(id: any, treeId: any) {
         if (!this.player.hasLumberjackingWeapon()) {
             this.player.notify('You do not have an axe to cut this tree with.');
             return;
@@ -95,7 +105,7 @@ class Lumberjacking extends Profession {
             return;
         }
 
-        //this.start();
+        this.start();
     }
 
     getTreeDestroyChance() {

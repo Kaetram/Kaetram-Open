@@ -4,18 +4,21 @@ import Points from './points';
 
 class Mana extends Points {
 
-    constructor(mana, maxMana) {
+    manaCallback: Function;
+    maxManaCallback: Function;
+
+    constructor(mana: number, maxMana: number) {
         super(mana, maxMana);
     }
 
-    setMana(mana) {
+    setMana(mana: number) {
         this.points = mana;
 
         if (this.manaCallback)
             this.manaCallback();
     }
 
-    setMaxMana(maxMana) {
+    setMaxMana(maxMana: number) {
         this.maxPoints = maxMana;
 
         if (this.maxManaCallback)
@@ -30,11 +33,11 @@ class Mana extends Points {
         return this.maxPoints;
     }
 
-    onMana(callback) {
+    onMana(callback: Function) {
         this.manaCallback = callback;
     }
 
-    onMaxMana(callback) {
+    onMaxMana(callback: Function) {
         this.maxManaCallback = callback;
     }
 

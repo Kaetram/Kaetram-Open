@@ -20,7 +20,7 @@ export default {
         return probability;
     },
 
-    getDamage(attacker, target, special) {
+    getDamage(attacker, target, special?) {
 
         let maxDamage = this.getMaxDamage(attacker, target, special),
             accuracy = Utils.randomInt(0, attacker.level);

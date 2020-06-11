@@ -24,6 +24,13 @@ import Bank from './containers/bank/bank';
 import Enchant from './enchant';
 import Utils from '../../../../util/utils';
 import Constants from '../../../../util/constants';
+import MongoDB from '../../../../database/mongodb/mongodb';
+import Connection from '../../../../network/connection';
+import World from '../../../world';
+import Map from '../../../../map/map';
+import Area from '../../../../map/area';
+import Regions from '../../../../map/regions';
+import GlobalObjects from '../../../../controllers/globalobjects';
 import Hit from '../combat/hit';
 import Trade from './trade';
 import Warp from './warp';
@@ -33,9 +40,124 @@ import config from "../../../../../config";
 
 class Player extends Character {
 
-    constructor(world, database, connection, clientId) {
-        super(-1, 'player', connection.id, -1, -1);
+    public world: World;
+    public database: MongoDB;
+    public connection: Connection;
 
+    public clientId: string;
+
+    public map: Map;
+    public regions: Regions;
+    public globalObjects: GlobalObjects;
+
+    public incoming: Incoming;
+
+    public ready: boolean;
+
+    public moving: boolean;
+    public potentialPosition: any;
+    public futurePosition: any;
+    public regionPosition: any;
+
+    public newRegion: boolean;
+
+    public team: any; // TODO
+    public userAgent: any; // TODO
+    public minigame: any; // TODO
+
+    public disconnectTimeout: any;
+    public timeoutDuration: number;
+    public lastRegionChange: number;
+
+    public handler: Handler;
+
+    public inventory: Inventory;
+    public professions: Professions;
+    public abilities: Abilities;
+    public friends: Friends;
+    public enchant: Enchant;
+    public bank: Bank;
+    public quests: Quests;
+    public trade: Trade;
+    public doors: Doors;
+    public warp: Warp;
+
+    public introduced: boolean;
+    public currentSong: string;
+    public acceptedTrade: boolean;
+    public invincible: boolean;
+    public noDamage: boolean;
+    public isGuest: boolean;
+
+    public canTalk: boolean;
+
+    public instanced: boolean;
+    public visible: boolean;
+
+    public talkIndex: number;
+    public cheatScore: number;
+    public defaultMovementSpeed: number;
+
+    public regionsLoaded: any;
+    public lightsLoaded: any;
+
+    public npcTalk: any;
+
+    public username: string;
+
+    public kind: any; // TO REMOVE;
+    public rights: number;
+    public experience: number;
+    public ban: Date;
+    public mute: number;
+    public membership: number; // TO REMOVE;
+    public lastLogin: number;
+    public pvpKills: number;
+    public pvpDeaths: number;
+    public orientation: number;
+    public mapVersion: number;
+
+    public nextExperience: number;
+    public prevExperience: number;
+    public hitPoints: HitPoints;
+    public mana: Mana;
+
+    public armour: Armour;
+    public weapon: Weapon;
+    public pendant: Pendant;
+    public ring: Ring;
+    public boots: Boots;
+
+    public cameraArea: Area;
+    public overlayArea: Area;
+
+    public permanentPVP: boolean;
+
+    questsLoaded: boolean;
+    achievementsLoaded: boolean;
+
+    public new: boolean;
+    public lastNotify: number;
+    public profileDialogOpen: boolean;
+    public inventoryOpen: boolean;
+    public warpOpen: boolean;
+
+    public deathCallback: Function;
+    public teleportCallback: Function;
+    public cheatScoreCallback: Function;
+    public profileToggleCallback: Function;
+    public inventoryToggleCallback: Function;
+    public warpToggleCallback: Function;
+    public orientationCallback: Function;
+    public regionCallback: Function;
+    public killCallback: Function;
+    public attackCallback: Function;
+    public npcTalkCallback: Function;
+    public doorCallback: Function;
+    public readyCallback: Function;
+
+    constructor(world: World, database: MongoDB, connection: Connection, clientId: string) {
+        super(-1, 'player', connection.id, -1, -1);
 
         this.world = world;
         this.database = database;
@@ -54,8 +176,8 @@ class Player extends Character {
         this.moving = false;
         this.potentialPosition = null;
         this.futurePosition = null;
-
         this.regionPosition = null;
+
         this.newRegion = false;
 
         this.team = null;
@@ -103,7 +225,7 @@ class Player extends Character {
         this.npcTalk = null;
     }
 
-    load(data) {
+    load(data: any) {
 
         this.kind = data.kind;
         this.rights = data.rights;
@@ -165,7 +287,7 @@ class Player extends Character {
         this.connection = null;
     }
 
-    loadRegions(regions) {
+    loadRegions(regions: any) {
 
         if (!regions)
             return;
@@ -190,7 +312,7 @@ class Player extends Character {
         if (config.offlineMode)
             return;
 
-        this.database.loader.getProfessions(this, (info) => {
+        this.database.loader.getProfessions(this, (info: any) => {
             if (!info) // If this somehow happens.
                 return;
 
@@ -205,7 +327,7 @@ class Player extends Character {
         if (config.offlineMode)
             return;
 
-        this.database.loader.getFriends(this, (info) => {
+        this.database.loader.getFriends(this, (info: any) => {
             if (!info)
                 return;
 
@@ -221,7 +343,7 @@ class Player extends Character {
             return;
         }
 
-        this.database.loader.getInventory(this, (ids, counts, skills, skillLevels) => {
+        this.database.loader.getInventory(this, (ids: any, counts: any, skills: any, skillLevels: any) => {
             if (ids === null || counts === null) {
                 this.inventory.loadEmpty();
                 return;
@@ -261,7 +383,7 @@ class Player extends Character {
         if (config.offlineMode)
             return;
 
-        this.database.loader.getAchievements(this, (ids, progress) => {
+        this.database.loader.getAchievements(this, (ids: any, progress: any) => {
             ids.pop();
             progress.pop();
 
@@ -274,7 +396,7 @@ class Player extends Character {
             this.quests.updateAchievements(ids, progress);
         });
 
-        this.database.loader.getQuests(this, (ids, stages) => {
+        this.database.loader.getQuests(this, (ids: any, stages: any) => {
             if (!ids || !stages) {
                 this.quests.updateQuests(ids, stages);
                 return;
@@ -378,7 +500,7 @@ class Player extends Character {
 
     }
 
-    addExperience(exp) {
+    addExperience(exp: number) {
 
         this.experience += exp;
 
@@ -397,7 +519,7 @@ class Player extends Character {
             this.popup('Level Up!', `Congratulations, you are now level ${this.level}!`, '#ff6600');
         }
 
-        let data = {
+        let data: any = {
             id: this.instance,
             level: this.level
         };
@@ -419,7 +541,7 @@ class Player extends Character {
         this.sync();
     }
 
-    heal(amount) {
+    heal(amount: number) {
 
         /**
          * Passed from the superclass...
@@ -434,7 +556,7 @@ class Player extends Character {
         this.sync();
     }
 
-    healHitPoints(amount) {
+    healHitPoints(amount: number) {
         let type = 'health';
 
         this.hitPoints.heal(amount);
@@ -448,7 +570,7 @@ class Player extends Character {
         }));
     }
 
-    healManaPoints(amount) {
+    healManaPoints(amount: number) {
         let type = 'mana';
 
         this.mana.heal(amount);
@@ -462,7 +584,7 @@ class Player extends Character {
         }));
     }
 
-    eat(id) {
+    eat(id: number) {
         let item = Items.getPlugin(id);
 
         if (!item)
@@ -471,7 +593,7 @@ class Player extends Character {
         new (item)(id).onUse(this);
     }
 
-    equip(string, count, ability, abilityLevel) {
+    equip(string: string, count: number, ability: number, abilityLevel: number) {
         let data = Items.getData(string),
             type, id, power;
 
@@ -500,7 +622,7 @@ class Player extends Character {
                 if (this.hasArmour() && this.armour.id !== 114)
                     this.inventory.add(this.armour.getItem());
 
-                this.setArmour(id, count, ability, abilityLevel, power);
+                this.setArmour(id, count, ability, abilityLevel);
                 break;
 
             case Modules.Equipment.Weapon:
@@ -508,7 +630,7 @@ class Player extends Character {
                 if (this.hasWeapon())
                     this.inventory.add(this.weapon.getItem());
 
-                this.setWeapon(id, count, ability, abilityLevel, power);
+                this.setWeapon(id, count, ability, abilityLevel);
                 break;
 
             case Modules.Equipment.Pendant:
@@ -516,7 +638,7 @@ class Player extends Character {
                 if (this.hasPendant())
                     this.inventory.add(this.pendant.getItem());
 
-                this.setPendant(id, count, ability, abilityLevel, power);
+                this.setPendant(id, count, ability, abilityLevel);
                 break;
 
             case Modules.Equipment.Ring:
@@ -524,7 +646,7 @@ class Player extends Character {
                 if (this.hasRing())
                     this.inventory.add(this.ring.getItem());
 
-                this.setRing(id, count, ability, abilityLevel, power);
+                this.setRing(id, count, ability, abilityLevel);
                 break;
 
             case Modules.Equipment.Boots:
@@ -532,7 +654,7 @@ class Player extends Character {
                 if (this.hasBoots())
                     this.inventory.add(this.boots.getItem());
 
-                this.setBoots(id, count, ability, abilityLevel, power);
+                this.setBoots(id, count, ability, abilityLevel);
                 break;
         }
 
@@ -547,11 +669,11 @@ class Player extends Character {
         }));
     }
 
-    updateRegion(force) {
+    updateRegion(force?: boolean) {
         this.world.region.sendRegion(this, this.region, force);
     }
 
-    isInvisible(instance) {
+    isInvisible(instance: string) {
         let entity = this.world.getEntityByInstance(instance);
 
         if (!entity)
@@ -564,7 +686,7 @@ class Player extends Character {
         return this.invisiblesIds.join(" ");
     }
 
-    canEquip(string) {
+    canEquip(string: string) {
         let requirement = Items.getLevelRequirement(string);
 
         if (requirement > Constants.MAX_LEVEL)
@@ -587,7 +709,7 @@ class Player extends Character {
         this.send(new Messages.Death(this.instance));
     }
 
-    teleport(x, y, isDoor, animate) {
+    teleport(x: number, y: number, isDoor?: boolean, animate?: boolean) {
 
         if (this.teleportCallback)
             this.teleportCallback(x, y, isDoor);
@@ -608,13 +730,13 @@ class Player extends Character {
      * in order to organize data more neatly.
      */
 
-    handleObject(id) {
+    handleObject(id: number) {
         let info = this.globalObjects.getInfo(id);
 
         if (!info)
             return;
 
-        let data;
+        let data: any;
 
         switch (info.type) {
             case 'sign':
@@ -651,7 +773,7 @@ class Player extends Character {
 
     }
 
-    incrementCheatScore(amount) {
+    incrementCheatScore(amount: number) {
 
         if (this.combat.started)
             return;
@@ -662,7 +784,7 @@ class Player extends Character {
             this.cheatScoreCallback();
     }
 
-    updatePVP(pvp, permanent) {
+    updatePVP(pvp: boolean, permanent?: boolean) {
 
         /**
          * No need to update if the state is the same
@@ -685,7 +807,7 @@ class Player extends Character {
         this.sendToAdjacentRegions(this.region, new Messages.PVP(this.instance, this.pvp));
     }
 
-    updateOverlay(overlay) {
+    updateOverlay(overlay: any) {
 
         if (this.overlayArea === overlay)
             return;
@@ -703,7 +825,7 @@ class Player extends Character {
             this.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
     }
 
-    updateCamera(camera) {
+    updateCamera(camera: any) {
 
         if (this.cameraArea === camera)
             return;
@@ -729,7 +851,7 @@ class Player extends Character {
             this.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
     }
 
-    updateMusic(song) {
+    updateMusic(song: string) {
 
         this.currentSong = song;
 
@@ -744,11 +866,11 @@ class Player extends Character {
         this.sync();
     }
 
-    applyDamage(damage) {
+    applyDamage(damage: number) {
         this.hitPoints.decrement(damage);
     }
 
-    toggleProfile(state) {
+    toggleProfile(state: boolean) {
 
         this.profileDialogOpen = state;
 
@@ -756,7 +878,7 @@ class Player extends Character {
             this.profileToggleCallback(state);
     }
 
-    toggleInventory(state) {
+    toggleInventory(state: boolean) {
 
         this.inventoryOpen = state;
 
@@ -764,7 +886,7 @@ class Player extends Character {
             this.inventoryToggleCallback(state);
     }
 
-    toggleWarp(state) {
+    toggleWarp(state: boolean) {
 
         this.warpOpen = state;
 
@@ -821,7 +943,7 @@ class Player extends Character {
                 objectData: {}
             };
 
-        _.each(this.map.treeIndexes, (index) => {
+        _.each(this.map.treeIndexes, (index: number) => {
             let position = this.map.indexToGridPosition(index + 1),
                 treeRegion = this.regions.regionIdFromPosition(position.x, position.y);
 
@@ -864,14 +986,6 @@ class Player extends Character {
      * Setters
      */
 
-    setArmour(id, count, ability, abilityLevel) {
-
-        if (!id)
-            return;
-
-        this.armour = new Armour(Items.idToString(id), id, count, ability, abilityLevel);
-    }
-
     breakWeapon() {
 
         this.notify('Your weapon has been broken.');
@@ -881,7 +995,15 @@ class Player extends Character {
         this.sendEquipment();
     }
 
-    setWeapon(id, count, ability, abilityLevel) {
+    setArmour(id: number, count: number, ability: number, abilityLevel: number) {
+
+        if (!id)
+            return;
+
+        this.armour = new Armour(Items.idToString(id), id, count, ability, abilityLevel);
+    }
+
+    setWeapon(id: number, count: number, ability: number, abilityLevel: number) {
 
         if (!id)
             return;
@@ -892,7 +1014,7 @@ class Player extends Character {
             this.attackRange = 7;
     }
 
-    setPendant(id, count, ability, abilityLevel) {
+    setPendant(id: number, count: number, ability: number, abilityLevel: number) {
 
         if (!id)
             return;
@@ -900,7 +1022,7 @@ class Player extends Character {
         this.pendant = new Pendant(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
-    setRing(id, count, ability, abilityLevel) {
+    setRing(id: number, count: number, ability: number, abilityLevel: number) {
 
         if (!id)
             return;
@@ -908,7 +1030,7 @@ class Player extends Character {
         this.ring = new Ring(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
-    setBoots(id, count, ability, abilityLevel) {
+    setBoots(id: number, count: number, ability: number, abilityLevel: number) {
 
         if (!id)
             return;
@@ -916,14 +1038,14 @@ class Player extends Character {
         this.boots = new Boots(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
-    guessPosition(x, y) {
+    guessPosition(x: number, y: number) {
         this.potentialPosition = {
             x: x,
             y: y
         }
     }
 
-    setPosition(x, y) {
+    setPosition(x: number, y: number) {
 
         if (this.dead)
             return;
@@ -944,7 +1066,7 @@ class Player extends Character {
         }), this.instance);
     }
 
-    setOrientation(orientation) {
+    setOrientation(orientation: number) {
 
         this.orientation = orientation;
 
@@ -952,7 +1074,7 @@ class Player extends Character {
             this.orientationCallback;
     }
 
-    setFuturePosition(x, y) {
+    setFuturePosition(x: number, y: number) {
         /**
          * Most likely will be used for anti-cheating methods
          * of calculating the actual time and duration for the
@@ -965,11 +1087,11 @@ class Player extends Character {
         }
     }
 
-    loadRegion(regionId) {
+    loadRegion(regionId: string) {
         this.regionsLoaded.push(regionId);
     }
 
-    hasLoadedRegion(region) {
+    hasLoadedRegion(region: string) {
         return this.regionsLoaded.indexOf(region) > -1;
     }
 
@@ -1080,8 +1202,6 @@ class Player extends Character {
     }
 
     getSpawn() {
-        let position;
-
         /**
          * Here we will implement functions from quests and
          * other special events and determine a spawn point.
@@ -1093,7 +1213,7 @@ class Player extends Character {
         return { x: 325, y: 87 };
     }
 
-    getHit(target) {
+    getHit(target?: Character) {
 
         let defaultDamage = Formulas.getDamage(this, target),
             isSpecial = 100 - this.weapon.abilityLevel < Utils.randomInt(0, 100);
@@ -1143,21 +1263,21 @@ class Player extends Character {
      * Miscellaneous
      */
 
-    send(message) {
+    send(message: any) {
         this.world.push(Packets.PushOpcode.Player, {
             player: this,
             message: message
         });
     }
 
-    sendToRegion(message) {
+    sendToRegion(message: any) {
         this.world.push(Packets.PushOpcode.Region, {
             regionId: this.region,
             message: message
         });
     }
 
-    sendToAdjacentRegions(regionId, message, ignoreId) {
+    sendToAdjacentRegions(regionId: string, message: any, ignoreId?: string) {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId: regionId,
             message: message,
@@ -1194,7 +1314,7 @@ class Player extends Character {
         this.y = position.y;
     }
 
-    sendMessage(playerName, message) {
+    sendMessage(playerName: string, message: string) {
 
         if (config.hubEnabled) {
             this.world.api.sendPrivateMessage(this, playerName, message);
@@ -1243,7 +1363,7 @@ class Player extends Character {
         this.save();
     }
 
-    popup(title, message, colour) {
+    popup(title: string, message: string, colour: string) {
 
         if (!title)
             return;
@@ -1258,7 +1378,7 @@ class Player extends Character {
         }));
     }
 
-    notify(message, colour) {
+    notify(message: string, colour?: string) {
 
         if (!message)
             return;
@@ -1282,7 +1402,7 @@ class Player extends Character {
      * show special messages to the player.
      */
 
-    chat(source, text, colour, isGlobal, withBubble) {
+    chat(source: string, text: string, colour?: string, isGlobal?: boolean, withBubble?: boolean) {
 
         if (!source || !text)
             return;
@@ -1296,7 +1416,7 @@ class Player extends Character {
         }))
     }
 
-    stopMovement(force) {
+    stopMovement(force?: boolean) {
         /**
          * Forcefully stopping the player will simply halt
          * them in between tiles. Should only be used if they are
@@ -1318,7 +1438,7 @@ class Player extends Character {
         return this.quests.getQuest(0).isFinished();
     }
 
-    finishedAchievement(id) {
+    finishedAchievement(id: number) {
 
         if (!this.quests)
             return false;
@@ -1331,7 +1451,7 @@ class Player extends Character {
         return achievement.isFinished();
     }
 
-    finishAchievement(id) {
+    finishAchievement(id: number) {
 
         if (!this.quests)
             return;
@@ -1381,7 +1501,7 @@ class Player extends Character {
 
     }
 
-    killCharacter(character) {
+    killCharacter(character: Character) {
 
         if (this.killCallback)
             this.killCallback(character);
@@ -1406,59 +1526,59 @@ class Player extends Character {
         return new Date().getTime() - this.lastRegionChange < 1200000; // 20 Minutes
     }
 
-    onOrientation(callback) {
+    onOrientation(callback: Function) {
         this.orientationCallback = callback;
     }
 
-    onRegion(callback) {
+    onRegion(callback: Function) {
         this.regionCallback = callback;
     }
 
-    onAttack(callback) {
+    onAttack(callback: Function) {
         this.attackCallback = callback;
     }
 
-    onHit(callback) {
+    onHit(callback: Function) {
         this.hitCallback = callback;
     }
 
-    onKill(callback) {
+    onKill(callback: Function) {
         this.killCallback = callback;
     }
 
-    onDeath(callback) {
+    onDeath(callback: Function) {
         this.deathCallback = callback;
     }
 
-    onTalkToNPC(callback) {
+    onTalkToNPC(callback: Function) {
         this.npcTalkCallback = callback;
     }
 
-    onDoor(callback) {
+    onDoor(callback: Function) {
         this.doorCallback = callback;
     }
 
-    onTeleport(callback) {
+    onTeleport(callback: Function) {
         this.teleportCallback = callback;
     }
 
-    onProfile(callback) {
+    onProfile(callback: Function) {
         this.profileToggleCallback = callback;
     }
 
-    onInventory(callback) {
+    onInventory(callback: Function) {
         this.inventoryToggleCallback = callback;
     }
 
-    onWarp(callback) {
+    onWarp(callback: Function) {
         this.warpToggleCallback = callback;
     }
 
-    onCheatScore(callback) {
+    onCheatScore(callback: Function) {
         this.cheatScoreCallback = callback;
     }
 
-    onReady(callback) {
+    onReady(callback: Function) {
         this.readyCallback = callback;
     }
 

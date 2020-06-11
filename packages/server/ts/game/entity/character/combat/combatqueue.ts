@@ -1,12 +1,16 @@
 /* global module */
 
+import Hit from './hit';
+
 class CombatQueue {
+
+    hitQueue: any;
 
     constructor() {
         this.hitQueue = [];
     }
 
-    add(hit) {
+    add(hit: Hit) {
         this.hitQueue.push(hit);
     }
 

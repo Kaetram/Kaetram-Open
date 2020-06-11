@@ -1,18 +1,18 @@
 /* global module */
 
 import Quest from '../quest';
-import Packets from '../../../../../network/packets';
+import Player from '../../player';
 
 class Thelie extends Quest {
 
-    constructor(player, data) {
+    constructor(player: Player, data: any) {
         super(player, data);
 
         this.player = player;
         this.data = data;
     }
 
-    load(stage) {
+    load(stage: number) {
         super.load(stage);
     }
 

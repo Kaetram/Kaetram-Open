@@ -7,7 +7,62 @@ import Combat from './combat/combat';
 
 class Character extends Entity {
 
-    constructor(id, type, instance, x, y) {
+    public level: number;
+    public movementSpeed: number;
+    public attackRange: number;
+    public attackRate: number;
+    public healingRate: number;
+
+    public spawnDistance: number;
+
+    public previousX: number;
+    public previousY: number;
+
+    public hitPoints: any;
+    public maxHitPoints: number;
+
+    public poison: string;
+    public aggressive: boolean;
+    public aggroRange: number;
+
+    public target: any; // TODO
+    public potentialTarget: any; // TODO
+
+    stunTimeout: any;
+
+    public projectile: any;
+    public projectileName: string;
+
+    healingInterval: any;
+    updated: boolean;
+
+    public weaponLevel: number;
+    public armourLevel: number;
+    public stunned: boolean;
+
+    stunCallback: Function;
+    hitCallback: Function;
+    damagedCallback: Function;
+    movementCallback: Function;
+    targetCallback: Function;
+    hitPointsCallback: Function;
+    poisonCallback: Function;
+    removeTargetCallback: Function;
+    healthChangeCallback: Function;
+    damageCallback: Function;
+    subAoECallback: Function;
+
+    region: string;
+    moving: boolean;
+    lastMovement: number;
+
+    pvp: boolean;
+
+    spawnLocation: any;
+
+    frozen: boolean;
+
+    constructor(id: number, type: string, instance: string, x: number, y: number) {
         super(id, type, instance, x, y);
 
         this.level = -1;
@@ -27,7 +82,7 @@ class Character extends Entity {
 
         /* States */
         this.dead = false;
-        this.poison = false;
+        this.poison = null;
         this.aggressive = false;
         this.aggroRange = 2;
 
@@ -97,7 +152,7 @@ class Character extends Entity {
         this.healingInterval = null;
     }
 
-    setStun(stun) {
+    setStun(stun: boolean) {
 
         this.stunned = stun;
 
@@ -105,13 +160,13 @@ class Character extends Entity {
             this.stunCallback(stun);
     }
 
-    hit(attacker) {
+    hit(attacker: Entity) {
 
         if (this.hitCallback)
             this.hitCallback(attacker);
     }
 
-    heal(amount) {
+    heal(amount: number) {
 
         this.setHitPoints(this.hitPoints + amount);
 
@@ -119,15 +174,11 @@ class Character extends Entity {
             this.hitPoints = this.maxHitPoints;
     }
 
-    addExperience() {
-        //Unimplemented.
-    }
-
     isRanged() {
         return this.attackRange > 1;
     }
 
-    applyDamage(damage, attacker) {
+    applyDamage(damage: number, attacker: Entity) {
 
         this.hitPoints -= damage;
 
@@ -151,7 +202,7 @@ class Character extends Entity {
         return this.maxHitPoints;
     }
 
-    setPosition(x, y) {
+    setPosition(x: number, y: number) {
 
         this.previousX = this.x;
         this.previousY = this.y;
@@ -174,7 +225,7 @@ class Character extends Entity {
         this.potentialTarget = potentialTarget;
     }
 
-    setHitPoints(hitPoints) {
+    setHitPoints(hitPoints: number) {
 
         this.hitPoints = hitPoints;
 
@@ -214,6 +265,34 @@ class Character extends Entity {
         return this.hitPoints >= this.maxHitPoints;
     }
 
+    /* Uninitialized Functions */
+
+    hasBreakableWeapon() {
+        return false;
+    }
+
+    breakWeapon() {}
+
+    return() {}
+
+    getHit(target?: any): any {
+        return `uninitialized ${target.instance}`;
+    }
+
+    finishAchievement(id: number): any {
+        return `uninitialized achievementId: ${id}`;
+    }
+
+    addExperience(exp: number) {
+        //Unimplemented.
+    }
+
+    canAggro(character: Character): boolean {
+        return false;
+    }
+
+    /*********************/
+
     removeTarget() {
 
         if (this.removeTargetCallback)
@@ -234,43 +313,43 @@ class Character extends Entity {
         this.target = null;
     }
 
-    onTarget(callback) {
+    onTarget(callback: Function) {
         this.targetCallback = callback;
     }
 
-    onRemoveTarget(callback) {
+    onRemoveTarget(callback: Function) {
         this.removeTargetCallback = callback;
     }
 
-    onMovement(callback) {
+    onMovement(callback: Function) {
         this.movementCallback = callback;
     }
 
-    onHit(callback) {
+    onHit(callback: Function) {
         this.hitCallback = callback;
     }
 
-    onHealthChange(callback) {
+    onHealthChange(callback: Function) {
         this.healthChangeCallback = callback;
     }
 
-    onDamage(callback) {
+    onDamage(callback: Function) {
         this.damageCallback = callback;
     }
 
-    onDamaged(callback) { // When the entity gets hit.
+    onDamaged(callback: Function) { // When the entity gets hit.
         this.damagedCallback = callback;
     }
 
-    onStunned(callback) {
+    onStunned(callback: Function) {
         this.stunCallback = callback;
     }
 
-    onSubAoE(callback) {
+    onSubAoE(callback: Function) {
         this.subAoECallback = callback;
     }
 
-    onPoison(callback) {
+    onPoison(callback: Function) {
         this.poisonCallback = callback;
     }
 }

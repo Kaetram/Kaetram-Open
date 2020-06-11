@@ -2,7 +2,7 @@
 
 class Area {
 
-    id: number;
+    id: any;
     x: number;
     y: number;
     width: number;

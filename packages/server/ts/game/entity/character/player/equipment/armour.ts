@@ -6,7 +6,9 @@ import Modules from '../../../../../util/modules';
 
 class Armour extends Equipment {
 
-    constructor(name, id, count, ability, abilityLevel) {
+    public defense: number;
+
+    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
         super(name, id, count, ability, abilityLevel);
 
         this.defense = Items.getArmourLevel(name);
@@ -16,7 +18,7 @@ class Armour extends Equipment {
         return this.ability === 6;
     }
 
-    setDefense(defense) {
+    setDefense(defense: number) {
         this.defense = defense;
     }
 

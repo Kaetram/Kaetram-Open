@@ -4,18 +4,21 @@ import Points from './points';
 
 class HitPoints extends Points {
 
-    constructor(hitPoints, maxHitPoints) {
+    hitPointsCallback: Function;
+    maxHitPointsCallback: Function;
+
+    constructor(hitPoints: number, maxHitPoints: number) {
         super(hitPoints, maxHitPoints);
     }
 
-    setHitPoints(hitPoints) {
+    setHitPoints(hitPoints: number) {
         super.setPoints(hitPoints);
 
         if (this.hitPointsCallback)
             this.hitPointsCallback();
     }
 
-    setMaxHitPoints(maxHitPoints) {
+    setMaxHitPoints(maxHitPoints: number) {
         super.setMaxPoints(maxHitPoints);
 
         if (this.maxHitPointsCallback)
@@ -30,11 +33,11 @@ class HitPoints extends Points {
         return this.maxPoints;
     }
 
-    onHitPoints(callback) {
+    onHitPoints(callback: Function) {
         return this.hitPointsCallback = callback;
     }
 
-    onMaxHitPoints(callback) {
+    onMaxHitPoints(callback: Function) {
         return this.maxHitPointsCallback = callback;
     }
 

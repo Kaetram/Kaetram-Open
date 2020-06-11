@@ -4,7 +4,23 @@ import Entity from '../entity';
 
 class Projectile extends Entity {
 
-    constructor(id, instance) {
+    startX: number;
+    startY: number;
+
+    destX: number;
+    destY: number;
+
+    target: Entity;
+
+    damage: number;
+
+    hitType: any; // TODO
+    owner: any; // TODO
+
+    static: boolean;
+    special: any;
+
+    constructor(id: number, instance: string) {
         super(id, 'projectile', instance);
 
         this.startX = -1;
@@ -22,7 +38,7 @@ class Projectile extends Entity {
         this.owner = null;
     }
 
-    setStart(x, y) {
+    setStart(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
@@ -31,14 +47,14 @@ class Projectile extends Entity {
      * TODO - Merge setTarget() && setStaticTarget into one function.
      */
 
-    setTarget(target) {
+    setTarget(target: Entity) {
         this.target = target;
 
         this.destX = target.x;
         this.destY = target.y;
     }
 
-    setStaticTarget(x, y) {
+    setStaticTarget(x: number, y: number) {
         this.static = true;
 
         this.destX = x;

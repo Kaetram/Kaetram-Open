@@ -1,13 +1,27 @@
 /* global module */
 
+import _ from 'underscore';
 import Messages from '../../../../../network/messages';
 import Packets from '../../../../../network/packets';
 import Utils from '../../../../../util/utils';
-import _ from 'underscore';
+import Player from '../player';
+import NPC from '../../../npc/npc';
+import Mob from '../../mob/mob';
 
 class Quest {
 
-    constructor(player, data) {
+    public player: Player;
+    public data: any;
+
+    public id: number;
+    public name: string;
+    public description: string;
+
+    public stage: number;
+
+    npcTalkCallback: Function;
+
+    constructor(player: Player, data: any) {
         this.player = player;
         this.data = data;
 
@@ -18,11 +32,11 @@ class Quest {
         this.stage = 0;
     }
 
-    load(stage) {
+    load(stage: number) {
         if (!stage)
             this.update();
         else
-            this.stage = parseInt(stage);
+            this.stage = stage;
     }
 
     finish() {
@@ -54,12 +68,12 @@ class Quest {
         this.update();
     }
 
-    setStage(stage) {
+    setStage(stage: number) {
         this.stage = stage;
         this.update();
     }
 
-    triggerTalk(npc) {
+    triggerTalk(npc: NPC) {
         if (this.npcTalkCallback)
             this.npcTalkCallback(npc);
     }
@@ -68,7 +82,7 @@ class Quest {
         return this.player.save();
     }
 
-    getConversation(id) {
+    getConversation(id: number) {
         let conversation = this.data.conversations[id];
 
         if (!conversation || !conversation[this.stage])
@@ -102,7 +116,7 @@ class Quest {
 
     }
 
-    forceTalk(npc, message) {
+    forceTalk(npc: NPC, message: string) {
         if (!npc)
             return;
 
@@ -126,18 +140,18 @@ class Quest {
         this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}))
     }
 
-    onNPCTalk(callback) {
+    onNPCTalk(callback: Function) {
         this.npcTalkCallback = callback;
     }
 
-    hasMob(mob) {
+    hasMob(mob: Mob) {
         if (!this.data.mobs)
             return;
 
         return this.data.mobs.indexOf(mob.id) > -1;
     }
 
-    hasNPC(id) {
+    hasNPC(id: number) {
         return this.data.npcs.indexOf(id) > -1;
     }
 
@@ -145,11 +159,11 @@ class Quest {
         return !!this.data.itemReward;
     }
 
-    hasInventorySpace(id, count) {
+    hasInventorySpace(id: number, count: number) {
         return this.player.inventory.canHold(id, count);
     }
 
-    hasDoorUnlocked(door) {
+    hasDoorUnlocked(door: any) {
         return this.stage > 9998;
     }
 
