@@ -16,7 +16,7 @@ export default class Connection {
         self.storage = game.storage;
         self.socket = game.socket;
         self.input = game.input;
-        self.interface = game.interface;
+        self.menu = game.menu;
         self.entities = game.entities;
         self.map = game.map;
         self.overlays = game.overlays;
@@ -89,7 +89,7 @@ export default class Connection {
         });
 
         self.messages.onWelcome(function (data) {
-            self.interface.loadHeader();
+            self.menu.loadHeader();
 
             self.game.player.load(data);
 
@@ -112,7 +112,7 @@ export default class Connection {
                         );
                     });
 
-                    self.interface.loadProfile();
+                    self.menu.loadProfile();
 
                     break;
 
@@ -127,7 +127,7 @@ export default class Connection {
                         info.power
                     );
 
-                    self.interface.profile.update();
+                    self.menu.profile.update();
 
                     break;
 
@@ -143,7 +143,7 @@ export default class Connection {
                             )
                         );
 
-                    self.interface.profile.update();
+                    self.menu.profile.update();
 
                     break;
             }
@@ -214,7 +214,7 @@ export default class Connection {
             if (data.orientation !== undefined)
                 entity.orientation = data.orientation;
 
-            self.interface.profile.update();
+            self.menu.profile.update();
         });
 
         self.messages.onMovement(function (opcode, info) {
@@ -597,24 +597,21 @@ export default class Connection {
                     var inventorySize = info.shift(),
                         data = info.shift();
 
-                    self.interface.loadInventory(inventorySize, data);
+                    self.menu.loadInventory(inventorySize, data);
 
                     break;
 
                 case Packets.InventoryOpcode.Add:
-                    if (self.interface.bank) self.interface.addInventory(info);
+                    if (self.menu.bank) self.menu.addInventory(info);
 
-                    if (self.interface.inventory)
-                        self.interface.inventory.add(info);
+                    if (self.menu.inventory) self.menu.inventory.add(info);
 
                     break;
 
                 case Packets.InventoryOpcode.Remove:
-                    if (self.interface.bank)
-                        self.interface.removeInventory(info);
+                    if (self.menu.bank) self.menu.removeInventory(info);
 
-                    if (self.interface.inventory)
-                        self.interface.inventory.remove(info);
+                    if (self.menu.inventory) self.menu.inventory.remove(info);
 
                     break;
             }
@@ -626,19 +623,19 @@ export default class Connection {
                     var bankSize = info.shift(),
                         data = info.shift();
 
-                    self.interface.loadBank(bankSize, data);
+                    self.menu.loadBank(bankSize, data);
 
                     break;
 
                 case Packets.BankOpcode.Add:
-                    if (!self.interface.bank) return;
+                    if (!self.menu.bank) return;
 
-                    self.interface.bank.add(info);
+                    self.menu.bank.add(info);
 
                     break;
 
                 case Packets.BankOpcode.Remove:
-                    self.interface.bank.remove(info);
+                    self.menu.bank.remove(info);
 
                     break;
             }
@@ -649,24 +646,24 @@ export default class Connection {
         self.messages.onQuest(function (opcode, info) {
             switch (opcode) {
                 case Packets.QuestOpcode.AchievementBatch:
-                    self.interface
+                    self.menu
                         .getQuestPage()
                         .loadAchievements(info.achievements);
 
                     break;
 
                 case Packets.QuestOpcode.QuestBatch:
-                    self.interface.getQuestPage().loadQuests(info.quests);
+                    self.menu.getQuestPage().loadQuests(info.quests);
 
                     break;
 
                 case Packets.QuestOpcode.Progress:
-                    self.interface.getQuestPage().progress(info);
+                    self.menu.getQuestPage().progress(info);
 
                     break;
 
                 case Packets.QuestOpcode.Finish:
-                    self.interface.getQuestPage().finish(info);
+                    self.menu.getQuestPage().finish(info);
 
                     break;
             }
@@ -675,12 +672,12 @@ export default class Connection {
         self.messages.onNotification(function (opcode, info) {
             switch (opcode) {
                 case Packets.NotificationOpcode.Ok:
-                    self.interface.displayNotify(info.message);
+                    self.menu.displayNotify(info.message);
 
                     break;
 
                 case Packets.NotificationOpcode.YesNo:
-                    self.interface.displayConfirm(info.message);
+                    self.menu.displayConfirm(info.message);
 
                     break;
 
@@ -694,7 +691,7 @@ export default class Connection {
                     break;
 
                 case Packets.NotificationOpcode.Popup:
-                    self.interface.showNotification(
+                    self.menu.showNotification(
                         info.title,
                         info.message,
                         info.colour
@@ -789,7 +786,7 @@ export default class Connection {
                         );
                     }
 
-                    self.interface.profile.update();
+                    self.menu.profile.update();
 
                     break;
 
@@ -870,11 +867,11 @@ export default class Connection {
                     break;
 
                 case Packets.NPCOpcode.Bank:
-                    self.interface.bank.display();
+                    self.menu.bank.display();
                     break;
 
                 case Packets.NPCOpcode.Enchant:
-                    self.interface.enchant.display();
+                    self.menu.enchant.display();
                     break;
 
                 case Packets.NPCOpcode.Countdown:
@@ -914,12 +911,12 @@ export default class Connection {
 
             switch (opcode) {
                 case Packets.EnchantOpcode.Select:
-                    self.interface.enchant.add(type, index);
+                    self.menu.enchant.add(type, index);
 
                     break;
 
                 case Packets.EnchantOpcode.Remove:
-                    self.interface.enchant.moveBack(type, index);
+                    self.menu.enchant.moveBack(type, index);
 
                     break;
             }
@@ -993,8 +990,8 @@ export default class Connection {
 
             switch (opcode) {
                 case Packets.ShopOpcode.Open:
-                    self.interface.shop.open(shopData.id);
-                    self.interface.shop.update(shopData);
+                    self.menu.shop.open(shopData.id);
+                    self.menu.shop.update(shopData);
 
                     break;
 
@@ -1005,20 +1002,20 @@ export default class Connection {
                     break;
 
                 case Packets.ShopOpcode.Select:
-                    if (self.interface.shop.isShopOpen(info.id))
-                        self.interface.shop.move(info);
+                    if (self.menu.shop.isShopOpen(info.id))
+                        self.menu.shop.move(info);
 
                     break;
 
                 case Packets.ShopOpcode.Remove:
-                    if (self.interface.shop.isShopOpen(info.id))
-                        self.interface.shop.moveBack(info.index);
+                    if (self.menu.shop.isShopOpen(info.id))
+                        self.menu.shop.moveBack(info.index);
 
                     break;
 
                 case Packets.ShopOpcode.Refresh:
-                    if (self.interface.shop.isShopOpen(info.id))
-                        self.interface.shop.update(info);
+                    if (self.menu.shop.isShopOpen(info.id))
+                        self.menu.shop.update(info);
 
                     break;
             }
@@ -1167,12 +1164,12 @@ export default class Connection {
         self.messages.onProfession(function (opcode, info) {
             switch (opcode) {
                 case Packets.ProfessionOpcode.Batch:
-                    self.interface.getProfessionPage().load(info.data);
+                    self.menu.getProfessionPage().load(info.data);
 
                     break;
 
                 case Packets.ProfessionOpcode.Update:
-                    self.interface.getProfessionPage().sync(info);
+                    self.menu.getProfessionPage().sync(info);
 
                     break;
             }

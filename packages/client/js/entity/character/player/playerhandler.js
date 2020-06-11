@@ -171,13 +171,13 @@ export default class PlayerHandler {
         self.player.onUpdateArmour(function (armourName, power) {
             self.player.setSprite(self.game.getSprite(armourName));
 
-            if (self.game.interface && self.game.interface.profile)
-                self.game.interface.profile.update();
+            if (self.game.menu && self.game.menu.profile)
+                self.game.menu.profile.update();
         });
 
         self.player.onUpdateEquipment(function (type, power) {
-            if (self.game.interface && self.game.interface.profile)
-                self.game.interface.profile.update();
+            if (self.game.menu && self.game.menu.profile)
+                self.game.menu.profile.update();
         });
     }
 

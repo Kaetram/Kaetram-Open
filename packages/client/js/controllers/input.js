@@ -140,22 +140,22 @@ export default class InputController {
                         break;
 
                     case Modules.Keys.I:
-                        self.game.interface.inventory.open();
+                        self.game.menu.inventory.open();
 
                         break;
 
                     case Modules.Keys.M:
-                        self.game.interface.warp.open();
+                        self.game.menu.warp.open();
 
                         break;
 
                     case Modules.Keys.P:
-                        self.game.interface.profile.open();
+                        self.game.menu.profile.open();
 
                         break;
 
                     case Modules.Keys.Esc:
-                        self.game.interface.profile.settings.open();
+                        self.game.menu.profile.settings.open();
 
                         break;
                 }
@@ -278,7 +278,7 @@ export default class InputController {
         )
             return;
 
-        if (self.game.interface) self.game.interface.hideAll();
+        if (self.game.menu) self.game.menu.hideAll();
 
         if (self.map.isObject(position.x, position.y)) {
             player.setObjectTarget(position.x, position.y);
@@ -552,6 +552,6 @@ export default class InputController {
     }
 
     getActions() {
-        return this.game.interface.actions;
+        return this.game.menu.actions;
     }
 }
