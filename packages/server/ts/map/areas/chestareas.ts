@@ -4,9 +4,9 @@ import _ from 'underscore';
 import Area from '../area';
 import World from '../../game/world';
 import * as map from '../../../data/map/world_server.json';
+import log from '../../util/log';
 
 class ChestAreas {
-
     world: World;
     chestAreas: any;
 
@@ -33,14 +33,12 @@ class ChestAreas {
             this.chestAreas.push(chestArea);
 
             chestArea.onEmpty(() => {
-
                 this.spawnChest(chestArea);
             });
 
             chestArea.onSpawn(() => {
                 this.removeChest(chestArea);
             });
-
         });
 
         log.info('Loaded ' + this.chestAreas.length + ' chest areas.');
@@ -50,19 +48,22 @@ class ChestAreas {
         if (new Date().getTime() - chestArea.lastSpawn < chestArea.spawnDelay)
             return;
 
-        chestArea.chest = this.world.spawnChest(chestArea.items, chestArea.cX, chestArea.cY, false);
+        chestArea.chest = this.world.spawnChest(
+            chestArea.items,
+            chestArea.cX,
+            chestArea.cY,
+            false
+        );
         chestArea.lastSpawn = new Date().getTime();
     }
 
     removeChest(chestArea) {
-        if (!chestArea.chest)
-            return;
+        if (!chestArea.chest) return;
 
         this.world.removeChest(chestArea.chest);
 
         chestArea.chest = null;
     }
-
 }
 
 export default ChestAreas;

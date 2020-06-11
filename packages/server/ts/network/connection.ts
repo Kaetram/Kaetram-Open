@@ -2,6 +2,7 @@
 
 import WebSocket from './websocket';
 import { SocketIO } from 'socket.io';
+import log from '../util/log';
 
 class Connection {
 

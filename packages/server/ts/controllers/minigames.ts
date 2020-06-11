@@ -1,7 +1,6 @@
-/* global module */
-
 import TeamWar from '../minigames/impl/teamwar';
 import World from '../game/world';
+import log from '../util/log';
 
 class Minigames {
 

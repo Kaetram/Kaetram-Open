@@ -3,9 +3,9 @@
 import _ from 'underscore';
 import Area from '../area';
 import * as map from '../../../data/map/world_server.json';
+import log from '../../util/log';
 
 class MusicAreas {
-
     musicAreas: any;
 
     constructor() {
@@ -23,7 +23,6 @@ class MusicAreas {
 
         log.info('Loaded ' + this.musicAreas.length + ' music areas.');
     }
-
 }
 
 export default MusicAreas;

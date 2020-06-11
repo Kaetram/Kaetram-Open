@@ -1,38 +1,37 @@
 import Player from './player';
+import log from '../../../../util/log';
 
 class Friends {
+    player: Player;
 
-	player: Player
+    friends: any;
 
-	friends: any;
+    constructor(player: Player) {
+        this.player = player;
 
-	constructor(player: Player) {
-		this.player = player;
+        this.friends = {};
+    }
 
-		this.friends = {};
-	}
+    update(info: any) {
+        log.info(info);
+    }
 
-	update(info: any) {
-		log.info(info);
-	}
+    add(username: string) {
+        if (username in this.friends) {
+            this.player.notify('That player is already in your friends list.');
+            return;
+        }
 
-	add(username: string) {
-		if (username in this.friends) {
-			this.player.notify('That player is already in your friends list.');
-			return;
-		}
+        this.friends[username] = 'offline';
+    }
 
-		this.friends[username] = 'offline';
-	}
+    remove(username: string) {
+        delete this.friends[username];
+    }
 
-	remove(username: string) {
-		delete this.friends[username];
-	}
-
-	getArray() {
-		return this.friends;
-	}
-
+    getArray() {
+        return this.friends;
+    }
 }
 
 export default Friends;

@@ -3,9 +3,9 @@
 import _ from 'underscore';
 import Area from '../area';
 import * as map from '../../../data/map/world_server.json';
+import log from '../../util/log';
 
 class PVPAreas {
-
     pvpAreas: any;
 
     constructor() {
@@ -25,7 +25,6 @@ class PVPAreas {
 
         log.info('Loaded ' + this.pvpAreas.length + ' PVP areas.');
     }
-
 }
 
 export default PVPAreas;

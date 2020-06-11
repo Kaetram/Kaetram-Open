@@ -1,6 +1,6 @@
-/* global module */
-
 import _ from 'underscore';
+import log from '../util/log';
+import config from '../../config';
 import Discord from '../network/discord';
 import Map from '../map/map';
 import Messages from '../network/messages';

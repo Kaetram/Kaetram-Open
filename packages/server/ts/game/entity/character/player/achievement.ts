@@ -1,5 +1,3 @@
-/* global module */
-
 import Data from '../../../../../data/achievements.json';
 import Messages from '../../../../network/messages';
 import Packets from '../../../../network/packets';
