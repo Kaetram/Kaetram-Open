@@ -1,50 +1,48 @@
-Detect = {};
-
-Detect.isIpad = function() {
+export const isIpad = () => {
     return /ipad/i.test(navigator.userAgent.toLowerCase());
 };
 
-Detect.isAndroid = function() {
+export const isAndroid = () => {
     return /Android/i.test(navigator.userAgent);
 };
 
-Detect.isWindows = function() {
-      return Detect.userAgentContains('Windows');
+export const isWindows = () => {
+    return userAgentContains('Windows');
 };
 
-Detect.isFirefox = function() {
-    return Detect.userAgentContains('Firefox');
+export const isFirefox = () => {
+    return userAgentContains('Firefox');
 };
 
-Detect.isSafari = function() {
-    return Detect.userAgentContains('Safari') && !Detect.userAgentContains('Chrome');
+export const isSafari = () => {
+    return userAgentContains('Safari') && !userAgentContains('Chrome');
 };
 
-Detect.isOpera = function() {
-    return Detect.userAgentContains('Opera');
+export const isOpera = () => {
+    return userAgentContains('Opera');
 };
 
-Detect.isInternetExplorer = function() {
+export const isInternetExplorer = () => {
     return false || !!document.documentMode;
 };
 
-Detect.isEdge = function() {
-    return !Detect.isInternetExplorer() && !!window.StyleMedia;
+export const isEdge = () => {
+    return !isInternetExplorer() && !!window.StyleMedia;
 };
 
-Detect.isFirefoxAndroid = function() {
-    return Detect.userAgentContains('Android') && Detect.userAgentContains('Firefox');
+export const isFirefoxAndroid = () => {
+    return userAgentContains('Android') && userAgentContains('Firefox');
 };
 
-Detect.userAgentContains = function(string) {
+export const userAgentContains = (string) => {
     return navigator.userAgent.indexOf(string) !== -1;
 };
 
-Detect.getUserAgent = function() {
+export const getUserAgent = () => {
     return navigator.userAgent.toString();
 };
 
-Detect.isTablet = function() {
+export const isTablet = () => {
     var userAgent = navigator.userAgent.toLowerCase(),
         isAppleTablet = /ipad/i.test(userAgent),
         isAndroidTablet = /android/i.test(userAgent);
@@ -52,24 +50,24 @@ Detect.isTablet = function() {
     return (isAppleTablet || isAndroidTablet) && window.innerWidth >= 640;
 };
 
-Detect.isMobile = function() {
+export const isMobile = () => {
     return window.innerWidth < 1000;
 };
 
-Detect.iOSVersion = function() {
-    if(window.MSStream){
+export const iOSVersion = () => {
+    if (window.MSStream) {
         // There is some iOS in Windows Phone...
         // https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
         return '';
     }
-    var match = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/),
+    var match = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/),
         version;
 
     if (match !== undefined && match !== null) {
         version = [
             parseInt(match[1], 10),
             parseInt(match[2], 10),
-            parseInt(match[3] || 0, 10)
+            parseInt(match[3] || 0, 10),
         ];
         return parseFloat(version.join('.'));
     }
@@ -77,49 +75,48 @@ Detect.iOSVersion = function() {
     return '';
 };
 
-Detect.androidVersion = function() {
-    var userAgent = navigator.userAgent.split('Android'), version;
+export const androidVersion = () => {
+    var userAgent = navigator.userAgent.split('Android'),
+        version;
 
-    if (userAgent.length > 1)
-        version = userAgent[1].split(';')[0];
+    if (userAgent.length > 1) version = userAgent[1].split(';')[0];
 
     return version;
 };
 
-Detect.supportsWebGL = function() {
+export const supportsWebGL = () => {
     //var canvas = document.createElement('canvas'),
     //    gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
     return false;
 };
 
-Detect.isAppleDevice = function() {
+export const isAppleDevice = () => {
     var devices = [
         'iPad Simulator',
         'iPhone Simulator',
         'iPod Simulator',
         'iPad',
         'iPhone',
-        'iPod'
+        'iPod',
     ];
 
     if (!!navigator.platform)
-        while(devices.length)
-            if (navigator.platform = devices.pop())
-                return true;
+        while (devices.length)
+            if ((navigator.platform = devices.pop())) return true;
 
     return false;
 };
 
 // Older mobile devices will default to non-centred camera mode
-Detect.isOldAndroid = function() {
-    return parseFloat(Detect.androidVersion() < 6.0);
+export const isOldAndroid = () => {
+    return parseFloat(androidVersion() < 6.0);
 };
 
-Detect.isOldApple = function() {
-    return parseFloat(Detect.iOSVersion() < 9.0);
+export const isOldApple = () => {
+    return parseFloat(iOSVersion() < 9.0);
 };
 
-Detect.useCenteredCamera = function() {
-    return Detect.isOldAndroid() || Detect.isOldApple() || Detect.isIpad();
+export const useCenteredCamera = () => {
+    return isOldAndroid() || isOldApple() || isIpad();
 };
