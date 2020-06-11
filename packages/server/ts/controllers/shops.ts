@@ -5,10 +5,17 @@ import ShopData from '../util/shops';
 import Items from '../util/items';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
+import Player from '../game/entity/character/player/player';
+import World from '../game/world';
 
 class Shops {
 
-    constructor(world) {
+    world: World;
+
+    interval: number;
+    shopInterval: any;
+
+    constructor(world: World) {
         this.world = world;
 
         this.interval = 60000;
@@ -21,7 +28,7 @@ class Shops {
 
         this.shopInterval = setInterval(() => {
 
-            _.each(ShopData.Data, (info) => {
+            _.each(ShopData.Data, (info: any) => {
 
                 for (let i = 0; i < info.count; i++)
                     if (info.count[i] < info.originalCount[i])
@@ -32,7 +39,7 @@ class Shops {
         }, this.interval);
     }
 
-    open(player, npcId) {
+    open(player: Player, npcId: number) {
 
         player.send(new Messages.Shop(Packets.ShopOpcode.Open, {
             instance: player.instance,
@@ -41,7 +48,7 @@ class Shops {
         }));
     }
 
-    buy(player, npcId, buyId, count) {
+    buy(player: Player, npcId: number, buyId: number, count: number) {
         let cost = ShopData.getCost(npcId, buyId, count),
             currency = this.getCurrency(npcId),
             stock = ShopData.getStock(npcId, buyId);
@@ -84,7 +91,7 @@ class Shops {
         this.refresh(npcId);
     }
 
-    sell(player, npcId, slotId) {
+    sell(player: Player, npcId: number, slotId: number) {
         let item = player.inventory.slots[slotId],
             shop = ShopData.Ids[npcId];
 
@@ -114,7 +121,7 @@ class Shops {
 
     }
 
-    remove(player) {
+    remove(player: Player) {
         let selectedItem = player.selectedShopItem;
 
         if (!selectedItem)
@@ -128,13 +135,13 @@ class Shops {
         player.selectedShopItem = null;
     }
 
-    refresh(shop) {
+    refresh(shop: any) {
         this.world.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Shop(Packets.ShopOpcode.Refresh, this.getShopData(shop))
         });
     }
 
-    getCurrency(npcId) {
+    getCurrency(npcId: number) {
         let shop = ShopData.Ids[npcId];
 
         if (!shop)
@@ -143,7 +150,7 @@ class Shops {
         return shop.currency;
     }
 
-    getSellPrice(npcId, itemId, count = 1) {
+    getSellPrice(npcId: number, itemId: number, count = 1) {
         let shop = ShopData.Ids[npcId];
 
         if (!shop)
@@ -157,7 +164,7 @@ class Shops {
         return Math.floor(ShopData.getCost(npcId, buyId, count) / 2);
     }
 
-    getShopData(npcId) {
+    getShopData(npcId: number) {
         let shop = ShopData.Ids[npcId];
 
         if (!shop || !_.isArray(shop.items))

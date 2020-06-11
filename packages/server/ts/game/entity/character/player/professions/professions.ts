@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import log from "../../../../../util/log";
 import Modules from '../../../../../util/modules';
 import Player from '../player';
 import World from '../../../../world';

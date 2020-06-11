@@ -15,8 +15,6 @@ import World from '../../../world';
 import Entity from '../../entity';
 import Map from '../../../../map/map';
 import Area from '../../../../map/area';
-import log from "../../../../util/log";
-import config from "../../../../../config";
 
 class Handler {
 
@@ -98,7 +96,7 @@ class Handler {
             log.debug(`Player has been hit - damage: ${damage}`);
         });
 
-        this.player.onKill((character: Character) => {
+        this.player.onKill((character: any) => {
 
             if (this.player.quests.isAchievementMob(character)) {
                 let achievement = this.player.quests.getAchievementByMob(character);

@@ -44,7 +44,7 @@ class Mob extends Character {
 
     area: Area;
 
-    constructor(id: number, instance: string, x: number, y: number, world: World) {
+    constructor(id: number, instance: string, x: number, y: number, world?: World) {
         super(id, 'mob', instance, x, y);
 
         if (!Mobs.exists(id))

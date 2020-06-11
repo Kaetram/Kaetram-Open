@@ -1,7 +1,6 @@
 /* global module */
 
 import Packets from '../network/packets';
-import Request from 'request';
 import _ from 'underscore';
 import Messages from '../network/messages';
 import sanitizer from 'sanitizer';
@@ -11,8 +10,8 @@ import Creator from '../database/mongodb/creator';
 import Utils from '../util/utils';
 import Player from '../game/entity/character/player/player';
 import World from '../game/world';
-import log from "../util/log";
-import config from "../../config";
+import Entity from '../game/entity/entity';
+import Character from '../game/entity/character/character';
 
 class Incoming {
 
@@ -22,7 +21,9 @@ class Incoming {
     database: any;
     commands: any;
 
-    constructor(player) {
+    introduced: boolean;
+
+    constructor(player: Player) {
 
         this.player = player;
         this.connection = this.player.connection;
@@ -30,7 +31,7 @@ class Incoming {
         this.database = this.player.database;
         this.commands = new Commands(this.player);
 
-        this.connection.listen((data) => {
+        this.connection.listen((data: any) => {
 
             let packet = data.shift(),
                 message = data[0];
@@ -128,7 +129,7 @@ class Incoming {
                     break;
 
                 case Packets.Region:
-                    this.handleRegion(message);
+                    //this.handleRegion(message);
                     break;
 
                 case Packets.Camera:
@@ -268,8 +269,8 @@ class Incoming {
 
     handleWho(message) {
 
-        _.each(message.shift(), (id) => {
-            let entity = this.world.getEntityByInstance(id);
+        _.each(message.shift(), (id: string) => {
+            let entity: any = this.world.getEntityByInstance(id);
 
             if (!entity || entity.dead)
                 return;
@@ -594,8 +595,8 @@ class Incoming {
 
         switch (opcode) {
             case Packets.CombatOpcode.Initiate:
-                let attacker = this.world.getEntityByInstance(message.shift()),
-                    target = this.world.getEntityByInstance(message.shift());
+                let attacker: any = this.world.getEntityByInstance(message.shift()),
+                    target: any = this.world.getEntityByInstance(message.shift());
 
                 if (!target || target.dead || !attacker || attacker.dead || !this.canAttack(attacker, target))
                     return;
@@ -624,8 +625,8 @@ class Incoming {
 
         switch (type) {
             case Packets.ProjectileOpcode.Impact:
-                let projectile = this.world.getEntityByInstance(message.shift()),
-                    target = this.world.getEntityByInstance(message.shift());
+                let projectile: any = this.world.getEntityByInstance(message.shift()),
+                    target: any = this.world.getEntityByInstance(message.shift());
 
                 if (!target || target.dead || !projectile)
                     return;

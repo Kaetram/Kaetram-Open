@@ -19,7 +19,8 @@ class API {
      * the simplicity of the current API.
      */
 
-     world: World;
+    world: World;
+    hubConnected: boolean;
 
     constructor(world: World) {
 

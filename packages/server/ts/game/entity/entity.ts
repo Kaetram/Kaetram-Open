@@ -23,10 +23,15 @@ class Entity {
     public invisibles: any;
     public invisiblesIds: any;
 
+    public username: string;
+    public instanced: boolean;
+    public region: string;
+
     setPositionCallback: Function;
 
     specialState: any;
     customScale: any;
+    roaming: any;
 
     constructor(id: number, type: string, instance: string, x?: number, y?: number) {
         this.id = id;
@@ -55,6 +60,26 @@ class Entity {
     getCombat() {
         return null;
     }
+
+    /** Uninitialized Variables **/
+
+    isOutsideSpawn(): boolean {
+        return false;
+    }
+
+    removeTarget() {}
+
+    return() {}
+
+    openChest() {}
+
+    hasTarget(): boolean {
+        return false;
+    }
+
+    setTarget(target: any) {}
+
+    /****************************/
 
     getDistance(entity: Entity) {
         let x = Math.abs(this.x - entity.x),

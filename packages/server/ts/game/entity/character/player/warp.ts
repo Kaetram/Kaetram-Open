@@ -39,7 +39,7 @@ class Warp {
             return;
         }
 
-        if (this.hasRequirement()) {
+        if (this.hasRequirement(levelRequirement)) {
             this.player.notify('You must be at least level ' + levelRequirement + ' to warp here!');
             return;
         }
@@ -65,7 +65,7 @@ class Warp {
     }
 
     hasRequirement(levelRequirement) {
-        return this.player.level < levelRequirement || !this.player.rights > 1;
+        return this.player.level < levelRequirement || this.player.rights > 1;
     }
 
     getDuration() {

@@ -2,9 +2,6 @@ import { Client, WebhookClient} from 'discord.js';
 import Utils from '../util/utils';
 import World from '../game/world';
 
-import log from "../util/log";
-import config from "../../config";
-
 /**
  * This class will be used in Kaetram-Hub as well.
  * But we will leave it in servers if the standalone
