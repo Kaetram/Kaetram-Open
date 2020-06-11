@@ -1,51 +1,46 @@
-define(function() {
+export default class Tile {
+    constructor(id, index, map) {
+        var self = this;
 
-    return Class.extend({
+        self.id = id;
+        self.index = index;
+        self.map = map;
 
-        init: function(id, index, map) {
-            var self = this;
+        self.animationInfo = map.getTileAnimation(id);
 
-            self.id = id;
-            self.index = index;
-            self.map = map;
+        self.animationIndex = 0;
+        self.lastTime = 0;
 
-            self.animationInfo = map.getTileAnimation(id);
+        self.canDraw = true;
+    }
 
-            self.animationIndex = 0;
-            self.lastTime = 0;
+    setPosition(position) {
+        this.x = position.x;
+        this.y = position.y;
+    }
 
-            self.canDraw = true;
-        },
+    update() {
+        this.id = this.animationInfo[this.animationIndex].tileid;
+        this.canDraw = true;
+    }
 
-        setPosition: function(position) {
-            this.x = position.x;
-            this.y = position.y;
-        },
+    animate(time) {
+        var self = this;
 
-        update: function() {
-            this.id = this.animationInfo[this.animationIndex].tileid;
-            this.canDraw = true;
-        },
+        if (
+            time - self.lastTime >
+            self.animationInfo[self.animationIndex].duration
+        ) {
+            self.update();
+            self.lastTime = time;
 
-        animate: function(time) {
-            var self = this;
-
-            if ((time - self.lastTime) > self.animationInfo[self.animationIndex].duration) {
-                self.update();
-                self.lastTime = time;
-
-                if (self.animationIndex >= self.animationInfo.length - 1)
-                    self.animationIndex = 0;
-                else
-                    self.animationIndex++;
-            }
-
-        },
-
-        getPosition: function() {
-            return (this.x && this.y) ? [this.x, this.y] : [0, 0];
+            if (self.animationIndex >= self.animationInfo.length - 1)
+                self.animationIndex = 0;
+            else self.animationIndex++;
         }
+    }
 
-    });
-
-});
+    getPosition() {
+        return this.x && this.y ? [this.x, this.y] : [0, 0];
+    }
+}
