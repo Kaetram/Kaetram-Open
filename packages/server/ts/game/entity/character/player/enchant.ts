@@ -1,5 +1,4 @@
-/* global module */
-
+import log from '../../../../util/log';
 import _ from 'underscore';
 import Items from '../../../../util/items';
 import Messages from '../../../../network/messages';
@@ -9,7 +8,6 @@ import Modules from '../../../../util/modules';
 import Player from './player';
 
 class Enchant {
-
     /**
      * Tier 1 - Damage/Armour boost (1-5%)
      * Tier 2 - Damage boost (1-10% & 10% for special ability or special ability level up)
@@ -17,7 +15,6 @@ class Enchant {
      * Tier 4 - Damage boost (1-20% & 20% for special ability or special ability level up)
      * Tier 5 - Damage boost (1-25% & 25% for special ability or special ability level up)
      */
-
 
     player: Player;
 
@@ -34,52 +31,47 @@ class Enchant {
     add(type, item) {
         let isItem = item === 'item';
 
-        if (isItem && !Items.isEnchantable(item.id))
-            return;
+        if (isItem && !Items.isEnchantable(item.id)) return;
 
         if (type === 'item') {
-            if (this.selectedItem)
-                this.remove('item');
+            if (this.selectedItem) this.remove('item');
 
             this.selectedItem = item;
-
         } else if (type === 'shards') {
-
-            if (this.selectedShards)
-                this.remove('shards');
+            if (this.selectedShards) this.remove('shards');
 
             this.selectedShards = item;
         }
 
-        this.player.send(new Messages.Enchant(Packets.EnchantOpcode.Select, {
-            type: type,
-            index: item.index
-        }));
+        this.player.send(
+            new Messages.Enchant(Packets.EnchantOpcode.Select, {
+                type: type,
+                index: item.index,
+            })
+        );
     }
 
     remove(type) {
         let index = -1;
 
         if (type === 'item' && this.selectedItem) {
-
             index = this.selectedItem.index;
 
             this.selectedItem = null;
-
         } else if (type === 'shards' && this.selectedShards) {
-
             index = this.selectedShards.index;
 
             this.selectedShards = null;
         }
 
-        if (index < 0)
-            return;
+        if (index < 0) return;
 
-        this.player.send(new Messages.Enchant(Packets.EnchantOpcode.Remove, {
-            type: type,
-            index: index
-        }));
+        this.player.send(
+            new Messages.Enchant(Packets.EnchantOpcode.Remove, {
+                type: type,
+                index: index,
+            })
+        );
     }
 
     convert(shard) {
@@ -88,8 +80,7 @@ class Enchant {
 
         let tier = Items.getShardTier(shard.id);
 
-        if (shard.count < 11 && tier > 5)
-            return;
+        if (shard.count < 11 && tier > 5) return;
 
         for (let i = 0; i < shard.count; i += 10) {
             this.player.inventory.remove(shard.id, 10, shard.index);
@@ -98,7 +89,7 @@ class Enchant {
                 id: shard.id + 1,
                 count: 1,
                 ability: -1,
-                abilityLevel: -1
+                abilityLevel: -1,
             });
         }
     }
@@ -120,7 +111,9 @@ class Enchant {
         }
 
         if (this.selectedShards.count < 10) {
-            this.player.notify('You must have a minimum of 10 shards to enchant.');
+            this.player.notify(
+                'You must have a minimum of 10 shards to enchant.'
+            );
             return;
         }
 
@@ -131,19 +124,23 @@ class Enchant {
 
         let tier = Items.getShardTier(this.selectedShards.id);
 
-        if (tier < 1)
-            return;
+        if (tier < 1) return;
 
         if (tier <= this.selectedItem.abilityLevel) {
-
-            this.player.notify('This item has already been imbued with those shards.');
+            this.player.notify(
+                'This item has already been imbued with those shards.'
+            );
 
             return;
         }
 
         this.generateAbility(tier);
 
-        this.player.inventory.remove(this.selectedShards.id, 10, this.selectedShards.index);
+        this.player.inventory.remove(
+            this.selectedShards.id,
+            10,
+            this.selectedShards.index
+        );
 
         this.remove('item');
         this.remove('shards');
@@ -155,19 +152,25 @@ class Enchant {
         let type = Items.getType(this.selectedItem.id),
             probability = Utils.randomInt(0, 100);
 
-        if (probability > 20 + (5 * tier)) {
+        if (probability > 20 + 5 * tier) {
             this.player.notify('The item has failed to enchant.');
             return;
         }
 
-        log.info(`Selected item ability info: ${this.selectedItem.ability} + ${this.selectedItem.abilityLevel}.`);
+        log.info(
+            `Selected item ability info: ${this.selectedItem.ability} + ${this.selectedItem.abilityLevel}.`
+        );
 
         if (this.hasAbility(this.selectedItem)) {
-            let abilityName = Object.keys(Modules.Enchantment)[this.selectedItem.ability];
+            let abilityName = Object.keys(Modules.Enchantment)[
+                this.selectedItem.ability
+            ];
 
             this.selectedItem.abilityLevel = tier;
 
-            this.player.notify(`Your item has been imbued with level ${tier} of the ${abilityName} ability.`);
+            this.player.notify(
+                `Your item has been imbued with level ${tier} of the ${abilityName} ability.`
+            );
 
             return;
         }
@@ -175,55 +178,50 @@ class Enchant {
         switch (type) {
             case 'armor':
             case 'armorarcher':
-
                 this.selectedItem.ability = Utils.randomInt(2, 3);
 
                 break;
 
             case 'weapon':
-
                 this.selectedItem.ability = Utils.randomInt(0, 1);
 
                 break;
 
             case 'weaponarcher':
-
                 this.selectedItem.ability = Utils.randomInt(4, 5);
 
                 break;
 
             case 'pendant':
-
                 break;
 
             case 'ring':
-
                 break;
 
             case 'boots':
-
                 break;
-
         }
 
         this.selectedItem.abilityLevel = tier;
 
         _.each(Modules.Enchantment, (id, index) => {
             if (id === this.selectedItem.ability)
-                this.player.notify(`Your item has been imbued with the ${index.toLowerCase()} ability.`);
-
+                this.player.notify(
+                    `Your item has been imbued with the ${index.toLowerCase()} ability.`
+                );
         });
-
     }
 
     verify() {
-        return Items.isEnchantable(this.selectedItem.id) && Items.isShard(this.selectedShards.id);
+        return (
+            Items.isEnchantable(this.selectedItem.id) &&
+            Items.isShard(this.selectedShards.id)
+        );
     }
 
     hasAbility(item) {
         return item.ability !== -1;
     }
-
 }
 
 export default Enchant;

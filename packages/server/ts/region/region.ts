@@ -1,6 +1,7 @@
 /* global module */
 
 import _ from 'underscore';
+import log from '../util/log';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
 import Player from '../game/entity/character/player/player';
@@ -10,11 +11,11 @@ import Regions from '../map/regions';
 import World from '../game/world';
 import * as fs from 'fs';
 import * as path from 'path';
+import config from '../../config';
 
 const map = path.resolve(__dirname, '../../data/map/world_client.json');
 
 class Region {
-
     /**
      * Region Generation.
      * This is used in order to send the client data about the new region
@@ -53,35 +54,45 @@ class Region {
         this.loaded = false;
 
         this.onAdd((entity: Entity, regionId: string) => {
-            if (!entity || !entity.username)
-                return;
+            if (!entity || !entity.username) return;
 
             if (config.debug)
-                log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
+                log.info(
+                    'Entity - ' +
+                        entity.username +
+                        ' has entered region - ' +
+                        regionId
+                );
 
             if (entity instanceof Player) {
-                if (!entity.questsLoaded)
-                    return;
+                if (!entity.questsLoaded) return;
 
-                if (!entity.achievementsLoaded)
-                    return;
+                if (!entity.achievementsLoaded) return;
 
                 this.sendRegion(entity, regionId);
             }
         });
 
         this.onRemove((entity: Entity, oldRegions: any) => {
-            if (!oldRegions || oldRegions.length < 1 || !entity || !entity.username)
+            if (
+                !oldRegions ||
+                oldRegions.length < 1 ||
+                !entity ||
+                !entity.username
+            )
                 return;
         });
 
         this.onIncoming((entity: Entity, regionId: string) => {
-            if (!entity || !entity.username)
-                return;
+            if (!entity || !entity.username) return;
 
             if (config.debug)
-                log.info('Entity - ' + entity.username + ' is incoming into region - ' + regionId);
-
+                log.info(
+                    'Entity - ' +
+                        entity.username +
+                        ' is incoming into region - ' +
+                        regionId
+                );
         });
 
         fs.watchFile(map, () => {
@@ -94,16 +105,13 @@ class Region {
                 }
 
                 try {
-
                     this.clientMap = JSON.parse(data);
 
                     this.updateRegions();
-
-                } catch(e) {
+                } catch (e) {
                     log.error('Could not parse JSON.');
                 }
             });
-
         });
 
         this.load();
@@ -117,7 +125,7 @@ class Region {
             this.regions[regionId] = {
                 entities: {},
                 players: [],
-                incoming: []
+                incoming: [],
             };
         });
 
@@ -127,8 +135,7 @@ class Region {
     }
 
     addEntityToInstance(entity: Entity, player: Player) {
-        if (!entity)
-            return;
+        if (!entity) return;
 
         this.add(entity, player.region);
 
@@ -147,7 +154,7 @@ class Region {
             this.regions[Region.regionIdToInstance(player, region)] = {
                 entities: {},
                 players: [],
-                incoming: []
+                incoming: [],
             };
         });
 
@@ -158,10 +165,9 @@ class Region {
             player: player,
             message: new Messages.Region(Packets.RegionOpcode.Update, {
                 id: player.instance,
-                type: "remove"
-            })
+                type: 'remove',
+            }),
         });
-
     }
 
     deleteInstance(player: Player) {
@@ -170,22 +176,25 @@ class Region {
         this.handle(player);
         this.push(player);
 
-        this.mapRegions.forEachSurroundingRegion(player.region, (regionId: string) => {
-            let instancedRegion = Region.regionIdToInstance(player, regionId);
+        this.mapRegions.forEachSurroundingRegion(
+            player.region,
+            (regionId: string) => {
+                let instancedRegion = Region.regionIdToInstance(
+                    player,
+                    regionId
+                );
 
-            if (instancedRegion in this.regions)
-                delete this.regions[instancedRegion];
-        });
+                if (instancedRegion in this.regions)
+                    delete this.regions[instancedRegion];
+            }
+        );
     }
 
     parseRegions() {
-        if (!this.loaded)
-            return;
+        if (!this.loaded) return;
 
         this.mapRegions.forEachRegion((regionId: string) => {
-
-            if (this.regions[regionId].incoming.length < 1)
-                return;
+            if (this.regions[regionId].incoming.length < 1) return;
 
             this.sendSpawns(regionId);
 
@@ -196,14 +205,13 @@ class Region {
     // If `regionId` is not null, we update adjacent regions
     updateRegions(regionId?: string) {
         if (regionId)
-            this.mapRegions.forEachSurroundingRegion((regionId), (id: string) => {
+            this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
                 let region = this.regions[id];
 
                 _.each(region.players, (instance: string) => {
                     let player = this.world.players[instance];
 
-                    if (player)
-                        this.sendRegion(player, player.region);
+                    if (player) this.sendRegion(player, player.region);
                 });
             });
         else
@@ -251,7 +259,13 @@ class Region {
 
         //No need to send empty data...
         if (tileData.length > 0)
-            player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
+            player.send(
+                new Messages.Region(
+                    Packets.RegionOpcode.Render,
+                    tileData,
+                    force
+                )
+            );
     }
 
     // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
@@ -263,35 +277,34 @@ class Region {
 
         dynamicTiles.indexes.push.apply(dynamicTiles.indexes, trees.indexes);
         dynamicTiles.data.push.apply(dynamicTiles.data, trees.data);
-        dynamicTiles.collisions.push.apply(dynamicTiles.collisions, trees.collisions);
+        dynamicTiles.collisions.push.apply(
+            dynamicTiles.collisions,
+            trees.collisions
+        );
 
-        if (trees.objectData)
-            dynamicTiles.objectData = trees.objectData;
+        if (trees.objectData) dynamicTiles.objectData = trees.objectData;
 
         return dynamicTiles;
     }
 
     sendSpawns(regionId: string) {
-        if (!regionId)
-            return;
+        if (!regionId) return;
 
         _.each(this.regions[regionId].incoming, (entity: Entity) => {
-            if (!entity || !entity.instance || entity.instanced)
-                return;
+            if (!entity || !entity.instance || entity.instanced) return;
 
             this.world.push(Packets.PushOpcode.Regions, {
                 regionId: regionId,
                 message: new Messages.Spawn(entity),
-                ignoreId: entity.isPlayer() ? entity.instance : null
-            })
-
+                ignoreId: entity.isPlayer() ? entity.instance : null,
+            });
         });
     }
 
     add(entity: Entity, regionId: string) {
         let newRegions = [];
 
-        if (entity && regionId && (regionId in this.regions)) {
+        if (entity && regionId && regionId in this.regions) {
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
                 if (entity.instanced)
                     id = Region.regionIdToInstance(entity, id);
@@ -310,8 +323,7 @@ class Region {
                 this.regions[regionId].players.push(entity.instance);
         }
 
-        if (this.addCallback)
-            this.addCallback(entity, regionId);
+        if (this.addCallback) this.addCallback(entity, regionId);
 
         return newRegions;
     }
@@ -323,44 +335,50 @@ class Region {
             let region = this.regions[entity.region];
 
             if (entity instanceof Player)
-                region.players = _.reject(region.players, (id) => { return id === entity.instance; });
+                region.players = _.reject(region.players, (id) => {
+                    return id === entity.instance;
+                });
 
-            this.mapRegions.forEachSurroundingRegion(entity.region, (id: string) => {
-                if (this.regions[id] && entity.instance in this.regions[id].entities) {
-                    delete this.regions[id].entities[entity.instance];
-                    oldRegions.push(id);
+            this.mapRegions.forEachSurroundingRegion(
+                entity.region,
+                (id: string) => {
+                    if (
+                        this.regions[id] &&
+                        entity.instance in this.regions[id].entities
+                    ) {
+                        delete this.regions[id].entities[entity.instance];
+                        oldRegions.push(id);
+                    }
                 }
-            });
+            );
 
             entity.region = null;
         }
 
-        if (this.removeCallback)
-            this.removeCallback(entity, oldRegions);
+        if (this.removeCallback) this.removeCallback(entity, oldRegions);
 
         return oldRegions;
     }
 
     incoming(entity: Entity, regionId: string) {
-        if (!entity || !regionId)
-            return;
+        if (!entity || !regionId) return;
 
         let region = this.regions[regionId];
 
         if (region && !_.include(region.entities, entity.instance))
             region.incoming.push(entity);
 
-        if (this.incomingCallback)
-            this.incomingCallback(entity, regionId);
+        if (this.incomingCallback) this.incomingCallback(entity, regionId);
     }
 
     handle(entity: Entity, region?: string) {
         let regionsChanged = false;
 
-        if (!entity)
-            return regionsChanged;
+        if (!entity) return regionsChanged;
 
-        let regionId = region ? region : this.mapRegions.regionIdFromPosition(entity.x, entity.y);
+        let regionId = region
+            ? region
+            : this.mapRegions.regionIdFromPosition(entity.x, entity.y);
 
         if (entity.instanced)
             regionId = Region.regionIdToInstance(entity, regionId);
@@ -383,8 +401,7 @@ class Region {
     push(player: Player) {
         let entities: any;
 
-        if (!player || !(player.region in this.regions))
-            return;
+        if (!player || !(player.region in this.regions)) return;
 
         entities = _.keys(this.regions[player.region].entities);
 
@@ -411,24 +428,21 @@ class Region {
         this.clientMap.data[index] = newTile;
 
         this.world.push(Packets.PushOpcode.Broadcast, {
-            message: Region.getModify(index, newTile)
-        })
-
+            message: Region.getModify(index, newTile),
+        });
     }
 
     /**
      * Compare the user's screen size and chip away the amount of data
      * we are sending.
      */
-    formatRegionData(player: Player, data: any) {
-
-    }
+    formatRegionData(player: Player, data: any) {}
 
     getRegionData(region: string, player: Player, force?: boolean) {
-        let data = [], cursor: any;
+        let data = [],
+            cursor: any;
 
-        if (!player)
-            return data;
+        if (!player) return data;
 
         this.mapRegions.forEachSurroundingRegion(region, (regionId: string) => {
             if (!player.hasLoadedRegion(regionId) || force) {
@@ -440,41 +454,40 @@ class Region {
                     for (let x = bounds.startX; x < bounds.endX; x++) {
                         let index = this.gridPositionToIndex(x - 1, y),
                             tileData = this.clientMap.data[index],
-                            isCollision = this.clientMap.collisions.indexOf(index) > -1 || !tileData,
+                            isCollision =
+                                this.clientMap.collisions.indexOf(index) > -1 ||
+                                !tileData,
                             objectId: any;
 
                         if (tileData !== 0) {
-
                             if (tileData instanceof Array) {
-
                                 for (let j = 0; j < tileData.length; j++) {
                                     if (this.map.isObject(tileData[j])) {
                                         objectId = tileData[j];
                                         break;
                                     }
                                 }
-                            } else
-                                if (this.map.isObject(tileData))
-                                    objectId = tileData;
+                            } else if (this.map.isObject(tileData))
+                                objectId = tileData;
                         }
 
                         let info: any = {
-                            index: index
+                            index: index,
                         };
 
-                        if (tileData)
-                            info.data = tileData;
+                        if (tileData) info.data = tileData;
 
-                        if (isCollision)
-                            info.isCollision = isCollision;
+                        if (isCollision) info.isCollision = isCollision;
 
                         if (objectId) {
                             info.isObject = !!objectId;
 
-                            let cursor = this.map.getCursor(info.index, objectId);
+                            let cursor = this.map.getCursor(
+                                info.index,
+                                objectId
+                            );
 
-                            if (cursor)
-                                info.cursor = cursor;
+                            if (cursor) info.cursor = cursor;
                         }
 
                         data.push(info);
@@ -493,14 +506,14 @@ class Region {
             startX: regionCoordinates.x,
             startY: regionCoordinates.y,
             endX: regionCoordinates.x + this.map.regionWidth,
-            endY: regionCoordinates.y + this.map.regionHeight
-        }
+            endY: regionCoordinates.y + this.map.regionHeight,
+        };
     }
 
     static getModify(index: number, newTile: any) {
         return new Messages.Region(Packets.RegionOpcode.Modify, {
-           index: index,
-           newTile: newTile
+            index: index,
+            newTile: newTile,
         });
     }
 
@@ -515,7 +528,7 @@ class Region {
     }
 
     gridPositionToIndex(x: number, y: number) {
-        return (y * this.clientWidth) + x + 1;
+        return y * this.clientWidth + x + 1;
     }
 
     onAdd(callback: Function) {

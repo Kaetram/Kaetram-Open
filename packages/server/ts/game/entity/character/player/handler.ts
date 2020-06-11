@@ -1,6 +1,8 @@
 /* global module */
 
 import _ from 'underscore';
+import log from '../../../../util/log';
+import config from '../../../../../config';
 import Messages from '../../../../network/messages';
 import Modules from '../../../../util/modules';
 import Packets from '../../../../network/packets';
@@ -17,7 +19,6 @@ import Map from '../../../../map/map';
 import Area from '../../../../map/area';
 
 class Handler {
-
     player: Player;
     world: World;
     map: Map;
@@ -26,7 +27,6 @@ class Handler {
     updateInterval: any;
 
     constructor(player: Player) {
-
         this.player = player;
 
         this.world = player.world;
@@ -39,33 +39,31 @@ class Handler {
     }
 
     destroy() {
-
         clearInterval(this.updateInterval);
         this.updateInterval = null;
     }
 
     load() {
-
         this.updateInterval = setInterval(() => {
-
             this.detectAggro();
             this.detectPVP(this.player.x, this.player.y);
 
-            if (this.updateTicks % 4 === 0) // Every 4 (1.6 seconds) update ticks.
+            if (this.updateTicks % 4 === 0)
+                // Every 4 (1.6 seconds) update ticks.
                 this.handlePoison();
 
-            if (this.updateTicks % 16 === 0) // Every 16 (6.4 seconds) update ticks.
+            if (this.updateTicks % 16 === 0)
+                // Every 16 (6.4 seconds) update ticks.
                 this.player.cheatScore = 0;
 
-            if (this.updateTicks > 100) // Reset them every now and then.
+            if (this.updateTicks > 100)
+                // Reset them every now and then.
                 this.updateTicks = 0;
 
             this.updateTicks++;
-
         }, 400);
 
         this.player.onMovement((x: number, y: number) => {
-
             this.player.checkRegions();
 
             this.detectMusic(x, y);
@@ -73,18 +71,14 @@ class Handler {
             this.detectCamera(x, y);
             this.detectLights(x, y);
             this.detectClipping(x, y);
-
         });
 
         this.player.onDeath(() => {
-
             this.player.combat.stop();
             this.player.professions.stopAll();
-
         });
 
         this.player.onHit((attacker: Character, damage: number) => {
-
             /**
              * Handles actions whenever the player
              * instance is hit by 'damage' amount
@@ -97,9 +91,10 @@ class Handler {
         });
 
         this.player.onKill((character: any) => {
-
             if (this.player.quests.isAchievementMob(character)) {
-                let achievement = this.player.quests.getAchievementByMob(character);
+                let achievement = this.player.quests.getAchievementByMob(
+                    character
+                );
 
                 if (achievement && achievement.isStarted())
                     this.player.quests.getAchievementByMob(character).step();
@@ -122,17 +117,22 @@ class Handler {
 
             if (this.player.ready) {
                 if (config.discordEnabled)
-                    this.world.discord.sendWebhook(this.player.username, 'has logged out!')
+                    this.world.discord.sendWebhook(
+                        this.player.username,
+                        'has logged out!'
+                    );
 
                 if (config.hubEnabled)
-                    this.world.api.sendChat(Utils.formatUsername(this.player.username), 'has logged out!');
+                    this.world.api.sendChat(
+                        Utils.formatUsername(this.player.username),
+                        'has logged out!'
+                    );
             }
 
             this.world.removePlayer(this.player);
         });
 
         this.player.onTalkToNPC((npc: NPC) => {
-
             if (this.player.quests.isQuestNPC(npc)) {
                 this.player.quests.getQuestByNPC(npc).triggerTalk(npc);
 
@@ -152,42 +152,46 @@ class Handler {
 
             switch (Npcs.getType(npc.id)) {
                 case 'banker':
-                    this.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
+                    this.player.send(
+                        new Messages.NPC(Packets.NPCOpcode.Bank, {})
+                    );
                     return;
 
                 case 'enchanter':
-                    this.player.send(new Messages.NPC(Packets.NPCOpcode.Enchant, {}));
+                    this.player.send(
+                        new Messages.NPC(Packets.NPCOpcode.Enchant, {})
+                    );
                     break;
             }
 
             let text = Npcs.getText(npc.id);
 
-            if (!text)
-                return;
+            if (!text) return;
 
-            this.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-                id: npc.instance,
-                text: npc.talk(text, this.player)
-            }));
-
+            this.player.send(
+                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                    id: npc.instance,
+                    text: npc.talk(text, this.player),
+                })
+            );
         });
 
         this.player.onTeleport((x: number, y: number, isDoor: boolean) => {
-            if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
+            if (
+                !this.player.finishedTutorial() &&
+                isDoor &&
+                this.player.doorCallback
+            ) {
                 this.player.doorCallback(x, y);
                 return;
             }
-
-
         });
 
         this.player.onPoison((info: any) => {
             this.player.sync();
 
-            if (info)
-                this.player.notify('You have been poisoned.');
-            else
-                this.player.notify('The poison has worn off.');
+            if (info) this.player.notify('You have been poisoned.');
+            else this.player.notify('The poison has worn off.');
 
             log.debug(`Player ${this.player.instance} updated poison status.`);
         });
@@ -198,8 +202,7 @@ class Handler {
              * It will not accomplish much, but it is enough for now.
              */
 
-            if (this.player.cheatScore > 10)
-                this.player.timeout();
+            if (this.player.cheatScore > 10) this.player.timeout();
 
             log.debug('Cheat score - ' + this.player.cheatScore);
         });
@@ -208,76 +211,80 @@ class Handler {
     detectAggro() {
         let region = this.world.region.regions[this.player.region];
 
-        if (!region)
-            return;
+        if (!region) return;
 
         _.each(region.entities, (character: Character) => {
-            if (character && character.type === 'mob' && this.canEntitySee(character)) {
+            if (
+                character &&
+                character.type === 'mob' &&
+                this.canEntitySee(character)
+            ) {
                 let aggro = character.canAggro(this.player);
 
-                if (aggro)
-                    character.combat.begin(this.player);
+                if (aggro) character.combat.begin(this.player);
             }
         });
     }
 
     detectMusic(x: number, y: number) {
-        let musicArea = _.find(this.world.getMusicAreas(), (area: Area) => { return area.contains(x, y); }),
+        let musicArea = _.find(this.world.getMusicAreas(), (area: Area) => {
+                return area.contains(x, y);
+            }),
             song = musicArea ? musicArea.id : null;
 
-        if (this.player.currentSong !== song)
-            this.player.updateMusic(song);
-
+        if (this.player.currentSong !== song) this.player.updateMusic(song);
     }
 
     detectPVP(x: number, y: number) {
-        let pvpArea = _.find(this.world.getPVPAreas(), (area: Area) => { return area.contains(x, y); });
+        let pvpArea = _.find(this.world.getPVPAreas(), (area: Area) => {
+            return area.contains(x, y);
+        });
 
         this.player.updatePVP(!!pvpArea);
     }
 
     detectOverlay(x: number, y: number) {
         let overlayArea = _.find(this.world.getOverlayAreas(), (area: Area) => {
-                return area.contains(x, y);
-            });
+            return area.contains(x, y);
+        });
 
         this.player.updateOverlay(overlayArea);
     }
 
     detectCamera(x: number, y: number) {
         let cameraArea = _.find(this.world.getCameraAreas(), (area: Area) => {
-                return area.contains(x, y);
-            });
+            return area.contains(x, y);
+        });
 
         this.player.updateCamera(cameraArea);
     }
 
     detectLights(x: number, y: number) {
-
         _.each(this.map.lights, (light) => {
-            if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(light)) {
-
+            if (
+                this.map.nearLight(light, x, y) &&
+                !this.player.hasLoadedLight(light)
+            ) {
                 // Add a half a tile offset so the light is centered on the tile.
 
                 this.player.lightsLoaded.push(light);
-                this.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
+                this.player.send(
+                    new Messages.Overlay(Packets.OverlayOpcode.Lamp, light)
+                );
             }
         });
     }
 
     detectClipping(x: number, y: number) {
-        let isColliding = this.map.isColliding(x, y)
+        let isColliding = this.map.isColliding(x, y);
 
-        if (!isColliding)
-            return;
+        if (!isColliding) return;
 
         this.player.incoming.handleNoClip(x, y);
     }
 
     handlePoison() {
-
-        if (!this.player.poison)
-            return;
+        if (!this.player.poison) return;
 
         let info: any = this.player.poison.split(':'),
             timeDiff = new Date().getTime() - info[0];
@@ -287,18 +294,19 @@ class Handler {
             return;
         }
 
-        let hit = new Hit(Modules.Hits.Poison, info[2])
+        let hit = new Hit(Modules.Hits.Poison, info[2]);
 
         hit.poison = true;
 
         this.player.combat.hit(this.player, this.player, hit.getData());
-
     }
 
     canEntitySee(entity: Entity) {
-        return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
+        return (
+            !this.player.hasInvisible(entity) &&
+            !this.player.hasInvisibleId(entity.id)
+        );
     }
-
 }
 
 export default Handler;
