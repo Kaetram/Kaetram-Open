@@ -3,9 +3,9 @@
     "version": "1.2.1",
     "private": false,
     "author": "Veradictus",
-    "main": "./dist/ts/main.js",
-    "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
+    "description": "Kaetram's server-side",
     "homepage": "https://kaetram.com/",
+    "main": "./dist/main.js",
     "scripts": {
         "start": "node ./dist/ts/main.js",
         "dev": "ts-node-dev ./ts/main.ts",
@@ -42,35 +42,5 @@
         "typescript": "~3.8.3",
         "vinyl-buffer": "^1.0.1",
         "vinyl-source-stream": "^2.0.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Veradictus/Kaetram-Open.git"
-    },
-    "bugs": {
-        "url": "https://github.com/Veradictus/Kaetram-Open/issues"
-    },
-    "keywords": [
-        "2d",
-        "2d-game",
-        "browserquest",
-        "demo",
-        "game",
-        "game-2d",
-        "game-development",
-        "game-engine",
-        "game-server",
-        "gamedev",
-        "html5",
-        "html5-canvas",
-        "html5-game",
-        "mmo",
-        "multiplayer",
-        "open-source",
-        "region",
-        "rendering-engine",
-        "taptapadventure",
-        "tileset"
-    ],
-    "license": "MPL-2.0"
+    }
 }
