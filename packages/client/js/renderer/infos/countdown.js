@@ -1,57 +1,46 @@
-/* global Modules */
+export default class Countdown {
+    constructor(id, time) {
+        var self = this;
 
-define(function() {
+        self.id = id;
+        self.time = time;
+        self.string = null;
 
-    return Class.extend({
+        self.lastTime = 0;
+        self.updateTime = 1000; //Update every second.
+    }
 
-        init: function(id, time) {
-            var self = this;
+    tick() {
+        var self = this;
 
-            self.id = id;
-            self.time = time;
-            self.string = null;
+        if (self.time < 1) return;
 
-            self.lastTime = 0;
-            self.updateTime = 1000; //Update every second.
-        },
+        // Originally was gonna do this in the renderer
+        // But it's best to update the string here.
 
-        tick: function() {
-            var self = this;
+        self.string = self.getStringFormat();
 
-            if (time < 1)
-                return;
+        self.time--;
+    }
 
-            // Originally was gonna do this in the renderer
-            // But it's best to update the string here.
+    update(time) {
+        var self = this;
 
-            self.string = self.getStringFormat();
-
-            time--;
-        },
-
-        update: function(time) {
-            var self = this;
-
-            if (time - self.lastTime > self.updateTime) {
-                self.lastTime = time;
-            }
-        },
-
-        getStringFormat: function() {
-            var self = this;
-
-            if (self.time < 60)
-                return '00:' + self.time;
-
-            var minutes = Math.floor(self.time / 60),
-                seconds = self.time - (minutes * 60);
-
-            if (minutes < 10)
-                return '0' + minutes + ':' + seconds;
-
-            return minutes + ':' + seconds;
+        if (time - self.lastTime > self.updateTime) {
+            self.lastTime = time;
         }
+    }
 
-    });
+    getStringFormat() {
+        var self = this;
 
-});
+        if (self.time < 60) return '00:' + self.time;
+
+        var minutes = Math.floor(self.time / 60),
+            seconds = self.time - minutes * 60;
+
+        if (minutes < 10) return '0' + minutes + ':' + seconds;
+
+        return minutes + ':' + seconds;
+    }
+}

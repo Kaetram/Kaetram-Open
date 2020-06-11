@@ -1,60 +1,43 @@
-define(function() {
+export default class Equipment {
+    constructor(name, string, count, ability, abilityLevel, power) {
+        this.name = name;
+        this.string = string;
+        this.count = count;
+        this.ability = ability;
+        this.abilityLevel = abilityLevel;
+        this.power = power || 0;
+    }
 
-    /**
-     * The children of these classes are responsible for
-     * clear and concise ways of organizing stats of weapons
-     * in the client side. This does not dictate the damage,
-     * defense or bonus stats, it's just for looks.
-     */
+    exists() {
+        return this.name !== null && this.name !== 'null';
+    }
 
-    return Class.extend({
+    getName() {
+        return this.name;
+    }
 
-        init: function(name, string, count, ability, abilityLevel, power) {
-            var self = this;
+    getString() {
+        return this.string;
+    }
 
-            self.name = name;
-            self.string = string;
-            self.count = count;
-            self.ability = ability;
-            self.abilityLevel = abilityLevel;
-            self.power = power || 0;
-        },
+    getCount() {
+        return this.count;
+    }
 
-        exists: function() {
-            return this.name !== null && this.name !== 'null';
-        },
+    getAbility() {
+        return this.ability;
+    }
 
-        getName: function() {
-            return this.name;
-        },
+    getAbilityLevel() {
+        return this.abilityLevel;
+    }
 
-        getString: function() {
-            return this.string;
-        },
-
-        getCount: function() {
-            return this.count;
-        },
-
-        getAbility: function() {
-            return this.ability;
-        },
-
-        getAbilityLevel: function() {
-            return this.abilityLevel;
-        },
-
-        update: function(name, string, count, ability, abilityLevel, power) {
-            var self = this;
-
-            self.name = name;
-            self.string = string;
-            self.count = count;
-            self.ability = ability;
-            self.abilityLevel = abilityLevel;
-            self.power = power;
-        }
-
-    });
-
-});
+    update(name, string, count, ability, abilityLevel, power) {
+        this.name = name;
+        this.string = string;
+        this.count = count;
+        this.ability = ability;
+        this.abilityLevel = abilityLevel;
+        this.power = power;
+    }
+}
