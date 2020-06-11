@@ -1,46 +1,26 @@
-define(['../entity'], function(Entity) {
+import Entity from '../entity';
 
-    return Entity.extend({
+export default class Item extends Entity {
+    constructor(id, kind, count, ability, abilityLevel) {
+        super(id, kind);
 
-        init: function(id, kind, count, ability, abilityLevel) {
-            var self = this;
+        var self = this;
 
-            self._super(id, kind);
+        self.count = count;
+        self.ability = ability;
+        self.abilityLevel = abilityLevel;
 
-            self.count = count;
-            self.ability = ability;
-            self.abilityLevel = abilityLevel;
+        self.dropped = false;
+        self.stackable = false;
 
-            self.dropped = false;
-            self.stackable = false;
+        self.type = 'item';
+    }
 
-            self.type = 'item';
-        },
+    idle() {
+        this.setAnimation('idle', 150);
+    }
 
-        idle: function() {
-            this.setAnimation('idle', 150);
-        },
-
-        setName: function(name) {
-            this._super(name);
-        },
-
-        setAnimation: function(name, speed, count) {
-            this._super(name, speed, count);
-        },
-
-        setGridPosition: function(x, y) {
-            this._super(x, y);
-        },
-
-        setSprite: function(sprite) {
-            this._super(sprite);
-        },
-
-        hasShadow: function() {
-            return true;
-        }
-
-    });
-
-});
+    hasShadow() {
+        return true;
+    }
+}

@@ -1,166 +1,149 @@
-/* global Packets, Modules, log */
+import $ from 'jquery';
+import Packets from '../network/packets';
+import Modules from '../utils/modules';
 
-define(['jquery'], function($) {
+export default class ChatController {
+    constructor(game) {
+        var self = this;
 
-    return Class.extend({
+        self.game = game;
 
-        init: function(game) {
-            var self = this;
+        self.chat = $('#chat');
+        self.log = $('#chatLog');
+        self.input = $('#chatInput');
+        self.button = $('#chatButton');
 
-            self.game = game;
+        self.visible = false;
 
-            self.chat = $('#chat');
-            self.log = $('#chatLog');
-            self.input = $('#chatInput');
-            self.button = $('#chatButton');
+        self.fadingDuration = 5000;
+        self.fadingTimeout = null;
 
-            self.visible = false;
+        self.button.click(function () {
+            self.button.blur();
 
-            self.fadingDuration = 5000;
-            self.fadingTimeout = null;
+            if (self.input.is(':visible')) self.hideInput();
+            else self.toggle();
+        });
+    }
 
-            self.button.click(function() {
+    add(source, text, colour) {
+        var self = this,
+            element = $('<p>' + source + ' » ' + text + '</p>');
 
-                self.button.blur();
+        self.showChat();
 
-                if (self.input.is(':visible'))
-                    self.hideInput();
-                else
-                    self.toggle();
+        if (!self.isActive()) self.hideInput();
 
-            });
-        },
+        self.hideChat();
 
-        add: function(source, text, colour) {
-            var self = this,
-                element = $('<p>' + source + ' » ' + text + '</p>');
+        element.css('color', colour ? colour : 'white');
 
+        self.log.append(element);
+        self.log.scrollTop(99999);
+    }
+
+    key(data) {
+        var self = this;
+
+        switch (data) {
+            case Modules.Keys.Esc:
+                self.toggle();
+
+                break;
+
+            case Modules.Keys.Enter:
+                if (self.input.val() === '') self.toggle();
+                else self.send();
+
+                break;
+        }
+    }
+
+    send() {
+        var self = this;
+
+        self.game.socket.send(Packets.Chat, [self.input.val()]);
+        self.toggle();
+    }
+
+    toggle() {
+        var self = this;
+
+        self.clean();
+
+        if (self.visible && !self.isActive()) self.showInput();
+        else if (self.visible) {
+            self.hideInput();
+            self.hideChat();
+        } else {
             self.showChat();
+            self.showInput();
+        }
+    }
 
-            if (!self.isActive())
-                self.hideInput();
+    showChat() {
+        var self = this;
 
-            self.hideChat();
+        self.chat.fadeIn('fast');
 
-            element.css('color', colour ? colour : 'white');
+        self.visible = true;
+    }
 
-            self.log.append(element);
-            self.log.scrollTop(99999);
-        },
+    showInput() {
+        var self = this;
 
-        key: function(data) {
-            var self = this;
+        self.button.addClass('active');
 
-            switch(data) {
-                case Modules.Keys.Esc:
+        self.input.fadeIn('fast');
+        self.input.val('');
+        self.input.focus();
 
-                    self.toggle();
+        self.clean();
+    }
 
-                    break;
+    hideChat() {
+        var self = this;
 
-                case Modules.Keys.Enter:
-
-                    if (self.input.val() === '')
-                        self.toggle();
-                    else
-                        self.send();
-
-                    break;
-            }
-        },
-
-        send: function() {
-            var self = this;
-
-            self.game.socket.send(Packets.Chat, [self.input.val()]);
-            self.toggle();
-        },
-
-        toggle: function() {
-            var self = this;
-
-            self.clean();
-
-            if (self.visible && !self.isActive())
-                self.showInput();
-            else if (self.visible) {
-                self.hideInput();
-                self.hideChat();
-            } else {
-                self.showChat();
-                self.showInput();
-            }
-
-        },
-
-        showChat: function() {
-            var self = this;
-
-            self.chat.fadeIn('fast');
-
-            self.visible = true;
-        },
-
-        showInput: function() {
-            var self = this;
-
-            self.button.addClass('active');
-
-            self.input.fadeIn('fast');
-            self.input.val('');
-            self.input.focus();
-
-            self.clean();
-        },
-
-        hideChat: function() {
-            var self = this;
-
-            if (self.fadingTimeout) {
-                clearTimeout(self.fadingTimeout);
-                self.fadingTimeout = null;
-            }
-
-            self.fadingTimeout = setTimeout(function() {
-
-                if (!self.isActive()) {
-                    self.chat.fadeOut('slow');
-
-                    self.visible = false;
-                }
-
-            }, self.fadingDuration);
-        },
-
-        hideInput: function() {
-            var self = this;
-
-            self.button.removeClass('active');
-
-            self.input.val('');
-            self.input.fadeOut('fast');
-            self.input.blur();
-
-            self.hideChat();
-        },
-
-        clear: function() {
-            var self = this;
-
-            if (self.button)
-                self.button.unbind('click');
-        },
-
-        clean: function() {
-            var self = this;
-
+        if (self.fadingTimeout) {
             clearTimeout(self.fadingTimeout);
             self.fadingTimeout = null;
-        },
-
-        isActive: function() {
-            return this.input.is(':focus');
         }
-    });
 
-});
+        self.fadingTimeout = setTimeout(function () {
+            if (!self.isActive()) {
+                self.chat.fadeOut('slow');
+
+                self.visible = false;
+            }
+        }, self.fadingDuration);
+    }
+
+    hideInput() {
+        var self = this;
+
+        self.button.removeClass('active');
+
+        self.input.val('');
+        self.input.fadeOut('fast');
+        self.input.blur();
+
+        self.hideChat();
+    }
+
+    clear() {
+        var self = this;
+
+        if (self.button) self.button.unbind('click');
+    }
+
+    clean() {
+        var self = this;
+
+        clearTimeout(self.fadingTimeout);
+        self.fadingTimeout = null;
+    }
+
+    isActive() {
+        return this.input.is(':focus');
+    }
+}

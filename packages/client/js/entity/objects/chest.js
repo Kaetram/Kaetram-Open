@@ -1,35 +1,13 @@
-define(['../entity'], function(Entity) {
+import Entity from '../entity';
 
-    return Entity.extend({
+export default class Chest extends Entity {
+    constructor(id, kind) {
+        super(id, kind);
 
-        init: function(id, kind) {
-            var self = this;
+        this.type = 'chest';
+    }
 
-            self._super(id, kind);
-
-            self.type = 'chest';
-        },
-
-        idle: function() {
-            this.setAnimation('idle_down', 150);
-        },
-
-        setName: function(name) {
-            this._super(name);
-        },
-
-        setAnimation: function(name, speed, count, onEndCount) {
-            this._super(name, speed, count, onEndCount);
-        },
-
-        setGridPosition: function(x, y) {
-            this._super(x, y);
-        },
-
-        setSprite: function(sprite) {
-            this._super(sprite);
-        }
-
-    });
-
-});
+    idle() {
+        this.setAnimation('idle_down', 150);
+    }
+}

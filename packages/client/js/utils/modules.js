@@ -1,25 +1,25 @@
-Modules = {
+export default {
     Orientation: {
         Up: 0,
         Down: 1,
         Left: 2,
-        Right: 3
+        Right: 3,
     },
 
     Types: {
-        Player: 0
+        Player: 0,
     },
 
     InputType: {
         Key: 0,
         LeftClick: 1,
-        RightClick: 2
+        RightClick: 2,
     },
 
     Actions: {
         Idle: 0,
         Attack: 1,
-        Walk: 2
+        Walk: 2,
     },
 
     Hits: {
@@ -32,11 +32,11 @@ Modules = {
         Critical: 6,
         Stun: 7,
         Explosive: 8,
-        Profession: 9
+        Profession: 9,
     },
 
     Infos: {
-        Countdown: 0
+        Countdown: 0,
     },
 
     Equipment: {
@@ -44,7 +44,7 @@ Modules = {
         Weapon: 1,
         Pendant: 2,
         Ring: 3,
-        Boots: 4
+        Boots: 4,
     },
 
     Hovering: {
@@ -54,7 +54,7 @@ Modules = {
         Item: 3,
         NPC: 4,
         Chest: 5,
-        Object: 6
+        Object: 6,
     },
 
     Keys: {
@@ -81,60 +81,60 @@ Modules = {
         I: 73,
         P: 80,
         M: 77,
-        Spacebar: 32
+        Spacebar: 32,
     },
 
     AudioTypes: {
         Music: 0,
-        SFX: 1
+        SFX: 1,
     },
 
     DamageColours: {
-        'received': {
+        received: {
             fill: 'rgb(255, 50, 50)',
-            stroke: 'rgb(255, 180, 180)'
+            stroke: 'rgb(255, 180, 180)',
         },
 
-        'inflicted': {
+        inflicted: {
             fill: 'white',
-            stroke: '#373737'
+            stroke: '#373737',
         },
 
-        'healed': {
+        healed: {
             fill: 'rgb(80, 255, 80)',
-            stroke: 'rgb(50, 120, 50)'
+            stroke: 'rgb(50, 120, 50)',
         },
 
-        'mana': {
+        mana: {
             fill: 'rgb(73, 94, 228)',
-            stroke: 'rgb(56, 63, 133)'
+            stroke: 'rgb(56, 63, 133)',
         },
 
-        'health': {
+        health: {
             fill: 'white',
-            stroke: '#373737'
+            stroke: '#373737',
         },
 
-        'exp': {
+        exp: {
             fill: 'rgb(80, 180, 255)',
-            stroke: 'rgb(15, 85, 138)'
+            stroke: 'rgb(15, 85, 138)',
         },
 
-        'poison': {
+        poison: {
             fill: 'rgb(66, 183, 77)',
-            stroke: 'rgb(50, 120 , 50)'
+            stroke: 'rgb(50, 120 , 50)',
         },
 
-        'profession': {
+        profession: {
             fill: 'rgb(204, 0, 153)',
-            stroke: 'rgb(112, 17, 112)'
-        }
+            stroke: 'rgb(112, 17, 112)',
+        },
     },
 
     Pointers: {
         Entity: 0,
         Position: 1,
-        Relative: 2
+        Relative: 2,
     },
 
     Enchantment: {
@@ -145,10 +145,17 @@ Modules = {
         Explosive: 4,
         Stun: 5,
         AntiStun: 6,
-        Splash: 7
+        Splash: 7,
     },
 
-    EnchantmentNames: ["Bloodsucking", "Critical", "Evasion", "Spike", "Explosive", "Stun", "AntiStun", "Splash"]
-
-
+    EnchantmentNames: [
+        'Bloodsucking',
+        'Critical',
+        'Evasion',
+        'Spike',
+        'Explosive',
+        'Stun',
+        'AntiStun',
+        'Splash',
+    ],
 };
