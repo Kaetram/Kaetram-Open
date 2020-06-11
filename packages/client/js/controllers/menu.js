@@ -1,13 +1,13 @@
 import log from '../lib/log';
 import $ from 'jquery';
-import Inventory from '../interface/inventory';
-import Profile from '../interface/profile/profile';
-import Actions from '../interface/actions';
-import Bank from '../interface/bank';
-import Enchant from '../interface/enchant';
-import Warp from '../interface/warp';
-import Shop from '../interface/shop';
-import Header from '../interface/header';
+import Inventory from '../menu/inventory';
+import Profile from '../menu/profile/profile';
+import Actions from '../menu/actions';
+import Bank from '../menu/bank';
+import Enchant from '../menu/enchant';
+import Warp from '../menu/warp';
+import Shop from '../menu/shop';
+import Header from '../menu/header';
 
 export default class MenuController {
     constructor(game) {

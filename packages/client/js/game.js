@@ -11,7 +11,7 @@ import Pathfinder from './utils/pathfinder';
 import Zoning from './controllers/zoning';
 import Info from './controllers/info';
 import Bubble from './controllers/bubble';
-import Interface from './controllers/menu';
+import Menu from './controllers/menu';
 import Audio from './controllers/audio';
 import Pointer from './controllers/pointer';
 import Overlay from './renderer/overlay';
@@ -42,7 +42,7 @@ export default class Game {
         self.pathfinder = null;
         self.zoning = null;
         self.info = null;
-        self.interface = null;
+        self.menu = null;
         self.audio = null;
 
         self.player = null;
@@ -111,7 +111,7 @@ export default class Game {
         self.pathfinder = null;
         self.zoning = null;
         self.info = null;
-        self.interface = null;
+        self.menu = null;
 
         self.audio.stop();
         self.audio = null;
@@ -171,7 +171,7 @@ export default class Game {
 
         self.setAudio(new Audio(self));
 
-        self.setInterface(new Interface(self));
+        self.setMenu(new Menu(self));
 
         self.loadStorage();
 
@@ -328,7 +328,7 @@ export default class Game {
 
         self.stop();
         self.renderer.stop();
-        self.interface.stop();
+        self.menu.stop();
 
         self.unload();
 
@@ -490,8 +490,8 @@ export default class Game {
         if (!this.pointer) this.pointer = pointer;
     }
 
-    setInterface(_interface) {
-        if (!this.interface) this.interface = _interface;
+    setMenu(_menu) {
+        if (!this.menu) this.menu = _menu;
     }
 
     setAudio(audio) {

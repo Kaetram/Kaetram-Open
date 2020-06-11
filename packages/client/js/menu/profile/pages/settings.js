@@ -165,7 +165,7 @@ export default class Settings {
     open() {
         var self = this;
 
-        self.game.interface.hideAll();
+        self.game.menu.hideAll();
 
         self.button.toggleClass('active');
 
