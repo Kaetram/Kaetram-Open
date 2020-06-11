@@ -1,9 +1,0 @@
-{
-  "extends": ["plugin:prettier/recommended"],
-  "parser": "babel-eslint",
-  "rules": {"no-undef":"error"},
-  "env": {
-    "browser": true,
-    "node": true
-}
-}
