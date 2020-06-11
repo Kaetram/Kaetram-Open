@@ -2,7 +2,7 @@ import Ability from './ability';
 
 class Evasion extends Ability {
 
-	constructor(name, type) {
+	constructor(name: string, type: number) {
 		super(name, type);
 	}
 

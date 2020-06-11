@@ -4,10 +4,17 @@ import _ from 'underscore';
 import Slot from './slot';
 import Items from '../../../../../util/items';
 import Constants from '../../../../../util/constants';
+import Player from '../player';
 
 class Container {
 
-    constructor(type, owner, size) {
+    public type: string;
+    public owner: Player;
+    public size: number;
+
+    public slots: any;
+
+    constructor(type: string, owner: Player, size: number) {
 
         this.type = type;
         this.owner = owner;
@@ -19,7 +26,7 @@ class Container {
             this.slots.push(new Slot(i));
     }
 
-    load(ids, counts, abilities, abilityLevels) {
+    load(ids: any, counts: any, abilities: any, abilityLevels: any) {
 
         /**
          * Fill each slot with manual data or the database
@@ -41,7 +48,7 @@ class Container {
         this.load(data, data, data, data);
     }
 
-    add(id, count, ability, abilityLevel) {
+    add(id: number, count: number, ability: number, abilityLevel: number) {
 
         //log.info('Trying to pickup ' + count + ' x ' + id);
         let maxStackSize = Items.maxStackSize(id) === -1 ? Constants.MAX_STACK : Items.maxStackSize(id);
@@ -113,7 +120,7 @@ class Container {
         }
     }
 
-    canHold(id, count) {
+    canHold(id: number, count: number) {
 
         if (!Items.isStackable(id))
             return this.hasSpace();
@@ -138,7 +145,7 @@ class Container {
         return remainingSpace >= count;
     }
 
-    remove(index, id, count) {
+    remove(index: number, id: number, count: number): any {
         /**
          * Perform item validity prior to calling the method.
          */
@@ -159,7 +166,7 @@ class Container {
         return true;
     }
 
-    getSlot(id) {
+    getSlot(id: number) {
 
         for (let i = 0; i < this.slots.length; i++)
             if (this.slots[i].id === id)
@@ -168,9 +175,9 @@ class Container {
         return null;
     }
 
-    contains(id, count) {
+    contains(id: number, count?: number) {
 
-        if (!count || count === 'undefined')
+        if (!count)
             count = 1;
 
         for (let index in this.slots) {
@@ -183,7 +190,7 @@ class Container {
         return false;
     }
 
-    containsSpaces(count) {
+    containsSpaces(count: number) {
         let emptySpaces = [];
 
         for (let i = 0; i < this.slots.length; i++)
@@ -206,7 +213,7 @@ class Container {
         return -1;
     }
 
-    getIndex(id) {
+    getIndex(id: number) {
 
         /**
          * Used when the index is not determined,
@@ -222,13 +229,13 @@ class Container {
 
     check() {
 
-        _.each(this.slots, (slot) => {
+        _.each(this.slots, (slot: Slot) => {
             if (isNaN(slot.id))
                 slot.empty();
         });
     }
 
-    forEachSlot(callback) {
+    forEachSlot(callback: Function) {
 
         for (let i = 0; i < this.slots.length; i++)
             callback(this.slots[i]);

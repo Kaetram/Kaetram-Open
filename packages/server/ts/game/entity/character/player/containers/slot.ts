@@ -4,7 +4,19 @@ import Items from '../../../../../util/items';
 
 class Slot {
 
-    constructor(index) {
+    public index: number;
+
+    public id: number;
+    public count: number;
+    public ability: number;
+    public abilityLevel: number;
+
+    public string: string;
+
+    public edible: boolean;
+    public equippable: boolean;
+
+    constructor(index: number) {
 
         this.index = index;
 
@@ -16,12 +28,12 @@ class Slot {
         this.string = null;
     }
 
-    load(id, count, ability, abilityLevel) {
+    load(id: number, count: number, ability: number, abilityLevel: number) {
 
-        this.id = parseInt(id);
-        this.count = parseInt(count);
-        this.ability = parseInt(ability);
-        this.abilityLevel = parseInt(abilityLevel);
+        this.id = id;
+        this.count = count;
+        this.ability = ability;
+        this.abilityLevel = abilityLevel;
 
         this.string = Items.idToString(this.id);
         this.edible = Items.isEdible(this.id);
@@ -40,16 +52,16 @@ class Slot {
         this.string = null;
     }
 
-    increment(amount) {
+    increment(amount: number) {
 
-        this.count += parseInt(amount);
+        this.count += amount;
 
         this.verify();
     }
 
-    decrement(amount) {
+    decrement(amount: number) {
 
-        this.count -= parseInt(amount);
+        this.count -= amount;
 
         if (this.count < 1)
             log.error('[Slot] Item ' + this.id + ' has a count below 1 -> count: ' + this.count);

@@ -1,11 +1,18 @@
 import _ from 'underscore';
-import Modules from '../../../../../util/modules';
-import Formulas from '../../../../../util/formulas';
 import log from "../../../../../util/log";
+import Modules from '../../../../../util/modules';
+import Player from '../player';
+import World from '../../../../world';
+import Profession from './impl/profession';
 
 class Professions {
 
-    constructor(player) {
+    player: Player;
+    world: World;
+
+    professions: any;
+
+    constructor(player: Player) {
         this.player = player;
         this.world = player.world;
 
@@ -36,7 +43,7 @@ class Professions {
 
     }
 
-    update(info) {
+    update(info: any) {
         _.each(info, (data, id) => {
             if (!(id in this.professions))
                 return;
@@ -45,7 +52,7 @@ class Professions {
         });
     }
 
-    getProfession(id) {
+    getProfession(id: number) {
         if (!(id in this.professions))
             return null;
 
@@ -53,12 +60,12 @@ class Professions {
     }
 
     stopAll() {
-        this.forEachProfession((profession) => {
+        this.forEachProfession((profession: Profession) => {
             profession.stop();
         });
     }
 
-    forEachProfession(callback) {
+    forEachProfession(callback: Function) {
         _.each(this.professions, (profession) => {
             callback(profession);
         });
@@ -72,7 +79,7 @@ class Professions {
     getInfo() {
         let data = [];
 
-        _.each(this.professions, (profession) => {
+        _.each(this.professions, (profession: Profession) => {
             data.push({
                 id: profession.id,
                 name: profession.name,
@@ -87,7 +94,7 @@ class Professions {
     getArray() {
         let data = {};
 
-        _.each(this.professions, (profession) => {
+        _.each(this.professions, (profession: Profession) => {
             data[profession.id] = profession.getData();
         });
 

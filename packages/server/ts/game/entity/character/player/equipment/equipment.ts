@@ -4,7 +4,13 @@ import Items from '../../../../../util/items';
 
 class Equipment {
 
-    constructor(name, id, count, ability, abilityLevel) {
+    public name: string;
+    public id: number;
+    public count: number;
+    public ability: number;
+    public abilityLevel: number;
+
+    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
         this.name = name;
         this.id = id;
         this.count = count ? count : 0;

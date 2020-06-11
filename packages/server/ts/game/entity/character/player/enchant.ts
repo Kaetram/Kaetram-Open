@@ -6,6 +6,7 @@ import Messages from '../../../../network/messages';
 import Packets from '../../../../network/packets';
 import Utils from '../../../../util/utils';
 import Modules from '../../../../util/modules';
+import Player from './player';
 
 class Enchant {
 
@@ -18,7 +19,12 @@ class Enchant {
      */
 
 
-    constructor(player) {
+    player: Player;
+
+    selectedItem: any;
+    selectedShards: any;
+
+    constructor(player: Player) {
         this.player = player;
 
         this.selectedItem = null;

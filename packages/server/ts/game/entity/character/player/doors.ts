@@ -1,13 +1,22 @@
 /* global module */
 
 import _ from 'underscore';
-import DoorData from '../../../../../data/doors';
-import Messages from '../../../../network/messages';
-import Packets from '../../../../network/packets';
+import DoorData from '../../../../../data/doors.json';
+import World from '../../../world';
+import Player from './player';
+import Map from '../../../../map/map';
+import Regions from '../../../../map/regions';
 
 class Doors {
 
-    constructor(player) {
+    public world: World;
+    public player: Player;
+    public map: Map;
+    public regions: Regions;
+
+    public doors: any;
+
+    constructor(player: Player) {
 
         this.world = player.world;
         this.player = player;
@@ -21,7 +30,7 @@ class Doors {
 
     load() {
 
-        _.each(DoorData, (door) => {
+        _.each(DoorData, (door: any) => {
             this.doors[door.id] = {
                 id: door.id,
                 x: door.x,
@@ -38,7 +47,7 @@ class Doors {
 
     }
 
-    getStatus(door) {
+    getStatus(door: any) {
 
         if (door.status)
             return door.status;
@@ -64,7 +73,7 @@ class Doors {
         }
     }
 
-    getTiles(door) {
+    getTiles(door: any) {
         let tiles = {
                 indexes: [],
                 data: [],
@@ -77,8 +86,8 @@ class Doors {
             closed: door.closedIds
         };
 
-        _.each(doorState[status], (value, key) => {
-            tiles.indexes.push(parseInt(key));
+        _.each(doorState[status], (value: any, key) => {
+            tiles.indexes.push(key);
             tiles.data.push(value.data);
             tiles.collisions.push(value.isColliding);
         });
@@ -93,7 +102,7 @@ class Doors {
                 collisions: []
             };
 
-        _.each(this.doors, (door) => {
+        _.each(this.doors, (door: any) => {
             /* There's no need to send dynamic data if the player is not nearby. */
             let doorRegion = this.regions.regionIdFromPosition(door.x, door.y);
 
@@ -110,7 +119,7 @@ class Doors {
         return allTiles;
     }
 
-    hasCollision(x, y) {
+    hasCollision(x: number, y: number) {
         let tiles = this.getAllTiles(),
             tileIndex = this.world.map.gridPositionToIndex(x, y),
             index = tiles.indexes.indexOf(tileIndex);
@@ -128,7 +137,7 @@ class Doors {
         return tiles.collisions[index];
     }
 
-    getDoor(x, y, callback) {
+    getDoor(x: number, y: number) {
 
         for (let i in this.doors)
             if (this.doors.hasOwnProperty(i))
@@ -138,13 +147,13 @@ class Doors {
         return null;
     }
 
-    isDoor(x, y, callback) {
-        this.forEachDoor((door) => {
+    isDoor(x: number, y: number, callback: Function) {
+        this.forEachDoor((door: any) => {
             callback(door.x === x && door.y === y);
         });
     }
 
-    forEachDoor(callback) {
+    forEachDoor(callback: Function) {
         _.each(this.doors, (door) => {
             callback(door);
         })

@@ -7,28 +7,28 @@ import Combat from './character/combat/combat';
 
 class Entity {
 
-    id: string;
-    type: any;
-    instance: string;
+    public id: number;
+    public type: string;
+    public instance: string;
 
-    x: number;
-    y: number;
-    oldX: number;
-    oldY: number;
+    public x: number;
+    public y: number;
+    public oldX: number;
+    public oldY: number;
 
-    combat: Combat;
+    public combat: Combat;
 
-    dead: boolean;
-    recentRegions: any;
-    invisibles: any;
-    invisiblesIds: any;
+    public dead: boolean;
+    public recentRegions: any;
+    public invisibles: any;
+    public invisiblesIds: any;
 
     setPositionCallback: Function;
 
     specialState: any;
     customScale: any;
 
-    constructor(id, type, instance, x, y) {
+    constructor(id: number, type: string, instance: string, x?: number, y?: number) {
         this.id = id;
         this.type = type;
         this.instance = instance;
@@ -56,21 +56,21 @@ class Entity {
         return null;
     }
 
-    getDistance(entity) {
+    getDistance(entity: Entity) {
         let x = Math.abs(this.x - entity.x),
             y = Math.abs(this.y - entity.y);
 
         return x > y ? x : y;
     }
 
-    getCoordDistance(toX, toY) {
+    getCoordDistance(toX: number, toY: number) {
         let x = Math.abs(this.x - toX),
             y = Math.abs(this.y - toY);
 
         return x > y ? x : y;
     }
 
-    setPosition(x, y) {
+    setPosition(x: number, y: number) {
         this.x = x;
         this.y = y;
 
@@ -89,18 +89,18 @@ class Entity {
      * Especially useful for ranged attacks and whatnot.
      */
 
-    isNear(entity, distance) {
+    isNear(entity: Entity, distance: number) {
         let dx = Math.abs(this.x - entity.x),
             dy = Math.abs(this.y - entity.y);
 
         return dx <= distance && dy <= distance;
     }
 
-    isAdjacent(entity) {
+    isAdjacent(entity: Entity) {
         return entity && this.getDistance(entity) < 2;
     }
 
-    isNonDiagonal(entity) {
+    isNonDiagonal(entity: Entity) {
         return this.isAdjacent(entity) && !(entity.x !== this.x && entity.y !== this.y);
     }
 
@@ -124,38 +124,38 @@ class Entity {
         return this.type === 'player';
     }
 
-    onSetPosition(callback) {
+    onSetPosition(callback: Function) {
         this.setPositionCallback = callback;
     }
 
-    addInvisible(entity) {
+    addInvisible(entity: Entity) {
         this.invisibles[entity.instance] = entity;
     }
 
-    addInvisibleId(entityId) {
+    addInvisibleId(entityId: number) {
         this.invisiblesIds.push(entityId);
     }
 
-    removeInvisible(entity) {
+    removeInvisible(entity: Entity) {
         delete this.invisibles[entity.instance];
     }
 
-    removeInvisibleId(entityId) {
+    removeInvisibleId(entityId: number) {
         let index = this.invisiblesIds.indexOf(entityId);
 
         if (index > -1)
             this.invisiblesIds.splice(index, 1);
     }
 
-    hasInvisible(entity) {
+    hasInvisible(entity: Entity) {
         return entity.instance in this.invisibles;
     }
 
-    hasInvisibleId(entityId) {
+    hasInvisibleId(entityId: number) {
         return this.invisiblesIds.indexOf(entityId) > -1;
     }
 
-    hasInvisibleInstance(instance) {
+    hasInvisibleInstance(instance: string) {
         return instance in this.invisibles;
     }
 

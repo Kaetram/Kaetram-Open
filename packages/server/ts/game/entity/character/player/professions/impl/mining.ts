@@ -6,10 +6,18 @@ import Modules from '../../../../../../util/modules';
 import Formulas from '../../../../../../util/formulas';
 import Utils from '../../../../../../util/utils';
 import Rocks from '../../../../../../../data/professions/rocks';
+import Player from '../../player';
 
 class Mining extends Profession {
 
-    constructor(id, player) {
+    tick: number;
+
+    miningInterval: any;
+    started: boolean;
+
+    rockId: any;
+
+    constructor(id: number, player: Player) {
         super(id, player, 'Mining');
 
         this.tick = 1000;
@@ -48,7 +56,8 @@ class Mining extends Profession {
         this.started = false;
     }
 
-    handle(id, rockId) {
+    // TODO
+    handle(id: any, rockId: any) {
         if (!this.player.hasMiningWeapon()) {
             this.player.notify('You do not have a pickaxe to mine this rock with.');
             return;

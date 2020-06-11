@@ -31,6 +31,10 @@ class Region {
 
     world: World;
 
+    regions: any;
+
+    loaded: boolean;
+
     constructor(world) {
         this.map = world.map;
         this.mapRegions = world.map.regions;
@@ -344,7 +348,7 @@ class Region {
             this.incomingCallback(entity, regionId);
     }
 
-    handle(entity, region) {
+    handle(entity, region?) {
         let regionsChanged = false;
 
         if (!entity)

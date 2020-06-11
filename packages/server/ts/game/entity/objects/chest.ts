@@ -5,7 +5,15 @@ import Utils from '../../../util/utils';
 
 class Chest extends Entity {
 
-    constructor(id, instance, x, y) {
+    respawnDuration: number;
+    static: boolean;
+
+    items: any;
+
+    openCallback: Function;
+    respawnCallback: Function;
+
+    constructor(id: number, instance: string, x: number, y: number) {
         super(id, 'chest', instance, x, y);
 
         this.respawnDuration = 25000;
@@ -56,11 +64,11 @@ class Chest extends Entity {
         };
     }
 
-    onOpen(callback) {
+    onOpen(callback: Function) {
         this.openCallback = callback;
     }
 
-    onRespawn(callback) {
+    onRespawn(callback: Function) {
         this.respawnCallback = callback;
     }
 }
