@@ -24,7 +24,7 @@
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": false,
-        "typeRoots": ["./ts/util"]
+        "typeRoots": ["./ts/util/globals.d.ts"]
     },
     "typedocOptions ": {
         "inputFiles": ["./"],

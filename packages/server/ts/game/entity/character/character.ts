@@ -51,8 +51,8 @@ class Character extends Entity {
     healthChangeCallback: Function;
     damageCallback: Function;
     subAoECallback: Function;
+    deathCallback: Function;
 
-    region: string;
     moving: boolean;
     lastMovement: number;
 
@@ -61,6 +61,10 @@ class Character extends Entity {
     spawnLocation: any;
 
     frozen: boolean;
+
+    public invincible: boolean;
+    public lastAttacker: Character;
+
 
     constructor(id: number, type: string, instance: string, x: number, y: number) {
         super(id, type, instance, x, y);
@@ -178,7 +182,7 @@ class Character extends Entity {
         return this.attackRange > 1;
     }
 
-    applyDamage(damage: number, attacker: Entity) {
+    applyDamage(damage: number, attacker?: Character) {
 
         this.hitPoints -= damage;
 
@@ -275,6 +279,10 @@ class Character extends Entity {
 
     return() {}
 
+    destroy() {}
+
+    die() {}
+
     getHit(target?: any): any {
         return `uninitialized ${target.instance}`;
     }
@@ -284,11 +292,17 @@ class Character extends Entity {
     }
 
     addExperience(exp: number) {
-        //Unimplemented.
+        log.debug(`Unimplemented \`addExperience\` ${exp}`);
     }
 
     canAggro(character: Character): boolean {
+        log.debug(`Can ${this.instance} aggro ${character.instance}`);
+
         return false;
+    }
+
+    killCharacter(character: Character): any {
+        log.debug(`Uninitialized \`killCharacter\` for ${character.instance}.`);
     }
 
     /*********************/

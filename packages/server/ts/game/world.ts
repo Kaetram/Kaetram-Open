@@ -25,17 +25,16 @@ import Network from '../network/network';
 import Trees from '../../data/professions/trees';
 import Rocks from '../../data/professions/rocks';
 import Socket from '../network/socket';
-import Database from '../database/database';
 import Player from './entity/character/player/player';
 import Entity from './entity/entity';
+import WebSocket from '../network/websocket';
+import MongoDB from '../database/mongodb/mongodb';
 import API from '../network/api';
-import config from "../../config";
-import log from "../util/log";
 
 class World {
 
     public socket: Socket;
-    public database: Database;
+    public database: MongoDB;
 
     public maxPlayers: number;
     public updateTime: number;
@@ -59,7 +58,6 @@ class World {
     public loadedRegions: boolean;
     public ready: boolean;
 
-
     public map: Map;
     public api: API;
     public shops: Shops;
@@ -73,7 +71,7 @@ class World {
     public populationCallback: Function;
 
 
-    constructor(socket, database) {
+    constructor(socket: WebSocket, database: MongoDB) {
         this.socket = socket;
         this.database = database;
 
@@ -104,7 +102,7 @@ class World {
         this.ready = false;
     }
 
-    load(onWorldLoad) {
+    load(onWorldLoad: Function) {
         log.info('************ World Information ***********');
 
         /**
@@ -155,7 +153,7 @@ class World {
     async tick() {
         let update = 1000 / this.updateTime;
 
-        const setIntervalAsync = (fn, ms) => {
+        const setIntervalAsync = (fn: any, ms: any) => {
             fn().then(() => {
                 setTimeout(() => setIntervalAsync(fn, ms), ms);
             });
@@ -191,25 +189,25 @@ class World {
      * Entity related functions *
      ****************************/
 
-    kill(entity) {
-        entity.applyDamage(entity.hitPoints);
+    kill(character: Character) {
+        character.applyDamage(character.hitPoints);
 
         this.push(Packets.PushOpcode.Regions, [{
-            regionId: entity.region,
+            regionId: character.region,
             message: new Messages.Points({
-                id: entity.instance,
-                hitPoints: entity.getHitPoints(),
+                id: character.instance,
+                hitPoints: character.getHitPoints(),
                 mana: null
             })
         }, {
-            regionId: entity.region,
-            message: new Messages.Despawn(entity.instance)
+            regionId: character.region,
+            message: new Messages.Despawn(character.instance)
         }]);
 
-        this.handleDeath(entity, true);
+        this.handleDeath(character, true);
     }
 
-    handleDamage(attacker, target, damage) {
+    handleDamage(attacker: Character, target: Character, damage: number) {
         if (!attacker || !target || isNaN(damage) || target.invincible)
             return;
 
@@ -238,7 +236,7 @@ class World {
             if (attacker.type === 'player')
                 attacker.killCharacter(target);
 
-            target.combat.forEachAttacker((attacker) => {
+            target.combat.forEachAttacker((attacker: Character) => {
                 attacker.removeTarget();
             });
 
@@ -258,7 +256,7 @@ class World {
         }
     }
 
-    handleDeath(character, ignoreDrops?, lastAttacker?) {
+    handleDeath(character: Character, ignoreDrops?: boolean, lastAttacker?: Character) {
         if (!character)
             return;
 
@@ -320,16 +318,16 @@ class World {
         return projectile;
     }
 
-    getEntityByInstance(instance) {
+    getEntityByInstance(instance: string) {
         if (instance in this.entities)
             return this.entities[instance];
     }
 
     spawnEntities() {
-        let entities = 0;
+        let entities: number = 0;
 
-        _.each(this.map.staticEntities, (data) => {
-            let key = data.string,
+        _.each(this.map.staticEntities, (data: any) => {
+            let key: string = data.string,
                 isMob = !!Mobs.Properties[key],
                 isNpc = !!NPCs.Properties[key],
                 isItem = !!Items.Data[key],
@@ -403,7 +401,7 @@ class World {
     spawnChests() {
         let chests = 0;
 
-        _.each(this.map.chests, (info) => {
+        _.each(this.map.chests, (info: any) => {
 
             this.spawnChest(info.i, info.x, info.y, true);
 
@@ -465,11 +463,11 @@ class World {
         return chest;
     }
 
-    createItem(id, instance, x, y, ability, abilityLevel) {
+    createItem(id: number, instance: string, x: number, y: number, ability?: number, abilityLevel?: number) {
         return new Item(id, instance, x, y, ability, abilityLevel);
     }
 
-    dropItem(id, count, x, y, ability?, abilityLevel?) {
+    dropItem(id: number, count: number, x: number, y: number, ability?: number, abilityLevel?: number) {
         let item = this.createItem(id, Utils.generateInstance(), x, y, ability, abilityLevel);
 
         item.count = count;
@@ -504,7 +502,7 @@ class World {
             if (time - tree.time < Trees.Regrowth[type])
                 return;
 
-            _.each(tree.data, (tile) => {
+            _.each(tree.data, (tile: any) => {
 
                 this.map.clientMap.data[tile.index] = tile.oldTiles;
 
@@ -530,7 +528,7 @@ class World {
             if (time - rock.time < Rocks.Respawn[type])
                 return;
 
-            _.each(rock.data, (tile) => {
+            _.each(rock.data, (tile: any) => {
 
                 this.map.clientMap.data[tile.index] = tile.oldTiles;
 
@@ -545,7 +543,7 @@ class World {
         });
     }
 
-    isTreeCut(id) {
+    isTreeCut(id: string) {
         if (id in this.cutTrees)
             return true;
 
@@ -556,7 +554,7 @@ class World {
         return false;
     }
 
-    isRockDepleted(id) {
+    isRockDepleted(id: string) {
         if (id in this.depletedRocks)
             return true;
 
@@ -575,7 +573,7 @@ class World {
      * using the data from `this.trees`.
      */
 
-    destroyTree(id, treeId) {
+    destroyTree(id: any, treeId: any) {
         let position = this.map.idToPosition(id);
 
         if (!(id in this.trees))
@@ -589,7 +587,7 @@ class World {
             treeId: treeId
         };
 
-        _.each(this.trees[id], (tile, key) => {
+        _.each(this.trees[id], (tile: any, key) => {
             let tiles = this.map.clientMap.data[tile.index];
 
             // Store the original tiles for respawning.
@@ -630,7 +628,7 @@ class World {
      * `type` - The type of tile we are looking for.
      */
 
-    getSearchTile(type, x, y) {
+    getSearchTile(type: string, x: number, y: number) {
         switch (type) {
             case 'tree':
                 return this.map.getTree(x, y);
@@ -735,7 +733,7 @@ class World {
         }
     }
 
-    addEntity(entity, region) {
+    addEntity(entity: Entity, region?: string) {
         if (entity.instance in this.entities)
             log.info('Entity ' + entity.instance + ' already exists.');
 
@@ -782,7 +780,7 @@ class World {
 
             entity.getCombat().setWorld(this);
 
-            entity.onStunned((stun) => {
+            entity.onStunned((stun: boolean) => {
 
                 this.push(Packets.PushOpcode.Regions, {
                     regionId: entity.region,
@@ -797,7 +795,7 @@ class World {
         }
     }
 
-    addPlayer(player) {
+    addPlayer(player: Player) {
         this.addEntity(player);
         this.players[player.instance] = player;
 
@@ -805,12 +803,12 @@ class World {
             this.populationCallback();
     }
 
-    addNPC(npc, region) {
+    addNPC(npc: NPC, region?: string) {
         this.addEntity(npc, region);
         this.npcs[npc.instance] = npc;
     }
 
-    addMob(mob, region) {
+    addMob(mob: Mob, region?: string) {
         if (!Mobs.exists(mob.id)) {
             log.error('Cannot spawn mob. ' + mob.id + ' does not exist.');
             return;
@@ -821,7 +819,7 @@ class World {
 
         mob.addToChestArea(this.getChestAreas());
 
-        mob.onHit((attacker) => {
+        mob.onHit((attacker: Character) => {
             if (mob.isDead() || mob.combat.started)
                 return;
 
@@ -829,7 +827,7 @@ class World {
         });
     }
 
-    addItem(item, region) {
+    addItem(item: Item, region?: string) {
         if (item.static)
             item.onRespawn(this.addItem.bind(this, item));
 
@@ -837,17 +835,17 @@ class World {
         this.items[item.instance] = item;
     }
 
-    addProjectile(projectile, region) {
+    addProjectile(projectile: Projectile, region?: string) {
         this.addEntity(projectile, region);
         this.projectiles[projectile.instance] = projectile;
     }
 
-    addChest(chest, region) {
+    addChest(chest: Chest, region?: string) {
         this.addEntity(chest, region);
         this.chests[chest.instance] = chest;
     }
 
-    removeEntity(entity) {
+    removeEntity(entity: Entity) {
         if (entity.instance in this.entities)
             delete this.entities[entity.instance];
 
@@ -862,15 +860,15 @@ class World {
         this.region.remove(entity);
     }
 
-    cleanCombat(entity) {
-        _.each(this.entities, (oEntity) => {
-            if (oEntity instanceof Character && oEntity.combat.hasAttacker(entity))
-                oEntity.combat.removeAttacker(entity);
+    cleanCombat(character: Character) {
+        _.each(this.entities, (oCharacter) => {
+            if (oCharacter instanceof Character && oCharacter.combat.hasAttacker(character))
+                oCharacter.combat.removeAttacker(character);
 
         });
     }
 
-    removeItem(item) {
+    removeItem(item: Item) {
         this.removeEntity(item);
         this.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Despawn(item.instance)
@@ -880,7 +878,7 @@ class World {
             item.respawn();
     }
 
-    removePlayer(player) {
+    removePlayer(player: Player) {
         this.push(Packets.PushOpcode.Regions, {
             regionId: player.region,
             message: new Messages.Despawn(player.instance)
@@ -906,13 +904,13 @@ class World {
         player = null;
     }
 
-    removeProjectile(projectile) {
+    removeProjectile(projectile: Projectile) {
         this.removeEntity(projectile);
 
         delete this.projectiles[projectile.instance];
     }
 
-    removeChest(chest) {
+    removeChest(chest: Chest) {
         this.removeEntity(chest);
         this.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Despawn(chest.instance)

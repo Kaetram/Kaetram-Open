@@ -1,12 +1,15 @@
 /* global module */
 
-
-import log from "../util/log";
 import TeamWar from '../minigames/impl/teamwar';
+import World from '../game/world';
 
 class Minigames {
 
-    constructor(world) {
+    public world: World;
+
+    public minigames: any;
+
+    constructor(world: World) {
         this.world = world;
 
         this.minigames = {};
