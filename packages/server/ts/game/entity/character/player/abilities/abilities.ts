@@ -1,11 +1,20 @@
 /* global module */
 
 import _ from 'underscore';
-import AbilityInfo from '../../../../../util/abilities';
+import Player from '../player';
+import Ability from './impl/ability';
 
 class Abilities {
 
-    constructor(player) {
+    player: Player;
+
+    abilities: any;
+
+    shortcuts: any;
+
+    shortcutSize: number;
+
+    constructor(player: Player) {
 
         this.player = player;
 
@@ -16,11 +25,11 @@ class Abilities {
         this.shortcutSize = 5;
     }
 
-    addAbility(ability) {
+    addAbility(ability: Ability) {
         this.abilities[ability.name] = ability;
     }
 
-    addShortcut(ability) {
+    addShortcut(ability: Ability) {
 
         if (this.shortcutSize >= 5)
             return;
@@ -28,7 +37,7 @@ class Abilities {
         this.shortcuts.push(ability.name);
     }
 
-    removeAbility(ability) {
+    removeAbility(ability: Ability) {
 
         if (this.isShortcut(ability))
             this.removeShortcut(this.shortcuts.indexOf(ability.name));
@@ -36,13 +45,13 @@ class Abilities {
         delete this.abilities[ability.name];
     }
 
-    removeShortcut(index) {
+    removeShortcut(index: number) {
         if (index > -1)
             this.shortcuts.splice(index, 1);
     }
 
-    hasAbility(ability) {
-        _.each(this.abilities, (uAbility) => {
+    hasAbility(ability: Ability) {
+        _.each(this.abilities, (uAbility: Ability) => {
             if (uAbility.name === ability.name)
                 return true;
         });
@@ -50,7 +59,7 @@ class Abilities {
         return false;
     }
 
-    isShortcut(ability) {
+    isShortcut(ability: Ability) {
         return this.shortcuts.indexOf(ability.name) > -1;
     }
 
@@ -59,7 +68,7 @@ class Abilities {
             abilityLevels = '',
             shortcuts = this.shortcuts.toString();
 
-        _.each(this.abilities, (ability) => {
+        _.each(this.abilities, (ability: Ability) => {
             abilities += ability.name;
             abilityLevels += ability.level;
         });

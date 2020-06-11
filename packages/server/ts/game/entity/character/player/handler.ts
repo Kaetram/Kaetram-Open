@@ -8,14 +8,29 @@ import Npcs from '../../../../util/npcs';
 import Hit from '../combat/hit';
 import Utils from '../../../../util/utils';
 import Shops from '../../../../util/shops';
+import Player from './player';
+import Character from '../character';
+import NPC from '../../npc/npc';
+import World from '../../../world';
+import Entity from '../../entity';
+import Map from '../../../../map/map';
+import Area from '../../../../map/area';
 import log from "../../../../util/log";
 import config from "../../../../../config";
 
 class Handler {
 
-    constructor(player) {
+    player: Player;
+    world: World;
+    map: Map;
+
+    updateTicks: number;
+    updateInterval: any;
+
+    constructor(player: Player) {
 
         this.player = player;
+
         this.world = player.world;
         this.map = player.world.map;
 
@@ -51,7 +66,7 @@ class Handler {
 
         }, 400);
 
-        this.player.onMovement((x, y) => {
+        this.player.onMovement((x: number, y: number) => {
 
             this.player.checkRegions();
 
@@ -70,7 +85,7 @@ class Handler {
 
         });
 
-        this.player.onHit((attacker, damage) => {
+        this.player.onHit((attacker: Character, damage: number) => {
 
             /**
              * Handles actions whenever the player
@@ -80,9 +95,10 @@ class Handler {
             if (this.player.combat.isRetaliating())
                 this.player.combat.begin(attacker);
 
+            log.debug(`Player has been hit - damage: ${damage}`);
         });
 
-        this.player.onKill((character) => {
+        this.player.onKill((character: Character) => {
 
             if (this.player.quests.isAchievementMob(character)) {
                 let achievement = this.player.quests.getAchievementByMob(character);
@@ -117,7 +133,7 @@ class Handler {
             this.world.removePlayer(this.player);
         });
 
-        this.player.onTalkToNPC((npc) => {
+        this.player.onTalkToNPC((npc: NPC) => {
 
             if (this.player.quests.isQuestNPC(npc)) {
                 this.player.quests.getQuestByNPC(npc).triggerTalk(npc);
@@ -158,7 +174,7 @@ class Handler {
 
         });
 
-        this.player.onTeleport((x, y, isDoor) => {
+        this.player.onTeleport((x: number, y: number, isDoor: boolean) => {
             if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
                 this.player.doorCallback(x, y);
                 return;
@@ -167,7 +183,7 @@ class Handler {
 
         });
 
-        this.player.onPoison((info) => {
+        this.player.onPoison((info: any) => {
             this.player.sync();
 
             if (info)
@@ -197,18 +213,18 @@ class Handler {
         if (!region)
             return;
 
-        _.each(region.entities, (entity) => {
-            if (entity && entity.type === 'mob' && this.canEntitySee(entity)) {
-                let aggro = entity.canAggro(this.player);
+        _.each(region.entities, (character: Character) => {
+            if (character && character.type === 'mob' && this.canEntitySee(character)) {
+                let aggro = character.canAggro(this.player);
 
                 if (aggro)
-                    entity.combat.begin(this.player);
+                    character.combat.begin(this.player);
             }
         });
     }
 
-    detectMusic(x, y) {
-        let musicArea = _.find(this.world.getMusicAreas(), (area) => { return area.contains(x, y); }),
+    detectMusic(x: number, y: number) {
+        let musicArea = _.find(this.world.getMusicAreas(), (area: Area) => { return area.contains(x, y); }),
             song = musicArea ? musicArea.id : null;
 
         if (this.player.currentSong !== song)
@@ -216,29 +232,29 @@ class Handler {
 
     }
 
-    detectPVP(x, y) {
-        let pvpArea = _.find(this.world.getPVPAreas(), (area) => { return area.contains(x, y); });
+    detectPVP(x: number, y: number) {
+        let pvpArea = _.find(this.world.getPVPAreas(), (area: Area) => { return area.contains(x, y); });
 
         this.player.updatePVP(!!pvpArea);
     }
 
-    detectOverlay(x, y) {
-        let overlayArea = _.find(this.world.getOverlayAreas(), (area) => {
+    detectOverlay(x: number, y: number) {
+        let overlayArea = _.find(this.world.getOverlayAreas(), (area: Area) => {
                 return area.contains(x, y);
             });
 
         this.player.updateOverlay(overlayArea);
     }
 
-    detectCamera(x, y) {
-        let cameraArea = _.find(this.world.getCameraAreas(), (area) => {
+    detectCamera(x: number, y: number) {
+        let cameraArea = _.find(this.world.getCameraAreas(), (area: Area) => {
                 return area.contains(x, y);
             });
 
         this.player.updateCamera(cameraArea);
     }
 
-    detectLights(x, y) {
+    detectLights(x: number, y: number) {
 
         _.each(this.map.lights, (light) => {
             if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(light)) {
@@ -251,7 +267,7 @@ class Handler {
         });
     }
 
-    detectClipping(x, y) {
+    detectClipping(x: number, y: number) {
         let isColliding = this.map.isColliding(x, y)
 
         if (!isColliding)
@@ -265,7 +281,7 @@ class Handler {
         if (!this.player.poison)
             return;
 
-        let info = this.player.poison.split(':'),
+        let info: any = this.player.poison.split(':'),
             timeDiff = new Date().getTime() - info[0];
 
         if (timeDiff > info[1]) {
@@ -281,7 +297,7 @@ class Handler {
 
     }
 
-    canEntitySee(entity) {
+    canEntitySee(entity: Entity) {
         return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
     }
 

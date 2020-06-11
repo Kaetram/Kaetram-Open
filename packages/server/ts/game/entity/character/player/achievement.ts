@@ -1,13 +1,27 @@
 /* global module */
 
-import Data from '../../../../../data/achievements';
+import Data from '../../../../../data/achievements.json';
 import Messages from '../../../../network/messages';
 import Packets from '../../../../network/packets';
 import Modules from '../../../../util/modules';
+import Player from './player';
+import NPC from '../../npc/npc';
 
 class Achievement {
 
-    constructor(id, player) {
+    public id: number;
+    public player: Player;
+
+    public progress: number
+
+    public data: any;
+
+    public name: string;
+    public description: string;
+
+    public discovered: boolean;
+
+    constructor(id: number, player: Player) {
 
         this.id = id;
         this.player = player;
@@ -40,7 +54,7 @@ class Achievement {
         }));
     }
 
-    converse(npc) {
+    converse(npc: NPC) {
 
         if (this.isThreshold() || this.hasItem())
             this.finish(npc);
@@ -58,7 +72,7 @@ class Achievement {
         }
     }
 
-    finish(npc) {
+    finish(npc: NPC) {
         let rewardType = this.data.rewardType;
 
         switch (rewardType) {
@@ -117,9 +131,9 @@ class Achievement {
         return false
     }
 
-    setProgress(progress, skipRegion) {
+    setProgress(progress: number, skipRegion?: boolean) {
 
-        this.progress = parseInt(progress);
+        this.progress = progress;
 
         if (this.data.rewardType === 'door' && !skipRegion)
             this.player.updateRegion();

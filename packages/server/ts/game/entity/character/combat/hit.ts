@@ -2,7 +2,15 @@
 
 class Hit {
 
-    constructor(type, damage) {
+    type: any;
+    damage: number;
+
+    ranged: boolean;
+    aoe: boolean;
+    terror: boolean;
+    poison: boolean;
+
+    constructor(type: any, damage: number) {
 
         this.type = type;
         this.damage = damage;

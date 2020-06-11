@@ -291,7 +291,7 @@ class World {
             character.die();
     }
 
-    createProjectile(info) {
+    createProjectile(info: any) {
         let attacker = info.shift(),
             target = info.shift();
 

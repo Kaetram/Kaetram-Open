@@ -6,7 +6,9 @@ import Modules from '../../../../../util/modules';
 
 class Pendant extends Equipment {
 
-    constructor(name, id, count, ability, abilityLevel) {
+    public pendantLevel: number;
+
+    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
         super(name, id, count, ability, abilityLevel);
 
         this.pendantLevel = Items.getPendantLevel(name);

@@ -165,7 +165,7 @@ class API {
         });
     }
 
-    sendChat(source, text, withArrow) {
+    sendChat(source: string, text: string, withArrow?: boolean) {
         let url = this.getUrl('chat'),
             data = {
                 form: {

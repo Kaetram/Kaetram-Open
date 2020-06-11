@@ -2,8 +2,14 @@
 
 import Modules from '../../../../util/modules';
 import Utils from '../../../../util/utils';
+import Player from './player';
 
 class Warp {
+
+    player: Player;
+
+    lastWarp: number;
+    warpTimeout: number;
 
     constructor(player) {
         this.player = player;

@@ -5,21 +5,21 @@ import Container from '../container';
 import Messages from '../../../../../../network/messages';
 import Packets from '../../../../../../network/packets';
 import Constants from './constants';
-import Items from '../../../../../../util/items';
+import Player from '../../player';
 
 class Inventory extends Container {
 
-    constructor(owner, size) {
+    constructor(owner: Player, size: number) {
         super('Inventory', owner, size);
     }
 
-    load(ids, counts, abilities, abilityLevels) {
+    load(ids: any, counts: any, abilities: any, abilityLevels: any) {
         super.load(ids, counts, abilities, abilityLevels);
 
         this.owner.send(new Messages.Inventory(Packets.InventoryOpcode.Batch, [this.size, this.slots]));
     }
 
-    add(item) {
+    add(item: any) {
         if (!this.canHold(item.id, item.count)) {
             this.owner.send(new Messages.Notification(Packets.NotificationOpcode.Text, {
                 message: Constants.InventoryFull
@@ -42,7 +42,7 @@ class Inventory extends Container {
         return true;
     }
 
-    remove(id, count, index) {
+    remove(id: number, count: number, index?: number) {
 
         if (!id || !count)
             return false;
@@ -54,7 +54,7 @@ class Inventory extends Container {
             return false;
 
         this.owner.send(new Messages.Inventory(Packets.InventoryOpcode.Remove, {
-            index: parseInt(index),
+            index: index,
             count: count
         }));
 

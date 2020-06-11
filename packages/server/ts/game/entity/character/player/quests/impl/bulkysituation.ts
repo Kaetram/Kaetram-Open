@@ -1,12 +1,16 @@
 /* global module */
 
 import Quest from '../quest';
+import Player from '../../player';
+import NPC from '../../../../npc/npc';
 import Packets from '../../../../../../network/packets';
 import Messages from '../../../../../../network/messages';
 
 class BulkySituation extends Quest {
 
-    constructor(player, data) {
+    lastNPC: NPC;
+
+    constructor(player: Player, data: any) {
         super(player, data);
 
         this.player = player;
@@ -15,7 +19,7 @@ class BulkySituation extends Quest {
         this.lastNPC = null;
     }
 
-    load(stage) {
+    load(stage: number) {
         super.load(stage);
 
         if (this.stage > 9998)
@@ -25,7 +29,7 @@ class BulkySituation extends Quest {
     }
 
     loadCallbacks() {
-        this.onNPCTalk((npc) => {
+        this.onNPCTalk((npc: NPC) => {
 
             if (this.hasRequirement()) {
                 this.progress('item');
@@ -48,7 +52,7 @@ class BulkySituation extends Quest {
 
     }
 
-    progress(type) {
+    progress(type: string) {
         let task = this.data.task[this.stage];
 
         if (!task || task !== type)

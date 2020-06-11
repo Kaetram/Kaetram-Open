@@ -26,7 +26,7 @@ class Grids {
         }
     }
 
-    updateEntityPosition(entity) {
+    updateEntityPosition(entity: Entity) {
         if (entity && entity.oldX === entity.x && entity.oldY === entity.y)
             return;
 
@@ -36,17 +36,17 @@ class Grids {
         entity.updatePosition();
     }
 
-    addToEntityGrid(entity, x, y) {
+    addToEntityGrid(entity: Entity, x: number, y: number) {
         if (entity && x > 0 && y > 0 && x < this.map.width && x < this.map.height && this.entityGrid[y][x])
             this.entityGrid[y][x][entity.instance] = entity;
     }
 
-    removeFromEntityGrid(entity, x, y) {
+    removeFromEntityGrid(entity: Entity, x: number, y: number) {
         if (entity && x > 0 && y > 0 && x < this.map.width && y < this.map.height && this.entityGrid[y][x] && entity.instance in this.entityGrid[y][x])
             delete this.entityGrid[y][x][entity.instance];
     }
 
-    getSurroundingEntities(entity, radius, include) {
+    getSurroundingEntities(entity: Entity, radius?: number, include?: boolean) {
         let entities = [];
 
         if (!this.checkBounds(entity.x, entity.y, radius))
@@ -71,7 +71,7 @@ class Grids {
         return entities;
     }
 
-    checkBounds(x, y, radius) {
+    checkBounds(x: number, y: number, radius?: number) {
         return x + radius < this.map.width && x - radius > 0 && y + radius < this.map.height && y - radius > 0;
     }
 

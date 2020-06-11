@@ -3,10 +3,32 @@ import Formulas from '../../../../../../util/formulas';
 import Constants from '../../../../../../util/constants';
 import Messages from '../../../../../../network/messages';
 import Packets from '../../../../../../network/packets';
+import Player from '../../player';
+import World from '../../../../../world';
+import Map from '../../../../../../map/map';
+import Region from '../../../../../../region/region';
 
 class Profession {
 
-    constructor(id, player, name) {
+    public id: number;
+    public player: Player;
+    public name: string;
+
+    public world: World;
+
+    public map: Map;
+    public region: Region;
+
+    public experience: number;
+
+    public targetId: string; // Double Check
+
+    public level: number;
+
+    public nextExperience: number;
+    public prevExperience: number;
+
+    constructor(id: number, player: Player, name: string) {
 
         this.id = id;
         this.player = player;
@@ -22,7 +44,7 @@ class Profession {
         this.targetId = null;
     }
 
-    load(data) {
+    load(data: any) {
 
         this.experience = data.experience;
 
@@ -32,7 +54,7 @@ class Profession {
         this.prevExperience = Formulas.prevExp(this.experience);
     }
 
-    addExperience(experience) {
+    addExperience(experience: number) {
         this.experience += experience;
 
         let oldLevel = this.level;
@@ -59,7 +81,7 @@ class Profession {
         this.player.save();
     }
 
-    stop() {
+    stop(): any {
         return 'Not implemented.';
     }
 

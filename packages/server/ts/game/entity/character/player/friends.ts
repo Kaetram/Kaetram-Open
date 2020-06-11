@@ -1,16 +1,22 @@
+import Player from './player';
+
 class Friends {
 
-	constructor(player) {
+	player: Player
+
+	friends: any;
+
+	constructor(player: Player) {
 		this.player = player;
 
 		this.friends = {};
 	}
 
-	update(info) {
+	update(info: any) {
 		log.info(info);
 	}
 
-	add(username) {
+	add(username: string) {
 		if (username in this.friends) {
 			this.player.notify('That player is already in your friends list.');
 			return;
@@ -19,7 +25,7 @@ class Friends {
 		this.friends[username] = 'offline';
 	}
 
-	remove(username) {
+	remove(username: string) {
 		delete this.friends[username];
 	}
 

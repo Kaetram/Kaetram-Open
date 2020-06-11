@@ -6,13 +6,46 @@ import Mobs from '../../../../util/mobs';
 import Utils from '../../../../util/utils';
 import Items from '../../../../util/items';
 import Constants from '../../../../util/constants';
+import World from '../../../world';
 import MobHandler from './mobhandler';
+import Player from '../player/player';
+import Area from '../../../../map/area';
 
 class Mob extends Character {
 
-    constructor(id, instance, x, y, world) {
-        super(id, 'mob', instance, x, y);
+    world: World;
 
+    data: any;
+    hitPoints: number;
+    maxHitPoints: number;
+    drops: any;
+
+    respawnDelay: number;
+
+    boss: boolean;
+    static: boolean;
+    hiddenName: boolean;
+    miniboss: boolean;
+
+    achievementId: number;
+
+    roaming: boolean;
+    maxRoamingDistance: number;
+
+    handler: MobHandler;
+
+    alwaysAggressive: boolean;
+
+    loadCallback: Function;
+    refreshCallback: Function;
+    respawnCallback: Function;
+    returnCallback: Function;
+    deathCallback: Function;
+
+    area: Area;
+
+    constructor(id: number, instance: string, x: number, y: number, world: World) {
+        super(id, 'mob', instance, x, y);
 
         if (!Mobs.exists(id))
             return;
@@ -91,7 +124,7 @@ class Mob extends Character {
         return this.data.projectileName ? this.data.projectileName : 'projectile-pinearrow';
     }
 
-    canAggro(player) {
+    canAggro(player: Player) {
 
         if (this.hasTarget())
           return false;
@@ -142,8 +175,8 @@ class Mob extends Character {
         return this.distanceToSpawn() > this.spawnDistance;
     }
 
-    addToChestArea(chestAreas) {
-        let area = _.find(chestAreas, (area) => { return area.contains(this.x, this.y); });
+    addToChestArea(chestAreas: any) {
+        let area = _.find(chestAreas, (area: Area) => { return area.contains(this.x, this.y); });
 
         if (area)
             area.addEntity(this);
@@ -189,23 +222,23 @@ class Mob extends Character {
         this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
-    onLoad(callback) {
+    onLoad(callback: Function) {
         this.loadCallback = callback;
     }
 
-    onRespawn(callback) {
+    onRespawn(callback: Function) {
         this.respawnCallback = callback;
     }
 
-    onReturn(callback) {
+    onReturn(callback: Function) {
         this.returnCallback = callback;
     }
 
-    onRefresh(callback) {
+    onRefresh(callback: Function) {
         this.refreshCallback = callback;
     }
 
-    onDeath(callback) {
+    onDeath(callback: Function) {
         this.deathCallback = callback;
     }
 

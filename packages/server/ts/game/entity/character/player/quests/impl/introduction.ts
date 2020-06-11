@@ -1,12 +1,18 @@
 /* global module */
 
 import Quest from '../quest';
+import Player from '../../player';
+import NPC from '../../../../npc/npc';
+import Character from '../../../character';
 import Packets from '../../../../../../network/packets';
 import Messages from '../../../../../../network/messages';
 
 class Introduction extends Quest {
 
-    constructor(player, data) {
+    lastNPC: NPC;
+    finishedCallback: Function;
+
+    constructor(player: Player, data: any) {
         super(player, data);
 
         this.player = player;
@@ -15,7 +21,7 @@ class Introduction extends Quest {
         this.lastNPC = null;
     }
 
-    load(stage) {
+    load(stage: number) {
         if (!this.player.inTutorial()) {
             this.setStage(9999);
             this.update();
@@ -34,7 +40,7 @@ class Introduction extends Quest {
     }
 
     loadCallbacks() {
-        this.onNPCTalk((npc) => {
+        this.onNPCTalk((npc: NPC) => {
 
             let conversation = this.getConversation(npc.id);
 
@@ -56,7 +62,7 @@ class Introduction extends Quest {
 
         });
 
-        this.player.onDoor((destX, destY) => {
+        this.player.onDoor((destX: number, destY: number) => {
             if (this.getTask() !== 'door') {
                 this.player.notify('You cannot go through this door yet.');
                 return;
@@ -70,28 +76,28 @@ class Introduction extends Quest {
             }
         });
 
-        this.player.onInventory((isOpen) => {
+        this.player.onInventory((isOpen: boolean) => {
 
             if (isOpen && this.stage === 1)
                 this.progress('click');
 
         });
 
-        this.player.onProfile((isOpen) => {
+        this.player.onProfile((isOpen: boolean) => {
 
             if (isOpen && this.stage === 3)
                 this.progress('click');
 
         });
 
-        this.player.onWarp((isOpen) => {
+        this.player.onWarp((isOpen: boolean) => {
 
             if (isOpen && this.stage === 5)
                 this.progress('click');
 
         });
 
-        this.player.onKill((character) => {
+        this.player.onKill((character: Character) => {
             if (this.data.kill[this.stage] === character.id)
                 this.progress('kill');
 
@@ -99,7 +105,7 @@ class Introduction extends Quest {
 
     }
 
-    progress(type) {
+    progress(type: string) {
         let task = this.data.task[this.stage];
 
         if (!task || task !== type)
@@ -161,7 +167,7 @@ class Introduction extends Quest {
         this.player.canTalk = !this.player.canTalk;
     }
 
-    setStage(stage) {
+    setStage(stage: number) {
         super.setStage(stage);
 
         this.clearPointers();
@@ -172,7 +178,7 @@ class Introduction extends Quest {
         super.finish();
     }
 
-    hasDoorUnlocked(door) {
+    hasDoorUnlocked(door: any) {
         switch (door.id) {
             case 0:
                 return this.stage > 6;
@@ -187,7 +193,7 @@ class Introduction extends Quest {
         return false;
     }
 
-    verifyDoor(destX, destY) {
+    verifyDoor(destX: number, destY: number) {
         let doorData = this.data.doors[this.stage];
 
         if (!doorData)
@@ -203,7 +209,7 @@ class Introduction extends Quest {
         return { x: 375, y: 41 };
     }
 
-    onFinishedLoading(callback) {
+    onFinishedLoading(callback: Function) {
         this.finishedCallback = callback;
     }
 }
