@@ -7,15 +7,16 @@
     },
     "extends": [
         "eslint:recommended",
+        "plugin:prettier/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
     ],
+    "plugins": ["@typescript-eslint"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 11,
         "sourceType": "module"
     },
-    "plugins": ["@typescript-eslint"],
     "rules": {
         "indent": ["error", 4],
         "linebreak-style": ["error", "unix"],
