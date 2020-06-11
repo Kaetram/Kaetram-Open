@@ -2,7 +2,7 @@
 
 config = { debugLevel: 'all', debug: true };
 
-let Log = require('../../server/js/util/log'),
+let Log = require('../../packages/server/js/util/log'),
     processMap = require('./processmap'),
     fs = require("fs")
     _ = require('underscore');

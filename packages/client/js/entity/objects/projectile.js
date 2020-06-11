@@ -1,120 +1,106 @@
-define(['../entity'], function(Entity) {
+import Entity from '../entity';
 
-    return Entity.extend({
+export default class Projectile extends Entity {
+    constructor(id, kind, owner) {
+        super(id, kind);
+        var self = this;
+        self.owner = owner;
 
-        init: function(id, kind, owner) {
-            var self = this;
+        self.name = '';
 
-            self._super(id, kind);
+        self.startX = -1;
+        self.startY = -1;
 
-            self.owner = owner;
+        self.destX = -1;
+        self.destY = -1;
 
-            self.name = '';
+        self.special = -1;
 
-            self.startX = -1;
-            self.startY = -1;
+        self.static = false;
+        self.dynamic = false;
 
-            self.destX = -1;
-            self.destY = -1;
+        self.speed = 150;
 
-            self.special = -1;
+        self.angle = 0;
 
-            self.static = false;
-            self.dynamic = false;
+        self.lighting = null;
+    }
 
-            self.speed = 150;
+    getId() {
+        return this.id;
+    }
 
-            self.angle = 0;
+    impact() {
+        if (this.impactCallback) this.impactCallback();
+    }
 
-            self.lighting = null;
-        },
+    setStart(x, y) {
+        var self = this;
 
-        getId: function() {
-            return this.id;
-        },
+        self.setGridPosition(Math.floor(x / 16), Math.floor(y / 16));
 
-        impact: function() {
-            if (this.impactCallback)
-                this.impactCallback();
-        },
+        self.startX = x;
+        self.startY = y;
+    }
 
-        setSprite: function(sprite) {
-            this._super(sprite);
-        },
+    setDestination(x, y) {
+        var self = this;
 
-        setAnimation: function(name, speed, count, onEndCount) {
-            this._super(name, speed, count, onEndCount);
-        },
+        self.static = true;
 
-        setStart: function(x, y) {
-            var self = this;
+        self.destX = x;
+        self.destY = y;
 
-            self.setGridPosition(Math.floor(x / 16), Math.floor(y / 16));
+        self.updateAngle();
+    }
 
-            self.startX = x;
-            self.startY = y;
-        },
+    setTarget(target) {
+        var self = this;
 
-        setDestination: function(x, y) {
-            var self = this;
+        if (!target) return;
 
-            self.static = true;
+        self.dynamic = true;
 
-            self.destX = x;
-            self.destY = y;
+        self.destX = target.x;
+        self.destY = target.y;
 
-            self.updateAngle();
-        },
+        self.updateAngle();
 
-        setTarget: function(target) {
-            var self = this;
+        if (target.type !== 'mob') return;
 
-            if (!target)
-                return;
-
-            self.dynamic = true;
-
+        target.onMove(function () {
             self.destX = target.x;
             self.destY = target.y;
 
             self.updateAngle();
+        });
+    }
 
-            if (target.type !== 'mob')
-                return;
+    getSpeed() {
+        var self = this;
 
-            target.onMove(function() {
-                self.destX = target.x;
-                self.destY = target.y;
+        return 1;
+    }
 
-                self.updateAngle();
-            });
-        },
+    updateTarget(x, y) {
+        var self = this;
 
-        getSpeed: function() {
-            var self = this;
+        self.destX = x;
+        self.destY = y;
+    }
 
-            return 1;
-        },
+    hasPath() {
+        return false;
+    }
 
-        updateTarget: function(x, y) {
-            var self = this;
+    updateAngle() {
+        this.angle =
+            Math.atan2(this.destY - this.y, this.destX - this.x) *
+                (180 / Math.PI) -
+            90;
+    }
 
-            self.destX = x;
-            self.destY = y;
-        },
-
-        hasPath: function() {
-            return false;
-        },
-
-        updateAngle: function() {
-            this.angle = Math.atan2(this.destY - this.y, this.destX - this.x) * (180 / Math.PI) - 90;
-        },
-
-        onImpact: function(callback) {
-            this.impactCallback = callback;
-        }
-
-    });
-
-});
+    onImpact(callback) {
+        this.impactCallback = callback;
+    }
+}
