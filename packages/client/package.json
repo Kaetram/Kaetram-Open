@@ -6,9 +6,9 @@
     "homepage": "https://kaetram.com/",
     "main": "./js/main.js",
     "scripts": {
-        "build": "gulp",
-        "start": "http-server",
-        "dev": "http-server",
+        "build": "webpack",
+        "start": "webpack-dev-server",
+        "dev": "webpack-dev-server",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
@@ -19,9 +19,10 @@
     },
     "devDependencies": {
         "gulp": "^4.0.2",
-        "http-server": "^0.12.3",
+        "html-webpack-plugin": "^4.3.0",
         "webpack": "^4.43.0",
         "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.11.0",
         "workbox-build": "^5.1.3"
     }
 }
