@@ -1,628 +1,782 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-<head>
-    <meta charset="utf-8" />
-    <link rel="manifest" href="manifest.json" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge; chrome=1" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"
-    />
+    <head>
+        <meta charset="utf-8" />
+        <link rel="manifest" href="manifest.json" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge; chrome=1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"
+        />
 
-    <!-- Meta -->
-    <meta
-        name="description"
-        content="An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience."
-    />
-    <meta name="robots" content="index, follow" />
-    <meta name="author" content="Veradictus" />
-    <meta name="image" content="https://kaetram.com/img/favicon.png" />
-    <meta name="language" content="English" />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+        <!-- Meta -->
+        <meta
+            name="description"
+            content="An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience."
+        />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="Veradictus" />
+        <meta name="image" content="https://kaetram.com/img/favicon.png" />
+        <meta name="language" content="English" />
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 
-    <!-- Open Graph Protocol -->
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content="https://kaetram.com/" />
-    <meta property="og:type" content="game" />
-    <meta property="og:title" content="Kaetram" />
-    <meta property="og:site_name" content="Kaetram" />
-    <meta
-        property="og:description"
-        content="An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience."
-    />
-    <meta property="og:image" content="https://kaetram.com/img/favicon.png" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="192" />
-    <meta property="og:image:height" content="192" />
-    <meta property="og:image:alt" content="Kaetram Logo" />
+        <!-- Open Graph Protocol -->
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:url" content="https://kaetram.com/" />
+        <meta property="og:type" content="game" />
+        <meta property="og:title" content="Kaetram" />
+        <meta property="og:site_name" content="Kaetram" />
+        <meta
+            property="og:description"
+            content="An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience."
+        />
+        <meta
+            property="og:image"
+            content="https://kaetram.com/img/favicon.png"
+        />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="192" />
+        <meta property="og:image:height" content="192" />
+        <meta property="og:image:alt" content="Kaetram Logo" />
 
-    <!-- Google -->
-    <meta itemprop="name" content="Kaetram" />
-    <meta
-        itemprop="description"
-        content="An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience."
-    />
-    <meta itemprop="image" content="https://kaetram.com/img/favicon.png" />
+        <!-- Google -->
+        <meta itemprop="name" content="Kaetram" />
+        <meta
+            itemprop="description"
+            content="An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience."
+        />
+        <meta itemprop="image" content="https://kaetram.com/img/favicon.png" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Kaetram" />
-    <meta name="twitter:description" content="An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience." />
-    <meta name="twitter:image:src" content="https://kaetram.com/img/favicon.png">
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Kaetram" />
+        <meta
+            name="twitter:description"
+            content="An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience."
+        />
+        <meta
+            name="twitter:image:src"
+            content="https://kaetram.com/img/favicon.png"
+        />
 
-    <!-- Mobile -->
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <link rel="icon" type="image/png" sizes="36x36" href="img/icons/android-chrome-36x36.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="img/icons/android-chrome-48x48.png" />
-    <link rel="icon" type="image/png" sizes="72x72" href="img/icons/android-chrome-72x72.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="img/icons/android-chrome-96x96.png" />
-    <link rel="icon" type="image/png" sizes="144x144"  href="img/icons/android-chrome-144x144.png" />
-    <link rel="icon" type="image/png" sizes="192x192"  href="img/icons/android-chrome-192x192.png" />
-    <link rel="icon" type="image/png" sizes="256x256"  href="img/icons/android-chrome-256x256.png" />
-    <link rel="icon" type="image/png" sizes="384x384"  href="img/icons/android-chrome-384x384.png" />
+        <!-- Mobile -->
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="36x36"
+            href="img/icons/android-chrome-36x36.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="48x48"
+            href="img/icons/android-chrome-48x48.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="72x72"
+            href="img/icons/android-chrome-72x72.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="96x96"
+            href="img/icons/android-chrome-96x96.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="144x144"
+            href="img/icons/android-chrome-144x144.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="192x192"
+            href="img/icons/android-chrome-192x192.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="256x256"
+            href="img/icons/android-chrome-256x256.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="384x384"
+            href="img/icons/android-chrome-384x384.png"
+        />
 
-    <!-- iOS -->
-    <meta name="apple-mobile-web-app-title" content="Kaetram" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-        name="apple-mobile-web-app-status-bar-style"
-        content="black-translucent"
-    />
-    <link rel="apple-touch-icon" sizes="57x57" href="img/icons/apple-touch-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="60x60" href="img/icons/apple-touch-icon-60x60.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="img/icons/apple-touch-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="img/icons/apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="img/icons/apple-touch-icon-114x114.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="img/icons/apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="img/icons/apple-touch-icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="img/icons/apple-touch-icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon-180x180.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="img/icons/apple-touch-icon-57x57-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="img/icons/apple-touch-icon-60x60-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/icons/apple-touch-icon-72x72-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="img/icons/apple-touch-icon-76x76-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/icons/apple-touch-icon-114x114-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="img/icons/apple-touch-icon-120x120-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/icons/apple-touch-icon-144x144-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="img/icons/apple-touch-icon-152x152-precomposed.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="img/icons/apple-touch-icon-180x180-precomposed.png" />
-    <link rel="mask-icon" href="img/icons/safari-pinned-tab.svg" size="any" color="#000000">
-    <!-- TODO: Startup Image
+        <!-- iOS -->
+        <meta name="apple-mobile-web-app-title" content="Kaetram" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="57x57"
+            href="img/icons/apple-touch-icon-57x57.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="60x60"
+            href="img/icons/apple-touch-icon-60x60.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="72x72"
+            href="img/icons/apple-touch-icon-72x72.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="76x76"
+            href="img/icons/apple-touch-icon-76x76.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="114x114"
+            href="img/icons/apple-touch-icon-114x114.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="120x120"
+            href="img/icons/apple-touch-icon-120x120.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="144x144"
+            href="img/icons/apple-touch-icon-144x144.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="152x152"
+            href="img/icons/apple-touch-icon-152x152.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="img/icons/apple-touch-icon-180x180.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="57x57"
+            href="img/icons/apple-touch-icon-57x57-precomposed.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="60x60"
+            href="img/icons/apple-touch-icon-60x60-precomposed.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="72x72"
+            href="img/icons/apple-touch-icon-72x72-precomposed.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="76x76"
+            href="img/icons/apple-touch-icon-76x76-precomposed.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="114x114"
+            href="img/icons/apple-touch-icon-114x114-precomposed.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="120x120"
+            href="img/icons/apple-touch-icon-120x120-precomposed.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="144x144"
+            href="img/icons/apple-touch-icon-144x144-precomposed.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="152x152"
+            href="img/icons/apple-touch-icon-152x152-precomposed.png"
+        />
+        <link
+            rel="apple-touch-icon-precomposed"
+            sizes="180x180"
+            href="img/icons/apple-touch-icon-180x180-precomposed.png"
+        />
+        <link
+            rel="mask-icon"
+            href="img/icons/safari-pinned-tab.svg"
+            size="any"
+            color="#000000"
+        />
+        <!-- TODO: Startup Image
         <link rel="apple-touch-startup-image" href="img/icons/touch-icon-start-up-320x480.png" /> -->
 
-    <!-- Windows  -->
-    <meta name="application-name" content="Kaetram" />
-    <meta name="msapplication-TileImage" content="img/icons/mstile-144x144.png" />
-    <meta name="msapplication-starturl" content="/?utm_source=a2hs" />
-    <meta name="msapplication-tooltip" content="Kaetram" />
-    <meta name="msapplication-tap-highlight" content="no" />
-    <meta name="msapplication-config" content="browserconfig.xml">
+        <!-- Windows  -->
+        <meta name="application-name" content="Kaetram" />
+        <meta
+            name="msapplication-TileImage"
+            content="img/icons/mstile-144x144.png"
+        />
+        <meta name="msapplication-starturl" content="/?utm_source=a2hs" />
+        <meta name="msapplication-tooltip" content="Kaetram" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="msapplication-config" content="browserconfig.xml" />
 
-    <!-- UC Mobile Browser  -->
-    <meta name="full-screen" content="yes" />
-    <meta name="browsermode" content="application" />
+        <!-- UC Mobile Browser  -->
+        <meta name="full-screen" content="yes" />
+        <meta name="browsermode" content="application" />
 
-    <!-- Disable night mode for this page  -->
-    <meta name="nightmode" content="enable/disable" />
+        <!-- Disable night mode for this page  -->
+        <meta name="nightmode" content="enable/disable" />
 
-    <!-- Layout mode -->
-    <meta name="layoutmode" content="fitscreen/standard" />
+        <!-- Layout mode -->
+        <meta name="layoutmode" content="fitscreen/standard" />
 
-    <!-- Show image even in text only mode  -->
-    <meta name="imagemode" content="force" />
+        <!-- Show image even in text only mode  -->
+        <meta name="imagemode" content="force" />
 
-    <!-- Orientation  -->
-    <meta name="screen-orientation" content="any" />
+        <!-- Orientation  -->
+        <meta name="screen-orientation" content="any" />
 
-    <!-- Theme Colors -->
-    <meta name="theme-color" content="#000000" />
-    <meta name="msapplication-TileColor" content="#000000" />
-    <meta name="msapplication-navbutton-color" content="#000000" />
+        <!-- Theme Colors -->
+        <meta name="theme-color" content="#000000" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-navbutton-color" content="#000000" />
 
-    <!-- JSON-LD -->
-    <script type="application/ld+json">
-        {
-            "@context": "http://www.schema.org",
-            "@type": "VideoGame",
-            "name": "Kaetram",
-            "alternateName": "Kaetram",
-            "url": "https://kaetram.com/",
-            "image": "https://kaetram.com/img/favicon.png",
-            "description": "An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience.",
-            "inLanguage": ["English"],
- 			"operatingSystem": "ANY",
-			"applicationCategory": "https://schema.org/VideoGame",
-            "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "5",
-                "ratingCount": "1"
-            },
-            "author": {
-                "@type": "Person",
-                "name": "Veradictus"
-            },
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
-            },
-            "genre": ["MMORPG"],
-            "audience": {
-                "@type": "PeopleAudience",
-                "suggestedMinAge": "8"
-            },
-            "numberOfPlayers": {
-                "@type": "QuantitativeValue",
-                "minValue": "0",
-                "maxValue": "200"
+        <!-- JSON-LD -->
+        <script type="application/ld+json">
+            {
+                "@context": "http://www.schema.org",
+                "@type": "VideoGame",
+                "name": "Kaetram",
+                "alternateName": "Kaetram",
+                "url": "https://kaetram.com/",
+                "image": "https://kaetram.com/img/favicon.png",
+                "description": "An open-source 2D HTML5 adventure based off BrowserQuest (BQ). Kaetram is created to help those interested in game development, and to provide a fun experience.",
+                "inLanguage": ["English"],
+                "operatingSystem": "ANY",
+                "applicationCategory": "https://schema.org/VideoGame",
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "5",
+                    "ratingCount": "1"
+                },
+                "author": {
+                    "@type": "Person",
+                    "name": "Veradictus"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                "genre": ["MMORPG"],
+                "audience": {
+                    "@type": "PeopleAudience",
+                    "suggestedMinAge": "8"
+                },
+                "numberOfPlayers": {
+                    "@type": "QuantitativeValue",
+                    "minValue": "0",
+                    "maxValue": "200"
+                }
             }
-        }
-    </script>
+        </script>
 
-    <meta name="rating" content="General">
+        <meta name="rating" content="General" />
 
-    <title>Kaetram</title>
+        <title>Kaetram</title>
 
-    <link rel="stylesheet" type="text/css" href="css/animations.css" />
-    <link rel="stylesheet" type="text/css" href="css/game.css" />
-    <link rel="stylesheet" type="text/css" href="css/main.css" />
-    <link rel="stylesheet" type="text/css" href="css/vars.css" />
-    <link rel="stylesheet" type="text/css" href="css/interface.css" />
-    <script src="js/lib/modernizr.js" type="text/javascript"></script>
-</head>
-<body class="intro">
-    <noscript>
-        <div class="alert">
-            You must enable JavaScript to play Kaetram.
+        <link rel="stylesheet" type="text/css" href="css/animations.css" />
+        <link rel="stylesheet" type="text/css" href="css/game.css" />
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" type="text/css" href="css/vars.css" />
+        <link rel="stylesheet" type="text/css" href="css/interface.css" />
+    </head>
+    <body class="intro">
+        <noscript>
+            <div class="alert">
+                You must enable JavaScript to play Kaetram.
+            </div>
+        </noscript>
+        <div id="intro">
+            <!-- <h1 id="logo"></h1> -->
+            <section id="parchment" class="loadCharacter">
+                <div class="parchment-left"></div>
+                <div class="parchment-middle">
+                    <article id="loadCharacter">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            Kaetram
+                            <span class="right-ornament"></span>
+                        </h1>
+                        <form method="get" accept-charset="utf-8">
+                            <input
+                                type="text"
+                                id="loginNameInput"
+                                class="stroke"
+                                name="player-name"
+                                placeholder="Username"
+                                tabindex="0"
+                                maxlength="32"
+                                autocomplete="off"
+                                readonly
+                                autofocus
+                            />
+                            <input
+                                type="password"
+                                id="loginPasswordInput"
+                                class="stroke"
+                                name="player-password"
+                                placeholder="Password"
+                                tabindex="0"
+                                maxlength="64"
+                                readonly
+                                autocomplete="off"
+                            />
+                        </form>
+                        <div id="rememberMe" class="check" tabindex="0">
+                            <div id="rememberMeText">Remember Me</div>
+                        </div>
+                        <div id="guest" class="check" tabindex="0">
+                            <div id="guestText">Play as a guest</div>
+                        </div>
+                        <div id="login" tabindex="0"></div>
+                        <div id="newCharacter" tabindex="0"></div>
+                        <div class="validation-summary"></div>
+                    </article>
+                    <article id="createCharacter">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            New Character
+                            <span class="right-ornament"></span>
+                        </h1>
+                        <form method="get" accept-charset="utf-8">
+                            <input
+                                type="text"
+                                id="registerNameInput"
+                                class="stroke"
+                                name="player-name"
+                                placeholder="Username"
+                                tabindex="0"
+                                maxlength="32"
+                                autocomplete="off"
+                            />
+                            <input
+                                type="password"
+                                id="registerPasswordInput"
+                                class="stroke"
+                                name="player-password"
+                                placeholder="Password"
+                                tabindex="0"
+                                maxlength="64"
+                                autocomplete="off"
+                            />
+                            <input
+                                type="password"
+                                id="registerPasswordConfirmationInput"
+                                class="stroke"
+                                name="player-password2"
+                                placeholder="Confirm Password"
+                                tabindex="0"
+                                maxlength="64"
+                                autocomplete="off"
+                            />
+                            <input
+                                type="email"
+                                id="registerEmailInput"
+                                class="stroke"
+                                name="player-email"
+                                placeholder="Email Address"
+                                tabindex="0"
+                                maxlength="64"
+                                autocomplete="off"
+                            />
+                        </form>
+                        <!-- <p></p> -->
+                        <div id="cancelButton" tabindex="0"></div>
+                        <div id="play" tabindex="0"></div>
+                        <div class="validation-summary" tabindex="0"></div>
+                    </article>
+                    <article id="clientUpdated">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            <span class="title">Client Updated</span>
+                            <span class="right-ornament"></span>
+                        </h1>
+                        <p id="cuDescription">
+                            <br />
+                            The client has been updated. You must clear your
+                            browser's cache in order to be able to play.
+                            <br />
+                            Try one of the following methods:
+                            <br />
+                            <br />
+                            1) Hold SHIFT key and press the reload button in
+                            your browser.
+                            <br />
+                            2) Windows + Linux: CTRL + SHIFT + R or SHIFT + F5
+                            <br />
+                            3) Mac: CMD + SHIFT + R
+                        </p>
+                    </article>
+                    <article id="credits">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            <span class="title">Credits</span>
+                            <span class="right-ornament"></span>
+                        </h1>
+                        <p id="cDescription">
+                            <br />
+                            Special thanks to Little Workshop for the pixel art.
+                            <br />
+                            <br />
+                            More pixel assets by
+                            <a
+                                class="clickable"
+                                target="_blank"
+                                href="https://shikashiassets.itch.io/shikashis-fantasy-icons-pack"
+                                >Shikashi</a
+                            >
+                            &amp;
+                            <a
+                                target="clickable"
+                                target="_blank"
+                                href="https://game-icons.net"
+                                >Game-Icons.net</a
+                            >
+                            <br />
+                            <br />
+                            Music by
+                            <a
+                                class="clickable"
+                                target="_blank"
+                                href="http://soundcloud.com/gyrowolf"
+                                >Terrel O'Brien</a
+                            >,
+                            <a
+                                class="clickable"
+                                target="_blank"
+                                href="http://blog.dayjo.org"
+                                >Joel Day</a
+                            >,
+                            <a
+                                class="clickable"
+                                target="_blank"
+                                href="http://www.dantilden.com"
+                                >Dan Tilden</a
+                            >, &amp;
+                            <a
+                                target="_blank"
+                                class="clickable"
+                                href="http://soundcloud.com/aaron-anderson-11"
+                                >Aaron Krogh</a
+                            >
+                        </p>
+                        <div class="close-about">
+                            <span>-- Click anywhere to close --</span>
+                        </div>
+                    </article>
+                    <article id="about">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            <span class="title">
+                                About
+                            </span>
+                            <span class="right-ornament"></span>
+                        </h1>
+                        <p id="aDescription">
+                            Kaetram is a 2D open-source experiment. The game is
+                            still very early in development, so please be wary
+                            of that. If you would like to check out the source
+                            code, visit our
+                            <a href="https://github.com/Veradictus/Kaetram-Open"
+                                >GitHub Repository</a
+                            >.
+                        </p>
+                        <div class="close-about">
+                            <span>-- Click anywhere to close --</span>
+                        </div>
+                    </article>
+                    <article id="git">
+                        Structure this later
+                    </article>
+                    <article id="death">
+                        <p>You have died...</p>
+                        <div id="respawn" class="button"></div>
+                    </article>
+                </div>
+                <div class="parchment-right"></div>
+                <div class="loader" hidden>
+                    Connecting<span class="loader__dot">.</span
+                    ><span class="loader__dot">.</span
+                    ><span class="loader__dot">.</span>
+                </div>
+
+                <button id="worlds-switch" title="Click to change worlds">
+                    <b>World&nbsp;<span id="current-world-index">...</span></b>
+                    |
+                    <small id="current-world-count">0</small>
+                    <br />
+                    <span id="current-world-id">...</span>
+
+                    <div id="worlds-popup">
+                        <table id="worlds-list" title="Join world">
+                            <tr>
+                                <th>Server ID</th>
+                                <th>Players</th>
+                            </tr>
+                        </table>
+                    </div>
+                </button>
+            </section>
         </div>
-    </noscript>
-    <div id="intro">
-        <!-- <h1 id="logo"></h1> -->
-        <section id="parchment" class="loadCharacter">
-            <div class="parchment-left"></div>
-            <div class="parchment-middle">
-                <article id="loadCharacter">
-                    <h1>
-                        <span class="left-ornament"></span>
-                        Kaetram
-                        <span class="right-ornament"></span>
-                    </h1>
-                    <form method="get" accept-charset="utf-8">
+        <div id="container">
+            <div id="border">
+                <div id="canvas">
+                    <canvas id="background"></canvas>
+                    <canvas id="entities"></canvas>
+                    <canvas id="foreground"></canvas>
+                    <canvas id="cursor"></canvas>
+                    <canvas id="overlay"></canvas>
+                    <canvas id="textCanvas"></canvas>
+                </div>
+                <div id="buttons">
+                    <ul>
+                        <li><div id="inventoryButton"></div></li>
+                        <li><div id="profileButton"></div></li>
+                        <li><div id="warpButton"></div></li>
+                        <li><div id="chatButton"></div></li>
+                        <li><div id="settingsButton"></div></li>
+                    </ul>
+                </div>
+                <div id="actionContainer">
+                    <ul></ul>
+                </div>
+                <div id="dropDialog">
+                    <div id="dropTitle">Input drop count.</div>
+                    <div align="center">
                         <input
+                            title="dropCount"
                             type="text"
-                            id="loginNameInput"
-                            class="stroke"
-                            name="player-name"
-                            placeholder="Username"
-                            tabindex="0"
-                            maxlength="32"
-                            autocomplete="off"
-                            readonly
-                            autofocus
+                            id="dropCount"
+                            size="6"
+                            maxlength="11"
                         />
-                        <input
-                            type="password"
-                            id="loginPasswordInput"
-                            class="stroke"
-                            name="player-password"
-                            placeholder="Password"
-                            tabindex="0"
-                            maxlength="64"
-                            readonly
-                            autocomplete="off"
-                        />
-                    </form>
-                    <div id="rememberMe" class="check" tabindex="0">
-                        <div id="rememberMeText">Remember Me</div>
+                        <span id="dropAccept">&nbsp;Accept&nbsp;</span>
+                        <span id="dropCancel">&nbsp;Cancel&nbsp;</span>
                     </div>
-                    <div id="guest" class="check" tabindex="0">
-                        <div id="guestText">Play as a guest</div>
+                </div>
+                <div id="profileDialog">
+                    <div id="statePage" class="page">
+                        <div id="profileName" class="profileInfo"></div>
+                        <div id="profileLevel" class="profileInfo"></div>
+                        <div id="profileExperience" class="profileInfo"></div>
+                        <div id="weaponSlot" class="profileSlot"></div>
+                        <div id="weaponSlotInfo" class="profileItemInfo"></div>
+                        <div id="armourSlot" class="profileSlot"></div>
+                        <div id="armourSlotInfo" class="profileItemInfo"></div>
+                        <div id="pendantSlot" class="profileSlot"></div>
+                        <div id="ringSlot" class="profileSlot"></div>
+                        <div id="bootsSlot" class="profileSlot"></div>
                     </div>
-                    <div id="login" tabindex="0"></div>
-                    <div id="newCharacter" tabindex="0"></div>
-                    <div class="validation-summary"></div>
-                </article>
-                <article id="createCharacter">
-                    <h1>
-                        <span class="left-ornament"></span>
-                        New Character
-                        <span class="right-ornament"></span>
-                    </h1>
-                    <form method="get" accept-charset="utf-8">
-                        <input
-                            type="text"
-                            id="registerNameInput"
-                            class="stroke"
-                            name="player-name"
-                            placeholder="Username"
-                            tabindex="0"
-                            maxlength="32"
-                            autocomplete="off"
-                        />
-                        <input
-                            type="password"
-                            id="registerPasswordInput"
-                            class="stroke"
-                            name="player-password"
-                            placeholder="Password"
-                            tabindex="0"
-                            maxlength="64"
-                            autocomplete="off"
-                        />
-                        <input
-                            type="password"
-                            id="registerPasswordConfirmationInput"
-                            class="stroke"
-                            name="player-password2"
-                            placeholder="Confirm Password"
-                            tabindex="0"
-                            maxlength="64"
-                            autocomplete="off"
-                        />
-                        <input
-                            type="email"
-                            id="registerEmailInput"
-                            class="stroke"
-                            name="player-email"
-                            placeholder="Email Address"
-                            tabindex="0"
-                            maxlength="64"
-                            autocomplete="off"
-                        />
-                    </form>
-                    <!-- <p></p> -->
-                    <div id="cancelButton" tabindex="0"></div>
-                    <div id="play" tabindex="0"></div>
-                    <div class="validation-summary" tabindex="0"></div>
-                </article>
-                <article id="clientUpdated">
-                    <h1>
-                        <span class="left-ornament"></span>
-                        <span class="title">Client Updated</span>
-                        <span class="right-ornament"></span>
-                    </h1>
-                    <p id="cuDescription">
-                        <br />
-                        The client has been updated. You must clear your browser's cache in order to be able to play.
-                        <br />
-                        Try one of the following methods:
-                        <br />
-                        <br />
-                        1) Hold SHIFT key and press the reload button in your browser.
-                        <br />
-                        2) Windows + Linux: CTRL + SHIFT + R or SHIFT + F5
-                        <br />
-                        3) Mac: CMD + SHIFT + R
-                    </p>
-                </article>
-                <article id="credits">
-                    <h1>
-                        <span class="left-ornament"></span>
-                        <span class="title">Credits</span>
-                        <span class="right-ornament"></span>
-                    </h1>
-                    <p id="cDescription">
-                        <br />
-                        Special thanks to Little Workshop for the pixel art.
-                        <br />
-                        <br />
-                        More pixel assets by <a class="clickable" target="_blank" href="https://shikashiassets.itch.io/shikashis-fantasy-icons-pack">Shikashi</a>
-                        &amp; <a target="clickable" target="_blank" href="https://game-icons.net">Game-Icons.net</a>
-                        <br />
-                        <br />
-                        Music by <a class="clickable" target="_blank" href="http://soundcloud.com/gyrowolf">Terrel O'Brien</a>,
-                        <a class="clickable" target="_blank" href="http://blog.dayjo.org">Joel Day</a>,
-                        <a class="clickable" target="_blank" href="http://www.dantilden.com">Dan Tilden</a>,
-                        &amp; <a target="_blank" class="clickable" href="http://soundcloud.com/aaron-anderson-11">Aaron Krogh</a>
-                    </p>
-                    <div class="close-about">
-                        <span>-- Click anywhere to close --</span>
+                    <div id="questPage" class="page">
+                        <div id="achievementCount" class="stroke"></div>
+                        <div id="achievementList"><ul></ul></div>
+                        <div id="questCount" class="stroke"></div>
+                        <div id="questList"><ul></ul></div>
                     </div>
-                </article>
-                <article id="about">
-                    <h1>
-                        <span class="left-ornament"></span>
-                        <span class="title">
-                            About
-                        </span>
-                        <span class="right-ornament"></span>
-                    </h1>
-                    <p id="aDescription">
-                        Kaetram is a 2D open-source experiment. The game is
-                        still very early in development, so please be wary
-                        of that. If you would like to check out the source
-                        code, visit our
-                        <a href="https://github.com/Veradictus/Kaetram-Open"
-                            >GitHub Repository</a
-                        >.
-                    </p>
-                    <div class="close-about">
-                        <span>-- Click anywhere to close --</span>
+                    <div id="professionsPage" class="page">
+                        <div id="professionsList"><ul></ul></div>
                     </div>
-                </article>
-                <article id="git">
-                    Structure this later
-                </article>
-                <article id="death">
-                    <p>You have died...</p>
-                    <div id="respawn" class="button"></div>
-                </article>
-            </div>
-            <div class="parchment-right"></div>
-            <div class="loader" hidden>
-                Connecting<span class="loader__dot">.</span
-                ><span class="loader__dot">.</span
-                ><span class="loader__dot">.</span>
-            </div>
+                    <div id="guildPage" class="page"></div>
+                    <div id="navigator">
+                        <div id="previous"></div>
+                        <div id="next"></div>
+                    </div>
+                </div>
+                <div id="settingsPage" class="page">
+                    <div id="sliders">
+                        <input
+                            title="Volume"
+                            id="volume"
+                            class="input"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="100"
+                        />
+                        <input
+                            title="SFX"
+                            id="sfx"
+                            class="input"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="100"
+                        />
+                        <input
+                            title="Brightness"
+                            id="brightness"
+                            class="input"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="100"
+                        />
+                    </div>
+                    <div id="texts">
+                        <p>Volume</p>
+                        <p>SFX</p>
+                        <p>Brightness</p>
+                        <p>Sound</p>
+                        <p>Centred Camera</p>
+                        <p>Debugging</p>
+                        <p>Auto Centre</p>
+                        <p>Names</p>
+                        <p>Levels</p>
+                    </div>
+                    <div id="info"></div>
+                    <div id="checkMarks">
+                        <div id="soundCheck" class="check"></div>
+                        <div id="cameraCheck" class="check"></div>
+                        <div id="debugCheck" class="check"></div>
+                        <div id="centreCheck" class="check"></div>
+                        <div id="nameCheck" class="check"></div>
+                        <div id="levelCheck" class="check"></div>
+                    </div>
+                </div>
+                <div id="attackInfo">
+                    <div class="name"></div>
+                    <div class="details"></div>
+                    <div class="health"></div>
+                </div>
+                <div id="mapFrame">
+                    <div id="warp1" class="mapButton"></div>
+                    <div id="warp2" class="mapButton"></div>
+                    <div id="warp3" class="mapButton"></div>
+                    <div id="warp4" class="mapButton"></div>
+                    <div id="warp5" class="mapButton"></div>
+                    <div id="warp6" class="mapButton"></div>
+                    <div id="closeMapFrame" class="close"></div>
+                </div>
+                <div id="inventory"><ul></ul></div>
+                <div id="bank">
+                    <div id="closeBank" class="close"></div>
+                    <div id="bankContainer">
+                        <div id="bankSlots"><ul></ul></div>
+                    </div>
+                    <div id="bankInventoryContainer">
+                        <div id="bankInventorySlots" class="inventorySlots">
+                            <ul></ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="trade">
+                    <div id="closeTrade" class="close"></div>
+                    <div id="tradePlayerContainer"></div>
+                    <div id="tradeOPlayerContainer"></div>
+                </div>
+                <div id="enchant">
+                    <div id="closeEnchant" class="close"></div>
+                    <div id="confirmEnchant" class="ok"></div>
+                    <div id="enchantContainer">
+                        <div id="enchantInventorySlots" class="inventorySlots">
+                            <ul></ul>
+                        </div>
+                    </div>
+                    <div id="enchantSelectedItem"></div>
+                    <div id="enchantShards">
+                        <div id="shardsCount" class="itemCount"></div>
+                    </div>
+                </div>
+                <div id="shop">
+                    <div id="closeShop" class="close"></div>
+                    <div id="shopContainer"><ul></ul></div>
+                    <div id="shopInventoryContainer">
+                        <div id="shopInventorySlots" class="inventorySlots">
+                            <ul></ul>
+                        </div>
 
-            <button id="worlds-switch" title="Click to change worlds">
-                <b>World&nbsp;<span id="current-world-index">...</span></b>
-                |
-                <small id="current-world-count">0</small>
-                <br />
-                <span id="current-world-id">...</span>
+                        <div id="shopSellSlot">
+                            <div id="shopSellSlotText" class="itemCount"></div>
+                        </div>
+                        <div id="shopSellSlotReturn">
+                            <div
+                                id="shopSellSlotReturnText"
+                                class="itemCount"
+                            ></div>
+                        </div>
 
-                <div id="worlds-popup">
-                    <table id="worlds-list" title="Join world">
-                        <tr>
-                            <th>Server ID</th>
-                            <th>Players</th>
-                        </tr>
-                    </table>
-                </div>
-            </button>
-        </section>
-    </div>
-    <div id="container">
-        <div id="border">
-            <div id="canvas">
-                <canvas id="background"></canvas>
-                <canvas id="entities"></canvas>
-                <canvas id="foreground"></canvas>
-                <canvas id="cursor"></canvas>
-                <canvas id="overlay"></canvas>
-                <canvas id="textCanvas"></canvas>
-            </div>
-            <div id="buttons">
-                <ul>
-                    <li><div id="inventoryButton"></div></li>
-                    <li><div id="profileButton"></div></li>
-                    <li><div id="warpButton"></div></li>
-                    <li><div id="chatButton"></div></li>
-                    <li><div id="settingsButton"></div></li>
-                </ul>
-            </div>
-            <div id="actionContainer">
-                <ul></ul>
-            </div>
-            <div id="dropDialog">
-                <div id="dropTitle">Input drop count.</div>
-                <div align="center">
-                    <input
-                        title="dropCount"
-                        type="text"
-                        id="dropCount"
-                        size="6"
-                        maxlength="11"
-                    />
-                    <span id="dropAccept">&nbsp;Accept&nbsp;</span>
-                    <span id="dropCancel">&nbsp;Cancel&nbsp;</span>
-                </div>
-            </div>
-            <div id="profileDialog">
-                <div id="statePage" class="page">
-                    <div id="profileName" class="profileInfo"></div>
-                    <div id="profileLevel" class="profileInfo"></div>
-                    <div id="profileExperience" class="profileInfo"></div>
-                    <div id="weaponSlot" class="profileSlot"></div>
-                    <div id="weaponSlotInfo" class="profileItemInfo"></div>
-                    <div id="armourSlot" class="profileSlot"></div>
-                    <div id="armourSlotInfo" class ="profileItemInfo"></div>
-                    <div id="pendantSlot" class="profileSlot"></div>
-                    <div id="ringSlot" class="profileSlot"></div>
-                    <div id="bootsSlot" class="profileSlot"></div>
-                </div>
-                <div id="questPage" class="page">
-                    <div id="achievementCount" class="stroke"></div>
-                    <div id="achievementList"><ul></ul></div>
-                    <div id="questCount" class="stroke"></div>
-                    <div id="questList"><ul></ul></div>
-                </div>
-                <div id="professionsPage" class="page">
-                    <div id="professionsList"><ul></ul></div>
-                </div>
-                <div id="guildPage" class="page"></div>
-                <div id="navigator">
-                    <div id="previous"></div>
-                    <div id="next"></div>
-                </div>
-            </div>
-            <div id="settingsPage" class="page">
-                <div id="sliders">
-                    <input
-                        title="Volume"
-                        id="volume"
-                        class="input"
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="100"
-                    />
-                    <input
-                        title="SFX"
-                        id="sfx"
-                        class="input"
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="100"
-                    />
-                    <input
-                        title="Brightness"
-                        id="brightness"
-                        class="input"
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="100"
-                    />
-                </div>
-                <div id="texts">
-                    <p>Volume</p>
-                    <p>SFX</p>
-                    <p>Brightness</p>
-                    <p>Sound</p>
-                    <p>Centred Camera</p>
-                    <p>Debugging</p>
-                    <p>Auto Centre</p>
-                    <p>Names</p>
-                    <p>Levels</p>
-                </div>
-                <div id="info"></div>
-                <div id="checkMarks">
-                    <div id="soundCheck" class="check"></div>
-                    <div id="cameraCheck" class="check"></div>
-                    <div id="debugCheck" class="check"></div>
-                    <div id="centreCheck" class="check"></div>
-                    <div id="nameCheck" class="check"></div>
-                    <div id="levelCheck" class="check"></div>
-                </div>
-            </div>
-            <div id="attackInfo">
-                <div class="name"></div>
-                <div class="details"></div>
-                <div class="health"></div>
-            </div>
-            <div id="mapFrame">
-                <div id="warp1" class="mapButton"></div>
-                <div id="warp2" class="mapButton"></div>
-                <div id="warp3" class="mapButton"></div>
-                <div id="warp4" class="mapButton"></div>
-                <div id="warp5" class="mapButton"></div>
-                <div id="warp6" class="mapButton"></div>
-                <div id="closeMapFrame" class="close"></div>
-            </div>
-            <div id="inventory"><ul></ul></div>
-            <div id="bank">
-                <div id="closeBank" class="close"></div>
-                <div id="bankContainer">
-                    <div id="bankSlots"><ul></ul></div>
-                </div>
-                <div id="bankInventoryContainer">
-                    <div id="bankInventorySlots" class="inventorySlots">
-                        <ul></ul>
+                        <div id="confirmSell" class="ok"></div>
                     </div>
                 </div>
-            </div>
-            <div id="trade">
-                <div id="closeTrade" class="close"></div>
-                <div id="tradePlayerContainer"></div>
-                <div id="tradeOPlayerContainer"></div>
-            </div>
-            <div id="enchant">
-                <div id="closeEnchant" class="close"></div>
-                <div id="confirmEnchant" class="ok"></div>
-                <div id="enchantContainer">
-                    <div id="enchantInventorySlots" class="inventorySlots">
-                        <ul></ul>
+                <div id="bubbles"></div>
+                <div id="notification">
+                    <div id="notificationTextTitle"></div>
+                    <div id="notificationTextDescription"></div>
+                </div>
+                <div id="notifications">
+                    <div id="notifyFade" class="fade"></div>
+                    <div id="notify">
+                        <div id="exclamation"></div>
+                        <div id="notifyDone" class="done"></div>
                     </div>
-                </div>
-                <div id="enchantSelectedItem"></div>
-                <div id="enchantShards">
-                    <div id="shardsCount" class="itemCount"></div>
-                </div>
-            </div>
-            <div id="shop">
-                <div id="closeShop" class="close"></div>
-                <div id="shopContainer"><ul></ul></div>
-                <div id="shopInventoryContainer">
-                    <div id="shopInventorySlots" class="inventorySlots">
-                        <ul></ul>
+                    <div id="confirm">
+                        <div id="question"></div>
+                        <div id="confirmDone" class="done"></div>
+                        <div id="cancel"></div>
                     </div>
-
-                    <div id="shopSellSlot">
-                        <div id="shopSellSlotText" class="itemCount"></div>
+                    <div id="message"></div>
+                </div>
+                <div id="chat">
+                    <div id="talk">
+                        <form method="get" accept-charset="utf-8">
+                            <input
+                                title="Enter your message!"
+                                id="chatInput"
+                                class="chatInputData"
+                                type="text"
+                                maxlength="256"
+                                autocomplete="off"
+                                data-lpignore="true"
+                            />
+                        </form>
                     </div>
-                    <div id="shopSellSlotReturn">
-                        <div id="shopSellSlotReturnText" class="itemCount"></div>
+                    <div id="chatLog"></div>
+                </div>
+                <div id="playerInfo">
+                    <div id="health"></div>
+                    <div id="healthBar">
+                        <div id="healthBarText"></div>
                     </div>
-
-                    <div id="confirmSell" class="ok"></div>
-
+                    <div id="exp"></div>
+                    <div id="expBar"></div>
                 </div>
-            </div>
-            <div id="bubbles"></div>
-            <div id="notification">
-                <div id="notificationTextTitle"></div>
-                <div id="notificationTextDescription"></div>
-            </div>
-            <div id="notifications">
-                <div id="notifyFade" class="fade"></div>
-                <div id="notify">
-                    <div id="exclamation"></div>
-                    <div id="notifyDone" class="done"></div>
-                </div>
-                <div id="confirm">
-                    <div id="question"></div>
-                    <div id="confirmDone" class="done"></div>
-                    <div id="cancel"></div>
-                </div>
-                <div id="message"></div>
-            </div>
-            <div id="chat">
-                <div id="talk">
-                    <form method="get" accept-charset="utf-8">
-                        <input
-                            title="Enter your message!"
-                            id="chatInput"
-                            class="chatInputData"
-                            type="text"
-                            maxlength="256"
-                            autocomplete="off"
-                            data-lpignore="true"
-                        />
-                    </form>
-                </div>
-                <div id="chatLog"></div>
-            </div>
-            <div id="playerInfo">
-                <div id="health"></div>
-                <div id="healthBar">
-                    <div id="healthBarText"></div>
-                </div>
-                <div id="exp"></div>
-                <div id="expBar"></div>
             </div>
         </div>
-    </div>
-    <footer>
-        <div id="about-link" class="clickable">
-            <span id="toggle-about">About</span>
-        </div>
-        <span class="dash">&ndash;</span>
-        <div id="credits-link" class="clickable">
-            <span id="toggle-credits">Credits</span>
-        </div>
-        <span class="dash">&ndash;</span>
-        <div id="discord-link" class="clickable">
-            <span id="toggle-discord">Discord</span>
-        </div>
-    </footer>
-    <div id="resizeCheck"></div>
+        <footer>
+            <div id="about-link" class="clickable">
+                <span id="toggle-about">About</span>
+            </div>
+            <span class="dash">&ndash;</span>
+            <div id="credits-link" class="clickable">
+                <span id="toggle-credits">Credits</span>
+            </div>
+            <span class="dash">&ndash;</span>
+            <div id="discord-link" class="clickable">
+                <span id="toggle-discord">Discord</span>
+            </div>
+        </footer>
+        <div id="resizeCheck"></div>
 
-    <!-- <script src="lib/gl-tiled.js" type="text/javascript"></script>
-    <script src="lib/gl-tiled.resource-loader.js" type="text/javascript"></script>
-    <script src="lib/illuminated.js" type="text/javascript"></script>
-    <script src="js/utils/detect.js" type="text/javascript"></script>
-    <script src="js/lib/log.js" type="text/javascript"></script>
-    <script src="lib/socket.io.js" type="text/javascript"></script>
-    <script src="js/lib/jquery.js" type="text/javascript"></script> -->
-
-    <!-- <script data-main="js/lib/home" src="js/lib/require.js" type="text/javascript"></script> -->
-    <script src="./dist/main.js"></script>
-
-    <script src="lib/pwa.js" type="text/javascript"></script>
-</body>
+        <!-- main script is injected by webpack -->
+    </body>
 </html>
