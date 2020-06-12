@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -6,7 +7,15 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'main.js',
-        publicPath: 'js',
+        // publicPath: 'js',
         libraryTarget: 'umd',
     },
+    devServer: {
+        contentBase: __dirname,
+        compress: true,
+        port: 9000,
+    },
+    plugins: [
+        new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
+    ],
 };
