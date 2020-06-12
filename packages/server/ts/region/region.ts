@@ -1,7 +1,8 @@
 /* global module */
 
 import _ from 'underscore';
-import log from '../util/log';
+import * as fs from 'fs';
+import * as path from 'path';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
 import Player from '../game/entity/character/player/player';
@@ -9,9 +10,8 @@ import Entity from '../game/entity/entity';
 import Map from '../map/map';
 import Regions from '../map/regions';
 import World from '../game/world';
-import * as fs from 'fs';
-import * as path from 'path';
 import config from '../../config';
+import log from '../util/log';
 
 const map = path.resolve(__dirname, '../../data/map/world_client.json');
 
