@@ -33,9 +33,9 @@ Messages.Welcome = class {
 
 Messages.Spawn = class {
 
-    entity: Entity;
+    entity: any;
 
-    constructor(entity: Entity) {
+    constructor(entity: any) {
         this.entity = entity;
     }
 
