@@ -9,13 +9,12 @@ import Formulas from './formulas';
 import Constants from './constants';
 import log from '../util/log';
 
-
-import NPCData from '../../data/npcs.json';
-import ItemData from '../../data/items.json';
-import MobData from '../../data/mobs.json';
-import AbilityData from '../../data/abilities.json';
-import ShopsData from '../../data/shops.json';
-import ObjectData from '../../data/objects.json';
+import * as NPCData from '../../data/npcs.json';
+import * as ItemData from '../../data/items.json';
+import * as MobData from '../../data/mobs.json';
+import * as AbilityData from '../../data/abilities.json';
+import * as ShopsData from '../../data/shops.json';
+import * as ObjectData from '../../data/objects.json';
 
 class Parser {
 
@@ -46,6 +45,7 @@ class Parser {
         let mobCounter = 0;
 
         _.each(MobData, (value: any, key) => {
+
             key = key.toLowerCase();
 
             Mobs.Properties[key] = {
@@ -246,7 +246,7 @@ class Parser {
             this.readyCallback();
     }
 
-    onReady(callback) {
+    onReady(callback: Function) {
         this.readyCallback = callback;
     }
 }

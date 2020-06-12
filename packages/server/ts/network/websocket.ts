@@ -3,8 +3,6 @@ import log from '../util/log';
 import config from '../../config';
 
 import Connection from './connection';
-import * as connect from 'connect';
-import * as serve from 'serve-static';
 import * as SocketIO from 'socket.io';
 import * as http from 'http';
 import * as https from 'https';
@@ -30,9 +28,6 @@ class WebSocket extends Socket {
 
         this.ips = {};
 
-        let app = connect();
-        app.use(serve('../client', {'index': ['index.html']}), null);
-
         let readyWebSocket = (port: number) => {
             log.info('Server is now listening on: ' + port);
 
@@ -42,7 +37,7 @@ class WebSocket extends Socket {
 
         let server = config.ssl ? https : http;
 
-        this.httpServer = server.createServer(app).listen(port, host, () => {
+        this.httpServer = server.createServer().listen(port, host, () => {
             readyWebSocket(port);
         });
 

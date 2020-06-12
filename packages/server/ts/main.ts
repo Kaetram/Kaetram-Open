@@ -31,11 +31,9 @@ class Main {
                 if (!config.allowConnectionsToggle)
                     this.world.allowConnections = true;
 
-                let host =
-                    config.host === '0.0.0.0' ? 'localhost' : config.host;
-                log.notice(
-                    'Connect locally via http://' + host + ':' + config.port
-                );
+                let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
+
+                log.notice('Connect locally via http://' + host + ':9000');
             };
 
             this.world = new World(this.webSocket, this.database);
