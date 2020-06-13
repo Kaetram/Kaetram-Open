@@ -124,14 +124,11 @@ export default class Sprite {
                 self.image.width,
                 self.image.height
             );
-            data = spriteData.data;
 
-            for (var i = 0; i < data.length; i += 4) {
-                data[i] = 255;
-                data[i + 1] = data[i + 2] = 75;
+            for (var i = 0; i < spriteData.data.length; i += 4) {
+                spriteData.data[i] = 255;
+                spriteData.data[i + 1] = spriteData.data[i + 2] = 75;
             }
-
-            spriteData.data = data;
 
             context.putImageData(spriteData, 0, 0);
 
