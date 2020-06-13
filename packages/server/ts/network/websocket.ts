@@ -37,7 +37,11 @@ class WebSocket extends Socket {
 
         let server = config.ssl ? https : http;
 
-        this.httpServer = server.createServer().listen(port, host, () => {
+        this.httpServer = server.createServer((_request, response) => {
+            response.writeHead(200, { 'Content-Type': 'text/plain' });
+            response.write('This is server, why are you here?');
+            response.end();
+        }).listen(port, host, () => {
             readyWebSocket(port);
         });
 
