@@ -26,6 +26,8 @@ export default class Inventory {
         var self = this,
             list = $('#inventory').find('ul');
 
+        console.log(data);
+
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
 

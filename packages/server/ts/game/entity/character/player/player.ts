@@ -204,7 +204,7 @@ class Player extends Character {
         this.inventory = new Inventory(this, 20);
         this.professions = new Professions(this);
         this.abilities = new Abilities(this);
-        this.friends = new Friends(this);
+        // this.friends = new Friends(this);
         this.enchant = new Enchant(this);
         this.bank = new Bank(this, 56);
         this.quests = new Quests(this);
@@ -354,7 +354,7 @@ class Player extends Character {
             return;
         }
 
-        this.database.loader.getInventory(this, (ids: any, counts: any, skills: any, skillLevels: any) => {
+        this.database.loader.getInventory(this, (ids: Array<number>, counts: Array<number>, skills: Array<number>, skillLevels: Array<number>) => {
             if (ids === null || counts === null) {
                 this.inventory.loadEmpty();
                 return;
@@ -923,6 +923,14 @@ class Player extends Character {
 
     getTutorial() {
         return this.quests.getQuest(Modules.Quests.Introduction);
+    }
+
+    getWeaponLevel() {
+        return this.weapon.getLevel();
+    }
+
+    getArmourLevel() {
+        return this.armour.getDefense()
     }
 
     getLumberjackingLevel() {

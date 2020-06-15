@@ -22,37 +22,37 @@ class Log {
         this.debugging = config.debug;
     }
 
-    info(message) {
+    info(message: any) {
         if (this.isLoggable('info')) return;
 
         this.send(null, `[${new Date()}] INFO ${message}`);
     }
 
-    debug(message) {
+    debug(message: any) {
         if (!this.debugging) return;
 
         this.send('\x1b[36m%s\x1b[0m', `[${new Date()}] DEBUG ${message}`);
     }
 
-    warning(message) {
+    warning(message: any) {
         if (this.isLoggable('warning')) return;
 
         this.send('\x1b[33m%s\x1b[0m', `[${new Date()}] WARNING ${message}`);
     }
 
-    error(message) {
+    error(message: any) {
         if (this.isLoggable('error')) return;
 
         this.send('\x1b[31m%s\x1b[0m', `[${new Date()}] ERROR ${message}`);
     }
 
-    notice(message) {
+    notice(message: any) {
         if (this.isLoggable('notice')) return;
 
         this.send('\x1b[32m%s\x1b[0m', `[${new Date()}] NOTICE ${message}`);
     }
 
-    trace(message) {
+    trace(message: any) {
         this.send(
             '\x1b[35m%s\x1b[0m',
             `[${new Date()}] TRACE ${message}`,
@@ -60,7 +60,7 @@ class Log {
         );
     }
 
-    send(colour, message, trace?) {
+    send(colour: any, message: any, trace?: boolean) {
         if (this.stream) this.stream.write(message + '\n');
 
         if (!colour) console.log(message);
@@ -68,7 +68,7 @@ class Log {
         else console.log(colour, message);
     }
 
-    isLoggable(type) {
+    isLoggable(type: string) {
         return this.logLevel !== 'all' && this.logLevel !== type;
     }
 

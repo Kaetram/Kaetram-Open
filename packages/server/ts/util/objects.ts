@@ -1,14 +1,14 @@
 export default {
     Data: {},
 
-    getObject(id) {
+    getObject(id: string) {
         if (id in this.Data)
             return this.Data[id];
 
         return null;
     },
 
-    getPosition(id) {
+    getPosition(id: string) {
         let info = id.split('-');
 
         return {
@@ -17,7 +17,7 @@ export default {
         }
     },
 
-    getCursor(id) {
+    getCursor(id: string) {
         if (id in this.Data)
             if (this.Data[id].cursor)
                 return this.Data[id].cursor;

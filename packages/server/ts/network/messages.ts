@@ -1,7 +1,6 @@
 /* global module */
 
 import Packets from './packets';
-import Entity from '../game/entity/entity';
 
 const Messages: any = {};
 

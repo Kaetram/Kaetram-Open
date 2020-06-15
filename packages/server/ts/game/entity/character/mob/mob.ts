@@ -36,6 +36,8 @@ class Mob extends Character {
 
     alwaysAggressive: boolean;
 
+    lastAttacker: Player;
+
     loadCallback: Function;
     refreshCallback: Function;
     respawnCallback: Function;

@@ -9,7 +9,7 @@ class Grids {
     map: Map;
     entityGrid: any;
 
-    constructor(map) {
+    constructor(map: Map) {
         this.map = map;
 
         this.entityGrid = [];

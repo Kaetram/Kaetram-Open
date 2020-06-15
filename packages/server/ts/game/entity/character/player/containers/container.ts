@@ -25,7 +25,7 @@ class Container {
             this.slots.push(new Slot(i));
     }
 
-    load(ids: any, counts: any, abilities: any, abilityLevels: any) {
+    load(ids: Array<number>, counts: Array<number>, abilities: Array<number>, abilityLevels: Array<number>) {
 
         /**
          * Fill each slot with manual data or the database

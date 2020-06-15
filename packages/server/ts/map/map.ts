@@ -12,6 +12,7 @@ import ChestAreas from './areas/chestareas';
 import OverlayAreas from './areas/overlayareas';
 import CameraAreas from './areas/cameraareas';
 import World from '../game/entity/character/player/player';
+import Area from './area';
 import Entity from '../game/entity/entity';
 import * as map from '../../data/map/world_server.json';
 import * as Spawns from '../../data/spawns.json';
@@ -59,7 +60,7 @@ class Map {
     readyInterval: any;
     readyCallback: Function;
 
-    constructor(world) {
+    constructor(world: any) {
         this.world = world;
 
         this.ready = false;
@@ -154,7 +155,7 @@ class Map {
         this.doors = {};
 
         _.each(map.doors, (door: any) => {
-            let orientation;
+            let orientation: number;
 
             switch (door.o) {
                 case 'u':
@@ -219,7 +220,7 @@ class Map {
         });
     }
 
-    indexToGridPosition(tileIndex) {
+    indexToGridPosition(tileIndex: number) {
         tileIndex -= 1;
 
         let x = this.getX(tileIndex + 1, this.width),
@@ -231,18 +232,18 @@ class Map {
         }
     }
 
-    gridPositionToIndex(x, y) {
+    gridPositionToIndex(x: number, y: number) {
         return (y * this.width) + x;
     }
 
-    getX(index, width) {
+    getX(index: number, width: number) {
         if (index === 0)
             return 0;
 
         return (index % width === 0) ? width - 1 : (index % width) - 1;
     }
 
-    getRandomPosition(area) {
+    getRandomPosition(area: Area) {
         let pos: any = {},
             valid = false;
 
@@ -255,11 +256,11 @@ class Map {
         return pos;
     }
 
-    inArea(posX, posY, x, y, width, height) {
+    inArea(posX: number, posY: number, x: number, y: number, width: number, height: number) {
         return posX >= x && posY >= y && posX <= width + x && posY <= height + y;
     }
 
-    inTutorialArea(entity) {
+    inTutorialArea(entity: Entity) {
         if (entity.x === -1 || entity.y === -1)
             return true;
 
@@ -268,7 +269,7 @@ class Map {
                 this.inArea(entity.x, entity.y, 399, 18, 20, 15);
     }
 
-    nearLight(light, x, y) {
+    nearLight(light: any, x: number, y: number) {
         let diff = Math.round(light.distance / 16),
             startX = light.x - this.zoneWidth - diff,
             startY = light.y - this.zoneHeight - diff,
@@ -278,14 +279,14 @@ class Map {
         return x > startX && y > startY && x < endX && y < endY;
     }
 
-    isObject(id) {
-        return this.objects.indexOf(id) > -1;
+    isObject(object: any) {
+        return this.objects.indexOf(object) > -1;
     }
 
-    getPositionObject(x, y) {
+    getPositionObject(x: number, y: number) {
         let index = this.gridPositionToIndex(x, y),
-            tiles = this.clientMap.data[index],
-            objectId;
+            tiles: any = this.clientMap.data[index],
+            objectId: any;
 
         if (tiles instanceof Array)
             for (let i in tiles)
@@ -298,7 +299,7 @@ class Map {
         return objectId;
     }
 
-    getCursor(tileIndex, tileId) {
+    getCursor(tileIndex: number, tileId: number) {
         if (tileId in this.cursors)
             return this.cursors[tileId];
 
@@ -310,13 +311,13 @@ class Map {
         return cursor;
     }
 
-    getObjectId(tileIndex) {
+    getObjectId(tileIndex: number) {
         let position = this.indexToGridPosition(tileIndex + 1);
 
         return position.x + '-' + position.y;
     }
 
-    getObject(x, y, data) {
+    getObject(x: number, y: number, data: any) {
         let index = this.gridPositionToIndex(x, y) - 1,
             tiles = this.clientMap.data[index];
 
@@ -331,42 +332,42 @@ class Map {
         return null;
     }
 
-    getTree(x, y) {
+    getTree(x: number, y: number) {
         return this.getObject(x, y, this.trees);
     }
 
-    getRock(x, y) {
+    getRock(x: number, y: number) {
         return this.getObject(x, y, this.rocks);
     }
 
     // Transforms an object's `instance` or `id` into position
-    idToPosition(id) {
+    idToPosition(id: string) {
         let split = id.split('-');
 
         return { x: parseInt(split[0]), y: parseInt(split[1]) };
     }
 
-    isDoor(x, y) {
+    isDoor(x: number, y: number) {
         return !!this.doors[this.gridPositionToIndex(x, y) + 1];
     }
 
-    getDoorDestination(x, y) {
+    getDoorDestination(x: number, y: number) {
         return this.doors[this.gridPositionToIndex(x, y) + 1];
     }
 
-    isValidPosition(x, y) {
+    isValidPosition(x: number, y: number) {
         return Number.isInteger(x) && Number.isInteger(y) && !this.isOutOfBounds(x, y) && !this.isColliding(x, y);
     }
 
-    isOutOfBounds(x, y) {
+    isOutOfBounds(x: number, y: number) {
         return x < 0 || x >= this.width || y < 0 || y >= this.height;
     }
 
-    isPlateau(index) {
+    isPlateau(index: number) {
         return index in this.plateau;
     }
 
-    isColliding(x, y) {
+    isColliding(x: number, y: number) {
         if (this.isOutOfBounds(x, y))
             return false;
 
@@ -376,7 +377,7 @@ class Map {
     }
 
     /* For preventing NPCs from roaming in null areas. */
-    isEmpty(x, y) {
+    isEmpty(x: number, y: number) {
         if (this.isOutOfBounds(x, y))
             return true;
 
@@ -385,7 +386,7 @@ class Map {
         return this.clientMap.data[tileIndex] === 0;
     }
 
-    getPlateauLevel(x, y) {
+    getPlateauLevel(x: number, y: number) {
         let index = this.gridPositionToIndex(x, y);
 
         if (!this.isPlateau(index))
@@ -394,7 +395,7 @@ class Map {
         return this.plateau[index];
     }
 
-    getActualTileIndex(tileIndex) {
+    getActualTileIndex(tileIndex: number) {
         let tileset = this.getTileset(tileIndex);
 
         if (!tileset)
@@ -403,7 +404,7 @@ class Map {
         return tileIndex - tileset.firstGID - 1;
     }
 
-    getTileset(tileIndex) {
+    getTileset(tileIndex: number) {
         /**
          if (id > this.tilesets[idx].firstGID - 1 &&
          id < this.tilesets[idx].lastGID + 1)
@@ -419,7 +420,7 @@ class Map {
         return null;
     }
 
-    isReady(callback) {
+    isReady(callback: Function) {
         this.readyCallback = callback;
     }
 
