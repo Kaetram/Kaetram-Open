@@ -6,9 +6,20 @@
  * @experiemntal Hardcoding regions and areas is still a work in progress.
  */
 
+import Region from '../region';
+import Map from '../../map/map';
+
 class Home {
 
-    constructor(region) {
+    private region: Region;
+    private map: Map;
+
+    private clientMap: any;
+
+    private startRegion: string;
+    private endRegion: string;
+
+    constructor(region: Region) {
         this.region = region;
         this.map = region.map;
         this.clientMap = this.map.clientMap;
@@ -35,7 +46,7 @@ class Home {
                 let tileIndex = this.region.gridPositionToIndex(x, y);
 
                 info.indexes.push(tileIndex);
-                info.data.push(this.clientMap.data[data]);
+                info.data.push(this.clientMap.data[tileIndex]);
                 info.collisions.push(this.map.isColliding(x, y));
             }
         }

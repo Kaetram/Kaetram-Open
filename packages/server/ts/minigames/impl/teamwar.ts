@@ -74,7 +74,7 @@ class TeamWar extends Minigame {
 		player.minigame = this.getState(player);
     }
 
-    remove(player) {
+    remove(player: Player) {
         let index = this.lobby.indexOf(player);
 
         if (index < 0)
@@ -108,12 +108,12 @@ class TeamWar extends Minigame {
         if (this.started)
             return;
 
-        _.each(this.lobby, (player) => {
+        _.each(this.lobby, (player: Player) => {
             this.sendCountdown(player);
         });
     }
 
-    sendCountdown(player) {
+    sendCountdown(player: Player) {
         /**
          * We handle this logic client-sided. If a countdown does not exist,
          * we create one, otherwise we synchronize it with the packets we receive.
@@ -128,17 +128,17 @@ class TeamWar extends Minigame {
         });
     }
 
-	inLobby(player) {
+	inLobby(player: Player) {
 		// TODO - Update these when new lobby is available.
 		return player.x > 0 && player.x < 10 && player.y > 10 && player.y < 0;
 	}
 
     // Used for radius
-    getRandom(radius?) {
+    getRandom(radius?: number) {
         return Utils.randomInt(0, radius || 4);
     }
 
-    getTeam(player) {
+    getTeam(player: Player) {
 		if (this.redTeam.indexOf(player) > -1)
 			return 'red';
 
@@ -169,7 +169,7 @@ class TeamWar extends Minigame {
     }
 
 	// Expand on the super `getState()`
-	getState(player?) {
+	getState(player?: Player) {
 		let state = super.getState();
 
 		// Player can only be in team `red`, `blue`, or `lobby`.

@@ -5,6 +5,7 @@ import * as _ from 'underscore';
 import World from '../game/world';
 import APIConstants from '../util/apiconstants';
 import Utils from '../util/utils';
+import Player from '../game/entity/character/player/player';
 import config from '../../config';
 import log from '../util/log';
 
@@ -43,8 +44,8 @@ class API {
         });
     }
 
-    handle(router) {
-        router.get('/', (request, response) => {
+    handle(router: express.Router) {
+        router.get('/', (_request: any, response: any) => {
             response.json({
                 name: config.name,
                 port: config.port, // Sends the server port.
@@ -54,20 +55,20 @@ class API {
             });
         });
 
-        router.post('/player', (request, response) => {
+        router.post('/player', (request: any, response: any) => {
             this.handlePlayer(request, response);
         });
 
-        router.post('/chat', (request, response) => {
+        router.post('/chat', (request: any, response: any) => {
             this.handleChat(request, response);
         });
 
-        router.get('/players', (request, response) => {
+        router.get('/players', (request: any, response: any) => {
             this.handlePlayers(request, response);
         });
     }
 
-    handlePlayer(request, response) {
+    handlePlayer(request: any, response: any) {
         if (!this.verifyToken(request.body.accessToken)) {
             this.returnError(
                 response,
@@ -102,7 +103,7 @@ class API {
         response.json(this.getPlayerData(player));
     }
 
-    handleChat(request, response) {
+    handleChat(request: any, response: any) {
         if (!this.verifyToken(request.body.accessToken)) {
             this.returnError(
                 response,
@@ -132,7 +133,7 @@ class API {
         response.json({ status: 'success' });
     }
 
-    handlePlayers(request, response) {
+    handlePlayers(request: any, response: any) {
         if (!this.verifyToken(request.query.accessToken)) {
             this.returnError(
                 response,
@@ -162,7 +163,7 @@ class API {
                 },
             };
 
-        request.post(url, data, (error, response, body) => {
+        request.post(url, data, (_error: any, _response: any, body: any) => {
             try {
                 let data = JSON.parse(body);
 
@@ -191,7 +192,7 @@ class API {
                 },
             };
 
-        request.post(url, data, (error, response, body) => {
+        request.post(url, data, (_error: any, _response: any, body: any) => {
             try {
                 let data = JSON.parse(body);
 
@@ -204,7 +205,7 @@ class API {
         });
     }
 
-    sendPrivateMessage(source, target, text) {
+    sendPrivateMessage(source: Player, target: string, text: string) {
         let url = this.getUrl('privateMessage'),
             data = {
                 form: {
@@ -215,7 +216,7 @@ class API {
                 },
             };
 
-        request.post(url, data, (error, response, body) => {
+        request.post(url, data, (_error: any, _response: any, body: any) => {
             try {
                 let data = JSON.parse(body);
 
@@ -236,11 +237,11 @@ class API {
         });
     }
 
-    verifyToken(token) {
+    verifyToken(token: string) {
         return token === config.accessToken;
     }
 
-    getPlayerData(player) {
+    getPlayerData(player: Player) {
         if (!player) return {};
 
         return {
@@ -258,11 +259,11 @@ class API {
         };
     }
 
-    getUrl(path) {
+    getUrl(path: string) {
         return `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
-    returnError(response, error, message) {
+    returnError(response: any, error: any, message: string) {
         response.json({
             error: error,
             message: message,

@@ -324,7 +324,6 @@ class World {
     }
 
     spawnEntities() {
-        let entities: number = 0;
 
         _.each(this.map.staticEntities, (data: any) => {
             let key: string = data.string,
@@ -391,27 +390,23 @@ class World {
                 this.addItem(item);
             }
 
-
-            entities++;
         });
 
         log.info('Spawned ' + Object.keys(this.entities).length + ' entities!');
     }
 
     spawnChests() {
-        let chests = 0;
 
         _.each(this.map.chests, (info: any) => {
 
             this.spawnChest(info.i, info.x, info.y, true);
 
-            chests++;
         });
 
         log.info('Spawned ' + Object.keys(this.chests).length + ' static chests');
     }
 
-    spawnMob(id, x, y) {
+    spawnMob(id: number, x: number, y: number) {
         let mob = new Mob(id, Utils.generateInstance(), x, y);
 
         if (!Mobs.exists(id))
@@ -422,9 +417,8 @@ class World {
         return mob;
     }
 
-    spawnChest(items, x, y, staticChest) {
-        let chestCount = Object.keys(this.chests).length,
-            chest = new Chest(194, Utils.generateInstance(), x, y);
+    spawnChest(items: any, x: number, y: number, staticChest?: boolean) {
+        let chest = new Chest(194, Utils.generateInstance(), x, y);
 
         chest.items = items;
 
@@ -638,7 +632,7 @@ class World {
         }
     }
 
-    search(x, y, refId, data, type) {
+    search(x: number, y: number, refId: any, data: any, type: string) {
         let objectTile = this.getSearchTile(type, x, y);
 
         if (!objectTile)
@@ -669,7 +663,7 @@ class World {
         return false;
     }
 
-    push(type, info) {
+    push(type: number, info: any) {
         if (_.isArray(info)) {
             _.each(info, (i) => { this.push(type, i); });
             return;

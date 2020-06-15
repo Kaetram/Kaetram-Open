@@ -4,7 +4,7 @@ export default {
     Properties: {},
     Ids: {},
 
-    idToString(id) {
+    idToString(id: number) {
 
         if (id in this.Ids)
             return this.Ids[id].key;
@@ -12,7 +12,7 @@ export default {
         return null;
     },
 
-    idToName(id) {
+    idToName(id: number) {
 
         if (id in this.Ids)
             return this.Ids[id].name;
@@ -20,7 +20,7 @@ export default {
         return null;
     },
 
-    getText(id) {
+    getText(id: number) {
 
         if (id in this.Ids)
             return this.Ids[id].text;
@@ -28,7 +28,7 @@ export default {
         return null;
     },
 
-    getType(id) {
+    getType(id: number) {
 
         if (id in this.Ids)
             return this.Ids[id].type;

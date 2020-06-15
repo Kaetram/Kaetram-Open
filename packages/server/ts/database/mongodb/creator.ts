@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import MongoDB from './mongodb';
 import log from '../../util/log';
 import config from '../../../config';
@@ -33,7 +33,7 @@ class Creator {
             this.saveRegions(playerRegions, player);
             this.saveAbilities(playerAbilities, player);
             this.saveProfessions(playerProfessions, player);
-            this.saveFriends(playerFriends, player);
+            //this.saveFriends(playerFriends, player);
             this.saveInventory(playerInventory, player, () => {
                 log.debug(
                     `Successfully saved all data for player ${player.username}.`
@@ -115,13 +115,9 @@ class Creator {
 
     saveAchievements(collection, player) {
         collection.updateOne(
-            {
-                username: player.username,
-            },
+            { username: player.username },
             { $set: player.quests.getAchievements() },
-            {
-                upsert: true,
-            },
+            { upsert: true },
             (error, result) => {
                 if (error)
                     log.error(
@@ -245,12 +241,12 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_professions for ${player.username}!`
+                        `An error has occurred while saving player_friends for ${player.username}!`
                     );
 
                 if (!result)
                     log.error(
-                        `Could not save player_professions for ${player.username}!`
+                        `Could not save player_friends for ${player.username}!`
                     );
             }
         );
