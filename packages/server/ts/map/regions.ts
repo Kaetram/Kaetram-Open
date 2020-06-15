@@ -62,7 +62,7 @@ class Regions {
         let position = this.regionIdToPosition(id),
             x = position.x, y = position.y;
 
-        let list = [], stringList = [];
+        let list = [];
 
         for (let i = -offset; i <= offset; i++) // y
             for (let j = -1; j <= 1; j++) // x

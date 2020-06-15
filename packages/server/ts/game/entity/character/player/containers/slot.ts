@@ -27,12 +27,12 @@ class Slot {
         this.string = null;
     }
 
-    load(id: number, count: number, ability: number, abilityLevel: number) {
+    load(id: any, count: any, ability: any, abilityLevel: any) {
 
-        this.id = id;
-        this.count = count;
-        this.ability = ability;
-        this.abilityLevel = abilityLevel;
+        this.id = parseInt(id);
+        this.count = parseInt(count);
+        this.ability = parseInt(ability);
+        this.abilityLevel = parseInt(abilityLevel);
 
         this.string = Items.idToString(this.id);
         this.edible = Items.isEdible(this.id);

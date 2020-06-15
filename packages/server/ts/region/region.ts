@@ -436,11 +436,10 @@ class Region {
      * Compare the user's screen size and chip away the amount of data
      * we are sending.
      */
-    formatRegionData(player: Player, data: any) {}
+    formatRegionData(_player: Player, _data: any) {}
 
     getRegionData(region: string, player: Player, force?: boolean) {
-        let data = [],
-            cursor: any;
+        let data = [];
 
         if (!player) return data;
 

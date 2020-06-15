@@ -3,12 +3,13 @@
 import Utils from './utils';
 import Constants from './constants';
 import Trees from '../../data/professions/trees';
+import Character from '../game/entity/character/character';
 
 export default {
     LevelExp: [],
 
     // Chances of getting logs from a tree.
-    getTreeChance(player, treeId) {
+    getTreeChance(player: any, treeId: string) {
         let lumberjackingLevel = player.getLumberjackingLevel(),
             weaponLumberjackingLevel = player.getWeaponLumberjackingLevel(),
             treeLevel = Trees.Levels[treeId],
@@ -20,7 +21,7 @@ export default {
         return probability;
     },
 
-    getDamage(attacker, target, special?) {
+    getDamage(attacker: Character, target: Character, special?: boolean) {
 
         let maxDamage = this.getMaxDamage(attacker, target, special),
             accuracy = Utils.randomInt(0, attacker.level);
@@ -28,31 +29,33 @@ export default {
         return Utils.randomInt(accuracy, maxDamage);
     },
 
-    getMaxDamage(attacker, target, special) {
+    getMaxDamage(attacker: Character, target: Character, special?: boolean) {
 
         if (!attacker || !target)
             return;
 
-        let damageDealt, damageAbsorbed, damageAmplifier = 1, absorptionAmplifier = 1,
-            usingRange = attacker.weapon ? attacker.weapon.isRanged() : attacker.isRanged(),
-            weaponLevel = attacker.weapon ? attacker.weapon.getLevel() : attacker.weaponLevel,
-            armourLevel = attacker.armour ? attacker.armour.getDefense() : attacker.armourLevel,
-            pendant = attacker.pendant ? attacker.pendant : null,
-            ring = attacker.ring ? attacker.ring : null,
-            boots = attacker.boots ? attacker.boots : null,
-            targetArmour = target.armour ? target.armour.getDefense() : target.armourLevel,
-            targetPendant = target.pendant ? target.pendant : null,
-            targetRing = target.ring ? target.ring : null,
-            targetBoots = target.boots ? target.boots : null,
-            isPlayer = attacker.type === 'player';
+        let damageDealt = 0, damageAbsorbed: number,
+            damageAmplifier = 1, absorptionAmplifier = 1,
+            weaponLevel = attacker.getWeaponLevel(),
+            armourLevel = attacker.getArmourLevel(),
+            pendant = attacker.pendant || null,
+            ring = attacker.ring || null,
+            boots = attacker.boots || null,
+            targetArmour = target.getArmourLevel(),
+            targetPendant = target.pendant || null,
+            targetRing = target.ring || null,
+            targetBoots = target.boots || null;
 
-        damageDealt = (isPlayer ? 10 : 0) + attacker.level + ((attacker.level * weaponLevel) / 4) + ((attacker.level + weaponLevel * armourLevel) / 8);
+        if (attacker.type === 'player')
+            damageDealt += 10;
+
+        damageDealt += attacker.level + ((attacker.level * weaponLevel) / 4) + ((attacker.level + weaponLevel * armourLevel) / 8);
 
         /**
          * Apply ranged damage deficit
          */
 
-        if (usingRange)
+        if (attacker.isRanged())
             damageDealt /= 1.275;
 
         if (special)
@@ -104,7 +107,7 @@ export default {
 
     },
 
-    getCritical(attacker, target) {
+    getCritical(attacker: any, target: Character) {
 
         if (!attacker || !target)
             return;
@@ -119,12 +122,12 @@ export default {
         return damage *= multiplier;
     },
 
-    getWeaponBreak(attacker, target) {
+    getWeaponBreak(attacker: Character, target: Character) {
 
         if (!attacker || !target)
             return;
 
-        let targetArmour = target.getArmourLevel();
+        // let targetArmour: number = target.getArmourLevel();
 
         /**
          * The chance a weapon will break ....
@@ -136,7 +139,7 @@ export default {
     },
 
 
-    getAoEDamage(attacker, target) {
+    getAoEDamage(attacker: Character, target: Character) {
         /**
          * Preliminary setup until this function is expanded
          * and fits in the necessary algorithms.
@@ -145,7 +148,7 @@ export default {
         return this.getDamage(attacker, target);
     },
 
-    nextExp(experience) {
+    nextExp(experience: number) {
         if (experience < 0)
             return -1;
 
@@ -154,7 +157,7 @@ export default {
                 return this.LevelExp[i];
     },
 
-    prevExp(experience) {
+    prevExp(experience: number) {
         if (experience < 0)
             return -1;
 
@@ -165,7 +168,7 @@ export default {
         return 0;
     },
 
-    expToLevel(experience) {
+    expToLevel(experience: number) {
         if (experience < 0)
             return -1;
 
@@ -176,18 +179,11 @@ export default {
         return Constants.MAX_LEVEL;
     },
 
-    getRewardExperience(player) {
-        if (!player)
-            return;
-
-        return (5 + player.level) * player.level;
-    },
-
-    getMaxHitPoints(level) {
+    getMaxHitPoints(level: number) {
         return 100 + (level * 30);
     },
 
-    getMaxMana(level) {
+    getMaxMana(level: number) {
         return 10 + (level * 8);
     }
 }

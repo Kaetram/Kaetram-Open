@@ -16,7 +16,7 @@ class Bank extends Container {
         this.open = false;
     }
 
-    load(ids: any, counts: any, abilities: any, abilityLevels: any) {
+    load(ids: Array<number>, counts: Array<number>, abilities: Array<number>, abilityLevels: Array<number>) {
         super.load(ids, counts, abilities, abilityLevels);
 
         this.owner.send(new Messages.Bank(Packets.BankOpcode.Batch, [this.size, this.slots]));

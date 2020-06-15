@@ -6,23 +6,23 @@ export default {
     Data: {},
     Ids: {},
 
-    isShopNPC(npcId) {
+    isShopNPC(npcId: number) {
         return npcId in this.Ids;
     },
 
-    getItems(npcId) {
+    getItems(npcId: number) {
         return this.Ids[npcId].items;
     },
 
-    shopIdToNPC(shopId) {
+    shopIdToNPC(shopId: string) {
         return this.Data[shopId].npcId;
     },
 
-    getItemCount(id) {
+    getItemCount(id: number) {
         return this.getItems(id).length;
     },
 
-    increment(npcId, itemId, count) {
+    increment(npcId: number, itemId: number, count: number) {
         let shop = this.Ids[npcId],
             index = shop.items.indexOf(itemId);
 
@@ -33,7 +33,7 @@ export default {
 
     },
 
-    decrement(npcId, buyId, count) {
+    decrement(npcId: number, buyId: number, count: number) {
         let shop = this.Ids[npcId];
 
         if (!buyId || buyId < 0)
@@ -45,7 +45,7 @@ export default {
             shop.count[buyId] = 0;
     },
 
-    getCost(npcId, buyId, count) {
+    getCost(npcId: number, buyId: number, count: number) {
         /**
          * Reason for the shopId variable is because some shops
          * may have different prices for the same item. A way to
@@ -60,7 +60,7 @@ export default {
         return shop.prices[buyId] * count;
     },
 
-    getStock(npcId, buyId) {
+    getStock(npcId: number, buyId: number) {
         let shop = this.Ids[npcId];
 
         if (!shop || !buyId || buyId < 0)
@@ -69,7 +69,7 @@ export default {
         return shop.count[buyId];
     },
 
-    getOriginalStock(shopId, buyId) {
+    getOriginalStock(shopId: number, buyId: number) {
         let shop = this.Ids[shopId];
 
         if (!buyId || buyId < 0)
@@ -78,7 +78,7 @@ export default {
         return shop.originalCount[buyId];
     },
 
-    getCount(npcId) {
+    getCount(npcId: number) {
         let count = this.Ids[npcId].count,
             counts = [];
 
@@ -91,7 +91,7 @@ export default {
         return counts;
     },
 
-    getItem(npcId, buyId) {
+    getItem(npcId: number, buyId: number) {
         if (!buyId || buyId < 0)
             return;
 

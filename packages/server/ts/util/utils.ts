@@ -8,26 +8,27 @@ import Packets from '../network/packets';
 import log from '../util/log';
 
 export default {
-    random(range) {
+
+    random(range: number) {
         return Math.floor(Math.random() * range);
     },
 
-    randomRange(min, max) {
+    randomRange(min: number, max: number) {
         return min + Math.random() * (max - min);
     },
 
-    randomInt(min, max) {
+    randomInt(min: number, max: number) {
         return min + Math.floor(Math.random() * (max - min + 1));
     },
 
-    getDistance(startX, startY, toX, toY) {
+    getDistance(startX: number, startY: number, toX: number, toY: number) {
         let x = Math.abs(startX - toX),
             y = Math.abs(startY - toY);
 
         return x > y ? x : y;
     },
 
-    positionOffset(radius) {
+    positionOffset(radius: number) {
         return {
             x: this.randomInt(0, radius),
             y: this.randomInt(0, radius),
@@ -56,7 +57,7 @@ export default {
         return ++this.instanceSeed + '' + this.randomInt(0, 25000);
     },
 
-    validPacket(packet) {
+    validPacket(packet: number) {
         let keys = Object.keys(Packets),
             filtered = [];
 
@@ -72,7 +73,7 @@ export default {
         return new Date().getTime();
     },
 
-    formatUsername(username) {
+    formatUsername(username: string) {
         return username.replace(/\w\S*/g, (string) => {
             return (
                 string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
@@ -85,7 +86,7 @@ export default {
      * characters (primarily used for colour codes). This function will be expanded
      * if necessary in the nearby future.
      */
-    parseMessage(message) {
+    parseMessage(message: string) {
         try {
             let messageBlocks = message.split('@');
 
@@ -95,7 +96,7 @@ export default {
                 return messageBlocks.join(' ');
             }
 
-            _.each(messageBlocks, (block, index) => {
+            _.each(messageBlocks, (_block, index) => {
                 if (index % 2 !== 0)
                     // we hit a colour code.
                     messageBlocks[
