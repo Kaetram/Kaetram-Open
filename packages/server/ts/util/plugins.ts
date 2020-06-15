@@ -3,11 +3,11 @@
 import * as fs from 'fs';
 const Filter = /^([^\\.].*)\.js$/;
 
-function identity(val) {
+function identity(val: any) {
     return val;
 }
 
-export default function requireItems(directory) {
+export default function requireItems(directory: any) {
     let files = fs.readdirSync(directory),
         modules = {},
         resolve = identity;

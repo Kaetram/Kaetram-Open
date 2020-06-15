@@ -64,6 +64,9 @@ class Character extends Entity {
     public invincible: boolean;
     public lastAttacker: Character;
 
+    public pendant: any;
+    public ring: any;
+    public boots: any;
 
     constructor(id: number, type: string, instance: string, x: number, y: number) {
         super(id, type, instance, x, y);
@@ -216,7 +219,7 @@ class Character extends Entity {
             this.movementCallback(x, y);
     }
 
-    setTarget(target) {
+    setTarget(target: any) {
 
         this.target = target;
 
@@ -224,7 +227,7 @@ class Character extends Entity {
             this.targetCallback(target);
     }
 
-    setPotentialTarget(potentialTarget) {
+    setPotentialTarget(potentialTarget: any) {
         this.potentialTarget = potentialTarget;
     }
 
@@ -236,7 +239,7 @@ class Character extends Entity {
             this.hitPointsCallback();
     }
 
-    setPoison(poison) {
+    setPoison(poison: boolean) {
 
         this.poison = poison;
 
@@ -254,6 +257,14 @@ class Character extends Entity {
 
     getDrop() {
         return null;
+    }
+
+    getWeaponLevel() {
+        return this.weaponLevel;
+    }
+
+    getArmourLevel() {
+        return this.armourLevel;
     }
 
     getState() {
@@ -318,7 +329,7 @@ class Character extends Entity {
         return !(this.target === null);
     }
 
-    hasPotentialTarget(potentialTarget) {
+    hasPotentialTarget(potentialTarget: any) {
         return this.potentialTarget === potentialTarget;
     }
 

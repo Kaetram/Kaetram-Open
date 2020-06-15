@@ -5,7 +5,7 @@ export default {
     Ids: {},
     Plugins: {},
 
-    idToString(id) {
+    idToString(id: number) {
 
         if (id in this.Ids)
             return this.Ids[id].key;
@@ -13,14 +13,14 @@ export default {
         return null;
     },
 
-    idToName(id) {
+    idToName(id: number) {
         if (id in this.Ids)
             return this.Ids[id].name;
 
         return null;
     },
 
-    getXp(id) {
+    getXp(id: number) {
 
         if (id in this.Ids)
             return this.Ids[id].xp;
@@ -28,16 +28,15 @@ export default {
         return -1;
     },
 
-    exists(id) {
-
+    exists(id: number) {
         return id in this.Ids;
     },
 
-    hasCombatPlugin(id) {
+    hasCombatPlugin(id: number) {
         return id in this.Ids && this.Ids[id].combatPlugin in this.Plugins
     },
 
-    isNewCombatPlugin(id) {
+    isNewCombatPlugin(id: number) {
         if (id in this.Ids && this.Ids[id].combatPlugin in this.Plugins)
             return this.Plugins[this.Ids[id].combatPlugin];
     }
