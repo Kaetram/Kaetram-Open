@@ -32,14 +32,14 @@ class Warp {
         let name = data[0],
             x = data[3] ? data[1] + Utils.randomInt(0, 1) : data[1],
             y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2],
-            levelRequirement = data[4];
+            levelRequirement: number = data[4];
 
         if (!this.player.finishedTutorial()) {
             this.player.notify('You cannot warp while in this event.');
             return;
         }
 
-        if (this.hasRequirement(levelRequirement)) {
+        if (!this.hasRequirement(levelRequirement)) {
             this.player.notify('You must be at least level ' + levelRequirement + ' to warp here!');
             return;
         }
@@ -51,7 +51,7 @@ class Warp {
         this.lastWarp = new Date().getTime();
     }
 
-    setLastWarp(lastWarp) {
+    setLastWarp(lastWarp: number) {
         if (isNaN(lastWarp)) {
             this.lastWarp = 0;
             this.player.save();
@@ -64,8 +64,8 @@ class Warp {
         return this.getDifference() > this.warpTimeout || this.player.rights > 1;
     }
 
-    hasRequirement(levelRequirement) {
-        return this.player.level < levelRequirement || this.player.rights > 1;
+    hasRequirement(levelRequirement: number) {
+        return this.player.level > levelRequirement || this.player.rights > 1;
     }
 
     getDuration() {
