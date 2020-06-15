@@ -3,7 +3,7 @@
 import Packets from '../network/packets';
 import _ from 'underscore';
 import Messages from '../network/messages';
-import sanitizer from 'sanitizer';
+import * as sanitizer from 'sanitizer';
 import Commands from './commands';
 import Items from '../util/items';
 import Creator from '../database/mongodb/creator';
@@ -689,7 +689,7 @@ class Incoming {
         }
     }
 
-    handleChat(message) {
+    handleChat(message: any) {
         let text = sanitizer.escape(sanitizer.sanitize(message.shift()));
 
         if (!text || text.length < 1 || !/\S/.test(text)) return;
