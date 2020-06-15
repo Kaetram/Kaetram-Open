@@ -1,4 +1,4 @@
-import $ from 'underscore';
+import $ from 'jquery';
 import Timer from '../../utils/timer';
 
 export default class Blob {
