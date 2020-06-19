@@ -5,11 +5,9 @@ config = {
     debugLevel: 'all'
 }
 
-let Log = require('../../packages/server/js/util/log'),
-    worldClient = require('../../packages/server/data/map/world_client'),
+let worldClient = require('../../packages/server/data/map/world_client'),
     worldServer = require('../../packages/server/data/map/world_server');
 
-log = new Log();
 
 class Helper {
 
@@ -33,7 +31,6 @@ class Helper {
             index = self.gridPositionToIndex(x, y);
 
         console.log(`"${index}": { "data": [${worldClient.data[index]}], "isColliding": ${worldClient.collisions.indexOf(index) > -1} },`);
-        //log.info(index + ' -- ' + worldClient.data[index]);
     }
 
     gridPositionToIndex(x, y) {
