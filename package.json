@@ -14,7 +14,9 @@
         "helper": "cd tools/map && node helper",
         "map": "cd tools/map && node exportmap data/map-refactor.json"
     },
-    "dependencies": {},
+    "dependencies": {
+        "underscore": "^1.10.2"
+    },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^3.2.0",
         "@typescript-eslint/parser": "^3.2.0",

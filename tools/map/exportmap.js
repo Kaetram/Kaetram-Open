@@ -2,12 +2,9 @@
 
 config = { debugLevel: 'all', debug: true };
 
-let Log = require('../../packages/server/js/util/log'),
-    processMap = require('./processmap'),
+let processMap = require('./processmap'),
     fs = require("fs")
     _ = require('underscore');
-
-log = new Log();
 
 class ExportMap {
 
@@ -21,7 +18,7 @@ class ExportMap {
 
         fs.exists(self.source, (exists) => {
             if (!exists) {
-                log.error(`The file ${source} could not be found.`);
+                console.log(`The file ${source} could not be found.`);
                 return;
             }
 
@@ -33,10 +30,10 @@ class ExportMap {
 
     handleMap(data) {
         let self = this,
-            worldClientJSON = '../../server/data/map/world_client.json',
-            worldServerJSON = '../../server/data/map/world_server.json',
-            clientMapJSON = '../../client/data/maps/map.json',
-            clientMapJS = '../../client/data/maps/map.js';
+            worldClientJSON = '../../packages/server/data/map/world_client.json',
+            worldServerJSON = '../../packages/server/data/map/world_server.json',
+            clientMapJSON = '../../packages/client/data/maps/map.json',
+            clientMapJS = '../../packages/client/data/maps/map.js';
 
         let worldClient = self.parse(data, worldClientJSON, 'client');
 
@@ -61,9 +58,9 @@ class ExportMap {
 
         fs.writeFile(destination, mapString, (error, file) => {
             if (error)
-                log.error(`An error has occurred while writing map files.`);
+                console.log(`An error has occurred while writing map files.`);
             else
-                log.notice(`[${mode.format()}] Map saved at: ${destination}`);
+                console.log(`[${mode.format()}] Map saved at: ${destination}`);
         });
 
         return map;
@@ -72,11 +69,11 @@ class ExportMap {
     copyTilesets() {
         let self = this,
             source = './data',
-            destination = '../../client/img/tilesets'
+            destination = '../../packages/client/img/tilesets'
 
         fs.readdir(source, (error, files) => {
             if (error) {
-                log.error('Could not copy the tilesets...');
+                console.log('Could not copy the tilesets...');
                 return;
             }
 
@@ -85,7 +82,7 @@ class ExportMap {
                     fs.copyFileSync(`${source}/${file}`, `${destination}/${file}`);
             });
 
-            log.notice(`Finished copying tilesets to ${destination}/`);
+            console.log(`Finished copying tilesets to ${destination}/`);
         });
     }
 
