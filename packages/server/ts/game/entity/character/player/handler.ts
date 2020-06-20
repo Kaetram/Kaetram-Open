@@ -290,7 +290,7 @@ class Handler {
             timeDiff = new Date().getTime() - info[0];
 
         if (timeDiff > info[1]) {
-            this.player.setPoison(false);
+            this.player.setPoison('');
             return;
         }
 
