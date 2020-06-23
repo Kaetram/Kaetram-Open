@@ -239,7 +239,7 @@ class Character extends Entity {
             this.hitPointsCallback();
     }
 
-    setPoison(poison: boolean) {
+    setPoison(poison: string) {
 
         this.poison = poison;
 
