@@ -11,6 +11,15 @@ class QueenAnt extends Combat {
      * AoE attacks and has a stun timer.
      */
 
+    aoeTimeout: any;
+    aoeCountdown: number;
+    aoeRadius: number;
+    lastAoE: number;
+    minionCount: number;
+    lastSpawn: number;
+    minions: Array<any>;
+    frozen: boolean;
+
     constructor(character) {
         character.spawnDistance = 18;
         super(character);
