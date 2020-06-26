@@ -51,6 +51,8 @@ class Character extends Entity {
     damageCallback: Function;
     subAoECallback: Function;
     deathCallback: Function;
+    onDeath: Function;
+    onReturn: Function;
 
     moving: boolean;
     lastMovement: number;
