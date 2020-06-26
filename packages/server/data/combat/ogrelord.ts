@@ -7,6 +7,14 @@ import _ from 'underscore';
 
 class OgreLord extends Combat {
 
+    dialogues: Array<string>;
+    minions: Array<any>;
+    lastSpawn: number;
+    loaded: boolean;
+
+    talkingInterval: any;
+    updateInterval: any;
+
     constructor(character) {
         super(character);
 

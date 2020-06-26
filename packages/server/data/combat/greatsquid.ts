@@ -3,6 +3,8 @@ import Modules from '../../ts/util/modules';
 
 class GreatSquid extends Combat {
 
+    lastTerror: number;
+
     constructor(character) {
         character.spawnDistance = 15;
         super(character);
