@@ -11,6 +11,9 @@ class SkeletonKing extends Combat {
      * And two death knights on (x + 1, y - 1) & (x - 1, y - 1)
      */
 
+    lastSpawn: number;
+    minions: Array<any>;
+
     constructor(character) {
         character.spawnDistance = 10;
         super(character);

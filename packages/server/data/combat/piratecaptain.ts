@@ -6,6 +6,12 @@ import Modules from '../../ts/util/modules';
 
 class PirateCaptain extends Combat {
 
+    teleportLocations: Array<any>;
+    lastTeleportIndex: number;
+    lastTeleport: number;
+    location: any;
+    character: any;
+
     constructor(character) {
         character.spawnDistance = 20;
         super(character);
@@ -100,7 +106,7 @@ class PirateCaptain extends Combat {
 
     getHealthPercentage() {
         //Floor it to avoid random floats
-        return Math.floor((this.character.hitPoints / self.character.maxHitPoints) * 100);
+        return Math.floor((this.character.hitPoints / this.character.maxHitPoints) * 100);
     }
 
 }
