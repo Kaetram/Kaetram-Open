@@ -18,6 +18,7 @@
         "underscore": "^1.10.2"
     },
     "devDependencies": {
+        "copy-webpack-plugin": "^6.0.2",
         "gulp": "^4.0.2",
         "html-webpack-plugin": "^4.3.0",
         "webpack": "^4.43.0",
