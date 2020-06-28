@@ -29,6 +29,6 @@
         "name": "Kaetram",
         "hideGenerator": true
     },
-    "includes": ["ts/**/*.ts", "data/**/*.json"],
+    "files": ["ts/main.ts"],
     "exclude": ["node_modules/"]
 }
