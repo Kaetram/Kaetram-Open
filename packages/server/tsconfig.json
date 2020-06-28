@@ -18,7 +18,7 @@
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
-        "declaration": true,
+        "declaration": true
     },
     "typedocOptions ": {
         "inputFiles": ["./"],
@@ -29,6 +29,6 @@
         "name": "Kaetram",
         "hideGenerator": true
     },
-    "files": ["ts/main.ts"],
+    "includes": ["ts/**/*.ts", "data/**/*.json"],
     "exclude": ["node_modules/"]
 }
