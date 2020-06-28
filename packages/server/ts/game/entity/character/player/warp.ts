@@ -11,14 +11,14 @@ class Warp {
     lastWarp: number;
     warpTimeout: number;
 
-    constructor(player) {
+    constructor(player: Player) {
         this.player = player;
 
         this.lastWarp = 0;
         this.warpTimeout = 30000;
     }
 
-    warp(id) {
+    warp(id: number) {
         if (!this.isCooldown()) {
             this.player.notify('You must wait another ' + this.getDuration() + ' to warp.');
             return;
