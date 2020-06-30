@@ -26,6 +26,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: cp packages/server/config.ts-dist packages/server/config.ts
-    - run: cp packages/client/data/config.json-dist packages/client/data/config.json
+    - run: cp packages/client/.env-dist packages/client/.env
     - run: npm test
     - run: npm run build
