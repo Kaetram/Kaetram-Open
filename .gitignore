@@ -1,11 +1,3 @@
-**/config.json
-**/config.js
-**/config.ts
-config.ts
-test.js
-
-packages/server/js  
-
 packages/client/.env
 packages/server/.env
 
