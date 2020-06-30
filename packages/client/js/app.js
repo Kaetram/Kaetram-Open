@@ -9,6 +9,8 @@ export default class App {
     constructor() {
         var self = this;
 
+        // Do not refactor env variables assignement
+        // process.env.VARIABLE is replaced by webpack during build process
         self.config = {
             ip: process.env.IP,
             port: process.env.PORT,
@@ -17,6 +19,8 @@ export default class App {
             debug: process.env.DEBUG,
             worldSwitch: process.env.WORLD_SWITCH,
         };
+
+        console.log(self.config);
 
         self.body = $('body');
         self.parchment = $('#parchment');
