@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "dotenv": "^8.2.0",
+        "dotenv-parse-variables": "^0.3.0",
         "gl-tiled": "^1.0.0",
         "jquery": "^3.5.1",
         "socket.io-client": "^2.3.0",
