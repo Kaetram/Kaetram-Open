@@ -1,8 +1,0 @@
-{
-  "ip": "127.0.0.1",
-  "port": 9001,
-  "version": 2,
-  "ssl": false,
-  "debug": false,
-  "worldSwitch": false
-}
