@@ -4,8 +4,10 @@
 config.ts
 test.js
 
-packages/server/js
-packages/server/config.ts
+packages/server/js  
+
+packages/client/.env
+packages/server/.env
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
