@@ -11,6 +11,9 @@
         "dev": "ts-node-dev ./ts/main.ts",
         "build": "tsc"
     },
+    "engines": {
+        "node": "~12.10.0"
+    },
     "dependencies": {
         "bcrypt": "^4.0.1",
         "camelcase": "^6.0.0",
