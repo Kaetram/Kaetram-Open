@@ -15,7 +15,7 @@
         "node": "~12.10.0"
     },
     "dependencies": {
-        "bcrypt": "^4.0.1",
+        "bcryptjs": "^2.4.3",
         "camelcase": "^6.0.0",
         "discord.js": "^12.2.0",
         "dotenv": "^8.2.0",
