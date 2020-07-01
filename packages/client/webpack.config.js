@@ -5,24 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const dotenv = require('dotenv');
 const dotenvParseVariables = require('dotenv-parse-variables');
 
-const clientEnvKeys = ['IP', 'PORT', 'VERSION', 'SSL', 'DEBUG', 'WORLD_SWITCH'];
-
-const envConfig = dotenv.config().parsed || process.env;
-
-console.log(Object.keys(envConfig));
-
-const config = Object.keys(envConfig)
-    .filter((key) => clientEnvKeys.includes(key))
-    .reduce(
-        (result, key) => ({
-            ...result,
-            [key]: envConfig[key],
-        }),
-        {}
-    );
-
-console.log(config);
-console.log(dotenvParseVariables(config));
+const config = dotenvParseVariables(dotenv.config().parsed || { ...process.env });
 
 module.exports = {
     mode: 'development',
@@ -40,7 +23,7 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': JSON.stringify(dotenvParseVariables(config)),
+            'process.env': JSON.stringify(config),
         }),
         new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
         new CopyPlugin({
