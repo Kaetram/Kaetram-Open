@@ -43,11 +43,6 @@ class Warp {
             return;
         }
 
-        // data.x += Utils.randomInt(-1, 1);
-        // data.y += Utils.randomInt(-1, 1);
-
-        console.log(data);
-
         this.player.teleport(data.x, data.y, false, true);
 
         this.player.notify(`You have been warped to ${data.name}`);
