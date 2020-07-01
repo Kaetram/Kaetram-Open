@@ -1,7 +1,7 @@
 /* global module */
 
 import _ from 'underscore';
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 import log from '../../util/log';
 import config from '../../../config';
 import { MongoClient, Db } from 'mongodb';
@@ -112,7 +112,7 @@ class MongoDB {
                 else {
                     let info = data[0];
 
-                    bcrypt.compare(
+                    bcryptjs.compare(
                         player.password,
                         info.password,
                         (error, result) => {
