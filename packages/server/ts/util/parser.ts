@@ -9,6 +9,10 @@ import Formulas from './formulas';
 import Constants from './constants';
 import log from '../util/log';
 
+// combat plugins are not loaded currently
+//import combatPlugins from '../../data/combat';
+import itemPlugins from '../../data/items/index';
+
 import * as NPCData from '../../data/npcs.json';
 import * as ItemData from '../../data/items.json';
 import * as MobData from '../../data/mobs.json';
@@ -33,8 +37,9 @@ class Parser {
     }
 
     load() {
-        this.onReady(async () => {
-            Mobs.Plugins = (await import('../util/plugins')).default(__dirname + '/../../data/combat/');
+        this.onReady(() => {
+            //Mobs.Plugins = (await import('../util/plugins')).default(__dirname + '/../../data/combat/');
+            Mobs.Plugins = [];
 
             log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
             log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
@@ -103,7 +108,7 @@ class Parser {
     loadItemData() {
         let itemCounter = 0;
 
-        _.each(ItemData, async (value: any, key) => {
+        _.each(ItemData, (value: any, key) => {
             key = key.toLowerCase();
 
             Items.Data[key] = {
@@ -134,7 +139,7 @@ class Parser {
             Items.Ids[value.id] = Items.Data[key];
 
             if (value.plugin)
-                Items.Plugins[value.id] = (await import('../../data/items/' + value.plugin)).default;
+                Items.Plugins[value.id] = itemPlugins[value.plugin];
 
             itemCounter++;
         });

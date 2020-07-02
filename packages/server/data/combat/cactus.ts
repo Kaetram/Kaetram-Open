@@ -1,6 +1,7 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
 import Hit from '../../ts/game/entity/character/combat/hit';
 import Modules from '../../ts/util/modules';
+import log from '../../ts/util/log';
 
 class Cactus extends Combat {
 
@@ -53,7 +54,7 @@ class Cactus extends Combat {
 
         let hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 
-        self.hit(self.character, attacker, hitInfo, true);
+        self.hit(self.character, attacker, hitInfo);
     }
 
 }
