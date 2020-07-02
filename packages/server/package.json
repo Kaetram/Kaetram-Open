@@ -7,7 +7,7 @@
     "homepage": "https://kaetram.com/",
     "main": "./dist/main.js",
     "scripts": {
-        "start": "node ./dist/ts/main.js",
+        "start": "node --max-old-space-size=4096 ./dist/ts/main.js",
         "dev": "ts-node-dev ./ts/main.ts",
         "build": "tsc"
     },
