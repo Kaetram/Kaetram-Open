@@ -3,6 +3,7 @@ import Modules from '../../../../../util/modules';
 import Player from '../player';
 import World from '../../../../world';
 import Profession from './impl/profession';
+import professions from './impl';
 import log from '../../../../../util/log';
 
 class Professions {
@@ -28,11 +29,9 @@ class Professions {
          * enum. We use the key to generate the profession class instance.
          */
 
-        _.each(pList, async (profession) => {
+        _.each(pList, (profession) => {
             try {
-                let ProfessionClass = (
-                        await import(`./impl/${profession.toLowerCase()}`)
-                    ).default,
+                let ProfessionClass = professions[profession.toLowerCase()],
                     id = Modules.Professions[profession];
 
                 this.professions[id] = new ProfessionClass(id, this.player);

@@ -155,8 +155,7 @@ export default class InputController {
                         break;
 
                     case Modules.Keys.Esc:
-                        self.game.menu.profile.settings.open();
-
+                        self.game.menu.hideAll();
                         break;
                 }
 
