@@ -232,7 +232,7 @@ class Mob extends Character {
         this.respawnCallback = callback;
     }
 
-    onReturn(callback: Function) {
+    onReturn = (callback: Function) => {
         this.returnCallback = callback;
     }
 
@@ -240,7 +240,7 @@ class Mob extends Character {
         this.refreshCallback = callback;
     }
 
-    onDeath(callback: Function) {
+    onDeath = (callback: Function) => {
         this.deathCallback = callback;
     }
 

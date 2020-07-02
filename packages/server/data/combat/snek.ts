@@ -2,6 +2,7 @@ import Combat from '../../ts/game/entity/character/combat/combat';
 import Hit from '../../ts/game/entity/character/combat/hit';
 import Utils from '../../ts/util/utils';
 import Modules from '../../ts/util/modules';
+import log from '../../ts/util/log';
 
 class Snek extends Combat {
 
