@@ -10,7 +10,7 @@ class Trade {
     public oPlayer: Player;
 
 
-    constructor(player) {
+    constructor(player: Player) {
         this.player = player;
         this.oPlayer = null;
 

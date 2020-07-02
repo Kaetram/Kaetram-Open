@@ -1565,7 +1565,7 @@ class Player extends Character {
         this.killCallback = callback;
     }
 
-    onDeath(callback: Function) {
+    onDeath = (callback: Function) => {
         this.deathCallback = callback;
     }
 

@@ -1,9 +1,16 @@
+import _ from 'underscore';
 import Combat from '../../ts/game/entity/character/combat/combat';
 import Messages from '../../ts/network/messages';
 import Packets from '../../ts/network/packets';
 import Utils from '../../ts/util/utils';
 
 class Tenebris extends Combat {
+
+    illusions: Array<any>;
+    firstIllusionKilled: boolean;
+    lastIllusion: number;
+    respawnDelay: number;
+
 
     constructor(character) {
         character.spawnDistance = 24;
@@ -32,7 +39,7 @@ class Tenebris extends Combat {
         });
 
         if (!self.isIllusion())
-            self.forceTalk('Who dares summon Tenebris!');
+            self.forceTalk(null, 'Who dares summon Tenebris!');
     }
 
     reset() {
