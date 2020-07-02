@@ -7,8 +7,6 @@ const dotenvParseVariables = require('dotenv-parse-variables');
 
 const config = dotenvParseVariables(dotenv.config().parsed || { ...process.env });
 
-
-console.log(config)
 module.exports = {
     mode: 'development',
     entry: './js/main.js',
