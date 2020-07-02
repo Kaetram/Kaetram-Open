@@ -7,12 +7,9 @@
     "homepage": "https://kaetram.com/",
     "main": "./dist/main.js",
     "scripts": {
-        "start": "node --max-old-space-size=4096 ./dist/ts/main.js",
+        "start": "node ./dist/ts/main.js",
         "dev": "ts-node-dev ./ts/main.ts",
         "build": "tsc"
-    },
-    "engines": {
-        "node": "~12.10.0"
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",

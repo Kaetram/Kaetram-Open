@@ -33,7 +33,7 @@ class Main {
 
                 let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
-                log.notice('Connect locally via http://' + host + ':9000');
+                log.notice('Connect locally via http://' + host + ':' + config.port);
             };
 
             this.world = new World(this.webSocket, this.database);

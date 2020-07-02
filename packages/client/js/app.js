@@ -20,8 +20,6 @@ export default class App {
             worldSwitch: process.env.WORLD_SWITCH,
         };
 
-        console.log(self.config);
-
         self.body = $('body');
         self.parchment = $('#parchment');
         self.container = $('#container');
