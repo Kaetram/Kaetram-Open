@@ -3,7 +3,7 @@
         "strict": true,
         "module": "commonjs",
         "target": "esnext",
-        "types": ["node"],
+        "types": [],
         "outDir": "./dist",
         "importHelpers": true,
         "incremental": true,
