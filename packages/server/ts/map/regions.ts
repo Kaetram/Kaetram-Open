@@ -29,8 +29,8 @@ class Regions {
         this.zoneWidth = this.map.zoneWidth; // 25
         this.zoneHeight = this.map.zoneHeight; // 20
 
-        this.regionWidth = this.map.regionWidth; // 40
-        this.regionHeight = this.map.regionHeight; // 50
+        this.regionWidth = this.map.regionWidth;
+        this.regionHeight = this.map.regionHeight;
 
         this.linkedRegions = {};
 
@@ -178,6 +178,8 @@ class Regions {
     }
 
     isSurrounding(regionId: string, toRegionId: string) {
+        if (!regionId || !toRegionId) return false;
+
         return this.getSurroundingRegions(regionId, 1, true).indexOf(toRegionId) > -1;
     }
 }
