@@ -73,6 +73,8 @@ module.exports = function parse(json, options) {
             map.lights = [];
             map.plateau = {};
 
+            map.warps = {};
+
             break;
     }
 
@@ -194,6 +196,27 @@ module.exports = function parse(json, options) {
                                 y: door.y / 16
                             };
                         }
+                    });
+
+                    break;
+
+                case 'warps':
+
+                    let warps = layer.objects;
+
+                    _.each(warps, function(warp) {
+                        map.warps[warp.name] = {
+                            x: warp.x / 16,
+                            y: warp.y / 16
+                        }
+
+                        _.each(warp.properties, function(property) {
+                            if (property.name === 'level')
+                                property.value = parseInt(property.value);
+
+                            map.warps[warp.name][property.name] = property.value;
+                        });
+
                     });
 
                     break;
@@ -450,7 +473,7 @@ let parseLayer = function(layer) {
 
             if (mode === 'server' && tGid in map.rocks)
                 map.rockIndexes.push(k);
-                
+
         }
 
     }

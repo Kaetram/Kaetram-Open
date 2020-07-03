@@ -3,19 +3,23 @@
 import Modules from '../../../../util/modules';
 import Utils from '../../../../util/utils';
 import Player from './player';
+import Map from '../../../../map/map';
 
 class Warp {
 
     player: Player;
+    map: Map;
 
     lastWarp: number;
     warpTimeout: number;
 
     constructor(player: Player) {
         this.player = player;
+        this.map = player.map;
 
         this.lastWarp = 0;
         this.warpTimeout = 30000;
+
     }
 
     warp(id: number) {
@@ -24,31 +28,27 @@ class Warp {
             return;
         }
 
-        let data = Modules.Warps[id];
+        let data = this.map.getWarpById(id);
 
         if (!data)
             return;
 
-        let name = data[0],
-            x = data[3] ? data[1] + Utils.randomInt(0, 1) : data[1],
-            y = data[3] ? data[2] + Utils.randomInt(0, 1) : data[2],
-            levelRequirement: number = data[4];
-
         if (!this.player.finishedTutorial()) {
-            this.player.notify('You cannot warp while in this event.');
+            this.player.notify('You cannot warp while in the tutorial.');
             return;
         }
 
-        if (!this.hasRequirement(levelRequirement)) {
-            this.player.notify('You must be at least level ' + levelRequirement + ' to warp here!');
+        if (!this.hasRequirement(data.level)) {
+            this.player.notify(`You must be at least level ${data.level} to warp here!`);
             return;
         }
 
-        this.player.teleport(x, y, false, true);
+        this.player.teleport(data.x, data.y, false, true);
 
-        this.player.notify('You have been warped to ' + name);
+        this.player.notify(`You have been warped to ${data.name}`);
 
         this.lastWarp = new Date().getTime();
+
     }
 
     setLastWarp(lastWarp: number) {

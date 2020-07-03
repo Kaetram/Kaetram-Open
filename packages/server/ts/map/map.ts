@@ -40,6 +40,7 @@ class Map {
     objects: any;
     cursors: any;
     doors: any;
+    warps: any;
 
     trees: any;
     treeIndexes: any;
@@ -89,6 +90,7 @@ class Map {
         this.plateau = map.plateau;
         this.objects = map.objects;
         this.cursors = map.cursors;
+        this.warps = map.warps;
 
         // Lumberjacking
         this.trees = map.trees;
@@ -99,14 +101,14 @@ class Map {
         this.rockIndexes = map.rockIndexes;
 
         this.zoneWidth = 25;
-        this.zoneHeight = 20;
+        this.zoneHeight = 25;
 
         /**
          * These are temporarily hardcoded,
          * but we will use a dynamic approach.
          */
-        this.regionWidth = 40;
-        this.regionHeight = 20;
+        this.regionWidth = this.width / this.zoneWidth;
+        this.regionHeight = this.height / this.zoneHeight;
 
         this.areas = {};
 
@@ -418,6 +420,19 @@ class Map {
                     return this.tilesets[id];
 
         return null;
+    }
+
+    getWarpById(id: number) {
+        let warpName = Object.keys(Modules.Warps)[id];
+
+        if (!warpName)
+            return null;
+
+        let warp = this.warps[warpName.toLowerCase()];
+
+        warp.name = warpName;
+
+        return warp;
     }
 
     isReady(callback: Function) {
