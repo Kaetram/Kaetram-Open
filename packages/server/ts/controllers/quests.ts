@@ -3,13 +3,14 @@
 import _ from 'underscore';
 import Introduction from '../game/entity/character/player/quests/impl/introduction';
 import BulkySituation from '../game/entity/character/player/quests/impl/bulkysituation';
-import QuestData from '../../data/quests.json';
-import AchievementData from '../../data/achievements.json';
 import Achievement from '../game/entity/character/player/achievement';
 import Player from '../game/entity/character/player/player';
 import Quest from '../game/entity/character/player/quests/quest';
 import NPC from '../game/entity/npc/npc';
 import Mob from '../game/entity/character/mob/mob';
+
+import * as QuestData from '../../data/quests.json';
+import * as AchievementData from '../../data/achievements.json';
 
 class Quests {
 
