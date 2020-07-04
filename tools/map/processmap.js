@@ -252,8 +252,11 @@ module.exports = function parse(json, options) {
                             y: chest.y / map.tilesize
                         };
 
-                        oChest['i'] = _.map(chest.properties[0].value.split(','), function(name) {
-                            return name;
+                        _.each(chest.properties, (property) => {
+                            if (property.name === 'items')
+                                oChest.i = property.value.split(',');
+                            else
+                                oChest[property.name] = property.value;
                         });
 
                         map.chests.push(oChest);
