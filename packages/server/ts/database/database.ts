@@ -14,11 +14,11 @@ class Database {
             case 'mongo':
             case 'mongodb':
                 this.database = new MongoDB(
-                    config.mongoHost,
-                    config.mongoPort,
-                    config.mongoUser,
-                    config.mongoPassword,
-                    config.mongoDatabase
+                    config.mongodbHost,
+                    config.mongodbPort,
+                    config.mongodbUser,
+                    config.mongodbPassword,
+                    config.mongodbDatabase
                 );
                 break;
 

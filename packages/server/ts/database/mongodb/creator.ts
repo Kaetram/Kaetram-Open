@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 import MongoDB from './mongodb';
 import log from '../../util/log';
 import config from '../../../config';
@@ -278,7 +278,7 @@ class Creator {
     }
 
     static getPasswordHash(password, callback) {
-        bcrypt.hash(password, 10, (error, hash) => {
+        bcryptjs.hash(password, 10, (error, hash) => {
             if (error) throw error;
 
             callback(hash);
