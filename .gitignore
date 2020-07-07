@@ -1,11 +1,5 @@
-**/config.json
-**/config.js
-**/config.ts
-config.ts
-test.js
-
-packages/server/js
-packages/server/config.ts
+packages/client/.env
+packages/server/.env
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
