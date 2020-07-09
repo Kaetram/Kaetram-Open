@@ -32,13 +32,13 @@ export default class Map {
 
     ready() {
         var self = this,
-            rC = function() {
+            rC = function () {
                 if (self.readyCallback) self.readyCallback();
             };
 
         if (self.mapLoaded && self.tilesetsLoaded) rC();
         else
-            setTimeout(function() {
+            setTimeout(function () {
                 self.loadTilesets();
                 self.ready();
             }, 50);
@@ -53,7 +53,7 @@ export default class Map {
             var worker = new Worker('./js/map/mapworker.js');
             worker.postMessage(1);
 
-            worker.onmessage = function(event) {
+            worker.onmessage = function (event) {
                 var map = event.data;
 
                 self.parseMap(map);
@@ -65,7 +65,7 @@ export default class Map {
 
             $.get(
                 'data/maps/map.json',
-                function(data) {
+                function (data) {
                     self.parseMap(data);
                     self.loadCollisions();
                     self.mapLoaded = true;
@@ -119,8 +119,8 @@ export default class Map {
 
         if (self.rawTilesets.length < 1) return;
 
-        _.each(self.rawTilesets, function(rawTileset) {
-            self.loadTileset(rawTileset, function(tileset) {
+        _.each(self.rawTilesets, function (rawTileset) {
+            self.loadTileset(rawTileset, function (tileset) {
                 self.tilesets[tileset.index] = tileset;
 
                 if (self.tilesets.length === self.rawTilesets.length) self.tilesetsLoaded = true;
@@ -144,7 +144,7 @@ export default class Map {
         tileset.loaded = true;
         tileset.scale = rawTileset.scale;
 
-        tileset.onload = function() {
+        tileset.onload = function () {
             if (tileset.width % self.tileSize > 0)
                 // Prevent uneven tilemaps from loading.
                 throw Error('The tile size is malformed in the tile set: ' + tileset.path);
@@ -152,7 +152,7 @@ export default class Map {
             callback(tileset);
         };
 
-        tileset.onerror = function() {
+        tileset.onerror = function () {
             throw Error('Could not find tile set: ' + tileset.path);
         };
     }
@@ -309,12 +309,12 @@ export default class Map {
             for (var j = 0; j < self.width; j++) self.grid[i][j] = 0;
         }
 
-        _.each(self.collisions, function(index) {
+        _.each(self.collisions, function (index) {
             var position = self.indexToGridPosition(index + 1);
             self.grid[position.y][position.x] = 1;
         });
 
-        _.each(self.blocking, function(index) {
+        _.each(self.blocking, function (index) {
             var position = self.indexToGridPosition(index + 1);
 
             if (self.grid[position.y]) self.grid[position.y][position.x] = 1;
@@ -324,7 +324,7 @@ export default class Map {
     updateCollisions() {
         var self = this;
 
-        _.each(self.collisions, function(index) {
+        _.each(self.collisions, function (index) {
             var position = self.indexToGridPosition(index + 1);
 
             if (position.x > self.width - 1) position.x = self.width - 1;

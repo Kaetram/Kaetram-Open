@@ -33,7 +33,7 @@ export default class EntitiesController {
         if (!self.sprites) {
             self.sprites = new Sprites(self.game.renderer);
 
-            self.sprites.onLoadedSprites(function() {
+            self.sprites.onLoadedSprites(function () {
                 self.game.input.loadCursors();
             });
         }
@@ -133,7 +133,7 @@ export default class EntitiesController {
                  * Move this into the external overall function
                  */
 
-                projectile.onImpact(function() {
+                projectile.onImpact(function () {
                     /**
                      * The data in the projectile is only for rendering purposes
                      * there is nothing you can change for the actual damage output here.
@@ -198,7 +198,7 @@ export default class EntitiesController {
                 player.setSprite(self.getSprite(info.armour.string));
                 player.idle();
 
-                _.each(equipments, function(equipment) {
+                _.each(equipments, function (equipment) {
                     player.setEquipment(
                         equipment.type,
                         equipment.name,
@@ -276,7 +276,7 @@ export default class EntitiesController {
 
         ids = ids[0];
 
-        _.each(self.entities, function(entity) {
+        _.each(self.entities, function (entity) {
             if (ids) {
                 if (ids.indexOf(parseInt(entity.id)) < 0 && entity.id !== self.game.player.id)
                     self.removeEntity(entity);
@@ -289,7 +289,7 @@ export default class EntitiesController {
     clearPlayers(exception) {
         var self = this;
 
-        _.each(self.entities, function(entity) {
+        _.each(self.entities, function (entity) {
             if (entity.id !== exception.id && entity.type === 'player') self.removeEntity(entity);
         });
 
@@ -366,7 +366,7 @@ export default class EntitiesController {
     }
 
     forEachEntity(callback) {
-        _.each(this.entities, function(entity) {
+        _.each(this.entities, function (entity) {
             callback(entity);
         });
     }
@@ -378,7 +378,7 @@ export default class EntitiesController {
             for (var j = y - radius, max_j = y + radius; j <= max_j; j++) {
                 if (self.map.isOutOfBounds(i, j)) continue;
 
-                _.each(self.grids.renderingGrid[j][i], function(entity) {
+                _.each(self.grids.renderingGrid[j][i], function (entity) {
                     callback(entity);
                 });
             }

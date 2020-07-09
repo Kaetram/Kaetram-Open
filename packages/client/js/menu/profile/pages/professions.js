@@ -16,7 +16,7 @@ export default class Professions extends Page {
     load(professions) {
         var self = this;
 
-        _.each(professions, function(profession) {
+        _.each(professions, function (profession) {
             var item = self.getItem(profession.id),
                 name = self.getName(profession.id),
                 info = $('<p></p>');

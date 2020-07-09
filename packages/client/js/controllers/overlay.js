@@ -44,7 +44,7 @@ export default class OverlayController {
             self.details.html('');
         }
 
-        self.onUpdate(function(entityId, hitPoints) {
+        self.onUpdate(function (entityId, hitPoints) {
             if (
                 self.hovering &&
                 self.hovering.id === entityId &&

@@ -113,7 +113,7 @@ export default class InfoController {
 
         self.infos[info.id] = info;
 
-        info.onDestroy(function(id) {
+        info.onDestroy(function (id) {
             self.destroyQueue.add(id);
         });
     }
@@ -121,11 +121,11 @@ export default class InfoController {
     update(time) {
         var self = this;
 
-        self.forEachInfo(function(info) {
+        self.forEachInfo(function (info) {
             info.update(time);
         });
 
-        self.destroyQueue.forEachQueue(function(id) {
+        self.destroyQueue.forEachQueue(function (id) {
             delete self.infos[id];
         });
 
@@ -141,7 +141,7 @@ export default class InfoController {
     }
 
     forEachInfo(callback) {
-        _.each(this.infos, function(info) {
+        _.each(this.infos, function (info) {
             callback(info);
         });
     }

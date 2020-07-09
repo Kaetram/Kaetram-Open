@@ -29,9 +29,9 @@ class Helper {
             index = self.gridPositionToIndex(x, y);
 
         console.log(
-            `"${index}": { "data": [${
-                worldClient.data[index]
-            }], "isColliding": ${worldClient.collisions.indexOf(index) > -1} },`
+            `"${index}": { "data": [${worldClient.data[index]}], "isColliding": ${
+                worldClient.collisions.indexOf(index) > -1
+            } },`
         );
     }
 

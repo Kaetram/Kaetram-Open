@@ -30,7 +30,7 @@ export default class Sprite {
         self.image.crossOrigin = 'Anonymous';
         self.image.src = self.filepath;
 
-        self.image.onload = function() {
+        self.image.onload = function () {
             self.loaded = true;
 
             if (self.loadHurt) self.createHurtSprite();

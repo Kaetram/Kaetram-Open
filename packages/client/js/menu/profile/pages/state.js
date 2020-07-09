@@ -53,23 +53,23 @@ export default class State extends Page {
 
         self.loaded = true;
 
-        self.weaponSlot.click(function() {
+        self.weaponSlot.click(function () {
             self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'weapon']);
         });
 
-        self.armourSlot.click(function() {
+        self.armourSlot.click(function () {
             self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'armour']);
         });
 
-        self.pendantSlot.click(function() {
+        self.pendantSlot.click(function () {
             self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'pendant']);
         });
 
-        self.ringSlot.click(function() {
+        self.ringSlot.click(function () {
             self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'ring']);
         });
 
-        self.bootsSlot.click(function() {
+        self.bootsSlot.click(function () {
             self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'boots']);
         });
     }
@@ -83,7 +83,7 @@ export default class State extends Page {
         self.ringSlot.css('background-image', self.getImageFormat(self.player.ring.string));
         self.bootsSlot.css('background-image', self.getImageFormat(self.player.boots.string));
 
-        self.forEachSlot(function(slot) {
+        self.forEachSlot(function (slot) {
             slot.css('background-size', '600%');
         });
     }
@@ -103,7 +103,7 @@ export default class State extends Page {
     }
 
     forEachSlot(callback) {
-        _.each(this.slots, function(slot) {
+        _.each(this.slots, function (slot) {
             callback(slot);
         });
     }

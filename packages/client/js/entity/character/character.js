@@ -57,7 +57,7 @@ export default class Character extends Entity {
         self.criticalAnimation = new Animation('atk_down', 10, 0, 48, 48);
         self.criticalAnimation.setSpeed(30);
 
-        self.criticalAnimation.setCount(1, function() {
+        self.criticalAnimation.setCount(1, function () {
             self.critical = false;
 
             self.criticalAnimation.reset();
@@ -68,7 +68,7 @@ export default class Character extends Entity {
         self.terrorAnimation = new Animation('explosion', 8, 0, 64, 64);
         self.terrorAnimation.setSpeed(50);
 
-        self.terrorAnimation.setCount(1, function() {
+        self.terrorAnimation.setCount(1, function () {
             self.terror = false;
 
             self.terrorAnimation.reset();
@@ -83,7 +83,7 @@ export default class Character extends Entity {
         self.explosionAnimation = new Animation('explosion', 8, 0, 64, 64);
         self.explosionAnimation.setSpeed(50);
 
-        self.explosionAnimation.setCount(1, function() {
+        self.explosionAnimation.setCount(1, function () {
             self.explosion = false;
 
             self.explosionAnimation.reset();
@@ -94,7 +94,7 @@ export default class Character extends Entity {
         self.healingAnimation = new Animation('explosion', 8, 0, 48, 48);
         self.healingAnimation.setSpeed(50);
 
-        self.healingAnimation.setCount(1, function() {
+        self.healingAnimation.setCount(1, function () {
             self.healing = false;
 
             self.healingAnimation.reset();
@@ -435,7 +435,7 @@ export default class Character extends Entity {
 
         if (self.healthBarTimeout) clearTimeout(self.healthBarTimeout);
 
-        self.healthBarTimeout = setTimeout(function() {
+        self.healthBarTimeout = setTimeout(function () {
             self.healthBarVisible = false;
         }, 7000);
     }
@@ -469,7 +469,7 @@ export default class Character extends Entity {
     forEachAttacker(callback) {
         var self = this;
 
-        _.each(self.attackers, function(attacker) {
+        _.each(self.attackers, function (attacker) {
             callback(attacker);
         });
     }

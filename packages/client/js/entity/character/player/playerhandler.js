@@ -20,7 +20,7 @@ export default class PlayerHandler {
     load() {
         var self = this;
 
-        self.player.onRequestPath(function(x, y) {
+        self.player.onRequestPath(function (x, y) {
             if (self.player.dead || self.player.frozen) return null;
 
             /**
@@ -57,7 +57,7 @@ export default class PlayerHandler {
             return self.game.findPath(self.player, x, y, ignores);
         });
 
-        self.player.onStartPathing(function(path) {
+        self.player.onStartPathing(function (path) {
             var i = path.length - 1;
 
             self.player.moving = true;
@@ -79,7 +79,7 @@ export default class PlayerHandler {
             ]);
         });
 
-        self.player.onStopPathing(function(x, y) {
+        self.player.onStopPathing(function (x, y) {
             self.entities.unregisterPosition(self.player);
             self.entities.registerPosition(self.player);
 
@@ -120,11 +120,11 @@ export default class PlayerHandler {
             self.player.moving = false;
         });
 
-        self.player.onBeforeStep(function() {
+        self.player.onBeforeStep(function () {
             self.entities.unregisterPosition(self.player);
         });
 
-        self.player.onStep(function() {
+        self.player.onStep(function () {
             if (self.player.hasNextStep()) self.entities.registerDuality(self.player);
 
             if (!self.camera.centered || self.camera.lockX || self.camera.lockY) self.checkBounds();
@@ -145,11 +145,11 @@ export default class PlayerHandler {
             }
         });
 
-        self.player.onSecondStep(function() {
+        self.player.onSecondStep(function () {
             self.renderer.updateAnimatedTiles();
         });
 
-        self.player.onMove(function() {
+        self.player.onMove(function () {
             /**
              * This is a callback representing the absolute exact position of the player.
              */
@@ -159,13 +159,13 @@ export default class PlayerHandler {
             if (self.player.hasTarget()) self.player.follow(self.player.target);
         });
 
-        self.player.onUpdateArmour(function(armourName, power) {
+        self.player.onUpdateArmour(function (armourName, power) {
             self.player.setSprite(self.game.getSprite(armourName));
 
             if (self.game.menu && self.game.menu.profile) self.game.menu.profile.update();
         });
 
-        self.player.onUpdateEquipment(function(type, power) {
+        self.player.onUpdateEquipment(function (type, power) {
             if (self.game.menu && self.game.menu.profile) self.game.menu.profile.update();
         });
     }

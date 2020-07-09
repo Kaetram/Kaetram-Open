@@ -15,7 +15,7 @@ export default class EntityHandler {
         if (!self.entity || !self.game) return;
 
         if (self.isCharacter()) {
-            self.entity.onRequestPath(function(x, y) {
+            self.entity.onRequestPath(function (x, y) {
                 var ignores = [];
 
                 if (self.entity.gridX === x && self.entity.gridY === y) return ignores;
@@ -25,14 +25,14 @@ export default class EntityHandler {
                 return self.game.findPath(self.entity, x, y, ignores);
             });
 
-            self.entity.onBeforeStep(function() {
+            self.entity.onBeforeStep(function () {
                 self.entities.unregisterPosition(self.entity);
             });
 
-            self.entity.onStep(function() {
+            self.entity.onStep(function () {
                 self.entities.registerDuality(self.entity);
 
-                self.entity.forEachAttacker(function(attacker) {
+                self.entity.forEachAttacker(function (attacker) {
                     /**
                      * This is the client-sided logic for representing PVP
                      * fights. It basically adds another layer of movement
@@ -68,7 +68,7 @@ export default class EntityHandler {
                     self.entity.stop(false);
             });
 
-            self.entity.onStopPathing(function() {
+            self.entity.onStopPathing(function () {
                 self.entities.grids.addToRenderingGrid(
                     self.entity,
                     self.entity.gridX,

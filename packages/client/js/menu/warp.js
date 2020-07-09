@@ -17,11 +17,11 @@ export default class Wrap {
     load() {
         var self = this;
 
-        self.button.click(function() {
+        self.button.click(function () {
             self.open();
         });
 
-        self.close.click(function() {
+        self.close.click(function () {
             self.hide();
         });
 
@@ -29,7 +29,7 @@ export default class Wrap {
             var warp = self.mapFrame.find('#warp' + i);
 
             if (warp) {
-                warp.click(function(event) {
+                warp.click(function (event) {
                     self.hide();
 
                     self.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);

@@ -185,13 +185,13 @@ class Entity {
         let string = this.isMob()
                 ? Mobs.idToString(this.id)
                 : this.isNPC()
-                    ? NPCs.idToString(this.id)
-                    : Items.idToString(this.id),
+                ? NPCs.idToString(this.id)
+                : Items.idToString(this.id),
             name = this.isMob()
                 ? Mobs.idToName(this.id)
                 : this.isNPC()
-                    ? NPCs.idToName(this.id)
-                    : Items.idToName(this.id),
+                ? NPCs.idToName(this.id)
+                : Items.idToName(this.id),
             data: any = {
                 type: this.type,
                 id: this.instance,

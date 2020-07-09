@@ -251,7 +251,7 @@ export default class Player extends Character {
         self.blink(90);
 
         if (!self.tempBlinkTimeout)
-            self.tempBlinkTimeout = setTimeout(function() {
+            self.tempBlinkTimeout = setTimeout(function () {
                 self.stopBlinking();
             }, 500);
     }

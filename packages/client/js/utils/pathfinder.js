@@ -73,7 +73,7 @@ export default class PathFinder {
             y,
             g;
 
-        _.each(self.ignores, function(entity) {
+        _.each(self.ignores, function (entity) {
             x = entity.hasPath() ? entity.nextGridX : entity.gridX;
             y = entity.hasPath() ? entity.nextGridY : entity.gridY;
 
