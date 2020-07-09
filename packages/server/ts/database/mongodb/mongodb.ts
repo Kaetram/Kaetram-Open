@@ -37,7 +37,9 @@ class MongoDB {
         let url = `mongodb://${this.host}:${this.port}/${this.database}`;
 
         if (config.mongodbAuth)
-            url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
+            url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${
+                this.database
+            }`;
 
         let client = new MongoClient(url, {
             useUnifiedTopology: true,
@@ -65,9 +67,7 @@ class MongoDB {
 
     login(player) {
         this.getDatabase((database) => {
-            let dataCursor = database
-                    .collection('player_data')
-                    .find({ username: player.username }),
+            let dataCursor = database.collection('player_data').find({ username: player.username }),
                 equipmentCursor = database
                     .collection('player_equipment')
                     .find({ username: player.username }),
@@ -103,25 +103,19 @@ class MongoDB {
 
     verify(player, callback) {
         this.getDatabase((database) => {
-            let dataCursor = database
-                .collection('player_data')
-                .find({ username: player.username });
+            let dataCursor = database.collection('player_data').find({ username: player.username });
 
             dataCursor.toArray().then((data) => {
                 if (data.length === 0) callback({ status: 'error' });
                 else {
                     let info = data[0];
 
-                    bcryptjs.compare(
-                        player.password,
-                        info.password,
-                        (error, result) => {
-                            if (error) throw error;
+                    bcryptjs.compare(player.password, info.password, (error, result) => {
+                        if (error) throw error;
 
-                            if (result) callback({ status: 'success' });
-                            else callback({ status: 'error' });
-                        }
-                    );
+                        if (result) callback({ status: 'success' });
+                        else callback({ status: 'error' });
+                    });
                 }
             });
         });
@@ -134,11 +128,7 @@ class MongoDB {
 
             cursor.toArray().then((info) => {
                 if (info.length === 0) {
-                    log.notice(
-                        'No player data found for ' +
-                            player.username +
-                            '. Creating user.'
-                    );
+                    log.notice('No player data found for ' + player.username + '. Creating user.');
 
                     player.new = true;
 
@@ -155,15 +145,12 @@ class MongoDB {
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
-            log.debug(
-                'Looking for - ' + player.email + ' or ' + player.username
-            );
+            log.debug('Looking for - ' + player.email + ' or ' + player.username);
 
             emailCursor.toArray().then((emailArray) => {
                 if (emailArray.length === 0) {
                     usernameCursor.toArray().then((usernameArray) => {
-                        if (usernameArray.length === 0)
-                            callback({ exists: false });
+                        if (usernameArray.length === 0) callback({ exists: false });
                         else callback({ exists: true, type: 'user' });
                     });
                 } else callback({ exists: true, type: 'email' });
@@ -193,12 +180,7 @@ class MongoDB {
                     (error, result) => {
                         if (error) throw error;
 
-                        if (result)
-                            log.notice(
-                                'Player ' +
-                                    player.username +
-                                    ' has been deleted.'
-                            );
+                        if (result) log.notice('Player ' + player.username + ' has been deleted.');
                     }
                 );
             });
@@ -238,8 +220,7 @@ class MongoDB {
                         (error, result) => {
                             if (error) throw error;
 
-                            if (result)
-                                callback('Successfully updated positions.');
+                            if (result) callback('Successfully updated positions.');
                         }
                     );
                 });

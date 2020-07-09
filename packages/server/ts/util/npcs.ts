@@ -5,34 +5,26 @@ export default {
     Ids: {},
 
     idToString(id: number) {
-
-        if (id in this.Ids)
-            return this.Ids[id].key;
+        if (id in this.Ids) return this.Ids[id].key;
 
         return null;
     },
 
     idToName(id: number) {
-
-        if (id in this.Ids)
-            return this.Ids[id].name;
+        if (id in this.Ids) return this.Ids[id].name;
 
         return null;
     },
 
     getText(id: number) {
-
-        if (id in this.Ids)
-            return this.Ids[id].text;
+        if (id in this.Ids) return this.Ids[id].text;
 
         return null;
     },
 
     getType(id: number) {
-
-        if (id in this.Ids)
-            return this.Ids[id].type;
+        if (id in this.Ids) return this.Ids[id].type;
 
         return null;
-    }
-}
+    },
+};

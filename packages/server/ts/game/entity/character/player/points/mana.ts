@@ -3,7 +3,6 @@
 import Points from './points';
 
 class Mana extends Points {
-
     manaCallback: Function;
     maxManaCallback: Function;
 
@@ -14,15 +13,13 @@ class Mana extends Points {
     setMana(mana: number) {
         this.points = mana;
 
-        if (this.manaCallback)
-            this.manaCallback();
+        if (this.manaCallback) this.manaCallback();
     }
 
     setMaxMana(maxMana: number) {
         this.maxPoints = maxMana;
 
-        if (this.maxManaCallback)
-            this.maxManaCallback();
+        if (this.maxManaCallback) this.maxManaCallback();
     }
 
     getMana() {
@@ -40,7 +37,6 @@ class Mana extends Points {
     onMaxMana(callback: Function) {
         this.maxManaCallback = callback;
     }
-
 }
 
 export default Mana;

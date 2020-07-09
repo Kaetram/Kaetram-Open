@@ -1,7 +1,6 @@
 /* global module */
 
 class Hit {
-
     type: any;
     damage: number;
 
@@ -11,7 +10,6 @@ class Hit {
     poison: boolean;
 
     constructor(type: any, damage: number) {
-
         this.type = type;
         this.damage = damage;
 
@@ -19,7 +17,6 @@ class Hit {
         this.aoe = false;
         this.terror = false;
         this.poison = false;
-
     }
 
     isRanged() {
@@ -45,10 +42,9 @@ class Hit {
             isRanged: this.isRanged(),
             isAoE: this.isAoE(),
             hasTerror: this.terror,
-            isPoison: this.poison
-        }
+            isPoison: this.poison,
+        };
     }
-
 }
 
 export default Hit;

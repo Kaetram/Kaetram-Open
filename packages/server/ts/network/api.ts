@@ -221,9 +221,7 @@ class API {
                 let data = JSON.parse(body);
 
                 if (data.error) {
-                    source.notify(
-                        `Player @aquamarine@${target}@white@ is not online.`
-                    );
+                    source.notify(`Player @aquamarine@${target}@white@ is not online.`);
                     return;
                 }
 

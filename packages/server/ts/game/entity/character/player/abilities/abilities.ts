@@ -5,7 +5,6 @@ import Player from '../player';
 import Ability from './impl/ability';
 
 class Abilities {
-
     player: Player;
 
     abilities: any;
@@ -15,7 +14,6 @@ class Abilities {
     shortcutSize: number;
 
     constructor(player: Player) {
-
         this.player = player;
 
         this.abilities = {};
@@ -30,30 +28,24 @@ class Abilities {
     }
 
     addShortcut(ability: Ability) {
-
-        if (this.shortcutSize >= 5)
-            return;
+        if (this.shortcutSize >= 5) return;
 
         this.shortcuts.push(ability.name);
     }
 
     removeAbility(ability: Ability) {
-
-        if (this.isShortcut(ability))
-            this.removeShortcut(this.shortcuts.indexOf(ability.name));
+        if (this.isShortcut(ability)) this.removeShortcut(this.shortcuts.indexOf(ability.name));
 
         delete this.abilities[ability.name];
     }
 
     removeShortcut(index: number) {
-        if (index > -1)
-            this.shortcuts.splice(index, 1);
+        if (index > -1) this.shortcuts.splice(index, 1);
     }
 
     hasAbility(ability: Ability) {
         _.each(this.abilities, (uAbility: Ability) => {
-            if (uAbility.name === ability.name)
-                return true;
+            if (uAbility.name === ability.name) return true;
         });
 
         return false;
@@ -77,10 +69,9 @@ class Abilities {
             username: this.player.username,
             abilities: abilities,
             abilityLevels: abilityLevels,
-            shortcuts: shortcuts
-        }
+            shortcuts: shortcuts,
+        };
     }
-
 }
 
 export default Abilities;

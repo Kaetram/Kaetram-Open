@@ -9,7 +9,6 @@ import * as https from 'https';
 import Utils from '../util/utils';
 
 class WebSocket extends Socket {
-
     host: string;
     version: string;
     ips: {};
@@ -31,19 +30,20 @@ class WebSocket extends Socket {
         let readyWebSocket = (port: number) => {
             log.info('Server is now listening on: ' + port);
 
-            if (this.webSocketReadyCallback)
-                this.webSocketReadyCallback();
+            if (this.webSocketReadyCallback) this.webSocketReadyCallback();
         };
 
         let server = config.ssl ? https : http;
 
-        this.httpServer = server.createServer((_request, response) => {
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write('This is server, why are you here?');
-            response.end();
-        }).listen(port, host, () => {
-            readyWebSocket(port);
-        });
+        this.httpServer = server
+            .createServer((_request, response) => {
+                response.writeHead(200, { 'Content-Type': 'text/plain' });
+                response.write('This is server, why are you here?');
+                response.end();
+            })
+            .listen(port, host, () => {
+                readyWebSocket(port);
+            });
 
         this.io = new SocketIO(this.httpServer);
         this.io.on('connection', (socket: any) => {
@@ -57,11 +57,12 @@ class WebSocket extends Socket {
             socket.on('client', (data: any) => {
                 if (data.gVer !== this.version) {
                     client.sendUTF8('updated');
-                    client.close('Wrong client version - expected ' + this.version + ' received ' + data.gVer);
+                    client.close(
+                        'Wrong client version - expected ' + this.version + ' received ' + data.gVer
+                    );
                 }
 
-                if (this.connectionCallback)
-                    this.connectionCallback(client);
+                if (this.connectionCallback) this.connectionCallback(client);
 
                 this.addConnection(client);
             });

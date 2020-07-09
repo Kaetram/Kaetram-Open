@@ -9,7 +9,6 @@ import Rocks from '../../../../../../../data/professions/rocks';
 import Player from '../../player';
 
 class Mining extends Profession {
-
     tick: number;
 
     miningInterval: any;
@@ -27,25 +26,18 @@ class Mining extends Profession {
     }
 
     start() {
-        if (this.started)
-            return;
+        if (this.started) return;
 
         this.miningInterval = setInterval(() => {
-
             try {
-
-
-
             } catch (e) {}
-
         }, this.tick);
 
         this.started = true;
     }
 
     stop() {
-        if (!this.started)
-            return;
+        if (!this.started) return;
 
         this.rockId = null;
         this.targetId = null;
@@ -67,7 +59,9 @@ class Mining extends Profession {
         this.targetId = id;
 
         if (this.level < Rocks.Levels[this.rockId]) {
-            this.player.notify(`You must be at least level ${Rocks.Levels[this.rockId]} to mine this rock.`);
+            this.player.notify(
+                `You must be at least level ${Rocks.Levels[this.rockId]} to mine this rock.`
+            );
             return;
         }
 
