@@ -14,7 +14,7 @@ export default class SpritesController {
 
         self.sparksAnimation = null;
 
-        $.getJSON('data/sprites.json', function(json) {
+        $.getJSON('data/sprites.json', function (json) {
             self.load(json);
         });
 
@@ -24,7 +24,7 @@ export default class SpritesController {
     load(spriteData) {
         var self = this;
 
-        _.each(spriteData, function(sprite) {
+        _.each(spriteData, function (sprite) {
             self.sprites[sprite.id] = new Sprite(sprite);
         });
 
@@ -43,7 +43,7 @@ export default class SpritesController {
     updateSprites() {
         var self = this;
 
-        _.each(self.sprites, function(sprite) {
+        _.each(self.sprites, function (sprite) {
             sprite.update();
         });
 

@@ -75,7 +75,7 @@ export default class Entity {
     blink(speed) {
         var self = this;
 
-        self.blinking = setInterval(function() {
+        self.blinking = setInterval(function () {
             self.toggleVisibility();
         }, speed);
     }
@@ -108,7 +108,7 @@ export default class Entity {
         self.normalSprite = self.sprite;
         self.animations = sprite.createAnimations();
 
-        sprite.onLoad(function() {
+        sprite.onLoad(function () {
             if (sprite.loadHurt) self.hurtSprite = sprite.hurtSprite;
         });
 
@@ -152,7 +152,7 @@ export default class Entity {
         self.currentAnimation.setCount(
             count ? count : 0,
             onEndCount ||
-                function() {
+                function () {
                     self.idle();
                 }
         );

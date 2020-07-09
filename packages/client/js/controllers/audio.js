@@ -60,7 +60,7 @@ export default class AudioController {
 
         sound.addEventListener(
             'canplaythrough',
-            function(e) {
+            function (e) {
                 this.removeEventListener('canplaythrough', arguments.callee, false);
 
                 if (callback) callback();
@@ -70,7 +70,7 @@ export default class AudioController {
 
         sound.addEventListener(
             'error',
-            function() {
+            function () {
                 log.error('The audible: ' + name + ' could not be loaded - unsupported extension?');
 
                 self.audibles[name] = null;
@@ -86,7 +86,7 @@ export default class AudioController {
 
         self.audibles[name] = [sound];
 
-        _.times(channels - 1, function() {
+        _.times(channels - 1, function () {
             self.audibles[name].push(sound.cloneNode(true));
         });
 
@@ -103,7 +103,7 @@ export default class AudioController {
 
         switch (type) {
             case Modules.AudioTypes.Music:
-                self.fadeOut(self.song, function() {
+                self.fadeOut(self.song, function () {
                     self.reset(self.song);
                 });
 
@@ -157,7 +157,7 @@ export default class AudioController {
                 music.loop = true;
                 music.addEventListener(
                     'ended',
-                    function() {
+                    function () {
                         music.play();
                     },
                     false
@@ -180,7 +180,7 @@ export default class AudioController {
 
         self.clearFadeOut(song);
 
-        song.fadingIn = setInterval(function() {
+        song.fadingIn = setInterval(function () {
             song.volume += 0.02;
 
             if (song.volume >= self.getMusicVolume() - 0.02) {
@@ -197,7 +197,7 @@ export default class AudioController {
 
         self.clearFadeIn(song);
 
-        song.fadingOut = setInterval(function() {
+        song.fadingOut = setInterval(function () {
             song.volume -= 0.08;
 
             if (song.volume <= 0.08) {
@@ -215,7 +215,7 @@ export default class AudioController {
 
         if (!self.song) return;
 
-        self.fadeOut(self.song, function(song) {
+        self.fadeOut(self.song, function (song) {
             self.reset(song);
         });
 
@@ -248,7 +248,7 @@ export default class AudioController {
 
         if (!self.song) return;
 
-        self.fadeOut(self.song, function() {
+        self.fadeOut(self.song, function () {
             self.reset(self.song);
             self.song = null;
         });
@@ -263,7 +263,7 @@ export default class AudioController {
 
         if (!self.audibles[name]) return null;
 
-        var audible = _.detect(self.audibles[name], function(audible) {
+        var audible = _.detect(self.audibles[name], function (audible) {
             return audible.ended || audible.paused;
         });
 

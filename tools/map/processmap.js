@@ -81,7 +81,7 @@ module.exports = function parse(json, options) {
 
     map.tilesize = self.json.tilewidth;
 
-    let handleProperty = function(property, value, id) {
+    let handleProperty = function (property, value, id) {
         if (property === 'c' || property === 'o') collisions[id] = true;
 
         if (mode === 'client' || mode === 'info') {
@@ -111,10 +111,10 @@ module.exports = function parse(json, options) {
         if (mode === 'server' && property === 'rock') map.rocks[id] = value;
     };
 
-    let handleAnimation = function(id, firstGID, tile) {
+    let handleAnimation = function (id, firstGID, tile) {
         let animationData = [];
 
-        _.each(tile.animation, function(animation) {
+        _.each(tile.animation, function (animation) {
             animationData.push({
                 duration: animation.duration,
                 tileid: parseInt(firstGID) + parseInt(animation.tileid) - 1,
@@ -125,7 +125,7 @@ module.exports = function parse(json, options) {
     };
 
     if (self.json.tilesets instanceof Array) {
-        _.each(self.json.tilesets, function(tileset) {
+        _.each(self.json.tilesets, function (tileset) {
             let name = tileset.name.toLowerCase();
 
             if (mode === 'info' || mode === 'server')
@@ -143,21 +143,21 @@ module.exports = function parse(json, options) {
             if (name === 'mobs' && mode === 'server') {
                 mobsFirstGid = tileset.firstgid;
 
-                _.each(tileset.tiles, function(tile) {
+                _.each(tileset.tiles, function (tile) {
                     entities[parseInt(tile.id) + 1] = {};
 
-                    _.each(tile.properties, function(property) {
+                    _.each(tile.properties, function (property) {
                         entities[parseInt(tile.id) + 1][property.name] = property.value;
                     });
                 });
             }
 
-            _.each(tileset.tiles, function(tile, index) {
+            _.each(tileset.tiles, function (tile, index) {
                 let id = parseInt(tileset.firstgid) + parseInt(tile.id);
 
                 if (tile.animation && mode === 'info') handleAnimation(id, tileset.firstgid, tile);
                 else
-                    _.each(tile.properties, function(data) {
+                    _.each(tile.properties, function (data) {
                         handleProperty(
                             data.name,
                             isValid(parseInt(data.value, 10))
@@ -170,7 +170,7 @@ module.exports = function parse(json, options) {
         });
     }
 
-    _.each(self.json.layers, function(layer) {
+    _.each(self.json.layers, function (layer) {
         let name = layer.name.toLowerCase();
 
         if (mode === 'server')
@@ -178,7 +178,7 @@ module.exports = function parse(json, options) {
                 case 'doors':
                     let doors = layer.objects;
 
-                    _.each(doors, function(door) {
+                    _.each(doors, function (door) {
                         if (door.properties.length > 2) {
                             map.doors[door.id] = {
                                 o: door.properties[0].value,
@@ -195,13 +195,13 @@ module.exports = function parse(json, options) {
                 case 'warps':
                     let warps = layer.objects;
 
-                    _.each(warps, function(warp) {
+                    _.each(warps, function (warp) {
                         map.warps[warp.name] = {
                             x: warp.x / 16,
                             y: warp.y / 16,
                         };
 
-                        _.each(warp.properties, function(property) {
+                        _.each(warp.properties, function (property) {
                             if (property.name === 'level')
                                 property.value = parseInt(property.value);
 
@@ -214,7 +214,7 @@ module.exports = function parse(json, options) {
                 case 'chestareas':
                     let cAreas = layer.objects;
 
-                    _.each(cAreas, function(area) {
+                    _.each(cAreas, function (area) {
                         let chestArea = {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
@@ -222,7 +222,7 @@ module.exports = function parse(json, options) {
                             height: area.height / map.tilesize,
                         };
 
-                        _.each(area.properties, function(property) {
+                        _.each(area.properties, function (property) {
                             chestArea['t' + property.name] = property.value;
                         });
 
@@ -234,13 +234,13 @@ module.exports = function parse(json, options) {
                 case 'chests':
                     let chests = layer.objects;
 
-                    _.each(chests, function(chest) {
+                    _.each(chests, function (chest) {
                         let oChest = {
                             x: chest.x / map.tilesize,
                             y: chest.y / map.tilesize,
                         };
 
-                        oChest['i'] = _.map(chest.properties[0].value.split(','), function(name) {
+                        oChest['i'] = _.map(chest.properties[0].value.split(','), function (name) {
                             return name;
                         });
 
@@ -252,13 +252,13 @@ module.exports = function parse(json, options) {
                 case 'lights':
                     let lights = layer.objects;
 
-                    _.each(lights, function(lightObject) {
+                    _.each(lights, function (lightObject) {
                         let light = {
                             x: lightObject.x / 16 + 0.5,
                             y: lightObject.y / 16 + 0.5,
                         };
 
-                        _.each(lightObject.properties, function(property) {
+                        _.each(lightObject.properties, function (property) {
                             light[property.name] = property.value;
                         });
 
@@ -270,7 +270,7 @@ module.exports = function parse(json, options) {
                 case 'music':
                     let mAreas = layer.objects;
 
-                    _.each(mAreas, function(area) {
+                    _.each(mAreas, function (area) {
                         let musicArea = {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
@@ -278,7 +278,7 @@ module.exports = function parse(json, options) {
                             height: area.height / map.tilesize,
                         };
 
-                        _.each(area.properties, function(property) {
+                        _.each(area.properties, function (property) {
                             musicArea[property.name] = property.value;
                         });
 
@@ -290,7 +290,7 @@ module.exports = function parse(json, options) {
                 case 'pvp':
                     let pAreas = layer.objects;
 
-                    _.each(pAreas, function(area) {
+                    _.each(pAreas, function (area) {
                         let pvpArea = {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
@@ -306,7 +306,7 @@ module.exports = function parse(json, options) {
                 case 'overlays':
                     let overlayAreas = layer.objects;
 
-                    _.each(overlayAreas, function(area) {
+                    _.each(overlayAreas, function (area) {
                         let oArea = {
                             id: area.id,
                             x: area.x / map.tilesize,
@@ -315,7 +315,7 @@ module.exports = function parse(json, options) {
                             height: area.height / map.tilesize,
                         };
 
-                        _.each(area.properties, function(property) {
+                        _.each(area.properties, function (property) {
                             oArea[property.name] = isNaN(property.value)
                                 ? property.value
                                 : parseFloat(property.value);
@@ -329,7 +329,7 @@ module.exports = function parse(json, options) {
                 case 'camera':
                     let cameraAreas = layer.objects;
 
-                    _.each(cameraAreas, function(area) {
+                    _.each(cameraAreas, function (area) {
                         let cArea = {
                             id: area.id,
                             x: area.x / map.tilesize,
@@ -347,7 +347,7 @@ module.exports = function parse(json, options) {
                 case 'games':
                     let gAreas = layer.objects;
 
-                    _.each(gAreas, function(area) {
+                    _.each(gAreas, function (area) {
                         let gameArea = {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
@@ -375,7 +375,7 @@ module.exports = function parse(json, options) {
     return map;
 };
 
-let calculateDepth = function(map) {
+let calculateDepth = function (map) {
     let depth = 1;
 
     _.each(map.data, (info) => {
@@ -387,11 +387,11 @@ let calculateDepth = function(map) {
     return depth;
 };
 
-let isValid = function(number) {
+let isValid = function (number) {
     return number && !isNaN(number - 0) && number !== null && number !== '' && number !== false;
 };
 
-let parseLayer = function(layer) {
+let parseLayer = function (layer) {
     let name = layer.name.toLowerCase(),
         type = layer.type;
 
@@ -451,13 +451,13 @@ let parseLayer = function(layer) {
 };
 
 if (typeof String.prototype.startsWith !== 'function') {
-    String.prototype.startsWith = function(str) {
+    String.prototype.startsWith = function (str) {
         return str.length > 0 && this.substring(0, str.length) === str;
     };
 }
 
 if (typeof String.prototype.endsWith !== 'function') {
-    String.prototype.endsWith = function(str) {
+    String.prototype.endsWith = function (str) {
         return str.length > 0 && this.substring(this.length - str.length, this.length) === str;
     };
 }

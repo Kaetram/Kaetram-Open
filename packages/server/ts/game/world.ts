@@ -311,10 +311,10 @@ class World {
                 info = isMob
                     ? Mobs.Properties[key]
                     : isNpc
-                        ? NPCs.Properties[key]
-                        : isItem
-                            ? Items.getData(key)
-                            : null,
+                    ? NPCs.Properties[key]
+                    : isItem
+                    ? Items.getData(key)
+                    : null,
                 position = this.map.indexToGridPosition(data.tileIndex);
 
             position.x++;

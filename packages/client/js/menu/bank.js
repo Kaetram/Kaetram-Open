@@ -43,7 +43,7 @@ export default class Bank {
             if (item.string)
                 image.css('background-image', self.container.getImageFormat(item.string));
 
-            slot.click(function(event) {
+            slot.click(function (event) {
                 self.click('bank', event);
             });
 
@@ -84,7 +84,7 @@ export default class Bank {
             if (iItem.string)
                 slotImage.css('background-image', self.container.getImageFormat(iItem.string));
 
-            iSlot.click(function(event) {
+            iSlot.click(function (event) {
                 self.click('inventory', event);
             });
 
