@@ -179,7 +179,7 @@ export default class Game {
         self.map = new Map(self);
         self.overlays = new Overlay(self);
 
-        self.map.onReady(function() {
+        self.map.onReady(function () {
             if (!self.isDebug()) self.map.loadRegionData();
 
             self.app.sendStatus('Loading the pathfinder');
@@ -283,7 +283,7 @@ export default class Game {
         if (!self.pathfinder) return path;
 
         if (ignores)
-            _.each(ignores, function(entity) {
+            _.each(ignores, function (entity) {
                 self.pathfinder.ignoreEntity(entity);
             });
 
@@ -399,7 +399,7 @@ export default class Game {
         var items = self.entities.grids.itemGrid[y][x];
 
         if (_.size(items) > 0) {
-            _.each(items, function(item) {
+            _.each(items, function (item) {
                 if (item.stackable) return item;
             });
 

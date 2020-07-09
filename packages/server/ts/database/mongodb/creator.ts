@@ -74,9 +74,7 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_equipment for ${
-                            player.username
-                        }!`
+                        `An error has occurred while saving player_equipment for ${player.username}!`
                     );
 
                 if (!result) log.error(`Could not save player_equipment for ${player.username}!`);
@@ -112,9 +110,7 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_achievements for ${
-                            player.username
-                        }!`
+                        `An error has occurred while saving player_achievements for ${player.username}!`
                     );
 
                 if (!result)
@@ -180,9 +176,7 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_abilities for ${
-                            player.username
-                        }!`
+                        `An error has occurred while saving player_abilities for ${player.username}!`
                     );
 
                 if (!result) log.error(`Could not save player_abilities for ${player.username}!`);
@@ -202,9 +196,7 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_professions for ${
-                            player.username
-                        }!`
+                        `An error has occurred while saving player_professions for ${player.username}!`
                     );
 
                 if (!result) log.error(`Could not save player_professions for ${player.username}!`);
@@ -244,9 +236,7 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_inventory for ${
-                            player.username
-                        }!`
+                        `An error has occurred while saving player_inventory for ${player.username}!`
                     );
 
                 if (!result) log.error(`Could not save player_inventory for ${player.username}!`);

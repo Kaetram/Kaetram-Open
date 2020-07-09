@@ -69,7 +69,7 @@ export default class BubbleController {
     update(time) {
         var self = this;
 
-        _.each(self.bubbles, function(bubble) {
+        _.each(self.bubbles, function (bubble) {
             var entity = self.game.entities.get(bubble.id);
 
             if (entity) self.setTo(entity);
@@ -94,7 +94,7 @@ export default class BubbleController {
     clean() {
         var self = this;
 
-        _.each(self.bubbles, function(bubble) {
+        _.each(self.bubbles, function (bubble) {
             bubble.destroy();
         });
 

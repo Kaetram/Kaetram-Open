@@ -149,9 +149,7 @@ class Enchant {
         }
 
         log.info(
-            `Selected item ability info: ${this.selectedItem.ability} + ${
-                this.selectedItem.abilityLevel
-            }.`
+            `Selected item ability info: ${this.selectedItem.ability} + ${this.selectedItem.abilityLevel}.`
         );
 
         if (this.hasAbility(this.selectedItem)) {

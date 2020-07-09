@@ -73,7 +73,7 @@ export default class Messages {
     handleBulkData(data) {
         var self = this;
 
-        _.each(data, function(message) {
+        _.each(data, function (message) {
             self.handleData(message);
         });
     }

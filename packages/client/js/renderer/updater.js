@@ -29,7 +29,7 @@ export default class Updater {
     updateEntities() {
         var self = this;
 
-        self.game.entities.forEachEntity(function(entity) {
+        self.game.entities.forEachEntity(function (entity) {
             if (!entity) return;
 
             if (entity.spriteLoaded) {
@@ -51,11 +51,11 @@ export default class Updater {
 
                                 entity.movement.start(
                                     self.game.time,
-                                    function(x) {
+                                    function (x) {
                                         entity.x = x;
                                         entity.moved();
                                     },
-                                    function() {
+                                    function () {
                                         entity.x = entity.movement.endValue;
                                         entity.moved();
                                         entity.nextStep();
@@ -73,11 +73,11 @@ export default class Updater {
 
                                 entity.movement.start(
                                     self.game.time,
-                                    function(y) {
+                                    function (y) {
                                         entity.y = y;
                                         entity.moved();
                                     },
-                                    function() {
+                                    function () {
                                         entity.y = entity.movement.endValue;
                                         entity.moved();
                                         entity.nextStep();

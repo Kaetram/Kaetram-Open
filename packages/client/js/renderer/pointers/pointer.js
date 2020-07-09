@@ -20,7 +20,7 @@ export default class Pointer {
     load() {
         var self = this;
 
-        self.blinkInterval = setInterval(function() {
+        self.blinkInterval = setInterval(function () {
             if (self.visible) self.hide();
             else self.show();
 

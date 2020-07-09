@@ -27,7 +27,7 @@ export default class Quest extends Page {
 
         self.achievementsLength = achievements.length;
 
-        _.each(achievements, function(achievement) {
+        _.each(achievements, function (achievement) {
             var item = self.getItem(false, achievement.id),
                 name = self.getName(false, achievement.id);
 
@@ -68,7 +68,7 @@ export default class Quest extends Page {
 
         self.questsLength = quests.length;
 
-        _.each(quests, function(quest) {
+        _.each(quests, function (quest) {
             var item = self.getItem(true, quest.id),
                 name = self.getName(true, quest.id);
 

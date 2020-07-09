@@ -20,15 +20,15 @@ export default class Header {
     load() {
         var self = this;
 
-        self.player.onHitPoints(function() {
+        self.player.onHitPoints(function () {
             self.calculateHealthBar();
         });
 
-        self.player.onMaxHitPoints(function() {
+        self.player.onMaxHitPoints(function () {
             self.calculateHealthBar();
         });
 
-        self.player.onExperience(function() {
+        self.player.onExperience(function () {
             self.calculateExpBar();
         });
     }
@@ -86,7 +86,7 @@ export default class Header {
 
         self.health.addClass(tClass);
 
-        setTimeout(function() {
+        setTimeout(function () {
             self.health.removeClass(tClass);
         }, 500);
     }
