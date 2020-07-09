@@ -35,9 +35,7 @@ class Creator {
             this.saveProfessions(playerProfessions, player);
             //this.saveFriends(playerFriends, player);
             this.saveInventory(playerInventory, player, () => {
-                log.debug(
-                    `Successfully saved all data for player ${player.username}.`
-                );
+                log.debug(`Successfully saved all data for player ${player.username}.`);
             });
         });
     }
@@ -58,10 +56,7 @@ class Creator {
                             `An error has occurred while saving player_data for ${player.username}!`
                         );
 
-                    if (!result)
-                        log.error(
-                            `Could not save player_data for ${player.username}!`
-                        );
+                    if (!result) log.error(`Could not save player_data for ${player.username}!`);
                 }
             );
         });
@@ -79,13 +74,12 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_equipment for ${player.username}!`
+                        `An error has occurred while saving player_equipment for ${
+                            player.username
+                        }!`
                     );
 
-                if (!result)
-                    log.error(
-                        `Could not save player_equipment for ${player.username}!`
-                    );
+                if (!result) log.error(`Could not save player_equipment for ${player.username}!`);
             }
         );
     }
@@ -105,10 +99,7 @@ class Creator {
                         `An error has occurred while saving player_quests for ${player.username}!`
                     );
 
-                if (!result)
-                    log.error(
-                        `Could not save player_quests for ${player.username}!`
-                    );
+                if (!result) log.error(`Could not save player_quests for ${player.username}!`);
             }
         );
     }
@@ -121,13 +112,13 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_achievements for ${player.username}!`
+                        `An error has occurred while saving player_achievements for ${
+                            player.username
+                        }!`
                     );
 
                 if (!result)
-                    log.error(
-                        `Could not save player_achievements for ${player.username}!`
-                    );
+                    log.error(`Could not save player_achievements for ${player.username}!`);
             }
         );
     }
@@ -147,10 +138,7 @@ class Creator {
                         `An error has occurred while saving player_bank for ${player.username}!`
                     );
 
-                if (!result)
-                    log.error(
-                        `Could not save player_bank for ${player.username}!`
-                    );
+                if (!result) log.error(`Could not save player_bank for ${player.username}!`);
             }
         );
     }
@@ -175,10 +163,7 @@ class Creator {
                         `An error has occurred while saving player_regions for ${player.username}!`
                     );
 
-                if (!result)
-                    log.error(
-                        `Could not save player_regions for ${player.username}!`
-                    );
+                if (!result) log.error(`Could not save player_regions for ${player.username}!`);
             }
         );
     }
@@ -195,13 +180,12 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_abilities for ${player.username}!`
+                        `An error has occurred while saving player_abilities for ${
+                            player.username
+                        }!`
                     );
 
-                if (!result)
-                    log.error(
-                        `Could not save player_abilities for ${player.username}!`
-                    );
+                if (!result) log.error(`Could not save player_abilities for ${player.username}!`);
             }
         );
     }
@@ -218,13 +202,12 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_professions for ${player.username}!`
+                        `An error has occurred while saving player_professions for ${
+                            player.username
+                        }!`
                     );
 
-                if (!result)
-                    log.error(
-                        `Could not save player_professions for ${player.username}!`
-                    );
+                if (!result) log.error(`Could not save player_professions for ${player.username}!`);
             }
         );
     }
@@ -244,10 +227,7 @@ class Creator {
                         `An error has occurred while saving player_friends for ${player.username}!`
                     );
 
-                if (!result)
-                    log.error(
-                        `Could not save player_friends for ${player.username}!`
-                    );
+                if (!result) log.error(`Could not save player_friends for ${player.username}!`);
             }
         );
     }
@@ -264,13 +244,12 @@ class Creator {
             (error, result) => {
                 if (error)
                     log.error(
-                        `An error has occurred while saving player_inventory for ${player.username}!`
+                        `An error has occurred while saving player_inventory for ${
+                            player.username
+                        }!`
                     );
 
-                if (!result)
-                    log.error(
-                        `Could not save player_inventory for ${player.username}!`
-                    );
+                if (!result) log.error(`Could not save player_inventory for ${player.username}!`);
 
                 if (result) callback();
             }

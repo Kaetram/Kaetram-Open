@@ -5,7 +5,6 @@ import Combat from './combat/combat';
 import log from '../../../util/log';
 
 class Character extends Entity {
-
     public level: number;
     public movementSpeed: number;
     public attackRange: number;
@@ -116,16 +115,13 @@ class Character extends Entity {
 
         if (Mobs.hasCombatPlugin(this.id))
             this.combat = new (Mobs.isNewCombatPlugin(this.id))(this);
-        else
-            this.combat = new Combat(this);
+        else this.combat = new Combat(this);
     }
 
     setMinibossData() {
-
         /* We only update the mob data once to prevent any issues. */
 
-        if (this.updated)
-            return;
+        if (this.updated) return;
 
         this.level += Math.floor(this.level / 2);
         this.maxHitPoints += Math.floor(this.maxHitPoints / 2);
@@ -137,49 +133,36 @@ class Character extends Entity {
     }
 
     startHealing() {
-
         this.healingInterval = setInterval(() => {
+            if (this.dead) return;
 
-            if (this.dead)
-                return;
+            if (this.combat.started) return;
 
-            if (this.combat.started)
-                return;
-
-            if (this.poison)
-                return;
+            if (this.poison) return;
 
             this.heal(1);
-
         }, this.healingRate);
     }
 
     stopHealing() {
-
         clearInterval(this.healingInterval);
         this.healingInterval = null;
     }
 
     setStun(stun: boolean) {
-
         this.stunned = stun;
 
-        if (this.stunCallback)
-            this.stunCallback(stun);
+        if (this.stunCallback) this.stunCallback(stun);
     }
 
     hit(attacker: Entity) {
-
-        if (this.hitCallback)
-            this.hitCallback(attacker);
+        if (this.hitCallback) this.hitCallback(attacker);
     }
 
     heal(amount: number) {
-
         this.setHitPoints(this.hitPoints + amount);
 
-        if (this.hitPoints >= this.maxHitPoints)
-            this.hitPoints = this.maxHitPoints;
+        if (this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
     }
 
     isRanged() {
@@ -187,11 +170,9 @@ class Character extends Entity {
     }
 
     applyDamage(damage: number, attacker?: Character) {
-
         this.hitPoints -= damage;
 
-        if (this.damagedCallback)
-            this.damagedCallback(damage, attacker);
+        if (this.damagedCallback) this.damagedCallback(damage, attacker);
     }
 
     isDead() {
@@ -211,22 +192,18 @@ class Character extends Entity {
     }
 
     setPosition(x: number, y: number) {
-
         this.previousX = this.x;
         this.previousY = this.y;
 
         super.setPosition(x, y);
 
-        if (this.movementCallback)
-            this.movementCallback(x, y);
+        if (this.movementCallback) this.movementCallback(x, y);
     }
 
     setTarget(target: any) {
-
         this.target = target;
 
-        if (this.targetCallback)
-            this.targetCallback(target);
+        if (this.targetCallback) this.targetCallback(target);
     }
 
     setPotentialTarget(potentialTarget: any) {
@@ -234,19 +211,15 @@ class Character extends Entity {
     }
 
     setHitPoints(hitPoints: number) {
-
         this.hitPoints = hitPoints;
 
-        if (this.hitPointsCallback)
-            this.hitPointsCallback();
+        if (this.hitPointsCallback) this.hitPointsCallback();
     }
 
     setPoison(poison: string) {
-
         this.poison = poison;
 
-        if (this.poisonCallback)
-            this.poisonCallback(poison);
+        if (this.poisonCallback) this.poisonCallback(poison);
     }
 
     getProjectile() {
@@ -320,9 +293,7 @@ class Character extends Entity {
     /*********************/
 
     removeTarget() {
-
-        if (this.removeTargetCallback)
-            this.removeTargetCallback();
+        if (this.removeTargetCallback) this.removeTargetCallback();
 
         this.clearTarget();
     }
@@ -363,7 +334,8 @@ class Character extends Entity {
         this.damageCallback = callback;
     }
 
-    onDamaged(callback: Function) { // When the entity gets hit.
+    onDamaged(callback: Function) {
+        // When the entity gets hit.
         this.damagedCallback = callback;
     }
 

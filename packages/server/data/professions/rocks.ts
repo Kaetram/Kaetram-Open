@@ -1,17 +1,16 @@
 let Rocks = {
-
     // The rock ids of the rock we're mining
     Rocks: {
-        BlueSteel: 264 // TODO - Make the item
+        BlueSteel: 264, // TODO - Make the item
     },
 
     // Get the level requirement of the rock
     Levels: {
-        BlueSteel: 1
+        BlueSteel: 1,
     },
 
     Experience: {
-        BlueSteel: 10
+        BlueSteel: 10,
     },
 
     // Chance of the rock being depleted
@@ -21,13 +20,10 @@ let Rocks = {
 
     // Time (in milliseconds) for the rock to be mineable again.
     Respawn: {
-        BlueSteel: 15000
+        BlueSteel: 15000,
     },
 
-    EmptyRock: {
-
-    }
-
+    EmptyRock: {},
 };
 
 export default Rocks;

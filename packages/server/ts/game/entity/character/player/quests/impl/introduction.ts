@@ -8,7 +8,6 @@ import Packets from '../../../../../../network/packets';
 import Messages from '../../../../../../network/messages';
 
 class Introduction extends Quest {
-
     lastNPC: NPC;
     finishedCallback: Function;
 
@@ -33,33 +32,29 @@ class Introduction extends Quest {
         this.updatePointers();
         this.toggleChat();
 
-        if (this.stage > 9998)
-            return;
+        if (this.stage > 9998) return;
 
         this.loadCallbacks();
     }
 
     loadCallbacks() {
         this.onNPCTalk((npc: NPC) => {
-
             let conversation = this.getConversation(npc.id);
 
             this.lastNPC = npc;
 
-            this.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-                id: npc.instance,
-                text: npc.talk(conversation, this.player)
-            }));
+            this.player.send(
+                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                    id: npc.instance,
+                    text: npc.talk(conversation, this.player),
+                })
+            );
 
-            if (this.player.talkIndex === 0)
-                this.progress('talk');
-
+            if (this.player.talkIndex === 0) this.progress('talk');
         });
 
         this.player.onReady(() => {
-
             this.updatePointers();
-
         });
 
         this.player.onDoor((destX: number, destY: number) => {
@@ -77,39 +72,26 @@ class Introduction extends Quest {
         });
 
         this.player.onInventory((isOpen: boolean) => {
-
-            if (isOpen && this.stage === 1)
-                this.progress('click');
-
+            if (isOpen && this.stage === 1) this.progress('click');
         });
 
         this.player.onProfile((isOpen: boolean) => {
-
-            if (isOpen && this.stage === 3)
-                this.progress('click');
-
+            if (isOpen && this.stage === 3) this.progress('click');
         });
 
         this.player.onWarp((isOpen: boolean) => {
-
-            if (isOpen && this.stage === 5)
-                this.progress('click');
-
+            if (isOpen && this.stage === 5) this.progress('click');
         });
 
         this.player.onKill((character: Character) => {
-            if (this.data.kill[this.stage] === character.id)
-                this.progress('kill');
-
+            if (this.data.kill[this.stage] === character.id) this.progress('kill');
         });
-
     }
 
     progress(type: string) {
         let task = this.data.task[this.stage];
 
-        if (!task || task !== type)
-            return;
+        if (!task || task !== type) return;
 
         if (this.stage === this.data.stages) {
             this.finish();
@@ -117,28 +99,23 @@ class Introduction extends Quest {
         }
 
         switch (type) {
-
             case 'door':
-
                 if (this.stage === 7)
                     this.player.inventory.add({
                         id: 248,
                         count: 1,
                         ability: -1,
-                        abilityLevel: -1
+                        abilityLevel: -1,
                     });
-
                 else if (this.stage === 15)
                     this.player.inventory.add({
                         id: 87,
                         count: 1,
                         ability: -1,
-                        abilityLevel: -1
+                        abilityLevel: -1,
                     });
 
                 break;
-
-
         }
 
         this.stage++;
@@ -149,14 +126,15 @@ class Introduction extends Quest {
         this.update();
         this.updatePointers();
 
-        this.player.send(new Messages.Quest(Packets.QuestOpcode.Progress, {
-            id: this.id,
-            stage: this.stage,
-            isQuest: true
-        }));
+        this.player.send(
+            new Messages.Quest(Packets.QuestOpcode.Progress, {
+                id: this.id,
+                stage: this.stage,
+                isQuest: true,
+            })
+        );
 
-        if (this.getTask() === 'door')
-            this.player.updateRegion();
+        if (this.getTask() === 'door') this.player.updateRegion();
     }
 
     isFinished() {
@@ -196,15 +174,13 @@ class Introduction extends Quest {
     verifyDoor(destX: number, destY: number) {
         let doorData = this.data.doors[this.stage];
 
-        if (!doorData)
-            return;
+        if (!doorData) return;
 
         return doorData[0] === destX && doorData[1] === destY;
     }
 
     getSpawn() {
-        if (this.stage > 7)
-            return { x: 331, y: 12 };
+        if (this.stage > 7) return { x: 331, y: 12 };
 
         return { x: 375, y: 41 };
     }

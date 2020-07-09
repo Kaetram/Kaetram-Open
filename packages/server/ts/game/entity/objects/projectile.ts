@@ -3,7 +3,6 @@
 import Entity from '../entity';
 
 class Projectile extends Entity {
-
     startX: number;
     startY: number;
 
@@ -67,8 +66,7 @@ class Projectile extends Entity {
          * an owner and a target are available.
          */
 
-        if (!this.owner || !this.target)
-            return;
+        if (!this.owner || !this.target) return;
 
         return {
             id: this.instance,
@@ -78,8 +76,8 @@ class Projectile extends Entity {
             damage: this.damage,
             special: this.special,
             hitType: this.hitType,
-            type: this.type
-        }
+            type: this.type,
+        };
     }
 }
 

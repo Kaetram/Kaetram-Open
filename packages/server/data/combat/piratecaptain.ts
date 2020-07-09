@@ -5,7 +5,6 @@ import Packets from '../../ts/network/packets';
 import Modules from '../../ts/util/modules';
 
 class PirateCaptain extends Combat {
-
     teleportLocations: Array<any>;
     lastTeleportIndex: number;
     lastTeleport: number;
@@ -27,7 +26,7 @@ class PirateCaptain extends Combat {
 
         self.location = {
             x: self.character.x,
-            y: self.character.y
+            y: self.character.y,
         };
 
         self.load();
@@ -45,18 +44,15 @@ class PirateCaptain extends Combat {
 
     hit(character, target, hitInfo) {
         var self = this;
-        if (self.canTeleport())
-            self.teleport();
-        else
-            super.hit(character, target, hitInfo);
+        if (self.canTeleport()) self.teleport();
+        else super.hit(character, target, hitInfo);
     }
 
     teleport() {
         var self = this,
             position = self.getRandomPosition();
 
-        if (!position)
-            return;
+        if (!position) return;
 
         self.stop();
 
@@ -72,16 +68,15 @@ class PirateCaptain extends Combat {
                     id: self.character.instance,
                     x: self.character.x,
                     y: self.character.y,
-                    withAnimation: true
-                })
+                    withAnimation: true,
+                }),
             });
 
         self.forEachAttacker((attacker) => {
             attacker.removeTarget();
         });
 
-        if (self.character.hasTarget())
-            self.begin(self.character.target);
+        if (self.character.hasTarget()) self.begin(self.character.target);
     }
 
     getRandomPosition() {
@@ -89,14 +84,13 @@ class PirateCaptain extends Combat {
             random = Utils.randomInt(0, self.teleportLocations.length - 1),
             position = self.teleportLocations[random];
 
-        if (!position || random === self.lastTeleportIndex)
-            return null;
+        if (!position || random === self.lastTeleportIndex) return null;
 
         return {
             x: position.x,
             y: position.y,
-            index: random
-        }
+            index: random,
+        };
     }
 
     canTeleport() {
@@ -108,7 +102,6 @@ class PirateCaptain extends Combat {
         //Floor it to avoid random floats
         return Math.floor((this.character.hitPoints / this.character.maxHitPoints) * 100);
     }
-
 }
 
 export default PirateCaptain;

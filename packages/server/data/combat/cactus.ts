@@ -4,7 +4,6 @@ import Modules from '../../ts/util/modules';
 import log from '../../ts/util/log';
 
 class Cactus extends Combat {
-
     constructor(character) {
         character.spawnDistance = 10;
         character.alwaysAggressive = true;
@@ -16,8 +15,7 @@ class Cactus extends Combat {
         self.character = character;
 
         self.character.onDamaged((damage, attacker) => {
-            if (!attacker || !attacker.armour || attacker.isRanged())
-                return;
+            if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
             self.damageAttacker(damage, attacker);
 
@@ -26,7 +24,6 @@ class Cactus extends Combat {
 
         self.character.onDeath(() => {
             self.forEachAttacker((attacker) => {
-
                 self.damageAttacker(self.character.maxHitPoints, attacker);
             });
 
@@ -37,8 +34,7 @@ class Cactus extends Combat {
     damageAttacker(damage, attacker) {
         let self = this;
 
-        if (!attacker || !attacker.armour || attacker.isRanged())
-            return;
+        if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
         /**
          * This is the formula for dealing damage when a player
@@ -47,16 +43,14 @@ class Cactus extends Combat {
          **/
 
         let defense = attacker.armour.getDefense(),
-            calculatedDamage = Math.floor((damage / 2) - (defense * 5));
+            calculatedDamage = Math.floor(damage / 2 - defense * 5);
 
-        if (calculatedDamage < 1)
-            return;
+        if (calculatedDamage < 1) return;
 
         let hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 
         self.hit(self.character, attacker, hitInfo);
     }
-
 }
 
 export default Cactus;

@@ -3,7 +3,6 @@
 import Hit from './hit';
 
 class CombatQueue {
-
     hitQueue: any;
 
     constructor() {
@@ -23,13 +22,10 @@ class CombatQueue {
     }
 
     getHit() {
-
-        if (this.hitQueue.length < 1)
-            return;
+        if (this.hitQueue.length < 1) return;
 
         return this.hitQueue.shift().getData();
     }
-
 }
 
 export default CombatQueue;

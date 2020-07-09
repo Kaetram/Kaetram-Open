@@ -6,7 +6,6 @@ import Player from './player';
 import Map from '../../../../map/map';
 
 class Warp {
-
     player: Player;
     map: Map;
 
@@ -19,7 +18,6 @@ class Warp {
 
         this.lastWarp = 0;
         this.warpTimeout = 30000;
-
     }
 
     warp(id: number) {
@@ -30,8 +28,7 @@ class Warp {
 
         let data = this.map.getWarpById(id);
 
-        if (!data)
-            return;
+        if (!data) return;
 
         if (!this.player.finishedTutorial()) {
             this.player.notify('You cannot warp while in the tutorial.');
@@ -48,16 +45,13 @@ class Warp {
         this.player.notify(`You have been warped to ${data.name}`);
 
         this.lastWarp = new Date().getTime();
-
     }
 
     setLastWarp(lastWarp: number) {
         if (isNaN(lastWarp)) {
             this.lastWarp = 0;
             this.player.save();
-        } else
-            this.lastWarp = lastWarp;
-
+        } else this.lastWarp = lastWarp;
     }
 
     isCooldown() {
@@ -71,16 +65,16 @@ class Warp {
     getDuration() {
         let difference = this.warpTimeout - this.getDifference();
 
-        if (!difference)
-            return '5 minutes';
+        if (!difference) return '5 minutes';
 
-        return difference > 60000 ? Math.ceil(difference / 60000) + ' minutes' : Math.floor(difference / 1000) + ' seconds';
+        return difference > 60000
+            ? Math.ceil(difference / 60000) + ' minutes'
+            : Math.floor(difference / 1000) + ' seconds';
     }
 
     getDifference() {
         return new Date().getTime() - this.lastWarp;
     }
-
 }
 
 export default Warp;

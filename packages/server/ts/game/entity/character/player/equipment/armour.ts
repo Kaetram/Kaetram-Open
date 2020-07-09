@@ -5,7 +5,6 @@ import Items from '../../../../../util/items';
 import Modules from '../../../../../util/modules';
 
 class Armour extends Equipment {
-
     public defense: number;
 
     constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
@@ -29,7 +28,6 @@ class Armour extends Equipment {
     getType() {
         return Modules.Equipment.Armour;
     }
-
 }
 
 export default Armour;

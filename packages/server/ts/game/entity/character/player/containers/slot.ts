@@ -2,7 +2,6 @@ import log from '../../../../../util/log';
 import Items from '../../../../../util/items';
 
 class Slot {
-
     public index: number;
 
     public id: number;
@@ -16,7 +15,6 @@ class Slot {
     public equippable: boolean;
 
     constructor(index: number) {
-
         this.index = index;
 
         this.id = -1;
@@ -28,7 +26,6 @@ class Slot {
     }
 
     load(id: any, count: any, ability: any, abilityLevel: any) {
-
         this.id = parseInt(id);
         this.count = parseInt(count);
         this.ability = parseInt(ability);
@@ -42,7 +39,6 @@ class Slot {
     }
 
     empty() {
-
         this.id = -1;
         this.count = -1;
         this.ability = -1;
@@ -52,14 +48,12 @@ class Slot {
     }
 
     increment(amount: number) {
-
         this.count += amount;
 
         this.verify();
     }
 
     decrement(amount: number) {
-
         this.count -= amount;
 
         if (this.count < 1)
@@ -69,9 +63,7 @@ class Slot {
     }
 
     verify() {
-
-        if (isNaN(this.count) || this.count < 1)
-            this.count = 1;
+        if (isNaN(this.count) || this.count < 1) this.count = 1;
     }
 
     getData() {
@@ -80,10 +72,9 @@ class Slot {
             string: this.string,
             count: this.count,
             ability: this.ability,
-            abilityLevel: this.abilityLevel
-        }
+            abilityLevel: this.abilityLevel,
+        };
     }
-
 }
 
 export default Slot;

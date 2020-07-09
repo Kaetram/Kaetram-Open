@@ -62,8 +62,7 @@ export default {
     },
 
     getLumberjackingLevel(weaponName: string) {
-        if (this.isWeapon(weaponName))
-            return this.Data[weaponName].lumberjacking;
+        if (this.isWeapon(weaponName)) return this.Data[weaponName].lumberjacking;
 
         return -1;
     },
@@ -87,8 +86,7 @@ export default {
     },
 
     getPendantLevel(pendantName: string) {
-        if (this.isPendant(pendantName))
-            return this.Data[pendantName].pendantLevel;
+        if (this.isPendant(pendantName)) return this.Data[pendantName].pendantLevel;
 
         return -1;
     },
@@ -106,28 +104,21 @@ export default {
     },
 
     isArcherWeapon(string: string) {
-        if (string in this.Data)
-            return this.Data[string].type === 'weaponarcher';
+        if (string in this.Data) return this.Data[string].type === 'weaponarcher';
 
         return false;
     },
 
     isWeapon(string: string) {
         if (string in this.Data)
-            return (
-                this.Data[string].type === 'weapon' ||
-                this.Data[string].type === 'weaponarcher'
-            );
+            return this.Data[string].type === 'weapon' || this.Data[string].type === 'weaponarcher';
 
         return false;
     },
 
     isArmour(string: string) {
         if (string in this.Data)
-            return (
-                this.Data[string].type === 'armor' ||
-                this.Data[string].type === 'armorarcher'
-            );
+            return this.Data[string].type === 'armor' || this.Data[string].type === 'armorarcher';
 
         return false;
     },
@@ -181,9 +172,7 @@ export default {
     },
 
     isShard(id: number) {
-        return (
-            id === 253 || id === 254 || id === 255 || id === 256 || id === 257
-        );
+        return id === 253 || id === 254 || id === 255 || id === 256 || id === 257;
     },
 
     isEnchantable(id: number) {

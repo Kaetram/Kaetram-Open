@@ -4,7 +4,6 @@ import Items from '../../ts/util/items';
 import Utils from '../../ts/util/utils';
 
 class HealthFlask {
-
     id: number;
     healAmount: number;
     manaAmount: number;
@@ -23,20 +22,15 @@ class HealthFlask {
             self.healAmount = customData.healAmount ? customData.healAmount : 0;
             self.manaAmount = customData.manaAmount ? customData.manaAmount : 0;
         }
-
     }
 
     onUse(character) {
         let self = this;
 
-        if (self.healAmount)
-            character.healHitPoints(self.healAmount);
+        if (self.healAmount) character.healHitPoints(self.healAmount);
 
-        if (self.manaAmount)
-            character.healManaPoints(self.manaAmount);
-
+        if (self.manaAmount) character.healManaPoints(self.manaAmount);
     }
-
 }
 
 export default HealthFlask;

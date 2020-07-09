@@ -15,9 +15,7 @@ class Log {
     constructor() {
         // Stream can be used to keep a log of what happened.
         this.logLevel = config.debugLevel || 'all';
-        this.stream = config.fsDebugging
-            ? fs.createWriteStream('runtime.log')
-            : null; // Write to a different stream
+        this.stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
 
         this.debugging = config.debug;
     }
@@ -53,11 +51,7 @@ class Log {
     }
 
     trace(message: any) {
-        this.send(
-            '\x1b[35m%s\x1b[0m',
-            `[${new Date()}] TRACE ${message}`,
-            true
-        );
+        this.send('\x1b[35m%s\x1b[0m', `[${new Date()}] TRACE ${message}`, true);
     }
 
     send(colour: any, message: any, trace?: boolean) {

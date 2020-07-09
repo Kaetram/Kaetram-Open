@@ -1,15 +1,13 @@
 /* global module */
 
 class Points {
-
     public points: number;
     public maxPoints: number;
 
     healCallback: Function;
 
     constructor(points: number, maxPoints: number) {
-        if (isNaN(points))
-            points = maxPoints;
+        if (isNaN(points)) points = maxPoints;
 
         this.points = points;
         this.maxPoints = maxPoints;
@@ -18,8 +16,7 @@ class Points {
     heal(amount: number) {
         this.setPoints(this.points + amount);
 
-        if (this.healCallback)
-            this.healCallback();
+        if (this.healCallback) this.healCallback();
     }
 
     increment(amount: number) {
@@ -33,8 +30,7 @@ class Points {
     setPoints(points: number) {
         this.points = points;
 
-        if (this.points >= this.maxPoints)
-            this.points = this.maxPoints;
+        if (this.points >= this.maxPoints) this.points = this.maxPoints;
     }
 
     setMaxPoints(maxPoints: number) {
@@ -48,7 +44,6 @@ class Points {
     onHeal(callback: Function) {
         this.healCallback = callback;
     }
-
 }
 
 export default Points;

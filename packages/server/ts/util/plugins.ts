@@ -15,10 +15,8 @@ export default function requireItems(directory: any) {
     files.forEach(async (file) => {
         let match = file.match(Filter);
 
-        if (match)
-            modules[match[1]] = resolve((await import(directory + file)).default);
-
+        if (match) modules[match[1]] = resolve((await import(directory + file)).default);
     });
 
     return modules;
-};
+}
