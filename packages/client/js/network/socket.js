@@ -31,10 +31,10 @@ export default class Socket {
         if (self.config.ssl) url = 'https://' + self.config.ip + '/server';
 
         $.get(url)
-            .then(function (data) {
+            .then(function(data) {
                 callback(data);
             })
-            .catch(function () {
+            .catch(function() {
                 callback('error');
             });
     }
@@ -42,7 +42,7 @@ export default class Socket {
     connect() {
         var self = this;
 
-        self.getServer(function (result) {
+        self.getServer(function(result) {
             var url;
 
             if (result === 'error') {
@@ -58,7 +58,7 @@ export default class Socket {
                 reconnection: false,
             });
 
-            self.connection.on('connect_error', function () {
+            self.connection.on('connect_error', function() {
                 log.info('Failed to connect to: ' + self.config.ip);
 
                 self.listening = false;
@@ -68,19 +68,12 @@ export default class Socket {
                 if (self.game.isDebug())
                     self.game.app.sendError(
                         null,
-                        "Couldn't connect to " +
-                            self.config.ip +
-                            ':' +
-                            self.config.port
+                        "Couldn't connect to " + self.config.ip + ':' + self.config.port
                     );
-                else
-                    self.game.app.sendError(
-                        null,
-                        'Could not connect to the game server.'
-                    );
+                else self.game.app.sendError(null, 'Could not connect to the game server.');
             });
 
-            self.connection.on('connect', function () {
+            self.connection.on('connect', function() {
                 self.listening = true;
 
                 log.info('Connection established...');
@@ -93,13 +86,13 @@ export default class Socket {
                 });
             });
 
-            self.connection.on('message', function (message) {
+            self.connection.on('message', function(message) {
                 var actualMessage = message.message ? message.message : message;
 
                 self.receive(actualMessage);
             });
 
-            self.connection.on('disconnect', function () {
+            self.connection.on('disconnect', function() {
                 self.game.handleDisconnection();
             });
         });
@@ -122,7 +115,6 @@ export default class Socket {
         var self = this,
             json = JSON.stringify([packet, data]);
 
-        if (self.connection && self.connection.connected)
-            self.connection.send(json);
+        if (self.connection && self.connection.connected) self.connection.send(json);
     }
 }

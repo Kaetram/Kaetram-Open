@@ -18,7 +18,7 @@ export default class ChatController {
         self.fadingDuration = 5000;
         self.fadingTimeout = null;
 
-        self.button.click(function () {
+        self.button.click(function() {
             self.button.blur();
 
             if (self.input.is(':visible')) self.hideInput();
@@ -109,7 +109,7 @@ export default class ChatController {
             self.fadingTimeout = null;
         }
 
-        self.fadingTimeout = setTimeout(function () {
+        self.fadingTimeout = setTimeout(function() {
             if (!self.isActive()) {
                 self.chat.fadeOut('slow');
 

@@ -39,15 +39,15 @@ export default class Shop {
         self.close = $('#closeShop');
 
         self.close.css('left', '97%');
-        self.close.click(function () {
+        self.close.click(function() {
             self.hide();
         });
 
-        self.sellSlot.click(function () {
+        self.sellSlot.click(function() {
             self.remove();
         });
 
-        self.confirmSell.click(function () {
+        self.confirmSell.click(function() {
             self.sell();
         });
     }
@@ -56,31 +56,19 @@ export default class Shop {
         var self = this,
             id = event.currentTarget.id.substring(11);
 
-        self.game.socket.send(Packets.Shop, [
-            Packets.ShopOpcode.Buy,
-            self.openShop,
-            id,
-            1,
-        ]);
+        self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, self.openShop, id, 1]);
     }
 
     sell() {
         // The server will handle the selected item and verifications.
-        this.game.socket.send(Packets.Shop, [
-            Packets.ShopOpcode.Sell,
-            this.openShop,
-        ]);
+        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Sell, this.openShop]);
     }
 
     select(event) {
         var self = this,
             id = event.currentTarget.id.substring(17);
 
-        self.game.socket.send(Packets.Shop, [
-            Packets.ShopOpcode.Select,
-            self.openShop,
-            id,
-        ]);
+        self.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, self.openShop, id]);
     }
 
     remove() {
@@ -89,9 +77,7 @@ export default class Shop {
 
     move(info) {
         var self = this,
-            inventorySlot = self
-                .getInventoryList()
-                .find('#shopInventorySlot' + info.slotId),
+            inventorySlot = self.getInventoryList().find('#shopInventorySlot' + info.slotId),
             slotImage = inventorySlot.find('#inventoryImage' + info.slotId),
             slotText = inventorySlot.find('#inventoryItemCount' + info.slotId);
 
@@ -113,9 +99,7 @@ export default class Shop {
 
     moveBack(index) {
         var self = this,
-            inventorySlot = self
-                .getInventoryList()
-                .find('#shopInventorySlot' + index);
+            inventorySlot = self.getInventoryList().find('#shopInventorySlot' + index);
 
         inventorySlot
             .find('#inventoryImage' + index)
@@ -159,9 +143,7 @@ export default class Shop {
         var self = this;
 
         for (var i = 0; i < self.container.size; i++) {
-            var shopItem = $(
-                    '<div id="shopItem' + i + '" class="shopItem"></div>'
-                ),
+            var shopItem = $('<div id="shopItem' + i + '" class="shopItem"></div>'),
                 string = self.data.strings[i],
                 name = self.data.names[i],
                 count = self.data.counts[i],
@@ -174,26 +156,13 @@ export default class Shop {
 
             if (!string || !name || !count) continue;
 
-            itemImage = $(
-                '<div id="shopItemImage' + i + '" class="shopItemImage"></div>'
-            );
-            itemCount = $(
-                '<div id="shopItemCount' + i + '" class="shopItemCount"></div>'
-            );
-            itemPrice = $(
-                '<div id="shopItemPrice' + i + '" class="shopItemPrice"></div>'
-            );
-            itemName = $(
-                '<div id="shopItemName' + i + '" class="shopItemName"></div>'
-            );
-            itemBuy = $(
-                '<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>'
-            );
+            itemImage = $('<div id="shopItemImage' + i + '" class="shopItemImage"></div>');
+            itemCount = $('<div id="shopItemCount' + i + '" class="shopItemCount"></div>');
+            itemPrice = $('<div id="shopItemPrice' + i + '" class="shopItemPrice"></div>');
+            itemName = $('<div id="shopItemName' + i + '" class="shopItemName"></div>');
+            itemBuy = $('<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>');
 
-            itemImage.css(
-                'background-image',
-                self.container.getImageFormat(string)
-            );
+            itemImage.css('background-image', self.container.getImageFormat(string));
             itemCount.html(count);
             itemPrice.html(price + 'g');
             itemName.html(name);
@@ -205,7 +174,7 @@ export default class Shop {
             });
 
             // Bind the itemBuy to the local buy function.
-            itemBuy.click(function (event) {
+            itemBuy.click(function(event) {
                 self.buy(event);
             });
 
@@ -227,7 +196,7 @@ export default class Shop {
 
             slot.attr('id', 'shopInventorySlot' + j);
 
-            slot.click(function (event) {
+            slot.click(function(event) {
                 self.select(event);
             });
 

@@ -23,14 +23,12 @@ export default class Actions {
             dropAccept = $('#dropAccept'),
             dropCancel = $('#dropCancel');
 
-        dropAccept.click(function (event) {
-            if (self.activeClass === 'inventory')
-                self.menu.inventory.clickAction(event);
+        dropAccept.click(function(event) {
+            if (self.activeClass === 'inventory') self.menu.inventory.clickAction(event);
         });
 
-        dropCancel.click(function (event) {
-            if (self.activeClass === 'inventory')
-                self.menu.inventory.clickAction(event);
+        dropCancel.click(function(event) {
+            if (self.activeClass === 'inventory') self.menu.inventory.clickAction(event);
         });
     }
 
@@ -53,9 +51,7 @@ export default class Actions {
                     left: '10%',
                 });
 
-                var dropButton = $(
-                    '<div id="drop" class="actionButton">Drop</div>'
-                );
+                var dropButton = $('<div id="drop" class="actionButton">Drop</div>');
 
                 self.add(dropButton);
 
@@ -92,9 +88,8 @@ export default class Actions {
 
         self.body.find('ul').prepend($('<li></li>').append(button));
 
-        button.click(function (event) {
-            if (self.activeClass === 'inventory')
-                self.menu.inventory.clickAction(event);
+        button.click(function(event) {
+            if (self.activeClass === 'inventory') self.menu.inventory.clickAction(event);
         });
 
         if (misc) self.miscButton = button;

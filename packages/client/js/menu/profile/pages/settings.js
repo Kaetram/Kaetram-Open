@@ -46,31 +46,31 @@ export default class Settings {
 
         self.renderer.adjustBrightness(self.getBrightness());
 
-        self.button.click(function () {
+        self.button.click(function() {
             self.open();
         });
 
-        self.volume.on('input', function () {
+        self.volume.on('input', function() {
             if (self.audio.song) self.audio.song.volume = this.value / 100;
         });
 
-        self.brightness.on('input', function () {
+        self.brightness.on('input', function() {
             self.renderer.adjustBrightness(this.value);
         });
 
-        self.volume.change(function () {
+        self.volume.change(function() {
             self.setMusicLevel(this.value);
         });
 
-        self.sfx.change(function () {
+        self.sfx.change(function() {
             self.setSFXLevel(this.value);
         });
 
-        self.brightness.change(function () {
+        self.brightness.change(function() {
             self.setBrightness(this.value);
         });
 
-        self.soundCheck.click(function () {
+        self.soundCheck.click(function() {
             var isActive = self.soundCheck.hasClass('active');
 
             self.setSound(!isActive);
@@ -87,7 +87,7 @@ export default class Settings {
             }
         });
 
-        self.cameraCheck.click(function () {
+        self.cameraCheck.click(function() {
             var active = self.cameraCheck.hasClass('active');
 
             if (active) self.renderer.camera.decenter();
@@ -98,7 +98,7 @@ export default class Settings {
             self.setCamera(!active);
         });
 
-        self.debugCheck.click(function () {
+        self.debugCheck.click(function() {
             var active = self.debugCheck.hasClass('active');
 
             self.debugCheck.toggleClass('active');
@@ -108,7 +108,7 @@ export default class Settings {
             self.setDebug(!active);
         });
 
-        self.centreCheck.click(function () {
+        self.centreCheck.click(function() {
             var active = self.centreCheck.hasClass('active');
 
             self.centreCheck.toggleClass('active');
@@ -118,7 +118,7 @@ export default class Settings {
             self.setCentre(!active);
         });
 
-        self.nameCheck.click(function () {
+        self.nameCheck.click(function() {
             var active = self.nameCheck.hasClass('active');
 
             self.nameCheck.toggleClass('active');
@@ -128,7 +128,7 @@ export default class Settings {
             self.setName(!active);
         });
 
-        self.levelCheck.click(function () {
+        self.levelCheck.click(function() {
             var active = self.levelCheck.hasClass('active');
 
             self.levelCheck.toggleClass('active');

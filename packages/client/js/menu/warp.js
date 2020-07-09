@@ -17,11 +17,11 @@ export default class Wrap {
     load() {
         var self = this;
 
-        self.button.click(function () {
+        self.button.click(function() {
             self.open();
         });
 
-        self.close.click(function () {
+        self.close.click(function() {
             self.hide();
         });
 
@@ -29,12 +29,10 @@ export default class Wrap {
             var warp = self.mapFrame.find('#warp' + i);
 
             if (warp) {
-                warp.click(function (event) {
+                warp.click(function(event) {
                     self.hide();
 
-                    self.game.socket.send(Packets.Warp, [
-                        event.currentTarget.id.substring(4),
-                    ]);
+                    self.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);
                 });
             }
 
@@ -49,10 +47,7 @@ export default class Wrap {
 
         self.toggle();
 
-        self.game.socket.send(Packets.Click, [
-            'warp',
-            self.button.hasClass('active'),
-        ]);
+        self.game.socket.send(Packets.Click, ['warp', self.button.hasClass('active')]);
     }
 
     toggle() {
@@ -87,8 +82,7 @@ export default class Wrap {
     clear() {
         var self = this;
 
-        for (var i = 0; i < self.warpCount; i++)
-            self.mapFrame.find('#warp' + i).unbind('click');
+        for (var i = 0; i < self.warpCount; i++) self.mapFrame.find('#warp' + i).unbind('click');
 
         if (self.close) self.close.unbind('click');
 

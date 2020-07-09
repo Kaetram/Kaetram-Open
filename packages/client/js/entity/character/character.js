@@ -57,7 +57,7 @@ export default class Character extends Entity {
         self.criticalAnimation = new Animation('atk_down', 10, 0, 48, 48);
         self.criticalAnimation.setSpeed(30);
 
-        self.criticalAnimation.setCount(1, function () {
+        self.criticalAnimation.setCount(1, function() {
             self.critical = false;
 
             self.criticalAnimation.reset();
@@ -68,7 +68,7 @@ export default class Character extends Entity {
         self.terrorAnimation = new Animation('explosion', 8, 0, 64, 64);
         self.terrorAnimation.setSpeed(50);
 
-        self.terrorAnimation.setCount(1, function () {
+        self.terrorAnimation.setCount(1, function() {
             self.terror = false;
 
             self.terrorAnimation.reset();
@@ -83,7 +83,7 @@ export default class Character extends Entity {
         self.explosionAnimation = new Animation('explosion', 8, 0, 64, 64);
         self.explosionAnimation.setSpeed(50);
 
-        self.explosionAnimation.setCount(1, function () {
+        self.explosionAnimation.setCount(1, function() {
             self.explosion = false;
 
             self.explosionAnimation.reset();
@@ -94,7 +94,7 @@ export default class Character extends Entity {
         self.healingAnimation = new Animation('explosion', 8, 0, 48, 48);
         self.healingAnimation.setSpeed(50);
 
-        self.healingAnimation.setCount(1, function () {
+        self.healingAnimation.setCount(1, function() {
             self.healing = false;
 
             self.healingAnimation.reset();
@@ -107,8 +107,7 @@ export default class Character extends Entity {
             o = ['atk', 'walk', 'idle'],
             orientation = self.orientation;
 
-        if (self.currentAnimation && self.currentAnimation.name === 'death')
-            return;
+        if (self.currentAnimation && self.currentAnimation.name === 'death') return;
 
         self.spriteFlipX = false;
         self.spriteFlipY = false;
@@ -128,14 +127,10 @@ export default class Character extends Entity {
     lookAt(character) {
         var self = this;
 
-        if (character.gridX > self.gridX)
-            self.setOrientation(Modules.Orientation.Right);
-        else if (character.gridX < self.gridX)
-            self.setOrientation(Modules.Orientation.Left);
-        else if (character.gridY > self.gridY)
-            self.setOrientation(Modules.Orientation.Down);
-        else if (character.gridY < self.gridY)
-            self.setOrientation(Modules.Orientation.Up);
+        if (character.gridX > self.gridX) self.setOrientation(Modules.Orientation.Right);
+        else if (character.gridX < self.gridX) self.setOrientation(Modules.Orientation.Left);
+        else if (character.gridY > self.gridY) self.setOrientation(Modules.Orientation.Down);
+        else if (character.gridY < self.gridY) self.setOrientation(Modules.Orientation.Up);
 
         self.idle();
     }
@@ -281,8 +276,7 @@ export default class Character extends Entity {
             y,
             path;
 
-        if (self.step % 2 === 0 && self.secondStepCallback)
-            self.secondStepCallback();
+        if (self.step % 2 === 0 && self.secondStepCallback) self.secondStepCallback();
 
         self.prevGridX = self.gridX;
         self.prevGridY = self.gridY;
@@ -399,13 +393,7 @@ export default class Character extends Entity {
     }
 
     hasEffect() {
-        return (
-            this.critical ||
-            this.stunned ||
-            this.terror ||
-            this.explosion ||
-            this.healing
-        );
+        return this.critical || this.stunned || this.terror || this.explosion || this.healing;
     }
 
     getEffectAnimation() {
@@ -447,7 +435,7 @@ export default class Character extends Entity {
 
         if (self.healthBarTimeout) clearTimeout(self.healthBarTimeout);
 
-        self.healthBarTimeout = setTimeout(function () {
+        self.healthBarTimeout = setTimeout(function() {
             self.healthBarVisible = false;
         }, 7000);
     }
@@ -475,17 +463,13 @@ export default class Character extends Entity {
     }
 
     isMoving() {
-        return (
-            this.currentAnimation.name === 'walk' ||
-            this.x % 2 !== 0 ||
-            this.y % 2 !== 0
-        );
+        return this.currentAnimation.name === 'walk' || this.x % 2 !== 0 || this.y % 2 !== 0;
     }
 
     forEachAttacker(callback) {
         var self = this;
 
-        _.each(self.attackers, function (attacker) {
+        _.each(self.attackers, function(attacker) {
             callback(attacker);
         });
     }
@@ -584,8 +568,7 @@ export default class Character extends Entity {
 
         self.maxHitPoints = maxHitPoints;
 
-        if (self.maxHitPointsCallback)
-            self.maxHitPointsCallback(self.maxHitPoints);
+        if (self.maxHitPointsCallback) self.maxHitPointsCallback(self.maxHitPoints);
     }
 
     setOrientation(orientation) {

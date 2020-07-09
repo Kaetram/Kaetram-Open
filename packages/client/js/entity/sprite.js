@@ -30,7 +30,7 @@ export default class Sprite {
         self.image.crossOrigin = 'Anonymous';
         self.image.src = self.filepath;
 
-        self.image.onload = function () {
+        self.image.onload = function() {
             self.loaded = true;
 
             if (self.loadHurt) self.createHurtSprite();
@@ -51,11 +51,9 @@ export default class Sprite {
 
         self.offsetX = sprite.offsetX !== undefined ? sprite.offsetX : -16;
         self.offsetY = sprite.offsetY !== undefined ? sprite.offsetY : -16;
-        self.offfsetAngle =
-            sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
+        self.offfsetAngle = sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
 
-        self.idleSpeed =
-            sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
+        self.idleSpeed = sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
     }
 
     update() {
@@ -77,13 +75,7 @@ export default class Sprite {
 
                 var a = self.animationData[name];
 
-                animations[name] = new Animation(
-                    name,
-                    a.length,
-                    a.row,
-                    self.width,
-                    self.height
-                );
+                animations[name] = new Animation(name, a.length, a.row, self.width, self.height);
             }
         }
 
@@ -110,20 +102,9 @@ export default class Sprite {
         canvas.height = self.image.height;
 
         try {
-            context.drawImage(
-                self.image,
-                0,
-                0,
-                self.image.width,
-                self.image.height
-            );
+            context.drawImage(self.image, 0, 0, self.image.width, self.image.height);
 
-            spriteData = context.getImageData(
-                0,
-                0,
-                self.image.width,
-                self.image.height
-            );
+            spriteData = context.getImageData(0, 0, self.image.width, self.image.height);
 
             for (var i = 0; i < spriteData.data.length; i += 4) {
                 spriteData.data[i] = 255;
