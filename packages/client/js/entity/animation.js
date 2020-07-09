@@ -39,8 +39,7 @@ export default class Animation {
     update(time) {
         var self = this;
 
-        if (self.lastTime === 0 && self.name.substr(0, 3) === 'atk')
-            self.lastTime = time;
+        if (self.lastTime === 0 && self.name.substr(0, 3) === 'atk') self.lastTime = time;
 
         if (self.readyToAnimate(time)) {
             self.lastTime = time;

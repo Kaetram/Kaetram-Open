@@ -34,7 +34,7 @@ export default class Connection {
     load() {
         var self = this;
 
-        self.messages.onHandshake(function (data) {
+        self.messages.onHandshake(function(data) {
             self.game.id = data.id;
             self.game.development = data.development;
 
@@ -59,22 +59,13 @@ export default class Connection {
                     email,
                 ]);
             } else if (self.app.isGuest()) {
-                self.socket.send(Packets.Intro, [
-                    Packets.IntroOpcode.Guest,
-                    'n',
-                    'n',
-                    'n',
-                ]);
+                self.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
             } else {
                 var loginInfo = self.app.loginFields,
                     name = loginInfo[0].val(),
                     pass = loginInfo[1].val();
 
-                self.socket.send(Packets.Intro, [
-                    Packets.IntroOpcode.Login,
-                    name,
-                    pass,
-                ]);
+                self.socket.send(Packets.Intro, [Packets.IntroOpcode.Login, name, pass]);
 
                 if (self.game.hasRemember()) {
                     self.storage.data.player.username = name;
@@ -88,7 +79,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onWelcome(function (data) {
+        self.messages.onWelcome(function(data) {
             self.menu.loadHeader();
 
             self.game.player.load(data);
@@ -97,10 +88,10 @@ export default class Connection {
             self.game.postLoad();
         });
 
-        self.messages.onEquipment(function (opcode, info) {
+        self.messages.onEquipment(function(opcode, info) {
             switch (opcode) {
                 case Packets.EquipmentOpcode.Batch:
-                    _.each(info, function (data) {
+                    _.each(info, function(data) {
                         self.game.player.setEquipment(
                             data.type,
                             data.name,
@@ -138,9 +129,7 @@ export default class Connection {
 
                     if (type === 'armour')
                         self.game.player.setSprite(
-                            self.game.getSprite(
-                                self.game.player.getSpriteName()
-                            )
+                            self.game.getSprite(self.game.player.getSpriteName())
                         );
 
                     self.menu.profile.update();
@@ -149,22 +138,17 @@ export default class Connection {
             }
         });
 
-        self.messages.onSpawn(function (data) {
+        self.messages.onSpawn(function(data) {
             self.entities.create(data.shift());
         });
 
-        self.messages.onEntityList(function (data) {
+        self.messages.onEntityList(function(data) {
             var ids = _.pluck(self.entities.getAll(), 'id'),
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
 
-            self.entities.decrepit = _.reject(self.entities.getAll(), function (
-                entity
-            ) {
-                return (
-                    _.include(known, entity.id) ||
-                    entity.id === self.game.player.id
-                );
+            self.entities.decrepit = _.reject(self.entities.getAll(), function(entity) {
+                return _.include(known, entity.id) || entity.id === self.game.player.id;
             });
 
             self.entities.clean(newIds);
@@ -172,7 +156,7 @@ export default class Connection {
             self.socket.send(Packets.Who, newIds);
         });
 
-        self.messages.onSync(function (data) {
+        self.messages.onSync(function(data) {
             var entity = self.entities.get(data.id);
 
             if (!entity || entity.type !== 'player') return;
@@ -211,13 +195,12 @@ export default class Connection {
 
             if (data.movementSpeed) entity.movementSpeed = data.movementSpeed;
 
-            if (data.orientation !== undefined)
-                entity.orientation = data.orientation;
+            if (data.orientation !== undefined) entity.orientation = data.orientation;
 
             self.menu.profile.update();
         });
 
-        self.messages.onMovement(function (opcode, info) {
+        self.messages.onMovement(function(opcode, info) {
             switch (opcode) {
                 case Packets.MovementOpcode.Move:
                     var entity = self.entities.get(info.id);
@@ -258,10 +241,8 @@ export default class Connection {
 
                     if (info.state) pEntity.stop(false);
 
-                    if (opcode === Packets.MovementOpcode.Stunned)
-                        pEntity.stunned = info.state;
-                    else if (opcode === Packets.MovementOpcode.Freeze)
-                        pEntity.frozen = info.state;
+                    if (opcode === Packets.MovementOpcode.Stunned) pEntity.stunned = info.state;
+                    else if (opcode === Packets.MovementOpcode.Freeze) pEntity.frozen = info.state;
 
                     break;
 
@@ -271,16 +252,13 @@ export default class Connection {
                         entity = self.entities.get(player);
 
                     // entity.stop();
-                    entity.performAction(
-                        orientation,
-                        Modules.Actions.Orientate
-                    );
+                    entity.performAction(orientation, Modules.Actions.Orientate);
 
                     break;
             }
         });
 
-        self.messages.onTeleport(function (info) {
+        self.messages.onTeleport(function(info) {
             var entity = self.entities.get(info.id),
                 isPlayer = info.id === self.game.player.id;
 
@@ -297,7 +275,7 @@ export default class Connection {
              * hitbox. Make sure you keep an eye out for this.
              */
 
-            var doTeleport = function () {
+            var doTeleport = function() {
                 self.entities.unregisterPosition(entity);
                 entity.setGridPosition(info.x, info.y);
 
@@ -328,7 +306,7 @@ export default class Connection {
 
                 entity.setSprite(self.game.getSprite('death'));
 
-                entity.animate('death', 240, 1, function () {
+                entity.animate('death', 240, 1, function() {
                     doTeleport();
 
                     entity.currentAnimation = null;
@@ -347,7 +325,7 @@ export default class Connection {
                     });*/
         });
 
-        self.messages.onDespawn(function (id) {
+        self.messages.onDespawn(function(id) {
             var entity = self.entities.get(id);
 
             if (!entity) return;
@@ -361,7 +339,7 @@ export default class Connection {
                 case 'chest':
                     entity.setSprite(self.game.getSprite('death'));
 
-                    entity.setAnimation('death', 120, 1, function () {
+                    entity.setAnimation('death', 120, 1, function() {
                         self.entities.unregisterPosition(entity);
                         delete self.entities.entities[entity.id];
                     });
@@ -375,38 +353,25 @@ export default class Connection {
 
             self.bubble.destroy(entity.id);
 
-            if (
-                self.game.player.hasTarget() &&
-                self.game.player.target.id === entity.id
-            )
+            if (self.game.player.hasTarget() && self.game.player.target.id === entity.id)
                 self.game.player.removeTarget();
 
-            self.entities.grids.removeFromPathingGrid(
-                entity.gridX,
-                entity.gridY
-            );
+            self.entities.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
 
-            if (
-                entity.id !== self.game.player.id &&
-                self.game.player.getDistance(entity) < 5
-            )
-                self.audio.play(
-                    Modules.AudioTypes.SFX,
-                    'kill' + Math.floor(Math.random() * 2 + 1)
-                );
+            if (entity.id !== self.game.player.id && self.game.player.getDistance(entity) < 5)
+                self.audio.play(Modules.AudioTypes.SFX, 'kill' + Math.floor(Math.random() * 2 + 1));
 
             entity.hitPoints = 0;
 
-            if (!entity.sprite.hasDeathAnimation)
-                entity.setSprite(self.game.getSprite('death'));
+            if (!entity.sprite.hasDeathAnimation) entity.setSprite(self.game.getSprite('death'));
 
-            entity.animate('death', 120, 1, function () {
+            entity.animate('death', 120, 1, function() {
                 self.entities.unregisterPosition(entity);
                 delete self.entities.entities[entity.id];
             });
         });
 
-        self.messages.onCombat(function (opcode, info) {
+        self.messages.onCombat(function(opcode, info) {
             var attacker = self.entities.get(info.attackerId),
                 target = self.entities.get(info.targetId);
 
@@ -418,10 +383,7 @@ export default class Connection {
 
                     target.addAttacker(attacker);
 
-                    if (
-                        target.id === self.game.player.id ||
-                        attacker.id === self.game.player.id
-                    )
+                    if (target.id === self.game.player.id || attacker.id === self.game.player.id)
                         self.socket.send(Packets.Combat, [
                             Packets.CombatOpcode.Initiate,
                             attacker.id,
@@ -436,10 +398,7 @@ export default class Connection {
 
                     if (!hit.isAoE && !hit.isPoison) {
                         attacker.lookAt(target);
-                        attacker.performAction(
-                            attacker.orientation,
-                            Modules.Actions.Attack
-                        );
+                        attacker.performAction(attacker.orientation, Modules.Actions.Attack);
                     } else if (hit.hasTerror) target.terror = true;
 
                     switch (hit.type) {
@@ -449,10 +408,7 @@ export default class Connection {
                             break;
 
                         default:
-                            if (
-                                attacker.id === self.game.player.id &&
-                                hit.damage > 0
-                            )
+                            if (attacker.id === self.game.player.id && hit.damage > 0)
                                 self.audio.play(
                                     Modules.AudioTypes.SFX,
                                     'hit' + Math.floor(Math.random() * 2 + 1)
@@ -461,16 +417,11 @@ export default class Connection {
                             break;
                     }
 
-                    self.info.create(
-                        hit.type,
-                        [hit.damage, isPlayer],
-                        target.x,
-                        target.y
-                    );
+                    self.info.create(hit.type, [hit.damage, isPlayer], target.x, target.y);
 
                     if (target.hurtSprite) {
                         target.sprite = target.hurtSprite;
-                        setTimeout(function () {
+                        setTimeout(function() {
                             target.sprite = target.normalSprite;
                         }, 75);
                     }
@@ -478,8 +429,7 @@ export default class Connection {
                     attacker.triggerHealthBar();
                     target.triggerHealthBar();
 
-                    if (isPlayer && hit.damage > 0)
-                        self.audio.play(Modules.AudioTypes.SFX, 'hurt');
+                    if (isPlayer && hit.damage > 0) self.audio.play(Modules.AudioTypes.SFX, 'hurt');
 
                     break;
 
@@ -494,14 +444,13 @@ export default class Connection {
                     break;
 
                 case Packets.CombatOpcode.Sync:
-                    if (target.x !== info.x || target.y !== info.y)
-                        target.go(info.x, info.y);
+                    if (target.x !== info.x || target.y !== info.y) target.go(info.x, info.y);
 
                     break;
             }
         });
 
-        self.messages.onAnimation(function (id, info) {
+        self.messages.onAnimation(function(id, info) {
             var character = self.entities.get(id);
 
             if (!character) return;
@@ -509,7 +458,7 @@ export default class Connection {
             character.performAction(character.orientation, info.action);
         });
 
-        self.messages.onProjectile(function (opcode, info) {
+        self.messages.onProjectile(function(opcode, info) {
             switch (opcode) {
                 case Packets.ProjectileOpcode.Create:
                     self.entities.create(info);
@@ -518,11 +467,11 @@ export default class Connection {
             }
         });
 
-        self.messages.onPopulation(function (population) {
+        self.messages.onPopulation(function(population) {
             self.population = population;
         });
 
-        self.messages.onPoints(function (data) {
+        self.messages.onPoints(function(data) {
             var entity = self.entities.get(data.id);
 
             if (!entity) return;
@@ -535,28 +484,24 @@ export default class Connection {
                     self.game.player.target.id === entity.id &&
                     self.input.overlay.updateCallback
                 )
-                    self.input.overlay.updateCallback(
-                        entity.id,
-                        data.hitPoints
-                    );
+                    self.input.overlay.updateCallback(entity.id, data.hitPoints);
             }
 
             if (data.mana) entity.setMana(data.mana);
         });
 
-        self.messages.onNetwork(function () {
+        self.messages.onNetwork(function() {
             self.socket.send(Packets.Network, [Packets.NetworkOpcode.Pong]);
         });
 
-        self.messages.onChat(function (info) {
+        self.messages.onChat(function(info) {
             if (self.game.isDebug()) log.info(info);
 
             if (info.withBubble) {
                 var entity = self.entities.get(info.id);
 
                 if (entity) {
-                    info.name =
-                        info.name.charAt(0).toUpperCase() + info.name.substr(1);
+                    info.name = info.name.charAt(0).toUpperCase() + info.name.substr(1);
 
                     self.bubble.create(info.id, info.text, info.duration);
                     self.bubble.setTo(entity);
@@ -570,7 +515,7 @@ export default class Connection {
             self.input.chatHandler.add(info.name, info.text, info.colour);
         });
 
-        self.messages.onCommand(function (info) {
+        self.messages.onCommand(function(info) {
             /**
              * This is for random miscellaneous commands that require
              * a specific action done by the client as opposed to
@@ -591,7 +536,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onInventory(function (opcode, info) {
+        self.messages.onInventory(function(opcode, info) {
             switch (opcode) {
                 case Packets.InventoryOpcode.Batch:
                     var inventorySize = info.shift(),
@@ -617,7 +562,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onBank(function (opcode, info) {
+        self.messages.onBank(function(opcode, info) {
             switch (opcode) {
                 case Packets.BankOpcode.Batch:
                     var bankSize = info.shift(),
@@ -641,14 +586,12 @@ export default class Connection {
             }
         });
 
-        self.messages.onAbility(function (opcode, info) {});
+        self.messages.onAbility(function(opcode, info) {});
 
-        self.messages.onQuest(function (opcode, info) {
+        self.messages.onQuest(function(opcode, info) {
             switch (opcode) {
                 case Packets.QuestOpcode.AchievementBatch:
-                    self.menu
-                        .getQuestPage()
-                        .loadAchievements(info.achievements);
+                    self.menu.getQuestPage().loadAchievements(info.achievements);
 
                     break;
 
@@ -669,7 +612,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onNotification(function (opcode, info) {
+        self.messages.onNotification(function(opcode, info) {
             switch (opcode) {
                 case Packets.NotificationOpcode.Ok:
                     self.menu.displayNotify(info.message);
@@ -682,26 +625,18 @@ export default class Connection {
                     break;
 
                 case Packets.NotificationOpcode.Text:
-                    self.input.chatHandler.add(
-                        'WORLD',
-                        info.message,
-                        info.colour
-                    );
+                    self.input.chatHandler.add('WORLD', info.message, info.colour);
 
                     break;
 
                 case Packets.NotificationOpcode.Popup:
-                    self.menu.showNotification(
-                        info.title,
-                        info.message,
-                        info.colour
-                    );
+                    self.menu.showNotification(info.title, info.message, info.colour);
 
                     break;
             }
         });
 
-        self.messages.onBlink(function (instance) {
+        self.messages.onBlink(function(instance) {
             var item = self.entities.get(instance);
 
             if (!item) return;
@@ -709,7 +644,7 @@ export default class Connection {
             item.blink(150);
         });
 
-        self.messages.onHeal(function (info) {
+        self.messages.onHeal(function(info) {
             var entity = self.entities.get(info.id);
 
             if (!entity) return;
@@ -720,24 +655,14 @@ export default class Connection {
 
             switch (info.type) {
                 case 'health':
-                    self.info.create(
-                        Modules.Hits.Heal,
-                        [info.amount],
-                        entity.x,
-                        entity.y
-                    );
+                    self.info.create(Modules.Hits.Heal, [info.amount], entity.x, entity.y);
 
                     self.game.player.healing = true;
 
                     break;
 
                 case 'mana':
-                    self.info.create(
-                        Modules.Hits.Mana,
-                        [info.amount],
-                        entity.x,
-                        entity.y
-                    );
+                    self.info.create(Modules.Hits.Mana, [info.amount], entity.x, entity.y);
 
                     break;
             }
@@ -745,7 +670,7 @@ export default class Connection {
             entity.triggerHealthBar();
         });
 
-        self.messages.onExperience(function (opcode, info) {
+        self.messages.onExperience(function(opcode, info) {
             var entity = self.entities.get(info.id);
 
             switch (opcode) {
@@ -757,12 +682,7 @@ export default class Connection {
                      */
                     if (entity.level !== info.level) {
                         entity.level = info.level;
-                        self.info.create(
-                            Modules.Hits.LevelUp,
-                            null,
-                            entity.x,
-                            entity.y
-                        );
+                        self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
                     }
 
                     /**
@@ -805,7 +725,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onDeath(function (id) {
+        self.messages.onDeath(function(id) {
             var entity = self.entities.get(id);
 
             if (!entity || id !== self.game.player.id) return;
@@ -821,7 +741,7 @@ export default class Connection {
             self.app.body.addClass('death');
         });
 
-        self.messages.onAudio(function (newSong) {
+        self.messages.onAudio(function(newSong) {
             self.audio.newSong = newSong;
 
             if (!self.audio.newSong || Detect.isMobile()) return;
@@ -829,7 +749,7 @@ export default class Connection {
             self.audio.update();
         });
 
-        self.messages.onNPC(function (opcode, info) {
+        self.messages.onNPC(function(opcode, info) {
             switch (opcode) {
                 case Packets.NPCOpcode.Talk:
                     var entity = self.entities.get(info.id),
@@ -847,10 +767,7 @@ export default class Connection {
 
                             self.bubble.setTo(entity);
 
-                            if (
-                                self.renderer.mobile &&
-                                self.renderer.autoCentre
-                            )
+                            if (self.renderer.mobile && self.renderer.autoCentre)
                                 self.renderer.camera.centreOn(self.game.player);
                         }
                     } else {
@@ -884,7 +801,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onRespawn(function (id, x, y) {
+        self.messages.onRespawn(function(id, x, y) {
             if (id !== self.game.player.id) {
                 log.error('Player id mismatch.');
                 return;
@@ -895,9 +812,7 @@ export default class Connection {
             self.renderer.camera.centreOn(self.game.player);
 
             self.game.player.currentAnimation = null;
-            self.game.player.setSprite(
-                self.game.getSprite(self.game.player.getSpriteName())
-            );
+            self.game.player.setSprite(self.game.getSprite(self.game.player.getSpriteName()));
             self.game.player.idle();
 
             self.entities.addEntity(self.game.player);
@@ -905,7 +820,7 @@ export default class Connection {
             self.game.player.dead = false;
         });
 
-        self.messages.onEnchant(function (opcode, info) {
+        self.messages.onEnchant(function(opcode, info) {
             var type = info.type,
                 index = info.index;
 
@@ -922,7 +837,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onGuild(function (opcode, info) {
+        self.messages.onGuild(function(opcode, info) {
             switch (opcode) {
                 case Packets.GuildOpcode.Create:
                     break;
@@ -932,7 +847,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onPointer(function (opcode, info) {
+        self.messages.onPointer(function(opcode, info) {
             switch (opcode) {
                 case Packets.PointerOpcode.NPC:
                     var entity = self.entities.get(info.id);
@@ -946,11 +861,7 @@ export default class Connection {
 
                 case Packets.PointerOpcode.Location:
                     self.pointer.create(info.id, Modules.Pointers.Position);
-                    self.pointer.setToPosition(
-                        info.id,
-                        info.x * 16,
-                        info.y * 16
-                    );
+                    self.pointer.setToPosition(info.id, info.x * 16, info.y * 16);
 
                     break;
 
@@ -966,17 +877,13 @@ export default class Connection {
                     break;
 
                 case Packets.PointerOpcode.Button:
-                    self.pointer.create(
-                        info.id,
-                        Modules.Pointers.Button,
-                        info.button
-                    );
+                    self.pointer.create(info.id, Modules.Pointers.Button, info.button);
 
                     break;
             }
         });
 
-        self.messages.onPVP(function (id, pvp) {
+        self.messages.onPVP(function(id, pvp) {
             if (self.game.player.id === id) self.game.pvp = pvp;
             else {
                 var entity = self.entities.get(id);
@@ -985,7 +892,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onShop(function (opcode, info) {
+        self.messages.onShop(function(opcode, info) {
             var shopData = info.shopData;
 
             switch (opcode) {
@@ -1002,26 +909,23 @@ export default class Connection {
                     break;
 
                 case Packets.ShopOpcode.Select:
-                    if (self.menu.shop.isShopOpen(info.id))
-                        self.menu.shop.move(info);
+                    if (self.menu.shop.isShopOpen(info.id)) self.menu.shop.move(info);
 
                     break;
 
                 case Packets.ShopOpcode.Remove:
-                    if (self.menu.shop.isShopOpen(info.id))
-                        self.menu.shop.moveBack(info.index);
+                    if (self.menu.shop.isShopOpen(info.id)) self.menu.shop.moveBack(info.index);
 
                     break;
 
                 case Packets.ShopOpcode.Refresh:
-                    if (self.menu.shop.isShopOpen(info.id))
-                        self.menu.shop.update(info);
+                    if (self.menu.shop.isShopOpen(info.id)) self.menu.shop.update(info);
 
                     break;
             }
         });
 
-        self.messages.onMinigame(function (opcode, info) {
+        self.messages.onMinigame(function(opcode, info) {
             switch (opcode) {
                 case Packets.MinigameOpcode.TeamWar:
                     self.teamWar.handle(info);
@@ -1030,7 +934,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onRegion(function (opcode, info) {
+        self.messages.onRegion(function(opcode, info) {
             switch (opcode) {
                 case Packets.RegionOpcode.Render:
                     self.map.synchronize(info);
@@ -1059,13 +963,12 @@ export default class Connection {
             self.renderer.updateAnimatedTiles();
         });
 
-        self.messages.onOverlay(function (opcode, info) {
+        self.messages.onOverlay(function(opcode, info) {
             switch (opcode) {
                 case Packets.OverlayOpcode.Set:
                     self.overlays.updateOverlay(info.image);
 
-                    if (!self.renderer.transitioning)
-                        self.renderer.updateDarkMask(info.colour);
+                    if (!self.renderer.transitioning) self.renderer.updateDarkMask(info.colour);
                     else self.queueColour = info.colour;
 
                     break;
@@ -1101,7 +1004,7 @@ export default class Connection {
             }
         });
 
-        self.messages.onCamera(function (opcode, info) {
+        self.messages.onCamera(function(opcode, info) {
             if (self.game.player.x === 0 || self.game.player.y === 0) {
                 self.socket.send(Packets.Camera);
                 return;
@@ -1132,36 +1035,23 @@ export default class Connection {
                     var middle = self.renderer.getMiddle();
 
                     self.renderer.removeAllLights();
-                    self.renderer.addLight(
-                        middle.x,
-                        middle.y,
-                        160,
-                        0.8,
-                        'rgba(0,0,0,0.3)',
-                        false
-                    );
+                    self.renderer.addLight(middle.x, middle.y, 160, 0.8, 'rgba(0,0,0,0.3)', false);
 
                     break;
             }
         });
 
-        self.messages.onBubble(function (info) {
+        self.messages.onBubble(function(info) {
             if (!info.text) {
                 self.bubble.destroy(info.id);
                 return;
             }
 
-            self.bubble.create(
-                info.id,
-                info.text,
-                info.duration,
-                info.isObject,
-                info.info
-            );
+            self.bubble.create(info.id, info.text, info.duration, info.isObject, info.info);
             self.bubble.setTo(info.info);
         });
 
-        self.messages.onProfession(function (opcode, info) {
+        self.messages.onProfession(function(opcode, info) {
             switch (opcode) {
                 case Packets.ProfessionOpcode.Batch:
                     self.menu.getProfessionPage().load(info.data);

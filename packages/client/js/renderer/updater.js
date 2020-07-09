@@ -29,7 +29,7 @@ export default class Updater {
     updateEntities() {
         var self = this;
 
-        self.game.entities.forEachEntity(function (entity) {
+        self.game.entities.forEachEntity(function(entity) {
             if (!entity) return;
 
             if (entity.spriteLoaded) {
@@ -47,17 +47,15 @@ export default class Updater {
                         switch (entity.orientation) {
                             case Modules.Orientation.Left:
                             case Modules.Orientation.Right:
-                                var isLeft =
-                                    entity.orientation ===
-                                    Modules.Orientation.Left;
+                                var isLeft = entity.orientation === Modules.Orientation.Left;
 
                                 entity.movement.start(
                                     self.game.time,
-                                    function (x) {
+                                    function(x) {
                                         entity.x = x;
                                         entity.moved();
                                     },
-                                    function () {
+                                    function() {
                                         entity.x = entity.movement.endValue;
                                         entity.moved();
                                         entity.nextStep();
@@ -71,17 +69,15 @@ export default class Updater {
 
                             case Modules.Orientation.Up:
                             case Modules.Orientation.Down:
-                                var isUp =
-                                    entity.orientation ===
-                                    Modules.Orientation.Up;
+                                var isUp = entity.orientation === Modules.Orientation.Up;
 
                                 entity.movement.start(
                                     self.game.time,
-                                    function (y) {
+                                    function(y) {
                                         entity.y = y;
                                         entity.moved();
                                     },
-                                    function () {
+                                    function() {
                                         entity.y = entity.movement.endValue;
                                         entity.moved();
                                         entity.nextStep();
@@ -149,8 +145,7 @@ export default class Updater {
         var self = this,
             target = self.input.targetAnimation;
 
-        if (target && self.input.selectedCellVisible)
-            target.update(self.game.time);
+        if (target && self.input.selectedCellVisible) target.update(self.game.time);
 
         if (!self.sprites) return;
 

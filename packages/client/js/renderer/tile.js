@@ -27,15 +27,11 @@ export default class Tile {
     animate(time) {
         var self = this;
 
-        if (
-            time - self.lastTime >
-            self.animationInfo[self.animationIndex].duration
-        ) {
+        if (time - self.lastTime > self.animationInfo[self.animationIndex].duration) {
             self.update();
             self.lastTime = time;
 
-            if (self.animationIndex >= self.animationInfo.length - 1)
-                self.animationIndex = 0;
+            if (self.animationIndex >= self.animationInfo.length - 1) self.animationIndex = 0;
             else self.animationIndex++;
         }
     }

@@ -32,13 +32,13 @@ export default class Map {
 
     ready() {
         var self = this,
-            rC = function () {
+            rC = function() {
                 if (self.readyCallback) self.readyCallback();
             };
 
         if (self.mapLoaded && self.tilesetsLoaded) rC();
         else
-            setTimeout(function () {
+            setTimeout(function() {
                 self.loadTilesets();
                 self.ready();
             }, 50);
@@ -48,13 +48,12 @@ export default class Map {
         var self = this;
 
         if (self.supportsWorker) {
-            if (self.game.isDebug())
-                log.info('Parsing map with Web Workers...');
+            if (self.game.isDebug()) log.info('Parsing map with Web Workers...');
 
             var worker = new Worker('./js/map/mapworker.js');
             worker.postMessage(1);
 
-            worker.onmessage = function (event) {
+            worker.onmessage = function(event) {
                 var map = event.data;
 
                 self.parseMap(map);
@@ -66,7 +65,7 @@ export default class Map {
 
             $.get(
                 'data/maps/map.json',
-                function (data) {
+                function(data) {
                     self.parseMap(data);
                     self.loadCollisions();
                     self.mapLoaded = true;
@@ -101,13 +100,11 @@ export default class Map {
 
             if (tile.isObject && objectIndex < 0) self.objects.push(tile.index);
 
-            if (!tile.isObject && objectIndex > -1)
-                self.objects.splice(objectIndex, 1);
+            if (!tile.isObject && objectIndex > -1) self.objects.splice(objectIndex, 1);
 
             if (tile.cursor) self.cursorTiles[tile.index] = tile.cursor;
 
-            if (!tile.cursor && tile.index in self.cursorTiles)
-                self.cursorTiles[tile.index] = null;
+            if (!tile.cursor && tile.index in self.cursorTiles) self.cursorTiles[tile.index] = null;
         }
 
         if (self.webGLMap) self.synchronizeWebGL(tileData);
@@ -122,12 +119,11 @@ export default class Map {
 
         if (self.rawTilesets.length < 1) return;
 
-        _.each(self.rawTilesets, function (rawTileset) {
-            self.loadTileset(rawTileset, function (tileset) {
+        _.each(self.rawTilesets, function(rawTileset) {
+            self.loadTileset(rawTileset, function(tileset) {
                 self.tilesets[tileset.index] = tileset;
 
-                if (self.tilesets.length === self.rawTilesets.length)
-                    self.tilesetsLoaded = true;
+                if (self.tilesets.length === self.rawTilesets.length) self.tilesetsLoaded = true;
             });
         });
     }
@@ -148,18 +144,15 @@ export default class Map {
         tileset.loaded = true;
         tileset.scale = rawTileset.scale;
 
-        tileset.onload = function () {
+        tileset.onload = function() {
             if (tileset.width % self.tileSize > 0)
                 // Prevent uneven tilemaps from loading.
-                throw Error(
-                    'The tile size is malformed in the tile set: ' +
-                        tileset.path
-                );
+                throw Error('The tile size is malformed in the tile set: ' + tileset.path);
 
             callback(tileset);
         };
 
-        tileset.onerror = function () {
+        tileset.onerror = function() {
             throw Error('Could not find tile set: ' + tileset.path);
         };
     }
@@ -207,10 +200,7 @@ export default class Map {
         self.webGLMap.repeatTiles = false;
 
         context.viewport(0, 0, context.canvas.width, context.canvas.height);
-        self.webGLMap.resizeViewport(
-            context.canvas.width,
-            context.canvas.height
-        );
+        self.webGLMap.resizeViewport(context.canvas.width, context.canvas.height);
     }
 
     /**
@@ -277,9 +267,7 @@ export default class Map {
                 imagewidth: self.tilesets[i].width,
                 imageheight: self.tilesets[i].height,
                 name: self.tilesets[i].name.split('.png')[0],
-                tilecount:
-                    (self.tilesets[i].width / 16) *
-                    (self.tilesets[i].height / 16),
+                tilecount: (self.tilesets[i].width / 16) * (self.tilesets[i].height / 16),
                 tilewidth: object.tilewidth,
                 tileheight: object.tileheight,
                 tiles: [],
@@ -300,8 +288,7 @@ export default class Map {
             object.tilesets.push(tileset);
         }
 
-        if (self.game.isDebug())
-            log.info('Successfully generated the WebGL map.');
+        if (self.game.isDebug()) log.info('Successfully generated the WebGL map.');
 
         return object;
     }
@@ -322,12 +309,12 @@ export default class Map {
             for (var j = 0; j < self.width; j++) self.grid[i][j] = 0;
         }
 
-        _.each(self.collisions, function (index) {
+        _.each(self.collisions, function(index) {
             var position = self.indexToGridPosition(index + 1);
             self.grid[position.y][position.x] = 1;
         });
 
-        _.each(self.blocking, function (index) {
+        _.each(self.blocking, function(index) {
             var position = self.indexToGridPosition(index + 1);
 
             if (self.grid[position.y]) self.grid[position.y][position.x] = 1;
@@ -337,7 +324,7 @@ export default class Map {
     updateCollisions() {
         var self = this;
 
-        _.each(self.collisions, function (index) {
+        _.each(self.collisions, function(index) {
             var position = self.indexToGridPosition(index + 1);
 
             if (position.x > self.width - 1) position.x = self.width - 1;
@@ -403,11 +390,7 @@ export default class Map {
     }
 
     isOutOfBounds(x, y) {
-        return (
-            isInt(x) &&
-            isInt(y) &&
-            (x < 0 || x >= this.width || y < 0 || y >= this.height)
-        );
+        return isInt(x) && isInt(y) && (x < 0 || x >= this.width || y < 0 || y >= this.height);
     }
 
     getX(index, width) {
@@ -424,10 +407,7 @@ export default class Map {
         var self = this;
 
         for (var idx in self.tilesets)
-            if (
-                id > self.tilesets[idx].firstGID - 1 &&
-                id < self.tilesets[idx].lastGID + 1
-            )
+            if (id > self.tilesets[idx].firstGID - 1 && id < self.tilesets[idx].lastGID + 1)
                 return self.tilesets[idx];
 
         return null;
@@ -436,12 +416,7 @@ export default class Map {
     saveRegionData() {
         var self = this;
 
-        self.game.storage.setRegionData(
-            self.data,
-            self.collisions,
-            self.objects,
-            self.cursorTiles
-        );
+        self.game.storage.setRegionData(self.data, self.collisions, self.objects, self.cursorTiles);
     }
 
     loadRegionData() {

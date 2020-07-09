@@ -9,15 +9,7 @@ import * as Detect from '../utils/detect';
 import _ from 'underscore';
 
 export default class Renderer {
-    constructor(
-        background,
-        entities,
-        foreground,
-        overlay,
-        textCanvas,
-        cursor,
-        game
-    ) {
+    constructor(background, entities, foreground, overlay, textCanvas, cursor, game) {
         var self = this;
 
         self.canvas = document.getElementById('canvas');
@@ -30,8 +22,7 @@ export default class Renderer {
 
         self.context = self.entities.getContext('2d'); // Entities
 
-        if (!Detect.supportsWebGL())
-            self.backContext = self.background.getContext('2d');
+        if (!Detect.supportsWebGL()) self.backContext = self.background.getContext('2d');
         // Background
         else
             self.backContext =
@@ -116,7 +107,7 @@ export default class Renderer {
         self.input = null;
         self.stopRendering = true;
 
-        self.forEachContext(function (context) {
+        self.forEachContext(function(context) {
             context.fillStyle = '#12100D';
             context.fillRect(0, 0, context.canvas.width, context.canvas.height);
         });
@@ -135,7 +126,7 @@ export default class Renderer {
     removeSmoothing() {
         var self = this;
 
-        self.forAllContexts(function (context) {
+        self.forAllContexts(function(context) {
             if (!context) return;
 
             context.imageSmoothingQuality = 'low';
@@ -161,7 +152,7 @@ export default class Renderer {
         self.canvasWidth = self.screenWidth * self.superScaling;
         self.canvasHeight = self.screenHeight * self.superScaling;
 
-        self.forEachCanvas(function (canvas) {
+        self.forEachCanvas(function(canvas) {
             canvas.width = self.canvasWidth;
             canvas.height = self.canvasHeight;
         });
@@ -208,7 +199,7 @@ export default class Renderer {
         self.checkDevice();
 
         if (!self.resizeTimeout)
-            self.resizeTimeout = setTimeout(function () {
+            self.resizeTimeout = setTimeout(function() {
                 self.scale = self.getScale();
                 self.clearScreen(self.cursorContext);
 
@@ -291,7 +282,7 @@ export default class Renderer {
 
         self.updateDrawingView();
 
-        self.forEachVisibleTile(function (id, index) {
+        self.forEachVisibleTile(function(id, index) {
             var isHighTile = self.map.isHighTile(id),
                 context = isHighTile ? self.foreContext : self.backContext;
 
@@ -325,19 +316,13 @@ export default class Renderer {
         // This is a janky and temporary solution to drawing high tiles
         // on the WebGL context.
 
-        self.foreContext.clearRect(
-            0,
-            0,
-            self.foreground.width,
-            self.foreground.height
-        );
+        self.foreContext.clearRect(0, 0, self.foreground.width, self.foreground.height);
         self.foreContext.save();
 
         self.setCameraView(self.foreContext);
 
-        self.forEachVisibleTile(function (id, index) {
-            if (self.map.isHighTile(id))
-                self.drawTile(self.foreContext, id, index);
+        self.forEachVisibleTile(function(id, index) {
+            if (self.map.isHighTile(id)) self.drawTile(self.foreContext, id, index);
         });
 
         self.foreContext.restore();
@@ -351,7 +336,7 @@ export default class Renderer {
         self.context.save();
         self.setCameraView(self.context);
 
-        self.forEachAnimatedTile(function (tile) {
+        self.forEachAnimatedTile(function(tile) {
             if (!self.camera.isVisible(tile.x, tile.y, 3, 1)) return;
 
             tile.animate(self.game.time);
@@ -383,7 +368,7 @@ export default class Renderer {
 
             self.overlayContext.globalCompositeOperation = 'lighter';
 
-            self.forEachLighting(function (lighting) {
+            self.forEachLighting(function(lighting) {
                 if (self.inRadius(lighting)) self.drawLighting(lighting);
             });
 
@@ -397,7 +382,7 @@ export default class Renderer {
 
         if (self.game.info.getCount() === 0) return;
 
-        self.game.info.forEachInfo(function (info) {
+        self.game.info.forEachInfo(function(info) {
             self.textContext.save();
             self.setCameraView(self.textContext);
             self.textContext.globalAlpha = info.opacity;
@@ -436,7 +421,7 @@ export default class Renderer {
 
         self.setCameraView(self.context);
 
-        self.forEachVisibleEntity(function (entity) {
+        self.forEachVisibleEntity(function(entity) {
             if (!entity) return;
 
             if (entity.spriteLoaded) self.drawEntity(entity);
@@ -473,8 +458,7 @@ export default class Renderer {
 
             if (entity.hasShadow()) {
                 data.shadowWidth = self.shadowSprite.width * self.superScaling;
-                data.shadowHeight =
-                    self.shadowSprite.height * self.superScaling;
+                data.shadowHeight = self.shadowSprite.height * self.superScaling;
 
                 data.shadowOffsetY = entity.shadowOffsetY * self.superScaling;
             }
@@ -490,8 +474,7 @@ export default class Renderer {
             self.context.scale(1, -1);
         } else self.context.translate(dx, dy);
 
-        if (entity.customScale)
-            self.context.scale(entity.customScale, entity.customScale);
+        if (entity.customScale) self.context.scale(entity.customScale, entity.customScale);
 
         if (entity.angled) self.context.rotate(data.angle);
 
@@ -551,11 +534,7 @@ export default class Renderer {
          * having rendererd the entity
          */
 
-        if (
-            entity instanceof Character &&
-            !entity.dead &&
-            !entity.teleporting
-        ) {
+        if (entity instanceof Character && !entity.dead && !entity.teleporting) {
             if (entity.hasWeapon()) {
                 var weapon = self.entities.getSprite(entity.weapon.getString());
 
@@ -563,16 +542,14 @@ export default class Renderer {
                     if (!weapon.loaded) weapon.load();
 
                     var animation = entity.currentAnimation,
-                        weaponAnimationData =
-                            weapon.animationData[animation.name],
+                        weaponAnimationData = weapon.animationData[animation.name],
                         frame = entity.currentAnimation.currentFrame,
                         index =
                             frame.index < weaponAnimationData.length
                                 ? frame.index
                                 : frame.index % weaponAnimationData.length,
                         weaponX = weapon.width * index * self.superScaling,
-                        weaponY =
-                            weapon.height * animation.row * self.superScaling,
+                        weaponY = weapon.height * animation.row * self.superScaling,
                         weaponWidth = weapon.width * self.superScaling,
                         weaponHeight = weapon.height * self.superScaling;
 
@@ -625,14 +602,8 @@ export default class Renderer {
         if (entity instanceof Item) {
             var sparksAnimation = self.entities.sprites.sparksAnimation,
                 sparksFrame = sparksAnimation.currentFrame,
-                sparksX =
-                    self.sparksSprite.width *
-                    sparksFrame.index *
-                    self.superScaling,
-                sparksY =
-                    self.sparksSprite.height *
-                    sparksAnimation.row *
-                    self.superScaling,
+                sparksX = self.sparksSprite.width * sparksFrame.index * self.superScaling,
+                sparksY = self.sparksSprite.height * sparksAnimation.row * self.superScaling,
                 sparksWidth = self.sparksSprite.width * self.superScaling,
                 sparksHeight = self.sparksSprite.height * self.superScaling;
 
@@ -653,20 +624,13 @@ export default class Renderer {
     drawHealth(entity) {
         var self = this;
 
-        if (
-            !entity.hitPoints ||
-            entity.hitPoints < 0 ||
-            !entity.healthBarVisible
-        )
-            return;
+        if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
 
         var barLength = 16,
             healthX = entity.x * self.superScaling - barLength / 2 + 8,
             healthY = (entity.y - entity.sprite.height / 4) * self.superScaling,
             healthWidth = Math.round(
-                (entity.hitPoints / entity.maxHitPoints) *
-                    barLength *
-                    self.superScaling
+                (entity.hitPoints / entity.maxHitPoints) * barLength * self.superScaling
             ),
             healthHeight = 2 * self.superScaling;
 
@@ -674,12 +638,7 @@ export default class Renderer {
         self.setCameraView(self.textContext);
         self.textContext.strokeStyle = '#00000';
         self.textContext.lineWidth = 1;
-        self.textContext.strokeRect(
-            healthX,
-            healthY,
-            barLength * self.superScaling,
-            healthHeight
-        );
+        self.textContext.strokeRect(healthX, healthY, barLength * self.superScaling, healthHeight);
         self.textContext.fillStyle = '#FD0000';
         self.textContext.fillRect(healthX, healthY, healthWidth, healthHeight);
         self.textContext.restore();
@@ -688,12 +647,7 @@ export default class Renderer {
     drawName(entity) {
         var self = this;
 
-        if (
-            entity.hidden ||
-            !entity.drawNames() ||
-            (!self.drawNames && !self.drawLevels)
-        )
-            return;
+        if (entity.hidden || !entity.drawNames() || (!self.drawNames && !self.drawLevels)) return;
 
         var colour = entity.wanted ? 'red' : 'white';
 
@@ -722,22 +676,11 @@ export default class Renderer {
                     '#000'
                 );
 
-            if (
-                self.drawLevels &&
-                (entity.type === 'mob' || entity.type === 'player')
-            )
-                self.drawText(
-                    'Level ' + entity.level,
-                    x,
-                    y,
-                    true,
-                    colour,
-                    '#000'
-                );
+            if (self.drawLevels && (entity.type === 'mob' || entity.type === 'player'))
+                self.drawText('Level ' + entity.level, x, y, true, colour, '#000');
 
             if (entity.type === 'item') {
-                if (entity.count > 1)
-                    self.drawText(entity.count, x, y, true, colour);
+                if (entity.count > 1) self.drawText(entity.count, x, y, true, colour);
 
                 if (entity.ability > -1)
                     self.drawText(
@@ -760,13 +703,7 @@ export default class Renderer {
 
             if (entity.counter <= 0) entity.hasCounter = false;
 
-            self.drawText(
-                entity.counter,
-                entity.x + 8,
-                entity.y - 10,
-                true,
-                colour
-            );
+            self.drawText(entity.counter, entity.x + 8, entity.y - 10, true, colour);
         }
 
         self.textContext.restore();
@@ -776,12 +713,8 @@ export default class Renderer {
         var self = this;
 
         if (lighting.relative) {
-            var lightX =
-                    (lighting.light.origX - self.camera.x / 16) *
-                    self.lightTileSize,
-                lightY =
-                    (lighting.light.origY - self.camera.y / 16) *
-                    self.lightTileSize;
+            var lightX = (lighting.light.origX - self.camera.x / 16) * self.lightTileSize,
+                lightY = (lighting.light.origY - self.camera.y / 16) * self.lightTileSize;
 
             lighting.light.position = new Vec2(lightX, lightY);
             lighting.compute(self.overlay.width, self.overlay.height);
@@ -797,13 +730,7 @@ export default class Renderer {
     drawCursor() {
         var self = this;
 
-        if (
-            self.tablet ||
-            self.mobile ||
-            self.hasRenderedMouse() ||
-            self.input.cursorMoved
-        )
-            return;
+        if (self.tablet || self.mobile || self.hasRenderedMouse() || self.input.cursorMoved) return;
 
         var cursor = self.input.cursor,
             scaling = 14 * self.superScaling;
@@ -901,17 +828,10 @@ export default class Renderer {
 
         if (!pathingGrid) return;
 
-        self.camera.forEachVisiblePosition(function (x, y) {
-            if (
-                x < 0 ||
-                y < 0 ||
-                x > self.map.width - 1 ||
-                y > self.map.height - 1
-            )
-                return;
+        self.camera.forEachVisiblePosition(function(x, y) {
+            if (x < 0 || y < 0 || x > self.map.width - 1 || y > self.map.height - 1) return;
 
-            if (pathingGrid[y][x] !== 0)
-                self.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
+            if (pathingGrid[y][x] !== 0) self.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
         });
     }
 
@@ -920,7 +840,7 @@ export default class Renderer {
 
         if (!self.game.player.hasPath()) return;
 
-        _.each(self.game.player.path, function (path) {
+        _.each(self.game.player.path, function(path) {
             self.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
         });
     }
@@ -977,11 +897,7 @@ export default class Renderer {
 
             if (!(tileId & DIAGONAL_FLIP_FLAG)) rotation = ROT_180_DEG;
 
-            tileId &= ~(
-                HORIZONTAL_FLIP_FLAG |
-                VERTICAL_FLIP_FLAG |
-                DIAGONAL_FLIP_FLAG
-            );
+            tileId &= ~(HORIZONTAL_FLIP_FLAG | VERTICAL_FLIP_FLAG | DIAGONAL_FLIP_FLAG);
         }
 
         var tileset = self.map.getTilesetFromId(tileId);
@@ -1014,22 +930,14 @@ export default class Renderer {
             var scale = self.superScaling;
 
             self.cells[cellId] = {
-                dx:
-                    self.getX(cellId + 1, self.map.width) *
-                    self.tileSize *
-                    scale,
+                dx: self.getX(cellId + 1, self.map.width) * self.tileSize * scale,
                 dy: Math.floor(cellId / self.map.width) * self.tileSize * scale,
                 width: self.tileSize * scale,
                 height: self.tileSize * scale,
             };
         }
 
-        self.drawImage(
-            context,
-            tileset,
-            self.tiles[originalTileId],
-            self.cells[cellId]
-        );
+        self.drawImage(context, tileset, self.tiles[originalTileId], self.cells[cellId]);
     }
 
     drawImage(context, image, tile, cell) {
@@ -1101,17 +1009,9 @@ export default class Renderer {
             context.strokeStyle = strokeColour || '#373737';
             context.lineWidth = strokeSize;
             context.font = (fontSize || self.fontSize) + 'px AdvoCut';
-            context.strokeText(
-                text,
-                x * self.superScaling,
-                y * self.superScaling
-            );
+            context.strokeText(text, x * self.superScaling, y * self.superScaling);
             context.fillStyle = colour || 'white';
-            context.fillText(
-                text,
-                x * self.superScaling,
-                y * self.superScaling
-            );
+            context.fillText(text, x * self.superScaling, y * self.superScaling);
 
             context.restore();
         }
@@ -1122,7 +1022,7 @@ export default class Renderer {
 
         if (!self.animateTiles || self.webGL) return;
 
-        self.forEachVisibleTile(function (id, index) {
+        self.forEachVisibleTile(function(id, index) {
             /**
              * We don't want to reinitialize animated tiles that already exist
              * and are within the visible camera proportions. This way we can parse
@@ -1189,12 +1089,7 @@ export default class Renderer {
 
         var location = self.input.getCoords();
 
-        if (
-            !(
-                location.x === self.input.selectedX &&
-                location.y === self.input.selectedY
-            )
-        ) {
+        if (!(location.x === self.input.selectedX && location.y === self.input.selectedY)) {
             var isColliding = self.map.isColliding(location.x, location.y);
 
             self.drawCellHighlight(
@@ -1212,9 +1107,8 @@ export default class Renderer {
     forEachVisibleIndex(callback, offset) {
         var self = this;
 
-        self.camera.forEachVisiblePosition(function (x, y) {
-            if (!self.map.isOutOfBounds(x, y))
-                callback(self.map.gridPositionToIndex(x, y) - 1);
+        self.camera.forEachVisiblePosition(function(x, y) {
+            if (!self.map.isOutOfBounds(x, y)) callback(self.map.gridPositionToIndex(x, y) - 1);
         }, offset);
     }
 
@@ -1223,18 +1117,17 @@ export default class Renderer {
 
         if (!self.map || !self.map.mapLoaded) return;
 
-        self.forEachVisibleIndex(function (index) {
+        self.forEachVisibleIndex(function(index) {
             var indexData = self.map.data[index];
 
             if (Array.isArray(indexData))
                 for (var i in indexData) callback(indexData[i] - 1, index);
-            else if (!isNaN(self.map.data[index] - 1))
-                callback(self.map.data[index] - 1, index);
+            else if (!isNaN(self.map.data[index] - 1)) callback(self.map.data[index] - 1, index);
         }, offset);
     }
 
     forEachAnimatedTile(callback) {
-        _.each(this.animatedTiles, function (tile) {
+        _.each(this.animatedTiles, function(tile) {
             callback(tile);
         });
     }
@@ -1246,9 +1139,9 @@ export default class Renderer {
 
         var grids = self.entities.grids;
 
-        self.camera.forEachVisiblePosition(function (x, y) {
+        self.camera.forEachVisiblePosition(function(x, y) {
             if (!self.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
-                _.each(grids.renderingGrid[y][x], function (entity) {
+                _.each(grids.renderingGrid[y][x], function(entity) {
                     callback(entity);
                 });
         });
@@ -1263,62 +1156,42 @@ export default class Renderer {
     }
 
     clear() {
-        this.forEachContext(function (context) {
-            context.clearRect(
-                0,
-                0,
-                context.canvas.width,
-                context.canvas.height
-            );
+        this.forEachContext(function(context) {
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         });
     }
 
     clearText() {
-        this.textContext.clearRect(
-            0,
-            0,
-            this.textCanvas.width,
-            this.textCanvas.height
-        );
-        this.overlayContext.clearRect(
-            0,
-            0,
-            this.overlay.width,
-            this.overlay.height
-        );
+        this.textContext.clearRect(0, 0, this.textCanvas.width, this.textCanvas.height);
+        this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
     }
 
     clearDrawing() {
-        this.forEachDrawingContext(function (context) {
-            context.clearRect(
-                0,
-                0,
-                context.canvas.width,
-                context.canvas.height
-            );
+        this.forEachDrawingContext(function(context) {
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         });
     }
 
     save() {
-        this.forEachContext(function (context) {
+        this.forEachContext(function(context) {
             context.save();
         });
     }
 
     saveDrawing() {
-        this.forEachDrawingContext(function (context) {
+        this.forEachDrawingContext(function(context) {
             context.save();
         });
     }
 
     restore() {
-        this.forEachContext(function (context) {
+        this.forEachContext(function(context) {
             context.restore();
         });
     }
 
     restoreDrawing() {
-        this.forEachDrawingContext(function (context) {
+        this.forEachDrawingContext(function(context) {
             context.restore();
         });
     }
@@ -1326,15 +1199,11 @@ export default class Renderer {
     hasRenderedFrame() {
         var self = this;
 
-        if (self.forceRendering || (self.mobile && self.camera.centered))
-            return false;
+        if (self.forceRendering || (self.mobile && self.camera.centered)) return false;
 
         if (!self.camera || self.stopRendering || !self.input) return true;
 
-        return (
-            self.renderedFrame[0] === self.camera.x &&
-            self.renderedFrame[1] === self.camera.y
-        );
+        return self.renderedFrame[0] === self.camera.x && self.renderedFrame[1] === self.camera.y;
     }
 
     saveFrame() {
@@ -1351,19 +1220,16 @@ export default class Renderer {
     transition(duration, forward, callback) {
         var self = this,
             textCanvas = $('#textCanvas'),
-            hasThreshold = function () {
+            hasThreshold = function() {
                 return forward ? self.brightness > 99 : self.brightness < 1;
             };
 
         self.transitioning = true;
 
-        self.transitionInterval = setInterval(function () {
+        self.transitionInterval = setInterval(function() {
             self.brightness += forward ? 6 : -6;
 
-            textCanvas.css(
-                'background',
-                'rgba(0,0,0,' + (1 - self.brightness / 100) + ')'
-            );
+            textCanvas.css('background', 'rgba(0,0,0,' + (1 - self.brightness / 100) + ')');
 
             if (hasThreshold()) {
                 clearInterval(self.transitionInterval);
@@ -1383,7 +1249,7 @@ export default class Renderer {
     updateView() {
         var self = this;
 
-        self.forEachContext(function (context) {
+        self.forEachContext(function(context) {
             self.setCameraView(context);
         });
     }
@@ -1391,7 +1257,7 @@ export default class Renderer {
     updateDrawingView() {
         var self = this;
 
-        self.forEachDrawingContext(function (context) {
+        self.forEachDrawingContext(function(context) {
             self.setCameraView(context);
         });
     }
@@ -1401,19 +1267,11 @@ export default class Renderer {
 
         if (!self.camera || self.stopRendering) return;
 
-        context.translate(
-            -self.camera.x * self.superScaling,
-            -self.camera.y * self.superScaling
-        );
+        context.translate(-self.camera.x * self.superScaling, -self.camera.y * self.superScaling);
     }
 
     clearScreen(context) {
-        context.clearRect(
-            0,
-            0,
-            this.context.canvas.width,
-            this.context.canvas.height
-        );
+        context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
     }
 
     hasRenderedMouse() {
@@ -1435,10 +1293,7 @@ export default class Renderer {
 
         if (level < 0 || level > 100) return;
 
-        $('#textCanvas').css(
-            'background',
-            'rgba(0, 0, 0, ' + (0.5 - level / 200) + ')'
-        );
+        $('#textCanvas').css('background', 'rgba(0, 0, 0, ' + (0.5 - level / 200) + ')');
     }
 
     loadStaticSprites() {
@@ -1462,31 +1317,31 @@ export default class Renderer {
      */
 
     forAllContexts(callback) {
-        _.each(this.allContexts, function (context) {
+        _.each(this.allContexts, function(context) {
             callback(context);
         });
     }
 
     forEachContext(callback) {
-        _.each(this.contexts, function (context) {
+        _.each(this.contexts, function(context) {
             callback(context);
         });
     }
 
     forEachDrawingContext(callback) {
-        _.each(this.drawingContexts, function (context) {
+        _.each(this.drawingContexts, function(context) {
             callback(context);
         });
     }
 
     forEachCanvas(callback) {
-        _.each(this.canvases, function (canvas) {
+        _.each(this.canvases, function(canvas) {
             callback(canvas);
         });
     }
 
     forEachLighting(callback) {
-        _.each(this.lightings, function (lighting) {
+        _.each(this.lightings, function(lighting) {
             callback(lighting);
         });
     }
@@ -1510,8 +1365,7 @@ export default class Renderer {
     }
 
     verifyCentration() {
-        this.forceRendering =
-            (this.mobile || this.tablet) && this.camera.centered;
+        this.forceRendering = (this.mobile || this.tablet) && this.camera.centered;
     }
 
     isPortableDevice() {
@@ -1537,10 +1391,7 @@ export default class Renderer {
             parsedObjects.push(
                 new Illuminated.RectangleObject({
                     topleft: new Vec2(object.x, object.y),
-                    bottomright: new Vec2(
-                        object.x + self.tileSize,
-                        object.y + self.tileSize
-                    ),
+                    bottomright: new Vec2(object.x + self.tileSize, object.y + self.tileSize),
                 })
             );
         }
@@ -1635,11 +1486,9 @@ export default class Renderer {
 
         return (
             position.x > self.camera.gridX - position.diff &&
-            position.x <
-                self.camera.gridX + self.camera.gridWidth + position.diff &&
+            position.x < self.camera.gridX + self.camera.gridWidth + position.diff &&
             position.y > self.camera.gridY - position.diff &&
-            position.y <
-                self.camera.gridY + self.camera.gridHeight + position.diff
+            position.y < self.camera.gridY + self.camera.gridHeight + position.diff
         );
     }
 

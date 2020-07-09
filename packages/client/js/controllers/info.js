@@ -52,32 +52,18 @@ export default class InfoController {
 
                 if (amount < 1 || !isInt(amount)) return;
 
-                if (
-                    type !== Modules.Hits.Experience &&
-                    type !== Modules.Hits.Profession
-                )
+                if (type !== Modules.Hits.Experience && type !== Modules.Hits.Profession)
                     prefix = '++';
                 else suffix = ' EXP';
 
                 if (type === Modules.Hits.Poison) prefix = '--';
 
-                var splat = new Splat(
-                    id,
-                    type,
-                    prefix + amount + suffix,
-                    x,
-                    y,
-                    false
-                );
+                var splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
 
-                if (type === Modules.Hits.Heal)
-                    colour = Modules.DamageColours.healed;
-                else if (type === Modules.Hits.Mana)
-                    colour = Modules.DamageColours.mana;
-                else if (type === Modules.Hits.Experience)
-                    colour = Modules.DamageColours.exp;
-                else if (type === Modules.Hits.Poison)
-                    colour = Modules.DamageColours.poison;
+                if (type === Modules.Hits.Heal) colour = Modules.DamageColours.healed;
+                else if (type === Modules.Hits.Mana) colour = Modules.DamageColours.mana;
+                else if (type === Modules.Hits.Experience) colour = Modules.DamageColours.exp;
+                else if (type === Modules.Hits.Poison) colour = Modules.DamageColours.poison;
                 else if (type === Modules.Hits.Profession)
                     colour = Modules.DamageColours.profession;
 
@@ -127,7 +113,7 @@ export default class InfoController {
 
         self.infos[info.id] = info;
 
-        info.onDestroy(function (id) {
+        info.onDestroy(function(id) {
             self.destroyQueue.add(id);
         });
     }
@@ -135,11 +121,11 @@ export default class InfoController {
     update(time) {
         var self = this;
 
-        self.forEachInfo(function (info) {
+        self.forEachInfo(function(info) {
             info.update(time);
         });
 
-        self.destroyQueue.forEachQueue(function (id) {
+        self.destroyQueue.forEachQueue(function(id) {
             delete self.infos[id];
         });
 
@@ -155,7 +141,7 @@ export default class InfoController {
     }
 
     forEachInfo(callback) {
-        _.each(this.infos, function (info) {
+        _.each(this.infos, function(info) {
             callback(info);
         });
     }
