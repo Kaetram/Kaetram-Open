@@ -43,18 +43,18 @@ export default class Enchant {
             var item = $(inventoryList[i]).clone(),
                 slot = item.find('#bankInventorySlot' + i);
 
-            slot.click(function(event) {
+            slot.click(function (event) {
                 self.select(event);
             });
 
             list.append(item);
         }
 
-        self.selectedItem.click(function() {
+        self.selectedItem.click(function () {
             self.remove('item');
         });
 
-        self.selectedShards.click(function() {
+        self.selectedShards.click(function () {
             self.remove('shards');
         });
     }

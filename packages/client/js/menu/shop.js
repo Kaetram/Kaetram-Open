@@ -39,15 +39,15 @@ export default class Shop {
         self.close = $('#closeShop');
 
         self.close.css('left', '97%');
-        self.close.click(function() {
+        self.close.click(function () {
             self.hide();
         });
 
-        self.sellSlot.click(function() {
+        self.sellSlot.click(function () {
             self.remove();
         });
 
-        self.confirmSell.click(function() {
+        self.confirmSell.click(function () {
             self.sell();
         });
     }
@@ -174,7 +174,7 @@ export default class Shop {
             });
 
             // Bind the itemBuy to the local buy function.
-            itemBuy.click(function(event) {
+            itemBuy.click(function (event) {
                 self.buy(event);
             });
 
@@ -196,7 +196,7 @@ export default class Shop {
 
             slot.attr('id', 'shopInventorySlot' + j);
 
-            slot.click(function(event) {
+            slot.click(function (event) {
                 self.select(event);
             });
 

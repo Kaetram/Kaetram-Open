@@ -1,6 +1,6 @@
 importScripts('../../data/maps/map.js', '../lib/underscore.min.js');
 
-onmessage = function(event) {
+onmessage = function (event) {
     loadCollisionGrid();
 
     postMessage(mapData);
@@ -16,12 +16,12 @@ function loadCollisionGrid() {
         for (var j = 0; j < mapData.width; j++) mapData.grid[i][j] = 0;
     }
 
-    _.each(mapData.collisions, function(tileIndex) {
+    _.each(mapData.collisions, function (tileIndex) {
         var position = indexToGridPosition(tileIndex + 1);
         mapData.grid[position.y][position.x] = 1;
     });
 
-    _.each(mapData.blocking, function(tileIndex) {
+    _.each(mapData.blocking, function (tileIndex) {
         var position = indexToGridPosition(tileIndex + 1);
 
         if (mapData.grid[position.y]) mapData.grid[position.y][position.x] = 1;

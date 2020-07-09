@@ -107,7 +107,7 @@ export default class Renderer {
         self.input = null;
         self.stopRendering = true;
 
-        self.forEachContext(function(context) {
+        self.forEachContext(function (context) {
             context.fillStyle = '#12100D';
             context.fillRect(0, 0, context.canvas.width, context.canvas.height);
         });
@@ -126,7 +126,7 @@ export default class Renderer {
     removeSmoothing() {
         var self = this;
 
-        self.forAllContexts(function(context) {
+        self.forAllContexts(function (context) {
             if (!context) return;
 
             context.imageSmoothingQuality = 'low';
@@ -152,7 +152,7 @@ export default class Renderer {
         self.canvasWidth = self.screenWidth * self.superScaling;
         self.canvasHeight = self.screenHeight * self.superScaling;
 
-        self.forEachCanvas(function(canvas) {
+        self.forEachCanvas(function (canvas) {
             canvas.width = self.canvasWidth;
             canvas.height = self.canvasHeight;
         });
@@ -199,7 +199,7 @@ export default class Renderer {
         self.checkDevice();
 
         if (!self.resizeTimeout)
-            self.resizeTimeout = setTimeout(function() {
+            self.resizeTimeout = setTimeout(function () {
                 self.scale = self.getScale();
                 self.clearScreen(self.cursorContext);
 
@@ -282,7 +282,7 @@ export default class Renderer {
 
         self.updateDrawingView();
 
-        self.forEachVisibleTile(function(id, index) {
+        self.forEachVisibleTile(function (id, index) {
             var isHighTile = self.map.isHighTile(id),
                 context = isHighTile ? self.foreContext : self.backContext;
 
@@ -321,7 +321,7 @@ export default class Renderer {
 
         self.setCameraView(self.foreContext);
 
-        self.forEachVisibleTile(function(id, index) {
+        self.forEachVisibleTile(function (id, index) {
             if (self.map.isHighTile(id)) self.drawTile(self.foreContext, id, index);
         });
 
@@ -336,7 +336,7 @@ export default class Renderer {
         self.context.save();
         self.setCameraView(self.context);
 
-        self.forEachAnimatedTile(function(tile) {
+        self.forEachAnimatedTile(function (tile) {
             if (!self.camera.isVisible(tile.x, tile.y, 3, 1)) return;
 
             tile.animate(self.game.time);
@@ -368,7 +368,7 @@ export default class Renderer {
 
             self.overlayContext.globalCompositeOperation = 'lighter';
 
-            self.forEachLighting(function(lighting) {
+            self.forEachLighting(function (lighting) {
                 if (self.inRadius(lighting)) self.drawLighting(lighting);
             });
 
@@ -382,7 +382,7 @@ export default class Renderer {
 
         if (self.game.info.getCount() === 0) return;
 
-        self.game.info.forEachInfo(function(info) {
+        self.game.info.forEachInfo(function (info) {
             self.textContext.save();
             self.setCameraView(self.textContext);
             self.textContext.globalAlpha = info.opacity;
@@ -421,7 +421,7 @@ export default class Renderer {
 
         self.setCameraView(self.context);
 
-        self.forEachVisibleEntity(function(entity) {
+        self.forEachVisibleEntity(function (entity) {
             if (!entity) return;
 
             if (entity.spriteLoaded) self.drawEntity(entity);
@@ -828,7 +828,7 @@ export default class Renderer {
 
         if (!pathingGrid) return;
 
-        self.camera.forEachVisiblePosition(function(x, y) {
+        self.camera.forEachVisiblePosition(function (x, y) {
             if (x < 0 || y < 0 || x > self.map.width - 1 || y > self.map.height - 1) return;
 
             if (pathingGrid[y][x] !== 0) self.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
@@ -840,7 +840,7 @@ export default class Renderer {
 
         if (!self.game.player.hasPath()) return;
 
-        _.each(self.game.player.path, function(path) {
+        _.each(self.game.player.path, function (path) {
             self.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
         });
     }
@@ -1022,7 +1022,7 @@ export default class Renderer {
 
         if (!self.animateTiles || self.webGL) return;
 
-        self.forEachVisibleTile(function(id, index) {
+        self.forEachVisibleTile(function (id, index) {
             /**
              * We don't want to reinitialize animated tiles that already exist
              * and are within the visible camera proportions. This way we can parse
@@ -1107,7 +1107,7 @@ export default class Renderer {
     forEachVisibleIndex(callback, offset) {
         var self = this;
 
-        self.camera.forEachVisiblePosition(function(x, y) {
+        self.camera.forEachVisiblePosition(function (x, y) {
             if (!self.map.isOutOfBounds(x, y)) callback(self.map.gridPositionToIndex(x, y) - 1);
         }, offset);
     }
@@ -1117,7 +1117,7 @@ export default class Renderer {
 
         if (!self.map || !self.map.mapLoaded) return;
 
-        self.forEachVisibleIndex(function(index) {
+        self.forEachVisibleIndex(function (index) {
             var indexData = self.map.data[index];
 
             if (Array.isArray(indexData))
@@ -1127,7 +1127,7 @@ export default class Renderer {
     }
 
     forEachAnimatedTile(callback) {
-        _.each(this.animatedTiles, function(tile) {
+        _.each(this.animatedTiles, function (tile) {
             callback(tile);
         });
     }
@@ -1139,9 +1139,9 @@ export default class Renderer {
 
         var grids = self.entities.grids;
 
-        self.camera.forEachVisiblePosition(function(x, y) {
+        self.camera.forEachVisiblePosition(function (x, y) {
             if (!self.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
-                _.each(grids.renderingGrid[y][x], function(entity) {
+                _.each(grids.renderingGrid[y][x], function (entity) {
                     callback(entity);
                 });
         });
@@ -1156,7 +1156,7 @@ export default class Renderer {
     }
 
     clear() {
-        this.forEachContext(function(context) {
+        this.forEachContext(function (context) {
             context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         });
     }
@@ -1167,31 +1167,31 @@ export default class Renderer {
     }
 
     clearDrawing() {
-        this.forEachDrawingContext(function(context) {
+        this.forEachDrawingContext(function (context) {
             context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         });
     }
 
     save() {
-        this.forEachContext(function(context) {
+        this.forEachContext(function (context) {
             context.save();
         });
     }
 
     saveDrawing() {
-        this.forEachDrawingContext(function(context) {
+        this.forEachDrawingContext(function (context) {
             context.save();
         });
     }
 
     restore() {
-        this.forEachContext(function(context) {
+        this.forEachContext(function (context) {
             context.restore();
         });
     }
 
     restoreDrawing() {
-        this.forEachDrawingContext(function(context) {
+        this.forEachDrawingContext(function (context) {
             context.restore();
         });
     }
@@ -1220,13 +1220,13 @@ export default class Renderer {
     transition(duration, forward, callback) {
         var self = this,
             textCanvas = $('#textCanvas'),
-            hasThreshold = function() {
+            hasThreshold = function () {
                 return forward ? self.brightness > 99 : self.brightness < 1;
             };
 
         self.transitioning = true;
 
-        self.transitionInterval = setInterval(function() {
+        self.transitionInterval = setInterval(function () {
             self.brightness += forward ? 6 : -6;
 
             textCanvas.css('background', 'rgba(0,0,0,' + (1 - self.brightness / 100) + ')');
@@ -1249,7 +1249,7 @@ export default class Renderer {
     updateView() {
         var self = this;
 
-        self.forEachContext(function(context) {
+        self.forEachContext(function (context) {
             self.setCameraView(context);
         });
     }
@@ -1257,7 +1257,7 @@ export default class Renderer {
     updateDrawingView() {
         var self = this;
 
-        self.forEachDrawingContext(function(context) {
+        self.forEachDrawingContext(function (context) {
             self.setCameraView(context);
         });
     }
@@ -1317,31 +1317,31 @@ export default class Renderer {
      */
 
     forAllContexts(callback) {
-        _.each(this.allContexts, function(context) {
+        _.each(this.allContexts, function (context) {
             callback(context);
         });
     }
 
     forEachContext(callback) {
-        _.each(this.contexts, function(context) {
+        _.each(this.contexts, function (context) {
             callback(context);
         });
     }
 
     forEachDrawingContext(callback) {
-        _.each(this.drawingContexts, function(context) {
+        _.each(this.drawingContexts, function (context) {
             callback(context);
         });
     }
 
     forEachCanvas(callback) {
-        _.each(this.canvases, function(canvas) {
+        _.each(this.canvases, function (canvas) {
             callback(canvas);
         });
     }
 
     forEachLighting(callback) {
-        _.each(this.lightings, function(lighting) {
+        _.each(this.lightings, function (lighting) {
             callback(lighting);
         });
     }

@@ -66,23 +66,23 @@ export default class App {
     load() {
         var self = this;
 
-        self.loginButton.click(function() {
+        self.loginButton.click(function () {
             self.login();
         });
 
-        self.createButton.click(function() {
+        self.createButton.click(function () {
             self.login();
         });
 
-        self.registerButton.click(function() {
+        self.registerButton.click(function () {
             self.openScroll('loadCharacter', 'createCharacter');
         });
 
-        self.cancelButton.click(function() {
+        self.cancelButton.click(function () {
             self.openScroll('createCharacter', 'loadCharacter');
         });
 
-        self.parchment.click(function() {
+        self.parchment.click(function () {
             if (
                 self.parchment.hasClass('about') ||
                 self.parchment.hasClass('credits') ||
@@ -93,23 +93,23 @@ export default class App {
             }
         });
 
-        self.about.click(function() {
+        self.about.click(function () {
             self.displayScroll('about');
         });
 
-        self.credits.click(function() {
+        self.credits.click(function () {
             self.displayScroll('credits');
         });
 
-        self.discord.click(function() {
+        self.discord.click(function () {
             window.open('https://discord.gg/MmbGAaw');
         });
 
-        self.git.click(function() {
+        self.git.click(function () {
             self.displayScroll('git');
         });
 
-        self.rememberMe.click(function() {
+        self.rememberMe.click(function () {
             if (!self.game || !self.game.storage) return;
 
             var active = self.rememberMe.hasClass('active');
@@ -119,13 +119,13 @@ export default class App {
             self.game.storage.toggleRemember(!active);
         });
 
-        self.guest.click(function() {
+        self.guest.click(function () {
             if (!self.game) return;
 
             self.guest.toggleClass('active');
         });
 
-        self.respawn.click(function() {
+        self.respawn.click(function () {
             if (!self.game || !self.game.player || !self.game.player.dead) return;
 
             self.game.respawn();
@@ -133,7 +133,7 @@ export default class App {
 
         window.scrollTo(0, 1);
 
-        self.window.resize(function() {
+        self.window.resize(function () {
             if (self.game) self.game.resize();
         });
 
@@ -141,7 +141,7 @@ export default class App {
         if (!window.localStorage.getItem('world'))
             window.localStorage.setItem('world', 'kaetram_server01');
 
-        $.get('https://hub.kaetram.com/all', function(servers) {
+        $.get('https://hub.kaetram.com/all', function (servers) {
             var serverIndex;
             for (var i = 0; i < servers.length; i++) {
                 var server = servers[i];
@@ -154,7 +154,7 @@ export default class App {
                     )
                 );
                 $('#worlds-list').append(row);
-                row.click(function() {
+                row.click(function () {
                     // TODO: This is when a server is clicked with the local `server` having the world data.
                     // log.info(server);
                 });
@@ -171,16 +171,16 @@ export default class App {
                 currentWorld.playerCount + '/' + currentWorld.maxPlayers
             );
 
-            $('#worlds-switch').click(function() {
+            $('#worlds-switch').click(function () {
                 $('#worlds-popup').toggle();
             });
         });
 
-        $(document).bind('keydown', function(e) {
+        $(document).bind('keydown', function (e) {
             if (e.which === Modules.Keys.Enter) return false;
         });
 
-        $(document).keydown(function(e) {
+        $(document).keydown(function (e) {
             var key = e.which || e.keyCode || 0;
 
             if (!self.game) return;
@@ -195,7 +195,7 @@ export default class App {
             if (self.game.started) self.game.handleInput(Modules.InputType.Key, key);
         });
 
-        $(document).keyup(function(e) {
+        $(document).keyup(function (e) {
             var key = e.which;
 
             if (!self.game || !self.game.started) return;
@@ -203,7 +203,7 @@ export default class App {
             self.game.input.keyUp(key);
         });
 
-        $(document).mousemove(function(event) {
+        $(document).mousemove(function (event) {
             if (
                 !self.game ||
                 !self.game.input ||
@@ -216,14 +216,14 @@ export default class App {
             self.game.input.moveCursor();
         });
 
-        $('body').on('contextmenu', '#canvas', function(event) {
+        $('body').on('contextmenu', '#canvas', function (event) {
             if (self.game && self.game.input)
                 self.game.input.handle(Modules.InputType.RightClick, event);
 
             return false;
         });
 
-        self.canvas.click(function(event) {
+        self.canvas.click(function (event) {
             if (!self.game || !self.game.started || event.button !== 0) return;
 
             window.scrollTo(0, 1);
@@ -231,7 +231,7 @@ export default class App {
             self.game.input.handle(Modules.InputType.LeftClick, event);
         });
 
-        $('input[type="range"]').on('input', function() {
+        $('input[type="range"]').on('input', function () {
             self.updateRange($(this));
         });
     }
@@ -259,7 +259,7 @@ export default class App {
 
         self.updateLoader(null);
 
-        setTimeout(function() {
+        setTimeout(function () {
             self.body.addClass('game');
             self.body.addClass('started');
 
@@ -295,10 +295,13 @@ export default class App {
 
             self.parchment.toggleClass('animate').removeClass(origin);
 
-            setTimeout(function() {
-                self.parchment.toggleClass('animate').addClass(destination);
-                self.parchmentAnimating = false;
-            }, Detect.isTablet() ? 0 : 1000);
+            setTimeout(
+                function () {
+                    self.parchment.toggleClass('animate').addClass(destination);
+                    self.parchmentAnimating = false;
+                },
+                Detect.isTablet() ? 0 : 1000
+            );
         } else self.parchment.removeClass(origin).addClass(destination);
     }
 
@@ -419,7 +422,7 @@ export default class App {
         if (!field) return;
 
         field.addClass('field-error').select();
-        field.bind('keypress', function(event) {
+        field.bind('keypress', function (event) {
             field.removeClass('field-error');
 
             $('.validation-error').remove();
@@ -513,12 +516,12 @@ export default class App {
         var self = this;
 
         if (self.loginFields)
-            _.each(self.loginFields, function(field) {
+            _.each(self.loginFields, function (field) {
                 field.prop('readonly', state);
             });
 
         if (self.registerFields)
-            _.each(self.registerFields, function(field) {
+            _.each(self.registerFields, function (field) {
                 field.prop('readOnly', state);
             });
     }

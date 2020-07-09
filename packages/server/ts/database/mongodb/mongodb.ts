@@ -37,9 +37,7 @@ class MongoDB {
         let url = `mongodb://${this.host}:${this.port}/${this.database}`;
 
         if (config.mongodbAuth)
-            url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${
-                this.database
-            }`;
+            url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
 
         let client = new MongoClient(url, {
             useUnifiedTopology: true,

@@ -149,10 +149,7 @@ class Incoming {
                 ? username.charAt(0).toUpperCase() + username.slice(1)
                 : '';
 
-        this.player.username = formattedUsername
-            .substr(0, 32)
-            .trim()
-            .toLowerCase();
+        this.player.username = formattedUsername.substr(0, 32).trim().toLowerCase();
         this.player.password = password.substr(0, 32);
         this.player.email = email.substr(0, 128).toLowerCase();
 

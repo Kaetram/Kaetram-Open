@@ -39,7 +39,7 @@ export default class MenuController {
         self.loadWarp();
         self.loadShop();
 
-        self.done.click(function() {
+        self.done.click(function () {
             self.hideNotify();
         });
     }
@@ -141,7 +141,7 @@ export default class MenuController {
          * Simple warning dialogue
          */
 
-        ok.click(function() {
+        ok.click(function () {
             self.hideNotify();
         });
 
@@ -150,11 +150,11 @@ export default class MenuController {
          * Confirmation dialogues
          */
 
-        cancel.click(function() {
+        cancel.click(function () {
             self.hideConfirm();
         });
 
-        done.click(function() {
+        done.click(function () {
             log.info(self.confirm.className);
 
             self.hideConfirm();
@@ -233,7 +233,7 @@ export default class MenuController {
         if (self.isNotificationVisible()) {
             self.hideNotification();
 
-            setTimeout(function() {
+            setTimeout(function () {
                 self.showNotification(title, message, colour);
             }, 700);
 
@@ -250,7 +250,7 @@ export default class MenuController {
 
         if (self.notificationTimeout) return;
 
-        self.notificationTimeout = setTimeout(function() {
+        self.notificationTimeout = setTimeout(function () {
             self.hideNotification();
         }, 4000);
     }

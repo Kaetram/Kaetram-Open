@@ -6,8 +6,8 @@ import * as Detect from './utils/detect';
 
 var app, body, chatInput, game;
 
-var load = function() {
-    $(document).ready(function() {
+var load = function () {
+    $(document).ready(function () {
         app = new App();
         body = $('body');
         chatInput = $('#chatInput');
@@ -17,7 +17,7 @@ var load = function() {
     });
 };
 
-var addClasses = function() {
+var addClasses = function () {
     var self = this;
 
     if (Detect.isWindows()) body.addClass('windows');
@@ -27,7 +27,7 @@ var addClasses = function() {
     if (Detect.isFirefoxAndroid()) chatInput.removeAttr('placeholder');
 };
 
-var initGame = function() {
+var initGame = function () {
     app.sendStatus('Loading game');
 
     if (app.config.debug) log.info('Loading the main application...');

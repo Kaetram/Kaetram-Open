@@ -40,11 +40,11 @@ export default class Inventory {
 
             itemSlot.css('background-size', '600%');
 
-            itemSlot.dblclick(function(event) {
+            itemSlot.dblclick(function (event) {
                 self.clickDouble(event);
             });
 
-            itemSlot.click(function(event) {
+            itemSlot.click(function (event) {
                 self.click(event);
             });
 
@@ -64,7 +64,7 @@ export default class Inventory {
             list.append(itemSlotList);
         }
 
-        self.button.click(function() {
+        self.button.click(function () {
             self.open();
         });
     }
@@ -294,9 +294,7 @@ export default class Inventory {
     clear() {
         var self = this;
 
-        $('#inventory')
-            .find('ul')
-            .empty();
+        $('#inventory').find('ul').empty();
 
         if (self.button) self.button.unbind('click');
     }
@@ -310,9 +308,7 @@ export default class Inventory {
     }
 
     getList() {
-        return $('#inventory')
-            .find('ul')
-            .find('li');
+        return $('#inventory').find('ul').find('li');
     }
 
     isVisible() {

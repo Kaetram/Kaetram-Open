@@ -25,7 +25,7 @@ export default class Overlay {
         overlay.crossOrigin = 'Anonymous';
         overlay.src = 'img/overlays/' + overlayName;
 
-        overlay.onload = function() {
+        overlay.onload = function () {
             if (self.game.isDebug()) log.info('Loaded ' + overlayName);
         };
 

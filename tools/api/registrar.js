@@ -5,11 +5,11 @@ var cls = require('../../server/js/lib/class'),
 function load() {
     var registrar = new Registrar();
 
-    registrar.onReady(function() {});
+    registrar.onReady(function () {});
 }
 
 module.exports = Registrar = cls.Class.extend({
-    init: function() {
+    init: function () {
         var self = this;
 
         self.client = redis.createClient('127.0.0.1', 6379, {
@@ -19,7 +19,7 @@ module.exports = Registrar = cls.Class.extend({
         self.readyCallback();
     },
 
-    onReady: function(callback) {
+    onReady: function (callback) {
         this.readyCallback = callback;
     },
 });
