@@ -68,7 +68,7 @@ export default class Projectile extends Entity {
 
         if (target.type !== 'mob') return;
 
-        target.onMove(function () {
+        target.onMove(function() {
             self.destX = target.x;
             self.destY = target.y;
 
@@ -94,10 +94,7 @@ export default class Projectile extends Entity {
     }
 
     updateAngle() {
-        this.angle =
-            Math.atan2(this.destY - this.y, this.destX - this.x) *
-                (180 / Math.PI) -
-            90;
+        this.angle = Math.atan2(this.destY - this.y, this.destX - this.x) * (180 / Math.PI) - 90;
     }
 
     onImpact(callback) {

@@ -8,14 +8,7 @@ export default class Transition {
         self.inProgress = false;
     }
 
-    start(
-        currentTime,
-        updateFunction,
-        stopFunction,
-        startValue,
-        endValue,
-        duration
-    ) {
+    start(currentTime, updateFunction, stopFunction, startValue, endValue, duration) {
         var self = this;
 
         self.startTime = currentTime;
@@ -41,9 +34,7 @@ export default class Transition {
             if (elapsed > self.duration) elapsed = self.duration;
 
             var diff = self.endValue - self.startValue,
-                interval = Math.round(
-                    self.startValue + (diff / self.duration) * elapsed
-                );
+                interval = Math.round(self.startValue + (diff / self.duration) * elapsed);
 
             if (elapsed === self.duration || interval === self.endValue) {
                 self.stop();

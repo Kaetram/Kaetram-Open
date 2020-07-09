@@ -40,8 +40,7 @@ export default class PathFinder {
 
         path = AStar(self.grid, start, end, self.mode);
 
-        if (path.length === 0 && incomplete)
-            path = self.findIncomplete(start, end);
+        if (path.length === 0 && incomplete) path = self.findIncomplete(start, end);
 
         return path;
     }
@@ -74,7 +73,7 @@ export default class PathFinder {
             y,
             g;
 
-        _.each(self.ignores, function (entity) {
+        _.each(self.ignores, function(entity) {
             x = entity.hasPath() ? entity.nextGridX : entity.gridX;
             y = entity.hasPath() ? entity.nextGridY : entity.gridY;
 

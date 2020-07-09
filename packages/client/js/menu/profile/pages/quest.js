@@ -27,7 +27,7 @@ export default class Quest extends Page {
 
         self.achievementsLength = achievements.length;
 
-        _.each(achievements, function (achievement) {
+        _.each(achievements, function(achievement) {
             var item = self.getItem(false, achievement.id),
                 name = self.getName(false, achievement.id);
 
@@ -41,10 +41,7 @@ export default class Quest extends Page {
                 name.text(
                     achievement.name +
                         (achievement.count > 2
-                            ? ' ' +
-                              (achievement.progress - 1) +
-                              '/' +
-                              (achievement.count - 1)
+                            ? ' ' + (achievement.progress - 1) + '/' + (achievement.count - 1)
                             : '')
                 );
             } else if (achievement.progress > 9998) {
@@ -71,7 +68,7 @@ export default class Quest extends Page {
 
         self.questsLength = quests.length;
 
-        _.each(quests, function (quest) {
+        _.each(quests, function(quest) {
             var item = self.getItem(true, quest.id),
                 name = self.getName(true, quest.id);
 
@@ -81,8 +78,7 @@ export default class Quest extends Page {
 
             if (quest.stage > 0 && quest.stage < 9999)
                 name.css('background', 'rgba(255, 255, 10, 0.4)');
-            else if (quest.stage > 9998)
-                name.css('background', 'rgba(10, 255, 10, 0.3)');
+            else if (quest.stage > 9998) name.css('background', 'rgba(10, 255, 10, 0.3)');
 
             if (quest.finished) self.finishedQuests++;
 
@@ -100,22 +96,16 @@ export default class Quest extends Page {
 
     progress(info) {
         var self = this,
-            item = info.isQuest
-                ? self.getQuest(info.id)
-                : self.getAchievement(info.id);
+            item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
 
         if (!item) return;
 
-        var name = item.find(
-            '' + (info.isQuest ? '#quest' : '#achievement') + info.id + 'name'
-        );
+        var name = item.find('' + (info.isQuest ? '#quest' : '#achievement') + info.id + 'name');
 
         if (!name) return;
 
         if (!info.isQuest && info.count > 2)
-            name.text(
-                info.name + ' ' + (info.progress - 1) + '/' + (info.count - 1)
-            );
+            name.text(info.name + ' ' + (info.progress - 1) + '/' + (info.count - 1));
         else name.text(info.name);
 
         name.css('background', 'rgba(255, 255, 10, 0.4)');
@@ -125,15 +115,11 @@ export default class Quest extends Page {
 
     finish(info) {
         var self = this,
-            item = info.isQuest
-                ? self.getQuest(info.id)
-                : self.getAchievement(info.id);
+            item = info.isQuest ? self.getQuest(info.id) : self.getAchievement(info.id);
 
         if (!item) return;
 
-        var name = item.find(
-            '' + (info.isQuest ? '#quest' : '#achievement') + info.id + 'name'
-        );
+        var name = item.find('' + (info.isQuest ? '#quest' : '#achievement') + info.id + 'name');
 
         if (!name) return;
 
@@ -153,9 +139,7 @@ export default class Quest extends Page {
         var self = this;
 
         if (self.finishedAchievement !== 0 && self.achievementsLength !== 0)
-            self.achievementsCount.html(
-                self.finishedAchievements + '/' + self.achievementsLength
-            );
+            self.achievementsCount.html(self.finishedAchievements + '/' + self.achievementsLength);
 
         if (self.finishedQuests !== 0 && self.questsLength !== 0)
             self.questCount.html(self.finishedQuests + '/' + self.questsLength);
@@ -173,9 +157,7 @@ export default class Quest extends Page {
     }
 
     getAchievement(id) {
-        return $(this.achievementsList.find('li')[id]).find(
-            '#achievement' + id
-        );
+        return $(this.achievementsList.find('li')[id]).find('#achievement' + id);
     }
 
     /**
@@ -185,10 +167,7 @@ export default class Quest extends Page {
 
     getItem(isQuest, id) {
         return $(
-            '<div id="' +
-                (isQuest ? 'quest' : 'achievement') +
-                id +
-                '" class="questItem"></div>'
+            '<div id="' + (isQuest ? 'quest' : 'achievement') + id + '" class="questItem"></div>'
         );
     }
 

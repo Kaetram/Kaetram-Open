@@ -25,7 +25,7 @@ export default class Overlay {
         overlay.crossOrigin = 'Anonymous';
         overlay.src = 'img/overlays/' + overlayName;
 
-        overlay.onload = function () {
+        overlay.onload = function() {
             if (self.game.isDebug()) log.info('Loaded ' + overlayName);
         };
 
@@ -35,8 +35,7 @@ export default class Overlay {
     updateOverlay(overlay) {
         var self = this;
 
-        if (overlay in self.overlays)
-            self.currentOverlay = self.overlays[overlay];
+        if (overlay in self.overlays) self.currentOverlay = self.overlays[overlay];
         else self.currentOverlay = overlay;
     }
 

@@ -271,11 +271,7 @@ export default class InputController {
 
         if (self.map.isOutOfBounds(position.x, position.y)) return;
 
-        if (
-            (self.game.zoning && self.game.zoning.direction) ||
-            player.disableAction
-        )
-            return;
+        if ((self.game.zoning && self.game.zoning.direction) || player.disableAction) return;
 
         if (self.game.menu) self.game.menu.hideAll();
 
@@ -313,10 +309,7 @@ export default class InputController {
                 return;
             }
 
-            if (
-                self.entity.gridX === player.gridX &&
-                self.entity.gridY === player.gridY
-            )
+            if (self.entity.gridX === player.gridX && self.entity.gridY === player.gridY)
                 self.game.socket.send(Packets.Target, [
                     Packets.TargetOpcode.Attack,
                     self.entity.id,
@@ -363,25 +356,19 @@ export default class InputController {
 
         if (self.newCursor !== self.cursor) self.cursor = self.newCursor;
 
-        if (self.newTargetColour !== self.targetColour)
-            self.targetColour = self.newTargetColour;
+        if (self.newTargetColour !== self.targetColour) self.targetColour = self.newTargetColour;
     }
 
     moveCursor() {
         var self = this;
 
-        if (!self.renderer || self.renderer.mobile || !self.renderer.camera)
-            return;
+        if (!self.renderer || self.renderer.mobile || !self.renderer.camera) return;
 
         var position = self.getCoords(),
             player = self.getPlayer();
 
         // The entity we are currently hovering over.
-        self.entity = self.game.getEntityAt(
-            position.x,
-            position.y,
-            self.isSamePosition(position)
-        );
+        self.entity = self.game.getEntityAt(position.x, position.y, self.isSamePosition(position));
 
         self.overlay.update(self.entity);
 
@@ -479,16 +466,11 @@ export default class InputController {
 
         if (!self.renderer || !self.renderer.camera) return;
 
-        var tileScale =
-                self.renderer.tileSize * self.renderer.getSuperScaling(),
+        var tileScale = self.renderer.tileSize * self.renderer.getSuperScaling(),
             offsetX = self.mouse.x % tileScale,
             offsetY = self.mouse.y % tileScale,
-            x =
-                (self.mouse.x - offsetX) / tileScale +
-                self.game.getCamera().gridX,
-            y =
-                (self.mouse.y - offsetY) / tileScale +
-                self.game.getCamera().gridY;
+            x = (self.mouse.x - offsetX) / tileScale + self.game.getCamera().gridX,
+            y = (self.mouse.y - offsetY) / tileScale + self.game.getCamera().gridY;
 
         return {
             x: x,
@@ -518,32 +500,19 @@ export default class InputController {
     }
 
     updateFrozen(state) {
-        this.game.socket.send(Packets.Movement, [
-            Packets.MovementOpcode.Freeze,
-            state,
-        ]);
+        this.game.socket.send(Packets.Movement, [Packets.MovementOpcode.Freeze, state]);
     }
 
     isTargetable(entity) {
-        return (
-            this.isAttackable(entity) ||
-            entity.type === 'npc' ||
-            entity.type === 'chest'
-        );
+        return this.isAttackable(entity) || entity.type === 'npc' || entity.type === 'chest';
     }
 
     isAttackable(entity) {
-        return (
-            entity.type === 'mob' ||
-            (entity.type === 'player' && entity.pvp && this.game.pvp)
-        );
+        return entity.type === 'mob' || (entity.type === 'player' && entity.pvp && this.game.pvp);
     }
 
     isSamePosition(position) {
-        return (
-            position.x === this.game.player.gridX &&
-            position.y === this.game.player.gridY
-        );
+        return position.x === this.game.player.gridX && position.y === this.game.player.gridY;
     }
 
     getPlayer() {

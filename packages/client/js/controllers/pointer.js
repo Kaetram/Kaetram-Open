@@ -42,7 +42,7 @@ export default class PointerController {
     resize() {
         var self = this;
 
-        _.each(self.pointers, function (pointer) {
+        _.each(self.pointers, function(pointer) {
             switch (pointer.type) {
                 case Modules.Pointers.Relative:
                     var scale = self.getScale(),
@@ -75,7 +75,7 @@ export default class PointerController {
     clean() {
         var self = this;
 
-        _.each(self.pointers, function (pointer) {
+        _.each(self.pointers, function(pointer) {
             pointer.destroy();
         });
 
@@ -191,7 +191,7 @@ export default class PointerController {
     update() {
         var self = this;
 
-        _.each(self.pointers, function (pointer) {
+        _.each(self.pointers, function(pointer) {
             switch (pointer.type) {
                 case Modules.Pointers.Entity:
                     var entity = self.game.entities.get(pointer.id);

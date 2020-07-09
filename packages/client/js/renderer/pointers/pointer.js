@@ -20,7 +20,7 @@ export default class Pointer {
     load() {
         var self = this;
 
-        self.blinkInterval = setInterval(function () {
+        self.blinkInterval = setInterval(function() {
             if (self.visible) self.hide();
             else self.show();
 
@@ -45,14 +45,12 @@ export default class Pointer {
     }
 
     show() {
-        if (this.type === Modules.Pointers.Button)
-            this.element.addClass('active');
+        if (this.type === Modules.Pointers.Button) this.element.addClass('active');
         else this.element.css('display', 'block');
     }
 
     hide() {
-        if (this.type === Modules.Pointers.Button)
-            this.element.removeClass('active');
+        if (this.type === Modules.Pointers.Button) this.element.removeClass('active');
         else this.element.css('display', 'none');
     }
 }

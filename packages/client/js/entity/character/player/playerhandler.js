@@ -20,7 +20,7 @@ export default class PlayerHandler {
     load() {
         var self = this;
 
-        self.player.onRequestPath(function (x, y) {
+        self.player.onRequestPath(function(x, y) {
             if (self.player.dead || self.player.frozen) return null;
 
             /**
@@ -32,8 +32,7 @@ export default class PlayerHandler {
             var ignores = [],
                 isObject = self.map.isObject(x, y);
 
-            if (self.player.gridX === x && self.player.gridY === y)
-                return ignores;
+            if (self.player.gridX === x && self.player.gridY === y) return ignores;
 
             ignores = [self.player];
 
@@ -58,7 +57,7 @@ export default class PlayerHandler {
             return self.game.findPath(self.player, x, y, ignores);
         });
 
-        self.player.onStartPathing(function (path) {
+        self.player.onStartPathing(function(path) {
             var i = path.length - 1;
 
             self.player.moving = true;
@@ -67,8 +66,7 @@ export default class PlayerHandler {
             self.input.selectedY = path[i][1];
             self.input.selectedCellVisible = true;
 
-            if (self.game.isDebug())
-                log.info('Movement speed: ' + self.player.movementSpeed);
+            if (self.game.isDebug()) log.info('Movement speed: ' + self.player.movementSpeed);
 
             self.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Started,
@@ -81,7 +79,7 @@ export default class PlayerHandler {
             ]);
         });
 
-        self.player.onStopPathing(function (x, y) {
+        self.player.onStopPathing(function(x, y) {
             self.entities.unregisterPosition(self.player);
             self.entities.registerPosition(self.player);
 
@@ -107,16 +105,12 @@ export default class PlayerHandler {
                 self.player.orientation,
             ]);
 
-            self.socket.send(Packets.Target, [
-                self.getTargetType(),
-                self.getTargetId(),
-            ]);
+            self.socket.send(Packets.Target, [self.getTargetType(), self.getTargetId()]);
 
             if (hasTarget) {
                 self.player.lookAt(self.player.target);
 
-                if (self.player.target.type === 'object')
-                    self.player.removeTarget();
+                if (self.player.target.type === 'object') self.player.removeTarget();
             }
 
             self.input.setPassiveTarget();
@@ -126,16 +120,14 @@ export default class PlayerHandler {
             self.player.moving = false;
         });
 
-        self.player.onBeforeStep(function () {
+        self.player.onBeforeStep(function() {
             self.entities.unregisterPosition(self.player);
         });
 
-        self.player.onStep(function () {
-            if (self.player.hasNextStep())
-                self.entities.registerDuality(self.player);
+        self.player.onStep(function() {
+            if (self.player.hasNextStep()) self.entities.registerDuality(self.player);
 
-            if (!self.camera.centered || self.camera.lockX || self.camera.lockY)
-                self.checkBounds();
+            if (!self.camera.centered || self.camera.lockX || self.camera.lockY) self.checkBounds();
 
             self.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Step,
@@ -146,19 +138,18 @@ export default class PlayerHandler {
             if (!self.isAttackable()) return;
 
             if (self.player.isRanged()) {
-                if (self.player.getDistance(self.player.target) < 7)
-                    self.player.stop(true);
+                if (self.player.getDistance(self.player.target) < 7) self.player.stop(true);
             } else {
                 self.input.selectedX = self.player.target.gridX;
                 self.input.selectedY = self.player.target.gridY;
             }
         });
 
-        self.player.onSecondStep(function () {
+        self.player.onSecondStep(function() {
             self.renderer.updateAnimatedTiles();
         });
 
-        self.player.onMove(function () {
+        self.player.onMove(function() {
             /**
              * This is a callback representing the absolute exact position of the player.
              */
@@ -168,16 +159,14 @@ export default class PlayerHandler {
             if (self.player.hasTarget()) self.player.follow(self.player.target);
         });
 
-        self.player.onUpdateArmour(function (armourName, power) {
+        self.player.onUpdateArmour(function(armourName, power) {
             self.player.setSprite(self.game.getSprite(armourName));
 
-            if (self.game.menu && self.game.menu.profile)
-                self.game.menu.profile.update();
+            if (self.game.menu && self.game.menu.profile) self.game.menu.profile.update();
         });
 
-        self.player.onUpdateEquipment(function (type, power) {
-            if (self.game.menu && self.game.menu.profile)
-                self.game.menu.profile.update();
+        self.player.onUpdateEquipment(function(type, power) {
+            if (self.game.menu && self.game.menu.profile) self.game.menu.profile.update();
         });
     }
 
@@ -187,9 +176,7 @@ export default class PlayerHandler {
 
         if (!target) return;
 
-        return (
-            target.type === 'mob' || (target.type === 'player' && target.pvp)
-        );
+        return target.type === 'mob' || (target.type === 'player' && target.pvp);
     }
 
     checkBounds() {
@@ -207,10 +194,7 @@ export default class PlayerHandler {
 
             self.camera.zone(direction);
 
-            self.socket.send(Packets.Movement, [
-                Packets.MovementOpcode.Zone,
-                direction,
-            ]);
+            self.socket.send(Packets.Movement, [Packets.MovementOpcode.Zone, direction]);
 
             self.renderer.updateAnimatedTiles();
 
@@ -230,8 +214,7 @@ export default class PlayerHandler {
 
         if (self.isAttackable()) return Packets.TargetOpcode.Attack;
 
-        if (target.type === 'npc' || target.type === 'chest')
-            return Packets.TargetOpcode.Talk;
+        if (target.type === 'npc' || target.type === 'chest') return Packets.TargetOpcode.Talk;
 
         if (target.type === 'object') return Packets.TargetOpcode.Object;
 

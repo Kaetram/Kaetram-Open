@@ -53,67 +53,37 @@ export default class State extends Page {
 
         self.loaded = true;
 
-        self.weaponSlot.click(function () {
-            self.game.socket.send(Packets.Equipment, [
-                Packets.EquipmentOpcode.Unequip,
-                'weapon',
-            ]);
+        self.weaponSlot.click(function() {
+            self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'weapon']);
         });
 
-        self.armourSlot.click(function () {
-            self.game.socket.send(Packets.Equipment, [
-                Packets.EquipmentOpcode.Unequip,
-                'armour',
-            ]);
+        self.armourSlot.click(function() {
+            self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'armour']);
         });
 
-        self.pendantSlot.click(function () {
-            self.game.socket.send(Packets.Equipment, [
-                Packets.EquipmentOpcode.Unequip,
-                'pendant',
-            ]);
+        self.pendantSlot.click(function() {
+            self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'pendant']);
         });
 
-        self.ringSlot.click(function () {
-            self.game.socket.send(Packets.Equipment, [
-                Packets.EquipmentOpcode.Unequip,
-                'ring',
-            ]);
+        self.ringSlot.click(function() {
+            self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'ring']);
         });
 
-        self.bootsSlot.click(function () {
-            self.game.socket.send(Packets.Equipment, [
-                Packets.EquipmentOpcode.Unequip,
-                'boots',
-            ]);
+        self.bootsSlot.click(function() {
+            self.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'boots']);
         });
     }
 
     loadSlots() {
         var self = this;
 
-        self.weaponSlot.css(
-            'background-image',
-            self.getImageFormat(self.player.weapon.string)
-        );
-        self.armourSlot.css(
-            'background-image',
-            self.getImageFormat(self.player.armour.string)
-        );
-        self.pendantSlot.css(
-            'background-image',
-            self.getImageFormat(self.player.pendant.string)
-        );
-        self.ringSlot.css(
-            'background-image',
-            self.getImageFormat(self.player.ring.string)
-        );
-        self.bootsSlot.css(
-            'background-image',
-            self.getImageFormat(self.player.boots.string)
-        );
+        self.weaponSlot.css('background-image', self.getImageFormat(self.player.weapon.string));
+        self.armourSlot.css('background-image', self.getImageFormat(self.player.armour.string));
+        self.pendantSlot.css('background-image', self.getImageFormat(self.player.pendant.string));
+        self.ringSlot.css('background-image', self.getImageFormat(self.player.ring.string));
+        self.bootsSlot.css('background-image', self.getImageFormat(self.player.boots.string));
 
-        self.forEachSlot(function (slot) {
+        self.forEachSlot(function(slot) {
             slot.css('background-size', '600%');
         });
     }
@@ -133,7 +103,7 @@ export default class State extends Page {
     }
 
     forEachSlot(callback) {
-        _.each(this.slots, function (slot) {
+        _.each(this.slots, function(slot) {
             callback(slot);
         });
     }

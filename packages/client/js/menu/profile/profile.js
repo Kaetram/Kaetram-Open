@@ -29,17 +29,16 @@ export default class Profile {
     load() {
         var self = this;
 
-        self.button.click(function () {
+        self.button.click(function() {
             self.open();
         });
 
-        self.next.click(function () {
-            if (self.activeIndex + 1 < self.pages.length)
-                self.setPage(self.activeIndex + 1);
+        self.next.click(function() {
+            if (self.activeIndex + 1 < self.pages.length) self.setPage(self.activeIndex + 1);
             else self.next.removeClass('enabled');
         });
 
-        self.previous.click(function () {
+        self.previous.click(function() {
             if (self.activeIndex > 0) self.setPage(self.activeIndex - 1);
             else self.previous.removeClass('enabled');
         });
@@ -75,16 +74,13 @@ export default class Profile {
 
         if (!self.activePage.loaded) self.activePage.load();
 
-        self.game.socket.send(Packets.Click, [
-            'profile',
-            self.button.hasClass('active'),
-        ]);
+        self.game.socket.send(Packets.Click, ['profile', self.button.hasClass('active')]);
     }
 
     update() {
         var self = this;
 
-        _.each(self.pages, function (page) {
+        _.each(self.pages, function(page) {
             page.update();
         });
     }
@@ -92,7 +88,7 @@ export default class Profile {
     resize() {
         var self = this;
 
-        _.each(self.pages, function (page) {
+        _.each(self.pages, function(page) {
             page.resize();
         });
     }
@@ -108,8 +104,7 @@ export default class Profile {
         self.activePage = page;
         self.activeIndex = index;
 
-        if (self.activeIndex + 1 === self.pages.length)
-            self.next.removeClass('enabled');
+        if (self.activeIndex + 1 === self.pages.length) self.next.removeClass('enabled');
         else if (self.activeIndex === 0) self.previous.removeClass('enabled');
         else {
             self.previous.addClass('enabled');
