@@ -2,15 +2,13 @@
 
 config = {
     debug: true,
-    debugLevel: 'all'
-}
+    debugLevel: 'all',
+};
 
 let worldClient = require('../../packages/server/data/map/world_client'),
     worldServer = require('../../packages/server/data/map/world_server');
 
-
 class Helper {
-
     constructor() {
         let self = this;
 
@@ -30,11 +28,15 @@ class Helper {
         let self = this,
             index = self.gridPositionToIndex(x, y);
 
-        console.log(`"${index}": { "data": [${worldClient.data[index]}], "isColliding": ${worldClient.collisions.indexOf(index) > -1} },`);
+        console.log(
+            `"${index}": { "data": [${
+                worldClient.data[index]
+            }], "isColliding": ${worldClient.collisions.indexOf(index) > -1} },`
+        );
     }
 
     gridPositionToIndex(x, y) {
-        return (y * this.width) + x;
+        return y * this.width + x;
     }
 
     indexToGridPosition(tileIndex) {
@@ -47,17 +49,15 @@ class Helper {
 
         return {
             x: x,
-            y: y
-        }
+            y: y,
+        };
     }
 
     getX(index, width) {
-        if (index === 0)
-            return 0;
+        if (index === 0) return 0;
 
-        return (index % width === 0) ? width - 1 : (index % width) - 1;
+        return index % width === 0 ? width - 1 : (index % width) - 1;
     }
-
 }
 
 module.exports = Helper;
