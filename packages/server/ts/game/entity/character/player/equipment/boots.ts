@@ -5,7 +5,6 @@ import Items from '../../../../../util/items';
 import Modules from '../../../../../util/modules';
 
 class Boots extends Equipment {
-
     public bootsLevel: number;
 
     constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
@@ -15,13 +14,12 @@ class Boots extends Equipment {
     }
 
     getBaseAmplifier() {
-        return 1.00 + (this.bootsLevel / 200);
+        return 1.0 + this.bootsLevel / 200;
     }
 
     getType() {
         return Modules.Equipment.Boots;
     }
-
 }
 
 export default Boots;

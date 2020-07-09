@@ -8,7 +8,6 @@ import Packets from '../network/packets';
 import log from '../util/log';
 
 export default {
-
     random(range: number) {
         return Math.floor(Math.random() * range);
     },
@@ -64,9 +63,7 @@ export default {
         for (let i = 0; i < keys.length; i++)
             if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
 
-        return (
-            packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1
-        );
+        return packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1;
     },
 
     getCurrentEpoch() {
@@ -75,9 +72,7 @@ export default {
 
     formatUsername(username: string) {
         return username.replace(/\w\S*/g, (string) => {
-            return (
-                string.charAt(0).toUpperCase() + string.substr(1).toLowerCase()
-            );
+            return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
         });
     },
 
@@ -99,9 +94,7 @@ export default {
             _.each(messageBlocks, (_block, index) => {
                 if (index % 2 !== 0)
                     // we hit a colour code.
-                    messageBlocks[
-                        index
-                    ] = `<span style="color:${messageBlocks[index]};">`;
+                    messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
             });
 
             let codeCount = messageBlocks.length / 2 - 1;

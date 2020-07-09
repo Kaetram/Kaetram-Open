@@ -3,7 +3,6 @@
 import Abilities from '../../../../../../util/abilities';
 
 class Ability {
-
     public name: string;
     public type: number;
 
@@ -12,7 +11,6 @@ class Ability {
     public data: any;
 
     constructor(name: string, type: number) {
-
         this.name = name;
         this.type = type;
 
@@ -24,7 +22,6 @@ class Ability {
     setLevel(level: number) {
         this.level = level;
     }
-
 }
 
 export default Ability;

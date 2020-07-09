@@ -10,7 +10,6 @@ import Region from '../region';
 import Map from '../../map/map';
 
 class Home {
-
     private region: Region;
     private map: Map;
 
@@ -34,7 +33,7 @@ class Home {
             info = {
                 indexes: [],
                 data: [],
-                collisions: []
+                collisions: [],
             };
 
         /**

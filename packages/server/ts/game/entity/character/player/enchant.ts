@@ -75,8 +75,7 @@ class Enchant {
     }
 
     convert(shard) {
-        if (!Items.isShard(shard.id) || !this.player.inventory.hasSpace())
-            return;
+        if (!Items.isShard(shard.id) || !this.player.inventory.hasSpace()) return;
 
         let tier = Items.getShardTier(shard.id);
 
@@ -111,9 +110,7 @@ class Enchant {
         }
 
         if (this.selectedShards.count < 10) {
-            this.player.notify(
-                'You must have a minimum of 10 shards to enchant.'
-            );
+            this.player.notify('You must have a minimum of 10 shards to enchant.');
             return;
         }
 
@@ -127,20 +124,14 @@ class Enchant {
         if (tier < 1) return;
 
         if (tier <= this.selectedItem.abilityLevel) {
-            this.player.notify(
-                'This item has already been imbued with those shards.'
-            );
+            this.player.notify('This item has already been imbued with those shards.');
 
             return;
         }
 
         this.generateAbility(tier);
 
-        this.player.inventory.remove(
-            this.selectedShards.id,
-            10,
-            this.selectedShards.index
-        );
+        this.player.inventory.remove(this.selectedShards.id, 10, this.selectedShards.index);
 
         this.remove('item');
         this.remove('shards');
@@ -158,13 +149,13 @@ class Enchant {
         }
 
         log.info(
-            `Selected item ability info: ${this.selectedItem.ability} + ${this.selectedItem.abilityLevel}.`
+            `Selected item ability info: ${this.selectedItem.ability} + ${
+                this.selectedItem.abilityLevel
+            }.`
         );
 
         if (this.hasAbility(this.selectedItem)) {
-            let abilityName = Object.keys(Modules.Enchantment)[
-                this.selectedItem.ability
-            ];
+            let abilityName = Object.keys(Modules.Enchantment)[this.selectedItem.ability];
 
             this.selectedItem.abilityLevel = tier;
 
@@ -213,10 +204,7 @@ class Enchant {
     }
 
     verify() {
-        return (
-            Items.isEnchantable(this.selectedItem.id) &&
-            Items.isShard(this.selectedShards.id)
-        );
+        return Items.isEnchantable(this.selectedItem.id) && Items.isShard(this.selectedShards.id);
     }
 
     hasAbility(item) {

@@ -6,7 +6,6 @@ import NPCs from '../../util/npcs';
 import Combat from './character/combat/combat';
 
 class Entity {
-
     public id: number;
     public type: string;
     public instance: string;
@@ -99,8 +98,7 @@ class Entity {
         this.x = x;
         this.y = y;
 
-        if (this.setPositionCallback)
-            this.setPositionCallback();
+        if (this.setPositionCallback) this.setPositionCallback();
     }
 
     updatePosition() {
@@ -168,8 +166,7 @@ class Entity {
     removeInvisibleId(entityId: number) {
         let index = this.invisiblesIds.indexOf(entityId);
 
-        if (index > -1)
-            this.invisiblesIds.splice(index, 1);
+        if (index > -1) this.invisiblesIds.splice(index, 1);
     }
 
     hasInvisible(entity: Entity) {
@@ -185,22 +182,28 @@ class Entity {
     }
 
     getState() {
-        let string = this.isMob() ? Mobs.idToString(this.id) : (this.isNPC() ? NPCs.idToString(this.id) : Items.idToString(this.id)),
-            name = this.isMob() ? Mobs.idToName(this.id) : (this.isNPC() ? NPCs.idToName(this.id) : Items.idToName(this.id)),
+        let string = this.isMob()
+                ? Mobs.idToString(this.id)
+                : this.isNPC()
+                    ? NPCs.idToString(this.id)
+                    : Items.idToString(this.id),
+            name = this.isMob()
+                ? Mobs.idToName(this.id)
+                : this.isNPC()
+                    ? NPCs.idToName(this.id)
+                    : Items.idToName(this.id),
             data: any = {
                 type: this.type,
                 id: this.instance,
                 string: string,
                 name: name,
                 x: this.x,
-                y: this.y
+                y: this.y,
             };
 
-        if (this.specialState)
-            data.nameColour = this.getNameColour();
+        if (this.specialState) data.nameColour = this.getNameColour();
 
-        if (this.customScale)
-            data.customScale = this.customScale;
+        if (this.customScale) data.customScale = this.customScale;
 
         return data;
     }
@@ -226,7 +229,6 @@ class Entity {
                 return '#0099cc';
         }
     }
-
 }
 
 export default Entity;

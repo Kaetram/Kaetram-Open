@@ -9,7 +9,6 @@ import World from '../../game/world';
 import Player from '../../game/entity/character/player/player';
 
 class TeamWar extends Minigame {
-
     world: World;
 
     lobby: any;
@@ -47,38 +46,30 @@ class TeamWar extends Minigame {
 
     load() {
         this.updateInterval = setInterval(() => {
-
-            if (this.count() < 5 || this.countdown > 0)
-                return;
+            if (this.count() < 5 || this.countdown > 0) return;
 
             this.buildTeams();
 
-            if (new Date().getTime() - this.lastSync > this.syncThreshold)
-                this.synchronize();
+            if (new Date().getTime() - this.lastSync > this.syncThreshold) this.synchronize();
 
             this.started = true;
-
         }, this.updateTick);
     }
 
-    start() {
-
-    }
+    start() {}
 
     add(player: Player) {
-        if (this.lobby.indexOf(player) > -1)
-            return;
+        if (this.lobby.indexOf(player) > -1) return;
 
         this.lobby.push(player);
 
-		player.minigame = this.getState(player);
+        player.minigame = this.getState(player);
     }
 
     remove(player: Player) {
         let index = this.lobby.indexOf(player);
 
-        if (index < 0)
-            return;
+        if (index < 0) return;
 
         this.lobby.splice(index, 1);
     }
@@ -94,10 +85,8 @@ class TeamWar extends Minigame {
             half = Math.ceil(tmp.length / 2),
             random = Utils.randomInt(0, 1);
 
-        if (random === 1)
-            this.redTeam = tmp.splice(0, half), this.blueTeam = tmp;
-        else
-            this.blueTeam = tmp.splice(0, half), this.redTeam = tmp;
+        if (random === 1) (this.redTeam = tmp.splice(0, half)), (this.blueTeam = tmp);
+        else (this.blueTeam = tmp.splice(0, half)), (this.redTeam = tmp);
     }
 
     count() {
@@ -105,8 +94,7 @@ class TeamWar extends Minigame {
     }
 
     synchronize() {
-        if (this.started)
-            return;
+        if (this.started) return;
 
         _.each(this.lobby, (player: Player) => {
             this.sendCountdown(player);
@@ -123,15 +111,15 @@ class TeamWar extends Minigame {
             player: player,
             message: new Messages.Minigame(Packets.MinigameOpcode.TeamWar, {
                 opcode: Packets.MinigameOpcode.TeamWarOpcode.Countdown,
-                countdown: this.countdown
-            })
+                countdown: this.countdown,
+            }),
         });
     }
 
-	inLobby(player: Player) {
-		// TODO - Update these when new lobby is available.
-		return player.x > 0 && player.x < 10 && player.y > 10 && player.y < 0;
-	}
+    inLobby(player: Player) {
+        // TODO - Update these when new lobby is available.
+        return player.x > 0 && player.x < 10 && player.y > 10 && player.y < 0;
+    }
 
     // Used for radius
     getRandom(radius?: number) {
@@ -139,16 +127,13 @@ class TeamWar extends Minigame {
     }
 
     getTeam(player: Player) {
-		if (this.redTeam.indexOf(player) > -1)
-			return 'red';
+        if (this.redTeam.indexOf(player) > -1) return 'red';
 
-		if (this.blueTeam.indexOf(player) > -1)
-			return 'blue';
+        if (this.blueTeam.indexOf(player) > -1) return 'blue';
 
-		if (this.lobby.indexOf(player) > -1)
-			return 'lobby';
+        if (this.lobby.indexOf(player) > -1) return 'lobby';
 
-		return null;
+        return null;
     }
 
     // Both these spawning areas randomize the spawning to a radius of 4
@@ -156,30 +141,29 @@ class TeamWar extends Minigame {
     getRedTeamSpawn() {
         return {
             x: 133 + this.getRandom(),
-            y: 471 + this.getRandom()
-        }
+            y: 471 + this.getRandom(),
+        };
     }
 
     // The spawning area for the blue team
     getBlueTeamSpawn() {
         return {
             x: 163 + this.getRandom(),
-            y: 499 + this.getRandom()
-        }
+            y: 499 + this.getRandom(),
+        };
     }
 
-	// Expand on the super `getState()`
-	getState(player?: Player) {
-		let state = super.getState();
+    // Expand on the super `getState()`
+    getState(player?: Player) {
+        let state = super.getState();
 
-		// Player can only be in team `red`, `blue`, or `lobby`.
-		state.team = this.getTeam(player);
+        // Player can only be in team `red`, `blue`, or `lobby`.
+        state.team = this.getTeam(player);
 
-		if (!state.team)
-			return null;
+        if (!state.team) return null;
 
-		return state;
-	}
+        return state;
+    }
 }
 
 export default TeamWar;

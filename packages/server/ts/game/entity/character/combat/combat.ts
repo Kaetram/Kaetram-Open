@@ -102,8 +102,7 @@ class Combat {
     start() {
         if (this.started) return;
 
-        if (this.character.type === 'player')
-            log.debug('Starting player attack.');
+        if (this.character.type === 'player') log.debug('Starting player attack.');
 
         this.lastAction = new Date().getTime();
 
@@ -125,8 +124,7 @@ class Combat {
     stop() {
         if (!this.started) return;
 
-        if (this.character.type === 'player')
-            log.debug('Stopping player attack.');
+        if (this.character.type === 'player') log.debug('Stopping player attack.');
 
         clearInterval(this.attackLoop);
         clearInterval(this.followLoop);
@@ -147,11 +145,7 @@ class Combat {
                 this.attack(this.character.target);
 
             if (this.queue.hasQueue())
-                this.hit(
-                    this.character,
-                    this.character.target,
-                    this.queue.getHit()
-                );
+                this.hit(this.character, this.character.target, this.queue.getHit());
 
             this.sync();
 
@@ -165,8 +159,7 @@ class Combat {
         if (this.isMob()) {
             if (!this.character.isRanged()) this.sendFollow();
 
-            if (this.isAttacked() || this.character.hasTarget())
-                this.lastAction = this.getTime();
+            if (this.isAttacked() || this.character.hasTarget()) this.lastAction = this.getTime();
 
             if (this.onSameTile()) {
                 let newPosition = this.getNewPosition();
@@ -186,8 +179,7 @@ class Combat {
 
             if (this.character.target.type !== 'player') return;
 
-            if (!this.inProximity())
-                this.follow(this.character, this.character.target);
+            if (!this.inProximity()) this.follow(this.character, this.character.target);
         }
     }
 
@@ -203,11 +195,7 @@ class Combat {
         let hit: any;
 
         if (this.isPlayer()) hit = this.character.getHit(target);
-        else
-            hit = new Hit(
-                Modules.Hits.Damage,
-                Formulas.getDamage(this.character, target)
-            );
+        else hit = new Hit(Modules.Hits.Damage, Formulas.getDamage(this.character, target));
 
         if (!hit) return;
 
@@ -235,9 +223,7 @@ class Combat {
 
         if (!this.world) return;
 
-        let entities = this.world
-            .getGrids()
-            .getSurroundingEntities(this.character, radius);
+        let entities = this.world.getGrids().getSurroundingEntities(this.character, radius);
 
         _.each(entities, (entity) => {
             let hitData = new Hit(
@@ -273,8 +259,7 @@ class Combat {
     }
 
     removeAttacker(character: Character) {
-        if (this.hasAttacker(character))
-            delete this.attackers[character.instance];
+        if (this.hasAttacker(character)) delete this.attackers[character.instance];
 
         if (!this.isAttacked()) this.sendToSpawn();
     }
@@ -440,8 +425,7 @@ class Combat {
     }
 
     sendFollow() {
-        if (!this.character.hasTarget() || this.character.target.isDead())
-            return;
+        if (!this.character.hasTarget() || this.character.target.isDead()) return;
 
         //let ignores = [this.character.instance, this.character.target.instance];
 
@@ -471,12 +455,8 @@ class Combat {
             target = this.character.target;
 
         return (
-            Utils.getDistance(
-                spawnPoint[0],
-                spawnPoint[1],
-                target.x,
-                target.y
-            ) > this.character.spawnDistance
+            Utils.getDistance(spawnPoint[0], spawnPoint[1], target.x, target.y) >
+            this.character.spawnDistance
         );
     }
 
@@ -504,10 +484,7 @@ class Combat {
         return (
             this.isMob() ||
             target.type === 'mob' ||
-            (this.isPlayer() &&
-                target.type === 'player' &&
-                target.pvp &&
-                this.character.pvp)
+            (this.isPlayer() && target.type === 'player' && target.pvp && this.character.pvp)
         );
     }
 
