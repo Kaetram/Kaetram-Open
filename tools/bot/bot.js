@@ -9,7 +9,6 @@ var Utils = require('../../server/js/util/utils'),
 log = new Log('info');
 
 class Entity {
-
     constructor(id, x, y, connection) {
         let self = this;
 
@@ -19,13 +18,11 @@ class Entity {
 
         self.connection = connection;
     }
-
 }
 
 module.exports = Entity;
 
 class Bot {
-
     constructor() {
         let self = this;
 
@@ -42,19 +39,15 @@ class Bot {
 
                 self.botCount--;
 
-                if (self.botCount < 1)
-                    clearInterval(connecting);
+                if (self.botCount < 1) clearInterval(connecting);
             }, 100);
 
         setInterval(() => {
-
             _.each(self.bots, (bot) => {
                 self.move(bot);
 
-                if (Utils.randomInt(0, 50) === 10)
-                    self.talk(bot);
+                if (Utils.randomInt(0, 50) === 10) self.talk(bot);
             });
-
         }, 2000);
     }
 
@@ -64,7 +57,7 @@ class Bot {
 
         connection = io('ws://127.0.0.1:9001', {
             forceNew: true,
-            reconnection: false
+            reconnection: false,
         });
 
         connection.on('connect', () => {
@@ -73,9 +66,8 @@ class Bot {
             connection.emit('client', {
                 gVer: config.gver,
                 cType: 'HTML5',
-                bot: true
+                bot: true,
             });
-
         });
 
         connection.on('connect_error', () => {
@@ -83,24 +75,18 @@ class Bot {
         });
 
         connection.on('message', (message) => {
-
             if (message.startsWith('[')) {
                 var data = JSON.parse(message);
 
                 if (data.length > 1)
-                    _.each(data, (msg) => { self.handlePackets(connection, msg); });
-                else
-                    self.handlePackets(connection, JSON.parse(message).shift());
-
-            } else
-                self.handlePackets(connection, message, 'utf8');
+                    _.each(data, (msg) => {
+                        self.handlePackets(connection, msg);
+                    });
+                else self.handlePackets(connection, JSON.parse(message).shift());
+            } else self.handlePackets(connection, message, 'utf8');
         });
 
-        connection.on('disconnect', () => {
-
-        });
-
-
+        connection.on('disconnect', () => {});
     }
 
     handlePackets(connection, message, type) {
@@ -115,13 +101,11 @@ class Bot {
 
         switch (opcode) {
             case 0:
-
                 self.send(connection, 1, [2, 'n' + self.bots.length, 'n', 'n']);
 
                 break;
 
             case 2:
-
                 let info = message.shift();
 
                 self.bots.push(new Entity(info.instance, info.x, info.y, connection));
@@ -129,18 +113,15 @@ class Bot {
                 break;
 
             case 14: //Combat
-
                 break;
         }
-
     }
 
     send(connection, packet, data) {
         var self = this,
             json = JSON.stringify([packet, data]);
 
-        if (connection && connection.connected)
-            connection.send(json);
+        if (connection && connection.connected) connection.send(json);
     }
 
     move(bot) {
@@ -150,26 +131,27 @@ class Bot {
             newX = currentX + Utils.randomInt(-3, 3),
             newY = currentY + Utils.randomInt(-3, 3);
 
-        setTimeout(() => { // Movement Request
+        setTimeout(() => {
+            // Movement Request
 
             self.send(bot.connection, 9, [0, newX, newY, currentX, currentY]);
-
         }, 250);
 
-        setTimeout(() => { // Empty target packet
+        setTimeout(() => {
+            // Empty target packet
 
             self.send(bot.connection, 13, [2]);
-
         }, 250);
 
-        setTimeout(() => { // Start Movement
+        setTimeout(() => {
+            // Start Movement
 
             self.send(bot.connection, 9, [1, newX, newY, currentX, currentY, 250]);
-
         }, 250);
 
-        setTimeout(() => { // Stop Movement
-            self.send(bot.connection, 9, [3, newX, newY])
+        setTimeout(() => {
+            // Stop Movement
+            self.send(bot.connection, 9, [3, newX, newY]);
         }, 1000);
 
         bot.x = newX;
@@ -179,7 +161,6 @@ class Bot {
     talk(bot) {
         this.send(bot.connection, 20, ['am human, hello there.']);
     }
-
 }
 
 module.exports = Bot;
