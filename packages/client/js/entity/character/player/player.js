@@ -55,11 +55,7 @@ export default class Player extends Character {
         self.setName(data.username);
         self.setGridPosition(data.x, data.y);
         self.setPointsData(data.hitPoints, data.mana);
-        self.setExperience(
-            data.experience,
-            data.nextExperience,
-            data.prevExperience
-        );
+        self.setExperience(data.experience, data.nextExperience, data.prevExperience);
 
         self.level = data.level;
 
@@ -138,15 +134,8 @@ export default class Player extends Character {
         self.poison = poison;
 
         if (self.poison)
-            $('#health').css(
-                'background',
-                '-webkit-linear-gradient(right, #079231, #012b0c)'
-            );
-        else
-            $('#health').css(
-                'background',
-                '-webkit-linear-gradient(right, #ff0000, #ef5a5a)'
-            );
+            $('#health').css('background', '-webkit-linear-gradient(right, #079231, #012b0c)');
+        else $('#health').css('background', '-webkit-linear-gradient(right, #ff0000, #ef5a5a)');
     }
 
     getX() {
@@ -187,125 +176,47 @@ export default class Player extends Character {
         switch (type) {
             case Modules.Equipment.Armour:
                 if (!self.armour)
-                    self.armour = new Armour(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
-                else
-                    self.armour.update(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
+                    self.armour = new Armour(name, string, count, ability, abilityLevel, power);
+                else self.armour.update(name, string, count, ability, abilityLevel, power);
 
-                if (self.updateArmourCallback)
-                    self.updateArmourCallback(string, power);
+                if (self.updateArmourCallback) self.updateArmourCallback(string, power);
 
                 break;
 
             case Modules.Equipment.Weapon:
                 if (!self.weapon)
-                    self.weapon = new Weapon(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
-                else
-                    self.weapon.update(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
+                    self.weapon = new Weapon(name, string, count, ability, abilityLevel, power);
+                else self.weapon.update(name, string, count, ability, abilityLevel, power);
 
                 self.weapon.ranged = string.includes('bow');
 
-                if (self.updateWeaponCallback)
-                    self.updateWeaponCallback(string, power);
+                if (self.updateWeaponCallback) self.updateWeaponCallback(string, power);
 
                 break;
 
             case Modules.Equipment.Pendant:
                 if (!self.pendant)
-                    self.pendant = new Pendant(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
-                else
-                    self.pendant.update(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
+                    self.pendant = new Pendant(name, string, count, ability, abilityLevel, power);
+                else self.pendant.update(name, string, count, ability, abilityLevel, power);
 
                 break;
 
             case Modules.Equipment.Ring:
                 if (!self.ring)
-                    self.ring = new Ring(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
-                else
-                    self.ring.update(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
+                    self.ring = new Ring(name, string, count, ability, abilityLevel, power);
+                else self.ring.update(name, string, count, ability, abilityLevel, power);
 
                 break;
 
             case Modules.Equipment.Boots:
                 if (!self.boots)
-                    self.boots = new Boots(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
-                else
-                    self.boots.update(
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
+                    self.boots = new Boots(name, string, count, ability, abilityLevel, power);
+                else self.boots.update(name, string, count, ability, abilityLevel, power);
 
                 break;
         }
 
-        if (self.updateEquipmentCallback)
-            self.updateEquipmentCallback(type, power);
+        if (self.updateEquipmentCallback) self.updateEquipmentCallback(type, power);
     }
 
     unequip(type) {
@@ -340,7 +251,7 @@ export default class Player extends Character {
         self.blink(90);
 
         if (!self.tempBlinkTimeout)
-            self.tempBlinkTimeout = setTimeout(function () {
+            self.tempBlinkTimeout = setTimeout(function() {
                 self.stopBlinking();
             }, 500);
     }

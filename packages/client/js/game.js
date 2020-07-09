@@ -129,15 +129,7 @@ export default class Game {
         self.app.sendStatus('Initializing render engine');
 
         self.setRenderer(
-            new Renderer(
-                background,
-                entities,
-                foreground,
-                overlay,
-                textCanvas,
-                cursor,
-                self
-            )
+            new Renderer(background, entities, foreground, overlay, textCanvas, cursor, self)
         );
     }
 
@@ -187,7 +179,7 @@ export default class Game {
         self.map = new Map(self);
         self.overlays = new Overlay(self);
 
-        self.map.onReady(function () {
+        self.map.onReady(function() {
             if (!self.isDebug()) self.map.loadRegionData();
 
             self.app.sendStatus('Loading the pathfinder');
@@ -207,8 +199,7 @@ export default class Game {
 
             self.app.sendStatus(null);
 
-            if (Detect.supportsWebGL())
-                self.map.loadWebGL(self.renderer.backContext);
+            if (Detect.supportsWebGL()) self.map.loadWebGL(self.renderer.backContext);
 
             self.loaded = true;
         });
@@ -246,11 +237,7 @@ export default class Game {
         self.player.setOrientation(self.storage.data.player.orientation);
         self.player.idle();
 
-        self.socket.send(Packets.Ready, [
-            true,
-            self.map.preloadedData,
-            Detect.getUserAgent(),
-        ]);
+        self.socket.send(Packets.Ready, [true, self.map.preloadedData, Detect.getUserAgent()]);
         self.sendClientData();
 
         self.playerHandler = new PlayerHandler(self, self.player);
@@ -279,11 +266,9 @@ export default class Game {
 
         if (!self.hasRemember()) return;
 
-        if (self.getStorageUsername() !== '')
-            loginName.val(self.getStorageUsername());
+        if (self.getStorageUsername() !== '') loginName.val(self.getStorageUsername());
 
-        if (self.getStoragePassword() !== '')
-            loginPassword.val(self.getStoragePassword());
+        if (self.getStoragePassword() !== '') loginPassword.val(self.getStoragePassword());
 
         $('#rememberMe').addClass('active');
     }
@@ -298,7 +283,7 @@ export default class Game {
         if (!self.pathfinder) return path;
 
         if (ignores)
-            _.each(ignores, function (entity) {
+            _.each(ignores, function(entity) {
                 self.pathfinder.ignoreEntity(entity);
             });
 
@@ -335,10 +320,7 @@ export default class Game {
         self.app.showMenu();
 
         if (noError) {
-            self.app.sendError(
-                null,
-                'You have been disconnected from the server'
-            );
+            self.app.sendError(null, 'You have been disconnected from the server');
             self.app.statusMessage = null;
         }
 
@@ -363,10 +345,7 @@ export default class Game {
 
         if (!player || player.id === self.player.id) return;
 
-        self.socket.send(Packets.Trade, [
-            Packets.TradeOpcode.Request,
-            player.id,
-        ]);
+        self.socket.send(Packets.Trade, [Packets.TradeOpcode.Request, player.id]);
     }
 
     resize() {
@@ -415,13 +394,12 @@ export default class Game {
         var self = this,
             entities = self.entities.grids.renderingGrid[y][x];
 
-        if (_.size(entities) > 0)
-            return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
+        if (_.size(entities) > 0) return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
 
         var items = self.entities.grids.itemGrid[y][x];
 
         if (_.size(items) > 0) {
-            _.each(items, function (item) {
+            _.each(items, function(item) {
                 if (item.stackable) return item;
             });
 

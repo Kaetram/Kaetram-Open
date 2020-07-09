@@ -33,8 +33,7 @@ export default class Container {
     getEmptySlot() {
         var self = this;
 
-        for (var i = 0; i < self.slots; i++)
-            if (!self.slots[i].string) return i;
+        for (var i = 0; i < self.slots; i++) if (!self.slots[i].string) return i;
 
         return -1;
     }

@@ -36,18 +36,15 @@ export default class Inventory {
             var itemSlot = $('<div id="slot' + i + '" class="itemSlot"></div>');
 
             if (item.string !== 'null')
-                itemSlot.css(
-                    'background-image',
-                    self.container.getImageFormat(item.string)
-                );
+                itemSlot.css('background-image', self.container.getImageFormat(item.string));
 
             itemSlot.css('background-size', '600%');
 
-            itemSlot.dblclick(function (event) {
+            itemSlot.dblclick(function(event) {
                 self.clickDouble(event);
             });
 
-            itemSlot.click(function (event) {
+            itemSlot.click(function(event) {
                 self.click(event);
             });
 
@@ -55,26 +52,19 @@ export default class Inventory {
                 count = item.count;
 
             if (count > 999999)
-                count =
-                    count.toString().substring(0, count.toString().length - 6) +
-                    'M';
-            else if (count > 9999)
-                count = count.toString().substring(0, 2) + 'K';
+                count = count.toString().substring(0, count.toString().length - 6) + 'M';
+            else if (count > 9999) count = count.toString().substring(0, 2) + 'K';
             else if (count === 1) count = '';
 
             itemSlotList.append(itemSlot);
             itemSlotList.append(
-                '<div id="itemCount' +
-                    i +
-                    '" class="inventoryItemCount">' +
-                    count +
-                    '</div>'
+                '<div id="itemCount' + i + '" class="inventoryItemCount">' + count + '</div>'
             );
 
             list.append(itemSlotList);
         }
 
-        self.button.click(function () {
+        self.button.click(function() {
             self.open();
         });
     }
@@ -87,10 +77,7 @@ export default class Inventory {
         if (self.isVisible()) self.hide();
         else self.display();
 
-        self.game.socket.send(Packets.Click, [
-            'inventory',
-            self.button.hasClass('active'),
-        ]);
+        self.game.socket.send(Packets.Click, ['inventory', self.button.hasClass('active')]);
     }
 
     click(event) {
@@ -101,21 +88,15 @@ export default class Inventory {
 
         self.clearSelection();
 
-        if (slot.string === null || slot.count === -1 || slot.string === 'null')
-            return;
+        if (slot.string === null || slot.count === -1 || slot.string === 'null') return;
 
         self.actions.loadDefaults('inventory');
 
-        if (slot.edible)
-            self.actions.add($('<div id="eat" class="actionButton">Eat</div>'));
+        if (slot.edible) self.actions.add($('<div id="eat" class="actionButton">Eat</div>'));
         else if (slot.equippable)
-            self.actions.add(
-                $('<div id="wield" class="actionButton">Wield</div>')
-            );
+            self.actions.add($('<div id="wield" class="actionButton">Wield</div>'));
         else if (slot.count > 999999)
-            self.actions.add(
-                $('<div id="itemInfo" class="actionButton">Info</div>')
-            );
+            self.actions.add($('<div id="itemInfo" class="actionButton">Info</div>'));
 
         if (!self.actions.isVisible()) self.actions.show();
 
@@ -235,19 +216,14 @@ export default class Inventory {
 
         var cssSlot = item.find('#slot' + info.index);
 
-        cssSlot.css(
-            'background-image',
-            self.container.getImageFormat(slot.string)
-        );
+        cssSlot.css('background-image', self.container.getImageFormat(slot.string));
 
         cssSlot.css('background-size', '600%');
 
         var count = slot.count;
 
         if (count > 999999)
-            count =
-                count.toString().substring(0, count.toString().length - 6) +
-                'M';
+            count = count.toString().substring(0, count.toString().length - 6) + 'M';
         else if (count > 9999) count = count.toString().substring(0, 2) + 'K';
         else if (count === 1) count = '';
 
@@ -283,11 +259,7 @@ export default class Inventory {
             if (!slot) continue;
 
             if (Detect.isMobile()) item.css('background-size', '600%');
-            else
-                item.css(
-                    'background-image',
-                    self.container.getImageFormat(slot.string)
-                );
+            else item.css('background-image', self.container.getImageFormat(slot.string));
         }
     }
 
@@ -322,7 +294,9 @@ export default class Inventory {
     clear() {
         var self = this;
 
-        $('#inventory').find('ul').empty();
+        $('#inventory')
+            .find('ul')
+            .empty();
 
         if (self.button) self.button.unbind('click');
     }
@@ -336,7 +310,9 @@ export default class Inventory {
     }
 
     getList() {
-        return $('#inventory').find('ul').find('li');
+        return $('#inventory')
+            .find('ul')
+            .find('li');
     }
 
     isVisible() {

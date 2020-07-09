@@ -39,7 +39,7 @@ export default class MenuController {
         self.loadWarp();
         self.loadShop();
 
-        self.done.click(function () {
+        self.done.click(function() {
             self.hideNotify();
         });
     }
@@ -141,7 +141,7 @@ export default class MenuController {
          * Simple warning dialogue
          */
 
-        ok.click(function () {
+        ok.click(function() {
             self.hideNotify();
         });
 
@@ -150,11 +150,11 @@ export default class MenuController {
          * Confirmation dialogues
          */
 
-        cancel.click(function () {
+        cancel.click(function() {
             self.hideConfirm();
         });
 
-        done.click(function () {
+        done.click(function() {
             log.info(self.confirm.className);
 
             self.hideConfirm();
@@ -188,10 +188,7 @@ export default class MenuController {
 
         if (self.actions && self.actions.isVisible()) self.actions.hide();
 
-        if (
-            self.profile &&
-            (self.profile.isVisible() || self.profile.settings.isVisible())
-        )
+        if (self.profile && (self.profile.isVisible() || self.profile.settings.isVisible()))
             self.profile.hide();
 
         if (
@@ -226,10 +223,7 @@ export default class MenuController {
         var self = this;
 
         if (self.isNotificationVisible())
-            self.notification.css(
-                'top',
-                window.innerHeight - self.notification.height() + 'px'
-            );
+            self.notification.css('top', window.innerHeight - self.notification.height() + 'px');
     }
 
     showNotification(title, message, colour) {
@@ -239,7 +233,7 @@ export default class MenuController {
         if (self.isNotificationVisible()) {
             self.hideNotification();
 
-            setTimeout(function () {
+            setTimeout(function() {
                 self.showNotification(title, message, colour);
             }, 700);
 
@@ -256,7 +250,7 @@ export default class MenuController {
 
         if (self.notificationTimeout) return;
 
-        self.notificationTimeout = setTimeout(function () {
+        self.notificationTimeout = setTimeout(function() {
             self.hideNotification();
         }, 4000);
     }
