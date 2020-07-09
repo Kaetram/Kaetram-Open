@@ -1,6 +1,6 @@
 /* global module */
 
 export default {
-	Data: {},
-	Ids: {}
-}
+    Data: {},
+    Ids: {},
+};

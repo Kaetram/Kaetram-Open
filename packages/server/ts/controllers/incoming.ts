@@ -34,9 +34,7 @@ class Incoming {
                 message = data[0];
 
             if (!Utils.validPacket(packet)) {
-                log.error(
-                    'Non-existent packet received: ' + packet + ' data: '
-                );
+                log.error('Non-existent packet received: ' + packet + ' data: ');
                 log.error(message);
 
                 return;
@@ -198,13 +196,10 @@ class Incoming {
             this.database.login(this.player);
         } else
             this.database.verify(this.player, (result) => {
-                if (result.status === 'success')
-                    this.database.login(this.player);
+                if (result.status === 'success') this.database.login(this.player);
                 else {
                     this.connection.sendUTF8('invalidlogin');
-                    this.connection.close(
-                        'Wrong password entered for: ' + this.player.username
-                    );
+                    this.connection.close('Wrong password entered for: ' + this.player.username);
                 }
             });
     }
@@ -216,8 +211,7 @@ class Incoming {
 
         if (!isReady) return;
 
-        if (this.player.regionsLoaded.length > 0 && !preloadedData)
-            this.player.regionsLoaded = [];
+        if (this.player.regionsLoaded.length > 0 && !preloadedData) this.player.regionsLoaded = [];
 
         this.player.ready = true;
 
@@ -249,16 +243,10 @@ class Incoming {
         this.player.save();
 
         if (config.discordEnabled)
-            this.world.discord.sendWebhook(
-                this.player.username,
-                'has logged in!'
-            );
+            this.world.discord.sendWebhook(this.player.username, 'has logged in!');
 
         if (config.hubEnabled)
-            this.world.api.sendChat(
-                Utils.formatUsername(this.player.username),
-                'has logged in!'
-            );
+            this.world.api.sendChat(Utils.formatUsername(this.player.username), 'has logged in!');
 
         if (this.player.readyCallback) this.player.readyCallback();
 
@@ -276,11 +264,9 @@ class Incoming {
             // Entity is an area-based mob
             if (entity.area) entity.specialState = 'area';
 
-            if (this.player.quests.isQuestNPC(entity))
-                entity.specialState = 'questNpc';
+            if (this.player.quests.isQuestNPC(entity)) entity.specialState = 'questNpc';
 
-            if (this.player.quests.isQuestMob(entity))
-                entity.specialState = 'questMob';
+            if (this.player.quests.isQuestMob(entity)) entity.specialState = 'questMob';
 
             if (entity.miniboss) {
                 entity.specialState = 'miniboss';
@@ -305,13 +291,9 @@ class Incoming {
 
                 if (!this.player.inventory.hasSpace()) {
                     this.player.send(
-                        new Messages.Notification(
-                            Packets.NotificationOpcode.Text,
-                            {
-                                message:
-                                    'You do not have enough space in your inventory.',
-                            }
-                        )
+                        new Messages.Notification(Packets.NotificationOpcode.Text, {
+                            message: 'You do not have enough space in your inventory.',
+                        })
                     );
                     return;
                 }
@@ -326,11 +308,7 @@ class Incoming {
                         break;
 
                     case 'armour':
-                        if (
-                            this.player.hasArmour() &&
-                            this.player.armour.id === 114
-                        )
-                            return;
+                        if (this.player.hasArmour() && this.player.armour.id === 114) return;
 
                         this.player.inventory.add(this.player.armour.getItem());
                         this.player.setArmour(114, 1, -1, -1);
@@ -340,9 +318,7 @@ class Incoming {
                     case 'pendant':
                         if (!this.player.hasPendant()) return;
 
-                        this.player.inventory.add(
-                            this.player.pendant.getItem()
-                        );
+                        this.player.inventory.add(this.player.pendant.getItem());
                         this.player.setPendant(-1, -1, -1, -1);
 
                         break;
@@ -364,11 +340,7 @@ class Incoming {
                         break;
                 }
 
-                this.player.send(
-                    new Messages.Equipment(Packets.EquipmentOpcode.Unequip, [
-                        type,
-                    ])
-                );
+                this.player.send(new Messages.Equipment(Packets.EquipmentOpcode.Unequip, [type]));
 
                 break;
         }
@@ -402,10 +374,7 @@ class Incoming {
                     movementSpeed = message.shift(),
                     targetId = message.shift();
 
-                if (
-                    !movementSpeed ||
-                    movementSpeed != this.player.movementSpeed
-                )
+                if (!movementSpeed || movementSpeed != this.player.movementSpeed)
                     this.player.incrementCheatScore(1);
 
                 if (
@@ -443,28 +412,21 @@ class Incoming {
                     entity = this.world.getEntityByInstance(id);
 
                 if (!this.player.moving) {
-                    log.debug(
-                        `Did not receive movement start packet for ${this.player.username}.`
-                    );
+                    log.debug(`Did not receive movement start packet for ${this.player.username}.`);
 
                     this.player.incrementCheatScore(1);
                 }
 
                 orientation = message.shift();
 
-                if (entity && entity.type === 'item')
-                    this.player.inventory.add(entity);
+                if (entity && entity.type === 'item') this.player.inventory.add(entity);
 
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     let door = this.player.doors.getDoor(posX, posY);
 
-                    if (door && this.player.doors.getStatus(door) === 'closed')
-                        return;
+                    if (door && this.player.doors.getStatus(door) === 'closed') return;
 
-                    let destination = this.world.map.getDoorDestination(
-                        posX,
-                        posY
-                    );
+                    let destination = this.world.map.getDoorDestination(posX, posY);
 
                     this.player.teleport(destination.x, destination.y, true);
                 } else {
@@ -477,8 +439,7 @@ class Incoming {
 
                 let diff = this.player.lastMovement - this.player.movementStart;
 
-                if (diff < this.player.movementSpeed)
-                    this.player.incrementCheatScore(1);
+                if (diff < this.player.movementSpeed) this.player.incrementCheatScore(1);
 
                 break;
 
@@ -488,11 +449,7 @@ class Incoming {
                     entityY = message.shift(),
                     oEntity = this.world.getEntityByInstance(instance);
 
-                if (
-                    !oEntity ||
-                    (oEntity.x === entityX && oEntity.y === entityY)
-                )
-                    return;
+                if (!oEntity || (oEntity.x === entityX && oEntity.y === entityY)) return;
 
                 oEntity.setPosition(entityX, entityY);
 
@@ -505,10 +462,10 @@ class Incoming {
 
                 this.world.push(Packets.PushOpcode.Regions, {
                     regionId: this.player.region,
-                    message: new Messages.Movement(
-                        Packets.MovementOpcode.Orientate,
-                        [this.player.instance, orientation]
-                    ),
+                    message: new Messages.Movement(Packets.MovementOpcode.Orientate, [
+                        this.player.instance,
+                        orientation,
+                    ]),
                 });
 
                 break;
@@ -561,32 +518,23 @@ class Incoming {
 
                 if (entity.dead) return;
 
-                if (this.player.npcTalkCallback)
-                    this.player.npcTalkCallback(entity);
+                if (this.player.npcTalkCallback) this.player.npcTalkCallback(entity);
 
                 break;
 
             case Packets.TargetOpcode.Attack:
                 let target = this.world.getEntityByInstance(instance);
 
-                if (
-                    !target ||
-                    target.dead ||
-                    !this.canAttack(this.player, target)
-                )
-                    return;
+                if (!target || target.dead || !this.canAttack(this.player, target)) return;
 
                 this.player.cheatScore = 0;
 
                 this.world.push(Packets.PushOpcode.Regions, {
                     regionId: target.region,
-                    message: new Messages.Combat(
-                        Packets.CombatOpcode.Initiate,
-                        {
-                            attackerId: this.player.instance,
-                            targetId: target.instance,
-                        }
-                    ),
+                    message: new Messages.Combat(Packets.CombatOpcode.Initiate, {
+                        attackerId: this.player.instance,
+                        targetId: target.instance,
+                    }),
                 });
 
                 break;
@@ -609,12 +557,8 @@ class Incoming {
 
         switch (opcode) {
             case Packets.CombatOpcode.Initiate:
-                let attacker: any = this.world.getEntityByInstance(
-                        message.shift()
-                    ),
-                    target: any = this.world.getEntityByInstance(
-                        message.shift()
-                    );
+                let attacker: any = this.world.getEntityByInstance(message.shift()),
+                    target: any = this.world.getEntityByInstance(message.shift());
 
                 if (
                     !target ||
@@ -645,28 +589,15 @@ class Incoming {
 
         switch (type) {
             case Packets.ProjectileOpcode.Impact:
-                let projectile: any = this.world.getEntityByInstance(
-                        message.shift()
-                    ),
-                    target: any = this.world.getEntityByInstance(
-                        message.shift()
-                    );
+                let projectile: any = this.world.getEntityByInstance(message.shift()),
+                    target: any = this.world.getEntityByInstance(message.shift());
 
                 if (!target || target.dead || !projectile) return;
 
-                this.world.handleDamage(
-                    projectile.owner,
-                    target,
-                    projectile.damage
-                );
+                this.world.handleDamage(projectile.owner, target, projectile.damage);
                 this.world.removeProjectile(projectile);
 
-                if (
-                    target.combat.started ||
-                    target.dead ||
-                    target.type !== 'mob'
-                )
-                    return;
+                if (target.combat.started || target.dead || target.type !== 'mob') return;
 
                 target.begin(projectile.owner);
 
@@ -681,10 +612,7 @@ class Incoming {
             case Packets.NetworkOpcode.Pong:
                 let time = new Date().getTime();
 
-                this.player.notify(
-                    `Latency of ${time - this.player.pingTime}ms`,
-                    'red'
-                );
+                this.player.notify(`Latency of ${time - this.player.pingTime}ms`, 'red');
                 break;
         }
     }
@@ -694,8 +622,7 @@ class Incoming {
 
         if (!text || text.length < 1 || !/\S/.test(text)) return;
 
-        if (text.charAt(0) === '/' || text.charAt(0) === ';')
-            this.commands.parse(text);
+        if (text.charAt(0) === '/' || text.charAt(0) === ';') this.commands.parse(text);
         else {
             if (this.player.isMuted()) {
                 this.player.send(
@@ -709,8 +636,7 @@ class Incoming {
             if (!this.player.canTalk) {
                 this.player.send(
                     new Messages.Notification(Packets.NotificationOpcode.Text, {
-                        message:
-                            'You are not allowed to talk for the duration of this event.',
+                        message: 'You are not allowed to talk for the duration of this event.',
                     })
                 );
                 return;
@@ -719,18 +645,10 @@ class Incoming {
             log.debug(`${this.player.username} - ${text}`);
 
             if (config.discordEnabled)
-                this.world.discord.sendWebhook(
-                    this.player.username,
-                    text,
-                    true
-                );
+                this.world.discord.sendWebhook(this.player.username, text, true);
 
             if (config.hubEnabled)
-                this.world.api.sendChat(
-                    Utils.formatUsername(this.player.username),
-                    text,
-                    true
-                );
+                this.world.api.sendChat(Utils.formatUsername(this.player.username), text, true);
 
             this.world.push(Packets.PushOpcode.Regions, {
                 regionId: this.player.region,
@@ -785,13 +703,7 @@ class Incoming {
 
                 (ability = iSlot.ability), (abilityLevel = iSlot.abilityLevel);
 
-                if (
-                    this.player.inventory.remove(
-                        id,
-                        count ? count : item.count,
-                        item.index
-                    )
-                )
+                if (this.player.inventory.remove(id, count ? count : item.count, item.index))
                     this.world.dropItem(
                         id,
                         count ? count : 1,
@@ -846,10 +758,7 @@ class Incoming {
                     if (bankSlot.id < 1) return;
 
                     //Infinite stacks move all at once, otherwise move one by one.
-                    let moveAmount =
-                        Items.maxStackSize(bankSlot.id) === -1
-                            ? bankSlot.count
-                            : 1;
+                    let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
 
                     bankSlot.count = moveAmount;
 
@@ -868,11 +777,7 @@ class Incoming {
                             inventorySlot.abilityLevel
                         )
                     )
-                        this.player.inventory.remove(
-                            inventorySlot.id,
-                            inventorySlot.count,
-                            index
-                        );
+                        this.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
                 }
 
                 break;
@@ -895,13 +800,7 @@ class Incoming {
             ignoreId: this.player.instance,
         });
 
-        this.player.send(
-            new Messages.Respawn(
-                this.player.instance,
-                this.player.x,
-                this.player.y
-            )
-        );
+        this.player.send(new Messages.Respawn(this.player.instance, this.player.x, this.player.y));
 
         this.player.revertPoints();
     }
@@ -995,9 +894,7 @@ class Incoming {
                     return;
                 }
 
-                log.debug(
-                    'Received Buy: ' + npcId + ' ' + buyId + ' ' + amount
-                );
+                log.debug('Received Buy: ' + npcId + ' ' + buyId + ' ' + amount);
 
                 this.world.shops.buy(this.player, npcId, buyId, amount);
 
@@ -1009,11 +906,7 @@ class Incoming {
                     return;
                 }
 
-                this.world.shops.sell(
-                    this.player,
-                    npcId,
-                    this.player.selectedShopItem.index
-                );
+                this.world.shops.sell(this.player, npcId, this.player.selectedShopItem.index);
 
                 break;
 
@@ -1038,8 +931,7 @@ class Incoming {
 
                 if (!item || item.id < 1) return;
 
-                if (this.player.selectedShopItem)
-                    this.world.shops.remove(this.player);
+                if (this.player.selectedShopItem) this.world.shops.remove(this.player);
 
                 let currency = this.world.shops.getCurrency(npcId);
 
@@ -1106,12 +998,7 @@ class Incoming {
 
         if (attacker.type === 'mob' || target.type === 'mob') return true;
 
-        return (
-            attacker.type === 'player' &&
-            target.type === 'player' &&
-            attacker.pvp &&
-            target.pvp
-        );
+        return attacker.type === 'player' && target.type === 'player' && attacker.pvp && target.pvp;
     }
 
     preventNoClip(x, y) {

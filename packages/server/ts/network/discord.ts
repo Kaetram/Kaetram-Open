@@ -27,10 +27,7 @@ class Discord {
         this.world = world;
 
         this.client = new Client();
-        this.webhook = new WebhookClient(
-            config.discordWebhookId,
-            config.discordWebhookToken
-        );
+        this.webhook = new WebhookClient(config.discordWebhookId, config.discordWebhookToken);
 
         this.client.on('ready', () => {
             log.notice('Successfully connected to the Discord server.');
@@ -59,11 +56,7 @@ class Discord {
 
         let formattedSource = Utils.formatUsername(source);
 
-        this.webhook.send(
-            `**[Kaetram]** ${formattedSource}${
-                withArrow ? ' »' : ''
-            } ${message}`
-        );
+        this.webhook.send(`**[Kaetram]** ${formattedSource}${withArrow ? ' »' : ''} ${message}`);
     }
 }
 

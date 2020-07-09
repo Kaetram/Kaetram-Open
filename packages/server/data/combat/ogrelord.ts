@@ -6,7 +6,6 @@ import Utils from '../../ts/util/utils';
 import _ from 'underscore';
 
 class OgreLord extends Combat {
-
     dialogues: Array<string>;
     minions: Array<any>;
     lastSpawn: number;
@@ -22,7 +21,11 @@ class OgreLord extends Combat {
 
         self.character = character;
 
-        self.dialogues = ['Get outta my swamp', 'No, not the onion.', 'My minions give me strength! You stand no chance!'];
+        self.dialogues = [
+            'Get outta my swamp',
+            'No, not the onion.',
+            'My minions give me strength! You stand no chance!',
+        ];
 
         self.minions = [];
 
@@ -42,16 +45,11 @@ class OgreLord extends Combat {
         var self = this;
 
         self.talkingInterval = setInterval(() => {
-
-            if (self.character.hasTarget())
-                self.forceTalk(self.getMessage());
-
+            if (self.character.hasTarget()) self.forceTalk(self.getMessage());
         }, 9000);
 
         self.updateInterval = setInterval(() => {
-
-            self.character.armourLevel = 50 + (self.minions.length * 15);
-
+            self.character.armourLevel = 50 + self.minions.length * 15;
         }, 2000);
 
         self.loaded = true;
@@ -60,8 +58,7 @@ class OgreLord extends Combat {
     hit(character, target, hitInfo) {
         var self = this;
 
-        if (self.isAttacked())
-            self.beginMinionAttack();
+        if (self.isAttacked()) self.beginMinionAttack();
 
         if (!character.isNonDiagonal(target)) {
             var distance = character.getDistance(target);
@@ -72,8 +69,7 @@ class OgreLord extends Combat {
             }
         }
 
-        if (self.canSpawn())
-            self.spawnMinions();
+        if (self.canSpawn()) self.spawnMinions();
 
         super.hit(character, target, hitInfo);
     }
@@ -81,18 +77,16 @@ class OgreLord extends Combat {
     forceTalk(message) {
         var self = this;
 
-        if (!self.world)
-            return;
+        if (!self.world) return;
 
         self.world.push(Packets.PushOpcode.Regions, {
             regionId: self.character.region,
             message: new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: self.character.instance,
                 text: message,
-                nonNPC: true
-            })
+                nonNPC: true,
+            }),
         });
-
     }
 
     getMessage() {
@@ -112,37 +106,27 @@ class OgreLord extends Combat {
             self.minions.push(self.world.spawnMob(12, xs[i], ys[i]));
 
         _.each(self.minions, (minion) => {
-
             minion.onDeath(() => {
-
-                if (self.isLast())
-                    self.lastSpawn = new Date().getTime();
+                if (self.isLast()) self.lastSpawn = new Date().getTime();
 
                 self.minions.splice(self.minions.indexOf(minion), 1);
-
             });
 
-            if (self.isAttacked())
-                self.beginMinionAttack();
-
+            if (self.isAttacked()) self.beginMinionAttack();
         });
 
-        if (!self.loaded)
-            self.load();
+        if (!self.loaded) self.load();
     }
 
     beginMinionAttack() {
         var self = this;
 
-        if (!self.hasMinions())
-            return;
+        if (!self.hasMinions()) return;
 
         _.each(self.minions, (minion) => {
             var randomTarget = self.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget)
-                minion.combat.begin(randomTarget);
-
+            if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
         });
     }
 
@@ -153,8 +137,7 @@ class OgreLord extends Combat {
 
         var listCopy = self.minions.slice();
 
-        for (var i = 0; i < listCopy.length; i++)
-            self.world.kill(listCopy[i]);
+        for (var i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
 
         clearInterval(self.talkingInterval);
         clearInterval(self.updateInterval);
@@ -172,12 +155,10 @@ class OgreLord extends Combat {
             var keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
-            if (randomAttacker)
-                return randomAttacker;
+            if (randomAttacker) return randomAttacker;
         }
 
-        if (self.character.hasTarget())
-            return self.character.target;
+        if (self.character.hasTarget()) return self.character.target;
 
         return null;
     }
@@ -191,9 +172,10 @@ class OgreLord extends Combat {
     }
 
     canSpawn() {
-        return (new Date().getTime() - this.lastSpawn > 50000) && !this.hasMinions() && this.isAttacked();
+        return (
+            new Date().getTime() - this.lastSpawn > 50000 && !this.hasMinions() && this.isAttacked()
+        );
     }
-
 }
 
 export default OgreLord;

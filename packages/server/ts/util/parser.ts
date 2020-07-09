@@ -21,7 +21,6 @@ import * as ShopsData from '../../data/shops.json';
 import * as ObjectData from '../../data/objects.json';
 
 class Parser {
-
     private readyCallback: Function;
 
     constructor() {
@@ -50,7 +49,6 @@ class Parser {
         let mobCounter = 0;
 
         _.each(MobData, (value: any, key) => {
-
             key = key.toLowerCase();
 
             Mobs.Properties[key] = {
@@ -72,7 +70,7 @@ class Parser {
                 projectileName: value.projectileName || null,
                 spawnDelay: value.spawnDelay || 60000,
                 combatPlugin: value.combatPlugin || null,
-                hiddenName: value.hiddenName || false
+                hiddenName: value.hiddenName || false,
             };
 
             Mobs.Ids[value.id] = Mobs.Properties[key];
@@ -94,7 +92,7 @@ class Parser {
                 id: value.id,
                 name: value.name || key,
                 text: value.text || null,
-                type: value.type || null
+                type: value.type || null,
             };
 
             NPCs.Ids[value.id] = NPCs.Properties[key];
@@ -133,13 +131,12 @@ class Parser {
                 customData: value.customData || null,
                 requirement: value.requirement || null,
                 lumberjacking: value.lumberjacking || 0,
-                mining: value.mining || 0
+                mining: value.mining || 0,
             };
 
             Items.Ids[value.id] = Items.Data[key];
 
-            if (value.plugin)
-                Items.Plugins[value.id] = itemPlugins[value.plugin];
+            if (value.plugin) Items.Plugins[value.id] = itemPlugins[value.plugin];
 
             itemCounter++;
         });
@@ -158,7 +155,7 @@ class Parser {
                 id: value.id,
                 type: value.type,
                 mana: value.mana || 0,
-                cooldown: value.cooldown || null
+                cooldown: value.cooldown || null,
             };
 
             Abilities.Ids[value.id] = Abilities.Data[key];
@@ -166,7 +163,7 @@ class Parser {
             skillCounter++;
         });
 
-        log.info('Finished loading ' + skillCounter + ' skills.')
+        log.info('Finished loading ' + skillCounter + ' skills.');
     }
 
     loadShops() {
@@ -183,7 +180,7 @@ class Parser {
                 originalCount: value.count,
                 prices: value.prices,
                 currency: value.currency,
-                stockDuration: value.stockDuration
+                stockDuration: value.stockDuration,
             };
 
             Shops.Ids[value.npcId] = Shops.Data[key];
@@ -226,20 +223,18 @@ class Parser {
             let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
-
     }
 
     loadObjects() {
         let objectCounter = 0;
 
         _.each(ObjectData, (value: any, key) => {
-
             Objects.Data[key] = {
                 x: value.x,
                 y: value.y,
                 type: value.type,
                 messages: value.messages,
-                cursor: value.cursor
+                cursor: value.cursor,
             };
 
             objectCounter++;
@@ -247,8 +242,7 @@ class Parser {
 
         log.info('Finished loading ' + objectCounter + ' global objects.');
 
-        if (this.readyCallback)
-            this.readyCallback();
+        if (this.readyCallback) this.readyCallback();
     }
 
     onReady(callback: Function) {

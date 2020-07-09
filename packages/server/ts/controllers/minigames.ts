@@ -3,7 +3,6 @@ import World from '../game/world';
 import log from '../util/log';
 
 class Minigames {
-
     public world: World;
 
     public minigames: any;
@@ -19,7 +18,7 @@ class Minigames {
     load() {
         this.minigames['TeamWar'] = new TeamWar(this.world);
 
-        log.info(`Finished loading ${Object.keys(this.minigames).length} minigames.`)
+        log.info(`Finished loading ${Object.keys(this.minigames).length} minigames.`);
     }
 
     getTeamWar() {

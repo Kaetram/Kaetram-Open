@@ -130,10 +130,7 @@ class Shops {
 
     refresh(shop: any) {
         this.world.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Shop(
-                Packets.ShopOpcode.Refresh,
-                this.getShopData(shop)
-            ),
+            message: new Messages.Shop(Packets.ShopOpcode.Refresh, this.getShopData(shop)),
         });
     }
 

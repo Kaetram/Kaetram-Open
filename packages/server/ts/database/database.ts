@@ -23,9 +23,7 @@ class Database {
                 break;
 
             default:
-                log.error(
-                    'The database ' + this.databaseType + ' could not be found.'
-                );
+                log.error('The database ' + this.databaseType + ' could not be found.');
                 break;
         }
     }

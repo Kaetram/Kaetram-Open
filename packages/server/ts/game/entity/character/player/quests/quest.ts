@@ -9,7 +9,6 @@ import NPC from '../../../npc/npc';
 import Mob from '../../mob/mob';
 
 class Quest {
-
     public player: Player;
     public data: any;
 
@@ -33,10 +32,8 @@ class Quest {
     }
 
     load(stage: number) {
-        if (!stage)
-            this.update();
-        else
-            this.stage = stage;
+        if (!stage) this.update();
+        else this.stage = stage;
     }
 
     finish() {
@@ -48,7 +45,7 @@ class Quest {
                     id: item.id,
                     count: item.count,
                     ability: -1,
-                    abilityLevel: -1
+                    abilityLevel: -1,
                 });
             else {
                 this.player.notify('You do not have enough space in your inventory.');
@@ -60,10 +57,12 @@ class Quest {
 
         this.setStage(9999);
 
-        this.player.send(new Messages.Quest(Packets.QuestOpcode.Finish, {
-            id: this.id,
-            isQuest: true
-        }));
+        this.player.send(
+            new Messages.Quest(Packets.QuestOpcode.Finish, {
+                id: this.id,
+                isQuest: true,
+            })
+        );
 
         this.update();
     }
@@ -74,8 +73,7 @@ class Quest {
     }
 
     triggerTalk(npc: NPC) {
-        if (this.npcTalkCallback)
-            this.npcTalkCallback(npc);
+        if (this.npcTalkCallback) this.npcTalkCallback(npc);
     }
 
     update() {
@@ -85,47 +83,48 @@ class Quest {
     getConversation(id: number) {
         let conversation = this.data.conversations[id];
 
-        if (!conversation || !conversation[this.stage])
-            return [''];
+        if (!conversation || !conversation[this.stage]) return [''];
 
         return conversation[this.stage];
     }
 
     updatePointers() {
-        if (!this.data.pointers)
-            return;
+        if (!this.data.pointers) return;
 
         let pointer = this.data.pointers[this.stage];
 
-        if (!pointer)
-            return;
+        if (!pointer) return;
 
         let opcode = pointer[0];
 
         if (opcode === 4)
-            this.player.send(new Messages.Pointer(opcode, {
-                id: Utils.generateRandomId(),
-                button: pointer[1]
-            }));
+            this.player.send(
+                new Messages.Pointer(opcode, {
+                    id: Utils.generateRandomId(),
+                    button: pointer[1],
+                })
+            );
         else
-            this.player.send(new Messages.Pointer(opcode, {
-                id: Utils.generateRandomId(),
-                x: pointer[1],
-                y: pointer[2]
-            }));
-
+            this.player.send(
+                new Messages.Pointer(opcode, {
+                    id: Utils.generateRandomId(),
+                    x: pointer[1],
+                    y: pointer[2],
+                })
+            );
     }
 
     forceTalk(npc: NPC, message: string) {
-        if (!npc)
-            return;
+        if (!npc) return;
 
         this.player.talkIndex = 0;
 
-        this.player.send(new Messages.NPC(Packets.NPCOpcode.Talk, {
-            id: npc.instance,
-            text: message
-        }));
+        this.player.send(
+            new Messages.NPC(Packets.NPCOpcode.Talk, {
+                id: npc.instance,
+                text: message,
+            })
+        );
     }
 
     resetTalkIndex() {
@@ -137,7 +136,7 @@ class Quest {
     }
 
     clearPointers() {
-        this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}))
+        this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}));
     }
 
     onNPCTalk(callback: Function) {
@@ -145,8 +144,7 @@ class Quest {
     }
 
     hasMob(mob: Mob) {
-        if (!this.data.mobs)
-            return;
+        if (!this.data.mobs) return;
 
         return this.data.mobs.indexOf(mob.id) > -1;
     }
@@ -205,10 +203,9 @@ class Quest {
             name: this.getName(),
             description: this.getDescription(),
             stage: this.getStage(),
-            finished: this.isFinished()
+            finished: this.isFinished(),
         };
     }
-
 }
 
 export default Quest;

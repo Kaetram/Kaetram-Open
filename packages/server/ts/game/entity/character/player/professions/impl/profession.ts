@@ -9,7 +9,6 @@ import Map from '../../../../../../map/map';
 import Region from '../../../../../../region/region';
 
 class Profession {
-
     public id: number;
     public player: Player;
     public name: string;
@@ -29,7 +28,6 @@ class Profession {
     public prevExperience: number;
 
     constructor(id: number, player: Player, name: string) {
-
         this.id = id;
         this.player = player;
         this.name = name; // The profession name
@@ -45,7 +43,6 @@ class Profession {
     }
 
     load(data: any) {
-
         this.experience = data.experience;
 
         this.level = Formulas.expToLevel(this.experience);
@@ -65,18 +62,26 @@ class Profession {
         this.prevExperience = Formulas.prevExp(this.experience);
 
         if (oldLevel !== this.level)
-            this.player.popup('Profession Level Up!', `Congratulations, your ${this.name} level is now ${this.level}.`, '#9933ff');
+            this.player.popup(
+                'Profession Level Up!',
+                `Congratulations, your ${this.name} level is now ${this.level}.`,
+                '#9933ff'
+            );
 
-        this.player.send(new Messages.Experience(Packets.ExperienceOpcode.Profession, {
-            id: this.player.instance,
-            amount: experience
-        }));
+        this.player.send(
+            new Messages.Experience(Packets.ExperienceOpcode.Profession, {
+                id: this.player.instance,
+                amount: experience,
+            })
+        );
 
-        this.player.send(new Messages.Profession(Packets.ProfessionOpcode.Update, {
-            id: this.id,
-            level: this.level,
-            percentage: this.getPercentage()
-        }));
+        this.player.send(
+            new Messages.Profession(Packets.ProfessionOpcode.Update, {
+                id: this.id,
+                level: this.level,
+                percentage: this.getPercentage(),
+            })
+        );
 
         this.player.save();
     }
@@ -88,18 +93,19 @@ class Profession {
     getLevel() {
         let level = Formulas.expToLevel(this.experience);
 
-        if (level > Constants.MAX_PROFESSION_LEVEL)
-            level = Constants.MAX_PROFESSION_LEVEL;
+        if (level > Constants.MAX_PROFESSION_LEVEL) level = Constants.MAX_PROFESSION_LEVEL;
 
         return level;
     }
 
     sync() {
-
-        this.player.sendToAdjacentRegions(this.player.region, new Messages.Sync({
-            id: this.player.instance,
-            orientation: this.getOrientation()
-        }))
+        this.player.sendToAdjacentRegions(
+            this.player.region,
+            new Messages.Sync({
+                id: this.player.instance,
+                orientation: this.getOrientation(),
+            })
+        );
     }
 
     isTarget() {
@@ -110,30 +116,25 @@ class Profession {
         let experience = this.experience - this.prevExperience,
             nextExperience = this.nextExperience - this.prevExperience;
 
-        return (experience / nextExperience * 100).toFixed(2);
+        return ((experience / nextExperience) * 100).toFixed(2);
     }
 
     getOrientation() {
-
-        if (!this.targetId)
-            return Modules.Orientation.Up;
+        if (!this.targetId) return Modules.Orientation.Up;
 
         let position = this.map.idToPosition(this.targetId);
 
-        if (position.x > this.player.x)
-            return Modules.Orientation.Right;
-        else if (position.x < this.player.x)
-            return Modules.Orientation.Left;
-        else if (position.y > this.player.y)
-            return Modules.Orientation.Down;
-        else (position.y < this.player.y)
-            return Modules.Orientation.Up;
+        if (position.x > this.player.x) return Modules.Orientation.Right;
+        else if (position.x < this.player.x) return Modules.Orientation.Left;
+        else if (position.y > this.player.y) return Modules.Orientation.Down;
+        else position.y < this.player.y;
+        return Modules.Orientation.Up;
     }
 
     getData() {
         return {
-            experience: this.experience
-        }
+            experience: this.experience,
+        };
     }
 }
 
