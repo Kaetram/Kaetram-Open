@@ -56,7 +56,7 @@ export default class Connection {
                     Packets.IntroOpcode.Register,
                     username,
                     password,
-                    email,
+                    email
                 ]);
             } else if (self.app.isGuest()) {
                 self.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
@@ -387,7 +387,7 @@ export default class Connection {
                         self.socket.send(Packets.Combat, [
                             Packets.CombatOpcode.Initiate,
                             attacker.id,
-                            target.id,
+                            target.id
                         ]);
 
                     break;

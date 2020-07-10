@@ -81,7 +81,7 @@ class Network {
             player,
             new Messages.Handshake({
                 id: clientId,
-                development: config.devClient,
+                development: config.devClient
             })
         );
     }

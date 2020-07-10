@@ -473,7 +473,7 @@ class Player extends Character {
             pvpKills: this.pvpKills,
             pvpDeaths: this.pvpDeaths,
             orientation: this.orientation,
-            movementSpeed: this.getMovementSpeed(),
+            movementSpeed: this.getMovementSpeed()
         };
 
         this.regionPosition = [this.x, this.y];
@@ -514,7 +514,7 @@ class Player extends Character {
 
         let data: any = {
             id: this.instance,
-            level: this.level,
+            level: this.level
         };
 
         /**
@@ -563,7 +563,7 @@ class Player extends Character {
             new Messages.Heal({
                 id: this.instance,
                 type: type,
-                amount: amount,
+                amount: amount
             })
         );
     }
@@ -580,7 +580,7 @@ class Player extends Character {
             new Messages.Heal({
                 id: this.instance,
                 type: type,
-                amount: amount,
+                amount: amount
             })
         );
     }
@@ -653,7 +653,7 @@ class Player extends Character {
                 count: count,
                 ability: ability,
                 abilityLevel: abilityLevel,
-                power: power,
+                power: power
             })
         );
     }
@@ -704,7 +704,7 @@ class Player extends Character {
                 id: this.instance,
                 x: x,
                 y: y,
-                withAnimation: animate,
+                withAnimation: animate
             })
         );
 
@@ -739,8 +739,8 @@ class Player extends Character {
                         text: message,
                         duration: 5000,
                         isObject: true,
-                        info: data.info,
-                    }),
+                        info: data.info
+                    })
                 });
 
                 break;
@@ -793,7 +793,7 @@ class Player extends Character {
             this.send(
                 new Messages.Overlay(Packets.OverlayOpcode.Set, {
                     image: overlay.fog ? overlay.fog : 'empty',
-                    colour: 'rgba(0,0,0,' + overlay.darkness + ')',
+                    colour: 'rgba(0,0,0,' + overlay.darkness + ')'
                 })
             );
         } else this.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
@@ -906,7 +906,7 @@ class Player extends Character {
             indexes: [],
             data: [],
             collisions: [],
-            objectData: {},
+            objectData: {}
         };
 
         _.each(this.map.treeIndexes, (index: number) => {
@@ -925,7 +925,7 @@ class Player extends Character {
             if (objectId)
                 tiles.objectData[index] = {
                     isObject: !!objectId,
-                    cursor: cursor,
+                    cursor: cursor
                 };
         });
 
@@ -993,7 +993,7 @@ class Player extends Character {
     guessPosition(x: number, y: number) {
         this.potentialPosition = {
             x: x,
-            y: y,
+            y: y
         };
     }
 
@@ -1014,7 +1014,7 @@ class Player extends Character {
                 x: x,
                 y: y,
                 forced: false,
-                teleport: false,
+                teleport: false
             }),
             this.instance
         );
@@ -1037,7 +1037,7 @@ class Player extends Character {
 
         this.futurePosition = {
             x: x,
-            y: y,
+            y: y
         };
     }
 
@@ -1144,7 +1144,7 @@ class Player extends Character {
             weapon: this.weapon.getData(),
             pendant: this.pendant.getData(),
             ring: this.ring.getData(),
-            boots: this.boots.getData(),
+            boots: this.boots.getData()
         };
     }
 
@@ -1212,14 +1212,14 @@ class Player extends Character {
     send(message: any) {
         this.world.push(Packets.PushOpcode.Player, {
             player: this,
-            message: message,
+            message: message
         });
     }
 
     sendToRegion(message: any) {
         this.world.push(Packets.PushOpcode.Region, {
             regionId: this.region,
-            message: message,
+            message: message
         });
     }
 
@@ -1227,7 +1227,7 @@ class Player extends Character {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId: regionId,
             message: message,
-            ignoreId: ignoreId,
+            ignoreId: ignoreId
         });
     }
 
@@ -1237,7 +1237,7 @@ class Player extends Character {
             weapon: this.weapon.getData(),
             pendant: this.pendant.getData(),
             ring: this.ring.getData(),
-            boots: this.boots.getData(),
+            boots: this.boots.getData()
         };
 
         this.send(new Messages.Equipment(Packets.EquipmentOpcode.Batch, info));
@@ -1248,7 +1248,7 @@ class Player extends Character {
 
         this.send(
             new Messages.Profession(Packets.ProfessionOpcode.Batch, {
-                data: this.professions.getInfo(),
+                data: this.professions.getInfo()
             })
         );
     }
@@ -1298,7 +1298,7 @@ class Player extends Character {
             armour: this.armour.getString(),
             weapon: this.weapon.getData(),
             poison: !!this.poison,
-            movementSpeed: this.getMovementSpeed(),
+            movementSpeed: this.getMovementSpeed()
         };
 
         this.sendToAdjacentRegions(this.region, new Messages.Sync(info));
@@ -1316,7 +1316,7 @@ class Player extends Character {
             new Messages.Notification(Packets.NotificationOpcode.Popup, {
                 title: title,
                 message: message,
-                colour: colour,
+                colour: colour
             })
         );
     }
@@ -1332,7 +1332,7 @@ class Player extends Character {
         this.send(
             new Messages.Notification(Packets.NotificationOpcode.Text, {
                 message: message,
-                colour: colour,
+                colour: colour
             })
         );
 
@@ -1353,7 +1353,7 @@ class Player extends Character {
                 text: text,
                 colour: colour,
                 isGlobal: isGlobal,
-                withBubble: withBubble,
+                withBubble: withBubble
             })
         );
     }
@@ -1368,7 +1368,7 @@ class Player extends Character {
         this.send(
             new Messages.Movement(Packets.MovementOpcode.Stop, {
                 instance: this.instance,
-                force: force,
+                force: force
             })
         );
     }

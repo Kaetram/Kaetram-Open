@@ -30,7 +30,7 @@ export default {
     positionOffset(radius: number) {
         return {
             x: this.randomInt(0, radius),
-            y: this.randomInt(0, radius),
+            y: this.randomInt(0, radius)
         };
     },
 
@@ -105,5 +105,5 @@ export default {
         } catch (e) {
             return '';
         }
-    },
+    }
 };

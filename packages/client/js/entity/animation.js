@@ -75,7 +75,7 @@ export default class Animation {
         self.currentFrame = {
             index: 0,
             x: 0,
-            y: self.row * self.height,
+            y: self.row * self.height
         };
     }
 }

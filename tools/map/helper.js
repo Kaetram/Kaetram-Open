@@ -2,7 +2,7 @@
 
 config = {
     debug: true,
-    debugLevel: 'all',
+    debugLevel: 'all'
 };
 
 let worldClient = require('../../packages/server/data/map/world_client'),
@@ -49,7 +49,7 @@ class Helper {
 
         return {
             x: x,
-            y: y,
+            y: y
         };
     }
 

@@ -45,7 +45,7 @@ export default class Entity {
 
         self.renderingData = {
             scale: -1,
-            angle: 0,
+            angle: 0
         };
 
         self.loadDirty();

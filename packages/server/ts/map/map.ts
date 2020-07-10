@@ -183,7 +183,7 @@ class Map {
                 portal: door.p ? door.p : 0,
                 level: door.l,
                 achievement: door.a,
-                rank: door.r,
+                rank: door.r
             };
         });
     }
@@ -196,7 +196,7 @@ class Map {
             this.staticEntities.push({
                 tileIndex: tileIndex,
                 string: entity.type,
-                roaming: entity.roaming,
+                roaming: entity.roaming
             });
         });
 
@@ -209,7 +209,7 @@ class Map {
                 roaming: data.roaming,
                 miniboss: data.miniboss,
                 achievementId: data.achievementId,
-                boss: data.boss,
+                boss: data.boss
             });
         });
     }
@@ -222,7 +222,7 @@ class Map {
 
         return {
             x: x,
-            y: y,
+            y: y
         };
     }
 

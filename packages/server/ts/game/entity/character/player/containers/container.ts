@@ -224,7 +224,7 @@ class Container {
             ids: ids.slice(0, -1),
             counts: counts.slice(0, -1),
             abilities: abilities.slice(0, -1),
-            abilityLevels: abilityLevels.slice(0, -1),
+            abilityLevels: abilityLevels.slice(0, -1)
         };
     }
 }

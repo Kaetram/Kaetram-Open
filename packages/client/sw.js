@@ -4,7 +4,7 @@ workbox.setConfig({ debug: false });
 
 workbox.core.setCacheNameDetails({
     prefix: 'kaetram',
-    suffix: 'v1',
+    suffix: 'v1'
 });
 
 // Cache audio
@@ -14,9 +14,9 @@ workbox.routing.registerRoute(
         cacheName: 'audio',
         plugins: [
             new workbox.expiration.Plugin({
-                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-            }),
-        ],
+                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
+            })
+        ]
     })
 );
 
@@ -27,16 +27,16 @@ workbox.routing.registerRoute(
         cacheName: 'images',
         plugins: [
             new workbox.expiration.Plugin({
-                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-            }),
-        ],
+                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 Days
+            })
+        ]
     })
 );
 
 workbox.routing.registerRoute(
     new RegExp('/data/'),
     new workbox.strategies.StaleWhileRevalidate({
-        cacheName: 'data',
+        cacheName: 'data'
     })
 );
 
@@ -47,20 +47,20 @@ workbox.routing.registerRoute(
         cacheName: 'fonts',
         plugins: [
             new workbox.cacheableResponse.Plugin({
-                statuses: [0, 200],
+                statuses: [0, 200]
             }),
             new workbox.expiration.Plugin({
                 maxAgeSeconds: 60 * 60 * 24 * 365,
-                maxEntries: 30,
-            }),
-        ],
+                maxEntries: 30
+            })
+        ]
     })
 );
 
 workbox.routing.registerRoute(
     /\.(?:js|css)$/,
     new workbox.strategies.StaleWhileRevalidate({
-        cacheName: 'static-resources',
+        cacheName: 'static-resources'
     })
 );
 
@@ -164,52 +164,52 @@ workbox.precaching.precacheAndRoute([
     { revision: '0f4935f0fefd876473668c303ef56dbc', url: 'img/icons/android-chrome-96x96.png' },
     {
         revision: '13b298263ffb394fe5c8089a5e89bd5a',
-        url: 'img/icons/apple-touch-icon-114x114-precomposed.png',
+        url: 'img/icons/apple-touch-icon-114x114-precomposed.png'
     },
     { revision: 'f9042423593b695b12c7fcc36709c351', url: 'img/icons/apple-touch-icon-114x114.png' },
     {
         revision: '1e8aa2f60458c05e30696a9e25fe6111',
-        url: 'img/icons/apple-touch-icon-120x120-precomposed.png',
+        url: 'img/icons/apple-touch-icon-120x120-precomposed.png'
     },
     { revision: 'a4bb472cead12303b9ee744f420263c2', url: 'img/icons/apple-touch-icon-120x120.png' },
     {
         revision: '1c097d4d930300bd1527e789db04fe29',
-        url: 'img/icons/apple-touch-icon-144x144-precomposed.png',
+        url: 'img/icons/apple-touch-icon-144x144-precomposed.png'
     },
     { revision: '5cd21a1b5f42a9b5a76b29f322da05c0', url: 'img/icons/apple-touch-icon-144x144.png' },
     {
         revision: 'b9903a8e4cd2fdead6ec11c6bff9b4d6',
-        url: 'img/icons/apple-touch-icon-152x152-precomposed.png',
+        url: 'img/icons/apple-touch-icon-152x152-precomposed.png'
     },
     { revision: 'e269044e89968839c0657a2a104af2ba', url: 'img/icons/apple-touch-icon-152x152.png' },
     {
         revision: 'ade17e322355fa8d87e25886ba7323b5',
-        url: 'img/icons/apple-touch-icon-180x180-precomposed.png',
+        url: 'img/icons/apple-touch-icon-180x180-precomposed.png'
     },
     { revision: 'a44ba061e0c43561ddbd279963d99e13', url: 'img/icons/apple-touch-icon-180x180.png' },
     {
         revision: '701983605cbc9979693244dda50d73a8',
-        url: 'img/icons/apple-touch-icon-57x57-precomposed.png',
+        url: 'img/icons/apple-touch-icon-57x57-precomposed.png'
     },
     { revision: '9813a0d8ba0369f46fa7779ae08f8e19', url: 'img/icons/apple-touch-icon-57x57.png' },
     {
         revision: '381ba6d06d37ecedec5aaba854f666c6',
-        url: 'img/icons/apple-touch-icon-60x60-precomposed.png',
+        url: 'img/icons/apple-touch-icon-60x60-precomposed.png'
     },
     { revision: 'bc32a03d68834a1274f7c5b6d70771ba', url: 'img/icons/apple-touch-icon-60x60.png' },
     {
         revision: '45497ac516e348609be21e9e70d99ac5',
-        url: 'img/icons/apple-touch-icon-72x72-precomposed.png',
+        url: 'img/icons/apple-touch-icon-72x72-precomposed.png'
     },
     { revision: '2211c22567663f5506d4ec46d0959996', url: 'img/icons/apple-touch-icon-72x72.png' },
     {
         revision: 'fdb76edf0f3f8b8033b088eb30902e12',
-        url: 'img/icons/apple-touch-icon-76x76-precomposed.png',
+        url: 'img/icons/apple-touch-icon-76x76-precomposed.png'
     },
     { revision: 'b6ec880f008fda3672137723c6058c71', url: 'img/icons/apple-touch-icon-76x76.png' },
     {
         revision: 'ade17e322355fa8d87e25886ba7323b5',
-        url: 'img/icons/apple-touch-icon-precomposed.png',
+        url: 'img/icons/apple-touch-icon-precomposed.png'
     },
     { revision: 'a44ba061e0c43561ddbd279963d99e13', url: 'img/icons/apple-touch-icon.png' },
     { revision: '974fa7dae6d5192665fd5b77f851ed4a', url: 'img/icons/favicon-16x16.png' },
@@ -421,7 +421,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '2a012ee5e20ef555770adcd3ad23864d', url: 'img/sprites/ironogre.png' },
     {
         revision: '4b60a671e338f39dc19da3b5bf27a70c',
-        url: 'img/sprites/item-adhererarcherarmor.png',
+        url: 'img/sprites/item-adhererarcherarmor.png'
     },
     { revision: '791679cfbe9758e2b33eeb6160fb34fa', url: 'img/sprites/item-adhererrobe.png' },
     { revision: '88d734e3825abc9d47085a9df42ec4e5', url: 'img/sprites/item-adminarmor.png' },
@@ -429,7 +429,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '8cee66c9663bd7a524ab0dd6497ee4b5', url: 'img/sprites/item-archerarmor.png' },
     {
         revision: '9cab1b0592b287b39516d390f62efd21',
-        url: 'img/sprites/item-archerschooluniform.png',
+        url: 'img/sprites/item-archerschooluniform.png'
     },
     { revision: '81755b5e8faf30c9588931ba1ed60339', url: 'img/sprites/item-armorbinding.png' },
     { revision: '83acf99ac7fd05b6a036b847710223b4', url: 'img/sprites/item-armorcommon.png' },
@@ -455,7 +455,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '1da83f35768821ce9040ae302401da4e', url: 'img/sprites/item-bluesword.png' },
     {
         revision: '708312f62d45772c15d7c4133a5d5fbb',
-        url: 'img/sprites/item-bluewingarcherarmor.png',
+        url: 'img/sprites/item-bluewingarcherarmor.png'
     },
     { revision: '224c8f74c3a1b69afccb599f6f443592', url: 'img/sprites/item-bluewingarmor.png' },
     { revision: '13e419b269289d8365c58cd7e23a1774', url: 'img/sprites/item-book.png' },
@@ -489,7 +489,7 @@ workbox.precaching.precacheAndRoute([
     { revision: 'dfdb7baed01a0eb9ec9353614a475a36', url: 'img/sprites/item-conferencecall.png' },
     {
         revision: '236860315f1c16d3c65b072d1ed565f4',
-        url: 'img/sprites/item-crystalarcherarmor.png',
+        url: 'img/sprites/item-crystalarcherarmor.png'
     },
     { revision: '9dc3e6b1c04724172bc4f977f2557a3f', url: 'img/sprites/item-crystalarmor.png' },
     { revision: '81a331c5ead1b3e2633ed57e328ad6b8', url: 'img/sprites/item-crystalbow.png' },
@@ -503,7 +503,7 @@ workbox.precaching.precacheAndRoute([
     { revision: 'fa66fdb101b9dca5c395d8fb9db9b64f', url: 'img/sprites/item-dolring.png' },
     {
         revision: '330267149e3687071248bf992f37289b',
-        url: 'img/sprites/item-dovakinarcherarmor.png',
+        url: 'img/sprites/item-dovakinarcherarmor.png'
     },
     { revision: 'c8354f32e772a009902cc8fc18f54cf2', url: 'img/sprites/item-dovakinarmor.png' },
     { revision: '22e6788db04c9efbf005919255fe8f46', url: 'img/sprites/item-dragonarmor.png' },
@@ -524,7 +524,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '28f6ce187035e289beb42fe81ca9b9e0', url: 'img/sprites/item-forestbow.png' },
     {
         revision: '2c3600841b16ba2b2f7266914951e505',
-        url: 'img/sprites/item-forestguardiansword.png',
+        url: 'img/sprites/item-forestguardiansword.png'
     },
     { revision: '914f5598c08c4139229f3a57eddc1e6a', url: 'img/sprites/item-frankensteinarmor.png' },
     { revision: 'de4c3d87b0668af8281d6734fee1d4a5', url: 'img/sprites/item-friedpotatoarmor.png' },
@@ -552,7 +552,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '645e1ef5320b520ebaa13f25d324f43e', url: 'img/sprites/item-greenpendant.png' },
     {
         revision: '4a5825a5fc5ae54493e93bf8ccec0a75',
-        url: 'img/sprites/item-greenwingarcherarmor.png',
+        url: 'img/sprites/item-greenwingarcherarmor.png'
     },
     { revision: '835aba0fd6d445c55ea9f5a95204c1ef', url: 'img/sprites/item-greenwingarmor.png' },
     { revision: 'a533e07ef0d49316d1afc60cd4542a21', url: 'img/sprites/item-guardarcherarmor.png' },
@@ -574,7 +574,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '77cfcfad8607e853db13fc2da3947a65', url: 'img/sprites/item-leaf.png' },
     {
         revision: '79f8b1bac974fa2b8cb744229894e7b5',
-        url: 'img/sprites/item-leatherarcherarmor.png',
+        url: 'img/sprites/item-leatherarcherarmor.png'
     },
     { revision: '5c2900b80e5e3568ee0230b17508ab26', url: 'img/sprites/item-leatherarmor.png' },
     { revision: '105896e414023cf44f46413b75043ad7', url: 'img/sprites/item-legolasarmor.png' },
@@ -592,7 +592,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '30e8cfe1986a20219d33d5e470cee5d1', url: 'img/sprites/item-mineral.png' },
     {
         revision: 'f858faa45cb8201c76c5ed220cadf968',
-        url: 'img/sprites/item-miniseadragonarmor.png',
+        url: 'img/sprites/item-miniseadragonarmor.png'
     },
     { revision: '2a7d76fa482a528c7d8fa17a422cf5b3', url: 'img/sprites/item-morningstar.png' },
     { revision: '35741cda3e2e2aa2dff7b58a7852f4b7', url: 'img/sprites/item-mountforestdragon.png' },
@@ -610,7 +610,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '6261a81fadd7bfe46bda48366b59e535', url: 'img/sprites/item-pickle.png' },
     {
         revision: 'dd81b5dffe496d07ff57bcee8a2affb7',
-        url: 'img/sprites/item-pinkcockroacharmor.png',
+        url: 'img/sprites/item-pinkcockroacharmor.png'
     },
     { revision: '26faf31ba0dea506f57c7796727f2ab6', url: 'img/sprites/item-pinksword.png' },
     { revision: '7cf2a30679d40684acb95ca3b434f574', url: 'img/sprites/item-piratearcherarmor.png' },
@@ -627,7 +627,7 @@ workbox.precaching.precacheAndRoute([
     { revision: 'b99c650ba405aa7e6c49f11a4d938074', url: 'img/sprites/item-powersword.png' },
     {
         revision: 'e78515fd5a0912c4e5ee42bdb3a0339e',
-        url: 'img/sprites/item-purplecloudkallege.png',
+        url: 'img/sprites/item-purplecloudkallege.png'
     },
     { revision: '7145bdea97e6323ea94d3622979a088b', url: 'img/sprites/item-rabbitarmor.png' },
     { revision: 'd8ab720f763c070f49135f7dec437f3a', url: 'img/sprites/item-radisharmor.png' },
@@ -642,7 +642,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '610b642bc2af70c70320dfed46069105', url: 'img/sprites/item-redenelbow.png' },
     {
         revision: '7b9dbe96a03960963e38252c59a35e68',
-        url: 'img/sprites/item-redguardarcherarmor.png',
+        url: 'img/sprites/item-redguardarcherarmor.png'
     },
     { revision: '6be96f0a4cd1e4608bbec919deca0ba6', url: 'img/sprites/item-redguardarmor.png' },
     { revision: '76d0fe11a78923fb02dfc36fef727cbc', url: 'img/sprites/item-redlightbow.png' },
@@ -654,7 +654,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '9b1435c73eb2d3eb70d8c63e7c985e23', url: 'img/sprites/item-redsword.png' },
     {
         revision: '89babe0c22a61a71aa5cb6a6ae6eb67f',
-        url: 'img/sprites/item-redwingarcherarmor.png',
+        url: 'img/sprites/item-redwingarcherarmor.png'
     },
     { revision: '0aa14348da3d62c6999c3403c8d7da01', url: 'img/sprites/item-redwingarmor.png' },
     { revision: 'ef4b0f76e42cc71d5ce5f68dd70d6c1f', url: 'img/sprites/item-regionarmor.png' },
@@ -687,7 +687,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '7ff2d414e26d02df8dfea83c6adff3ec', url: 'img/sprites/item-skylightsaber.png' },
     {
         revision: 'c745fe985c0843cf9dfbe5e704e3ae55',
-        url: 'img/sprites/item-snowfoxarcherarmor.png',
+        url: 'img/sprites/item-snowfoxarcherarmor.png'
     },
     { revision: '04a6dd6072ab4b2ff25ddb0eac5d599f', url: 'img/sprites/item-snowfoxarmor.png' },
     { revision: '678a6bcf28c4de12a0a0c34c18fc629f', url: 'img/sprites/item-snowmanarmor.png' },
@@ -970,32 +970,32 @@ workbox.precaching.precacheAndRoute([
     { revision: '87c236b07fd7f86008b7b012e267b96a', url: 'js/entity/character/npc/npc.js' },
     {
         revision: '662acf06e3605b7bbbb5d81f7684d6cd',
-        url: 'js/entity/character/player/equipment/armour.js',
+        url: 'js/entity/character/player/equipment/armour.js'
     },
     {
         revision: '18b14039d740cf35027d8ae34954cc18',
-        url: 'js/entity/character/player/equipment/boots.js',
+        url: 'js/entity/character/player/equipment/boots.js'
     },
     {
         revision: '9bcbec1d69cb5fd5b5307223cd3f63c8',
-        url: 'js/entity/character/player/equipment/equipment.js',
+        url: 'js/entity/character/player/equipment/equipment.js'
     },
     {
         revision: '18b14039d740cf35027d8ae34954cc18',
-        url: 'js/entity/character/player/equipment/pendant.js',
+        url: 'js/entity/character/player/equipment/pendant.js'
     },
     {
         revision: '18b14039d740cf35027d8ae34954cc18',
-        url: 'js/entity/character/player/equipment/ring.js',
+        url: 'js/entity/character/player/equipment/ring.js'
     },
     {
         revision: '6bec3c8274c32081d9306a7ab4451f93',
-        url: 'js/entity/character/player/equipment/weapon.js',
+        url: 'js/entity/character/player/equipment/weapon.js'
     },
     { revision: '249153b396113ac45c2521a68ffa525f', url: 'js/entity/character/player/player.js' },
     {
         revision: 'ee93b83e8278c77cfabf5e14a815c70c',
-        url: 'js/entity/character/player/playerhandler.js',
+        url: 'js/entity/character/player/playerhandler.js'
     },
     { revision: '794095c87202b3aaf225eb6ff1af9f60', url: 'js/entity/entity.js' },
     { revision: 'fcb7898b4f147016b43de248fb65414d', url: 'js/entity/entityhandler.js' },
@@ -1017,7 +1017,7 @@ workbox.precaching.precacheAndRoute([
     { revision: '605cc6e8a6457c0f05eb0086f0afb68b', url: 'js/interface/profile/pages/guild.js' },
     {
         revision: 'e2fcce0110c6171e386728e7c64bec8b',
-        url: 'js/interface/profile/pages/professions.js',
+        url: 'js/interface/profile/pages/professions.js'
     },
     { revision: '1e9fffa164c927a0c456677c0e822b20', url: 'js/interface/profile/pages/quest.js' },
     { revision: '6aed619ce287c00dfa612c429a594904', url: 'js/interface/profile/pages/settings.js' },
@@ -1070,5 +1070,5 @@ workbox.precaching.precacheAndRoute([
     { revision: '54abd7cbc983a31af234b43040843f6c', url: 'package-lock.json' },
     { revision: 'ecc304c8b05e55e7e9876e84f6c2b63f', url: 'package.json' },
     { revision: '8c46938efd330c39fafd22aeecb540f7', url: 'robots.txt' },
-    { revision: '0cb5c74bea59445adc3dc4171907595f', url: 'sitemap.xml' },
+    { revision: '0cb5c74bea59445adc3dc4171907595f', url: 'sitemap.xml' }
 ]);
