@@ -9,7 +9,16 @@ export default class App {
     constructor() {
         var self = this;
 
-        self.config = null;
+        // Do not refactor env variables assignement
+        // process.env.VARIABLE is replaced by webpack during build process
+        self.config = {
+            ip: process.env.IP,
+            port: process.env.PORT,
+            version: process.env.VERSION,
+            ssl: process.env.SSL,
+            debug: process.env.DEBUG,
+            worldSwitch: process.env.WORLD_SWITCH,
+        };
 
         self.body = $('body');
         self.parchment = $('#parchment');
@@ -168,12 +177,6 @@ export default class App {
             $('#worlds-switch').click(function () {
                 $('#worlds-popup').toggle();
             });
-        });
-
-        $.getJSON('data/config.json', function (json) {
-            self.config = json;
-
-            if (self.readyCallback) self.readyCallback();
         });
 
         $(document).bind('keydown', function (e) {
@@ -576,9 +579,5 @@ export default class App {
         return window.innerHeight > window.innerWidth
             ? 'portrait'
             : 'landscape';
-    }
-
-    onReady(callback) {
-        this.readyCallback = callback;
     }
 }
