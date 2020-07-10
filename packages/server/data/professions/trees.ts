@@ -10,7 +10,7 @@ let Trees = {
         Oak: 264,
         Palm: 269,
         IceOak: 270,
-        IcePalm: 271,
+        IcePalm: 271
     },
 
     // Get the level requirement of the tree
@@ -18,14 +18,14 @@ let Trees = {
         Oak: 1,
         Palm: 5,
         IceOak: 20,
-        IcePalm: 25,
+        IcePalm: 25
     },
 
     Experience: {
         Oak: 10,
         Palm: 25,
         IceOak: 70,
-        IcePalm: 105,
+        IcePalm: 105
     },
 
     // Chance of cutting a tree
@@ -33,14 +33,14 @@ let Trees = {
         Oak: 3, // 1 in 3
         Palm: 5, // 1 in 5
         IceOak: 5, // 1 in 5,
-        IcePalm: 7, // 1 in 7
+        IcePalm: 7 // 1 in 7
     },
 
     Regrowth: {
         Oak: 15000,
         Palm: 30000,
         IceOak: 60000,
-        IcePalm: 72000,
+        IcePalm: 72000
     },
 
     // TODO - Move this to the tilemap instead?
@@ -84,8 +84,8 @@ let Trees = {
         // Ice Palm
 
         '6594': '2176',
-        '6658': '2240',
-    },
+        '6658': '2240'
+    }
 };
 
 export default Trees;

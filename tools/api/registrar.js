@@ -13,7 +13,7 @@ module.exports = Registrar = cls.Class.extend({
         var self = this;
 
         self.client = redis.createClient('127.0.0.1', 6379, {
-            socket_nodelay: true,
+            socket_nodelay: true
         });
 
         self.readyCallback();
@@ -21,7 +21,7 @@ module.exports = Registrar = cls.Class.extend({
 
     onReady: function (callback) {
         this.readyCallback = callback;
-    },
+    }
 });
 
 load();

@@ -185,13 +185,13 @@ class World {
                 message: new Messages.Points({
                     id: character.instance,
                     hitPoints: character.getHitPoints(),
-                    mana: null,
-                }),
+                    mana: null
+                })
             },
             {
                 regionId: character.region,
-                message: new Messages.Despawn(character.instance),
-            },
+                message: new Messages.Despawn(character.instance)
+            }
         ]);
 
         this.handleDeath(character, true);
@@ -212,8 +212,8 @@ class World {
             message: new Messages.Points({
                 id: target.instance,
                 hitPoints: target.getHitPoints(),
-                mana: null,
-            }),
+                mana: null
+            })
         });
 
         // If target has died...
@@ -231,13 +231,13 @@ class World {
                     regionId: target.region,
                     message: new Messages.Combat(Packets.CombatOpcode.Finish, {
                         attackerId: attacker.instance,
-                        targetId: target.instance,
-                    }),
+                        targetId: target.instance
+                    })
                 },
                 {
                     regionId: target.region,
-                    message: new Messages.Despawn(target.instance),
-                },
+                    message: new Messages.Despawn(target.instance)
+                }
             ]);
 
             this.handleDeath(target, false, attacker);
@@ -459,7 +459,7 @@ class World {
 
         item.onBlink(() => {
             this.push(Packets.PushOpcode.Broadcast, {
-                message: new Messages.Blink(item.instance),
+                message: new Messages.Blink(item.instance)
             });
         });
 
@@ -546,7 +546,7 @@ class World {
         this.cutTrees[id] = {
             data: {},
             time: new Date().getTime(),
-            treeId: treeId,
+            treeId: treeId
         };
 
         _.each(this.trees[id], (tile: any, key) => {
@@ -555,7 +555,7 @@ class World {
             // Store the original tiles for respawning.
             this.cutTrees[id].data[key] = {
                 oldTiles: [].concat(tiles), // concat to create a new array
-                index: tile.index,
+                index: tile.index
             };
 
             // We do not remove tiles that do not have another tile behind them.
@@ -608,7 +608,7 @@ class World {
 
         data[refId][id] = {
             index: this.map.gridPositionToIndex(x, y) - 1,
-            objectTile: objectTile,
+            objectTile: objectTile
         };
 
         if (this.search(x + 1, y, refId, data, type)) return true;
@@ -704,8 +704,8 @@ class World {
                     {
                         message: new Messages.Combat(Packets.CombatOpcode.Finish, {
                             attackerId: null,
-                            targetId: entity.instance,
-                        }),
+                            targetId: entity.instance
+                        })
                     },
                     {
                         message: new Messages.Movement(Packets.MovementOpcode.Move, {
@@ -713,9 +713,9 @@ class World {
                             x: entity.x,
                             y: entity.y,
                             forced: false,
-                            teleport: false,
-                        }),
-                    },
+                            teleport: false
+                        })
+                    }
                 ]);
             }
         });
@@ -728,8 +728,8 @@ class World {
                     regionId: entity.region,
                     message: new Messages.Movement(Packets.MovementOpcode.Stunned, {
                         id: entity.instance,
-                        state: stun,
-                    }),
+                        state: stun
+                    })
                 });
             });
         }
@@ -804,7 +804,7 @@ class World {
     removeItem(item: Item) {
         this.removeEntity(item);
         this.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Despawn(item.instance),
+            message: new Messages.Despawn(item.instance)
         });
 
         if (item.static) item.respawn();
@@ -813,7 +813,7 @@ class World {
     removePlayer(player: Player) {
         this.push(Packets.PushOpcode.Regions, {
             regionId: player.region,
-            message: new Messages.Despawn(player.instance),
+            message: new Messages.Despawn(player.instance)
         });
 
         if (player.ready) player.save();
@@ -842,7 +842,7 @@ class World {
     removeChest(chest: Chest) {
         this.removeEntity(chest);
         this.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Despawn(chest.instance),
+            message: new Messages.Despawn(chest.instance)
         });
 
         if (chest.static) chest.respawn();
@@ -862,8 +862,8 @@ class World {
                 text: message,
                 colour: colour,
                 isGlobal: isGlobal,
-                withBubble: withBubble,
-            }),
+                withBubble: withBubble
+            })
         });
     }
 

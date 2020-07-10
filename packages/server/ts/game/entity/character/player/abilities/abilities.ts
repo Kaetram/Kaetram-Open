@@ -69,7 +69,7 @@ class Abilities {
             username: this.player.username,
             abilities: abilities,
             abilityLevels: abilityLevels,
-            shortcuts: shortcuts,
+            shortcuts: shortcuts
         };
     }
 }

@@ -53,7 +53,7 @@ class Equipment {
             count: this.count,
             ability: this.ability,
             abilityLevel: this.abilityLevel,
-            power: Items.getLevelRequirement(this.name),
+            power: Items.getLevelRequirement(this.name)
         };
     }
 
@@ -68,7 +68,7 @@ class Equipment {
             id: this.id,
             count: this.count,
             ability: this.ability,
-            abilityLevel: this.abilityLevel,
+            abilityLevel: this.abilityLevel
         };
     }
 }

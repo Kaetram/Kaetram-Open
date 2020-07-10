@@ -211,8 +211,8 @@ class Combat {
                 attackerId: this.character.instance, //irrelevant
                 targetId: this.character.instance, //can be the same since we're acting on an entity.
                 x: this.character.x,
-                y: this.character.y,
-            }),
+                y: this.character.y
+            })
         });
     }
 
@@ -276,8 +276,8 @@ class Combat {
                 x: this.character.x,
                 y: this.character.y,
                 forced: false,
-                teleport: false,
-            }),
+                teleport: false
+            })
         });
     }
 
@@ -303,7 +303,7 @@ class Combat {
     getNewPosition() {
         let position = {
             x: this.character.x,
-            y: this.character.y,
+            y: this.character.y
         };
 
         let random = Utils.randomInt(0, 3);
@@ -382,7 +382,7 @@ class Combat {
                 message: new Messages.Projectile(
                     Packets.ProjectileOpcode.Create,
                     projectile.getData()
-                ),
+                )
             });
         } else {
             this.world.push(Packets.PushOpcode.Regions, {
@@ -390,8 +390,8 @@ class Combat {
                 message: new Messages.Combat(Packets.CombatOpcode.Hit, {
                     attackerId: character.instance,
                     targetId: target.instance,
-                    hitInfo: hitInfo,
-                }),
+                    hitInfo: hitInfo
+                })
             });
 
             this.world.handleDamage(character, target, hitInfo.damage);
@@ -409,8 +409,8 @@ class Combat {
                 attackerId: character.instance,
                 targetId: target.instance,
                 isRanged: character.isRanged,
-                attackRange: character.attackRange,
-            }),
+                attackRange: character.attackRange
+            })
         });
     }
 
@@ -419,8 +419,8 @@ class Combat {
             regionId: this.character.region,
             message: new Messages.Combat(Packets.CombatOpcode.Finish, {
                 attackerId: this.character.instance,
-                targetId: null,
-            }),
+                targetId: null
+            })
         });
     }
 
@@ -433,8 +433,8 @@ class Combat {
             regionId: this.character.region,
             message: new Messages.Movement(Packets.MovementOpcode.Follow, {
                 attackerId: this.character.instance,
-                targetId: this.character.target.instance,
-            }),
+                targetId: this.character.target.instance
+            })
         });
     }
 

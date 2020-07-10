@@ -46,7 +46,7 @@ class Enchant {
         this.player.send(
             new Messages.Enchant(Packets.EnchantOpcode.Select, {
                 type: type,
-                index: item.index,
+                index: item.index
             })
         );
     }
@@ -69,7 +69,7 @@ class Enchant {
         this.player.send(
             new Messages.Enchant(Packets.EnchantOpcode.Remove, {
                 type: type,
-                index: index,
+                index: index
             })
         );
     }
@@ -88,7 +88,7 @@ class Enchant {
                 id: shard.id + 1,
                 count: 1,
                 ability: -1,
-                abilityLevel: -1,
+                abilityLevel: -1
             });
         }
     }

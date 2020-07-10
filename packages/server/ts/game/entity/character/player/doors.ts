@@ -37,7 +37,7 @@ class Doors {
                 questId: door.questId,
                 achievementId: door.achievementId,
                 closedIds: door.closedIds,
-                openIds: door.openIds,
+                openIds: door.openIds
             };
         });
     }
@@ -67,13 +67,13 @@ class Doors {
         let tiles = {
             indexes: [],
             data: [],
-            collisions: [],
+            collisions: []
         };
 
         let status = this.getStatus(door),
             doorState = {
                 open: door.openIds,
-                closed: door.closedIds,
+                closed: door.closedIds
             };
 
         _.each(doorState[status], (value: any, key) => {
@@ -89,7 +89,7 @@ class Doors {
         let allTiles = {
             indexes: [],
             data: [],
-            collisions: [],
+            collisions: []
         };
 
         _.each(this.doors, (door: any) => {

@@ -8,7 +8,7 @@ const appConfig: Record<string, any> = Object.keys(envConfig).reduce((result, ke
     const camelCaseKey = camelcase(key);
     return {
         ...result,
-        [camelCaseKey]: envConfig[key],
+        [camelCaseKey]: envConfig[key]
     };
 }, {});
 

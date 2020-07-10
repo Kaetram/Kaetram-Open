@@ -15,5 +15,5 @@ export default {
     queenant,
     skeletonking,
     snek,
-    tenebris,
+    tenebris
 };

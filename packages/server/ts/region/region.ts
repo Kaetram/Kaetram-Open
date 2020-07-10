@@ -109,7 +109,7 @@ class Region {
             this.regions[regionId] = {
                 entities: {},
                 players: [],
-                incoming: [],
+                incoming: []
             };
         });
 
@@ -138,7 +138,7 @@ class Region {
             this.regions[Region.regionIdToInstance(player, region)] = {
                 entities: {},
                 players: [],
-                incoming: [],
+                incoming: []
             };
         });
 
@@ -149,8 +149,8 @@ class Region {
             player: player,
             message: new Messages.Region(Packets.RegionOpcode.Update, {
                 id: player.instance,
-                type: 'remove',
-            }),
+                type: 'remove'
+            })
         });
     }
 
@@ -263,7 +263,7 @@ class Region {
             this.world.push(Packets.PushOpcode.Regions, {
                 regionId: regionId,
                 message: new Messages.Spawn(entity),
-                ignoreId: entity.isPlayer() ? entity.instance : null,
+                ignoreId: entity.isPlayer() ? entity.instance : null
             });
         });
     }
@@ -382,7 +382,7 @@ class Region {
         this.clientMap.data[index] = newTile;
 
         this.world.push(Packets.PushOpcode.Broadcast, {
-            message: Region.getModify(index, newTile),
+            message: Region.getModify(index, newTile)
         });
     }
 
@@ -423,7 +423,7 @@ class Region {
                         }
 
                         let info: any = {
-                            index: index,
+                            index: index
                         };
 
                         if (tileData) info.data = tileData;
@@ -454,14 +454,14 @@ class Region {
             startX: regionCoordinates.x,
             startY: regionCoordinates.y,
             endX: regionCoordinates.x + this.map.regionWidth,
-            endY: regionCoordinates.y + this.map.regionHeight,
+            endY: regionCoordinates.y + this.map.regionHeight
         };
     }
 
     static getModify(index: number, newTile: any) {
         return new Messages.Region(Packets.RegionOpcode.Modify, {
             index: index,
-            newTile: newTile,
+            newTile: newTile
         });
     }
 

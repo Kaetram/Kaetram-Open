@@ -162,5 +162,5 @@ export default {
 
     getMaxMana(level: number) {
         return 10 + level * 8;
-    },
+    }
 };

@@ -289,7 +289,7 @@ class Incoming {
                 if (!this.player.inventory.hasSpace()) {
                     this.player.send(
                         new Messages.Notification(Packets.NotificationOpcode.Text, {
-                            message: 'You do not have enough space in your inventory.',
+                            message: 'You do not have enough space in your inventory.'
                         })
                     );
                     return;
@@ -461,8 +461,8 @@ class Incoming {
                     regionId: this.player.region,
                     message: new Messages.Movement(Packets.MovementOpcode.Orientate, [
                         this.player.instance,
-                        orientation,
-                    ]),
+                        orientation
+                    ])
                 });
 
                 break;
@@ -530,8 +530,8 @@ class Incoming {
                     regionId: target.region,
                     message: new Messages.Combat(Packets.CombatOpcode.Initiate, {
                         attackerId: this.player.instance,
-                        targetId: target.instance,
-                    }),
+                        targetId: target.instance
+                    })
                 });
 
                 break;
@@ -624,7 +624,7 @@ class Incoming {
             if (this.player.isMuted()) {
                 this.player.send(
                     new Messages.Notification(Packets.NotificationOpcode.Text, {
-                        message: 'You are currently muted.',
+                        message: 'You are currently muted.'
                     })
                 );
                 return;
@@ -633,7 +633,7 @@ class Incoming {
             if (!this.player.canTalk) {
                 this.player.send(
                     new Messages.Notification(Packets.NotificationOpcode.Text, {
-                        message: 'You are not allowed to talk for the duration of this event.',
+                        message: 'You are not allowed to talk for the duration of this event.'
                     })
                 );
                 return;
@@ -654,8 +654,8 @@ class Incoming {
                     name: this.player.username,
                     withBubble: true,
                     text: text,
-                    duration: 7000,
-                }),
+                    duration: 7000
+                })
             });
         }
     }
@@ -794,7 +794,7 @@ class Incoming {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId: this.player.region,
             message: new Messages.Spawn(this.player),
-            ignoreId: this.player.instance,
+            ignoreId: this.player.instance
         });
 
         this.player.send(new Messages.Respawn(this.player.instance, this.player.x, this.player.y));
@@ -939,13 +939,13 @@ class Incoming {
                         id: npcId,
                         slotId: slotId,
                         currency: Items.idToString(currency),
-                        price: this.world.shops.getSellPrice(npcId, item.id),
+                        price: this.world.shops.getSellPrice(npcId, item.id)
                     })
                 );
 
                 this.player.selectedShopItem = {
                     id: npcId,
-                    index: item.index,
+                    index: item.index
                 };
 
                 log.debug('Received Select: ' + npcId + ' ' + slotId);

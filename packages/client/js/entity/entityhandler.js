@@ -57,7 +57,7 @@ export default class EntityHandler {
                         Packets.MovementOpcode.Entity,
                         self.entity.id,
                         self.entity.gridX,
-                        self.entity.gridY,
+                        self.entity.gridY
                     ]);
 
                 if (

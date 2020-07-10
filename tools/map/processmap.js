@@ -22,7 +22,7 @@ module.exports = function parse(json, options) {
         width: 0,
         height: 0,
         collisions: [],
-        version: new Date().getTime(),
+        version: new Date().getTime()
     };
 
     switch (mode) {
@@ -117,7 +117,7 @@ module.exports = function parse(json, options) {
         _.each(tile.animation, function (animation) {
             animationData.push({
                 duration: animation.duration,
-                tileid: parseInt(firstGID) + parseInt(animation.tileid) - 1,
+                tileid: parseInt(firstGID) + parseInt(animation.tileid) - 1
             });
         });
 
@@ -137,7 +137,7 @@ module.exports = function parse(json, options) {
                         imageName: tileset.image.includes('/')
                             ? tileset.image.split('/')[2]
                             : tileset.image,
-                        scale: tileset.name === 'tilesheet' ? 2 : 1,
+                        scale: tileset.name === 'tilesheet' ? 2 : 1
                     });
 
             if (name === 'mobs' && mode === 'server') {
@@ -185,7 +185,7 @@ module.exports = function parse(json, options) {
                                 tx: parseInt(door.properties[1].value),
                                 ty: parseInt(door.properties[2].value),
                                 x: door.x / 16,
-                                y: door.y / 16,
+                                y: door.y / 16
                             };
                         }
                     });
@@ -198,7 +198,7 @@ module.exports = function parse(json, options) {
                     _.each(warps, function (warp) {
                         map.warps[warp.name] = {
                             x: warp.x / 16,
-                            y: warp.y / 16,
+                            y: warp.y / 16
                         };
 
                         _.each(warp.properties, function (property) {
@@ -219,7 +219,7 @@ module.exports = function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize,
+                            height: area.height / map.tilesize
                         };
 
                         _.each(area.properties, function (property) {
@@ -237,7 +237,7 @@ module.exports = function parse(json, options) {
                     _.each(chests, function (chest) {
                         let oChest = {
                             x: chest.x / map.tilesize,
-                            y: chest.y / map.tilesize,
+                            y: chest.y / map.tilesize
                         };
 
                         oChest['i'] = _.map(chest.properties[0].value.split(','), function (name) {
@@ -255,7 +255,7 @@ module.exports = function parse(json, options) {
                     _.each(lights, function (lightObject) {
                         let light = {
                             x: lightObject.x / 16 + 0.5,
-                            y: lightObject.y / 16 + 0.5,
+                            y: lightObject.y / 16 + 0.5
                         };
 
                         _.each(lightObject.properties, function (property) {
@@ -275,7 +275,7 @@ module.exports = function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize,
+                            height: area.height / map.tilesize
                         };
 
                         _.each(area.properties, function (property) {
@@ -295,7 +295,7 @@ module.exports = function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize,
+                            height: area.height / map.tilesize
                         };
 
                         map.pvpAreas.push(pvpArea);
@@ -312,7 +312,7 @@ module.exports = function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize,
+                            height: area.height / map.tilesize
                         };
 
                         _.each(area.properties, function (property) {
@@ -336,7 +336,7 @@ module.exports = function parse(json, options) {
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
                             height: area.height / map.tilesize,
-                            type: area.properties[0].value,
+                            type: area.properties[0].value
                         };
 
                         map.cameraAreas.push(cArea);
@@ -352,7 +352,7 @@ module.exports = function parse(json, options) {
                             x: area.x / map.tilesize,
                             y: area.y / map.tilesize,
                             width: area.width / map.tilesize,
-                            height: area.height / map.tilesize,
+                            height: area.height / map.tilesize
                         };
 
                         map.gameAreas.push(gameArea);

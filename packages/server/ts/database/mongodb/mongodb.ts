@@ -42,7 +42,7 @@ class MongoDB {
         let client = new MongoClient(url, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
-            wtimeout: 5,
+            wtimeout: 5
         });
 
         if (this.connection) {
@@ -165,7 +165,7 @@ class MongoDB {
                 'player_abilities',
                 'player_bank',
                 'player_quests',
-                'player_achievements',
+                'player_achievements'
             ];
 
             _.each(collections, (col) => {
@@ -173,7 +173,7 @@ class MongoDB {
 
                 collection.deleteOne(
                     {
-                        username: player.username,
+                        username: player.username
                     },
                     (error, result) => {
                         if (error) throw error;
@@ -209,11 +209,11 @@ class MongoDB {
 
                     collection.updateOne(
                         {
-                            username: playerInfo.username,
+                            username: playerInfo.username
                         },
                         { $set: playerInfo },
                         {
-                            upsert: true,
+                            upsert: true
                         },
                         (error, result) => {
                             if (error) throw error;

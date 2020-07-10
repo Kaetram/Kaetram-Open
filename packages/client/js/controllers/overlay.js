@@ -35,7 +35,7 @@ export default class OverlayController {
         if (self.hasHealth()) {
             self.health.css({
                 display: 'block',
-                width: Math.ceil((entity.hitPoints / entity.maxHitPoints) * 100) - 10 + '%',
+                width: Math.ceil((entity.hitPoints / entity.maxHitPoints) * 100) - 10 + '%'
             });
 
             self.details.html(entity.hitPoints + ' / ' + entity.maxHitPoints);

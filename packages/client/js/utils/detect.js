@@ -94,7 +94,7 @@ export const isAppleDevice = () => {
         'iPod Simulator',
         'iPad',
         'iPhone',
-        'iPod',
+        'iPod'
     ];
 
     if (!!navigator.platform)

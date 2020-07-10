@@ -47,7 +47,7 @@ class Lumberjacking extends Profession {
                 this.sync();
                 this.player.sendToRegion(
                     new Messages.Animation(this.player.instance, {
-                        action: Modules.Actions.Attack,
+                        action: Modules.Actions.Attack
                     })
                 );
 
@@ -58,7 +58,7 @@ class Lumberjacking extends Profession {
 
                     this.player.inventory.add({
                         id: Trees.Logs[this.treeId],
-                        count: 1,
+                        count: 1
                     });
 
                     if (this.getTreeDestroyChance())

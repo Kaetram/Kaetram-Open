@@ -51,7 +51,7 @@ class API {
                 port: config.port, // Sends the server port.
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
-                playerCount: this.world.getPopulation(),
+                playerCount: this.world.getPopulation()
             });
         });
 
@@ -159,8 +159,8 @@ class API {
                     serverId: config.serverId,
                     accessToken: config.accessToken,
                     port: config.apiPort,
-                    remoteServerHost: config.remoteServerHost,
-                },
+                    remoteServerHost: config.remoteServerHost
+                }
             };
 
         request.post(url, data, (_error: any, _response: any, body: any) => {
@@ -188,8 +188,8 @@ class API {
                     serverId: config.serverId,
                     source: source,
                     text: text,
-                    withArrow: withArrow,
-                },
+                    withArrow: withArrow
+                }
             };
 
         request.post(url, data, (_error: any, _response: any, body: any) => {
@@ -212,8 +212,8 @@ class API {
                     hubAccessToken: config.hubAccessToken,
                     source: Utils.formatUsername(source.username),
                     target: Utils.formatUsername(target),
-                    text: text,
-                },
+                    text: text
+                }
             };
 
         request.post(url, data, (_error: any, _response: any, body: any) => {
@@ -253,7 +253,7 @@ class API {
             pvpKills: player.pvpKills,
             orientation: player.orientation,
             lastLogin: player.lastLogin,
-            mapVersion: player.mapVersion,
+            mapVersion: player.mapVersion
         };
     }
 
@@ -264,7 +264,7 @@ class API {
     returnError(response: any, error: any, message: string) {
         response.json({
             error: error,
-            message: message,
+            message: message
         });
     }
 }
