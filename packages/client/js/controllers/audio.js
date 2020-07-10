@@ -29,7 +29,7 @@ export default class AudioController {
             village: false,
             beach: false,
             spookyship: false,
-            meadowofthepast: false,
+            meadowofthepast: false
         };
 
         self.sounds = {
@@ -49,7 +49,7 @@ export default class AudioController {
             teleport: false,
             chest: false,
             npc: false,
-            'npc-end': false,
+            'npc-end': false
         };
     }
 
@@ -276,7 +276,7 @@ export default class AudioController {
     getMusic(name) {
         return {
             sound: this.get(name),
-            name: name,
+            name: name
         };
     }
 

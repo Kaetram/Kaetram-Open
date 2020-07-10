@@ -45,7 +45,7 @@ class Quest {
                     id: item.id,
                     count: item.count,
                     ability: -1,
-                    abilityLevel: -1,
+                    abilityLevel: -1
                 });
             else {
                 this.player.notify('You do not have enough space in your inventory.');
@@ -60,7 +60,7 @@ class Quest {
         this.player.send(
             new Messages.Quest(Packets.QuestOpcode.Finish, {
                 id: this.id,
-                isQuest: true,
+                isQuest: true
             })
         );
 
@@ -101,7 +101,7 @@ class Quest {
             this.player.send(
                 new Messages.Pointer(opcode, {
                     id: Utils.generateRandomId(),
-                    button: pointer[1],
+                    button: pointer[1]
                 })
             );
         else
@@ -109,7 +109,7 @@ class Quest {
                 new Messages.Pointer(opcode, {
                     id: Utils.generateRandomId(),
                     x: pointer[1],
-                    y: pointer[2],
+                    y: pointer[2]
                 })
             );
     }
@@ -122,7 +122,7 @@ class Quest {
         this.player.send(
             new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: npc.instance,
-                text: message,
+                text: message
             })
         );
     }
@@ -203,7 +203,7 @@ class Quest {
             name: this.getName(),
             description: this.getDescription(),
             stage: this.getStage(),
-            finished: this.isFinished(),
+            finished: this.isFinished()
         };
     }
 }

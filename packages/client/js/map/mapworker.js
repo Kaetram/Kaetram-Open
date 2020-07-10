@@ -39,7 +39,7 @@ function indexToGridPosition(index) {
 
     return {
         x: x,
-        y: y,
+        y: y
     };
 }
 

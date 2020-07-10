@@ -71,7 +71,7 @@ class Profession {
         this.player.send(
             new Messages.Experience(Packets.ExperienceOpcode.Profession, {
                 id: this.player.instance,
-                amount: experience,
+                amount: experience
             })
         );
 
@@ -79,7 +79,7 @@ class Profession {
             new Messages.Profession(Packets.ProfessionOpcode.Update, {
                 id: this.id,
                 level: this.level,
-                percentage: this.getPercentage(),
+                percentage: this.getPercentage()
             })
         );
 
@@ -103,7 +103,7 @@ class Profession {
             this.player.region,
             new Messages.Sync({
                 id: this.player.instance,
-                orientation: this.getOrientation(),
+                orientation: this.getOrientation()
             })
         );
     }
@@ -133,7 +133,7 @@ class Profession {
 
     getData() {
         return {
-            experience: this.experience,
+            experience: this.experience
         };
     }
 }

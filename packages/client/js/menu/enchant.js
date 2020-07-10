@@ -128,7 +128,7 @@ export default class Enchant {
     select(event) {
         this.game.socket.send(Packets.Enchant, [
             Packets.EnchantOpcode.Select,
-            event.currentTarget.id.substring(17),
+            event.currentTarget.id.substring(17)
         ]);
     }
 

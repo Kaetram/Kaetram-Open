@@ -52,13 +52,13 @@ export default {
     IntroOpcode: {
         Login: 0,
         Register: 1,
-        Guest: 2,
+        Guest: 2
     },
 
     EquipmentOpcode: {
         Batch: 0,
         Equip: 1,
-        Unequip: 2,
+        Unequip: 2
     },
 
     MovementOpcode: {
@@ -72,21 +72,21 @@ export default {
         Entity: 7,
         Freeze: 8,
         Stunned: 9,
-        Zone: 10,
+        Zone: 10
     },
 
     TargetOpcode: {
         Talk: 0,
         Attack: 1,
         None: 2,
-        Object: 3,
+        Object: 3
     },
 
     CombatOpcode: {
         Initiate: 0,
         Hit: 1,
         Finish: 2,
-        Sync: 3,
+        Sync: 3
     },
 
     ProjectileOpcode: {
@@ -94,45 +94,45 @@ export default {
         Dynamic: 1,
         Create: 2,
         Update: 3,
-        Impact: 4,
+        Impact: 4
     },
 
     NetworkOpcode: {
         Ping: 0,
-        Pong: 1,
+        Pong: 1
     },
 
     InventoryOpcode: {
         Batch: 0,
         Add: 1,
         Remove: 2,
-        Select: 3,
+        Select: 3
     },
 
     BankOpcode: {
         Batch: 0,
         Add: 1,
         Remove: 2,
-        Select: 3,
+        Select: 3
     },
 
     QuestOpcode: {
         QuestBatch: 0,
         AchievementBatch: 1,
         Progress: 2,
-        Finish: 3,
+        Finish: 3
     },
 
     NotificationOpcode: {
         Ok: 0,
         YesNo: 1,
         Text: 2,
-        Popup: 3,
+        Popup: 3
     },
 
     ExperienceOpcode: {
         Combat: 0,
-        Profession: 1,
+        Profession: 1
     },
 
     NPCOpcode: {
@@ -140,20 +140,20 @@ export default {
         Store: 1,
         Bank: 2,
         Enchant: 3,
-        Countdown: 4,
+        Countdown: 4
     },
 
     TradeOpcode: {
         Request: 1,
         Accept: 2,
-        Decline: 3,
+        Decline: 3
     },
 
     EnchantOpcode: {
         Select: 0,
         Remove: 1,
         Enchant: 2,
-        Update: 3,
+        Update: 3
     },
 
     GuildOpcode: {
@@ -161,7 +161,7 @@ export default {
         Join: 1,
         Leave: 2,
         Rank: 3,
-        Loot: 4,
+        Loot: 4
     },
 
     PointerOpcode: {
@@ -169,7 +169,7 @@ export default {
         NPC: 1,
         Relative: 2,
         Remove: 3,
-        Button: 4,
+        Button: 4
     },
 
     ShopOpcode: {
@@ -178,7 +178,7 @@ export default {
         Sell: 2,
         Refresh: 3,
         Select: 4,
-        Remove: 5,
+        Remove: 5
     },
 
     MinigameOpcode: {
@@ -190,8 +190,8 @@ export default {
             Red: 2,
             Blue: 3,
             Leave: 4,
-            Countdown: 5,
-        },
+            Countdown: 5
+        }
     },
 
     RegionOpcode: {
@@ -199,7 +199,7 @@ export default {
         Modify: 1,
         Collision: 2,
         Update: 3,
-        Reset: 4,
+        Reset: 4
     },
 
     OverlayOpcode: {
@@ -207,22 +207,22 @@ export default {
         Remove: 1,
         Lamp: 2,
         RemoveLamps: 3,
-        Darkness: 4,
+        Darkness: 4
     },
 
     CameraOpcode: {
         LockX: 0,
         LockY: 1,
         FreeFlow: 2,
-        Player: 3,
+        Player: 3
     },
 
     CommandOpcode: {
-        CtrlClick: 0,
+        CtrlClick: 0
     },
 
     ProfessionOpcode: {
         Batch: 0,
-        Update: 1,
-    },
+        Update: 1
+    }
 };

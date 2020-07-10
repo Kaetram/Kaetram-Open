@@ -81,7 +81,7 @@ class Professions {
                 id: profession.id,
                 name: profession.name,
                 level: profession.level,
-                percentage: profession.getPercentage(),
+                percentage: profession.getPercentage()
             });
         });
 
@@ -97,7 +97,7 @@ class Professions {
 
         return {
             username: this.player.username,
-            data: data,
+            data: data
         };
     }
 }

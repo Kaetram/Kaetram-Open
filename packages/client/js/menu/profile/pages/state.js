@@ -28,7 +28,7 @@ export default class State extends Page {
             this.armourSlot,
             this.pendantSlot,
             this.ringSlot,
-            this.bootsSlot,
+            this.bootsSlot
         ];
 
         this.loaded = false;

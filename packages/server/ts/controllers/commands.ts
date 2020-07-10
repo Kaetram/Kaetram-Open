@@ -57,7 +57,7 @@ class Commands {
             case 'coords':
                 this.player.send(
                     new Messages.Notification(Packets.NotificationOpcode.Text, {
-                        message: 'x: ' + this.player.x + ' y: ' + this.player.y,
+                        message: 'x: ' + this.player.x + ' y: ' + this.player.y
                     })
                 );
 
@@ -69,7 +69,7 @@ class Commands {
                 this.player.send(
                     new Messages.Quest(Packets.QuestOpcode.Progress, {
                         id: tutorialQuest.id,
-                        stage: tutorialQuest.stage,
+                        stage: tutorialQuest.stage
                     })
                 );
 
@@ -181,7 +181,7 @@ class Commands {
                     id: spawnId,
                     count: count,
                     ability: ability ? ability : -1,
-                    abilityLevel: abilityLevel ? abilityLevel : -1,
+                    abilityLevel: abilityLevel ? abilityLevel : -1
                 });
 
                 return;
@@ -266,7 +266,7 @@ class Commands {
                         new Messages.Pointer(Packets.PointerOpcode.Location, {
                             id: this.player.instance,
                             x: posX,
-                            y: posY,
+                            y: posY
                         })
                     );
                 } else {
@@ -276,7 +276,7 @@ class Commands {
 
                     this.player.send(
                         new Messages.Pointer(Packets.PointerOpcode.NPC, {
-                            id: instance,
+                            id: instance
                         })
                     );
                 }
@@ -323,8 +323,8 @@ class Commands {
                     player: this.player,
                     message: new Messages.Region(Packets.RegionOpcode.Modify, {
                         index: tileIndex,
-                        data: tileInfo,
-                    }),
+                        data: tileInfo
+                    })
                 });
 
                 return;
@@ -359,7 +359,7 @@ class Commands {
             case 'debug':
                 this.player.send(
                     new Messages.Command({
-                        command: 'debug',
+                        command: 'debug'
                     })
                 );
                 return;
@@ -457,7 +457,7 @@ class Commands {
             case 'toggleheal':
                 this.player.send(
                     new Messages.Command({
-                        command: 'toggleheal',
+                        command: 'toggleheal'
                     })
                 );
                 break;
@@ -467,7 +467,7 @@ class Commands {
                     new Messages.Notification(Packets.NotificationOpcode.Popup, {
                         title: 'New Quest Found!',
                         message: 'New quest has been discovered!',
-                        colour: '#00000',
+                        colour: '#00000'
                     })
                 );
 

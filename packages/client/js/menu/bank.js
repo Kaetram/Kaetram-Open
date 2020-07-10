@@ -35,7 +35,7 @@ export default class Bank {
 
             slot.css({
                 'margin-right': 2 * self.getScale() + 'px',
-                'margin-bottom': 4 * self.getScale() + 'px',
+                'margin-bottom': 4 * self.getScale() + 'px'
             });
 
             var image = $('<div id="bankImage' + i + '" class="bankImage"></div>');
@@ -60,7 +60,7 @@ export default class Bank {
             slot.find('#bankItemCount' + i).css({
                 'font-size': 4 * self.getScale() + 'px',
                 'margin-top': '0',
-                'margin-left': '0',
+                'margin-left': '0'
             });
 
             var bankListItem = $('<li></li>');
@@ -76,7 +76,7 @@ export default class Bank {
 
             iSlot.css({
                 'margin-right': 3 * self.getScale() + 'px',
-                'margin-bottom': 6 * self.getScale() + 'px',
+                'margin-bottom': 6 * self.getScale() + 'px'
             });
 
             var slotImage = $('<div id="inventoryImage' + j + '" class="bankImage"></div>');
@@ -102,7 +102,7 @@ export default class Bank {
 
             iSlot.find('#inventoryItemCount' + j).css({
                 'margin-top': '0',
-                'margin-left': '0',
+                'margin-left': '0'
             });
 
             var inventoryListItem = $('<li></li>');
@@ -125,13 +125,13 @@ export default class Bank {
 
             bankSlot.css({
                 'margin-right': 2 * self.getScale() + 'px',
-                'margin-bottom': 4 * self.getScale() + 'px',
+                'margin-bottom': 4 * self.getScale() + 'px'
             });
 
             bankSlot.find('#bankItemCount' + i).css({
                 'font-size': 4 * self.getScale() + 'px',
                 'margin-top': '0',
-                'margin-left': '0',
+                'margin-left': '0'
             });
 
             image.css('background-image', self.container.getImageFormat(slot.string));
@@ -144,7 +144,7 @@ export default class Bank {
 
             inventorySlot.css({
                 'margin-right': 3 * self.getScale() + 'px',
-                'margin-bottom': 6 * self.getScale() + 'px',
+                'margin-bottom': 6 * self.getScale() + 'px'
             });
 
             iImage.css('background-image', self.container.getImageFormat(iSlot.string));

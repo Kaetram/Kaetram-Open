@@ -57,7 +57,7 @@ class Bot {
 
         connection = io('ws://127.0.0.1:9001', {
             forceNew: true,
-            reconnection: false,
+            reconnection: false
         });
 
         connection.on('connect', () => {
@@ -66,7 +66,7 @@ class Bot {
             connection.emit('client', {
                 gVer: config.gver,
                 cType: 'HTML5',
-                bot: true,
+                bot: true
             });
         });
 

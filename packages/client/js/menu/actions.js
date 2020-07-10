@@ -41,14 +41,14 @@ export default class Actions {
         if (data)
             self.body.css({
                 left: data.mouseX - self.body.width() / 2 + 'px',
-                top: data.mouseY + self.body.height() / 2 + 'px',
+                top: data.mouseY + self.body.height() / 2 + 'px'
             });
 
         switch (self.activeClass) {
             case 'inventory':
                 self.body.css({
                     bottom: '10%',
-                    left: '10%',
+                    left: '10%'
                 });
 
                 var dropButton = $('<div id="drop" class="actionButton">Drop</div>');

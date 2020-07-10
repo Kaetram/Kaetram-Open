@@ -19,7 +19,7 @@ class GlobalObjects {
         if (objectId in this.map.trees)
             return {
                 type: 'lumberjacking',
-                tree: this.map.trees[objectId],
+                tree: this.map.trees[objectId]
             };
 
         let object = Objects.getObject(id);
@@ -27,7 +27,7 @@ class GlobalObjects {
         if (!object) return null;
 
         return {
-            type: object.type,
+            type: object.type
         };
     }
 
@@ -50,8 +50,8 @@ class GlobalObjects {
             info: {
                 id: id,
                 x: position.x * 16,
-                y: position.y * 16 + 8, // offset for the chat bubble
-            },
+                y: position.y * 16 + 8 // offset for the chat bubble
+            }
         };
     }
 

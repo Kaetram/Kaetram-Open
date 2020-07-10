@@ -33,7 +33,7 @@ class Home {
             info = {
                 indexes: [],
                 data: [],
-                collisions: [],
+                collisions: []
             };
 
         /**

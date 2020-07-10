@@ -26,7 +26,7 @@ class PirateCaptain extends Combat {
 
         self.location = {
             x: self.character.x,
-            y: self.character.y,
+            y: self.character.y
         };
 
         self.load();
@@ -68,8 +68,8 @@ class PirateCaptain extends Combat {
                     id: self.character.instance,
                     x: self.character.x,
                     y: self.character.y,
-                    withAnimation: true,
-                }),
+                    withAnimation: true
+                })
             });
 
         self.forEachAttacker((attacker) => {
@@ -89,7 +89,7 @@ class PirateCaptain extends Combat {
         return {
             x: position.x,
             y: position.y,
-            index: random,
+            index: random
         };
     }
 

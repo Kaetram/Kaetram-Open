@@ -42,7 +42,7 @@ class Hit {
             isRanged: this.isRanged(),
             isAoE: this.isAoE(),
             hasTerror: this.terror,
-            isPoison: this.poison,
+            isPoison: this.poison
         };
     }
 }

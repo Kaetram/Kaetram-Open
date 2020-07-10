@@ -185,7 +185,7 @@ export default class Map {
                 name: self.tilesets[i].name,
                 url: self.tilesets[i].path,
                 data: self.tilesets[i],
-                extension: 'png',
+                extension: 'png'
             };
         }
 
@@ -193,7 +193,7 @@ export default class Map {
 
         self.webGLMap = new glTiled.GLTilemap(map, {
             gl: context,
-            assetCache: resources,
+            assetCache: resources
         });
 
         self.webGLMap.glInitialize(context);
@@ -226,7 +226,7 @@ export default class Map {
                 orientation: 'orthogonal',
                 renderorder: 'right-down',
                 layers: [],
-                tilesets: [],
+                tilesets: []
             };
 
         /* Create 'layers' based on map depth and data. */
@@ -241,7 +241,7 @@ export default class Map {
                 visible: true,
                 x: 0,
                 y: 0,
-                data: [],
+                data: []
             };
 
             for (var j = 0; j < self.data.length; j++) {
@@ -270,7 +270,7 @@ export default class Map {
                 tilecount: (self.tilesets[i].width / 16) * (self.tilesets[i].height / 16),
                 tilewidth: object.tilewidth,
                 tileheight: object.tileheight,
-                tiles: [],
+                tiles: []
             };
 
             for (var j in self.animatedTiles) {
@@ -279,7 +279,7 @@ export default class Map {
                 if (indx > tileset.firstgid - 1 && indx < tileset.tilecount)
                     tileset.tiles.push({
                         animation: self.animatedTiles[j],
-                        id: indx,
+                        id: indx
                     });
             }
 
@@ -345,7 +345,7 @@ export default class Map {
 
         return {
             x: x,
-            y: y,
+            y: y
         };
     }
 

@@ -128,7 +128,7 @@ export default class Updater {
             player = self.game.player,
             position = {
                 x: player.gridX,
-                y: player.gridY,
+                y: player.gridY
             };
 
         if (player.frozen) return;

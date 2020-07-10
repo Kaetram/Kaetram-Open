@@ -256,7 +256,7 @@ export default class Character extends Entity {
     proceed(x, y) {
         this.newDestination = {
             x: x,
-            y: y,
+            y: y
         };
     }
 
@@ -369,7 +369,7 @@ export default class Character extends Entity {
 
         self.destination = {
             gridX: x,
-            gridY: y,
+            gridY: y
         };
 
         self.adjacentTiles = {};
@@ -549,7 +549,7 @@ export default class Character extends Entity {
             id: x + '-' + y,
             type: 'object',
             gridX: x,
-            gridY: y,
+            gridY: y
         });
     }
 
