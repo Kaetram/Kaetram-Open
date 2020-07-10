@@ -28,15 +28,13 @@ var addClasses = function () {
 };
 
 var initGame = function () {
-    app.onReady(function () {
-        app.sendStatus('Loading game');
+    app.sendStatus('Loading game');
 
-        if (app.config.debug) log.info('Loading the main application...');
-        if (app.config.worldSwitch) $('#worlds-switch').show();
+    if (app.config.debug) log.info('Loading the main application...');
+    if (app.config.worldSwitch) $('#worlds-switch').show();
 
-        game = new Game(app);
-        app.setGame(game);
-    });
+    game = new Game(app);
+    app.setGame(game);
 };
 
 load();
