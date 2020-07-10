@@ -68,7 +68,7 @@ export default class PointerController {
             margin: 'inherit',
             'margin-top': '-18px',
             top: '30px',
-            background: 'url("img/sprites/pointer.png")',
+            background: 'url("img/sprites/pointer.png")'
         });
     }
 

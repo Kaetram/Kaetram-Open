@@ -70,7 +70,7 @@ class Parser {
                 projectileName: value.projectileName || null,
                 spawnDelay: value.spawnDelay || 60000,
                 combatPlugin: value.combatPlugin || null,
-                hiddenName: value.hiddenName || false,
+                hiddenName: value.hiddenName || false
             };
 
             Mobs.Ids[value.id] = Mobs.Properties[key];
@@ -92,7 +92,7 @@ class Parser {
                 id: value.id,
                 name: value.name || key,
                 text: value.text || null,
-                type: value.type || null,
+                type: value.type || null
             };
 
             NPCs.Ids[value.id] = NPCs.Properties[key];
@@ -131,7 +131,7 @@ class Parser {
                 customData: value.customData || null,
                 requirement: value.requirement || null,
                 lumberjacking: value.lumberjacking || 0,
-                mining: value.mining || 0,
+                mining: value.mining || 0
             };
 
             Items.Ids[value.id] = Items.Data[key];
@@ -155,7 +155,7 @@ class Parser {
                 id: value.id,
                 type: value.type,
                 mana: value.mana || 0,
-                cooldown: value.cooldown || null,
+                cooldown: value.cooldown || null
             };
 
             Abilities.Ids[value.id] = Abilities.Data[key];
@@ -180,7 +180,7 @@ class Parser {
                 originalCount: value.count,
                 prices: value.prices,
                 currency: value.currency,
-                stockDuration: value.stockDuration,
+                stockDuration: value.stockDuration
             };
 
             Shops.Ids[value.npcId] = Shops.Data[key];
@@ -234,7 +234,7 @@ class Parser {
                 y: value.y,
                 type: value.type,
                 messages: value.messages,
-                cursor: value.cursor,
+                cursor: value.cursor
             };
 
             objectCounter++;

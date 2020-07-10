@@ -44,7 +44,7 @@ export default class InputController {
 
         self.mouse = {
             x: 0,
-            y: 0,
+            y: 0
         };
 
         self.load();
@@ -171,7 +171,7 @@ export default class InputController {
 
                     self.game.socket.send(Packets.Command, [
                         Packets.CommandOpcode.CtrlClick,
-                        self.getCoords(),
+                        self.getCoords()
                     ]);
                     return;
                 }
@@ -303,7 +303,7 @@ export default class InputController {
             ) {
                 self.game.socket.send(Packets.Target, [
                     Packets.TargetOpcode.Attack,
-                    self.entity.id,
+                    self.entity.id
                 ]);
                 player.lookAt(self.entity);
                 return;
@@ -312,7 +312,7 @@ export default class InputController {
             if (self.entity.gridX === player.gridX && self.entity.gridY === player.gridY)
                 self.game.socket.send(Packets.Target, [
                     Packets.TargetOpcode.Attack,
-                    self.entity.id,
+                    self.entity.id
                 ]);
 
             if (self.isTargetable(self.entity)) {
@@ -340,7 +340,7 @@ export default class InputController {
             actions.loadDefaults(self.entity.type, {
                 mouseX: self.mouse.x,
                 mouseY: self.mouse.y,
-                pvp: self.entity.pvp,
+                pvp: self.entity.pvp
             });
 
             actions.show();
@@ -474,7 +474,7 @@ export default class InputController {
 
         return {
             x: x,
-            y: y,
+            y: y
         };
     }
 
@@ -495,7 +495,7 @@ export default class InputController {
             dx: self.selectedX * 16 * superScale,
             dy: self.selectedY * 16 * superScale,
             dw: sprite.width * superScale,
-            dh: sprite.height * superScale,
+            dh: sprite.height * superScale
         });
     }
 

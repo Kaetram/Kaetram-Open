@@ -29,7 +29,7 @@ class Inventory extends Container {
         if (!this.canHold(item.id, item.count)) {
             this.owner.send(
                 new Messages.Notification(Packets.NotificationOpcode.Text, {
-                    message: Constants.InventoryFull,
+                    message: Constants.InventoryFull
                 })
             );
             return false;
@@ -58,7 +58,7 @@ class Inventory extends Container {
         this.owner.send(
             new Messages.Inventory(Packets.InventoryOpcode.Remove, {
                 index: index,
-                count: count,
+                count: count
             })
         );
 

@@ -143,7 +143,7 @@ export default class EntitiesController {
                         self.game.socket.send(Packets.Projectile, [
                             Packets.ProjectileOpcode.Impact,
                             info.id,
-                            target.id,
+                            target.id
                         ]);
 
                     if (info.hitType === Modules.Hits.Explosive) target.explosion = true;

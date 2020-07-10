@@ -17,7 +17,7 @@ export default class App {
             version: process.env.VERSION,
             ssl: process.env.SSL,
             debug: process.env.DEBUG,
-            worldSwitch: process.env.WORLD_SWITCH,
+            worldSwitch: process.env.WORLD_SWITCH
         };
 
         self.body = $('body');
@@ -357,7 +357,7 @@ export default class App {
                         characterName,
                         registerPassword,
                         registerPasswordConfirmation,
-                        email,
+                        email
                     ];
 
                 if (!characterName.val()) {
@@ -403,7 +403,7 @@ export default class App {
 
         $('<span></span>', {
             class: 'status blink',
-            text: message,
+            text: message
         }).appendTo('.validation-summary');
 
         $('.status').append(
@@ -416,7 +416,7 @@ export default class App {
 
         $('<span></span>', {
             class: 'validation-error blink',
-            text: error,
+            text: error
         }).appendTo('.validation-summary');
 
         if (!field) return;

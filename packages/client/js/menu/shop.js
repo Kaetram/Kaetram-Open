@@ -83,12 +83,12 @@ export default class Shop {
 
         self.sellSlot.css({
             'background-image': slotImage.css('background-image'),
-            'background-size': slotImage.css('background-size'),
+            'background-size': slotImage.css('background-size')
         });
 
         self.sellSlotReturn.css({
             'background-image': self.container.getImageFormat(info.currency),
-            'background-size': self.sellSlot.css('background-size'),
+            'background-size': self.sellSlot.css('background-size')
         });
 
         self.sellSlotReturnText.text(info.price);
@@ -170,7 +170,7 @@ export default class Shop {
 
             self.container.setSlot(i, {
                 string: string,
-                count: count,
+                count: count
             });
 
             // Bind the itemBuy to the local buy function.

@@ -86,5 +86,5 @@ export default {
         if (!buyId || buyId < 0) return;
 
         return this.Ids[npcId].items[buyId];
-    },
+    }
 };

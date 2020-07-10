@@ -42,7 +42,7 @@ export default class PlayerHandler {
                     x,
                     y,
                     self.player.gridX,
-                    self.player.gridY,
+                    self.player.gridY
                 ]);
 
             if (isObject)
@@ -51,7 +51,7 @@ export default class PlayerHandler {
                         return false;
                     },
                     gridX: x,
-                    gridY: y,
+                    gridY: y
                 });
 
             return self.game.findPath(self.player, x, y, ignores);
@@ -75,7 +75,7 @@ export default class PlayerHandler {
                 self.player.gridX,
                 self.player.gridY,
                 self.player.movementSpeed,
-                self.getTargetId(),
+                self.getTargetId()
             ]);
         });
 
@@ -102,7 +102,7 @@ export default class PlayerHandler {
                 y,
                 id,
                 hasTarget,
-                self.player.orientation,
+                self.player.orientation
             ]);
 
             self.socket.send(Packets.Target, [self.getTargetType(), self.getTargetId()]);
@@ -132,7 +132,7 @@ export default class PlayerHandler {
             self.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Step,
                 self.player.gridX,
-                self.player.gridY,
+                self.player.gridY
             ]);
 
             if (!self.isAttackable()) return;

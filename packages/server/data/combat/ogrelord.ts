@@ -24,7 +24,7 @@ class OgreLord extends Combat {
         self.dialogues = [
             'Get outta my swamp',
             'No, not the onion.',
-            'My minions give me strength! You stand no chance!',
+            'My minions give me strength! You stand no chance!'
         ];
 
         self.minions = [];
@@ -84,8 +84,8 @@ class OgreLord extends Combat {
             message: new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: self.character.instance,
                 text: message,
-                nonNPC: true,
-            }),
+                nonNPC: true
+            })
         });
     }
 

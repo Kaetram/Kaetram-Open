@@ -181,8 +181,8 @@ class QueenAnt extends Combat {
             regionId: self.character.region,
             message: new Messages.NPC(Packets.NPCOpcode.Countdown, {
                 id: self.character.instance,
-                countdown: count,
-            }),
+                countdown: count
+            })
         });
     }
 

@@ -72,7 +72,7 @@ class Slot {
             string: this.string,
             count: this.count,
             ability: this.ability,
-            abilityLevel: this.abilityLevel,
+            abilityLevel: this.abilityLevel
         };
     }
 }

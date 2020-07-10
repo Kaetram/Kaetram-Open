@@ -88,8 +88,8 @@ class MobHandler {
                     message: new Messages.Movement(Packets.MovementOpcode.Move, {
                         id: this.mob.instance,
                         x: newX,
-                        y: newY,
-                    }),
+                        y: newY
+                    })
                 });
             }
         }, 5000);
@@ -122,8 +122,8 @@ class MobHandler {
             message: new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: this.mob.instance,
                 text: message,
-                nonNPC: true,
-            }),
+                nonNPC: true
+            })
         });
     }
 }

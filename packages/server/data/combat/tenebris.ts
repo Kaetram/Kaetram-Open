@@ -88,8 +88,8 @@ class Tenebris extends Combat {
                 id: self.character.instance,
                 x: self.character.x,
                 y: self.character.y,
-                withAnimation: true,
-            }),
+                withAnimation: true
+            })
         });
     }
 
@@ -140,8 +140,8 @@ class Tenebris extends Combat {
             message: new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: instance,
                 text: message,
-                nonNPC: true,
-            }),
+                nonNPC: true
+            })
         });
     }
 

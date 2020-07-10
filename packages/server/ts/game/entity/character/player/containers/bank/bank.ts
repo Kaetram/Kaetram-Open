@@ -30,7 +30,7 @@ class Bank extends Container {
         if (!this.canHold(id, count)) {
             this.owner.send(
                 new Messages.Notification(Packets.NotificationOpcode.Text, {
-                    message: 'You do not have enough space in your bank.',
+                    message: 'You do not have enough space in your bank.'
                 })
             );
             return false;
@@ -50,7 +50,7 @@ class Bank extends Container {
         this.owner.send(
             new Messages.Bank(Packets.BankOpcode.Remove, {
                 index: index,
-                count: count,
+                count: count
             })
         );
 
@@ -68,7 +68,7 @@ class Bank extends Container {
             id: slot.id,
             count: slot.count,
             ability: slot.ability,
-            abilityLevel: slot.abilityLevel,
+            abilityLevel: slot.abilityLevel
         };
     }
 }

@@ -55,7 +55,7 @@ export default class Socket {
 
             self.connection = io(url, {
                 forceNew: true,
-                reconnection: false,
+                reconnection: false
             });
 
             self.connection.on('connect_error', function () {
@@ -82,7 +82,7 @@ export default class Socket {
 
                 self.connection.emit('client', {
                     gVer: self.config.version,
-                    cType: 'HTML5',
+                    cType: 'HTML5'
                 });
             });
 

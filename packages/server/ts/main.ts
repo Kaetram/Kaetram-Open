@@ -156,7 +156,7 @@ class Main {
                         id: itemId,
                         count: itemCount,
                         ability: -1,
-                        abilityLevel: -1,
+                        abilityLevel: -1
                     });
 
                     break;

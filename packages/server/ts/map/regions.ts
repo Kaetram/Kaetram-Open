@@ -153,7 +153,7 @@ class Regions {
 
         return {
             x: parseInt(position[0], 10),
-            y: parseInt(position[1], 10),
+            y: parseInt(position[1], 10)
         };
     }
 
@@ -162,7 +162,7 @@ class Regions {
 
         return {
             x: parseInt(position[0]) * this.zoneWidth,
-            y: parseInt(position[1]) * this.zoneHeight,
+            y: parseInt(position[1]) * this.zoneHeight
         };
     }
 

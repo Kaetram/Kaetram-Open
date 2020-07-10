@@ -141,7 +141,7 @@ export default class Inventory {
             case 'wield':
                 self.game.socket.send(Packets.Inventory, [
                     Packets.InventoryOpcode.Select,
-                    self.selectedItem.index,
+                    self.selectedItem.index
                 ]);
                 self.clearSelection();
 
@@ -157,7 +157,7 @@ export default class Inventory {
                 } else {
                     self.game.socket.send(Packets.Inventory, [
                         Packets.InventoryOpcode.Remove,
-                        item,
+                        item
                     ]);
                     self.clearSelection();
                 }
@@ -172,7 +172,7 @@ export default class Inventory {
                 self.game.socket.send(Packets.Inventory, [
                     Packets.InventoryOpcode.Remove,
                     self.selectedItem,
-                    count,
+                    count
                 ]);
                 self.actions.hideDrop();
                 self.clearSelection();

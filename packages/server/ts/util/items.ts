@@ -222,5 +222,5 @@ export default {
     getManaFactor(id: number) {
         if (id in this.Ids) return this.Ids[id].healsMana;
         return 0;
-    },
+    }
 };

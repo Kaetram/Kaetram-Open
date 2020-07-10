@@ -108,7 +108,7 @@ class Mob extends Character {
 
         return {
             id: Items.stringToId(item),
-            count: count,
+            count: count
         };
     }
 

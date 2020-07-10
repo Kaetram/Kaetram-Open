@@ -40,7 +40,7 @@ export default class Renderer {
             self.foreground,
             self.overlay,
             self.textCanvas,
-            self.cursor,
+            self.cursor
         ];
 
         self.allContexts = [
@@ -49,7 +49,7 @@ export default class Renderer {
             self.foreContext,
             self.overlayContext,
             self.textContext,
-            self.cursorContext,
+            self.cursorContext
         ];
 
         self.contexts = [self.context, self.textContext, self.overlayContext];
@@ -183,7 +183,7 @@ export default class Renderer {
 
         self.darkMask = new DarkMask({
             lights: [],
-            color: 'rgba(0, 0, 0, 0.84)',
+            color: 'rgba(0, 0, 0, 0.84)'
         });
 
         self.darkMask.compute(self.overlay.width, self.overlay.height);
@@ -922,7 +922,7 @@ export default class Renderer {
                 y: Math.floor(relativeTileId / setWidth) * self.tileSize,
                 width: self.tileSize,
                 height: self.tileSize,
-                rotation: rotation,
+                rotation: rotation
             };
         }
 
@@ -933,7 +933,7 @@ export default class Renderer {
                 dx: self.getX(cellId + 1, self.map.width) * self.tileSize * scale,
                 dy: Math.floor(cellId / self.map.width) * self.tileSize * scale,
                 width: self.tileSize * scale,
-                height: self.tileSize * scale,
+                height: self.tileSize * scale
             };
         }
 
@@ -1391,7 +1391,7 @@ export default class Renderer {
             parsedObjects.push(
                 new Illuminated.RectangleObject({
                     topleft: new Vec2(object.x, object.y),
-                    bottomright: new Vec2(object.x + self.tileSize, object.y + self.tileSize),
+                    bottomright: new Vec2(object.x + self.tileSize, object.y + self.tileSize)
                 })
             );
         }
@@ -1405,7 +1405,7 @@ export default class Renderer {
             lighting = new Lighting({
                 light: light,
                 objects: self.parseObjects(objects),
-                diffuse: light.diffuse,
+                diffuse: light.diffuse
             });
 
         light.origX = light.position.x;
@@ -1455,7 +1455,7 @@ export default class Renderer {
             radius: 0,
             samples: 2,
             roughness: 0,
-            angle: 0,
+            angle: 0
         };
     }
 
@@ -1481,7 +1481,7 @@ export default class Renderer {
             position = {
                 x: lighting.light.origX,
                 y: lighting.light.origY,
-                diff: lighting.light.diff,
+                diff: lighting.light.diff
             };
 
         return (
@@ -1495,7 +1495,7 @@ export default class Renderer {
     getMiddle() {
         return {
             x: this.overlay.width / 2,
-            y: this.overlay.height / 2,
+            y: this.overlay.height / 2
         };
     }
 

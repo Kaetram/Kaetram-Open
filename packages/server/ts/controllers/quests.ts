@@ -94,7 +94,7 @@ class Quests {
         return {
             username: this.player.username,
             ids: ids,
-            stages: stages,
+            stages: stages
         };
     }
 
@@ -110,7 +110,7 @@ class Quests {
         return {
             username: this.player.username,
             ids: ids,
-            progress: progress,
+            progress: progress
         };
     }
 
@@ -122,7 +122,7 @@ class Quests {
         });
 
         return {
-            achievements: achievements,
+            achievements: achievements
         };
     }
 
@@ -134,7 +134,7 @@ class Quests {
         });
 
         return {
-            quests: quests,
+            quests: quests
         };
     }
 
