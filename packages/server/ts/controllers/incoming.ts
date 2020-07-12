@@ -168,7 +168,6 @@ class Incoming {
         }
 
         if (config.offlineMode) {
-
             this.player.load(Creator.getFullData(this.player));
             this.player.intro();
 

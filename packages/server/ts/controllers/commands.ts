@@ -412,7 +412,6 @@ class Commands {
                 break;
 
             case 'resetAchievements':
-
                 this.player.quests.forEachAchievement((achievement: Achievement) => {
                     achievement.setProgress(0);
                 });
