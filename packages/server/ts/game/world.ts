@@ -399,7 +399,7 @@ class World {
 
         _.each(this.map.chests, (info: any) => {
 
-            this.spawnChest(info.i, info.x, info.y, true);
+            this.spawnChest(info.i, info.x, info.y, info.achievement, true);
 
         });
 
@@ -417,8 +417,8 @@ class World {
         return mob;
     }
 
-    spawnChest(items: any, x: number, y: number, staticChest?: boolean) {
-        let chest = new Chest(194, Utils.generateInstance(), x, y);
+    spawnChest(items: any, x: number, y: number, achievement?: string, staticChest?: boolean) {
+        let chest = new Chest(194, Utils.generateInstance(), x, y, achievement);
 
         chest.items = items;
 
@@ -430,7 +430,7 @@ class World {
 
         }
 
-        chest.onOpen(() => {
+        chest.onOpen((player?: Player) => {
 
             /**
              * Pretty simple concept, detect when the player opens the chest
@@ -449,6 +449,9 @@ class World {
                 return;
 
             this.dropItem(Items.stringToId(item.string), item.count, chest.x, chest.y);
+
+            if (player && chest.achievement)
+                player.finishAchievement(parseInt(chest.achievement));
 
         });
 

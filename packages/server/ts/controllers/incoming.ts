@@ -555,7 +555,7 @@ class Incoming {
                 this.player.cheatScore = 0;
 
                 if (entity.type === 'chest') {
-                    entity.openChest();
+                    entity.openChest(this.player);
                     return;
                 }
 
