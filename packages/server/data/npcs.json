@@ -238,5 +238,10 @@
   "Bluestoremannpc": {
     "id": 44,
     "name": "Clerk"
+  },
+
+  "RoyalGuard": {
+    "id": 45,
+    "name": "Royal Guard"
   }
 }

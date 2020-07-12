@@ -1,6 +1,7 @@
 /* global module */
 
 import Entity from '../entity';
+import Player from '../character/player/player';
 import Utils from '../../../util/utils';
 
 class Chest extends Entity {
@@ -8,21 +9,24 @@ class Chest extends Entity {
     static: boolean;
 
     items: any;
+    achievement: string;
 
     openCallback: Function;
     respawnCallback: Function;
 
-    constructor(id: number, instance: string, x: number, y: number) {
+    constructor(id: number, instance: string, x: number, y: number, achievement?: string) {
         super(id, 'chest', instance, x, y);
 
         this.respawnDuration = 25000;
         this.static = false;
 
+        this.achievement = achievement;
+
         this.items = [];
     }
 
-    openChest() {
-        if (this.openCallback) this.openCallback();
+    openChest(player?: Player) {
+        if (this.openCallback) this.openCallback(player);
     }
 
     respawn() {
