@@ -1,6 +1,8 @@
-import Combat from '../../ts/game/entity/character/combat/combat';
-import Utils from '../../ts/util/utils';
 import _ from 'underscore';
+import Combat from '../../ts/game/entity/character/combat/combat';
+import Character from '../../ts/game/entity/character/character';
+import Mob from '../../ts/game/entity/character/mob/mob';
+import Utils from '../../ts/util/utils';
 
 class SkeletonKing extends Combat {
     /**
@@ -13,7 +15,7 @@ class SkeletonKing extends Combat {
     lastSpawn: number;
     minions: Array<any>;
 
-    constructor(character) {
+    constructor(character: Mob) {
         character.spawnDistance = 10;
         super(character);
 
@@ -38,7 +40,7 @@ class SkeletonKing extends Combat {
         for (var i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
     }
 
-    hit(character, target, hitInfo) {
+    hit(character: Character, target: Character, hitInfo: any) {
         var self = this;
 
         if (self.isAttacked()) self.beginMinionAttack();
@@ -63,7 +65,7 @@ class SkeletonKing extends Combat {
 
         if (!self.colliding(x - 1, y + 1)) self.minions.push(self.world.spawnMob(11, x - 1, y - 1));
 
-        _.each(self.minions, (minion) => {
+        _.each(self.minions, (minion: Mob) => {
             minion.onDeath(() => {
                 if (self.isLast()) self.lastSpawn = new Date().getTime();
 
@@ -79,7 +81,7 @@ class SkeletonKing extends Combat {
 
         if (!self.hasMinions()) return;
 
-        _.each(self.minions, (minion) => {
+        _.each(self.minions, (minion: Mob) => {
             var randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
