@@ -52,6 +52,7 @@ class ChestAreas {
             chestArea.items,
             chestArea.cX,
             chestArea.cY,
+            null,
             false
         );
         chestArea.lastSpawn = new Date().getTime();
