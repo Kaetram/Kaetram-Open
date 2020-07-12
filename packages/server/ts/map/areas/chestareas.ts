@@ -10,7 +10,7 @@ class ChestAreas {
     world: World;
     chestAreas: any;
 
-    constructor(world) {
+    constructor(world: World) {
         this.world = world;
 
         this.chestAreas = [];
@@ -43,7 +43,7 @@ class ChestAreas {
         log.info('Loaded ' + this.chestAreas.length + ' chest areas.');
     }
 
-    spawnChest(chestArea) {
+    spawnChest(chestArea: any) {
         if (new Date().getTime() - chestArea.lastSpawn < chestArea.spawnDelay) return;
 
         chestArea.chest = this.world.spawnChest(
@@ -56,7 +56,7 @@ class ChestAreas {
         chestArea.lastSpawn = new Date().getTime();
     }
 
-    removeChest(chestArea) {
+    removeChest(chestArea: any) {
         if (!chestArea.chest) return;
 
         this.world.removeChest(chestArea.chest);

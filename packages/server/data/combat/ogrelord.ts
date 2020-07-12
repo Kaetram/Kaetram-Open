@@ -1,9 +1,11 @@
+import _ from 'underscore';
 import Combat from '../../ts/game/entity/character/combat/combat';
+import Character from '../../ts/game/entity/character/character';
+import Mob from '../../ts/game/entity/character/mob/mob';
 import Messages from '../../ts/network/messages';
 import Packets from '../../ts/network/packets';
 import Modules from '../../ts/util/modules';
 import Utils from '../../ts/util/utils';
-import _ from 'underscore';
 
 class OgreLord extends Combat {
     dialogues: Array<string>;
@@ -14,7 +16,7 @@ class OgreLord extends Combat {
     talkingInterval: any;
     updateInterval: any;
 
-    constructor(character) {
+    constructor(character: Mob) {
         super(character);
 
         let self = this;
@@ -55,7 +57,7 @@ class OgreLord extends Combat {
         self.loaded = true;
     }
 
-    hit(character, target, hitInfo) {
+    hit(character: Character, target: Character, hitInfo: any) {
         var self = this;
 
         if (self.isAttacked()) self.beginMinionAttack();
@@ -74,7 +76,7 @@ class OgreLord extends Combat {
         super.hit(character, target, hitInfo);
     }
 
-    forceTalk(message) {
+    forceTalk(message: string) {
         var self = this;
 
         if (!self.world) return;
@@ -105,7 +107,7 @@ class OgreLord extends Combat {
         for (var i = 0; i < xs.length; i++)
             self.minions.push(self.world.spawnMob(12, xs[i], ys[i]));
 
-        _.each(self.minions, (minion) => {
+        _.each(self.minions, (minion: Mob) => {
             minion.onDeath(() => {
                 if (self.isLast()) self.lastSpawn = new Date().getTime();
 
@@ -123,7 +125,7 @@ class OgreLord extends Combat {
 
         if (!self.hasMinions()) return;
 
-        _.each(self.minions, (minion) => {
+        _.each(self.minions, (minion: Mob) => {
             var randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
