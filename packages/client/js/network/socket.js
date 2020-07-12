@@ -55,7 +55,7 @@ export default class Socket {
 
             self.connection = io(url, {
                 forceNew: true,
-                reconnection: false,
+                reconnection: false
             });
 
             self.connection.on('connect_error', function () {
@@ -68,16 +68,9 @@ export default class Socket {
                 if (self.game.isDebug())
                     self.game.app.sendError(
                         null,
-                        "Couldn't connect to " +
-                            self.config.ip +
-                            ':' +
-                            self.config.port
+                        "Couldn't connect to " + self.config.ip + ':' + self.config.port
                     );
-                else
-                    self.game.app.sendError(
-                        null,
-                        'Could not connect to the game server.'
-                    );
+                else self.game.app.sendError(null, 'Could not connect to the game server.');
             });
 
             self.connection.on('connect', function () {
@@ -89,7 +82,7 @@ export default class Socket {
 
                 self.connection.emit('client', {
                     gVer: self.config.version,
-                    cType: 'HTML5',
+                    cType: 'HTML5'
                 });
             });
 
@@ -122,7 +115,6 @@ export default class Socket {
         var self = this,
             json = JSON.stringify([packet, data]);
 
-        if (self.connection && self.connection.connected)
-            self.connection.send(json);
+        if (self.connection && self.connection.connected) self.connection.send(json);
     }
 }

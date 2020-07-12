@@ -35,8 +35,7 @@ export default class Overlay {
     updateOverlay(overlay) {
         var self = this;
 
-        if (overlay in self.overlays)
-            self.currentOverlay = self.overlays[overlay];
+        if (overlay in self.overlays) self.currentOverlay = self.overlays[overlay];
         else self.currentOverlay = overlay;
     }
 

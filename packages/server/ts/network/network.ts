@@ -7,10 +7,9 @@ import Map from '../map/map';
 import Player from '../game/entity/character/player/player';
 import Utils from '../util/utils';
 import Connection from './connection';
-import config from "../../config";
+import config from '../../config';
 
 class Network {
-
     world: World;
     database: MongoDB;
     socket: any;
@@ -57,8 +56,7 @@ class Network {
                     conn.send(this.packets[id]);
                     this.packets[id] = [];
                     this.packets[id].id = id;
-                } else
-                    this.socket.removeConnection(id);
+                } else this.socket.removeConnection(id);
             }
         }
     }
@@ -79,10 +77,13 @@ class Network {
 
         this.addToPackets(player);
 
-        this.pushToPlayer(player, new Messages.Handshake({
-            id: clientId,
-            development: config.devClient
-        }));
+        this.pushToPlayer(
+            player,
+            new Messages.Handshake({
+                id: clientId,
+                development: config.devClient
+            })
+        );
     }
 
     handlePopulationChange() {
@@ -113,8 +114,7 @@ class Network {
 
     pushSelectively(message: any, ignores?: any) {
         _.each(this.packets, (packet: any) => {
-            if (ignores.indexOf(packet.id) < 0)
-                packet.push(message.serialize());
+            if (ignores.indexOf(packet.id) < 0) packet.push(message.serialize());
         });
     }
 
@@ -173,8 +173,7 @@ class Network {
         _.each(names, (name: string) => {
             let player = this.world.getPlayerByName(name);
 
-            if (player)
-                this.pushToPlayer(player, message);
+            if (player) this.pushToPlayer(player, message);
         });
     }
 
@@ -193,7 +192,6 @@ class Network {
     getSocketTime(connection: Connection) {
         return this.socket.ips[connection.socket.conn.remoteAddress];
     }
-
 }
 
 export default Network;

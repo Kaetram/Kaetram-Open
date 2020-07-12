@@ -28,8 +28,7 @@ class Main {
             let onWorldLoad = () => {
                 log.notice(`World has successfully been created.`);
 
-                if (!config.allowConnectionsToggle)
-                    this.world.allowConnections = true;
+                if (!config.allowConnectionsToggle) this.world.allowConnections = true;
 
                 let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
@@ -44,9 +43,7 @@ class Main {
         this.webSocket.onConnect((connection) => {
             if (this.world.allowConnections) {
                 if (this.world.isFull()) {
-                    log.info(
-                        'All the worlds are currently full. Please try again later.'
-                    );
+                    log.info('All the worlds are currently full. Please try again later.');
 
                     connection.sendUTF8('full');
                     connection.close();
@@ -78,9 +75,7 @@ class Main {
 
             switch (command) {
                 case 'players':
-                    log.info(
-                        `There are a total of ${this.getPopulation()} player(s) logged in.`
-                    );
+                    log.info(`There are a total of ${this.getPopulation()} player(s) logged in.`);
 
                     break;
 
@@ -161,7 +156,7 @@ class Main {
                         id: itemId,
                         count: itemCount,
                         ability: -1,
-                        abilityLevel: -1,
+                        abilityLevel: -1
                     });
 
                     break;

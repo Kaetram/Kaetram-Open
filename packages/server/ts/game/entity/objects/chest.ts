@@ -5,7 +5,6 @@ import Player from '../character/player/player';
 import Utils from '../../../util/utils';
 
 class Chest extends Entity {
-
     respawnDuration: number;
     static: boolean;
 
@@ -27,22 +26,20 @@ class Chest extends Entity {
     }
 
     openChest(player?: Player) {
-        if (this.openCallback)
-            this.openCallback(player);
+        if (this.openCallback) this.openCallback(player);
     }
 
     respawn() {
         setTimeout(() => {
-
-            if (this.respawnCallback)
-                this.respawnCallback();
-
+            if (this.respawnCallback) this.respawnCallback();
         }, this.respawnDuration);
     }
 
     getItem() {
         let random = Utils.randomInt(0, this.items.length - 1),
-            item = this.items[random], count = 1, probability = 100;
+            item = this.items[random],
+            count = 1,
+            probability = 100;
 
         if (item.includes(':')) {
             let itemData = item.split(':');
@@ -56,11 +53,9 @@ class Chest extends Entity {
          * We must ensure an item is always present in order
          * to avoid any unforeseen circumstances.
          */
-        if (!item)
-            return null;
+        if (!item) return null;
 
-        if (Utils.randomInt(0, 100) > probability)
-            return null;
+        if (Utils.randomInt(0, 100) > probability) return null;
 
         return {
             string: item,

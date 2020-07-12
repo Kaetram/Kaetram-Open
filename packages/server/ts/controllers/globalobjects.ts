@@ -4,7 +4,6 @@ import Map from '../map/map';
 import World from '../game/world';
 
 class GlobalObjects {
-
     world: World;
     map: Map;
 
@@ -25,8 +24,7 @@ class GlobalObjects {
 
         let object = Objects.getObject(id);
 
-        if (!object)
-            return null;
+        if (!object) return null;
 
         return {
             type: object.type
@@ -41,8 +39,7 @@ class GlobalObjects {
     getSignData(id) {
         let object = Objects.getObject(id);
 
-        if (!object)
-            return null;
+        if (!object) return null;
 
         let position = Objects.getPosition(id);
 
@@ -53,9 +50,9 @@ class GlobalObjects {
             info: {
                 id: id,
                 x: position.x * 16,
-                y: (position.y * 16) + 8 // offset for the chat bubble
+                y: position.y * 16 + 8 // offset for the chat bubble
             }
-        }
+        };
     }
 
     /**
@@ -63,7 +60,6 @@ class GlobalObjects {
      */
 
     talk(object, player) {
-
         if (player.npcTalk !== object.id) {
             player.npcTalk = object.id;
             player.talkIndex = 0;
@@ -71,19 +67,16 @@ class GlobalObjects {
 
         let message = object.messages[player.talkIndex];
 
-        if (message && message.includes("@player@")) {
+        if (message && message.includes('@player@')) {
             message = message.replace('@player@', '@red@' + Utils.formatUsername(player.username));
             message = Utils.parseMessage(message);
         }
 
-        if (player.talkIndex > object.messages.length - 1)
-            player.talkIndex = 0;
-        else
-            player.talkIndex++;
+        if (player.talkIndex > object.messages.length - 1) player.talkIndex = 0;
+        else player.talkIndex++;
 
         return message;
     }
-
 }
 
 export default GlobalObjects;

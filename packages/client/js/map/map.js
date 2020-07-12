@@ -48,8 +48,7 @@ export default class Map {
         var self = this;
 
         if (self.supportsWorker) {
-            if (self.game.isDebug())
-                log.info('Parsing map with Web Workers...');
+            if (self.game.isDebug()) log.info('Parsing map with Web Workers...');
 
             var worker = new Worker('./js/map/mapworker.js');
             worker.postMessage(1);
@@ -101,13 +100,11 @@ export default class Map {
 
             if (tile.isObject && objectIndex < 0) self.objects.push(tile.index);
 
-            if (!tile.isObject && objectIndex > -1)
-                self.objects.splice(objectIndex, 1);
+            if (!tile.isObject && objectIndex > -1) self.objects.splice(objectIndex, 1);
 
             if (tile.cursor) self.cursorTiles[tile.index] = tile.cursor;
 
-            if (!tile.cursor && tile.index in self.cursorTiles)
-                self.cursorTiles[tile.index] = null;
+            if (!tile.cursor && tile.index in self.cursorTiles) self.cursorTiles[tile.index] = null;
         }
 
         if (self.webGLMap) self.synchronizeWebGL(tileData);
@@ -126,8 +123,7 @@ export default class Map {
             self.loadTileset(rawTileset, function (tileset) {
                 self.tilesets[tileset.index] = tileset;
 
-                if (self.tilesets.length === self.rawTilesets.length)
-                    self.tilesetsLoaded = true;
+                if (self.tilesets.length === self.rawTilesets.length) self.tilesetsLoaded = true;
             });
         });
     }
@@ -151,10 +147,7 @@ export default class Map {
         tileset.onload = function () {
             if (tileset.width % self.tileSize > 0)
                 // Prevent uneven tilemaps from loading.
-                throw Error(
-                    'The tile size is malformed in the tile set: ' +
-                        tileset.path
-                );
+                throw Error('The tile size is malformed in the tile set: ' + tileset.path);
 
             callback(tileset);
         };
@@ -192,7 +185,7 @@ export default class Map {
                 name: self.tilesets[i].name,
                 url: self.tilesets[i].path,
                 data: self.tilesets[i],
-                extension: 'png',
+                extension: 'png'
             };
         }
 
@@ -200,17 +193,14 @@ export default class Map {
 
         self.webGLMap = new glTiled.GLTilemap(map, {
             gl: context,
-            assetCache: resources,
+            assetCache: resources
         });
 
         self.webGLMap.glInitialize(context);
         self.webGLMap.repeatTiles = false;
 
         context.viewport(0, 0, context.canvas.width, context.canvas.height);
-        self.webGLMap.resizeViewport(
-            context.canvas.width,
-            context.canvas.height
-        );
+        self.webGLMap.resizeViewport(context.canvas.width, context.canvas.height);
     }
 
     /**
@@ -236,7 +226,7 @@ export default class Map {
                 orientation: 'orthogonal',
                 renderorder: 'right-down',
                 layers: [],
-                tilesets: [],
+                tilesets: []
             };
 
         /* Create 'layers' based on map depth and data. */
@@ -251,7 +241,7 @@ export default class Map {
                 visible: true,
                 x: 0,
                 y: 0,
-                data: [],
+                data: []
             };
 
             for (var j = 0; j < self.data.length; j++) {
@@ -277,12 +267,10 @@ export default class Map {
                 imagewidth: self.tilesets[i].width,
                 imageheight: self.tilesets[i].height,
                 name: self.tilesets[i].name.split('.png')[0],
-                tilecount:
-                    (self.tilesets[i].width / 16) *
-                    (self.tilesets[i].height / 16),
+                tilecount: (self.tilesets[i].width / 16) * (self.tilesets[i].height / 16),
                 tilewidth: object.tilewidth,
                 tileheight: object.tileheight,
-                tiles: [],
+                tiles: []
             };
 
             for (var j in self.animatedTiles) {
@@ -291,7 +279,7 @@ export default class Map {
                 if (indx > tileset.firstgid - 1 && indx < tileset.tilecount)
                     tileset.tiles.push({
                         animation: self.animatedTiles[j],
-                        id: indx,
+                        id: indx
                     });
             }
 
@@ -300,8 +288,7 @@ export default class Map {
             object.tilesets.push(tileset);
         }
 
-        if (self.game.isDebug())
-            log.info('Successfully generated the WebGL map.');
+        if (self.game.isDebug()) log.info('Successfully generated the WebGL map.');
 
         return object;
     }
@@ -358,7 +345,7 @@ export default class Map {
 
         return {
             x: x,
-            y: y,
+            y: y
         };
     }
 
@@ -403,11 +390,7 @@ export default class Map {
     }
 
     isOutOfBounds(x, y) {
-        return (
-            isInt(x) &&
-            isInt(y) &&
-            (x < 0 || x >= this.width || y < 0 || y >= this.height)
-        );
+        return isInt(x) && isInt(y) && (x < 0 || x >= this.width || y < 0 || y >= this.height);
     }
 
     getX(index, width) {
@@ -424,10 +407,7 @@ export default class Map {
         var self = this;
 
         for (var idx in self.tilesets)
-            if (
-                id > self.tilesets[idx].firstGID - 1 &&
-                id < self.tilesets[idx].lastGID + 1
-            )
+            if (id > self.tilesets[idx].firstGID - 1 && id < self.tilesets[idx].lastGID + 1)
                 return self.tilesets[idx];
 
         return null;
@@ -436,12 +416,7 @@ export default class Map {
     saveRegionData() {
         var self = this;
 
-        self.game.storage.setRegionData(
-            self.data,
-            self.collisions,
-            self.objects,
-            self.cursorTiles
-        );
+        self.game.storage.setRegionData(self.data, self.collisions, self.objects, self.cursorTiles);
     }
 
     loadRegionData() {

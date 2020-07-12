@@ -47,9 +47,7 @@ export default class Updater {
                         switch (entity.orientation) {
                             case Modules.Orientation.Left:
                             case Modules.Orientation.Right:
-                                var isLeft =
-                                    entity.orientation ===
-                                    Modules.Orientation.Left;
+                                var isLeft = entity.orientation === Modules.Orientation.Left;
 
                                 entity.movement.start(
                                     self.game.time,
@@ -71,9 +69,7 @@ export default class Updater {
 
                             case Modules.Orientation.Up:
                             case Modules.Orientation.Down:
-                                var isUp =
-                                    entity.orientation ===
-                                    Modules.Orientation.Up;
+                                var isUp = entity.orientation === Modules.Orientation.Up;
 
                                 entity.movement.start(
                                     self.game.time,
@@ -132,7 +128,7 @@ export default class Updater {
             player = self.game.player,
             position = {
                 x: player.gridX,
-                y: player.gridY,
+                y: player.gridY
             };
 
         if (player.frozen) return;
@@ -149,8 +145,7 @@ export default class Updater {
         var self = this,
             target = self.input.targetAnimation;
 
-        if (target && self.input.selectedCellVisible)
-            target.update(self.game.time);
+        if (target && self.input.selectedCellVisible) target.update(self.game.time);
 
         if (!self.sprites) return;
 

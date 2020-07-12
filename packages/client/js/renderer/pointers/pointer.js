@@ -45,14 +45,12 @@ export default class Pointer {
     }
 
     show() {
-        if (this.type === Modules.Pointers.Button)
-            this.element.addClass('active');
+        if (this.type === Modules.Pointers.Button) this.element.addClass('active');
         else this.element.css('display', 'block');
     }
 
     hide() {
-        if (this.type === Modules.Pointers.Button)
-            this.element.removeClass('active');
+        if (this.type === Modules.Pointers.Button) this.element.removeClass('active');
         else this.element.css('display', 'none');
     }
 }

@@ -39,16 +39,14 @@ export default class Grids {
         for (var i = 0; i < self.map.height; i++) {
             self.pathingGrid[i] = [];
 
-            for (var j = 0; j < self.map.width; j++)
-                self.pathingGrid[i][j] = self.map.grid[i][j];
+            for (var j = 0; j < self.map.width; j++) self.pathingGrid[i][j] = self.map.grid[i][j];
         }
     }
 
     addToRenderingGrid(entity, x, y) {
         var self = this;
 
-        if (!self.map.isOutOfBounds(x, y))
-            self.renderingGrid[y][x][entity.id] = entity;
+        if (!self.map.isOutOfBounds(x, y)) self.renderingGrid[y][x][entity.id] = entity;
     }
 
     addToPathingGrid(x, y) {
@@ -64,11 +62,7 @@ export default class Grids {
     removeFromRenderingGrid(entity, x, y) {
         var self = this;
 
-        if (
-            entity &&
-            self.renderingGrid[y][x] &&
-            entity.id in self.renderingGrid[y][x]
-        )
+        if (entity && self.renderingGrid[y][x] && entity.id in self.renderingGrid[y][x])
             delete self.renderingGrid[y][x][entity.id];
     }
 
@@ -83,8 +77,7 @@ export default class Grids {
     removeFromItemGrid(item, x, y) {
         var self = this;
 
-        if (item && self.itemGrid[y][x][item.id])
-            delete self.itemGrid[y][x][item.id];
+        if (item && self.itemGrid[y][x][item.id]) delete self.itemGrid[y][x][item.id];
     }
 
     removeEntity(entity) {
