@@ -11,7 +11,7 @@ import MusicAreas from './areas/musicareas';
 import ChestAreas from './areas/chestareas';
 import OverlayAreas from './areas/overlayareas';
 import CameraAreas from './areas/cameraareas';
-import World from '../game/entity/character/player/player';
+import World from '../game/world';
 import Area from './area';
 import Entity from '../game/entity/entity';
 import * as map from '../../data/map/world_server.json';
@@ -60,7 +60,7 @@ class Map {
     readyInterval: any;
     readyCallback: Function;
 
-    constructor(world: any) {
+    constructor(world: World) {
         this.world = world;
 
         this.ready = false;

@@ -50,7 +50,6 @@ class Character extends Entity {
     damageCallback: Function;
     subAoECallback: Function;
     deathCallback: Function;
-    onDeath: Function;
     onReturn: Function;
 
     moving: boolean;
@@ -61,6 +60,8 @@ class Character extends Entity {
     spawnLocation: any;
 
     frozen: boolean;
+
+    alwaysAggressive: boolean;
 
     public invincible: boolean;
     public lastAttacker: Character;
@@ -349,6 +350,10 @@ class Character extends Entity {
 
     onPoison(callback: Function) {
         this.poisonCallback = callback;
+    }
+
+    onDeath(callback: Function) {
+        this.deathCallback = callback;
     }
 }
 

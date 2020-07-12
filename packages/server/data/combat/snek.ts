@@ -1,11 +1,11 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
-import Hit from '../../ts/game/entity/character/combat/hit';
+import Character from '../../ts/game/entity/character/character';
+import Mob from '../../ts/game/entity/character/mob/mob';
 import Utils from '../../ts/util/utils';
-import Modules from '../../ts/util/modules';
 import log from '../../ts/util/log';
 
 class Snek extends Combat {
-    constructor(character) {
+    constructor(character: Mob) {
         character.spawnDistance = 15;
         super(character);
 
@@ -13,7 +13,7 @@ class Snek extends Combat {
 
         self.character = character;
 
-        self.character.onDamage((target, hitInfo) => {
+        self.character.onDamage((target: Character, hitInfo: any) => {
             if (!target || target.type !== 'player') return;
 
             if (self.canPoison()) target.setPoison(self.getPoisonData());
