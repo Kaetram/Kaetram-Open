@@ -50,8 +50,10 @@
 
   "3": {
     "id": 3,
-    "name": "Dodgey Dodge",
-    "description": "Learn the art of dodging attacks."
+    "name": "Maze Crawler",
+    "description": "Find the hidden treasure in the maze.",
+    "rewardType": 1,
+    "reward": 200
   },
 
   "4": {
