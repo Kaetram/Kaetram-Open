@@ -411,6 +411,16 @@ class Commands {
 
                 break;
 
+            case 'resetAchievements':
+
+                this.player.quests.forEachAchievement((achievement: Achievement) => {
+                    achievement.setProgress(0);
+                });
+
+                this.player.updateRegion();
+
+                break;
+
             case 'clear':
                 this.player.inventory.forEachSlot((slot) => {
                     if (slot !== -1) {
