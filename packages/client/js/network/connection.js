@@ -935,6 +935,10 @@ export default class Connection {
         });
 
         self.messages.onRegion(function (opcode, info) {
+
+            log.info(opcode);
+            log.info(info);
+
             switch (opcode) {
                 case Packets.RegionOpcode.Render:
                     self.map.synchronize(info);

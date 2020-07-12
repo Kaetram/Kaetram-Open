@@ -918,6 +918,8 @@ class Player extends Character {
             let objectId = this.map.getPositionObject(position.x, position.y),
                 cursor = this.map.getCursor(index, objectId);
 
+            console.log(typeof index);
+
             tiles.indexes.push(index);
             tiles.data.push(this.map.clientMap.data[index]);
             tiles.collisions.push(this.map.collisions.indexOf(index) > -1);
