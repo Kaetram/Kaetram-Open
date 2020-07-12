@@ -10,7 +10,6 @@ import Region from '../region';
 import Map from '../../map/map';
 
 class Home {
-
     private region: Region;
     private map: Map;
 

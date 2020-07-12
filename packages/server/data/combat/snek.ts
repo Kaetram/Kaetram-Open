@@ -5,7 +5,6 @@ import Modules from '../../ts/util/modules';
 import log from '../../ts/util/log';
 
 class Snek extends Combat {
-
     constructor(character) {
         character.spawnDistance = 15;
         super(character);
@@ -15,15 +14,14 @@ class Snek extends Combat {
         self.character = character;
 
         self.character.onDamage((target, hitInfo) => {
-            if (!target || target.type !== 'player')
-                return;
+            if (!target || target.type !== 'player') return;
 
-            if (self.canPoison())
-                target.setPoison(self.getPoisonData());
+            if (self.canPoison()) target.setPoison(self.getPoisonData());
 
-            log.info(`Entity ${self.character.id} hit ${target.instance} - damage ${hitInfo.damage}.`);
+            log.info(
+                `Entity ${self.character.id} hit ${target.instance} - damage ${hitInfo.damage}.`
+            );
         });
-
     }
 
     canPoison() {
@@ -36,7 +34,6 @@ class Snek extends Combat {
     getPoisonData() {
         return new Date().getTime().toString() + ':30000:1';
     }
-
 }
 
 export default Snek;

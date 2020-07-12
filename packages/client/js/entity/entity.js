@@ -45,7 +45,7 @@ export default class Entity {
 
         self.renderingData = {
             scale: -1,
-            angle: 0,
+            angle: 0
         };
 
         self.loadDirty();
@@ -95,8 +95,7 @@ export default class Entity {
     setSprite(sprite) {
         var self = this;
 
-        if (!sprite || (self.sprite && self.sprite.name === sprite.name))
-            return;
+        if (!sprite || (self.sprite && self.sprite.name === sprite.name)) return;
 
         if (self.type === 'player') sprite.loadHurt = true;
 
@@ -137,10 +136,7 @@ export default class Entity {
     setAnimation(name, speed, count, onEndCount) {
         var self = this;
 
-        if (
-            !self.spriteLoaded ||
-            (self.currentAnimation && self.currentAnimation.name === name)
-        )
+        if (!self.spriteLoaded || (self.currentAnimation && self.currentAnimation.name === name))
             return;
 
         var anim = self.getAnimationByName(name);

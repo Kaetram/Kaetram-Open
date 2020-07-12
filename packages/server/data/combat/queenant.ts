@@ -5,7 +5,6 @@ import Utils from '../../ts/util/utils';
 import _ from 'underscore';
 
 class QueenAnt extends Combat {
-
     /*
      * The queen ant is a little more complex as it uses
      * AoE attacks and has a stun timer.
@@ -43,7 +42,6 @@ class QueenAnt extends Combat {
         self.frozen = false;
 
         self.character.onDeath(() => {
-
             /**
              * This is to prevent the boss from dealing
              * any powerful AoE attack after dying.
@@ -58,9 +56,7 @@ class QueenAnt extends Combat {
 
             var listCopy = self.minions.slice();
 
-            for (var i = 0; i < listCopy.length; i++)
-                self.world.kill(listCopy[i]);
-
+            for (var i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
         });
 
         self.character.onReturn(() => {
@@ -80,19 +76,16 @@ class QueenAnt extends Combat {
     hit(attacker, target, hitInfo) {
         var self = this;
 
-        if (self.frozen)
-            return;
+        if (self.frozen) return;
 
         if (self.canCastAoE()) {
             self.doAoE();
             return;
         }
 
-        if (self.canSpawn())
-            self.spawnMinions();
+        if (self.canSpawn()) self.spawnMinions();
 
-        if (self.isAttacked())
-            self.beginMinionAttack();
+        if (self.isAttacked()) self.beginMinionAttack();
 
         super.hit(attacker, target, hitInfo);
     }
@@ -115,13 +108,10 @@ class QueenAnt extends Combat {
         self.pushCountdown(self.aoeCountdown);
 
         self.aoeTimeout = setTimeout(() => {
-
             self.dealAoE(self.aoeRadius, true);
 
             self.pushFreeze(false);
-
         }, 5000);
-
     }
 
     spawnMinions() {
@@ -133,38 +123,28 @@ class QueenAnt extends Combat {
             self.minions.push(self.world.spawnMob(13, self.character.x, self.character.y));
 
         _.each(self.minions, (minion) => {
-
             minion.aggressive = true;
             minion.spawnDistance = 12;
 
             minion.onDeath(() => {
-
-                if (self.isLast())
-                    self.lastSpawn = new Date().getTime();
+                if (self.isLast()) self.lastSpawn = new Date().getTime();
 
                 self.minions.splice(self.minions.indexOf(minion), 1);
-
             });
 
-            if (self.isAttacked())
-                self.beginMinionAttack();
-
+            if (self.isAttacked()) self.beginMinionAttack();
         });
     }
 
     beginMinionAttack() {
         var self = this;
 
-        if (!self.hasMinions())
-            return;
+        if (!self.hasMinions()) return;
 
         _.each(self.minions, (minion) => {
-
             var randomTarget = self.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget)
-                minion.combat.begin(randomTarget);
-
+            if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
         });
     }
 
@@ -179,12 +159,10 @@ class QueenAnt extends Combat {
             var keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
-            if (randomAttacker)
-                return randomAttacker;
+            if (randomAttacker) return randomAttacker;
         }
 
-        if (self.character.hasTarget())
-            return self.character.target;
+        if (self.character.hasTarget()) return self.character.target;
 
         return null;
     }
@@ -206,14 +184,11 @@ class QueenAnt extends Combat {
                 countdown: count
             })
         });
-
     }
 
     getMinions() {
         var self = this,
             grids = self.world.getGrids();
-
-
     }
 
     isLast() {
@@ -229,9 +204,10 @@ class QueenAnt extends Combat {
     }
 
     canSpawn() {
-        return new Date().getTime() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked();
+        return (
+            new Date().getTime() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked()
+        );
     }
-
 }
 
 export default QueenAnt;

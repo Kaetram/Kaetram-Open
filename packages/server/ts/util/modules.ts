@@ -1,7 +1,6 @@
 /* global module */
 
 let Modules = {
-
     Orientation: {
         Up: 0,
         Down: 1,
@@ -128,8 +127,7 @@ let Modules = {
         Idle: 0,
         Attack: 1,
         Walk: 2
-    },
-
+    }
 };
 
 export default Modules;

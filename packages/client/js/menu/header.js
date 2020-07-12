@@ -40,8 +40,7 @@ export default class Header {
 
         //11 is due to the offset of the #health in the #healthBar
         var diff = Math.floor(
-                width * (self.player.hitPoints / self.player.maxHitPoints) -
-                    11 * scale
+                width * (self.player.hitPoints / self.player.maxHitPoints) - 11 * scale
             ),
             prevWidth = self.health.width();
 
@@ -51,9 +50,7 @@ export default class Header {
         if (diff > width) diff = width;
 
         self.health.css('width', diff + 'px');
-        self.healthBarText.text(
-            self.player.hitPoints + '/' + self.player.maxHitPoints
-        );
+        self.healthBarText.text(self.player.hitPoints + '/' + self.player.maxHitPoints);
     }
 
     calculateExpBar() {
@@ -62,8 +59,7 @@ export default class Header {
             width = self.expBar.width();
 
         var experience = self.player.experience - self.player.prevExperience,
-            nextExperience =
-                self.player.nextExperience - self.player.prevExperience,
+            nextExperience = self.player.nextExperience - self.player.prevExperience,
             diff = Math.floor(width * (experience / nextExperience));
 
         self.exp.css('width', diff + 'px');

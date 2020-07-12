@@ -56,25 +56,16 @@ export default class Connection {
                     Packets.IntroOpcode.Register,
                     username,
                     password,
-                    email,
+                    email
                 ]);
             } else if (self.app.isGuest()) {
-                self.socket.send(Packets.Intro, [
-                    Packets.IntroOpcode.Guest,
-                    'n',
-                    'n',
-                    'n',
-                ]);
+                self.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
             } else {
                 var loginInfo = self.app.loginFields,
                     name = loginInfo[0].val(),
                     pass = loginInfo[1].val();
 
-                self.socket.send(Packets.Intro, [
-                    Packets.IntroOpcode.Login,
-                    name,
-                    pass,
-                ]);
+                self.socket.send(Packets.Intro, [Packets.IntroOpcode.Login, name, pass]);
 
                 if (self.game.hasRemember()) {
                     self.storage.data.player.username = name;
@@ -138,9 +129,7 @@ export default class Connection {
 
                     if (type === 'armour')
                         self.game.player.setSprite(
-                            self.game.getSprite(
-                                self.game.player.getSpriteName()
-                            )
+                            self.game.getSprite(self.game.player.getSpriteName())
                         );
 
                     self.menu.profile.update();
@@ -158,13 +147,8 @@ export default class Connection {
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
 
-            self.entities.decrepit = _.reject(self.entities.getAll(), function (
-                entity
-            ) {
-                return (
-                    _.include(known, entity.id) ||
-                    entity.id === self.game.player.id
-                );
+            self.entities.decrepit = _.reject(self.entities.getAll(), function (entity) {
+                return _.include(known, entity.id) || entity.id === self.game.player.id;
             });
 
             self.entities.clean(newIds);
@@ -211,8 +195,7 @@ export default class Connection {
 
             if (data.movementSpeed) entity.movementSpeed = data.movementSpeed;
 
-            if (data.orientation !== undefined)
-                entity.orientation = data.orientation;
+            if (data.orientation !== undefined) entity.orientation = data.orientation;
 
             self.menu.profile.update();
         });
@@ -258,10 +241,8 @@ export default class Connection {
 
                     if (info.state) pEntity.stop(false);
 
-                    if (opcode === Packets.MovementOpcode.Stunned)
-                        pEntity.stunned = info.state;
-                    else if (opcode === Packets.MovementOpcode.Freeze)
-                        pEntity.frozen = info.state;
+                    if (opcode === Packets.MovementOpcode.Stunned) pEntity.stunned = info.state;
+                    else if (opcode === Packets.MovementOpcode.Freeze) pEntity.frozen = info.state;
 
                     break;
 
@@ -271,10 +252,7 @@ export default class Connection {
                         entity = self.entities.get(player);
 
                     // entity.stop();
-                    entity.performAction(
-                        orientation,
-                        Modules.Actions.Orientate
-                    );
+                    entity.performAction(orientation, Modules.Actions.Orientate);
 
                     break;
             }
@@ -375,30 +353,17 @@ export default class Connection {
 
             self.bubble.destroy(entity.id);
 
-            if (
-                self.game.player.hasTarget() &&
-                self.game.player.target.id === entity.id
-            )
+            if (self.game.player.hasTarget() && self.game.player.target.id === entity.id)
                 self.game.player.removeTarget();
 
-            self.entities.grids.removeFromPathingGrid(
-                entity.gridX,
-                entity.gridY
-            );
+            self.entities.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
 
-            if (
-                entity.id !== self.game.player.id &&
-                self.game.player.getDistance(entity) < 5
-            )
-                self.audio.play(
-                    Modules.AudioTypes.SFX,
-                    'kill' + Math.floor(Math.random() * 2 + 1)
-                );
+            if (entity.id !== self.game.player.id && self.game.player.getDistance(entity) < 5)
+                self.audio.play(Modules.AudioTypes.SFX, 'kill' + Math.floor(Math.random() * 2 + 1));
 
             entity.hitPoints = 0;
 
-            if (!entity.sprite.hasDeathAnimation)
-                entity.setSprite(self.game.getSprite('death'));
+            if (!entity.sprite.hasDeathAnimation) entity.setSprite(self.game.getSprite('death'));
 
             entity.animate('death', 120, 1, function () {
                 self.entities.unregisterPosition(entity);
@@ -418,14 +383,11 @@ export default class Connection {
 
                     target.addAttacker(attacker);
 
-                    if (
-                        target.id === self.game.player.id ||
-                        attacker.id === self.game.player.id
-                    )
+                    if (target.id === self.game.player.id || attacker.id === self.game.player.id)
                         self.socket.send(Packets.Combat, [
                             Packets.CombatOpcode.Initiate,
                             attacker.id,
-                            target.id,
+                            target.id
                         ]);
 
                     break;
@@ -436,10 +398,7 @@ export default class Connection {
 
                     if (!hit.isAoE && !hit.isPoison) {
                         attacker.lookAt(target);
-                        attacker.performAction(
-                            attacker.orientation,
-                            Modules.Actions.Attack
-                        );
+                        attacker.performAction(attacker.orientation, Modules.Actions.Attack);
                     } else if (hit.hasTerror) target.terror = true;
 
                     switch (hit.type) {
@@ -449,10 +408,7 @@ export default class Connection {
                             break;
 
                         default:
-                            if (
-                                attacker.id === self.game.player.id &&
-                                hit.damage > 0
-                            )
+                            if (attacker.id === self.game.player.id && hit.damage > 0)
                                 self.audio.play(
                                     Modules.AudioTypes.SFX,
                                     'hit' + Math.floor(Math.random() * 2 + 1)
@@ -461,12 +417,7 @@ export default class Connection {
                             break;
                     }
 
-                    self.info.create(
-                        hit.type,
-                        [hit.damage, isPlayer],
-                        target.x,
-                        target.y
-                    );
+                    self.info.create(hit.type, [hit.damage, isPlayer], target.x, target.y);
 
                     if (target.hurtSprite) {
                         target.sprite = target.hurtSprite;
@@ -478,8 +429,7 @@ export default class Connection {
                     attacker.triggerHealthBar();
                     target.triggerHealthBar();
 
-                    if (isPlayer && hit.damage > 0)
-                        self.audio.play(Modules.AudioTypes.SFX, 'hurt');
+                    if (isPlayer && hit.damage > 0) self.audio.play(Modules.AudioTypes.SFX, 'hurt');
 
                     break;
 
@@ -494,8 +444,7 @@ export default class Connection {
                     break;
 
                 case Packets.CombatOpcode.Sync:
-                    if (target.x !== info.x || target.y !== info.y)
-                        target.go(info.x, info.y);
+                    if (target.x !== info.x || target.y !== info.y) target.go(info.x, info.y);
 
                     break;
             }
@@ -535,10 +484,7 @@ export default class Connection {
                     self.game.player.target.id === entity.id &&
                     self.input.overlay.updateCallback
                 )
-                    self.input.overlay.updateCallback(
-                        entity.id,
-                        data.hitPoints
-                    );
+                    self.input.overlay.updateCallback(entity.id, data.hitPoints);
             }
 
             if (data.mana) entity.setMana(data.mana);
@@ -555,8 +501,7 @@ export default class Connection {
                 var entity = self.entities.get(info.id);
 
                 if (entity) {
-                    info.name =
-                        info.name.charAt(0).toUpperCase() + info.name.substr(1);
+                    info.name = info.name.charAt(0).toUpperCase() + info.name.substr(1);
 
                     self.bubble.create(info.id, info.text, info.duration);
                     self.bubble.setTo(entity);
@@ -646,9 +591,7 @@ export default class Connection {
         self.messages.onQuest(function (opcode, info) {
             switch (opcode) {
                 case Packets.QuestOpcode.AchievementBatch:
-                    self.menu
-                        .getQuestPage()
-                        .loadAchievements(info.achievements);
+                    self.menu.getQuestPage().loadAchievements(info.achievements);
 
                     break;
 
@@ -682,20 +625,12 @@ export default class Connection {
                     break;
 
                 case Packets.NotificationOpcode.Text:
-                    self.input.chatHandler.add(
-                        'WORLD',
-                        info.message,
-                        info.colour
-                    );
+                    self.input.chatHandler.add('WORLD', info.message, info.colour);
 
                     break;
 
                 case Packets.NotificationOpcode.Popup:
-                    self.menu.showNotification(
-                        info.title,
-                        info.message,
-                        info.colour
-                    );
+                    self.menu.showNotification(info.title, info.message, info.colour);
 
                     break;
             }
@@ -720,24 +655,14 @@ export default class Connection {
 
             switch (info.type) {
                 case 'health':
-                    self.info.create(
-                        Modules.Hits.Heal,
-                        [info.amount],
-                        entity.x,
-                        entity.y
-                    );
+                    self.info.create(Modules.Hits.Heal, [info.amount], entity.x, entity.y);
 
                     self.game.player.healing = true;
 
                     break;
 
                 case 'mana':
-                    self.info.create(
-                        Modules.Hits.Mana,
-                        [info.amount],
-                        entity.x,
-                        entity.y
-                    );
+                    self.info.create(Modules.Hits.Mana, [info.amount], entity.x, entity.y);
 
                     break;
             }
@@ -757,12 +682,7 @@ export default class Connection {
                      */
                     if (entity.level !== info.level) {
                         entity.level = info.level;
-                        self.info.create(
-                            Modules.Hits.LevelUp,
-                            null,
-                            entity.x,
-                            entity.y
-                        );
+                        self.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
                     }
 
                     /**
@@ -847,10 +767,7 @@ export default class Connection {
 
                             self.bubble.setTo(entity);
 
-                            if (
-                                self.renderer.mobile &&
-                                self.renderer.autoCentre
-                            )
+                            if (self.renderer.mobile && self.renderer.autoCentre)
                                 self.renderer.camera.centreOn(self.game.player);
                         }
                     } else {
@@ -895,9 +812,7 @@ export default class Connection {
             self.renderer.camera.centreOn(self.game.player);
 
             self.game.player.currentAnimation = null;
-            self.game.player.setSprite(
-                self.game.getSprite(self.game.player.getSpriteName())
-            );
+            self.game.player.setSprite(self.game.getSprite(self.game.player.getSpriteName()));
             self.game.player.idle();
 
             self.entities.addEntity(self.game.player);
@@ -946,11 +861,7 @@ export default class Connection {
 
                 case Packets.PointerOpcode.Location:
                     self.pointer.create(info.id, Modules.Pointers.Position);
-                    self.pointer.setToPosition(
-                        info.id,
-                        info.x * 16,
-                        info.y * 16
-                    );
+                    self.pointer.setToPosition(info.id, info.x * 16, info.y * 16);
 
                     break;
 
@@ -966,11 +877,7 @@ export default class Connection {
                     break;
 
                 case Packets.PointerOpcode.Button:
-                    self.pointer.create(
-                        info.id,
-                        Modules.Pointers.Button,
-                        info.button
-                    );
+                    self.pointer.create(info.id, Modules.Pointers.Button, info.button);
 
                     break;
             }
@@ -1002,20 +909,17 @@ export default class Connection {
                     break;
 
                 case Packets.ShopOpcode.Select:
-                    if (self.menu.shop.isShopOpen(info.id))
-                        self.menu.shop.move(info);
+                    if (self.menu.shop.isShopOpen(info.id)) self.menu.shop.move(info);
 
                     break;
 
                 case Packets.ShopOpcode.Remove:
-                    if (self.menu.shop.isShopOpen(info.id))
-                        self.menu.shop.moveBack(info.index);
+                    if (self.menu.shop.isShopOpen(info.id)) self.menu.shop.moveBack(info.index);
 
                     break;
 
                 case Packets.ShopOpcode.Refresh:
-                    if (self.menu.shop.isShopOpen(info.id))
-                        self.menu.shop.update(info);
+                    if (self.menu.shop.isShopOpen(info.id)) self.menu.shop.update(info);
 
                     break;
             }
@@ -1064,8 +968,7 @@ export default class Connection {
                 case Packets.OverlayOpcode.Set:
                     self.overlays.updateOverlay(info.image);
 
-                    if (!self.renderer.transitioning)
-                        self.renderer.updateDarkMask(info.colour);
+                    if (!self.renderer.transitioning) self.renderer.updateDarkMask(info.colour);
                     else self.queueColour = info.colour;
 
                     break;
@@ -1132,14 +1035,7 @@ export default class Connection {
                     var middle = self.renderer.getMiddle();
 
                     self.renderer.removeAllLights();
-                    self.renderer.addLight(
-                        middle.x,
-                        middle.y,
-                        160,
-                        0.8,
-                        'rgba(0,0,0,0.3)',
-                        false
-                    );
+                    self.renderer.addLight(middle.x, middle.y, 160, 0.8, 'rgba(0,0,0,0.3)', false);
 
                     break;
             }
@@ -1151,13 +1047,7 @@ export default class Connection {
                 return;
             }
 
-            self.bubble.create(
-                info.id,
-                info.text,
-                info.duration,
-                info.isObject,
-                info.info
-            );
+            self.bubble.create(info.id, info.text, info.duration, info.isObject, info.info);
             self.bubble.setTo(info.info);
         });
 

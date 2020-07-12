@@ -3,18 +3,16 @@
 config = { debugLevel: 'all', debug: true };
 
 let processMap = require('./processmap'),
-    fs = require("fs")
-    _ = require('underscore');
+    fs = require('fs');
+_ = require('underscore');
 
 class ExportMap {
-
     constructor() {
         let self = this;
 
         self.source = process.argv[2];
 
-        if (!self.source)
-            self.source = 'data/map-refactor.json';
+        if (!self.source) self.source = 'data/map-refactor.json';
 
         fs.exists(self.source, (exists) => {
             if (!exists) {
@@ -48,19 +46,15 @@ class ExportMap {
         let self = this,
             map = processMap(data, { mode: mode });
 
-        if (worldClient)
-            map.depth = worldClient.depth;
+        if (worldClient) map.depth = worldClient.depth;
 
         let mapString = JSON.stringify(map);
 
-        if (isJS)
-            mapString = 'let mapData = ' + mapString;
+        if (isJS) mapString = 'let mapData = ' + mapString;
 
         fs.writeFile(destination, mapString, (error, file) => {
-            if (error)
-                console.log(`An error has occurred while writing map files.`);
-            else
-                console.log(`[${mode.format()}] Map saved at: ${destination}`);
+            if (error) console.log(`An error has occurred while writing map files.`);
+            else console.log(`[${mode.format()}] Map saved at: ${destination}`);
         });
 
         return map;
@@ -69,7 +63,7 @@ class ExportMap {
     copyTilesets() {
         let self = this,
             source = './data',
-            destination = '../../packages/client/img/tilesets'
+            destination = '../../packages/client/img/tilesets';
 
         fs.readdir(source, (error, files) => {
             if (error) {
@@ -85,15 +79,14 @@ class ExportMap {
             console.log(`Finished copying tilesets to ${destination}/`);
         });
     }
-
 }
 
-String.prototype.format = function() {
+String.prototype.format = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
-}
+};
 
-String.prototype.startsWith = function(str) {
-    return str.length > 0 && this.substring( 0, str.length ) === str;
+String.prototype.startsWith = function (str) {
+    return str.length > 0 && this.substring(0, str.length) === str;
 };
 
 module.exports = ExportMap;

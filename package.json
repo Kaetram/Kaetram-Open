@@ -10,6 +10,8 @@
         "start": "",
         "dev": "lerna run --parallel dev",
         "build": "lerna run --parallel build",
+        "lint": "prettier --check ./**/*.{js,ts}",
+        "lint:fix": "prettier --write ./**/*.{js,ts}",
         "test": "",
         "helper": "cd tools/map && node helper",
         "map": "cd tools/map && node exportmap data/map-refactor.json"

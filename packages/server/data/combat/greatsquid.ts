@@ -2,7 +2,6 @@ import Combat from '../../ts/game/entity/character/combat/combat';
 import Modules from '../../ts/util/modules';
 
 class GreatSquid extends Combat {
-
     lastTerror: number;
 
     constructor(character) {
@@ -31,7 +30,6 @@ class GreatSquid extends Combat {
     canUseTerror() {
         return new Date().getTime() - this.lastTerror > 15000;
     }
-
 }
 
 export default GreatSquid;

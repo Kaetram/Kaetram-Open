@@ -57,12 +57,7 @@ class Region {
             if (!entity || !entity.username) return;
 
             if (config.debug)
-                log.info(
-                    'Entity - ' +
-                        entity.username +
-                        ' has entered region - ' +
-                        regionId
-                );
+                log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
 
             if (entity instanceof Player) {
                 if (!entity.questsLoaded) return;
@@ -74,25 +69,14 @@ class Region {
         });
 
         this.onRemove((entity: Entity, oldRegions: any) => {
-            if (
-                !oldRegions ||
-                oldRegions.length < 1 ||
-                !entity ||
-                !entity.username
-            )
-                return;
+            if (!oldRegions || oldRegions.length < 1 || !entity || !entity.username) return;
         });
 
         this.onIncoming((entity: Entity, regionId: string) => {
             if (!entity || !entity.username) return;
 
             if (config.debug)
-                log.info(
-                    'Entity - ' +
-                        entity.username +
-                        ' is incoming into region - ' +
-                        regionId
-                );
+                log.info('Entity - ' + entity.username + ' is incoming into region - ' + regionId);
         });
 
         fs.watchFile(map, () => {
@@ -125,7 +109,7 @@ class Region {
             this.regions[regionId] = {
                 entities: {},
                 players: [],
-                incoming: [],
+                incoming: []
             };
         });
 
@@ -154,7 +138,7 @@ class Region {
             this.regions[Region.regionIdToInstance(player, region)] = {
                 entities: {},
                 players: [],
-                incoming: [],
+                incoming: []
             };
         });
 
@@ -165,8 +149,8 @@ class Region {
             player: player,
             message: new Messages.Region(Packets.RegionOpcode.Update, {
                 id: player.instance,
-                type: 'remove',
-            }),
+                type: 'remove'
+            })
         });
     }
 
@@ -176,18 +160,11 @@ class Region {
         this.handle(player);
         this.push(player);
 
-        this.mapRegions.forEachSurroundingRegion(
-            player.region,
-            (regionId: string) => {
-                let instancedRegion = Region.regionIdToInstance(
-                    player,
-                    regionId
-                );
+        this.mapRegions.forEachSurroundingRegion(player.region, (regionId: string) => {
+            let instancedRegion = Region.regionIdToInstance(player, regionId);
 
-                if (instancedRegion in this.regions)
-                    delete this.regions[instancedRegion];
-            }
-        );
+            if (instancedRegion in this.regions) delete this.regions[instancedRegion];
+        });
     }
 
     parseRegions() {
@@ -252,20 +229,13 @@ class Region {
                 if (index in data) {
                     tileData[i].isObject = data[index].isObject;
 
-                    if (data[index].cursor)
-                        tileData[i].cursor = data[index].cursor;
+                    if (data[index].cursor) tileData[i].cursor = data[index].cursor;
                 }
             }
 
         //No need to send empty data...
         if (tileData.length > 0)
-            player.send(
-                new Messages.Region(
-                    Packets.RegionOpcode.Render,
-                    tileData,
-                    force
-                )
-            );
+            player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
     }
 
     // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
@@ -277,10 +247,7 @@ class Region {
 
         dynamicTiles.indexes.push.apply(dynamicTiles.indexes, trees.indexes);
         dynamicTiles.data.push.apply(dynamicTiles.data, trees.data);
-        dynamicTiles.collisions.push.apply(
-            dynamicTiles.collisions,
-            trees.collisions
-        );
+        dynamicTiles.collisions.push.apply(dynamicTiles.collisions, trees.collisions);
 
         if (trees.objectData) dynamicTiles.objectData = trees.objectData;
 
@@ -296,7 +263,7 @@ class Region {
             this.world.push(Packets.PushOpcode.Regions, {
                 regionId: regionId,
                 message: new Messages.Spawn(entity),
-                ignoreId: entity.isPlayer() ? entity.instance : null,
+                ignoreId: entity.isPlayer() ? entity.instance : null
             });
         });
     }
@@ -306,8 +273,7 @@ class Region {
 
         if (entity && regionId && regionId in this.regions) {
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
-                if (entity.instanced)
-                    id = Region.regionIdToInstance(entity, id);
+                if (entity.instanced) id = Region.regionIdToInstance(entity, id);
 
                 let region = this.regions[id];
 
@@ -319,8 +285,7 @@ class Region {
 
             entity.region = regionId;
 
-            if (entity instanceof Player)
-                this.regions[regionId].players.push(entity.instance);
+            if (entity instanceof Player) this.regions[regionId].players.push(entity.instance);
         }
 
         if (this.addCallback) this.addCallback(entity, regionId);
@@ -339,18 +304,12 @@ class Region {
                     return id === entity.instance;
                 });
 
-            this.mapRegions.forEachSurroundingRegion(
-                entity.region,
-                (id: string) => {
-                    if (
-                        this.regions[id] &&
-                        entity.instance in this.regions[id].entities
-                    ) {
-                        delete this.regions[id].entities[entity.instance];
-                        oldRegions.push(id);
-                    }
+            this.mapRegions.forEachSurroundingRegion(entity.region, (id: string) => {
+                if (this.regions[id] && entity.instance in this.regions[id].entities) {
+                    delete this.regions[id].entities[entity.instance];
+                    oldRegions.push(id);
                 }
-            );
+            });
 
             entity.region = null;
         }
@@ -365,8 +324,7 @@ class Region {
 
         let region = this.regions[regionId];
 
-        if (region && !_.include(region.entities, entity.instance))
-            region.incoming.push(entity);
+        if (region && !_.include(region.entities, entity.instance)) region.incoming.push(entity);
 
         if (this.incomingCallback) this.incomingCallback(entity, regionId);
     }
@@ -376,12 +334,9 @@ class Region {
 
         if (!entity) return regionsChanged;
 
-        let regionId = region
-            ? region
-            : this.mapRegions.regionIdFromPosition(entity.x, entity.y);
+        let regionId = region ? region : this.mapRegions.regionIdFromPosition(entity.x, entity.y);
 
-        if (entity.instanced)
-            regionId = Region.regionIdToInstance(entity, regionId);
+        if (entity.instanced) regionId = Region.regionIdToInstance(entity, regionId);
 
         if (!entity.region || (entity.region && entity.region !== regionId)) {
             regionsChanged = true;
@@ -391,8 +346,7 @@ class Region {
             let oldRegions = this.remove(entity),
                 newRegions = this.add(entity, regionId);
 
-            if (_.size(oldRegions) > 0)
-                entity.recentRegions = _.difference(oldRegions, newRegions);
+            if (_.size(oldRegions) > 0) entity.recentRegions = _.difference(oldRegions, newRegions);
         }
 
         return regionsChanged;
@@ -428,7 +382,7 @@ class Region {
         this.clientMap.data[index] = newTile;
 
         this.world.push(Packets.PushOpcode.Broadcast, {
-            message: Region.getModify(index, newTile),
+            message: Region.getModify(index, newTile)
         });
     }
 
@@ -454,8 +408,7 @@ class Region {
                         let index = this.gridPositionToIndex(x - 1, y),
                             tileData = this.clientMap.data[index],
                             isCollision =
-                                this.clientMap.collisions.indexOf(index) > -1 ||
-                                !tileData,
+                                this.clientMap.collisions.indexOf(index) > -1 || !tileData,
                             objectId: any;
 
                         if (tileData !== 0) {
@@ -466,12 +419,11 @@ class Region {
                                         break;
                                     }
                                 }
-                            } else if (this.map.isObject(tileData))
-                                objectId = tileData;
+                            } else if (this.map.isObject(tileData)) objectId = tileData;
                         }
 
                         let info: any = {
-                            index: index,
+                            index: index
                         };
 
                         if (tileData) info.data = tileData;
@@ -481,10 +433,7 @@ class Region {
                         if (objectId) {
                             info.isObject = !!objectId;
 
-                            let cursor = this.map.getCursor(
-                                info.index,
-                                objectId
-                            );
+                            let cursor = this.map.getCursor(info.index, objectId);
 
                             if (cursor) info.cursor = cursor;
                         }
@@ -505,14 +454,14 @@ class Region {
             startX: regionCoordinates.x,
             startY: regionCoordinates.y,
             endX: regionCoordinates.x + this.map.regionWidth,
-            endY: regionCoordinates.y + this.map.regionHeight,
+            endY: regionCoordinates.y + this.map.regionHeight
         };
     }
 
     static getModify(index: number, newTile: any) {
         return new Messages.Region(Packets.RegionOpcode.Modify, {
             index: index,
-            newTile: newTile,
+            newTile: newTile
         });
     }
 

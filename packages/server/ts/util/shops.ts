@@ -26,23 +26,19 @@ export default {
         let shop = this.Ids[npcId],
             index = shop.items.indexOf(itemId);
 
-        if (index < 0)
-            return;
+        if (index < 0) return;
 
         shop.count[index] += count;
-
     },
 
     decrement(npcId: number, buyId: number, count: number) {
         let shop = this.Ids[npcId];
 
-        if (!buyId || buyId < 0)
-            return;
+        if (!buyId || buyId < 0) return;
 
         shop.count[buyId] -= count;
 
-        if (shop.count[buyId] < 0)
-            shop.count[buyId] = 0;
+        if (shop.count[buyId] < 0) shop.count[buyId] = 0;
     },
 
     getCost(npcId: number, buyId: number, count: number) {
@@ -54,8 +50,7 @@ export default {
 
         let shop = this.Ids[npcId];
 
-        if (!shop || buyId < 0)
-            return 2;
+        if (!shop || buyId < 0) return 2;
 
         return shop.prices[buyId] * count;
     },
@@ -63,8 +58,7 @@ export default {
     getStock(npcId: number, buyId: number) {
         let shop = this.Ids[npcId];
 
-        if (!shop || !buyId || buyId < 0)
-            return null;
+        if (!shop || !buyId || buyId < 0) return null;
 
         return shop.count[buyId];
     },
@@ -72,8 +66,7 @@ export default {
     getOriginalStock(shopId: number, buyId: number) {
         let shop = this.Ids[shopId];
 
-        if (!buyId || buyId < 0)
-            return;
+        if (!buyId || buyId < 0) return;
 
         return shop.originalCount[buyId];
     },
@@ -82,20 +75,16 @@ export default {
         let count = this.Ids[npcId].count,
             counts = [];
 
-        if (_.isArray(count))
-            return count;
+        if (_.isArray(count)) return count;
 
-        for (let i = 0; i < this.getItemCount(npcId); i++)
-            counts.push(count);
+        for (let i = 0; i < this.getItemCount(npcId); i++) counts.push(count);
 
         return counts;
     },
 
     getItem(npcId: number, buyId: number) {
-        if (!buyId || buyId < 0)
-            return;
+        if (!buyId || buyId < 0) return;
 
         return this.Ids[npcId].items[buyId];
     }
-
-}
+};

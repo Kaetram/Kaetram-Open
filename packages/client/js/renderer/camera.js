@@ -45,10 +45,8 @@ export default class Camera {
         self.gridWidth = factorWidth;
         self.gridHeight = factorHeight;
 
-        self.borderX =
-            self.map.width * self.tileSize - self.gridWidth * self.tileSize;
-        self.borderY =
-            self.map.height * self.tileSize - self.gridHeight * self.tileSize;
+        self.borderX = self.map.width * self.tileSize - self.gridWidth * self.tileSize;
+        self.borderY = self.map.height * self.tileSize - self.gridHeight * self.tileSize;
     }
 
     setPosition(x, y) {
@@ -200,34 +198,22 @@ export default class Camera {
 
         switch (direction) {
             case Modules.Orientation.Up:
-                self.setGridPosition(
-                    self.gridX,
-                    self.gridY - self.gridHeight + 3
-                );
+                self.setGridPosition(self.gridX, self.gridY - self.gridHeight + 3);
 
                 break;
 
             case Modules.Orientation.Down:
-                self.setGridPosition(
-                    self.gridX,
-                    self.gridY + self.gridHeight - 3
-                );
+                self.setGridPosition(self.gridX, self.gridY + self.gridHeight - 3);
 
                 break;
 
             case Modules.Orientation.Right:
-                self.setGridPosition(
-                    self.gridX + self.gridWidth - 3,
-                    self.gridY
-                );
+                self.setGridPosition(self.gridX + self.gridWidth - 3, self.gridY);
 
                 break;
 
             case Modules.Orientation.Left:
-                self.setGridPosition(
-                    self.gridX - self.gridWidth + 3,
-                    self.gridY
-                );
+                self.setGridPosition(self.gridX - self.gridWidth + 3, self.gridY);
 
                 break;
         }
@@ -245,13 +231,11 @@ export default class Camera {
 
         if (self.gridX < 0) self.setGridPosition(0, self.gridY);
 
-        if (self.gridX > self.map.width)
-            self.setGridPosition(self.map.width, self.gridY);
+        if (self.gridX > self.map.width) self.setGridPosition(self.map.width, self.gridY);
 
         if (self.gridY < 0) self.setGridPosition(self.gridX, 0);
 
-        if (self.gridY > self.map.height)
-            self.setGridPosition(self.gridX, self.map.height);
+        if (self.gridY > self.map.height) self.setGridPosition(self.gridX, self.map.height);
     }
 
     forEachVisiblePosition(callback, offset) {
@@ -259,18 +243,8 @@ export default class Camera {
 
         if (!offset) offset = 1;
 
-        for (
-            var y = self.gridY - offset,
-                maxY = y + self.gridHeight + offset * 2;
-            y < maxY;
-            y++
-        )
-            for (
-                var x = self.gridX - offset,
-                    maxX = x + self.gridWidth + offset * 2;
-                x < maxX;
-                x++
-            )
+        for (var y = self.gridY - offset, maxY = y + self.gridHeight + offset * 2; y < maxY; y++)
+            for (var x = self.gridX - offset, maxX = x + self.gridWidth + offset * 2; x < maxX; x++)
                 callback(x, y);
     }
 

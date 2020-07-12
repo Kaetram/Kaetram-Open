@@ -37,7 +37,7 @@ class Shops {
             new Messages.Shop(Packets.ShopOpcode.Open, {
                 instance: player.instance,
                 npcId: npcId,
-                shopData: this.getShopData(npcId),
+                shopData: this.getShopData(npcId)
             })
         );
     }
@@ -76,7 +76,7 @@ class Shops {
             id: ShopData.getItem(npcId, buyId),
             count: count,
             ability: -1,
-            abilityLevel: -1,
+            abilityLevel: -1
         });
 
         ShopData.decrement(npcId, buyId, count);
@@ -106,7 +106,7 @@ class Shops {
         player.inventory.remove(item.id, item.count, item.index);
         player.inventory.add({
             id: currency,
-            count: price,
+            count: price
         });
 
         this.remove(player);
@@ -121,7 +121,7 @@ class Shops {
         player.send(
             new Messages.Shop(Packets.ShopOpcode.Remove, {
                 id: selectedItem.id,
-                index: selectedItem.index,
+                index: selectedItem.index
             })
         );
 
@@ -130,10 +130,7 @@ class Shops {
 
     refresh(shop: any) {
         this.world.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Shop(
-                Packets.ShopOpcode.Refresh,
-                this.getShopData(shop)
-            ),
+            message: new Messages.Shop(Packets.ShopOpcode.Refresh, this.getShopData(shop))
         });
     }
 
@@ -175,7 +172,7 @@ class Shops {
             strings: strings,
             names: names,
             counts: shop.count,
-            prices: shop.prices,
+            prices: shop.prices
         };
     }
 }

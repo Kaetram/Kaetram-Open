@@ -30,17 +30,12 @@ export default class OverlayController {
 
         self.hovering = entity;
 
-        self.name.html(
-            entity.type === 'player' ? entity.username : entity.name
-        );
+        self.name.html(entity.type === 'player' ? entity.username : entity.name);
 
         if (self.hasHealth()) {
             self.health.css({
                 display: 'block',
-                width:
-                    Math.ceil((entity.hitPoints / entity.maxHitPoints) * 100) -
-                    10 +
-                    '%',
+                width: Math.ceil((entity.hitPoints / entity.maxHitPoints) * 100) - 10 + '%'
             });
 
             self.details.html(entity.hitPoints + ' / ' + entity.maxHitPoints);
@@ -60,26 +55,16 @@ export default class OverlayController {
                 else {
                     self.health.css(
                         'width',
-                        Math.ceil(
-                            (hitPoints / self.hovering.maxHitPoints) * 100
-                        ) -
-                            10 +
-                            '%'
+                        Math.ceil((hitPoints / self.hovering.maxHitPoints) * 100) - 10 + '%'
                     );
-                    self.details.html(
-                        hitPoints + ' / ' + self.hovering.maxHitPoints
-                    );
+                    self.details.html(hitPoints + ' / ' + self.hovering.maxHitPoints);
                 }
             }
         });
     }
 
     validEntity(entity) {
-        return (
-            entity &&
-            entity.id !== this.input.getPlayer().id &&
-            entity.type !== 'projectile'
-        );
+        return entity && entity.id !== this.input.getPlayer().id && entity.type !== 'projectile';
     }
 
     clean() {

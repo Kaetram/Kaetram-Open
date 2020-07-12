@@ -52,32 +52,18 @@ export default class InfoController {
 
                 if (amount < 1 || !isInt(amount)) return;
 
-                if (
-                    type !== Modules.Hits.Experience &&
-                    type !== Modules.Hits.Profession
-                )
+                if (type !== Modules.Hits.Experience && type !== Modules.Hits.Profession)
                     prefix = '++';
                 else suffix = ' EXP';
 
                 if (type === Modules.Hits.Poison) prefix = '--';
 
-                var splat = new Splat(
-                    id,
-                    type,
-                    prefix + amount + suffix,
-                    x,
-                    y,
-                    false
-                );
+                var splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
 
-                if (type === Modules.Hits.Heal)
-                    colour = Modules.DamageColours.healed;
-                else if (type === Modules.Hits.Mana)
-                    colour = Modules.DamageColours.mana;
-                else if (type === Modules.Hits.Experience)
-                    colour = Modules.DamageColours.exp;
-                else if (type === Modules.Hits.Poison)
-                    colour = Modules.DamageColours.poison;
+                if (type === Modules.Hits.Heal) colour = Modules.DamageColours.healed;
+                else if (type === Modules.Hits.Mana) colour = Modules.DamageColours.mana;
+                else if (type === Modules.Hits.Experience) colour = Modules.DamageColours.exp;
+                else if (type === Modules.Hits.Poison) colour = Modules.DamageColours.poison;
                 else if (type === Modules.Hits.Profession)
                     colour = Modules.DamageColours.profession;
 

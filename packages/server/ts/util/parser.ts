@@ -21,7 +21,6 @@ import * as ShopsData from '../../data/shops.json';
 import * as ObjectData from '../../data/objects.json';
 
 class Parser {
-
     private readyCallback: Function;
 
     constructor() {
@@ -50,7 +49,6 @@ class Parser {
         let mobCounter = 0;
 
         _.each(MobData, (value: any, key) => {
-
             key = key.toLowerCase();
 
             Mobs.Properties[key] = {
@@ -138,8 +136,7 @@ class Parser {
 
             Items.Ids[value.id] = Items.Data[key];
 
-            if (value.plugin)
-                Items.Plugins[value.id] = itemPlugins[value.plugin];
+            if (value.plugin) Items.Plugins[value.id] = itemPlugins[value.plugin];
 
             itemCounter++;
         });
@@ -166,7 +163,7 @@ class Parser {
             skillCounter++;
         });
 
-        log.info('Finished loading ' + skillCounter + ' skills.')
+        log.info('Finished loading ' + skillCounter + ' skills.');
     }
 
     loadShops() {
@@ -226,14 +223,12 @@ class Parser {
             let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
-
     }
 
     loadObjects() {
         let objectCounter = 0;
 
         _.each(ObjectData, (value: any, key) => {
-
             Objects.Data[key] = {
                 x: value.x,
                 y: value.y,
@@ -247,8 +242,7 @@ class Parser {
 
         log.info('Finished loading ' + objectCounter + ' global objects.');
 
-        if (this.readyCallback)
-            this.readyCallback();
+        if (this.readyCallback) this.readyCallback();
     }
 
     onReady(callback: Function) {

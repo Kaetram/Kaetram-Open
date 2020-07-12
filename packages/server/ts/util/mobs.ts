@@ -6,24 +6,19 @@ export default {
     Plugins: {},
 
     idToString(id: number) {
-
-        if (id in this.Ids)
-            return this.Ids[id].key;
+        if (id in this.Ids) return this.Ids[id].key;
 
         return null;
     },
 
     idToName(id: number) {
-        if (id in this.Ids)
-            return this.Ids[id].name;
+        if (id in this.Ids) return this.Ids[id].name;
 
         return null;
     },
 
     getXp(id: number) {
-
-        if (id in this.Ids)
-            return this.Ids[id].xp;
+        if (id in this.Ids) return this.Ids[id].xp;
 
         return -1;
     },
@@ -33,11 +28,11 @@ export default {
     },
 
     hasCombatPlugin(id: number) {
-        return id in this.Ids && this.Ids[id].combatPlugin in this.Plugins
+        return id in this.Ids && this.Ids[id].combatPlugin in this.Plugins;
     },
 
     isNewCombatPlugin(id: number) {
         if (id in this.Ids && this.Ids[id].combatPlugin in this.Plugins)
             return this.Plugins[this.Ids[id].combatPlugin];
     }
-}
+};

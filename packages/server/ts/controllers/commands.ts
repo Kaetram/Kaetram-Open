@@ -25,8 +25,7 @@ class Commands {
 
         this.handlePlayerCommands(command, blocks);
 
-        if (this.player.rights > 0)
-            this.handleModeratorCommands(command, blocks);
+        if (this.player.rights > 0) this.handleModeratorCommands(command, blocks);
 
         if (this.player.rights > 1) this.handleAdminCommands(command, blocks);
     }
@@ -58,7 +57,7 @@ class Commands {
             case 'coords':
                 this.player.send(
                     new Messages.Notification(Packets.NotificationOpcode.Text, {
-                        message: 'x: ' + this.player.x + ' y: ' + this.player.y,
+                        message: 'x: ' + this.player.x + ' y: ' + this.player.y
                     })
                 );
 
@@ -70,7 +69,7 @@ class Commands {
                 this.player.send(
                     new Messages.Quest(Packets.QuestOpcode.Progress, {
                         id: tutorialQuest.id,
-                        stage: tutorialQuest.stage,
+                        stage: tutorialQuest.stage
                     })
                 );
 
@@ -119,9 +118,7 @@ class Commands {
 
             case 'ping':
                 this.player.pingTime = new Date().getTime();
-                this.player.send(
-                    new Messages.Network(Packets.NetworkOpcode.Ping)
-                );
+                this.player.send(new Messages.Network(Packets.NetworkOpcode.Ping));
 
                 break;
         }
@@ -184,15 +181,13 @@ class Commands {
                     id: spawnId,
                     count: count,
                     ability: ability ? ability : -1,
-                    abilityLevel: abilityLevel ? abilityLevel : -1,
+                    abilityLevel: abilityLevel ? abilityLevel : -1
                 });
 
                 return;
 
             case 'maxhealth':
-                this.player.notify(
-                    'Max health is ' + this.player.hitPoints.getMaxHitPoints()
-                );
+                this.player.notify('Max health is ' + this.player.hitPoints.getMaxHitPoints());
 
                 return;
 
@@ -271,7 +266,7 @@ class Commands {
                         new Messages.Pointer(Packets.PointerOpcode.Location, {
                             id: this.player.instance,
                             x: posX,
-                            y: posY,
+                            y: posY
                         })
                     );
                 } else {
@@ -281,7 +276,7 @@ class Commands {
 
                     this.player.send(
                         new Messages.Pointer(Packets.PointerOpcode.NPC, {
-                            id: instance,
+                            id: instance
                         })
                     );
                 }
@@ -320,10 +315,7 @@ class Commands {
 
                 if (!tileX || !tileY) return;
 
-                let tileIndex = this.world.region.gridPositionToIndex(
-                    tileX - 1,
-                    tileY
-                );
+                let tileIndex = this.world.region.gridPositionToIndex(tileX - 1, tileY);
 
                 log.info('Sending Tile: ' + tileIndex);
 
@@ -331,8 +323,8 @@ class Commands {
                     player: this.player,
                     message: new Messages.Region(Packets.RegionOpcode.Modify, {
                         index: tileIndex,
-                        data: tileInfo,
-                    }),
+                        data: tileInfo
+                    })
                 });
 
                 return;
@@ -343,28 +335,17 @@ class Commands {
 
                 if (!getTileX || !getTileY) return;
 
-                let getTileIndex = this.world.map.gridPositionToIndex(
-                    getTileX,
-                    getTileY
-                );
+                let getTileIndex = this.world.map.gridPositionToIndex(getTileX, getTileY);
 
                 log.info('Tile Index: ' + getTileIndex);
-                log.info(
-                    'Tile Info: ' + this.world.map.clientMap.data[getTileIndex]
-                );
-                log.info(
-                    'Actual Index: ' +
-                        this.world.map.getActualTileIndex(getTileIndex)
-                );
+                log.info('Tile Info: ' + this.world.map.clientMap.data[getTileIndex]);
+                log.info('Actual Index: ' + this.world.map.getActualTileIndex(getTileIndex));
                 log.info('Tree? ' + this.world.map.getTree(getTileX, getTileY));
 
                 return;
 
             case 'instance':
-                this.world.region.createInstance(
-                    this.player,
-                    this.player.region
-                );
+                this.world.region.createInstance(this.player, this.player.region);
                 return;
 
             case 'checkregion':
@@ -378,7 +359,7 @@ class Commands {
             case 'debug':
                 this.player.send(
                     new Messages.Command({
-                        command: 'debug',
+                        command: 'debug'
                     })
                 );
                 return;
@@ -420,9 +401,7 @@ class Commands {
                 let achievementId = parseInt(blocks.shift());
 
                 if (!achievementId) {
-                    this.player.notify(
-                        'Invalid command format. /resetAchievement <achievementId>'
-                    );
+                    this.player.notify('Invalid command format. /resetAchievement <achievementId>');
                     return;
                 }
 
@@ -478,21 +457,18 @@ class Commands {
             case 'toggleheal':
                 this.player.send(
                     new Messages.Command({
-                        command: 'toggleheal',
+                        command: 'toggleheal'
                     })
                 );
                 break;
 
             case 'popup':
                 this.player.send(
-                    new Messages.Notification(
-                        Packets.NotificationOpcode.Popup,
-                        {
-                            title: 'New Quest Found!',
-                            message: 'New quest has been discovered!',
-                            colour: '#00000',
-                        }
-                    )
+                    new Messages.Notification(Packets.NotificationOpcode.Popup, {
+                        title: 'New Quest Found!',
+                        message: 'New quest has been discovered!',
+                        colour: '#00000'
+                    })
                 );
 
                 break;

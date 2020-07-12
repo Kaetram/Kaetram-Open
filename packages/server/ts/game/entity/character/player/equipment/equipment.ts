@@ -3,7 +3,6 @@
 import Items from '../../../../../util/items';
 
 class Equipment {
-
     public name: string;
     public id: number;
     public count: number;
@@ -39,7 +38,7 @@ class Equipment {
     }
 
     getBaseAmplifier() {
-        return 1.00;
+        return 1.0;
     }
 
     getType() {
@@ -70,7 +69,7 @@ class Equipment {
             count: this.count,
             ability: this.ability,
             abilityLevel: this.abilityLevel
-        }
+        };
     }
 }
 

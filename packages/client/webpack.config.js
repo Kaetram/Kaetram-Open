@@ -15,16 +15,16 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'main.js',
         // publicPath: 'js',
-        libraryTarget: 'umd',
+        libraryTarget: 'umd'
     },
     devServer: {
         contentBase: __dirname,
         compress: true,
-        port: 9000,
+        port: 9000
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': JSON.stringify(config),
+            'process.env': JSON.stringify(config)
         }),
         new HtmlWebpackPlugin({ template: path.join(__dirname, 'index.html') }),
         new CopyPlugin({
@@ -37,8 +37,8 @@ module.exports = {
                 { from: 'favicon.ico', to: 'favicon.ico' },
                 { from: 'manifest.json', to: 'manifest.json' },
                 { from: 'js/map/mapworker.js', to: 'js/map/mapworker.js' },
-                { from: 'js/lib/underscore.min.js', to: 'js/lib/underscore.min.js' },
-            ],
-        }),
-    ],
+                { from: 'js/lib/underscore.min.js', to: 'js/lib/underscore.min.js' }
+            ]
+        })
+    ]
 };
