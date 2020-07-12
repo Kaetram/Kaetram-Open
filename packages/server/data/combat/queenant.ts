@@ -1,8 +1,10 @@
+import _ from 'underscore';
 import Combat from '../../ts/game/entity/character/combat/combat';
+import Character from '../../ts/game/entity/character/character';
+import Mob from '../../ts/game/entity/character/mob/mob';
 import Packets from '../../ts/network/packets';
 import Messages from '../../ts/network/messages';
 import Utils from '../../ts/util/utils';
-import _ from 'underscore';
 
 class QueenAnt extends Combat {
     /*
@@ -19,7 +21,7 @@ class QueenAnt extends Combat {
     minions: Array<any>;
     frozen: boolean;
 
-    constructor(character) {
+    constructor(character: Mob) {
         character.spawnDistance = 18;
         super(character);
 
@@ -65,7 +67,7 @@ class QueenAnt extends Combat {
         });
     }
 
-    begin(attacker) {
+    begin(attacker: Character) {
         var self = this;
 
         self.resetAoE();
@@ -73,7 +75,7 @@ class QueenAnt extends Combat {
         super.begin(attacker);
     }
 
-    hit(attacker, target, hitInfo) {
+    hit(attacker: Character, target: Character, hitInfo: any) {
         var self = this;
 
         if (self.frozen) return;
@@ -122,7 +124,7 @@ class QueenAnt extends Combat {
         for (var i = 0; i < self.minionCount; i++)
             self.minions.push(self.world.spawnMob(13, self.character.x, self.character.y));
 
-        _.each(self.minions, (minion) => {
+        _.each(self.minions, (minion: Mob) => {
             minion.aggressive = true;
             minion.spawnDistance = 12;
 
@@ -141,7 +143,7 @@ class QueenAnt extends Combat {
 
         if (!self.hasMinions()) return;
 
-        _.each(self.minions, (minion) => {
+        _.each(self.minions, (minion: Mob) => {
             var randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
@@ -167,14 +169,14 @@ class QueenAnt extends Combat {
         return null;
     }
 
-    pushFreeze(state) {
+    pushFreeze(state: boolean) {
         var self = this;
 
         self.character.frozen = state;
         self.character.stunned = state;
     }
 
-    pushCountdown(count) {
+    pushCountdown(count: number) {
         var self = this;
 
         self.world.push(Packets.PushOpcode.Regions, {
@@ -186,9 +188,10 @@ class QueenAnt extends Combat {
         });
     }
 
+    // TODO
     getMinions() {
-        var self = this,
-            grids = self.world.getGrids();
+        // var self = this,
+        //     grids = self.world.getGrids();
     }
 
     isLast() {

@@ -217,10 +217,6 @@ class Mob extends Character {
     onRefresh(callback: Function) {
         this.refreshCallback = callback;
     }
-
-    onDeath = (callback: Function) => {
-        this.deathCallback = callback;
-    };
 }
 
 export default Mob;

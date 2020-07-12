@@ -717,7 +717,7 @@ class Player extends Character {
      * in order to organize data more neatly.
      */
 
-    handleObject(id: number) {
+    handleObject(id: string) {
         let info = this.globalObjects.getInfo(id);
 
         if (!info) return;

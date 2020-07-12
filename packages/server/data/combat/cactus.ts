@@ -1,39 +1,37 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
+import Character from '../../ts/game/entity/character/character';
+import Player from '../../ts/game/entity/character/player/player';
 import Hit from '../../ts/game/entity/character/combat/hit';
 import Modules from '../../ts/util/modules';
 import log from '../../ts/util/log';
 
 class Cactus extends Combat {
-    constructor(character) {
+    constructor(character: Character) {
         character.spawnDistance = 10;
         character.alwaysAggressive = true;
 
         super(character);
 
-        let self = this;
+        this.character = character;
 
-        self.character = character;
-
-        self.character.onDamaged((damage, attacker) => {
+        this.character.onDamaged((damage: any, attacker: Player) => {
             if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
-            self.damageAttacker(damage, attacker);
+            this.damageAttacker(damage, attacker);
 
-            log.debug(`Entity ${self.character.id} damaged ${damage} by ${attacker.instance}.`);
+            log.debug(`Entity ${this.character.id} damaged ${damage} by ${attacker.instance}.`);
         });
 
-        self.character.onDeath(() => {
-            self.forEachAttacker((attacker) => {
-                self.damageAttacker(self.character.maxHitPoints, attacker);
+        this.character.onDeath(() => {
+            this.forEachAttacker((attacker: Player) => {
+                this.damageAttacker(this.character.maxHitPoints, attacker);
             });
 
             log.debug('Oh noes, le cactus did a die. :(');
         });
     }
 
-    damageAttacker(damage, attacker) {
-        let self = this;
-
+    damageAttacker(damage: number, attacker: Player) {
         if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
         /**
@@ -49,7 +47,7 @@ class Cactus extends Combat {
 
         let hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 
-        self.hit(self.character, attacker, hitInfo);
+        this.hit(this.character, attacker, hitInfo, true);
     }
 }
 

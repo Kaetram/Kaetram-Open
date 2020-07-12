@@ -2,17 +2,18 @@ import Objects from '../util/objects';
 import Utils from '../util/utils';
 import Map from '../map/map';
 import World from '../game/world';
+import Player from '../game/entity/character/player/player';
 
 class GlobalObjects {
     world: World;
     map: Map;
 
-    constructor(world) {
+    constructor(world: World) {
         this.world = world;
         this.map = world.map;
     }
 
-    getInfo(id) {
+    getInfo(id: string) {
         let position = Objects.getPosition(id),
             objectId = this.map.getPositionObject(position.x, position.y);
 
@@ -36,7 +37,7 @@ class GlobalObjects {
      * position data for the client to display the bubble.
      */
 
-    getSignData(id) {
+    getSignData(id: string) {
         let object = Objects.getObject(id);
 
         if (!object) return null;
@@ -59,7 +60,7 @@ class GlobalObjects {
      * Ripped from `npc.js` but with some minor adjustments.
      */
 
-    talk(object, player) {
+    talk(object: any, player: Player) {
         if (player.npcTalk !== object.id) {
             player.npcTalk = object.id;
             player.talkIndex = 0;

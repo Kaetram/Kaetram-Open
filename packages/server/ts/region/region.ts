@@ -226,7 +226,7 @@ class Region {
                 let data = dynamicTiles.objectData,
                     index = tileData[i].index;
 
-                if (index in data) {
+                if (data && index in data) {
                     tileData[i].isObject = data[index].isObject;
 
                     if (data[index].cursor) tileData[i].cursor = data[index].cursor;

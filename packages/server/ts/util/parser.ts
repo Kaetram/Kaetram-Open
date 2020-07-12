@@ -9,8 +9,7 @@ import Formulas from './formulas';
 import Constants from './constants';
 import log from '../util/log';
 
-// combat plugins are not loaded currently
-//import combatPlugins from '../../data/combat';
+import combatPlugins from '../../data/combat/index';
 import itemPlugins from '../../data/items/index';
 
 import * as NPCData from '../../data/npcs.json';
@@ -37,8 +36,7 @@ class Parser {
 
     load() {
         this.onReady(() => {
-            //Mobs.Plugins = (await import('../util/plugins')).default(__dirname + '/../../data/combat/');
-            Mobs.Plugins = [];
+            Mobs.Plugins = combatPlugins;
 
             log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
             log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
