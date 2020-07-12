@@ -65,24 +65,16 @@ export default class Enchant {
 
         switch (type) {
             case 'item':
-                self.selectedItem.css(
-                    'background-image',
-                    image.css('background-image')
-                );
+                self.selectedItem.css('background-image', image.css('background-image'));
 
-                if (Detect.isMobile())
-                    self.selectedItem.css('background-size', '600%');
+                if (Detect.isMobile()) self.selectedItem.css('background-size', '600%');
 
                 break;
 
             case 'shards':
-                self.selectedShards.css(
-                    'background-image',
-                    image.css('background-image')
-                );
+                self.selectedShards.css('background-image', image.css('background-image'));
 
-                if (Detect.isMobile())
-                    self.selectedShards.css('background-size', '600%');
+                if (Detect.isMobile()) self.selectedShards.css('background-size', '600%');
 
                 var count = self.getItemSlot(index).count;
 
@@ -107,10 +99,7 @@ export default class Enchant {
         switch (type) {
             case 'item':
                 if (count > 0)
-                    image.css(
-                        'background-image',
-                        self.selectedItem.css('background-image')
-                    );
+                    image.css('background-image', self.selectedItem.css('background-image'));
 
                 if (count > 1) itemCount.text(count);
 
@@ -120,10 +109,7 @@ export default class Enchant {
 
             case 'shards':
                 if (count > 0)
-                    image.css(
-                        'background-image',
-                        self.selectedShards.css('background-image')
-                    );
+                    image.css('background-image', self.selectedShards.css('background-image'));
 
                 if (count > 1) itemCount.text(count);
 
@@ -142,15 +128,12 @@ export default class Enchant {
     select(event) {
         this.game.socket.send(Packets.Enchant, [
             Packets.EnchantOpcode.Select,
-            event.currentTarget.id.substring(17),
+            event.currentTarget.id.substring(17)
         ]);
     }
 
     remove(type) {
-        this.game.socket.send(Packets.Enchant, [
-            Packets.EnchantOpcode.Remove,
-            type,
-        ]);
+        this.game.socket.send(Packets.Enchant, [Packets.EnchantOpcode.Remove, type]);
     }
 
     getInventorySize() {

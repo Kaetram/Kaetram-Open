@@ -12,7 +12,6 @@ import Player from '../player/player';
 import Area from '../../../../map/area';
 
 class Mob extends Character {
-
     world: World;
 
     data: any;
@@ -49,8 +48,7 @@ class Mob extends Character {
     constructor(id: number, instance: string, x: number, y: number, world?: World) {
         super(id, 'mob', instance, x, y);
 
-        if (!Mobs.exists(id))
-            return;
+        if (!Mobs.exists(id)) return;
 
         this.world = world;
 
@@ -85,41 +83,33 @@ class Mob extends Character {
     }
 
     load() {
-
         this.handler = new MobHandler(this, this.world);
 
-        if (this.loadCallback)
-            this.loadCallback();
+        if (this.loadCallback) this.loadCallback();
     }
 
     refresh() {
-
         this.hitPoints = this.data.hitPoints;
         this.maxHitPoints = this.data.hitPoints;
 
-        if (this.refreshCallback)
-            this.refreshCallback();
-
+        if (this.refreshCallback) this.refreshCallback();
     }
 
     getDrop() {
-
-        if (!this.drops)
-            return null;
+        if (!this.drops) return null;
 
         let random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
             dropObjects = Object.keys(this.drops),
             item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
 
-        if (random > this.drops[item])
-            return null;
+        if (random > this.drops[item]) return null;
 
         let count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
 
         return {
             id: Items.stringToId(item),
             count: count
-        }
+        };
     }
 
     getProjectileName() {
@@ -127,35 +117,27 @@ class Mob extends Character {
     }
 
     canAggro(player: Player) {
+        if (this.hasTarget()) return false;
 
-        if (this.hasTarget())
-          return false;
+        if (!this.aggressive) return false;
 
-        if (!this.aggressive)
-          return false;
+        if (Math.floor(this.level * 1.5) < player.level && !this.alwaysAggressive) return false;
 
-        if ((Math.floor(this.level * 1.5) < player.level) && !this.alwaysAggressive)
-          return false;
-
-        if (!player.hasAggressionTimer())
-          return false;
+        if (!player.hasAggressionTimer()) return false;
 
         return this.isNear(player, this.aggroRange);
     }
 
     destroy() {
-
         this.dead = true;
         this.clearTarget();
         this.resetPosition();
         this.respawn();
 
-        if (this.area)
-            this.area.removeEntity(this);
+        if (this.area) this.area.removeEntity(this);
     }
 
     return() {
-
         this.clearTarget();
         this.resetPosition();
         this.setPosition(this.x, this.y);
@@ -178,27 +160,24 @@ class Mob extends Character {
     }
 
     addToChestArea(chestAreas: any) {
-        let area = _.find(chestAreas, (area: Area) => { return area.contains(this.x, this.y); });
+        let area = _.find(chestAreas, (area: Area) => {
+            return area.contains(this.x, this.y);
+        });
 
-        if (area)
-            area.addEntity(this);
+        if (area) area.addEntity(this);
     }
 
     respawn() {
-
         /**
          * Some entities are static (only spawned once during an event)
          * Meanwhile, other entities act as an illusion to another entity,
          * so the resawning script is handled elsewhere.
          */
 
-        if (!this.static || this.respawnDelay === -1)
-            return;
+        if (!this.static || this.respawnDelay === -1) return;
 
         setTimeout(() => {
-            if (this.respawnCallback)
-                this.respawnCallback();
-
+            if (this.respawnCallback) this.respawnCallback();
         }, this.respawnDelay);
     }
 
@@ -220,7 +199,6 @@ class Mob extends Character {
     }
 
     resetPosition() {
-
         this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
@@ -234,7 +212,7 @@ class Mob extends Character {
 
     onReturn = (callback: Function) => {
         this.returnCallback = callback;
-    }
+    };
 
     onRefresh(callback: Function) {
         this.refreshCallback = callback;
@@ -242,8 +220,7 @@ class Mob extends Character {
 
     onDeath = (callback: Function) => {
         this.deathCallback = callback;
-    }
-
+    };
 }
 
 export default Mob;

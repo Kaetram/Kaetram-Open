@@ -116,11 +116,7 @@ export default class EntitiesController {
 
                 attacker.lookAt(target);
 
-                var projectile = new Projectile(
-                    info.id,
-                    info.projectileType,
-                    attacker
-                );
+                var projectile = new Projectile(info.id, info.projectileType, attacker);
 
                 projectile.name = info.name;
 
@@ -143,18 +139,14 @@ export default class EntitiesController {
                      * there is nothing you can change for the actual damage output here.
                      */
 
-                    if (
-                        self.isPlayer(projectile.owner.id) ||
-                        self.isPlayer(target.id)
-                    )
+                    if (self.isPlayer(projectile.owner.id) || self.isPlayer(target.id))
                         self.game.socket.send(Packets.Projectile, [
                             Packets.ProjectileOpcode.Impact,
                             info.id,
-                            target.id,
+                            target.id
                         ]);
 
-                    if (info.hitType === Modules.Hits.Explosive)
-                        target.explosion = true;
+                    if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 
                     self.game.info.create(
                         Modules.Hits.Damage,
@@ -171,10 +163,7 @@ export default class EntitiesController {
 
                 self.addEntity(projectile);
 
-                attacker.performAction(
-                    attacker.orientation,
-                    Modules.Actions.Attack
-                );
+                attacker.performAction(attacker.orientation, Modules.Actions.Attack);
                 attacker.triggerHealthBar();
 
                 return;
@@ -198,13 +187,7 @@ export default class EntitiesController {
 
                 var hitPointsData = info.hitPoints,
                     manaData = info.mana,
-                    equipments = [
-                        info.armour,
-                        info.weapon,
-                        info.pendant,
-                        info.ring,
-                        info.boots,
-                    ];
+                    equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
 
                 player.setHitPoints(hitPointsData[0]);
                 player.setMaxHitPoints(hitPointsData[1]);
@@ -235,9 +218,7 @@ export default class EntitiesController {
 
         if (!entity) return;
 
-        var sprite = self.getSprite(
-            info.type === 'item' ? 'item-' + info.string : info.string
-        );
+        var sprite = self.getSprite(info.type === 'item' ? 'item-' + info.string : info.string);
 
         entity.setGridPosition(info.x, info.y);
         entity.setName(info.name);
@@ -297,10 +278,7 @@ export default class EntitiesController {
 
         _.each(self.entities, function (entity) {
             if (ids) {
-                if (
-                    ids.indexOf(parseInt(entity.id)) < 0 &&
-                    entity.id !== self.game.player.id
-                )
+                if (ids.indexOf(parseInt(entity.id)) < 0 && entity.id !== self.game.player.id)
                     self.removeEntity(entity);
             } else if (entity.id !== self.game.player.id) self.removeEntity(entity);
         });
@@ -312,8 +290,7 @@ export default class EntitiesController {
         var self = this;
 
         _.each(self.entities, function (entity) {
-            if (entity.id !== exception.id && entity.type === 'player')
-                self.removeEntity(entity);
+            if (entity.id !== exception.id && entity.type === 'player') self.removeEntity(entity);
         });
 
         self.grids.resetPathingGrid();
@@ -327,10 +304,7 @@ export default class EntitiesController {
         self.entities[entity.id] = entity;
         self.registerPosition(entity);
 
-        if (
-            !(entity instanceof Item && entity.dropped) &&
-            !self.renderer.isPortableDevice()
-        )
+        if (!(entity instanceof Item && entity.dropped) && !self.renderer.isPortableDevice())
             entity.fadeIn(self.game.time);
     }
 
@@ -356,8 +330,7 @@ export default class EntitiesController {
                           self.grids.addToPathingGrid(entity.gridX, entity.gridY);
                 }*/
 
-        if (entity.type === 'item')
-            self.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
+        if (entity.type === 'item') self.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
 
         self.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
     }

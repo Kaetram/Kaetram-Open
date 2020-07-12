@@ -5,12 +5,10 @@ import Packets from '../../ts/network/packets';
 import Utils from '../../ts/util/utils';
 
 class Tenebris extends Combat {
-
     illusions: Array<any>;
     firstIllusionKilled: boolean;
     lastIllusion: number;
     respawnDelay: number;
-
 
     constructor(character) {
         character.spawnDistance = 24;
@@ -25,21 +23,16 @@ class Tenebris extends Combat {
         self.respawnDelay = 95000;
 
         character.onDeath(() => {
-
             if (self.isIllusion())
-                if (!self.firstIllusionKilled)
-                    self.spawnTenbris();
-            else {
+                if (!self.firstIllusionKilled) self.spawnTenbris();
+                else {
+                    self.removeIllusions();
 
-                self.removeIllusions();
-
-                self.reset();
-
-            }
+                    self.reset();
+                }
         });
 
-        if (!self.isIllusion())
-            self.forceTalk(null, 'Who dares summon Tenebris!');
+        if (!self.isIllusion()) self.forceTalk(null, 'Who dares summon Tenebris!');
     }
 
     reset() {
@@ -49,23 +42,18 @@ class Tenebris extends Combat {
         self.firstIllusionKilled = false;
 
         setTimeout(() => {
-
             var offset = Utils.positionOffset(4);
 
             self.world.spawnMob(105, 48 + offset.x, 338 + offset.y);
-
         }, self.respawnDelay);
-
     }
 
     hit(attacker, target, hitInfo) {
         var self = this;
 
-        if (self.isAttacked())
-            self.beginIllusionAttack();
+        if (self.isAttacked()) self.beginIllusionAttack();
 
-        if (self.canSpawn())
-            self.spawnIllusions();
+        if (self.canSpawn()) self.spawnIllusions();
 
         super.hit(attacker, target, hitInfo);
     }
@@ -84,14 +72,12 @@ class Tenebris extends Combat {
 
         _.each(self.illusions, (illusion) => {
             illusion.onDeath(() => {
-                if (self.isLast())
-                    self.lastIllusion = new Date().getTime();
+                if (self.isLast()) self.lastIllusion = new Date().getTime();
 
                 self.illusions.splice(self.illusions.indexOf(illusion), 1);
             });
 
-            if (self.isAttacked())
-                self.beginIllusionAttack();
+            if (self.isAttacked()) self.beginIllusionAttack();
         });
 
         self.character.setPosition(62, 343);
@@ -105,7 +91,6 @@ class Tenebris extends Combat {
                 withAnimation: true
             })
         });
-
     }
 
     removeIllusions() {
@@ -115,22 +100,18 @@ class Tenebris extends Combat {
 
         var listCopy = self.illusions.slice();
 
-        for (var i = 0; i < listCopy.length; i++)
-            self.world.kill(listCopy[i]);
+        for (var i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
     }
 
     beginIllusionAttack() {
         var self = this;
 
-        if (!self.hasIllusions())
-            return;
+        if (!self.hasIllusions()) return;
 
         _.each(self.illusions, (illusion) => {
             var target = self.getRandomTarget();
 
-            if (!illusion.hasTarget && target)
-                illusion.combat.begin(target);
-
+            if (!illusion.hasTarget && target) illusion.combat.begin(target);
         });
     }
 
@@ -141,12 +122,10 @@ class Tenebris extends Combat {
             var keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
-            if (randomAttacker)
-                return randomAttacker;
+            if (randomAttacker) return randomAttacker;
         }
 
-        if (self.character.hasTarget())
-            return self.character.target;
+        if (self.character.hasTarget()) return self.character.target;
 
         return null;
     }
@@ -154,8 +133,7 @@ class Tenebris extends Combat {
     forceTalk(instance, message) {
         var self = this;
 
-        if (!self.world)
-            return;
+        if (!self.world) return;
 
         self.world.push(Packets.PushOpcode.Regions, {
             regionId: self.character.region,
@@ -165,7 +143,6 @@ class Tenebris extends Combat {
                 nonNPC: true
             })
         });
-
     }
 
     isLast() {
@@ -173,7 +150,12 @@ class Tenebris extends Combat {
     }
 
     canSpawn() {
-        return !this.isIllusion() && !this.hasIllusions && new Date().getTime() - this.lastIllusion === 45000 && Utils.randomInt(0, 4) === 2;
+        return (
+            !this.isIllusion() &&
+            !this.hasIllusions &&
+            new Date().getTime() - this.lastIllusion === 45000 &&
+            Utils.randomInt(0, 4) === 2
+        );
     }
 
     isIllusion() {
@@ -183,7 +165,6 @@ class Tenebris extends Combat {
     hasIllusions() {
         return this.illusions.length > 0;
     }
-
 }
 
 export default Tenebris;

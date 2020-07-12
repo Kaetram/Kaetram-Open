@@ -84,17 +84,14 @@ class Handler {
              * instance is hit by 'damage' amount
              */
 
-            if (this.player.combat.isRetaliating())
-                this.player.combat.begin(attacker);
+            if (this.player.combat.isRetaliating()) this.player.combat.begin(attacker);
 
             log.debug(`Player has been hit - damage: ${damage}`);
         });
 
         this.player.onKill((character: any) => {
             if (this.player.quests.isAchievementMob(character)) {
-                let achievement = this.player.quests.getAchievementByMob(
-                    character
-                );
+                let achievement = this.player.quests.getAchievementByMob(character);
 
                 if (achievement && achievement.isStarted())
                     this.player.quests.getAchievementByMob(character).step();
@@ -117,10 +114,7 @@ class Handler {
 
             if (this.player.ready) {
                 if (config.discordEnabled)
-                    this.world.discord.sendWebhook(
-                        this.player.username,
-                        'has logged out!'
-                    );
+                    this.world.discord.sendWebhook(this.player.username, 'has logged out!');
 
                 if (config.hubEnabled)
                     this.world.api.sendChat(
@@ -152,15 +146,11 @@ class Handler {
 
             switch (Npcs.getType(npc.id)) {
                 case 'banker':
-                    this.player.send(
-                        new Messages.NPC(Packets.NPCOpcode.Bank, {})
-                    );
+                    this.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
                     return;
 
                 case 'enchanter':
-                    this.player.send(
-                        new Messages.NPC(Packets.NPCOpcode.Enchant, {})
-                    );
+                    this.player.send(new Messages.NPC(Packets.NPCOpcode.Enchant, {}));
                     break;
             }
 
@@ -171,17 +161,13 @@ class Handler {
             this.player.send(
                 new Messages.NPC(Packets.NPCOpcode.Talk, {
                     id: npc.instance,
-                    text: npc.talk(text, this.player),
+                    text: npc.talk(text, this.player)
                 })
             );
         });
 
         this.player.onTeleport((x: number, y: number, isDoor: boolean) => {
-            if (
-                !this.player.finishedTutorial() &&
-                isDoor &&
-                this.player.doorCallback
-            ) {
+            if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
                 this.player.doorCallback(x, y);
                 return;
             }
@@ -214,11 +200,7 @@ class Handler {
         if (!region) return;
 
         _.each(region.entities, (character: Character) => {
-            if (
-                character &&
-                character.type === 'mob' &&
-                this.canEntitySee(character)
-            ) {
+            if (character && character.type === 'mob' && this.canEntitySee(character)) {
                 let aggro = character.canAggro(this.player);
 
                 if (aggro) character.combat.begin(this.player);
@@ -261,16 +243,11 @@ class Handler {
 
     detectLights(x: number, y: number) {
         _.each(this.map.lights, (light) => {
-            if (
-                this.map.nearLight(light, x, y) &&
-                !this.player.hasLoadedLight(light)
-            ) {
+            if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(light)) {
                 // Add a half a tile offset so the light is centered on the tile.
 
                 this.player.lightsLoaded.push(light);
-                this.player.send(
-                    new Messages.Overlay(Packets.OverlayOpcode.Lamp, light)
-                );
+                this.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
             }
         });
     }
@@ -302,10 +279,7 @@ class Handler {
     }
 
     canEntitySee(entity: Entity) {
-        return (
-            !this.player.hasInvisible(entity) &&
-            !this.player.hasInvisibleId(entity.id)
-        );
+        return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
     }
 }
 

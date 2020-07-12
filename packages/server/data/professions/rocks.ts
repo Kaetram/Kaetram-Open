@@ -1,5 +1,4 @@
 let Rocks = {
-
     // The rock ids of the rock we're mining
     Rocks: {
         BlueSteel: 264 // TODO - Make the item
@@ -16,7 +15,7 @@ let Rocks = {
 
     // Chance of the rock being depleted
     Chances: {
-        BlueSteel: 3, // 1 in 3
+        BlueSteel: 3 // 1 in 3
     },
 
     // Time (in milliseconds) for the rock to be mineable again.
@@ -24,10 +23,7 @@ let Rocks = {
         BlueSteel: 15000
     },
 
-    EmptyRock: {
-
-    }
-
+    EmptyRock: {}
 };
 
 export default Rocks;

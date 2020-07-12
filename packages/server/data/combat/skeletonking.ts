@@ -3,7 +3,6 @@ import Utils from '../../ts/util/utils';
 import _ from 'underscore';
 
 class SkeletonKing extends Combat {
-
     /**
      * First of its kind, the Skeleton King will spawn 4 minions.
      * Two sorcerers on (x + 1, y + 1) & (x - 1, y + 1)
@@ -36,18 +35,15 @@ class SkeletonKing extends Combat {
 
         var listCopy = self.minions.slice();
 
-        for (var i = 0; i < listCopy.length; i++)
-            self.world.kill(listCopy[i]);
+        for (var i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
     }
 
     hit(character, target, hitInfo) {
         var self = this;
 
-        if (self.isAttacked())
-            self.beginMinionAttack();
+        if (self.isAttacked()) self.beginMinionAttack();
 
-        if (self.canSpawn())
-            self.spawnMinions();
+        if (self.canSpawn()) self.spawnMinions();
 
         super.hit(character, target, hitInfo);
     }
@@ -59,43 +55,34 @@ class SkeletonKing extends Combat {
 
         self.lastSpawn = new Date().getTime();
 
-        if (!self.colliding(x + 2, y - 2))
-            self.minions.push(self.world.spawnMob(17, x + 2, y + 2));
+        if (!self.colliding(x + 2, y - 2)) self.minions.push(self.world.spawnMob(17, x + 2, y + 2));
 
-        if (!self.colliding(x - 2, y - 2))
-            self.minions.push(self.world.spawnMob(17, x - 2, y + 2));
+        if (!self.colliding(x - 2, y - 2)) self.minions.push(self.world.spawnMob(17, x - 2, y + 2));
 
-        if (!self.colliding(x + 1, y + 1))
-            self.minions.push(self.world.spawnMob(11, x + 1, y - 1));
+        if (!self.colliding(x + 1, y + 1)) self.minions.push(self.world.spawnMob(11, x + 1, y - 1));
 
-        if (!self.colliding(x - 1, y + 1))
-            self.minions.push(self.world.spawnMob(11, x - 1, y - 1));
+        if (!self.colliding(x - 1, y + 1)) self.minions.push(self.world.spawnMob(11, x - 1, y - 1));
 
         _.each(self.minions, (minion) => {
             minion.onDeath(() => {
-                if (self.isLast())
-                    self.lastSpawn = new Date().getTime();
+                if (self.isLast()) self.lastSpawn = new Date().getTime();
 
                 self.minions.splice(self.minions.indexOf(minion), 1);
             });
 
-            if (self.isAttacked())
-                self.beginMinionAttack();
+            if (self.isAttacked()) self.beginMinionAttack();
         });
     }
 
     beginMinionAttack() {
         var self = this;
 
-        if (!self.hasMinions())
-            return;
+        if (!self.hasMinions()) return;
 
         _.each(self.minions, (minion) => {
             var randomTarget = self.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget)
-                minion.combat.begin(randomTarget);
-
+            if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
         });
     }
 
@@ -106,12 +93,10 @@ class SkeletonKing extends Combat {
             var keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
-            if (randomAttacker)
-                return randomAttacker;
+            if (randomAttacker) return randomAttacker;
         }
 
-        if (self.character.hasTarget())
-            return self.character.target;
+        if (self.character.hasTarget()) return self.character.target;
 
         return null;
     }
@@ -125,9 +110,10 @@ class SkeletonKing extends Combat {
     }
 
     canSpawn() {
-        return (new Date().getTime() - this.lastSpawn > 25000) && !this.hasMinions() && this.isAttacked();
+        return (
+            new Date().getTime() - this.lastSpawn > 25000 && !this.hasMinions() && this.isAttacked()
+        );
     }
-
 }
 
 export default SkeletonKing;

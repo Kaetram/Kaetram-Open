@@ -5,7 +5,6 @@ import Items from '../../../../../util/items';
 import Modules from '../../../../../util/modules';
 
 class Weapon extends Equipment {
-
     public level: number;
     public ranged: boolean;
     public lumberjacking: number;
@@ -27,7 +26,7 @@ class Weapon extends Equipment {
     getBaseAmplifier() {
         let base = super.getBaseAmplifier();
 
-        return base + (0.05 * this.abilityLevel);
+        return base + 0.05 * this.abilityLevel;
     }
 
     hasCritical() {
@@ -43,7 +42,7 @@ class Weapon extends Equipment {
     }
 
     isRanged() {
-        return this.ranged
+        return this.ranged;
     }
 
     setLevel(level: number) {
@@ -57,7 +56,6 @@ class Weapon extends Equipment {
     getType() {
         return Modules.Equipment.Weapon;
     }
-
 }
 
 export default Weapon;

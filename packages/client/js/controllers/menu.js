@@ -188,10 +188,7 @@ export default class MenuController {
 
         if (self.actions && self.actions.isVisible()) self.actions.hide();
 
-        if (
-            self.profile &&
-            (self.profile.isVisible() || self.profile.settings.isVisible())
-        )
+        if (self.profile && (self.profile.isVisible() || self.profile.settings.isVisible()))
             self.profile.hide();
 
         if (
@@ -226,10 +223,7 @@ export default class MenuController {
         var self = this;
 
         if (self.isNotificationVisible())
-            self.notification.css(
-                'top',
-                window.innerHeight - self.notification.height() + 'px'
-            );
+            self.notification.css('top', window.innerHeight - self.notification.height() + 'px');
     }
 
     showNotification(title, message, colour) {

@@ -19,7 +19,6 @@ import * as Spawns from '../../data/spawns.json';
 import * as ClientMap from '../../data/map/world_client.json';
 
 class Map {
-
     world: World;
     ready: boolean;
 
@@ -119,13 +118,11 @@ class Map {
 
         this.readyInterval = setInterval(() => {
             if (!this.world.ready)
-                if (this.readyCallback)
-                    this.readyCallback();
-            else {
-                clearInterval(this.readyInterval);
-                this.readyInterval = null;
-            }
-
+                if (this.readyCallback) this.readyCallback();
+                else {
+                    clearInterval(this.readyInterval);
+                    this.readyInterval = null;
+                }
         }, 50);
     }
 
@@ -187,11 +184,8 @@ class Map {
                 level: door.l,
                 achievement: door.a,
                 rank: door.r
-            }
-
+            };
         });
-
-
     }
 
     loadStaticEntities() {
@@ -204,7 +198,6 @@ class Map {
                 string: entity.type,
                 roaming: entity.roaming
             });
-
         });
 
         _.each(Spawns, (data) => {
@@ -218,7 +211,6 @@ class Map {
                 achievementId: data.achievementId,
                 boss: data.boss
             });
-
         });
     }
 
@@ -231,18 +223,17 @@ class Map {
         return {
             x: x,
             y: y
-        }
+        };
     }
 
     gridPositionToIndex(x: number, y: number) {
-        return (y * this.width) + x;
+        return y * this.width + x;
     }
 
     getX(index: number, width: number) {
-        if (index === 0)
-            return 0;
+        if (index === 0) return 0;
 
-        return (index % width === 0) ? width - 1 : (index % width) - 1;
+        return index % width === 0 ? width - 1 : (index % width) - 1;
     }
 
     getRandomPosition(area: Area) {
@@ -263,12 +254,13 @@ class Map {
     }
 
     inTutorialArea(entity: Entity) {
-        if (entity.x === -1 || entity.y === -1)
-            return true;
+        if (entity.x === -1 || entity.y === -1) return true;
 
-        return this.inArea(entity.x, entity.y, 370, 36, 10, 10) ||
-                this.inArea(entity.x, entity.y, 312, 11, 25, 22) ||
-                this.inArea(entity.x, entity.y, 399, 18, 20, 15);
+        return (
+            this.inArea(entity.x, entity.y, 370, 36, 10, 10) ||
+            this.inArea(entity.x, entity.y, 312, 11, 25, 22) ||
+            this.inArea(entity.x, entity.y, 399, 18, 20, 15)
+        );
     }
 
     nearLight(light: any, x: number, y: number) {
@@ -292,23 +284,18 @@ class Map {
 
         if (tiles instanceof Array)
             for (let i in tiles)
-                if (this.isObject(tiles[i]))
-                    objectId = tiles[i];
-        else
-            if (this.isObject(tiles))
-                objectId = tiles;
+                if (this.isObject(tiles[i])) objectId = tiles[i];
+                else if (this.isObject(tiles)) objectId = tiles;
 
         return objectId;
     }
 
     getCursor(tileIndex: number, tileId: number) {
-        if (tileId in this.cursors)
-            return this.cursors[tileId];
+        if (tileId in this.cursors) return this.cursors[tileId];
 
         let cursor = Objects.getCursor(this.getObjectId(tileIndex));
 
-        if (!cursor)
-            return null;
+        if (!cursor) return null;
 
         return cursor;
     }
@@ -323,13 +310,9 @@ class Map {
         let index = this.gridPositionToIndex(x, y) - 1,
             tiles = this.clientMap.data[index];
 
-        if (tiles instanceof Array)
-            for (let i in tiles)
-                if (tiles[i] in data)
-                    return tiles[i];
+        if (tiles instanceof Array) for (let i in tiles) if (tiles[i] in data) return tiles[i];
 
-        if (tiles in data)
-            return tiles;
+        if (tiles in data) return tiles;
 
         return null;
     }
@@ -358,7 +341,12 @@ class Map {
     }
 
     isValidPosition(x: number, y: number) {
-        return Number.isInteger(x) && Number.isInteger(y) && !this.isOutOfBounds(x, y) && !this.isColliding(x, y);
+        return (
+            Number.isInteger(x) &&
+            Number.isInteger(y) &&
+            !this.isOutOfBounds(x, y) &&
+            !this.isColliding(x, y)
+        );
     }
 
     isOutOfBounds(x: number, y: number) {
@@ -370,8 +358,7 @@ class Map {
     }
 
     isColliding(x: number, y: number) {
-        if (this.isOutOfBounds(x, y))
-            return false;
+        if (this.isOutOfBounds(x, y)) return false;
 
         let tileIndex = this.gridPositionToIndex(x, y);
 
@@ -380,8 +367,7 @@ class Map {
 
     /* For preventing NPCs from roaming in null areas. */
     isEmpty(x: number, y: number) {
-        if (this.isOutOfBounds(x, y))
-            return true;
+        if (this.isOutOfBounds(x, y)) return true;
 
         let tileIndex = this.gridPositionToIndex(x, y);
 
@@ -391,8 +377,7 @@ class Map {
     getPlateauLevel(x: number, y: number) {
         let index = this.gridPositionToIndex(x, y);
 
-        if (!this.isPlateau(index))
-            return 0;
+        if (!this.isPlateau(index)) return 0;
 
         return this.plateau[index];
     }
@@ -400,8 +385,7 @@ class Map {
     getActualTileIndex(tileIndex: number) {
         let tileset = this.getTileset(tileIndex);
 
-        if (!tileset)
-            return;
+        if (!tileset) return;
 
         return tileIndex - tileset.firstGID - 1;
     }
@@ -415,8 +399,10 @@ class Map {
 
         for (let id in this.tilesets)
             if (this.tilesets.hasOwnProperty(id))
-                if (tileIndex > this.tilesets[id].firstGID - 1 &&
-                    tileIndex < this.tilesets[id].lastGID + 1)
+                if (
+                    tileIndex > this.tilesets[id].firstGID - 1 &&
+                    tileIndex < this.tilesets[id].lastGID + 1
+                )
                     return this.tilesets[id];
 
         return null;
@@ -425,8 +411,7 @@ class Map {
     getWarpById(id: number) {
         let warpName = Object.keys(Modules.Warps)[id];
 
-        if (!warpName)
-            return null;
+        if (!warpName) return null;
 
         let warp = this.warps[warpName.toLowerCase()];
 
@@ -438,7 +423,6 @@ class Map {
     isReady(callback: Function) {
         this.readyCallback = callback;
     }
-
 }
 
 export default Map;

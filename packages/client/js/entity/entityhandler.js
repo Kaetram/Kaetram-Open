@@ -18,8 +18,7 @@ export default class EntityHandler {
             self.entity.onRequestPath(function (x, y) {
                 var ignores = [];
 
-                if (self.entity.gridX === x && self.entity.gridY === y)
-                    return ignores;
+                if (self.entity.gridX === x && self.entity.gridY === y) return ignores;
 
                 ignores = [self.entity];
 
@@ -58,14 +57,13 @@ export default class EntityHandler {
                         Packets.MovementOpcode.Entity,
                         self.entity.id,
                         self.entity.gridX,
-                        self.entity.gridY,
+                        self.entity.gridY
                     ]);
 
                 if (
                     self.entity.attackRange > 1 &&
                     self.entity.hasTarget() &&
-                    self.entity.getDistance(self.entity.target) <=
-                        self.entity.attackRange
+                    self.entity.getDistance(self.entity.target) <= self.entity.attackRange
                 )
                     self.entity.stop(false);
             });

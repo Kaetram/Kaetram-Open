@@ -25,7 +25,6 @@ class Socket {
     getConnection(id: string) {
         return this._connections[id];
     }
-
 }
 
 export default Socket;

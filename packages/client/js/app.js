@@ -17,7 +17,7 @@ export default class App {
             version: process.env.VERSION,
             ssl: process.env.SSL,
             debug: process.env.DEBUG,
-            worldSwitch: process.env.WORLD_SWITCH,
+            worldSwitch: process.env.WORLD_SWITCH
         };
 
         self.body = $('body');
@@ -126,8 +126,7 @@ export default class App {
         });
 
         self.respawn.click(function () {
-            if (!self.game || !self.game.player || !self.game.player.dead)
-                return;
+            if (!self.game || !self.game.player || !self.game.player.dead) return;
 
             self.game.respawn();
         });
@@ -148,9 +147,7 @@ export default class App {
                 var server = servers[i];
 
                 var row = $(document.createElement('tr'));
-                row.append(
-                    $(document.createElement('td')).text(server.serverId)
-                );
+                row.append($(document.createElement('td')).text(server.serverId));
                 row.append(
                     $(document.createElement('td')).text(
                         server.playerCount + '/' + server.maxPlayers
@@ -195,8 +192,7 @@ export default class App {
                 return;
             }
 
-            if (self.game.started)
-                self.game.handleInput(Modules.InputType.Key, key);
+            if (self.game.started) self.game.handleInput(Modules.InputType.Key, key);
         });
 
         $(document).keyup(function (e) {
@@ -322,10 +318,7 @@ export default class App {
 
             if (content !== 'about') self.helpButton.removeClass('active');
         } else if (state !== 'animate')
-            self.openScroll(
-                state,
-                state === content ? 'loadCharacter' : content
-            );
+            self.openScroll(state, state === content ? 'loadCharacter' : content);
     }
 
     verifyForm() {
@@ -339,8 +332,7 @@ export default class App {
                 var nameInput = $('#loginNameInput'),
                     passwordInput = $('#loginPasswordInput');
 
-                if (self.loginFields.length === 0)
-                    self.loginFields = [nameInput, passwordInput];
+                if (self.loginFields.length === 0) self.loginFields = [nameInput, passwordInput];
 
                 if (!nameInput.val() && !self.isGuest()) {
                     self.sendError(nameInput, 'Please enter a username.');
@@ -357,9 +349,7 @@ export default class App {
             case 'createCharacter':
                 var characterName = $('#registerNameInput'),
                     registerPassword = $('#registerPasswordInput'),
-                    registerPasswordConfirmation = $(
-                        '#registerPasswordConfirmationInput'
-                    ),
+                    registerPasswordConfirmation = $('#registerPasswordConfirmationInput'),
                     email = $('#registerEmailInput');
 
                 if (self.registerFields.length === 0)
@@ -367,33 +357,21 @@ export default class App {
                         characterName,
                         registerPassword,
                         registerPasswordConfirmation,
-                        email,
+                        email
                     ];
 
                 if (!characterName.val()) {
-                    self.sendError(
-                        characterName,
-                        'A username is necessary you silly.'
-                    );
+                    self.sendError(characterName, 'A username is necessary you silly.');
                     return false;
                 }
 
                 if (!registerPassword.val()) {
-                    self.sendError(
-                        registerPassword,
-                        'You must enter a password.'
-                    );
+                    self.sendError(registerPassword, 'You must enter a password.');
                     return false;
                 }
 
-                if (
-                    registerPasswordConfirmation.val() !==
-                    registerPassword.val()
-                ) {
-                    self.sendError(
-                        registerPasswordConfirmation,
-                        'The passwords do not match!'
-                    );
+                if (registerPasswordConfirmation.val() !== registerPassword.val()) {
+                    self.sendError(registerPasswordConfirmation, 'The passwords do not match!');
                     return false;
                 }
 
@@ -425,7 +403,7 @@ export default class App {
 
         $('<span></span>', {
             class: 'status blink',
-            text: message,
+            text: message
         }).appendTo('.validation-summary');
 
         $('.status').append(
@@ -438,7 +416,7 @@ export default class App {
 
         $('<span></span>', {
             class: 'validation-error blink',
-            text: error,
+            text: error
         }).appendTo('.validation-summary');
 
         if (!field) return;
@@ -456,13 +434,9 @@ export default class App {
     cleanErrors() {
         var self = this,
             activeForm = self.getActiveForm(),
-            fields =
-                activeForm === 'loadCharacter'
-                    ? self.loginFields
-                    : self.registerFields;
+            fields = activeForm === 'loadCharacter' ? self.loginFields : self.registerFields;
 
-        for (var i = 0; i < fields.length; i++)
-            fields[i].removeClass('field-error');
+        for (var i = 0; i < fields.length; i++) fields[i].removeClass('field-error');
 
         $('.validation-error').remove();
         $('.status').remove();
@@ -554,9 +528,7 @@ export default class App {
 
     updateRange(obj) {
         var self = this,
-            val =
-                (obj.val() - obj.attr('min')) /
-                (obj.attr('max') - obj.attr('min'));
+            val = (obj.val() - obj.attr('min')) / (obj.attr('max') - obj.attr('min'));
 
         obj.css(
             'background-image',
@@ -576,8 +548,6 @@ export default class App {
     }
 
     getOrientation() {
-        return window.innerHeight > window.innerWidth
-            ? 'portrait'
-            : 'landscape';
+        return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
     }
 }

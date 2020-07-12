@@ -64,11 +64,7 @@ export const iOSVersion = () => {
         version;
 
     if (match !== undefined && match !== null) {
-        version = [
-            parseInt(match[1], 10),
-            parseInt(match[2], 10),
-            parseInt(match[3] || 0, 10),
-        ];
+        version = [parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3] || 0, 10)];
         return parseFloat(version.join('.'));
     }
 
@@ -98,12 +94,11 @@ export const isAppleDevice = () => {
         'iPod Simulator',
         'iPad',
         'iPhone',
-        'iPod',
+        'iPod'
     ];
 
     if (!!navigator.platform)
-        while (devices.length)
-            if ((navigator.platform = devices.pop())) return true;
+        while (devices.length) if ((navigator.platform = devices.pop())) return true;
 
     return false;
 };

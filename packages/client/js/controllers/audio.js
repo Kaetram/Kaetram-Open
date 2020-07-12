@@ -29,7 +29,7 @@ export default class AudioController {
             village: false,
             beach: false,
             spookyship: false,
-            meadowofthepast: false,
+            meadowofthepast: false
         };
 
         self.sounds = {
@@ -49,7 +49,7 @@ export default class AudioController {
             teleport: false,
             chest: false,
             npc: false,
-            'npc-end': false,
+            'npc-end': false
         };
     }
 
@@ -61,11 +61,7 @@ export default class AudioController {
         sound.addEventListener(
             'canplaythrough',
             function (e) {
-                this.removeEventListener(
-                    'canplaythrough',
-                    arguments.callee,
-                    false
-                );
+                this.removeEventListener('canplaythrough', arguments.callee, false);
 
                 if (callback) callback();
             },
@@ -75,11 +71,7 @@ export default class AudioController {
         sound.addEventListener(
             'error',
             function () {
-                log.error(
-                    'The audible: ' +
-                        name +
-                        ' could not be loaded - unsupported extension?'
-                );
+                log.error('The audible: ' + name + ' could not be loaded - unsupported extension?');
 
                 self.audibles[name] = null;
             },
@@ -105,12 +97,7 @@ export default class AudioController {
     play(type, name) {
         var self = this;
 
-        if (
-            !self.isEnabled() ||
-            !self.fileExists(name) ||
-            self.game.player.dead
-        )
-            return;
+        if (!self.isEnabled() || !self.fileExists(name) || self.game.player.dead) return;
 
         if (Detect.isSafari()) return;
 
@@ -289,7 +276,7 @@ export default class AudioController {
     getMusic(name) {
         return {
             sound: this.get(name),
-            name: name,
+            name: name
         };
     }
 
