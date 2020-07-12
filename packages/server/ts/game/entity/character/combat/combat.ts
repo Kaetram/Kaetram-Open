@@ -371,8 +371,8 @@ class Combat {
         character.setPosition(x, y);
     }
 
-    hit(character: Character, target: Character, hitInfo: any) {
-        if (!this.canHit()) return;
+    hit(character: Character, target: Character, hitInfo: any, override?: boolean) {
+        if (!this.canHit() && !override) return;
 
         if (character.isRanged() || hitInfo.isRanged) {
             let projectile = this.world.createProjectile([character, target]);

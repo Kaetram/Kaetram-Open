@@ -1,5 +1,7 @@
 import _ from 'underscore';
 import Combat from '../../ts/game/entity/character/combat/combat';
+import Character from '../../ts/game/entity/character/character';
+import Mob from '../../ts/game/entity/character/mob/mob';
 import Messages from '../../ts/network/messages';
 import Packets from '../../ts/network/packets';
 import Utils from '../../ts/util/utils';
@@ -10,7 +12,7 @@ class Tenebris extends Combat {
     lastIllusion: number;
     respawnDelay: number;
 
-    constructor(character) {
+    constructor(character: Mob) {
         character.spawnDistance = 24;
         super(character);
 
@@ -48,7 +50,7 @@ class Tenebris extends Combat {
         }, self.respawnDelay);
     }
 
-    hit(attacker, target, hitInfo) {
+    hit(attacker: Character, target: Character, hitInfo: any) {
         var self = this;
 
         if (self.isAttacked()) self.beginIllusionAttack();
@@ -70,7 +72,7 @@ class Tenebris extends Combat {
         self.illusions.push(self.world.spawnMob(105, self.character.x + 1, self.character.y + 1));
         self.illusions.push(self.world.spawnMob(105, self.character.x - 1, self.character.y + 1));
 
-        _.each(self.illusions, (illusion) => {
+        _.each(self.illusions, (illusion: Mob) => {
             illusion.onDeath(() => {
                 if (self.isLast()) self.lastIllusion = new Date().getTime();
 
@@ -108,7 +110,7 @@ class Tenebris extends Combat {
 
         if (!self.hasIllusions()) return;
 
-        _.each(self.illusions, (illusion) => {
+        _.each(self.illusions, (illusion: Mob) => {
             var target = self.getRandomTarget();
 
             if (!illusion.hasTarget && target) illusion.combat.begin(target);
@@ -130,7 +132,7 @@ class Tenebris extends Combat {
         return null;
     }
 
-    forceTalk(instance, message) {
+    forceTalk(instance: string, message: any) {
         var self = this;
 
         if (!self.world) return;
