@@ -217,7 +217,6 @@ class Mob extends Character {
     onRefresh(callback: Function) {
         this.refreshCallback = callback;
     }
-
 }
 
 export default Mob;
