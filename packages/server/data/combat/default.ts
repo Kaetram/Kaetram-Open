@@ -1,4 +1,5 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
+import Character from '../../ts/game/entity/character/character';
 
 /*
  * The default superclass for combat-related plugins.
@@ -7,7 +8,7 @@ import Combat from '../../ts/game/entity/character/combat/combat';
  */
 
 class Default extends Combat {
-    constructor(character) {
+    constructor(character: Character) {
         super(character);
 
         let self = this;
@@ -15,3 +16,5 @@ class Default extends Combat {
         self.character = character;
     }
 }
+
+export default Default;

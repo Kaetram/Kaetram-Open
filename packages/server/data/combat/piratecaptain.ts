@@ -1,8 +1,9 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
+import Character from '../../ts/game/entity/character/character';
+import Mob from '../../ts/game/entity/character/mob/mob';
 import Utils from '../../ts/util/utils';
 import Messages from '../../ts/network/messages';
 import Packets from '../../ts/network/packets';
-import Modules from '../../ts/util/modules';
 
 class PirateCaptain extends Combat {
     teleportLocations: Array<any>;
@@ -11,7 +12,7 @@ class PirateCaptain extends Combat {
     location: any;
     character: any;
 
-    constructor(character) {
+    constructor(character: Mob) {
         character.spawnDistance = 20;
         super(character);
 
@@ -42,7 +43,7 @@ class PirateCaptain extends Combat {
         self.teleportLocations.push(north, south, west, east);
     }
 
-    hit(character, target, hitInfo) {
+    hit(character: Character, target: Character, hitInfo: any) {
         var self = this;
         if (self.canTeleport()) self.teleport();
         else super.hit(character, target, hitInfo);
@@ -72,7 +73,7 @@ class PirateCaptain extends Combat {
                 })
             });
 
-        self.forEachAttacker((attacker) => {
+        self.forEachAttacker((attacker: Character) => {
             attacker.removeTarget();
         });
 

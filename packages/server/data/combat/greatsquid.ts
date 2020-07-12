@@ -1,10 +1,12 @@
 import Combat from '../../ts/game/entity/character/combat/combat';
+import Character from '../../ts/game/entity/character/character';
+import Mob from '../../ts/game/entity/character/mob/mob';
 import Modules from '../../ts/util/modules';
 
 class GreatSquid extends Combat {
     lastTerror: number;
 
-    constructor(character) {
+    constructor(character: Mob) {
         character.spawnDistance = 15;
         super(character);
 
@@ -15,7 +17,7 @@ class GreatSquid extends Combat {
         self.lastTerror = new Date().getTime();
     }
 
-    hit(character, target, hitInfo) {
+    hit(character: Character, target: Character, hitInfo: any) {
         let self = this;
 
         if (self.canUseTerror) {

@@ -1,14 +1,14 @@
 /* global module */
 
+import Player from '../../ts/game/entity/character/player/player';
 import Items from '../../ts/util/items';
-import Utils from '../../ts/util/utils';
 
 class HealthFlask {
     id: number;
     healAmount: number;
     manaAmount: number;
 
-    constructor(id) {
+    constructor(id: number) {
         let self = this;
 
         self.id = id;
@@ -24,7 +24,7 @@ class HealthFlask {
         }
     }
 
-    onUse(character) {
+    onUse(character: Player) {
         let self = this;
 
         if (self.healAmount) character.healHitPoints(self.healAmount);
