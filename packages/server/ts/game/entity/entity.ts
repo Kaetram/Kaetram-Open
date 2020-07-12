@@ -4,6 +4,7 @@ import Mobs from '../../util/mobs';
 import Items from '../../util/items';
 import NPCs from '../../util/npcs';
 import Combat from './character/combat/combat';
+import Player from './character/player/player';
 
 class Entity {
     public id: number;
@@ -70,13 +71,13 @@ class Entity {
 
     return() {}
 
-    openChest() {}
+    openChest(_player?: Player) {}
 
     hasTarget(): boolean {
         return false;
     }
 
-    setTarget(target: any) {}
+    setTarget(_target: any) {}
 
     /****************************/
 
