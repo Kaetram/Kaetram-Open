@@ -1,10 +1,11 @@
 import config from '../../../../../config';
 import _ from 'underscore';
-import DoorData from '../../../../../data/doors.json';
 import World from '../../../world';
 import Player from './player';
 import Map from '../../../../map/map';
 import Regions from '../../../../map/regions';
+
+import * as DoorData from '../../../../../data/doors.json';
 
 class Doors {
     public world: World;
@@ -76,8 +77,8 @@ class Doors {
                 closed: door.closedIds
             };
 
-        _.each(doorState[status], (value: any, key) => {
-            tiles.indexes.push(key);
+        _.each(doorState[status], (value: any, key: string) => {
+            tiles.indexes.push(parseInt(key));
             tiles.data.push(value.data);
             tiles.collisions.push(value.isColliding);
         });
