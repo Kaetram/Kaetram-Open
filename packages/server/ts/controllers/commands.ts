@@ -6,17 +6,18 @@ import Packets from '../network/packets';
 import World from '../game/world';
 import Player from '../game/entity/character/player/player';
 import log from '../util/log';
+import Achievement from '../game/entity/character/player/achievement';
 
 class Commands {
     player: Player;
     world: World;
 
-    constructor(player) {
+    constructor(player: Player) {
         this.player = player;
         this.world = player.world;
     }
 
-    parse(rawText) {
+    parse(rawText: string) {
         let blocks = rawText.substring(1).split(' ');
 
         if (blocks.length < 1) return;
@@ -30,7 +31,7 @@ class Commands {
         if (this.player.rights > 1) this.handleAdminCommands(command, blocks);
     }
 
-    handlePlayerCommands(command, blocks) {
+    handlePlayerCommands(command: string, blocks: Array<string>) {
         switch (command) {
             case 'players':
                 let population = this.world.getPopulation(),
@@ -124,7 +125,7 @@ class Commands {
         }
     }
 
-    handleModeratorCommands(command, blocks) {
+    handleModeratorCommands(command: string, blocks: Array<any>) {
         switch (command) {
             case 'mute':
             case 'ban':
@@ -165,8 +166,8 @@ class Commands {
         }
     }
 
-    handleAdminCommands(command, blocks) {
-        let username, player;
+    handleAdminCommands(command: string, blocks: Array<string>) {
+        let username: string, player: Player;
 
         switch (command) {
             case 'spawn':
@@ -391,7 +392,7 @@ class Commands {
                 break;
 
             case 'finishAllAchievements':
-                this.player.quests.forEachAchievement((achievement) => {
+                this.player.quests.forEachAchievement((achievement: Achievement) => {
                     this.player.finishAchievement(achievement.id);
                 });
 
@@ -425,7 +426,7 @@ class Commands {
                 break;
 
             case 'togglepvp':
-                this.world.forEachPlayer((player) => {
+                this.world.forEachPlayer((player: Player) => {
                     player.updatePVP(true, true);
                 });
 

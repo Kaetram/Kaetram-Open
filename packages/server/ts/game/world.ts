@@ -308,14 +308,17 @@ class World {
                 isMob = !!Mobs.Properties[key],
                 isNpc = !!NPCs.Properties[key],
                 isItem = !!Items.Data[key],
-                info = isMob
-                    ? Mobs.Properties[key]
-                    : isNpc
-                    ? NPCs.Properties[key]
-                    : isItem
-                    ? Items.getData(key)
-                    : null,
-                position = this.map.indexToGridPosition(data.tileIndex);
+                position = this.map.indexToGridPosition(data.tileIndex),
+                info: any;
+
+                if (isMob)
+                    info = Mobs.Properties[key];
+
+                if (isNpc)
+                    info = NPCs.Properties[key];
+
+                if (isItem)
+                    info = Items.getData(key);
 
             position.x++;
 

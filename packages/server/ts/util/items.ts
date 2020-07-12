@@ -13,9 +13,7 @@ export default {
     },
 
     hasPlugin(id: number) {
-        if (id in this.Plugins) return true;
-
-        return false;
+        return id in this.Plugins;
     },
 
     getPlugin(id: number) {

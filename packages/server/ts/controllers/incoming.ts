@@ -12,6 +12,7 @@ import Player from '../game/entity/character/player/player';
 import World from '../game/world';
 import log from '../util/log';
 import config from '../../config';
+import Character from '../game/entity/character/character';
 
 class Incoming {
     player: Player;
@@ -138,7 +139,7 @@ class Incoming {
         });
     }
 
-    handleIntro(message) {
+    handleIntro(message: Array<any>) {
         let loginType = message.shift(),
             username = message.shift().toLowerCase(),
             password = message.shift(),
@@ -167,7 +168,6 @@ class Incoming {
         }
 
         if (config.offlineMode) {
-            let creator = new Creator(null);
 
             this.player.load(Creator.getFullData(this.player));
             this.player.intro();
@@ -178,7 +178,7 @@ class Incoming {
         this.introduced = true;
 
         if (isRegistering) {
-            this.database.exists(this.player, (result) => {
+            this.database.exists(this.player, (result: any) => {
                 if (result.exists) {
                     this.connection.sendUTF8(result.type + 'exists');
                     this.connection.close(result.type + ' is not available.');
@@ -192,7 +192,7 @@ class Incoming {
 
             this.database.login(this.player);
         } else
-            this.database.verify(this.player, (result) => {
+            this.database.verify(this.player, (result: any) => {
                 if (result.status === 'success') this.database.login(this.player);
                 else {
                     this.connection.sendUTF8('invalidlogin');
@@ -201,7 +201,7 @@ class Incoming {
             });
     }
 
-    handleReady(message) {
+    handleReady(message: Array<any>) {
         let isReady = message.shift(),
             preloadedData = message.shift(),
             userAgent = message.shift();
@@ -250,7 +250,7 @@ class Incoming {
         this.player.sync();
     }
 
-    handleWho(message) {
+    handleWho(message: Array<any>) {
         _.each(message.shift(), (id: string) => {
             let entity: any = this.world.getEntityByInstance(id);
 
@@ -279,7 +279,7 @@ class Incoming {
         });
     }
 
-    handleEquipment(message) {
+    handleEquipment(message: Array<any>) {
         let opcode = message.shift();
 
         switch (opcode) {
@@ -343,18 +343,16 @@ class Incoming {
         }
     }
 
-    handleMovement(message) {
+    handleMovement(message: Array<any>) {
         let opcode = message.shift(),
-            orientation;
+            orientation: number;
 
         if (!this.player || this.player.dead) return;
 
         switch (opcode) {
             case Packets.MovementOpcode.Request:
                 let requestX = message.shift(),
-                    requestY = message.shift(),
-                    playerX = message.shift(),
-                    playerY = message.shift();
+                    requestY = message.shift();
 
                 if (this.preventNoClip(requestX, requestY))
                     this.player.guessPosition(requestX, requestY);
@@ -486,7 +484,7 @@ class Incoming {
         }
     }
 
-    handleRequest(message) {
+    handleRequest(message: Array<any>) {
         let id = message.shift();
 
         if (id !== this.player.instance) return;
@@ -494,7 +492,7 @@ class Incoming {
         this.world.region.push(this.player);
     }
 
-    handleTarget(message) {
+    handleTarget(message: Array<any>) {
         let opcode = message.shift(),
             instance = message.shift();
 
@@ -520,7 +518,7 @@ class Incoming {
                 break;
 
             case Packets.TargetOpcode.Attack:
-                let target = this.world.getEntityByInstance(instance);
+                let target: any = this.world.getEntityByInstance(instance);
 
                 if (!target || target.dead || !this.canAttack(this.player, target)) return;
 
@@ -549,7 +547,7 @@ class Incoming {
         }
     }
 
-    handleCombat(message) {
+    handleCombat(message: Array<any>) {
         let opcode = message.shift();
 
         switch (opcode) {
@@ -581,7 +579,7 @@ class Incoming {
         }
     }
 
-    handleProjectile(message) {
+    handleProjectile(message: Array<any>) {
         let type = message.shift();
 
         switch (type) {
@@ -602,7 +600,7 @@ class Incoming {
         }
     }
 
-    handleNetwork(message) {
+    handleNetwork(message: Array<any>) {
         let opcode = message.shift();
 
         switch (opcode) {
@@ -660,7 +658,7 @@ class Incoming {
         }
     }
 
-    handleCommand(message) {
+    handleCommand(message: Array<any>) {
         let opcode = message.shift();
 
         if (this.player.rights < 2) return;
@@ -675,16 +673,16 @@ class Incoming {
         }
     }
 
-    handleInventory(message) {
+    handleInventory(message: Array<any>) {
         let opcode = message.shift(),
-            id,
-            ability,
-            abilityLevel;
+            id: number,
+            ability: number,
+            abilityLevel: number;
 
         switch (opcode) {
             case Packets.InventoryOpcode.Remove:
                 let item = message.shift(),
-                    count;
+                    count: number;
 
                 if (!item) return;
 
@@ -740,7 +738,7 @@ class Incoming {
         }
     }
 
-    handleBank(message) {
+    handleBank(message: Array<any>) {
         let opcode = message.shift();
 
         switch (opcode) {
@@ -781,7 +779,7 @@ class Incoming {
         }
     }
 
-    handleRespawn(message) {
+    handleRespawn(message: Array<any>) {
         let instance = message.shift();
 
         if (this.player.instance !== instance) return;
@@ -802,7 +800,7 @@ class Incoming {
         this.player.revertPoints();
     }
 
-    handleTrade(message) {
+    handleTrade(message: Array<any>) {
         let opcode = message.shift(),
             oPlayer = this.world.getEntityByInstance(message.shift());
 
@@ -820,7 +818,7 @@ class Incoming {
         }
     }
 
-    handleEnchant(message) {
+    handleEnchant(message: Array<any>) {
         let opcode = message.shift();
 
         switch (opcode) {
@@ -849,7 +847,7 @@ class Incoming {
         }
     }
 
-    handleClick(message) {
+    handleClick(message: Array<any>) {
         let type = message.shift(),
             state = message.shift();
 
@@ -871,13 +869,13 @@ class Incoming {
         }
     }
 
-    handleWarp(message) {
+    handleWarp(message: Array<any>) {
         let id = parseInt(message.shift()) - 1;
 
         if (this.player.warp) this.player.warp.warp(id);
     }
 
-    handleShop(message) {
+    handleShop(message: Array<any>) {
         let opcode = message.shift(),
             npcId = message.shift();
 
@@ -959,8 +957,9 @@ class Incoming {
         }
     }
 
-    handleCamera(message) {
+    handleCamera(message: Array<any>) {
         log.info(this.player.x + ' ' + this.player.y);
+        console.log(message);
 
         this.player.cameraArea = null;
         this.player.handler.detectCamera(this.player.x, this.player.y);
@@ -971,7 +970,7 @@ class Incoming {
      * for more functionality when needed.
      */
 
-    handleClient(message) {
+    handleClient(message: Array<any>) {
         let canvasWidth = message.shift(),
             canvasHeight = message.shift();
 
@@ -987,7 +986,7 @@ class Incoming {
         this.player.regionHeight = Math.ceil(canvasHeight / 48);
     }
 
-    canAttack(attacker, target) {
+    canAttack(attacker: Character, target: Character) {
         /**
          * Used to prevent client-sided manipulation. The client will send the packet to start combat
          * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
@@ -998,7 +997,7 @@ class Incoming {
         return attacker.type === 'player' && target.type === 'player' && attacker.pvp && target.pvp;
     }
 
-    preventNoClip(x, y) {
+    preventNoClip(x: number, y: number) {
         let isMapColliding = this.world.map.isColliding(x, y),
             isInstanceColliding = this.player.doors.hasCollision(x, y);
 
@@ -1012,7 +1011,7 @@ class Incoming {
         return true;
     }
 
-    handleNoClip(x, y) {
+    handleNoClip(x: number, y: number) {
         this.player.stopMovement(true);
         this.player.notify(
             'We have detected no-clipping in your client. Please submit a bug report.'
