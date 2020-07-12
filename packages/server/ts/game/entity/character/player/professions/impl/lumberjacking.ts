@@ -92,8 +92,6 @@ class Lumberjacking extends Profession {
         this.treeId = treeId;
         this.targetId = id;
 
-        this.world.destroyTree(this.targetId, Modules.Trees[this.treeId]);
-
         if (this.level < Trees.Levels[this.treeId]) {
             this.player.notify(
                 `You must be at least level ${Trees.Levels[this.treeId]} to cut this tree!`

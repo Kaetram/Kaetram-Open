@@ -46,7 +46,13 @@ class ChestAreas {
     spawnChest(chestArea) {
         if (new Date().getTime() - chestArea.lastSpawn < chestArea.spawnDelay) return;
 
-        chestArea.chest = this.world.spawnChest(chestArea.items, chestArea.cX, chestArea.cY, false);
+        chestArea.chest = this.world.spawnChest(
+            chestArea.items,
+            chestArea.cX,
+            chestArea.cY,
+            null,
+            false
+        );
         chestArea.lastSpawn = new Date().getTime();
     }
 
