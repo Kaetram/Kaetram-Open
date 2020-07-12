@@ -6,7 +6,6 @@ import * as map from '../../data/map/world_server.json';
 import Map from './map';
 
 class Regions {
-
     map: Map;
 
     width: number;
@@ -47,8 +46,7 @@ class Regions {
 
             if (regionId in this.linkedRegions)
                 this.linkedRegions[regionId].push(linkedRegionPosition);
-            else
-                this.linkedRegions[regionId] = [linkedRegionPosition];
+            else this.linkedRegions[regionId] = [linkedRegionPosition];
         });
     }
 
@@ -60,21 +58,30 @@ class Regions {
 
     getSurroundingRegions(id: string, offset = 1, stringFormat?: boolean) {
         let position = this.regionIdToPosition(id),
-            x = position.x, y = position.y;
+            x = position.x,
+            y = position.y;
 
         let list = [];
 
-        for (let i = -offset; i <= offset; i++) // y
-            for (let j = -1; j <= 1; j++) // x
-                if (i > -2 || i < 2)
-                    list.push({ x: x + j, y: y + i });
+        for (
+            let i = -offset;
+            i <= offset;
+            i++ // y
+        )
+            for (
+                let j = -1;
+                j <= 1;
+                j++ // x
+            )
+                if (i > -2 || i < 2) list.push({ x: x + j, y: y + i });
 
         _.each(this.linkedRegions[id], (regionPosition) => {
-
-            if (!_.any(list, (regionPosition) => {
-                return regionPosition.x === x && regionPosition.y === y;
-            })) list.push(regionPosition);
-
+            if (
+                !_.any(list, (regionPosition) => {
+                    return regionPosition.x === x && regionPosition.y === y;
+                })
+            )
+                list.push(regionPosition);
         });
 
         list = _.reject(list, (regionPosition) => {
@@ -96,8 +103,7 @@ class Regions {
          * the moment.
          */
 
-        if (surroundingRegions.length !== 9)
-            return;
+        if (surroundingRegions.length !== 9) return;
 
         /**
          * 11-0 12-0 13-0
@@ -109,8 +115,7 @@ class Regions {
             adjacentRegions = [];
 
         _.each(surroundingRegions, (region) => {
-            if (region.x !== centreRegion.x && region.y !== centreRegion.y)
-                return;
+            if (region.x !== centreRegion.x && region.y !== centreRegion.y) return;
 
             adjacentRegions.push(region);
         });
@@ -120,13 +125,11 @@ class Regions {
 
     forEachRegion(callback: Function) {
         for (let x = 0; x < this.regionWidth; x++)
-            for (let y = 0; y < this.regionHeight; y++)
-                callback(x + '-' + y)
+            for (let y = 0; y < this.regionHeight; y++) callback(x + '-' + y);
     }
 
     forEachSurroundingRegion(regionId: string, callback: Function, offset?: number) {
-        if (!regionId)
-            return;
+        if (!regionId) return;
 
         _.each(this.getSurroundingRegions(regionId, offset), (region) => {
             callback(region.x + '-' + region.y);
@@ -134,8 +137,7 @@ class Regions {
     }
 
     forEachAdjacentRegion(regionId: string, callback: Function, offset?: number) {
-        if (!regionId)
-            return;
+        if (!regionId) return;
 
         _.each(this.getAdjacentRegions(regionId, offset), (region) => {
             callback(region.x + '-' + region.y);
@@ -143,7 +145,7 @@ class Regions {
     }
 
     regionIdFromPosition(x: number, y: number) {
-        return (Math.floor(x / this.zoneWidth) + '-' + (Math.floor(y / this.zoneHeight)));
+        return Math.floor(x / this.zoneWidth) + '-' + Math.floor(y / this.zoneHeight);
     }
 
     regionIdToPosition(id: string) {
@@ -152,7 +154,7 @@ class Regions {
         return {
             x: parseInt(position[0], 10),
             y: parseInt(position[1], 10)
-        }
+        };
     }
 
     regionIdToCoordinates(id: string) {
@@ -161,7 +163,7 @@ class Regions {
         return {
             x: parseInt(position[0]) * this.zoneWidth,
             y: parseInt(position[1]) * this.zoneHeight
-        }
+        };
     }
 
     /**

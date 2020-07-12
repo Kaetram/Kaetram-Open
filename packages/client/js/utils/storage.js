@@ -34,7 +34,7 @@ export default class Storage {
                 password: '',
                 autoLogin: false,
                 rememberMe: false,
-                orientation: Modules.Orientation.Down,
+                orientation: Modules.Orientation.Down
             },
 
             settings: {
@@ -46,15 +46,15 @@ export default class Storage {
                 centerCamera: true,
                 debug: false,
                 showNames: true,
-                showLevels: true,
+                showLevels: true
             },
 
             map: {
                 regionData: [],
                 collisions: [],
                 objects: [],
-                cursorTiles: {},
-            },
+                cursorTiles: {}
+            }
         };
     }
 

@@ -4,7 +4,6 @@ import Mob from '../game/entity/character/mob/mob';
 import Player from '../game/entity/character/player/player';
 
 class Area {
-
     id: any;
     x: number;
     y: number;
@@ -49,37 +48,31 @@ class Area {
     }
 
     addEntity(mob: Mob) {
-        if (this.entities.indexOf(mob) > 0)
-            return;
+        if (this.entities.indexOf(mob) > 0) return;
 
         this.entities.push(mob);
         mob.area = this;
 
         // Grab a spawn delay from an mob to create an offset for the chest.
-        if (!this.spawnDelay)
-            this.spawnDelay = mob.respawnDelay;
+        if (!this.spawnDelay) this.spawnDelay = mob.respawnDelay;
 
-        if (this.spawnCallback)
-            this.spawnCallback();
+        if (this.spawnCallback) this.spawnCallback();
     }
 
     removeEntity(mob: Mob) {
         let index = this.entities.indexOf(mob);
 
-        if (index > -1)
-            this.entities.splice(index, 1);
+        if (index > -1) this.entities.splice(index, 1);
 
         if (this.entities.length === 0 && this.emptyCallback) {
-            if (mob.lastAttacker)
-                this.handleAchievement(mob.lastAttacker);
+            if (mob.lastAttacker) this.handleAchievement(mob.lastAttacker);
 
             this.emptyCallback();
         }
     }
 
     handleAchievement(player: Player) {
-        if (!this.achievement)
-            return;
+        if (!this.achievement) return;
 
         player.finishAchievement(this.achievement);
     }
@@ -95,7 +88,6 @@ class Area {
     onSpawn(callback: Function) {
         this.spawnCallback = callback;
     }
-
 }
 
 export default Area;

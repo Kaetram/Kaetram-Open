@@ -22,13 +22,7 @@ export default class Professions extends Page {
                 info = $('<p></p>');
 
             name.text(profession.name);
-            info.text(
-                'Level ' +
-                    profession.level +
-                    ' | ' +
-                    profession.percentage +
-                    '%'
-            );
+            info.text('Level ' + profession.level + ' | ' + profession.percentage + '%');
 
             name.append(info);
 
@@ -53,14 +47,10 @@ export default class Professions extends Page {
     }
 
     getItem(id) {
-        return $(
-            '<div id="professionItem' + id + '" class="professionItem"></div>'
-        );
+        return $('<div id="professionItem' + id + '" class="professionItem"></div>');
     }
 
     getName(id) {
-        return $(
-            '<div id="professionName' + id + '" class="professionName"></div>'
-        );
+        return $('<div id="professionName' + id + '" class="professionName"></div>');
     }
 }

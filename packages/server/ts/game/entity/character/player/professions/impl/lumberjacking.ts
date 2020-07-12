@@ -8,7 +8,6 @@ import Trees from '../../../../../../../data/professions/trees';
 import Player from '../../player';
 
 class Lumberjacking extends Profession {
-
     tick: number;
 
     cuttingInterval: any;
@@ -28,20 +27,16 @@ class Lumberjacking extends Profession {
     }
 
     start() {
-        if (this.started)
-            return;
+        if (this.started) return;
 
         this.cuttingInterval = setInterval(() => {
-
             try {
-
                 if (!this.player || !this.isTarget() || this.world.isTreeCut(this.targetId)) {
                     this.stop();
                     return;
                 }
 
-                if (!this.treeId || !this.targetId)
-                    return;
+                if (!this.treeId || !this.targetId) return;
 
                 if (!this.player.inventory.canHold(Trees.Logs[this.treeId], 1)) {
                     this.player.notify('You do not have enough space in your inventory!');
@@ -50,9 +45,11 @@ class Lumberjacking extends Profession {
                 }
 
                 this.sync();
-                this.player.sendToRegion(new Messages.Animation(this.player.instance, {
-                    action: Modules.Actions.Attack
-                }));
+                this.player.sendToRegion(
+                    new Messages.Animation(this.player.instance, {
+                        action: Modules.Actions.Attack
+                    })
+                );
 
                 let probability = Formulas.getTreeChance(this.player, this.treeId);
 
@@ -67,17 +64,14 @@ class Lumberjacking extends Profession {
                     if (this.getTreeDestroyChance())
                         this.world.destroyTree(this.targetId, Modules.Trees[this.treeId]);
                 }
-
             } catch (e) {}
-
         }, this.tick);
 
         this.started = true;
     }
 
     stop() {
-        if (!this.started)
-            return;
+        if (!this.started) return;
 
         this.treeId = null;
         this.targetId = null;
@@ -99,7 +93,9 @@ class Lumberjacking extends Profession {
         this.targetId = id;
 
         if (this.level < Trees.Levels[this.treeId]) {
-            this.player.notify(`You must be at least level ${Trees.Levels[this.treeId]} to cut this tree!`);
+            this.player.notify(
+                `You must be at least level ${Trees.Levels[this.treeId]} to cut this tree!`
+            );
             return;
         }
 
@@ -113,7 +109,6 @@ class Lumberjacking extends Profession {
     getQueueCount() {
         return Object.keys(this.queuedTrees).length;
     }
-
 }
 
 export default Lumberjacking;

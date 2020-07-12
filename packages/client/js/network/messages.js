@@ -95,45 +95,27 @@ export default class Messages {
                 break;
 
             case 'error':
-                self.app.sendError(
-                    null,
-                    'The server has responded with an error!'
-                );
+                self.app.sendError(null, 'The server has responded with an error!');
                 break;
 
             case 'development':
-                self.app.sendError(
-                    null,
-                    'The game is currently in development mode.'
-                );
+                self.app.sendError(null, 'The game is currently in development mode.');
                 break;
 
             case 'disallowed':
-                self.app.sendError(
-                    null,
-                    'The server is currently not accepting connections!'
-                );
+                self.app.sendError(null, 'The server is currently not accepting connections!');
                 break;
 
             case 'maintenance':
-                self.app.sendError(
-                    null,
-                    'Kaetram is currently under maintenance.'
-                );
+                self.app.sendError(null, 'Kaetram is currently under maintenance.');
                 break;
 
             case 'userexists':
-                self.app.sendError(
-                    null,
-                    'The username you have chosen already exists.'
-                );
+                self.app.sendError(null, 'The username you have chosen already exists.');
                 break;
 
             case 'emailexists':
-                self.app.sendError(
-                    null,
-                    'The email you have chosen is not available.'
-                );
+                self.app.sendError(null, 'The email you have chosen is not available.');
                 break;
 
             case 'loggedin':
@@ -141,10 +123,7 @@ export default class Messages {
                 break;
 
             case 'invalidlogin':
-                self.app.sendError(
-                    null,
-                    'You have entered the wrong username or password.'
-                );
+                self.app.sendError(null, 'You have entered the wrong username or password.');
                 break;
 
             case 'toofast':
@@ -156,10 +135,7 @@ export default class Messages {
 
             case 'malform':
                 self.app.game.handleDisconnection(true);
-                self.app.sendError(
-                    null,
-                    'Client has experienced a malfunction.'
-                );
+                self.app.sendError(null, 'Client has experienced a malfunction.');
 
                 break;
 
@@ -209,8 +185,7 @@ export default class Messages {
             equipType = data.shift(),
             equipInfo = data.shift();
 
-        if (self.equipmentCallback)
-            self.equipmentCallback(equipType, equipInfo);
+        if (self.equipmentCallback) self.equipmentCallback(equipType, equipInfo);
     }
 
     receiveEntityList(data) {

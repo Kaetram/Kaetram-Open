@@ -32,8 +32,7 @@ export default class PlayerHandler {
             var ignores = [],
                 isObject = self.map.isObject(x, y);
 
-            if (self.player.gridX === x && self.player.gridY === y)
-                return ignores;
+            if (self.player.gridX === x && self.player.gridY === y) return ignores;
 
             ignores = [self.player];
 
@@ -43,7 +42,7 @@ export default class PlayerHandler {
                     x,
                     y,
                     self.player.gridX,
-                    self.player.gridY,
+                    self.player.gridY
                 ]);
 
             if (isObject)
@@ -52,7 +51,7 @@ export default class PlayerHandler {
                         return false;
                     },
                     gridX: x,
-                    gridY: y,
+                    gridY: y
                 });
 
             return self.game.findPath(self.player, x, y, ignores);
@@ -67,8 +66,7 @@ export default class PlayerHandler {
             self.input.selectedY = path[i][1];
             self.input.selectedCellVisible = true;
 
-            if (self.game.isDebug())
-                log.info('Movement speed: ' + self.player.movementSpeed);
+            if (self.game.isDebug()) log.info('Movement speed: ' + self.player.movementSpeed);
 
             self.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Started,
@@ -77,7 +75,7 @@ export default class PlayerHandler {
                 self.player.gridX,
                 self.player.gridY,
                 self.player.movementSpeed,
-                self.getTargetId(),
+                self.getTargetId()
             ]);
         });
 
@@ -104,19 +102,15 @@ export default class PlayerHandler {
                 y,
                 id,
                 hasTarget,
-                self.player.orientation,
+                self.player.orientation
             ]);
 
-            self.socket.send(Packets.Target, [
-                self.getTargetType(),
-                self.getTargetId(),
-            ]);
+            self.socket.send(Packets.Target, [self.getTargetType(), self.getTargetId()]);
 
             if (hasTarget) {
                 self.player.lookAt(self.player.target);
 
-                if (self.player.target.type === 'object')
-                    self.player.removeTarget();
+                if (self.player.target.type === 'object') self.player.removeTarget();
             }
 
             self.input.setPassiveTarget();
@@ -131,23 +125,20 @@ export default class PlayerHandler {
         });
 
         self.player.onStep(function () {
-            if (self.player.hasNextStep())
-                self.entities.registerDuality(self.player);
+            if (self.player.hasNextStep()) self.entities.registerDuality(self.player);
 
-            if (!self.camera.centered || self.camera.lockX || self.camera.lockY)
-                self.checkBounds();
+            if (!self.camera.centered || self.camera.lockX || self.camera.lockY) self.checkBounds();
 
             self.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Step,
                 self.player.gridX,
-                self.player.gridY,
+                self.player.gridY
             ]);
 
             if (!self.isAttackable()) return;
 
             if (self.player.isRanged()) {
-                if (self.player.getDistance(self.player.target) < 7)
-                    self.player.stop(true);
+                if (self.player.getDistance(self.player.target) < 7) self.player.stop(true);
             } else {
                 self.input.selectedX = self.player.target.gridX;
                 self.input.selectedY = self.player.target.gridY;
@@ -171,13 +162,11 @@ export default class PlayerHandler {
         self.player.onUpdateArmour(function (armourName, power) {
             self.player.setSprite(self.game.getSprite(armourName));
 
-            if (self.game.menu && self.game.menu.profile)
-                self.game.menu.profile.update();
+            if (self.game.menu && self.game.menu.profile) self.game.menu.profile.update();
         });
 
         self.player.onUpdateEquipment(function (type, power) {
-            if (self.game.menu && self.game.menu.profile)
-                self.game.menu.profile.update();
+            if (self.game.menu && self.game.menu.profile) self.game.menu.profile.update();
         });
     }
 
@@ -187,9 +176,7 @@ export default class PlayerHandler {
 
         if (!target) return;
 
-        return (
-            target.type === 'mob' || (target.type === 'player' && target.pvp)
-        );
+        return target.type === 'mob' || (target.type === 'player' && target.pvp);
     }
 
     checkBounds() {
@@ -207,10 +194,7 @@ export default class PlayerHandler {
 
             self.camera.zone(direction);
 
-            self.socket.send(Packets.Movement, [
-                Packets.MovementOpcode.Zone,
-                direction,
-            ]);
+            self.socket.send(Packets.Movement, [Packets.MovementOpcode.Zone, direction]);
 
             self.renderer.updateAnimatedTiles();
 
@@ -230,8 +214,7 @@ export default class PlayerHandler {
 
         if (self.isAttackable()) return Packets.TargetOpcode.Attack;
 
-        if (target.type === 'npc' || target.type === 'chest')
-            return Packets.TargetOpcode.Talk;
+        if (target.type === 'npc' || target.type === 'chest') return Packets.TargetOpcode.Talk;
 
         if (target.type === 'object') return Packets.TargetOpcode.Object;
 

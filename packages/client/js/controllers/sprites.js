@@ -28,8 +28,7 @@ export default class SpritesController {
             self.sprites[sprite.id] = new Sprite(sprite);
         });
 
-        if (self.renderer.game.isDebug())
-            log.info('Finished loading sprite data...');
+        if (self.renderer.game.isDebug()) log.info('Finished loading sprite data...');
 
         if (self.loadedSpritesCallback) self.loadedSpritesCallback();
     }
@@ -48,8 +47,7 @@ export default class SpritesController {
             sprite.update();
         });
 
-        if (self.renderer.game.isDebug())
-            log.info('Sprites updated upon scaling.');
+        if (self.renderer.game.isDebug()) log.info('Sprites updated upon scaling.');
     }
 
     onLoadedSprites(callback) {

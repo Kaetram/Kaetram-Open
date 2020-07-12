@@ -40,8 +40,7 @@ export default class PathFinder {
 
         path = AStar(self.grid, start, end, self.mode);
 
-        if (path.length === 0 && incomplete)
-            path = self.findIncomplete(start, end);
+        if (path.length === 0 && incomplete) path = self.findIncomplete(start, end);
 
         return path;
     }

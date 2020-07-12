@@ -7,7 +7,6 @@ import Map from '../../../../map/map';
 import Regions from '../../../../map/regions';
 
 class Doors {
-
     public world: World;
     public player: Player;
     public map: Map;
@@ -16,7 +15,6 @@ class Doors {
     public doors: any;
 
     constructor(player: Player) {
-
         this.world = player.world;
         this.player = player;
         this.map = this.world.map;
@@ -28,7 +26,6 @@ class Doors {
     }
 
     load() {
-
         _.each(DoorData, (door: any) => {
             this.doors[door.id] = {
                 id: door.id,
@@ -41,49 +38,43 @@ class Doors {
                 achievementId: door.achievementId,
                 closedIds: door.closedIds,
                 openIds: door.openIds
-            }
+            };
         });
-
     }
 
     getStatus(door: any) {
+        if (door.status) return door.status;
 
-        if (door.status)
-            return door.status;
-
-        if (config.offlineMode)
-            return true;
+        if (config.offlineMode) return true;
 
         switch (door.requirement) {
-
             case 'quest':
                 let quest = this.player.quests.getQuest(door.questId);
 
-                return (quest && quest.hasDoorUnlocked(door)) ? 'open' : 'closed';
+                return quest && quest.hasDoorUnlocked(door) ? 'open' : 'closed';
 
             case 'achievement':
                 let achievement = this.player.quests.getAchievement(door.achievementId);
 
-                return (achievement && achievement.isFinished()) ? 'open' : 'closed';
+                return achievement && achievement.isFinished() ? 'open' : 'closed';
 
             case 'level':
                 return this.player.level >= door.level ? 'open' : 'closed';
-
         }
     }
 
     getTiles(door: any) {
         let tiles = {
-                indexes: [],
-                data: [],
-                collisions: []
-            };
+            indexes: [],
+            data: [],
+            collisions: []
+        };
 
         let status = this.getStatus(door),
             doorState = {
-            open: door.openIds,
-            closed: door.closedIds
-        };
+                open: door.openIds,
+                closed: door.closedIds
+            };
 
         _.each(doorState[status], (value: any, key) => {
             tiles.indexes.push(key);
@@ -96,17 +87,16 @@ class Doors {
 
     getAllTiles() {
         let allTiles = {
-                indexes: [],
-                data: [],
-                collisions: []
-            };
+            indexes: [],
+            data: [],
+            collisions: []
+        };
 
         _.each(this.doors, (door: any) => {
             /* There's no need to send dynamic data if the player is not nearby. */
             let doorRegion = this.regions.regionIdFromPosition(door.x, door.y);
 
-            if (!this.regions.isSurrounding(this.player.region, doorRegion))
-                return;
+            if (!this.regions.isSurrounding(this.player.region, doorRegion)) return;
 
             let tiles = this.getTiles(door);
 
@@ -130,18 +120,17 @@ class Doors {
          * in doors.json file.
          */
 
-        if (index < 0) // Tile does not exist.
+        if (index < 0)
+            // Tile does not exist.
             return false;
 
         return tiles.collisions[index];
     }
 
     getDoor(x: number, y: number) {
-
         for (let i in this.doors)
             if (this.doors.hasOwnProperty(i))
-                if (this.doors[i].x === x && this.doors[i].y === y)
-                    return this.doors[i];
+                if (this.doors[i].x === x && this.doors[i].y === y) return this.doors[i];
 
         return null;
     }
@@ -155,9 +144,8 @@ class Doors {
     forEachDoor(callback: Function) {
         _.each(this.doors, (door) => {
             callback(door);
-        })
+        });
     }
-
 }
 
 export default Doors;

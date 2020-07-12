@@ -39,8 +39,7 @@ export default class Animation {
     update(time) {
         var self = this;
 
-        if (self.lastTime === 0 && self.name.substr(0, 3) === 'atk')
-            self.lastTime = time;
+        if (self.lastTime === 0 && self.name.substr(0, 3) === 'atk') self.lastTime = time;
 
         if (self.readyToAnimate(time)) {
             self.lastTime = time;
@@ -76,7 +75,7 @@ export default class Animation {
         self.currentFrame = {
             index: 0,
             x: 0,
-            y: self.row * self.height,
+            y: self.row * self.height
         };
     }
 }
