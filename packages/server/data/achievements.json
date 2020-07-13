@@ -60,63 +60,71 @@
     "id": 4,
     "name": "Skeletal Pass",
     "description": "",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "5": {
     "id": 5,
     "name": "Golem",
     "description": "",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "6": {
     "id": 6,
     "name": "Skeleton Boss",
     "description": "Defeat the skeleton boss.",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "7": {
     "id": 7,
     "name": "Spectre Passage",
     "description": "",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "8": {
     "id": 8,
     "name": "Quite a Mimic",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "9": {
     "id": 9,
     "name": "Death Gate",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "10": {
     "id": 10,
     "name": "Elven Path",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "11": {
     "id": 11,
     "name": "Frozen Knighthood",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "12": {
     "id": 12,
     "name": "Hermit Lifestyle",
-    "rewardType": "door"
+    "isDoorReward": true
   },
 
   "13": {
     "id": 13,
     "name": "Frozen Beach",
-    "rewardType": "door"
+    "isDoorReward": true
+  },
+
+  "14": {
+    "id": 14,
+    "name": "Gates of Hell",
+    "isDoorReward": true,
+    "rewardType": 1,
+    "reward": 2000
   }
 }

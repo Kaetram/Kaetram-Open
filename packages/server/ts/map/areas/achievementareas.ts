@@ -18,7 +18,7 @@ class AchievementAreas {
         _.each(list, (o: any) => {
             let achievementArea: any = new Area(o.id, o.x, o.y, o.width, o.height);
 
-            achievementArea.achievement = o.achievement;
+            achievementArea.achievement = parseInt(o.achievement);
 
             this.achievementAreas.push(achievementArea);
         });
