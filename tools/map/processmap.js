@@ -350,7 +350,7 @@ module.exports = function parse(json, options) {
                 case 'achievements':
                     let achievementAreas = layer.objects;
 
-                    _.each(achievementAreas, function(area) {
+                    _.each(achievementAreas, function (area) {
                         let achievementArea = {
                             id: area.id,
                             x: area.x / map.tilesize,
