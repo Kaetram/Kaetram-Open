@@ -11,6 +11,7 @@ import MusicAreas from './areas/musicareas';
 import ChestAreas from './areas/chestareas';
 import OverlayAreas from './areas/overlayareas';
 import CameraAreas from './areas/cameraareas';
+import AchievementAreas from './areas/achievementareas';
 import World from '../game/world';
 import Area from './area';
 import Entity from '../game/entity/entity';
@@ -148,6 +149,7 @@ class Map {
         this.areas['Chests'] = new ChestAreas(this.world);
         this.areas['Overlays'] = new OverlayAreas();
         this.areas['Cameras'] = new CameraAreas();
+        this.areas['Achievements'] = new AchievementAreas();
     }
 
     loadDoors() {
