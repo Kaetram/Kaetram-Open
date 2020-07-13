@@ -27,6 +27,9 @@ class Achievement {
 
         this.data = Data[this.id];
 
+        if (!this.data.reward)
+            this.data.reward = 'door';
+
         this.name = this.data.name;
         this.description = this.data.description;
 
@@ -137,7 +140,7 @@ class Achievement {
     setProgress(progress: number, skipRegion?: boolean) {
         this.progress = progress;
 
-        if (this.data.rewardType === 'door' && !skipRegion) this.player.updateRegion();
+        if (this.data.isDoorReward && !skipRegion) this.player.updateRegion();
     }
 
     isStarted() {

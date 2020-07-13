@@ -922,6 +922,10 @@ class World {
         return this.map.areas['Cameras'].cameraAreas;
     }
 
+    getAchievementAreas() {
+        return this.map.areas['Achievements'].achievementAreas;
+    }
+
     getGrids() {
         return this.map.grids;
     }
