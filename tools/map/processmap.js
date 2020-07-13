@@ -68,6 +68,8 @@ module.exports = function parse(json, options) {
             map.overlayAreas = [];
             map.cameraAreas = [];
 
+            map.achievementAreas = [];
+
             map.lights = [];
             map.plateau = {};
 
@@ -341,6 +343,24 @@ module.exports = function parse(json, options) {
                         };
 
                         map.cameraAreas.push(cArea);
+                    });
+
+                    break;
+
+                case 'achievements':
+                    let achievementAreas = layer.objects;
+
+                    _.each(achievementAreas, function(area) {
+                        let achievementArea = {
+                            id: area.id,
+                            x: area.x / map.tilesize,
+                            y: area.y / map.tilesize,
+                            width: area.width / map.tilesize,
+                            height: area.height / map.tilesize,
+                            achievement: area.properties[0].value
+                        };
+
+                        map.achievementAreas.push(achievementArea);
                     });
 
                     break;
