@@ -27,8 +27,7 @@ class Achievement {
 
         this.data = Data[this.id];
 
-        if (!this.data.reward)
-            this.data.reward = 'door';
+        if (!this.data.reward) this.data.reward = 'door';
 
         this.name = this.data.name;
         this.description = this.data.description;

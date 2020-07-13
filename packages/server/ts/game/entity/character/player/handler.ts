@@ -247,11 +247,9 @@ class Handler {
             return area.contains(x, y);
         });
 
-        if (!achievementArea || !achievementArea.achievement)
-            return;
+        if (!achievementArea || !achievementArea.achievement) return;
 
-        if (!this.player.achievementsLoaded)
-            return;
+        if (!this.player.achievementsLoaded) return;
 
         this.player.finishAchievement(achievementArea.achievement);
     }
