@@ -422,9 +422,7 @@ class Commands {
 
             case 'clear':
                 this.player.inventory.forEachSlot((slot) => {
-                    if (slot !== -1) {
-                        this.player.inventory.remove(slot.id, slot.count);
-                    }
+                    if (slot !== -1) this.player.inventory.remove(slot.id, slot.count);
                 });
 
                 break;
