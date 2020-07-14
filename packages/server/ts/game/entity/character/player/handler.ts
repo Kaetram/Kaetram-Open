@@ -68,8 +68,9 @@ class Handler {
 
             this.detectMusic(x, y);
             this.detectOverlay(x, y);
-            this.detectCamera(x, y);
             this.detectLights(x, y);
+            this.detectAchievements(x, y);
+            this.detectCamera(x, y);
             this.detectClipping(x, y);
         });
 
@@ -239,6 +240,18 @@ class Handler {
         });
 
         this.player.updateCamera(cameraArea);
+    }
+
+    detectAchievements(x: number, y: number) {
+        let achievementArea = _.find(this.world.getAchievementAreas(), (area: Area) => {
+            return area.contains(x, y);
+        });
+
+        if (!achievementArea || !achievementArea.achievement) return;
+
+        if (!this.player.achievementsLoaded) return;
+
+        this.player.finishAchievement(achievementArea.achievement);
     }
 
     detectLights(x: number, y: number) {
