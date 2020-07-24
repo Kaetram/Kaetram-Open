@@ -47,7 +47,6 @@
             "See, I know they respawn and stuff.", "But can you kill forty of them?"]
   },
 
-
   "3": {
     "id": 3,
     "name": "Maze Crawler",
@@ -126,5 +125,10 @@
     "isDoorReward": true,
     "rewardType": 1,
     "reward": 2000
+  },
+
+  "15": {
+    "id": 15,
+    "name": "Mudwich Path"
   }
 }
