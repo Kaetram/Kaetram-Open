@@ -313,7 +313,7 @@
     "name": "Dark Wizard",
     "id": 17,
     "drops": {"bastardsword": 100, "wizardrobe": 100, "redlightbow": 125, "topazring": 15},
-    "hitPoints": 700,
+    "hitPoints": 150,
     "armour": 4,
     "weapon": 10,
     "xp": 50,
