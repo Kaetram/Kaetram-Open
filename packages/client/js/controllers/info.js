@@ -33,6 +33,11 @@ export default class InfoController {
                         ? Modules.DamageColours.received
                         : Modules.DamageColours.inflicted;
 
+                if (type === Modules.Hits.Critical)
+                    dColour = isTarget
+                        ? Modules.DamageColours.receivedCritical
+                        : Modules.DamageColours.inflictedCritical;
+
                 hitSplat.setColours(dColour.fill, dColour.stroke);
 
                 self.addInfo(hitSplat);
