@@ -124,10 +124,6 @@ class Incoming {
                     this.handleShop(message);
                     break;
 
-                case Packets.Region:
-                    //this.handleRegion(message);
-                    break;
-
                 case Packets.Camera:
                     this.handleCamera(message);
                     break;

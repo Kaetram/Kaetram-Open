@@ -534,8 +534,8 @@ export default class Renderer {
          * having rendererd the entity
          */
 
-        if (entity instanceof Character && !entity.dead && !entity.teleporting) {
-            if (entity.hasWeapon()) {
+        if (entity instanceof Character) {
+            if (entity.hasWeapon() && !entity.dead && !entity.teleporting) {
                 var weapon = self.entities.getSprite(entity.weapon.getString());
 
                 if (weapon) {

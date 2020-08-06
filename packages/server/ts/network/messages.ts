@@ -538,4 +538,18 @@ Messages.Profession = class {
     }
 };
 
+Messages.BuildUp = class {
+    opcode: any;
+    info: any;
+
+    constructor(opcode: any, info: any) {
+        this.opcode = opcode;
+        this.info = info;
+    }
+
+    serialize() {
+        return [Packets.BuildUp, this.opcode, this.info];
+    }
+};
+
 export default Messages;
