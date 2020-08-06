@@ -95,8 +95,18 @@ export default {
             stroke: 'rgb(255, 180, 180)'
         },
 
+        receivedCritical: {
+            fill: 'rgb(204, 0, 204)',
+            stroke: 'rgb(255, 180, 180)'
+        },
+
         inflicted: {
             fill: 'white',
+            stroke: '#373737'
+        },
+
+        inflictedCritical: {
+            fill: 'rgb(255, 153, 204)',
             stroke: '#373737'
         },
 
