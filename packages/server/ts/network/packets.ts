@@ -49,7 +49,8 @@ const Packets: { [key: string]: any } = {
     Camera: 45,
     Bubble: 46,
     Client: 47,
-    Profession: 48
+    Profession: 48,
+    BuildUp: 49
 };
 
 Packets.IntroOpcode = {
