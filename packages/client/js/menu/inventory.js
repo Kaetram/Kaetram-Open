@@ -2,6 +2,7 @@ import $ from 'jquery';
 import Container from './container/container';
 import Packets from '../network/packets';
 import * as Detect from '../utils/detect';
+import Modules from '../utils/modules';
 
 export default class Inventory {
     constructor(game, size) {
@@ -58,6 +59,13 @@ export default class Inventory {
             itemSlotList.append(
                 '<div id="itemCount' + i + '" class="inventoryItemCount">' + count + '</div>'
             );
+
+            if (item.ability > -1) {
+                let eList = Object.keys(Modules.Enchantment), // enchantment list
+                    enchantment = eList[item.ability];
+
+                if (enchantment) itemSlotList.find('#itemCount' + i).text(enchantment);
+            }
 
             list.append(itemSlotList);
         }
@@ -226,6 +234,13 @@ export default class Inventory {
         else if (count === 1) count = '';
 
         item.find('#itemCount' + info.index).text(count);
+
+        if (slot.ability > -1) {
+            let eList = Object.keys(Modules.Enchantment), // enchantment list
+                enchantment = eList[slot.ability];
+
+            if (enchantment) item.find('#itemCount' + info.index).text(enchantment);
+        }
     }
 
     remove(info) {
