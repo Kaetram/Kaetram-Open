@@ -1,0 +1,15 @@
+/**
+    This TypeScript configuration file is for webpack configs only
+*/
+{
+    "compilerOptions": {
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "removeComments": true,
+        "module": "commonjs",
+        "target": "es5",
+        "resolveJsonModule": true,
+        "esModuleInterop": true
+    }
+}
