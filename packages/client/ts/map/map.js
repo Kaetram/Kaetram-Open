@@ -50,7 +50,7 @@ export default class Map {
         if (self.supportsWorker) {
             if (self.game.isDebug()) log.info('Parsing map with Web Workers...');
 
-            var worker = new Worker('./js/map/mapworker.js');
+            var worker = new Worker('./ts/map/mapworker.js');
             worker.postMessage(1);
 
             worker.onmessage = function (event) {
