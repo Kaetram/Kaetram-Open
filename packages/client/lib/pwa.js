@@ -1,4 +1,4 @@
-import log from '../js/lib/log';
+import log from '../ts/lib/log';
 var deferredPrompt = null;
 
 export const install = function () {

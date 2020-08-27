@@ -2,30 +2,36 @@
     "name": "@kaetram/client",
     "version": "1.0.0",
     "author": "Veradictus",
-    "description": "Kaetram's web server",
+    "description": "Kaetram's web client",
     "homepage": "https://kaetram.com/",
-    "main": "./js/main.js",
+    "main": "./ts/main.js",
     "scripts": {
-        "build": "webpack",
+        "build": "cross-env NODE_ENV=\"production\" webpack --config webpack.config.ts",
         "start": "webpack-dev-server",
         "dev": "webpack-dev-server",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": ""
     },
     "dependencies": {
-        "dotenv": "^8.2.0",
-        "dotenv-parse-variables": "^0.3.0",
         "gl-tiled": "^1.0.0",
         "jquery": "^3.5.1",
         "socket.io-client": "^2.3.0",
         "underscore": "^1.10.2"
     },
     "devDependencies": {
-        "copy-webpack-plugin": "^6.0.2",
+        "@types/copy-webpack-plugin": "^6.0.0",
+        "@types/dotenv-parse-variables": "^0.2.0",
+        "@types/dotenv-webpack": "^1.8.0",
+        "clean-webpack-plugin": "^3.0.0",
+        "copy-webpack-plugin": "^6.0.3",
+        "cross-env": "^7.0.2",
+        "dotenv-extended": "^2.8.0",
+        "dotenv-parse-variables": "^0.3.1",
         "gulp": "^4.0.2",
         "html-webpack-plugin": "^4.3.0",
+        "ts-node": "^9.0.0",
+        "typescript": "^4.0.2",
         "webpack": "^4.43.0",
         "webpack-cli": "^3.3.11",
-        "webpack-dev-server": "^3.11.0",
-        "workbox-build": "^5.1.3"
+        "webpack-dev-server": "^3.11.0"
     }
 }
