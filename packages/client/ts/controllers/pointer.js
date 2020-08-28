@@ -59,7 +59,7 @@ export default class PointerController {
         });
     }
 
-    setSize(element) {
+    async setSize(element) {
         var self = this;
 
         element.css({
@@ -68,7 +68,7 @@ export default class PointerController {
             margin: 'inherit',
             'margin-top': '-18px',
             top: '30px',
-            background: 'url("img/sprites/pointer.png")'
+            background: `url("${(await import('../../img/sprites/pointer.png')).default}")`
         });
     }
 
