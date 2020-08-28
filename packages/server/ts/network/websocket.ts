@@ -3,6 +3,7 @@ import log from '../util/log';
 import config from '../../config';
 
 import Connection from './connection';
+import * as WS from 'ws';
 import * as SocketIO from 'socket.io';
 import * as http from 'http';
 import * as https from 'https';
@@ -15,6 +16,7 @@ class WebSocket extends Socket {
 
     httpServer: http.Server | https.Server;
     io: SocketIO;
+    ws: WS.Server
 
     public connectionCallback: any;
     public webSocketReadyCallback: any;
@@ -66,6 +68,24 @@ class WebSocket extends Socket {
 
                 this.addConnection(client);
             });
+        });
+
+        if (!config.websocketEnabled)
+            return;
+
+        log.info('Initializing secondary websocket.');
+
+        this.ws = new WS.Server({ port: config.websocketPort });
+
+        this.ws.on('connection', (socket) => {
+            console.log(socket);
+
+
+            socket.on('message', (message) => {
+                console.log('Received message');
+                console.log(message);
+            });
+
         });
     }
 
