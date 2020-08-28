@@ -9,7 +9,7 @@ export default class App {
     constructor() {
         var self = this;
 
-        // Do not refactor env variables assignement
+        // Do not refactor env variables assignment
         // process.env.VARIABLE is replaced by webpack during build process
         self.config = {
             ip: process.env.IP,
