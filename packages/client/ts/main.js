@@ -1,3 +1,9 @@
+// import '../css/animations.css';
+// import '../css/game.css';
+// import '../css/main.css';
+// import '../css/vars.css';
+// import '../css/interface.css';
+
 import $ from 'jquery';
 import App from './app';
 import Game from './game';

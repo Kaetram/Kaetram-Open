@@ -38,7 +38,7 @@ export default class Container {
         return -1;
     }
 
-    getImageFormat(name) {
-        return 'url("img/sprites/item-' + name + '.png")';
+    async getImageFormat(name) {
+        return `url("${(await import(`../../../img/sprites/item-${name}.png`)).default}")`;
     }
 }

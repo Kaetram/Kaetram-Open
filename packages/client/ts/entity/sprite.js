@@ -39,11 +39,11 @@ export default class Sprite {
         };
     }
 
-    loadSprite() {
+    async loadSprite() {
         var self = this,
             sprite = self.sprite;
 
-        self.filepath = 'img/sprites/' + self.id + '.png';
+        self.filepath = (await import(`../../img/sprites/${self.id}.png`)).default;
         self.animationData = sprite.animations;
 
         self.width = sprite.width;

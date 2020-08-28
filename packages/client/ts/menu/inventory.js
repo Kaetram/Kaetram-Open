@@ -23,7 +23,7 @@ export default class Inventory {
         self.selectedItem = null;
     }
 
-    load(data) {
+    async load(data) {
         var self = this,
             list = $('#inventory').find('ul');
 
@@ -35,7 +35,7 @@ export default class Inventory {
             var itemSlot = $('<div id="slot' + i + '" class="itemSlot"></div>');
 
             if (item.string !== 'null')
-                itemSlot.css('background-image', self.container.getImageFormat(item.string));
+                itemSlot.css('background-image', await self.container.getImageFormat(item.string));
 
             itemSlot.css('background-size', '600%');
 
@@ -203,7 +203,7 @@ export default class Inventory {
         self.actions.hide();
     }
 
-    add(info) {
+    async add(info) {
         var self = this,
             item = $(self.getList()[info.index]),
             slot = self.container.slots[info.index];
@@ -222,7 +222,7 @@ export default class Inventory {
 
         var cssSlot = item.find('#slot' + info.index);
 
-        cssSlot.css('background-image', self.container.getImageFormat(slot.string));
+        cssSlot.css('background-image', await self.container.getImageFormat(slot.string));
 
         cssSlot.css('background-size', '600%');
 
@@ -261,7 +261,7 @@ export default class Inventory {
         }
     }
 
-    resize() {
+    async resize() {
         var self = this,
             list = self.getList();
 
@@ -272,7 +272,7 @@ export default class Inventory {
             if (!slot) continue;
 
             if (Detect.isMobile()) item.css('background-size', '600%');
-            else item.css('background-image', self.container.getImageFormat(slot.string));
+            else item.css('background-image', await self.container.getImageFormat(slot.string));
         }
     }
 

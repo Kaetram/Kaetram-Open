@@ -74,14 +74,14 @@ export default class State extends Page {
         });
     }
 
-    loadSlots() {
+    async loadSlots() {
         var self = this;
 
-        self.weaponSlot.css('background-image', self.getImageFormat(self.player.weapon.string));
-        self.armourSlot.css('background-image', self.getImageFormat(self.player.armour.string));
-        self.pendantSlot.css('background-image', self.getImageFormat(self.player.pendant.string));
-        self.ringSlot.css('background-image', self.getImageFormat(self.player.ring.string));
-        self.bootsSlot.css('background-image', self.getImageFormat(self.player.boots.string));
+        self.weaponSlot.css('background-image', await self.getImageFormat(self.player.weapon.string));
+        self.armourSlot.css('background-image', await self.getImageFormat(self.player.armour.string));
+        self.pendantSlot.css('background-image', await self.getImageFormat(self.player.pendant.string));
+        self.ringSlot.css('background-image', await self.getImageFormat(self.player.ring.string));
+        self.bootsSlot.css('background-image', await self.getImageFormat(self.player.boots.string));
 
         self.forEachSlot(function (slot) {
             slot.css('background-size', '600%');
