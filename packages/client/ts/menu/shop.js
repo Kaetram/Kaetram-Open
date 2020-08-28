@@ -241,11 +241,11 @@ export default class Shop {
 
         if (self.inventory) self.inventory.find('ul').empty();
 
-        if (self.close) self.close.unbind('click');
+        if (self.close) self.close.off('click');
 
-        if (self.sellSlot) self.sellSlot.unbind('click');
+        if (self.sellSlot) self.sellSlot.off('click');
 
-        if (self.confirmSell) self.confirmSell.unbind('click');
+        if (self.confirmSell) self.confirmSell.off('click');
     }
 
     getScale() {

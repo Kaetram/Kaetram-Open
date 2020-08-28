@@ -1,4 +1,4 @@
-import * as bcryptjs from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 import MongoDB from './mongodb';
 import log from '../../util/log';
 import config from '../../../config';

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import $ from 'jquery';
 import Blob from '../renderer/bubbles/blob';
 

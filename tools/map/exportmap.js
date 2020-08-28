@@ -4,7 +4,7 @@ config = { debugLevel: 'all', debug: true };
 
 let processMap = require('./processmap'),
     fs = require('fs');
-_ = require('underscore');
+_ = require('lodash');
 
 class ExportMap {
     constructor() {
@@ -30,19 +30,17 @@ class ExportMap {
         let self = this,
             worldClientJSON = '../../packages/server/data/map/world_client.json',
             worldServerJSON = '../../packages/server/data/map/world_server.json',
-            clientMapJSON = '../../packages/client/data/maps/map.json',
-            clientMapJS = '../../packages/client/data/maps/map.js';
+            clientMapJSON = '../../packages/client/data/maps/map.json';
 
         let worldClient = self.parse(data, worldClientJSON, 'client');
 
         self.parse(data, worldServerJSON, 'server');
         self.parse(data, clientMapJSON, 'info', worldClient);
-        self.parse(data, clientMapJS, 'info', worldClient, true);
 
         self.copyTilesets();
     }
 
-    parse(data, destination, mode, worldClient, isJS) {
+    parse(data, destination, mode, worldClient) {
         let self = this,
             map = processMap(data, { mode: mode });
 
@@ -50,10 +48,8 @@ class ExportMap {
 
         let mapString = JSON.stringify(map);
 
-        if (isJS) mapString = 'let mapData = ' + mapString;
-
         fs.writeFile(destination, mapString, (error, file) => {
-            if (error) console.log(`An error has occurred while writing map files.`);
+            if (error) console.log('An error has occurred while writing map files.');
             else console.log(`[${mode.format()}] Map saved at: ${destination}`);
         });
 

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import Combat from '../../ts/game/entity/character/combat/combat';
 import Character from '../../ts/game/entity/character/character';
 import Mob from '../../ts/game/entity/character/mob/mob';

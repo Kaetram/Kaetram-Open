@@ -120,11 +120,11 @@ export default class Actions {
     clear() {
         var self = this;
 
-        $('#dropAccept').unbind('click');
-        $('#dropCancel').unbind('click');
+        $('#dropAccept').off('click');
+        $('#dropCancel').off('click');
 
-        self.trade.unbind('click');
-        self.follow.unbind('click');
+        self.trade.off('click');
+        self.follow.off('click');
     }
 
     displayDrop(activeClass) {

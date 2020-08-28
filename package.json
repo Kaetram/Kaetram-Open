@@ -17,7 +17,7 @@
         "map": "cd tools/map && node exportmap data/map-refactor.json"
     },
     "dependencies": {
-        "underscore": "^1.10.2"
+        "lodash": "^4.17.15"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^3.9.1",

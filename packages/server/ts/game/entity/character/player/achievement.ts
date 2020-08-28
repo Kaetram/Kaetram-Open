@@ -4,7 +4,7 @@ import Modules from '../../../../util/modules';
 import Player from './player';
 import NPC from '../../npc/npc';
 
-import * as Data from '../../../../../data/achievements.json';
+import Data from '../../../../../data/achievements.json';
 
 class Achievement {
     public id: number;

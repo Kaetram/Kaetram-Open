@@ -309,7 +309,7 @@ export default class Inventory {
 
         $('#inventory').find('ul').empty();
 
-        if (self.button) self.button.unbind('click');
+        if (self.button) self.button.off('click');
     }
 
     getScale() {

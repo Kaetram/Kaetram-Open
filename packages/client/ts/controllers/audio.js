@@ -1,5 +1,5 @@
 import log from '../lib/log';
-import _ from 'underscore';
+import _ from 'lodash';
 import * as Detect from '../utils/detect';
 import Modules from '../utils/modules';
 
@@ -58,22 +58,19 @@ export default class AudioController {
             fullPath = path + name + '.' + self.format,
             sound = document.createElement('audio');
 
-        sound.addEventListener(
-            'canplaythrough',
-            function (e) {
-                this.removeEventListener('canplaythrough', arguments.callee, false);
+        function event() {
+            sound.removeEventListener('canplaythrough', event, false);
 
-                if (callback) callback();
-            },
-            false
-        );
+            if (callback) callback();
+        }
+        sound.addEventListener('canplaythrough', event, false);
 
         sound.addEventListener(
             'error',
-            function () {
-                log.error('The audible: ' + name + ' could not be loaded - unsupported extension?');
+            () => {
+                log.error(`The audible: ${name} could not be loaded - unsupported extension?`);
 
-                self.audibles[name] = null;
+                this.audibles[name] = null;
             },
             false
         );
@@ -263,7 +260,7 @@ export default class AudioController {
 
         if (!self.audibles[name]) return null;
 
-        var audible = _.detect(self.audibles[name], function (audible) {
+        var audible = _.find(self.audibles[name], function (audible) {
             return audible.ended || audible.paused;
         });
 
