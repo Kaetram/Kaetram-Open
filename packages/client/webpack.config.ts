@@ -15,19 +15,15 @@ const { NODE_ENV } = env;
 
 const inProduction = NODE_ENV === 'production';
 
-const entry = ['./index.html', './css/main.css', './ts/main.js'].map((file) =>
-    path.resolve(__dirname, file)
-);
-if (!inProduction)
-    entry.unshift('webpack-hot-middleware/client?path=/__webpack_hmr&reload=true&timeout=20000');
-
 const exclude = /(node_modules|bower_components)/;
 
 const config: WebpackOptions = {
     name: 'Client',
     target: 'web',
     mode: NODE_ENV as 'development' | 'production',
-    entry,
+    entry: ['./index.html', './css/main.css', './ts/main.js'].map((file) =>
+        path.resolve(__dirname, file)
+    ),
     devtool: inProduction ? 'source-map' : 'inline-source-map',
     output: {
         path: path.resolve(__dirname, './dist'),
@@ -36,12 +32,12 @@ const config: WebpackOptions = {
     module: {
         rules: [
             {
-                test: /\.html?$/,
+                test: /\.html?$/i,
                 loader: 'html-loader',
                 exclude
             },
             {
-                test: /\.css?$/,
+                test: /\.css$/i,
                 use: [
                     inProduction ? MiniCssExtractPlugin.loader : 'style-loader',
                     'css-loader'
@@ -51,26 +47,17 @@ const config: WebpackOptions = {
                 exclude
             },
             {
-                test: /\.js?$/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            [
-                                '@babel/preset-env',
-                                {
-                                    targets: {
-                                        esmodules: true
-                                    }
-                                }
-                            ]
-                        ]
-                    }
-                },
+                test: /\.js?$/i,
+                use: ['babel-loader'],
                 exclude
             },
             {
-                test: /\.(png|svg|ttf|woff|eot)$/,
+                test: /worker\.js$/i,
+                use: ['worker-loader', 'babel-loader'],
+                exclude
+            },
+            {
+                test: /\.(png|svg|ttf|woff|eot)$/i,
                 loader: 'file-loader',
                 exclude
             }
