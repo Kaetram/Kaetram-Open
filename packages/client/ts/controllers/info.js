@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import Modules from '../utils/modules';
 import Queue from '../utils/queue';
 import Splat from '../renderer/infos/splat';

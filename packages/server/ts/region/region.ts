@@ -1,8 +1,8 @@
 /* global module */
 
-import _ from 'underscore';
-import * as fs from 'fs';
-import * as path from 'path';
+import _ from 'lodash';
+import fs from 'fs';
+import path from 'path';
 import Messages from '../network/messages';
 import Packets from '../network/packets';
 import Player from '../game/entity/character/player/player';
@@ -161,7 +161,7 @@ class Region {
         this.push(player);
 
         this.mapRegions.forEachSurroundingRegion(player.region, (regionId: string) => {
-            let instancedRegion = Region.regionIdToInstance(player, regionId);
+            const instancedRegion = Region.regionIdToInstance(player, regionId);
 
             if (instancedRegion in this.regions) delete this.regions[instancedRegion];
         });
@@ -183,10 +183,10 @@ class Region {
     updateRegions(regionId?: string) {
         if (regionId)
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
-                let region = this.regions[id];
+                const region = this.regions[id];
 
                 _.each(region.players, (instance: string) => {
-                    let player = this.world.players[instance];
+                    const player = this.world.players[instance];
 
                     if (player) this.sendRegion(player, player.region);
                 });
@@ -200,12 +200,12 @@ class Region {
     }
 
     sendRegion(player: Player, region: string, force?: boolean) {
-        let tileData = this.getRegionData(region, player, force),
+        const tileData = this.getRegionData(region, player, force),
             dynamicTiles = this.getDynamicTiles(player);
 
         // Send dynamic tiles alongside the region
         for (let i = 0; i < tileData.length; i++) {
-            let tile = tileData[i],
+            const tile = tileData[i],
                 index = dynamicTiles.indexes.indexOf(tile.index);
 
             if (index > -1) {
@@ -223,7 +223,7 @@ class Region {
                 tileData[i].data = dynamicTiles.data[i];
                 tileData[i].isCollision = dynamicTiles.collisions[i];
 
-                let data = dynamicTiles.objectData,
+                const data = dynamicTiles.objectData,
                     index = tileData[i].index;
 
                 if (data && index in data) {
@@ -240,7 +240,7 @@ class Region {
 
     // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
     getDynamicTiles(player: Player) {
-        let dynamicTiles: any = player.doors.getAllTiles(),
+        const dynamicTiles: any = player.doors.getAllTiles(),
             trees = player.getSurroundingTrees();
 
         // Start with the doors and append afterwards.
@@ -269,13 +269,13 @@ class Region {
     }
 
     add(entity: Entity, regionId: string) {
-        let newRegions = [];
+        const newRegions = [];
 
         if (entity && regionId && regionId in this.regions) {
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
                 if (entity.instanced) id = Region.regionIdToInstance(entity, id);
 
-                let region = this.regions[id];
+                const region = this.regions[id];
 
                 if (region && region.entities) {
                     region.entities[entity.instance] = entity;
@@ -294,10 +294,10 @@ class Region {
     }
 
     remove(entity: Entity) {
-        let oldRegions = [];
+        const oldRegions = [];
 
         if (entity && entity.region) {
-            let region = this.regions[entity.region];
+            const region = this.regions[entity.region];
 
             if (entity instanceof Player)
                 region.players = _.reject(region.players, (id) => {
@@ -322,9 +322,9 @@ class Region {
     incoming(entity: Entity, regionId: string) {
         if (!entity || !regionId) return;
 
-        let region = this.regions[regionId];
+        const region = this.regions[regionId];
 
-        if (region && !_.include(region.entities, entity.instance)) region.incoming.push(entity);
+        if (region && !_.includes(region.entities, entity.instance)) region.incoming.push(entity);
 
         if (this.incomingCallback) this.incomingCallback(entity, regionId);
     }
@@ -343,7 +343,7 @@ class Region {
 
             this.incoming(entity, regionId);
 
-            let oldRegions = this.remove(entity),
+            const oldRegions = this.remove(entity),
                 newRegions = this.add(entity, regionId);
 
             if (_.size(oldRegions) > 0) entity.recentRegions = _.difference(oldRegions, newRegions);
@@ -371,13 +371,13 @@ class Region {
     }
 
     changeTileAt(player: Player, newTile: any, x: number, y: number) {
-        let index = this.gridPositionToIndex(x, y);
+        const index = this.gridPositionToIndex(x, y);
 
         player.send(Region.getModify(index, newTile));
     }
 
     changeGlobalTile(newTile: any, x: number, y: number) {
-        let index = this.gridPositionToIndex(x, y);
+        const index = this.gridPositionToIndex(x, y);
 
         this.clientMap.data[index] = newTile;
 
@@ -393,7 +393,7 @@ class Region {
     formatRegionData(_player: Player, _data: any) {}
 
     getRegionData(region: string, player: Player, force?: boolean) {
-        let data = [];
+        const data = [];
 
         if (!player) return data;
 
@@ -401,7 +401,7 @@ class Region {
             if (!player.hasLoadedRegion(regionId) || force) {
                 player.loadRegion(regionId);
 
-                let bounds = this.getRegionBounds(regionId);
+                const bounds = this.getRegionBounds(regionId);
 
                 for (let y = bounds.startY; y < bounds.endY; y++) {
                     for (let x = bounds.startX; x < bounds.endX; x++) {
@@ -422,7 +422,7 @@ class Region {
                             } else if (this.map.isObject(tileData)) objectId = tileData;
                         }
 
-                        let info: any = {
+                        const info: any = {
                             index: index
                         };
 
@@ -433,7 +433,7 @@ class Region {
                         if (objectId) {
                             info.isObject = !!objectId;
 
-                            let cursor = this.map.getCursor(info.index, objectId);
+                            const cursor = this.map.getCursor(info.index, objectId);
 
                             if (cursor) info.cursor = cursor;
                         }
@@ -448,7 +448,7 @@ class Region {
     }
 
     getRegionBounds(regionId: string) {
-        let regionCoordinates = this.mapRegions.regionIdToCoordinates(regionId);
+        const regionCoordinates = this.mapRegions.regionIdToCoordinates(regionId);
 
         return {
             startX: regionCoordinates.x,
@@ -466,7 +466,7 @@ class Region {
     }
 
     static instanceToRegionId(instancedRegionId: string) {
-        let region = instancedRegionId.split('-');
+        const region = instancedRegionId.split('-');
 
         return region[0] + '-' + region[1];
     }

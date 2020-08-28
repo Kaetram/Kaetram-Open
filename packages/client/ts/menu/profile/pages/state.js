@@ -1,6 +1,6 @@
 import Page from '../page';
 import $ from 'jquery';
-import _ from 'underscore';
+import _ from 'lodash';
 import Packets from '../../../network/packets';
 
 export default class State extends Page {
@@ -77,9 +77,18 @@ export default class State extends Page {
     async loadSlots() {
         var self = this;
 
-        self.weaponSlot.css('background-image', await self.getImageFormat(self.player.weapon.string));
-        self.armourSlot.css('background-image', await self.getImageFormat(self.player.armour.string));
-        self.pendantSlot.css('background-image', await self.getImageFormat(self.player.pendant.string));
+        self.weaponSlot.css(
+            'background-image',
+            await self.getImageFormat(self.player.weapon.string)
+        );
+        self.armourSlot.css(
+            'background-image',
+            await self.getImageFormat(self.player.armour.string)
+        );
+        self.pendantSlot.css(
+            'background-image',
+            await self.getImageFormat(self.player.pendant.string)
+        );
         self.ringSlot.css('background-image', await self.getImageFormat(self.player.ring.string));
         self.bootsSlot.css('background-image', await self.getImageFormat(self.player.boots.string));
 

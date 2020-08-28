@@ -56,10 +56,10 @@ export default class Sprite {
         self.idleSpeed = sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
     }
 
-    update() {
+    async update() {
         var self = this;
 
-        self.loadSprite();
+        await self.loadSprite();
         self.load();
     }
 

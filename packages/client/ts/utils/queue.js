@@ -3,7 +3,7 @@
  * most notably used in the info controller to queue
  * objects to delete
  */
-import _ from 'underscore';
+import _ from 'lodash';
 
 export default class Queue {
     constructor() {

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import Slot from './slot';
 import log from '../../../../../util/log';
 import Items from '../../../../../util/items';

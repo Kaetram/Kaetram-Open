@@ -171,8 +171,8 @@ export default class Enchant {
 
         self.enchantSlots.find('ul').empty();
 
-        self.confirm.unbind('click');
-        self.closeEnchant.unbind('click');
+        self.confirm.off('click');
+        self.closeEnchant.off('click');
     }
 
     hasImage(image) {

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import Entity from '../entity';
 import Transition from '../../utils/transition';
 import Animation from '../animation';

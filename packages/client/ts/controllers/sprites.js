@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import $ from 'jquery';
 import log from '../lib/log';
 import Sprite from '../entity/sprite';

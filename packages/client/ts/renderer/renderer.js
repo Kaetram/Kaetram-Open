@@ -6,7 +6,7 @@ import Item from '../entity/objects/item';
 import Modules from '../utils/modules';
 import Illuminated from '../../lib/illuminated';
 import * as Detect from '../utils/detect';
-import _ from 'underscore';
+import _ from 'lodash';
 
 export default class Renderer {
     constructor(background, entities, foreground, overlay, textCanvas, cursor, game) {

@@ -1,5 +1,5 @@
 import Packets from './packets';
-import _ from 'underscore';
+import _ from 'lodash';
 
 export default class Messages {
     /**
