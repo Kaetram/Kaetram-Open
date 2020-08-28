@@ -1,8 +1,8 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Area from '../area';
-import * as map from '../../../data/map/world_server.json';
+import map from '../../../data/map/world_server.json';
 import log from '../../util/log';
 
 class OverlayAreas {

@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import _ from 'underscore';
+import _ from 'lodash';
 import State from './pages/state';
 import Settings from './pages/settings';
 import Quest from './pages/quest';
@@ -133,9 +133,9 @@ export default class Profile {
     clean() {
         var self = this;
 
-        self.button.unbind('click');
-        self.next.unbind('click');
-        self.previous.unbind('click');
+        self.button.off('click');
+        self.next.off('click');
+        self.previous.off('click');
 
         self.quests.clear();
         self.settings.clear();

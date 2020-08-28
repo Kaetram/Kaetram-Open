@@ -1,6 +1,8 @@
 import $ from 'jquery';
-import _ from 'underscore';
+import _ from 'lodash';
 import log from '../lib/log';
+import mapData from '../../data/maps/map.json';
+import MapWorker from './mapworker';
 import glTiled from 'gl-tiled';
 import { isInt } from '../utils/util';
 
@@ -50,7 +52,8 @@ export default class Map {
         if (self.supportsWorker) {
             if (self.game.isDebug()) log.info('Parsing map with Web Workers...');
 
-            var worker = new Worker('./ts/map/mapworker.js');
+            const worker = new MapWorker();
+
             worker.postMessage(1);
 
             worker.onmessage = function (event) {
@@ -61,17 +64,11 @@ export default class Map {
                 self.mapLoaded = true;
             };
         } else {
-            if (self.game.isDebug()) log.info('Parsing map with Ajax...');
+            if (self.game.isDebug()) log.info('Parsing map with JSON...');
 
-            $.get(
-                'data/maps/map.json',
-                function (data) {
-                    self.parseMap(data);
-                    self.loadCollisions();
-                    self.mapLoaded = true;
-                },
-                'json'
-            );
+            self.parseMap(mapData);
+            self.loadCollisions();
+            self.mapLoaded = true;
         }
     }
 

@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import Modules from '../utils/modules';
 import log from '../lib/log';
 import Animation from '../entity/animation';

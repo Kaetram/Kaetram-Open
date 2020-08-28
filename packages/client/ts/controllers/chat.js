@@ -133,7 +133,7 @@ export default class ChatController {
     clear() {
         var self = this;
 
-        if (self.button) self.button.unbind('click');
+        if (self.button) self.button.off('click');
     }
 
     clean() {

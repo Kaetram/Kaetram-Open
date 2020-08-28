@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import _ from 'underscore';
+import _ from 'lodash';
 
 export default class Settings {
     //TODO - Hide crpyto mining option on mobiles and completely disable it.
@@ -187,17 +187,17 @@ export default class Settings {
     clear() {
         var self = this;
 
-        self.button.unbind('click');
-        self.soundCheck.unbind('click');
-        self.cameraCheck.unbind('click');
-        self.debugCheck.unbind('click');
-        self.centreCheck.unbind('click');
-        self.nameCheck.unbind('click');
-        self.levelCheck.unbind('click');
+        self.button.off('click');
+        self.soundCheck.off('click');
+        self.cameraCheck.off('click');
+        self.debugCheck.off('click');
+        self.centreCheck.off('click');
+        self.nameCheck.off('click');
+        self.levelCheck.off('click');
 
-        self.brightness.unbind('change');
-        self.volume.unbind('change');
-        self.sfx.unbind('change');
+        self.brightness.off('change');
+        self.volume.off('change');
+        self.sfx.off('change');
     }
 
     setMusicLevel(musicLevel) {

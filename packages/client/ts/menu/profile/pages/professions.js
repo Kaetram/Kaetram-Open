@@ -1,6 +1,6 @@
 import Page from '../page';
 import $ from 'jquery';
-import _ from 'underscore';
+import _ from 'lodash';
 
 export default class Professions extends Page {
     constructor(game) {
