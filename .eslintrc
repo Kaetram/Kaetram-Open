@@ -5,13 +5,14 @@
         "es2020": true,
         "node": true
     },
+    "plugins": ["prettier", "@typescript-eslint"],
     "extends": [
         "eslint:recommended",
-        "plugin:prettier/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "prettier",
+        "plugin:prettier/recommended"
     ],
-    "plugins": ["@typescript-eslint"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 11,
@@ -23,11 +24,13 @@
             "error",
             4,
             {
+                "ignoredNodes": ["ConditionalExpression"],
                 "SwitchCase": 1
             }
         ],
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "single"],
         "semi": ["error", "always"]
-    }
+    },
+    "ignorePatterns": ["node_modules/", "dist/", "**/*.min.*"]
 }
