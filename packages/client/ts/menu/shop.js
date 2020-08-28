@@ -75,7 +75,7 @@ export default class Shop {
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
     }
 
-    move(info) {
+    async move(info) {
         var self = this,
             inventorySlot = self.getInventoryList().find('#shopInventorySlot' + info.slotId),
             slotImage = inventorySlot.find('#inventoryImage' + info.slotId),
@@ -87,7 +87,7 @@ export default class Shop {
         });
 
         self.sellSlotReturn.css({
-            'background-image': self.container.getImageFormat(info.currency),
+            'background-image': await self.container.getImageFormat(info.currency),
             'background-size': self.sellSlot.css('background-size')
         });
 
@@ -139,7 +139,7 @@ export default class Shop {
         self.load();
     }
 
-    load() {
+    async load() {
         var self = this;
 
         for (var i = 0; i < self.container.size; i++) {
@@ -162,7 +162,7 @@ export default class Shop {
             itemName = $('<div id="shopItemName' + i + '" class="shopItemName"></div>');
             itemBuy = $('<div id="shopItemBuy' + i + '" class="shopItemBuy"></div>');
 
-            itemImage.css('background-image', self.container.getImageFormat(string));
+            itemImage.css('background-image', await self.container.getImageFormat(string));
             itemCount.html(count);
             itemPrice.html(price + 'g');
             itemName.html(name);

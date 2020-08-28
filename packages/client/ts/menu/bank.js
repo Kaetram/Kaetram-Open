@@ -22,7 +22,7 @@ export default class Bank {
         });
     }
 
-    load(data) {
+    async load(data) {
         var self = this,
             bankList = self.bankSlots.find('ul'),
             inventoryList = self.bankInventorySlots.find('ul');
@@ -41,7 +41,7 @@ export default class Bank {
             var image = $('<div id="bankImage' + i + '" class="bankImage"></div>');
 
             if (item.string)
-                image.css('background-image', self.container.getImageFormat(item.string));
+                image.css('background-image', await self.container.getImageFormat(item.string));
 
             slot.click(function (event) {
                 self.click('bank', event);
@@ -82,7 +82,7 @@ export default class Bank {
             var slotImage = $('<div id="inventoryImage' + j + '" class="bankImage"></div>');
 
             if (iItem.string)
-                slotImage.css('background-image', self.container.getImageFormat(iItem.string));
+                slotImage.css('background-image', await self.container.getImageFormat(iItem.string));
 
             iSlot.click(function (event) {
                 self.click('inventory', event);
@@ -113,7 +113,7 @@ export default class Bank {
         }
     }
 
-    resize() {
+    async resize() {
         var self = this,
             bankList = self.getBankList(),
             inventoryList = self.getInventoryList();
@@ -134,7 +134,7 @@ export default class Bank {
                 'margin-left': '0'
             });
 
-            image.css('background-image', self.container.getImageFormat(slot.string));
+            image.css('background-image', await self.container.getImageFormat(slot.string));
         }
 
         for (var j = 0; j < inventoryList.length; j++) {
@@ -147,7 +147,7 @@ export default class Bank {
                 'margin-bottom': 6 * self.getScale() + 'px'
             });
 
-            iImage.css('background-image', self.container.getImageFormat(iSlot.string));
+            iImage.css('background-image', await self.container.getImageFormat(iSlot.string));
         }
     }
 
@@ -159,7 +159,7 @@ export default class Bank {
         self.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
     }
 
-    add(info) {
+    async add(info) {
         var self = this,
             item = $(self.getBankList()[info.index]),
             slot = self.container.slots[info.index];
@@ -174,7 +174,7 @@ export default class Bank {
             cssSlot = bankSlot.find('#bankImage' + info.index),
             count = bankSlot.find('#bankItemCount' + info.index);
 
-        cssSlot.css('background-image', self.container.getImageFormat(info.string));
+        cssSlot.css('background-image', await self.container.getImageFormat(info.string));
 
         if (self.scale < 3) cssSlot.css('background-size', '600%');
 
@@ -200,7 +200,7 @@ export default class Bank {
         } else divItem.find('#bankItemCount' + info.index).text(slot.count);
     }
 
-    addInventory(info) {
+    async addInventory(info) {
         var self = this,
             item = $(self.getInventoryList()[info.index]);
 
@@ -209,7 +209,7 @@ export default class Bank {
         var slot = item.find('#bankInventorySlot' + info.index),
             image = slot.find('#inventoryImage' + info.index);
 
-        image.css('background-image', self.container.getImageFormat(info.string));
+        image.css('background-image', await self.container.getImageFormat(info.string));
 
         if (info.count > 1) slot.find('#inventoryItemCount' + info.index).text(info.count);
     }
