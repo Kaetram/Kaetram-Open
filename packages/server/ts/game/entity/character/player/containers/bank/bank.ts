@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Container from '../container';
 import Messages from '../../../../../../network/messages';
 import Packets from '../../../../../../network/packets';

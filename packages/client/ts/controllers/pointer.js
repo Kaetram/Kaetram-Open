@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import _ from 'underscore';
+import _ from 'lodash';
 import Pointer from '../renderer/pointers/pointer';
 import Modules from '../utils/modules';
 

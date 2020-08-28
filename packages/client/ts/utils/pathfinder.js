@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import AStar from '../lib/astar';
 
 export default class PathFinder {

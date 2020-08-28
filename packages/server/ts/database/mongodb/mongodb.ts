@@ -1,7 +1,7 @@
 /* global module */
 
-import _ from 'underscore';
-import * as bcryptjs from 'bcryptjs';
+import _ from 'lodash';
+import bcryptjs from 'bcryptjs';
 import log from '../../util/log';
 import config from '../../../config';
 import { MongoClient, Db } from 'mongodb';

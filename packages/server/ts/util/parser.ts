@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import Mobs from './mobs';
 import NPCs from './npcs';
 import Items from './items';
@@ -12,12 +12,12 @@ import log from '../util/log';
 import combatPlugins from '../../data/combat/index';
 import itemPlugins from '../../data/items/index';
 
-import * as NPCData from '../../data/npcs.json';
-import * as ItemData from '../../data/items.json';
-import * as MobData from '../../data/mobs.json';
-import * as AbilityData from '../../data/abilities.json';
-import * as ShopsData from '../../data/shops.json';
-import * as ObjectData from '../../data/objects.json';
+import NPCData from '../../data/npcs.json';
+import ItemData from '../../data/items.json';
+import MobData from '../../data/mobs.json';
+import AbilityData from '../../data/abilities.json';
+import ShopsData from '../../data/shops.json';
+import ObjectData from '../../data/objects.json';
 
 class Parser {
     private readyCallback: Function;
@@ -45,6 +45,7 @@ class Parser {
 
     loadMobData() {
         let mobCounter = 0;
+        console.log(_);
 
         _.each(MobData, (value: any, key) => {
             key = key.toLowerCase();
@@ -218,7 +219,7 @@ class Parser {
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
-            let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
+            const points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
     }

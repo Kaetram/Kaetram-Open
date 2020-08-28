@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Hit from './hit';
 import CombatQueue from './combatqueue';
 import Utils from '../../../../util/utils';

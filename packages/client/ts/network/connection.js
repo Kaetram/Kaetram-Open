@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import TeamWar from './impl/teamwar';
 import Packets from './packets';
 import Modules from '../utils/modules';
@@ -143,12 +143,12 @@ export default class Connection {
         });
 
         self.messages.onEntityList(function (data) {
-            var ids = _.pluck(self.entities.getAll(), 'id'),
+            var ids = _.map(self.entities.getAll(), 'id'),
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
 
             self.entities.decrepit = _.reject(self.entities.getAll(), function (entity) {
-                return _.include(known, entity.id) || entity.id === self.game.player.id;
+                return _.includes(known, entity.id) || entity.id === self.game.player.id;
             });
 
             self.entities.clean(newIds);

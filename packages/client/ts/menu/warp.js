@@ -82,10 +82,10 @@ export default class Wrap {
     clear() {
         var self = this;
 
-        for (var i = 0; i < self.warpCount; i++) self.mapFrame.find('#warp' + i).unbind('click');
+        for (var i = 0; i < self.warpCount; i++) self.mapFrame.find('#warp' + i).off('click');
 
-        if (self.close) self.close.unbind('click');
+        if (self.close) self.close.off('click');
 
-        if (self.button) self.button.unbind('click');
+        if (self.button) self.button.off('click');
     }
 }
