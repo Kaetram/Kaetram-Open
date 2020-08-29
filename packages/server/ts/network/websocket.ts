@@ -77,15 +77,19 @@ class WebSocket extends Socket {
 
         this.ws = new WS.Server({ port: config.websocketPort });
 
-        this.ws.on('connection', (socket) => {
-            console.log(socket);
+        this.ws.on('connection', (socket: any, request: any) => {
+            let mappedAddress = request.socket.remoteAddress,
+                remoteAddress = mappedAddress.split('::ffff:')[1];
 
+            socket.conn = { remoteAddress: remoteAddress };
 
-            socket.on('message', (message) => {
-                console.log('Received message');
-                console.log(message);
-            });
+            log.info('Received raw websocket connection from: ' + socket.remoteAddress);
 
+            let client = new Connection(this.createId(), socket, this);
+
+            if (this.connectionCallback) this.connectionCallback(client);
+
+            this.addConnection(client);
         });
     }
 
