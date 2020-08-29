@@ -83,9 +83,9 @@ class WebSocket extends Socket {
 
             socket.conn = { remoteAddress: remoteAddress };
 
-            log.info('Received raw websocket connection from: ' + socket.remoteAddress);
+            log.info('Received raw websocket connection from: ' + socket.conn.remoteAddress);
 
-            let client = new Connection(this.createId(), socket, this);
+            let client = new Connection(this.createId(), socket, this, true);
 
             if (this.connectionCallback) this.connectionCallback(client);
 
