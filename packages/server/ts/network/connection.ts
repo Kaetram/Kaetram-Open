@@ -22,7 +22,11 @@ class Connection {
         this.rawWebSocket = rawWebSocket;
 
         this.socket.on('message', (message: any) => {
-            if (this.listenCallback) this.listenCallback(JSON.parse(message));
+            try {
+                if (this.listenCallback) this.listenCallback(JSON.parse(message));
+            } catch(e) {
+                log.error('Could not parse message: ' + message);
+            }
         });
 
         this.socket.on(this.rawWebSocket ? 'close' : 'disconnect', () => {
