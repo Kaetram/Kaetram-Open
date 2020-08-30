@@ -24,7 +24,7 @@ class Connection {
         this.socket.on('message', (message: any) => {
             try {
                 if (this.listenCallback) this.listenCallback(JSON.parse(message));
-            } catch(e) {
+            } catch (e) {
                 log.error('Could not parse message: ' + message);
             }
         });
