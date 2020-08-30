@@ -16,7 +16,7 @@ class WebSocket extends Socket {
 
     httpServer: http.Server | https.Server;
     io: SocketIO;
-    ws: WS.Server
+    ws: WS.Server;
 
     public connectionCallback: any;
     public webSocketReadyCallback: any;
@@ -70,8 +70,7 @@ class WebSocket extends Socket {
             });
         });
 
-        if (!config.websocketEnabled)
-            return;
+        if (!config.websocketEnabled) return;
 
         log.info('Initializing secondary websocket.');
 
