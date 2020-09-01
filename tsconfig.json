@@ -1,15 +1,21 @@
-/**
-    This TypeScript configuration file is for webpack configs only
-*/
 {
     "compilerOptions": {
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "importHelpers": true,
         "removeComments": true,
-        "module": "commonjs",
-        "target": "es5",
+        "allowJs": true,
+        "inlineSourceMap": true,
+        "moduleResolution": "node",
         "resolveJsonModule": true,
-        "esModuleInterop": true
-    }
+        "esModuleInterop": true,
+        "noImplicitAny": false,
+        "strictNullChecks": false,
+        "rootDir": "./",
+        "baseUrl": "./packages",
+        "paths": {
+            "@kaetram/*": ["./*"]
+        }
+    },
+    "exclude": ["node_modules", "**/*.spec.ts", "dist"]
 }

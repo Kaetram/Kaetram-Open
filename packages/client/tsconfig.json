@@ -1,11 +1,11 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "esnext",
         "target": "esnext",
         "rootDir": "./",
         "baseUrl": "./",
         "outDir": "./dist"
     },
-    "files": ["./ts/main.ts"]
+    "files": ["./ts/main.ts", "./typings/index.d.ts"]
 }
