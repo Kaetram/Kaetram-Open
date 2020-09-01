@@ -21,12 +21,14 @@ const config: WebpackOptions = {
     name: 'Client',
     target: 'web',
     mode: NODE_ENV as 'development' | 'production',
-    entry: ['./index.html', './css/main.css', './ts/main.js'].map((file) =>
+    entry: ['./index.html', './css/main.css', './ts/main.ts'].map((file) =>
         path.resolve(__dirname, file)
     ),
     devtool: inProduction ? 'source-map' : 'inline-source-map',
     output: {
         path: path.resolve(__dirname, './dist'),
+        filename: '[name].[hash].js',
+        chunkFilename: '[name].[chunkhash].js',
         libraryTarget: 'umd'
     },
     module: {
@@ -47,24 +49,24 @@ const config: WebpackOptions = {
                 exclude
             },
             {
-                test: /\.js?$/i,
-                use: ['babel-loader'],
+                test: /\.ts?$/i,
+                use: ['babel-loader', 'ts-loader'],
                 exclude
             },
             {
-                test: /worker\.js$/i,
-                use: ['worker-loader', 'babel-loader'],
+                test: /worker\.ts$/i,
+                use: ['worker-loader', 'babel-loader', 'ts-loader'],
                 exclude
             },
             {
-                test: /\.(png|svg|ttf|woff|eot)$/i,
+                test: /\.((png|svg|gif)|(mp3)|(ttf|woff|eot))$/i,
                 loader: 'file-loader',
                 exclude
             }
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js', '.json']
+        extensions: 'ts js json io-client'.split(' ').map((ext) => `.${ext}`)
     },
     devServer: {
         contentBase: __dirname,
@@ -83,11 +85,11 @@ const config: WebpackOptions = {
         //         { from: 'img', to: 'img' },
         //         { from: 'fonts', to: 'fonts' },
         //         { from: 'data', to: 'data' },
-        //         { from: 'sw.js', to: 'sw.js' },
+        //         { from: 'sw.ts', to: 'sw.ts' },
         //         { from: 'favicon.ico', to: 'favicon.ico' },
         //         { from: 'manifest.json', to: 'manifest.json' },
-        //         { from: 'ts/map/mapworker.js', to: 'ts/map/mapworker.js' },
-        //         { from: 'ts/lib/underscore.min.js', to: 'ts/lib/underscore.min.js' }
+        //         { from: 'ts/map/mapworker.ts', to: 'ts/map/mapworker.ts' },
+        //         { from: 'ts/lib/underscore.min.ts', to: 'ts/lib/underscore.min.ts' }
         //     ]
         // })
         new HtmlWebpackPlugin({
@@ -103,7 +105,10 @@ const config: WebpackOptions = {
                   }
                 : false
         }),
-        new MiniCssExtractPlugin()
+        new MiniCssExtractPlugin({
+            filename: '[name].[hash].css',
+            chunkFilename: '[name].[chunkhash].css'
+        })
     ]
 };
 
