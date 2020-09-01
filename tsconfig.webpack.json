@@ -1,0 +1,10 @@
+/**
+ * This TypeScript configuration file is for webpack configs only
+ */
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5"
+    }
+}
