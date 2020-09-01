@@ -19,6 +19,7 @@
         "sourceType": "module"
     },
     "rules": {
+        "no-fallthrough": "off",
         "prettier/prettier": "warn",
         "indent": [
             "error",
