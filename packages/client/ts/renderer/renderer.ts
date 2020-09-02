@@ -252,21 +252,16 @@ export default class Renderer {
         this.forAllContexts((context) => {
             if (!context) return;
 
-            interface SmoothingRenderingContext extends CanvasRenderingContext2D {
-                webkitImageSmoothingEnabled: boolean;
-                mozImageSmoothingEnabled: boolean;
-                msImageSmoothingEnabled: boolean;
-                oImageSmoothingEnabled: boolean;
-            }
             const ctx = context as SmoothingRenderingContext;
 
             ctx.imageSmoothingQuality = 'low';
 
             ctx.imageSmoothingEnabled = false;
-            ctx.webkitImageSmoothingEnabled = false;
-            ctx.mozImageSmoothingEnabled = false;
-            ctx.msImageSmoothingEnabled = false;
-            ctx.oImageSmoothingEnabled = false;
+            /** @deprecated */
+            // ctx.webkitImageSmoothingEnabled = false;
+            // ctx.mozImageSmoothingEnabled = false;
+            // ctx.msImageSmoothingEnabled = false;
+            // ctx.oImageSmoothingEnabled = false;
         });
     }
 
