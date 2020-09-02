@@ -95,7 +95,7 @@ export default class Profile {
 
     resize() {
         _.each(this.pages as State[], (page) => {
-            page.resize();
+            page?.resize();
         });
     }
 

@@ -7,26 +7,34 @@ import log from '../util/log';
 class Connection {
     public id: string;
     public socket: SocketIO;
-    public _server: WebSocket;
+
+    private server: WebSocket;
+    private rawWebSocket: boolean;
 
     listenCallback: Function;
     closeCallback: Function;
 
-    constructor(id: string, socket: SocketIO, server: WebSocket) {
+    constructor(id: string, socket: SocketIO, server: WebSocket, rawWebSocket?: boolean) {
         this.id = id;
         this.socket = socket;
-        this._server = server;
+        this.server = server;
+
+        this.rawWebSocket = rawWebSocket;
 
         this.socket.on('message', (message: any) => {
-            if (this.listenCallback) this.listenCallback(JSON.parse(message));
+            try {
+                if (this.listenCallback) this.listenCallback(JSON.parse(message));
+            } catch (e) {
+                log.error('Could not parse message: ' + message);
+            }
         });
 
-        this.socket.on('disconnect', () => {
+        this.socket.on(this.rawWebSocket ? 'close' : 'disconnect', () => {
             log.info('Closed socket: ' + this.socket.conn.remoteAddress);
 
             if (this.closeCallback) this.closeCallback();
 
-            this._server.removeConnection(this.id);
+            this.server.removeConnection(this.id);
         });
     }
 
@@ -49,7 +57,8 @@ class Connection {
     close(reason: any) {
         if (reason) log.info('[Connection] Closing - ' + reason);
 
-        this.socket.conn.close();
+        if (this.rawWebSocket) this.socket.close();
+        else this.socket.conn.close();
     }
 }
 
