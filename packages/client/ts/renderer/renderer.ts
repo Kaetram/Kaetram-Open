@@ -252,7 +252,7 @@ export default class Renderer {
         this.forAllContexts((context) => {
             if (!context) return;
 
-            const ctx = context as SmoothingRenderingContext;
+            const ctx = context;
 
             ctx.imageSmoothingQuality = 'low';
 

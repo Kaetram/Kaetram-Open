@@ -1,0 +1,7 @@
+{
+  "modules": false,
+  "plugins": {
+    "autoprefixer": true,
+    "postcss-preset-env": true
+  }
+}
