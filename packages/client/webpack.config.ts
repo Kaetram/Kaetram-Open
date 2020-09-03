@@ -21,7 +21,7 @@ const config: WebpackOptions = {
     name: 'Client',
     target: 'web',
     mode: NODE_ENV as 'development' | 'production',
-    entry: ['./index.html', './css/main.css', './ts/main.ts'].map((file) =>
+    entry: ['./index.html', './scss/main.scss', './ts/main.ts'].map((file) =>
         path.resolve(__dirname, file)
     ),
     devtool: inProduction ? 'source-map' : 'inline-source-map',
@@ -39,12 +39,12 @@ const config: WebpackOptions = {
                 exclude
             },
             {
-                test: /\.css$/i,
+                test: /\.s?[ac]ss$/i,
                 use: [
                     inProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-                    'css-loader'
-                    // , 'postcss-loader',
-                    // 'sass-loader'
+                    'css-loader',
+                    'postcss-loader',
+                    'sass-loader'
                 ],
                 exclude
             },
@@ -79,19 +79,6 @@ const config: WebpackOptions = {
         new DefinePlugin({
             'process.env': JSON.stringify(env)
         }),
-        // , new CopyPlugin({
-        //     patterns: [
-        //         { from: 'css', to: 'css' },
-        //         { from: 'img', to: 'img' },
-        //         { from: 'fonts', to: 'fonts' },
-        //         { from: 'data', to: 'data' },
-        //         { from: 'sw.ts', to: 'sw.ts' },
-        //         { from: 'favicon.ico', to: 'favicon.ico' },
-        //         { from: 'manifest.json', to: 'manifest.json' },
-        //         { from: 'ts/map/mapworker.ts', to: 'ts/map/mapworker.ts' },
-        //         { from: 'ts/lib/underscore.min.ts', to: 'ts/lib/underscore.min.ts' }
-        //     ]
-        // })
         new HtmlWebpackPlugin({
             template: path.join(__dirname, './index.html'),
             minify: inProduction
