@@ -6,7 +6,6 @@
     overflow-x: hidden;
     overflow-y: hidden;
     background-color: rgba(0, 0, 0, 0);
-
     cursor: default;
 }
 
@@ -22,7 +21,8 @@
     float: left;
 }
 
-#notify, #confirm {
+#notify,
+#confirm {
     position: absolute;
     left: 35%;
     top: 45%;
@@ -30,7 +30,8 @@
     pointer-events: auto;
 }
 
-#exclamation, #question {
+#exclamation,
+#question {
     left: 10%;
     top: 30%;
 }
@@ -53,7 +54,6 @@
     right: 20px;
     bottom: 10%;
     display: none;
-
     cursor: default;
 }
 
@@ -72,7 +72,8 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.itemCount, .inventoryItemCount {
+.itemCount,
+.inventoryItemCount {
     font-family: 'AdvoCut', sans-serif;
     color: rgba(255, 255, 255, 1);
 }
@@ -96,7 +97,7 @@
 
 .actionButton:hover {
     background-color: rgba(0, 0, 0, 0.4);
-    color: #ffffff;
+    color: #fff;
     cursor: pointer;
 }
 
@@ -134,32 +135,33 @@
     margin-bottom: 10px;
 }
 
-#dropAccept, #dropCancel {
+#dropAccept,
+#dropCancel {
     background: rgba(120, 120, 120, 0.3);
     cursor: pointer;
-
     font-size: 18px;
 }
 
-#dropAccept:hover, #dropCancel:hover {
+#dropAccept:hover,
+#dropCancel:hover {
     background: rgba(120, 120, 120, 0.4);
 }
 
-#dropAccept:active, #dropCancel:active {
+#dropAccept:active,
+#dropCancel:active {
     background: rgba(120, 120, 120, 0.4);
     color: #fcda5c;
 }
 
-#profileDialog, #settingsPage {
+#profileDialog,
+#settingsPage {
     bottom: 15px;
-
     display: none;
     position: absolute;
     -ms-user-select: none;
-        user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
-
+    user-select: none;
     cursor: default;
 }
 
@@ -199,11 +201,18 @@
     top: 41%;
 }
 
-#volume, #sfx, #brightness {
+#volume,
+#sfx,
+#brightness {
     position: absolute;
 }
 
-#soundCheck, #cameraCheck, #debugCheck, #centreCheck, #nameCheck, #levelCheck {
+#soundCheck,
+#cameraCheck,
+#debugCheck,
+#centreCheck,
+#nameCheck,
+#levelCheck {
     left: 50%;
 }
 
@@ -214,7 +223,8 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-#attackInfo .name, #attackInfo .health {
+#attackInfo .name,
+#attackInfo .health {
     position: absolute;
     text-align: center;
     font-family: 'AdvoCut', sans-serif;
@@ -245,7 +255,6 @@
     position: absolute;
     top: 20%;
     left: 25%;
-
     cursor: default;
 }
 
@@ -253,7 +262,8 @@
     float: right;
 }
 
-#bankInventoryContainer, #enchantContainer {
+#bankInventoryContainer,
+#enchantContainer {
     float: left;
 }
 
@@ -289,9 +299,7 @@
 #enchant {
     position: absolute;
     display: none;
-
     cursor: default;
-
     top: 50%;
     left: 50%;
 }
@@ -303,7 +311,8 @@
     left: 20%;
 }
 
-#tradePlayerContainer, #tradeOPlayerContainer {
+#tradePlayerContainer,
+#tradeOPlayerContainer {
     position: relative;
     float: left;
     top: 24%;
@@ -317,10 +326,10 @@
     left: 12.5%;
 }
 
-#enchantSelectedItem, #enchantShards {
+#enchantSelectedItem,
+#enchantShards {
     position: absolute;
     top: 80%;
-
     background-size: 600%;
 }
 
@@ -369,20 +378,19 @@
     position: absolute;
     top: 50%;
     left: 8%;
-
     overflow: auto;
 }
 
 ::-webkit-scrollbar {
-    width: 0px;
+    width: 0;
     background: transparent; /* make scrollbar transparent */
 }
 
-#achievementList, #professionsList {
+#achievementList,
+#professionsList {
     position: absolute;
     top: 6%;
     left: 8%;
-
     overflow: auto;
 }
 
@@ -400,13 +408,15 @@
     margin-right: 4%;
 }
 
-.questItem, .professionItem {
+.questItem,
+.professionItem {
     font-family: 'AdvoCut', sans-serif;
     width: 100%;
-    height: 10%
+    height: 10%;
 }
 
-.questName, .professionName {
+.questName,
+.professionName {
     width: 98%;
     text-align: center;
     float: left;
@@ -415,11 +425,11 @@
     color: white;
     z-index: 1;
     background-color: rgb(51, 153, 255, 0.4);
-
     font-size: 22px;
 }
 
-#achievementCount, #questCount {
+#achievementCount,
+#questCount {
     float: right;
     right: 3%;
     position: absolute;
@@ -443,16 +453,14 @@
     background-repeat: no-repeat;
     pointer-events: auto;
     display: none;
-
     cursor: default;
-
     z-index: 100;
 }
 
 .mapButton {
     position: absolute;
-    background-position-y: 0;
     -ms-background-position-y: 0;
+    background-position-y: 0;
 }
 
 #closeMapFrame {
@@ -469,7 +477,6 @@
     display: none;
     top: 17%;
     left: 50%;
-
     cursor: default;
 }
 
@@ -508,13 +515,15 @@
     height: 32px;
     border: 2px solid rgba(0, 0, 255, 0.3);
     -webkit-transform: scale(0.9);
-            transform: scale(0.9);
+    transform: scale(0.9);
     border-radius: 100%;
-
     background-size: 600%;
 }
 
-.shopItemName, .shopItemCount, .shopItemPrice, .shopItemBuy {
+.shopItemName,
+.shopItemCount,
+.shopItemPrice,
+.shopItemBuy {
     position: absolute;
     padding-top: 2%;
     font-size: 12px;
@@ -547,7 +556,6 @@
 
 #playerInfo {
     position: absolute;
-
     top: 10px;
     left: 10px;
 }
@@ -576,7 +584,6 @@
     font-family: 'AdvoCut', sans-serif;
     font-size: 10px;
     font-weight: bold;
-
     pointer-events: none;
 }
 
@@ -584,11 +591,14 @@
     text-align: right;
 }
 
-#shopSellSlotReturnText, #shopSellSlotText, #shardsCount {
+#shopSellSlotReturnText,
+#shopSellSlotText,
+#shardsCount {
     color: black;
 }
 
-#confirmEnchant, #confirmSell {
+#confirmEnchant,
+#confirmSell {
     top: 80%;
     left: 70%;
 }
@@ -618,41 +628,44 @@
 }
 
 #worlds-popup {
-  display: none;
-  z-index: 1;
-  bottom: 125%;
-  left: 62.5%;
-  background-color: #555;
-  color: #fff;
-  text-align: justify;
-  border-radius: 6px;
-  padding: 12px;
-  position: absolute;
-  margin-left: -80px;
+    display: none;
+    z-index: 1;
+    bottom: 125%;
+    left: 62.5%;
+    background-color: #555;
+    color: #fff;
+    text-align: justify;
+    border-radius: 6px;
+    padding: 12px;
+    position: absolute;
+    margin-left: -80px;
 }
 
 #worlds-popup::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 33%;
-  margin-left: -25px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 33%;
+    margin-left: -25px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
 }
 
 #worlds-popup > table th {
     border-bottom: 2px solid #eee;
 }
+
 #worlds-popup > table td {
     padding: 12px 24px 10px 16px;
     border-left: 2px solid #fff;
 }
+
 #worlds-popup > table tr:hover {
     background: #333a;
 }
-#worlds-popup > table tr:hover:::after {
+
+#worlds-popup > table tr:hover::after {
     content: "Join";
 }
 
@@ -661,13 +674,12 @@
     opacity: 0.8;
     top: 100%;
     left: 50%;
-
     pointer-events: none;
-    -moz-transition:0.7s top ease;
-    -webkit-transition:0.7s top ease;
-    -o-transition:0.7s top ease;
-    -ms-transition:0.7s top ease;
-    transition:0.7s top ease;
+    -moz-transition: 0.7s top ease;
+    -webkit-transition: 0.7s top ease;
+    -o-transition: 0.7s top ease;
+    -ms-transition: 0.7s top ease;
+    transition: 0.7s top ease;
 }
 
 #notificationTextTitle {
@@ -688,17 +700,14 @@
     text-shadow: 2px 2px #0e0a00;
     text-align: center;
     color: white;
-
     margin-top: 10px;
 }
 
 @media only screen and (min-width: 1501px) {
-
     #notification {
         width: 648px;
         height: 102px;
         background: url('../img/3/spritesheet.png') no-repeat;
-
         margin-left: -344px;
     }
 
@@ -787,7 +796,7 @@
     #inventory {
         width: 288px;
         height: 303px;
-        border: 3px solid #373737
+        border: 3px solid #373737;
     }
 
     .itemSlot {
@@ -801,14 +810,15 @@
     }
 
     .itemSlot:hover {
-        border: 3px solid #eeeeee;
+        border: 3px solid #eee;
     }
 
     .itemSlot:active {
         border: 3px solid #fcda5c;
     }
 
-    .itemCount, .inventoryItemCount {
+    .itemCount,
+    .inventoryItemCount {
         width: 48px;
         height: 21px;
         font-size: 18px;
@@ -834,7 +844,8 @@
         right: 34px;
     }
 
-    #profileDialog, .page {
+    #profileDialog,
+    .page {
         width: 372px;
         height: 651px;
         position: absolute;
@@ -853,7 +864,6 @@
     #settingsPage {
         background: url('../img/3/characterdialogsheet.png') -744px 0;
         display: none;
-
         right: 0;
         bottom: 45px;
     }
@@ -950,7 +960,8 @@
         height: 51px;
     }
 
-    #previous, #next {
+    #previous,
+    #next {
         background-image: url('../img/3/characterdialogsheet.png');
         position: absolute;
         left: initial;
@@ -1018,7 +1029,8 @@
         background: url('../img/3/characterdialogsheet.png') -330px -723px;
     }
 
-    .check:hover, .check:focus {
+    .check:hover,
+    .check:focus {
         background-position: -357px -723px;
     }
 
@@ -1076,10 +1088,10 @@
         border: 3px solid #373737;
         border-radius: 6px;
         background: red;
-        transition: .5s width ease;
-        -o-transition: .5s width ease;
-        -moz-transition: .5s width ease;
-        -webkit-transition: .5s width ease;
+        -o-transition: 0.5s width ease;
+        -moz-transition: 0.5s width ease;
+        -webkit-transition: 0.5s width ease;
+        transition: 0.5s width ease;
     }
 
     #bank {
@@ -1087,7 +1099,8 @@
         height: 501px;
     }
 
-    #bankContainer, #bankInventoryContainer {
+    #bankContainer,
+    #bankInventoryContainer {
         background: url('../img/3/bank.png');
     }
 
@@ -1107,7 +1120,8 @@
         left: 429px;
     }
 
-    #bankInventoryContainer, #enchantContainer {
+    #bankInventoryContainer,
+    #enchantContainer {
         width: 387px;
         height: 381px;
         background-position: 0 0;
@@ -1128,12 +1142,12 @@
         width: 387px;
         height: 465px;
         background: url('../img/3/containers.png') 0 0;
-
         margin-left: -193px;
         margin-top: -232px;
     }
 
-    #enchantSelectedItem, #enchantShards {
+    #enchantSelectedItem,
+    #enchantShards {
         width: 48px;
         height: 45px;
     }
@@ -1145,7 +1159,6 @@
     .close {
         width: 48px;
         height: 48px;
-
         background: url('../img/3/containers.png') -96px -498px;
     }
 
@@ -1172,7 +1185,8 @@
         height: 69px;
     }
 
-    #questList, #achievementList {
+    #questList,
+    #achievementList {
         width: 318px;
         height: 246px;
     }
@@ -1187,11 +1201,13 @@
         height: 48px;
     }
 
-    .questName, .professionName {
+    .questName,
+    .professionName {
         border-radius: 12px;
     }
 
-    #achievementCount, #questCount {
+    #achievementCount,
+    #questCount {
         font-size: 24px;
         width: 90px;
         height: 24px;
@@ -1201,7 +1217,6 @@
         width: 810px;
         height: 540px;
         background: url('../img/3/mapframe.png');
-
         margin-left: -405px;
         margin-top: -270px;
     }
@@ -1247,29 +1262,40 @@
         background: url('../img/3/mapicons.png') 231px 0;
     }
 
-    #warp1:hover, #warp2:hover, #warp3:hover, #warp4:hover, #warp5:hover, #warp6:hover {
-        background-position-y: -60px;
+    #warp1:hover,
+    #warp2:hover,
+    #warp3:hover,
+    #warp4:hover,
+    #warp5:hover,
+    #warp6:hover {
         -ms-background-position-y: -60px;
+        background-position-y: -60px;
     }
 
-    #warp1.active, #warp2.active, #warp3.active, #warp4.active, #warp5.active, #warp6.active {
-        background-position-y: -120px;
+    #warp1.active,
+    #warp2.active,
+    #warp3.active,
+    #warp4.active,
+    #warp5.active,
+    #warp6.active {
         -ms-background-position-y: -120px;
+        background-position-y: -120px;
     }
 
     #shop {
         width: 510px;
         height: 504px;
-        background: url("../img/3/containers.png") -387px -66px;;
+        background: url("../img/3/containers.png") -387px -66px;
     }
 
     #shopInventoryContainer {
         width: 387px;
         height: 464px;
-        background: url("../img/3/containers.png") 0 0;;
+        background: url("../img/3/containers.png") 0 0;
     }
 
-    #shopSellSlot, #shopSellSlotReturn {
+    #shopSellSlot,
+    #shopSellSlotReturn {
         position: absolute;
         width: 48px;
         height: 49px;
@@ -1284,11 +1310,16 @@
         left: 132px;
     }
 
-    #shopSellSlotReturnText, #shopSellSlotText, #shardsCount {
+    #shopSellSlotReturnText,
+    #shopSellSlotText,
+    #shardsCount {
         margin-top: 57px;
     }
 
-    .shopItemName, .shopItemCount, .shopItemPrice, .shopItemBuy {
+    .shopItemName,
+    .shopItemCount,
+    .shopItemPrice,
+    .shopItemBuy {
         font-size: 16px;
     }
 
@@ -1298,26 +1329,25 @@
         left: 30px;
         width: 230px;
         height: 26px;
-        border: 0px;
-        margin: 0px;
-        padding: 0px;
+        border: 0;
+        margin: 0;
+        padding: 0;
         text-align: center;
     }
 
     #healthBar {
         position: absolute;
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
         width: 264px;
         height: 39px;
-        border: 0px;
-        margin: 0px;
-        padding: 0px;
+        border: 0;
+        margin: 0;
+        padding: 0;
         text-align: center;
         color: white;
-
-        background-image: url('../img/3/main.png' );
-        background-position: 0px -834px;
+        background-image: url('../img/3/main.png');
+        background-position: 0 -834px;
     }
 
     #exp {
@@ -1326,20 +1356,18 @@
         left: 36px;
         width: 228px;
         height: 15px;
-        border: 0px;
-        margin: 0px;
-        padding: 0px;
+        border: 0;
+        margin: 0;
+        padding: 0;
     }
 
     #expBar {
         position: absolute;
         width: 228px;
         height: 15px;
-
-        background-image: url('../img/3/main.png' );
-        background-position: 0px -873px;
+        background-image: url('../img/3/main.png');
+        background-position: 0 -873px;
         color: rgba(255, 255, 255, 1);
-
         top: 30px;
         left: 36px;
     }
@@ -1348,16 +1376,13 @@
         margin: 10px 0 0 30px;
         font-size: 18px;
     }
-
 }
 
 @media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
-
     #notification {
         width: 432px;
         height: 68px;
         background: url('../img/2/spritesheet.png') no-repeat;
-
         margin-left: -216px;
     }
 
@@ -1451,13 +1476,15 @@
         background: url('../img/2/skillslots.png') no-repeat;
     }
 
-    #notify, #confirm {
+    #notify,
+    #confirm {
         width: 333px;
         height: 94px;
         background: url('../img/2/containers.png') -601px 0;
     }
 
-    #question, #exclamation {
+    #question,
+    #exclamation {
         position: relative;
         width: 30px;
         height: 32px;
@@ -1472,13 +1499,15 @@
         background: url('../img/2/containers.png') -669px -94px;
     }
 
-    .ok, .done {
+    .ok,
+    .done {
         width: 27px;
         height: 14px;
         background: url('../img/2/containers.png') -642px -108px;
     }
 
-    .ok:hover, .done:hover {
+    .ok:hover,
+    .done:hover {
         background: url('../img/2/containers.png') -642px -94px;
     }
 
@@ -1488,14 +1517,15 @@
         background: url('../img/2/containers.png') -601px -108px;
     }
 
-    #cancel:hover, #cancel:focus {
+    #cancel:hover,
+    #cancel:focus {
         background: url('../img/2/containers.png') -601px -94px;
     }
 
     #inventory {
         width: 192px;
         height: 202px;
-        border: 2px solid #373737
+        border: 2px solid #373737;
     }
 
     .itemSlot {
@@ -1508,15 +1538,17 @@
         border: 2px solid #707070;
     }
 
-    .itemSlot:hover, .itemSlot.select {
-        border: 2px solid #eeeeee;
+    .itemSlot:hover,
+    .itemSlot.select {
+        border: 2px solid #eee;
     }
 
     .itemSlot:active {
         border: 2px solid #fcda5c;
     }
 
-    .itemCount, .inventoryItemCount {
+    .itemCount,
+    .inventoryItemCount {
         width: 32px;
         height: 14px;
         font-size: 12px;
@@ -1542,10 +1574,10 @@
         right: 22px;
     }
 
-    #profileDialog, .page {
+    #profileDialog,
+    .page {
         width: 248px;
         height: 434px;
-
         position: absolute;
     }
 
@@ -1562,7 +1594,6 @@
     #settingsPage {
         background: url('../img/2/characterdialogsheet.png') -496px 0;
         display: none;
-
         right: 0;
         bottom: 30px;
     }
@@ -1660,7 +1691,8 @@
         height: 34px;
     }
 
-    #previous, #next {
+    #previous,
+    #next {
         background-image: url('../img/2/characterdialogsheet.png');
         position: absolute;
         left: initial;
@@ -1728,7 +1760,8 @@
         background: url('../img/2/characterdialogsheet.png') -220px -481px;
     }
 
-    .check:hover, .check:focus {
+    .check:hover,
+    .check:focus {
         background-position: -238px -481px;
     }
 
@@ -1786,10 +1819,10 @@
         border: 1px solid #373737;
         border-radius: 4px;
         background: red;
-        transition: .5s width ease;
-        -o-transition: .5s width ease;
-        -moz-transition: .5s width ease;
-        -webkit-transition: .5s width ease;
+        -o-transition: 0.5s width ease;
+        -moz-transition: 0.5s width ease;
+        -webkit-transition: 0.5s width ease;
+        transition: 0.5s width ease;
     }
 
     #bank {
@@ -1797,7 +1830,8 @@
         height: 334px;
     }
 
-    #bankContainer, #bankInventoryContainer {
+    #bankContainer,
+    #bankInventoryContainer {
         background: url('../img/2/bank.png');
     }
 
@@ -1817,7 +1851,8 @@
         left: 286px;
     }
 
-    #bankInventoryContainer, #enchantContainer {
+    #bankInventoryContainer,
+    #enchantContainer {
         width: 258px;
         height: 254px;
         background-position: 0 0;
@@ -1838,7 +1873,6 @@
         width: 258px;
         height: 310px;
         background: url('../img/2/containers.png') 0 0;
-
         margin-left: -129px;
         margin-top: -155px;
     }
@@ -1849,12 +1883,14 @@
         background: url(../img/2/trade.png) 0 0;
     }
 
-    #tradePlayerContainer, #tradeOPlayerContainer {
+    #tradePlayerContainer,
+    #tradeOPlayerContainer {
         width: 206px;
         height: 186px;
     }
 
-    #enchantSelectedItem, #enchantShards {
+    #enchantSelectedItem,
+    #enchantShards {
         width: 32px;
         height: 30px;
     }
@@ -1866,7 +1902,6 @@
     .close {
         width: 32px;
         height: 32px;
-
         background: url('../img/2/containers.png') -64px -332px;
     }
 
@@ -1893,7 +1928,8 @@
         height: 46px;
     }
 
-    #questList, #achievementList {
+    #questList,
+    #achievementList {
         width: 212px;
         height: 164px;
     }
@@ -1906,16 +1942,17 @@
     .skillSlot {
         width: 32px;
         height: 32px;
-
         background-image: url('../img/2/skillicons.png');
     }
 
-    .questName, .professionName {
+    .questName,
+    .professionName {
         font-size: 20px;
         border-radius: 8px;
     }
 
-    #achievementCount, #questCount {
+    #achievementCount,
+    #questCount {
         font-size: 16px;
         width: 60px;
         height: 16px;
@@ -1925,7 +1962,6 @@
         width: 540px;
         height: 360px;
         background: url('../img/2/mapframe.png');
-
         margin-left: -270px;
         margin-top: -180px;
     }
@@ -1956,8 +1992,6 @@
     #warp4 {
         top: 240px;
         left: 270px;
-
-
         background: url('../img/2/mapicons.png') 94px 0;
     }
 
@@ -1973,29 +2007,40 @@
         background: url('../img/2/mapicons.png') 154px 0;
     }
 
-    #warp1:hover, #warp2:hover, #warp3:hover, #warp4:hover, #warp5:hover, #warp6:hover {
-        background-position-y: -40px;
+    #warp1:hover,
+    #warp2:hover,
+    #warp3:hover,
+    #warp4:hover,
+    #warp5:hover,
+    #warp6:hover {
         -ms-background-position-y: -40px;
+        background-position-y: -40px;
     }
 
-    #warp1.active, #warp2.active, #warp3.active, #warp4.active, #warp5.active, #warp6.active {
-        background-position-y: -80px;
+    #warp1.active,
+    #warp2.active,
+    #warp3.active,
+    #warp4.active,
+    #warp5.active,
+    #warp6.active {
         -ms-background-position-y: -80px;
+        background-position-y: -80px;
     }
 
     #shop {
         width: 340px;
         height: 336px;
-        background: url("../img/2/containers.png") -258px -44px;;
+        background: url("../img/2/containers.png") -258px -44px;
     }
 
     #shopInventoryContainer {
         width: 258px;
         height: 310px;
-        background: url("../img/2/containers.png") 0 0;;
+        background: url("../img/2/containers.png") 0 0;
     }
 
-    #shopSellSlot, #shopSellSlotReturn {
+    #shopSellSlot,
+    #shopSellSlotReturn {
         position: absolute;
         width: 32px;
         height: 32px;
@@ -2010,7 +2055,9 @@
         left: 88px;
     }
 
-    #shopSellSlotReturnText, #shopSellSlotText, #shardsCount {
+    #shopSellSlotReturnText,
+    #shopSellSlotText,
+    #shardsCount {
         margin-top: 38px;
     }
 
@@ -2020,26 +2067,25 @@
         left: 20px;
         width: 154px;
         height: 20px;
-        border: 0px;
-        margin: 0px;
-        padding: 0px;
+        border: 0;
+        margin: 0;
+        padding: 0;
         text-align: center;
     }
 
     #healthBar {
         position: absolute;
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
         width: 176px;
         height: 26px;
-        border: 0px;
-        margin: 0px;
-        padding: 0px;
+        border: 0;
+        margin: 0;
+        padding: 0;
         text-align: center;
         color: white;
-
-        background-image: url('../img/2/main.png' );
-        background-position: 0px -556px;
+        background-image: url('../img/2/main.png');
+        background-position: 0 -556px;
     }
 
     #healthBarText {
@@ -2052,28 +2098,24 @@
         left: 24px;
         width: 152px;
         height: 9px;
-        border: 0px;
-        margin: 0px;
-        padding: 0px;
+        border: 0;
+        margin: 0;
+        padding: 0;
     }
 
     #expBar {
         position: absolute;
         width: 152px;
         height: 9px;
-
-        background-image: url('../img/2/main.png' );
-        background-position: 0px -582px;
+        background-image: url('../img/2/main.png');
+        background-position: 0 -582px;
         color: rgba(255, 255, 255, 1);
-
         top: 20px;
         left: 24px;
     }
-
 }
 
 @media only screen and (max-width: 1000px) {
-
     #chatButton {
         position: relative;
         width: 28px;
@@ -2141,13 +2183,15 @@
         background: url('../img/1/skillslots.png');
     }
 
-    #notify, #confirm {
+    #notify,
+    #confirm {
         width: 166px;
         height: 47px;
         background: url('../img/1/containers.png') -300px 0;
     }
 
-    #question, #exclamation {
+    #question,
+    #exclamation {
         position: relative;
         width: 15px;
         height: 16px;
@@ -2162,7 +2206,8 @@
         background: url('../img/1/containers.png') -334px -47px;
     }
 
-    .ok, .done {
+    .ok,
+    .done {
         left: 85%;
         top: 55%;
         width: 14px;
@@ -2170,7 +2215,8 @@
         background: url('../img/1/containers.png') -387px -79px;
     }
 
-    .ok:hover, .done:hover {
+    .ok:hover,
+    .done:hover {
         background: url('../img/1/containers.png') -387px -65px;
     }
 
@@ -2182,7 +2228,8 @@
         background: url('../img/1/containers.png') -371px -79px;
     }
 
-    #cancel:hover, #cancel:focus {
+    #cancel:hover,
+    #cancel:focus {
         background: url('../img/1/containers.png') -371px -65px;
     }
 
@@ -2196,7 +2243,6 @@
         height: 32px;
         border-radius: 3px;
         border: 1px solid #707070;
-
         font-size: 20px;
     }
 
@@ -2206,7 +2252,8 @@
         right: 104px;
     }
 
-    #profileDialog, .page {
+    #profileDialog,
+    .page {
         width: 124px;
         height: 217px;
         position: absolute;
@@ -2224,10 +2271,8 @@
 
     #settingsPage {
         transform: scale(1.5);
-
         background: url('../img/1/characterdialogsheet.png') -248px 0;
         display: none;
-
         right: 60px;
         bottom: 84px;
     }
@@ -2324,7 +2369,8 @@
         height: 17px;
     }
 
-    #previous, #next {
+    #previous,
+    #next {
         background-image: url('../img/1/characterdialogsheet.png');
         position: absolute;
         left: initial;
@@ -2379,7 +2425,7 @@
         width: 60px;
         height: 100px;
         font-size: 8px;
-        top: 15%
+        top: 15%;
     }
 
     #texts p {
@@ -2393,7 +2439,8 @@
         background: url('../img/1/characterdialogsheet.png') -110px -241px;
     }
 
-    .check:hover, .check:focus {
+    .check:hover,
+    .check:focus {
         background-position: -119px -241px;
     }
 
@@ -2451,20 +2498,20 @@
         border: 1px solid #373737;
         border-radius: 2px;
         background: red;
-        transition: .5s width ease;
-        -o-transition: .5s width ease;
-        -moz-transition: .5s width ease;
-        -webkit-transition: .5s width ease;
+        -o-transition: 0.5s width ease;
+        -moz-transition: 0.5s width ease;
+        -webkit-transition: 0.5s width ease;
+        transition: 0.5s width ease;
     }
 
     #bank {
         width: 300px;
         height: 167px;
-
         transform: scale(1.5);
     }
 
-    #bankContainer, #bankInventoryContainer {
+    #bankContainer,
+    #bankInventoryContainer {
         background: url('../img/1/bank.png');
     }
 
@@ -2484,7 +2531,8 @@
         left: 143px;
     }
 
-    #bankInventoryContainer, #enchantContainer {
+    #bankInventoryContainer,
+    #enchantContainer {
         width: 129px;
         height: 127px;
         background-position: 0 0;
@@ -2503,16 +2551,15 @@
 
     #enchant {
         transform: scale(1.6);
-
         width: 129px;
         height: 155px;
         background: url('../img/1/containers.png') 0 0;
-
         margin-left: -64px;
         margin-top: -77px;
     }
 
-    #enchantSelectedItem, #enchantShards {
+    #enchantSelectedItem,
+    #enchantShards {
         width: 16px;
         height: 15px;
     }
@@ -2526,7 +2573,8 @@
         height: 23px;
     }
 
-    #questList, #achievementList {
+    #questList,
+    #achievementList {
         width: 104px;
         height: 82px;
     }
@@ -2541,13 +2589,15 @@
         height: 16px;
     }
 
-    .questName, .professionName {
+    .questName,
+    .professionName {
         border: 1px solid #373737;
         font-size: 10px;
         border-radius: 4px;
     }
 
-    #achievementCount, #questCount {
+    #achievementCount,
+    #questCount {
         font-size: 8px;
         width: 30px;
         height: 8px;
@@ -2555,11 +2605,9 @@
 
     #mapFrame {
         transform: scale(1.6);
-
         width: 270px;
         height: 180px;
         background: url('../img/1/mapframe.png');
-
         margin-left: -135px;
         margin-top: -90px;
     }
@@ -2610,14 +2658,24 @@
         background: url('../img/1/mapicons.png') 77px 0;
     }
 
-    #warp1:hover, #warp2:hover, #warp3:hover, #warp4:hover, #warp5:hover, #warp6:hover {
-        background-position-y: -20px;
+    #warp1:hover,
+    #warp2:hover,
+    #warp3:hover,
+    #warp4:hover,
+    #warp5:hover,
+    #warp6:hover {
         -ms-background-position-y: -20px;
+        background-position-y: -20px;
     }
 
-    #warp1.active, #warp2.active, #warp3.active, #warp4.active, #warp5.active, #warp6.active {
-        background-position-y: -40px;
+    #warp1.active,
+    #warp2.active,
+    #warp3.active,
+    #warp4.active,
+    #warp5.active,
+    #warp6.active {
         -ms-background-position-y: -40px;
+        background-position-y: -40px;
     }
 
     #shop {
@@ -2625,17 +2683,18 @@
         left: 55%;
         width: 170px;
         height: 168px;
-        background: url("../img/1/containers.png") -129px -22px;;
+        background: url("../img/1/containers.png") -129px -22px;
         transform: scale(1.5);
     }
 
     #shopInventoryContainer {
         width: 129px;
         height: 155px;
-        background: url("../img/1/containers.png") 0 0;;
+        background: url("../img/1/containers.png") 0 0;
     }
 
-    #shopSellSlot, #shopSellSlotReturn {
+    #shopSellSlot,
+    #shopSellSlotReturn {
         position: absolute;
         width: 16px;
         height: 16px;
@@ -2650,7 +2709,9 @@
         left: 44px;
     }
 
-    #shopSellSlotReturnText, #shopSellSlotText, #shardsCount {
+    #shopSellSlotReturnText,
+    #shopSellSlotText,
+    #shardsCount {
         margin-top: 19px;
     }
 
@@ -2671,7 +2732,9 @@
         border: 1px solid rgba(0, 0, 255, 0.3);
     }
 
-    .shopItemName, .shopItemCount, .shopItemPrice {
+    .shopItemName,
+    .shopItemCount,
+    .shopItemPrice {
         font-size: 7px;
     }
 
@@ -2699,5 +2762,4 @@
         margin-left: 1px;
         margin-top: -7px;
     }
-
 }
