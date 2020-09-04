@@ -1,13 +1,13 @@
-import Packets from '../../../network/packets';
-import log from '../../../lib/log';
-import Game from '../../../game';
-import Player from './player';
-import Map from '../../../map/map';
-import InputController from '../../../controllers/input';
 import EntitiesController from '../../../controllers/entities';
+import InputController from '../../../controllers/input';
+import Game from '../../../game';
+import log from '../../../lib/log';
+import Map from '../../../map/map';
+import Packets from '../../../network/packets';
 import Socket from '../../../network/socket';
-import Renderer from '../../../renderer/renderer';
 import Camera from '../../../renderer/camera';
+import Renderer from '../../../renderer/renderer';
+import Player from './player';
 
 export default class PlayerHandler {
     game: Game;
@@ -18,6 +18,7 @@ export default class PlayerHandler {
     entities: EntitiesController;
     socket: Socket;
     renderer: Renderer;
+
     constructor(game: Game, player: Player) {
         this.game = game;
         this.map = game.map;

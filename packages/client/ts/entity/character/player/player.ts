@@ -1,13 +1,18 @@
 import $ from 'jquery';
 
+import Game from '../../../game';
 import Modules from '../../../utils/modules';
 import Character from '../character';
 import Armour from './equipment/armour';
-import Weapon from './equipment/weapon';
-import Pendant from './equipment/pendant';
 import Boots from './equipment/boots';
+import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
-import Game from '../../../game';
+import Weapon from './equipment/weapon';
+
+export type PartialPlayerData = Partial<Player> & {
+    hitPoints: number[];
+    mana: number[];
+};
 
 export default class Player extends Character {
     rights: number;
@@ -46,6 +51,7 @@ export default class Player extends Character {
     updateEquipmentCallback: (type: number, power: number) => void;
     tempBlinkTimeout: NodeJS.Timeout;
     moving: boolean;
+
     constructor() {
         super('-1', Modules.Types.Player);
 
@@ -84,7 +90,7 @@ export default class Player extends Character {
         this.loadEquipment();
     }
 
-    load(data: Partial<Player> & { hitPoints: number[]; mana: number[] }): void {
+    load(data: PartialPlayerData): void {
         this.setId(data.instance);
         this.setName(data.username);
         this.setGridPosition(data.x, data.y);

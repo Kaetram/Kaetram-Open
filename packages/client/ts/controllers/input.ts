@@ -1,18 +1,18 @@
-import Modules from '../utils/modules';
-import log from '../lib/log';
+import App from '../app';
 import Animation from '../entity/animation';
+import Character from '../entity/character/character';
+import Player from '../entity/character/player/player';
+import Entity from '../entity/entity';
+import Sprite from '../entity/sprite';
+import Game from '../game';
+import log from '../lib/log';
+import Map from '../map/map';
+import Actions from '../menu/actions';
+import Packets from '../network/packets';
+import Renderer from '../renderer/renderer';
+import Modules from '../utils/modules';
 import Chat from './chat';
 import Overlay from './overlay';
-import Packets from '../network/packets';
-import App from '../app';
-import Renderer from '../renderer/renderer';
-import Game from '../game';
-import Map from '../map/map';
-import Sprite from '../entity/sprite';
-import Entity from '../entity/entity';
-import Player from '../entity/character/player/player';
-import Actions from '../menu/actions';
-import Character from '../entity/character/character';
 
 type Cursors = 'hand' | 'sword' | 'loot' | 'target' | 'arrow' | 'talk' | 'spell' | 'bow' | 'axe';
 

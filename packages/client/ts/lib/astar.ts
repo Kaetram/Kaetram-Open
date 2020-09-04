@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 /**
  * A* (A-Star) algorithm for a path finder
  * @author  Andrea Giammarchi

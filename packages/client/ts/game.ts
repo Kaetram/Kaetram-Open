@@ -1,40 +1,34 @@
-import Renderer from './renderer/renderer';
-import Storage from './utils/storage';
-import Map from './map/map';
-import Socket from './network/socket';
-import Player from './entity/character/player/player';
-import Updater from './renderer/updater';
-import Entities from './controllers/entities';
-import Input from './controllers/input';
-import PlayerHandler from './entity/character/player/playerhandler';
-import Pathfinder from './utils/pathfinder';
-import Zoning from './controllers/zoning';
-import Info from './controllers/info';
-import Bubble from './controllers/bubble';
-import Menu from './controllers/menu';
-import Audio from './controllers/audio';
-import Pointer from './controllers/pointer';
-import Overlay from './renderer/overlay';
-import Connection from './network/connection';
-import _ from 'lodash';
 import $ from 'jquery';
-import * as Detect from './utils/detect';
-import Packets from './network/packets';
-import Modules from './utils/modules';
+import _ from 'lodash';
+
 import App from './app';
-import Messages from './network/messages';
-import EntitiesController from './controllers/entities';
-import Sprite from './entity/sprite';
-import InputController from './controllers/input';
-import InfoController from './controllers/info';
-import MenuController from './controllers/menu';
 import AudioController from './controllers/audio';
-// import Pointer from './renderer/pointers/pointer';
 import BubbleController from './controllers/bubble';
-import Camera from './renderer/camera';
-import Entity from './entity/entity';
+import EntitiesController from './controllers/entities';
+import InfoController from './controllers/info';
+import InputController from './controllers/input';
+import MenuController from './controllers/menu';
+import Pointer from './controllers/pointer';
+import Zoning from './controllers/zoning';
 import Character from './entity/character/character';
+import Player from './entity/character/player/player';
+import PlayerHandler from './entity/character/player/playerhandler';
+import Entity from './entity/entity';
+import Sprite from './entity/sprite';
+import Map from './map/map';
 import Inventory from './menu/inventory';
+import Connection from './network/connection';
+import Messages from './network/messages';
+import Packets from './network/packets';
+import Socket from './network/socket';
+import Camera from './renderer/camera';
+import Overlay from './renderer/overlay';
+import Renderer from './renderer/renderer';
+import Updater from './renderer/updater';
+import * as Detect from './utils/detect';
+import Modules from './utils/modules';
+import Pathfinder from './utils/pathfinder';
+import Storage from './utils/storage';
 
 export default class Game {
     app: App;
@@ -68,7 +62,8 @@ export default class Game {
     bubble: BubbleController;
     camera: Camera;
     inventory: Inventory;
-    development: any;
+    development: boolean;
+
     constructor(app: App) {
         this.app = app;
 
@@ -183,21 +178,21 @@ export default class Game {
 
         this.setSocket(new Socket(this));
         this.setMessages(this.socket.messages);
-        this.setInput(new Input(this));
+        this.setInput(new InputController(this));
 
         this.app.sendStatus('Loading controllers');
 
-        this.setEntityController(new Entities(this));
+        this.setEntityController(new EntitiesController(this));
 
-        this.setInfo(new Info(this));
+        this.setInfo(new InfoController(this));
 
-        this.setBubble(new Bubble(this));
+        this.setBubble(new BubbleController(this));
 
         this.setPointer(new Pointer(this));
 
-        this.setAudio(new Audio(this));
+        this.setAudio(new AudioController(this));
 
-        this.setMenu(new Menu(this));
+        this.setMenu(new MenuController(this));
 
         this.loadStorage();
 
@@ -462,38 +457,38 @@ export default class Game {
         this.updater ||= updater;
     }
 
-    setEntityController(entities: Entities): void {
+    setEntityController(entities: EntitiesController): void {
         this.entities ||= entities;
     }
 
-    setInput(input: Input): void {
+    setInput(input: InputController): void {
         if (!this.input) {
             this.input = input;
             this.renderer.setInput(this.input);
         }
     }
 
-    setPathfinder(pathfinder) {
+    setPathfinder(pathfinder: Pathfinder): void {
         this.pathfinder ||= pathfinder;
     }
 
-    setInfo(info) {
+    setInfo(info: InfoController): void {
         this.info ||= info;
     }
 
-    setBubble(bubble) {
+    setBubble(bubble: BubbleController): void {
         this.bubble ||= bubble;
     }
 
-    setPointer(pointer) {
+    setPointer(pointer: Pointer): void {
         this.pointer ||= pointer;
     }
 
-    setMenu(_menu) {
+    setMenu(_menu: MenuController): void {
         this.menu ||= _menu;
     }
 
-    setAudio(audio) {
+    setAudio(audio: AudioController): void {
         this.audio ||= audio;
     }
 }

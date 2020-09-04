@@ -1,17 +1,17 @@
-import Character from '../entity/character/character';
-import Modules from '../utils/modules';
-import Game from '../game';
-import Renderer from './renderer';
-import Map from '../map/map';
 import InputController from '../controllers/input';
 import SpritesController from '../controllers/sprites';
+import Character from '../entity/character/character';
 import Player from '../entity/character/player/player';
 import Projectile from '../entity/objects/projectile';
+import Game from '../game';
+import Map from '../map/map';
+import Modules from '../utils/modules';
+import Renderer from './renderer';
 
 export default class Updater {
     game: Game;
     map: Map;
-    player: any;
+    player: Player;
     renderer: Renderer;
     input: InputController;
     sprites: SpritesController;
@@ -40,7 +40,7 @@ export default class Updater {
         this.lastUpdate = new Date();
     }
 
-    updateEntities() {
+    updateEntities(): void {
         this.game.entities.forEachEntity((entity) => {
             if (!entity) return;
 
@@ -123,7 +123,7 @@ export default class Updater {
         });
     }
 
-    updateFading(entity) {
+    updateFading(entity: any): void {
         if (!entity || !entity.fading) return;
 
         const duration = 1000,
@@ -136,7 +136,7 @@ export default class Updater {
         } else entity.fadingAlpha = dt / duration;
     }
 
-    updateKeyboard() {
+    updateKeyboard(): void {
         const player = this.game.player,
             position = {
                 x: player.gridX,
@@ -153,7 +153,7 @@ export default class Updater {
         if (player.hasKeyboardMovement()) this.input.keyMove(position);
     }
 
-    updateAnimations() {
+    updateAnimations(): void {
         const target = this.input.targetAnimation;
 
         if (target && this.input.selectedCellVisible) target.update(this.game.time);
@@ -165,17 +165,17 @@ export default class Updater {
         if (sparks) sparks.update(this.game.time);
     }
 
-    updateInfos() {
+    updateInfos(): void {
         if (this.game.info) this.game.info.update(this.game.time);
     }
 
-    updateBubbles() {
+    updateBubbles(): void {
         if (this.game.bubble) this.game.bubble.update(this.game.time);
 
         if (this.game.pointer) this.game.pointer.update();
     }
 
-    setSprites(sprites) {
+    setSprites(sprites: SpritesController): void {
         this.sprites = sprites;
     }
 }

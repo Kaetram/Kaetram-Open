@@ -1,6 +1,7 @@
 /// <reference lib="webworker" />
 
 import _ from 'lodash';
+
 import mapData from '../../data/maps/map.json';
 
 // declare const _: LoDashStatic;

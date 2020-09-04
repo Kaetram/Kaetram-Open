@@ -1,6 +1,7 @@
 import $ from 'jquery';
-import Packets from '../network/packets';
+
 import Game from '../game';
+import Packets from '../network/packets';
 
 export default class Wrap {
     game: Game;

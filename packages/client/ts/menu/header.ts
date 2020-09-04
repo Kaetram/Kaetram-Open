@@ -1,7 +1,7 @@
 import $ from 'jquery';
-import Game from '../game';
-import MenuController from '../controllers/menu';
+
 import Player from '../entity/character/player/player';
+import Game from '../game';
 
 export default class Header {
     game: Game;
@@ -11,7 +11,8 @@ export default class Header {
     healthBarText: JQuery<HTMLElement>;
     exp: JQuery<HTMLElement>;
     expBar: JQuery<HTMLElement>;
-    constructor(game: Game, menu: MenuController) {
+
+    constructor(game: Game /* , menu: MenuController */) {
         this.game = game;
         this.player = game.player;
 
@@ -59,8 +60,8 @@ export default class Header {
     }
 
     calculateExpBar(): void {
-        const scale = this.getScale(),
-            width = this.expBar.width();
+        // const scale = this.getScale();
+        const width = this.expBar.width();
 
         const experience = this.player.experience - this.player.prevExperience,
             nextExperience = this.player.nextExperience - this.player.prevExperience,

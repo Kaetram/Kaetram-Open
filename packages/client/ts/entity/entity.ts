@@ -1,5 +1,5 @@
-import EntityHandler from './entityhandler';
 import Animation from './animation';
+import EntityHandler from './entityhandler';
 import Sprite, { Animations } from './sprite';
 
 export interface EntityRenderingData {
@@ -71,6 +71,7 @@ export default class Entity {
     nextGridX: number;
     nextGridY: number;
     fadingAlpha: number;
+
     constructor(id: string, kind: number) {
         this.id = id;
         this.kind = kind;

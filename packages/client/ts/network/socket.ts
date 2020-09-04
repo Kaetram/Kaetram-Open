@@ -1,14 +1,10 @@
 import $ from 'jquery';
-import Messages from './messages';
-import log from '../lib/log';
 import io from 'socket.io-client';
-import Game from '../game';
-import { Config } from '../app';
 
-interface API {
-    host: string;
-    port: string;
-}
+import { Config } from '../app';
+import Game from '../game';
+import log from '../lib/log';
+import Messages from './messages';
 
 export default class Socket {
     game: Game;
@@ -115,7 +111,7 @@ export default class Socket {
         } else this.messages.handleUTF8(message);
     }
 
-    send(packet: number, data?: any[]): void {
+    send(packet: number, data?: unknown[]): void {
         const json = JSON.stringify([packet, data]);
 
         if (this.connection && this.connection.connected) this.connection.send(json);
