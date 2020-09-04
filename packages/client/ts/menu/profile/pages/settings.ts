@@ -1,9 +1,10 @@
 import $ from 'jquery';
-import Game from '../../../game';
+
 import AudioController from '../../../controllers/audio';
-import Storage from '../../../utils/storage';
-import Renderer from '../../../renderer/renderer';
+import Game from '../../../game';
 import Camera from '../../../renderer/camera';
+import Renderer from '../../../renderer/renderer';
+import Storage from '../../../utils/storage';
 
 export default class Settings {
     game: Game;

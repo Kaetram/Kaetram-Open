@@ -1,4 +1,5 @@
 import $ from 'jquery';
+
 import Game from '../game';
 
 export default class Abilities {

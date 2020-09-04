@@ -1,21 +1,21 @@
+import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
 import $ from 'jquery';
-import Camera from './camera';
-import Tile from './tile';
-import Character from '../entity/character/character';
-import Item from '../entity/objects/item';
-import Modules from '../utils/modules';
-import { Vec2, Lighting, Lamp, DarkMask, RectangleObject } from 'illuminated';
-import * as Detect from '../utils/detect';
 import _ from 'lodash';
-import Game from '../game';
+
+import Map from '../../ts/map/map';
 import EntitiesController from '../controllers/entities';
 import InputController from '../controllers/input';
-import Splat from './infos/splat';
-import Entity from '../entity/entity';
-import { EntityRenderingData } from '../entity/entity';
-import Map from '../../ts/map/map';
-import Sprite from '../entity/sprite';
+import Character from '../entity/character/character';
 import Player from '../entity/character/player/player';
+import Entity, { EntityRenderingData } from '../entity/entity';
+import Item from '../entity/objects/item';
+import Sprite from '../entity/sprite';
+import Game from '../game';
+import * as Detect from '../utils/detect';
+import Modules from '../utils/modules';
+import Camera from './camera';
+import Splat from './infos/splat';
+import Tile from './tile';
 
 interface RendererTile {
     relativeTileId: number;
@@ -132,6 +132,7 @@ export default class Renderer {
     transitioning: boolean;
     transitionInterval: NodeJS.Timeout;
     tileset: any;
+
     constructor(
         background: HTMLCanvasElement,
         entitiesCanvas: HTMLCanvasElement,
@@ -1590,7 +1591,7 @@ export default class Renderer {
         return bounds as Bounds;
     }
 
-    getTileset() {
+    getTileset(): void {
         return this.tileset;
     }
 }

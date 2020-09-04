@@ -1,6 +1,7 @@
-import Entity from '../entity';
 import { Lighting } from 'illuminated';
+
 import Character from '../character/character';
+import Entity from '../entity';
 
 export default class Projectile extends Entity {
     name: string;

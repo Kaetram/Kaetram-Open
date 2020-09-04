@@ -1,27 +1,34 @@
 import _ from 'lodash';
-import TeamWar from './impl/teamwar';
-import Packets from './packets';
-import Modules from '../utils/modules';
-import log from '../lib/log';
-import * as Detect from '../utils/detect';
+
 import App from '../app';
-import Game from '../game';
 import AudioController from '../controllers/audio';
-import Messages from './messages';
-import Storage from '../utils/storage';
-import Socket from './socket';
+import BubbleController from '../controllers/bubble';
+import EntitiesController, { AnyEntity } from '../controllers/entities';
+import InfoController from '../controllers/info';
 import InputController from '../controllers/input';
 import MenuController from '../controllers/menu';
-import EntitiesController from '../controllers/entities';
+import PointerController from '../controllers/pointer';
+import Character from '../entity/character/character';
+import Equipment from '../entity/character/player/equipment/equipment';
+import Player, { PartialPlayerData } from '../entity/character/player/player';
+import Game from '../game';
+import log from '../lib/log';
 import Map from '../map/map';
+import Slot from '../menu/container/slot';
+import Inventory from '../menu/inventory';
 import Overlay from '../renderer/overlay';
 import Renderer from '../renderer/renderer';
-import BubbleController from '../controllers/bubble';
-import InfoController from '../controllers/info';
-import PointerController from '../controllers/pointer';
-import Inventory from '../menu/inventory';
-import Player from '../entity/character/player/player';
-import Character from '../entity/character/character';
+import * as Detect from '../utils/detect';
+import Modules from '../utils/modules';
+import Storage from '../utils/storage';
+import TeamWar from './impl/teamwar';
+import Messages from './messages';
+import Packets from './packets';
+import Socket from './socket';
+
+/**
+ * TODO: Types to be done when common server and client types are made.
+ */
 
 export default class Connection {
     game: Game;
@@ -114,7 +121,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onWelcome((data: any) => {
+        this.messages.onWelcome((data: PartialPlayerData) => {
             this.menu.loadHeader();
 
             this.game.player.load(data);
@@ -126,7 +133,7 @@ export default class Connection {
         this.messages.onEquipment((opcode, info: any) => {
             switch (opcode) {
                 case Packets.EquipmentOpcode.Batch:
-                    _.each(info, (data) => {
+                    _.each(info, (data: Equipment) => {
                         this.game.player.setEquipment(
                             data.type,
                             data.name,
@@ -142,20 +149,31 @@ export default class Connection {
 
                     break;
 
-                case Packets.EquipmentOpcode.Equip:
+                case Packets.EquipmentOpcode.Equip: {
+                    const {
+                        type,
+                        name,
+                        string,
+                        count,
+                        ability,
+                        abilityLevel,
+                        power
+                    } = info as Equipment;
+
                     this.game.player.setEquipment(
-                        info.type,
-                        info.name,
-                        info.string,
-                        info.count,
-                        info.ability,
-                        info.abilityLevel,
-                        info.power
+                        type,
+                        name,
+                        string,
+                        count,
+                        ability,
+                        abilityLevel,
+                        power
                     );
 
                     this.menu.profile.update();
 
                     break;
+                }
 
                 case Packets.EquipmentOpcode.Unequip: {
                     const type = info.shift();
@@ -174,11 +192,11 @@ export default class Connection {
             }
         });
 
-        this.messages.onSpawn((data: any) => {
+        this.messages.onSpawn((data: AnyEntity[]) => {
             this.entities.create(data.shift());
         });
 
-        this.messages.onEntityList((data: any) => {
+        this.messages.onEntityList((data: string[]) => {
             const ids = _.map(this.entities.getAll(), 'id'),
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
@@ -192,7 +210,7 @@ export default class Connection {
             this.socket.send(Packets.Who, newIds);
         });
 
-        this.messages.onSync((data: any) => {
+        this.messages.onSync((data: Player) => {
             const entity = this.entities.get(data.id) as Player;
 
             if (!entity || entity.type !== 'player') return;
@@ -212,7 +230,7 @@ export default class Connection {
                 entity.level = data.level;
             }
 
-            if (data.armour) entity.setSprite(this.game.getSprite(data.armour));
+            if (data.armour) entity.setSprite(this.game.getSprite(data.armour.name));
 
             if (data.weapon)
                 entity.setEquipment(
@@ -583,52 +601,64 @@ export default class Connection {
         this.messages.onInventory((opcode, info: any) => {
             switch (opcode) {
                 case Packets.InventoryOpcode.Batch: {
-                    const inventorySize = info.shift(),
-                        data = info.shift();
+                    const inventorySize = info.shift() as number,
+                        data = info.shift() as Equipment[];
 
                     this.menu.loadInventory(inventorySize, data);
 
                     break;
                 }
 
-                case Packets.InventoryOpcode.Add:
-                    if (this.menu.bank) this.menu.addInventory(info);
+                case Packets.InventoryOpcode.Add: {
+                    const slot = info as Slot;
 
-                    if (this.menu.inventory) this.menu.inventory.add(info);
+                    if (this.menu.bank) this.menu.addInventory(slot);
 
-                    break;
-
-                case Packets.InventoryOpcode.Remove:
-                    if (this.menu.bank) this.menu.removeInventory(info);
-
-                    if (this.menu.inventory) this.menu.inventory.remove(info);
+                    if (this.menu.inventory) this.menu.inventory.add(slot);
 
                     break;
+                }
+
+                case Packets.InventoryOpcode.Remove: {
+                    const slot = info as Slot;
+
+                    if (this.menu.bank) this.menu.removeInventory(slot);
+
+                    if (this.menu.inventory) this.menu.inventory.remove(slot);
+
+                    break;
+                }
             }
         });
 
-        this.messages.onBank((opcode, info: any[]) => {
+        this.messages.onBank((opcode, info: any) => {
             switch (opcode) {
                 case Packets.BankOpcode.Batch: {
-                    const bankSize = info.shift(),
-                        data = info.shift();
+                    const bankSize = info.shift() as number,
+                        data = info.shift() as Slot[];
 
                     this.menu.loadBank(bankSize, data);
 
                     break;
                 }
 
-                case Packets.BankOpcode.Add:
+                case Packets.BankOpcode.Add: {
+                    const slot = info as Slot;
+
                     if (!this.menu.bank) return;
 
                     this.menu.bank.add(info);
 
                     break;
+                }
 
-                case Packets.BankOpcode.Remove:
+                case Packets.BankOpcode.Remove: {
+                    const slot = info as Slot;
+
                     this.menu.bank.remove(info);
 
                     break;
+                }
             }
         });
 

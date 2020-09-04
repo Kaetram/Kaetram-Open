@@ -6,6 +6,7 @@ export default class Equipment {
     abilityLevel: number;
     power: number;
     type: number;
+
     constructor(
         name: string,
         string: string,

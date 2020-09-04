@@ -1,5 +1,5 @@
-import log from '../lib/log';
 import Game from '../game';
+import log from '../lib/log';
 
 export default class Overlay {
     game: Game;

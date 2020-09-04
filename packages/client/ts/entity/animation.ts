@@ -14,6 +14,7 @@ export default class Animation {
     count: number;
     lastTime: number;
     speed: number;
+
     /**
      * Ripped from BrowserQuest's client
      */

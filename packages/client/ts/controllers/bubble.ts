@@ -1,8 +1,9 @@
-import _ from 'lodash';
 import $ from 'jquery';
-import Blob from '../renderer/bubbles/blob';
-import Game from '../game';
+import _ from 'lodash';
+
 import Entity from '../entity/entity';
+import Game from '../game';
+import Blob from '../renderer/bubbles/blob';
 
 export default class BubbleController {
     game: Game;

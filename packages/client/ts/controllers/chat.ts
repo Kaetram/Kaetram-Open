@@ -1,7 +1,8 @@
 import $ from 'jquery';
+
+import Game from '../game';
 import Packets from '../network/packets';
 import Modules from '../utils/modules';
-import Game from '../game';
 
 export default class ChatController {
     game: Game;
@@ -12,6 +13,7 @@ export default class ChatController {
     visible: boolean;
     fadingDuration: number;
     fadingTimeout: NodeJS.Timeout;
+
     constructor(game: Game) {
         this.game = game;
 
