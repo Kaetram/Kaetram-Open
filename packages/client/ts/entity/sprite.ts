@@ -1,6 +1,6 @@
-import Animation from './animation';
-import log from '../lib/log';
 import spriteData from '../../data/sprites.json';
+import log from '../lib/log';
+import Animation from './animation';
 
 export type SpriteData = typeof spriteData[0];
 

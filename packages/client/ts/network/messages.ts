@@ -1,6 +1,7 @@
-import Packets from './packets';
 import _ from 'lodash';
+
 import App from '../app';
+import Packets from './packets';
 
 /** @todo Change once handlers are typed */
 type Callback = (...data: never[]) => void;

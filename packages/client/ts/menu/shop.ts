@@ -1,9 +1,17 @@
 import $ from 'jquery';
-import Container from './container/container';
-import Packets from '../network/packets';
-import Game from '../game';
+
 import MenuController from '../controllers/menu';
 import Player from '../entity/character/player/player';
+import Game from '../game';
+import Packets from '../network/packets';
+import Container from './container/container';
+
+interface ShopMoveInfo {
+    id: string;
+    slotId: string;
+    currency: string;
+    price: number;
+}
 
 export default class Shop {
     game: Game;
@@ -91,7 +99,7 @@ export default class Shop {
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
     }
 
-    async move(info: any): Promise<void> {
+    async move(info: ShopMoveInfo): Promise<void> {
         const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
             slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`),
             slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);

@@ -1,8 +1,7 @@
-import log from '../lib/log';
-import Map from '../map/map';
 import Entity from '../entity/entity';
 import Item from '../entity/objects/item';
-import Character from '../entity/character/character';
+import log from '../lib/log';
+import Map from '../map/map';
 
 export default class Grids {
     map: Map;

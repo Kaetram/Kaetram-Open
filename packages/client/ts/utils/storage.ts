@@ -13,7 +13,7 @@ interface PlayerData {
 }
 
 interface Settings {
-    autoCentre?: boolean;
+    autoCentre: boolean;
     music: number;
     sfx: number;
     brightness: number;
@@ -25,6 +25,13 @@ interface Settings {
     showLevels: boolean;
 }
 
+interface RegionMapData {
+    regionData: number[];
+    collisions: MapCollisions;
+    objects: unknown[];
+    cursorTiles: { [key: string]: string };
+}
+
 interface StorageData {
     new: boolean;
     clientVersion: number;
@@ -33,12 +40,7 @@ interface StorageData {
 
     settings: Settings;
 
-    map: {
-        regionData: number[];
-        collisions: MapCollisions;
-        objects: unknown[];
-        cursorTiles: { [key: string]: unknown };
-    };
+    map: RegionMapData;
 }
 
 export default class Storage {
@@ -76,6 +78,7 @@ export default class Storage {
             },
 
             settings: {
+                autoCentre: false,
                 music: 100,
                 sfx: 100,
                 brightness: 100,
@@ -138,7 +141,7 @@ export default class Storage {
         regionData: number[],
         collisionData: MapCollisions,
         objects: unknown[],
-        cursorTiles: { [key: string]: unknown }
+        cursorTiles: { [key: string]: string }
     ): void {
         this.data.map.regionData = regionData;
         this.data.map.collisions = collisionData;
@@ -167,7 +170,7 @@ export default class Storage {
     getObjects(): unknown[] {
         return this.data.map.objects;
     }
-    getCursorTiles(): { [key: string]: unknown } {
+    getCursorTiles(): { [key: string]: string } {
         return this.data.map.cursorTiles;
     }
 }

@@ -1,6 +1,31 @@
-import Page from '../page';
 import $ from 'jquery';
 import _ from 'lodash';
+
+import Page from '../page';
+
+/**
+ * @todo
+ * Replace this with a `common` interface linking to the server's `Achievement` class.
+ */
+interface AchievementsInfo {
+    id: string;
+    name: string;
+    progress: number;
+    count: number;
+    finished: boolean;
+    isQuest: boolean;
+}
+/**
+ * @todo
+ * Replace this with a `common` interface linking to the server's `Quest` class.
+ */
+interface QuestInfo {
+    id: string;
+    name: string;
+    description: string;
+    stage: number;
+    finished: boolean;
+}
 
 export default class Quest extends Page {
     achievements: JQuery;
@@ -34,7 +59,7 @@ export default class Quest extends Page {
         this.questsLength = 0;
     }
 
-    loadAchievements(achievements: any): void {
+    loadAchievements(achievements: AchievementsInfo[]): void {
         this.achievementsLength = achievements.length;
 
         _.each(achievements, (achievement) => {
@@ -73,7 +98,7 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    loadQuests(quests: any[]): void {
+    loadQuests(quests: QuestInfo[]): void {
         this.questsLength = quests.length;
 
         _.each(quests, (quest) => {
@@ -102,7 +127,7 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    progress(info): void {
+    progress(info: AchievementsInfo): void {
         const item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
 
         if (!item) return;
@@ -120,7 +145,7 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    finish(info) {
+    finish(info: AchievementsInfo): void {
         const item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
 
         if (!item) return;

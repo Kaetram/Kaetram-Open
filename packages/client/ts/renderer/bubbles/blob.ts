@@ -1,4 +1,5 @@
 import $ from 'jquery';
+
 import Entity from '../../entity/entity';
 import Timer from '../../utils/timer';
 

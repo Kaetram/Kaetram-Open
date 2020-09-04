@@ -1,28 +1,36 @@
 import _ from 'lodash';
-import Modules from '../utils/modules';
-import Packets from '../network/packets';
 
-import Grids from '../renderer/grids';
-import Chest from '../entity/objects/chest';
-import Player from '../entity/character/player/player';
-import Item from '../entity/objects/item';
-import Sprites from './sprites';
+import Character from '../entity/character/character';
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
-import Projectile from '../entity/objects/projectile';
-import Renderer from '../renderer/renderer';
-import Game from '../game';
-import Entity from '../entity/entity';
-import SpritesController from './sprites';
-import Map from '../map/map';
-import Character from '../entity/character/character';
-import Sprite from '../entity/sprite';
 import Equipment from '../entity/character/player/equipment/equipment';
 import Weapon from '../entity/character/player/equipment/weapon';
+import Player from '../entity/character/player/player';
+import Entity from '../entity/entity';
+import Chest from '../entity/objects/chest';
+import Item from '../entity/objects/item';
+import Projectile from '../entity/objects/projectile';
+import Sprite from '../entity/sprite';
+import Game from '../game';
+import Map from '../map/map';
+import Packets from '../network/packets';
+import Grids from '../renderer/grids';
+import Renderer from '../renderer/renderer';
+import Modules from '../utils/modules';
+import SpritesController from './sprites';
 
 interface EntitiesCollection {
     [id: string]: Entity;
 }
+
+export interface Movable {
+    string: number;
+    characterId: string;
+    targetId: string;
+    attackerId: string;
+    hitType: number;
+}
+export type AnyEntity = Entity & Player & Mob & Projectile & Weapon & Equipment & Movable;
 
 export default class EntitiesController {
     game: Game;
@@ -32,6 +40,7 @@ export default class EntitiesController {
     entities: EntitiesCollection;
     decrepit: Entity[];
     map: Map;
+
     constructor(game: Game) {
         this.game = game;
         this.renderer = game.renderer;
@@ -47,7 +56,7 @@ export default class EntitiesController {
         this.game.app.sendStatus('Loading sprites');
 
         if (!this.sprites) {
-            this.sprites = new Sprites(this.game.renderer);
+            this.sprites = new SpritesController(this.game.renderer);
 
             this.sprites.onLoadedSprites(() => {
                 this.game.input.loadCursors();
@@ -63,15 +72,7 @@ export default class EntitiesController {
         if (this.sprites) this.sprites.updateSprites();
     }
 
-    create(
-        /** TODO: identity crisis */
-        info: Entity &
-            Player &
-            Mob &
-            Projectile &
-            Weapon &
-            Equipment & { string: number; characterId: string; targetId: string; hitType: number }
-    ): void {
+    create(info: AnyEntity): void {
         let entity: Entity;
 
         if (this.isPlayer(info.id)) return;
@@ -225,7 +226,6 @@ export default class EntitiesController {
                 player.idle();
 
                 _.each(equipments, (equipment) => {
-                    // TODO: why not pass the whole object?check
                     player.setEquipment(
                         equipment.type,
                         equipment.name,

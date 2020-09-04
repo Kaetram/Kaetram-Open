@@ -2,6 +2,7 @@ import Equipment from './equipment';
 
 export default class Armour extends Equipment {
     defence: number;
+
     constructor(
         name: string,
         string: string,

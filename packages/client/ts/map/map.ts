@@ -1,11 +1,12 @@
-import _ from 'lodash';
-import log from '../lib/log';
-import mapData from '../../data/maps/map.json';
-import MapWorker from './mapworker';
 import glTiled, { GLTilemap, ITilemap } from 'gl-tiled';
-import { isInt } from '../utils/util';
+import _ from 'lodash';
+
+import mapData from '../../data/maps/map.json';
 import Game from '../game';
+import log from '../lib/log';
 import Renderer from '../renderer/renderer';
+import { isInt } from '../utils/util';
+import MapWorker from './mapworker';
 
 type MapDataType = typeof mapData;
 export interface MapData extends MapDataType {
@@ -32,7 +33,7 @@ interface TileData {
     isObject: boolean;
     isCollision: boolean;
     index: number;
-    cursor: unknown;
+    cursor: string;
 }
 
 export type MapCollisions = typeof mapData.collisions;
@@ -49,12 +50,9 @@ export default class Map {
     supportsWorker: boolean;
     data: number[];
     objects: unknown[];
-    /**
-     * {@linkcode TileData.cursor}
-     */
-    cursorTiles: { [key: string]: unknown };
+    cursorTiles: { [key: string]: string };
     tilesets: TilesetImageElement[];
-    lastSyncData: any[];
+    lastSyncData: TileData[];
     grid: number[][];
     webGLMap: GLTilemap;
     tilesetsLoaded: boolean;
@@ -424,7 +422,7 @@ export default class Map {
         return this.objects.indexOf(index) > -1;
     }
 
-    getTileCursor(x: number, y: number): any {
+    getTileCursor(x: number, y: number): string {
         const index = this.gridPositionToIndex(x, y) - 1;
 
         if (!(index in this.cursorTiles)) return null;

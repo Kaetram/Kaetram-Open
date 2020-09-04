@@ -4,6 +4,7 @@
     "rules": {
         "indentation": 4,
         "no-duplicate-selectors": null,
-        "no-descending-specificity": null
+        "no-descending-specificity": null,
+        "function-name-case": null
     }
 }

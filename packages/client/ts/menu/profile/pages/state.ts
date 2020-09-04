@@ -1,9 +1,10 @@
-import Page from '../page';
 import $ from 'jquery';
 import _ from 'lodash';
-import Packets from '../../../network/packets';
-import Game from '../../../game';
+
 import Player from '../../../entity/character/player/player';
+import Game from '../../../game';
+import Packets from '../../../network/packets';
+import Page from '../page';
 
 export default class State extends Page {
     game: Game;

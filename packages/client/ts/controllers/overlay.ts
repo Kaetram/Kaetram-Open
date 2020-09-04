@@ -1,9 +1,10 @@
 import $ from 'jquery';
-import Entity from '../entity/entity';
+
+import Character from '../entity/character/character';
 import Player from '../entity/character/player/player';
+import Entity from '../entity/entity';
 import Game from '../game';
 import InputController from './input';
-import Character from '../entity/character/character';
 
 export default class OverlayController {
     hovering: Entity;

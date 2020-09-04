@@ -1,9 +1,10 @@
 import $ from 'jquery';
-import Packets from '../network/packets';
-import log from '../lib/log';
-import * as Detect from '../utils/detect';
-import Game from '../game';
+
 import MenuController from '../controllers/menu';
+import Game from '../game';
+import log from '../lib/log';
+import Packets from '../network/packets';
+import * as Detect from '../utils/detect';
 import Slot from './container/slot';
 
 export default class Enchant {

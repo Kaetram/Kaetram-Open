@@ -1,8 +1,15 @@
 import $ from 'jquery';
-import log from '../lib/log';
+
 import MenuController from '../controllers/menu';
 import Player from '../entity/character/player/player';
 import Game from '../game';
+import log from '../lib/log';
+
+interface ActionsData {
+    mouseX: number;
+    mouseY: number;
+    pvp: boolean;
+}
 
 export default class Actions {
     menu: MenuController;
@@ -41,7 +48,7 @@ export default class Actions {
         });
     }
 
-    loadDefaults(activeClass: string, data?: any): void {
+    loadDefaults(activeClass: string, data?: ActionsData): void {
         this.reset();
         this.activeClass = activeClass;
 

@@ -1,16 +1,19 @@
-import log from '../lib/log';
 import $ from 'jquery';
-import Inventory from '../menu/inventory';
-import Profile from '../menu/profile/profile';
-import Bank from '../menu/bank';
-import Actions from '../menu/actions';
-import Enchant from '../menu/enchant';
-import Shop from '../menu/shop';
-import Header from '../menu/header';
-import Warp from '../menu/warp';
+
+import Equipment from '../entity/character/player/equipment/equipment';
 import Game from '../game';
+import log from '../lib/log';
+import Actions from '../menu/actions';
+import Bank from '../menu/bank';
+import Slot from '../menu/container/slot';
+import Enchant from '../menu/enchant';
+import Header from '../menu/header';
+import Inventory from '../menu/inventory';
 import Professions from '../menu/profile/pages/professions';
 import Quest from '../menu/profile/pages/quest';
+import Profile from '../menu/profile/profile';
+import Shop from '../menu/shop';
+import Warp from '../menu/warp';
 
 export default class MenuController {
     game: Game;
@@ -80,7 +83,7 @@ export default class MenuController {
         this.resizeNotification();
     }
 
-    loadInventory(size: number, data: any[]): void {
+    loadInventory(size: number, data: Equipment[]): void {
         /**
          * This can be called multiple times and can be used
          * to completely refresh the inventory.
@@ -91,7 +94,7 @@ export default class MenuController {
         this.inventory.load(data);
     }
 
-    loadBank(size: number, data: any[]): void {
+    loadBank(size: number, data: Slot[]): void {
         /**
          * Similar structure as the inventory, just that it
          * has two containers. The bank and the inventory.
@@ -130,7 +133,7 @@ export default class MenuController {
     }
 
     loadHeader(): void {
-        this.header ||= new Header(this.game, this);
+        this.header ||= new Header(this.game /* , this */);
     }
 
     loadNotifications(): void {
@@ -204,11 +207,11 @@ export default class MenuController {
         if (this.shop && this.shop.isVisible()) this.shop.hide();
     }
 
-    addInventory(info: any): void {
+    addInventory(info: Slot): void {
         this.bank.addInventory(info);
     }
 
-    removeInventory(info: any): void {
+    removeInventory(info: Slot): void {
         this.bank.removeInventory(info);
     }
 

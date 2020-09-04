@@ -1,10 +1,11 @@
 import _ from 'lodash';
+
+import Game from '../game';
+import Countdown from '../renderer/infos/countdown';
+import Splat from '../renderer/infos/splat';
 import Modules from '../utils/modules';
 import Queue from '../utils/queue';
-import Splat from '../renderer/infos/splat';
-import Countdown from '../renderer/infos/countdown';
 import { isInt } from '../utils/util';
-import Game from '../game';
 
 type Info = Splat | Countdown;
 

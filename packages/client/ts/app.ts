@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Modules from './utils/modules';
-import * as Detect from './utils/detect';
 import { install } from '../lib/pwa';
 import Game from './game';
+import * as Detect from './utils/detect';
+import Modules from './utils/modules';
 
 export interface Config {
     ip: string;
@@ -47,6 +47,7 @@ export default class App {
     loggingIn: boolean;
     statusMessage: string;
     orientation: string;
+
     constructor() {
         // Do not refactor env variables assignment
         // process.env.VARIABLE is replaced by webpack during build process
