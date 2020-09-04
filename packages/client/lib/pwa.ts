@@ -4,15 +4,14 @@ let deferredPrompt = null;
 export const install = (): void => {
     if (deferredPrompt) {
         try {
-            if (localStorage.getItem('prompted') !== 'true')
-                deferredPrompt.prompt();
+            if (localStorage.getItem('prompted') !== 'true') deferredPrompt.prompt();
         } finally {
             deferredPrompt.userChoice.then((choiceResult) => {
                 localStorage.setItem('prompted', 'true');
                 if (choiceResult.outcome === 'accepted') {
-                // PWA has been installed
+                    // PWA has been installed
                 } else {
-                // User chose not to install PWA
+                    // User chose not to install PWA
                 }
 
                 deferredPrompt = null;
@@ -20,7 +19,6 @@ export const install = (): void => {
         }
     }
 };
-
 
 // Check compatibility for the browser we're running this in
 if ('serviceWorker' in navigator) {
@@ -40,14 +38,12 @@ if ('serviceWorker' in navigator) {
 
     window.addEventListener('load', () => {
         if (navigator.serviceWorker.controller)
-            log.info(
-                '[PWA Builder] active service worker found, no need to register'
-            );
+            log.info('[PWA Builder] active service worker found, no need to register');
         else {
             // Register the service worker
             navigator.serviceWorker
                 .register('sw.js', {
-                    scope: '../',
+                    scope: '../'
                 })
                 .then((reg) => {
                     log.info(

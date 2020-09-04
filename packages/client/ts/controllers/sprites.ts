@@ -1,16 +1,17 @@
 import _ from 'lodash';
-import $ from 'jquery';
-import log from '../lib/log';
+
 import spriteData from '../../data/sprites.json';
-import Sprite, { SpriteData } from '../entity/sprite';
 import Animation from '../entity/animation';
+import Sprite, { SpriteData } from '../entity/sprite';
+import log from '../lib/log';
 import Renderer from '../renderer/renderer';
 
 export default class SpritesController {
     renderer: Renderer;
     sprites: { [id: string]: Sprite };
     sparksAnimation: Animation;
-    loadedSpritesCallback;
+    loadedSpritesCallback: () => void;
+
     constructor(renderer: Renderer) {
         this.renderer = renderer;
 

@@ -1,9 +1,9 @@
+import App from '../app';
+import Player from '../entity/character/player/player';
+import Entity from '../entity/entity';
+import Map from '../map/map';
 import Modules from '../utils/modules';
 import Renderer from './renderer';
-import Map from '../map/map';
-import App from '../app';
-import Entity from '../entity/entity';
-import Player from '../entity/character/player/player';
 
 export default class Camera {
     renderer: Renderer;
@@ -29,6 +29,7 @@ export default class Camera {
     gridHeight: number;
     borderX: number;
     borderY: number;
+
     constructor(renderer: Renderer) {
         this.renderer = renderer;
         this.map = renderer.map;

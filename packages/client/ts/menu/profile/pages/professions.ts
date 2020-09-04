@@ -1,7 +1,19 @@
-import Page from '../page';
 import $ from 'jquery';
 import _ from 'lodash';
+
 import Game from '../../../game';
+import Page from '../page';
+
+/**
+ * @todo
+ * Replace this with a `common` interface linking to the server's `Profession` class.
+ */
+interface ProfessionsInfo {
+    id: string;
+    name: string;
+    level: number;
+    percentage: number;
+}
 
 export default class Professions extends Page {
     professions: JQuery;
@@ -18,7 +30,7 @@ export default class Professions extends Page {
         this.game = game;
     }
 
-    load(professions: any[]): void {
+    load(professions: ProfessionsInfo[]): void {
         _.each(professions, (profession) => {
             const item = this.getItem(profession.id),
                 name = this.getName(profession.id),
@@ -39,7 +51,7 @@ export default class Professions extends Page {
         });
     }
 
-    sync(info: any): void {
+    sync(info: ProfessionsInfo): void {
         if (!info) return;
 
         $(`#professionName${info.id}`).find('p').text(`Level ${info.level} | ${info.percentage}%`);

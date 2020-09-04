@@ -1,7 +1,7 @@
-import Modules from '../utils/modules';
 import Game from '../game';
-import Renderer from '../renderer/renderer';
 import Camera from '../renderer/camera';
+import Renderer from '../renderer/renderer';
+import Modules from '../utils/modules';
 import InputController from './input';
 
 export default class ZoningController {
@@ -10,6 +10,7 @@ export default class ZoningController {
     camera: Camera;
     input: InputController;
     direction: number;
+
     constructor(game: Game) {
         this.game = game;
         this.renderer = game.renderer;

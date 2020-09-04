@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import Entity from '../entity';
+
+import Modules from '../../utils/modules';
 import Transition from '../../utils/transition';
 import Animation from '../animation';
-import Modules from '../../utils/modules';
 import Weapon from '../character/player/equipment/weapon';
+import Entity from '../entity';
 
 export default class Character extends Entity {
     dead: boolean;

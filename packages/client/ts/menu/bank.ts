@@ -1,8 +1,9 @@
 import $ from 'jquery';
-import Container from './container/container';
-import Packets from '../network/packets';
-import Game from '../game';
+
 import Player from '../entity/character/player/player';
+import Game from '../game';
+import Packets from '../network/packets';
+import Container from './container/container';
 import Slot from './container/slot';
 
 export default class Bank {
@@ -15,6 +16,7 @@ export default class Bank {
     container: Container;
     close: JQuery<HTMLElement>;
     scale: number;
+
     constructor(game: Game, inventoryContainer: Container, size: number) {
         this.game = game;
         this.inventoryContainer = inventoryContainer;
@@ -171,7 +173,7 @@ export default class Bank {
         this.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
     }
 
-    async add(info: any): Promise<void> {
+    async add(info: Slot): Promise<void> {
         const item = $(this.getBankList()[info.index]),
             slot = this.container.slots[info.index];
 
@@ -192,7 +194,7 @@ export default class Bank {
         if (slot.count > 1) count.text(slot.count);
     }
 
-    remove(info: any): void {
+    remove(info: Slot): void {
         const item = $(this.getBankList()[info.index]),
             slot = this.container.slots[info.index];
 
@@ -210,7 +212,7 @@ export default class Bank {
         } else divItem.find(`#bankItemCount${info.index}`).text(slot.count);
     }
 
-    async addInventory(info: any): Promise<void> {
+    async addInventory(info: Slot): Promise<void> {
         const item = $(this.getInventoryList()[info.index]);
 
         if (!item) return;
@@ -223,7 +225,7 @@ export default class Bank {
         if (info.count > 1) slot.find(`#inventoryItemCount${info.index}`).text(info.count);
     }
 
-    removeInventory(info: any): void {
+    removeInventory(info: Slot): void {
         const item = $(this.getInventoryList()[info.index]);
 
         if (!item) return;

@@ -1,8 +1,9 @@
-import log from '../lib/log';
 import _ from 'lodash';
+
+import Game from '../game';
+import log from '../lib/log';
 import * as Detect from '../utils/detect';
 import Modules from '../utils/modules';
-import Game from '../game';
 
 interface Music {
     beach: boolean;

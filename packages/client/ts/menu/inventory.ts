@@ -1,11 +1,13 @@
 import $ from 'jquery';
-import Container from './container/container';
+
+import Equipment from '../entity/character/player/equipment/equipment';
+import Game from '../game';
 import Packets from '../network/packets';
 import * as Detect from '../utils/detect';
 import Modules from '../utils/modules';
-import Slot from './container/slot';
-import Game from '../game';
 import Actions from './actions';
+import Container from './container/container';
+import Slot from './container/slot';
 
 export default class Inventory {
     game: Game;
@@ -34,7 +36,7 @@ export default class Inventory {
         this.selectedItem = null;
     }
 
-    async load(data: any[]): Promise<void> {
+    async load(data: Equipment[]): Promise<void> {
         const list = $('#inventory').find('ul');
 
         for (let i = 0; i < data.length; i++) {
@@ -58,16 +60,17 @@ export default class Inventory {
             });
 
             const itemSlotList = $('<li></li>');
-            let count = item.count;
+            const count = item.count;
+            let itemCount = '';
 
             if (count > 999999)
-                count = `${count.toString().substring(0, count.toString().length - 6)}M`;
-            else if (count > 9999) count = `${count.toString().substring(0, 2)}K`;
-            else if (count === 1) count = '';
+                itemCount = `${count.toString().substring(0, count.toString().length - 6)}M`;
+            else if (count > 9999) itemCount = `${count.toString().substring(0, 2)}K`;
+            else if (count === 1) itemCount = '';
 
             itemSlotList.append(itemSlot);
             itemSlotList.append(
-                `<div id="itemCount${i}" class="inventoryItemCount">${count}</div>`
+                `<div id="itemCount${i}" class="inventoryItemCount">${itemCount}</div>`
             );
 
             if (item.ability > -1) {

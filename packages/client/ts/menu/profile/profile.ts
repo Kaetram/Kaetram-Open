@@ -1,13 +1,14 @@
 import $ from 'jquery';
 import _ from 'lodash';
-import State from './pages/state';
-import Settings from './pages/settings';
-import Quest from './pages/quest';
+
+import Game from '../../game';
+import Packets from '../../network/packets';
+import Page from './page';
 import Guild from './pages/guild';
 import Professions from './pages/professions';
-import Packets from '../../network/packets';
-import Game from '../../game';
-import Page from './page';
+import Quest from './pages/quest';
+import Settings from './pages/settings';
+import State from './pages/state';
 
 export default class Profile {
     game: Game;
@@ -23,6 +24,7 @@ export default class Profile {
     settings: Settings;
     quests: Quest;
     guild: Guild;
+
     constructor(game: Game) {
         this.game = game;
 
@@ -69,7 +71,7 @@ export default class Profile {
             this.next.addClass('enabled');
     }
 
-    open() {
+    open(): void {
         this.game.menu.hideAll();
         this.settings.hide();
 
@@ -86,20 +88,20 @@ export default class Profile {
         this.game.socket.send(Packets.Click, ['profile', this.button.hasClass('active')]);
     }
 
-    update() {
+    update(): void {
         _.each(this.pages as State[], (page) => {
             // if (!page.update) console.log(page);
             page.update?.();
         });
     }
 
-    resize() {
+    resize(): void {
         _.each(this.pages as State[], (page) => {
             page?.resize();
         });
     }
 
-    setPage(index) {
+    setPage(index: number): void {
         const page = this.pages[index];
 
         this.clear();
@@ -119,19 +121,19 @@ export default class Profile {
         page.show();
     }
 
-    show() {
+    show(): void {
         this.body.fadeIn('slow');
         this.button.addClass('active');
     }
 
-    hide() {
+    hide(): void {
         this.body.fadeOut('fast');
         this.button.removeClass('active');
 
         if (this.settings) this.settings.hide();
     }
 
-    clean() {
+    clean(): void {
         this.button.off('click');
         this.next.off('click');
         this.previous.off('click');
@@ -141,11 +143,11 @@ export default class Profile {
         // this.state.clear();
     }
 
-    isVisible() {
+    isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 
-    clear() {
+    clear(): void {
         if (this.activePage) this.activePage.hide();
     }
 }

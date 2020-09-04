@@ -1,10 +1,11 @@
 import $ from 'jquery';
 import _ from 'lodash';
-import Pointer from '../renderer/pointers/pointer';
-import Modules from '../utils/modules';
+
+import Entity from '../entity/entity';
 import Game from '../game';
 import Camera from '../renderer/camera';
-import Entity from '../entity/entity';
+import Pointer from '../renderer/pointers/pointer';
+import Modules from '../utils/modules';
 
 export default class PointerController {
     game: Game;

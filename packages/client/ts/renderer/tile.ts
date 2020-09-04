@@ -1,4 +1,5 @@
 import Map, { MapAnimations } from '../map/map';
+
 export default class Tile {
     id: number;
     index: number;

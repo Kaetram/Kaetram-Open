@@ -1,6 +1,6 @@
-import Packets from '../network/packets';
-import Game from '../game';
 import EntitiesController from '../controllers/entities';
+import Game from '../game';
+import Packets from '../network/packets';
 import Player from './character/player/player';
 import Entity from './entity';
 

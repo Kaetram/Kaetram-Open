@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import AStar from '../lib/astar';
-import Entity from '../entity/entity';
+
 import Character from '../entity/character/character';
+import Entity from '../entity/entity';
+import AStar from '../lib/astar';
 
 export default class PathFinder {
     width: number;
@@ -10,6 +11,7 @@ export default class PathFinder {
     grid: number[][];
     blankGrid: number[][];
     ignores: Character[];
+
     constructor(width: number, height: number) {
         this.width = width;
         this.height = height;
@@ -69,7 +71,7 @@ export default class PathFinder {
     }
 
     applyIgnore(ignored: boolean): void {
-        let x, y, g;
+        let x: number, y: number;
 
         _.each(this.ignores, (entity) => {
             x = entity.hasPath() ? entity.nextGridX : entity.gridX;

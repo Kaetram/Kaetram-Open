@@ -1,5 +1,5 @@
-import Page from '../page';
 import Game from '../../../game';
+import Page from '../page';
 
 export default class Ability extends Page {
     game: Game;
