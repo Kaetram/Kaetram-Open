@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Player from '../player';
 import Ability from './impl/ability';
 

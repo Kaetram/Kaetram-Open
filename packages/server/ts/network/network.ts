@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import World from '../game/world';
 import MongoDB from '../database/mongodb/mongodb';
 import Messages from './messages';

@@ -1,7 +1,7 @@
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
-import * as request from 'request';
-import * as _ from 'underscore';
+import express from 'express';
+import bodyParser from 'body-parser';
+import request from 'request';
+import _ from 'lodash';
 import World from '../game/world';
 import APIConstants from '../util/apiconstants';
 import Utils from '../util/utils';

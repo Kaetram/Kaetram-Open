@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import Modules from '../../../../../util/modules';
 import Player from '../player';
 import World from '../../../../world';

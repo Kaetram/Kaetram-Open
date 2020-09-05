@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Grids from './grids';
 import Regions from './regions';
 import Utils from '../util/utils';
@@ -15,9 +15,9 @@ import AchievementAreas from './areas/achievementareas';
 import World from '../game/world';
 import Area from './area';
 import Entity from '../game/entity/entity';
-import * as map from '../../data/map/world_server.json';
-import * as Spawns from '../../data/spawns.json';
-import * as ClientMap from '../../data/map/world_client.json';
+import map from '../../data/map/world_server.json';
+import Spawns from '../../data/spawns.json';
+import ClientMap from '../../data/map/world_client.json';
 
 class Map {
     world: World;

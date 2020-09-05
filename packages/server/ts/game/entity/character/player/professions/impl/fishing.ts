@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import Profession from './profession';
 import Player from '../../player';
 
