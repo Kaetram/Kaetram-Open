@@ -1,0 +1,10 @@
+{
+    "defaultSeverity": "warning",
+    "extends": "stylelint-config-standard",
+    "rules": {
+        "indentation": 4,
+        "no-duplicate-selectors": null,
+        "no-descending-specificity": null,
+        "function-name-case": null
+    }
+}

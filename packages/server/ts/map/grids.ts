@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Map from './map';
 import Entity from '../game/entity/entity';
 

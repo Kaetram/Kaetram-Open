@@ -1,7 +1,7 @@
 /* global module */
 
-import _ from 'underscore';
-import * as map from '../../data/map/world_server.json';
+import _ from 'lodash';
+import map from '../../data/map/world_server.json';
 
 import Map from './map';
 
@@ -37,10 +37,10 @@ class Regions {
     }
 
     loadDoors() {
-        let doors = map.doors;
+        const doors = map.doors;
 
         _.each(doors, (door) => {
-            let regionId = this.regionIdFromPosition(door.x, door.y),
+            const regionId = this.regionIdFromPosition(door.x, door.y),
                 linkedRegionId = this.regionIdFromPosition(door.tx, door.ty),
                 linkedRegionPosition = this.regionIdToPosition(linkedRegionId);
 
@@ -57,7 +57,7 @@ class Regions {
     // y y x y y
 
     getSurroundingRegions(id: string, offset = 1, stringFormat?: boolean) {
-        let position = this.regionIdToPosition(id),
+        const position = this.regionIdToPosition(id),
             x = position.x,
             y = position.y;
 
@@ -77,7 +77,7 @@ class Regions {
 
         _.each(this.linkedRegions[id], (regionPosition) => {
             if (
-                !_.any(list, (regionPosition) => {
+                !_.some(list, (regionPosition) => {
                     return regionPosition.x === x && regionPosition.y === y;
                 })
             )
@@ -85,7 +85,7 @@ class Regions {
         });
 
         list = _.reject(list, (regionPosition) => {
-            let gX = regionPosition.x,
+            const gX = regionPosition.x,
                 gY = regionPosition.y;
 
             return gX < 0 || gY < 0 || gX >= this.regionWidth || gY >= this.regionHeight;
@@ -95,7 +95,7 @@ class Regions {
     }
 
     getAdjacentRegions(id: string, offset: number, stringFormat?: boolean) {
-        let surroundingRegions = this.getSurroundingRegions(id, offset);
+        const surroundingRegions = this.getSurroundingRegions(id, offset);
 
         /**
          * We will leave this hardcoded to surrounding areas of
@@ -111,7 +111,7 @@ class Regions {
          * 11-2 12-2 13-2
          */
 
-        let centreRegion = this.regionIdToPosition(id),
+        const centreRegion = this.regionIdToPosition(id),
             adjacentRegions = [];
 
         _.each(surroundingRegions, (region) => {
@@ -149,7 +149,7 @@ class Regions {
     }
 
     regionIdToPosition(id: string) {
-        let position = id.split('-');
+        const position = id.split('-');
 
         return {
             x: parseInt(position[0], 10),
@@ -158,7 +158,7 @@ class Regions {
     }
 
     regionIdToCoordinates(id: string) {
-        let position = id.split('-');
+        const position = id.split('-');
 
         return {
             x: parseInt(position[0]) * this.zoneWidth,
@@ -170,7 +170,7 @@ class Regions {
      * Converts an array of regions from object type to string format.
      */
     regionsToCoordinates(regions: any) {
-        let stringList = [];
+        const stringList = [];
 
         _.each(regions, (region: any) => {
             stringList.push(region.x + '-' + region.y);

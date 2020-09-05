@@ -1,34 +1,11 @@
 {
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "strict": true,
         "module": "commonjs",
         "target": "esnext",
-        "types": [],
-        "outDir": "./dist",
-        "importHelpers": true,
-        "incremental": true,
-        "removeComments": true,
-        "moduleResolution": "node",
-        "preserveConstEnums": true,
-
-        "noImplicitAny": false,
-        "strictNullChecks": false,
-
-        "sourceMap": true,
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
-        "forceConsistentCasingInFileNames": true,
-        "declaration": true
+        "rootDir": "./",
+        "baseUrl": "./",
+        "outDir": "./dist"
     },
-    "typedocOptions ": {
-        "inputFiles": ["./"],
-        "mode": "modules",
-        "out": "../docs",
-        "entryPoint": "./ts/main",
-        "theme": "default",
-        "name": "Kaetram",
-        "hideGenerator": true
-    },
-    "files": ["ts/main.ts"],
-    "exclude": ["node_modules/"]
+    "files": ["./ts/main.ts"]
 }

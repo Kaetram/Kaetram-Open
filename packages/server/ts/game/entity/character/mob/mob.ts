@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Character from '../character';
 import Mobs from '../../../../util/mobs';
 import Utils from '../../../../util/utils';

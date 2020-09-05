@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import log from '../../../../util/log';
 import Character from '../character';
 import Incoming from '../../../../controllers/incoming';

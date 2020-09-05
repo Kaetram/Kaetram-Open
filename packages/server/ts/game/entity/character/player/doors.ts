@@ -1,11 +1,11 @@
 import config from '../../../../../config';
-import _ from 'underscore';
+import _ from 'lodash';
 import World from '../../../world';
 import Player from './player';
 import Map from '../../../../map/map';
 import Regions from '../../../../map/regions';
 
-import * as DoorData from '../../../../../data/doors.json';
+import DoorData from '../../../../../data/doors.json';
 
 class Doors {
     public world: World;

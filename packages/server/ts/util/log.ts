@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 import config from '../../config';
 
 class Log {

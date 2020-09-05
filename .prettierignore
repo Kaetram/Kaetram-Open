@@ -1,5 +1,4 @@
 packages/server/dist
 packages/client/dist
-packages/client/lib
 packages/client/js/lib
 packages/client/data/**/*

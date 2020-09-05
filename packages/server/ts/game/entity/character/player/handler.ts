@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import log from '../../../../util/log';
 import config from '../../../../../config';
 import Messages from '../../../../network/messages';

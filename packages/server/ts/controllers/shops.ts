@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import ShopData from '../util/shops';
 import Items from '../util/items';
 import Messages from '../network/messages';
