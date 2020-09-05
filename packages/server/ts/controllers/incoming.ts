@@ -1,9 +1,9 @@
 /* global module */
 
 import Packets from '../network/packets';
-import _ from 'underscore';
+import _ from 'lodash';
 import Messages from '../network/messages';
-import * as sanitizer from 'sanitizer';
+import sanitizer from 'sanitizer';
 import Commands from './commands';
 import Items from '../util/items';
 import Creator from '../database/mongodb/creator';

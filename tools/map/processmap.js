@@ -1,4 +1,4 @@
-let _ = require('underscore');
+let _ = require('lodash');
 
 /**
  * Global Values

@@ -3,7 +3,7 @@
  * game server.
  */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Packets from '../network/packets';
 import log from '../util/log';
 

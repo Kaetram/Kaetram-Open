@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import _ from 'lodash';
 import log from '../util/log';
 import config from '../../config';
 import Discord from '../network/discord';

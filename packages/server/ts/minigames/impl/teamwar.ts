@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Packets from '../../network/packets';
 import Messages from '../../network/messages';
 import Minigame from '../minigame';
