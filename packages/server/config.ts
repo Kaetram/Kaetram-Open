@@ -1,6 +1,6 @@
-import * as dotenv from 'dotenv';
-import * as dotenvParseVariables from 'dotenv-parse-variables';
-import * as camelcase from 'camelcase';
+import dotenv from 'dotenv';
+import dotenvParseVariables from 'dotenv-parse-variables';
+import camelcase from 'camelcase';
 
 const envConfig = dotenvParseVariables(dotenv.config().parsed || { ...process.env });
 

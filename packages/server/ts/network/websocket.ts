@@ -3,10 +3,10 @@ import log from '../util/log';
 import config from '../../config';
 
 import Connection from './connection';
-import * as WS from 'ws';
-import * as SocketIO from 'socket.io';
-import * as http from 'http';
-import * as https from 'https';
+import WS from 'ws';
+import SocketIO from 'socket.io';
+import http from 'http';
+import https from 'https';
 import Utils from '../util/utils';
 
 class WebSocket extends Socket {

@@ -1,5 +1,5 @@
 import log from '../../../../util/log';
-import _ from 'underscore';
+import _ from 'lodash';
 import Items from '../../../../util/items';
 import Messages from '../../../../network/messages';
 import Packets from '../../../../network/packets';

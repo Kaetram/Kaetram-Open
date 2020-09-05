@@ -1,6 +1,6 @@
 /* global module */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import Introduction from '../game/entity/character/player/quests/impl/introduction';
 import BulkySituation from '../game/entity/character/player/quests/impl/bulkysituation';
 import Achievement from '../game/entity/character/player/achievement';
@@ -9,8 +9,8 @@ import Quest from '../game/entity/character/player/quests/quest';
 import NPC from '../game/entity/npc/npc';
 import Mob from '../game/entity/character/mob/mob';
 
-import * as QuestData from '../../data/quests.json';
-import * as AchievementData from '../../data/achievements.json';
+import QuestData from '../../data/quests.json';
+import AchievementData from '../../data/achievements.json';
 
 class Quests {
     public player: Player;

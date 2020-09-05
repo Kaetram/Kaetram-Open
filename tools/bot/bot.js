@@ -4,7 +4,7 @@ config = { debugLevel: 'all', gver: 1 };
 
 var Utils = require('../../server/js/util/utils'),
     io = require('socket.io-client'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     Log = require('../../server/js/util/log');
 log = new Log('info');
 
