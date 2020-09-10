@@ -78,8 +78,8 @@ class ExportMap {
         this.copyTilesets();
     }
 
-    parse(data: MapData, destination: string, mode: string, worldClient?: ProcessMap): ProcessMap {
-        const map = new ProcessMap(data, { mode: mode });
+    parse(data: MapData, destination: string, mode: string, worldClient?: MapData): MapData {
+        const map = new ProcessMap(data, { mode: mode }).parse();
 
         if (worldClient) map.depth = worldClient.depth;
 
