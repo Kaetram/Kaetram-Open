@@ -22,16 +22,16 @@
         "no-fallthrough": "off",
         "prettier/prettier": "warn",
         "indent": [
-            "error",
+            "warn",
             4,
             {
                 "ignoredNodes": ["ConditionalExpression"],
                 "SwitchCase": 1
             }
         ],
-        "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"]
+        "linebreak-style": ["warn", "unix"],
+        "quotes": ["warn", "single"],
+        "semi": ["warn", "always"]
     },
     "ignorePatterns": ["node_modules/", "dist/", "**/*.min.*"]
 }
