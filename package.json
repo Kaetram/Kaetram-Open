@@ -12,8 +12,8 @@
         "build": "lerna run --parallel build",
         "lint": "eslint \"./packages/**/*.ts\"",
         "test": "",
-        "helper": "cd tools/map && node helper",
-        "map": "cd tools/map && node exportmap data/map-refactor.json"
+        "helper": "lerna run helper",
+        "map": "lerna run map"
     },
     "dependencies": {},
     "devDependencies": {
