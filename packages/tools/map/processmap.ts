@@ -15,11 +15,9 @@ export default class ProcessMap {
         this.json = json;
         this.options = options;
         this.mode = options.mode;
-
-        this.load();
     }
 
-    load(): MapData {
+    parse(): MapData {
         const { mode } = this.options;
 
         this.map = {
