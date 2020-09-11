@@ -401,7 +401,11 @@ export default class ProcessMap {
         if (this.mode === 'server' && property === 'rock') map.rocks[id] = value;
     }
 
-    handleAnimation(id: number, firstGID: string, tile): void {
+    handleAnimation(
+        id: number,
+        firstGID: string,
+        tile: { animation: { duration: number; tileid: string }[] }
+    ): void {
         const animationData = [];
 
         _.each(tile.animation, (animation) => {
@@ -426,11 +430,13 @@ export default class ProcessMap {
         return depth;
     }
 
-    isValid(number: any): boolean {
+    isValid(number: number): boolean {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         return number && !isNaN(number - 0) && number !== null && number !== '' && number !== false;
     }
 
-    parseLayer(layer): void {
+    parseLayer(layer: { name: string; type: string; data: number[]; visible: number }): void {
         const name = layer.name.toLowerCase(),
             type = layer.type;
 
