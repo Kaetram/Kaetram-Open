@@ -23,7 +23,11 @@ class Entity {
     }
 }
 
-// export default Entity;
+interface PacketInfo {
+    instance: string;
+    x: number;
+    y: number;
+}
 
 class Bot {
     bots: Entity[];
@@ -74,7 +78,7 @@ class Bot {
             log.info('Failed to establish connection.');
         });
 
-        connection.on('message', (message) => {
+        connection.on('message', (message: string) => {
             if (message.startsWith('[')) {
                 const data = JSON.parse(message);
 
@@ -91,13 +95,17 @@ class Bot {
         });
     }
 
-    handlePackets(connection: SocketIOClient.Socket, message: never[], type?: string): void {
+    handlePackets(
+        connection: SocketIOClient.Socket,
+        message: string | [number, PacketInfo],
+        type?: string
+    ): void {
         if (type === 'utf8' || !isArray(message)) {
             log.info(`Received UTF8 message ${message}.`);
             return;
         }
 
-        const opcode: number = message.shift();
+        const opcode = message.shift() as number;
 
         switch (opcode) {
             case 0:
@@ -106,7 +114,7 @@ class Bot {
                 break;
 
             case 2: {
-                const info: { instance: string; x: number; y: number } = message.shift();
+                const info = message.shift() as PacketInfo;
 
                 this.bots.push(new Entity(info.instance, info.x, info.y, connection));
 
@@ -162,6 +170,6 @@ class Bot {
     }
 }
 
-// export default Bot;
+export default Bot;
 
 new Bot();
