@@ -9,9 +9,9 @@ import _ from 'lodash';
 const relative = (dir: string): string => path.relative('../../', dir);
 
 export interface MapData {
-    width: any;
-    height: any;
-    collisions: any[];
+    width: number;
+    height: number;
+    collisions: number[];
     version: number;
 
     lights?: any[];
@@ -40,7 +40,7 @@ export interface MapData {
     achievementAreas?: any[];
     plateau?: any;
     warps?: any;
-    tilesize?: any;
+    tilesize?: number;
     layers?: any[];
 }
 
@@ -65,7 +65,7 @@ class ExportMap {
         });
     }
 
-    handleMap(data) {
+    handleMap(data: MapData): void {
         const worldClientJSON = '../../server/data/map/world_client.json',
             worldServerJSON = '../../server/data/map/world_server.json',
             clientMapJSON = '../../client/data/maps/map.json';
@@ -93,7 +93,7 @@ class ExportMap {
         return map;
     }
 
-    copyTilesets() {
+    copyTilesets(): void {
         const source = './data',
             destination = '../../client/img/tilesets';
 
@@ -113,14 +113,6 @@ class ExportMap {
     }
 }
 
-// String.prototype.format = function () {
-//     return this.charAt(0).toUpperCase() + this.slice(1);
-// };
-
-// String.prototype.startsWith = function (str) {
-//     return str.length > 0 && this.substring(0, str.length) === str;
-// };
-
-module.exports = ExportMap;
+export default ExportMap;
 
 new ExportMap();
