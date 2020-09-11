@@ -57,7 +57,7 @@ export default class BubbleController {
 
         const y = (info.y - this.game.getCamera().y) * scale - tileSize * 2 - offsetY;
 
-        bubble.element.css('left', `${x - offset}${3}px`);
+        bubble.element.css('left', `${x - offset + 3}px`);
         bubble.element.css('top', `${y}px`);
     }
 
