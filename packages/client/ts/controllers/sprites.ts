@@ -10,7 +10,6 @@ export default class SpritesController {
     renderer: Renderer;
     sprites: { [id: string]: Sprite };
     sparksAnimation: Animation;
-    loadedSpritesCallback: () => void;
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
@@ -30,8 +29,6 @@ export default class SpritesController {
         });
 
         if (this.renderer.game.isDebug()) log.info('Finished loading sprite data...');
-
-        this.loadedSpritesCallback?.();
     }
 
     loadAnimations(): void {
@@ -45,9 +42,5 @@ export default class SpritesController {
         });
 
         if (this.renderer.game.isDebug()) log.info('Sprites updated upon scaling.');
-    }
-
-    onLoadedSprites(callback: () => void): void {
-        this.loadedSpritesCallback = callback;
     }
 }
