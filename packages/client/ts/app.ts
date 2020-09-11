@@ -241,7 +241,7 @@ export default class App {
             this.game.input.keyUp(key);
         });
 
-        $(document).trigger('mousemove', (event: JQuery.MouseMoveEvent<Document>) => {
+        $(document).on('mousemove', (event: JQuery.MouseMoveEvent<Document>) => {
             if (
                 !this.game ||
                 !this.game.input ||
