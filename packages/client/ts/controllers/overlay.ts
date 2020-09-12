@@ -16,7 +16,7 @@ export default class OverlayController {
     details: JQuery;
     health: JQuery;
 
-    updateCallback: (id: string, data: any) => void;
+    updateCallback: (id: string, data: number) => void;
 
     constructor(input: InputController) {
         this.input = input;
@@ -48,6 +48,7 @@ export default class OverlayController {
         if (this.hasHealth()) {
             this.health.css({
                 display: 'block',
+                /* stylelint-disable */
                 width: `${
                     Math.ceil((entity.hitPoints / (entity as Character).maxHitPoints) * 100) - 10
                 }%`
@@ -108,7 +109,7 @@ export default class OverlayController {
         return this.input.game;
     }
 
-    onUpdate(callback: (id: string, data: any) => void): void {
+    onUpdate(callback: (id: string, data: number) => void): void {
         this.updateCallback = callback;
     }
 }
