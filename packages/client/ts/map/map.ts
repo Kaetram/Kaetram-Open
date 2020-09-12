@@ -116,12 +116,12 @@ export default class Map {
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            const worker = new MapWorker() as Worker;
+            const worker = new MapWorker();
 
             worker.postMessage(1);
 
             worker.onmessage = (event) => {
-                const map = event.data;
+                const map: MapData = event.data;
 
                 this.parseMap(map);
                 this.grid = map.grid;
