@@ -6,5 +6,5 @@
         "rootDir": "./",
         "baseUrl": "./"
     },
-    "files": ["./typings/index.d.ts"]
+    "files": ["./types/index.d.ts"]
 }

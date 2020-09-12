@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Kaetram set of shared resources across server and client",
     "homepage": "https://kaetram.com/",
-    "main": "typings/index.d.ts",
+    "types": "types/index.d.ts",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
