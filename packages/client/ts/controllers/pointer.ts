@@ -72,7 +72,7 @@ export default class PointerController {
             margin: 'inherit',
             'margin-top': '-18px',
             top: '30px',
-            background: `url("${(await import(`${'../../img/sprites/pointer.png'}`)).default}")`
+            background: `url("${(await import('../../img/sprites/pointer.png')).default}")`
         });
     }
 

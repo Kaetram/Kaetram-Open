@@ -131,7 +131,7 @@ export default class Renderer {
     realFPS: number;
     transitioning: boolean;
     transitionInterval: NodeJS.Timeout;
-    tileset: any;
+    tileset: unknown;
 
     constructor(
         background: HTMLCanvasElement,
@@ -1554,7 +1554,7 @@ export default class Renderer {
      * Setters
      */
 
-    setTileset(tileset): void {
+    setTileset(tileset: unknown): void {
         this.tileset = tileset;
     }
 
@@ -1591,7 +1591,7 @@ export default class Renderer {
         return bounds as Bounds;
     }
 
-    getTileset(): void {
+    getTileset(): unknown {
         return this.tileset;
     }
 }

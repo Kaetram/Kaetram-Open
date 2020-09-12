@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { install } from '../lib/pwa';
+import install from '../lib/pwa';
 import Game from './game';
 import * as Detect from './utils/detect';
 import Modules from './utils/modules';

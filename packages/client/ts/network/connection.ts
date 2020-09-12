@@ -130,10 +130,10 @@ export default class Connection {
             this.game.postLoad();
         });
 
-        this.messages.onEquipment((opcode, info: any) => {
+        this.messages.onEquipment((opcode, info: Equipment | Equipment[] | string[]) => {
             switch (opcode) {
                 case Packets.EquipmentOpcode.Batch:
-                    _.each(info, (data: Equipment) => {
+                    _.each(info as Equipment[], (data) => {
                         this.game.player.setEquipment(
                             data.type,
                             data.name,
@@ -176,7 +176,7 @@ export default class Connection {
                 }
 
                 case Packets.EquipmentOpcode.Unequip: {
-                    const type = info.shift();
+                    const type = (info as string[]).shift();
 
                     this.game.player.unequip(type);
 
