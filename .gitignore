@@ -139,10 +139,10 @@ dist
 
 ### VisualStudioCode ###
 .vscode/*
-# !.vscode/settings.json
-# !.vscode/tasks.json
-# !.vscode/launch.json
-# !.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 *.code-workspace
 
 ### VisualStudioCode Patch ###
@@ -289,8 +289,7 @@ $RECYCLE.BIN/
 
 # .yarn/cache and .pnp.* may be safely ignored, but you'll need to run yarn install
 # to regenerate them between each branch switch.
-# Uncomment the following lines if you're not using Zero-Installs:
-# .yarn/cache
-# .pnp.*
+.yarn/cache
+.pnp.*
 
 # https://www.toptal.com/developers/gitignore/api/node,git,windows,linux,macos,yarn,visualstudiocode,webstorm,typings
