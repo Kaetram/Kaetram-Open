@@ -6,25 +6,27 @@
     "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The codebase is simple, clean, and intuitive, and is intended to be used as a learning tool. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
     "homepage": "https://kaetram.com/",
     "scripts": {
-        "install": "lerna bootstrap",
-        "dev": "lerna run --parallel dev",
-        "start": "lerna run --parallel start",
-        "build": "lerna run --parallel build",
+        "packages": "yarn workspaces foreach --exclude kaetram -piv run",
+        "dev": "yarn packages dev",
+        "start": "yarn packages start",
+        "build": "yarn packages build",
         "lint": "eslint \"./packages/**/*.ts\"",
         "test": "",
-        "helper": "lerna run helper",
-        "map": "lerna run map"
+        "helper": "yarn packages helper",
+        "map": "yarn packages map"
     },
-    "dependencies": {},
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.1.0",
         "@typescript-eslint/parser": "^4.1.0",
         "babel-eslint": "^10.1.0",
-        "eslint": "^7.8.1",
+        "css-loader": "^4.3.0",
+        "eslint": "^7.9.0",
         "eslint-config-prettier": "^6.11.0",
-        "eslint-plugin-prettier": "^3.1.3",
-        "lerna": "^3.13.1",
-        "prettier": "^2.0.5",
+        "eslint-plugin-prettier": "^3.1.4",
+        "html-loader": "^1.3.0",
+        "prettier": "^2.1.1",
+        "ts-node": "^9.0.0",
+        "tslib": "^2.0.1",
         "typescript": "^4.0.2"
     },
     "workspaces": [
