@@ -3,6 +3,7 @@ import dotEnvExtended from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
 import { WebpackOptions } from 'webpack/declarations/WebpackOptions';
 
+import PnpWebpackPlugin from 'pnp-webpack-plugin';
 import { HotModuleReplacementPlugin, DefinePlugin } from 'webpack';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -74,7 +75,11 @@ const config: WebpackOptions = {
         ]
     },
     resolve: {
+        plugins: [PnpWebpackPlugin],
         extensions: 'ts js json io-client'.split(' ').map((ext) => `.${ext}`)
+    },
+    resolveLoader: {
+        plugins: [PnpWebpackPlugin.moduleLoader(module)]
     },
     devServer: {
         contentBase: __dirname,
