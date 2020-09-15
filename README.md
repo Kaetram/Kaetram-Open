@@ -110,9 +110,9 @@ You must first [install Node.js](https://nodejs.org/en/download/) to run the ser
 
 #### NOTE: Node.js
 
-> Node.js version must be greater than or equal to `10.0.0` as anything under this version would
-> interpret something like `catch {}` instead of the usual `catch (err) {}` as a Syntax Error. _This
-> error is not in this codebase, it's in one of the necessary node modules currently installed_
+> We recommend you use Node.js version greater or equal to `12.0.0` in order to have the
+> most stable experience when developing/experimenting with Kaetram. Older versions may work
+> but have not been tested.
 
 #### NOTE: MongoDB
 
@@ -122,10 +122,12 @@ You must first [install Node.js](https://nodejs.org/en/download/) to run the ser
 > user is not necessary, but you can enable authentication with the `Config.mongoAuth` variable in
 > the [server configuration](packages/server/config.ts)._
 
-After installing Node.js, install all packages by running
+You will need to [install Yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable)
+
+After installing Yarn, install all packages by running
 
 ```console
-npm install
+yarn install
 ```
 
 ### Installing and Running
