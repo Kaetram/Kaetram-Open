@@ -21,18 +21,18 @@ export default class InfoController {
         this.destroyQueue = new Queue();
     }
 
-    create(type: number, data: any[], x: number, y: number): void {
+    create(type: number, data: unknown[], x: number, y: number): void {
         switch (type) {
             case Modules.Hits.Damage:
             case Modules.Hits.Stun:
             case Modules.Hits.Critical: {
-                let damage = data.shift();
-                const isTarget: boolean = data.shift();
-                const dId = this.generateId(this.game.time, damage, x, y);
+                const damage = data.shift() as number | string;
+                const isTarget = data.shift() as boolean;
+                const dId = this.generateId(this.game.time, damage as number, x, y);
 
-                if (damage < 1 || !isInt(damage)) damage = 'MISS';
+                if (damage < 1 || !isInt(damage as number)) (damage as string) = 'MISS';
 
-                const hitSplat = new Splat(dId, type, damage, x, y, false);
+                const hitSplat = new Splat(dId, type, damage.toString(), x, y, false);
                 let dColour = isTarget
                     ? Modules.DamageColours.received
                     : Modules.DamageColours.inflicted;
@@ -54,7 +54,7 @@ export default class InfoController {
             case Modules.Hits.Experience:
             case Modules.Hits.Profession:
             case Modules.Hits.Poison: {
-                const amount: number = data.shift();
+                const amount: number = data.shift() as number;
                 const id: string = this.generateId(this.game.time, amount, x, y);
                 let prefix = '+';
                 let colour;
@@ -103,7 +103,7 @@ export default class InfoController {
 
                 if (this.countdownExists) return;
 
-                const time: number = data.shift(),
+                const time = data.shift() as number,
                     countdown = new Countdown('countdown', time);
 
                 this.addInfo(countdown);

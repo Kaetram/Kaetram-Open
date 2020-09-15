@@ -145,7 +145,7 @@ export default class Shop {
         this.update(this.data);
     }
 
-    update(data: any): void {
+    update(data: { strings: string[] }): void {
         this.reset();
 
         this.container = new Container(data.strings.length);
