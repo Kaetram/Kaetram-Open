@@ -45,7 +45,6 @@ class Parser {
 
     loadMobData(): void {
         let mobCounter = 0;
-        console.log(_);
 
         _.each(MobData, (value: any, key) => {
             key = key.toLowerCase();

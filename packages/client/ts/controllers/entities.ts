@@ -58,9 +58,7 @@ export default class EntitiesController {
         if (!this.sprites) {
             this.sprites = new SpritesController(this.game.renderer);
 
-            this.sprites.onLoadedSprites(() => {
-                this.game.input.loadCursors();
-            });
+            this.game.input.loadCursors();
         }
 
         this.game.app.sendStatus('Loading grids');

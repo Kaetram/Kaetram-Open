@@ -1,1 +1,10 @@
-/home/lemuel/Codes/Kaetram-Open/tsconfig.webpack.json
+/**
+ * This TypeScript configuration file is for webpack configs only
+ */
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5"
+    }
+}
