@@ -4,10 +4,7 @@ import _ from 'lodash';
 
 import mapData from '../../data/maps/map.json';
 
-// declare const _: LoDashStatic;
-
 type MapDataType = typeof mapData;
-// declare const mapData: MapDataType;
 
 export interface MapData extends MapDataType {
     grid: number[][];
@@ -44,7 +41,7 @@ function loadCollisionGrid() {
     });
 }
 
-function indexToGridPosition(index) {
+function indexToGridPosition(index: number) {
     let x = 0,
         y = 0;
 
@@ -59,10 +56,10 @@ function indexToGridPosition(index) {
     };
 }
 
-function getX(index, width) {
+function getX(index: number, width: number) {
     if (index === 0) return 0;
 
     return index % width === 0 ? width - 1 : (index % width) - 1;
 }
 
-export default class MapWorker {}
+export default DedicatedWorkerGlobalScope;

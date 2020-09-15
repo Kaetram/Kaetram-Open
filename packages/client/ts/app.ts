@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { install } from '../lib/pwa';
+import install from '../lib/pwa';
 import Game from './game';
 import * as Detect from './utils/detect';
 import Modules from './utils/modules';
@@ -241,7 +241,7 @@ export default class App {
             this.game.input.keyUp(key);
         });
 
-        $(document).trigger('mousemove', (event: JQuery.MouseMoveEvent<Document>) => {
+        $(document).on('mousemove', (event: JQuery.MouseMoveEvent<Document>) => {
             if (
                 !this.game ||
                 !this.game.input ||
