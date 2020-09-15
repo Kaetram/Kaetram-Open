@@ -6,7 +6,7 @@ import _ from 'lodash';
  * objects to delete
  */
 export default class Queue {
-    queue: unknown[];
+    queue: string[];
 
     constructor() {
         this.queue = [];
@@ -16,17 +16,17 @@ export default class Queue {
         this.queue = [];
     }
 
-    add(object: unknown): void {
+    add(object: string): void {
         this.queue.push(object);
     }
 
-    getQueue(): unknown[] {
+    getQueue(): string[] {
         return this.queue;
     }
 
-    forEachQueue(callback: (object: never) => void): void {
+    forEachQueue(callback: (object: string) => void): void {
         _.each(this.queue, (object) => {
-            callback(object as never);
+            callback(object);
         });
     }
 }

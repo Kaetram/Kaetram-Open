@@ -11,6 +11,7 @@
         "esModuleInterop": true,
         "noImplicitAny": false,
         "strictNullChecks": false,
+        "composite": true,
         "rootDir": "./",
         "baseUrl": "./packages",
         "paths": {

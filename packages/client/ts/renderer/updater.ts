@@ -7,6 +7,7 @@ import Game from '../game';
 import Map from '../map/map';
 import Modules from '../utils/modules';
 import Renderer from './renderer';
+import Entity from '../entity/entity';
 
 export default class Updater {
     game: Game;
@@ -123,7 +124,7 @@ export default class Updater {
         });
     }
 
-    updateFading(entity: any): void {
+    updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
         const duration = 1000,
@@ -131,7 +132,7 @@ export default class Updater {
             dt = time - entity.fadingTime;
 
         if (dt > duration) {
-            entity.isFading = false;
+            entity.fading = false;
             entity.fadingAlpha = 1;
         } else entity.fadingAlpha = dt / duration;
     }
