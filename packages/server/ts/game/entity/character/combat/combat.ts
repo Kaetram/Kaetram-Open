@@ -202,6 +202,16 @@ class Combat {
         this.queue.add(hit);
     }
 
+    forceAttack() {
+        if (!this.character.target || !this.inProximity()) return;
+
+        //this.stop();
+        this.start();
+
+        this.attackCount(2, this.character.target);
+        this.hit(this.character, this.character.target, this.queue.getHit());
+    }
+
     sync() {
         if (this.character.type !== 'mob') return;
 
@@ -236,16 +246,6 @@ class Combat {
 
             this.hit(this.character, entity, hitData);
         });
-    }
-
-    forceAttack() {
-        if (!this.character.target || !this.inProximity()) return;
-
-        //this.stop();
-        this.start();
-
-        this.attackCount(2, this.character.target);
-        this.hit(this.character, this.character.target, this.queue.getHit());
     }
 
     attackCount(count: number, target: Character) {
