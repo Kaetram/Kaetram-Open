@@ -22,7 +22,7 @@ class CombatQueue {
     }
 
     getHit() {
-        if (this.hitQueue.length < 1) return;
+        if (this.hitQueue.length < 1) return null;
 
         return this.hitQueue.shift().getData();
     }
