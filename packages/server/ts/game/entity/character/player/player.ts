@@ -1167,7 +1167,7 @@ class Player extends Character {
         let defaultDamage = Formulas.getDamage(this, target),
             isSpecial = Utils.randomInt(0, 100) < 30 + this.weapon.abilityLevel * 3;
 
-        if (this.hasSpecialAttack() && !isSpecial)
+        if (!isSpecial || !this.hasSpecialAttack())
             return new Hit(Modules.Hits.Damage, defaultDamage);
 
         switch (this.weapon.ability) {
