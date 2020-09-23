@@ -398,20 +398,16 @@ html [type="button"],
 
 #health {
     /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(right, #f00, #ef5a5a);
+    background: linear-gradient(to right, #f00, #ef5a5a);
 
-    /* Firefox 3.6+ */
-    background: -moz-linear-gradient(right, #f88, #f00);
     -webkit-transition: 0.5s width ease;
     transition: 0.5s width ease;
 }
 
 #exp {
     /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(left, #4f4, #080);
+    background: linear-gradient(to left, #4f4, #080);
 
-    /* Firefox 3.6+ */
-    background: -moz-linear-gradient(left, #4f4, #080);
     -webkit-transition: 0.5s width ease;
     transition: 0.5s width ease;
 }

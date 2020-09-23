@@ -26,6 +26,7 @@ class Connection {
                 if (this.listenCallback) this.listenCallback(JSON.parse(message));
             } catch (e) {
                 log.error('Could not parse message: ' + message);
+                console.log(e);
             }
         });
 
