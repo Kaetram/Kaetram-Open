@@ -1,6 +1,7 @@
 {
     "defaultSeverity": "warning",
     "extends": "stylelint-config-standard",
+    "configBasedir": "./",
     "rules": {
         "indentation": 4,
         "no-duplicate-selectors": null,
