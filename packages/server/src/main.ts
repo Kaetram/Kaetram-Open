@@ -25,12 +25,12 @@ class Main {
              * the websocket.
              */
 
-            let onWorldLoad = () => {
-                log.notice(`World has successfully been created.`);
+            const onWorldLoad = () => {
+                log.notice('World has successfully been created.');
 
                 if (!config.allowConnectionsToggle) this.world.allowConnections = true;
 
-                let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
+                const host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
                 log.notice('Connect locally via http://' + host + ':9000');
             };
@@ -58,15 +58,15 @@ class Main {
     }
 
     loadConsole() {
-        let stdin = process.openStdin();
+        const stdin = process.openStdin();
 
         stdin.addListener('data', (data) => {
-            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+            const message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
                 type = message.charAt(0);
 
             if (type !== '/') return;
 
-            let blocks = message.substring(1).split(' '),
+            const blocks = message.substring(1).split(' '),
                 command = blocks.shift();
 
             if (!command) return;
@@ -106,7 +106,7 @@ class Main {
                     break;
 
                 case 'resetPositions':
-                    let newX = parseInt(blocks.shift()),
+                    const newX = parseInt(blocks.shift()),
                         newY = parseInt(blocks.shift());
 
                     //x: 325, y: 87
@@ -143,7 +143,7 @@ class Main {
                     break;
 
                 case 'give':
-                    let itemId = blocks.shift(),
+                    const itemId = blocks.shift(),
                         itemCount = parseInt(blocks.shift());
 
                     username = blocks.join(' ');
