@@ -86,7 +86,7 @@ export default class Header {
     toggle(tClass: string): void {
         this.health.addClass(tClass);
 
-        setTimeout(() => {
+        window.setTimeout(() => {
             this.health.removeClass(tClass);
         }, 500);
     }

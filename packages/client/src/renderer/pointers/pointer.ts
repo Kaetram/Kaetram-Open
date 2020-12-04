@@ -4,7 +4,7 @@ export default class Pointer {
     id: string;
     element: JQuery<HTMLElement>;
     type: number;
-    blinkInterval: NodeJS.Timeout;
+    blinkInterval: number;
     visible: boolean;
     x: number;
     y: number;
@@ -24,7 +24,7 @@ export default class Pointer {
     }
 
     load(): void {
-        this.blinkInterval = setInterval(() => {
+        this.blinkInterval = window.setInterval(() => {
             if (this.visible) this.hide();
             else this.show();
 
