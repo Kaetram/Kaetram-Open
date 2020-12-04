@@ -25,7 +25,7 @@ export default class MenuController {
     notification: JQuery<HTMLDivElement>;
     title: JQuery<HTMLDivElement>;
     description: JQuery<HTMLDivElement>;
-    notificationTimeout: NodeJS.Timeout;
+    notificationTimeout: number;
     inventory: Inventory;
     profile: Profile;
     bank: Bank;
@@ -226,7 +226,7 @@ export default class MenuController {
         if (this.isNotificationVisible()) {
             this.hideNotification();
 
-            setTimeout(() => {
+            window.setTimeout(() => {
                 this.showNotification(title, message, colour);
             }, 700);
 
@@ -243,7 +243,7 @@ export default class MenuController {
 
         if (this.notificationTimeout) return;
 
-        this.notificationTimeout = setTimeout(() => {
+        this.notificationTimeout = window.setTimeout(() => {
             this.hideNotification();
         }, 4000);
     }

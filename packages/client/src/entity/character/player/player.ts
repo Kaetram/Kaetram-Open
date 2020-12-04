@@ -49,7 +49,7 @@ export default class Player extends Character {
     updateArmourCallback: (string: string, power: number) => void;
     updateWeaponCallback: (string: string, power: number) => void;
     updateEquipmentCallback: (type: number, power: number) => void;
-    tempBlinkTimeout: NodeJS.Timeout;
+    tempBlinkTimeout: number;
     moving: boolean;
 
     constructor() {
@@ -282,7 +282,7 @@ export default class Player extends Character {
         this.blink(90);
 
         if (!this.tempBlinkTimeout)
-            this.tempBlinkTimeout = setTimeout(() => {
+            this.tempBlinkTimeout = window.setTimeout(() => {
                 this.stopBlinking();
             }, 500);
     }

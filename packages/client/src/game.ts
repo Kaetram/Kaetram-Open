@@ -236,7 +236,7 @@ export default class Game {
     connect(): void {
         this.app.cleanErrors();
 
-        setTimeout(() => {
+        window.setTimeout(() => {
             this.socket.connect();
         }, 1000);
 

@@ -6,8 +6,6 @@ export default class Mob extends Character {
     constructor(id: string, kind: number) {
         super(id, kind);
 
-        this.name = name;
-
         this.hitPoints = -1;
         this.maxHitPoints = -1;
 
