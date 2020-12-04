@@ -12,7 +12,7 @@ export default class ChatController {
     button: JQuery;
     visible: boolean;
     fadingDuration: number;
-    fadingTimeout: NodeJS.Timeout;
+    fadingTimeout: number;
 
     constructor(game: Game) {
         this.game = game;
@@ -105,7 +105,7 @@ export default class ChatController {
             this.fadingTimeout = null;
         }
 
-        this.fadingTimeout = setTimeout(() => {
+        this.fadingTimeout = window.setTimeout(() => {
             if (!this.isActive()) {
                 this.chat.fadeOut('slow');
 

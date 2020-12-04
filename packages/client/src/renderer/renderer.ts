@@ -2,7 +2,7 @@ import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Map from '../../ts/map/map';
+import Map from '../map/map';
 import EntitiesController from '../controllers/entities';
 import InputController from '../controllers/input';
 import Character from '../entity/character/character';
@@ -100,7 +100,7 @@ export default class Renderer {
     lastTarget: number[];
     animatedTiles: { [index: number]: Tile };
     drawnTiles: Tile[];
-    resizeTimeout: NodeJS.Timeout;
+    resizeTimeout: number;
     autoCentre: boolean;
     drawTarget: boolean;
     selectedCellVisible: boolean;
@@ -130,7 +130,7 @@ export default class Renderer {
     sparksSprite: Sprite;
     realFPS: number;
     transitioning: boolean;
-    transitionInterval: NodeJS.Timeout;
+    transitionInterval: number;
     tileset: unknown;
 
     constructor(
@@ -319,7 +319,7 @@ export default class Renderer {
         this.checkDevice();
 
         if (!this.resizeTimeout)
-            this.resizeTimeout = setTimeout(() => {
+            this.resizeTimeout = window.setTimeout(() => {
                 this.scale = this.getScale();
                 this.clearScreen(this.cursorContext);
 
@@ -1288,7 +1288,7 @@ export default class Renderer {
 
         this.transitioning = true;
 
-        this.transitionInterval = setInterval(() => {
+        this.transitionInterval = window.setInterval(() => {
             this.brightness += forward ? 6 : -6;
 
             textCanvas.css('background', `rgba(0,0,0,${1 - this.brightness / 100})`);

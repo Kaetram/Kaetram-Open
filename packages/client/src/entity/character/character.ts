@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Modules from '../../utils/modules';
 import Transition from '../../utils/transition';
 import Animation from '../animation';
-import Weapon from '../character/player/equipment/weapon';
+import Weapon from './player/equipment/weapon';
 import Entity from '../entity';
 
 export default class Character extends Entity {
@@ -19,7 +19,7 @@ export default class Character extends Entity {
     mana: number;
     maxMana: number;
     healthBarVisible: boolean;
-    healthBarTimeout: NodeJS.Timeout;
+    healthBarTimeout: number;
     following: boolean;
     attacking: boolean;
     interrupted: boolean;
@@ -454,7 +454,7 @@ export default class Character extends Entity {
 
         if (this.healthBarTimeout) clearTimeout(this.healthBarTimeout);
 
-        this.healthBarTimeout = setTimeout(() => {
+        this.healthBarTimeout = window.setTimeout(() => {
             this.healthBarVisible = false;
         }, 7000);
     }
