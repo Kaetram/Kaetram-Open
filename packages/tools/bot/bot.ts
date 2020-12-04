@@ -1,27 +1,12 @@
 #!/usr/bin/env node
-
-import Utils from '@kaetram/server/ts/util/utils';
-import io from 'socket.io-client';
+import Utils from '@kaetram/server/src/util/utils';
 import { each, isArray } from 'lodash';
+import io from 'socket.io-client';
+import Entity from './entity';
 
 const log = console;
 
 const config = { debugLevel: 'all', gver: 1 };
-
-class Entity {
-    id;
-    x: number;
-    y: number;
-    connection: SocketIOClient.Socket;
-
-    constructor(id, x: number, y: number, connection: SocketIOClient.Socket) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-
-        this.connection = connection;
-    }
-}
 
 interface PacketInfo {
     instance: string;
@@ -29,7 +14,7 @@ interface PacketInfo {
     y: number;
 }
 
-class Bot {
+export default class Bot {
     bots: Entity[];
     botCount: number;
 
@@ -87,7 +72,7 @@ class Bot {
                         this.handlePackets(connection, msg);
                     });
                 else this.handlePackets(connection, JSON.parse(message).shift());
-            } else this.handlePackets(connection, message, 'utf8');
+            } else this.handlePackets(connection, message as never, 'utf8');
         });
 
         connection.on('disconnect', () => {
@@ -97,7 +82,7 @@ class Bot {
 
     handlePackets(
         connection: SocketIOClient.Socket,
-        message: string | [number, PacketInfo],
+        message: string[] | [number, PacketInfo],
         type?: string
     ): void {
         if (type === 'utf8' || !isArray(message)) {
@@ -169,7 +154,5 @@ class Bot {
         this.send(bot.connection, 20, ['am human, hello there.']);
     }
 }
-
-export default Bot;
 
 new Bot();
