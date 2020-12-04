@@ -1,7 +1,7 @@
-import Combat from '../../ts/game/entity/character/combat/combat';
-import Character from '../../ts/game/entity/character/character';
-import Mob from '../../ts/game/entity/character/mob/mob';
-import Modules from '../../ts/util/modules';
+import Combat from '../../src/game/entity/character/combat/combat';
+import Character from '../../src/game/entity/character/character';
+import Mob from '../../src/game/entity/character/mob/mob';
+import Modules from '../../src/util/modules';
 
 class GreatSquid extends Combat {
     lastTerror: number;
@@ -10,7 +10,7 @@ class GreatSquid extends Combat {
         character.spawnDistance = 15;
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.character = character;
 
@@ -18,7 +18,7 @@ class GreatSquid extends Combat {
     }
 
     hit(character: Character, target: Character, hitInfo: any) {
-        let self = this;
+        const self = this;
 
         if (self.canUseTerror) {
             hitInfo.type = Modules.Hits.Stun;
