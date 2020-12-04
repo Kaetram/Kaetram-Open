@@ -50,7 +50,7 @@ export default class Entity {
     dirty: boolean;
     dirtyCallback: () => void;
     fadingTime: number;
-    blinking: NodeJS.Timeout;
+    blinking: number;
     type: string;
     normalSprite;
     hurtSprite;
@@ -137,7 +137,7 @@ export default class Entity {
     }
 
     blink(speed: number): void {
-        this.blinking = setInterval(() => {
+        this.blinking = window.setInterval(() => {
             this.toggleVisibility();
         }, speed);
     }

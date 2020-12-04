@@ -43,8 +43,8 @@ interface Sounds {
 
 interface AudioElement extends HTMLAudioElement {
     name: Songs;
-    fadingIn: NodeJS.Timeout;
-    fadingOut: NodeJS.Timeout;
+    fadingIn: number;
+    fadingOut: number;
 }
 
 type Songs = keyof (Music & Sounds);
@@ -229,7 +229,7 @@ export default class AudioController {
 
         this.clearFadeOut(song);
 
-        song.fadingIn = setInterval(() => {
+        song.fadingIn = window.setInterval(() => {
             song.volume += 0.02;
 
             if (song.volume >= this.getMusicVolume() - 0.02) {
@@ -244,7 +244,7 @@ export default class AudioController {
 
         this.clearFadeIn(song);
 
-        song.fadingOut = setInterval(() => {
+        song.fadingOut = window.setInterval(() => {
             song.volume -= 0.08;
 
             if (song.volume <= 0.08) {
