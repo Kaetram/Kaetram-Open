@@ -1,4 +1,4 @@
-import log from '../ts/lib/log';
+import log from '../src/lib/log';
 
 interface DeferredPrompt extends Event {
     prompt: () => void;

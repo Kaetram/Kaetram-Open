@@ -22,7 +22,9 @@ Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 Patreon &ndash; <https://www.patreon.com/kaetram>
 
 ![Demo1](https://i.imgur.com/slnzrZB.png)
+
 ![Demo2](https://i.imgur.com/jS5d3oq.png)
+
 ![Demo3](https://i.imgur.com/cZTFqnd.png)
 
 ## Table of Contents
@@ -76,22 +78,23 @@ run multiple instances in parallel.
 
 Kaetram is built with modularity in mind, as such, the client supports multiple tileset parsing. The
 tilemap can easily be constructed using [Tiled Map Editor](https://www.mapeditor.org/). Using our
-map parsing tool located in [`tools/map/exportmap.js`](tools/map/exportmap.js) you can easily export
-your creation to both the client and the server.
+map parsing tool located in [`packages/tools/map/exportmap.ts`](packages/tools/map/exportmap.ts) you
+can easily export your creation to both the client and the server.
 
 ### Map Parsing
 
-Once you finish modifying your map in `tools/maps/data` you can parse the map data by executing
-`exportmap.js` in `tools/maps` directory. Example command:
+Once you finish modifying your map in [`packages/tools/map/data/`](packages/tools/map/data/) you can
+parse the map data by executing `yarn exportmap` inside the [`packages/tools/`](packages/tools/)
+directory. Example command:
 
 ```console
-./exportmap.js ./data/map.json
+yarn exportmap ./data/map.json
 ```
 
 In order to build the current game map you can run
 
 ```console
-npm run map
+yarn map
 ```
 
 ### Kaetram Hub
@@ -105,14 +108,15 @@ If a server is full, it simply returns another server that has room for the play
 
 ### Prerequisites
 
-You must first [install Node.js](https://nodejs.org/en/download/) to run the server, and
-[install MongoDB](https://www.mongodb.com/download-center/community) database to store user data.
+You must first [install Node.js](https://nodejs.org/en/download/) to run the workspace, and
+optionally [install MongoDB](https://www.mongodb.com/download-center/community) to store user data
+on the server.
 
 #### NOTE: Node.js
 
-> We recommend you use Node.js version greater or equal to `12.0.0` in order to have the
-> most stable experience when developing/experimenting with Kaetram. Older versions may work
-> but have not been tested.
+> We recommend you use Node.js version greater than or equal to `12.0.0` in order to have the most
+> stable experience when developing/experimenting with Kaetram. Older versions would not work with
+> our current packages.
 
 #### NOTE: MongoDB
 
@@ -120,34 +124,44 @@ You must first [install Node.js](https://nodejs.org/en/download/) to run the ser
 > your own limited version if you do not want to install MongoDB. To do this, set
 > `Config.offlineMode = true` in the server configuration. _If you do choose to install MongoDB, a
 > user is not necessary, but you can enable authentication with the `Config.mongoAuth` variable in
-> the [server configuration](packages/server/config.ts)._
+> the [server configuration](packages/server/.env)._
 
-You will need to [install Yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable)
-
-After installing Yarn, install all packages by running
+You will then need to install Yarn using
 
 ```console
-yarn install
+npm install -g yarn
+```
+
+After installing Yarn, install the packages by simply running
+
+```console
+yarn
 ```
 
 ### Installing and Running
 
-Before starting Kaetram, there is some configuration that must be done. In `packages/server/` directory,
-rename `.env-dist` to `.env`. Modify the file as to fit your needs. Similar procedure for
-the `packages/client/` directory, simply rename `.env-dist` to `.env`. Make sure the
-settings in the client match those in the server.
+Before starting Kaetram, there is some configuration that must be done. In
+[`packages/server/`](packages/server/) directory, rename
+[`.env.defaults`](packages/server/.env.defaults) to `.env`. Modify the file as to fit your needs. As
+for the client, [`.env.defaults`](packages/client/.env.defaults) will be used unless override by a
+`.env` file. Make sure the settings in the client match those in the server.
 
-MongoDB is a requirement for Kaetram to run with all the features enabled, but you can still run
-your own limited version if you do not want to install MongoDB. To do this, set `offlineMode = true`
-in the server configuration.
-
-If you do choose to install MongoDB, a user is not necessary, but you can enable authentication with
-the `mongoAuth` variable in the server configuration.
-
-As of now a production build is not available so for running a development server, run
+To run a live development build, run
 
 ```console
-npm run dev
+yarn dev
+```
+
+In order to create a production build, run
+
+```console
+yarn build
+```
+
+Then, to run each production build package, use
+
+```console
+yarn start
 ```
 
 ## Roadmap
@@ -186,30 +200,6 @@ features (and known issues).
 #### Miscellaneous
 
 - Add (continue) to NPC talking&mdash;spacebar when talking
-
-<!-- ## Running Tests
-
-> TODO: Tests are unfinished, yet alone barley even started.
-
-Tests _and coverage_ are ran with [Jest](https://jestjs.io/) To run the tests,
-simply run
-
-```console
-npm test
-``` -->
-
-<!-- ## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-Contributions are what make the open source community such an amazing place to be learn, inspire,
-and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request -->
 
 ## License
 
