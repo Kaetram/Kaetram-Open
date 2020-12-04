@@ -482,7 +482,7 @@ export default class Connection {
 
                     if (target.hurtSprite) {
                         target.sprite = target.hurtSprite;
-                        setTimeout(() => {
+                        window.setTimeout(() => {
                             target.sprite = target.normalSprite;
                         }, 75);
                     }

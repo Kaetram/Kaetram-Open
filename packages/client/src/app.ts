@@ -179,40 +179,41 @@ export default class App {
         if (!window.localStorage.getItem('world'))
             window.localStorage.setItem('world', 'kaetram_server01');
 
-        $.get('https://hub.kaetram.com/all', (servers) => {
-            let serverIndex;
-            for (let i = 0; i < servers.length; i++) {
-                const server = servers[i];
+        if (this.config.worldSwitch)
+            $.get('https://hub.kaetram.com/all', (servers) => {
+                let serverIndex;
+                for (let i = 0; i < servers.length; i++) {
+                    const server = servers[i];
 
-                const row = $(document.createElement('tr'));
-                row.append($(document.createElement('td')).text(server.serverId));
-                row.append(
-                    $(document.createElement('td')).text(
-                        `${server.playerCount}/${server.maxPlayers}`
-                    )
-                );
-                $('#worlds-list').append(row);
-                row.click(() => {
-                    // TODO: This is when a server is clicked with the local `server` having the world data.
-                    // log.info(server);
-                });
+                    const row = $(document.createElement('tr'));
+                    row.append($(document.createElement('td')).text(server.serverId));
+                    row.append(
+                        $(document.createElement('td')).text(
+                            `${server.playerCount}/${server.maxPlayers}`
+                        )
+                    );
+                    $('#worlds-list').append(row);
+                    row.click(() => {
+                        // TODO: This is when a server is clicked with the local `server` having the world data.
+                        // log.info(server);
+                    });
 
-                if (server.serverId === window.localStorage.getItem('world')) {
-                    serverIndex = i;
+                    if (server.serverId === window.localStorage.getItem('world')) {
+                        serverIndex = i;
+                    }
                 }
-            }
-            const currentWorld = servers[serverIndex];
+                const currentWorld = servers[serverIndex];
 
-            $('#current-world-index').text(serverIndex);
-            $('#current-world-id').text(currentWorld.serverId);
-            $('#current-world-count').text(
-                `${currentWorld.playerCount}/${currentWorld.maxPlayers}`
-            );
+                $('#current-world-index').text(serverIndex);
+                $('#current-world-id').text(currentWorld.serverId);
+                $('#current-world-count').text(
+                    `${currentWorld.playerCount}/${currentWorld.maxPlayers}`
+                );
 
-            $('#worlds-switch').click(() => {
-                $('#worlds-popup').toggle();
+                $('#worlds-switch').click(() => {
+                    $('#worlds-popup').toggle();
+                });
             });
-        });
 
         $(document).bind('keydown', (e) => {
             if (e.which === Modules.Keys.Enter) return false;
@@ -294,7 +295,7 @@ export default class App {
     fadeMenu(): void {
         this.updateLoader(null);
 
-        setTimeout(() => {
+        window.setTimeout(() => {
             this.body.addClass('game');
             this.body.addClass('started');
 
@@ -326,7 +327,7 @@ export default class App {
 
             this.parchment.toggleClass('animate').removeClass(origin);
 
-            setTimeout(
+            window.setTimeout(
                 () => {
                     this.parchment.toggleClass('animate').addClass(destination);
                     this.parchmentAnimating = false;

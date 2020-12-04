@@ -104,7 +104,7 @@ export default class Map {
 
         if (this.mapLoaded && this.tilesetsLoaded) rC();
         else
-            setTimeout(() => {
+            window.setTimeout(() => {
                 this.loadTilesets();
                 this.ready();
             }, 50);
