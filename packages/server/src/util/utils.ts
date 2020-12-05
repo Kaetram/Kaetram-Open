@@ -4,6 +4,8 @@
  */
 
 import _ from 'lodash';
+import crypto from 'crypto';
+
 import Packets from '../network/packets';
 import log from '../util/log';
 
@@ -105,5 +107,15 @@ export default {
         } catch (e) {
             return '';
         }
+    },
+
+    /**
+     * This function is primarily used for comparing checksum data
+     * of maps in order to determine if an update is necessary.
+     * @param data Any form of data, string, numbers, etc.
+     */
+
+    getChecksum(data: any) {
+        return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
     }
 };
