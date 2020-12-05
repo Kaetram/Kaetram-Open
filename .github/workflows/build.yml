@@ -24,8 +24,8 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
             - run: yarn install --immutable
-            - run: cp packages/server/.env-dist packages/server/.env
-            # - run: cp packages/client/.env-dist packages/client/.env
+            - run: cp packages/server/.env.defaults packages/server/.env
+            # - run: cp packages/client/.env.defaults packages/client/.env
             # - run: yarn lint
             # - run: yarn test
             # - run: yarn build
