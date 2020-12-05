@@ -1,9 +1,9 @@
-import Combat from '../../ts/game/entity/character/combat/combat';
-import Character from '../../ts/game/entity/character/character';
-import Player from '../../ts/game/entity/character/player/player';
-import Hit from '../../ts/game/entity/character/combat/hit';
-import Modules from '../../ts/util/modules';
-import log from '../../ts/util/log';
+import Combat from '../../src/game/entity/character/combat/combat';
+import Character from '../../src/game/entity/character/character';
+import Player from '../../src/game/entity/character/player/player';
+import Hit from '../../src/game/entity/character/combat/hit';
+import Modules from '../../src/util/modules';
+import log from '../../src/util/log';
 
 class Cactus extends Combat {
     constructor(character: Character) {
@@ -40,12 +40,12 @@ class Cactus extends Combat {
          * as the armour gets better.
          **/
 
-        let defense = attacker.armour.getDefense(),
+        const defense = attacker.armour.getDefense(),
             calculatedDamage = Math.floor(damage / 2 - defense * 5);
 
         if (calculatedDamage < 1) return;
 
-        let hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
+        const hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 
         this.hit(this.character, attacker, hitInfo, true);
     }

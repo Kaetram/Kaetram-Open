@@ -1,7 +1,7 @@
 /* global module */
 
-import Player from '../../ts/game/entity/character/player/player';
-import Items from '../../ts/util/items';
+import Player from '../../src/game/entity/character/player/player';
+import Items from '../../src/util/items';
 
 class HealthFlask {
     id: number;
@@ -9,14 +9,14 @@ class HealthFlask {
     manaAmount: number;
 
     constructor(id: number) {
-        let self = this;
+        const self = this;
 
         self.id = id;
 
         self.healAmount = 0;
         self.manaAmount = 0;
 
-        let customData = Items.getCustomData(self.id);
+        const customData = Items.getCustomData(self.id);
 
         if (customData) {
             self.healAmount = customData.healAmount ? customData.healAmount : 0;
@@ -25,7 +25,7 @@ class HealthFlask {
     }
 
     onUse(character: Player) {
-        let self = this;
+        const self = this;
 
         if (self.healAmount) character.healHitPoints(self.healAmount);
 
