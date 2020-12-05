@@ -1,7 +1,6 @@
 /* global module */
 
 import _ from 'lodash';
-import map from '../../data/map/world_server.json';
 
 import Map from './map';
 
@@ -37,7 +36,7 @@ class Regions {
     }
 
     loadDoors() {
-        const doors = map.doors;
+        const doors = this.map.doors;
 
         _.each(doors, (door) => {
             const regionId = this.regionIdFromPosition(door.x, door.y),
