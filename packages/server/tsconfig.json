@@ -7,5 +7,7 @@
         "baseUrl": "./",
         "outDir": "./dist"
     },
+    "include": ["ts/**/*", "data/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts"],
     "files": ["./ts/main.ts"]
 }
