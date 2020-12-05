@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import Area from '../area';
-import map from '../../../data/map/world_server.json';
+import map from '../../../data/map/world.json';
 import log from '../../util/log';
 
 class CameraAreas {

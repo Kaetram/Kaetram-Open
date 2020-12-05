@@ -12,8 +12,9 @@ import Regions from '../map/regions';
 import World from '../game/world';
 import config from '../../config';
 import log from '../util/log';
+import Utils from '../util/utils';
 
-const map = path.resolve(__dirname, '../../data/map/world_client.json');
+const map = path.resolve(__dirname, '../../data/map/world.json');
 
 class Region {
     /**
@@ -27,16 +28,11 @@ class Region {
     map: Map;
     mapRegions: Regions;
 
-    clientMap: any;
-
     world: World;
 
     regions: any;
 
     loaded: boolean;
-
-    clientWidth: number;
-    clientHeight: number;
 
     addCallback: Function;
     removeCallback: Function;
@@ -45,8 +41,6 @@ class Region {
     constructor(world: World) {
         this.map = world.map;
         this.mapRegions = world.map.regions;
-
-        this.clientMap = this.map.clientMap;
 
         this.world = world;
 
@@ -79,31 +73,11 @@ class Region {
                 log.info('Entity - ' + entity.username + ' is incoming into region - ' + regionId);
         });
 
-        fs.watchFile(map, () => {
-            log.info('Received Map Update -> Sending to Players...');
-
-            fs.readFile(map, 'utf8', (error, data) => {
-                if (error) {
-                    log.error('Could not reload the map file...');
-                    return;
-                }
-
-                try {
-                    this.clientMap = JSON.parse(data);
-
-                    this.updateRegions();
-                } catch (e) {
-                    log.error('Could not parse JSON.');
-                }
-            });
-        });
-
         this.load();
+        this.loadWatcher();
     }
 
     load() {
-        this.clientWidth = this.clientMap.width;
-        this.clientHeight = this.clientMap.height;
 
         this.mapRegions.forEachRegion((regionId: string) => {
             this.regions[regionId] = {
@@ -116,6 +90,38 @@ class Region {
         this.loaded = true;
 
         log.info('Finished loading regions!');
+    }
+
+    loadWatcher() {
+        fs.watch(map, (_eventType, _fileName) => {
+            this.update();
+        });
+
+        log.info('Finished loading file watcher!');
+    }
+
+    update() {
+        let data = fs.readFileSync(map, {
+            encoding: 'utf8',
+            flag: 'r'
+        });
+
+        if (!data) return;
+
+        try {
+            let jsonData = JSON.parse(data),
+                checksum = Utils.getChecksum(data);
+
+            if (checksum === this.map.checksum)
+                return;
+
+            this.map.create(jsonData);
+            this.map.load();
+
+            log.debug('Successfully loaded new map data.');
+
+            this.updateRegions();
+        } catch (e) { log.error('Could not parse new map file.'); log.debug(e); }
     }
 
     addEntityToInstance(entity: Entity, player: Player) {
@@ -379,7 +385,7 @@ class Region {
     changeGlobalTile(newTile: any, x: number, y: number) {
         const index = this.gridPositionToIndex(x, y);
 
-        this.clientMap.data[index] = newTile;
+        this.map.data[index] = newTile;
 
         this.world.push(Packets.PushOpcode.Broadcast, {
             message: Region.getModify(index, newTile)
@@ -406,9 +412,9 @@ class Region {
                 for (let y = bounds.startY; y < bounds.endY; y++) {
                     for (let x = bounds.startX; x < bounds.endX; x++) {
                         let index = this.gridPositionToIndex(x - 1, y),
-                            tileData = this.clientMap.data[index],
+                            tileData = this.map.data[index],
                             isCollision =
-                                this.clientMap.collisions.indexOf(index) > -1 || !tileData,
+                                this.map.collisions.indexOf(index) > -1 || !tileData,
                             objectId: any;
 
                         if (tileData !== 0) {
@@ -476,7 +482,7 @@ class Region {
     }
 
     gridPositionToIndex(x: number, y: number) {
-        return y * this.clientWidth + x + 1;
+        return y * this.map.width + x + 1;
     }
 
     onAdd(callback: Function) {
