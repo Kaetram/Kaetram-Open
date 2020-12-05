@@ -1,15 +1,14 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
-import worldClient from '@kaetram/server/data/map/world_client.json';
-import worldServer from '@kaetram/server/data/map/world_server.json';
+import world from '@kaetram/server/data/map/world.json';
 
 export default class Helper {
     width: number;
     height: number;
 
     constructor() {
-        this.width = worldServer.width;
-        this.height = worldServer.height;
+        this.width = world.width;
+        this.height = world.height;
 
         // Palm Tree Stump
         this.getTileData(167, 263);
@@ -24,8 +23,8 @@ export default class Helper {
         const index = this.gridPositionToIndex(x, y);
 
         console.log(
-            `"${index}": { "data": [${worldClient.data[index]}], "isColliding": ${
-                worldClient.collisions.indexOf(index) > -1
+            `"${index}": { "data": [${world.data[index]}], "isColliding": ${
+                world.collisions.indexOf(index) > -1
             } },`
         );
     }

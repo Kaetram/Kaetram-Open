@@ -1,6 +1,7 @@
-/* global module */
-
+import fs from 'fs';
 import _ from 'lodash';
+import path from 'path';
+
 import Grids from './grids';
 import Regions from './regions';
 import Utils from '../util/utils';
@@ -15,9 +16,13 @@ import AchievementAreas from './areas/achievementareas';
 import World from '../game/world';
 import Area from './area';
 import Entity from '../game/entity/entity';
-import map from '../../data/map/world_server.json';
 import Spawns from '../../data/spawns.json';
-import ClientMap from '../../data/map/world_client.json';
+
+import log from '../util/log';
+
+let map: any;
+
+const mapDestination = path.resolve(__dirname, '../../data/map/world.json');
 
 class Map {
     world: World;
@@ -27,7 +32,9 @@ class Map {
     grids: Grids;
 
     version: number;
-    clientMap: any;
+
+    data: any[];
+
     width: number;
     height: number;
 
@@ -58,6 +65,8 @@ class Map {
 
     staticEntities: any;
 
+    checksum: string;
+
     readyInterval: any;
     readyCallback: Function;
 
@@ -66,16 +75,26 @@ class Map {
 
         this.ready = false;
 
+        this.create();
         this.load();
 
         this.regions = new Regions(this);
         this.grids = new Grids(this);
     }
 
+    create(jsonData?: any) {
+        try {
+            map = jsonData || JSON.parse(fs.readFileSync(mapDestination, {
+                encoding: 'utf8',
+                flag: 'r'
+            }));
+        } catch (e) { log.error('Could not create the map file.'); };
+    }
+
     load() {
         this.version = map.version || 0;
 
-        this.clientMap = ClientMap;
+        this.data = map.data;
 
         this.width = map.width;
         this.height = map.height;
@@ -110,6 +129,8 @@ class Map {
         this.regionWidth = this.width / this.zoneWidth;
         this.regionHeight = this.height / this.zoneHeight;
 
+        this.checksum = Utils.getChecksum(JSON.stringify(map));
+
         this.areas = {};
 
         this.loadAreas();
@@ -117,14 +138,16 @@ class Map {
 
         this.ready = true;
 
+        if (this.world.ready)
+            return;
+
         this.readyInterval = setInterval(() => {
-            if (!this.world.ready)
-                if (this.readyCallback) this.readyCallback();
-                else {
-                    clearInterval(this.readyInterval);
-                    this.readyInterval = null;
-                }
-        }, 50);
+            if (this.readyCallback) this.readyCallback();
+
+            clearInterval(this.readyInterval);
+            this.readyInterval = null;
+        }, 75);
+
     }
 
     loadAreas() {
@@ -281,7 +304,7 @@ class Map {
 
     getPositionObject(x: number, y: number) {
         let index = this.gridPositionToIndex(x, y),
-            tiles: any = this.clientMap.data[index],
+            tiles: any = this.data[index],
             objectId: any;
 
         if (tiles instanceof Array)
@@ -310,7 +333,7 @@ class Map {
 
     getObject(x: number, y: number, data: any) {
         let index = this.gridPositionToIndex(x, y) - 1,
-            tiles = this.clientMap.data[index];
+            tiles = this.data[index];
 
         if (tiles instanceof Array) for (let i in tiles) if (tiles[i] in data) return tiles[i];
 
@@ -373,7 +396,7 @@ class Map {
 
         let tileIndex = this.gridPositionToIndex(x, y);
 
-        return this.clientMap.data[tileIndex] === 0;
+        return this.data[tileIndex] === 0;
     }
 
     getPlateauLevel(x: number, y: number) {
