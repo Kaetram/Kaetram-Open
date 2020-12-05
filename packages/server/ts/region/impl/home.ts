@@ -13,7 +13,6 @@ class Home {
     private region: Region;
     private map: Map;
 
-    private clientMap: any;
 
     private startRegion: string;
     private endRegion: string;
@@ -21,7 +20,6 @@ class Home {
     constructor(region: Region) {
         this.region = region;
         this.map = region.map;
-        this.clientMap = this.map.clientMap;
 
         this.startRegion = '0-4';
         this.endRegion = '4-10';
@@ -45,7 +43,7 @@ class Home {
                 let tileIndex = this.region.gridPositionToIndex(x, y);
 
                 info.indexes.push(tileIndex);
-                info.data.push(this.clientMap.data[tileIndex]);
+                info.data.push(this.map.data[tileIndex]);
                 info.collisions.push(this.map.isColliding(x, y));
             }
         }
