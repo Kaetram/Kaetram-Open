@@ -480,7 +480,7 @@ class World {
             if (time - tree.time < Trees.Regrowth[type]) return;
 
             _.each(tree.data, (tile: any) => {
-                this.map.clientMap.data[tile.index] = tile.oldTiles;
+                this.map.data[tile.index] = tile.oldTiles;
             });
 
             let position = this.map.idToPosition(key),
@@ -502,7 +502,7 @@ class World {
             if (time - rock.time < Rocks.Respawn[type]) return;
 
             _.each(rock.data, (tile: any) => {
-                this.map.clientMap.data[tile.index] = tile.oldTiles;
+                this.map.data[tile.index] = tile.oldTiles;
             });
 
             let position = this.map.idToPosition(key),
@@ -552,7 +552,7 @@ class World {
         };
 
         _.each(this.trees[id], (tile: any, key) => {
-            let tiles = this.map.clientMap.data[tile.index];
+            let tiles = this.map.data[tile.index];
 
             // Store the original tiles for respawning.
             this.cutTrees[id].data[key] = {
