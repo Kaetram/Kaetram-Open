@@ -919,7 +919,7 @@ class Player extends Character {
                 cursor = this.map.getCursor(index, objectId);
 
             tiles.indexes.push(index);
-            tiles.data.push(this.map.clientMap.data[index]);
+            tiles.data.push(this.map.data[index]);
             tiles.collisions.push(this.map.collisions.indexOf(index) > -1);
 
             if (objectId)
