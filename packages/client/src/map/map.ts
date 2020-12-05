@@ -222,7 +222,7 @@ export default class Map {
     parseMap(map: MapData): void {
         this.width = map.width;
         this.height = map.height;
-        this.tileSize = map.tilesize;
+        this.tileSize = map.tileSize;
         this.blocking = map.blocking || [];
         this.collisions = map.collisions;
         this.high = map.high;
