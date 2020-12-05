@@ -1,8 +1,8 @@
 import _ from 'lodash';
-import Combat from '../../ts/game/entity/character/combat/combat';
-import Character from '../../ts/game/entity/character/character';
-import Mob from '../../ts/game/entity/character/mob/mob';
-import Utils from '../../ts/util/utils';
+import Combat from '../../src/game/entity/character/combat/combat';
+import Character from '../../src/game/entity/character/character';
+import Mob from '../../src/game/entity/character/mob/mob';
+import Utils from '../../src/util/utils';
 
 class SkeletonKing extends Combat {
     /**
@@ -19,7 +19,7 @@ class SkeletonKing extends Combat {
         character.spawnDistance = 10;
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.lastSpawn = 0;
 
@@ -31,17 +31,17 @@ class SkeletonKing extends Combat {
     }
 
     reset() {
-        var self = this;
+        const self = this;
 
         self.lastSpawn = 0;
 
-        var listCopy = self.minions.slice();
+        const listCopy = self.minions.slice();
 
-        for (var i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
+        for (let i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
     }
 
     hit(character: Character, target: Character, hitInfo: any) {
-        var self = this;
+        const self = this;
 
         if (self.isAttacked()) self.beginMinionAttack();
 
@@ -51,7 +51,7 @@ class SkeletonKing extends Combat {
     }
 
     spawnMinions() {
-        var self = this,
+        const self = this,
             x = self.character.x,
             y = self.character.y;
 
@@ -77,22 +77,22 @@ class SkeletonKing extends Combat {
     }
 
     beginMinionAttack() {
-        var self = this;
+        const self = this;
 
         if (!self.hasMinions()) return;
 
         _.each(self.minions, (minion: Mob) => {
-            var randomTarget = self.getRandomTarget();
+            const randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
         });
     }
 
     getRandomTarget() {
-        var self = this;
+        const self = this;
 
         if (self.isAttacked()) {
-            var keys = Object.keys(self.attackers),
+            const keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;
