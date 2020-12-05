@@ -7,5 +7,5 @@
         "baseUrl": "./",
         "outDir": "./dist"
     },
-    "files": ["./ts/main.ts"]
+    "files": ["./src/main.ts"]
 }
