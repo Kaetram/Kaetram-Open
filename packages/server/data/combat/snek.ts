@@ -1,15 +1,15 @@
-import Combat from '../../ts/game/entity/character/combat/combat';
-import Character from '../../ts/game/entity/character/character';
-import Mob from '../../ts/game/entity/character/mob/mob';
-import Utils from '../../ts/util/utils';
-import log from '../../ts/util/log';
+import Combat from '../../src/game/entity/character/combat/combat';
+import Character from '../../src/game/entity/character/character';
+import Mob from '../../src/game/entity/character/mob/mob';
+import Utils from '../../src/util/utils';
+import log from '../../src/util/log';
 
 class Snek extends Combat {
     constructor(character: Mob) {
         character.spawnDistance = 15;
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.character = character;
 
@@ -25,7 +25,7 @@ class Snek extends Combat {
     }
 
     canPoison() {
-        let self = this,
+        const self = this,
             chance = Utils.randomInt(0, self.character.level);
 
         return chance === 7;
