@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import zlib from 'zlib';
+
 import log from '../../server/ts/util/log';
 
 import MapData from './mapdata';
@@ -210,20 +212,40 @@ export default class ProcessMap {
             return;
         }
 
-        _.each(layer.data, (value, index: number) => {
-            if (value < 1)
+        if (layer.compression) {
+            if (layer.compression !== 'zlib') {
+                log.error(`${layer.compression} compression is not supported.`);
                 return;
+            }
+
+            let compressedData = layer.data,
+                buffer = Buffer.from(compressedData, 'base64');
+
+            layer.data = [];
+
+            let inflatedData = zlib.inflateSync(buffer),
+                size = this.map.width * this.map.height * 4;
+
+            if (!inflatedData) return;
+
+            for (var i = 0; i < size; i += 4)
+                layer.data.push(inflatedData.readUInt32LE(i));            
+
+            this.parseTileLayerData(layer.data);
+
+        } else this.parseTileLayerData(layer.data);
+
+        this.formatData();
+    }
+
+    parseTileLayerData(data: any) {
+        _.each(data, (value, index) => {
+            if (value < 1) return;
 
             if (!this.map.data[index]) this.map.data[index] = value;
             else if (_.isArray(this.map.data[index])) this.map.data[index].push(value);
             else this.map.data[index] = [this.map.data[index], value];
-
-            if (value in this.collisionTiles) this.map.collisions.push(index);
-            if (value in this.map.trees) this.map.treeIndexes.push(index);
-            if (value in this.map.rocks) this.map.rockIndexes.push(index);
         });
-
-        this.formatData();
     }
 
     parseObjectLayer(layer: any) {
