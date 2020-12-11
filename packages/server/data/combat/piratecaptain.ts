@@ -1,9 +1,9 @@
-import Combat from '../../ts/game/entity/character/combat/combat';
-import Character from '../../ts/game/entity/character/character';
-import Mob from '../../ts/game/entity/character/mob/mob';
-import Utils from '../../ts/util/utils';
-import Messages from '../../ts/network/messages';
-import Packets from '../../ts/network/packets';
+import Combat from '../../src/game/entity/character/combat/combat';
+import Character from '../../src/game/entity/character/character';
+import Mob from '../../src/game/entity/character/mob/mob';
+import Utils from '../../src/util/utils';
+import Messages from '../../src/network/messages';
+import Packets from '../../src/network/packets';
 
 class PirateCaptain extends Combat {
     teleportLocations: Array<any>;
@@ -16,7 +16,7 @@ class PirateCaptain extends Combat {
         character.spawnDistance = 20;
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.character = character;
 
@@ -34,7 +34,7 @@ class PirateCaptain extends Combat {
     }
 
     load() {
-        var self = this,
+        const self = this,
             south = { x: 251, y: 574 },
             west = { x: 243, y: 569 },
             east = { x: 258, y: 568 },
@@ -44,13 +44,13 @@ class PirateCaptain extends Combat {
     }
 
     hit(character: Character, target: Character, hitInfo: any) {
-        var self = this;
+        const self = this;
         if (self.canTeleport()) self.teleport();
         else super.hit(character, target, hitInfo);
     }
 
     teleport() {
-        var self = this,
+        const self = this,
             position = self.getRandomPosition();
 
         if (!position) return;
@@ -81,7 +81,7 @@ class PirateCaptain extends Combat {
     }
 
     getRandomPosition() {
-        var self = this,
+        const self = this,
             random = Utils.randomInt(0, self.teleportLocations.length - 1),
             position = self.teleportLocations[random];
 

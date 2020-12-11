@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import Combat from '../../ts/game/entity/character/combat/combat';
-import Character from '../../ts/game/entity/character/character';
-import Mob from '../../ts/game/entity/character/mob/mob';
-import Packets from '../../ts/network/packets';
-import Messages from '../../ts/network/messages';
-import Utils from '../../ts/util/utils';
+import Combat from '../../src/game/entity/character/combat/combat';
+import Character from '../../src/game/entity/character/character';
+import Mob from '../../src/game/entity/character/mob/mob';
+import Packets from '../../src/network/packets';
+import Messages from '../../src/network/messages';
+import Utils from '../../src/util/utils';
 
 class QueenAnt extends Combat {
     /*
@@ -25,7 +25,7 @@ class QueenAnt extends Combat {
         character.spawnDistance = 18;
         super(character);
 
-        let self = this;
+        const self = this;
 
         self.character = character;
 
@@ -56,9 +56,9 @@ class QueenAnt extends Combat {
                 self.aoeTimeout = null;
             }
 
-            var listCopy = self.minions.slice();
+            const listCopy = self.minions.slice();
 
-            for (var i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
+            for (let i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
         });
 
         self.character.onReturn(() => {
@@ -68,7 +68,7 @@ class QueenAnt extends Combat {
     }
 
     begin(attacker: Character) {
-        var self = this;
+        const self = this;
 
         self.resetAoE();
 
@@ -76,7 +76,7 @@ class QueenAnt extends Combat {
     }
 
     hit(attacker: Character, target: Character, hitInfo: any) {
-        var self = this;
+        const self = this;
 
         if (self.frozen) return;
 
@@ -93,7 +93,7 @@ class QueenAnt extends Combat {
     }
 
     doAoE() {
-        var self = this;
+        const self = this;
 
         /**
          * The reason this function does not use its superclass
@@ -117,11 +117,11 @@ class QueenAnt extends Combat {
     }
 
     spawnMinions() {
-        var self = this;
+        const self = this;
 
         self.lastSpawn = new Date().getTime();
 
-        for (var i = 0; i < self.minionCount; i++)
+        for (let i = 0; i < self.minionCount; i++)
             self.minions.push(self.world.spawnMob(13, self.character.x, self.character.y));
 
         _.each(self.minions, (minion: Mob) => {
@@ -139,12 +139,12 @@ class QueenAnt extends Combat {
     }
 
     beginMinionAttack() {
-        var self = this;
+        const self = this;
 
         if (!self.hasMinions()) return;
 
         _.each(self.minions, (minion: Mob) => {
-            var randomTarget = self.getRandomTarget();
+            const randomTarget = self.getRandomTarget();
 
             if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
         });
@@ -155,10 +155,10 @@ class QueenAnt extends Combat {
     }
 
     getRandomTarget() {
-        var self = this;
+        const self = this;
 
         if (self.isAttacked()) {
-            var keys = Object.keys(self.attackers),
+            const keys = Object.keys(self.attackers),
                 randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;
@@ -170,14 +170,14 @@ class QueenAnt extends Combat {
     }
 
     pushFreeze(state: boolean) {
-        var self = this;
+        const self = this;
 
         self.character.frozen = state;
         self.character.stunned = state;
     }
 
     pushCountdown(count: number) {
-        var self = this;
+        const self = this;
 
         self.world.push(Packets.PushOpcode.Regions, {
             regionId: self.character.region,
