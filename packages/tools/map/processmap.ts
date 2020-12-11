@@ -245,6 +245,10 @@ export default class ProcessMap {
             if (!this.map.data[index]) this.map.data[index] = value;
             else if (_.isArray(this.map.data[index])) this.map.data[index].push(value);
             else this.map.data[index] = [this.map.data[index], value];
+
+            if (value in this.collisionTiles) this.map.collisions.push(index);
+            if (value in this.map.trees) this.map.treeIndexes.push(index);
+            if (value in this.map.rocks) this.map.rockIndexes.push(index);
         });
     }
 
