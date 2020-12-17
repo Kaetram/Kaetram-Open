@@ -119,9 +119,9 @@ export default class ProcessMap {
     }
 
     parseStaticEntities(layer: any) {
+
         _.each(layer.data, (value, index) => {
-            if (value < 1)
-                return;
+            if (value < 1) return;
 
             if (value in this.map.entities)
                 this.map.staticEntities[index] = this.map.entities[value];
@@ -202,6 +202,8 @@ export default class ProcessMap {
     parseTileLayer(layer: any) {
         const name = layer.name.toLowerCase();
 
+        layer.data = this.getLayerData(layer.data, layer.compression);
+
         if (name === 'entities') {
             this.parseStaticEntities(layer);
             return;
@@ -212,28 +214,7 @@ export default class ProcessMap {
             return;
         }
 
-        if (layer.compression) {
-            if (layer.compression !== 'zlib') {
-                log.error(`${layer.compression} compression is not supported.`);
-                return;
-            }
-
-            let compressedData = layer.data,
-                buffer = Buffer.from(compressedData, 'base64');
-
-            layer.data = [];
-
-            let inflatedData = zlib.inflateSync(buffer),
-                size = this.map.width * this.map.height * 4;
-
-            if (!inflatedData) return;
-
-            for (var i = 0; i < size; i += 4)
-                layer.data.push(inflatedData.readUInt32LE(i));            
-
-            this.parseTileLayerData(layer.data);
-
-        } else this.parseTileLayerData(layer.data);
+        this.parseTileLayerData(layer.data)
 
         this.formatData();
     }
@@ -529,6 +510,56 @@ export default class ProcessMap {
             //if (_.isArray(value))
             //    this.map.data[index] = value.reverse();
         });
+    }
+
+        /**
+     * This function allows us to decompress data from the Tiled editor
+     * map file. Thus far, our parser only supports zlib, gzip, and CSV
+     * in the JSON file-format. Further support is not entirely necessary
+     * but should be considered.
+     * 
+     * @param data The we will be parsing, base64 string format 
+     * for compressed data, and string for uncompressed data.
+     * @param type The type of compression 'zlib', 'gzip', '' are accepted inputs.
+     */
+
+    getLayerData(data: any, type: string): number[] {
+        if (_.isArray(data))
+            return data;
+
+        let dataBuffer = Buffer.from(data, 'base64'),
+            inflatedData: Buffer;
+
+        switch (type) {
+
+            case 'zlib':
+                inflatedData = zlib.inflateSync(dataBuffer);
+                break;
+
+            case 'gzip':
+                inflatedData = zlib.gunzipSync(dataBuffer);
+                break;
+
+            default:
+                log.error('Invalid compression format detected.');
+                return;
+
+        }
+
+        if (!inflatedData) return;
+
+        let size = this.map.width * this.map.height * 4,
+            layerData: number[] = [];
+
+        if (inflatedData.length !== size) {
+            log.error('Invalid buffer detected while parsing layer.');
+            return;
+        }
+
+        for (var i = 0; i < size; i += 4)
+            layerData.push(inflatedData.readUInt32LE(i));
+
+        return layerData;
     }
 
     /**
