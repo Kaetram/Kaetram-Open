@@ -3,7 +3,7 @@
 import fs from 'fs';
 import _ from 'lodash';
 import path from 'path';
-import log from '../../server/ts/util/log';
+import log from '../../server/src/util/log';
 
 import MapData from './mapdata';
 import ProcessMap from './processmap';
