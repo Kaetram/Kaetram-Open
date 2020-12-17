@@ -37,7 +37,9 @@ export default class Socket {
         if (this.config.ssl) url = `https://${this.config.ip}/server`;
 
         try {
-            callback(await $.get(url));
+            let response = await $.get(url);
+
+            callback(typeof response === 'string' ? 'error' : response);
         } catch {
             callback('error');
         }
