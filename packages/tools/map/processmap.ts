@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import zlib from 'zlib';
 
-import log from '../../server/ts/util/log';
+import log from '../../server/src/util/log';
 
 import MapData from './mapdata';
 
@@ -559,6 +559,7 @@ export default class ProcessMap {
         return JSON.stringify({
             width: this.map.width,
             height: this.map.height,
+            depth: this.map.depth,
             collisions: [],
             lights: [],
             version: this.map.version,
