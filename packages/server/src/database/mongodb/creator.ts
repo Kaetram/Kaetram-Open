@@ -25,18 +25,23 @@ class Creator {
                 playerFriends = database.collection('player_friends'),
                 playerInventory = database.collection('player_inventory');
 
-            this.saveData(playerData, player);
-            this.saveEquipment(playerEquipment, player);
-            this.saveQuests(playerQuests, player);
-            this.saveAchievements(playerAchievements, player);
-            this.saveBank(playerBank, player);
-            this.saveRegions(playerRegions, player);
-            this.saveAbilities(playerAbilities, player);
-            this.saveProfessions(playerProfessions, player);
-            //this.saveFriends(playerFriends, player);
-            this.saveInventory(playerInventory, player, () => {
-                log.debug(`Successfully saved all data for player ${player.username}.`);
-            });
+            try {
+                this.saveData(playerData, player);
+                this.saveEquipment(playerEquipment, player);
+                this.saveQuests(playerQuests, player);
+                this.saveAchievements(playerAchievements, player);
+                this.saveBank(playerBank, player);
+                this.saveRegions(playerRegions, player);
+                this.saveAbilities(playerAbilities, player);
+                this.saveProfessions(playerProfessions, player);
+                //this.saveFriends(playerFriends, player);
+                this.saveInventory(playerInventory, player, () => {
+                    log.debug(`Successfully saved all data for player ${player.username}.`);
+                });
+            } catch (e) {
+                log.error(`Error while saving data for ${player.username}`);
+            }
+
         });
     }
 
