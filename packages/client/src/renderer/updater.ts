@@ -108,9 +108,10 @@ export default class Updater {
                 } else if (entity.type === 'projectile') {
                     const projectile = entity as Projectile;
                     const mDistance = projectile.speed * this.timeDifferential;
-                    const dx = projectile.destX - entity.x;
-                    const dy = projectile.destY - entity.y;
+                    const dx = projectile.target.x - entity.x;
+                    const dy = projectile.target.y - entity.y;
                     const tDistance = Math.sqrt(dx * dx + dy * dy);
+                    
                     let amount = mDistance / tDistance;
 
                     if (amount > 1) amount = 1;
