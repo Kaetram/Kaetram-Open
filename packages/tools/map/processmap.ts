@@ -118,31 +118,6 @@ export default class ProcessMap {
         });
     }
 
-    parseStaticEntities(layer: any) {
-
-        _.each(layer.data, (value, index) => {
-            if (value < 1) return;
-
-            if (value in this.map.entities)
-                this.map.staticEntities[index] = this.map.entities[value];
-        });
-    }
-
-    parsePlateau(layer: any) {
-        const level = parseInt(layer.name.split('plateau')[1]);
-
-        _.each(layer.data, (value, index) => {
-            if (value < 1)
-                return;
-
-            // We skip collisions
-            if (this.map.collisions.indexOf(value) > -1)
-                return;
-            
-            this.map.plateau[index] = level;
-        });
-    }
-
     parseTileset(tileset: any) {
 
         this.map.tilesets.push({
@@ -204,6 +179,11 @@ export default class ProcessMap {
 
         layer.data = this.getLayerData(layer.data, layer.compression);
 
+        if (name === 'blocking') {
+            this.parseBlocking(layer);
+            return;
+        }
+
         if (name === 'entities') {
             this.parseStaticEntities(layer);
             return;
@@ -230,6 +210,39 @@ export default class ProcessMap {
             if (value in this.collisionTiles) this.map.collisions.push(index);
             if (value in this.map.trees) this.map.treeIndexes.push(index);
             if (value in this.map.rocks) this.map.rockIndexes.push(index);
+        });
+    }
+
+    parseBlocking(layer: any) {
+        _.each(layer.data, (value, index) => {
+            if (value < 1) return;
+
+            this.map.collisions.push(index);
+        });
+    }
+
+    parseStaticEntities(layer: any) {
+
+        _.each(layer.data, (value, index) => {
+            if (value < 1) return;
+
+            if (value in this.map.entities)
+                this.map.staticEntities[index] = this.map.entities[value];
+        });
+    }
+
+    parsePlateau(layer: any) {
+        const level = parseInt(layer.name.split('plateau')[1]);
+
+        _.each(layer.data, (value, index) => {
+            if (value < 1)
+                return;
+
+            // We skip collisions
+            if (this.map.collisions.indexOf(value) > -1)
+                return;
+            
+            this.map.plateau[index] = level;
         });
     }
 
