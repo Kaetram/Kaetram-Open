@@ -272,6 +272,10 @@ export default class Entity {
         return this.sprite.name;
     }
 
+    getAngle(): number {
+        return 0;
+    }
+
     toggleVisibility(): void {
         this.setVisible(!this.visible);
     }

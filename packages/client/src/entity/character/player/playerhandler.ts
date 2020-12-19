@@ -67,6 +67,7 @@ export default class PlayerHandler {
                     gridY: y
                 });
 
+
             return this.game.findPath(this.player, x, y, ignores);
         });
 
