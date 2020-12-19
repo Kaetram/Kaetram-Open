@@ -127,14 +127,13 @@ export default class Updater {
     updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
-        const duration = 1000,
-            time = this.game.time,
+        let time = this.game.time,
             dt = time - entity.fadingTime;
 
-        if (dt > duration) {
+        if (dt > entity.fadingDuration) {
             entity.fading = false;
             entity.fadingAlpha = 1;
-        } else entity.fadingAlpha = dt / duration;
+        } else entity.fadingAlpha = dt / entity.fadingDuration;
     }
 
     updateKeyboard(): void {
