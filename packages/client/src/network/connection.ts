@@ -197,15 +197,22 @@ export default class Connection {
         });
 
         this.messages.onEntityList((data: string[]) => {
-            const ids = _.map(this.entities.getAll(), 'id'),
+            let ids = _.map(this.entities.getAll(), 'id'),
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
+
+            console.log('hello?');
 
             this.entities.decrepit = _.reject(this.entities.getAll(), (entity) => {
                 return _.includes(known, entity.id) || entity.id === this.game.player.id;
             });
 
-            this.entities.clean(newIds);
+            console.log('------------------------------------------------');
+            console.log(this.entities.decrepit);
+            console.log(ids);
+            console.log(_.map(this.entities.getAll(), 'id'));
+
+            this.entities.clean();
 
             this.socket.send(Packets.Who, newIds);
         });
