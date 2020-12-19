@@ -10,13 +10,14 @@ export default class Projectile extends Entity {
     owner: Entity;
     startX: number;
     startY: number;
-    destX: number;
-    destY: number;
     special: number;
     static: boolean;
     dynamic: boolean;
     speed: number;
     lighting: Lighting;
+
+    target: Character;
+
     impactCallback: () => void;
 
     constructor(id: string, kind: number, owner: Entity) {
@@ -29,9 +30,6 @@ export default class Projectile extends Entity {
         this.startX = -1;
         this.startY = -1;
 
-        this.destX = -1;
-        this.destY = -1;
-
         this.special = -1;
 
         this.static = false;
@@ -42,6 +40,8 @@ export default class Projectile extends Entity {
         this.angle = 0;
 
         this.lighting = null;
+
+        this.fadingDuration = 100;
     }
 
     getId(): string {
@@ -59,31 +59,16 @@ export default class Projectile extends Entity {
         this.startY = y;
     }
 
-    setDestination(x: number, y: number): void {
-        this.static = true;
-
-        this.destX = x;
-        this.destY = y;
-
-        this.updateAngle();
-    }
-
     setTarget(target: Character): void {
         if (!target) return;
 
         this.dynamic = true;
 
-        this.destX = target.x;
-        this.destY = target.y;
+        this.target = target;
 
         this.updateAngle();
 
-        if (target.type !== 'mob') return;
-
-        target.onMove(() => {
-            this.destX = target.x;
-            this.destY = target.y;
-
+        this.target.onMove(() => {
             this.updateAngle();
         });
     }
@@ -92,17 +77,18 @@ export default class Projectile extends Entity {
         return 1;
     }
 
-    updateTarget(x: number, y: number): void {
-        this.destX = x;
-        this.destY = y;
-    }
-
     hasPath(): boolean {
         return false;
     }
 
     updateAngle(): void {
-        this.angle = Math.atan2(this.destY - this.y, this.destX - this.x) * (180 / Math.PI) - 90;
+        if (!this.target) return;
+
+        this.angle = Math.atan2(this.target.y - this.y, this.target.x - this.x) * (180 / Math.PI) - 90;
+    }
+
+    getAngle(): number {
+        return (this.angle * Math.PI) / 180;
     }
 
     onImpact(callback: () => void): void {
