@@ -361,6 +361,7 @@ export default class InputController {
             }
         }
 
+        player.removeTarget();
         player.go(position.x, position.y);
     }
 
