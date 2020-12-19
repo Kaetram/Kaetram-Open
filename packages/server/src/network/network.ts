@@ -66,7 +66,7 @@ class Network {
             player = new Player(this.world, this.database, connection, clientId),
             timeDifference = new Date().getTime() - this.getSocketTime(connection);
 
-        if (!config.debug && timeDifference - this.differenceThreshold < 5000) {
+        if (!config.debug && timeDifference < this.differenceThreshold) {
             connection.sendUTF8('toofast');
             connection.close('Logging in too fast.');
 
