@@ -114,6 +114,8 @@ export default class Updater {
                     
                     let amount = mDistance / tDistance;
 
+                    projectile.updateAngle();
+
                     if (amount > 1) amount = 1;
 
                     entity.x += dx * amount;

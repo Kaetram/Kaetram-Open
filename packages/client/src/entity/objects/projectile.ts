@@ -67,10 +67,6 @@ export default class Projectile extends Entity {
         this.target = target;
 
         this.updateAngle();
-
-        this.target.onMove(() => {
-            this.updateAngle();
-        });
     }
 
     getSpeed(): number {
