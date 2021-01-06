@@ -22,6 +22,10 @@ export default class Page {
         return this.body.css('display') === 'block';
     }
 
+    resize(): void {
+        // not implemented
+    }
+
     async getImageFormat(name: string): Promise<string> {
         return `url("${(await import(`../../../img/sprites/item-${name}.png`)).default}")`;
     }

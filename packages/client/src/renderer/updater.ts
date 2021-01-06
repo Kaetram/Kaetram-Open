@@ -108,10 +108,13 @@ export default class Updater {
                 } else if (entity.type === 'projectile') {
                     const projectile = entity as Projectile;
                     const mDistance = projectile.speed * this.timeDifferential;
-                    const dx = projectile.destX - entity.x;
-                    const dy = projectile.destY - entity.y;
+                    const dx = projectile.target.x - entity.x;
+                    const dy = projectile.target.y - entity.y;
                     const tDistance = Math.sqrt(dx * dx + dy * dy);
+                    
                     let amount = mDistance / tDistance;
+
+                    projectile.updateAngle();
 
                     if (amount > 1) amount = 1;
 
@@ -127,14 +130,13 @@ export default class Updater {
     updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
-        const duration = 1000,
-            time = this.game.time,
+        let time = this.game.time,
             dt = time - entity.fadingTime;
 
-        if (dt > duration) {
+        if (dt > entity.fadingDuration) {
             entity.fading = false;
             entity.fadingAlpha = 1;
-        } else entity.fadingAlpha = dt / duration;
+        } else entity.fadingAlpha = dt / entity.fadingDuration;
     }
 
     updateKeyboard(): void {

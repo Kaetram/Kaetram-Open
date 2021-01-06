@@ -223,8 +223,8 @@ export default class Messages {
         this.equipmentCallback?.(equipType, equipInfo);
     }
 
-    receiveEntityList(data: never): void {
-        this.entityListCallback?.(data);
+    receiveEntityList(data: never[]): void {
+        this.entityListCallback?.(data.shift());
     }
 
     receiveSync(data: never[]): void {
