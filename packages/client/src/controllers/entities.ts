@@ -293,14 +293,15 @@ export default class EntitiesController {
         delete this.entities[entity.id];
     }
 
-    clean(ids: string[]): void {
+    clean(): void {
         // ids = ids[0];
 
-        _.each(this.entities, (entity) => {
-            if (ids) {
-                if (ids.indexOf(entity.id) < 0 && entity.id !== this.game.player.id)
-                    this.removeEntity(entity);
-            } else if (entity.id !== this.game.player.id) this.removeEntity(entity);
+        if (this.decrepit.length === 0) return;
+
+        _.each(this.decrepit, (entity: Entity) => {
+            if (entity.id === this.game.player.id) return;
+
+            this.removeEntity(entity);
         });
 
         this.grids.resetPathingGrid();

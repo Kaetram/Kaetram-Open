@@ -26,14 +26,14 @@ export default class InfoController {
             case Modules.Hits.Damage:
             case Modules.Hits.Stun:
             case Modules.Hits.Critical: {
-                const damage = data.shift() as number | string;
-                const isTarget = data.shift() as boolean;
-                const dId = this.generateId(this.game.time, damage as number, x, y);
+                let damage = data.shift() as number | string,
+                    isTarget = data.shift() as boolean,
+                    dId = this.generateId(this.game.time, damage as number, x, y);
 
                 if (damage < 1 || !isInt(damage as number)) (damage as string) = 'MISS';
 
-                const hitSplat = new Splat(dId, type, damage.toString(), x, y, false);
-                let dColour = isTarget
+                let hitSplat = new Splat(dId, type, damage.toString(), x, y, false),
+                    dColour = isTarget
                     ? Modules.DamageColours.received
                     : Modules.DamageColours.inflicted;
 
@@ -54,11 +54,10 @@ export default class InfoController {
             case Modules.Hits.Experience:
             case Modules.Hits.Profession:
             case Modules.Hits.Poison: {
-                const amount: number = data.shift() as number;
-                const id: string = this.generateId(this.game.time, amount, x, y);
-                let prefix = '+';
-                let colour;
-                let suffix = '';
+                let amount: number = data.shift() as number,
+                    id: string = this.generateId(this.game.time, amount, x, y),
+                    prefix = '+',
+                    suffix = '', colour;
 
                 if (amount < 1 || !isInt(amount)) return;
 
@@ -68,7 +67,7 @@ export default class InfoController {
 
                 if (type === Modules.Hits.Poison) prefix = '--';
 
-                const splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
+                let splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
 
                 if (type === Modules.Hits.Heal) colour = Modules.DamageColours.healed;
                 else if (type === Modules.Hits.Mana) colour = Modules.DamageColours.mana;
@@ -103,7 +102,7 @@ export default class InfoController {
 
                 if (this.countdownExists) return;
 
-                const time = data.shift() as number,
+                let time = data.shift() as number,
                     countdown = new Countdown('countdown', time);
 
                 this.addInfo(countdown);
