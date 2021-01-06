@@ -72,6 +72,8 @@ export default class Entity {
     nextGridY: number;
     fadingAlpha: number;
 
+    fadingDuration: number;
+
     constructor(id: string, kind: number) {
         this.id = id;
         this.kind = kind;
@@ -111,6 +113,8 @@ export default class Entity {
 
         this.countdownTime = 0;
         this.counter = 0;
+
+        this.fadingDuration = 1000;
 
         this.renderingData = {
             scale: -1,
@@ -266,6 +270,10 @@ export default class Entity {
 
     getSprite(): string {
         return this.sprite.name;
+    }
+
+    getAngle(): number {
+        return 0;
     }
 
     toggleVisibility(): void {
