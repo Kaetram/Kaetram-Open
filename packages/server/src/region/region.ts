@@ -370,7 +370,7 @@ class Region {
         });
 
         entities = _.map(entities, (instance: string) => {
-            return parseInt(instance);
+            return instance;
         });
 
         player.send(new Messages.List(entities));

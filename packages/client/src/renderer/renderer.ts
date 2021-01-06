@@ -552,7 +552,8 @@ export default class Renderer {
             data.ox = sprite.offsetX * this.superScaling;
             data.oy = sprite.offsetY * this.superScaling;
 
-            if (entity.angled) data.angle = (entity.angle * Math.PI) / 180;
+            if (entity.angled && entity.type !== 'projectile') 
+                data.angle = (entity.angle * Math.PI) / 180;
 
             if (entity.hasShadow()) {
                 data.shadowWidth = this.shadowSprite.width * this.superScaling;
@@ -574,7 +575,8 @@ export default class Renderer {
 
         if (entity.customScale) this.context.scale(entity.customScale, entity.customScale);
 
-        if (entity.angled) this.context.rotate(data.angle);
+        if (entity.angled)
+            this.context.rotate(entity.type === 'projectile' ? entity.getAngle() : data.angle);
 
         if (entity.hasShadow()) {
             this.context.globalCompositeOperation = 'source-over';
