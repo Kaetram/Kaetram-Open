@@ -245,8 +245,8 @@ class Incoming {
         this.player.sync();
     }
 
-    handleWho(message: Array<any>) {
-        _.each(message.shift(), (id: string) => {
+    handleWho(message: Array<string>) {
+        _.each(message, (id: string) => {
             let entity: any = this.world.getEntityByInstance(id);
 
             if (!entity || entity.dead) return;
