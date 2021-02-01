@@ -2,6 +2,9 @@
     "defaultSeverity": "warning",
     "extends": "stylelint-config-standard",
     "configBasedir": "./",
+    "plugins": [
+        "stylelint-csstree-validator"
+    ],
     "rules": {
         "indentation": 4,
         "no-duplicate-selectors": null,
