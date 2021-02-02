@@ -18,7 +18,7 @@ export interface EntityRenderingData {
 
 export default class Entity {
     id: string;
-    kind: number;
+    kind: string;
     x: number;
     y: number;
     gridX: number;

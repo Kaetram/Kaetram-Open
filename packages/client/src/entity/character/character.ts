@@ -65,7 +65,7 @@ export default class Character extends Entity {
     type: string;
     forced: boolean;
 
-    constructor(id: string, kind: number) {
+    constructor(id: string, kind: string) {
         super(id, kind);
 
         this.nextGridX = -1;
@@ -548,8 +548,6 @@ export default class Character extends Entity {
          * parameter. But we are throwing in an extra.
          */
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         const character = new Character(`${x}-${y}`, 'object');
         character.setGridPosition(x, y);
 
