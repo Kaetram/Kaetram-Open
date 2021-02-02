@@ -2,15 +2,17 @@
     "compilerOptions": {
         "strict": true,
         "forceConsistentCasingInFileNames": true,
-        "importHelpers": true,
+        "importHelpers": false,
         "removeComments": true,
-        "inlineSourceMap": true,
-        "allowJs": true,
+        "sourceMap": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "esModuleInterop": true,
+
+        /** These values should be set to true once refactoring codebase. */
         "noImplicitAny": false,
         "strictNullChecks": false,
+
         "rootDir": "./",
         "baseUrl": "./packages",
         "paths": {
