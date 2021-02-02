@@ -1,10 +1,5 @@
 {
     "name": "@kaetram/server",
-    "version": "1.3.0",
-    "author": "Veradictus",
-    "description": "Kaetram's server-side",
-    "homepage": "https://kaetram.com/",
-    "main": "./dist/main.js",
     "scripts": {
         "start": "node ./dist/src/main.js",
         "dev": "ts-node-dev ./src/main.ts",
@@ -15,34 +10,28 @@
         "body-parser": "^1.19.0",
         "camelcase": "^6.2.0",
         "discord.js": "^12.5.1",
-        "dotenv": "^8.2.0",
         "dotenv-parse-variables": "^1.0.1",
         "express": "^4.17.1",
         "lodash": "^4.17.20",
         "mongodb": "^3.6.3",
         "request": "^2.88.2",
         "sanitizer": "^0.1.3",
-        "socket.io": "^2.3.0",
-        "tslib": "^2.0.3",
+        "socket.io": "^2.4.1",
+        "tslib": "^2.1.0",
         "url": "^0.11.0",
-        "ws": "^7.4.0"
+        "ws": "^7.4.2"
     },
     "devDependencies": {
         "@types/bcrypt": "^3.0.0",
         "@types/body-parser": "^1.19.0",
-        "@types/libsodium-wrappers": "^0.7.8",
-        "@types/lodash": "^4.14.165",
-        "@types/mongodb": "^3.6.0",
-        "@types/node": "^14.14.10",
+        "@types/dotenv-parse-variables": "^0.2.0",
+        "@types/lodash": "^4.14.168",
+        "@types/mongodb": "^3.6.3",
+        "@types/node": "^14.14.22",
         "@types/underscore": "^1.10.24",
-        "bufferutil": "^4.0.2",
-        "erlpack": "^0.1.3",
-        "libsodium-wrappers": "^0.7.8",
-        "ts-node": "^9.1.0",
-        "ts-node-dev": "^1.0.0",
-        "typescript": "^4.1.2",
-        "utf-8-validate": "^5.0.3",
-        "zlib-sync": "^0.1.7"
-    },
-    "license": "MPL-2.0"
+        "dotenv-extended": "^2.9.0",
+        "ts-node": "^9.1.1",
+        "ts-node-dev": "^1.1.1",
+        "typescript": "^4.1.3"
+    }
 }

@@ -1,72 +1,75 @@
 import log from '../src/lib/log';
 
-interface DeferredPrompt extends Event {
-    prompt: () => void;
-    userChoice: Promise<{
-        outcome: 'accepted';
+/**
+ * The `BeforeInstallPromptEvent` is fired at the `Window.onbeforeinstallprompt` handler
+ * before a user is prompted to "install" a web site to a home screen on mobile.
+ */
+interface BeforeInstallPromptEvent extends Event {
+    /**
+     * Returns an array of `DOMString` items containing the platforms on which the event was
+     * dispatched. This is provided for user agents that want to present a choice of versions
+     * to the user such as, for example, "web" or "play" which would allow the user to chose
+     * between a web version or an Android version.
+     */
+    readonly platforms: string[];
+
+    /**
+     * Returns a `Promise` that resolves to a `DOMString`
+     * containing either "accepted" or "dismissed".
+     */
+    readonly userChoice: Promise<{
+        outcome: 'accepted' | 'dismissed';
+        platform: string;
     }>;
+
+    /**
+     * Allows a developer to show the install prompt at a time of their own choosing.
+     * This method returns a Promise.
+     */
+    prompt(): Promise<void>;
 }
-let deferredPrompt: DeferredPrompt;
-
-export default async function install(): Promise<void> {
-    if (deferredPrompt) {
-        try {
-            if (localStorage.getItem('prompted') !== 'true') deferredPrompt.prompt();
-        } finally {
-            const choiceResult = await deferredPrompt.userChoice;
-
-            localStorage.setItem('prompted', 'true');
-            if (choiceResult.outcome === 'accepted') {
-                // PWA has been installed
-            } else {
-                // User chose not to install PWA
-            }
-
-            deferredPrompt = null;
-        }
+declare global {
+    interface WindowEventMap {
+        beforeinstallprompt: BeforeInstallPromptEvent;
     }
 }
 
-// Check compatibility for the browser we're running this in
-if ('serviceWorker' in navigator) {
-    // ? Maybe prompt user before refreshing
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        window.location.reload();
-    });
+let deferredPrompt: BeforeInstallPromptEvent | null;
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent Chrome 67 and earlier from automatically showing the prompt
-        e.preventDefault();
-        deferredPrompt = e;
-    });
+export default async function install(): Promise<void> {
+    if (!deferredPrompt) return;
 
-    window.addEventListener('load', async () => {
-        if (navigator.serviceWorker.controller)
-            log.info('[PWA Builder] active service worker found, no need to register');
-        else {
-            // Register the service worker
-            try {
-                const reg = await navigator.serviceWorker.register('sw.js', {
-                    scope: '../'
-                });
+    if (localStorage.getItem('prompted') !== 'true')
+        await deferredPrompt.prompt().catch((err) => {
+            log.error('[SW ERROR]', err);
+        });
 
-                log.info(
-                    `[PWA Builder] Service worker has been registered for scope: ${reg.scope}`
-                );
+    const { outcome } = await deferredPrompt.userChoice;
 
-                reg.onupdatefound = () => {
-                    const installingWorker = reg.installing;
-                    installingWorker.onstatechange = () => {
-                        switch (installingWorker.state) {
-                            case 'installed':
-                                // if (navigator.serviceWorker.controller);
-                                break;
-                        }
-                    };
-                };
-            } catch (err) {
-                log.error('[SW ERROR]', err);
-            }
-        }
-    });
+    localStorage.setItem('prompted', 'true');
+    if (outcome === 'accepted') {
+        // PWA has been installed
+    }
+    // User chose not to install PWA
+    else;
+
+    deferredPrompt = null;
 }
+
+async function init(): Promise<void> {
+    window.addEventListener('beforeinstallprompt', (event) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt.
+        event.preventDefault();
+
+        deferredPrompt = event;
+    });
+
+    const { Workbox } = await import('workbox-window');
+
+    const wb = new Workbox('/service-worker.js');
+
+    wb.register();
+}
+
+// Check compatibility for the browser and environment we're running this in.
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) init();
