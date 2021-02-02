@@ -41,6 +41,7 @@ Patreon &ndash; <https://www.patreon.com/kaetram>
       - [NOTE: Node.js](#note-nodejs)
       - [NOTE: MongoDB](#note-mongodb)
     - [Installing and Running](#installing-and-running)
+    - [Configuration](#configuration)
   - [Roadmap](#roadmap)
     - [TODO](#todo)
       - [Gameplay](#gameplay)
@@ -62,7 +63,7 @@ predecessor, a couple are:
 - Supports RESTful API.
 - Discord server integration.
 - Cross-server private messaging and interactions.
-- Lerna monorepo packaging
+- Yarn workspaces for monorepo packaging
 - And much more
 
 ### Regions
@@ -114,17 +115,17 @@ on the server.
 
 #### NOTE: Node.js
 
-> We recommend you use Node.js version greater than or equal to `12.0.0` in order to have the most
+> You need to use a Node.js version greater than or equal to `12.0.0` in order to have the most
 > stable experience when developing/experimenting with Kaetram. Older versions would not work with
-> our current packages.
+> our current dependencies.
 
 #### NOTE: MongoDB
 
 > MongoDB is a requirement for Kaetram to run with all the features enabled, but you can still run
-> your own limited version if you do not want to install MongoDB. To do this, set
-> `Config.offlineMode = true` in the server configuration. _If you do choose to install MongoDB, a
-> user is not necessary, but you can enable authentication with the `Config.mongoAuth` variable in
-> the [server configuration](packages/server/.env)._
+> your own limited version if you do not want to install MongoDB. To do this, see
+> [Configuration](#configuration), and set `OFFLINE_MODE=true` in the
+> [server configuration](packages/server/.env). _If you do choose to install MongoDB, a user is not
+> necessary, but you can enable authentication with the `MONGODB_AUTH` setting._
 
 You will then need to install Yarn using
 
@@ -139,12 +140,6 @@ yarn
 ```
 
 ### Installing and Running
-
-Before starting Kaetram, there is some configuration that must be done. In
-[`packages/server/`](packages/server/) directory, rename
-[`.env.defaults`](packages/server/.env.defaults) to `.env`. Modify the file as to fit your needs. As
-for the client, [`.env.defaults`](packages/client/.env.defaults) will be used unless override by a
-`.env` file. Make sure the settings in the client match those in the server.
 
 To run a live development build, run
 
@@ -163,6 +158,13 @@ Then, to run each production build package, use
 ```console
 yarn start
 ```
+
+### Configuration
+
+Optionally, if you would want some additional configuration, in the [server](packages/server/) and
+[client](packages/client/) packages, A file called `.env.defaults` will be used unless overridden by
+a `.env` file. Create and modify the `.env` file to fit your needs, make sure the network settings
+in the client match those in the server.
 
 ## Roadmap
 
