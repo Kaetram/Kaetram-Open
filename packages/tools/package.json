@@ -1,9 +1,5 @@
 {
     "name": "@kaetram/tools",
-    "version": "1.0.0",
-    "description": "Kaetram set command line tools.",
-    "homepage": "https://kaetram.com/",
-    "license": "MPL-2.0",
     "scripts": {
         "helper": "ts-node map/helper",
         "exportmap": "ts-node map/exportmap",
@@ -15,8 +11,8 @@
     "devDependencies": {
         "@kaetram/server": "workspace:packages/server",
         "@types/redis": "^2.8.28",
-        "ts-node": "^9.1.0",
-        "tslib": "^2.0.3",
-        "typescript": "^4.1.2"
+        "ts-node": "^9.1.1",
+        "tslib": "^2.1.0",
+        "typescript": "^4.1.3"
     }
 }

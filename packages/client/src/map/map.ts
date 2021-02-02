@@ -6,7 +6,6 @@ import Game from '../game';
 import log from '../lib/log';
 import Renderer from '../renderer/renderer';
 import { isInt } from '../utils/util';
-import MapWorker from './mapworker';
 
 type MapDataType = typeof mapData;
 export interface MapData extends MapDataType {
@@ -114,9 +113,7 @@ export default class Map {
         if (this.supportsWorker) {
             if (this.game.isDebug()) log.info('Parsing map with Web Workers...');
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const worker = new MapWorker();
+            const worker = new Worker(new URL('./mapworker.ts', import.meta.url));
 
             worker.postMessage(1);
 
