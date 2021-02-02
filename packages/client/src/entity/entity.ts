@@ -74,9 +74,9 @@ export default class Entity {
 
     fadingDuration: number;
 
-    constructor(id: string, kind: number) {
+    constructor(id: string, type: string) {
         this.id = id;
-        this.kind = kind;
+        this.type = type;
 
         this.x = 0;
         this.y = 0;
