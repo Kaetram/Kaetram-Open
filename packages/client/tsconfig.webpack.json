@@ -1,10 +1,11 @@
-/**
- * This TypeScript configuration file is for webpack configs only
- */
 {
-    "extends": "./tsconfig.json",
+    /**
+     * This TypeScript configuration file is for webpack configs only.
+     */
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5"
+        "target": "es5",
+        "esModuleInterop": true,
+        "resolveJsonModule": true
     }
 }

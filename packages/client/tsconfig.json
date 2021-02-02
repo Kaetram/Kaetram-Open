@@ -2,7 +2,9 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "esnext",
-        "target": "esnext"
+        "target": "esnext",
+        "removeComments": false,
+        "types": ["@types/webpack-env"]
     },
     "include": ["**/*.ts", "../../package.json"],
     "files": ["src/main.ts", "./types/index.d.ts"]
