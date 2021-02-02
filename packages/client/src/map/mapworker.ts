@@ -61,5 +61,3 @@ function getX(index: number, width: number) {
 
     return index % width === 0 ? width - 1 : (index % width) - 1;
 }
-
-export default DedicatedWorkerGlobalScope;
