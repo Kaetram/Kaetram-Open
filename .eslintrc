@@ -1,8 +1,8 @@
 {
     "root": true,
     "env": {
+        "es2021": true,
         "browser": true,
-        "es2020": true,
         "node": true
     },
     "plugins": ["prettier", "@typescript-eslint"],
@@ -15,7 +15,7 @@
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 11,
+        "ecmaVersion": 12,
         "sourceType": "module"
     },
     "rules": {
@@ -29,9 +29,8 @@
                 "SwitchCase": 1
             }
         ],
-        "linebreak-style": ["error", "unix"],
         "quotes": ["error", "single"],
         "semi": ["error", "always"]
     },
-    "ignorePatterns": ["node_modules/", "dist/", "**/*.min.*"]
+    "ignorePatterns": ["node_modules", "dist"]
 }
