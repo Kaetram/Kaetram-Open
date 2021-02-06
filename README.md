@@ -203,7 +203,9 @@ features (and known issues).
 
 - Add (continue) to NPC talking&mdash;spacebar when talking
 
-## License
+## License & Commission
+
+For all inquiries about purchasing a different license or commission work, please contact @Vanity on Discord.
 
 This project is distributed under the MPL-2.0 License. See [`LICENSE`](LICENSE) for more
 information.
