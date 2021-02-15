@@ -1,15 +1,20 @@
 import path from 'path';
-import dotEnvExtended from 'dotenv-extended';
-import dotenvParseVariables from 'dotenv-parse-variables';
-
-import { DefinePlugin, RuleSetRule, WebpackPluginInstance } from 'webpack';
-import type { Configuration, WebpackOptionsNormalized } from 'webpack';
 
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+import dotEnvExtended from 'dotenv-extended';
+import dotenvParseVariables from 'dotenv-parse-variables';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-import { version, description } from '../../package.json';
+import { description, version } from 'kaetram/package.json';
+
+import { DefinePlugin } from 'webpack';
+import type {
+    Configuration,
+    RuleSetRule,
+    WebpackOptionsNormalized,
+    WebpackPluginInstance
+} from 'webpack';
 
 export const env = dotenvParseVariables(dotEnvExtended.load()) as Record<string, string>;
 
@@ -80,7 +85,7 @@ export type Config = Configuration & Pick<WebpackOptionsNormalized, 'devServer'>
 const config: Config = {
     name: 'Client',
     target: 'web',
-    entry: 'index.html scss/main.scss src/main.ts'.split(' ').map(resolve),
+    entry: 'index.html scss/main.scss src/main.ts'.split(' ').map((src) => resolve(src)),
     performance: {
         maxEntrypointSize: maxSize,
         maxAssetSize: maxSize
