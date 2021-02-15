@@ -60,13 +60,13 @@ export default class Sprite {
         this.image.crossOrigin = 'Anonymous';
         this.image.src = this.filepath;
 
-        this.image.onload = () => {
+        this.image.addEventListener('load', () => {
             this.loaded = true;
 
             if (this.loadHurt) this.createHurtSprite();
 
             this.loadCallback?.();
-        };
+        });
     }
 
     async loadSprite(): Promise<void> {
@@ -93,7 +93,7 @@ export default class Sprite {
     createAnimations(): Animations {
         const animations: Animations = {};
 
-        for (const name in this.animationData) {
+        for (const name in this.animationData)
             if (Object.prototype.hasOwnProperty.call(this.animationData, name)) {
                 if (name === 'death')
                     // Check if sprite has a death animation
@@ -103,7 +103,6 @@ export default class Sprite {
 
                 animations[name] = new Animation(name, a.length, a.row, this.width, this.height);
             }
-        }
 
         return animations;
     }
@@ -144,9 +143,9 @@ export default class Sprite {
                 height: this.height,
                 type: 'hurt'
             };
-        } catch (e) {
+        } catch (error) {
             log.error('Could not load hurt sprite.');
-            log.error(e);
+            log.error(error);
         }
     }
 
