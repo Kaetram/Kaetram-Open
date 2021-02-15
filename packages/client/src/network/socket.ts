@@ -37,7 +37,7 @@ export default class Socket {
         if (this.config.ssl) url = `https://${this.config.ip}/server`;
 
         try {
-            let response = await $.get(url);
+            const response = await $.get(url);
 
             callback(typeof response === 'string' ? 'error' : response);
         } catch {
@@ -49,13 +49,12 @@ export default class Socket {
         this.getServer((result) => {
             let url;
 
-            if (result === 'error') {
-                if (this.config.ssl) url = `wss://${this.config.ip}`;
-                else url = `ws://${this.config.ip}:${this.config.port}`;
-            } else {
-                if (this.config.ssl) url = `wss://${result.host}`;
-                else url = `ws://${result.host}:${result.port}`;
-            }
+            if (result === 'error')
+                url = this.config.ssl
+                    ? `wss://${this.config.ip}`
+                    : `ws://${this.config.ip}:${this.config.port}`;
+            else if (this.config.ssl) url = `wss://${result.host}`;
+            else url = `ws://${result.host}:${result.port}`;
 
             this.connection = io(url, {
                 forceNew: true,
@@ -91,14 +90,12 @@ export default class Socket {
             });
 
             this.connection.on('message', (message) => {
-                const actualMessage = message.message ? message.message : message;
+                const actualMessage = message.message || message;
 
                 this.receive(actualMessage);
             });
 
-            this.connection.on('disconnect', () => {
-                this.game.handleDisconnection();
-            });
+            this.connection.on('disconnect', () => this.game.handleDisconnection());
         });
     }
 
@@ -116,6 +113,6 @@ export default class Socket {
     send(packet: number, data?: unknown[]): void {
         const json = JSON.stringify([packet, data]);
 
-        if (this.connection && this.connection.connected) this.connection.send(json);
+        if (this.connection?.connected) this.connection.send(json);
     }
 }

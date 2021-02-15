@@ -53,7 +53,7 @@ export default class Animation {
     }
 
     update(time: number): boolean {
-        if (this.lastTime === 0 && this.name.substr(0, 3) === 'atk') this.lastTime = time;
+        if (this.lastTime === 0 && this.name.slice(0, 3) === 'atk') this.lastTime = time;
 
         if (this.readyToAnimate(time)) {
             this.lastTime = time;
