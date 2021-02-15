@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import Player from '../../../entity/character/player/player';
 import Game from '../../../game';
-import Packets from '../../../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Page from '../page';
 
 export default class State extends Page {
@@ -68,25 +68,25 @@ export default class State extends Page {
 
         this.loaded = true;
 
-        this.weaponSlot.click(() => {
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'weapon']);
-        });
+        this.weaponSlot.on('click', () =>
+            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'weapon'])
+        );
 
-        this.armourSlot.click(() => {
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'armour']);
-        });
+        this.armourSlot.on('click', () =>
+            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'armour'])
+        );
 
-        this.pendantSlot.click(() => {
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'pendant']);
-        });
+        this.pendantSlot.on('click', () =>
+            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'pendant'])
+        );
 
-        this.ringSlot.click(() => {
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'ring']);
-        });
+        this.ringSlot.on('click', () =>
+            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'ring'])
+        );
 
-        this.bootsSlot.click(() => {
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'boots']);
-        });
+        this.bootsSlot.on('click', () =>
+            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'boots'])
+        );
     }
 
     async loadSlots(): Promise<void> {
@@ -105,9 +105,7 @@ export default class State extends Page {
         this.ringSlot.css('background-image', await this.getImageFormat(this.player.ring.string));
         this.bootsSlot.css('background-image', await this.getImageFormat(this.player.boots.string));
 
-        this.forEachSlot((slot) => {
-            slot.css('background-size', '600%');
-        });
+        this.forEachSlot((slot) => slot.css('background-size', '600%'));
     }
 
     update(): void {
@@ -124,9 +122,7 @@ export default class State extends Page {
     }
 
     forEachSlot(callback: (slot: JQuery) => void): void {
-        _.each(this.slots, (slot) => {
-            callback(slot);
-        });
+        _.each(this.slots, (slot) => callback(slot));
     }
 
     getScale(): number {

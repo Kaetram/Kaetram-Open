@@ -1,6 +1,8 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        "noImplicitAny": true,
+        "strictNullChecks": true,
         "module": "esnext",
         "target": "esnext",
         "rootDir": "./",

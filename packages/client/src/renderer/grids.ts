@@ -5,9 +5,9 @@ import Map from '../map/map';
 
 export default class Grids {
     map: Map;
-    renderingGrid: Entity[][];
+    renderingGrid: Record<string, Entity>[][];
     pathingGrid: number[][];
-    itemGrid: Item[][];
+    itemGrid: Record<string, Item>[][];
 
     constructor(map: Map) {
         this.map = map;
@@ -26,9 +26,9 @@ export default class Grids {
             this.itemGrid[i] = [];
 
             for (let j = 0; j < this.map.width; j++) {
-                this.renderingGrid[i][j] = {} as Entity;
+                this.renderingGrid[i][j] = {};
                 this.pathingGrid[i][j] = this.map.grid[i][j];
-                this.itemGrid[i][j] = {} as Item;
+                this.itemGrid[i][j] = {};
             }
         }
 
@@ -54,7 +54,7 @@ export default class Grids {
     }
 
     addToItemGrid(item: Entity, x: number, y: number): void {
-        if (item && this.itemGrid[y][x]) this.itemGrid[y][x][item.id] = item;
+        if (item && this.itemGrid[y][x]) this.itemGrid[y][x][item.id] = item as Item;
     }
 
     removeFromRenderingGrid(entity: Entity, x: number, y: number): void {
@@ -79,9 +79,8 @@ export default class Grids {
             this.removeFromPathingGrid(entity.gridX, entity.gridY);
             this.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
 
-            if (entity.nextGridX > -1 && entity.nextGridY > -1) {
+            if (entity.nextGridX > -1 && entity.nextGridY > -1)
                 this.removeFromPathingGrid(entity.nextGridX, entity.nextGridY);
-            }
         }
     }
 }

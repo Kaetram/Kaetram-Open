@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 import Game from '../game';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
 
 export default class Wrap {
     game: Game;
@@ -23,24 +23,19 @@ export default class Wrap {
     }
 
     load(): void {
-        this.button.click(() => {
-            this.open();
-        });
+        this.button.on('click', () => this.open());
 
-        this.close.click(() => {
-            this.hide();
-        });
+        this.close.on('click', () => this.hide());
 
         for (let i = 1; i < 7; i++) {
             const warp = this.mapFrame.find(`#warp${i}`);
 
-            if (warp) {
-                warp.click((event) => {
+            if (warp)
+                warp.on('click', (event) => {
                     this.hide();
 
-                    this.game.socket.send(Packets.Warp, [event.currentTarget.id.substring(4)]);
+                    this.game.socket.send(Packets.Warp, [event.currentTarget.id.slice(4)]);
                 });
-            }
 
             this.warpCount++;
         }
@@ -80,8 +75,8 @@ export default class Wrap {
     clear(): void {
         for (let i = 0; i < this.warpCount; i++) this.mapFrame.find(`#warp${i}`).off('click');
 
-        if (this.close) this.close.off('click');
+        this.close?.off('click');
 
-        if (this.button) this.button.off('click');
+        this.button?.off('click');
     }
 }
