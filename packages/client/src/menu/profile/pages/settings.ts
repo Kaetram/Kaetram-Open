@@ -27,7 +27,7 @@ export default class Settings {
     loaded: boolean;
     value: number;
 
-    //TODO - Hide crpyto mining option on mobiles and completely disable it.
+    // TODO - Hide crypto mining option on mobiles and completely disable it.
     constructor(game: Game) {
         this.game = game;
         this.audio = game.audio;
@@ -69,31 +69,21 @@ export default class Settings {
 
         this.renderer.adjustBrightness(this.getBrightness());
 
-        this.button.click(() => {
-            this.open();
-        });
+        this.button.on('click', () => this.open());
 
         this.volume.on('input', () => {
             if (this.audio.song) this.audio.song.volume = this.value / 100;
         });
 
-        this.brightness.on('input', () => {
-            this.renderer.adjustBrightness(this.value);
-        });
+        this.brightness.on('input', () => this.renderer.adjustBrightness(this.value));
 
-        this.volume.change(() => {
-            this.setMusicLevel(this.value);
-        });
+        this.volume.change(() => this.setMusicLevel(this.value));
 
-        this.sfx.change(() => {
-            this.setSFXLevel(this.value);
-        });
+        this.sfx.change(() => this.setSFXLevel(this.value));
 
-        this.brightness.change(() => {
-            this.setBrightness(this.value);
-        });
+        this.brightness.change(() => this.setBrightness(this.value));
 
-        this.soundCheck.click(() => {
+        this.soundCheck.on('click', () => {
             const isActive = this.soundCheck.hasClass('active');
 
             this.setSound(!isActive);
@@ -110,7 +100,7 @@ export default class Settings {
             }
         });
 
-        this.cameraCheck.click(() => {
+        this.cameraCheck.on('click', () => {
             const active = this.cameraCheck.hasClass('active');
 
             if (active) this.renderer.camera.decenter();
@@ -121,7 +111,7 @@ export default class Settings {
             this.setCamera(!active);
         });
 
-        this.debugCheck.click(() => {
+        this.debugCheck.on('click', () => {
             const active = this.debugCheck.hasClass('active');
 
             this.debugCheck.toggleClass('active');
@@ -131,7 +121,7 @@ export default class Settings {
             this.setDebug(!active);
         });
 
-        this.centreCheck.click(() => {
+        this.centreCheck.on('click', () => {
             const active = this.centreCheck.hasClass('active');
 
             this.centreCheck.toggleClass('active');
@@ -141,7 +131,7 @@ export default class Settings {
             this.setCentre(!active);
         });
 
-        this.nameCheck.click(() => {
+        this.nameCheck.on('click', () => {
             const active = this.nameCheck.hasClass('active');
 
             this.nameCheck.toggleClass('active');
@@ -151,7 +141,7 @@ export default class Settings {
             this.setName(!active);
         });
 
-        this.levelCheck.click(() => {
+        this.levelCheck.on('click', () => {
             const active = this.levelCheck.hasClass('active');
 
             this.levelCheck.toggleClass('active');

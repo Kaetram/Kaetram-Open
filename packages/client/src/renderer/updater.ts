@@ -2,12 +2,12 @@ import InputController from '../controllers/input';
 import SpritesController from '../controllers/sprites';
 import Character from '../entity/character/character';
 import Player from '../entity/character/player/player';
+import Entity from '../entity/entity';
 import Projectile from '../entity/objects/projectile';
 import Game from '../game';
 import Map from '../map/map';
-import Modules from '../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import Renderer from './renderer';
-import Entity from '../entity/entity';
 
 export default class Updater {
     game: Game;
@@ -29,7 +29,7 @@ export default class Updater {
     }
 
     update(): void {
-        this.timeDifferential = (new Date().getTime() - this.lastUpdate?.getTime()) / 1000;
+        this.timeDifferential = (Date.now() - this.lastUpdate?.getTime()) / 1000;
 
         this.updateEntities();
         this.input.updateCursor();
@@ -50,13 +50,12 @@ export default class Updater {
 
                 const animation = entity.currentAnimation;
 
-                if (animation) animation.update(this.game.time);
+                animation?.update(this.game.time);
 
                 if (entity instanceof Character) {
-                    if (entity.movement && entity.movement.inProgress)
-                        entity.movement.step(this.game.time);
+                    if (entity.movement?.inProgress) entity.movement.step(this.game.time);
 
-                    if (entity.hasPath() && !entity.movement.inProgress) {
+                    if (entity.hasPath() && !entity.movement.inProgress)
                         switch (entity.orientation) {
                             case Modules.Orientation.Left:
                             case Modules.Orientation.Right: {
@@ -104,14 +103,13 @@ export default class Updater {
                                 break;
                             }
                         }
-                    }
                 } else if (entity.type === 'projectile') {
                     const projectile = entity as Projectile;
                     const mDistance = projectile.speed * this.timeDifferential;
                     const dx = projectile.target.x - entity.x;
                     const dy = projectile.target.y - entity.y;
                     const tDistance = Math.sqrt(dx * dx + dy * dy);
-                    
+
                     let amount = mDistance / tDistance;
 
                     projectile.updateAngle();
@@ -130,7 +128,7 @@ export default class Updater {
     updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
-        let time = this.game.time,
+        const time = this.game.time,
             dt = time - entity.fadingTime;
 
         if (dt > entity.fadingDuration) {
@@ -165,17 +163,17 @@ export default class Updater {
 
         const sparks = this.sprites.sparksAnimation;
 
-        if (sparks) sparks.update(this.game.time);
+        sparks?.update(this.game.time);
     }
 
     updateInfos(): void {
-        if (this.game.info) this.game.info.update(this.game.time);
+        this.game.info?.update(this.game.time);
     }
 
     updateBubbles(): void {
-        if (this.game.bubble) this.game.bubble.update(this.game.time);
+        this.game.bubble?.update(this.game.time);
 
-        if (this.game.pointer) this.game.pointer.update();
+        this.game.pointer?.update();
     }
 
     setSprites(sprites: SpritesController): void {
