@@ -12,7 +12,7 @@ export default class Countdown {
         this.string = null;
 
         this.lastTime = 0;
-        this.updateTime = 1000; //Update every second.
+        this.updateTime = 1000; // Update every second.
     }
 
     tick(): void {
@@ -27,9 +27,7 @@ export default class Countdown {
     }
 
     update(time: number): void {
-        if (time - this.lastTime > this.updateTime) {
-            this.lastTime = time;
-        }
+        if (time - this.lastTime > this.updateTime) this.lastTime = time;
     }
 
     getStringFormat(): string {
