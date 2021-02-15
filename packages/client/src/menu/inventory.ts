@@ -2,9 +2,9 @@ import $ from 'jquery';
 
 import Equipment from '../entity/character/player/equipment/equipment';
 import Game from '../game';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import * as Detect from '../utils/detect';
-import Modules from '../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import Actions from './actions';
 import Container from './container/container';
 import Slot from './container/slot';
@@ -39,9 +39,7 @@ export default class Inventory {
     async load(data: Equipment[]): Promise<void> {
         const list = $('#inventory').find('ul');
 
-        for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-
+        for (const [i, item] of data.entries()) {
             this.container.setSlot(i, item);
 
             const itemSlot = $(`<div id="slot${i}" class="itemSlot"></div>`);
@@ -51,21 +49,19 @@ export default class Inventory {
 
             itemSlot.css('background-size', '600%');
 
-            itemSlot.dblclick((event) => {
-                this.clickDouble(event);
-            });
+            itemSlot.dblclick((event) => this.clickDouble(event));
 
-            itemSlot.click((event) => {
-                this.click(event);
-            });
+            itemSlot.on('click', (event) => this.click(event));
 
             const itemSlotList = $('<li></li>');
             const count = item.count;
             let itemCount = '';
 
             if (count > 999999)
-                itemCount = `${count.toString().substring(0, count.toString().length - 6)}M`;
-            else if (count > 9999) itemCount = `${count.toString().substring(0, 2)}K`;
+                itemCount = `${count
+                    .toString()
+                    .slice(0, Math.max(0, count.toString().length - 6))}M`;
+            else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
             else if (count === 1) itemCount = '';
 
             itemSlotList.append(itemSlot);
@@ -83,9 +79,7 @@ export default class Inventory {
             list.append(itemSlotList);
         }
 
-        this.button.click(() => {
-            this.open();
-        });
+        this.button.on('click', () => this.open());
     }
 
     open(): void {
@@ -98,7 +92,7 @@ export default class Inventory {
     }
 
     click(event: JQuery.ClickEvent): void {
-        const index = event.currentTarget.id.substring(4),
+        const index = event.currentTarget.id.slice(4),
             slot = this.container.slots[index],
             item = $(this.getList()[index]);
 
@@ -127,7 +121,7 @@ export default class Inventory {
     }
 
     clickDouble(event: JQuery.DoubleClickEvent): void {
-        const index = event.currentTarget.id.substring(4),
+        const index = event.currentTarget.id.slice(4),
             slot = this.container.slots[index];
 
         if (!slot.edible && !slot.equippable) return;
@@ -240,8 +234,8 @@ export default class Inventory {
         let itemCount = '';
 
         if (count > 999999)
-            itemCount = `${count.toString().substring(0, count.toString().length - 6)}M`;
-        else if (count > 9999) itemCount = `${count.toString().substring(0, 2)}K`;
+            itemCount = `${count.toString().slice(0, Math.max(0, count.toString().length - 6))}M`;
+        else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
         else if (count === 1) itemCount = '';
 
         item.find(`#itemCount${info.index}`).text(itemCount);
@@ -274,8 +268,8 @@ export default class Inventory {
     async resize(): Promise<void> {
         const list = this.getList();
 
-        for (let i = 0; i < list.length; i++) {
-            const item = $(list[i]).find(`#slot${i}`),
+        for (const [i, element] of [...list].entries()) {
+            const item = $(element).find(`#slot${i}`),
                 slot = this.container.slots[i];
 
             if (!slot) continue;
@@ -310,7 +304,7 @@ export default class Inventory {
     clear(): void {
         $('#inventory').find('ul').empty();
 
-        if (this.button) this.button.off('click');
+        this.button?.off('click');
     }
 
     getScale(): number {

@@ -40,9 +40,7 @@ export default async function install(): Promise<void> {
     if (!deferredPrompt) return;
 
     if (localStorage.getItem('prompted') !== 'true')
-        await deferredPrompt.prompt().catch((err) => {
-            log.error('[SW ERROR]', err);
-        });
+        await deferredPrompt.prompt().catch((error: Error) => log.error('[SW ERROR]', error));
 
     const { outcome } = await deferredPrompt.userChoice;
 

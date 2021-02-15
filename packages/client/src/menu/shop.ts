@@ -3,7 +3,7 @@ import $ from 'jquery';
 import MenuController from '../controllers/menu';
 import Player from '../entity/character/player/player';
 import Game from '../game';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Container from './container/container';
 
 interface ShopMoveInfo {
@@ -65,21 +65,15 @@ export default class Shop {
         this.close = $('#closeShop');
 
         this.close.css('left', '97%');
-        this.close.click(() => {
-            this.hide();
-        });
+        this.close.on('click', () => this.hide());
 
-        this.sellSlot.click(() => {
-            this.remove();
-        });
+        this.sellSlot.on('click', () => this.remove());
 
-        this.confirmSell.click(() => {
-            this.sell();
-        });
+        this.confirmSell.on('click', () => this.sell());
     }
 
     buy(event: JQuery.ClickEvent): void {
-        const id = event.currentTarget.id.substring(11);
+        const id = event.currentTarget.id.slice(11);
 
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, this.openShop, id, 1]);
     }
@@ -90,7 +84,7 @@ export default class Shop {
     }
 
     select(event: JQuery.ClickEvent): void {
-        const id = event.currentTarget.id.substring(17);
+        const id = event.currentTarget.id.slice(17);
 
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, this.openShop, id]);
     }
@@ -105,13 +99,13 @@ export default class Shop {
             slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
 
         this.sellSlot.css({
-            'background-image': slotImage.css('background-image'),
-            'background-size': slotImage.css('background-size')
+            backgroundImage: slotImage.css('background-image'),
+            backgroundSize: slotImage.css('background-size')
         });
 
         this.sellSlotReturn.css({
-            'background-image': await this.container.getImageFormat(info.currency),
-            'background-size': this.sellSlot.css('background-size')
+            backgroundImage: await this.container.getImageFormat(info.currency),
+            backgroundSize: this.sellSlot.css('background-size')
         });
 
         this.sellSlotReturnText.text(info.price);
@@ -150,7 +144,7 @@ export default class Shop {
 
         this.container = new Container(data.strings.length);
 
-        //Update the global data to current revision
+        // Update the global data to current revision
         this.data = data;
 
         this.load();
@@ -184,9 +178,7 @@ export default class Shop {
             });
 
             // Bind the itemBuy to the local buy function.
-            itemBuy.click((event) => {
-                this.buy(event);
-            });
+            itemBuy.on('click', (event) => this.buy(event));
 
             const listItem = $('<li></li>');
 
@@ -206,9 +198,7 @@ export default class Shop {
 
             slot.attr('id', `shopInventorySlot${j}`);
 
-            slot.click((event) => {
-                this.select(event);
-            });
+            slot.on('click', (event) => this.select(event));
 
             this.getInventoryList().append(slot);
         }
@@ -239,15 +229,15 @@ export default class Shop {
     }
 
     clear(): void {
-        if (this.shop) this.shop.find('ul').empty();
+        this.shop?.find('ul').empty();
 
-        if (this.inventory) this.inventory.find('ul').empty();
+        this.inventory?.find('ul').empty();
 
-        if (this.close) this.close.off('click');
+        this.close?.off('click');
 
-        if (this.sellSlot) this.sellSlot.off('click');
+        this.sellSlot?.off('click');
 
-        if (this.confirmSell) this.confirmSell.off('click');
+        this.confirmSell?.off('click');
     }
 
     getScale(): number {
