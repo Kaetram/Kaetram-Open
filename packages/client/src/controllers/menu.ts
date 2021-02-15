@@ -16,92 +16,70 @@ import Shop from '../menu/shop';
 import Warp from '../menu/warp';
 
 export default class MenuController {
-    game: Game;
-    notify: JQuery<HTMLDivElement>;
-    confirm: JQuery<HTMLDivElement>;
-    message: JQuery<HTMLDivElement>;
-    fade: JQuery<HTMLDivElement>;
-    done: JQuery<HTMLDivElement>;
-    notification: JQuery<HTMLDivElement>;
-    title: JQuery<HTMLDivElement>;
-    description: JQuery<HTMLDivElement>;
-    notificationTimeout: number;
-    inventory: Inventory;
-    profile: Profile;
-    bank: Bank;
-    actions: Actions;
-    enchant: Enchant;
-    shop: Shop;
-    header: Header;
-    warp: Warp;
+    private notify = $('#notify');
+    private confirm = $('#confirm');
+    private message = $('#message');
+    private fade = $('#notifyFade');
+    private done = $('#notifyDone');
 
-    constructor(game: Game) {
-        this.game = game;
+    private notification = $('#notification');
+    private title = $('#notificationTextTitle'); // notification title
+    private description = $('#notificationTextDescription'); // notification description
 
-        this.notify = $('#notify');
-        this.confirm = $('#confirm');
-        this.message = $('#message');
-        this.fade = $('#notifyFade');
-        this.done = $('#notifyDone');
+    private notificationTimeout!: number | null;
 
-        this.notification = $('#notification');
-        this.title = $('#notificationTextTitle'); // notification title
-        this.description = $('#notificationTextDescription'); // notification description
-        this.notificationTimeout = null;
+    public inventory!: Inventory | null;
+    public profile!: Profile | null;
+    public bank!: Bank | null;
+    public actions!: Actions | null;
+    public enchant!: Enchant | null;
+    public shop!: Shop | null;
+    private header!: Header | null;
+    public warp!: Warp | null;
 
-        this.inventory = null;
-        this.profile = null;
-        this.bank = null;
-        this.actions = null;
-        this.enchant = null;
-        this.shop = null;
-        this.header = null;
-
+    public constructor(public game: Game) {
         this.loadNotifications();
         this.loadActions();
         this.loadWarp();
         this.loadShop();
 
-        this.done.click(() => {
-            this.hideNotify();
-        });
+        this.done.on('click', () => this.hideNotify());
     }
 
-    resize(): void {
-        if (this.inventory) this.inventory.resize();
+    public resize(): void {
+        this.inventory?.resize();
 
-        if (this.profile) this.profile.resize();
+        this.profile?.resize();
 
-        if (this.bank) this.bank.resize();
+        this.bank?.resize();
 
-        if (this.enchant) this.enchant.resize();
+        this.enchant?.resize();
 
-        if (this.shop && this.shop.isVisible()) this.shop.resize();
+        if (this.shop?.isVisible()) this.shop.resize();
 
-        if (this.header) this.header.resize();
+        this.header?.resize();
 
         this.resizeNotification();
     }
 
-    loadInventory(size: number, data: Equipment[]): void {
-        /**
-         * This can be called multiple times and can be used
-         * to completely refresh the inventory.
-         */
-
+    /**
+     * This can be called multiple times and can be used
+     * to completely refresh the inventory.
+     */
+    public loadInventory(size: number, data: Equipment[]): void {
         this.inventory = new Inventory(this.game, size);
 
         this.inventory.load(data);
     }
 
-    loadBank(size: number, data: Slot[]): void {
-        /**
-         * Similar structure as the inventory, just that it
-         * has two containers. The bank and the inventory.
-         */
-
+    /**
+     * Similar structure as the inventory, just that it
+     * has two containers. The bank and the inventory.
+     */
+    public loadBank(size: number, data: Slot[]): void {
         if (!this.inventory) {
             log.error('Inventory not initialized.');
+
             return;
         }
 
@@ -112,31 +90,31 @@ export default class MenuController {
         this.loadEnchant();
     }
 
-    loadProfile(): void {
+    public loadProfile(): void {
         this.profile ||= new Profile(this.game);
     }
 
-    loadActions(): void {
+    private loadActions(): void {
         this.actions ||= new Actions(this);
     }
 
-    loadEnchant(): void {
+    private loadEnchant(): void {
         this.enchant ||= new Enchant(this.game, this);
     }
 
-    loadWarp(): void {
+    private loadWarp(): void {
         this.warp ||= new Warp(this.game);
     }
 
-    loadShop(): void {
+    private loadShop(): void {
         this.shop ||= new Shop(this.game, this);
     }
 
-    loadHeader(): void {
-        this.header ||= new Header(this.game /* , this */);
+    public loadHeader(): void {
+        this.header ||= new Header(this.game);
     }
 
-    loadNotifications(): void {
+    private loadNotifications(): void {
         const ok = $('#ok'),
             cancel = $('#cancel'),
             done = $('#done');
@@ -145,90 +123,82 @@ export default class MenuController {
          * Simple warning dialogue
          */
 
-        ok.click(() => {
-            this.hideNotify();
-        });
+        ok.on('click', () => this.hideNotify());
 
         /**
          * Callbacks responsible for
          * Confirmation dialogues
          */
 
-        cancel.click(() => {
-            this.hideConfirm();
-        });
+        cancel.on('click', () => this.hideConfirm());
 
-        done.click(() => {
+        done.on('click', () => {
             log.info(this.confirm[0].className);
 
             this.hideConfirm();
         });
     }
 
-    stop(): void {
-        if (this.inventory) this.inventory.clear();
+    public stop(): void {
+        this.inventory?.clear();
 
-        if (this.actions) this.actions.clear();
+        this.actions?.clear();
 
-        if (this.profile) this.profile.clean();
+        this.profile?.clean();
 
-        if (this.game.input) this.game.input.chatHandler.clear();
+        this.game.input?.chatHandler.clear();
 
-        if (this.bank) this.bank.clear();
+        this.bank?.clear();
 
-        if (this.enchant) this.enchant.clear();
+        this.enchant?.clear();
 
-        if (this.warp) this.warp.clear();
+        this.warp?.clear();
 
-        if (this.shop) this.shop.clear();
+        this.shop?.clear();
     }
 
-    hideAll(): void {
-        if (this.inventory && this.inventory.isVisible()) this.inventory.hide();
+    public hideAll(): void {
+        if (this.inventory?.isVisible()) this.inventory.hide();
 
-        if (this.actions && this.actions.isVisible()) this.actions.hide();
+        if (this.actions?.isVisible()) this.actions.hide();
 
-        if (this.profile && (this.profile.isVisible() || this.profile.settings.isVisible()))
-            this.profile.hide();
+        if (this.profile?.isVisible() || this.profile?.settings.isVisible()) this.profile.hide();
 
-        if (
-            this.game.input &&
-            this.game.input.chatHandler &&
-            this.game.input.chatHandler.input.is(':visible')
-        )
+        if (this.game.input?.chatHandler?.input.is(':visible'))
             this.game.input.chatHandler.hideInput();
 
-        if (this.bank && this.bank.isVisible()) this.bank.hide();
+        if (this.bank?.isVisible()) this.bank.hide();
 
-        if (this.enchant && this.enchant.isVisible()) this.enchant.hide();
+        if (this.enchant?.isVisible()) this.enchant.hide();
 
-        if (this.warp && this.warp.isVisible()) this.warp.hide();
+        if (this.warp?.isVisible()) this.warp.hide();
 
-        if (this.shop && this.shop.isVisible()) this.shop.hide();
+        if (this.shop?.isVisible()) this.shop.hide();
     }
 
-    addInventory(info: Slot): void {
-        this.bank.addInventory(info);
+    public addInventory(info: Slot): void {
+        this.bank?.addInventory(info);
     }
 
-    removeInventory(info: Slot): void {
-        this.bank.removeInventory(info);
+    public removeInventory(info: Slot): void {
+        this.bank?.removeInventory(info);
     }
 
-    resizeNotification(): void {
+    private resizeNotification(): void {
         if (this.isNotificationVisible())
-            this.notification.css('top', `${window.innerHeight - this.notification.height()}px`);
+            this.notification.css(
+                'top',
+                `${window.innerHeight - (this.notification.height() as number)}px`
+            );
     }
 
-    showNotification(title: string, message: string, colour: string): void {
-        const top = window.innerHeight - this.notification.height();
+    public showNotification(title: string, message: string, colour: string): void {
+        const top = window.innerHeight - (this.notification.height() as number);
 
         if (this.isNotificationVisible()) {
             this.hideNotification();
 
-            window.setTimeout(() => {
-                this.showNotification(title, message, colour);
-            }, 700);
+            window.setTimeout(() => this.showNotification(title, message, colour), 700);
 
             return;
         }
@@ -243,65 +213,63 @@ export default class MenuController {
 
         if (this.notificationTimeout) return;
 
-        this.notificationTimeout = window.setTimeout(() => {
-            this.hideNotification();
-        }, 4000);
+        this.notificationTimeout = window.setTimeout(() => this.hideNotification(), 4000);
     }
 
-    hideNotification(): void {
+    private hideNotification(): void {
         if (!this.isNotificationVisible()) return;
 
-        clearTimeout(this.notificationTimeout);
+        clearTimeout(this.notificationTimeout as number);
         this.notificationTimeout = null;
 
         this.notification.removeClass('active');
         this.notification.css('top', '100%');
     }
 
-    displayNotify(message: string): void {
+    public displayNotify(message: string): void {
         if (this.isNotifyVisible()) return;
 
-        this.notify.css('display', 'block');
-        this.fade.css('display', 'block');
-        this.message.css('display', 'block');
+        this.notify.show();
+        this.fade.show();
+        this.message.show();
 
         this.message.text(message);
     }
 
-    displayConfirm(message: string): void {
+    public displayConfirm(message: string): void {
         if (this.isConfirmVisible()) return;
 
-        this.confirm.css('display', 'block');
+        this.confirm.show();
         this.confirm.text(message);
     }
 
-    hideNotify(): void {
-        this.fade.css('display', 'none');
-        this.notify.css('display', 'none');
-        this.message.css('display', 'none');
+    private hideNotify(): void {
+        this.fade.hide();
+        this.notify.hide();
+        this.message.hide();
     }
 
-    hideConfirm(): void {
-        this.confirm.css('display', 'none');
+    private hideConfirm(): void {
+        this.confirm.hide();
     }
 
-    getQuestPage(): Quest {
-        return this.profile.quests;
+    public getQuestPage(): Quest | undefined {
+        return this.profile?.quests;
     }
 
-    getProfessionPage(): Professions {
-        return this.profile.professions;
+    public getProfessionPage(): Professions | undefined {
+        return this.profile?.professions;
     }
 
-    isNotifyVisible(): boolean {
+    private isNotifyVisible(): boolean {
         return this.notify.css('display') === 'block';
     }
 
-    isConfirmVisible(): boolean {
+    private isConfirmVisible(): boolean {
         return this.confirm.css('display') === 'block';
     }
 
-    isNotificationVisible(): boolean {
+    private isNotificationVisible(): boolean {
         return this.notification.hasClass('active');
     }
 }

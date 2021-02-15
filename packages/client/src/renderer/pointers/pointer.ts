@@ -1,4 +1,4 @@
-import Modules from '../../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 
 export default class Pointer {
     id: string;
@@ -46,11 +46,11 @@ export default class Pointer {
 
     show(): void {
         if (this.type === Modules.Pointers.Button) this.element.addClass('active');
-        else this.element.css('display', 'block');
+        else this.element.show();
     }
 
     hide(): void {
         if (this.type === Modules.Pointers.Button) this.element.removeClass('active');
-        else this.element.css('display', 'none');
+        else this.element.hide();
     }
 }

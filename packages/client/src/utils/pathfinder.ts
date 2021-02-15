@@ -32,7 +32,7 @@ export default class PathFinder {
             for (let j = 0; j < this.width; j++) this.blankGrid[i][j] = 0;
         }
 
-        //log.info('Successfully loaded the pathfinder!');
+        // log.info('Successfully loaded the pathfinder!');
     }
 
     find(grid: number[][], entity: Entity, x: number, y: number, incomplete: boolean): number[][] {

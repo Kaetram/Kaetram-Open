@@ -3,7 +3,7 @@ import InputController from '../../../controllers/input';
 import Game from '../../../game';
 import log from '../../../lib/log';
 import Map from '../../../map/map';
-import Packets from '../../../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Socket from '../../../network/socket';
 import Camera from '../../../renderer/camera';
 import Renderer from '../../../renderer/renderer';
@@ -66,7 +66,6 @@ export default class PlayerHandler {
                     gridX: x,
                     gridY: y
                 });
-
 
             return this.game.findPath(this.player, x, y, ignores);
         });
@@ -134,9 +133,7 @@ export default class PlayerHandler {
             this.player.moving = false;
         });
 
-        this.player.onBeforeStep(() => {
-            this.entities.unregisterPosition(this.player);
-        });
+        this.player.onBeforeStep(() => this.entities.unregisterPosition(this.player));
 
         this.player.onStep(() => {
             if (this.player.hasNextStep()) this.entities.registerDuality(this.player);
@@ -159,9 +156,7 @@ export default class PlayerHandler {
             }
         });
 
-        this.player.onSecondStep(() => {
-            this.renderer.updateAnimatedTiles();
-        });
+        this.player.onSecondStep(() => this.renderer.updateAnimatedTiles());
 
         this.player.onMove(() => {
             /**

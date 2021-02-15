@@ -2,7 +2,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 
 import Game from '../../game';
-import Packets from '../../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Page from './page';
 import Guild from './pages/guild';
 import Professions from './pages/professions';
@@ -42,23 +42,21 @@ export default class Profile {
     }
 
     load(): void {
-        this.button.click(() => {
-            this.open();
-        });
+        this.button.on('click', () => this.open());
 
-        this.next.click(() => {
+        this.next.on('click', () => {
             if (this.activeIndex + 1 < this.pages.length) this.setPage(this.activeIndex + 1);
             else this.next.removeClass('enabled');
         });
 
-        this.previous.click(() => {
+        this.previous.on('click', () => {
             if (this.activeIndex > 0) this.setPage(this.activeIndex - 1);
             else this.previous.removeClass('enabled');
         });
 
         this.state = new State(this.game);
         this.professions = new Professions(this.game);
-        //this.ability = new Ability(this.game);
+        // this.ability = new Ability(this.game);
         this.settings = new Settings(this.game);
         this.quests = new Quest();
         this.guild = new Guild(this.game);
@@ -96,9 +94,7 @@ export default class Profile {
     }
 
     resize(): void {
-        _.each(this.pages as State[], (page) => {
-            page?.resize();
-        });
+        _.each(this.pages as State[], (page) => page?.resize());
     }
 
     setPage(index: number): void {
@@ -130,7 +126,7 @@ export default class Profile {
         this.body.fadeOut('fast');
         this.button.removeClass('active');
 
-        if (this.settings) this.settings.hide();
+        this.settings?.hide();
     }
 
     clean(): void {
@@ -148,6 +144,6 @@ export default class Profile {
     }
 
     clear(): void {
-        if (this.activePage) this.activePage.hide();
+        this.activePage?.hide();
     }
 }

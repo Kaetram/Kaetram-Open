@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 import Game from '../../../game';
-import Modules from '../../../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import Character from '../character';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
@@ -136,7 +136,7 @@ export default class Player extends Character {
     }
 
     isRanged(): boolean {
-        return this.weapon && this.weapon.ranged;
+        return this.weapon?.ranged;
     }
 
     hasWeapon(): boolean {
@@ -282,9 +282,7 @@ export default class Player extends Character {
         this.blink(90);
 
         if (!this.tempBlinkTimeout)
-            this.tempBlinkTimeout = window.setTimeout(() => {
-                this.stopBlinking();
-            }, 500);
+            this.tempBlinkTimeout = window.setTimeout(() => this.stopBlinking(), 500);
     }
 
     onUpdateArmour(callback: (armourName: string, power: number) => void): void {
