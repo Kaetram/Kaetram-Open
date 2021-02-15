@@ -1,7 +1,7 @@
-import config, { plugins, rules, exclude } from './webpack.common';
-import type { Config } from './webpack.common';
-
 import { HotModuleReplacementPlugin } from 'webpack';
+
+import config, { exclude, plugins, rules } from './webpack.common';
+import type { Config } from './webpack.common';
 
 plugins.unshift(new HotModuleReplacementPlugin());
 
