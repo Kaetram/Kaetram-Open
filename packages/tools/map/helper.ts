@@ -1,43 +1,36 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env ts-node-script
 
 import world from '@kaetram/server/data/map/world.json';
 
 export default class Helper {
-    width: number;
-    height: number;
+    #width = world.width;
+    #height = world.height;
 
-    constructor() {
-        this.width = world.width;
-        this.height = world.height;
-
+    public constructor() {
         // Palm Tree Stump
         this.getTileData(167, 263);
         this.getTileData(167, 264);
-
-        //for (let i = 1; i < 5; i++)
-        //    for (let j = 1; j < 5; j++)
-        //        this.getTileData(9 + i, 91 + j);
     }
 
-    getTileData(x: number, y: number): void {
+    private getTileData(x: number, y: number): void {
         const index = this.gridPositionToIndex(x, y);
 
         console.log(
-            `"${index}": { "data": [${world.data[index]}], "isColliding": ${
-                world.collisions.indexOf(index) > -1
-            } },`
+            `"${index}": { "data": [${
+                world.data[index]
+            }], "isColliding": ${world.collisions.includes(index)} },`
         );
     }
 
-    gridPositionToIndex(x: number, y: number): number {
-        return y * this.width + x;
+    private gridPositionToIndex(x: number, y: number): number {
+        return y * this.#width + x;
     }
 
-    indexToGridPosition(tileIndex: number): { x: number; y: number } {
+    private indexToGridPosition(tileIndex: number): { x: number; y: number } {
         tileIndex -= 1;
 
-        const x = this.getX(tileIndex + 1, this.width),
-            y = Math.floor(tileIndex / this.width);
+        const x = this.getX(tileIndex + 1, this.#width),
+            y = Math.floor(tileIndex / this.#height);
 
         return {
             x: x,
@@ -45,7 +38,7 @@ export default class Helper {
         };
     }
 
-    getX(index: number, width: number): number {
+    private getX(index: number, width: number): number {
         if (index === 0) return 0;
 
         return index % width === 0 ? width - 1 : (index % width) - 1;
