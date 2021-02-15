@@ -1,28 +1,28 @@
-enum Orientation {
+export enum Orientation {
     Up,
     Down,
     Left,
     Right
 }
 
-enum Types {
+export enum Types {
     Player
 }
 
-enum InputType {
+export enum InputType {
     Key,
     LeftClick,
     RightClick
 }
 
-enum Actions {
+export enum Actions {
     Idle,
     Attack,
     Walk,
     Orientate
 }
 
-enum Hits {
+export enum Hits {
     Damage,
     Poison,
     Heal,
@@ -35,11 +35,30 @@ enum Hits {
     Profession
 }
 
-enum Infos {
+export enum Infos {
     Countdown
 }
 
-enum Equipment {
+export enum Projectiles {
+    Arrow,
+    Boulder,
+    FireBall,
+    IceBall,
+    Terror,
+    Tornado
+}
+
+export enum Abilities {
+    Freeze,
+    Curse,
+    Smash,
+    Tornado,
+    Run,
+    Call,
+    Evasion
+}
+
+export enum Equipment {
     Armour,
     Weapon,
     Pendant,
@@ -47,7 +66,7 @@ enum Equipment {
     Boots
 }
 
-enum Hovering {
+export enum Hovering {
     Colliding,
     Mob,
     Player,
@@ -57,7 +76,7 @@ enum Hovering {
     Object
 }
 
-enum Keys {
+export enum Keys {
     One = 49,
     Two,
     Three,
@@ -88,19 +107,81 @@ enum Keys {
     M = 77
 }
 
-enum AudioTypes {
+export enum AudioTypes {
     Music,
     SFX
 }
 
-enum Pointers {
+export enum Pointers {
     Entity,
     Position,
     Relative,
     Button
 }
 
-enum Enchantment {
+export enum Trade {
+    Request,
+    Started,
+    Accepted,
+    Finished
+}
+
+enum Type {
+    Killing,
+    Scavenge
+}
+enum Rewards {
+    Item,
+    Experience,
+    Skill
+}
+export const Achievements = {
+    Type,
+    Rewards
+};
+
+export enum Quests {
+    Introduction,
+    BulkySituation
+}
+
+export enum Languages {
+    English,
+    Romanian,
+    French,
+    Spanish,
+    German,
+    Japanese,
+    Chinese
+}
+
+export enum Warps {
+    Mudwich,
+    Southorn,
+    Lakesworld,
+    Aynor,
+    Crullfeld,
+    Patsow
+}
+
+export enum Professions {
+    Lumberjacking,
+    Fishing,
+    Mining
+}
+
+export enum Trees {
+    Oak,
+    Palm,
+    IceOak,
+    IcePalm
+}
+
+export enum Rocks {
+    BlueSteel
+}
+
+export enum Enchantment {
     Bloodsucking,
     Critical,
     Evasion,
@@ -111,7 +192,7 @@ enum Enchantment {
     Splash
 }
 
-const EnchantmentNames = [
+export const EnchantmentNames = [
     'Bloodsucking',
     'Critical',
     'Evasion',
@@ -122,7 +203,12 @@ const EnchantmentNames = [
     'Splash'
 ];
 
-const DamageColours = {
+export interface Colours {
+    fill: string;
+    stroke: string;
+}
+
+export const DamageColours = {
     received: {
         fill: 'rgb(255, 50, 50)',
         stroke: 'rgb(255, 180, 180)'
@@ -172,21 +258,4 @@ const DamageColours = {
         fill: 'rgb(204, 0, 153)',
         stroke: 'rgb(112, 17, 112)'
     }
-};
-
-export default {
-    Orientation,
-    Types,
-    InputType,
-    Actions,
-    Hits,
-    Infos,
-    Equipment,
-    Hovering,
-    Keys,
-    AudioTypes,
-    Pointers,
-    Enchantment,
-    EnchantmentNames,
-    DamageColours
 };

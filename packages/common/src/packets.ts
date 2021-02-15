@@ -47,10 +47,11 @@ enum Packets {
     Camera,
     Bubble,
     Client,
-    Profession
+    Profession,
+    BuildUp
 }
 
-enum IntroOpcode {
+export enum IntroOpcode {
     Login,
     Register,
     Guest
@@ -162,7 +163,8 @@ enum GuildOpcode {
     Join,
     Leave,
     Rank,
-    Loot
+    Loot,
+    Update
 }
 
 enum PointerOpcode {
@@ -218,6 +220,17 @@ enum CameraOpcode {
     Player
 }
 
+enum PushOpcode {
+    Broadcast,
+    Selectively,
+    Player,
+    Players,
+    Region,
+    Regions,
+    NameArray,
+    OldRegions
+}
+
 enum CommandOpcode {
     CtrlClick
 }
@@ -254,6 +267,7 @@ export default {
     RegionOpcode,
     OverlayOpcode,
     CameraOpcode,
+    PushOpcode,
     CommandOpcode,
     ProfessionOpcode
 };
