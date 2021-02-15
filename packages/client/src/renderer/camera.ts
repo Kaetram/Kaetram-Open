@@ -2,7 +2,7 @@ import App from '../app';
 import Player from '../entity/character/player/player';
 import Entity from '../entity/entity';
 import Map from '../map/map';
-import Modules from '../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import Renderer from './renderer';
 
 export default class Camera {
@@ -22,7 +22,7 @@ export default class Camera {
     speed: number;
     panning: boolean;
     centered: boolean;
-    player: Player;
+    player: Player | null;
     lockX: boolean;
     lockY: boolean;
     gridWidth: number;
@@ -119,7 +119,7 @@ export default class Camera {
         this.y = this.gridY * 16;
     }
 
-    setPlayer(player: Player): void {
+    setPlayer(player: Player | null): void {
         this.player = player;
 
         this.centreOn(this.player);

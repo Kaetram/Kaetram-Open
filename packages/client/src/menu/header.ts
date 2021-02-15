@@ -27,24 +27,18 @@ export default class Header {
     }
 
     load(): void {
-        this.player.onHitPoints(() => {
-            this.calculateHealthBar();
-        });
+        this.player.onHitPoints(() => this.calculateHealthBar());
 
-        this.player.onMaxHitPoints(() => {
-            this.calculateHealthBar();
-        });
+        this.player.onMaxHitPoints(() => this.calculateHealthBar());
 
-        this.player.onExperience(() => {
-            this.calculateExpBar();
-        });
+        this.player.onExperience(() => this.calculateExpBar());
     }
 
     calculateHealthBar(): void {
         const scale = this.getScale(),
             width = this.healthBar.width();
 
-        //11 is due to the offset of the #health in the #healthBar
+        // 11 is due to the offset of the #health in the #healthBar
         let diff = Math.floor(
             width * (this.player.hitPoints / this.player.maxHitPoints) - 11 * scale
         );
@@ -86,8 +80,6 @@ export default class Header {
     toggle(tClass: string): void {
         this.health.addClass(tClass);
 
-        window.setTimeout(() => {
-            this.health.removeClass(tClass);
-        }, 500);
+        window.setTimeout(() => this.health.removeClass(tClass), 500);
     }
 }

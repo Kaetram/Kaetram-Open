@@ -2,7 +2,6 @@ import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Map from '../map/map';
 import EntitiesController from '../controllers/entities';
 import InputController from '../controllers/input';
 import Character from '../entity/character/character';
@@ -11,8 +10,9 @@ import Entity, { EntityRenderingData } from '../entity/entity';
 import Item from '../entity/objects/item';
 import Sprite from '../entity/sprite';
 import Game from '../game';
+import Map from '../map/map';
 import * as Detect from '../utils/detect';
-import Modules from '../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import Camera from './camera';
 import Splat from './infos/splat';
 import Tile from './tile';
@@ -85,7 +85,7 @@ export default class Renderer {
     drawingContexts: (CanvasRenderingContext2D | RenderingContext)[];
     lightings: RendererLighting[];
     // textures: { [key: string]: any };
-    entities: EntitiesController;
+    entities: EntitiesController | null;
     game: Game;
     camera: Camera;
     input: InputController;
@@ -142,7 +142,7 @@ export default class Renderer {
         cursor: HTMLCanvasElement,
         game: Game
     ) {
-        this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
+        this.canvas = document.querySelector('#canvas') as HTMLCanvasElement;
         this.background = background;
         this.entitiesCanvas = entitiesCanvas;
         this.foreground = foreground;
@@ -323,17 +323,17 @@ export default class Renderer {
                 this.scale = this.getScale();
                 this.clearScreen(this.cursorContext);
 
-                if (this.camera) this.camera.update();
+                this.camera?.update();
 
                 this.loadSizes();
 
                 this.game.sendClientData();
 
-                if (this.entities) this.entities.update();
+                this.entities?.update();
 
-                if (this.camera) this.camera.centreOn(this.game.player);
+                this.camera?.centreOn(this.game.player);
 
-                if (this.game.menu) this.game.menu.resize();
+                this.game.menu?.resize();
 
                 this.stopRendering = false;
                 this.resizeTimeout = null;
@@ -552,7 +552,7 @@ export default class Renderer {
             data.ox = sprite.offsetX * this.superScaling;
             data.oy = sprite.offsetY * this.superScaling;
 
-            if (entity.angled && entity.type !== 'projectile') 
+            if (entity.angled && entity.type !== 'projectile')
                 data.angle = (entity.angle * Math.PI) / 180;
 
             if (entity.hasShadow()) {
@@ -785,7 +785,7 @@ export default class Renderer {
                     );
             }
         } else {
-            //TODO - Move this countdown elsewhere.
+            // TODO - Move this countdown elsewhere.
             if (this.game.time - entity.countdownTime > 1000) {
                 entity.countdownTime = this.game.time;
                 entity.counter--;
@@ -915,9 +915,9 @@ export default class Renderer {
     drawPathing(): void {
         if (!this.game.player.hasPath()) return;
 
-        _.each(this.game.player.path, (path) => {
-            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
-        });
+        _.each(this.game.player.path, (path) =>
+            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)')
+        );
     }
 
     drawSelectedCell(): void {
@@ -1198,9 +1198,7 @@ export default class Renderer {
     }
 
     forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        _.each(this.animatedTiles, (tile) => {
-            callback(tile);
-        });
+        _.each(this.animatedTiles, (tile) => callback(tile));
     }
 
     forEachVisibleEntity(callback: (entity: Entity) => void): void {
@@ -1210,9 +1208,7 @@ export default class Renderer {
 
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
-                _.each(grids.renderingGrid[y][x], (entity: Entity) => {
-                    callback(entity);
-                });
+                _.each(grids.renderingGrid[y][x], (entity: Entity) => callback(entity));
         });
     }
 
@@ -1225,9 +1221,9 @@ export default class Renderer {
     }
 
     clear(): void {
-        this.forEachContext((context) => {
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        });
+        this.forEachContext((context) =>
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+        );
     }
 
     clearText(): void {
@@ -1236,33 +1232,25 @@ export default class Renderer {
     }
 
     clearDrawing(): void {
-        this.forEachDrawingContext((context) => {
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        });
+        this.forEachDrawingContext((context) =>
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height)
+        );
     }
 
     save(): void {
-        this.forEachContext((context) => {
-            context.save();
-        });
+        this.forEachContext((context) => context.save());
     }
 
     saveDrawing(): void {
-        this.forEachDrawingContext((context) => {
-            context.save();
-        });
+        this.forEachDrawingContext((context) => context.save());
     }
 
     restore(): void {
-        this.forEachContext((context) => {
-            context.restore();
-        });
+        this.forEachContext((context) => context.restore());
     }
 
     restoreDrawing(): void {
-        this.forEachDrawingContext((context) => {
-            context.restore();
-        });
+        this.forEachDrawingContext((context) => context.restore());
     }
 
     hasRenderedFrame(): boolean {
@@ -1284,10 +1272,7 @@ export default class Renderer {
 
     transition(duration: number, forward: boolean, callback: () => void): void {
         const textCanvas = $('#textCanvas'),
-            hasThreshold = () => {
-                return forward ? this.brightness > 99 : this.brightness < 1;
-            };
-
+            hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
         this.transitioning = true;
 
         this.transitionInterval = window.setInterval(() => {
@@ -1311,15 +1296,11 @@ export default class Renderer {
      */
 
     updateView(): void {
-        this.forEachContext((context) => {
-            this.setCameraView(context);
-        });
+        this.forEachContext((context) => this.setCameraView(context));
     }
 
     updateDrawingView(): void {
-        this.forEachDrawingContext((context) => {
-            this.setCameraView(context);
-        });
+        this.forEachDrawingContext((context) => this.setCameraView(context));
     }
 
     setCameraView(context: CanvasRenderingContext2D): void {
@@ -1361,7 +1342,7 @@ export default class Renderer {
     }
 
     hasDrawnTile(id: Tile): boolean {
-        return this.drawnTiles.indexOf(id) > -1;
+        return this.drawnTiles.includes(id);
     }
 
     /**
@@ -1369,33 +1350,23 @@ export default class Renderer {
      */
 
     forAllContexts(callback: (context: CanvasRenderingContext2D) => void): void {
-        _.each(this.allContexts, (context) => {
-            callback(context as CanvasRenderingContext2D);
-        });
+        _.each(this.allContexts, (context) => callback(context as CanvasRenderingContext2D));
     }
 
     forEachContext(callback: (context: CanvasRenderingContext2D) => void): void {
-        _.each(this.contexts, (context) => {
-            callback(context);
-        });
+        _.each(this.contexts, (context) => callback(context));
     }
 
     forEachDrawingContext(callback: (context: CanvasRenderingContext2D) => void): void {
-        _.each(this.drawingContexts, (context) => {
-            callback(context as CanvasRenderingContext2D);
-        });
+        _.each(this.drawingContexts, (context) => callback(context as CanvasRenderingContext2D));
     }
 
     forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
-        _.each(this.canvases, (canvas) => {
-            callback(canvas);
-        });
+        _.each(this.canvases, (canvas) => callback(canvas));
     }
 
     forEachLighting(callback: (lighting: RendererLighting) => void): void {
-        _.each(this.lightings, (lighting) => {
-            callback(lighting);
-        });
+        _.each(this.lightings, (lighting) => callback(lighting));
     }
 
     getX(index: number, width: number): number {
@@ -1411,7 +1382,7 @@ export default class Renderer {
         this.mEdge = Detect.isEdge();
         this.webGL = Detect.supportsWebGL();
 
-        //this.animateTiles = !this.firefox && !this.mEdge;
+        // this.animateTiles = !this.firefox && !this.mEdge;
     }
 
     verifyCentration(): void {
@@ -1432,16 +1403,13 @@ export default class Renderer {
 
         if (!objects) return parsedObjects;
 
-        for (let i = 0; i < objects.length; i++) {
-            const object = objects[i];
-
+        for (const object of objects)
             parsedObjects.push(
                 new RectangleObject({
                     topleft: new Vec2(object.x, object.y),
                     bottomright: new Vec2(object.x + this.tileSize, object.y + this.tileSize)
                 })
             );
-        }
 
         return parsedObjects;
     }
@@ -1564,7 +1532,7 @@ export default class Renderer {
         this.map = map;
     }
 
-    setEntities(entities: EntitiesController): void {
+    setEntities(entities: EntitiesController | null): void {
         this.entities = entities;
     }
 
