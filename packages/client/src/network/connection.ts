@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash';
 
 import App from '../app';
@@ -19,11 +20,11 @@ import Inventory from '../menu/inventory';
 import Overlay from '../renderer/overlay';
 import Renderer from '../renderer/renderer';
 import * as Detect from '../utils/detect';
-import Modules from '../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import Storage from '../utils/storage';
 import TeamWar from './impl/teamwar';
 import Messages from './messages';
-import Packets from './packets';
+import Packets from '@kaetram/common/src/packets';
 import Socket from './socket';
 
 /**
@@ -100,9 +101,9 @@ export default class Connection {
                     password,
                     email
                 ]);
-            } else if (this.app.isGuest()) {
+            } else if (this.app.isGuest())
                 this.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
-            } else {
+            else {
                 const loginInfo = this.app.loginFields,
                     name = loginInfo[0].val() as string,
                     pass = loginInfo[1].val() as string;
@@ -192,18 +193,17 @@ export default class Connection {
             }
         });
 
-        this.messages.onSpawn((data: AnyEntity[]) => {
-            this.entities.create(data.shift());
-        });
+        this.messages.onSpawn((data: AnyEntity[]) => this.entities.create(data.shift()));
 
         this.messages.onEntityList((data: string[]) => {
-            let ids = _.map(this.entities.getAll(), 'id'),
+            const ids = _.map(this.entities.getAll(), 'id'),
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
-                
-            this.entities.decrepit = _.reject(this.entities.getAll(), (entity) => {
-                return _.includes(known, entity.id) || entity.id === this.game.player.id;
-            });
+
+            this.entities.decrepit = _.reject(
+                this.entities.getAll(),
+                (entity) => _.includes(known, entity.id) || entity.id === this.game.player.id
+            );
 
             this.entities.clean();
 
@@ -501,7 +501,7 @@ export default class Connection {
                         target.forget();
                     }
 
-                    if (attacker) attacker.removeTarget();
+                    attacker?.removeTarget();
 
                     break;
 
@@ -552,9 +552,9 @@ export default class Connection {
             if (data.mana) entity.setMana(data.mana);
         });
 
-        this.messages.onNetwork(() => {
-            this.socket.send(Packets.Network, [Packets.NetworkOpcode.Pong]);
-        });
+        this.messages.onNetwork(() =>
+            this.socket.send(Packets.Network, [Packets.NetworkOpcode.Pong])
+        );
 
         this.messages.onChat((info: any) => {
             if (this.game.isDebug()) log.info(info);
@@ -563,7 +563,7 @@ export default class Connection {
                 const entity = this.entities.get(info.id);
 
                 if (entity) {
-                    info.name = info.name.charAt(0).toUpperCase() + info.name.substr(1);
+                    info.name = info.name.charAt(0).toUpperCase() + info.name.slice(1);
 
                     this.bubble.create(info.id, info.text, info.duration);
                     this.bubble.setTo(entity);
@@ -614,7 +614,7 @@ export default class Connection {
 
                     if (this.menu.bank) this.menu.addInventory(slot);
 
-                    if (this.menu.inventory) this.menu.inventory.add(slot);
+                    this.menu.inventory?.add(slot);
 
                     break;
                 }
@@ -624,7 +624,7 @@ export default class Connection {
 
                     if (this.menu.bank) this.menu.removeInventory(slot);
 
-                    if (this.menu.inventory) this.menu.inventory.remove(slot);
+                    this.menu.inventory?.remove(slot);
 
                     break;
                 }
@@ -643,7 +643,7 @@ export default class Connection {
                 }
 
                 case Packets.BankOpcode.Add: {
-                    const slot = info as Slot;
+                    // const slot = info as Slot;
 
                     if (!this.menu.bank) return;
 
@@ -653,7 +653,7 @@ export default class Connection {
                 }
 
                 case Packets.BankOpcode.Remove: {
-                    const slot = info as Slot;
+                    // const slot = info as Slot;
 
                     this.menu.bank.remove(info);
 
@@ -662,8 +662,7 @@ export default class Connection {
             }
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        this.messages.onAbility((opcode, info: any) => {});
+        // this.messages.onAbility((opcode, info: any) => {});
 
         this.messages.onQuest((opcode, info: any) => {
             switch (opcode) {
@@ -809,7 +808,7 @@ export default class Connection {
 
             this.audio.stop();
 
-            //this.audio.play(Modules.AudioTypes.SFX, 'death');
+            // this.audio.play(Modules.AudioTypes.SFX, 'death');
 
             this.game.player.dead = true;
             this.game.player.removeTarget();
@@ -837,7 +836,7 @@ export default class Connection {
 
                     let sound: 'npc' | 'npc-end';
 
-                    if (isNPC) {
+                    if (isNPC)
                         if (!message) {
                             sound = 'npc-end';
                             this.bubble.destroy(info.id);
@@ -851,7 +850,7 @@ export default class Connection {
                             if (this.renderer.mobile && this.renderer.autoCentre)
                                 this.renderer.camera.centreOn(this.game.player);
                         }
-                    } else {
+                    else {
                         this.bubble.create(info.id, message, this.time);
                         this.bubble.setTo(entity);
                     }
@@ -875,7 +874,7 @@ export default class Connection {
                     const cEntity = this.entities.get(info.id),
                         countdown = info.countdown;
 
-                    if (cEntity) cEntity.setCountdown(countdown);
+                    cEntity?.setCountdown(countdown);
 
                     break;
                 }
@@ -918,7 +917,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onGuild((opcode, info: any) => {
+        this.messages.onGuild((opcode) => {
             switch (opcode) {
                 case Packets.GuildOpcode.Create:
                     break;
@@ -1087,7 +1086,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onCamera((opcode, info: any) => {
+        this.messages.onCamera((opcode) => {
             if (this.game.player.x === 0 || this.game.player.y === 0) {
                 this.socket.send(Packets.Camera);
                 return;

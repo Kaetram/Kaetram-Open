@@ -37,9 +37,7 @@ export default class SpritesController {
     }
 
     updateSprites(): void {
-        _.each(this.sprites, (sprite) => {
-            sprite.update();
-        });
+        _.each(this.sprites, (sprite) => sprite.update());
 
         if (this.renderer.game.isDebug()) log.info('Sprites updated upon scaling.');
     }
