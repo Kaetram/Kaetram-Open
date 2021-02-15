@@ -4984,8 +4984,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/body-parser", "npm:1.19.0"],
             ["@types/dotenv-parse-variables", "npm:0.2.0"],
             ["@types/lodash", "npm:4.14.168"],
-            ["@types/mongodb", "npm:3.6.3"],
-            ["@types/node", "npm:14.14.22"],
+            ["@types/mongodb", "npm:3.6.7"],
+            ["@types/node", "npm:14.14.28"],
             ["@types/underscore", "npm:1.10.24"],
             ["bcryptjs", "npm:2.4.3"],
             ["body-parser", "npm:1.19.0"],
@@ -4995,7 +4995,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dotenv-parse-variables", "npm:2.0.0"],
             ["express", "npm:4.17.1"],
             ["lodash", "npm:4.17.20"],
-            ["mongodb", "virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:3.6.3"],
+            ["mongodb", "virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:3.6.4"],
             ["request", "npm:2.88.2"],
             ["sanitizer", "npm:0.1.3"],
             ["socket.io", "npm:2.4.1"],
@@ -5004,7 +5004,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tslib", "npm:2.1.0"],
             ["typescript", "patch:typescript@npm%3A4.1.5#builtin<compat/typescript>::version=4.1.5&hash=cc6730"],
             ["url", "npm:0.11.0"],
-            ["ws", "virtual:4f3a76185762ac27729cba850894467de295cc2d30a2bf9078dcca9712692c79e564e90045ebe07bd4341bf4649f367a4a55e144bfbcdc53c5a236b4992a3924#npm:7.4.2"]
+            ["ws", "virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:7.4.3"]
           ],
           "linkType": "SOFT",
         }]
@@ -5017,7 +5017,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@kaetram/common", "workspace:packages/common"],
             ["@kaetram/server", "workspace:packages/server"],
             ["@types/lodash", "npm:4.14.168"],
-            ["@types/node", "npm:14.14.27"],
+            ["@types/node", "npm:14.14.28"],
             ["@types/socket.io-client", "npm:1.4.35"],
             ["lodash", "npm:4.17.20"],
             ["ts-node", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:9.1.1"],
@@ -5539,10 +5539,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/mongodb", [
-        ["npm:3.6.3", {
-          "packageLocation": "./.yarn/cache/@types-mongodb-npm-3.6.3-737d6d7e59-2ccf239c49.zip/node_modules/@types/mongodb/",
+        ["npm:3.6.7", {
+          "packageLocation": "./.yarn/cache/@types-mongodb-npm-3.6.7-2f09858b66-9a334a2528.zip/node_modules/@types/mongodb/",
           "packageDependencies": [
-            ["@types/mongodb", "npm:3.6.3"],
+            ["@types/mongodb", "npm:3.6.7"],
             ["@types/bson", "npm:4.0.2"],
             ["@types/node", "npm:14.10.1"]
           ],
@@ -5564,17 +5564,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:14.14.22", {
-          "packageLocation": "./.yarn/cache/@types-node-npm-14.14.22-fe4ed4ddc2-e46e32685b.zip/node_modules/@types/node/",
+        ["npm:14.14.28", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-14.14.28-f643c75c74-e750df4d5e.zip/node_modules/@types/node/",
           "packageDependencies": [
-            ["@types/node", "npm:14.14.22"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:14.14.27", {
-          "packageLocation": "./.yarn/cache/@types-node-npm-14.14.27-d50eb1c0f8-efc78cf6e6.zip/node_modules/@types/node/",
-          "packageDependencies": [
-            ["@types/node", "npm:14.14.27"]
+            ["@types/node", "npm:14.14.28"]
           ],
           "linkType": "HARD",
         }]
@@ -12964,17 +12957,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mongodb", [
-        ["npm:3.6.3", {
-          "packageLocation": "./.yarn/cache/mongodb-npm-3.6.3-3206384cb1-85a8064180.zip/node_modules/mongodb/",
+        ["npm:3.6.4", {
+          "packageLocation": "./.yarn/cache/mongodb-npm-3.6.4-1ff94acb62-f2331e7cdc.zip/node_modules/mongodb/",
           "packageDependencies": [
-            ["mongodb", "npm:3.6.3"]
+            ["mongodb", "npm:3.6.4"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:3.6.3", {
-          "packageLocation": "./.yarn/$$virtual/mongodb-virtual-3960296df6/0/cache/mongodb-npm-3.6.3-3206384cb1-85a8064180.zip/node_modules/mongodb/",
+        ["virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:3.6.4", {
+          "packageLocation": "./.yarn/$$virtual/mongodb-virtual-911623b511/0/cache/mongodb-npm-3.6.4-1ff94acb62-f2331e7cdc.zip/node_modules/mongodb/",
           "packageDependencies": [
-            ["mongodb", "virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:3.6.3"],
+            ["mongodb", "virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:3.6.4"],
             ["aws4", null],
             ["bl", "npm:2.2.1"],
             ["bson", "npm:1.1.5"],
@@ -18596,10 +18589,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["npm:7.4.3", {
+          "packageLocation": "./.yarn/cache/ws-npm-7.4.3-0b722707c3-493655b7c4.zip/node_modules/ws/",
+          "packageDependencies": [
+            ["ws", "npm:7.4.3"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["virtual:4f3a76185762ac27729cba850894467de295cc2d30a2bf9078dcca9712692c79e564e90045ebe07bd4341bf4649f367a4a55e144bfbcdc53c5a236b4992a3924#npm:7.4.2", {
           "packageLocation": "./.yarn/$$virtual/ws-virtual-f573dfd7ae/0/cache/ws-npm-7.4.2-4485e6ad6c-832efdf144.zip/node_modules/ws/",
           "packageDependencies": [
             ["ws", "virtual:4f3a76185762ac27729cba850894467de295cc2d30a2bf9078dcca9712692c79e564e90045ebe07bd4341bf4649f367a4a55e144bfbcdc53c5a236b4992a3924#npm:7.4.2"],
+            ["@types/bufferutil", null],
+            ["@types/utf-8-validate", null],
+            ["bufferutil", null],
+            ["utf-8-validate", null]
+          ],
+          "packagePeers": [
+            "@types/bufferutil",
+            "@types/utf-8-validate",
+            "bufferutil",
+            "utf-8-validate"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:7.4.3", {
+          "packageLocation": "./.yarn/$$virtual/ws-virtual-75d4531c41/0/cache/ws-npm-7.4.3-0b722707c3-493655b7c4.zip/node_modules/ws/",
+          "packageDependencies": [
+            ["ws", "virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:7.4.3"],
             ["@types/bufferutil", null],
             ["@types/utf-8-validate", null],
             ["bufferutil", null],
