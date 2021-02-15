@@ -1,13 +1,16 @@
 # Kaetram
 
-[![Version](https://img.shields.io/github/package-json/v/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open)
-[![MPL-2.0 License](https://img.shields.io/github/license/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open/blob/master/LICENSE)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com%2F&style=flat)](https://kaetram.com/)
-[![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open?style=flat)](https://github.com/Kaetram/Kaetram-Open/issues)
-[![Watch This Repo](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription)
-[![Star This Repo](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers)
-[![Fork This Repo](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork)
-[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat)](https://discord.gg/MmbGAaw)
+[![Version](https://img.shields.io/github/package-json/v/Kaetram/Kaetram-Open)](https://github.com/Kaetram/Kaetram-Open/releases/latest 'Version')
+[![MPL-2.0 License](https://img.shields.io/github/license/Kaetram/Kaetram-Open)][license]
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com&style=flat)](https://kaetram.com 'Website')
+[![Workflow Status](https://img.shields.io/github/workflow/status/Kaetram/Kaetram-Open/Kaetram-Open%20CI)](https://github.com/Kaetram/Kaetram-Open/actions?query=workflow%3A%22Kaetram-Open+CI%22 'Workflow Status')
+[![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open)](https://github.com/Kaetram/Kaetram-Open/issues 'Open Issues')
+
+[![Watch](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription 'Watch')
+[![Stars](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers 'Stars')
+[![Fork](https://img.shields.io/github/forks/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/fork 'Fork')
+[![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat)][discord]
+[![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UCBbxPvvBlEsBi3sWiPJA6wQ 'YouTube')
 
 Kaetram is an open-source game-engine created to aid those interested in entering the game
 development realm. The codebase is simple, clean, and intuitive. This project is intended to be used
@@ -31,40 +34,103 @@ Patreon &ndash; <https://www.patreon.com/kaetram>
 
 - [Kaetram](#kaetram)
   - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-    - [Regions](#regions)
-    - [Tilemap](#tilemap)
-    - [Map Parsing](#map-parsing)
-    - [Kaetram Hub](#kaetram-hub)
+  - [Technologies](#technologies)
   - [Get Started](#get-started)
     - [Prerequisites](#prerequisites)
       - [NOTE: Node.js](#note-nodejs)
       - [NOTE: MongoDB](#note-mongodb)
     - [Installing and Running](#installing-and-running)
     - [Configuration](#configuration)
+  - [Features](#features)
+    - [Regions](#regions)
+    - [Tilemap](#tilemap)
+    - [Map Parsing](#map-parsing)
+    - [Kaetram Hub](#kaetram-hub)
   - [Roadmap](#roadmap)
     - [TODO](#todo)
       - [Gameplay](#gameplay)
       - [Code-base Development](#code-base-development)
       - [Miscellaneous](#miscellaneous)
-  - [License](#license)
+  - [License & Commission](#license--commission)
 
-## Features
+## Technologies
 
 BQ was intended as an experiment to showcase HTML5 capabilities, since then, technology has only
-served to advance. Kaetram contains a lot of ideas and features that builds on top of its
-predecessor, a couple are:
+served to advance. Kaetram contains a lot of ideas and [features](#features) that builds on top of
+its predecessor, a couple are:
 
-- Multiplayer using [Socket.IO](https://socket.io)
-- Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles)
-- Region system (client receives only necessary data and saves it)
+- Multiplayer using [Socket.IO](https://socket.io).
+- Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles).
+- Region system (client receives only necessary data and saves it).
 - Questing and achievements system.
 - Plugin-based combat system (for bosses/special enemies).
 - Supports RESTful API.
 - Discord server integration.
 - Cross-server private messaging and interactions.
-- Yarn workspaces for monorepo packaging
-- And much more
+- Yarn v2 workspaces for monorepo packaging.
+- And much more!
+
+## Get Started
+
+### Prerequisites
+
+You must first [install Node.js](https://nodejs.org/en/download/) to run the project, and optionally
+[install MongoDB](https://www.mongodb.com/try/download/community) to store user data on the server.
+
+#### NOTE: Node.js
+
+> You need to use a Node.js version greater than or equal to `12.0.0` to have the most stable
+> experience when developing/experimenting with Kaetram. Older versions would not work with our
+> current dependencies.
+
+#### NOTE: MongoDB
+
+> MongoDB is a requirement for Kaetram to run with all the features enabled, but you can still run
+> your own limited version if you do not want to install MongoDB. To do this, see
+> [Configuration](#configuration), and set `OFFLINE_MODE=true` in the
+> [server configuration](packages/server/.env). _If you do choose to install MongoDB, a user is not
+> necessary, but you can enable authentication with the `MONGODB_AUTH` setting._
+
+You will then need to install Yarn using
+
+```console
+npm install -g yarn
+```
+
+After installing Yarn, install the dependencies by simply running
+
+```console
+yarn
+```
+
+### Installing and Running
+
+To run a live development build, run
+
+```console
+yarn dev
+```
+
+To create a production build, run
+
+```console
+yarn build
+```
+
+Then, to run each production build, use
+
+```console
+yarn start
+```
+
+### Configuration
+
+Optionally, if you would want some additional configuration, in the [server](packages/server/) and
+[client](packages/client/) packages, A file called `.env.defaults` will be used unless overridden by
+a `.env` file. Create and modify the `.env` file to fit your needs, make sure the network settings
+in the client match those in the server.
+
+## Features
 
 ### Regions
 
@@ -92,7 +158,7 @@ directory. Example command:
 yarn exportmap ./data/map.json
 ```
 
-In order to build the current game map you can run
+To build the current game map you can run
 
 ```console
 yarn map
@@ -104,67 +170,6 @@ There is also support for a hub server. This can help connect servers across one
 players to interact with their friends across them in a variety of ways (private messaging and
 guilds). Furthermore, the hub serves as a gateway for determining what server to place players in.
 If a server is full, it simply returns another server that has room for the player.
-
-## Get Started
-
-### Prerequisites
-
-You must first [install Node.js](https://nodejs.org/en/download/) to run the workspace, and
-optionally [install MongoDB](https://www.mongodb.com/download-center/community) to store user data
-on the server.
-
-#### NOTE: Node.js
-
-> You need to use a Node.js version greater than or equal to `12.0.0` in order to have the most
-> stable experience when developing/experimenting with Kaetram. Older versions would not work with
-> our current dependencies.
-
-#### NOTE: MongoDB
-
-> MongoDB is a requirement for Kaetram to run with all the features enabled, but you can still run
-> your own limited version if you do not want to install MongoDB. To do this, see
-> [Configuration](#configuration), and set `OFFLINE_MODE=true` in the
-> [server configuration](packages/server/.env). _If you do choose to install MongoDB, a user is not
-> necessary, but you can enable authentication with the `MONGODB_AUTH` setting._
-
-You will then need to install Yarn using
-
-```console
-npm install -g yarn
-```
-
-After installing Yarn, install the packages by simply running
-
-```console
-yarn
-```
-
-### Installing and Running
-
-To run a live development build, run
-
-```console
-yarn dev
-```
-
-In order to create a production build, run
-
-```console
-yarn build
-```
-
-Then, to run each production build package, use
-
-```console
-yarn start
-```
-
-### Configuration
-
-Optionally, if you would want some additional configuration, in the [server](packages/server/) and
-[client](packages/client/) packages, A file called `.env.defaults` will be used unless overridden by
-a `.env` file. Create and modify the `.env` file to fit your needs, make sure the network settings
-in the client match those in the server.
 
 ## Roadmap
 
@@ -205,7 +210,11 @@ features (and known issues).
 
 ## License & Commission
 
-For all inquiries about purchasing a different license or commission work, please contact @Vanity on Discord.
+For all inquiries about purchasing a different license or commission work, please contact
+**@Vanity** on [Discord][discord].
 
-This project is distributed under the MPL-2.0 License. See [`LICENSE`](LICENSE) for more
-information.
+This project is distributed under the Mozilla Public License Version 2.0. See [`LICENSE`][license]
+for more information.
+
+[license]: LICENSE 'Project License'
+[discord]: https://discord.gg/MmbGAaw 'Join Discord'
