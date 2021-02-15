@@ -1,23 +1,24 @@
 import _ from 'lodash';
 
-import Character from '../entity/character/character';
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
-import Equipment from '../entity/character/player/equipment/equipment';
-import Weapon from '../entity/character/player/equipment/weapon';
 import Player from '../entity/character/player/player';
-import Entity from '../entity/entity';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
 import Projectile from '../entity/objects/projectile';
-import Sprite from '../entity/sprite';
-import Game from '../game';
-import Map from '../map/map';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Grids from '../renderer/grids';
-import Renderer from '../renderer/renderer';
-import Modules from '../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import SpritesController from './sprites';
+
+import type Character from '../entity/character/character';
+import type Equipment from '../entity/character/player/equipment/equipment';
+import type Weapon from '../entity/character/player/equipment/weapon';
+import type Entity from '../entity/entity';
+import type Sprite from '../entity/sprite';
+import type Game from '../game';
+import type Map from '../map/map';
+import type Renderer from '../renderer/renderer';
 
 interface EntitiesCollection {
     [id: string]: Entity;
@@ -33,45 +34,36 @@ export interface Movable {
 export type AnyEntity = Entity & Player & Mob & Projectile & Weapon & Equipment & Movable;
 
 export default class EntitiesController {
-    game: Game;
-    renderer: Renderer;
-    grids: Grids;
-    sprites: SpritesController;
-    entities: EntitiesCollection;
-    decrepit: Entity[];
-    map: Map;
+    private renderer = this.game.renderer as Renderer;
 
-    constructor(game: Game) {
-        this.game = game;
-        this.renderer = game.renderer;
+    public grids!: Grids;
+    public sprites!: SpritesController;
 
-        this.grids = null;
-        this.sprites = null;
+    public entities: EntitiesCollection = {};
+    public decrepit: Entity[] = [];
 
-        this.entities = {};
-        this.decrepit = [];
-    }
+    public constructor(private game: Game) {}
 
-    load(): void {
+    public load(): void {
         this.game.app.sendStatus('Loading sprites');
 
         if (!this.sprites) {
-            this.sprites = new SpritesController(this.game.renderer);
+            this.sprites = new SpritesController(this.renderer);
 
-            this.game.input.loadCursors();
+            this.game.input?.loadCursors();
         }
 
         this.game.app.sendStatus('Loading grids');
 
-        this.grids ||= new Grids(this.game.map);
+        this.grids ||= new Grids(this.game.map as Map);
     }
 
-    update(): void {
-        if (this.sprites) this.sprites.updateSprites();
+    public update(): void {
+        this.sprites?.updateSprites();
     }
 
-    create(info: AnyEntity): void {
-        let entity: Entity;
+    public create(info: AnyEntity): void {
+        let entity: Chest | NPC | null = null;
 
         if (this.isPlayer(info.id)) return;
 
@@ -164,7 +156,7 @@ export default class EntitiesController {
                      */
 
                     if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
-                        this.game.socket.send(Packets.Projectile, [
+                        this.game.socket?.send(Packets.Projectile, [
                             Packets.ProjectileOpcode.Impact,
                             info.id,
                             target.id
@@ -172,7 +164,7 @@ export default class EntitiesController {
 
                     if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 
-                    this.game.info.create(
+                    this.game.info?.create(
                         Modules.Hits.Damage,
                         [info.damage, this.isPlayer(target.id)],
                         target.x,
@@ -206,12 +198,12 @@ export default class EntitiesController {
                 player.pvpKills = info.pvpKills;
                 player.pvpDeaths = info.pvpDeaths;
                 player.attackRange = info.attackRange;
-                player.orientation = info.orientation ? info.orientation : 0;
+                player.orientation = info.orientation || 0;
                 player.type = info.type;
                 player.movementSpeed = info.movementSpeed;
 
-                const hitPointsData = info.hitPoints,
-                    manaData = info.mana,
+                const hitPointsData = info.hitPoints as number[],
+                    manaData = info.mana as number[],
                     equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
 
                 player.setHitPoints(hitPointsData[0]);
@@ -272,34 +264,32 @@ export default class EntitiesController {
          */
     }
 
-    isPlayer(id: string): boolean {
-        return this.game.player.id === id;
+    private isPlayer(id: string): boolean {
+        const { player } = this.game;
+
+        return player ? player.id === id : false;
     }
 
-    get(id: string): Entity {
-        if (id in this.entities) return this.entities[id];
-
-        return null;
+    public get(id: string): Entity {
+        return this.entities[id];
     }
 
-    exists(id: number): boolean {
-        return id in this.entities;
-    }
-
-    removeEntity(entity: Entity): void {
+    public removeEntity(entity: Entity): void {
         this.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
         this.grids.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
 
         delete this.entities[entity.id];
     }
 
-    clean(): void {
+    public clean(): void {
         // ids = ids[0];
 
         if (this.decrepit.length === 0) return;
 
         _.each(this.decrepit, (entity: Entity) => {
-            if (entity.id === this.game.player.id) return;
+            const { player } = this.game;
+
+            if (player ? entity.id === player.id : false) return;
 
             this.removeEntity(entity);
         });
@@ -307,7 +297,7 @@ export default class EntitiesController {
         this.grids.resetPathingGrid();
     }
 
-    clearPlayers(exception: Player): void {
+    public clearPlayers(exception: Player): void {
         _.each(this.entities, (entity) => {
             if (entity.id !== exception.id && entity.type === 'player') this.removeEntity(entity);
         });
@@ -315,7 +305,7 @@ export default class EntitiesController {
         this.grids.resetPathingGrid();
     }
 
-    addEntity(entity: Entity): void {
+    public addEntity(entity: Entity): void {
         if (this.entities[entity.id]) return;
 
         this.entities[entity.id] = entity;
@@ -325,7 +315,7 @@ export default class EntitiesController {
             entity.fadeIn(this.game.time);
     }
 
-    removeItem(item: Entity): void {
+    public removeItem(item: Entity): void {
         if (!item) return;
 
         this.grids.removeFromItemGrid(item, item.gridX, item.gridY);
@@ -334,7 +324,7 @@ export default class EntitiesController {
         delete this.entities[item.id];
     }
 
-    registerPosition(entity: Entity): void {
+    public registerPosition(entity: Entity): void {
         if (!entity) return;
 
         // if (
@@ -352,7 +342,7 @@ export default class EntitiesController {
         this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
     }
 
-    registerDuality(entity: Player): void {
+    public registerDuality(entity: Player): void {
         if (!entity) return;
 
         this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
@@ -365,40 +355,21 @@ export default class EntitiesController {
         // }
     }
 
-    unregisterPosition(entity: Entity): void {
+    public unregisterPosition(entity: Entity): void {
         if (!entity) return;
 
         this.grids.removeEntity(entity);
     }
 
-    getSprite(name: string): Sprite {
+    public getSprite(name: string): Sprite {
         return this.sprites.sprites[name];
     }
 
-    getAll(): EntitiesCollection {
+    public getAll(): EntitiesCollection {
         return this.entities;
     }
 
-    forEachEntity(callback: (entity: Entity) => void): void {
-        _.each(this.entities, (entity) => {
-            callback(entity);
-        });
-    }
-
-    forEachEntityAround(
-        x: number,
-        y: number,
-        radius: number,
-        callback: (entity: Entity) => void
-    ): void {
-        for (let i = x - radius, max_i = x + radius; i <= max_i; i++) {
-            for (let j = y - radius, max_j = y + radius; j <= max_j; j++) {
-                if (this.map.isOutOfBounds(i, j)) continue;
-
-                _.each(this.grids.renderingGrid[j][i], (entity: Entity) => {
-                    callback(entity);
-                });
-            }
-        }
+    public forEachEntity(callback: (entity: Entity) => void): void {
+        _.each(this.entities, (entity) => callback(entity));
     }
 }

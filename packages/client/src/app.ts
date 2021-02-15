@@ -3,124 +3,89 @@ import _ from 'lodash';
 
 import install from '../lib/pwa';
 import Game from './game';
-import * as Detect from './utils/detect';
-import Modules from './utils/modules';
+import { isMobile, isTablet } from './utils/detect';
+import * as Modules from '@kaetram/common/src/modules';
 
 export interface Config {
+    /** Server host */
     ip: string;
+    /** Server port */
     port: number;
+    /** Game version on the server */
     version: string;
+    /** Use HTTPS */
     ssl: boolean;
     debug: boolean;
     worldSwitch: boolean;
 }
 
 export default class App {
-    config: Config;
-    body: JQuery;
-    parchment: JQuery;
-    container: JQuery;
-    window: JQuery<Window & typeof globalThis>;
-    canvas: JQuery;
-    border: JQuery;
-    intro: JQuery;
-    loginButton: JQuery;
-    createButton: JQuery;
-    registerButton: JQuery;
-    helpButton: JQuery;
-    cancelButton: JQuery;
-    yes: JQuery;
-    no: JQuery;
-    loading: JQuery;
-    respawn: JQuery;
-    rememberMe: JQuery;
-    guest: JQuery;
-    about: JQuery;
-    credits: JQuery;
-    discord: JQuery;
-    git: JQuery;
-    footer: JQuery;
-    loginFields: JQuery<HTMLInputElement>[];
-    registerFields: JQuery<HTMLInputElement>[];
-    game: Game;
-    parchmentAnimating: boolean;
-    loggingIn: boolean;
-    statusMessage: string;
-    orientation: string;
+    // Do not refactor env variables assignment
+    // process.env.VARIABLE is replaced by webpack during build process
+    public config: Config = {
+        ip: process.env.IP as string,
+        port: parseInt(process.env.PORT as string),
+        version: process.env.VERSION as string,
+        ssl: !!process.env.SSL,
+        debug: !!process.env.DEBUG,
+        worldSwitch: !!process.env.WORLD_SWITCH
+    };
 
-    constructor() {
-        // Do not refactor env variables assignment
-        // process.env.VARIABLE is replaced by webpack during build process
-        this.config = {
-            ip: process.env.IP,
-            port: parseInt(process.env.PORT),
-            version: process.env.VERSION,
-            ssl: !!process.env.SSL,
-            debug: !!process.env.DEBUG,
-            worldSwitch: !!process.env.WORLD_SWITCH
-        };
+    public body = $('body');
 
-        this.body = $('body');
-        this.parchment = $('#parchment');
-        this.container = $('#container');
-        this.window = $(window);
-        this.canvas = $('#canvas');
-        this.border = $('#border');
+    private parchment = $('#parchment');
+    private window = $(window);
 
-        this.intro = $('#intro');
+    public canvas = $('#canvas');
+    public border = $('#border');
 
-        this.loginButton = $('#login');
-        this.createButton = $('#play');
-        this.registerButton = $('#newCharacter');
-        this.helpButton = $('#helpButton');
-        this.cancelButton = $('#cancelButton');
-        this.yes = $('#yes');
-        this.no = $('#no');
-        this.loading = $('.loader');
+    private loginButton = $('#login');
+    private createButton = $('#play');
+    private registerButton = $('#newCharacter');
+    private helpButton = $('#helpButton');
+    private cancelButton = $('#cancelButton');
+    private loading = $('.loader');
 
-        this.respawn = $('#respawn');
+    private respawn = $('#respawn');
 
-        this.rememberMe = $('#rememberMe');
-        this.guest = $('#guest');
+    private rememberMe = $('#rememberMe');
+    private guest = $('#guest');
 
-        this.about = $('#toggle-about');
-        this.credits = $('#toggle-credits');
-        this.discord = $('#toggle-discord');
-        this.git = $('#toggle-git');
+    private about = $('#toggle-about');
+    private credits = $('#toggle-credits');
+    private discord = $('#toggle-discord');
+    private git = $('#toggle-git');
 
-        this.footer = $('footer');
+    private footer = $('footer');
 
-        this.loginFields = [];
-        this.registerFields = [];
+    public loginFields: JQuery<HTMLInputElement>[] = [];
+    public registerFields: JQuery<HTMLInputElement>[] = [];
 
-        this.game = null;
-        this.parchmentAnimating = false;
-        this.loggingIn = false;
+    public game!: Game;
 
+    private parchmentAnimating = false;
+    private loggingIn = false;
+
+    public statusMessage!: string | null;
+    // orientation: string;
+
+    public constructor() {
         this.sendStatus('Initializing the main app');
 
-        this.updateOrientation();
+        // this.updateOrientation();
         this.load();
     }
 
-    load(): void {
-        this.loginButton.click(() => {
-            this.login();
-        });
+    private load(): void {
+        this.loginButton.on('click', () => this.login());
 
-        this.createButton.click(() => {
-            this.login();
-        });
+        this.createButton.on('click', () => this.login());
 
-        this.registerButton.click(() => {
-            this.openScroll('loadCharacter', 'createCharacter');
-        });
+        this.registerButton.on('click', () => this.openScroll('loadCharacter', 'createCharacter'));
 
-        this.cancelButton.click(() => {
-            this.openScroll('createCharacter', 'loadCharacter');
-        });
+        this.cancelButton.on('click', () => this.openScroll('createCharacter', 'loadCharacter'));
 
-        this.parchment.click(() => {
+        this.parchment.on('click', () => {
             if (
                 this.parchment.hasClass('about') ||
                 this.parchment.hasClass('credits') ||
@@ -131,24 +96,16 @@ export default class App {
             }
         });
 
-        this.about.click(() => {
-            this.displayScroll('about');
-        });
+        this.about.on('click', () => this.displayScroll('about'));
 
-        this.credits.click(() => {
-            this.displayScroll('credits');
-        });
+        this.credits.on('click', () => this.displayScroll('credits'));
 
-        this.discord.click(() => {
-            window.open('https://discord.gg/MmbGAaw');
-        });
+        this.discord.on('click', () => window.open('https://discord.gg/MmbGAaw'));
 
-        this.git.click(() => {
-            this.displayScroll('git');
-        });
+        this.git.on('click', () => this.displayScroll('git'));
 
-        this.rememberMe.click(() => {
-            if (!this.game || !this.game.storage) return;
+        this.rememberMe.on('click', () => {
+            if (!this.game?.storage) return;
 
             const active = this.rememberMe.hasClass('active');
 
@@ -157,23 +114,17 @@ export default class App {
             this.game.storage.toggleRemember(!active);
         });
 
-        this.guest.click(() => {
-            if (!this.game) return;
-
-            this.guest.toggleClass('active');
+        this.guest.on('click', () => {
+            if (this.game) this.guest.toggleClass('active');
         });
 
-        this.respawn.click(() => {
-            if (!this.game || !this.game.player || !this.game.player.dead) return;
-
-            this.game.respawn();
+        this.respawn.on('click', () => {
+            if (this.game?.player?.dead) this.game.respawn();
         });
 
         window.scrollTo(0, 1);
 
-        this.window.resize(() => {
-            if (this.game) this.game.resize();
-        });
+        this.window.on('resize', () => this.game.resize());
 
         // Default Server ID
         if (!window.localStorage.getItem('world'))
@@ -181,10 +132,8 @@ export default class App {
 
         if (this.config.worldSwitch)
             $.get('https://hub.kaetram.com/all', (servers) => {
-                let serverIndex;
-                for (let i = 0; i < servers.length; i++) {
-                    const server = servers[i];
-
+                let serverIndex = 0;
+                for (const [i, server] of servers.entries()) {
                     const row = $(document.createElement('tr'));
                     row.append($(document.createElement('td')).text(server.serverId));
                     row.append(
@@ -193,14 +142,12 @@ export default class App {
                         )
                     );
                     $('#worlds-list').append(row);
-                    row.click(() => {
+                    row.on('click', () => {
                         // TODO: This is when a server is clicked with the local `server` having the world data.
                         // log.info(server);
                     });
 
-                    if (server.serverId === window.localStorage.getItem('world')) {
-                        serverIndex = i;
-                    }
+                    if (server.serverId === window.localStorage.getItem('world')) serverIndex = i;
                 }
                 const currentWorld = servers[serverIndex];
 
@@ -210,21 +157,21 @@ export default class App {
                     `${currentWorld.playerCount}/${currentWorld.maxPlayers}`
                 );
 
-                $('#worlds-switch').click(() => {
-                    $('#worlds-popup').toggle();
-                });
+                $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
+            }).catch(() => {
+                //
             });
 
-        $(document).bind('keydown', (e) => {
+        $(document).on('keydown', (e) => {
             if (e.which === Modules.Keys.Enter) return false;
         });
 
-        $(document).keydown((e) => {
+        $(document).on('keydown', (e) => {
             const key = e.which || e.keyCode || 0;
 
             if (!this.game) return;
 
-            this.body.focus();
+            this.body.trigger('focus');
 
             if (key === Modules.Keys.Enter && !this.game.started) {
                 this.login();
@@ -234,12 +181,12 @@ export default class App {
             if (this.game.started) this.game.handleInput(Modules.InputType.Key, key);
         });
 
-        $(document).keyup((e) => {
+        $(document).on('keyup', (e) => {
             const key = e.which;
 
             if (!this.game || !this.game.started) return;
 
-            this.game.input.keyUp(key);
+            this.game?.input?.keyUp(key);
         });
 
         $(document).on('mousemove', (event: JQuery.MouseMoveEvent<Document>) => {
@@ -256,34 +203,26 @@ export default class App {
         });
 
         $('body').on('contextmenu', '#canvas', (event) => {
-            if (this.game && this.game.input)
-                this.game.input.handle(Modules.InputType.RightClick, event);
+            this.game?.input?.handle(Modules.InputType.RightClick, event);
 
             return false;
         });
 
-        this.canvas.click((event) => {
+        this.canvas.on('click', (event) => {
             if (!this.game || !this.game.started || event.button !== 0) return;
 
             window.scrollTo(0, 1);
 
-            this.game.input.handle(Modules.InputType.LeftClick, event);
+            this.game?.input?.handle(Modules.InputType.LeftClick, event);
         });
 
-        const { updateRange } = this;
-        $('input[type="range"]').on('input', function () {
-            updateRange($(this as HTMLInputElement));
-        });
+        $('input[type="range"]').on('input', (_e, input: HTMLInputElement) =>
+            this.updateRange($(input))
+        );
     }
 
-    login(): void {
-        if (
-            this.loggingIn ||
-            !this.game ||
-            !this.game.loaded ||
-            this.statusMessage ||
-            !this.verifyForm()
-        )
+    private login(): void {
+        if (this.loggingIn || !this.game?.loaded || this.statusMessage || !this.verifyForm())
             return;
 
         this.toggleLogin(true);
@@ -292,7 +231,7 @@ export default class App {
         install();
     }
 
-    fadeMenu(): void {
+    public fadeMenu(): void {
         this.updateLoader(null);
 
         window.setTimeout(() => {
@@ -305,7 +244,7 @@ export default class App {
         }, 500);
     }
 
-    showMenu(): void {
+    public showMenu(): void {
         this.body.removeClass('game');
         this.body.removeClass('started');
         this.body.addClass('intro');
@@ -315,12 +254,12 @@ export default class App {
 
     // showDeath(): void {}
 
-    openScroll(origin: string, destination: string): void {
+    public openScroll(origin: string | undefined, destination: string): void {
         if (!destination || this.loggingIn) return;
 
         this.cleanErrors();
 
-        if (!Detect.isMobile()) {
+        if (!isMobile()) {
             if (this.parchmentAnimating) return;
 
             this.parchmentAnimating = true;
@@ -332,12 +271,12 @@ export default class App {
                     this.parchment.toggleClass('animate').addClass(destination);
                     this.parchmentAnimating = false;
                 },
-                Detect.isTablet() ? 0 : 1000
+                isTablet() ? 0 : 1000
             );
         } else this.parchment.removeClass(origin).addClass(destination);
     }
 
-    displayScroll(content: string): void {
+    private displayScroll(content: string): void {
         const state = this.parchment.attr('class');
 
         if (this.game.started) {
@@ -352,10 +291,10 @@ export default class App {
             this.openScroll(state, state === content ? 'loadCharacter' : content);
     }
 
-    verifyForm(): boolean {
+    private verifyForm(): boolean {
         const activeForm = this.getActiveForm();
 
-        if (activeForm === 'null') return;
+        if (activeForm === 'null') return false;
 
         switch (activeForm) {
             case 'loadCharacter': {
@@ -420,13 +359,13 @@ export default class App {
         return true;
     }
 
-    verifyEmail(email: string): boolean {
-        return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+    private verifyEmail(email: string): boolean {
+        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
             email
         );
     }
 
-    sendStatus(message: string): void {
+    public sendStatus(message: string | null): void {
         this.cleanErrors();
 
         this.statusMessage = message;
@@ -443,7 +382,7 @@ export default class App {
         );
     }
 
-    sendError(field: JQuery, error: string): void {
+    public sendError(field: JQuery | null, error: string): void {
         this.cleanErrors();
 
         $('<span></span>', {
@@ -453,17 +392,17 @@ export default class App {
 
         if (!field) return;
 
-        field.addClass('field-error').select();
-        field.bind('keypress', function (event) {
+        field.addClass('field-error').trigger('select');
+        field.on('keypress', function (event) {
             field.removeClass('field-error');
 
             $('.validation-error').remove();
 
-            $(this).unbind(event);
+            $(this).off(event);
         });
     }
 
-    cleanErrors(): void {
+    public cleanErrors(): void {
         const activeForm = this.getActiveForm();
         const fields = activeForm === 'loadCharacter' ? this.loginFields : this.registerFields;
 
@@ -473,53 +412,51 @@ export default class App {
         $('.status').remove();
     }
 
-    getActiveForm(): string {
+    private getActiveForm(): string {
         return this.parchment[0].className;
     }
 
-    isRegistering(): boolean {
+    public isRegistering(): boolean {
         return this.getActiveForm() === 'createCharacter';
     }
 
-    isGuest(): boolean {
+    public isGuest(): boolean {
         return this.guest.hasClass('active');
     }
 
-    setGame(game: Game): void {
+    public setGame(game: Game): void {
         this.game = game;
     }
 
-    hasWorker(): boolean {
+    public hasWorker(): boolean {
         return !!window.Worker;
     }
 
-    getScaleFactor(): number {
+    public getScaleFactor(): number {
         return 3;
     }
 
-    getUIScale(): number {
+    public getUIScale(): number {
         const width = window.innerWidth;
         const height = window.innerHeight;
 
         return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
     }
 
-    revertLoader(): void {
+    private revertLoader(): void {
         this.updateLoader('Connecting');
     }
 
-    updateLoader(message: string): void {
-        if (!message) {
-            this.loading.html('');
-            return;
-        }
+    public updateLoader(message: string | null): void {
+        if (message) {
+            const dots =
+                '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
 
-        const dots =
-            '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
-        this.loading.html(message + dots);
+            this.loading.html(message + dots);
+        } else this.loading.html('');
     }
 
-    toggleLogin(toggle: boolean): void {
+    public toggleLogin(toggle: boolean): void {
         this.revertLoader();
 
         this.toggleTyping(toggle);
@@ -539,34 +476,28 @@ export default class App {
         }
     }
 
-    toggleTyping(state: boolean): void {
-        if (this.loginFields)
-            _.each(this.loginFields, (field) => {
-                field.prop('readonly', state);
-            });
+    private toggleTyping(state: boolean): void {
+        if (this.loginFields) _.each(this.loginFields, (field) => field.prop('readonly', state));
 
         if (this.registerFields)
-            _.each(this.registerFields, (field) => {
-                field.prop('readOnly', state);
-            });
+            _.each(this.registerFields, (field) => field.prop('readOnly', state));
     }
 
-    updateRange(obj: JQuery<HTMLInputElement>): void {
+    public updateRange(obj: JQuery<HTMLInputElement>): void {
+        const min = parseInt(obj.attr('min') as string);
         const val =
-            (parseInt(obj.val() as string) - parseInt(obj.attr('min'))) /
-            (parseInt(obj.attr('max')) - parseInt(obj.attr('min')));
+            (parseInt(obj.val() as string) - min) / (parseInt(obj.attr('max') as string) - min);
 
-        obj.css(
-            'background-image',
-            `-webkit-gradient(linear, left top, right top, color-stop(${val}, #4d4d4d), color-stop(${val}, #C5C5C5))`
-        );
+        obj.css({
+            backgroundImage: `-webkit-gradient(linear, left top, right top, color-stop(${val}, #4d4d4d), color-stop(${val}, #c5c5c5))`
+        });
     }
 
-    updateOrientation(): void {
-        this.orientation = this.getOrientation();
-    }
+    // updateOrientation(): void {
+    //     this.orientation = this.getOrientation();
+    // }
 
-    getOrientation(): 'portrait' | 'landscape' {
-        return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-    }
+    // getOrientation(): 'portrait' | 'landscape' {
+    //     return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+    // }
 }

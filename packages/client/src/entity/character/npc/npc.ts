@@ -1,6 +1,6 @@
 import Character from '../character';
 
-export default class NCP extends Character {
+export default class NPC extends Character {
     constructor(id: string, kind: string) {
         super(id, kind);
 
