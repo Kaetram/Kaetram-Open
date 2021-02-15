@@ -17,7 +17,7 @@ export default class Weapon extends Equipment {
 
         this.level = -1;
         this.damage = -1;
-        this.ranged = string && string.includes('bow');
+        this.ranged = string?.includes('bow');
     }
 
     setDamage(damage: number): void {

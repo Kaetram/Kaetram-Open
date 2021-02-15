@@ -1,12 +1,13 @@
-/* eslint-disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 /**
  * A* (A-Star) algorithm for a path finder
  * @author  Andrea Giammarchi
  * @license Mit Style License
  */
 
-function diagonalSuccessors($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i) {
+function diagonalSuccessors($N, $S, $E, $W, N, S, E, W, grid, _rows, _cols, result, i) {
     if ($N) {
         $E && !grid[N][E] && (result[i++] = { x: E, y: N });
         $W && !grid[N][W] && (result[i++] = { x: W, y: N });
@@ -34,7 +35,8 @@ function diagonalSuccessorsFree($N, $S, $E, $W, N, S, E, W, grid, rows, cols, re
     return result;
 }
 
-function nothingToDo($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function nothingToDo(_$N, _$S, _$E, _$W, _N, _S, _E, _W, _grid, _rows, _cols, result, _i) {
     return result;
 }
 
@@ -61,17 +63,19 @@ function diagonal(start, end, f1, f2) {
     return f2(f1(start.x - end.x), f1(start.y - end.y));
 }
 
-function euclidean(start, end, f1, f2) {
+function euclidean(start, end, _f1, f2) {
     const x = start.x - end.x,
         y = start.y - end.y;
     return f2(x * x + y * y);
 }
 
-function manhattan(start, end, f1, f2) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function manhattan(start, end, f1, _f2) {
     return f1(start.x - end.x) + f1(start.y - end.y);
 }
 
-function AStar(grid, start, end, f) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function AStar(grid: number[][], start: number[], end: number[], f: string): number[][] {
     const cols = grid[0].length;
     const rows = grid.length;
     const limit = cols * rows;
@@ -125,12 +129,11 @@ function AStar(grid, start, end, f) {
 
         max = limit;
         min = 0;
-        for (i = 0; i < length; ++i) {
+        for (i = 0; i < length; ++i)
             if ((f = open[i].f) < max) {
                 max = f;
                 min = i;
             }
-        }
 
         current = open.splice(min, 1)[0];
         if (current.v !== end.v) {
@@ -150,9 +153,8 @@ function AStar(grid, start, end, f) {
             }
         } else {
             i = length = 0;
-            do {
-                result[i++] = [current.x, current.y];
-            } while ((current = current.p));
+            do result[i++] = [current.x, current.y];
+            while ((current = current.p));
             result.reverse();
         }
     } while (length);

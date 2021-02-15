@@ -1,6 +1,6 @@
 import EntitiesController from '../controllers/entities';
 import Game from '../game';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Player from './character/player/player';
 import Entity from './entity';
 
@@ -29,9 +29,7 @@ export default class EntityHandler {
                 return this.game.findPath(this.entity, x, y, ignores);
             });
 
-            this.entity.onBeforeStep(() => {
-                this.entities.unregisterPosition(this.entity);
-            });
+            this.entity.onBeforeStep(() => this.entities.unregisterPosition(this.entity));
 
             this.entity.onStep(() => {
                 this.entities.registerDuality(this.entity);
