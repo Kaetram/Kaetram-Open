@@ -1,41 +1,31 @@
 import $ from 'jquery';
 
-import Game from '../game';
-import Packets from '../network/packets';
-import Modules from '../utils/modules';
+import Packets from '@kaetram/common/src/packets';
+import * as Modules from '@kaetram/common/src/modules';
+
+import type Game from '../game';
 
 export default class ChatController {
-    game: Game;
-    chat: JQuery;
-    log: JQuery;
-    input: JQuery;
-    button: JQuery;
-    visible: boolean;
-    fadingDuration: number;
-    fadingTimeout: number;
+    private chat = $('#chat');
+    private log = $('#chatLog');
+    public input = $('#chatInput');
+    private button = $('#chatButton');
 
-    constructor(game: Game) {
-        this.game = game;
+    private visible = false;
 
-        this.chat = $('#chat');
-        this.log = $('#chatLog');
-        this.input = $('#chatInput');
-        this.button = $('#chatButton');
+    private fadingDuration = 5000 as const;
+    private fadingTimeout!: number | null;
 
-        this.visible = false;
-
-        this.fadingDuration = 5000;
-        this.fadingTimeout = null;
-
-        this.button.click(() => {
-            this.button.blur();
+    public constructor(private game: Game) {
+        this.button.on('click', () => {
+            this.button.trigger('blur');
 
             if (this.input.is(':visible')) this.hideInput();
             else this.toggle();
         });
     }
 
-    add(source: string, text: string, colour?: string): void {
+    public add(source: string, text: string, colour?: string): void {
         const element = $(`<p>${source} » ${text}</p>`);
 
         this.showChat();
@@ -44,13 +34,13 @@ export default class ChatController {
 
         this.hideChat();
 
-        element.css('color', colour ? colour : 'white');
+        element.css('color', colour || 'white');
 
         this.log.append(element);
         this.log.scrollTop(99999);
     }
 
-    key(data: number): void {
+    public key(data: Modules.Keys): void {
         switch (data) {
             case Modules.Keys.Esc:
                 this.toggle();
@@ -65,12 +55,12 @@ export default class ChatController {
         }
     }
 
-    send(): void {
-        this.game.socket.send(Packets.Chat, [this.input.val()]);
+    private send(): void {
+        this.game.socket?.send(Packets.Chat, [this.input.val()]);
         this.toggle();
     }
 
-    toggle(): void {
+    public toggle(): void {
         this.clean();
 
         if (this.visible && !this.isActive()) this.showInput();
@@ -83,23 +73,23 @@ export default class ChatController {
         }
     }
 
-    showChat(): void {
+    private showChat(): void {
         this.chat.fadeIn('fast');
 
         this.visible = true;
     }
 
-    showInput(): void {
+    private showInput(): void {
         this.button.addClass('active');
 
         this.input.fadeIn('fast');
         this.input.val('');
-        this.input.focus();
+        this.input.trigger('focus');
 
         this.clean();
     }
 
-    hideChat(): void {
+    private hideChat(): void {
         if (this.fadingTimeout) {
             clearTimeout(this.fadingTimeout);
             this.fadingTimeout = null;
@@ -114,26 +104,26 @@ export default class ChatController {
         }, this.fadingDuration);
     }
 
-    hideInput(): void {
+    public hideInput(): void {
         this.button.removeClass('active');
 
         this.input.val('');
         this.input.fadeOut('fast');
-        this.input.blur();
+        this.input.trigger('blur');
 
         this.hideChat();
     }
 
-    clear(): void {
-        if (this.button) this.button.off('click');
+    public clear(): void {
+        this.button.off('click');
     }
 
-    clean(): void {
-        clearTimeout(this.fadingTimeout);
+    private clean(): void {
+        clearTimeout(this.fadingTimeout as number);
         this.fadingTimeout = null;
     }
 
-    isActive(): boolean {
+    public isActive(): boolean {
         return this.input.is(':focus');
     }
 }

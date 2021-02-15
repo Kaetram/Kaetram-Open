@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import App from '../app';
-import Packets from './packets';
+import Packets from '@kaetram/common/src/packets';
 
 /** @todo Change once handlers are typed */
 type Callback = (...data: never[]) => void;
@@ -115,9 +115,7 @@ export default class Messages {
     }
 
     handleBulkData(data: never[]): void {
-        _.each(data, (message) => {
-            this.handleData(message);
-        });
+        _.each(data, (message) => this.handleData(message));
     }
 
     handleUTF8(message: string): void {
