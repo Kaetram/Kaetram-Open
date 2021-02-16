@@ -30,7 +30,7 @@ export default class OverlayController {
         this.health = this.attackInfo.find('.health');
     }
 
-    update(entity: Entity): void {
+    update(entity: Entity | undefined): void {
         if (!this.validEntity(entity)) {
             this.hovering = null;
 
@@ -50,13 +50,17 @@ export default class OverlayController {
                 display: 'block',
                 /* stylelint-disable */
                 width: `${
-                    Math.ceil((entity.hitPoints / (entity as Character).maxHitPoints) * 100) - 10
+                    Math.ceil(
+                        ((entity?.hitPoints as number) / (entity as Character).maxHitPoints) * 100
+                    ) - 10
                 }%`
             });
 
-            this.details.html(`${entity.hitPoints} / ${(entity as Character).maxHitPoints}`);
+            this.details.html(
+                `${entity?.hitPoints as number} / ${(entity as Character).maxHitPoints}`
+            );
         } else {
-            this.health.css('display', 'none');
+            this.health.hide();
             this.details.html('');
         }
 
@@ -67,7 +71,7 @@ export default class OverlayController {
                 hovering.id === entityId &&
                 hovering.type !== 'npc' &&
                 hovering.type !== 'item'
-            ) {
+            )
                 if (hitPoints < 1) this.hide();
                 else {
                     this.health.css(
@@ -76,7 +80,6 @@ export default class OverlayController {
                     );
                     this.details.html(`${hitPoints} / ${hovering.maxHitPoints}`);
                 }
-            }
         });
     }
 
