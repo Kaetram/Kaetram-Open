@@ -1,26 +1,19 @@
 /* global module */
 
-import WebSocket from './websocket';
-import { SocketIO } from 'socket.io';
+import { Socket } from 'socket.io';
 import log from '../util/log';
 
 class Connection {
     public id: string;
-    public socket: SocketIO;
+    public socket: Socket;
 
-    private server: WebSocket;
-    private rawWebSocket: boolean;
+    private listenCallback: Function;
+    private closeCallback: Function;
 
-    listenCallback: Function;
-    closeCallback: Function;
-
-    constructor(id: string, socket: SocketIO, server: WebSocket, rawWebSocket?: boolean) {
+    constructor(id: string, socket: Socket) {
         this.id = id;
         this.socket = socket;
-        this.server = server;
-
-        this.rawWebSocket = rawWebSocket;
-
+        
         this.socket.on('message', (message: any) => {
             try {
                 if (this.listenCallback) this.listenCallback(JSON.parse(message));
@@ -28,14 +21,6 @@ class Connection {
                 log.error('Could not parse message: ' + message);
                 console.log(e);
             }
-        });
-
-        this.socket.on(this.rawWebSocket ? 'close' : 'disconnect', () => {
-            log.info('Closed socket: ' + this.socket.conn.remoteAddress);
-
-            if (this.closeCallback) this.closeCallback();
-
-            this.server.removeConnection(this.id);
         });
     }
 
@@ -55,11 +40,10 @@ class Connection {
         this.socket.send(data);
     }
 
-    close(reason: any) {
+    close(reason?: any) {
         if (reason) log.info('[Connection] Closing - ' + reason);
 
-        if (this.rawWebSocket) this.socket.close();
-        else this.socket.conn.close();
+        this.socket.conn.close();
     }
 }
 
