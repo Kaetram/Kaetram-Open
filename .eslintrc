@@ -5,13 +5,14 @@
         "browser": true,
         "node": true
     },
-    "plugins": ["prettier", "@typescript-eslint"],
+    "plugins": ["prettier", "@typescript-eslint", "unicorn"],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:unicorn/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -19,8 +20,17 @@
         "sourceType": "module"
     },
     "rules": {
+        "curly": ["warn", "multi"],
+
         "no-fallthrough": "off",
         "prettier/prettier": "warn",
+
+        "unicorn/no-null": "off",
+        "unicorn/prefer-number-properties": "off",
+        "unicorn/prevent-abbreviations": "off",
+        "unicorn/consistent-function-scoping": "off",
+        "unicorn/no-nested-ternary": "off",
+
         "indent": [
             "error",
             4,

@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-import Modules from '../../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import Transition from '../../utils/transition';
 import Animation from '../animation';
-import Weapon from './player/equipment/weapon';
 import Entity from '../entity';
+import Weapon from './player/equipment/weapon';
 
 export default class Character extends Entity {
     dead: boolean;
@@ -65,8 +65,8 @@ export default class Character extends Entity {
     type: string;
     forced: boolean;
 
-    constructor(id: string, type: string) {
-        super(id, type);
+    constructor(id: string, kind: string) {
+        super(id, kind);
 
         this.nextGridX = -1;
         this.nextGridY = -1;
@@ -163,12 +163,12 @@ export default class Character extends Entity {
         const o = ['atk', 'walk', 'idle'],
             orientation = this.orientation;
 
-        if (this.currentAnimation && this.currentAnimation.name === 'death') return;
+        if (this.currentAnimation?.name === 'death') return;
 
         this.spriteFlipX = false;
         this.spriteFlipY = false;
 
-        if (o.indexOf(animation) > -1) {
+        if (o.includes(animation)) {
             animation += `_${
                 orientation === Modules.Orientation.Left
                     ? 'right'
@@ -245,7 +245,7 @@ export default class Character extends Entity {
     }
 
     idle(o?: number): void {
-        const orientation = o ? o : this.orientation;
+        const orientation = o || this.orientation;
 
         this.performAction(orientation, Modules.Actions.Idle);
     }
@@ -470,7 +470,7 @@ export default class Character extends Entity {
     }
 
     updateGridPosition(): void {
-        if (!this.path || this.path.length < 1) return;
+        if (!this.path || this.path.length === 0) return;
 
         this.setGridPosition(this.path[this.step][0], this.path[this.step][1]);
     }
@@ -480,9 +480,7 @@ export default class Character extends Entity {
     }
 
     forEachAttacker(callback: (attacker: Character) => void): void {
-        _.each(this.attackers, (attacker) => {
-            callback(attacker as Character);
-        });
+        _.each(this.attackers, (attacker) => callback(attacker as Character));
     }
 
     isAttacked(): boolean {
@@ -548,7 +546,6 @@ export default class Character extends Entity {
          * parameter. But we are throwing in an extra.
          */
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         const character = new Character(`${x}-${y}`, 'object');
         character.setGridPosition(x, y);
 

@@ -18,7 +18,7 @@ export interface EntityRenderingData {
 
 export default class Entity {
     id: string;
-    kind: number;
+    kind: string;
     x: number;
     y: number;
     gridX: number;
@@ -56,7 +56,7 @@ export default class Entity {
     hurtSprite;
     readyCallback: () => void;
     attackRange: number;
-    mana: number;
+    mana: number | number[];
     maxMana: number;
     experience: number;
     level: number;
@@ -64,7 +64,7 @@ export default class Entity {
     frozen: boolean;
     teleporting: boolean;
     dead: boolean;
-    hitPoints: number;
+    hitPoints: number | number[];
     pvp: boolean;
     nameColour: string;
     customScale: number;
@@ -141,9 +141,7 @@ export default class Entity {
     }
 
     blink(speed: number): void {
-        this.blinking = window.setInterval(() => {
-            this.toggleVisibility();
-        }, speed);
+        this.blinking = window.setInterval(() => this.toggleVisibility(), speed);
     }
 
     stopBlinking(): void {
@@ -153,14 +151,14 @@ export default class Entity {
     }
 
     idle(o?: number): void {
-        o ? o : this.orientation;
+        o || this.orientation;
     }
 
     setName(name: string): void {
         this.name = name;
     }
 
-    setSprite(sprite: Sprite): void {
+    setSprite(sprite: Sprite | undefined): void {
         if (!sprite || (this.sprite && this.sprite.name === sprite.name)) return;
 
         if (this.type === 'player') sprite.loadHurt = true;
@@ -184,8 +182,7 @@ export default class Entity {
     }
 
     setAnimation(name: string, speed: number, count?: number, onEndCount?: () => void): void {
-        if (!this.spriteLoaded || (this.currentAnimation && this.currentAnimation.name === name))
-            return;
+        if (!this.spriteLoaded || this.currentAnimation?.name === name) return;
 
         const anim = this.getAnimationByName(name);
 
@@ -193,11 +190,11 @@ export default class Entity {
 
         this.currentAnimation = anim;
 
-        if (name.substr(0, 3) === 'atk') this.currentAnimation.reset();
+        if (name.slice(0, 3) === 'atk') this.currentAnimation.reset();
 
         this.currentAnimation.setSpeed(speed);
 
-        this.currentAnimation.setCount(count ? count : 0, onEndCount || (() => this.idle()));
+        this.currentAnimation.setCount(count || 0, onEndCount || (() => this.idle()));
     }
 
     setPosition(x: number, y: number): void {
@@ -215,7 +212,7 @@ export default class Entity {
     setCountdown(count: number): void {
         this.counter = count;
 
-        this.countdownTime = new Date().getTime();
+        this.countdownTime = Date.now();
 
         this.hasCounter = true;
     }

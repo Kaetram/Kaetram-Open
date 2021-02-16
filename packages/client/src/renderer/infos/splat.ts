@@ -1,4 +1,4 @@
-import Modules from '../../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 
 export default class Splat {
     id: string;
@@ -16,7 +16,14 @@ export default class Splat {
     stroke: string;
     destroyCallback: (id: string) => void;
 
-    constructor(id: string, type: number, text: string, x: number, y: number, statique: boolean) {
+    constructor(
+        id: string,
+        type: Modules.Hits,
+        text: string,
+        x: number,
+        y: number,
+        statique: boolean
+    ) {
         this.id = id;
         this.type = type;
         this.text = text;
@@ -25,7 +32,7 @@ export default class Splat {
 
         this.statique = statique;
 
-        this.opacity = 1.0;
+        this.opacity = 1;
         this.lastTime = 0;
         this.speed = 100;
 
