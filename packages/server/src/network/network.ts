@@ -50,13 +50,13 @@ class Network {
 
         for (let id in this.packets) {
             if (this.packets[id].length > 0 && this.packets.hasOwnProperty(id)) {
-                let conn = this.socket.getConnection(id);
+                let conn = this.socket.get(id);
 
                 if (conn) {
                     conn.send(this.packets[id]);
                     this.packets[id] = [];
                     this.packets[id].id = id;
-                } else this.socket.removeConnection(id);
+                } else this.socket.remove(id);
             }
         }
     }
