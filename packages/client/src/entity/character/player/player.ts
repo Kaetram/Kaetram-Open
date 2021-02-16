@@ -53,7 +53,7 @@ export default class Player extends Character {
     moving: boolean;
 
     constructor() {
-        super('-1', Modules.Types.Player);
+        super('-1', Modules.Types.Player.toString());
 
         this.username = '';
         this.password = '';

@@ -4,6 +4,7 @@ import Database from './database/database';
 import log from './util/log';
 import Parser from './util/parser';
 import config from '../config';
+import Connection from './network/connection';
 
 class Main {
     webSocket: WebSocket;
@@ -19,7 +20,7 @@ class Main {
         this.parser = new Parser();
         this.world = null;
 
-        this.webSocket.onWebSocketReady(() => {
+        this.webSocket.onReady(() => {
             /**
              * Initialize the world after we have finished loading
              * the websocket.
@@ -32,7 +33,7 @@ class Main {
 
                 const host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
-                log.notice('Connect locally via http://' + host + ':9000');
+                log.notice('Connect locally via http://' + host + ':' + config.port);
             };
 
             this.world = new World(this.webSocket, this.database);
@@ -40,7 +41,7 @@ class Main {
             this.world.load(onWorldLoad);
         });
 
-        this.webSocket.onConnect((connection) => {
+        this.webSocket.onConnection((connection: Connection) => {
             if (this.world.allowConnections) {
                 if (this.world.isFull()) {
                     log.info('All the worlds are currently full. Please try again later.');

@@ -20,8 +20,8 @@ export default class Projectile extends Entity {
 
     impactCallback: () => void;
 
-    constructor(id: string, kind: number, owner: Entity) {
-        super(id, kind);
+    constructor(id: string, type: string, owner: Entity) {
+        super(id, type);
 
         this.owner = owner;
 
