@@ -65,8 +65,8 @@ export default class Character extends Entity {
     type: string;
     forced: boolean;
 
-    constructor(id: string, kind: number) {
-        super(id, kind);
+    constructor(id: string, type: string) {
+        super(id, type);
 
         this.nextGridX = -1;
         this.nextGridY = -1;
@@ -549,7 +549,6 @@ export default class Character extends Entity {
          */
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         const character = new Character(`${x}-${y}`, 'object');
         character.setGridPosition(x, y);
 
