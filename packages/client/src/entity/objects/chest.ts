@@ -1,8 +1,8 @@
 import Entity from '../entity';
 
 export default class Chest extends Entity {
-    constructor(id: string, kind: number) {
-        super(id, kind);
+    constructor(id: string, type: string) {
+        super(id, type);
 
         this.type = 'chest';
     }

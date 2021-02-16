@@ -7,8 +7,8 @@ export default class Item extends Entity {
     abilityLevel: number;
     stackable: boolean;
 
-    constructor(id: string, kind: number, count: number, ability: number, abilityLevel: number) {
-        super(id, kind);
+    constructor(id: string, type: string, count: number, ability: number, abilityLevel: number) {
+        super(id, type);
 
         this.count = count;
         this.ability = ability;
