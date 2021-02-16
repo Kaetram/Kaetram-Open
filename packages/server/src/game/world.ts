@@ -24,7 +24,6 @@ import GlobalObjects from '../controllers/globalobjects';
 import Network from '../network/network';
 import Trees from '../../data/professions/trees';
 import Rocks from '../../data/professions/rocks';
-import Socket from '../network/socket';
 import Player from './entity/character/player/player';
 import Entity from './entity/entity';
 import WebSocket from '../network/websocket';
@@ -32,7 +31,7 @@ import MongoDB from '../database/mongodb/mongodb';
 import API from '../network/api';
 
 class World {
-    public socket: Socket;
+    public socket: WebSocket;
     public database: MongoDB;
 
     public maxPlayers: number;
