@@ -1,21 +1,16 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Entity from '../entity/entity';
-import Game from '../game';
 import Blob from '../renderer/bubbles/blob';
 
+import type Entity from '../entity/entity';
+import type Game from '../game';
+
 export default class BubbleController {
-    game: Game;
-    bubbles: { [id: string]: Blob };
-    container: JQuery;
+    private bubbles: { [id: string]: Blob } = {};
+    private container = $('#bubbles');
 
-    constructor(game: Game) {
-        this.game = game;
-        this.bubbles = {};
-
-        this.container = $('#bubbles');
-    }
+    public constructor(private game: Game) {}
 
     /**
      * This creates the blob that will be used to display text.
@@ -23,12 +18,20 @@ export default class BubbleController {
      * @param id - An identifier for the bubble we are creating.
      * @param message - A string of the text we are displaying.
      * @param duration - How long the bubble will display for.
-     * @param isObject - (optional) Boolean value used to determine object.
-     * @param info - (optional) Used in conjunction with `isObject` to specify object data.
+     * @param isObject - Value used to determine object.
+     * @param info - Used in conjunction with `isObject` to specify object data.
      */
-    create(id: string, message: string, duration = 5000, isObject?: boolean, info?: Entity): Blob {
-        if (this.bubbles[id]) {
-            this.bubbles[id].reset(this.game.time);
+    public create(
+        id: string,
+        message: string,
+        duration = 5000,
+        isObject?: boolean,
+        info?: Entity
+    ): void {
+        const bubble = this.bubbles[id];
+        if (bubble) {
+            bubble.reset(this.game.time);
+
             $(`#${id} p`).html(message);
         } else {
             const element = $(
@@ -39,31 +42,34 @@ export default class BubbleController {
 
             this.bubbles[id] = new Blob(id, element, duration, isObject, info);
 
-            return this.bubbles[id];
+            // return this.bubbles[id];
         }
     }
 
-    setTo(info: Entity): void {
+    public setTo(info: Entity): void {
         const bubble = this.get(info.id);
 
         if (!bubble || !info) return;
 
-        const scale = this.game.renderer.getScale();
+        const camera = this.game.getCamera();
+
+        const scale = this.game.renderer?.getScale() as number;
         const tileSize = 48; // 16 * scale
-        const x = (info.x - this.game.getCamera().x) * scale;
+
+        const x = (info.x - camera.x) * scale;
         const width = parseInt(bubble.element.css('width')) + 24;
         const offset = width / 2 - tileSize / 2;
         const offsetY = -20;
+        const y = (info.y - camera.y) * scale - tileSize * 2 - offsetY;
 
-        const y = (info.y - this.game.getCamera().y) * scale - tileSize * 2 - offsetY;
-
-        bubble.element.css('left', `${x - offset + 3}px`);
-        bubble.element.css('top', `${y}px`);
+        bubble.element.css({ left: `${x - offset + 3}px`, top: `${y}px` });
     }
 
-    update(time: number): void {
+    public update(time: number): void {
         _.each(this.bubbles, (bubble) => {
-            const entity = this.game.entities.get(bubble.id);
+            if (!bubble) return;
+
+            const entity = this.game.entities?.get(bubble.id);
 
             if (entity) this.setTo(entity);
 
@@ -76,21 +82,17 @@ export default class BubbleController {
         });
     }
 
-    get(id: string): Blob {
-        if (id in this.bubbles) return this.bubbles[id];
-
-        return null;
+    private get(id: string): Blob {
+        return this.bubbles[id];
     }
 
-    clean(): void {
-        _.each(this.bubbles, (bubble) => {
-            bubble.destroy();
-        });
+    public clean(): void {
+        _.each(this.bubbles, (bubble) => bubble.destroy());
 
         this.bubbles = {};
     }
 
-    destroy(id: string): void {
+    public destroy(id: string): void {
         const bubble = this.get(id);
 
         if (!bubble) return;

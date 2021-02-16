@@ -97,10 +97,7 @@ export default class Map {
     }
 
     ready(): void {
-        const rC = () => {
-            this.readyCallback?.();
-        };
-
+        const rC = () => this.readyCallback?.();
         if (this.mapLoaded && this.tilesetsLoaded) rC();
         else
             window.setTimeout(() => {
@@ -117,13 +114,13 @@ export default class Map {
 
             worker.postMessage(1);
 
-            worker.onmessage = (event) => {
+            worker.addEventListener('message', (event) => {
                 const map: MapData = event.data;
 
                 this.parseMap(map);
                 this.grid = map.grid;
                 this.mapLoaded = true;
-            };
+            });
         } else {
             if (this.game.isDebug()) log.info('Parsing map with JSON...');
 
@@ -135,9 +132,8 @@ export default class Map {
 
     synchronize(tileData: TileData[]): void {
         // Use traditional for-loop instead of _
-        for (let i = 0; i < tileData.length; i++) {
-            const tile = tileData[i],
-                collisionIndex = this.collisions.indexOf(tile.index),
+        for (const tile of tileData) {
+            const collisionIndex = this.collisions.indexOf(tile.index),
                 objectIndex = this.objects.indexOf(tile.index);
 
             this.data[tile.index] = tile.data;
@@ -172,7 +168,7 @@ export default class Map {
     }
 
     loadTilesets(): void {
-        if (this.rawTilesets.length < 1) return;
+        if (this.rawTilesets.length === 0) return;
 
         _.each(this.rawTilesets, (rawTileset) => {
             this.loadTileset(rawTileset, (tileset) => {
@@ -203,17 +199,17 @@ export default class Map {
         tileset.loaded = true;
         tileset.scale = rawTileset.scale;
 
-        tileset.onload = () => {
+        tileset.addEventListener('load', () => {
             if (tileset.width % this.tileSize > 0)
                 // Prevent uneven tilemaps from loading.
-                throw Error(`The tile size is malformed in the tile set: ${tileset.path}`);
+                throw new Error(`The tile size is malformed in the tile set: ${tileset.path}`);
 
             callback(tileset);
-        };
+        });
 
-        tileset.onerror = () => {
-            throw Error(`Could not find tile set: ${tileset.path}`);
-        };
+        tileset.addEventListener('error', () => {
+            throw new Error(`Could not find tile set: ${tileset.path}`);
+        });
     }
 
     parseMap(map: MapData): void {
@@ -236,16 +232,15 @@ export default class Map {
         const map = this.formatWebGL(),
             resources = {};
 
-        for (let i = 0; i < this.tilesets.length; i++) {
+        for (let i = 0; i < this.tilesets.length; i++)
             resources[this.tilesets[i].name] = {
                 name: this.tilesets[i].name,
                 url: this.tilesets[i].path,
                 data: this.tilesets[i],
                 extension: 'png'
             };
-        }
 
-        if (this.webGLMap) this.webGLMap.glTerminate();
+        this.webGLMap?.glTerminate();
 
         this.webGLMap = new glTiled.GLTilemap(map, {
             gl: context,
@@ -309,10 +304,10 @@ export default class Map {
             for (let j = 0; j < this.data.length; j++) {
                 const tile = this.data[j];
 
-                if (Array.isArray(tile)) {
+                if (Array.isArray(tile))
                     if (tile[i]) layerObject.data[j] = tile[i];
                     else layerObject.data[j] = 0;
-                } else if (i === 0) layerObject.data[j] = tile;
+                else if (i === 0) layerObject.data[j] = tile;
                 else layerObject.data[j] = 0;
             }
 
@@ -416,7 +411,7 @@ export default class Map {
     isObject(x: number, y: number): boolean {
         const index = this.gridPositionToIndex(x, y) - 1;
 
-        return this.objects.indexOf(index) > -1;
+        return this.objects.includes(index);
     }
 
     getTileCursor(x: number, y: number): string {
@@ -428,11 +423,11 @@ export default class Map {
     }
 
     isHighTile(id: number): boolean {
-        return this.high.indexOf(id + 1) > -1;
+        return this.high.includes(id + 1);
     }
 
     isLightTile(id: number): boolean {
-        return this.lights.indexOf(id + 1) > -1;
+        return this.lights.includes(id + 1);
     }
 
     isAnimatedTile(id: number): boolean {
@@ -471,7 +466,7 @@ export default class Map {
             objects = this.game.storage.getObjects(),
             cursorTiles = this.game.storage.getCursorTiles();
 
-        if (regionData.length < 1) return;
+        if (regionData.length === 0) return;
 
         this.preloadedData = true;
 
