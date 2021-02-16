@@ -51,7 +51,7 @@ export default class WebSocket {
 
             log.info(`Received connection from: ${socket.conn.remoteAddress}.`);
 
-            let connection = new Connection(this.getId(), socket);
+            let connection = new Connection(this.getId(), socket, this);
 
             socket.on('client', (data: any) => {
                 if (!this.verifyVersion(connection, data.gVer)) return;
