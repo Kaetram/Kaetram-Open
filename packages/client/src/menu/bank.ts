@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 import Player from '../entity/character/player/player';
 import Game from '../game';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Container from './container/container';
 import Slot from './container/slot';
 
@@ -31,24 +31,21 @@ export default class Bank {
         this.close = $('#closeBank');
 
         this.close.css('left', '97%');
-        this.close.click(() => {
-            this.hide();
-        });
+        this.close.on('click', () => this.hide());
     }
 
     async load(data: Slot[]): Promise<void> {
         const bankList = this.bankSlots.find('ul'),
             inventoryList = this.bankInventorySlots.find('ul');
 
-        for (let i = 0; i < data.length; i++) {
-            const item = data[i],
-                slot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`);
+        for (const [i, item] of data.entries()) {
+            const slot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`);
 
             this.container.setSlot(i, item);
 
             slot.css({
-                'margin-right': `${2 * this.getScale()}px`,
-                'margin-bottom': `${4 * this.getScale()}px`
+                marginRight: `${2 * this.getScale()}px`,
+                marginBottom: `${4 * this.getScale()}px`
             });
 
             const image = $(`<div id="bankImage${i}" class="bankImage"></div>`);
@@ -56,25 +53,25 @@ export default class Bank {
             if (item.string)
                 image.css('background-image', await this.container.getImageFormat(item.string));
 
-            slot.click((event) => {
-                this.click('bank', event);
-            });
+            slot.on('click', (event) => this.click('bank', event));
 
             const count = item.count;
             let itemCount: string;
 
             if (count > 999999)
-                itemCount = `${count.toString().substring(0, count.toString().length - 6)}M`;
-            else if (count > 9999) itemCount = `${count.toString().substring(0, 2)}K`;
+                itemCount = `${count
+                    .toString()
+                    .slice(0, Math.max(0, count.toString().length - 6))}M`;
+            else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
             else if (count === 1) itemCount = '';
 
             slot.append(image);
             slot.append(`<div id="bankItemCount${i}" class="itemCount">${itemCount}</div>`);
 
             slot.find(`#bankItemCount${i}`).css({
-                'font-size': `${4 * this.getScale()}px`,
-                'margin-top': '0',
-                'margin-left': '0'
+                fontSize: `${4 * this.getScale()}px`,
+                marginTop: '0',
+                marginLeft: '0'
             });
 
             const bankListItem = $('<li></li>');
@@ -89,8 +86,8 @@ export default class Bank {
                 iSlot = $(`<div id="bankInventorySlot${j}" class="bankSlot"></div>`);
 
             iSlot.css({
-                'margin-right': `${3 * this.getScale()}px`,
-                'margin-bottom': `${6 * this.getScale()}px`
+                marginRight: `${3 * this.getScale()}px`,
+                marginBottom: `${6 * this.getScale()}px`
             });
 
             const slotImage = $(`<div id="inventoryImage${j}" class="bankImage"></div>`);
@@ -101,24 +98,24 @@ export default class Bank {
                     await this.container.getImageFormat(iItem.string)
                 );
 
-            iSlot.click((event) => {
-                this.click('inventory', event);
-            });
+            iSlot.on('click', (event) => this.click('inventory', event));
 
             const count = iItem.count;
             let itemCount;
 
             if (count > 999999)
-                itemCount = `${count.toString().substring(0, count.toString().length - 6)}M`;
-            else if (count > 9999) itemCount = `${count.toString().substring(0, 2)}K`;
+                itemCount = `${count
+                    .toString()
+                    .slice(0, Math.max(0, count.toString().length - 6))}M`;
+            else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
             else if (count === 1) itemCount = '';
 
             iSlot.append(slotImage);
             iSlot.append(`<div id="inventoryItemCount${j}" class="itemCount">${itemCount}</div>`);
 
             iSlot.find(`#inventoryItemCount${j}`).css({
-                'margin-top': '0',
-                'margin-left': '0'
+                marginTop: '0',
+                marginLeft: '0'
             });
 
             const inventoryListItem = $('<li></li>');
@@ -133,33 +130,33 @@ export default class Bank {
         const bankList = this.getBankList(),
             inventoryList = this.getInventoryList();
 
-        for (let i = 0; i < bankList.length; i++) {
-            const bankSlot = $(bankList[i]).find(`#bankSlot${i}`),
+        for (const [i, element] of [...bankList].entries()) {
+            const bankSlot = $(element).find(`#bankSlot${i}`),
                 image = bankSlot.find(`#bankImage${i}`),
                 slot = this.container.slots[i];
 
             bankSlot.css({
-                'margin-right': `${2 * this.getScale()}px`,
-                'margin-bottom': `${4 * this.getScale()}px`
+                marginRight: `${2 * this.getScale()}px`,
+                marginBottom: `${4 * this.getScale()}px`
             });
 
             bankSlot.find(`#bankItemCount${i}`).css({
-                'font-size': `${4 * this.getScale()}px`,
-                'margin-top': '0',
-                'margin-left': '0'
+                fontSize: `${4 * this.getScale()}px`,
+                marginTop: '0',
+                marginLeft: '0'
             });
 
             image.css('background-image', await this.container.getImageFormat(slot.string));
         }
 
-        for (let j = 0; j < inventoryList.length; j++) {
-            const inventorySlot = $(inventoryList[j]).find(`#bankInventorySlot${j}`),
+        for (const [j, element] of [...inventoryList].entries()) {
+            const inventorySlot = $(element).find(`#bankInventorySlot${j}`),
                 iImage = inventorySlot.find(`#inventoryImage${j}`),
                 iSlot = this.inventoryContainer.slots[j];
 
             inventorySlot.css({
-                'margin-right': `${3 * this.getScale()}px`,
-                'margin-bottom': `${6 * this.getScale()}px`
+                marginRight: `${3 * this.getScale()}px`,
+                marginBottom: `${6 * this.getScale()}px`
             });
 
             iImage.css('background-image', await this.container.getImageFormat(iSlot.string));
@@ -168,7 +165,7 @@ export default class Bank {
 
     click(type: string, event: JQuery.ClickEvent): void {
         const isBank = type === 'bank',
-            index = event.currentTarget.id.substring(isBank ? 8 : 17);
+            index = event.currentTarget.id.slice(Math.max(0, isBank ? 8 : 17));
 
         this.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
     }
@@ -256,9 +253,9 @@ export default class Bank {
     }
 
     clear(): void {
-        if (this.bankSlots) this.bankSlots.find('ul').empty();
+        this.bankSlots?.find('ul').empty();
 
-        if (this.bankInventorySlots) this.bankInventorySlots.find('ul').empty();
+        this.bankInventorySlots?.find('ul').empty();
     }
 
     isVisible(): boolean {

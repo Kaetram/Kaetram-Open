@@ -25,8 +25,6 @@ export default class Queue {
     }
 
     forEachQueue(callback: (object: string) => void): void {
-        _.each(this.queue, (object) => {
-            callback(object);
-        });
+        _.each(this.queue, (object) => callback(object));
     }
 }

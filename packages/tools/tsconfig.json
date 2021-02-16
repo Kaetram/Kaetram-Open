@@ -1,0 +1,10 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "module": "commonjs",
+        "target": "esnext",
+        "types": ["@kaetram/common"]
+    }
+}
