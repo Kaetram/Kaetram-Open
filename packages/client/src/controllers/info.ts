@@ -1,39 +1,35 @@
 import _ from 'lodash';
 
-import Game from '../game';
+import * as Modules from '@kaetram/common/src/modules';
+
 import Countdown from '../renderer/infos/countdown';
 import Splat from '../renderer/infos/splat';
-import Modules from '../utils/modules';
 import Queue from '../utils/queue';
 import { isInt } from '../utils/util';
+
+import type Game from '../game';
 
 type Info = Splat | Countdown;
 
 export default class InfoController {
-    game: Game;
-    infos: { [info: string]: Info };
-    destroyQueue: Queue;
+    private infos: { [info: string]: Info } = {};
+    private destroyQueue = new Queue();
 
-    constructor(game: Game) {
-        this.game = game;
+    public constructor(private game: Game) {}
 
-        this.infos = {};
-        this.destroyQueue = new Queue();
-    }
-
-    create(type: number, data: unknown[], x: number, y: number): void {
+    public create(type: Modules.Hits | Modules.Infos, data: unknown[], x: number, y: number): void {
         switch (type) {
             case Modules.Hits.Damage:
             case Modules.Hits.Stun:
             case Modules.Hits.Critical: {
-                let damage = data.shift() as number | string,
-                    isTarget = data.shift() as boolean,
+                let damage = data.shift() as number | string;
+                const isTarget = data.shift() as boolean,
                     dId = this.generateId(this.game.time, damage as number, x, y);
 
                 if (damage < 1 || !isInt(damage as number)) (damage as string) = 'MISS';
 
-                let hitSplat = new Splat(dId, type, damage.toString(), x, y, false),
-                    dColour = isTarget
+                const hitSplat = new Splat(dId, type, damage.toString(), x, y, false);
+                let dColour = isTarget
                     ? Modules.DamageColours.received
                     : Modules.DamageColours.inflicted;
 
@@ -54,10 +50,11 @@ export default class InfoController {
             case Modules.Hits.Experience:
             case Modules.Hits.Profession:
             case Modules.Hits.Poison: {
-                let amount: number = data.shift() as number,
-                    id: string = this.generateId(this.game.time, amount, x, y),
-                    prefix = '+',
-                    suffix = '', colour;
+                const amount: number = data.shift() as number,
+                    id: string = this.generateId(this.game.time, amount, x, y);
+                let prefix = '+',
+                    suffix = '',
+                    colour: Modules.Colours | null = null;
 
                 if (amount < 1 || !isInt(amount)) return;
 
@@ -67,16 +64,27 @@ export default class InfoController {
 
                 if (type === Modules.Hits.Poison) prefix = '--';
 
-                let splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
+                const splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
 
-                if (type === Modules.Hits.Heal) colour = Modules.DamageColours.healed;
-                else if (type === Modules.Hits.Mana) colour = Modules.DamageColours.mana;
-                else if (type === Modules.Hits.Experience) colour = Modules.DamageColours.exp;
-                else if (type === Modules.Hits.Poison) colour = Modules.DamageColours.poison;
-                else if (type === Modules.Hits.Profession)
-                    colour = Modules.DamageColours.profession;
+                switch (type) {
+                    case Modules.Hits.Heal:
+                        colour = Modules.DamageColours.healed;
+                        break;
+                    case Modules.Hits.Mana:
+                        colour = Modules.DamageColours.mana;
+                        break;
+                    case Modules.Hits.Experience:
+                        colour = Modules.DamageColours.exp;
+                        break;
+                    case Modules.Hits.Poison:
+                        colour = Modules.DamageColours.poison;
+                        break;
+                    case Modules.Hits.Profession:
+                        colour = Modules.DamageColours.profession;
+                        break;
+                }
 
-                splat.setColours(colour.fill, colour.stroke);
+                if (colour) splat.setColours(colour.fill, colour.stroke);
 
                 this.addInfo(splat);
 
@@ -100,9 +108,9 @@ export default class InfoController {
                  * We only allow the creation of one countdown timer.
                  */
 
-                if (this.countdownExists) return;
+                if (this.countdownExists()) return;
 
-                let time = data.shift() as number,
+                const time = data.shift() as number,
                     countdown = new Countdown('countdown', time);
 
                 this.addInfo(countdown);
@@ -112,49 +120,33 @@ export default class InfoController {
         }
     }
 
-    getCount(): number {
+    public getCount(): number {
         return Object.keys(this.infos).length;
     }
 
-    getCountdown(): Info {
-        return this.infos['countdown'];
-    }
-
-    addInfo(info: Info): void {
+    private addInfo(info: Info): void {
         this.infos[info.id] = info;
 
-        info.onDestroy((id) => {
-            this.destroyQueue.add(id);
-        });
+        info.onDestroy((id) => this.destroyQueue.add(id));
     }
 
-    update(time: number): void {
-        this.forEachInfo((info) => {
-            info.update(time);
-        });
+    public update(time: number): void {
+        this.forEachInfo((info) => info.update(time));
 
-        this.destroyQueue.forEachQueue((id) => {
-            delete this.infos[id];
-        });
+        this.destroyQueue.forEachQueue((id) => delete this.infos[id]);
 
         this.destroyQueue.reset();
     }
 
-    countdownExists(): boolean {
+    private countdownExists(): boolean {
         return 'countdown' in this.infos;
     }
 
-    clearCountdown(): void {
-        delete this.infos['countdown'];
+    public forEachInfo(callback: (info: Info) => void): void {
+        _.each(this.infos, (info) => callback(info));
     }
 
-    forEachInfo(callback: (info: Info) => void): void {
-        _.each(this.infos, (info) => {
-            callback(info);
-        });
-    }
-
-    generateId(time: number, info: number, x: number, y: number): string {
+    private generateId(time: number, info: number, x: number, y: number): string {
         return `${time}${Math.abs(info)}${x}${y}`;
     }
 }

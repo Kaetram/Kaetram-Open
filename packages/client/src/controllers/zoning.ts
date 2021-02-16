@@ -1,7 +1,7 @@
 import Game from '../game';
 import Camera from '../renderer/camera';
 import Renderer from '../renderer/renderer';
-import Modules from '../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 import InputController from './input';
 
 export default class ZoningController {
