@@ -1,24 +1,23 @@
-import config, { plugins, rules, maxSize, exclude, env } from './webpack.common';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { GenerateSW } from 'workbox-webpack-plugin';
+
+import { name } from 'kaetram/package.json';
+
+import type { Compiler } from 'webpack';
+
+import config, { env, exclude, maxSize, plugins, resolve, rules } from './webpack.common';
 import type { Config } from './webpack.common';
 
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
-import ResourceHintWebpackPlugin from 'resource-hints-webpack-plugin';
-import { GenerateSW } from 'workbox-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { resolve } from './webpack.common';
-
 plugins.push(
-    ...[
-        new CleanWebpackPlugin(),
-        new MiniCssExtractPlugin(),
-        new ResourceHintWebpackPlugin(),
-        new GenerateSW({
-            cacheId: 'kaetram',
-            maximumFileSizeToCacheInBytes: maxSize,
-            clientsClaim: true,
-            skipWaiting: true
-        })
-    ]
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin() as (compiler: Compiler) => void,
+    new GenerateSW({
+        cacheId: name,
+        maximumFileSizeToCacheInBytes: maxSize,
+        clientsClaim: false,
+        skipWaiting: false
+    })
 );
 
 rules.push({
