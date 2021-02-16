@@ -20,8 +20,8 @@ export default class Projectile extends Entity {
 
     impactCallback: () => void;
 
-    constructor(id: string, type: string, owner: Entity) {
-        super(id, type);
+    constructor(id: string, kind: string, owner: Entity) {
+        super(id, kind);
 
         this.owner = owner;
 
@@ -80,7 +80,8 @@ export default class Projectile extends Entity {
     updateAngle(): void {
         if (!this.target) return;
 
-        this.angle = Math.atan2(this.target.y - this.y, this.target.x - this.x) * (180 / Math.PI) - 90;
+        this.angle =
+            Math.atan2(this.target.y - this.y, this.target.x - this.x) * (180 / Math.PI) - 90;
     }
 
     getAngle(): number {

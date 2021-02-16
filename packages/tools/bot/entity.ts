@@ -1,5 +1,5 @@
 export default class Entity {
-    constructor(
+    public constructor(
         public id: string,
         public x: number,
         public y: number,
