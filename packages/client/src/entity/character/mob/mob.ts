@@ -3,8 +3,8 @@ import Character from '../character';
 export default class Mob extends Character {
     hiddenName: boolean;
 
-    constructor(id: string, type: string) {
-        super(id, type);
+    constructor(id: string, kind: string) {
+        super(id, kind);
 
         this.hitPoints = -1;
         this.maxHitPoints = -1;

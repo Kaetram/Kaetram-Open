@@ -2,7 +2,7 @@ const storage = window.localStorage;
 const name = 'data';
 import App from '../app';
 import { MapCollisions } from '../map/map';
-import Modules from './modules';
+import * as Modules from '@kaetram/common/src/modules';
 
 interface PlayerData {
     username: string;

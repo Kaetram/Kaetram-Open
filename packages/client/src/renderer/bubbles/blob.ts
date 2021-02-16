@@ -12,12 +12,18 @@ export default class Blob {
     type: string;
     info: Entity;
 
-    constructor(id: string, element: JQuery, duration: number, isObject: boolean, info: Entity) {
+    constructor(
+        id: string,
+        element: JQuery,
+        duration: number,
+        isObject: boolean | undefined,
+        info: Entity | undefined
+    ) {
         this.id = id;
         this.element = element;
         this.duration = duration || 5000;
 
-        this.time = new Date().getTime();
+        this.time = Date.now();
         this.timer = new Timer(this.time, this.duration);
 
         if (isObject) {
