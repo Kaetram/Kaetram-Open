@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import io from 'socket.io-client';
+import { io, Socket as IOSocket } from 'socket.io-client';
 
 import { Config } from '../app';
 import Game from '../game';
@@ -9,7 +9,7 @@ import Messages from './messages';
 export default class Socket {
     game: Game;
     config: Config;
-    connection: SocketIOClient.Socket;
+    connection: IOSocket;
     listening: boolean;
     disconnected: boolean;
     messages: Messages;
