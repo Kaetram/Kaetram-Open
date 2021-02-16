@@ -1,12 +1,15 @@
 #!/usr/bin/env node
-import Utils from '@kaetram/server/src/util/utils';
+
 import { each, isArray } from 'lodash';
 import io from 'socket.io-client';
+
+import Packets from '@kaetram/common/src/packets';
+import log from '@kaetram/server/src/util/log';
+import Utils from '@kaetram/server/src/util/utils';
+
 import Entity from './entity';
 
-const log = console;
-
-const config = { debugLevel: 'all', gver: 1 };
+const gVer = 1;
 
 interface PacketInfo {
     instance: string;
@@ -15,27 +18,22 @@ interface PacketInfo {
 }
 
 export default class Bot {
-    bots: Entity[];
-    botCount: number;
+    #bots: Entity[] = [];
+    #botCount = 300 as const;
 
-    constructor() {
-        this.bots = [];
-        this.botCount = 300;
-
+    public constructor() {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         const connecting = setInterval(() => {
             this.connect();
 
-            this.botCount--;
-
-            if (this.botCount < 1) clearInterval(connecting);
+            if (--this.#botCount < 1) clearInterval(connecting);
         }, 100);
 
         setInterval(() => {
-            each(this.bots, (bot) => {
+            each(this.#bots, (bot) => {
                 this.move(bot);
 
                 if (Utils.randomInt(0, 50) === 10) this.talk(bot);
@@ -43,7 +41,7 @@ export default class Bot {
         }, 2000);
     }
 
-    connect(): void {
+    private connect(): void {
         const connection = io('ws://127.0.0.1:9001', {
             forceNew: true,
             reconnection: false
@@ -53,7 +51,7 @@ export default class Bot {
             log.info('Connection established...');
 
             connection.emit('client', {
-                gVer: config.gver,
+                gVer,
                 cType: 'HTML5',
                 bot: true
             });
@@ -80,7 +78,7 @@ export default class Bot {
         });
     }
 
-    handlePackets(
+    private handlePackets(
         connection: SocketIOClient.Socket,
         message: string[] | [number, PacketInfo],
         type?: string
@@ -93,31 +91,35 @@ export default class Bot {
         const opcode = message.shift() as number;
 
         switch (opcode) {
-            case 0:
-                this.send(connection, 1, [2, 'n' + this.bots.length, 'n', 'n']);
+            case Packets.Handshake:
+                this.send(connection, 1, [2, 'n' + this.#bots.length, 'n', 'n']);
 
                 break;
 
-            case 2: {
+            case Packets.Welcome: {
                 const info = message.shift() as PacketInfo;
 
-                this.bots.push(new Entity(info.instance, info.x, info.y, connection));
+                this.#bots.push(new Entity(info.instance, info.x, info.y, connection));
 
                 break;
             }
 
-            case 14: //Combat
+            case Packets.Combat:
                 break;
         }
     }
 
-    send(connection: SocketIOClient.Socket, packet: number, data: (string | number)[]): void {
+    private send(
+        connection: SocketIOClient.Socket,
+        packet: number,
+        data: (string | number)[]
+    ): void {
         const json = JSON.stringify([packet, data]);
 
         if (connection && connection.connected) connection.send(json);
     }
 
-    move(bot: Entity): void {
+    private move(bot: Entity): void {
         const currentX = bot.x,
             currentY = bot.y,
             newX = currentX + Utils.randomInt(-3, 3),
@@ -150,7 +152,7 @@ export default class Bot {
         bot.y = newY;
     }
 
-    talk(bot: Entity): void {
+    private talk(bot: Entity): void {
         this.send(bot.connection, 20, ['am human, hello there.']);
     }
 }

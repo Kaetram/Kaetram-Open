@@ -39,11 +39,11 @@ export default class Actions {
         const dropAccept = $('#dropAccept'),
             dropCancel = $('#dropCancel');
 
-        dropAccept.click((event) => {
+        dropAccept.on('click', (event) => {
             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
         });
 
-        dropCancel.click((event) => {
+        dropCancel.on('click', (event) => {
             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
         });
     }
@@ -105,7 +105,7 @@ export default class Actions {
     add(button: JQuery, misc?: boolean): void {
         this.body.find('ul').prepend($('<li></li>').append(button));
 
-        button.click((event) => {
+        button.on('click', (event) => {
             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
         });
 

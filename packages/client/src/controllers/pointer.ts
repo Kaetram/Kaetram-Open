@@ -5,7 +5,7 @@ import Entity from '../entity/entity';
 import Game from '../game';
 import Camera from '../renderer/camera';
 import Pointer from '../renderer/pointers/pointer';
-import Modules from '../utils/modules';
+import * as Modules from '@kaetram/common/src/modules';
 
 export default class PointerController {
     game: Game;
@@ -66,20 +66,20 @@ export default class PointerController {
     }
 
     async setSize(element: JQuery): Promise<void> {
+        const { default: pointer } = await import('../../img/sprites/pointer.png');
+
         element.css({
+            top: '30px',
             width: '64px',
             height: '64px',
             margin: 'inherit',
-            'margin-top': '-18px',
-            top: '30px',
-            background: `url("${(await import('../../img/sprites/pointer.png')).default}")`
+            marginTop: '-18px',
+            background: `url("${pointer}")`
         });
     }
 
     clean(): void {
-        _.each(this.pointers, (pointer) => {
-            pointer.destroy();
-        });
+        _.each(this.pointers, (pointer) => pointer.destroy());
 
         this.pointers = {};
     }
@@ -92,7 +92,7 @@ export default class PointerController {
     set(pointer: Pointer, posX: number, posY: number): void {
         this.updateCamera();
 
-        const tileSize = 48, //16 * this.scale
+        const tileSize = 48, // 16 * this.scale
             x = (posX - this.camera.x) * this.scale,
             width = parseInt(pointer.element.css('width') + 24),
             offset = width / 2 - tileSize / 2;
@@ -211,6 +211,6 @@ export default class PointerController {
     }
 
     getScale(): number {
-        return this.game.getScaleFactor(); //always 3
+        return this.game.getScaleFactor(); // always 3
     }
 }
