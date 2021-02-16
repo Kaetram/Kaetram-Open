@@ -2,6 +2,7 @@
 
 import { Socket } from 'socket.io';
 import log from '../util/log';
+import WebSocket from './websocket';
 
 class Connection {
     public id: string;
@@ -10,7 +11,7 @@ class Connection {
     private listenCallback: Function;
     private closeCallback: Function;
 
-    constructor(id: string, socket: Socket) {
+    constructor(id: string, socket: Socket, webSocket: WebSocket) {
         this.id = id;
         this.socket = socket;
         
@@ -22,6 +23,14 @@ class Connection {
                 console.log(e);
             }
         });
+
+        this.socket.on('disconnect', () => {
+            log.info(`Closed socket: ${this.socket.conn.remoteAddress}.`);
+
+            if (this.closeCallback) this.closeCallback();
+
+            webSocket.remove(this.id);
+        }); 
     }
 
     listen(callback: Function) {
@@ -40,10 +49,10 @@ class Connection {
         this.socket.send(data);
     }
 
-    close(reason?: any) {
+    close(reason?: string) {
         if (reason) log.info('[Connection] Closing - ' + reason);
 
-        this.socket.conn.close();
+        this.socket.disconnect(true);
     }
 }
 
