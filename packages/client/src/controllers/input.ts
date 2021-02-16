@@ -1,4 +1,3 @@
-import App from '../app';
 import Animation from '../entity/animation';
 import Character from '../entity/character/character';
 import Player from '../entity/character/player/player';
@@ -6,11 +5,11 @@ import Entity from '../entity/entity';
 import Sprite from '../entity/sprite';
 import Game from '../game';
 import log from '../lib/log';
-import Map from '../map/map';
+
 import Actions from '../menu/actions';
-import Packets from '../network/packets';
-import Renderer from '../renderer/renderer';
-import Modules from '../utils/modules';
+import Packets from '@kaetram/common/src/packets';
+
+import * as Modules from '@kaetram/common/src/modules';
 import Chat from './chat';
 import Overlay from './overlay';
 
@@ -29,77 +28,45 @@ interface TargetData {
 }
 
 export default class InputController {
-    game: Game;
-    app: App;
-    renderer: Renderer;
-    map: Map;
-    selectedCellVisible: boolean;
-    // previousClick: { [key: string]: any };
-    cursorVisible: boolean;
-    targetVisible: boolean;
-    selectedX: number;
-    selectedY: number;
-    cursor: Sprite;
-    newCursor: Sprite;
-    targetData: TargetData;
-    targetColour: string;
-    newTargetColour: string;
-    mobileTargetColour: string;
-    keyMovement: boolean;
-    cursorMoved: boolean;
-    // previousKey: { [key: string]: any };
-    cursors: { [cursor in Cursors]?: Sprite };
-    lastMousePosition: Pos;
-    hovering: number;
-    hoveringEntity: Entity;
-    mouse: Pos;
+    app = this.game.app;
+    renderer = this.game.renderer;
+    map = this.game.map;
+
+    selectedCellVisible = false;
+    cursorVisible = true;
+    targetVisible = true;
+    selectedX = -1;
+    selectedY = -1;
+
+    cursor!: Sprite;
+    newCursor!: Sprite;
+
+    targetData!: TargetData;
+    targetColour!: string;
+    newTargetColour!: string;
+
+    mobileTargetColour = 'rgba(51, 255, 0)';
+    keyMovement = true;
+    cursorMoved = false;
+
+    cursors: { [cursor in Cursors]?: Sprite } = {};
+    lastMousePosition: Pos = { x: 0, y: 0 };
+
+    hovering!: number | null;
+    hoveringEntity!: Entity; // for debugging
+
+    mouse: Pos = { x: 0, y: 0 };
+
     /**
      * This is the animation for the target
      * cell spinner sprite (only on desktop)
      */
-    targetAnimation: Animation;
-    chatHandler: Chat;
-    overlay: Overlay;
-    entity: Entity;
+    targetAnimation!: Animation;
+    chatHandler!: Chat;
+    overlay!: Overlay;
+    entity!: Entity | undefined;
 
-    constructor(game: Game) {
-        this.game = game;
-        this.app = game.app;
-        this.renderer = game.renderer;
-        this.map = game.map;
-
-        this.selectedCellVisible = false;
-        // this.previousClick = {};
-        this.cursorVisible = true;
-        this.targetVisible = true;
-        this.selectedX = -1;
-        this.selectedY = -1;
-
-        this.cursor = null;
-        this.newCursor = null;
-
-        this.targetData = null;
-        this.targetColour = null;
-        this.newTargetColour = null;
-        this.mobileTargetColour = 'rgba(51, 255, 0)';
-
-        this.keyMovement = true;
-        this.cursorMoved = false;
-
-        // this.previousKey = {};
-
-        this.cursors = {};
-
-        this.lastMousePosition = { x: 0, y: 0 };
-
-        this.hovering = null;
-        this.hoveringEntity = null; // for debugging
-
-        this.mouse = {
-            x: 0,
-            y: 0
-        };
-
+    constructor(public game: Game) {
         this.load();
     }
 
@@ -112,33 +79,33 @@ export default class InputController {
     }
 
     loadCursors(): void {
-        this.cursors['hand'] = this.game.getSprite('hand');
-        this.cursors['sword'] = this.game.getSprite('sword');
-        this.cursors['loot'] = this.game.getSprite('loot');
-        this.cursors['target'] = this.game.getSprite('target');
-        this.cursors['arrow'] = this.game.getSprite('arrow');
-        this.cursors['talk'] = this.game.getSprite('talk');
-        this.cursors['spell'] = this.game.getSprite('spell');
-        this.cursors['bow'] = this.game.getSprite('bow');
-        this.cursors['axe'] = this.game.getSprite('axe_cursor');
+        this.cursors.hand = this.game.getSprite('hand');
+        this.cursors.sword = this.game.getSprite('sword');
+        this.cursors.loot = this.game.getSprite('loot');
+        this.cursors.target = this.game.getSprite('target');
+        this.cursors.arrow = this.game.getSprite('arrow');
+        this.cursors.talk = this.game.getSprite('talk');
+        this.cursors.spell = this.game.getSprite('spell');
+        this.cursors.bow = this.game.getSprite('bow');
+        this.cursors.axe = this.game.getSprite('axe_cursor');
 
-        this.newCursor = this.cursors['hand'];
+        this.newCursor = this.cursors['hand'] as Sprite;
         this.newTargetColour = 'rgba(255, 255, 255, 0.5)';
 
         if (this.game.isDebug()) log.info('Loaded Cursors!');
     }
 
-    handle(inputType: number, data: unknown): void {
+    handle(inputType: Modules.InputType, data: Modules.Keys | JQuery.Event): void {
         const player = this.getPlayer();
 
         switch (inputType) {
             case Modules.InputType.Key:
                 if (this.chatHandler.isActive()) {
-                    this.chatHandler.key(data as number);
+                    this.chatHandler.key(data as Modules.Keys);
                     return;
                 }
 
-                switch (data as number) {
+                switch (data) {
                     case Modules.Keys.W:
                     case Modules.Keys.Up:
                         player.moveUp = true;
@@ -183,22 +150,22 @@ export default class InputController {
                         break;
 
                     case Modules.Keys.I:
-                        this.game.menu.inventory.open();
+                        this.game.menu?.inventory?.open();
 
                         break;
 
                     case Modules.Keys.M:
-                        this.game.menu.warp.open();
+                        this.game.menu?.warp?.open();
 
                         break;
 
                     case Modules.Keys.P:
-                        this.game.menu.profile.open();
+                        this.game.menu?.profile?.open();
 
                         break;
 
                     case Modules.Keys.Esc:
-                        this.game.menu.hideAll();
+                        this.game.menu?.hideAll();
                         break;
                 }
 
@@ -212,7 +179,7 @@ export default class InputController {
                 if ((window.event as MouseEvent).ctrlKey) {
                     log.info('Control key is pressed lmao');
 
-                    this.game.socket.send(Packets.Command, [
+                    this.game.socket?.send(Packets.Command, [
                         Packets.CommandOpcode.CtrlClick,
                         this.getCoords()
                     ]);
@@ -230,7 +197,7 @@ export default class InputController {
         }
     }
 
-    keyUp(key: number): void {
+    keyUp(key: Modules.Keys): void {
         const player = this.getPlayer();
 
         switch (key) {
@@ -290,10 +257,10 @@ export default class InputController {
         }
     }
 
-    leftClick(position: Pos, keyMovement?: boolean): void {
+    leftClick(position: Pos | undefined, keyMovement?: boolean): void {
         const player = this.getPlayer();
 
-        if (player.stunned) return;
+        if (player.stunned || !position) return;
 
         this.setPassiveTarget();
 
@@ -303,26 +270,26 @@ export default class InputController {
          */
 
         if (
-            this.renderer.mobile &&
+            this.renderer?.mobile &&
             this.chatHandler.input.is(':visible') &&
             this.chatHandler.input.val() === ''
         )
             this.chatHandler.hideInput();
 
-        if (this.map.isOutOfBounds(position.x, position.y)) return;
+        if (this.map?.isOutOfBounds(position.x, position.y)) return;
 
-        if ((this.game.zoning && this.game.zoning.direction) || player.disableAction) return;
+        if (this.game.zoning?.direction || player.disableAction) return;
 
-        if (this.game.menu) this.game.menu.hideAll();
+        this.game.menu?.hideAll();
 
-        if (this.map.isObject(position.x, position.y)) {
+        if (this.map?.isObject(position.x, position.y)) {
             player.setObjectTarget(position.x, position.y);
             player.followPosition(position.x, position.y);
 
             return;
         }
 
-        if (this.renderer.mobile || keyMovement)
+        if (this.renderer?.mobile || keyMovement)
             this.entity = this.game.getEntityAt(
                 position.x,
                 position.y,
@@ -341,7 +308,7 @@ export default class InputController {
                 player.isRanged() &&
                 this.isAttackable(this.entity)
             ) {
-                this.game.socket.send(Packets.Target, [
+                this.game.socket?.send(Packets.Target, [
                     Packets.TargetOpcode.Attack,
                     this.entity.id
                 ]);
@@ -350,7 +317,7 @@ export default class InputController {
             }
 
             if (this.entity.gridX === player.gridX && this.entity.gridY === player.gridY)
-                this.game.socket.send(Packets.Target, [
+                this.game.socket?.send(Packets.Target, [
                     Packets.TargetOpcode.Attack,
                     this.entity.id
                 ]);
@@ -365,8 +332,10 @@ export default class InputController {
         player.go(position.x, position.y);
     }
 
-    rightClick(position: Pos): void {
-        if (this.renderer.mobile)
+    rightClick(position: Pos | undefined): void {
+        if (!position) return;
+
+        if (this.renderer?.mobile)
             this.entity = this.game.getEntityAt(
                 position.x,
                 position.y,
@@ -384,7 +353,7 @@ export default class InputController {
 
             actions.show();
         } else if (this.hovering === Modules.Hovering.Object) {
-            //TODO
+            // TODO
         }
     }
 
@@ -402,14 +371,16 @@ export default class InputController {
         const position = this.getCoords(),
             player = this.getPlayer();
 
+        if (!position) return;
+
         // The entity we are currently hovering over.
         this.entity = this.game.getEntityAt(position.x, position.y, this.isSamePosition(position));
 
         this.overlay.update(this.entity);
 
-        if (!this.entity || this.entity.id === player.id) {
-            if (this.map.isObject(position.x, position.y)) {
-                const cursor = this.map.getTileCursor(position.x, position.y);
+        if (!this.entity || this.entity.id === player.id)
+            if (this.map?.isObject(position.x, position.y)) {
+                const cursor = this.map.getTileCursor(position.x, position.y) as Cursors;
 
                 this.setCursor(this.cursors[cursor || 'talk']);
                 this.hovering = Modules.Hovering.Object;
@@ -417,7 +388,7 @@ export default class InputController {
                 this.setCursor(this.cursors['hand']);
                 this.hovering = null;
             }
-        } else {
+        else
             switch (this.entity.type) {
                 case 'item':
                 case 'chest':
@@ -443,7 +414,6 @@ export default class InputController {
 
                     break;
             }
-        }
     }
 
     setPosition(x: number, y: number): void {
@@ -452,9 +422,9 @@ export default class InputController {
     }
 
     setCoords(event: JQuery.MouseMoveEvent<Document>): void {
-        const offset = this.app.canvas.offset(),
-            width = this.renderer.background.width,
-            height = this.renderer.background.height;
+        const offset = this.app.canvas.offset() as JQuery.Coordinates,
+            width = this.renderer?.background.width as number,
+            height = this.renderer?.background.height as number;
 
         this.cursorMoved = false;
 
@@ -468,7 +438,7 @@ export default class InputController {
         else if (this.mouse.y <= 0) this.mouse.y = 0;
     }
 
-    setCursor(cursor: Sprite): void {
+    setCursor(cursor: Sprite | undefined): void {
         if (cursor) this.newCursor = cursor;
         else log.error(`Cursor: ${cursor} could not be found.`);
     }
@@ -483,18 +453,19 @@ export default class InputController {
         this.mobileTargetColour = 'rgb(51, 255, 0)';
     }
 
-    getAttackCursor(): Sprite {
+    getAttackCursor(): Sprite | undefined {
         return this.cursors[this.getPlayer().isRanged() ? 'bow' : 'sword'];
     }
 
-    getCoords(): Pos {
-        if (!this.renderer || !this.renderer.camera) return;
+    getCoords(): Pos | undefined {
+        if (!this.renderer?.camera) return;
 
         const tileScale = this.renderer.tileSize * this.renderer.getSuperScaling(),
             offsetX = this.mouse.x % tileScale,
             offsetY = this.mouse.y % tileScale,
-            x = (this.mouse.x - offsetX) / tileScale + this.game.getCamera().gridX,
-            y = (this.mouse.y - offsetY) / tileScale + this.game.getCamera().gridY;
+            camera = this.game.getCamera(),
+            x = (this.mouse.x - offsetX) / tileScale + camera.gridX,
+            y = (this.mouse.y - offsetY) / tileScale + camera.gridY;
 
         return {
             x: x,
@@ -502,15 +473,17 @@ export default class InputController {
         };
     }
 
-    getTargetData(): TargetData {
+    getTargetData(): TargetData | undefined {
         const frame = this.targetAnimation.currentFrame,
-            superScale = this.renderer.getSuperScaling(),
+            superScale = this.renderer?.getSuperScaling() as number,
             sprite = this.game.getSprite('target');
+
+        if (!sprite) return;
 
         if (!sprite.loaded) sprite.load();
 
         return (this.targetData = {
-            sprite: sprite,
+            sprite,
             x: frame.x * superScale,
             y: frame.y * superScale,
             width: sprite.width * superScale,
@@ -523,7 +496,7 @@ export default class InputController {
     }
 
     updateFrozen(state: boolean): void {
-        this.game.socket.send(Packets.Movement, [Packets.MovementOpcode.Freeze, state]);
+        this.game.socket?.send(Packets.Movement, [Packets.MovementOpcode.Freeze, state]);
     }
 
     isTargetable(entity: Entity): boolean {
@@ -535,14 +508,16 @@ export default class InputController {
     }
 
     isSamePosition(position: Pos): boolean {
-        return position.x === this.game.player.gridX && position.y === this.game.player.gridY;
+        const player = this.getPlayer();
+
+        return position.x === player.gridX && position.y === player.gridY;
     }
 
     getPlayer(): Player {
-        return this.game.player;
+        return this.game.player as Player;
     }
 
     getActions(): Actions {
-        return this.game.menu.actions;
+        return this.game.menu?.actions as Actions;
     }
 }

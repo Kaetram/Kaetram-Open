@@ -3,7 +3,7 @@ import $ from 'jquery';
 import MenuController from '../controllers/menu';
 import Game from '../game';
 import log from '../lib/log';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import * as Detect from '../utils/detect';
 import Slot from './container/slot';
 
@@ -34,13 +34,9 @@ export default class Enchant {
 
         this.closeEnchant = $('#closeEnchant');
 
-        this.confirm.click(() => {
-            this.enchant();
-        });
+        this.confirm.on('click', () => this.enchant());
 
-        this.closeEnchant.click(() => {
-            this.hide();
-        });
+        this.closeEnchant.on('click', () => this.hide());
     }
 
     resize(): void {
@@ -57,20 +53,14 @@ export default class Enchant {
             const item = $(inventoryList[i]).clone(),
                 slot = item.find(`#bankInventorySlot${i}`);
 
-            slot.click((event) => {
-                this.select(event);
-            });
+            slot.on('click', (event) => this.select(event));
 
             list.append(item);
         }
 
-        this.selectedItem.click(() => {
-            this.remove('item');
-        });
+        this.selectedItem.on('click', () => this.remove('item'));
 
-        this.selectedShards.click(() => {
-            this.remove('shards');
-        });
+        this.selectedShards.on('click', () => this.remove('shards'));
     }
 
     add(type: string, index: number): void {
@@ -139,7 +129,7 @@ export default class Enchant {
     select(event: JQuery.ClickEvent): void {
         this.game.socket.send(Packets.Enchant, [
             Packets.EnchantOpcode.Select,
-            event.currentTarget.id.substring(17)
+            event.currentTarget.id.slice(17)
         ]);
     }
 
