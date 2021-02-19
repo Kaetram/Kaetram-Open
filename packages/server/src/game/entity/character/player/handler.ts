@@ -16,7 +16,8 @@ import NPC from '../../npc/npc';
 import World from '../../../world';
 import Entity from '../../entity';
 import Map from '../../../../map/map';
-import Area from '../../../../map/area';
+import Area from '../../../../map/areas/area';
+import Areas from '../../../../map/areas/areas';
 
 class Handler {
     player: Player;
@@ -46,7 +47,6 @@ class Handler {
     load() {
         this.updateInterval = setInterval(() => {
             this.detectAggro();
-            this.detectPVP(this.player.x, this.player.y);
 
             if (this.updateTicks % 4 === 0)
                 // Every 4 (1.6 seconds) update ticks.
@@ -66,11 +66,14 @@ class Handler {
         this.player.onMovement((x: number, y: number) => {
             this.player.checkRegions();
 
-            this.detectMusic(x, y);
+            this.detectAreas(x, y);
+
+
+            /*this.detectMusic(x, y);
             this.detectOverlay(x, y);
             this.detectLights(x, y);
             this.detectAchievements(x, y);
-            this.detectCamera(x, y);
+            this.detectCamera(x, y);*/
             this.detectClipping(x, y);
         });
 
@@ -214,51 +217,37 @@ class Handler {
         });
     }
 
-    detectMusic(x: number, y: number) {
-        let musicArea = _.find(this.world.getMusicAreas(), (area: Area) => {
-                return area.contains(x, y);
-            }),
-            song = musicArea ? musicArea.id : null;
+    detectAreas(x: number, y: number) {
+        this.map.forEachAreas((areas: Areas, name: string) => {
+            let info = areas.inArea(x, y);
 
-        if (this.player.currentSong !== song) this.player.updateMusic(song);
-    }
+            switch (name) {
+                case 'pvp':
+                    return this.player.updatePVP(!!info);
 
-    detectPVP(x: number, y: number) {
-        let pvpArea = _.find(this.world.getPVPAreas(), (area: Area) => {
-            return area.contains(x, y);
+                case 'music':
+                    return this.player.updateMusic(info);
+
+                case 'overlay':
+                    return this.player.updateOverlay(info);
+
+                case 'camera':
+                    return this.player.updateCamera(info);
+
+                case 'achievements':
+
+                    if (!info || !info.achievement) return;
+
+                    if (!this.player.achievementsLoaded) return;
+
+                    this.player.finishAchievement(info.achievement);
+
+                    break;
+            }
+
         });
-
-        this.player.updatePVP(!!pvpArea);
     }
-
-    detectOverlay(x: number, y: number) {
-        let overlayArea = _.find(this.world.getOverlayAreas(), (area: Area) => {
-            return area.contains(x, y);
-        });
-
-        this.player.updateOverlay(overlayArea);
-    }
-
-    detectCamera(x: number, y: number) {
-        let cameraArea = _.find(this.world.getCameraAreas(), (area: Area) => {
-            return area.contains(x, y);
-        });
-
-        this.player.updateCamera(cameraArea);
-    }
-
-    detectAchievements(x: number, y: number) {
-        let achievementArea = _.find(this.world.getAchievementAreas(), (area: Area) => {
-            return area.contains(x, y);
-        });
-
-        if (!achievementArea || !achievementArea.achievement) return;
-
-        if (!this.player.achievementsLoaded) return;
-
-        this.player.finishAchievement(achievementArea.achievement);
-    }
-
+    
     detectLights(x: number, y: number) {
         _.each(this.map.lights, (light) => {
             if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(light)) {
