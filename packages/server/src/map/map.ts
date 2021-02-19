@@ -7,16 +7,13 @@ import Regions from './regions';
 import Utils from '../util/utils';
 import Modules from '../util/modules';
 import Objects from '../util/objects';
-import PVPAreas from './areas/pvpareas';
-import MusicAreas from './areas/musicareas';
-import ChestAreas from './areas/chestareas';
-import OverlayAreas from './areas/overlayareas';
-import CameraAreas from './areas/cameraareas';
-import AchievementAreas from './areas/achievementareas';
 import World from '../game/world';
-import Area from './area';
+import Area from './areas/area';
 import Entity from '../game/entity/entity';
 import Spawns from '../../data/spawns.json';
+
+import Areas from './areas/areas';
+import AreasIndex from './areas/index';
 
 import log from '../util/log';
 
@@ -39,7 +36,6 @@ class Map {
     height: number;
 
     collisions: any;
-    chestAreas: any;
     chests: any;
     tilesets: any;
     lights: any;
@@ -99,7 +95,6 @@ class Map {
         this.width = map.width;
         this.height = map.height;
         this.collisions = map.collisions;
-        this.chestAreas = map.chestAreas;
         this.chests = map.chests;
 
         this.loadStaticEntities();
@@ -151,34 +146,17 @@ class Map {
     }
 
     loadAreas() {
-        /**
-         * The structure for the new this.areas is as follows:
-         *
-         * this.areas = {
-         *      pvpAreas = {
-         *          allPvpAreas
-         *      },
-         *
-         *      musicAreas = {
-         *          allMusicAreas
-         *      },
-         *
-         *      ...
-         * }
-         */
+        _.each(map.areas, (area: any, key: string) => {
+            if (!(key in AreasIndex)) return;
 
-        this.areas['PVP'] = new PVPAreas();
-        this.areas['Music'] = new MusicAreas();
-        this.areas['Chests'] = new ChestAreas(this.world);
-        this.areas['Overlays'] = new OverlayAreas();
-        this.areas['Cameras'] = new CameraAreas();
-        this.areas['Achievements'] = new AchievementAreas();
+            this.areas[key] = new AreasIndex[key](area, this.world);
+        });
     }
 
     loadDoors() {
         this.doors = {};
 
-        _.each(map.doors, (door: any) => {
+        _.each(map.areas.doors, (door: any) => {
             let orientation: number;
 
             switch (door.o) {
@@ -416,12 +394,6 @@ class Map {
     }
 
     getTileset(tileIndex: number) {
-        /**
-         if (id > this.tilesets[idx].firstGID - 1 &&
-         id < this.tilesets[idx].lastGID + 1)
-            return this.tilesets[idx];
-         */
-
         for (let id in this.tilesets)
             if (this.tilesets.hasOwnProperty(id))
                 if (
@@ -447,6 +419,12 @@ class Map {
 
     isReady(callback: Function) {
         this.readyCallback = callback;
+    }
+
+    forEachAreas(callback: (areas: Areas, key: string) => void) {
+        _.each(this.areas, (a: Areas, name: string) => {
+            callback(a, name);
+        })
     }
 }
 
