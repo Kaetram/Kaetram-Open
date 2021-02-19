@@ -757,7 +757,7 @@ class World {
         this.addEntity(mob, region);
         this.mobs[mob.instance] = mob;
 
-        mob.addToChestArea(this.getChestAreas());
+        //mob.addToChestArea(this.getChestAreas());
 
         mob.onHit((attacker: Character) => {
             if (mob.isDead() || mob.combat.started) return;
@@ -899,30 +899,6 @@ class World {
         _.each(this.players, (player) => {
             callback(player);
         });
-    }
-
-    getPVPAreas() {
-        return this.map.areas['PVP'].pvpAreas;
-    }
-
-    getMusicAreas() {
-        return this.map.areas['Music'].musicAreas;
-    }
-
-    getChestAreas() {
-        return this.map.areas['Chests'].chestAreas;
-    }
-
-    getOverlayAreas() {
-        return this.map.areas['Overlays'].overlayAreas;
-    }
-
-    getCameraAreas() {
-        return this.map.areas['Cameras'].cameraAreas;
-    }
-
-    getAchievementAreas() {
-        return this.map.areas['Achievements'].achievementAreas;
     }
 
     getGrids() {
