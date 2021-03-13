@@ -957,7 +957,8 @@ class Incoming {
         console.log(message);
 
         this.player.cameraArea = null;
-        this.player.handler.detectCamera(this.player.x, this.player.y);
+        // TODO - Make this a server-side thing.
+        //this.player.handler.detectCamera(this.player.x, this.player.y);
     }
 
     /**
