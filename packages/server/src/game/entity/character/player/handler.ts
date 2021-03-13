@@ -243,6 +243,10 @@ class Handler {
                     this.player.finishAchievement(info.achievement);
 
                     break;
+
+                case 'door':
+                    
+                    break;
             }
 
         });
