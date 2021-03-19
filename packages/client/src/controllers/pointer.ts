@@ -1,29 +1,28 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Entity from '../entity/entity';
-import Game from '../game';
-import Camera from '../renderer/camera';
-import Pointer from '../renderer/pointers/pointer';
 import * as Modules from '@kaetram/common/src/modules';
 
+import pointer from '../../img/sprites/pointer.png';
+import Pointer from '../renderer/pointers/pointer';
+
+import type Entity from '../entity/entity';
+import type Game from '../game';
+import type Camera from '../renderer/camera';
+import type Renderer from '../renderer/renderer';
+
 export default class PointerController {
-    game: Game;
-    pointers: { [key: string]: Pointer };
-    scale: number;
-    container: JQuery<HTMLElement>;
-    camera: Camera;
+    private pointers: { [id: string]: Pointer } = {};
 
-    constructor(game: Game) {
-        this.game = game;
-        this.pointers = {};
+    private scale = this.getScale();
 
-        this.scale = this.getScale();
+    private container = $('#bubbles');
 
-        this.container = $('#bubbles');
-    }
+    private camera!: Camera | undefined;
 
-    create(id: string, type: number, name?: string): void {
+    public constructor(private game: Game) {}
+
+    public create(id: string, type: Modules.Pointers, name?: string): void {
         if (id in this.pointers) return;
 
         switch (type) {
@@ -46,18 +45,19 @@ export default class PointerController {
         }
     }
 
-    resize(): void {
-        _.each(this.pointers, (pointer) => {
-            switch (pointer.type) {
+    public resize(): void {
+        _.each(this.pointers, ({ type, x, y, element }) => {
+            switch (type) {
                 case Modules.Pointers.Relative: {
                     const scale = this.getScale(),
-                        x = pointer.x,
-                        y = pointer.y,
                         offsetX = 0,
                         offsetY = 0;
 
-                    pointer.element.css('left', `${x * scale - offsetX}px`);
-                    pointer.element.css('top', `${y * scale - offsetY}px`);
+                    element.css({
+                        /* stylelint-disable */
+                        left: `${x * scale - offsetX}px`,
+                        top: `${y * scale - offsetY}px`
+                    });
 
                     break;
                 }
@@ -65,9 +65,7 @@ export default class PointerController {
         });
     }
 
-    async setSize(element: JQuery): Promise<void> {
-        const { default: pointer } = await import('../../img/sprites/pointer.png');
-
+    private setSize(element: JQuery): void {
         element.css({
             top: '30px',
             width: '64px',
@@ -78,75 +76,81 @@ export default class PointerController {
         });
     }
 
-    clean(): void {
+    public clean(): void {
         _.each(this.pointers, (pointer) => pointer.destroy());
 
         this.pointers = {};
     }
 
-    destroy(pointer: Pointer): void {
+    private destroy(pointer: Pointer): void {
         delete this.pointers[pointer.id];
         pointer.destroy();
     }
 
-    set(pointer: Pointer, posX: number, posY: number): void {
+    private set(pointer: Pointer, posX: number, posY: number): void {
         this.updateCamera();
+
+        if (!this.camera) return;
+
+        const { element } = pointer;
+        const { canvasWidth, canvasHeight } = this.game.renderer as Renderer;
 
         const tileSize = 48, // 16 * this.scale
             x = (posX - this.camera.x) * this.scale,
-            width = parseInt(pointer.element.css('width') + 24),
+            width = parseInt(element.css('width') + 24),
             offset = width / 2 - tileSize / 2;
 
         const y = (posY - this.camera.y) * this.scale - tileSize;
-        const outX = x / this.game.renderer.canvasWidth,
-            outY = y / this.game.renderer.canvasHeight;
+        const outX = x / canvasWidth,
+            outY = y / canvasHeight;
 
-        if (outX >= 1.5) {
-            // right
-            pointer.element.css('left', '');
-            pointer.element.css('right', '0');
-            pointer.element.css('top', '50%');
-            pointer.element.css('bottom', '');
-
-            pointer.element.css('transform', 'rotate(-90deg)');
-        } else if (outY >= 1.5) {
-            // bottom
-
-            pointer.element.css('left', '50%');
-            pointer.element.css('right', '');
-            pointer.element.css('top', '');
-            pointer.element.css('bottom', '0');
-
-            pointer.element.css('transform', '');
-        } else if (outX <= 0) {
-            // left
-
-            pointer.element.css('left', '0');
-            pointer.element.css('right', '');
-            pointer.element.css('top', '50%');
-            pointer.element.css('bottom', '');
-
-            pointer.element.css('transform', 'rotate(90deg)');
-        } else if (outY <= 0) {
-            // top
-
-            pointer.element.css('left', '');
-            pointer.element.css('right', '50%');
-            pointer.element.css('top', '0');
-            pointer.element.css('bottom', '');
-
-            pointer.element.css('transform', 'rotate(180deg)');
-        } else {
-            pointer.element.css('left', `${x - offset}px`);
-            pointer.element.css('right', '');
-            pointer.element.css('top', `${y}px`);
-            pointer.element.css('bottom', '');
-
-            pointer.element.css('transform', '');
-        }
+        if (outX >= 1.5)
+            // Right
+            element.css({
+                left: '',
+                right: 0,
+                top: '50%',
+                bottom: '',
+                transform: 'rotate(-90deg)'
+            });
+        else if (outY >= 1.5)
+            // Bottom
+            element.css({
+                left: '50%',
+                right: '',
+                top: '',
+                bottom: 0,
+                transform: ''
+            });
+        else if (outX <= 0)
+            // Left
+            element.css({
+                left: 0,
+                right: '',
+                top: '50%',
+                bottom: '',
+                transform: 'rotate(90deg)'
+            });
+        else if (outY <= 0)
+            // Top
+            element.css({
+                left: '',
+                right: '50%',
+                top: 0,
+                bottom: '',
+                transform: 'rotate(180deg)'
+            });
+        else
+            element.css({
+                left: `${x - offset}px`,
+                right: '',
+                top: `${y}px`,
+                bottom: '',
+                transform: ''
+            });
     }
 
-    setToEntity(entity: Entity): void {
+    public setToEntity(entity: Entity): void {
         const pointer = this.get(entity.id);
 
         if (!pointer) return;
@@ -154,7 +158,7 @@ export default class PointerController {
         this.set(pointer, entity.x, entity.y);
     }
 
-    setToPosition(id: string, x: number, y: number): void {
+    public setToPosition(id: string, x: number, y: number): void {
         const pointer = this.get(id);
 
         if (!pointer) return;
@@ -164,7 +168,7 @@ export default class PointerController {
         this.set(pointer, x, y);
     }
 
-    setRelative(id: string, x: number, y: number): void {
+    public setRelative(id: string, x: number, y: number): void {
         const pointer = this.get(id);
 
         if (!pointer) return;
@@ -175,15 +179,17 @@ export default class PointerController {
 
         pointer.setPosition(x, y);
 
-        pointer.element.css('left', `${x * scale - offsetX}px`);
-        pointer.element.css('top', `${y * scale - offsetY}px`);
+        pointer.element.css({
+            left: `${x * scale - offsetX}px`,
+            top: `${y * scale - offsetY}px`
+        });
     }
 
-    update(): void {
+    public update(): void {
         _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
                 case Modules.Pointers.Entity: {
-                    const entity = this.game.entities.get(pointer.id);
+                    const entity = this.game.entities?.get(pointer.id);
 
                     if (entity) this.setToEntity(entity);
                     else this.destroy(pointer);
@@ -200,17 +206,17 @@ export default class PointerController {
         });
     }
 
-    get(id: string): Pointer {
+    private get(id: string): Pointer | null {
         if (id in this.pointers) return this.pointers[id];
 
         return null;
     }
 
-    updateCamera(): void {
-        this.camera = this.game.renderer.camera;
+    private updateCamera(): void {
+        this.camera = this.game.renderer?.camera;
     }
 
-    getScale(): number {
-        return this.game.getScaleFactor(); // always 3
+    private getScale(): number {
+        return this.game.getScaleFactor();
     }
 }

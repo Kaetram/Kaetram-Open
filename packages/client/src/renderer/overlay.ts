@@ -25,9 +25,7 @@ export default class Overlay {
         overlay.crossOrigin = 'Anonymous';
         overlay.src = (await import(`../../img/overlays/${overlayName}`)).default;
 
-        overlay.addEventListener('load', () => {
-            if (this.game.isDebug()) log.info(`Loaded ${overlayName}`);
-        });
+        overlay.addEventListener('load', () => log.debug(`Loaded ${overlayName}`));
 
         return overlay;
     }

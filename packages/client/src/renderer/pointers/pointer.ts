@@ -3,7 +3,7 @@ import * as Modules from '@kaetram/common/src/modules';
 export default class Pointer {
     id: string;
     element: JQuery<HTMLElement>;
-    type: number;
+    type: Modules.Pointers;
     blinkInterval: number;
     visible: boolean;
     x: number;
