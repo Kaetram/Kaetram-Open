@@ -3,8 +3,8 @@
 [![Version](https://img.shields.io/github/package-json/v/Kaetram/Kaetram-Open)](https://github.com/Kaetram/Kaetram-Open/releases/latest 'Version')
 [![MPL-2.0 License](https://img.shields.io/github/license/Kaetram/Kaetram-Open)][license]
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com&style=flat)](https://kaetram.com 'Website')
-[![Workflow Status](https://img.shields.io/github/workflow/status/Kaetram/Kaetram-Open/Kaetram-Open%20CI)](https://github.com/Kaetram/Kaetram-Open/actions?query=workflow%3A%22Kaetram-Open+CI%22 'Workflow Status')
-[![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open)](https://github.com/Kaetram/Kaetram-Open/issues 'Open Issues')
+[![Workflow Status](https://img.shields.io/github/workflow/status/Kaetram/Kaetram-Open/Kaetram-Open%20CI)](https://github.com/Kaetram/Kaetram-Open/actions/workflows/build.yml 'Workflow Status')
+[![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open)][issues]
 
 [![Watch](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription 'Watch')
 [![Stars](https://img.shields.io/github/stars/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/stargazers 'Stars')
@@ -24,11 +24,11 @@ Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
 Patreon &ndash; <https://www.patreon.com/kaetram>
 
-![Demo1](https://i.imgur.com/slnzrZB.png)
+![Demo 1](https://i.imgur.com/slnzrZB.png 'Demo 1')
 
-![Demo2](https://i.imgur.com/jS5d3oq.png)
+![Demo 2](https://i.imgur.com/jS5d3oq.png 'Demo 2')
 
-![Demo3](https://i.imgur.com/cZTFqnd.png)
+![Demo 3](https://i.imgur.com/cZTFqnd.png 'Demo 3')
 
 ## Table of Contents
 
@@ -39,7 +39,8 @@ Patreon &ndash; <https://www.patreon.com/kaetram>
     - [Prerequisites](#prerequisites)
       - [NOTE: Node.js](#note-nodejs)
       - [NOTE: MongoDB](#note-mongodb)
-    - [Installing and Running](#installing-and-running)
+    - [Installing](#installing)
+    - [Running](#running)
     - [Configuration](#configuration)
   - [Features](#features)
     - [Regions](#regions)
@@ -74,8 +75,9 @@ its predecessor, a couple are:
 
 ### Prerequisites
 
-You must first [install Node.js](https://nodejs.org/en/download/) to run the project, and optionally
-[install MongoDB](https://www.mongodb.com/try/download/community) to store user data on the server.
+You must first [install Node.js](https://nodejs.org/en/download/) to run the project, and
+_optionally_ [install MongoDB](https://www.mongodb.com/try/download/community) to store user data on
+the server.
 
 #### NOTE: Node.js
 
@@ -91,6 +93,8 @@ You must first [install Node.js](https://nodejs.org/en/download/) to run the pro
 > [server configuration](packages/server/.env). _If you do choose to install MongoDB, a user is not
 > necessary, but you can enable authentication with the `MONGODB_AUTH` setting._
 
+### Installing
+
 You will then need to install Yarn using
 
 ```console
@@ -103,15 +107,15 @@ After installing Yarn, install the dependencies by simply running
 yarn
 ```
 
-### Installing and Running
+### Running
 
-To run a live development build, run
+To run live development builds, run
 
 ```console
 yarn dev
 ```
 
-To create a production build, run
+To create production builds, run
 
 ```console
 yarn build
@@ -125,10 +129,12 @@ yarn start
 
 ### Configuration
 
-Optionally, if you would want some additional configuration, in the [server](packages/server/) and
+_Optionally_, if you would want some additional configuration, in the [server](packages/server/) and
 [client](packages/client/) packages, A file called `.env.defaults` will be used unless overridden by
-a `.env` file. Create and modify the `.env` file to fit your needs, make sure the network settings
-in the client match those in the server.
+a new `.env` file.
+
+Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs. Make sure the
+network settings in the client match those in the server.
 
 ## Features
 
@@ -144,21 +150,23 @@ run multiple instances in parallel.
 ### Tilemap
 
 Kaetram is built with modularity in mind, as such, the client supports multiple tileset parsing. The
-tilemap can easily be constructed using [Tiled Map Editor](https://www.mapeditor.org/). Using our
-map parsing tool located in [`packages/tools/map/exportmap.ts`](packages/tools/map/exportmap.ts) you
-can easily export your creation to both the client and the server.
+tilemap can easily be constructed using the [Tiled Map Editor](https://www.mapeditor.org/). Using
+our [map parsing](#map-parsing) tool, you can easily export your creation to both the client and the
+server.
 
 ### Map Parsing
 
-Once you finish modifying your map in [`packages/tools/map/data/`](packages/tools/map/data/) you can
+Once finished modifying your map in [`packages/tools/map/data/`](packages/tools/map/data/), you can
 parse the map data by executing `yarn exportmap` inside the [`packages/tools/`](packages/tools/)
-directory. Example command:
+directory.
+
+Example command:
 
 ```console
 yarn exportmap ./data/map.json
 ```
 
-To build the current game map you can run
+To build the current game map, you can run
 
 ```console
 yarn map
@@ -177,8 +185,7 @@ Here we have [The Roadmap Project Board](https://github.com/Kaetram/Kaetram-Open
 is the main board of the Kaetram-Open project. A kind of Kanban tasks board for tracking and
 presenting the progress to the community. Here we plan, prioritize and track our work.
 
-See also the [open issues](https://github.com/Kaetram/Kaetram-Open/issues) for a list of proposed
-features (and known issues).
+See also the [open issues][issues] for a list of proposed features (and known issues).
 
 ### TODO
 
@@ -213,8 +220,9 @@ features (and known issues).
 For all inquiries about purchasing a different license or commission work, please contact
 **@Vanity** on [Discord][discord].
 
-This project is distributed under the Mozilla Public License Version 2.0. See [`LICENSE`][license]
-for more information.
+This project is distributed under the **Mozilla Public License Version 2.0**. See
+[`LICENSE`][license] for more information.
 
 [license]: LICENSE 'Project License'
+[issues]: https://github.com/Kaetram/Kaetram-Open/issues 'Open Issues'
 [discord]: https://discord.gg/MmbGAaw 'Join Discord'
