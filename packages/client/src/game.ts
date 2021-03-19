@@ -51,7 +51,6 @@ export default class Game {
     private stopped = false;
     public started = false;
     public ready = false;
-    public loaded = false;
 
     public time = Date.now();
 
@@ -168,17 +167,14 @@ export default class Game {
 
         this.loadStorage();
 
-        if (!hasWorker) {
-            this.app.sendStatus(null);
-            this.loaded = true;
-        }
+        if (!hasWorker) this.app.ready();
     }
 
     public loadMap(): void {
         this.map = new Map(this);
         this.overlays = new Overlay(this);
 
-        this.map.onReady(() => {
+        this.map.onReady(async () => {
             const map = this.map as Map;
 
             if (!this.isDebug()) map.loadRegionData();
@@ -194,15 +190,13 @@ export default class Game {
 
             this.setUpdater(new Updater(this));
 
-            this.entities?.load();
+            await this.entities?.load();
 
             this.renderer?.setEntities(this.entities);
 
-            this.app.sendStatus(null);
-
             if (supportsWebGL()) map.loadWebGL(this.renderer?.backContext as WebGLRenderingContext);
 
-            this.loaded = true;
+            this.app.ready();
         });
     }
 
@@ -241,7 +235,7 @@ export default class Game {
 
         renderer.updateAnimatedTiles();
 
-        this.zoning = new Zoning(this);
+        this.zoning = new Zoning();
 
         updater.setSprites(entities.sprites);
 
@@ -267,7 +261,7 @@ export default class Game {
         if (this.getStoragePassword() !== '')
             loginPassword.val(this.getStoragePassword() as string);
 
-        $('#rememberMe').addClass('active');
+        $('#rememberMe').prop('checked', true);
     }
 
     public findPath(
