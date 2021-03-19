@@ -1,4 +1,3 @@
-
 #buttons {
     position: absolute;
     bottom: 0;
@@ -7,18 +6,18 @@
     overflow-y: hidden;
     background-color: rgba(0, 0, 0, 0);
     cursor: default;
-}
 
-#buttons ul {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    float: right;
-}
+    & ul {
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        float: right;
 
-#buttons ul li {
-    float: left;
+        & li {
+            float: left;
+        }
+    }
 }
 
 #notify,
@@ -55,17 +54,17 @@
     bottom: 10%;
     display: none;
     cursor: default;
-}
 
-#inventory ul {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
+    & ul {
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
 
-#inventory ul li {
-    float: left;
+        & li {
+            float: left;
+        }
+    }
 }
 
 .itemSlot {
@@ -93,18 +92,18 @@
     text-align: center;
     color: #c6c0a3;
     cursor: pointer;
-}
 
-.actionButton:hover {
-    background-color: rgba(0, 0, 0, 0.4);
-    color: #fff;
-    cursor: pointer;
-}
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.4);
+        color: #fff;
+        cursor: pointer;
+    }
 
-.actionButton:active {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fcda5c;
-    cursor: pointer;
+    &:active {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fcda5c;
+        cursor: pointer;
+    }
 }
 
 #dropDialog {
@@ -117,7 +116,7 @@
     margin-left: -100px;
     margin-right: -28px;
     padding: 5px;
-    background: rgba(45, 45, 45, 0.8);
+    background-color: rgba(45, 45, 45, 0.8);
     border-radius: 6px 6px 6px 6px;
     display: none;
 }
@@ -137,19 +136,19 @@
 
 #dropAccept,
 #dropCancel {
-    background: rgba(120, 120, 120, 0.3);
+    background-color: rgba(120, 120, 120, 0.3);
     cursor: pointer;
     font-size: 18px;
 }
 
 #dropAccept:hover,
 #dropCancel:hover {
-    background: rgba(120, 120, 120, 0.4);
+    background-color: rgba(120, 120, 120, 0.4);
 }
 
 #dropAccept:active,
 #dropCancel:active {
-    background: rgba(120, 120, 120, 0.4);
+    background-color: rgba(120, 120, 120, 0.4);
     color: #fcda5c;
 }
 
@@ -184,6 +183,30 @@
     float: left;
     left: 10%;
     top: 15%;
+}
+
+.check {
+    padding-left: 1em;
+    display: block;
+    position: absolute;
+    cursor: pointer;
+    user-select: none;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .checkmark {
+        position: absolute;
+        top: -1.5px;
+        left: 0;
+        height: 16px;
+        width: 16px;
+    }
 }
 
 #info {
@@ -221,33 +244,33 @@
     position: absolute;
     left: 40%;
     background-color: rgba(0, 0, 0, 0.5);
-}
 
-#attackInfo .name,
-#attackInfo .health {
-    position: absolute;
-    text-align: center;
-    font-family: 'AdvoCut', sans-serif;
-    color: white;
-}
+    & .name,
+    & .health {
+        position: absolute;
+        text-align: center;
+        font-family: 'AdvoCut', sans-serif;
+        color: white;
+    }
 
-#attackInfo .name {
-    width: 100%;
-    overflow: hidden;
-}
+    & .name {
+        width: 100%;
+        overflow: hidden;
+    }
 
-#attackInfo .details {
-    overflow: hidden;
-    text-align: center;
-    font-family: 'AdvoCut', sans-serif;
-    color: white;
-    width: 100%;
-}
+    & .details {
+        overflow: hidden;
+        text-align: center;
+        font-family: 'AdvoCut', sans-serif;
+        color: white;
+        width: 100%;
+    }
 
-#attackInfo .health {
-    width: 90%;
-    left: 5%;
-    overflow: hidden;
+    & .health {
+        width: 90%;
+        left: 5%;
+        overflow: hidden;
+    }
 }
 
 #bank {
@@ -383,7 +406,7 @@
 
 ::-webkit-scrollbar {
     width: 0;
-    background: transparent; /* make scrollbar transparent */
+    background-color: transparent; /* make scrollbar transparent */
 }
 
 #achievementList,
@@ -400,12 +423,12 @@
     list-style-type: none;
     width: 128%;
     margin-left: 7%;
-}
 
-#abilityShortcut ul li {
-    float: left;
-    margin-top: 1%;
-    margin-right: 4%;
+    & li {
+        float: left;
+        margin-top: 1%;
+        margin-right: 4%;
+    }
 }
 
 .questItem,
@@ -494,10 +517,10 @@
     width: 85%;
     height: 80%;
     left: 8%;
-}
 
-#shopContainer ul li {
-    padding-bottom: 5px;
+    & ul li {
+        padding-bottom: 5px;
+    }
 }
 
 .shopItem {
@@ -547,11 +570,11 @@
     border: 2px solid rgba(0, 255, 0, 0.3);
     border-radius: 30%;
     left: 75%;
-}
 
-.shopItemBuy:hover {
-    color: white;
-    cursor: pointer;
+    &:hover {
+        color: white;
+        cursor: pointer;
+    }
 }
 
 #playerInfo {
@@ -614,7 +637,7 @@
     font-size: 0.75em;
     border: 1px solid #555;
     border-radius: 5px;
-    background: #d83a39;
+    background-color: #d83a39;
 }
 
 #current-world-count {
@@ -639,34 +662,34 @@
     padding: 12px;
     position: absolute;
     margin-left: -80px;
-}
 
-#worlds-popup::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 33%;
-    margin-left: -25px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
+    &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 33%;
+        margin-left: -25px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
 
-#worlds-popup > table th {
-    border-bottom: 2px solid #eee;
-}
+    & > table th {
+        border-bottom: 2px solid #eee;
+    }
 
-#worlds-popup > table td {
-    padding: 12px 24px 10px 16px;
-    border-left: 2px solid #fff;
-}
+    & > table td {
+        padding: 12px 24px 10px 16px;
+        border-left: 2px solid #fff;
+    }
 
-#worlds-popup > table tr:hover {
-    background: #333a;
-}
+    & > table tr:hover {
+        background-color: #333a;
 
-#worlds-popup > table tr:hover::after {
-    content: "Join";
+        &::after {
+            content: 'Join';
+        }
+    }
 }
 
 #notification {
@@ -703,7 +726,7 @@
     margin-top: 10px;
 }
 
-@media only screen and (min-width: 1501px) {
+@media only screen and (--lg) {
     #notification {
         width: 648px;
         height: 102px;
@@ -716,14 +739,14 @@
         width: 42px;
         height: 45px;
         background: url('../img/3/maintwo.png') no-repeat -588px -942px;
-    }
 
-    #chatButton:hover {
-        background: url('../img/3/maintwo.png') no-repeat -630px -942px;
-    }
+        &:hover {
+            background: url('../img/3/maintwo.png') no-repeat -630px -942px;
+        }
 
-    #chatButton.active {
-        background: url('../img/3/maintwo.png') no-repeat -672px -942px;
+        &.active {
+            background: url('../img/3/maintwo.png') no-repeat -672px -942px;
+        }
     }
 
     #inventoryButton {
@@ -731,14 +754,14 @@
         width: 42px;
         height: 45px;
         background: url('../img/3/main.png') no-repeat -588px -942px;
-    }
 
-    #inventoryButton:hover {
-        background: url('../img/3/main.png') no-repeat -630px -942px;
-    }
+        &:hover {
+            background: url('../img/3/main.png') no-repeat -630px -942px;
+        }
 
-    #inventoryButton.active {
-        background: url('../img/3/main.png') no-repeat -672px -942px;
+        &.active {
+            background: url('../img/3/main.png') no-repeat -672px -942px;
+        }
     }
 
     #profileButton {
@@ -746,14 +769,14 @@
         width: 42px;
         height: 45px;
         background: url('../img/3/main.png') no-repeat -714px -942px;
-    }
 
-    #profileButton:hover {
-        background: url('../img/3/main.png') no-repeat -756px -942px;
-    }
+        &:hover {
+            background: url('../img/3/main.png') no-repeat -756px -942px;
+        }
 
-    #profileButton.active {
-        background: url('../img/3/main.png') no-repeat -798px -942px;
+        &.active {
+            background: url('../img/3/main.png') no-repeat -798px -942px;
+        }
     }
 
     #settingsButton {
@@ -761,14 +784,14 @@
         width: 42px;
         height: 45px;
         background: url('../img/3/main.png') no-repeat -1218px -942px;
-    }
 
-    #settingsButton:hover {
-        background: url('../img/3/main.png') no-repeat -1260px -942px;
-    }
+        &:hover {
+            background: url('../img/3/main.png') no-repeat -1260px -942px;
+        }
 
-    #settingsButton.active {
-        background: url('../img/3/main.png') no-repeat -1302px -942px;
+        &.active {
+            background: url('../img/3/main.png') no-repeat -1302px -942px;
+        }
     }
 
     #warpButton {
@@ -776,21 +799,21 @@
         width: 42px;
         height: 45px;
         background: url('../img/3/main.png') no-repeat -966px -942px;
-    }
 
-    #warpButton:hover {
-        background: url('../img/3/main.png') no-repeat -1008px -942px;
-    }
+        &:hover {
+            background: url('../img/3/main.png') no-repeat -1008px -942px;
+        }
 
-    #warpButton.active {
-        background: url('../img/3/main.png') no-repeat -1050px -942px;
+        &.active {
+            background: url('../img/3/main.png') no-repeat -1050px -942px;
+        }
     }
 
     #abilityShortcut {
         width: 366px;
         height: 60px;
         top: 720px;
-        background: url('../img/3/skillslots.png');
+        background-image: url('../img/3/skillslots.png');
     }
 
     #inventory {
@@ -807,14 +830,14 @@
         margin-bottom: 21px;
         border-radius: 9px;
         border: 3px solid #707070;
-    }
 
-    .itemSlot:hover {
-        border: 3px solid #eee;
-    }
+        &:hover {
+            border: 3px solid #eee;
+        }
 
-    .itemSlot:active {
-        border: 3px solid #fcda5c;
+        &:active {
+            border: 3px solid #fcda5c;
+        }
     }
 
     .itemCount,
@@ -973,21 +996,21 @@
     #previous {
         left: 0;
         background-position: 0 -669px;
-    }
 
-    #previous.enabled {
-        background-position: 0 -720px;
-        cursor: pointer;
+        &.enabled {
+            background-position: 0 -720px;
+            cursor: pointer;
+        }
     }
 
     #next {
         left: 63px;
         background-position: -63px -720px;
-    }
 
-    #next.enabled {
-        background-position: -63px -669px;
-        cursor: pointer;
+        &.enabled {
+            background-position: -63px -669px;
+            cursor: pointer;
+        }
     }
 
     #sliders {
@@ -1016,34 +1039,36 @@
         width: 240px;
         height: 300px;
         font-size: 24px;
-    }
 
-    #texts p {
-        margin-bottom: 36px;
+        & p {
+            margin-bottom: 36px;
+        }
     }
 
     .check {
-        position: absolute;
-        width: 24px;
-        height: 24px;
-        background: url('../img/3/characterdialogsheet.png') -330px -723px;
-    }
+        .checkmark {
+            width: 24px;
+            height: 24px;
+            background: url('../img/3/characterdialogsheet.png') -327px -720px;
+        }
 
-    .check:hover,
-    .check:focus {
-        background-position: -357px -723px;
-    }
+        &:hover input ~ .checkmark,
+        input:focus ~ .checkmark {
+            background-position-x: -354px;
+        }
 
-    .check:active {
-        background-position: -384px -723px;
-    }
+        input:active ~ .checkmark {
+            background-position-x: -381px;
+        }
 
-    .check.active {
-        background-position: -411px -723px;
-    }
+        input:checked ~ .checkmark {
+            background-position-x: -408px;
+        }
 
-    .check.active:hover {
-        background-position: -438px -723px;
+        &:hover input:checked ~ .checkmark,
+        input:focus:checked ~ .checkmark {
+            background-position-x: -435px;
+        }
     }
 
     #soundCheck {
@@ -1077,21 +1102,21 @@
         border-bottom-left-radius: 24px;
         border-bottom-right-radius: 24px;
         border: 6px solid #373737;
-    }
 
-    #attackInfo .details {
-        margin-top: 27px;
-    }
+        & .details {
+            margin-top: 27px;
+        }
 
-    #attackInfo .health {
-        height: 18px;
-        border: 3px solid #373737;
-        border-radius: 6px;
-        background: red;
-        -o-transition: 0.5s width ease;
-        -moz-transition: 0.5s width ease;
-        -webkit-transition: 0.5s width ease;
-        transition: 0.5s width ease;
+        & .health {
+            height: 18px;
+            border: 3px solid #373737;
+            border-radius: 6px;
+            background-color: red;
+            -o-transition: 0.5s width ease;
+            -moz-transition: 0.5s width ease;
+            -webkit-transition: 0.5s width ease;
+            transition: 0.5s width ease;
+        }
     }
 
     #bank {
@@ -1101,11 +1126,11 @@
 
     #bankContainer,
     #bankInventoryContainer {
-        background: url('../img/3/bank.png');
+        background-image: url('../img/3/bank.png');
     }
 
     #enchantContainer {
-        background: url('../img/3/containers.png');
+        background-image: url('../img/3/containers.png');
     }
 
     #bankContainer {
@@ -1160,24 +1185,24 @@
         width: 48px;
         height: 48px;
         background: url('../img/3/containers.png') -96px -498px;
-    }
 
-    .close.active {
-        background-position: -144px -498px;
-    }
+        &.active {
+            background-position-x: -144px;
+        }
 
-    .close:hover {
-        background-position: -192px -498px;
+        &:hover {
+            background-position-x: -192px;
+        }
     }
 
     .ok {
         width: 42px;
         height: 42px;
         background: url('../img/3/containers.png') -1143px -183px;
-    }
 
-    .ok:hover {
-        background-position: -1143px -141px;
+        &:hover {
+            background-position-x: -1143px;
+        }
     }
 
     #message {
@@ -1216,7 +1241,7 @@
     #mapFrame {
         width: 810px;
         height: 540px;
-        background: url('../img/3/mapframe.png');
+        background-image: url('../img/3/mapframe.png');
         margin-left: -405px;
         margin-top: -270px;
     }
@@ -1285,13 +1310,13 @@
     #shop {
         width: 510px;
         height: 504px;
-        background: url("../img/3/containers.png") -387px -66px;
+        background: url('../img/3/containers.png') -387px -66px;
     }
 
     #shopInventoryContainer {
         width: 387px;
         height: 464px;
-        background: url("../img/3/containers.png") 0 0;
+        background: url('../img/3/containers.png') 0 0;
     }
 
     #shopSellSlot,
@@ -1378,7 +1403,7 @@
     }
 }
 
-@media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
+@media only screen and (--md) {
     #notification {
         width: 432px;
         height: 68px;
@@ -1399,14 +1424,14 @@
         width: 28px;
         height: 30px;
         background: url('../img/2/maintwo.png') no-repeat -392px -628px;
-    }
 
-    #chatButton:hover {
-        background: url('../img/2/maintwo.png') no-repeat -420px -628px;
-    }
+        &:hover {
+            background-position-x: -420px;
+        }
 
-    #chatButton.active {
-        background: url('../img/2/maintwo.png') no-repeat -448px -628px;
+        &.active {
+            background-position-x: -448px;
+        }
     }
 
     #inventoryButton {
@@ -1414,14 +1439,14 @@
         width: 28px;
         height: 30px;
         background: url('../img/2/main.png') no-repeat -392px -628px;
-    }
 
-    #inventoryButton:hover {
-        background: url('../img/2/main.png') no-repeat -420px -628px;
-    }
+        &:hover {
+            background-position-x: -420px;
+        }
 
-    #inventoryButton.active {
-        background: url('../img/2/main.png') no-repeat -448px -628px;
+        &.active {
+            background-position-x: -448px;
+        }
     }
 
     #profileButton {
@@ -1429,14 +1454,14 @@
         width: 28px;
         height: 30px;
         background: url('../img/2/main.png') no-repeat -476px -628px;
-    }
 
-    #profileButton:hover {
-        background: url('../img/2/main.png') no-repeat -504px -628px;
-    }
+        &:hover {
+            background-position-x: -504px;
+        }
 
-    #profileButton.active {
-        background: url('../img/2/main.png') no-repeat -532px -628px;
+        &.active {
+            background-position-x: -532px;
+        }
     }
 
     #settingsButton {
@@ -1444,14 +1469,14 @@
         width: 28px;
         height: 30px;
         background: url('../img/2/main.png') no-repeat -812px -628px;
-    }
 
-    #settingsButton:hover {
-        background: url('../img/2/main.png') no-repeat -840px -628px;
-    }
+        &:hover {
+            background-position-x: -840px;
+        }
 
-    #settingsButton.active {
-        background: url('../img/2/main.png') no-repeat -868px -628px;
+        &.active {
+            background-position-x: -868px;
+        }
     }
 
     #warpButton {
@@ -1459,14 +1484,14 @@
         width: 28px;
         height: 30px;
         background: url('../img/2/main.png') no-repeat -644px -628px;
-    }
 
-    #warpButton:hover {
-        background: url('../img/2/main.png') no-repeat -672px -628px;
-    }
+        &:hover {
+            background-position-x: -672px;
+        }
 
-    #warpButton.active {
-        background: url('../img/2/main.png') no-repeat -700px -628px;
+        &.active {
+            background-position-x: -700px;
+        }
     }
 
     #abilityShortcut {
@@ -1506,6 +1531,12 @@
         background: url('../img/2/containers.png') -642px -108px;
     }
 
+    .ok {
+        width: 28px;
+        height: 28px;
+        background: url('../img/2/containers.png') -762px -122px;
+    }
+
     .ok:hover,
     .done:hover {
         background: url('../img/2/containers.png') -642px -94px;
@@ -1515,11 +1546,11 @@
         width: 40px;
         height: 14px;
         background: url('../img/2/containers.png') -601px -108px;
-    }
 
-    #cancel:hover,
-    #cancel:focus {
-        background: url('../img/2/containers.png') -601px -94px;
+        &:hover,
+        &:focus {
+            background-position-y: -94px;
+        }
     }
 
     #inventory {
@@ -1536,15 +1567,15 @@
         margin-bottom: 14px;
         border-radius: 3px;
         border: 2px solid #707070;
-    }
 
-    .itemSlot:hover,
-    .itemSlot.select {
-        border: 2px solid #eee;
-    }
+        &:hover,
+        &.select {
+            border: 2px solid #eee;
+        }
 
-    .itemSlot:active {
-        border: 2px solid #fcda5c;
+        &:active {
+            border: 2px solid #fcda5c;
+        }
     }
 
     .itemCount,
@@ -1704,21 +1735,21 @@
     #previous {
         left: 0;
         background-position: 0 -446px;
-    }
 
-    #previous.enabled {
-        background-position: 0 -480px;
-        cursor: pointer;
+        &.enabled {
+            background-position: 0 -480px;
+            cursor: pointer;
+        }
     }
 
     #next {
         left: 42px;
         background-position: -42px -480px;
-    }
 
-    #next.enabled {
-        background-position: -42px -446px;
-        cursor: pointer;
+        &.enabled {
+            background-position: -42px -446px;
+            cursor: pointer;
+        }
     }
 
     #sliders {
@@ -1747,34 +1778,36 @@
         width: 120px;
         height: 200px;
         font-size: 16px;
-    }
 
-    #texts p {
-        margin-bottom: 24px;
+        & p {
+            margin-bottom: 24px;
+        }
     }
 
     .check {
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        background: url('../img/2/characterdialogsheet.png') -220px -481px;
-    }
+        .checkmark {
+            width: 16px;
+            height: 16px;
+            background: url('../img/2/characterdialogsheet.png') -218px -480px;
+        }
 
-    .check:hover,
-    .check:focus {
-        background-position: -238px -481px;
-    }
+        &:hover input ~ .checkmark,
+        input:focus ~ .checkmark {
+            background-position-x: -236px;
+        }
 
-    .check:active {
-        background-position: -256px -481px;
-    }
+        input:active ~ .checkmark {
+            background-position-x: -254px;
+        }
 
-    .check.active {
-        background-position: -274px -481px;
-    }
+        input:checked ~ .checkmark {
+            background-position-x: -272px;
+        }
 
-    .check.active:hover {
-        background-position: -292px -481px;
+        &:hover input:checked ~ .checkmark,
+        input:focus:checked ~ .checkmark {
+            background-position-x: -290px;
+        }
     }
 
     #soundCheck {
@@ -1808,21 +1841,21 @@
         border-bottom-left-radius: 16px;
         border-bottom-right-radius: 16px;
         border: 4px solid #373737;
-    }
 
-    #attackInfo .details {
-        margin-top: 18px;
-    }
+        & .details {
+            margin-top: 18px;
+        }
 
-    #attackInfo .health {
-        height: 12px;
-        border: 1px solid #373737;
-        border-radius: 4px;
-        background: red;
-        -o-transition: 0.5s width ease;
-        -moz-transition: 0.5s width ease;
-        -webkit-transition: 0.5s width ease;
-        transition: 0.5s width ease;
+        & .health {
+            height: 12px;
+            border: 1px solid #373737;
+            border-radius: 4px;
+            background-color: red;
+            -o-transition: 0.5s width ease;
+            -moz-transition: 0.5s width ease;
+            -webkit-transition: 0.5s width ease;
+            transition: 0.5s width ease;
+        }
     }
 
     #bank {
@@ -1832,11 +1865,11 @@
 
     #bankContainer,
     #bankInventoryContainer {
-        background: url('../img/2/bank.png');
+        background-image: url('../img/2/bank.png');
     }
 
     #enchantContainer {
-        background: url('../img/2/containers.png');
+        background-image: url('../img/2/containers.png');
     }
 
     #bankContainer {
@@ -1866,7 +1899,7 @@
     .bankSlot {
         width: 32px;
         height: 30px;
-        background: url(../img/2/containers.png) -600px -344px;
+        background: url('../img/2/containers.png') -600px -344px;
     }
 
     #enchant {
@@ -1880,7 +1913,7 @@
     #trade {
         width: 500px;
         height: 339px;
-        background: url(../img/2/trade.png) 0 0;
+        background: url('../img/2/trade.png') 0 0;
     }
 
     #tradePlayerContainer,
@@ -1903,20 +1936,14 @@
         width: 32px;
         height: 32px;
         background: url('../img/2/containers.png') -64px -332px;
-    }
 
-    .close.active {
-        background-position: -96px -332px;
-    }
+        &.active {
+            background-position-x: -96px;
+        }
 
-    .close:hover {
-        background-position: -128px -332px;
-    }
-
-    .ok {
-        width: 28px;
-        height: 28px;
-        background: url('../img/2/containers.png') -762px -122px;
+        &:hover {
+            background-position-x: -128px;
+        }
     }
 
     .ok:hover {
@@ -1961,7 +1988,7 @@
     #mapFrame {
         width: 540px;
         height: 360px;
-        background: url('../img/2/mapframe.png');
+        background-image: url('../img/2/mapframe.png');
         margin-left: -270px;
         margin-top: -180px;
     }
@@ -2030,13 +2057,13 @@
     #shop {
         width: 340px;
         height: 336px;
-        background: url("../img/2/containers.png") -258px -44px;
+        background: url('../img/2/containers.png') -258px -44px;
     }
 
     #shopInventoryContainer {
         width: 258px;
         height: 310px;
-        background: url("../img/2/containers.png") 0 0;
+        background: url('../img/2/containers.png') 0 0;
     }
 
     #shopSellSlot,
@@ -2115,20 +2142,20 @@
     }
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (--sm) {
     #chatButton {
         position: relative;
         width: 28px;
         height: 30px;
         background: url('../img/2/maintwo.png') no-repeat -392px -628px;
-    }
 
-    #chatButton:hover {
-        background: url('../img/2/maintwo.png') no-repeat -420px -628px;
-    }
+        &:hover {
+            background-position-x: -420px;
+        }
 
-    #chatButton.active {
-        background: url('../img/2/maintwo.png') no-repeat -448px -628px;
+        &.active {
+            background-position-x: -448px;
+        }
     }
 
     #profileButton {
@@ -2136,14 +2163,14 @@
         width: 28px;
         height: 30px;
         background: url('../img/2/main.png') no-repeat -476px -628px;
-    }
 
-    #profileButton:hover {
-        background: url('../img/2/main.png') no-repeat -504px -628px;
-    }
+        &:hover {
+            background-position-x: -504px;
+        }
 
-    #profileButton.active {
-        background: url('../img/2/main.png') no-repeat -532px -628px;
+        &.active {
+            background-position-x: -532px;
+        }
     }
 
     #settingsButton {
@@ -2151,14 +2178,14 @@
         width: 28px;
         height: 30px;
         background: url('../img/2/main.png') no-repeat -812px -628px;
-    }
 
-    #settingsButton:hover {
-        background: url('../img/2/main.png') no-repeat -840px -628px;
-    }
+        &:hover {
+            background-position-x: -840px;
+        }
 
-    #settingsButton.active {
-        background: url('../img/2/main.png') no-repeat -868px -628px;
+        &.active {
+            background-position-x: -868px;
+        }
     }
 
     #warpButton {
@@ -2166,21 +2193,21 @@
         width: 28px;
         height: 30px;
         background: url('../img/2/main.png') no-repeat -644px -628px;
-    }
 
-    #warpButton:hover {
-        background: url('../img/2/main.png') no-repeat -672px -628px;
-    }
+        &:hover {
+            background-position-x: -672px;
+        }
 
-    #warpButton.active {
-        background: url('../img/2/main.png') no-repeat -700px -628px;
+        &.active {
+            background-position-x: -700px;
+        }
     }
 
     #abilityShortcut {
         width: 122px;
         height: 20px;
         top: 240px;
-        background: url('../img/1/skillslots.png');
+        background-image: url('../img/1/skillslots.png');
     }
 
     #notify,
@@ -2226,11 +2253,11 @@
         width: 14px;
         height: 14px;
         background: url('../img/1/containers.png') -371px -79px;
-    }
 
-    #cancel:hover,
-    #cancel:focus {
-        background: url('../img/1/containers.png') -371px -65px;
+        &:hover,
+        &:focus {
+            background-position-x: -65px;
+        }
     }
 
     #actionContainer {
@@ -2382,21 +2409,21 @@
     #previous {
         left: 0;
         background-position: 0 -223px;
-    }
 
-    #previous.enabled {
-        background-position: 0 -240px;
-        cursor: pointer;
+        &.enabled {
+            background-position: 0 -240px;
+            cursor: pointer;
+        }
     }
 
     #next {
         left: 21px;
         background-position: -21px -240px;
-    }
 
-    #next.enabled {
-        background-position: -21px -223px;
-        cursor: pointer;
+        &.enabled {
+            background-position: -21px -223px;
+            cursor: pointer;
+        }
     }
 
     #sliders {
@@ -2426,34 +2453,36 @@
         height: 100px;
         font-size: 8px;
         top: 15%;
-    }
 
-    #texts p {
-        margin-bottom: 12px;
+        & p {
+            margin-bottom: 12px;
+        }
     }
 
     .check {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background: url('../img/1/characterdialogsheet.png') -110px -241px;
-    }
+        .checkmark {
+            width: 8px;
+            height: 8px;
+            background: url('../img/1/characterdialogsheet.png') -109px -240px;
+        }
 
-    .check:hover,
-    .check:focus {
-        background-position: -119px -241px;
-    }
+        &:hover input ~ .checkmark,
+        input:focus ~ .checkmark {
+            background-position-x: -118px;
+        }
 
-    .check:active {
-        background-position: -128px -241px;
-    }
+        input:active ~ .checkmark {
+            background-position-x: -127px;
+        }
 
-    .check.active {
-        background-position: -137px -241px;
-    }
+        input:checked ~ .checkmark {
+            background-position-x: -136px;
+        }
 
-    .check.active:hover {
-        background-position: -146px -241px;
+        &:hover input:checked ~ .checkmark,
+        input:focus:checked ~ .checkmark {
+            background-position-x: -145px;
+        }
     }
 
     #soundCheck {
@@ -2487,21 +2516,21 @@
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
         border: 2px solid #373737;
-    }
 
-    #attackInfo .details {
-        margin-top: 9px;
-    }
+        & .details {
+            margin-top: 9px;
+        }
 
-    #attackInfo .health {
-        height: 6px;
-        border: 1px solid #373737;
-        border-radius: 2px;
-        background: red;
-        -o-transition: 0.5s width ease;
-        -moz-transition: 0.5s width ease;
-        -webkit-transition: 0.5s width ease;
-        transition: 0.5s width ease;
+        & .health {
+            height: 6px;
+            border: 1px solid #373737;
+            border-radius: 2px;
+            background-color: red;
+            -o-transition: 0.5s width ease;
+            -moz-transition: 0.5s width ease;
+            -webkit-transition: 0.5s width ease;
+            transition: 0.5s width ease;
+        }
     }
 
     #bank {
@@ -2512,11 +2541,11 @@
 
     #bankContainer,
     #bankInventoryContainer {
-        background: url('../img/1/bank.png');
+        background-image: url('../img/1/bank.png');
     }
 
     #enchantContainer {
-        background: url('../img/1/containers.png');
+        background-image: url('../img/1/containers.png');
     }
 
     #bankContainer {
@@ -2546,7 +2575,7 @@
     .bankSlot {
         width: 16px;
         height: 15px;
-        background: url(../img/1/containers.png) -300px -172px;
+        background: url('../img/1/containers.png') -300px -172px;
     }
 
     #enchant {
@@ -2607,7 +2636,7 @@
         transform: scale(1.6);
         width: 270px;
         height: 180px;
-        background: url('../img/1/mapframe.png');
+        background-image: url('../img/1/mapframe.png');
         margin-left: -135px;
         margin-top: -90px;
     }
@@ -2683,14 +2712,14 @@
         left: 55%;
         width: 170px;
         height: 168px;
-        background: url("../img/1/containers.png") -129px -22px;
+        background: url('../img/1/containers.png') -129px -22px;
         transform: scale(1.5);
     }
 
     #shopInventoryContainer {
         width: 129px;
         height: 155px;
-        background: url("../img/1/containers.png") 0 0;
+        background: url('../img/1/containers.png') 0 0;
     }
 
     #shopSellSlot,
