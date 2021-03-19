@@ -84,7 +84,6 @@ export default class Renderer {
     contexts: CanvasRenderingContext2D[];
     drawingContexts: (CanvasRenderingContext2D | RenderingContext)[];
     lightings: RendererLighting[];
-    // textures: { [key: string]: any };
     entities: EntitiesController | null;
     game: Game;
     camera: Camera;
@@ -122,7 +121,6 @@ export default class Renderer {
     webGL: boolean;
     map: Map;
     mEdge: boolean;
-    firefox: boolean;
     tablet: boolean;
     mobile: boolean;
     darkMask: DarkMask;
@@ -186,7 +184,6 @@ export default class Renderer {
         this.drawingContexts = [this.backContext, this.foreContext]; // For drawing the map.
 
         this.lightings = [];
-        // this.textures = {};
 
         this.game = game;
         this.camera = null;
@@ -294,7 +291,7 @@ export default class Renderer {
 
         if (!storage.data.new) return;
 
-        if (this.mEdge || this.firefox || Detect.useCenteredCamera()) {
+        if (this.mEdge || Detect.useCenteredCamera()) {
             this.camera.centered = false;
 
             storage.data.settings.centerCamera = false;
@@ -1378,11 +1375,10 @@ export default class Renderer {
     checkDevice(): void {
         this.mobile = Detect.isMobile();
         this.tablet = Detect.isTablet();
-        this.firefox = Detect.isFirefox();
         this.mEdge = Detect.isEdge();
         this.webGL = Detect.supportsWebGL();
 
-        // this.animateTiles = !this.firefox && !this.mEdge;
+        // this.animateTiles = !this.mEdge;
     }
 
     verifyCentration(): void {

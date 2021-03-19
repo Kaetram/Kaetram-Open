@@ -1,4 +1,5 @@
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import PreloadWebpackPlugin from '@vue/preload-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { GenerateSW } from 'workbox-webpack-plugin';
 
@@ -9,14 +10,21 @@ import type { Compiler } from 'webpack';
 import config, { env, exclude, maxSize, plugins, resolve, rules } from './webpack.common';
 import type { Config } from './webpack.common';
 
+type Plugin = (compiler: Compiler) => void;
+
 plugins.push(
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin() as (compiler: Compiler) => void,
+    new PreloadWebpackPlugin({
+        as: 'font',
+        include: 'allAssets',
+        fileWhitelist: [/\.woff$/i]
+    }),
+    new MiniCssExtractPlugin() as Plugin,
     new GenerateSW({
         cacheId: name,
         maximumFileSizeToCacheInBytes: maxSize,
-        clientsClaim: false,
-        skipWaiting: false
+        skipWaiting: true,
+        clientsClaim: true
     })
 );
 
