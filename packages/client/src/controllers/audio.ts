@@ -63,7 +63,7 @@ export default class AudioController {
 
     public constructor(private game: Game) {}
 
-    public async parse(path: string, name: Audio, channels: number): Promise<void> {
+    public async parse(path: 'music' | 'sounds', name: Audio, channels: number): Promise<void> {
         const { default: fullPath } = await import(`../../audio/${path}/${name}.${this.format}`),
             sound = document.createElement('audio') as AudioElement;
 
@@ -98,7 +98,7 @@ export default class AudioController {
         else if (name in this.sounds) this.sounds[name as Sounds] = true;
     }
 
-    public play(type: Modules.AudioTypes, name: Audio): void {
+    public async play(type: Modules.AudioTypes, name: Audio): Promise<void> {
         if (!this.isEnabled() || this.game.player?.dead) return;
 
         if (isSafari()) return;
@@ -123,7 +123,7 @@ export default class AudioController {
             }
 
             case Modules.AudioTypes.SFX: {
-                if (!this.sounds[name as Sounds]) this.parse('sounds', name, 4);
+                if (!this.sounds[name as Sounds]) await this.parse('sounds', name, 4);
 
                 const sound = this.get(name);
 
@@ -138,7 +138,7 @@ export default class AudioController {
         }
     }
 
-    public update(): void {
+    public async update(): Promise<void> {
         if (!this.isEnabled()) return;
 
         if (this.newSong === this.song) return;
@@ -150,7 +150,7 @@ export default class AudioController {
             else this.fadeSongOut();
 
             if (song.name in this.music && !this.music[song.name as Music]) {
-                this.parse('music', song.name, 1);
+                await this.parse('music', song.name, 1);
 
                 const music = this.audibles[song.name]?.[0] as AudioElement;
 
