@@ -557,7 +557,7 @@ export default class Connection {
         );
 
         this.messages.onChat((info: any) => {
-            if (this.game.isDebug()) log.info(info);
+            log.debug(info);
 
             if (info.withBubble) {
                 const entity = this.entities.get(info.id);

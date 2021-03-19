@@ -1,37 +1,26 @@
 import $ from 'jquery';
 
-import Character from '../entity/character/character';
-import Player from '../entity/character/player/player';
-import Entity from '../entity/entity';
-import Game from '../game';
-import InputController from './input';
+import type Character from '../entity/character/character';
+import type Player from '../entity/character/player/player';
+import type Entity from '../entity/entity';
+import type InputController from './input';
 
 export default class OverlayController {
-    hovering: Entity;
-    input: InputController;
+    private hovering!: Entity | null;
 
-    attackInfo: JQuery;
-    image: JQuery;
-    name: JQuery;
-    details: JQuery;
-    health: JQuery;
+    private attackInfo = $('#attackInfo');
 
-    updateCallback: (id: string, data: number) => void;
+    // private image = this.attackInfo.find('.image div');
+    private name = this.attackInfo.find('.name');
+    private details = this.attackInfo.find('.details');
+    private health = this.attackInfo.find('.health');
 
-    constructor(input: InputController) {
-        this.input = input;
-        this.hovering = null;
+    public updateCallback!: (id: string, data: number) => void;
 
-        this.attackInfo = $('#attackInfo');
+    public constructor(private input: InputController) {}
 
-        this.image = this.attackInfo.find('.image div');
-        this.name = this.attackInfo.find('.name');
-        this.details = this.attackInfo.find('.details');
-        this.health = this.attackInfo.find('.health');
-    }
-
-    update(entity: Entity | undefined): void {
-        if (!this.validEntity(entity)) {
+    public update(entity: Entity | undefined): void {
+        if (!entity || !this.validEntity(entity)) {
             this.hovering = null;
 
             if (this.isVisible()) this.hide();
@@ -83,36 +72,29 @@ export default class OverlayController {
         });
     }
 
-    validEntity(entity: Entity): boolean {
+    private validEntity(entity: Entity): boolean {
         return entity && entity.id !== this.input.getPlayer().id && entity.type !== 'projectile';
     }
 
-    clean(): void {
-        this.details.html('');
-        this.hovering = null;
+    private hasHealth(): boolean {
+        return this.hovering
+            ? this.hovering.type === 'mob' || this.hovering.type === 'player'
+            : false;
     }
 
-    hasHealth(): boolean {
-        return this.hovering.type === 'mob' || this.hovering.type === 'player';
-    }
-
-    display(): void {
+    private display(): void {
         this.attackInfo.fadeIn('fast');
     }
 
-    hide(): void {
+    private hide(): void {
         this.attackInfo.fadeOut('fast');
     }
 
-    isVisible(): boolean {
+    private isVisible(): boolean {
         return this.attackInfo.css('display') === 'block';
     }
 
-    getGame(): Game {
-        return this.input.game;
-    }
-
-    onUpdate(callback: (id: string, data: number) => void): void {
+    private onUpdate(callback: (id: string, data: number) => void): void {
         this.updateCallback = callback;
     }
 }

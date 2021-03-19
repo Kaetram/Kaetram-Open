@@ -1,19 +1,20 @@
 import $ from 'jquery';
 
-import Equipment from '../entity/character/player/equipment/equipment';
-import Game from '../game';
 import log from '../lib/log';
 import Actions from '../menu/actions';
 import Bank from '../menu/bank';
-import Slot from '../menu/container/slot';
 import Enchant from '../menu/enchant';
 import Header from '../menu/header';
 import Inventory from '../menu/inventory';
-import Professions from '../menu/profile/pages/professions';
-import Quest from '../menu/profile/pages/quest';
 import Profile from '../menu/profile/profile';
 import Shop from '../menu/shop';
 import Warp from '../menu/warp';
+
+import type Equipment from '../entity/character/player/equipment/equipment';
+import type Game from '../game';
+import type Slot from '../menu/container/slot';
+import type Professions from '../menu/profile/pages/professions';
+import type Quest from '../menu/profile/pages/quest';
 
 export default class MenuController {
     private notify = $('#notify');
@@ -23,8 +24,10 @@ export default class MenuController {
     private done = $('#notifyDone');
 
     private notification = $('#notification');
-    private title = $('#notificationTextTitle'); // notification title
-    private description = $('#notificationTextDescription'); // notification description
+    /** Notification title */
+    private title = $('#notificationTextTitle');
+    /** Notification description */
+    private description = $('#notificationTextDescription');
 
     private notificationTimeout!: number | null;
 
