@@ -1,4 +1,4 @@
-import log from '../src/lib/log';
+import log from './log';
 
 /**
  * The `BeforeInstallPromptEvent` is fired at the `Window.onbeforeinstallprompt` handler
@@ -65,6 +65,11 @@ async function init(): Promise<void> {
     const { Workbox } = await import('workbox-window');
 
     const wb = new Workbox('/service-worker.js');
+
+    wb.addEventListener('installed', (event) => {
+        if (event.isUpdate && confirm('New content is available!. Click OK to refresh'))
+            window.location.reload();
+    });
 
     wb.register();
 }

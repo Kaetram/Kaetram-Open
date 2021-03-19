@@ -4,6 +4,8 @@
         "module": "esnext",
         "target": "esnext",
         "removeComments": false,
+        "noImplicitAny": false,
+        "strictNullChecks": false,
         "types": ["@types/webpack-env"]
     },
     "include": ["**/*.ts", "../../package.json"],

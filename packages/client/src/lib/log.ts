@@ -14,4 +14,4 @@ class Logger {
     }
 }
 
-export default new Logger('debug');
+export default new Logger(process.env.NODE_ENV === 'development' ? 'debug' : 'info');
