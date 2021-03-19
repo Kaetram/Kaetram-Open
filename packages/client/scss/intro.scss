@@ -1,4 +1,3 @@
-
 html,
 body,
 div,
@@ -67,7 +66,7 @@ td {
     outline: 0;
     font-size: 100%;
     vertical-align: baseline;
-    background: transparent;
+    background-color: transparent;
 }
 
 article,
@@ -85,16 +84,16 @@ section {
 
 canvas {
     position: absolute;
-    image-rendering: optimizeSpeed;             /* Older versions of FF          */
-    image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+    image-rendering: optimizeSpeed; /* Older versions of FF          */
+    image-rendering: -moz-crisp-edges; /* FF 6.0+                       */
     image-rendering: -webkit-optimize-contrast; /* Safari                        */
-    image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
-    image-rendering: pixelated;                 /* Awesome future-browsers       */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+    image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
+    image-rendering: pixelated; /* Awesome future-browsers       */
+    -ms-interpolation-mode: nearest-neighbor; /* IE                            */
 }
 
 html {
-    background: #000;
+    background-color: #000;
 }
 
 #background,
@@ -108,9 +107,18 @@ html {
 
 #container {
     z-index: 100;
-    background: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     -webkit-transition: 1s opacity linear 0.5s;
     transition: 1s opacity linear 0.5s;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    position: inherit;
+
+    /* width: 490px;
+    height: 266px;
+    margin: -126px auto auto -245px;
+    position: absolute; */
 }
 
 footer {
@@ -146,15 +154,12 @@ footer {
 
 .game footer {
     color: #8a8a8a;
+    opacity: 0;
 }
 
 .intro footer,
 footer:hover {
     opacity: 1;
-}
-
-.game footer {
-    opacity: 0;
 }
 
 footer div {
@@ -173,6 +178,7 @@ footer div {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+    user-select: none;
     cursor: none;
 }
 
@@ -189,7 +195,7 @@ footer div {
 .parchment-middle,
 .parchment-right,
 #respawn {
-    background: url('../img/3/spritesheet.png');
+    background-image: url('../img/3/spritesheet.png');
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges;
@@ -213,29 +219,29 @@ footer div {
 
 #parchment input {
     width: 50%;
-    background: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.05);
     text-align: center;
     color: #eee;
     -webkit-animation: glow 0.5s linear infinite alternate;
     animation: glow 0.5s linear infinite alternate;
-}
 
-#parchment input:focus {
-    border-color: rgba(0, 0, 0, 0.3);
-    background: rgba(0, 0, 0, 0.1);
-    color: #fff;
-    -webkit-animation: none;
-    animation: none;
-}
+    &:focus {
+        border-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.1);
+        color: #fff;
+        -webkit-animation: none;
+        animation: none;
+    }
 
-#parchment input.field-error {
-    background: rgba(255, 0, 0, 0.1);
-    border-color: #f84444;
+    &.field-error {
+        background-color: rgba(255, 0, 0, 0.1);
+        border-color: #f84444;
+    }
 }
 
 #parchment select {
     width: 25%;
-    background: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.05);
     text-align: center;
     color: black;
 }
@@ -248,7 +254,7 @@ footer div {
 #alert {
     height: 50px;
     width: 100%;
-    background: #d83939;
+    background-color: #d83939;
     color: #eee;
     font-size: 20px;
     font-family: 'AdvoCut', arial, sans-serif;
@@ -259,11 +265,6 @@ footer div {
 
 .intro footer {
     opacity: 1;
-}
-
-#intro {
-    -webkit-transition: 0.4s opacity linear;
-    transition: 0.4s opacity linear;
 }
 
 #parchment {
@@ -284,11 +285,6 @@ footer div {
     font-family: 'AdvoCut', sans-serif;
 }
 
-#cuDescription {
-    margin-left: 10%;
-    width: 80%;
-}
-
 #credits,
 #git,
 #about,
@@ -296,28 +292,24 @@ footer div {
 #createCharacter,
 #death,
 #ask,
-#error,
-#clientUpdated {
+#error {
     opacity: 0;
     pointer-events: none;
     -webkit-transition: none;
     transition: none;
-}
-
-#credits,
-#about,
-#git,
-#death,
-#ask,
-#error,
-#loadCharacter,
-#createCharacter,
-#clientUpdated {
     position: absolute;
     left: 50%;
     text-align: center;
     font-family: 'AdvoCut', sans-serif;
     z-index: 1000;
+}
+
+#credits,
+#about,
+#death,
+#ask,
+#git {
+    top: 50%;
 }
 
 .credits #credits,
@@ -327,20 +319,11 @@ footer div {
 .ask #ask,
 .error #error,
 .createCharacter #createCharacter,
-.loadCharacter #loadCharacter,
-.clientUpdated #clientUpdated {
+.loadCharacter #loadCharacter {
     opacity: 1;
     pointer-events: auto;
     -webkit-transition: 0.5s opacity linear;
     transition: 0.5s opacity linear;
-}
-
-#credits,
-#about,
-#death,
-#ask,
-#git {
-    top: 50%;
 }
 
 .parchment-left {
@@ -400,19 +383,7 @@ footer div {
     background-size: 100% 100%; */
 }
 
-#container {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    position: inherit;
-
-    /* width: 490px;
-    height: 266px;
-    margin: -126px auto auto -245px;
-    position: absolute; */
-}
-
-@media only screen and (min-width: 1501px) {
+@media only screen and (--lg) {
     .intro footer {
         font-size: 28px;
     }
@@ -433,12 +404,13 @@ footer div {
     .parchment-middle,
     .parchment-right,
     #respawn {
-        background: url('../img/3/spritesheet.png');
+        background-image: url('../img/3/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: -moz-crisp-edges;
         image-rendering: -o-pixelated;
         image-rendering: pixelated;
+        background-size: 1266px auto;
     }
 
     .parchment-left,
@@ -469,8 +441,7 @@ footer div {
     #parchment,
     #createCharacter,
     #loadCharacter,
-    #error,
-    #clientUpdated {
+    #error {
         width: 1266px;
         height: 546px;
         position: absolute;
@@ -507,13 +478,6 @@ footer div {
         height: 45px;
     }
 
-    .parchment-left,
-    .parchment-middle,
-    .parchment-right,
-    #respawn {
-        background-size: 1266px auto;
-    }
-
     .animate .parchment-middle {
         -webkit-animation: parchmiddle3 1s ease-in-out 1;
         animation: parchmiddle3 1s ease-in-out 1;
@@ -531,10 +495,10 @@ footer div {
         height: 153px;
         margin: 63px auto 0 auto;
         background-position: 0 -1428px;
-    }
 
-    #respawn:active {
-        background-position: -375px -1428px;
+        &:active {
+            background-position: -375px -1428px;
+        }
     }
 
     .loader {
@@ -543,7 +507,7 @@ footer div {
     }
 }
 
-@media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
+@media only screen and (--md) {
     #credits,
     #about,
     #death,
@@ -567,12 +531,13 @@ footer div {
     .parchment-middle,
     .parchment-right,
     #respawn {
-        background: url('../img/2/spritesheet.png');
+        background-image: url('../img/2/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: -moz-crisp-edges;
         image-rendering: -o-pixelated;
         image-rendering: pixelated;
+        background-size: 844px auto;
     }
 
     .parchment-left,
@@ -603,8 +568,7 @@ footer div {
     #parchment,
     #createCharacter,
     #loadCharacter,
-    #error,
-    #clientUpdated {
+    #error {
         width: 844px;
         height: 364px;
         position: absolute;
@@ -641,13 +605,6 @@ footer div {
         height: 30px;
     }
 
-    .parchment-left,
-    .parchment-middle,
-    .parchment-right,
-    #respawn {
-        background-size: 844px auto;
-    }
-
     .animate .parchment-middle {
         -webkit-animation: parchmiddle2 1s ease-in-out 1;
         animation: parchmiddle2 1s ease-in-out 1;
@@ -665,14 +622,14 @@ footer div {
         height: 102px;
         margin: 42px auto 0 auto;
         background-position: 0 -952px;
-    }
 
-    #respawn:active {
-        background-position: -250px -952px;
+        &:active {
+            background-position: -250px -952px;
+        }
     }
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (--sm) {
     .loader {
         position: relative;
         margin-top: 34%;
@@ -725,8 +682,7 @@ footer div {
     #parchment,
     #createCharacter,
     #loadCharacter,
-    #error,
-    #clientUpdated {
+    #error {
         width: 422px;
         height: 182px;
         position: absolute;
@@ -787,10 +743,10 @@ footer div {
         height: 51px;
         margin: 21px auto 0 auto;
         background-position: 0 -476px;
-    }
 
-    #respawn:active {
-        background-position: -125px -476px;
+        &:active {
+            background-position: -125px -476px;
+        }
     }
 
     #canvas,
