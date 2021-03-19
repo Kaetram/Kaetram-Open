@@ -1,6 +1,19 @@
-
 body {
     line-height: 1;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    -ms-interpolation-mode: nearest-neighbor;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-pixelated;
+    image-rendering: pixelated;
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6)),
+        url('../img/tile.png') center center;
+    -webkit-background-size: auto;
+    -moz-background-size: auto;
+    -o-background-size: auto;
+    background-size: auto;
 }
 
 ol,
@@ -53,6 +66,7 @@ section {
         url('../fonts/advocut/advocut-webfont.svg#AndinaRegular') format('svg');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 .gp {
@@ -69,17 +83,6 @@ body {
     overflow: hidden;
 }
 
-body {
-    padding: 0;
-    margin: 0;
-    background: #111;
-    overflow: hidden;
-    -ms-interpolation-mode: nearest-neighbor;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -o-pixelated;
-    image-rendering: pixelated;
-}
-
 #resizeCheck {
     top: 0;
     height: 0;
@@ -89,17 +92,9 @@ body {
     transition: 0.001s height ease-in-out;
 }
 
-body {
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6)), url('../img/tile.png') center center;
-    -webkit-background-size: auto;
-    -moz-background-size: auto;
-    -o-background-size: auto;
-    background-size: auto;
-}
-
 .left-ornament,
 .right-ornament {
-    background: url('../img/1/spritesheet.png');
+    background-image: url('../img/1/spritesheet.png');
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: -moz-crisp-edges;
     image-rendering: -o-pixelated;
@@ -121,20 +116,11 @@ body {
     color: #d83939;
 }
 
-#resizeCheck {
-    position: absolute;
-    height: 0;
-    top: 0;
-    left: 0;
-    -webkit-transition: 0.001s height ease-in-out;
-    transition: 0.001s height ease-in-out;
-}
-
 .validation-summary {
-    margin: 0.5em;
+    margin: 0.5em auto;
     min-height: 1em;
-    position: absolute;
-    left: 33%;
+    // position: absolute;
+    // left: 33%;
 }
 
 .validation-error {
@@ -149,16 +135,6 @@ body {
     font-size: 15px;
 }
 
-#bubbles a {
-    pointer-events: auto;
-    text-decoration: none;
-    color: #fcda5c;
-}
-
-#bubbles p {
-    margin-top: 6px;
-}
-
 #bubbles {
     width: 100%;
     height: 100%;
@@ -169,33 +145,43 @@ body {
     z-index: 5;
     position: absolute;
     font-family: 'AdvoCut', sans-serif;
+
+    & p {
+        margin-top: 6px;
+    }
+
+    & a {
+        pointer-events: auto;
+        text-decoration: none;
+        color: #fcda5c;
+    }
 }
 
 .pointer {
     display: inline-block;
     position: absolute;
     pointer-events: none;
+    user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
 }
 
 .bubble {
-    background: rgba(45, 45, 45, 0.9);
+    background-color: rgba(45, 45, 45, 0.9);
     padding: 3px 10px 0 10px;
     border-radius: 8px;
     color: rgba(255, 255, 255, 0.8);
     display: inline-block;
     text-align: center;
     position: absolute;
-    -moz-user-select: none;
-    -webkit-user-select: none;
+    user-select: none;
 }
 
 .bubbleTip {
     width: 11px;
     height: 10px;
     top: 10px;
-    background: url('../img/thingy.png');
+    background-image: url('../img/thingy.png');
     margin: 0 auto;
     position: relative;
 }
@@ -220,10 +206,10 @@ body {
     pointer-events: none;
     left: 35%;
     bottom: 20%;
-}
 
-#chat p {
-    font-family: 'AdvoCut', sans-serif;
+    & p {
+        font-family: 'AdvoCut', sans-serif;
+    }
 }
 
 #chatLog {
@@ -238,14 +224,14 @@ body {
 
 #talk {
     width: 100%;
-}
 
-#talk .input {
-    color: #eee;
-    background: none;
-    width: 90%;
-    margin-left: 2%;
-    border: 0;
+    & .input {
+        color: #eee;
+        background: none;
+        width: 90%;
+        margin-left: 2%;
+        border: 0;
+    }
 }
 
 #login,
@@ -253,25 +239,10 @@ body {
     top: 65%;
 }
 
-#yes,
-#no {
-    position: absolute;
-    width: 200px;
-}
-
-#yes,
-#no {
-    top: 70%;
-}
-
-#yes {
-    left: 10%;
-}
-
 #continue,
 #cancelButton,
 #play {
-    top: 70%;
+    top: 92.5%;
 }
 
 #login {
@@ -289,6 +260,32 @@ body {
 
 #play {
     left: 65%;
+}
+
+#login,
+#newCharacter,
+#continue,
+#cancelButton,
+#play {
+    position: absolute;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+
+    &:disabled {
+        cursor: wait;
+    }
+}
+
+#yes,
+#no {
+    position: absolute;
+    width: 200px;
+    top: 70%;
+}
+
+#yes {
+    left: 10%;
 }
 
 #rememberMe {
@@ -309,7 +306,7 @@ body {
 }
 
 #guest {
-    left: 70%;
+    left: 65%;
 }
 
 #guestText {
@@ -317,7 +314,7 @@ body {
     left: 110%;
 }
 
-input[type="range"] {
+input[type='range'] {
     width: 100%;
     -webkit-appearance: none;
     background-image:
@@ -328,16 +325,16 @@ input[type="range"] {
             color-stop(1, #4d4d4d),
             color-stop(1, #c5c5c5)
         );
-}
 
-input[type='range']::-webkit-slider-thumb {
-    -webkit-appearance: none !important;
-    background-color: #707070;
-    border: 1px solid #000;
-}
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none !important;
+        background-color: #707070;
+        border: 1px solid #000;
 
-input[type='range']::-webkit-slider-thumb:active {
-    background-color: #fcda5c;
+        &:active {
+            background-color: #fcda5c;
+        }
+    }
 }
 
 audio,
@@ -354,9 +351,9 @@ audio:not([controls]) {
 }
 
 button,
-html [type="button"],
-[type="reset"],
-[type="submit"] {
+html [type='button'],
+[type='reset'],
+[type='submit'] {
     -webkit-appearance: button;
 
     /* 2 */
@@ -372,23 +369,34 @@ html [type="button"],
     margin-top: 10%;
 }
 
-#close-updated {
-    margin-top: 5%;
-}
-
 @keyframes flash {
-    0% { background: #ffa2a2; }
-    100% { background: #e22525; }
+    0% {
+        background-color: #ffa2a2;
+    }
+
+    100% {
+        background-color: #e22525;
+    }
 }
 
 @keyframes flash-green {
-    0% { background: #a2ffa2; }
-    100% { background: #25e225; }
+    0% {
+        background-color: #a2ffa2;
+    }
+
+    100% {
+        background-color: #25e225;
+    }
 }
 
 @keyframes flash-poison {
-    0% { background: #0cab3c; }
-    100% { background: #035819; }
+    0% {
+        background-color: #0cab3c;
+    }
+
+    100% {
+        background-color: #035819;
+    }
 }
 
 #health,
@@ -399,7 +407,6 @@ html [type="button"],
 #health {
     /* Safari 5.1, Chrome 10+ */
     background: linear-gradient(to right, #f00, #ef5a5a);
-
     -webkit-transition: 0.5s width ease;
     transition: 0.5s width ease;
 }
@@ -407,7 +414,6 @@ html [type="button"],
 #exp {
     /* Safari 5.1, Chrome 10+ */
     background: linear-gradient(to left, #4f4, #080);
-
     -webkit-transition: 0.5s width ease;
     transition: 0.5s width ease;
 }
@@ -427,11 +433,10 @@ html [type="button"],
     animation: flash-poison 0.5s linear 1;
 }
 
-@media only screen and (min-width: 1501px) {
+@media only screen and (--lg) {
     #parchment h1,
     #loadCharacter h1,
-    #about h1,
-    #clientUpdated h1 {
+    #about h1 {
         margin-top: 30px;
         font-size: 30px;
     }
@@ -441,26 +446,20 @@ html [type="button"],
         font-size: 30px;
     }
 
-    #parchment h2,
-    #loadCharacter h1,
-    #createCharacter h1,
-    #about h1,
-    #clientUpdated h1 {
-        margin-left: 30px;
-    }
-
     .left-ornament,
     .right-ornament {
-        background: url('../img/3/spritesheet.png');
+        background-image: url('../img/3/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
         image-rendering: -moz-crisp-edges;
         image-rendering: -o-pixelated;
         image-rendering: pixelated;
-    }
-
-    .left-ornament,
-    .right-ornament {
         background-size: 1266px auto;
+        width: 93px;
+        height: 36px;
+        display: inline-block;
+        margin: 0 20px;
+        top: 12px;
+        position: relative;
     }
 
     .left-ornament {
@@ -471,20 +470,6 @@ html [type="button"],
         background-position: -1155px 0;
     }
 
-    .left-ornament,
-    .right-ornament {
-        width: 93px;
-        height: 36px;
-        display: inline-block;
-        margin: 0 20px;
-        top: 12px;
-        position: relative;
-    }
-
-    #createCharacter .login {
-        margin: 12px auto 12px auto;
-    }
-
     .login,
     .login div,
     .createNew,
@@ -492,47 +477,40 @@ html [type="button"],
         margin: 105px 240px 105px 240px;
         -webkit-tap-highlight-color: transparent;
         display: inline-block;
+        background-size: auto 30px;
     }
 
-    .login,
-    .login div,
-    .createNew,
-    .createNew div {
-        -webkit-tap-highlight-color: transparent;
-        display: inline-block;
-        background-size: auto 30px;
+    #createCharacter .login {
+        margin: 12px auto 12px auto;
     }
 
     .login div {
         width: 375px;
         height: 153px;
         background-position: -687px 0;
-    }
 
-    .login div:active {
-        background-position: -687px -459px;
+        &:active {
+            background-position: -687px -459px;
+        }
     }
 
     .login.loading div {
         background-position: -681px -2178px;
     }
 
+    .login img {
+        display: none;
+    }
+
     .login.loading img {
         width: 24px;
         height: 24px;
-    }
-
-    .login img {
-        display: none;
+        display: inline;
     }
 
     .login.loading span:hover {
         color: inherit;
         cursor: default;
-    }
-
-    .login.loading img {
-        display: inline;
     }
 
     #resizeCheck {
@@ -552,15 +530,24 @@ html [type="button"],
     #talk {
         margin-top: 300px;
         height: 30px;
-    }
 
-    #talk .input {
-        font-size: 15px;
-        padding: 6px 0;
+        & .input {
+            font-size: 15px;
+            padding: 6px 0;
+        }
     }
 
     .stroke {
-        text-shadow: 2px 2px 0 #373737, 2px -2px 0 #373737, 0 2px 0 #373737, 2px 0 0 #373737, -2px 2px 0 #373737, -2px -2px 0 #373737, 0 -2px 0 #373737, 0 2px 0 #373737, -2px 0 0 #373737;
+        text-shadow:
+            2px 2px 0 #373737,
+            2px -2px 0 #373737,
+            0 2px 0 #373737,
+            2px 0 0 #373737,
+            -2px 2px 0 #373737,
+            -2px -2px 0 #373737,
+            0 -2px 0 #373737,
+            0 2px 0 #373737,
+            -2px 0 0 #373737;
     }
 
     #login,
@@ -568,93 +555,94 @@ html [type="button"],
     #continue,
     #cancelButton,
     #play {
-        position: absolute;
         width: 306px;
         height: 81px;
-        background: url('../img/3/buttons.png');
+        background-image: url('../img/3/buttons.png');
     }
 
     #login {
-        background-position: -309px 0;
-    }
+        background-position-x: -309px;
 
-    #login:hover,
-    #login:focus {
-        background-position: -312px -87px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -87px;
+        }
 
-    #login:active {
-        background-position: -312px -174px;
-    }
+        &:active {
+            background-position-y: -174px;
+        }
 
-    #login.disabled {
-        background-position: -312px -261px;
+        &:disabled {
+            background-position-y: -261px;
+        }
     }
 
     #newCharacter {
-        background-position: -618px 0;
-    }
+        background-position-x: -618px;
 
-    #newCharacter:hover,
-    #newCharacter:focus {
-        background-position: -621px -87px;
-    }
+        &:hover,
+        &:focus {
+            background-position: -621px -87px;
+        }
 
-    #newCharacter:active {
-        background-position: -618px -174px;
-    }
+        &:active {
+            background-position: -618px -171px;
+        }
 
-    #newCharacter.disabled {
-        background-position: -618px -261px;
+        &:disabled {
+            background-position-y: -261px;
+        }
     }
 
     #continue {
-        background-position: -1242px 0;
-    }
+        background-position-x: -1242px;
 
-    #continue:hover {
-        background-position: -1242px -87px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -87px;
+        }
 
-    #continue:active {
-        background-position: -1242px -174px;
-    }
+        &:active {
+            background-position-y: -174px;
+        }
 
-    #continue.disabled {
-        background-position: -1242px -261px;
+        &:disabled {
+            background-position-y: -261px;
+        }
     }
 
     #cancelButton {
-        background-position: -933px 0;
-    }
+        background-position-x: -933px;
 
-    #cancelButton:hover {
-        background-position: -933px -87px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -87px;
+        }
 
-    #cancelButton:active {
-        background-position: -933px -174px;
-    }
+        &:active {
+            background-position-y: -171px;
+        }
 
-    #cancelButton.disabled {
-        background-position: -933px -261px;
+        &:disabled {
+            background-position-y: -258px;
+        }
     }
 
     #play {
-        background-position: 0 0;
-    }
+        background-position-x: 0;
 
-    #play:hover,
-    #play:focus {
-        background-position: 0 -87px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -87px;
+        }
 
-    #play:active {
-        background-position: 0 -174px;
-    }
+        &:active {
+            background-position-y: -174px;
+        }
 
-    #play.disabled {
-        background-position: 0 -261px;
+        &:disabled {
+            background-position-y: -261px;
+        }
     }
 
     #rememberMeText,
@@ -668,24 +656,23 @@ html [type="button"],
         width: 366px;
     }
 
-    input[type="range"] {
+    input[type='range'] {
         border-radius: 9px;
         height: 9px;
-    }
 
-    input[type='range']::-webkit-slider-thumb {
-        border-radius: 6px;
-        height: 24px;
-        width: 15px;
+        &::-webkit-slider-thumb {
+            border-radius: 6px;
+            height: 24px;
+            width: 15px;
+        }
     }
 }
 
-@media only screen and (max-width: 1500px), only screen and (max-height: 870px) {
+@media only screen and (--md) {
     #parchment h1,
     #loadCharacter h1,
     #createCharacter h1,
-    #about h1,
-    #clientUpdated h1 {
+    #about h1 {
         margin-top: 40px;
     }
 
@@ -698,28 +685,12 @@ html [type="button"],
 
     .left-ornament,
     .right-ornament {
-        background: url('../img/2/spritesheet.png');
+        background-image: url('../img/2/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
         image-rendering: -moz-crisp-edges;
         image-rendering: -o-pixelated;
         image-rendering: pixelated;
-    }
-
-    .left-ornament,
-    .right-ornament {
         background-size: 844px auto;
-    }
-
-    .left-ornament {
-        background-position: -708px 0;
-    }
-
-    .right-ornament {
-        background-position: -770px 0;
-    }
-
-    .left-ornament,
-    .right-ornament {
         width: 62px;
         height: 24px;
         position: relative;
@@ -728,8 +699,12 @@ html [type="button"],
         top: 6px;
     }
 
-    #createCharacter .login {
-        margin: 8px auto 8px auto;
+    .left-ornament {
+        background-position: -708px 0;
+    }
+
+    .right-ornament {
+        background-position: -770px 0;
     }
 
     .login,
@@ -741,36 +716,37 @@ html [type="button"],
         display: inline-block;
     }
 
+    #createCharacter .login {
+        margin: 8px auto 8px auto;
+    }
+
     .login div {
         width: 250px;
         height: 102px;
         background-position: -458px 0;
-    }
 
-    .login div:active {
-        background-position: -458px -306px;
+        &:active {
+            background-position: -458px -306px;
+        }
     }
 
     .login.loading div {
         background-position: -454px -1452px;
     }
 
+    .login img {
+        display: none;
+    }
+
     .login.loading img {
         width: 16px;
         height: 16px;
-    }
-
-    .login img {
-        display: none;
+        display: inline;
     }
 
     .login.loading span:hover {
         color: inherit;
         cursor: default;
-    }
-
-    .login.loading img {
-        display: inline;
     }
 
     #resizeCheck {
@@ -790,15 +766,24 @@ html [type="button"],
     #talk {
         margin-top: 200px;
         height: 20px;
-    }
 
-    #talk .input {
-        font-size: 10px;
-        padding: 4px 0;
+        & .input {
+            font-size: 10px;
+            padding: 4px 0;
+        }
     }
 
     .stroke {
-        text-shadow: 2px 2px 0 #373737, 2px -2px 0 #373737, 0 2px 0 #373737, 2px 0 0 #373737, -2px 2px 0 #373737, -2px -2px 0 #373737, 0 -2px 0 #373737, 0 2px 0 #373737, -2px 0 0 #373737;
+        text-shadow:
+            2px 2px 0 #373737,
+            2px -2px 0 #373737,
+            0 2px 0 #373737,
+            2px 0 0 #373737,
+            -2px 2px 0 #373737,
+            -2px -2px 0 #373737,
+            0 -2px 0 #373737,
+            0 2px 0 #373737,
+            -2px 0 0 #373737;
     }
 
     #login,
@@ -806,93 +791,94 @@ html [type="button"],
     #continue,
     #cancelButton,
     #play {
-        position: absolute;
         width: 204px;
         height: 54px;
-        background: url('../img/2/buttons.png');
+        background-image: url('../img/2/buttons.png');
     }
 
     #login {
-        background-position: -205px 0;
-    }
+        background-position-x: -205px;
 
-    #login:hover,
-    #login:focus {
-        background-position: -207px -58px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -58px;
+        }
 
-    #login:active {
-        background-position: -205px -116px;
-    }
+        &:active {
+            background-position-y: -116px;
+        }
 
-    #login.disabled {
-        background-position: -205px -174px;
+        &:disabled {
+            background-position-y: -174px;
+        }
     }
 
     #newCharacter {
-        background-position: -412px 0;
-    }
+        background-position-x: -412px;
 
-    #newCharacter:hover,
-    #newCharacter:focus {
-        background-position: -414px -58px;
-    }
+        &:hover,
+        &:focus {
+            background-position: -414px -58px;
+        }
 
-    #newCharacter:active {
-        background-position: -412px -116px;
-    }
+        &:disabled {
+            background-position-y: -174px;
+        }
 
-    #newCharacter.disabled {
-        background-position: -412px -174px;
+        &:active {
+            background-position: -412px -115px;
+        }
     }
 
     #continue {
-        background-position: -828px 0;
-    }
+        background-position-x: -828px;
 
-    #continue:hover {
-        background-position: -828px -58px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -58px;
+        }
 
-    #continue:active {
-        background-position: -828px -116px;
-    }
+        &:active {
+            background-position-y: -116px;
+        }
 
-    #continue.disabled {
-        background-position: -828px -174px;
+        &:disabled {
+            background-position-y: -174px;
+        }
     }
 
     #cancelButton {
-        background-position: -622px 0;
-    }
+        background-position-x: -622px;
 
-    #cancelButton:hover {
-        background-position: -622px -58px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -58px;
+        }
 
-    #cancelButton:active {
-        background-position: -622px -116px;
-    }
+        &:active {
+            background-position-y: -115px;
+        }
 
-    #cancelButton.disabled {
-        background-position: -622px -174px;
+        &:disabled {
+            background-position-y: -173px;
+        }
     }
 
     #play {
-        background-position: 0 0;
-    }
+        background-position-x: 0;
 
-    #play:hover,
-    #play:focus {
-        background-position: 0 -58px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -58px;
+        }
 
-    #play:active {
-        background-position: 0 -116px;
-    }
+        &:active {
+            background-position-y: -116px;
+        }
 
-    #play.disabled {
-        background-position: 0 -174px;
+        &:disabled {
+            background-position-y: -174px;
+        }
     }
 
     #rememberMeText,
@@ -906,15 +892,15 @@ html [type="button"],
         width: 256px;
     }
 
-    input[type="range"] {
+    input[type='range'] {
         border-radius: 6px;
         height: 6px;
-    }
 
-    input[type='range']::-webkit-slider-thumb {
-        border-radius: 4px;
-        height: 15px;
-        width: 10px;
+        &::-webkit-slider-thumb {
+            border-radius: 4px;
+            height: 15px;
+            width: 10px;
+        }
     }
 
     #about h1 {
@@ -922,12 +908,11 @@ html [type="button"],
     }
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (--sm) {
     #parchment h1,
     #loadCharacter h1,
     #createCharacter h1,
-    #about h1,
-    #clientUpdated h1 {
+    #about h1 {
         margin-top: 20px;
     }
 
@@ -941,18 +926,6 @@ html [type="button"],
     .left-ornament,
     .right-ornament {
         background-size: 422px auto;
-    }
-
-    .left-ornament {
-        background-position: -354px 0;
-    }
-
-    .right-ornament {
-        background-position: -385px 0;
-    }
-
-    .left-ornament,
-    .right-ornament {
         width: 31px;
         height: 12px;
         display: inline-block;
@@ -961,8 +934,12 @@ html [type="button"],
         position: relative;
     }
 
-    #createCharacter .login {
-        margin: 4px auto 4px auto;
+    .left-ornament {
+        background-position: -354px 0;
+    }
+
+    .right-ornament {
+        background-position: -385px 0;
     }
 
     .login,
@@ -974,36 +951,37 @@ html [type="button"],
         display: inline-block;
     }
 
+    #createCharacter .login {
+        margin: 4px auto 4px auto;
+    }
+
     .login div {
         width: 125px;
         height: 51px;
         background-position: -229px 0;
-    }
 
-    .login div:active {
-        background-position: -229px -153px;
+        &:active {
+            background-position: -229px -153px;
+        }
     }
 
     .login.loading div {
         background-position: -227px -726px;
     }
 
+    .login img {
+        display: none;
+    }
+
     .login.loading img {
         width: 8px;
         height: 8px;
-    }
-
-    .login img {
-        display: none;
+        display: inline;
     }
 
     .login.loading span:hover {
         color: inherit;
         cursor: default;
-    }
-
-    .login.loading img {
-        display: inline;
     }
 
     #resizeCheck {
@@ -1023,15 +1001,24 @@ html [type="button"],
     #talk {
         margin-top: 100px;
         height: 10px;
-    }
 
-    #talk .input {
-        font-size: 5px;
-        padding: 2px 0;
+        & .input {
+            font-size: 5px;
+            padding: 2px 0;
+        }
     }
 
     .stroke {
-        text-shadow: 1px 1px 0 #373737, 1px -1px 0 #373737, 0 1px 0 #373737, 1px 0 0 #373737, -1px 1px 0 #373737, -1px -1px 0 #373737, 0 -1px 0 #373737, 0 1px 0 #373737, -1px 0 0 #373737;
+        text-shadow:
+            1px 1px 0 #373737,
+            1px -1px 0 #373737,
+            0 1px 0 #373737,
+            1px 0 0 #373737,
+            -1px 1px 0 #373737,
+            -1px -1px 0 #373737,
+            0 -1px 0 #373737,
+            0 1px 0 #373737,
+            -1px 0 0 #373737;
     }
 
     #login,
@@ -1039,93 +1026,95 @@ html [type="button"],
     #continue,
     #cancelButton,
     #play {
-        position: absolute;
         width: 102px;
         height: 27px;
-        background: url('../img/1/buttons.png');
+        background-image: url('../img/1/buttons.png');
     }
 
     #login {
-        background-position: -103px 0;
-    }
+        background-position-x: -103px;
 
-    #login:hover,
-    #login:focus {
-        background-position: -104px -29px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -29px;
+        }
 
-    #login:active {
-        background-position: -103px -58px;
-    }
+        &:active {
+            background-position-y: -58px;
+        }
 
-    #login.disabled {
-        background-position: -103px -87px;
+        &:disabled {
+            background-position-y: -87px;
+        }
     }
 
     #newCharacter {
-        background-position: -206px 0;
-    }
+        background-position-x: -206px;
 
-    #newCharacter:hover,
-    #newCharacter:focus {
-        background-position: -207px -29px;
-    }
+        &:hover,
+        &:focus {
+            background-position: -207px -29px;
+        }
 
-    #newCharacter:active {
-        background-position: -206px -58px;
-    }
+        &:active {
+            background-position-y: -57px;
+            background-position-x: -206px;
+        }
 
-    #newCharacter.disabled {
-        background-position: -206px -87px;
+        &:disabled {
+            background-position-y: -87px;
+        }
     }
 
     #continue {
-        background-position: -414px 0;
-    }
+        background-position-x: -414px;
 
-    #continue:hover {
-        background-position: -414px -29px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -29px;
+        }
 
-    #continue:active {
-        background-position: -414px -58px;
-    }
+        &:active {
+            background-position-y: -58px;
+        }
 
-    #continue.disabled {
-        background-position: -414px -87px;
+        &:disabled {
+            background-position-y: -87px;
+        }
     }
 
     #cancelButton {
-        background-position: -311px 0;
-    }
+        background-position-x: -311px;
 
-    #cancelButton:hover {
-        background-position: -311px -29px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -29px;
+        }
 
-    #cancelButton:active {
-        background-position: -311px -58px;
-    }
+        &:active {
+            background-position-y: -57px;
+        }
 
-    #cancelButton.disabled {
-        background-position: -311px -87px;
+        &:disabled {
+            background-position-y: -86px;
+        }
     }
 
     #play {
-        background-position: 0 0;
-    }
+        background-position-x: 0;
 
-    #play:hover,
-    #play:focus {
-        background-position: 0 -29px;
-    }
+        &:hover,
+        &:focus {
+            background-position-y: -29px;
+        }
 
-    #play:active {
-        background-position: 0 -58px;
-    }
+        &:active {
+            background-position-y: -58px;
+        }
 
-    #play.disabled {
-        background-position: 0 -87px;
+        &:disabled {
+            background-position-y: -87px;
+        }
     }
 
     #rememberMeText,
@@ -1147,7 +1136,7 @@ html [type="button"],
         width: 128px;
     }
 
-    input[type="range"] {
+    input[type='range'] {
         border-radius: 3px;
         height: 3px;
     }
