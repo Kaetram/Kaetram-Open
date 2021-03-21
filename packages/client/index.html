@@ -437,6 +437,7 @@
                             min="0"
                             max="100"
                             value="100"
+                            aria-labelledby="volumeText"
                         />
                         <input
                             title="SFX"
@@ -446,6 +447,7 @@
                             min="0"
                             max="100"
                             value="100"
+                            aria-labelledby="sfxText"
                         />
                         <input
                             title="Brightness"
@@ -455,27 +457,46 @@
                             min="0"
                             max="100"
                             value="100"
+                            aria-labelledby="brightnessText"
                         />
                     </div>
                     <div id="texts">
-                        <p>Volume</p>
-                        <p>SFX</p>
-                        <p>Brightness</p>
-                        <p>Sound</p>
-                        <p>Centred Camera</p>
-                        <p>Debugging</p>
-                        <p>Auto Centre</p>
-                        <p>Names</p>
-                        <p>Levels</p>
+                        <p id="volumeText">Volume</p>
+                        <p id="sfxText">SFX</p>
+                        <p id="brightnessText">Brightness</p>
+                        <p id="soundCheckText">Sound</p>
+                        <p id="cameraCheckText">Centred Camera</p>
+                        <p id="debugCheckText">Debugging</p>
+                        <p id="centreCheckText">Auto Centre</p>
+                        <p id="nameCheckText">Names</p>
+                        <p id="levelCheckText">Levels</p>
                     </div>
                     <div id="info"></div>
                     <div id="checkMarks">
-                        <div id="soundCheck" class="check"></div>
-                        <div id="cameraCheck" class="check"></div>
-                        <div id="debugCheck" class="check"></div>
-                        <div id="centreCheck" class="check"></div>
-                        <div id="nameCheck" class="check"></div>
-                        <div id="levelCheck" class="check"></div>
+                        <label id="soundCheck" class="check">
+                            <input type="checkbox" aria-labelledby="soundCheckText" />
+                            <span class="checkmark"></span>
+                        </label>
+                        <label id="cameraCheck" class="check">
+                            <input type="checkbox" aria-labelledby="cameraCheckText" />
+                            <span class="checkmark" />
+                        </label>
+                        <label id="debugCheck" class="check">
+                            <input type="checkbox" aria-labelledby="debugCheckText" />
+                            <span class="checkmark" />
+                        </label>
+                        <label id="centreCheck" class="check">
+                            <input type="checkbox" aria-labelledby="centreCheckText" />
+                            <span class="checkmark" />
+                        </label>
+                        <label id="nameCheck" class="check">
+                            <input type="checkbox" aria-labelledby="nameCheckText" />
+                            <span class="checkmark" />
+                        </label>
+                        <label id="levelCheck" class="check">
+                            <input type="checkbox" aria-labelledby="levelCheckText" />
+                            <span class="checkmark" />
+                        </label>
                     </div>
                 </div>
                 <div id="attackInfo">
@@ -560,7 +581,7 @@
                 </div>
                 <div id="chat">
                     <div id="talk">
-                        <form method="get" accept-charset="utf-8">
+                        <form>
                             <input
                                 title="Enter your message!"
                                 id="chatInput"
@@ -598,7 +619,5 @@
             </div>
         </footer>
         <div id="resizeCheck"></div>
-
-        <!-- main script is injected by webpack -->
     </body>
 </html>
