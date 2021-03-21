@@ -97,11 +97,11 @@ export default class Map {
     }
 
     ready(): void {
-        const rC = () => this.readyCallback?.();
-        if (this.mapLoaded && this.tilesetsLoaded) rC();
+        if (this.mapLoaded && this.tilesetsLoaded) this.readyCallback?.();
         else
             window.setTimeout(() => {
                 this.loadTilesets();
+
                 this.ready();
             }, 50);
     }
