@@ -9,7 +9,7 @@ $(() => {
 
     app.sendStatus('Loading game');
 
-    if (app.config.debug) log.info('Loading the main application...');
+    log.debug('Loading the main application...');
     if (app.config.worldSwitch) $('#worlds-switch').show();
 
     new Game(app);
