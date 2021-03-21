@@ -52,7 +52,7 @@ export default class Sprite {
             loaded: false
         };
 
-        this.loadSprite();
+        // this.loadSprite();
     }
 
     load(): void {
@@ -72,21 +72,24 @@ export default class Sprite {
     async loadSprite(): Promise<void> {
         const sprite = this.sprite;
 
-        this.filepath = (await import(`../../img/sprites/${this.id}.png`)).default;
+        const { default: path } = await import(`../../img/sprites/${this.id}.png`);
+
+        this.filepath = path;
         this.animationData = sprite.animations;
 
         this.width = sprite.width;
         this.height = sprite.height;
 
-        this.offsetX = sprite.offsetX !== undefined ? sprite.offsetX : -16;
-        this.offsetY = sprite.offsetY !== undefined ? sprite.offsetY : -16;
-        this.offfsetAngle = sprite.offsetAngle !== undefined ? sprite.offsetAngle : 0;
+        this.offsetX = sprite.offsetX ?? -16;
+        this.offsetY = sprite.offsetY ?? -16;
+        this.offfsetAngle = sprite.offsetAngle ?? 0;
 
-        this.idleSpeed = sprite.idleSpeed !== undefined ? sprite.idleSpeed : 450;
+        this.idleSpeed = sprite.idleSpeed ?? 450;
     }
 
     async update(): Promise<void> {
         await this.loadSprite();
+
         this.load();
     }
 

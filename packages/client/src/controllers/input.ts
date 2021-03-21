@@ -1,17 +1,17 @@
-import Animation from '../entity/animation';
-import Character from '../entity/character/character';
-import Player from '../entity/character/player/player';
-import Entity from '../entity/entity';
-import Sprite from '../entity/sprite';
-import Game from '../game';
-import log from '../lib/log';
-
-import Actions from '../menu/actions';
+import * as Modules from '@kaetram/common/src/modules';
 import Packets from '@kaetram/common/src/packets';
 
-import * as Modules from '@kaetram/common/src/modules';
+import Animation from '../entity/animation';
+import log from '../lib/log';
+import Actions from '../menu/actions';
 import Chat from './chat';
 import Overlay from './overlay';
+
+import type Character from '../entity/character/character';
+import type Player from '../entity/character/player/player';
+import type Entity from '../entity/entity';
+import type Sprite from '../entity/sprite';
+import type Game from '../game';
 
 type Cursors = 'hand' | 'sword' | 'loot' | 'target' | 'arrow' | 'talk' | 'spell' | 'bow' | 'axe';
 
@@ -92,7 +92,7 @@ export default class InputController {
         this.newCursor = this.cursors['hand'] as Sprite;
         this.newTargetColour = 'rgba(255, 255, 255, 0.5)';
 
-        if (this.game.isDebug()) log.info('Loaded Cursors!');
+        log.debug('Loaded Cursors!');
     }
 
     handle(inputType: Modules.InputType, data: Modules.Keys | JQuery.Event): void {
@@ -247,11 +247,9 @@ export default class InputController {
             this.keyMovement = true;
             this.cursorMoved = false;
 
-            if (this.game.isDebug()) {
-                log.info('--- keyMove ---');
-                log.info(position);
-                log.info('---------------');
-            }
+            log.debug('--- keyMove ---');
+            log.debug(position);
+            log.debug('---------------');
 
             this.leftClick(position, true);
         }
