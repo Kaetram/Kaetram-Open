@@ -3035,7 +3035,6 @@ __metadata:
     "@types/copy-webpack-plugin": ^6.4.0
     "@types/dotenv-parse-variables": ^0.2.0
     "@types/dotenv-webpack": ^7.0.0
-    "@types/favicons": ^6.2.1
     "@types/jquery": ^3.5.5
     "@types/lodash": ^4.14.168
     "@types/mini-css-extract-plugin": ^1.2.2
@@ -3083,7 +3082,7 @@ __metadata:
     ts-loader: ^8.0.18
     ts-node: ^9.1.1
     typescript: ^4.2.3
-    webpack: ^5.26.3
+    webpack: ^5.27.1
     webpack-cli: ^4.5.0
     webpack-dev-server: ^4.0.0-beta.0
     workbox-webpack-plugin: ^6.1.2
@@ -3449,15 +3448,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 7e03ff6e6ace3bb819ef417cd631a0f76bc9cff179135895117b327962d44d337f701a3c6007d031dd3eea372eff0bf3ca49402dedee5b7e9aff54e88676e764
-  languageName: node
-  linkType: hard
-
-"@types/favicons@npm:^6.2.1":
-  version: 6.2.1
-  resolution: "@types/favicons@npm:6.2.1"
-  dependencies:
-    "@types/node": "*"
-  checksum: 64fa290d6a6b69521a6afeecc4b055d01f72836cfe470bc17e18039b834e61a1e46a7f971253ad588f27325ecfd28cddedd9bc64b16bd1892056054cf70c0b2b
   languageName: node
   linkType: hard
 
@@ -14283,9 +14273,9 @@ typescript@^4.2.3:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.26.3":
-  version: 5.26.3
-  resolution: "webpack@npm:5.26.3"
+"webpack@npm:^5.27.1":
+  version: 5.27.1
+  resolution: "webpack@npm:5.27.1"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.46
@@ -14315,7 +14305,7 @@ typescript@^4.2.3:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: f3d456173423ba67a18167f79c1c1b3dd33c9e4d2de2c51253fcb148353449235c4b789d22207de34106cfe9efbd20e20fe6a26ba204224ecc34f486a428a3a6
+  checksum: 9f801e3d86c093ebe8fe4f5ec28cf6d28bc14f62ff64d0b06abe4555112f21d7d82e313cde1e8f5c6fd41a0953f36b840e5e5116530699d0ac8e1b588ce74ce1
   languageName: node
   linkType: hard
 

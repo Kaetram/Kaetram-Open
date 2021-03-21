@@ -69,19 +69,6 @@ td {
     background-color: transparent;
 }
 
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-menu,
-nav,
-section {
-    display: block;
-}
-
 canvas {
     position: absolute;
     image-rendering: optimizeSpeed; /* Older versions of FF          */
@@ -108,8 +95,7 @@ html {
 #container {
     z-index: 100;
     background-color: rgba(0, 0, 0, 0.2);
-    -webkit-transition: 1s opacity linear 0.5s;
-    transition: 1s opacity linear 0.5s;
+    transition: 1s opacity linear;
     width: 100%;
     height: 100%;
     margin: 0;
@@ -130,26 +116,13 @@ footer {
     width: 100%;
     color: #c6c0a3;
     text-shadow: 0 1px 0 black;
-    -webkit-transition: 0.2s opacity linear;
     transition: 0.2s opacity linear;
     font-size: 18px;
-}
-
-.sub-forum-link {
-    color: #c6c0a3;
 }
 
 .link:hover {
     cursor: pointer;
     color: #d83939;
-}
-
-#about-link span:hover,
-#credits-link span:hover,
-#discord-link span:hover,
-.sub-forum-link:hover {
-    color: #fcda5c;
-    cursor: pointer;
 }
 
 .game footer {
@@ -164,6 +137,12 @@ footer:hover {
 
 footer div {
     display: inline-block;
+    padding: 0 5px;
+
+    span:hover {
+        color: #fcda5c;
+        cursor: pointer;
+    }
 }
 
 #canvas,
@@ -173,11 +152,7 @@ footer div {
 #overlay,
 #container,
 #border,
-#footer,
 #cursor {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     cursor: none;
 }
@@ -187,7 +162,6 @@ footer div {
 #entities,
 #cursor,
 #overlay {
-    -webkit-transform: translateZ(0);
     transform: translateZ(0);
 }
 
@@ -222,14 +196,12 @@ footer div {
     background-color: rgba(0, 0, 0, 0.05);
     text-align: center;
     color: #eee;
-    -webkit-animation: glow 0.5s linear infinite alternate;
     animation: glow 0.5s linear infinite alternate;
 
     &:focus {
         border-color: rgba(0, 0, 0, 0.3);
         background-color: rgba(0, 0, 0, 0.1);
         color: #fff;
-        -webkit-animation: none;
         animation: none;
     }
 
@@ -247,7 +219,6 @@ footer div {
 }
 
 #intro {
-    -webkit-transition: 0.4s opacity linear;
     transition: 0.4s opacity linear;
 }
 
@@ -295,7 +266,6 @@ footer div {
 #error {
     opacity: 0;
     pointer-events: none;
-    -webkit-transition: none;
     transition: none;
     position: absolute;
     left: 50%;
@@ -312,6 +282,13 @@ footer div {
     top: 50%;
 }
 
+#loadCharacter,
+#createCharacter {
+    form {
+        position: relative;
+    }
+}
+
 .credits #credits,
 .about #about,
 .git #git,
@@ -322,7 +299,6 @@ footer div {
 .loadCharacter #loadCharacter {
     opacity: 1;
     pointer-events: auto;
-    -webkit-transition: 0.5s opacity linear;
     transition: 0.5s opacity linear;
 }
 
@@ -345,17 +321,11 @@ footer div {
 }
 
 .animate .parchment-left {
-    -webkit-animation: parchleft 1s ease-in-out 1;
     animation: parchleft 1s ease-in-out 1;
 }
 
 .animate .parchment-right {
-    -webkit-animation: parchright 1s ease-in-out 1;
     animation: parchright 1s ease-in-out 1;
-}
-
-#createCharacter form {
-    position: relative;
 }
 
 .loader {
@@ -479,7 +449,6 @@ footer div {
     }
 
     .animate .parchment-middle {
-        -webkit-animation: parchmiddle3 1s ease-in-out 1;
         animation: parchmiddle3 1s ease-in-out 1;
     }
 
@@ -606,7 +575,6 @@ footer div {
     }
 
     .animate .parchment-middle {
-        -webkit-animation: parchmiddle2 1s ease-in-out 1;
         animation: parchmiddle2 1s ease-in-out 1;
     }
 
@@ -727,7 +695,6 @@ footer div {
     }
 
     .animate .parchment-middle {
-        -webkit-animation: parchmiddle1 1s ease-in-out 1;
         animation: parchmiddle1 1s ease-in-out 1;
     }
 
@@ -756,7 +723,6 @@ footer div {
     #overlay,
     #container,
     #border,
-    #footer,
     #cursor {
         cursor: default;
     }
@@ -765,6 +731,5 @@ footer div {
 .tablet .animate .parchment-left,
 .tablet .animate .parchment-right,
 .tablet .animate .parchment-middle {
-    -webkit-animation: none;
     animation: none;
 }
