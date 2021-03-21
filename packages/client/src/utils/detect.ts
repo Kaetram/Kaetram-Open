@@ -2,11 +2,7 @@ export const userAgentContains = (string: string): boolean => navigator.userAgen
 
 export const isIpad = (): boolean => /ipad/i.test(navigator.userAgent.toLowerCase());
 
-export const isFirefox = (): boolean => userAgentContains('Firefox');
-
 export const isSafari = (): boolean => userAgentContains('Safari') && !userAgentContains('Chrome');
-
-export const isOpera = (): boolean => userAgentContains('Opera');
 
 interface IEDocument extends Document {
     documentMode: number;
