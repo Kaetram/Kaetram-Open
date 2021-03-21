@@ -157,9 +157,6 @@
     bottom: 15px;
     display: none;
     position: absolute;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
     user-select: none;
     cursor: default;
 }
@@ -186,8 +183,10 @@
 }
 
 .check {
+    top: 100%;
     padding-left: 1em;
     display: block;
+    text-align: left;
     position: absolute;
     cursor: pointer;
     user-select: none;
@@ -482,7 +481,6 @@
 
 .mapButton {
     position: absolute;
-    -ms-background-position-y: 0;
     background-position-y: 0;
 }
 
@@ -524,8 +522,6 @@
 }
 
 .shopItem {
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
     display: inline-flex;
     width: 98%;
     height: 5%;
@@ -537,7 +533,6 @@
     width: 32px;
     height: 32px;
     border: 2px solid rgba(0, 0, 255, 0.3);
-    -webkit-transform: scale(0.9);
     transform: scale(0.9);
     border-radius: 100%;
     background-size: 600%;
@@ -698,10 +693,6 @@
     top: 100%;
     left: 50%;
     pointer-events: none;
-    -moz-transition: 0.7s top ease;
-    -webkit-transition: 0.7s top ease;
-    -o-transition: 0.7s top ease;
-    -ms-transition: 0.7s top ease;
     transition: 0.7s top ease;
 }
 
@@ -1112,9 +1103,6 @@
             border: 3px solid #373737;
             border-radius: 6px;
             background-color: red;
-            -o-transition: 0.5s width ease;
-            -moz-transition: 0.5s width ease;
-            -webkit-transition: 0.5s width ease;
             transition: 0.5s width ease;
         }
     }
@@ -1293,7 +1281,6 @@
     #warp4:hover,
     #warp5:hover,
     #warp6:hover {
-        -ms-background-position-y: -60px;
         background-position-y: -60px;
     }
 
@@ -1303,7 +1290,6 @@
     #warp4.active,
     #warp5.active,
     #warp6.active {
-        -ms-background-position-y: -120px;
         background-position-y: -120px;
     }
 
@@ -1851,9 +1837,6 @@
             border: 1px solid #373737;
             border-radius: 4px;
             background-color: red;
-            -o-transition: 0.5s width ease;
-            -moz-transition: 0.5s width ease;
-            -webkit-transition: 0.5s width ease;
             transition: 0.5s width ease;
         }
     }
@@ -2040,7 +2023,6 @@
     #warp4:hover,
     #warp5:hover,
     #warp6:hover {
-        -ms-background-position-y: -40px;
         background-position-y: -40px;
     }
 
@@ -2050,7 +2032,6 @@
     #warp4.active,
     #warp5.active,
     #warp6.active {
-        -ms-background-position-y: -80px;
         background-position-y: -80px;
     }
 
@@ -2526,9 +2507,6 @@
             border: 1px solid #373737;
             border-radius: 2px;
             background-color: red;
-            -o-transition: 0.5s width ease;
-            -moz-transition: 0.5s width ease;
-            -webkit-transition: 0.5s width ease;
             transition: 0.5s width ease;
         }
     }
@@ -2693,7 +2671,6 @@
     #warp4:hover,
     #warp5:hover,
     #warp6:hover {
-        -ms-background-position-y: -20px;
         background-position-y: -20px;
     }
 
@@ -2703,7 +2680,6 @@
     #warp4.active,
     #warp5.active,
     #warp6.active {
-        -ms-background-position-y: -40px;
         background-position-y: -40px;
     }
 
