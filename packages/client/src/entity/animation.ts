@@ -4,31 +4,29 @@ interface Frame {
     y: number;
 }
 
+/**
+ * Ripped from BrowserQuest's client.
+ */
 export default class Animation {
-    name: string;
-    length: number;
-    row: number;
-    width: number;
-    height: number;
-    currentFrame: Frame;
-    count: number;
-    lastTime: number;
-    speed: number;
+    public currentFrame!: Frame;
+    public count!: number;
 
-    /**
-     * Ripped from BrowserQuest's client
-     */
-    constructor(name: string, length: number, row: number, width: number, height: number) {
-        this.name = name;
-        this.length = length;
-        this.row = row;
-        this.width = width;
-        this.height = height;
+    private lastTime!: number;
+    private speed!: number;
 
+    private endCountCallback!: () => void;
+
+    public constructor(
+        public name: string,
+        private length: number,
+        public row: number,
+        private width: number,
+        private height: number
+    ) {
         this.reset();
     }
 
-    tick(): void {
+    private tick(): void {
         let i = this.currentFrame.index;
 
         i = i < this.length - 1 ? i + 1 : 0;
@@ -47,9 +45,6 @@ export default class Animation {
         this.currentFrame.y = this.height * this.row;
 
         this.currentFrame.index = i;
-    }
-    endCountCallback(): void {
-        throw new Error('Method not implemented.');
     }
 
     update(time: number): boolean {

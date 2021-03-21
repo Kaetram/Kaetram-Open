@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node-script
 
 import { each, isArray } from 'lodash';
 import io from 'socket.io-client';
