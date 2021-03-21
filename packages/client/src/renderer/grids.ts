@@ -32,7 +32,7 @@ export default class Grids {
             }
         }
 
-        if (this.map.game.isDebug()) log.info('Finished generating grids.');
+        log.debug('Finished generating grids.');
     }
 
     resetPathingGrid(): void {

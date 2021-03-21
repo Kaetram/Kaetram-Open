@@ -3,12 +3,13 @@ import _ from 'lodash';
 import Character from '../entity/character/character';
 import Entity from '../entity/entity';
 import AStar from '../lib/astar';
+import type { FunctionTypes, PosTuple } from '../lib/astar';
 
 export default class PathFinder {
     width: number;
     height: number;
-    mode: string;
-    grid: number[][];
+    mode: FunctionTypes;
+    grid: number[][] | null;
     blankGrid: number[][];
     ignores: Character[];
 
@@ -36,8 +37,8 @@ export default class PathFinder {
     }
 
     find(grid: number[][], entity: Entity, x: number, y: number, incomplete: boolean): number[][] {
-        const start = [entity.gridX, entity.gridY];
-        const end = [x, y];
+        const start: PosTuple = [entity.gridX, entity.gridY];
+        const end: PosTuple = [x, y];
         let path;
 
         this.grid = grid;
@@ -50,8 +51,8 @@ export default class PathFinder {
         return path;
     }
 
-    findIncomplete(start: number[], end: number[]): number[][] {
-        let incomplete = [],
+    findIncomplete(start: PosTuple, end: PosTuple): number[][] {
+        let incomplete: number[][] = [],
             x,
             y;
 
@@ -61,8 +62,8 @@ export default class PathFinder {
             x = perfect[i][0];
             y = perfect[i][1];
 
-            if (this.grid[y][x] === 0) {
-                incomplete = AStar(this.grid, start, [x.y], this.mode);
+            if (this.grid?.[y][x] === 0) {
+                incomplete = AStar(this.grid, start, [x, y], this.mode);
                 break;
             }
         }
@@ -77,7 +78,7 @@ export default class PathFinder {
             x = entity.hasPath() ? entity.nextGridX : entity.gridX;
             y = entity.hasPath() ? entity.nextGridY : entity.gridY;
 
-            if (x >= 0 && y >= 0) this.grid[y][x] = ignored ? 0 : 1;
+            if (x >= 0 && y >= 0 && this.grid) this.grid[y][x] = ignored ? 0 : 1;
         });
     }
 
