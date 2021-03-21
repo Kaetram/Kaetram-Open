@@ -1,5 +1,38 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+export type PosTuple = [x: number, y: number];
+
+export type FunctionTypes = 'Diagonal' | 'Euclidean' | 'DiagonalFree' | 'EuclideanFree' | 'DEFAULT';
+
+interface Result {
+    x: number;
+    y: number;
+    f?: number;
+    g?: number;
+    v?: number;
+    p?: Result;
+}
+
+type Successor = (
+    $N: boolean,
+    $S: boolean,
+    $E: boolean,
+    $W: boolean,
+    N: number,
+    S: number,
+    E: number,
+    W: number,
+    grid: number[][],
+    rows: number,
+    cols: number,
+    result: Result[],
+    i: number
+) => Result[];
+
+type MathFunction = (
+    start: Pos,
+    end: Pos,
+    f1: (...values: number[]) => number,
+    f2: (...values: number[]) => number
+) => number;
 
 /**
  * A* (A-Star) algorithm for a path finder
@@ -7,82 +40,22 @@
  * @license Mit Style License
  */
 
-function diagonalSuccessors($N, $S, $E, $W, N, S, E, W, grid, _rows, _cols, result, i) {
-    if ($N) {
-        $E && !grid[N][E] && (result[i++] = { x: E, y: N });
-        $W && !grid[N][W] && (result[i++] = { x: W, y: N });
-    }
-    if ($S) {
-        $E && !grid[S][E] && (result[i++] = { x: E, y: S });
-        $W && !grid[S][W] && (result[i++] = { x: W, y: S });
-    }
-    return result;
-}
-
-function diagonalSuccessorsFree($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i) {
-    $N = N > -1;
-    $S = S < rows;
-    $E = E < cols;
-    $W = W > -1;
-    if ($E) {
-        $N && !grid[N][E] && (result[i++] = { x: E, y: N });
-        $S && !grid[S][E] && (result[i++] = { x: E, y: S });
-    }
-    if ($W) {
-        $N && !grid[N][W] && (result[i++] = { x: W, y: N });
-        $S && !grid[S][W] && (result[i++] = { x: W, y: S });
-    }
-    return result;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function nothingToDo(_$N, _$S, _$E, _$W, _N, _S, _E, _W, _grid, _rows, _cols, result, _i) {
-    return result;
-}
-
-function successors(find, x, y, grid, rows, cols) {
-    const N = y - 1,
-        S = y + 1,
-        E = x + 1,
-        W = x - 1,
-        $N = N > -1 && !grid[N][x],
-        $S = S < rows && !grid[S][x],
-        $E = E < cols && !grid[y][E],
-        $W = W > -1 && !grid[y][W],
-        result = [];
-    let i = 0;
-
-    $N && (result[i++] = { x: x, y: N });
-    $E && (result[i++] = { x: E, y: y });
-    $S && (result[i++] = { x: x, y: S });
-    $W && (result[i++] = { x: W, y: y });
-    return find($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i);
-}
-
-function diagonal(start, end, f1, f2) {
-    return f2(f1(start.x - end.x), f1(start.y - end.y));
-}
-
-function euclidean(start, end, _f1, f2) {
-    const x = start.x - end.x,
-        y = start.y - end.y;
-    return f2(x * x + y * y);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function manhattan(start, end, f1, _f2) {
-    return f1(start.x - end.x) + f1(start.y - end.y);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function AStar(grid: number[][], start: number[], end: number[], f: string): number[][] {
+function AStar(
+    grid: number[][],
+    start: [number, number],
+    end: [number, number],
+    f: FunctionTypes
+): number[][] {
     const cols = grid[0].length;
     const rows = grid.length;
+
     const limit = cols * rows;
-    const f1 = Math.abs;
+
     let f2 = Math.max;
-    const list = {};
-    const result = [];
+
+    const list: Record<number, number> = {};
+    const result: [x: number, y: number][] = [];
+
     const open = [
         {
             x: start[0],
@@ -90,19 +63,17 @@ function AStar(grid: number[][], start: number[], end: number[], f: string): num
             f: 0,
             g: 0,
             v: start[0] + start[1] * cols
-        }
+        } as Result
     ];
+
     let length = 1,
-        adj,
-        distance,
-        find,
-        i,
-        j,
-        max,
-        min,
-        current,
-        next;
-    end = { x: end[0], y: end[1], v: end[0] + end[1] * cols };
+        distance: MathFunction,
+        find: Successor,
+        current: Result,
+        next: Result[];
+
+    const endPos = { x: end[0], y: end[1], v: end[0] + end[1] * cols };
+
     switch (f) {
         case 'Diagonal':
         case 'Euclidean':
@@ -115,51 +86,165 @@ function AStar(grid: number[][], start: number[], end: number[], f: string): num
             f2 = Math.sqrt;
             distance = euclidean;
             break;
+
         default:
             distance = manhattan;
             find = nothingToDo;
             break;
     }
-    find || (find = diagonalSuccessorsFree);
+
+    find ||= diagonalSuccessorsFree;
 
     do {
         if (length > 100)
             // Don't let it get too crazy.
             return [];
 
-        max = limit;
-        min = 0;
-        for (i = 0; i < length; ++i)
-            if ((f = open[i].f) < max) {
-                max = f;
+        let max = limit;
+        let min = 0;
+
+        for (let i = 0; i < length; ++i) {
+            const openF = open[i].f as number;
+
+            if (openF < max) {
+                max = openF;
                 min = i;
             }
+        }
 
         current = open.splice(min, 1)[0];
-        if (current.v !== end.v) {
+        if (current.v !== endPos.v) {
             --length;
             next = successors(find, current.x, current.y, grid, rows, cols);
-            for (i = 0, j = next.length; i < j; ++i) {
-                (adj = next[i]).p = current;
+
+            for (let i = 0, j = next.length; i < j; ++i) {
+                const adj = next[i];
+
+                adj.p = current;
                 adj.f = adj.g = 0;
                 adj.v = adj.x + adj.y * cols;
+
                 if (!(adj.v in list)) {
                     adj.f =
-                        (adj.g = current.g + distance(adj, current, f1, f2)) +
-                        distance(adj, end, f1, f2);
+                        (adj.g = (current.g as number) + distance(adj, current, Math.abs, f2)) +
+                        distance(adj, endPos, Math.abs, f2);
+
                     open[length++] = adj;
                     list[adj.v] = 1;
                 }
             }
         } else {
-            i = length = 0;
+            let i = (length = 0);
+
             do result[i++] = [current.x, current.y];
-            while ((current = current.p));
+            while ((current = current.p as Result));
+
             result.reverse();
         }
     } while (length);
 
     return result;
 }
+
+const diagonalSuccessors: Successor = (
+    $N,
+    $S,
+    $E,
+    $W,
+    N,
+    S,
+    E,
+    W,
+    grid,
+    _rows,
+    _cols,
+    result,
+    i
+) => {
+    if ($N) {
+        $E && !grid[N][E] && (result[i++] = { x: E, y: N });
+        $W && !grid[N][W] && (result[i++] = { x: W, y: N });
+    }
+    if ($S) {
+        $E && !grid[S][E] && (result[i++] = { x: E, y: S });
+        $W && !grid[S][W] && (result[i++] = { x: W, y: S });
+    }
+
+    return result;
+};
+
+const diagonalSuccessorsFree: Successor = (
+    $N,
+    $S,
+    $E,
+    $W,
+    N,
+    S,
+    E,
+    W,
+    grid,
+    rows,
+    cols,
+    result,
+    i
+) => {
+    $N = N > -1;
+    $S = S < rows;
+    $E = E < cols;
+    $W = W > -1;
+
+    if ($E) {
+        $N && !grid[N][E] && (result[i++] = { x: E, y: N });
+        $S && !grid[S][E] && (result[i++] = { x: E, y: S });
+    }
+    if ($W) {
+        $N && !grid[N][W] && (result[i++] = { x: W, y: N });
+        $S && !grid[S][W] && (result[i++] = { x: W, y: S });
+    }
+
+    return result;
+};
+
+const nothingToDo: Successor = (_$N, _$S, _$E, _$W, _N, _S, _E, _W, _grid, _rows, _cols, result) =>
+    result;
+
+function successors(
+    find: Successor,
+    x: number,
+    y: number,
+    grid: number[][],
+    rows: number,
+    cols: number
+) {
+    const N = y - 1,
+        S = y + 1,
+        E = x + 1,
+        W = x - 1,
+        $N = N > -1 && !grid[N][x],
+        $S = S < rows && !grid[S][x],
+        $E = E < cols && !grid[y][E],
+        $W = W > -1 && !grid[y][W],
+        result = [];
+
+    let i = 0;
+
+    $N && (result[i++] = { x: x, y: N });
+    $E && (result[i++] = { x: E, y: y });
+    $S && (result[i++] = { x: x, y: S });
+    $W && (result[i++] = { x: W, y: y });
+
+    return find($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i);
+}
+
+const diagonal: MathFunction = (start, end, f1, f2) => f2(f1(start.x - end.x), f1(start.y - end.y));
+
+const euclidean: MathFunction = (start, end, _f1, f2) => {
+    const x = start.x - end.x,
+        y = start.y - end.y;
+
+    return f2(x * x + y * y);
+};
+
+const manhattan: MathFunction = (start, end, f1) => f1(start.x - end.x) + f1(start.y - end.y);
 
 export default AStar;
