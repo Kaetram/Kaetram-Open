@@ -4,8 +4,10 @@
         "module": "esnext",
         "target": "esnext",
         "removeComments": false,
+        "noImplicitAny": false,
+        "strictNullChecks": false,
         "types": ["@types/webpack-env"]
     },
     "include": ["**/*.ts", "../../package.json"],
-    "files": ["src/main.ts", "./types/index.d.ts"]
+    "files": ["src/main.ts", "types/index.d.ts"]
 }

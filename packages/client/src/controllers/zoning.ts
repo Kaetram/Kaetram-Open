@@ -1,46 +1,29 @@
-import Game from '../game';
-import Camera from '../renderer/camera';
-import Renderer from '../renderer/renderer';
 import * as Modules from '@kaetram/common/src/modules';
-import InputController from './input';
 
 export default class ZoningController {
-    game: Game;
-    renderer: Renderer;
-    camera: Camera;
-    input: InputController;
-    direction: number;
+    public direction!: Modules.Orientation | null;
 
-    constructor(game: Game) {
-        this.game = game;
-        this.renderer = game.renderer;
-        this.camera = game.camera;
-        this.input = game.input;
-
+    public reset(): void {
         this.direction = null;
     }
 
-    reset(): void {
-        this.direction = null;
-    }
-
-    setUp(): void {
+    public setUp(): void {
         this.direction = Modules.Orientation.Up;
     }
 
-    setDown(): void {
+    public setDown(): void {
         this.direction = Modules.Orientation.Down;
     }
 
-    setRight(): void {
+    public setRight(): void {
         this.direction = Modules.Orientation.Right;
     }
 
-    setLeft(): void {
+    public setLeft(): void {
         this.direction = Modules.Orientation.Left;
     }
 
-    getDirection(): number {
-        return this.direction;
+    public getDirection(): Modules.Orientation {
+        return this.direction as Modules.Orientation;
     }
 }
