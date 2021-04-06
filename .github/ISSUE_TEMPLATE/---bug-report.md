@@ -1,5 +1,5 @@
 ---
-name: ':bug: Bug Report'
+name: 🐛 Bug Report
 about: Report a bug or regression to help us improve
 title: '[Bug]'
 labels: bug
