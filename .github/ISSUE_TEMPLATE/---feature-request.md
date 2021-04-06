@@ -1,5 +1,5 @@
 ---
-name: ':writing_hand: Feature Request'
+name: ✍️ Feature Request
 about: Suggest an idea for this project
 title: '[Feature]'
 labels: '[3] phase: features, enhancement'
