@@ -121,8 +121,8 @@ class Map {
          * These are temporarily hardcoded,
          * but we will use a dynamic approach.
          */
-        this.regionWidth = this.width / this.zoneWidth;
-        this.regionHeight = this.height / this.zoneHeight;
+        this.regionWidth = 25;
+        this.regionHeight = 25;
 
         this.checksum = Utils.getChecksum(JSON.stringify(map));
 
@@ -157,9 +157,11 @@ class Map {
         this.doors = {};
 
         _.each(map.areas.doors, (door: any) => {
+            if (!door.destination) return;
+
             let orientation: number;
 
-            switch (door.o) {
+            switch (door.orientation) {
                 case 'u':
                     orientation = Modules.Orientation.Up;
                     break;
@@ -177,16 +179,15 @@ class Map {
                     break;
             }
 
-            let index = this.gridPositionToIndex(door.x, door.y) + 1;
+            let index = this.gridPositionToIndex(door.x, door.y, 1),
+                destination = this.getDoorDestination(door);
+
+            if (!destination) return;
 
             this.doors[index] = {
-                x: door.tx,
-                y: door.ty,
-                orientation: orientation,
-                portal: door.p ? door.p : 0,
-                level: door.l,
-                achievement: door.a,
-                rank: door.r
+                x: destination.x,
+                y: destination.y,
+                orientation: destination.orientation
             };
         });
     }
@@ -229,8 +230,8 @@ class Map {
         };
     }
 
-    gridPositionToIndex(x: number, y: number) {
-        return y * this.width + x;
+    gridPositionToIndex(x: number, y: number, offset: number = 0) {
+        return y * this.width + x + offset;
     }
 
     getX(index: number, width: number) {
@@ -310,7 +311,7 @@ class Map {
     }
 
     getObject(x: number, y: number, data: any) {
-        let index = this.gridPositionToIndex(x, y) - 1,
+        let index = this.gridPositionToIndex(x, y, -1),
             tiles = this.data[index];
 
         if (tiles instanceof Array) for (let i in tiles) if (tiles[i] in data) return tiles[i];
@@ -336,11 +337,19 @@ class Map {
     }
 
     isDoor(x: number, y: number) {
-        return !!this.doors[this.gridPositionToIndex(x, y) + 1];
+        return !!this.doors[this.gridPositionToIndex(x, y, 1)];
     }
 
-    getDoorDestination(x: number, y: number) {
-        return this.doors[this.gridPositionToIndex(x, y) + 1];
+    getDoorByPosition(x: number, y: number) {
+        return this.doors[this.gridPositionToIndex(x, y, 1)];
+    }
+
+    getDoorDestination(door: any) {
+        for (let i in map.areas.doors)
+            if (map.areas.doors[i].id === door.destination)
+                return map.areas.doors[i];
+                
+        return null;
     }
 
     isValidPosition(x: number, y: number) {
