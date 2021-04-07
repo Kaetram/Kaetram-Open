@@ -51,9 +51,6 @@ class Map {
     rocks: any;
     rockIndexes: any;
 
-    zoneWidth: number;
-    zoneHeight: number;
-
     regionWidth: number;
     regionHeight: number;
 
@@ -113,9 +110,6 @@ class Map {
         // Mining
         this.rocks = map.rocks;
         this.rockIndexes = map.rockIndexes;
-
-        this.zoneWidth = 25;
-        this.zoneHeight = 25;
 
         /**
          * These are temporarily hardcoded,
@@ -269,10 +263,10 @@ class Map {
 
     nearLight(light: any, x: number, y: number) {
         let diff = Math.round(light.distance / 16),
-            startX = light.x - this.zoneWidth - diff,
-            startY = light.y - this.zoneHeight - diff,
-            endX = light.x + this.zoneWidth + diff,
-            endY = light.y + this.zoneHeight + diff;
+            startX = light.x - this.regionWidth - diff,
+            startY = light.y - this.regionHeight - diff,
+            endX = light.x + this.regionWidth + diff,
+            endY = light.y + this.regionHeight + diff;
 
         return x > startX && y > startY && x < endX && y < endY;
     }
