@@ -5,6 +5,6 @@
         "strictNullChecks": true,
         "module": "commonjs",
         "target": "esnext",
-        "types": ["@kaetram/common"]
+        "types": ["@types/node", "@kaetram/common"]
     }
 }
