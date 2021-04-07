@@ -414,7 +414,7 @@ class Incoming {
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     let door = this.player.doors.getDoor(posX, posY);
 
-                    if (door && this.player.doors.getStatus(door) === 'closed') return;
+                    if (door && this.player.doors.isClosed(door)) return;
 
                     let destination = this.world.map.getDoorByPosition(posX, posY);
 
