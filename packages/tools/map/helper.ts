@@ -1,6 +1,9 @@
 #!/usr/bin/env ts-node-script
 
+import fs from 'fs';
+import _ from 'lodash';
 import world from '@kaetram/server/data/map/world.json';
+import rawJson from './data/map-refactor.json';
 
 export default class Helper {
     #width = world.width;
@@ -8,8 +11,52 @@ export default class Helper {
 
     public constructor() {
         // Palm Tree Stump
-        this.getTileData(167, 263);
-        this.getTileData(167, 264);
+
+        console.log('hi?');
+
+        _.each(rawJson.layers, (layer: any) => {
+            if (layer.name !== 'doors') return;
+
+            let doorObjects = _.cloneDeep(layer.objects);
+
+            _.each(layer.objects, (door: any) => {
+                let properties: any = {},
+                    newProperties: any = [];
+
+                _.each(door.properties, (property: any) => {
+                    properties[property.name] = property.value;
+                });
+
+                if ('x' in properties) {
+                    let doorId = this.findDoorId(doorObjects, properties.x, properties.y);
+
+                    if (doorId) {
+                        newProperties.push({
+                            name: 'destination',
+                            type: 'object',
+                            value: doorId
+                        });
+                        newProperties.push({
+                            name: 'orientation',
+                            type: 'string',
+                            value: properties.o
+                        })
+                    }
+                }
+
+                door.properties = newProperties;
+            });
+        });
+
+        fs.writeFileSync('map-test.json', JSON.stringify(rawJson));
+    }
+
+    private findDoorId(doors: any, x: number, y: number) {
+        for (let i in doors)
+            if (doors[i].x === x * 16 && doors[i].y === y * 16)
+                return doors[i].id;
+
+        return null;
     }
 
     private getTileData(x: number, y: number): void {
