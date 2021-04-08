@@ -24,6 +24,17 @@ Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
 Patreon &ndash; <https://www.patreon.com/kaetram>
 
+Crypto Donations:
+
+BTC - ```bc1qeh0tdlkuc5q82j2qk9h3sqmwe6uy75qpjtc0dv```
+
+LTC - ```MMRo7dfAi2T8rJrx7m3DmzhsgHRC7XJ83f```
+
+ETH - ```0x4c6de7175f789DAf0f531477753B07402EEfedaC```
+
+BCH - ```bitcoincash:qzx6uqunqj4mtv74jng97pea0mfcl4nmyqsew92enu```
+
+
 ![Demo1](https://i.imgur.com/slnzrZB.png)
 
 ![Demo2](https://i.imgur.com/jS5d3oq.png)
