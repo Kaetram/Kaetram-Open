@@ -19,6 +19,7 @@ export default class Shop {
     shop: JQuery;
     inventory: JQuery;
     sellSlot: JQuery;
+    sellSlotText: JQuery;
     sellSlotReturn: JQuery;
     sellSlotReturnText: JQuery;
     confirmSell: JQuery;
@@ -46,6 +47,7 @@ export default class Shop {
          */
 
         this.sellSlot = $('#shopSellSlot');
+        this.sellSlotText = $('#shopSellSlotText');
         this.sellSlotReturn = $('#shopSellSlotReturn');
         this.sellSlotReturnText = $('#shopSellSlotReturnText');
 
@@ -108,7 +110,11 @@ export default class Shop {
             backgroundSize: this.sellSlot.css('background-size')
         });
 
-        this.sellSlotReturnText.text(info.price);
+        var quantity: number = Number(slotText.text()) || 1;
+
+        this.sellSlotText.text(slotText.text());
+
+        this.sellSlotReturnText.text(info.price * quantity);
 
         slotImage.css('background-image', '');
         slotText.text('');
@@ -120,8 +126,13 @@ export default class Shop {
         inventorySlot
             .find(`#inventoryImage${index}`)
             .css('background-image', this.sellSlot.css('background-image'));
+        
+        inventorySlot
+            .find(`#inventoryItemCount${index}`)
+            .text(this.sellSlotText.text());
 
         this.sellSlot.css('background-image', '');
+        this.sellSlotText.text('');
         this.sellSlotReturn.css('background-image', '');
         this.sellSlotReturnText.text('');
     }
@@ -224,6 +235,11 @@ export default class Shop {
 
     hide(): void {
         this.openShop = -1;
+
+        this.sellSlot.css('background-image', '');
+        this.sellSlotText.text('');
+        this.sellSlotReturn.css('background-image', '');
+        this.sellSlotReturnText.text('');
 
         this.body.fadeOut('fast');
     }
