@@ -1,5 +1,5 @@
 ---
-name: ':page_with_curl: Documentation Issue'
+name: 📃 Documentation Issue
 about: Report missing or malformed information
 title: '[Documentation]'
 labels: docs
