@@ -1,28 +1,46 @@
 /* global module */
 
-import Mob from '../game/entity/character/mob/mob';
-import Player from '../game/entity/character/player/player';
+import Mob from '../../game/entity/character/mob/mob';
+import Player from '../../game/entity/character/player/player';
 
 class Area {
-    id: any;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
 
-    entities: any;
-    chest: any;
-    items: any;
+    public id: number;
+    public x: number;
+    public y: number;
+    public width: number;
+    public height: number;
 
-    hasRespawned: boolean;
+    public entities: any;
+    public chest: any;
+    public items: any;
 
-    maxEntities: number;
-    spawnDelay: number;
+    public hasRespawned: boolean;
 
-    spawnCallback: Function;
-    emptyCallback: Function;
+    // Overlay properties
+    public darkness: string;
+    public type: string;
+    public fog: boolean;
 
-    achievement: any;
+    // Properties it can hold
+    public achievement: number;
+    public cameraType: string;
+    public song: string;
+
+    // Door coordinates
+    public tx: number;
+    public ty: number;
+
+    // Chest coordinates
+    public cx: number;
+    public cy: number;
+
+    public maxEntities: number;
+    public spawnDelay: number;
+    public lastSpawn: number;
+
+    private spawnCallback: Function;
+    private emptyCallback: Function;
 
     constructor(id: number, x: number, y: number, width: number, height: number) {
         this.id = id;
