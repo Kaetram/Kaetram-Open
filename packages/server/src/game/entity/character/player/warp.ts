@@ -59,7 +59,7 @@ class Warp {
     }
 
     hasRequirement(levelRequirement: number) {
-        return this.player.level > levelRequirement || this.player.rights > 1;
+        return this.player.level >= levelRequirement || this.player.rights > 1;
     }
 
     getDuration() {
