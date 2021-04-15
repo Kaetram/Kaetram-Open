@@ -44,11 +44,14 @@ export default class EntitiesController {
 
     public constructor(private game: Game) {}
 
-    public load(): void {
+    public async load(): Promise<void> {
         this.game.app.sendStatus('Loading sprites');
 
         if (!this.sprites) {
-            this.sprites = new SpritesController(this.renderer);
+            const sprites = new SpritesController();
+            await sprites.load();
+
+            this.sprites = sprites;
 
             this.game.input?.loadCursors();
         }
