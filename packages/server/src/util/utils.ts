@@ -36,6 +36,12 @@ export default {
         };
     },
 
+    connectionCounter: 0,
+
+    getConnectionId() {
+        return '1' + this.random(1000) + this.connectionCounter++;
+    },
+
     /**
      * We are just using some incremental seeds to prevent ids/instances
      * from ending up with the same numbers/variables.
