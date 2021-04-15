@@ -414,9 +414,9 @@ class Incoming {
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     let door = this.player.doors.getDoor(posX, posY);
 
-                    if (door && this.player.doors.getStatus(door) === 'closed') return;
+                    if (door && this.player.doors.isClosed(door)) return;
 
-                    let destination = this.world.map.getDoorDestination(posX, posY);
+                    let destination = this.world.map.getDoorByPosition(posX, posY);
 
                     this.player.teleport(destination.x, destination.y, true);
                 } else {
@@ -957,7 +957,8 @@ class Incoming {
         console.log(message);
 
         this.player.cameraArea = null;
-        this.player.handler.detectCamera(this.player.x, this.player.y);
+        // TODO - Make this a server-side thing.
+        //this.player.handler.detectCamera(this.player.x, this.player.y);
     }
 
     /**
