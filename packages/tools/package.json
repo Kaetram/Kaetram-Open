@@ -3,7 +3,7 @@
     "scripts": {
         "helper": "ts-node map/helper",
         "exportmap": "ts-node map/exportmap",
-        "map": "yarn exportmap map/data/map-refactor.json"
+        "map": "yarn exportmap map/data/map.json"
     },
     "dependencies": {
         "lodash": "^4.17.21"

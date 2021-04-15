@@ -9,7 +9,7 @@ import Constants from '../../../../util/constants';
 import World from '../../../world';
 import MobHandler from './mobhandler';
 import Player from '../player/player';
-import Area from '../../../../map/area';
+import Area from '../../../../map/areas/area';
 
 class Mob extends Character {
     world: World;

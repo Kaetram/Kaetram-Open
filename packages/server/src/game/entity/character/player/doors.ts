@@ -142,6 +142,10 @@ class Doors {
         });
     }
 
+    isClosed(door: any) {
+        return this.getStatus(door) === 'closed';
+    }
+
     forEachDoor(callback: Function) {
         _.each(this.doors, (door) => {
             callback(door);
