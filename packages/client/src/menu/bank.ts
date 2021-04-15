@@ -56,7 +56,7 @@ export default class Bank {
             slot.on('click', (event) => this.click('bank', event));
 
             const count = item.count;
-            let itemCount: string;
+            let itemCount: string = count.toString();
 
             if (count > 999999)
                 itemCount = `${count
@@ -101,7 +101,7 @@ export default class Bank {
             iSlot.on('click', (event) => this.click('inventory', event));
 
             const count = iItem.count;
-            let itemCount;
+            let itemCount = count.toString();
 
             if (count > 999999)
                 itemCount = `${count
