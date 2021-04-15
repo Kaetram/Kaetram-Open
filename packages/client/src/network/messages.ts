@@ -122,12 +122,6 @@ export default class Messages {
         this.app.toggleLogin(false);
 
         switch (message) {
-            case 'updated':
-                this.app.sendError(null, 'The client has been updated!');
-
-                this.app.openScroll('loadCharacter', 'clientUpdated');
-                break;
-
             case 'full':
                 this.app.sendError(null, 'The servers are currently full!');
                 break;
