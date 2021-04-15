@@ -8,11 +8,12 @@ import Player from '../game/entity/character/player/player';
 import Utils from '../util/utils';
 import Connection from './connection';
 import config from '../../config';
+import SocketHandler from './sockethandler';
 
 class Network {
     world: World;
     database: MongoDB;
-    socket: any;
+    socketHandler: SocketHandler;
     region: Region;
     map: Map;
 
@@ -22,7 +23,7 @@ class Network {
     constructor(world: World) {
         this.world = world;
         this.database = world.database;
-        this.socket = world.socket;
+        this.socketHandler = world.socketHandler;
         this.region = world.region;
         this.map = world.map;
 
@@ -50,13 +51,13 @@ class Network {
 
         for (let id in this.packets) {
             if (this.packets[id].length > 0 && this.packets.hasOwnProperty(id)) {
-                let conn = this.socket.get(id);
+                let conn = this.socketHandler.get(id);
 
                 if (conn) {
                     conn.send(this.packets[id]);
                     this.packets[id] = [];
                     this.packets[id].id = id;
-                } else this.socket.remove(id);
+                } else this.socketHandler.remove(id);
             }
         }
     }
@@ -73,7 +74,7 @@ class Network {
             return;
         }
 
-        this.socket.ips[connection.socket.conn.remoteAddress] = new Date().getTime();
+        this.socketHandler.ips[connection.socket.conn.remoteAddress] = new Date().getTime();
 
         this.addToPackets(player);
 
@@ -190,7 +191,7 @@ class Network {
     }
 
     getSocketTime(connection: Connection) {
-        return this.socket.ips[connection.socket.conn.remoteAddress];
+        return this.socketHandler.ips[connection.socket.conn.remoteAddress];
     }
 }
 
