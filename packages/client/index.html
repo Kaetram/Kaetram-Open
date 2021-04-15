@@ -2,7 +2,6 @@
 <html dir="ltr" lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge; chrome=1" />
         <meta http-equiv="Content-Type" content="text/html" />
         <meta
             name="viewport"
@@ -139,16 +138,16 @@
                             Kaetram
                             <span class="right-ornament"></span>
                         </h1>
-                        <form method="get" accept-charset="utf-8">
+                        <form>
                             <input
                                 type="text"
                                 id="loginNameInput"
                                 class="stroke"
                                 name="player-name"
                                 placeholder="Username"
-                                tabindex="0"
+                                aria-label="Username"
                                 maxlength="32"
-                                autocomplete="off"
+                                autocomplete="username"
                                 readonly
                                 autofocus
                             />
@@ -158,21 +157,39 @@
                                 class="stroke"
                                 name="player-password"
                                 placeholder="Password"
-                                tabindex="0"
+                                aria-label="Password"
                                 maxlength="64"
+                                autocomplete="current-password"
                                 readonly
-                                autocomplete="off"
                             />
+
+                            <label id="rememberMe" class="check">
+                                <div id="rememberMeText">Remember Me</div>
+                                <input type="checkbox" aria-labelledby="rememberMeText" />
+                                <span class="checkmark"></span>
+                            </label>
+                            <label id="guest" class="check">
+                                <div id="guestText">Play as a guest</div>
+                                <input type="checkbox" aria-labelledby="guestText" />
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <button
+                                title="Login"
+                                aria-label="Login"
+                                type="submit"
+                                id="login"
+                                disabled
+                            ></button>
+                            <button
+                                title="New Account"
+                                aria-label="New Account"
+                                type="button"
+                                id="newCharacter"
+                            ></button>
+
+                            <div class="validation-summary"></div>
                         </form>
-                        <div id="rememberMe" class="check" tabindex="0">
-                            <div id="rememberMeText">Remember Me</div>
-                        </div>
-                        <div id="guest" class="check" tabindex="0">
-                            <div id="guestText">Play as a guest</div>
-                        </div>
-                        <div id="login" tabindex="0"></div>
-                        <div id="newCharacter" tabindex="0"></div>
-                        <div class="validation-summary"></div>
                     </article>
                     <article id="createCharacter">
                         <h1>
@@ -180,16 +197,16 @@
                             New Character
                             <span class="right-ornament"></span>
                         </h1>
-                        <form method="get" accept-charset="utf-8">
+                        <form>
                             <input
                                 type="text"
                                 id="registerNameInput"
                                 class="stroke"
                                 name="player-name"
                                 placeholder="Username"
-                                tabindex="0"
+                                aria-label="Username"
                                 maxlength="32"
-                                autocomplete="off"
+                                autocomplete="username"
                             />
                             <input
                                 type="password"
@@ -197,9 +214,9 @@
                                 class="stroke"
                                 name="player-password"
                                 placeholder="Password"
-                                tabindex="0"
+                                aria-label="Password"
                                 maxlength="64"
-                                autocomplete="off"
+                                autocomplete="new-password"
                             />
                             <input
                                 type="password"
@@ -207,9 +224,9 @@
                                 class="stroke"
                                 name="player-password2"
                                 placeholder="Confirm Password"
-                                tabindex="0"
+                                aria-label="Confirm Password"
                                 maxlength="64"
-                                autocomplete="off"
+                                autocomplete="new-password"
                             />
                             <input
                                 type="email"
@@ -217,36 +234,23 @@
                                 class="stroke"
                                 name="player-email"
                                 placeholder="Email Address"
-                                tabindex="0"
+                                aria-label="Email Address"
                                 maxlength="64"
-                                autocomplete="off"
+                                autocomplete="email"
                             />
+
+                            <!-- <p></p> -->
+
+                            <button
+                                title="Cancel"
+                                aria-label="Cancel"
+                                type="button"
+                                id="cancelButton"
+                            ></button>
+                            <button title="Play" aria-label="Play" type="submit" id="play"></button>
+
+                            <div class="validation-summary"></div>
                         </form>
-                        <!-- <p></p> -->
-                        <div id="cancelButton" tabindex="0"></div>
-                        <div id="play" tabindex="0"></div>
-                        <div class="validation-summary" tabindex="0"></div>
-                    </article>
-                    <article id="clientUpdated">
-                        <h1>
-                            <span class="left-ornament"></span>
-                            <span class="title">Client Updated</span>
-                            <span class="right-ornament"></span>
-                        </h1>
-                        <p id="cuDescription">
-                            <br />
-                            The client has been updated. You must clear your browser's cache in
-                            order to be able to play.
-                            <br />
-                            Try one of the following methods:
-                            <br />
-                            <br />
-                            1) Hold SHIFT key and press the reload button in your browser.
-                            <br />
-                            2) Windows + Linux: CTRL + SHIFT + R or SHIFT + F5
-                            <br />
-                            3) Mac: CMD + SHIFT + R
-                        </p>
                     </article>
                     <article id="credits">
                         <h1>
@@ -433,6 +437,7 @@
                             min="0"
                             max="100"
                             value="100"
+                            aria-labelledby="volumeText"
                         />
                         <input
                             title="SFX"
@@ -442,6 +447,7 @@
                             min="0"
                             max="100"
                             value="100"
+                            aria-labelledby="sfxText"
                         />
                         <input
                             title="Brightness"
@@ -451,27 +457,46 @@
                             min="0"
                             max="100"
                             value="100"
+                            aria-labelledby="brightnessText"
                         />
                     </div>
                     <div id="texts">
-                        <p>Volume</p>
-                        <p>SFX</p>
-                        <p>Brightness</p>
-                        <p>Sound</p>
-                        <p>Centred Camera</p>
-                        <p>Debugging</p>
-                        <p>Auto Centre</p>
-                        <p>Names</p>
-                        <p>Levels</p>
+                        <p id="volumeText">Volume</p>
+                        <p id="sfxText">SFX</p>
+                        <p id="brightnessText">Brightness</p>
+                        <p id="soundCheckText">Sound</p>
+                        <p id="cameraCheckText">Centred Camera</p>
+                        <p id="debugCheckText">Debugging</p>
+                        <p id="centreCheckText">Auto Centre</p>
+                        <p id="nameCheckText">Names</p>
+                        <p id="levelCheckText">Levels</p>
                     </div>
                     <div id="info"></div>
                     <div id="checkMarks">
-                        <div id="soundCheck" class="check"></div>
-                        <div id="cameraCheck" class="check"></div>
-                        <div id="debugCheck" class="check"></div>
-                        <div id="centreCheck" class="check"></div>
-                        <div id="nameCheck" class="check"></div>
-                        <div id="levelCheck" class="check"></div>
+                        <label id="soundCheck" class="check">
+                            <input type="checkbox" aria-labelledby="soundCheckText" />
+                            <span class="checkmark"></span>
+                        </label>
+                        <label id="cameraCheck" class="check">
+                            <input type="checkbox" aria-labelledby="cameraCheckText" />
+                            <span class="checkmark" />
+                        </label>
+                        <label id="debugCheck" class="check">
+                            <input type="checkbox" aria-labelledby="debugCheckText" />
+                            <span class="checkmark" />
+                        </label>
+                        <label id="centreCheck" class="check">
+                            <input type="checkbox" aria-labelledby="centreCheckText" />
+                            <span class="checkmark" />
+                        </label>
+                        <label id="nameCheck" class="check">
+                            <input type="checkbox" aria-labelledby="nameCheckText" />
+                            <span class="checkmark" />
+                        </label>
+                        <label id="levelCheck" class="check">
+                            <input type="checkbox" aria-labelledby="levelCheckText" />
+                            <span class="checkmark" />
+                        </label>
                     </div>
                 </div>
                 <div id="attackInfo">
@@ -556,7 +581,7 @@
                 </div>
                 <div id="chat">
                     <div id="talk">
-                        <form method="get" accept-charset="utf-8">
+                        <form>
                             <input
                                 title="Enter your message!"
                                 id="chatInput"
@@ -594,7 +619,5 @@
             </div>
         </footer>
         <div id="resizeCheck"></div>
-
-        <!-- main script is injected by webpack -->
     </body>
 </html>
