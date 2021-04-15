@@ -2,65 +2,43 @@ import log from '../util/log';
 import config from '../../config';
 
 import Connection from './connection';
+import SocketHandler from './sockethandler';
+
 import { Server, Socket } from 'socket.io';
+import ws from 'ws';
 import http from 'http';
-import https from 'https';
-import Utils from '../util/utils';
 
 export default class WebSocket {
     public host: string;
     public port: number;
 
     public version: string;
+    public type: string;
 
-    public ips: { [id: string]: number }
-    public connections: { [id: string]: Connection };
+    public server: Server | ws.Server; // The SocketIO server
+    public httpServer: http.Server;
+    public socketHandler: SocketHandler;
 
-    public server: Server; // The SocketIO server
-    public httpServer: http.Server | https.Server;
+    public addCallback: (connection: Connection) => void;
+    private initializedCallback: () => void;
 
-    private counter: number;
-
-    private readyCallback: () => void;
-    private connectionCallback: (connection: Connection) => void;
-
-    constructor(host: string, port: number, version: string) {
+    constructor(host: string, port: number, type: string, socketHandler: SocketHandler) {
         this.host = host;
         this.port = port;
 
-        this.version = version;
+        this.version = config.gver;
+        this.type = type;
 
-        this.ips = {};
-        this.connections = {};
+        this.socketHandler = socketHandler;        
+    }
 
-        this.httpServer = (config.ssl ? https : http).createServer(this.httpResponse)
+    loadServer() {
+        this.httpServer = http.createServer(this.httpResponse)
             .listen(this.port, this.host, () => {
-                log.info(`Server is now listening on port: ${this.port}.`);
+                log.info(`[${this.type}] Server is now listening on port: ${this.port}.`);
 
-                if (this.readyCallback) this.readyCallback();
+                if (this.initializedCallback) this.initializedCallback();
             });
-
-        this.server = new Server(this.httpServer, {
-            cors: {
-                origin: '*'
-            }
-        });
-        this.server.on('connection', (socket: Socket) => {
-            if (socket.handshake.headers['cf-connecting-ip'])
-                socket.conn.remoteAddress = socket.handshake.headers['cf-connecting-ip'];
-
-            log.info(`Received connection from: ${socket.conn.remoteAddress}.`);
-
-            let connection = new Connection(this.getId(), socket, this);
-
-            socket.on('client', (data: any) => {
-                if (!this.verifyVersion(connection, data.gVer)) return;
-
-                this.add(connection);
-            });
-        });
-
-        this.counter = 0;
     }
 
     /**
@@ -85,69 +63,12 @@ export default class WebSocket {
         return status;
     }
 
-    /**
-     * We add a connection to our dictionary of connections.
-     * 
-     * Key: The connection id.
-     * Value: The connection itself.
-     * 
-     * @param connection The connection we are adding.
-     */
-
-    add(connection: Connection) {
-        this.connections[connection.id] = connection;
-
-        if (this.connectionCallback) this.connectionCallback(connection);
+    onAdd(callback: (connection: Connection) => void) {
+        this.addCallback = callback;
     }
-
-    /**
-     * Used to remove connections from our dictionary of connections.
-     * 
-     * @param id The connection id we are removing.
-     */
-
-    remove(id: string) {
-        delete this.connections[id];
-    }
-
-    /**
-     * Finds and returns a connection in our dictionary of connections.
-     * 
-     * @param id The id of the connection we are trying to get.
-     * @returns The connection element or null.
-     */
-
-    get(id: string): Connection {
-        return this.connections[id];
-    }
-
-    /**
-     * @returns A randomly generated id based on counter of connections.
-     */
-
-    getId(): string {
-        return '1' + Utils.random(1000) + this.counter;
-    }
-
-    /**
-     * The callback that the main class uses to determine
-     * if the websocket is ready.
-     * 
-     * @param callback The void function callback
-     */
-
-    onReady(callback: () => void) {
-        this.readyCallback = callback;
-    }
-
-    /**
-     * The callback for when a new connection is received.
-     * 
-     * @param callback The callback containing the Connection that occurs.
-     */
-
-    onConnection(callback: (connection: Connection) => void) {
-        this.connectionCallback = callback;
+    
+    onInitialize(callback: () => void) {
+        this.initializedCallback = callback;
     }
 
 }
