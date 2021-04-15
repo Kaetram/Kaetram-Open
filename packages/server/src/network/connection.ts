@@ -1,19 +1,22 @@
 /* global module */
 
 import { Socket } from 'socket.io';
+
 import log from '../util/log';
-import WebSocket from './websocket';
+import SocketHandler from './sockethandler';
 
 class Connection {
     public id: string;
     public socket: Socket;
-
+    public socketHandler: SocketHandler;
+    
     private listenCallback: Function;
     private closeCallback: Function;
 
-    constructor(id: string, socket: Socket, webSocket: WebSocket) {
+    constructor(id: string, type: string, socket: Socket, socketHandler: SocketHandler) {
         this.id = id;
         this.socket = socket;
+        this.socketHandler = socketHandler;
         
         this.socket.on('message', (message: any) => {
             try {
@@ -29,7 +32,7 @@ class Connection {
 
             if (this.closeCallback) this.closeCallback();
 
-            webSocket.remove(this.id);
+            this.socketHandler.remove(this.id);
         }); 
     }
 
