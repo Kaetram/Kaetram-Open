@@ -1,14 +1,17 @@
 {
-    "defaultSeverity": "warning",
-    "extends": "stylelint-config-standard",
     "configBasedir": "./",
+    "defaultSeverity": "warning",
+    "extends": [
+        "stylelint-config-standard"
+    ],
     "plugins": [
-        "stylelint-csstree-validator"
+        "stylelint-scss",
+        "stylelint-media-use-custom-media",
+        "stylelint-high-performance-animation"
     ],
     "rules": {
         "indentation": 4,
-        "no-duplicate-selectors": null,
-        "no-descending-specificity": null,
-        "function-name-case": null
+        "csstools/media-use-custom-media": true,
+        "plugin/no-low-performance-animation-properties": null
     }
 }

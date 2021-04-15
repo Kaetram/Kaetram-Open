@@ -79,7 +79,7 @@ export default class PlayerHandler {
             this.input.selectedY = path[i][1];
             this.input.selectedCellVisible = true;
 
-            if (this.game.isDebug()) log.info(`Movement speed: ${this.player.movementSpeed}`);
+            log.debug(`Movement speed: ${this.player.movementSpeed}`);
 
             this.socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Started,
@@ -105,7 +105,7 @@ export default class PlayerHandler {
 
             if (entity) id = entity.id;
 
-            if (this.game.isDebug()) log.info('Stopping pathing.');
+            log.debug('Stopping pathing.');
 
             const hasTarget = this.player.hasTarget();
 

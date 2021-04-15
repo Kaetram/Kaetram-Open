@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import install from '../lib/pwa';
+import install from './lib/pwa';
 import Game from './game';
 import { isMobile, isTablet } from './utils/detect';
 import * as Modules from '@kaetram/common/src/modules';
@@ -21,13 +21,13 @@ export interface Config {
 
 export default class App {
     // Do not refactor env variables assignment
-    // process.env.VARIABLE is replaced by webpack during build process
+    // `process.env.VARIABLE` is replaced by webpack during build process
     public config: Config = {
         ip: process.env.IP as string,
         port: parseInt(process.env.PORT as string),
         version: process.env.VERSION as string,
         ssl: !!process.env.SSL,
-        debug: !!process.env.DEBUG,
+        debug: process.env.NODE_ENV === 'development',
         worldSwitch: !!process.env.WORLD_SWITCH
     };
 
@@ -39,8 +39,10 @@ export default class App {
     public canvas = $('#canvas');
     public border = $('#border');
 
+    private forms = $('#intro form');
+
     private loginButton = $('#login');
-    private createButton = $('#play');
+    // private createButton = $('#play');
     private registerButton = $('#newCharacter');
     private helpButton = $('#helpButton');
     private cancelButton = $('#cancelButton');
@@ -48,8 +50,8 @@ export default class App {
 
     private respawn = $('#respawn');
 
-    private rememberMe = $('#rememberMe');
-    private guest = $('#guest');
+    private rememberMe = $('#rememberMe input');
+    private guest = $('#guest input');
 
     private about = $('#toggle-about');
     private credits = $('#toggle-credits');
@@ -62,6 +64,8 @@ export default class App {
     public registerFields: JQuery<HTMLInputElement>[] = [];
 
     public game!: Game;
+
+    private loaded = false;
 
     private parchmentAnimating = false;
     private loggingIn = false;
@@ -77,9 +81,11 @@ export default class App {
     }
 
     private load(): void {
-        this.loginButton.on('click', () => this.login());
+        this.forms.on('submit', (e) => {
+            e.preventDefault();
 
-        this.createButton.on('click', () => this.login());
+            this.login();
+        });
 
         this.registerButton.on('click', () => this.openScroll('loadCharacter', 'createCharacter'));
 
@@ -104,18 +110,12 @@ export default class App {
 
         this.git.on('click', () => this.displayScroll('git'));
 
-        this.rememberMe.on('click', () => {
+        this.rememberMe.on('change', () => {
             if (!this.game?.storage) return;
 
-            const active = this.rememberMe.hasClass('active');
-
-            this.rememberMe.toggleClass('active');
+            const active = this.rememberMe.prop('checked');
 
             this.game.storage.toggleRemember(!active);
-        });
-
-        this.guest.on('click', () => {
-            if (this.game) this.guest.toggleClass('active');
         });
 
         this.respawn.on('click', () => {
@@ -158,8 +158,6 @@ export default class App {
                 );
 
                 $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
-            }).catch(() => {
-                //
             });
 
         $(document).on('keydown', (e) => {
@@ -172,11 +170,6 @@ export default class App {
             if (!this.game) return;
 
             this.body.trigger('focus');
-
-            if (key === Modules.Keys.Enter && !this.game.started) {
-                this.login();
-                return;
-            }
 
             if (this.game.started) this.game.handleInput(Modules.InputType.Key, key);
         });
@@ -221,9 +214,18 @@ export default class App {
         );
     }
 
+    public ready(): void {
+        this.sendStatus(null);
+
+        this.loaded = true;
+
+        this.loginButton.prop('disabled', false);
+    }
+
     private login(): void {
-        if (this.loggingIn || !this.game?.loaded || this.statusMessage || !this.verifyForm())
-            return;
+        if (this.loggingIn || !this.loaded || this.statusMessage || !this.verifyForm()) return;
+
+        this.loaded = false;
 
         this.toggleLogin(true);
         this.game.connect();
@@ -270,6 +272,8 @@ export default class App {
                 () => {
                     this.parchment.toggleClass('animate').addClass(destination);
                     this.parchmentAnimating = false;
+
+                    $(`#${destination} input`)[0]?.focus();
                 },
                 isTablet() ? 0 : 1000
             );
@@ -421,7 +425,7 @@ export default class App {
     }
 
     public isGuest(): boolean {
-        return this.guest.hasClass('active');
+        return this.guest.prop('checked');
     }
 
     public setGame(game: Game): void {
@@ -463,17 +467,11 @@ export default class App {
 
         this.loggingIn = toggle;
 
-        if (toggle) {
-            this.loading.removeAttr('hidden');
+        if (toggle) this.loading.removeAttr('hidden');
+        else this.loading.attr('hidden', 'true');
 
-            this.loginButton.addClass('disabled');
-            this.registerButton.addClass('disabled');
-        } else {
-            this.loading.attr('hidden', 'true');
-
-            this.loginButton.removeClass('disabled');
-            this.registerButton.removeClass('disabled');
-        }
+        this.loginButton.prop('disabled', toggle);
+        this.registerButton.prop('disabled', toggle);
     }
 
     private toggleTyping(state: boolean): void {

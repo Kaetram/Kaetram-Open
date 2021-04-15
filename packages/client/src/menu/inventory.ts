@@ -55,7 +55,7 @@ export default class Inventory {
 
             const itemSlotList = $('<li></li>');
             const count = item.count;
-            let itemCount = '';
+            let itemCount = count.toString();
 
             if (count > 999999)
                 itemCount = `${count
@@ -231,13 +231,13 @@ export default class Inventory {
         cssSlot.css('background-size', '600%');
 
         const count = slot.count;
-        let itemCount = '';
+        let itemCount = count.toString();
 
         if (count > 999999)
             itemCount = `${count.toString().slice(0, Math.max(0, count.toString().length - 6))}M`;
         else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
         else if (count === 1) itemCount = '';
-
+        
         item.find(`#itemCount${info.index}`).text(itemCount);
 
         if (slot.ability > -1) {
@@ -255,8 +255,11 @@ export default class Inventory {
         if (!item || !slot) return;
 
         slot.count -= info.count;
+        let itemCount = slot.count.toString();
+        
+        if (slot.count === 1) itemCount = ''
 
-        item.find(`#itemCount${info.index}`).text(slot.count);
+        item.find(`#itemCount${info.index}`).text(itemCount);
 
         if (slot.count < 1) {
             item.find(`#slot${info.index}`).css('background-image', '');
