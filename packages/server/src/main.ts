@@ -5,9 +5,10 @@ import log from './util/log';
 import Parser from './util/parser';
 import config from '../config';
 import Connection from './network/connection';
+import SocketHandler from './network/sockethandler';
 
 class Main {
-    webSocket: WebSocket;
+    socketHandler: SocketHandler;
     database: any;
     parser: Parser;
     world: World;
@@ -15,12 +16,12 @@ class Main {
     constructor() {
         log.info('Initializing ' + config.name + ' game engine...');
 
-        this.webSocket = new WebSocket(config.host, config.port, config.gver);
+        this.socketHandler = new SocketHandler();
         this.database = new Database(config.database).getDatabase();
         this.parser = new Parser();
         this.world = null;
 
-        this.webSocket.onReady(() => {
+        this.socketHandler.onReady(() => {
             /**
              * Initialize the world after we have finished loading
              * the websocket.
@@ -33,15 +34,15 @@ class Main {
 
                 const host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
-                log.notice('Connect locally via http://' + host + ':' + config.port);
+                log.notice('Connect locally via http://' + host + ':' + config.socketioPort);
             };
 
-            this.world = new World(this.webSocket, this.database);
+            this.world = new World(this.socketHandler, this.database);
 
             this.world.load(onWorldLoad);
         });
 
-        this.webSocket.onConnection((connection: Connection) => {
+        this.socketHandler.onConnection((connection: Connection) => {
             if (this.world.allowConnections) {
                 if (this.world.isFull()) {
                     log.info('All the worlds are currently full. Please try again later.');
