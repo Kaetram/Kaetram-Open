@@ -26,12 +26,12 @@ import Trees from '../../data/professions/trees';
 import Rocks from '../../data/professions/rocks';
 import Player from './entity/character/player/player';
 import Entity from './entity/entity';
-import WebSocket from '../network/websocket';
+import SocketHandler from '../network/sockethandler';
 import MongoDB from '../database/mongodb/mongodb';
 import API from '../network/api';
 
 class World {
-    public socket: WebSocket;
+    public socketHandler: SocketHandler;
     public database: MongoDB;
 
     public maxPlayers: number;
@@ -68,8 +68,8 @@ class World {
     public playerConnectCallback: Function;
     public populationCallback: Function;
 
-    constructor(socket: WebSocket, database: MongoDB) {
-        this.socket = socket;
+    constructor(socketHandler: SocketHandler, database: MongoDB) {
+        this.socketHandler = socketHandler;
         this.database = database;
 
         this.maxPlayers = config.maxPlayers;
