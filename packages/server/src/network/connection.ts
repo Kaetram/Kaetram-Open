@@ -7,6 +7,9 @@ import SocketHandler from './sockethandler';
 
 class Connection {
     public id: string;
+    
+    private type: string;
+
     public socket: Socket;
     public socketHandler: SocketHandler;
     
@@ -15,6 +18,7 @@ class Connection {
 
     constructor(id: string, type: string, socket: Socket, socketHandler: SocketHandler) {
         this.id = id;
+        this.type = type;
         this.socket = socket;
         this.socketHandler = socketHandler;
         
@@ -27,7 +31,7 @@ class Connection {
             }
         });
 
-        this.socket.on('disconnect', () => {
+        this.socket.on(this.getCloseSignal(), () => {
             log.info(`Closed socket: ${this.socket.conn.remoteAddress}.`);
 
             if (this.closeCallback) this.closeCallback();
@@ -56,6 +60,10 @@ class Connection {
         if (reason) log.info('[Connection] Closing - ' + reason);
 
         this.socket.disconnect(true);
+    }
+
+    getCloseSignal() {
+        return this.type === 'WebSocket' ? 'close' : 'disconnect';
     }
 }
 
