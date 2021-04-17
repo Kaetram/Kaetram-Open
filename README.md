@@ -22,18 +22,6 @@ Live Version &ndash; <https://kaetram.com>
 
 Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
-Patreon &ndash; <https://www.patreon.com/kaetram>
-
-Crypto Donations:
-
-BTC - ```bc1qeh0tdlkuc5q82j2qk9h3sqmwe6uy75qpjtc0dv```
-
-LTC - ```MMRo7dfAi2T8rJrx7m3DmzhsgHRC7XJ83f```
-
-ETH - ```0x4c6de7175f789DAf0f531477753B07402EEfedaC```
-
-BCH - ```bitcoincash:qzx6uqunqj4mtv74jng97pea0mfcl4nmyqsew92enu```
-
 ![Demo 1](https://i.imgur.com/slnzrZB.png 'Demo 1')
 
 ![Demo 2](https://i.imgur.com/jS5d3oq.png 'Demo 2')
@@ -200,6 +188,24 @@ See also the [open issues][issues] for a list of proposed features (and known is
 #### Miscellaneous
 
 - Add (continue) to NPC talking&mdash;spacebar when talking
+
+## Donations
+
+### Sponsor
+
+Patreon &ndash; <https://www.patreon.com/kaetram>
+
+Open Collective &ndash; <https://opencollective.com/kaetram>
+
+### Crypto
+
+`BTC` &ndash; `bc1qeh0tdlkuc5q82j2qk9h3sqmwe6uy75qpjtc0dv`
+
+`LTC` &ndash; `MMRo7dfAi2T8rJrx7m3DmzhsgHRC7XJ83f`
+
+`ETH` &ndash; `0x4c6de7175f789DAf0f531477753B07402EEfedaC`
+
+`BCH` &ndash; `bitcoincash:qzx6uqunqj4mtv74jng97pea0mfcl4nmyqsew92enu`
 
 ## License & Commission
 
