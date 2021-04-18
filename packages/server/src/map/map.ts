@@ -101,7 +101,7 @@ class Map {
         this.plateau = map.plateau;
         this.objects = map.objects;
         this.cursors = map.cursors;
-        this.warps = map.warps;
+        this.warps = map.areas.warps;
 
         // Lumberjacking
         this.trees = map.trees;
@@ -413,11 +413,23 @@ class Map {
 
         if (!warpName) return null;
 
-        let warp = this.warps[warpName.toLowerCase()];
+        let warp = this.getWarpByName(warpName.toLowerCase());
+
+        if (!warp) return;
 
         warp.name = warpName;
 
         return warp;
+    }
+
+    getWarpByName(name: string) {
+        console.log(this.warps);
+
+        for (let i in this.warps)
+            if (this.warps[i].name === name)
+                return _.cloneDeep(this.warps[i]);
+
+        return null;
     }
 
     isReady(callback: Function) {
