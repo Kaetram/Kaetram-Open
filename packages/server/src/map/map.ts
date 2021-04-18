@@ -92,7 +92,7 @@ class Map {
         this.width = map.width;
         this.height = map.height;
         this.collisions = map.collisions;
-        this.chests = map.chests;
+        this.chests = map.areas.chests;
 
         this.loadStaticEntities();
 
@@ -115,7 +115,7 @@ class Map {
          * These are temporarily hardcoded,
          * but we will use a dynamic approach.
          */
-        this.regionWidth = 25;
+        this.regionWidth = 35;
         this.regionHeight = 25;
 
         this.checksum = Utils.getChecksum(JSON.stringify(map));
