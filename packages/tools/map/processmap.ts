@@ -265,6 +265,7 @@ export default class ProcessMap {
     private parseObject(name: keyof ProcessedMap, info: any) {
         let object: any = {
             id: info.id,
+            name: info.name,
             x: info.x / this.#map.tileSize,
             y: info.y / this.#map.tileSize,
             width: info.width / this.#map.tileSize,
