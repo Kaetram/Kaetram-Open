@@ -51,8 +51,6 @@ export default class ProcessMap {
             rocks: {},
             rockIndexes: [],
             areas: {},
-            chests: [],
-            warps: {},
             cursors: {},
             layers: []
         };
