@@ -757,7 +757,7 @@ class World {
         this.addEntity(mob, region);
         this.mobs[mob.instance] = mob;
 
-        //mob.addToChestArea(this.getChestAreas());
+        mob.addToChestArea(this.map.getChestAreas());
 
         mob.onHit((attacker: Character) => {
             if (mob.isDead() || mob.combat.started) return;
