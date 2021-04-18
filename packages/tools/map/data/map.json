@@ -2627,7 +2627,7 @@
         {
          "draworder":"topdown",
          "id":21,
-         "name":"chests",
+         "name":"chest",
          "objects":[
                 {
                  "height":0,
@@ -2660,7 +2660,7 @@
         {
          "draworder":"topdown",
          "id":23,
-         "name":"chestareas",
+         "name":"chests",
          "objects":[
                 {
                  "height":64,
@@ -2673,14 +2673,14 @@
                          "value":"morningstar,mailarmor"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"91"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":91
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"85"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":85
                         }],
                  "rotation":0,
                  "type":"",
@@ -2700,14 +2700,14 @@
                          "value":"sword2,leatherarmor"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"36"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":36
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"97"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":97
                         }],
                  "rotation":0,
                  "type":"",
@@ -2727,14 +2727,14 @@
                          "value":"morningstar,mailarmor"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"971"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":971
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"14"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":14
                         }],
                  "rotation":0,
                  "type":"",
@@ -2754,14 +2754,14 @@
                          "value":"ironbow,mailarcherarmor"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"924"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":924
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"12"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":12
                         }],
                  "rotation":0,
                  "type":"",
@@ -2781,14 +2781,14 @@
                          "value":"shardt1,flask,flask"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"42"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":42
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"159"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":159
                         }],
                  "rotation":0,
                  "type":"",
@@ -2804,8 +2804,8 @@
                  "properties":[
                         {
                          "name":"achievement",
-                         "type":"string",
-                         "value":"4"
+                         "type":"int",
+                         "value":4
                         }, 
                         {
                          "name":"items",
@@ -2813,14 +2813,14 @@
                          "value":"bluesword:1:10,flask:3:90"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"944"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":944
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"80"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":80
                         }],
                  "rotation":0,
                  "type":"",
@@ -2840,14 +2840,14 @@
                          "value":"redsword:1:5,bluesword:1:30,morningstar:1:75,flask:3:95"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"239"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":239
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"43"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":43
                         }],
                  "rotation":0,
                  "type":"",
@@ -2863,8 +2863,8 @@
                  "properties":[
                         {
                          "name":"achievement",
-                         "type":"string",
-                         "value":"7"
+                         "type":"int",
+                         "value":7
                         }, 
                         {
                          "name":"items",
@@ -2872,14 +2872,14 @@
                          "value":"shardt1:2:10,flask:3:90"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"963"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":963
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"133"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":133
                         }],
                  "rotation":0,
                  "type":"",
@@ -2895,8 +2895,8 @@
                  "properties":[
                         {
                          "name":"achievement",
-                         "type":"string",
-                         "value":"8"
+                         "type":"int",
+                         "value":8
                         }, 
                         {
                          "name":"items",
@@ -2904,14 +2904,14 @@
                          "value":"shardt2:1:10,bigflask:1:90"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"820"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":820
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"11"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":11
                         }],
                  "rotation":0,
                  "type":"",
@@ -2927,8 +2927,8 @@
                  "properties":[
                         {
                          "name":"achievement",
-                         "type":"string",
-                         "value":"8"
+                         "type":"int",
+                         "value":8
                         }, 
                         {
                          "name":"items",
@@ -2936,14 +2936,14 @@
                          "value":"shardt2:1:10,bigflask:1:90"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"817"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":817
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"11"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":11
                         }],
                  "rotation":0,
                  "type":"",
@@ -2959,8 +2959,8 @@
                  "properties":[
                         {
                          "name":"achievement",
-                         "type":"string",
-                         "value":"4"
+                         "type":"int",
+                         "value":4
                         }, 
                         {
                          "name":"items",
@@ -2968,14 +2968,14 @@
                          "value":"bluearmor:1:10,icesword:1:10,flask:4:95"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"54"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":54
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"237"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":237
                         }],
                  "rotation":0,
                  "type":"",
@@ -2995,14 +2995,14 @@
                          "value":"flask"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"21"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":21
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"118"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":118
                         }],
                  "rotation":0,
                  "type":"",
@@ -3018,8 +3018,8 @@
                  "properties":[
                         {
                          "name":"achievement",
-                         "type":"string",
-                         "value":"13"
+                         "type":"int",
+                         "value":13
                         }, 
                         {
                          "name":"items",
@@ -3027,14 +3027,14 @@
                          "value":"icesword:1:10,flask:3:95"
                         }, 
                         {
-                         "name":"x",
-                         "type":"string",
-                         "value":"883"
+                         "name":"spawnX",
+                         "type":"int",
+                         "value":883
                         }, 
                         {
-                         "name":"y",
-                         "type":"string",
-                         "value":"107"
+                         "name":"spawnY",
+                         "type":"int",
+                         "value":107
                         }],
                  "rotation":0,
                  "type":"",
@@ -3045,7 +3045,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -3349,6 +3349,16 @@
                          "name":"achievement",
                          "type":"string",
                          "value":"14"
+                        }, 
+                        {
+                         "name":"x",
+                         "type":"",
+                         "value":null
+                        }, 
+                        {
+                         "name":"y",
+                         "type":"",
+                         "value":null
                         }],
                  "rotation":0,
                  "type":"",
@@ -3366,6 +3376,16 @@
                          "name":"achievement",
                          "type":"string",
                          "value":"15"
+                        }, 
+                        {
+                         "name":"x",
+                         "type":"",
+                         "value":null
+                        }, 
+                        {
+                         "name":"y",
+                         "type":"",
+                         "value":null
                         }],
                  "rotation":0,
                  "type":"",

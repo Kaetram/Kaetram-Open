@@ -54,7 +54,7 @@ class Map {
     regionWidth: number;
     regionHeight: number;
 
-    areas: any;
+    areas: { [name: string]: Areas };
 
     staticEntities: any;
 
@@ -92,7 +92,7 @@ class Map {
         this.width = map.width;
         this.height = map.height;
         this.collisions = map.collisions;
-        this.chests = map.areas.chests;
+        this.chests = map.areas.chest;
 
         this.loadStaticEntities();
 
@@ -430,6 +430,10 @@ class Map {
                 return _.cloneDeep(this.warps[i]);
 
         return null;
+    }
+
+    getChestAreas(): Areas {
+        return this.areas['chests'];
     }
 
     isReady(callback: Function) {
