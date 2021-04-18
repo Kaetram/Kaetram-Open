@@ -11,10 +11,10 @@ export default class Chest extends Areas {
 
         super.load(this.data, (chestArea: Area, rawData: any) => {
             chestArea.maxEntities = rawData.entities || 0;
-            chestArea.items = rawData.items.split(',');
+            chestArea.items = rawData.items;
 
-            chestArea.cx = rawData.cx;
-            chestArea.cy = rawData.cy;
+            chestArea.cx = rawData.spawnX;
+            chestArea.cy = rawData.spawnY;
 
             if (rawData.achievement)
                 chestArea.achievement = rawData.achievement;
