@@ -26,7 +26,6 @@ class Chest extends Entity {
     }
 
     addItems(items: string) {
-        console.log(items);
         this.items = items.split(',');
     }
 

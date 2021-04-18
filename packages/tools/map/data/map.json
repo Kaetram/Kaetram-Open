@@ -591,6 +591,12 @@
                  "height":16,
                  "id":8,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"destination",
+                         "type":"object",
+                         "value":142
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1328,6 +1334,12 @@
                  "height":16,
                  "id":142,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"destination",
+                         "type":"object",
+                         "value":8
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1783,7 +1795,7 @@
                         {
                          "name":"destination",
                          "type":"object",
-                         "value":62
+                         "value":164
                         }, 
                         {
                          "name":"orientation",
@@ -1805,7 +1817,7 @@
                         {
                          "name":"destination",
                          "type":"object",
-                         "value":61
+                         "value":163
                         }, 
                         {
                          "name":"orientation",
@@ -3067,7 +3079,7 @@
         {
          "draworder":"topdown",
          "id":26,
-         "name":"overlays",
+         "name":"overlay",
          "objects":[
                 {
                  "height":672,
@@ -3137,7 +3149,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
