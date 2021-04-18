@@ -3,7 +3,7 @@
 import fs from 'fs';
 import _ from 'lodash';
 import world from '@kaetram/server/data/map/world.json';
-import rawJson from './data/map-refactor.json';
+import rawJson from './data/map.json';
 
 export default class Helper {
     #width = world.width;
@@ -15,36 +15,46 @@ export default class Helper {
         console.log('hi?');
 
         _.each(rawJson.layers, (layer: any) => {
-            if (layer.name !== 'doors') return;
+            if (layer.name !== 'chests') return;
 
-            let doorObjects = _.cloneDeep(layer.objects);
+            let chests = _.cloneDeep(layer.objects);
 
-            _.each(layer.objects, (door: any) => {
+            _.each(layer.objects, (chestArea: any) => {
                 let properties: any = {},
                     newProperties: any = [];
 
-                _.each(door.properties, (property: any) => {
+                _.each(chestArea.properties, (property: any) => {
                     properties[property.name] = property.value;
                 });
 
-                if ('x' in properties) {
-                    let doorId = this.findDoorId(doorObjects, properties.x, properties.y);
+                newProperties.push({
+                    name: 'spawnX',
+                    type: 'int',
+                    value: parseInt(properties.x)
+                });
 
-                    if (doorId) {
-                        newProperties.push({
-                            name: 'destination',
-                            type: 'object',
-                            value: doorId
-                        });
-                        newProperties.push({
-                            name: 'orientation',
-                            type: 'string',
-                            value: properties.o
-                        })
-                    }
-                }
+                newProperties.push({
+                    name: 'spawnY',
+                    type: 'int',
+                    value: parseInt(properties.y)
+                });
 
-                door.properties = newProperties;
+                if ('achievement' in properties)
+                    newProperties.push({
+                        name: 'achievement',
+                        type: 'int',
+                        value: parseInt(properties.achievement)
+                    });
+
+                if ('items' in properties)
+                    newProperties.push({
+                        name: 'items',
+                        type: 'string',
+                        value: properties.items
+                    });
+
+
+                chestArea.properties = newProperties;
             });
         });
 

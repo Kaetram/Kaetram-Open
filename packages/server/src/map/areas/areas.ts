@@ -16,7 +16,7 @@ export default class Areas {
         this.areas = [];
     }
 
-    load(mapAreas: any, callback?: Function) {
+    public load(mapAreas: any, callback?: Function) {
         _.each(mapAreas, (a: any) => {
             let area: Area = new Area(a.id, a.x, a.y, a.width, a.height);
 
@@ -26,11 +26,11 @@ export default class Areas {
         });
     }
 
-    message(type: string) {
+    public message(type: string) {
         log.info(`Loaded ${this.areas.length} ${type} areas.`);
     }
     
-    inArea(x: number, y: number) {
+    public inArea(x: number, y: number): Area {
         return _.find(this.areas, (area: Area) => {
             return area.contains(x, y);
         });

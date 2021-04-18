@@ -126,10 +126,6 @@ export interface ProcessedMap {
     rocks: Record<string, never>;
     rockIndexes: number[];
     areas: { [name: string]: Area[] };
-    chests: Chest[];
     cursors: { [tileId: number]: string };
-    warps: {
-        [name: string]: Warp;
-    };
     layers: [];
 }
