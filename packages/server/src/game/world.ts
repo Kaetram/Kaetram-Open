@@ -374,7 +374,7 @@ class World {
 
     spawnChests() {
         _.each(this.map.chests, (info: any) => {
-            this.spawnChest(info.i, info.x, info.y, info.achievement, true);
+            this.spawnChest(info.items, info.x, info.y, info.achievement, true);
         });
 
         log.info('Spawned ' + Object.keys(this.chests).length + ' static chests');
@@ -390,10 +390,10 @@ class World {
         return mob;
     }
 
-    spawnChest(items: any, x: number, y: number, achievement?: string, staticChest?: boolean) {
+    spawnChest(items: string, x: number, y: number, achievement?: string, staticChest?: boolean) {
         let chest = new Chest(194, Utils.generateInstance(), x, y, achievement);
 
-        chest.items = items;
+        chest.addItems(items);
 
         if (staticChest) {
             chest.static = staticChest;
@@ -757,7 +757,7 @@ class World {
         this.addEntity(mob, region);
         this.mobs[mob.instance] = mob;
 
-        //mob.addToChestArea(this.getChestAreas());
+        mob.addToChestArea(this.map.getChestAreas());
 
         mob.onHit((attacker: Character) => {
             if (mob.isDead() || mob.combat.started) return;
