@@ -3,17 +3,14 @@ import zlib from 'zlib';
 
 import log from '../../server/src/util/log';
 import {
-    Chest,
     Entity,
     Layer,
-    Light,
     MapData,
     ObjectGroup,
     ProcessedMap,
     Property,
     Tile,
-    Tileset,
-    Warp
+    Tileset
 } from './mapdata';
 
 export default class ProcessMap {
@@ -43,7 +40,6 @@ export default class ProcessMap {
 
             plateau: {},
 
-            lights: [],
             high: [],
             objects: [],
             trees: {},
