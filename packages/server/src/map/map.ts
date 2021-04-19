@@ -97,7 +97,7 @@ class Map {
         this.loadStaticEntities();
 
         this.tilesets = map.tilesets;
-        this.lights = map.lights;
+        this.lights = map.areas.lights;
         this.plateau = map.plateau;
         this.objects = map.objects;
         this.cursors = map.cursors;
