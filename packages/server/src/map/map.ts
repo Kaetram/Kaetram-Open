@@ -54,7 +54,7 @@ class Map {
     regionWidth: number;
     regionHeight: number;
 
-    areas: any;
+    areas: { [name: string]: Areas };
 
     staticEntities: any;
 
@@ -92,16 +92,16 @@ class Map {
         this.width = map.width;
         this.height = map.height;
         this.collisions = map.collisions;
-        this.chests = map.chests;
+        this.chests = map.areas.chest;
 
         this.loadStaticEntities();
 
         this.tilesets = map.tilesets;
-        this.lights = map.lights;
+        this.lights = map.areas.lights;
         this.plateau = map.plateau;
         this.objects = map.objects;
         this.cursors = map.cursors;
-        this.warps = map.warps;
+        this.warps = map.areas.warps;
 
         // Lumberjacking
         this.trees = map.trees;
@@ -115,7 +115,7 @@ class Map {
          * These are temporarily hardcoded,
          * but we will use a dynamic approach.
          */
-        this.regionWidth = 25;
+        this.regionWidth = 35;
         this.regionHeight = 25;
 
         this.checksum = Utils.getChecksum(JSON.stringify(map));
@@ -413,11 +413,27 @@ class Map {
 
         if (!warpName) return null;
 
-        let warp = this.warps[warpName.toLowerCase()];
+        let warp = this.getWarpByName(warpName.toLowerCase());
+
+        if (!warp) return;
 
         warp.name = warpName;
 
         return warp;
+    }
+
+    getWarpByName(name: string) {
+        console.log(this.warps);
+
+        for (let i in this.warps)
+            if (this.warps[i].name === name)
+                return _.cloneDeep(this.warps[i]);
+
+        return null;
+    }
+
+    getChestAreas(): Areas {
+        return this.areas['chests'];
     }
 
     isReady(callback: Function) {
