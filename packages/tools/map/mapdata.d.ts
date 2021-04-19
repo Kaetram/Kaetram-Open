@@ -60,86 +60,14 @@ export interface Entity {
 interface Entities {
     [tileId: number]: Entity;
 }
-export interface ChestArea {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    titems?: number;
-    tx?: number;
-    ty?: number;
-}
 
-export interface Chest {
-    x: number;
-    y: number;
-    achievement: string;
-    i: string[];
-}
-
-export interface Light {
-    x: number;
-    y: number;
-    color: string;
-    diffuse: string;
-    distance: string;
-    id: string;
-    type: string;
-}
-
-export interface Warp {
-    x: number;
-    y: number;
-    level?: number;
-}
-
-export interface MusicArea {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-
-export interface PVPArea {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-
-export interface OverlayArea {
+export interface Area {
     id: number;
     x: number;
     y: number;
     width: number;
     height: number;
-    darkness?: number;
-    type?: string;
-}
-
-export interface CameraArea {
-    id: number;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    type: string;
-}
-
-export interface AchievementArea {
-    id: number;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    achievement: string;
-}
-
-export interface GameArea {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+    properties: { [property: string]: string | number }
 }
 
 export interface ProcessedMap {
@@ -167,33 +95,13 @@ export interface ProcessedMap {
 
     plateau: { [index: number]: number };
 
-    lights: Light[];
     high: number[];
     objects: number[];
     trees: { [tileId: number]: 'Oak' | 'IceOak' | 'Palm' | 'IcePalm' };
     treeIndexes: number[];
     rocks: Record<string, never>;
     rockIndexes: number[];
-    pvpAreas: PVPArea[];
-    gameAreas: GameArea[];
-    doors: {
-        [doorId: number]: {
-            o: string;
-            tx: number;
-            ty: number;
-            x: number;
-            y: number;
-        };
-    };
-    musicAreas: MusicArea[];
-    chestAreas: ChestArea[];
-    chests: Chest[];
-    overlayAreas: OverlayArea[];
-    cameraAreas: CameraArea[];
-    achievementAreas: AchievementArea[];
+    areas: { [name: string]: Area[] };
     cursors: { [tileId: number]: string };
-    warps: {
-        [name: string]: Warp;
-    };
     layers: [];
 }
