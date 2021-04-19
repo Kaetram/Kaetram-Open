@@ -17,9 +17,7 @@ import AreasIndex from './areas/index';
 
 import log from '../util/log';
 
-let map: any;
-
-const mapDestination = path.resolve(__dirname, '../../data/map/world.json');
+import map from '../../data/map/world.json';
 
 class Map {
     world: World;
@@ -68,20 +66,10 @@ class Map {
 
         this.ready = false;
 
-        this.create();
         this.load();
 
         this.regions = new Regions(this);
         this.grids = new Grids(this);
-    }
-
-    create(jsonData?: any) {
-        try {
-            map = jsonData || JSON.parse(fs.readFileSync(mapDestination, {
-                encoding: 'utf8',
-                flag: 'r'
-            }));
-        } catch (e) { log.error('Could not create the map file.'); };
     }
 
     load() {

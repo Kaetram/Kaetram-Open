@@ -109,13 +109,11 @@ class Region {
         if (!data) return;
 
         try {
-            let jsonData = JSON.parse(data),
-                checksum = Utils.getChecksum(data);
+            let checksum = Utils.getChecksum(data);
 
             if (checksum === this.map.checksum)
                 return;
 
-            this.map.create(jsonData);
             this.map.load();
 
             log.debug('Successfully loaded new map data.');
