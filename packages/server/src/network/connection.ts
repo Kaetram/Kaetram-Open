@@ -1,19 +1,26 @@
 /* global module */
 
 import { Socket } from 'socket.io';
+
 import log from '../util/log';
-import WebSocket from './websocket';
+import SocketHandler from './sockethandler';
 
 class Connection {
     public id: string;
-    public socket: Socket;
+    
+    private type: string;
 
+    public socket: Socket;
+    public socketHandler: SocketHandler;
+    
     private listenCallback: Function;
     private closeCallback: Function;
 
-    constructor(id: string, socket: Socket, webSocket: WebSocket) {
+    constructor(id: string, type: string, socket: Socket, socketHandler: SocketHandler) {
         this.id = id;
+        this.type = type;
         this.socket = socket;
+        this.socketHandler = socketHandler;
         
         this.socket.on('message', (message: any) => {
             try {
@@ -24,12 +31,12 @@ class Connection {
             }
         });
 
-        this.socket.on('disconnect', () => {
+        this.socket.on(this.getCloseSignal(), () => {
             log.info(`Closed socket: ${this.socket.conn.remoteAddress}.`);
 
             if (this.closeCallback) this.closeCallback();
 
-            webSocket.remove(this.id);
+            this.socketHandler.remove(this.id);
         }); 
     }
 
@@ -53,6 +60,10 @@ class Connection {
         if (reason) log.info('[Connection] Closing - ' + reason);
 
         this.socket.disconnect(true);
+    }
+
+    getCloseSignal() {
+        return this.type === 'WebSocket' ? 'close' : 'disconnect';
     }
 }
 
