@@ -6,59 +6,24 @@ import world from '@kaetram/server/data/map/world.json';
 import rawJson from './data/map.json';
 
 export default class Helper {
-    #width = world.width;
-    #height = world.height;
+    #width = 1000;
+    #height = 1000;
 
     public constructor() {
-        // Palm Tree Stump
+        const stdin = process.openStdin();
 
-        console.log('hi?');
+        stdin.on('data', (data: string) => {
+            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+                value = parseInt(message);
 
-        _.each(rawJson.layers, (layer: any) => {
-            if (layer.name !== 'chests') return;
+            if (isNaN(value)) return;
 
-            let chests = _.cloneDeep(layer.objects);
+            let position = this.indexToGridPosition(value + 1),
+                adjustedIndex = this.gridPositionToIndex(position.x, position.y, 700);
 
-            _.each(layer.objects, (chestArea: any) => {
-                let properties: any = {},
-                    newProperties: any = [];
-
-                _.each(chestArea.properties, (property: any) => {
-                    properties[property.name] = property.value;
-                });
-
-                newProperties.push({
-                    name: 'spawnX',
-                    type: 'int',
-                    value: parseInt(properties.x)
-                });
-
-                newProperties.push({
-                    name: 'spawnY',
-                    type: 'int',
-                    value: parseInt(properties.y)
-                });
-
-                if ('achievement' in properties)
-                    newProperties.push({
-                        name: 'achievement',
-                        type: 'int',
-                        value: parseInt(properties.achievement)
-                    });
-
-                if ('items' in properties)
-                    newProperties.push({
-                        name: 'items',
-                        type: 'string',
-                        value: properties.items
-                    });
-
-
-                chestArea.properties = newProperties;
-            });
+            console.log(position);
+            console.log(adjustedIndex);
         });
-
-        fs.writeFileSync('map-test.json', JSON.stringify(rawJson));
     }
 
     private findDoorId(doors: any, x: number, y: number) {
@@ -79,8 +44,8 @@ export default class Helper {
         );
     }
 
-    private gridPositionToIndex(x: number, y: number): number {
-        return y * this.#width + x;
+    private gridPositionToIndex(x: number, y: number, width?: number): number {
+        return y * (width || this.#width) + x;
     }
 
     private indexToGridPosition(tileIndex: number): { x: number; y: number } {
