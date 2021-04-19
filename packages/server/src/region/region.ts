@@ -239,6 +239,10 @@ class Region {
                 }
             }
 
+        for (let i in tileData)
+            if (tileData[i].index == 73008)
+                console.log(tileData[i]);
+
         //No need to send empty data...
         if (tileData.length > 0)
             player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
