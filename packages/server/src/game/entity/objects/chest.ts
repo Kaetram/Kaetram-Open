@@ -25,6 +25,10 @@ class Chest extends Entity {
         this.items = [];
     }
 
+    addItems(items: string) {
+        this.items = items.split(',');
+    }
+
     openChest(player?: Player) {
         if (this.openCallback) this.openCallback(player);
     }
