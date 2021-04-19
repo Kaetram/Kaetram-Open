@@ -225,8 +225,6 @@ export default class App {
     private login(): void {
         if (this.loggingIn || !this.loaded || this.statusMessage || !this.verifyForm()) return;
 
-        this.loaded = false;
-
         this.toggleLogin(true);
         this.game.connect();
 
