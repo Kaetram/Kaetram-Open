@@ -3,17 +3,14 @@ import zlib from 'zlib';
 
 import log from '../../server/src/util/log';
 import {
-    Chest,
     Entity,
     Layer,
-    Light,
     MapData,
     ObjectGroup,
     ProcessedMap,
     Property,
     Tile,
-    Tileset,
-    Warp
+    Tileset
 } from './mapdata';
 
 export default class ProcessMap {
@@ -43,7 +40,6 @@ export default class ProcessMap {
 
             plateau: {},
 
-            lights: [],
             high: [],
             objects: [],
             trees: {},
@@ -51,8 +47,6 @@ export default class ProcessMap {
             rocks: {},
             rockIndexes: [],
             areas: {},
-            chests: [],
-            warps: {},
             cursors: {},
             layers: []
         };
@@ -265,6 +259,7 @@ export default class ProcessMap {
     private parseObject(name: keyof ProcessedMap, info: any) {
         let object: any = {
             id: info.id,
+            name: info.name,
             x: info.x / this.#map.tileSize,
             y: info.y / this.#map.tileSize,
             width: info.width / this.#map.tileSize,

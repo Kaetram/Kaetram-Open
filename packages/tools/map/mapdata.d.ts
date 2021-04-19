@@ -61,29 +61,6 @@ interface Entities {
     [tileId: number]: Entity;
 }
 
-export interface Chest {
-    x: number;
-    y: number;
-    achievement: string;
-    i: string[];
-}
-
-export interface Light {
-    x: number;
-    y: number;
-    color: string;
-    diffuse: string;
-    distance: string;
-    id: string;
-    type: string;
-}
-
-export interface Warp {
-    x: number;
-    y: number;
-    level?: number;
-}
-
 export interface Area {
     id: number;
     x: number;
@@ -118,7 +95,6 @@ export interface ProcessedMap {
 
     plateau: { [index: number]: number };
 
-    lights: Light[];
     high: number[];
     objects: number[];
     trees: { [tileId: number]: 'Oak' | 'IceOak' | 'Palm' | 'IcePalm' };
@@ -126,10 +102,6 @@ export interface ProcessedMap {
     rocks: Record<string, never>;
     rockIndexes: number[];
     areas: { [name: string]: Area[] };
-    chests: Chest[];
     cursors: { [tileId: number]: string };
-    warps: {
-        [name: string]: Warp;
-    };
     layers: [];
 }

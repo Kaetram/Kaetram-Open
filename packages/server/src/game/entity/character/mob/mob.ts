@@ -10,6 +10,7 @@ import World from '../../../world';
 import MobHandler from './mobhandler';
 import Player from '../player/player';
 import Area from '../../../../map/areas/area';
+import Areas from '../../../../map/areas/areas';
 
 class Mob extends Character {
     world: World;
@@ -159,10 +160,8 @@ class Mob extends Character {
         return this.distanceToSpawn() > this.spawnDistance;
     }
 
-    addToChestArea(chestAreas: any) {
-        let area = _.find(chestAreas, (area: Area) => {
-            return area.contains(this.x, this.y);
-        });
+    addToChestArea(chestAreas: Areas) {
+        let area = chestAreas.inArea(this.x, this.y);
 
         if (area) area.addEntity(this);
     }
