@@ -22,7 +22,8 @@ jobs:
         runs-on: ${{ matrix.os }}
 
         steps:
-            - uses: actions/checkout@v2
+            - name: Checkout on ${{ runner.os }}
+              uses: actions/checkout@v2
             - name: Use Node.js v${{ matrix.node-version }}
               uses: actions/setup-node@v2
               with:
