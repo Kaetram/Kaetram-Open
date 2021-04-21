@@ -6,7 +6,7 @@ class Logger {
     }
 
     public debug(...data: unknown[]): void {
-        if (this.level === 'debug') console.log(...data);
+        if (this.level === 'debug') console.debug(...data);
     }
 
     public error(...data: unknown[]): void {
