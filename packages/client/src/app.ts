@@ -110,7 +110,7 @@ export default class App {
 
         this.git.on('click', () => this.displayScroll('git'));
 
-        this.rememberMe.on('change', () => {
+        this.rememberMe.on('input', () => {
             if (!this.game?.storage) return;
 
             const active = this.rememberMe.prop('checked');
