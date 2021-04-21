@@ -11,6 +11,8 @@ class Area {
     public width: number;
     public height: number;
 
+    public polygon: any[];
+
     public entities: any;
     public chest: any;
     public items: any;
@@ -61,10 +63,6 @@ class Area {
         this.spawnDelay = 0;
     }
 
-    contains(x: number, y: number) {
-        return x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
-    }
-
     addEntity(mob: Mob) {
         if (this.entities.indexOf(mob) > 0) return;
 
@@ -93,6 +91,28 @@ class Area {
         if (!this.achievement) return;
 
         player.finishAchievement(this.achievement);
+    }
+
+    contains(x: number, y: number): boolean {
+        return this.polygon ? this.inPolygon(x, y) : this.inRectangularArea(x, y);
+    }
+
+    inRectangularArea(x: number, y: number): boolean {
+        return x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+    }
+
+    inPolygon(x: number, y: number): boolean {
+        for (let i = 0, j = this.polygon.length - 1; i < this.polygon.length; j = i++) {
+            let xi = this.polygon[i].x, yi = this.polygon[i].y,
+                xj = this.polygon[j].x, yj = this.polygon[j].y;
+
+            let intersect = ((yi > y) != (yj > y)) &&
+                (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+            if (intersect) return true;
+        }
+
+        return false;
     }
 
     setMaxEntities(maxEntities: number) {
