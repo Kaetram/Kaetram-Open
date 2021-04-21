@@ -160,9 +160,7 @@ export default class App {
                 $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
             });
 
-        $(document).on('keydown', (e) => {
-            if (e.which === Modules.Keys.Enter) return false;
-        });
+        $(document).on('keydown', (e) => e.which !== Modules.Keys.Enter);
 
         $(document).on('keydown', (e) => {
             const key = e.which || e.keyCode || 0;
@@ -170,6 +168,8 @@ export default class App {
             if (!this.game) return;
 
             this.body.trigger('focus');
+
+            if (key === Modules.Keys.Enter && !this.game.started) return this.login();
 
             if (this.game.started) this.game.handleInput(Modules.InputType.Key, key);
         });
