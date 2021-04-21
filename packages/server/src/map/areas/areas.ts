@@ -20,6 +20,8 @@ export default class Areas {
         _.each(mapAreas, (a: any) => {
             let area: Area = new Area(a.id, a.x, a.y, a.width, a.height);
 
+            if (a.polygon) area.polygon = a.polygon;
+
             this.areas.push(area);
 
             if (callback) callback(this.areas[this.areas.length - 1], a);
