@@ -61,9 +61,9 @@ the server.
 
 #### NOTE: MongoDB
 
-> MongoDB is a requirement for Kaetram to run with all the features enabled, but you can still run
-> your own limited version if you do not want to install MongoDB. To do this, see
-> [Configuration](#configuration), and set `OFFLINE_MODE=true` in the
+> MongoDB is not a requirement for Kaetram to run, but you can store and save user data if you
+> install it, so you can run an online environment with all the features enabled. To do this, see
+> [Configuration](#configuration), and set `OFFLINE_MODE=false` in the
 > [server configuration](packages/server/.env). _If you do choose to install MongoDB, a user is not
 > necessary, but you can enable authentication with the `MONGODB_AUTH` setting._
 
