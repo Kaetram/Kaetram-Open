@@ -265,6 +265,9 @@ export default class ProcessMap {
     }
 
     /**
+     * Polygons are drawn without the offset, we add the `x` and `y` position
+     * of the object to get the true position of the polygon.
+     * 
      * @param info The raw data from Tiled
      * @returns A modified array of polygons adjusted for `tileSize`.
      */
@@ -273,11 +276,13 @@ export default class ProcessMap {
         if (!info.polygon) return;
 
         let polygon: any = [];
+        
+        console.log(info);
 
         _.each(info.polygon, (point: any) => {
             polygon.push({ 
-                x: point.x / this.#map.tileSize,
-                y: point.y / this.#map.tileSize
+                x: (info.x + point.x) / this.#map.tileSize,
+                y: (info.y + point.y) / this.#map.tileSize
             });
         });
 
