@@ -55,9 +55,10 @@ the server.
 
 #### NOTE: Node.js
 
-> You need to use a Node.js version greater than or equal to `12.0.0` to have the most stable
+> You need to use a Node.js version greater than or equal to `v12.x`, following the
+> [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases/), to have the most stable
 > experience when developing/experimenting with Kaetram. Older versions would not work with our
-> current dependencies.
+> current package manager and dependencies.
 
 #### NOTE: MongoDB
 
