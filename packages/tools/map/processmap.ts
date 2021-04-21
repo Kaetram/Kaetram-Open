@@ -124,16 +124,6 @@ export default class ProcessMap {
         const name = property.name,
             value = (parseInt(property.value, 10) as never) || property.value;
 
-        if (objectGroup && objectGroup.objects)
-            _.each(objectGroup.objects, (object) => {
-                if (!(tileId in this.#map.polygons))
-                    this.#map.polygons[tileId] = this.parsePolygon(
-                        object.polygon,
-                        object.x,
-                        object.y
-                    );
-            });
-
         if (this.isColliding(name) && !(tileId in this.#map.polygons))
             this.#collisionTiles[tileId] = true;
 
@@ -263,7 +253,8 @@ export default class ProcessMap {
             x: info.x / this.#map.tileSize,
             y: info.y / this.#map.tileSize,
             width: info.width / this.#map.tileSize,
-            height: info.height / this.#map.tileSize
+            height: info.height / this.#map.tileSize,
+            polygon: this.extractPolygon(info)
         };
 
         _.each(info.properties, (property: any) => {
@@ -271,6 +262,31 @@ export default class ProcessMap {
         });
 
         this.#map.areas[name].push(object);
+    }
+
+    /**
+     * Polygons are drawn without the offset, we add the `x` and `y` position
+     * of the object to get the true position of the polygon.
+     * 
+     * @param info The raw data from Tiled
+     * @returns A modified array of polygons adjusted for `tileSize`.
+     */
+
+    private extractPolygon(info: any) {
+        if (!info.polygon) return;
+
+        let polygon: any = [];
+        
+        console.log(info);
+
+        _.each(info.polygon, (point: any) => {
+            polygon.push({ 
+                x: (info.x + point.x) / this.#map.tileSize,
+                y: (info.y + point.y) / this.#map.tileSize
+            });
+        });
+
+        return polygon;
     }
 
     /**
@@ -287,25 +303,6 @@ export default class ProcessMap {
         });
 
         this.#map.depth = depth;
-    }
-
-    /**
-     * The way Tiled processes polygons is by using the first point
-     * as the pivot point around where the rest of the shape is drawn.
-     * This can create issues if we start at different point on the shape,
-     * so the solution is to append the offset to each point.
-     */
-    private parsePolygon(polygon: Pos[], offsetX: number, offsetY: number): Pos[] {
-        const formattedPolygons: Pos[] = [];
-
-        _.each(polygon, (p) => {
-            formattedPolygons.push({
-                x: p.x + offsetX,
-                y: p.y + offsetY
-            });
-        });
-
-        return formattedPolygons;
     }
 
     /**
