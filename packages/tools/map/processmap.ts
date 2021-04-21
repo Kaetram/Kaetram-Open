@@ -253,7 +253,8 @@ export default class ProcessMap {
             x: info.x / this.#map.tileSize,
             y: info.y / this.#map.tileSize,
             width: info.width / this.#map.tileSize,
-            height: info.height / this.#map.tileSize
+            height: info.height / this.#map.tileSize,
+            polygon: this.extractPolygon(info)
         };
 
         _.each(info.properties, (property: any) => {
@@ -261,6 +262,26 @@ export default class ProcessMap {
         });
 
         this.#map.areas[name].push(object);
+    }
+
+    /**
+     * @param info The raw data from Tiled
+     * @returns A modified array of polygons adjusted for `tileSize`.
+     */
+
+    private extractPolygon(info: any) {
+        if (!info.polygon) return;
+
+        let polygon: any = [];
+
+        _.each(info.polygon, (point: any) => {
+            polygon.push({ 
+                x: point.x / this.#map.tileSize,
+                y: point.y / this.#map.tileSize
+            });
+        });
+
+        return polygon;
     }
 
     /**
