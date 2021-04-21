@@ -11,14 +11,15 @@ on:
 
 jobs:
     build:
-        name: Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
-        runs-on: ${{ matrix.os }}
-
         strategy:
             matrix:
-                node-version: [12.x, 14.x, 15.x, 16.x]
                 # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-                os: [ubuntu-latest, windows-latest, macos-latest]
+                node-version: [12.x, 14.x, 15.x, 16.x]
+                platform: [ubuntu-latest, windows-latest, macos-latest]
+
+        name: Node.js ${{ matrix.node-version }} on ${{ runner.os }}
+
+        runs-on: ${{ matrix.platform }}
 
         steps:
             - uses: actions/checkout@v2
@@ -26,7 +27,6 @@ jobs:
               uses: actions/setup-node@v2
               with:
                   node-version: ${{ matrix.node-version }}
-                  check-latest: true
             - name: Install Dependencies
               run: yarn install --immutable --immutable-cache --check-cache
             - name: Build Packages
