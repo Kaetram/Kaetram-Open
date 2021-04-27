@@ -8,7 +8,7 @@ import Page from '../page';
  * Replace this with a `common` interface linking to the server's `Achievement` class.
  */
 interface AchievementsInfo {
-    id: string;
+    id: number;
     name: string;
     progress: number;
     count: number;
@@ -20,7 +20,7 @@ interface AchievementsInfo {
  * Replace this with a `common` interface linking to the server's `Quest` class.
  */
 interface QuestInfo {
-    id: string;
+    id: number;
     name: string;
     description: string;
     stage: number;
@@ -32,13 +32,13 @@ export default class Quest extends Page {
     quests: JQuery;
     achievementsCount: JQuery;
     questCount: JQuery;
-    achievementsList;
-    questList;
+    achievementsList: JQuery;
+    questList: JQuery;
     finishedAchievements: number;
     finishedQuests: number;
     achievementsLength: number;
     questsLength: number;
-    finishedAchievement: number;
+    finishedAchievement!: number;
 
     constructor() {
         super('#questPage');
@@ -63,8 +63,8 @@ export default class Quest extends Page {
         this.achievementsLength = achievements.length;
 
         _.each(achievements, (achievement) => {
-            const item = this.getItem(false, achievement.id),
-                name = this.getName(false, achievement.id);
+            const item = this.getItem(false, achievement.id);
+            const name = this.getName(false, achievement.id);
 
             name.text('????????');
 
@@ -102,8 +102,8 @@ export default class Quest extends Page {
         this.questsLength = quests.length;
 
         _.each(quests, (quest) => {
-            const item = this.getItem(true, quest.id),
-                name = this.getName(true, quest.id);
+            const item = this.getItem(true, quest.id);
+            const name = this.getName(true, quest.id);
 
             name.text(quest.name);
 
@@ -179,11 +179,11 @@ export default class Quest extends Page {
         this.questList.empty();
     }
 
-    getQuest(id: string): JQuery {
+    getQuest(id: number): JQuery {
         return $(this.questList.find('li')[id]).find(`#quest${id}`);
     }
 
-    getAchievement(id: string): JQuery {
+    getAchievement(id: number): JQuery {
         return $(this.achievementsList.find('li')[id]).find(`#achievement${id}`);
     }
 
@@ -192,11 +192,11 @@ export default class Quest extends Page {
      * on their type of item and id (index).
      */
 
-    getItem(isQuest: boolean, id: string): JQuery {
+    getItem(isQuest: boolean, id: number): JQuery {
         return $(`<div id="${isQuest ? 'quest' : 'achievement'}${id}" class="questItem"></div>`);
     }
 
-    getName(isQuest: boolean, id: string): JQuery {
+    getName(isQuest: boolean, id: number): JQuery {
         return $(
             `<div id="${isQuest ? 'quest' : 'achievement'}${id}name" class="questName"></div>`
         );

@@ -32,9 +32,9 @@ export default class Professions extends Page {
 
     load(professions: ProfessionsInfo[]): void {
         _.each(professions, (profession) => {
-            const item = this.getItem(profession.id),
-                name = this.getName(profession.id),
-                info = $('<p></p>');
+            const item = this.getItem(profession.id);
+            const name = this.getName(profession.id);
+            const info = $('<p></p>');
 
             name.text(profession.name);
             info.text(`Level ${profession.level} | ${profession.percentage}%`);

@@ -9,8 +9,8 @@ export default class Blob {
     duration: number;
     time: number;
     timer: Timer;
-    type: string;
-    info: Entity;
+    type!: string;
+    info?: Entity;
 
     constructor(
         id: string,
