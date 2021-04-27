@@ -1,22 +1,15 @@
 import _ from 'lodash';
+
 import log from '../util/log';
+
 import config from '../../config';
 import Discord from '../network/discord';
 import Map from '../map/map';
 import Messages from '../network/messages';
-import Utils from '../util/utils';
 import Mobs from '../util/mobs';
-import Mob from './entity/character/mob/mob';
-import NPCs from '../util/npcs';
-import NPC from './entity/npc/npc';
-import Items from '../util/items';
-import Item from './entity/objects/item';
-import Chest from './entity/objects/chest';
 import Character from './entity/character/character';
-import Projectile from './entity/objects/projectile';
 import Minigames from '../controllers/minigames';
 import Packets from '../network/packets';
-import Formulas from '../util/formulas';
 import Modules from '../util/modules';
 import Shops from '../controllers/shops';
 import Region from '../region/region';
@@ -24,8 +17,8 @@ import GlobalObjects from '../controllers/globalobjects';
 import Network from '../network/network';
 import Trees from '../../data/professions/trees';
 import Rocks from '../../data/professions/rocks';
-import Player from './entity/character/player/player';
 import Entity from './entity/entity';
+import Entities from '../controllers/entities';
 import SocketHandler from '../network/sockethandler';
 import MongoDB from '../database/mongodb/mongodb';
 import API from '../network/api';
@@ -38,14 +31,6 @@ class World {
     public updateTime: number;
     public debug: boolean;
     public allowConnections: boolean;
-
-    public players: { [key: string]: Player };
-    public entities: { [key: string]: Entity };
-    public items: { [key: string]: Item };
-    public mobs: { [key: string]: Mob };
-    public chests: { [key: string]: Chest };
-    public npcs: { [key: string]: NPC };
-    public projectiles: { [key: string]: Projectile };
 
     public trees: { [key: string]: any };
     public cutTrees: { [key: string]: any };
@@ -60,6 +45,7 @@ class World {
     public api: API;
     public shops: Shops;
     public region: Region;
+    public entities: Entities;
     public network: Network;
     public discord: Discord;
     public minigames: Minigames;
@@ -77,14 +63,6 @@ class World {
 
         this.debug = false;
         this.allowConnections = false;
-
-        this.players = {};
-        this.entities = {};
-        this.items = {};
-        this.chests = {};
-        this.mobs = {};
-        this.npcs = {};
-        this.projectiles = {};
 
         // Lumberjacking Variables
         this.trees = {};
@@ -115,9 +93,6 @@ class World {
 
             this.loaded();
 
-            this.spawnChests();
-            this.spawnEntities();
-
             setTimeout(onWorldLoad, 100);
         });
     }
@@ -134,6 +109,7 @@ class World {
         this.shops = new Shops(this);
         this.region = new Region(this);
         this.discord = new Discord(this);
+        this.entities = new Entities(this);
         this.network = new Network(this);
         this.globalObjects = new GlobalObjects(this);
 
@@ -254,7 +230,7 @@ class World {
 
             if (character.deathCallback) character.deathCallback();
 
-            this.removeEntity(character);
+            this.entities.remove(character);
 
             character.dead = true;
 
@@ -265,208 +241,9 @@ class World {
             if (!ignoreDrops) {
                 let drop = character.getDrop();
 
-                if (drop) this.dropItem(drop.id, drop.count, deathX, deathY);
+                if (drop) this.entities.dropItem(drop.id, drop.count, deathX, deathY);
             }
         } else if (character.type === 'player') character.die();
-    }
-
-    createProjectile(info: any) {
-        let attacker = info.shift(),
-            target = info.shift();
-
-        if (!attacker || !target) return null;
-
-        let startX = attacker.x,
-            startY = attacker.y,
-            type = attacker.getProjectile(),
-            hit = null,
-            projectile = new Projectile(type, Utils.generateInstance());
-
-        projectile.setStart(startX, startY);
-        projectile.setTarget(target);
-
-        if (attacker.type === 'player') hit = attacker.getHit(target);
-
-        projectile.damage = hit ? hit.damage : Formulas.getDamage(attacker, target, true);
-        projectile.hitType = hit ? hit.type : Modules.Hits.Damage;
-
-        projectile.owner = attacker;
-
-        this.addProjectile(projectile, projectile.owner.region);
-
-        return projectile;
-    }
-
-    getEntityByInstance(instance: string) {
-        if (instance in this.entities) return this.entities[instance];
-    }
-
-    spawnEntities() {
-        _.each(this.map.staticEntities, (data: any) => {
-            let key: string = data.string,
-                isMob = !!Mobs.Properties[key],
-                isNpc = !!NPCs.Properties[key],
-                isItem = !!Items.Data[key],
-                position = this.map.indexToGridPosition(data.tileIndex),
-                info: any;
-
-            if (isMob) info = Mobs.Properties[key];
-
-            if (isNpc) info = NPCs.Properties[key];
-
-            if (isItem) info = Items.getData(key);
-
-            position.x++;
-
-            if (!info || info === 'null') {
-                if (this.debug)
-                    log.info('Unknown object spawned at: ' + position.x + ' ' + position.y);
-
-                return;
-            }
-
-            let instance = Utils.generateInstance();
-
-            if (isMob) {
-                let mob = new Mob(info.id, instance, position.x, position.y, this);
-
-                mob.static = true;
-
-                if (data.roaming) mob.roaming = true;
-
-                if (data.miniboss) {
-                    if (data.achievementId) mob.achievementId = data.achievementId;
-
-                    mob.miniboss = data.miniboss;
-                }
-
-                if (data.boss) mob.boss = data.boss;
-
-                if (Mobs.Properties[key].hiddenName)
-                    mob.hiddenName = Mobs.Properties[key].hiddenName;
-
-                mob.load();
-
-                mob.onRespawn(() => {
-                    mob.dead = false;
-
-                    mob.lastAttacker = null;
-
-                    mob.refresh();
-
-                    this.addMob(mob);
-                });
-
-                this.addMob(mob);
-            }
-
-            if (isNpc) this.addNPC(new NPC(info.id, instance, position.x, position.y));
-
-            if (isItem) {
-                let item = this.createItem(info.id, instance, position.x, position.y);
-                item.static = true;
-                this.addItem(item);
-            }
-        });
-
-        log.info('Spawned ' + Object.keys(this.entities).length + ' entities!');
-    }
-
-    spawnChests() {
-        _.each(this.map.chests, (info: any) => {
-            this.spawnChest(info.items, info.x, info.y, info.achievement, true);
-        });
-
-        log.info('Spawned ' + Object.keys(this.chests).length + ' static chests');
-    }
-
-    spawnMob(id: number, x: number, y: number) {
-        let mob = new Mob(id, Utils.generateInstance(), x, y);
-
-        if (!Mobs.exists(id)) return;
-
-        this.addMob(mob);
-
-        return mob;
-    }
-
-    spawnChest(items: string, x: number, y: number, achievement?: string, staticChest?: boolean) {
-        let chest = new Chest(194, Utils.generateInstance(), x, y, achievement);
-
-        chest.addItems(items);
-
-        if (staticChest) {
-            chest.static = staticChest;
-
-            chest.onRespawn(this.addChest.bind(this, chest));
-        }
-
-        chest.onOpen((player?: Player) => {
-            /**
-             * Pretty simple concept, detect when the player opens the chest
-             * then remove it and drop an item instead. Give it a 25 second
-             * cooldown prior to respawning and voila.
-             */
-
-            this.removeChest(chest);
-
-            if (config.debug) log.info(`Opening chest at x: ${chest.x}, y: ${chest.y}`);
-
-            let item = chest.getItem();
-
-            if (!item) return;
-
-            this.dropItem(Items.stringToId(item.string), item.count, chest.x, chest.y);
-
-            if (player && chest.achievement) player.finishAchievement(parseInt(chest.achievement));
-        });
-
-        this.addChest(chest);
-
-        return chest;
-    }
-
-    createItem(
-        id: number,
-        instance: string,
-        x: number,
-        y: number,
-        ability?: number,
-        abilityLevel?: number
-    ) {
-        return new Item(id, instance, x, y, ability, abilityLevel);
-    }
-
-    dropItem(
-        id: number,
-        count: number,
-        x: number,
-        y: number,
-        ability?: number,
-        abilityLevel?: number
-    ) {
-        let item = this.createItem(id, Utils.generateInstance(), x, y, ability, abilityLevel);
-
-        item.count = count;
-        item.dropped = true;
-
-        this.addItem(item);
-        item.despawn();
-
-        if (config.debug) {
-            log.info(`Item - ${id} has been dropped at x: ${x}, y: ${y}.`);
-            log.info(`Item Region - ${item.region}`);
-        }
-
-        item.onBlink(() => {
-            this.push(Packets.PushOpcode.Broadcast, {
-                message: new Messages.Blink(item.instance)
-            });
-        });
-
-        item.onDespawn(() => {
-            this.removeItem(item);
-        });
     }
 
     parseTrees() {
@@ -680,176 +457,6 @@ class World {
         }
     }
 
-    addEntity(entity: Entity, region?: string) {
-        if (entity.instance in this.entities)
-            log.info('Entity ' + entity.instance + ' already exists.');
-
-        this.entities[entity.instance] = entity;
-
-        if (entity.type !== 'projectile') this.region.handle(entity, region);
-
-        if (entity.x > 0 && entity.y > 0)
-            this.getGrids().addToEntityGrid(entity, entity.x, entity.y);
-
-        entity.onSetPosition(() => {
-            this.getGrids().updateEntityPosition(entity);
-
-            if (entity.isMob() && entity.isOutsideSpawn()) {
-                entity.removeTarget();
-                entity.combat.forget();
-                entity.combat.stop();
-
-                entity.return();
-
-                this.push(Packets.PushOpcode.Broadcast, [
-                    {
-                        message: new Messages.Combat(Packets.CombatOpcode.Finish, {
-                            attackerId: null,
-                            targetId: entity.instance
-                        })
-                    },
-                    {
-                        message: new Messages.Movement(Packets.MovementOpcode.Move, {
-                            id: entity.instance,
-                            x: entity.x,
-                            y: entity.y,
-                            forced: false,
-                            teleport: false
-                        })
-                    }
-                ]);
-            }
-        });
-
-        if (entity instanceof Character) {
-            entity.getCombat().setWorld(this);
-
-            entity.onStunned((stun: boolean) => {
-                this.push(Packets.PushOpcode.Regions, {
-                    regionId: entity.region,
-                    message: new Messages.Movement(Packets.MovementOpcode.Stunned, {
-                        id: entity.instance,
-                        state: stun
-                    })
-                });
-            });
-        }
-    }
-
-    addPlayer(player: Player) {
-        this.addEntity(player);
-        this.players[player.instance] = player;
-
-        if (this.populationCallback) this.populationCallback();
-    }
-
-    addNPC(npc: NPC, region?: string) {
-        this.addEntity(npc, region);
-        this.npcs[npc.instance] = npc;
-    }
-
-    addMob(mob: Mob, region?: string) {
-        if (!Mobs.exists(mob.id)) {
-            log.error('Cannot spawn mob. ' + mob.id + ' does not exist.');
-            return;
-        }
-
-        this.addEntity(mob, region);
-        this.mobs[mob.instance] = mob;
-
-        mob.addToChestArea(this.map.getChestAreas());
-
-        mob.onHit((attacker: Character) => {
-            if (mob.isDead() || mob.combat.started) return;
-
-            mob.combat.begin(attacker);
-        });
-    }
-
-    addItem(item: Item, region?: string) {
-        if (item.static) item.onRespawn(this.addItem.bind(this, item));
-
-        this.addEntity(item, region);
-        this.items[item.instance] = item;
-    }
-
-    addProjectile(projectile: Projectile, region?: string) {
-        this.addEntity(projectile, region);
-        this.projectiles[projectile.instance] = projectile;
-    }
-
-    addChest(chest: Chest, region?: string) {
-        this.addEntity(chest, region);
-        this.chests[chest.instance] = chest;
-    }
-
-    removeEntity(entity: Entity) {
-        if (entity.instance in this.entities) delete this.entities[entity.instance];
-
-        if (entity.instance in this.mobs) delete this.mobs[entity.instance];
-
-        if (entity.instance in this.items) delete this.items[entity.instance];
-
-        this.getGrids().removeFromEntityGrid(entity, entity.x, entity.y);
-
-        this.region.remove(entity);
-    }
-
-    cleanCombat(character: Character) {
-        _.each(this.entities, (oCharacter) => {
-            if (oCharacter instanceof Character && oCharacter.combat.hasAttacker(character))
-                oCharacter.combat.removeAttacker(character);
-        });
-    }
-
-    removeItem(item: Item) {
-        this.removeEntity(item);
-        this.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Despawn(item.instance)
-        });
-
-        if (item.static) item.respawn();
-    }
-
-    removePlayer(player: Player) {
-        this.push(Packets.PushOpcode.Regions, {
-            regionId: player.region,
-            message: new Messages.Despawn(player.instance)
-        });
-
-        if (player.ready) player.save();
-
-        if (this.populationCallback) this.populationCallback();
-
-        this.removeEntity(player);
-
-        this.cleanCombat(player);
-
-        if (player.isGuest) this.database.delete(player);
-
-        delete this.players[player.instance];
-        delete this.network.packets[player.instance];
-
-        player.destroy();
-        player = null;
-    }
-
-    removeProjectile(projectile: Projectile) {
-        this.removeEntity(projectile);
-
-        delete this.projectiles[projectile.instance];
-    }
-
-    removeChest(chest: Chest) {
-        this.removeEntity(chest);
-        this.push(Packets.PushOpcode.Broadcast, {
-            message: new Messages.Despawn(chest.instance)
-        });
-
-        if (chest.static) chest.respawn();
-        else delete this.chests[chest.instance];
-    }
-
     globalMessage(
         source: any,
         message: any,
@@ -868,45 +475,31 @@ class World {
         });
     }
 
-    isOnline(username: string) {
-        for (let id in this.players)
-            if (this.players.hasOwnProperty(id))
-                if (this.players[id].username.toLowerCase() === username.toLowerCase()) return true;
+    cleanCombat(character: Character) {
+        this.entities.forEachEntity((entity: Entity) => {
+            if (entity instanceof Character && entity.combat.hasAttacker(entity))
+                entity.combat.removeAttacker(entity);
+        });
+    }
 
-        return false;
+    isOnline(username: string) {
+        return this.entities.isOnline(username);
     }
 
     getPlayerByName(username: string) {
-        for (let id in this.players)
-            if (this.players.hasOwnProperty(id))
-                if (this.players[id].username.toLowerCase() === username.toLowerCase())
-                    return this.players[id];
-
-        return null;
+        return this.entities.getPlayer(username);
     }
 
     isFull() {
         return this.getPopulation() >= this.maxPlayers;
     }
-
-    getPlayerByInstance(instance: string) {
-        if (instance in this.players) return this.players[instance];
-
-        return null;
-    }
-
-    forEachPlayer(callback: Function) {
-        _.each(this.players, (player) => {
-            callback(player);
-        });
-    }
-
+    
     getGrids() {
         return this.map.grids;
     }
 
     getPopulation() {
-        return _.size(this.players);
+        return _.size(this.entities.players);
     }
 
     onPlayerConnection(callback: Function) {

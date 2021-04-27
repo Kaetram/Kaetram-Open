@@ -11,9 +11,7 @@ class Default extends Combat {
     constructor(character: Character) {
         super(character);
 
-        const self = this;
-
-        self.character = character;
+        this.character = character;
     }
 }
 
