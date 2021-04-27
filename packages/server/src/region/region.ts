@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
+
 import Messages from '../network/messages';
 import Packets from '../network/packets';
 import Player from '../game/entity/character/player/player';
@@ -13,6 +14,7 @@ import World from '../game/world';
 import config from '../../config';
 import log from '../util/log';
 import Utils from '../util/utils';
+import Entities from '../controllers/entities';
 
 const map = path.resolve(__dirname, '../../data/map/world.json');
 
@@ -29,6 +31,7 @@ class Region {
     mapRegions: Regions;
 
     world: World;
+    entities: Entities;
 
     regions: any;
 
@@ -43,6 +46,7 @@ class Region {
         this.mapRegions = world.map.regions;
 
         this.world = world;
+        this.entities = world.entities;
 
         this.regions = {};
         this.loaded = false;
@@ -190,13 +194,13 @@ class Region {
                 const region = this.regions[id];
 
                 _.each(region.players, (instance: string) => {
-                    const player = this.world.players[instance];
+                    const player = this.entities.players[instance];
 
                     if (player) this.sendRegion(player, player.region);
                 });
             });
         else
-            this.world.forEachPlayer((player: Player) => {
+            this.entities.forEachPlayer((player: Player) => {
                 player.regionsLoaded = [];
 
                 this.sendRegion(player, player.region, true);

@@ -7,14 +7,17 @@ import World from '../game/world';
 import Player from '../game/entity/character/player/player';
 import log from '../util/log';
 import Achievement from '../game/entity/character/player/achievement';
+import Entities from './entities';
 
 class Commands {
     player: Player;
     world: World;
+    entities: Entities;
 
     constructor(player: Player) {
         this.player = player;
         this.world = player.world;
+        this.entities = this.world.entities;
     }
 
     parse(rawText: string) {
@@ -38,7 +41,7 @@ class Commands {
                     singular = population === 1;
 
                 if (this.player.rights > 1)
-                    _.each(this.world.players, (player) => {
+                    this,this.entities.forEachPlayer((player: Player) => {
                         this.player.notify(player.username);
                     });
 
@@ -203,7 +206,7 @@ class Commands {
 
                 if (!dCount) dCount = 1;
 
-                this.world.dropItem(id, dCount, this.player.x, this.player.y);
+                this.entities.dropItem(id, dCount, this.player.x, this.player.y);
 
                 return;
 
@@ -252,7 +255,7 @@ class Commands {
             case 'mob':
                 let npcId = parseInt(blocks.shift());
 
-                this.world.spawnMob(npcId, this.player.x, this.player.y);
+                this.entities.spawnMob(npcId, this.player.x, this.player.y);
 
                 return;
 
@@ -285,7 +288,7 @@ class Commands {
                 return;
 
             case 'teleall':
-                _.each(this.world.players, (player) => {
+                this.entities.forEachPlayer((player: Player) => {
                     player.teleport(this.player.x, this.player.y);
                 });
 
@@ -418,7 +421,7 @@ class Commands {
                 break;
 
             case 'togglepvp':
-                this.world.forEachPlayer((player: Player) => {
+                this.entities.forEachPlayer((player: Player) => {
                     player.updatePVP(true, true);
                 });
 
