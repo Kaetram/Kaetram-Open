@@ -16,6 +16,12 @@ export default {
         return null;
     },
 
+    stringToId(name: string) {
+        if (name in this.Properties) return this.Properties[name].id;
+
+        return null;
+    },
+
     getText(id: number) {
         if (id in this.Ids) return this.Ids[id].text;
 

@@ -11,10 +11,12 @@ import Character from '../character';
 import World from '../../../world';
 import Packets from '../../../../network/packets';
 import log from '../../../../util/log';
+import Entities from '../../../../controllers/entities';
 
 class Combat {
     character: Character;
     world: World;
+    entities: Entities;
 
     attackers: any;
 
@@ -352,6 +354,8 @@ class Combat {
 
     setWorld(world: World) {
         if (!this.world) this.world = world;
+
+        if (!this.entities) this.entities = world.entities;
     }
 
     forget() {
@@ -375,7 +379,7 @@ class Combat {
         if (!this.canHit() && !override) return;
 
         if (character.isRanged() || hitInfo.isRanged) {
-            let projectile = this.world.createProjectile([character, target]);
+            let projectile = this.world.entities.spawnProjectile([character, target]);
 
             this.world.push(Packets.PushOpcode.Regions, {
                 regionId: character.region,
