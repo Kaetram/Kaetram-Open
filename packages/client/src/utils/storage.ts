@@ -1,7 +1,7 @@
 const storage = window.localStorage;
 const name = 'data';
 import App from '../app';
-import { MapCollisions } from '../map/map';
+import { CursorsTiles } from '../map/map';
 import * as Modules from '@kaetram/common/src/modules';
 
 interface PlayerData {
@@ -27,9 +27,9 @@ interface Settings {
 
 interface RegionMapData {
     regionData: number[];
-    collisions: MapCollisions;
+    collisions: number[];
     objects: unknown[];
-    cursorTiles: { [key: string]: string };
+    cursorTiles: CursorsTiles;
 }
 
 interface StorageData {
@@ -45,18 +45,16 @@ interface StorageData {
 
 export default class Storage {
     app: App;
-    data: StorageData;
+    data!: StorageData;
 
     constructor(app: App) {
         this.app = app;
-        this.data = null;
 
         this.load();
     }
 
     load(): void {
-        if (storage.data) this.data = JSON.parse(storage.getItem(name));
-        else this.data = this.create();
+        this.data = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
 
         if (this.data.clientVersion !== parseFloat(this.app.config.version)) {
             this.data = this.create();
@@ -124,7 +122,7 @@ export default class Storage {
     setPlayer(option: keyof PlayerData, value: never): void {
         const pData = this.getPlayer();
 
-        if (Object.prototype.hasOwnProperty.call(pData, option)) pData[option] = value;
+        if (option in pData) pData[option] = value;
 
         this.save();
     }
@@ -132,16 +130,16 @@ export default class Storage {
     setSettings(option: keyof Settings, value: never): void {
         const sData = this.getSettings();
 
-        if (Object.prototype.hasOwnProperty.call(sData, option)) sData[option] = value;
+        if (option in sData) sData[option] = value;
 
         this.save();
     }
 
     setRegionData(
         regionData: number[],
-        collisionData: MapCollisions,
+        collisionData: number[],
         objects: unknown[],
-        cursorTiles: { [key: string]: string }
+        cursorTiles: CursorsTiles
     ): void {
         this.data.map.regionData = regionData;
         this.data.map.collisions = collisionData;
@@ -156,21 +154,21 @@ export default class Storage {
     }
 
     getSettings(): Settings {
-        return this.data ? this.data.settings : null;
+        return this.data.settings;
     }
 
     getRegionData(): number[] {
         return this.data.map.regionData;
     }
 
-    getCollisions(): MapCollisions {
+    getCollisions(): number[] {
         return this.data.map.collisions;
     }
 
     getObjects(): unknown[] {
         return this.data.map.objects;
     }
-    getCursorTiles(): { [key: string]: string } {
+    getCursorTiles(): CursorsTiles {
         return this.data.map.cursorTiles;
     }
 }

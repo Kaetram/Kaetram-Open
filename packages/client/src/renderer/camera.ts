@@ -1,96 +1,78 @@
-import App from '../app';
+import * as Modules from '@kaetram/common/src/modules';
+
 import Player from '../entity/character/player/player';
 import Entity from '../entity/entity';
-import Map from '../map/map';
-import * as Modules from '@kaetram/common/src/modules';
 import Renderer from './renderer';
 
 export default class Camera {
-    renderer: Renderer;
-    map: Map;
-    app: App;
-    offset: number;
-    x: number;
-    y: number;
-    dX: number;
-    dY: number;
-    gridX: number;
-    gridY: number;
-    prevGridX: number;
-    prevGridY: number;
-    tileSize: number;
-    speed: number;
-    panning: boolean;
-    centered: boolean;
-    player: Player | null;
-    lockX: boolean;
-    lockY: boolean;
-    gridWidth: number;
-    gridHeight: number;
-    borderX: number;
-    borderY: number;
+    private map = this.renderer.map;
+    private app = this.renderer.game.app;
 
-    constructor(renderer: Renderer) {
-        this.renderer = renderer;
-        this.map = renderer.map;
-        this.app = renderer.game.app;
+    // offset = 0.5;
 
-        this.offset = 0.5;
-        this.x = 0;
-        this.y = 0;
+    public x = 0;
+    public y = 0;
+    // dX = 0;
+    // dY = 0;
+    public gridX = 0;
+    public gridY = 0;
+    // private prevGridX = 0;
+    // private prevGridY = 0;
 
-        this.dX = 0;
-        this.dY = 0;
+    private tileSize = this.renderer.tileSize;
 
-        this.gridX = 0;
-        this.gridY = 0;
+    // speed = 1;
+    // private panning = false;
+    public centered = true;
+    private player: Player | null = null;
+    public lockX = false;
+    public lockY = false;
 
-        this.prevGridX = 0;
-        this.prevGridY = 0;
+    public gridWidth!: number;
+    public gridHeight!: number;
+    private borderX!: number;
+    private borderY!: number;
 
-        this.tileSize = this.renderer.tileSize;
-
-        this.speed = 1;
-        this.panning = false;
-        this.centered = true;
-        this.player = null;
-
-        this.lockX = false;
-        this.lockY = false;
-
+    public constructor(private renderer: Renderer) {
         this.update();
     }
 
-    update(): void {
-        const scale = this.renderer.getScale(),
-            borderWidth = this.app.border.width(),
-            borderHeight = this.app.border.height(),
-            factorWidth = Math.ceil(borderWidth / this.tileSize / scale),
-            factorHeight = Math.ceil(borderHeight / this.tileSize / scale);
+    public update(): void {
+        const { renderer, app, tileSize, map } = this;
+
+        const scale = renderer.getScale();
+
+        const borderWidth = app.border.width()!;
+        const borderHeight = app.border.height()!;
+
+        const factorWidth = Math.ceil(borderWidth / tileSize / scale);
+        const factorHeight = Math.ceil(borderHeight / tileSize / scale);
 
         this.gridWidth = factorWidth;
         this.gridHeight = factorHeight;
 
-        this.borderX = this.map.width * this.tileSize - this.gridWidth * this.tileSize;
-        this.borderY = this.map.height * this.tileSize - this.gridHeight * this.tileSize;
+        const { gridWidth, gridHeight } = this;
+
+        this.borderX = map.width * tileSize - gridWidth * tileSize;
+        this.borderY = map.height * tileSize - gridHeight * tileSize;
     }
 
-    setPosition(x: number, y: number): void {
-        this.x = x;
-        this.y = y;
+    // private setPosition(x: number, y: number): void {
+    //     this.x = x;
+    //     this.y = y;
 
-        this.prevGridX = this.gridX;
-        this.prevGridY = this.gridY;
+    //     // this.prevGridX = this.gridX;
+    //     // this.prevGridY = this.gridY;
 
-        this.gridX = Math.floor(x / 16);
-        this.gridY = Math.floor(y / 16);
-    }
+    //     this.gridX = Math.floor(x / 16);
+    //     this.gridY = Math.floor(y / 16);
+    // }
 
-    clip(): void {
+    public clip(): void {
         this.setGridPosition(Math.round(this.x / 16), Math.round(this.y / 16));
     }
 
-    center(): void {
+    public center(): void {
         if (this.centered) return;
 
         this.centered = true;
@@ -99,7 +81,7 @@ export default class Camera {
         this.renderer.verifyCentration();
     }
 
-    decenter(): void {
+    public decenter(): void {
         if (!this.centered) return;
 
         this.clip();
@@ -108,9 +90,9 @@ export default class Camera {
         this.renderer.verifyCentration();
     }
 
-    setGridPosition(x: number, y: number): void {
-        this.prevGridX = this.gridX;
-        this.prevGridY = this.gridY;
+    private setGridPosition(x: number, y: number): void {
+        // this.prevGridX = this.gridX;
+        // this.prevGridY = this.gridY;
 
         this.gridX = x;
         this.gridY = y;
@@ -119,67 +101,74 @@ export default class Camera {
         this.y = this.gridY * 16;
     }
 
-    setPlayer(player: Player | null): void {
+    public setPlayer(player: Player): void {
         this.player = player;
 
         this.centreOn(this.player);
     }
 
-    handlePanning(direction: number): void {
-        if (!this.panning) return;
+    // handlePanning(direction: Modules.Keys): void {
+    //     const { panning, x, y } = this;
 
-        switch (direction) {
-            case Modules.Keys.Up:
-                this.setPosition(this.x, this.y - 1);
-                break;
+    //     if (!panning) return;
 
-            case Modules.Keys.Down:
-                this.setPosition(this.x, this.y + 1);
-                break;
+    //     switch (direction) {
+    //         case Modules.Keys.Up:
+    //             this.setPosition(x, y - 1);
+    //             break;
 
-            case Modules.Keys.Left:
-                this.setPosition(this.x - 1, this.y);
-                break;
+    //         case Modules.Keys.Down:
+    //             this.setPosition(x, y + 1);
+    //             break;
 
-            case Modules.Keys.Right:
-                this.setPosition(this.x + 1, this.y);
-                break;
-        }
-    }
+    //         case Modules.Keys.Left:
+    //             this.setPosition(x - 1, y);
+    //             break;
 
-    centreOn(player: Player): void {
+    //         case Modules.Keys.Right:
+    //             this.setPosition(x + 1, y);
+    //             break;
+    //     }
+    // }
+
+    public centreOn(player: Player | null): void {
         if (!player) return;
 
-        const width = Math.floor(this.gridWidth / 2),
-            height = Math.floor(this.gridHeight / 2),
-            nextX = player.x - width * this.tileSize,
-            nextY = player.y - height * this.tileSize;
+        const { gridWidth, gridHeight, tileSize, borderX, borderY, lockX, lockY } = this;
 
-        if (nextX >= 0 && nextX <= this.borderX && !this.lockX) {
+        const width = Math.floor(gridWidth / 2);
+        const height = Math.floor(gridHeight / 2);
+
+        const nextX = player.x - width * tileSize;
+        const nextY = player.y - height * tileSize;
+
+        if (nextX >= 0 && nextX <= borderX && !lockX) {
             this.x = nextX;
             this.gridX = Math.round(player.x / 16) - width;
         } else this.offsetX(nextX);
 
-        if (nextY >= 0 && nextY <= this.borderY && !this.lockY) {
+        if (nextY >= 0 && nextY <= borderY && !lockY) {
             this.y = nextY;
             this.gridY = Math.round(player.y / 16) - height;
         } else this.offsetY(nextY);
     }
 
-    forceCentre(entity: Entity): void {
+    public forceCentre(entity: Entity): void {
         if (!entity) return;
 
-        const width = Math.floor(this.gridWidth / 2),
-            height = Math.floor(this.gridHeight / 2);
+        const { gridWidth, gridHeight, tileSize } = this;
 
-        this.x = entity.x - width * this.tileSize;
+        const width = Math.floor(gridWidth / 2);
+        const height = Math.floor(gridHeight / 2);
+
+        this.x = entity.x - width * tileSize;
         this.gridX = Math.round(entity.x / 16) - width;
 
-        this.y = entity.y - height * this.tileSize;
+        this.y = entity.y - height * tileSize;
         this.gridY = Math.round(entity.y / 16) - height;
     }
 
-    offsetX(nextX: number): void {
+    private offsetX(nextX: number): void {
         if (nextX <= 16) {
             this.x = 0;
             this.gridX = 0;
@@ -189,17 +178,19 @@ export default class Camera {
         }
     }
 
-    offsetY(nextY: number): void {
+    private offsetY(nextY: number): void {
+        const { borderY } = this;
+
         if (nextY <= 16) {
             this.y = 0;
             this.gridY = 0;
-        } else if (nextY >= this.borderY) {
-            this.y = this.borderY;
-            this.gridY = Math.round(this.borderY / 16);
+        } else if (nextY >= borderY) {
+            this.y = borderY;
+            this.gridY = Math.round(borderY / 16);
         }
     }
 
-    zone(direction: number): void {
+    public zone(direction: Modules.Orientation): void {
         switch (direction) {
             case Modules.Orientation.Up:
                 this.setGridPosition(this.gridX, this.gridY - this.gridHeight + 3);
@@ -229,30 +220,36 @@ export default class Camera {
      * Clip the map to the boundaries of the map if
      * we zone somewhere out of the limitations.
      */
-    zoneClip(): void {
+    private zoneClip(): void {
+        const { width, height } = this.map;
+
         if (this.gridX < 0) this.setGridPosition(0, this.gridY);
 
-        if (this.gridX > this.map.width) this.setGridPosition(this.map.width, this.gridY);
+        if (this.gridX > width) this.setGridPosition(width, this.gridY);
 
         if (this.gridY < 0) this.setGridPosition(this.gridX, 0);
 
-        if (this.gridY > this.map.height) this.setGridPosition(this.gridX, this.map.height);
+        if (this.gridY > height) this.setGridPosition(this.gridX, height);
     }
 
-    forEachVisiblePosition(callback: (x: number, y: number) => void, offset?: number): void {
+    public forEachVisiblePosition(callback: (x: number, y: number) => void, offset?: number): void {
+        const { gridX, gridY, gridWidth, gridHeight } = this;
+
         offset ||= 1;
 
-        for (let y = this.gridY - offset, maxY = y + this.gridHeight + offset * 2; y < maxY; y++)
-            for (let x = this.gridX - offset, maxX = x + this.gridWidth + offset * 2; x < maxX; x++)
+        for (let y = gridY - offset, maxY = y + gridHeight + offset * 2; y < maxY; y++)
+            for (let x = gridX - offset, maxX = x + gridWidth + offset * 2; x < maxX; x++)
                 callback(x, y);
     }
 
-    isVisible(x: number, y: number, offset: number, offset2: number): boolean {
+    public isVisible(x: number, y: number, offset: number, offset2: number): boolean {
+        const { gridX, gridY, gridWidth, gridHeight } = this;
+
         return (
-            x > this.gridX - offset &&
-            x < this.gridX + this.gridWidth &&
-            y > this.gridY - offset &&
-            y < this.gridY + this.gridHeight + offset2
+            x > gridX - offset &&
+            x < gridX + gridWidth &&
+            y > gridY - offset &&
+            y < gridY + gridHeight + offset2
         );
     }
 }

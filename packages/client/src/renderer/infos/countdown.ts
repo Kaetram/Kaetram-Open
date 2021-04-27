@@ -1,10 +1,10 @@
 export default class Countdown {
     id: string;
     time: number;
-    string: string;
+    string: string | null;
     lastTime: number;
     updateTime: number;
-    destroyCallback: (id: string) => void;
+    destroyCallback?(id: string): void;
 
     constructor(id: string, time: number) {
         this.id = id;
@@ -33,8 +33,8 @@ export default class Countdown {
     getStringFormat(): string {
         if (this.time < 60) return `00:${this.time}`;
 
-        const minutes = Math.floor(this.time / 60),
-            seconds = this.time - minutes * 60;
+        const minutes = Math.floor(this.time / 60);
+        const seconds = this.time - minutes * 60;
 
         if (minutes < 10) return `0${minutes}:${seconds}`;
 

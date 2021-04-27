@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
-import Packets from '@kaetram/common/src/packets';
 import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
 
 import type Game from '../game';
 
@@ -13,14 +13,16 @@ export default class ChatController {
 
     private visible = false;
 
-    private fadingDuration = 5000 as const;
+    private readonly fadingDuration = 5000;
     private fadingTimeout!: number | null;
 
     public constructor(private game: Game) {
-        this.button.on('click', () => {
-            this.button.trigger('blur');
+        const { button, input } = this;
 
-            if (this.input.is(':visible')) this.hideInput();
+        button.on('click', () => {
+            button.trigger('blur');
+
+            if (input.is(':visible')) this.hideInput();
             else this.toggle();
         });
     }
@@ -36,8 +38,7 @@ export default class ChatController {
 
         element.css('color', colour || 'white');
 
-        this.log.append(element);
-        this.log.scrollTop(99999);
+        this.log.append(element).scrollTop(99999);
     }
 
     public key(data: Modules.Keys): void {
@@ -56,7 +57,7 @@ export default class ChatController {
     }
 
     private send(): void {
-        this.game.socket?.send(Packets.Chat, [this.input.val()]);
+        this.game.socket.send(Packets.Chat, [this.input.val()]);
         this.toggle();
     }
 
@@ -90,26 +91,28 @@ export default class ChatController {
     }
 
     private hideChat(): void {
-        if (this.fadingTimeout) {
-            clearTimeout(this.fadingTimeout);
+        const { fadingTimeout, chat, fadingDuration } = this;
+
+        if (fadingTimeout) {
+            clearTimeout(fadingTimeout);
             this.fadingTimeout = null;
         }
 
         this.fadingTimeout = window.setTimeout(() => {
             if (!this.isActive()) {
-                this.chat.fadeOut('slow');
+                chat.fadeOut('slow');
 
                 this.visible = false;
             }
-        }, this.fadingDuration);
+        }, fadingDuration);
     }
 
     public hideInput(): void {
-        this.button.removeClass('active');
+        const { button, input } = this;
 
-        this.input.val('');
-        this.input.fadeOut('fast');
-        this.input.trigger('blur');
+        button.removeClass('active');
+
+        input.val('').fadeOut('fast').trigger('blur');
 
         this.hideChat();
     }
@@ -119,7 +122,7 @@ export default class ChatController {
     }
 
     private clean(): void {
-        clearTimeout(this.fadingTimeout as number);
+        clearTimeout(this.fadingTimeout!);
         this.fadingTimeout = null;
     }
 

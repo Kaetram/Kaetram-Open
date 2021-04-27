@@ -56,21 +56,21 @@ function AStar(
     const list: Record<number, number> = {};
     const result: [x: number, y: number][] = [];
 
-    const open = [
+    const open: Result[] = [
         {
             x: start[0],
             y: start[1],
             f: 0,
             g: 0,
             v: start[0] + start[1] * cols
-        } as Result
+        }
     ];
 
-    let length = 1,
-        distance: MathFunction,
-        find: Successor,
-        current: Result,
-        next: Result[];
+    let length = 1;
+    let distance: MathFunction;
+    let find: Successor;
+    let current: Result;
+    let next: Result[];
 
     const endPos = { x: end[0], y: end[1], v: end[0] + end[1] * cols };
 
@@ -104,7 +104,7 @@ function AStar(
         let min = 0;
 
         for (let i = 0; i < length; ++i) {
-            const openF = open[i].f as number;
+            const openF = open[i].f!;
 
             if (openF < max) {
                 max = openF;
@@ -112,7 +112,7 @@ function AStar(
             }
         }
 
-        current = open.splice(min, 1)[0];
+        [current] = open.splice(min, 1);
         if (current.v !== endPos.v) {
             --length;
             next = successors(find, current.x, current.y, grid, rows, cols);
@@ -126,7 +126,7 @@ function AStar(
 
                 if (!(adj.v in list)) {
                     adj.f =
-                        (adj.g = (current.g as number) + distance(adj, current, Math.abs, f2)) +
+                        (adj.g = current.g! + distance(adj, current, Math.abs, f2)) +
                         distance(adj, endPos, Math.abs, f2);
 
                     open[length++] = adj;
@@ -137,7 +137,7 @@ function AStar(
             let i = (length = 0);
 
             do result[i++] = [current.x, current.y];
-            while ((current = current.p as Result));
+            while ((current = current.p!));
 
             result.reverse();
         }
@@ -216,22 +216,22 @@ function successors(
     rows: number,
     cols: number
 ) {
-    const N = y - 1,
-        S = y + 1,
-        E = x + 1,
-        W = x - 1,
-        $N = N > -1 && !grid[N][x],
-        $S = S < rows && !grid[S][x],
-        $E = E < cols && !grid[y][E],
-        $W = W > -1 && !grid[y][W],
-        result = [];
+    const N = y - 1;
+    const S = y + 1;
+    const E = x + 1;
+    const W = x - 1;
+    const $N = N > -1 && !grid[N][x];
+    const $S = S < rows && !grid[S][x];
+    const $E = E < cols && !grid[y][E];
+    const $W = W > -1 && !grid[y][W];
+    const result = [];
 
     let i = 0;
 
-    $N && (result[i++] = { x: x, y: N });
-    $E && (result[i++] = { x: E, y: y });
-    $S && (result[i++] = { x: x, y: S });
-    $W && (result[i++] = { x: W, y: y });
+    $N && (result[i++] = { x, y: N });
+    $E && (result[i++] = { x: E, y });
+    $S && (result[i++] = { x, y: S });
+    $W && (result[i++] = { x: W, y });
 
     return find($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i);
 }
@@ -239,8 +239,8 @@ function successors(
 const diagonal: MathFunction = (start, end, f1, f2) => f2(f1(start.x - end.x), f1(start.y - end.y));
 
 const euclidean: MathFunction = (start, end, _f1, f2) => {
-    const x = start.x - end.x,
-        y = start.y - end.y;
+    const x = start.x - end.x;
+    const y = start.y - end.y;
 
     return f2(x * x + y * y);
 };

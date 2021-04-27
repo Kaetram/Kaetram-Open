@@ -6,7 +6,7 @@ import EntitiesController from '../controllers/entities';
 import InputController from '../controllers/input';
 import Character from '../entity/character/character';
 import Player from '../entity/character/player/player';
-import Entity, { EntityRenderingData } from '../entity/entity';
+import Entity from '../entity/entity';
 import Item from '../entity/objects/item';
 import Sprite from '../entity/sprite';
 import Game from '../game';
@@ -58,12 +58,12 @@ interface RendererLighting extends RendererLight, Lighting {
     light: RendererLamp;
 }
 
-const HORIZONTAL_FLIP_FLAG = 0x80000000,
-    VERTICAL_FLIP_FLAG = 0x40000000,
-    DIAGONAL_FLIP_FLAG = 0x20000000,
-    ROT_90_DEG = Math.PI / 2,
-    ROT_NEG_90_DEG = ROT_90_DEG * -1,
-    ROT_180_DEG = Math.PI;
+const HORIZONTAL_FLIP_FLAG = 0x80000000;
+const VERTICAL_FLIP_FLAG = 0x40000000;
+const DIAGONAL_FLIP_FLAG = 0x20000000;
+const ROT_90_DEG = Math.PI / 2;
+const ROT_NEG_90_DEG = ROT_90_DEG * -1;
+const ROT_180_DEG = Math.PI;
 
 export default class Renderer {
     canvas: HTMLCanvasElement;
@@ -84,7 +84,7 @@ export default class Renderer {
     contexts: CanvasRenderingContext2D[];
     drawingContexts: (CanvasRenderingContext2D | RenderingContext)[];
     lightings: RendererLighting[];
-    entities: EntitiesController | null;
+    entities: EntitiesController;
     game: Game;
     camera: Camera;
     input: InputController;
@@ -99,7 +99,7 @@ export default class Renderer {
     lastTarget: number[];
     animatedTiles: { [index: number]: Tile };
     drawnTiles: Tile[];
-    resizeTimeout: number;
+    resizeTimeout: number | null;
     autoCentre: boolean;
     drawTarget: boolean;
     selectedCellVisible: boolean;
@@ -113,22 +113,22 @@ export default class Renderer {
     animatedTilesDrawCalls: number;
     tiles: { [id: string]: RendererTile };
     cells: { [id: number]: RendererCell };
-    scale: number;
-    superScaling: number;
-    lightTileSize: number;
-    canvasWidth: number;
-    canvasHeight: number;
-    webGL: boolean;
-    map: Map;
-    mEdge: boolean;
-    tablet: boolean;
-    mobile: boolean;
-    darkMask: DarkMask;
-    shadowSprite: Sprite;
-    sparksSprite: Sprite;
-    realFPS: number;
-    transitioning: boolean;
-    transitionInterval: number;
+    scale!: number;
+    superScaling!: number;
+    lightTileSize!: number;
+    canvasWidth!: number;
+    canvasHeight!: number;
+    webGL!: boolean;
+    map!: Map;
+    mEdge!: boolean;
+    tablet!: boolean;
+    mobile!: boolean;
+    darkMask!: DarkMask;
+    shadowSprite!: Sprite;
+    sparksSprite!: Sprite;
+    realFPS!: number;
+    transitioning!: boolean;
+    transitionInterval!: number;
     tileset: unknown;
 
     constructor(
@@ -140,7 +140,7 @@ export default class Renderer {
         cursor: HTMLCanvasElement,
         game: Game
     ) {
-        this.canvas = document.querySelector('#canvas') as HTMLCanvasElement;
+        this.canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
         this.background = background;
         this.entitiesCanvas = entitiesCanvas;
         this.foreground = foreground;
@@ -148,19 +148,17 @@ export default class Renderer {
         this.textCanvas = textCanvas;
         this.cursor = cursor;
 
-        this.context = this.entitiesCanvas.getContext('2d'); // Entities
+        this.context = this.entitiesCanvas.getContext('2d')!; // Entities
 
-        if (!Detect.supportsWebGL()) this.backContext = this.background.getContext('2d');
-        // Background
-        else
-            this.backContext =
-                this.background.getContext('webgl') ||
-                this.background.getContext('experimental-webgl');
+        this.backContext = (!Detect.supportsWebGL()
+            ? this.background.getContext('2d')
+            : this.background.getContext('webgl') ||
+              this.background.getContext('experimental-webgl'))!;
 
-        this.foreContext = this.foreground.getContext('2d'); // Foreground
-        this.overlayContext = this.overlay.getContext('2d'); // Lighting
-        this.textContext = this.textCanvas.getContext('2d'); // Texts
-        this.cursorContext = this.cursor.getContext('2d'); // Cursor
+        this.foreContext = this.foreground.getContext('2d')!; // Foreground
+        this.overlayContext = this.overlay.getContext('2d')!; // Lighting
+        this.textContext = this.textCanvas.getContext('2d')!; // Texts
+        this.cursorContext = this.cursor.getContext('2d')!; // Cursor
 
         this.canvases = [
             this.background,
@@ -186,9 +184,9 @@ export default class Renderer {
         this.lightings = [];
 
         this.game = game;
-        this.camera = null;
-        this.entities = null;
-        this.input = null;
+        this.camera = null!;
+        this.entities = null!;
+        this.input = null!;
 
         this.tileSize = 16;
         this.fontSize = 16;
@@ -228,8 +226,8 @@ export default class Renderer {
     }
 
     stop(): void {
-        this.camera = null;
-        this.input = null;
+        this.camera = null!;
+        this.input = null!;
         this.stopRendering = true;
 
         this.forEachContext((context) => {
@@ -250,11 +248,9 @@ export default class Renderer {
         this.forAllContexts((context) => {
             if (!context) return;
 
-            const ctx = context;
+            context.imageSmoothingQuality = 'low';
 
-            ctx.imageSmoothingQuality = 'low';
-
-            ctx.imageSmoothingEnabled = false;
+            context.imageSmoothingEnabled = false;
             /** @deprecated */
             // ctx.webkitImageSmoothingEnabled = false;
             // ctx.mozImageSmoothingEnabled = false;
@@ -283,7 +279,7 @@ export default class Renderer {
     }
 
     loadCamera(): void {
-        const storage = this.game.storage;
+        const { storage } = this.game;
 
         this.camera = new Camera(this);
 
@@ -320,7 +316,7 @@ export default class Renderer {
                 this.scale = this.getScale();
                 this.clearScreen(this.cursorContext);
 
-                this.camera?.update();
+                this.camera.update();
 
                 this.loadSizes();
 
@@ -328,9 +324,9 @@ export default class Renderer {
 
                 this.entities?.update();
 
-                this.camera?.centreOn(this.game.player);
+                this.camera.centreOn(this.game.player);
 
-                this.game.menu?.resize();
+                this.game.menu.resize();
 
                 this.stopRendering = false;
                 this.resizeTimeout = null;
@@ -416,6 +412,8 @@ export default class Renderer {
     }
 
     drawWebGL(): void {
+        if (!this.map.webGLMap) return;
+
         const dt = this.game.time - this.game.lastTime;
 
         this.game.lastTime = this.game.time;
@@ -464,7 +462,7 @@ export default class Renderer {
             if (overlay !== 'empty') {
                 const img = new Image();
                 img.src = overlay;
-                this.overlayContext.fillStyle = this.overlayContext.createPattern(img, 'repeat');
+                this.overlayContext.fillStyle = this.overlayContext.createPattern(img, 'repeat')!;
                 this.overlayContext.fillRect(
                     0,
                     0,
@@ -525,19 +523,30 @@ export default class Renderer {
     }
 
     drawEntity(entity: Entity): void {
-        const sprite = entity.sprite,
-            animation = entity.currentAnimation,
-            data: EntityRenderingData = entity.renderingData;
+        const {
+            sprite,
+            currentAnimation: animation,
+            renderingData: data,
+            angled,
+            type,
+            angle,
+            shadowOffsetY,
+            fading,
+            fadingAlpha,
+            spriteFlipX,
+            spriteFlipY,
+            customScale
+        } = entity;
 
         if (!sprite || !animation || !entity.isVisible()) return;
 
-        const frame = animation.currentFrame,
-            x = frame.x * this.superScaling,
-            y = frame.y * this.superScaling,
-            dx = entity.x * this.superScaling,
-            dy = entity.y * this.superScaling,
-            flipX = dx + this.tileSize * this.superScaling,
-            flipY = dy + data.height;
+        const frame = animation.currentFrame;
+        const x = frame.x * this.superScaling;
+        const y = frame.y * this.superScaling;
+        const dx = entity.x * this.superScaling;
+        const dy = entity.y * this.superScaling;
+        const flipX = dx + this.tileSize * this.superScaling;
+        const flipY = dy + data.height;
 
         this.context.save();
 
@@ -549,31 +558,29 @@ export default class Renderer {
             data.ox = sprite.offsetX * this.superScaling;
             data.oy = sprite.offsetY * this.superScaling;
 
-            if (entity.angled && entity.type !== 'projectile')
-                data.angle = (entity.angle * Math.PI) / 180;
+            if (angled && type !== 'projectile') data.angle = (angle * Math.PI) / 180;
 
             if (entity.hasShadow()) {
                 data.shadowWidth = this.shadowSprite.width * this.superScaling;
                 data.shadowHeight = this.shadowSprite.height * this.superScaling;
 
-                data.shadowOffsetY = entity.shadowOffsetY * this.superScaling;
+                data.shadowOffsetY = shadowOffsetY * this.superScaling;
             }
         }
 
-        if (entity.fading) this.context.globalAlpha = entity.fadingAlpha;
+        if (fading) this.context.globalAlpha = fadingAlpha;
 
-        if (entity.spriteFlipX) {
+        if (spriteFlipX) {
             this.context.translate(flipX, dy);
             this.context.scale(-1, 1);
-        } else if (entity.spriteFlipY) {
+        } else if (spriteFlipY) {
             this.context.translate(dx, flipY);
             this.context.scale(1, -1);
         } else this.context.translate(dx, dy);
 
-        if (entity.customScale) this.context.scale(entity.customScale, entity.customScale);
+        if (customScale) this.context.scale(customScale, customScale);
 
-        if (entity.angled)
-            this.context.rotate(entity.type === 'projectile' ? entity.getAngle() : data.angle);
+        if (angled) this.context.rotate(type === 'projectile' ? entity.getAngle() : data.angle);
 
         if (entity.hasShadow()) {
             this.context.globalCompositeOperation = 'source-over';
@@ -635,9 +642,9 @@ export default class Renderer {
                 if (weapon) {
                     if (!weapon.loaded) weapon.load();
 
-                    const animation = entity.currentAnimation;
+                    const animation = entity.currentAnimation!;
                     const weaponAnimationData = weapon.animationData[animation.name];
-                    const frame = entity.currentAnimation.currentFrame;
+                    const frame = animation.currentFrame;
                     const index =
                         frame.index < weaponAnimationData.length
                             ? frame.index
@@ -664,17 +671,17 @@ export default class Renderer {
             if (entity.hasEffect()) {
                 const sprite = this.entities.getSprite(entity.getActiveEffect());
 
-                if (!sprite.loaded) sprite.load();
-
                 if (sprite) {
-                    const animation = entity.getEffectAnimation(),
-                        index = animation.currentFrame.index,
-                        x = sprite.width * index * this.superScaling,
-                        y = sprite.height * animation.row * this.superScaling,
-                        width = sprite.width * this.superScaling,
-                        height = sprite.height * this.superScaling,
-                        offsetX = sprite.offsetX * this.superScaling,
-                        offsetY = sprite.offsetY * this.superScaling;
+                    if (!sprite.loaded) sprite.load();
+
+                    const animation = entity.getEffectAnimation()!;
+                    const { index } = animation.currentFrame;
+                    const x = sprite.width * index * this.superScaling;
+                    const y = sprite.height * animation.row * this.superScaling;
+                    const width = sprite.width * this.superScaling;
+                    const height = sprite.height * this.superScaling;
+                    const offsetX = sprite.offsetX * this.superScaling;
+                    const offsetY = sprite.offsetY * this.superScaling;
 
                     this.context.drawImage(
                         sprite.image,
@@ -694,12 +701,12 @@ export default class Renderer {
         }
 
         if (entity instanceof Item) {
-            const sparksAnimation = this.entities.sprites.sparksAnimation,
-                sparksFrame = sparksAnimation.currentFrame,
-                sparksX = this.sparksSprite.width * sparksFrame.index * this.superScaling,
-                sparksY = this.sparksSprite.height * sparksAnimation.row * this.superScaling,
-                sparksWidth = this.sparksSprite.width * this.superScaling,
-                sparksHeight = this.sparksSprite.height * this.superScaling;
+            const { sparksAnimation } = this.entities.sprites;
+            const sparksFrame = sparksAnimation.currentFrame;
+            const sparksX = this.sparksSprite.width * sparksFrame.index * this.superScaling;
+            const sparksY = this.sparksSprite.height * sparksAnimation.row * this.superScaling;
+            const sparksWidth = this.sparksSprite.width * this.superScaling;
+            const sparksHeight = this.sparksSprite.height * this.superScaling;
 
             this.context.drawImage(
                 this.sparksSprite.image,
@@ -718,13 +725,13 @@ export default class Renderer {
     drawHealth(entity: Character): void {
         if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
 
-        const barLength = 16,
-            healthX = entity.x * this.superScaling - barLength / 2 + 8,
-            healthY = (entity.y - entity.sprite.height / 4) * this.superScaling,
-            healthWidth = Math.round(
-                (entity.hitPoints / entity.maxHitPoints) * barLength * this.superScaling
-            ),
-            healthHeight = 2 * this.superScaling;
+        const barLength = 16;
+        const healthX = entity.x * this.superScaling - barLength / 2 + 8;
+        const healthY = (entity.y - entity.sprite.height / 4) * this.superScaling;
+        const healthWidth = Math.round(
+            (entity.hitPoints / entity.maxHitPoints) * barLength * this.superScaling
+        );
+        const healthHeight = 2 * this.superScaling;
 
         this.textContext.save();
         this.setCameraView(this.textContext);
@@ -798,8 +805,8 @@ export default class Renderer {
 
     drawLighting(lighting: RendererLighting): void {
         if (lighting.relative) {
-            const lightX = (lighting.light.origX - this.camera.x / 16) * this.lightTileSize,
-                lightY = (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
+            const lightX = (lighting.light.origX - this.camera.x / 16) * this.lightTileSize;
+            const lightY = (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
 
             lighting.light.position = new Vec2(lightX, lightY);
             lighting.compute(this.overlay.width, this.overlay.height);
@@ -813,32 +820,34 @@ export default class Renderer {
     }
 
     drawCursor(): void {
-        if (this.tablet || this.mobile || this.hasRenderedMouse() || this.input.cursorMoved) return;
+        const { input, cursorContext, tablet, mobile, superScaling } = this;
 
-        const cursor = this.input.cursor,
-            scaling = 14 * this.superScaling;
+        if (tablet || mobile || this.hasRenderedMouse() || input.cursorMoved) return;
 
-        this.clearScreen(this.cursorContext);
-        this.cursorContext.save();
+        const { cursor, mouse } = input;
+        const scaling = 14 * superScaling;
+
+        this.clearScreen(cursorContext);
+        cursorContext.save();
 
         if (cursor) {
             if (!cursor.loaded) cursor.load();
 
             if (cursor.loaded)
-                this.cursorContext.drawImage(
+                cursorContext.drawImage(
                     cursor.image,
                     0,
                     0,
                     scaling,
                     scaling,
-                    this.input.mouse.x,
-                    this.input.mouse.y,
+                    mouse.x,
+                    mouse.y,
                     scaling,
                     scaling
                 );
         }
 
-        this.cursorContext.restore();
+        cursorContext.restore();
 
         this.saveMouse();
     }
@@ -864,7 +873,7 @@ export default class Renderer {
     }
 
     drawPosition(): void {
-        const player = this.game.player;
+        const { player } = this.game;
 
         this.drawText(
             `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.gridPositionToIndex(
@@ -878,10 +887,10 @@ export default class Renderer {
         );
 
         if (this.input.hoveringEntity) {
+            const { x, y } = this.input.getCoords()!;
+
             this.drawText(
-                `x: ${this.input.getCoords().x} y: ${this.input.getCoords().y} instance: ${
-                    this.input.hoveringEntity.id
-                }`,
+                `x: ${x} y: ${y} instance: ${this.input.hoveringEntity.id}`,
                 10,
                 71,
                 false,
@@ -898,7 +907,7 @@ export default class Renderer {
     }
 
     drawCollisions(): void {
-        const pathingGrid = this.entities.grids.pathingGrid;
+        const { pathingGrid } = this.entities.grids;
 
         if (!pathingGrid) return;
 
@@ -950,7 +959,7 @@ export default class Renderer {
 
     drawTile(context: CanvasRenderingContext2D, tileId: number, cellId: number): void {
         const originalTileId = tileId;
-        let rotation;
+        let rotation!: number;
 
         /**
          * `originalTileId` is the tileId prior to doing any
@@ -981,17 +990,17 @@ export default class Renderer {
          */
 
         if (!(originalTileId in this.tiles)) {
-            const setWidth = tileset.width / this.tileSize,
-                relativeTileId = tileId - tileset.firstGID + 1;
+            const setWidth = tileset.width / this.tileSize;
+            const relativeTileId = tileId - tileset.firstGID + 1;
 
             this.tiles[originalTileId] = {
-                relativeTileId: relativeTileId,
-                setWidth: setWidth,
+                relativeTileId,
+                setWidth,
                 x: this.getX(relativeTileId + 1, setWidth) * this.tileSize,
                 y: Math.floor(relativeTileId / setWidth) * this.tileSize,
                 width: this.tileSize,
                 height: this.tileSize,
-                rotation: rotation
+                rotation
             };
         }
 
@@ -1016,7 +1025,8 @@ export default class Renderer {
         cell: RendererCell
     ): void {
         // const scale = this.superScaling;
-        let dx, dy; // this.superScaling * 1.5;
+        let dx!: number;
+        let dy!: number; // this.superScaling * 1.5;
 
         if (!context) return;
 
@@ -1024,10 +1034,9 @@ export default class Renderer {
             context.save();
             context.rotate(tile.rotation);
 
-            dx = cell.dx;
-            dy = cell.dy;
+            ({ dx, dy } = cell);
 
-            const temp = cell.dx;
+            const temporary = cell.dx;
 
             switch (tile.rotation) {
                 case ROT_180_DEG:
@@ -1040,14 +1049,14 @@ export default class Renderer {
                 case ROT_90_DEG:
                     context.translate(0, -cell.height);
 
-                    (dx = dy), (dy = -temp);
+                    (dx = dy), (dy = -temporary);
 
                     break;
 
                 case ROT_NEG_90_DEG:
                     context.translate(-cell.width, 0);
 
-                    (dx = -dy), (dy = temp);
+                    (dx = -dy), (dy = temporary);
 
                     break;
             }
@@ -1077,8 +1086,8 @@ export default class Renderer {
         strokeColour?: string,
         fontSize?: number
     ): void {
-        const strokeSize = 3,
-            context = this.textContext;
+        const strokeSize = 3;
+        const context = this.textContext;
 
         if (text && x && y) {
             context.save();
@@ -1113,8 +1122,8 @@ export default class Renderer {
              */
 
             if (!(index in this.animatedTiles)) {
-                const tile = new Tile(id, index, this.map),
-                    position = this.map.indexToGridPosition(tile.index);
+                const tile = new Tile(id, index, this.map);
+                const position = this.map.indexToGridPosition(tile.index);
 
                 tile.setPosition(position);
 
@@ -1159,7 +1168,7 @@ export default class Renderer {
         )
             return;
 
-        const location = this.input.getCoords();
+        const location = this.input.getCoords()!;
 
         if (!(location.x === this.input.selectedX && location.y === this.input.selectedY)) {
             const isColliding = this.map.isColliding(location.x, location.y);
@@ -1176,7 +1185,7 @@ export default class Renderer {
      * Primordial Rendering functions
      */
 
-    forEachVisibleIndex(callback: (index: number) => void, offset: number): void {
+    forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y)) callback(this.map.gridPositionToIndex(x, y) - 1);
         }, offset);
@@ -1188,20 +1197,19 @@ export default class Renderer {
         this.forEachVisibleIndex((index) => {
             const indexData = this.map.data[index];
 
-            if (Array.isArray(indexData))
-                for (const i in indexData) callback(indexData[i] - 1, index);
+            if (Array.isArray(indexData)) for (const data of indexData) callback(data - 1, index);
             else if (!isNaN(this.map.data[index] - 1)) callback(this.map.data[index] - 1, index);
         }, offset);
     }
 
     forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        _.each(this.animatedTiles, (tile) => callback(tile));
+        _.each(this.animatedTiles, callback);
     }
 
     forEachVisibleEntity(callback: (entity: Entity) => void): void {
         if (!this.entities || !this.camera) return;
 
-        const grids = this.entities.grids;
+        const { grids } = this.entities;
 
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
@@ -1268,8 +1276,8 @@ export default class Renderer {
     }
 
     transition(duration: number, forward: boolean, callback: () => void): void {
-        const textCanvas = $('#textCanvas'),
-            hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
+        const textCanvas = $('#textCanvas');
+        const hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
         this.transitioning = true;
 
         this.transitionInterval = window.setInterval(() => {
@@ -1279,7 +1287,7 @@ export default class Renderer {
 
             if (hasThreshold()) {
                 clearInterval(this.transitionInterval);
-                this.transitionInterval = null;
+                this.transitionInterval = null!;
 
                 this.transitioning = false;
 
@@ -1329,11 +1337,11 @@ export default class Renderer {
     }
 
     loadStaticSprites(): void {
-        this.shadowSprite = this.entities.getSprite('shadow16');
+        this.shadowSprite = this.entities.getSprite('shadow16')!;
 
         if (!this.shadowSprite.loaded) this.shadowSprite.load();
 
-        this.sparksSprite = this.entities.getSprite('sparks');
+        this.sparksSprite = this.entities.getSprite('sparks')!;
 
         if (!this.sparksSprite.loaded) this.sparksSprite.load();
     }
@@ -1351,7 +1359,7 @@ export default class Renderer {
     }
 
     forEachContext(callback: (context: CanvasRenderingContext2D) => void): void {
-        _.each(this.contexts, (context) => callback(context));
+        _.each(this.contexts, callback);
     }
 
     forEachDrawingContext(callback: (context: CanvasRenderingContext2D) => void): void {
@@ -1359,11 +1367,11 @@ export default class Renderer {
     }
 
     forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
-        _.each(this.canvases, (canvas) => callback(canvas));
+        _.each(this.canvases, callback);
     }
 
     forEachLighting(callback: (lighting: RendererLighting) => void): void {
-        _.each(this.lightings, (lighting) => callback(lighting));
+        _.each(this.lightings, callback);
     }
 
     getX(index: number, width: number): number {
@@ -1395,7 +1403,7 @@ export default class Renderer {
     }
 
     parseObjects(objects: Pos[]): RectangleObject[] {
-        const parsedObjects = [];
+        const parsedObjects: RectangleObject[] = [];
 
         if (!objects) return parsedObjects;
 
@@ -1419,12 +1427,12 @@ export default class Renderer {
         relative: boolean,
         objects?: Pos[]
     ): void {
-        const light = new Lamp(this.getLightData(x, y, distance, diffuse, color)) as RendererLamp,
-            lighting = new Lighting({
-                light: light,
-                objects: this.parseObjects(objects)
-                // diffuse: light.diffuse
-            }) as RendererLighting;
+        const light = new Lamp(this.getLightData(x, y, distance, diffuse, color)) as RendererLamp;
+        const lighting = new Lighting({
+            light,
+            objects: this.parseObjects(objects!)
+            // diffuse: light.diffuse
+        }) as RendererLighting;
 
         light.origX = light.position.x;
         light.origY = light.position.y;
@@ -1450,10 +1458,10 @@ export default class Renderer {
     }
 
     removeNonRelativeLights(): void {
-        _.each(this.lightings, (lighting, i) => {
+        _.each(this.lightings, (lighting, index) => {
             if (!lighting.light.relative) {
-                this.lightings.splice(i, 1);
-                this.darkMask.lights.splice(i, 1);
+                this.lightings.splice(index, 1);
+                this.darkMask.lights.splice(index, 1);
             }
         });
 
@@ -1469,9 +1477,9 @@ export default class Renderer {
     ): Partial<Lamp> {
         return {
             position: new Vec2(x, y),
-            distance: distance,
-            diffuse: diffuse,
-            color: color,
+            distance,
+            diffuse,
+            color,
             radius: 0,
             samples: 2,
             roughness: 0,
@@ -1480,8 +1488,8 @@ export default class Renderer {
     }
 
     hasLighting(lighting: RendererLighting): boolean {
-        for (let i = 0; i < this.lightings.length; i++) {
-            const light = this.lightings[i].light;
+        for (let index = 0; index < this.lightings.length; index++) {
+            const { light } = this.lightings[index];
 
             if (
                 lighting.light.origX === light.origX &&
@@ -1528,7 +1536,7 @@ export default class Renderer {
         this.map = map;
     }
 
-    setEntities(entities: EntitiesController | null): void {
+    setEntities(entities: EntitiesController): void {
         this.entities = entities;
     }
 
@@ -1540,21 +1548,27 @@ export default class Renderer {
      * Getters
      */
 
-    getTargetBounds(x: number, y: number): Bounds {
-        const bounds: Partial<Bounds> = {},
-            tx = x || this.input.selectedX,
-            ty = y || this.input.selectedY;
+    getTargetBounds(tx: number, ty: number): Bounds {
+        const sx = tx || this.input.selectedX;
+        const sy = ty || this.input.selectedY;
 
-        bounds.x = (tx * this.tileSize - this.camera.x) * this.superScaling;
-        bounds.y = (ty * this.tileSize - this.camera.y) * this.superScaling;
-        bounds.width = this.tileSize * this.superScaling;
-        bounds.height = this.tileSize * this.superScaling;
-        bounds.left = bounds.x;
-        bounds.right = bounds.x + bounds.width;
-        bounds.top = bounds.y;
-        bounds.bottom = bounds.y + bounds.height;
+        const x = (sx * this.tileSize - this.camera.x) * this.superScaling;
+        const y = (sy * this.tileSize - this.camera.y) * this.superScaling;
+        const width = this.tileSize * this.superScaling;
+        const height = this.tileSize * this.superScaling;
 
-        return bounds as Bounds;
+        const bounds: Bounds = {
+            x,
+            y,
+            width,
+            height,
+            left: x,
+            right: x + width,
+            top: y,
+            bottom: y + height
+        };
+
+        return bounds;
     }
 
     getTileset(): unknown {
