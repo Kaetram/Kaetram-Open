@@ -27,6 +27,8 @@ export default class Page {
     }
 
     async getImageFormat(name: string): Promise<string> {
-        return `url("${(await import(`../../../img/sprites/item-${name}.png`)).default}")`;
+        const { default: image } = await import(`../../../img/sprites/item-${name}.png`);
+
+        return `url("${image}")`;
     }
 }

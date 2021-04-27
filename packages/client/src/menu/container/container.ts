@@ -20,8 +20,8 @@ export default class Container {
          */
 
         this.slots[index].load(
-            info.string,
-            info.count,
+            info.string!,
+            info.count!,
             info.ability,
             info.abilityLevel,
             info.edible,
@@ -35,7 +35,9 @@ export default class Container {
         return -1;
     }
 
-    async getImageFormat(name: string): Promise<string> {
-        return `url("${(await import(`../../../img/sprites/item-${name}.png`)).default}")`;
+    async getImageFormat(name: string | null): Promise<string> {
+        const { default: image } = await import(`../../../img/sprites/item-${name}.png`);
+
+        return `url("${image}")`;
     }
 }

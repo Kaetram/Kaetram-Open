@@ -14,7 +14,7 @@ export default class Pointer {
         this.element = element;
         this.type = type;
 
-        this.blinkInterval = null;
+        this.blinkInterval = null!;
         this.visible = true;
 
         this.x = -1;

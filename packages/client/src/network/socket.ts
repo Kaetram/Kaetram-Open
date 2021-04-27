@@ -17,7 +17,7 @@ export default class Socket {
     constructor(game: Game) {
         this.game = game;
         this.config = this.game.app.config;
-        this.connection = null;
+        this.connection = null!;
 
         this.listening = false;
 
@@ -31,7 +31,9 @@ export default class Socket {
      * The connection assumes it is a hub, if it's not,
      * we default to normal server connection.
      */
-    async getServer(callback: (data) => void): Promise<void> {
+    async getServer(
+        callback: (data: { host: string; port: number } | 'error') => void
+    ): Promise<void> {
         let url = `http://${this.config.ip}:${this.config.port}/server`;
 
         if (this.config.ssl) url = `https://${this.config.ip}/server`;

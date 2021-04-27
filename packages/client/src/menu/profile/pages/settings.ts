@@ -18,14 +18,14 @@ export default class Settings {
     sfx: JQuery<HTMLInputElement>;
     brightness: JQuery<HTMLInputElement>;
     info: JQuery;
-    soundCheck: JQuery;
-    cameraCheck: JQuery;
-    debugCheck: JQuery;
-    centreCheck: JQuery;
-    nameCheck: JQuery;
-    levelCheck: JQuery;
+    soundCheck: JQuery<HTMLInputElement>;
+    cameraCheck: JQuery<HTMLInputElement>;
+    debugCheck: JQuery<HTMLInputElement>;
+    centreCheck: JQuery<HTMLInputElement>;
+    nameCheck: JQuery<HTMLInputElement>;
+    levelCheck: JQuery<HTMLInputElement>;
     loaded: boolean;
-    value: number;
+    value!: number;
 
     // TODO - Hide crypto mining option on mobiles and completely disable it.
     constructor(game: Game) {
@@ -44,12 +44,12 @@ export default class Settings {
 
         this.info = $('#info');
 
-        this.soundCheck = $('#soundCheck');
-        this.cameraCheck = $('#cameraCheck');
-        this.debugCheck = $('#debugCheck');
-        this.centreCheck = $('#centreCheck');
-        this.nameCheck = $('#nameCheck');
-        this.levelCheck = $('#levelCheck');
+        this.soundCheck = $('#soundCheck input');
+        this.cameraCheck = $('#cameraCheck input');
+        this.debugCheck = $('#debugCheck input');
+        this.centreCheck = $('#centreCheck input');
+        this.nameCheck = $('#nameCheck input');
+        this.levelCheck = $('#levelCheck input');
 
         this.loaded = false;
 
@@ -77,100 +77,75 @@ export default class Settings {
 
         this.brightness.on('input', () => this.renderer.adjustBrightness(this.value));
 
-        this.volume.change(() => this.setMusicLevel(this.value));
+        this.volume.on('change', () => this.setMusicLevel(this.value));
 
-        this.sfx.change(() => this.setSFXLevel(this.value));
+        this.sfx.on('change', () => this.setSFXLevel(this.value));
 
-        this.brightness.change(() => this.setBrightness(this.value));
+        this.brightness.on('change', () => this.setBrightness(this.value));
 
-        this.soundCheck.on('click', () => {
-            const isActive = this.soundCheck.hasClass('active');
+        this.soundCheck.on('change', () => {
+            const isActive = this.soundCheck.prop('checked');
 
             this.setSound(!isActive);
 
             if (isActive) {
                 this.audio.reset(this.audio.song);
                 this.audio.song = null;
-
-                this.soundCheck.removeClass('active');
-            } else {
-                this.audio.update();
-
-                this.soundCheck.addClass('active');
-            }
+            } else this.audio.update();
         });
 
-        this.cameraCheck.on('click', () => {
-            const active = this.cameraCheck.hasClass('active');
+        this.cameraCheck.on('change', () => {
+            const active = this.cameraCheck.prop('checked');
 
-            if (active) this.renderer.camera.decenter();
-            else this.renderer.camera.center();
+            if (active) this.renderer.camera.center();
+            else this.renderer.camera.decenter();
 
-            this.cameraCheck.toggleClass('active');
-
-            this.setCamera(!active);
+            this.setCamera(active);
         });
 
-        this.debugCheck.on('click', () => {
-            const active = this.debugCheck.hasClass('active');
+        this.debugCheck.on('change', () => {
+            const active = this.debugCheck.prop('checked');
 
-            this.debugCheck.toggleClass('active');
+            this.renderer.debugging = active;
 
-            this.renderer.debugging = !active;
-
-            this.setDebug(!active);
+            this.setDebug(active);
         });
 
-        this.centreCheck.on('click', () => {
-            const active = this.centreCheck.hasClass('active');
+        this.centreCheck.on('change', () => {
+            const active = this.centreCheck.prop('checked');
 
-            this.centreCheck.toggleClass('active');
+            this.renderer.autoCentre = active;
 
-            this.renderer.autoCentre = !active;
-
-            this.setCentre(!active);
+            this.setCentre(active);
         });
 
-        this.nameCheck.on('click', () => {
-            const active = this.nameCheck.hasClass('active');
+        this.nameCheck.on('change', () => {
+            const active = this.nameCheck.prop('checked');
 
-            this.nameCheck.toggleClass('active');
+            this.renderer.drawNames = active;
 
-            this.renderer.drawNames = !active;
-
-            this.setName(!active);
+            this.setName(active);
         });
 
-        this.levelCheck.on('click', () => {
-            const active = this.levelCheck.hasClass('active');
+        this.levelCheck.on('change', () => {
+            const active = this.levelCheck.prop('checked');
 
-            this.levelCheck.toggleClass('active');
+            this.renderer.drawLevels = active;
 
-            this.renderer.drawLevels = !active;
-
-            this.setName(!active);
+            this.setName(active);
         });
 
-        if (this.getSound()) this.soundCheck.addClass('active');
+        this.soundCheck.prop('checked', this.getSound());
 
-        if (this.getCamera()) this.cameraCheck.addClass('active');
-        else {
-            this.camera.centered = false;
-            this.renderer.verifyCentration();
-        }
+        this.cameraCheck.prop('checked', this.getCamera());
 
-        if (this.getDebug()) {
-            this.debugCheck.addClass('active');
-            this.renderer.debugging = true;
-        }
+        this.debugCheck.prop('checked', this.getDebug());
 
-        if (this.getCentreCap()) this.centreCheck.addClass('active');
+        this.centreCheck.prop('checked', this.getCentreCap());
 
-        if (this.getName()) this.nameCheck.addClass('active');
-        else this.renderer.drawNames = false;
+        this.nameCheck.prop('checked', this.getName());
 
-        if (this.getLevel()) this.levelCheck.addClass('active');
-        else this.renderer.drawLevels = false;
+        this.levelCheck.prop('checked', this.getLevel());
 
         this.loaded = true;
     }
@@ -195,12 +170,12 @@ export default class Settings {
 
     clear(): void {
         this.button.off('click');
-        this.soundCheck.off('click');
-        this.cameraCheck.off('click');
-        this.debugCheck.off('click');
-        this.centreCheck.off('click');
-        this.nameCheck.off('click');
-        this.levelCheck.off('click');
+        this.soundCheck.off('change');
+        this.cameraCheck.off('change');
+        this.debugCheck.off('change');
+        this.centreCheck.off('change');
+        this.nameCheck.off('change');
+        this.levelCheck.off('change');
 
         this.brightness.off('change');
         this.volume.off('change');

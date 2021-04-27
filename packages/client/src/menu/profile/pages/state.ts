@@ -109,8 +109,8 @@ export default class State extends Page {
     }
 
     update(): void {
-        const weaponPower = this.player.weapon.power,
-            armourPower = this.player.armour.power;
+        const weaponPower = this.player.weapon.power;
+        const armourPower = this.player.armour.power;
 
         this.level.text(this.player.level);
         this.experience.text(this.player.experience);
@@ -122,7 +122,7 @@ export default class State extends Page {
     }
 
     forEachSlot(callback: (slot: JQuery) => void): void {
-        _.each(this.slots, (slot) => callback(slot));
+        _.each(this.slots, callback);
     }
 
     getScale(): number {
