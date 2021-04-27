@@ -1,94 +1,62 @@
-import { Lighting } from 'illuminated';
-
 import Character from '../character/character';
 import Entity from '../entity';
 
 export default class Projectile extends Entity {
-    name: string;
-    angled: boolean;
-    type: string;
-    owner: Entity;
-    startX: number;
-    startY: number;
-    special: number;
-    static: boolean;
-    dynamic: boolean;
-    speed: number;
-    lighting: Lighting;
+    public name = '';
 
-    target: Character;
+    public speed = 150;
+    public angle = 0;
 
-    impactCallback: () => void;
+    public readonly fadingDuration = 100;
 
-    constructor(id: string, kind: string, owner: Entity) {
+    public target!: Character;
+
+    private impactCallback?(): void;
+
+    public constructor(id: string, kind: string, public owner: Entity) {
         super(id, kind);
-
-        this.owner = owner;
-
-        this.name = '';
-
-        this.startX = -1;
-        this.startY = -1;
-
-        this.special = -1;
-
-        this.static = false;
-        this.dynamic = false;
-
-        this.speed = 150;
-
-        this.angle = 0;
-
-        this.lighting = null;
-
-        this.fadingDuration = 100;
     }
 
-    getId(): string {
+    public getId(): string {
         return this.id;
     }
 
-    impact(): void {
+    public impact(): void {
         this.impactCallback?.();
     }
 
-    setStart(x: number, y: number): void {
+    public setStart(x: number, y: number): void {
         this.setGridPosition(Math.floor(x / 16), Math.floor(y / 16));
-
-        this.startX = x;
-        this.startY = y;
     }
 
-    setTarget(target: Character): void {
+    public setTarget(target: Character): void {
         if (!target) return;
-
-        this.dynamic = true;
 
         this.target = target;
 
         this.updateAngle();
     }
 
-    getSpeed(): number {
+    public getSpeed(): number {
         return 1;
     }
 
-    hasPath(): boolean {
+    public hasPath(): boolean {
         return false;
     }
 
-    updateAngle(): void {
+    public updateAngle(): void {
         if (!this.target) return;
 
         this.angle =
             Math.atan2(this.target.y - this.y, this.target.x - this.x) * (180 / Math.PI) - 90;
     }
 
-    getAngle(): number {
+    public getAngle(): number {
         return (this.angle * Math.PI) / 180;
     }
 
-    onImpact(callback: () => void): void {
+    public onImpact(callback: () => void): void {
         this.impactCallback = callback;
     }
 }

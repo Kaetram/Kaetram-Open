@@ -15,9 +15,9 @@ export default class Updater {
     player: Player;
     renderer: Renderer;
     input: InputController;
-    sprites: SpritesController;
-    timeDifferential: number;
-    lastUpdate: Date;
+    sprites: SpritesController | null;
+    timeDifferential!: number;
+    lastUpdate!: Date;
 
     constructor(game: Game) {
         this.game = game;
@@ -103,8 +103,8 @@ export default class Updater {
                                 break;
                             }
                         }
-                } else if (entity.type === 'projectile') {
-                    const projectile = entity as Projectile;
+                } else if (entity instanceof Projectile) {
+                    const projectile = entity;
                     const mDistance = projectile.speed * this.timeDifferential;
                     const dx = projectile.target.x - entity.x;
                     const dy = projectile.target.y - entity.y;
@@ -128,8 +128,8 @@ export default class Updater {
     updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
-        const time = this.game.time,
-            dt = time - entity.fadingTime;
+        const { time } = this.game;
+        const dt = time - entity.fadingTime;
 
         if (dt > entity.fadingDuration) {
             entity.fading = false;
@@ -138,11 +138,11 @@ export default class Updater {
     }
 
     updateKeyboard(): void {
-        const player = this.game.player,
-            position = {
-                x: player.gridX,
-                y: player.gridY
-            };
+        const { player } = this.game;
+        const position = {
+            x: player.gridX,
+            y: player.gridY
+        };
 
         if (player.frozen) return;
 
@@ -167,7 +167,7 @@ export default class Updater {
     }
 
     updateInfos(): void {
-        this.game.info?.update(this.game.time);
+        this.game.info.update(this.game.time);
     }
 
     updateBubbles(): void {

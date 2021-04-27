@@ -1,13 +1,13 @@
 import Entity from '../entity';
 
 export default class Chest extends Entity {
-    constructor(id: string, kind: string) {
-        super(id, kind);
+    public readonly type = 'chest';
 
-        this.type = 'chest';
+    public constructor(id: string, kind: string) {
+        super(id, kind);
     }
 
-    idle(): void {
+    public idle(): void {
         this.setAnimation('idle_down', 150);
     }
 }

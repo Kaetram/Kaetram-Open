@@ -3,10 +3,10 @@ export default class Transition {
     endValue: number;
     startValue: number;
     duration: number;
-    startTime: number;
-    updateFunction: (interval: number) => void;
-    stopFunction: () => void;
-    count: number;
+    startTime!: number;
+    updateFunction?(interval: number): void;
+    stopFunction?(): void;
+    count!: number;
 
     constructor() {
         this.startValue = 0;
@@ -17,8 +17,8 @@ export default class Transition {
 
     start(
         currentTime: number,
-        updateFunction: (interval: number) => void,
-        stopFunction: () => void,
+        updateFunction: ((interval: number) => void) | undefined,
+        stopFunction: (() => void) | undefined,
         startValue: number,
         endValue: number,
         duration: number
@@ -43,8 +43,8 @@ export default class Transition {
 
             if (elapsed > this.duration) elapsed = this.duration;
 
-            const diff = this.endValue - this.startValue,
-                interval = Math.round(this.startValue + (diff / this.duration) * elapsed);
+            const diff = this.endValue - this.startValue;
+            const interval = Math.round(this.startValue + (diff / this.duration) * elapsed);
 
             if (elapsed === this.duration || interval === this.endValue) {
                 this.stop();
