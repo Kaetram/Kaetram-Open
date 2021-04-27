@@ -1,7 +1,8 @@
 import $ from 'jquery';
 
-import Game from '../../../game';
 import * as Modules from '@kaetram/common/src/modules';
+
+import Game from '../../../game';
 import Character from '../character';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
@@ -9,103 +10,106 @@ import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
-export type PartialPlayerData = Partial<Player> & {
+export type PlayerData = Player & {
     hitPoints: number[];
     mana: number[];
 };
 
 export default class Player extends Character {
-    rights: number;
-    level: number;
-    pvp: boolean;
-    pvpKills: number;
-    pvpDeaths: number;
-    attackRange: number;
-    orientation: number;
-    movementSpeed: number;
-    username: string;
-    password: string;
-    email: string;
-    avatar: unknown;
-    wanted: boolean;
-    experience: number;
-    nextExperience: number;
-    prevExperience: number;
-    prevX: number;
-    prevY: number;
-    direction: number;
-    moveLeft: boolean;
-    moveRight: boolean;
-    moveUp: boolean;
-    moveDown: boolean;
-    disableAction: boolean;
-    lastLogin: number;
-    armour: Armour;
-    pendant: Pendant;
-    ring: Ring;
-    boots: Boots;
-    poison: boolean;
-    experienceCallback: () => void;
-    updateArmourCallback: (string: string, power: number) => void;
-    updateWeaponCallback: (string: string, power: number) => void;
-    updateEquipmentCallback: (type: number, power: number) => void;
-    tempBlinkTimeout: number;
-    moving: boolean;
+    username = '';
+    password = '';
+    email = '';
+
+    avatar = null;
+    rights = 0;
+    wanted = false;
+
+    experience = -1;
+    nextExperience = -1;
+    prevExperience = -1;
+    level = -1;
+
+    pvpKills = -1;
+    pvpDeaths = -1;
+
+    hitPoints = -1;
+    maxHitPoints = -1;
+
+    mana = -1;
+    maxMana = -1;
+
+    prevX = 0;
+    prevY = 0;
+
+    direction = null;
+
+    pvp = false;
+
+    moveLeft = false;
+    moveRight = false;
+    moveUp = false;
+    moveDown = false;
+
+    disableAction = false;
+
+    attackRange!: number;
+    orientation!: number;
+    movementSpeed!: number;
+
+    lastLogin!: number | null;
+
+    armour!: Armour;
+    pendant!: Pendant;
+    ring!: Ring;
+    boots!: Boots;
+    poison!: boolean;
+
+    experienceCallback?(): void;
+    updateArmourCallback?(string: string, power?: number): void;
+    updateWeaponCallback?(string: string, power?: number): void;
+    updateEquipmentCallback?(type: number, power?: number): void;
+
+    tempBlinkTimeout!: number;
+    moving!: boolean;
 
     constructor() {
         super('-1', Modules.Types.Player.toString());
 
-        this.username = '';
-        this.password = '';
-        this.email = '';
-
-        this.avatar = null;
-
-        this.rights = 0;
-        this.wanted = false;
-        this.experience = -1;
-        this.nextExperience = -1;
-        this.prevExperience = -1;
-        this.level = -1;
-        this.pvpKills = -1;
-        this.pvpDeaths = -1;
-
-        this.hitPoints = -1;
-        this.maxHitPoints = -1;
-        this.mana = -1;
-        this.maxMana = -1;
-
-        this.prevX = 0;
-        this.prevY = 0;
-
-        this.direction = null;
-        this.pvp = false;
-
-        this.moveLeft = false;
-        this.moveRight = false;
-        this.moveUp = false;
-        this.moveDown = false;
-        this.disableAction = false;
-
         this.loadEquipment();
     }
 
-    load(data: PartialPlayerData): void {
-        this.setId(data.instance);
-        this.setName(data.username);
-        this.setGridPosition(data.x, data.y);
-        this.setPointsData(data.hitPoints, data.mana);
-        this.setExperience(data.experience, data.nextExperience, data.prevExperience);
+    load({
+        instance,
+        username,
+        x,
+        y,
+        hitPoints,
+        mana,
+        experience,
+        nextExperience,
+        prevExperience,
+        level,
+        lastLogin,
+        pvpKills,
+        pvpDeaths,
+        orientation,
+        movementSpeed
+    }: PlayerData): void {
+        this.setId(instance);
+        this.setName(username);
+        this.setGridPosition(x, y);
+        this.setPointsData(hitPoints, mana);
+        this.setExperience(experience, nextExperience, prevExperience);
 
-        this.level = data.level;
+        this.level = level;
 
-        this.lastLogin = data.lastLogin;
-        this.pvpKills = data.pvpKills;
-        this.pvpDeaths = data.pvpDeaths;
+        this.lastLogin = lastLogin;
+        this.pvpKills = pvpKills;
+        this.pvpDeaths = pvpDeaths;
 
-        this.orientation = data.orientation;
+        this.orientation = orientation;
 
-        this.movementSpeed = data.movementSpeed;
+        this.movementSpeed = movementSpeed;
 
         this.type = 'player';
     }
@@ -128,19 +132,19 @@ export default class Player extends Character {
     }
 
     loadEquipment(): void {
-        this.armour = null;
-        this.weapon = null;
-        this.pendant = null;
-        this.ring = null;
-        this.boots = null;
+        this.armour = null!;
+        this.weapon = null!;
+        this.pendant = null!;
+        this.ring = null!;
+        this.boots = null!;
     }
 
     isRanged(): boolean {
-        return this.weapon?.ranged;
+        return this.weapon?.ranged || false;
     }
 
     hasWeapon(): boolean {
-        return this.weapon ? this.weapon.exists() : false;
+        return this.weapon?.exists() || false;
     }
 
     setName(name: string): void {
@@ -186,12 +190,7 @@ export default class Player extends Character {
         this.experienceCallback?.();
     }
 
-    setPointsData(hitPointsData: number[], manaData: number[]): void {
-        const hitPoints = hitPointsData.shift(),
-            maxHitPoints = hitPointsData.shift(),
-            mana = manaData.shift(),
-            maxMana = manaData.shift();
-
+    setPointsData([hitPoints, maxHitPoints]: number[], [mana, maxMana]: number[]): void {
         this.setMaxHitPoints(maxHitPoints);
         this.setMaxMana(maxMana);
 
@@ -257,23 +256,23 @@ export default class Player extends Character {
     unequip(type: string): void {
         switch (type) {
             case 'armour':
-                this.armour.update('Cloth Armour', 'clotharmor', 1, -1, -1);
+                this.armour?.update('Cloth Armour', 'clotharmor', 1, -1, -1);
                 break;
 
             case 'weapon':
-                this.weapon.update(null, null, -1, -1, -1);
+                this.weapon?.update('', '', -1, -1, -1);
                 break;
 
             case 'pendant':
-                this.pendant.update(null, null, -1, -1, -1);
+                this.pendant?.update('', '', -1, -1, -1);
                 break;
 
             case 'ring':
-                this.ring.update(null, null, -1, -1, -1);
+                this.ring?.update('', '', -1, -1, -1);
                 break;
 
             case 'boots':
-                this.boots.update(null, null, -1, -1, -1);
+                this.boots?.update('', '', -1, -1, -1);
                 break;
         }
     }

@@ -3,7 +3,7 @@ import log from '../lib/log';
 
 export default class Overlay {
     game: Game;
-    currentOverlay: string;
+    currentOverlay: string | null;
     overlays: { [key: string]: HTMLImageElement };
 
     constructor(game: Game) {
@@ -23,7 +23,8 @@ export default class Overlay {
         const overlay = new Image();
 
         overlay.crossOrigin = 'Anonymous';
-        overlay.src = (await import(`../../img/overlays/${overlayName}`)).default;
+        const { default: image } = await import(`../../img/overlays/${overlayName}`);
+        overlay.src = image;
 
         overlay.addEventListener('load', () => log.debug(`Loaded ${overlayName}`));
 
@@ -31,11 +32,10 @@ export default class Overlay {
     }
 
     updateOverlay(overlay: string): void {
-        if (overlay in this.overlays) this.currentOverlay = overlay;
-        else this.currentOverlay = overlay;
+        this.currentOverlay = overlay in this.overlays ? overlay : overlay;
     }
 
-    getFog(): string {
+    getFog(): string | null {
         return this.currentOverlay;
     }
 }

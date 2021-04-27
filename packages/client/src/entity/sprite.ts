@@ -2,77 +2,76 @@ import spriteData from '../../data/sprites.json';
 import log from '../lib/log';
 import Animation from './animation';
 
-export type SpriteData = typeof spriteData[0];
+interface AnimationData {
+    [name: string]: {
+        length: number;
+        row: number;
+    };
+}
+
+export type SpriteData = typeof spriteData[0] & {
+    animations: AnimationData;
+};
 
 export interface Animations {
     [name: string]: Animation;
 }
 
 export default class Sprite {
-    sprite: SpriteData;
-    name: string;
-    id: string;
-    loaded: boolean;
-    loadHurt: boolean;
-    offsetX: number;
-    offsetY: number;
-    offsetAngle: number;
-    hurtSprite: {
-        loaded: boolean;
-        image?: HTMLCanvasElement;
-        offsetX?: number;
-        offsetY?: number;
-        width?: number;
-        height?: number;
-        type?: string;
-    };
-    image: HTMLImageElement;
-    filepath: string;
-    loadCallback: () => void;
-    animationData;
-    width: number;
-    height: number;
-    offfsetAngle: number;
-    idleSpeed: number;
-    hasDeathAnimation: boolean;
+    public id = this.sprite.id;
 
-    constructor(sprite: SpriteData) {
-        this.sprite = sprite;
+    public name!: string;
+    public type!: string;
 
-        this.id = sprite.id;
+    public loaded = false;
+    public loadHurt = false;
 
-        this.loaded = false;
-        this.loadHurt = false;
+    public offsetX = 0;
+    public offsetY = 0;
+    // private offsetAngle!: number;
 
-        this.offsetX = 0;
-        this.offsetY = 0;
-        this.offsetAngle = 0;
+    public hurtSprite = {
+        loaded: false
+    } as Sprite;
 
-        this.hurtSprite = {
-            loaded: false
-        };
+    public image!: HTMLImageElement | HTMLCanvasElement;
+    private filepath!: string;
 
-        // this.loadSprite();
-    }
+    private loadCallback?(): void;
 
-    load(): void {
+    public animationData!: AnimationData;
+
+    public width!: number;
+    public height!: number;
+
+    public idleSpeed!: number;
+    public hasDeathAnimation!: boolean;
+
+    public constructor(private sprite: SpriteData) {}
+
+    public load(): void {
         this.image = new Image();
-        this.image.crossOrigin = 'Anonymous';
-        this.image.src = this.filepath;
 
-        this.image.addEventListener('load', () => {
+        const { image, filepath } = this;
+
+        image.crossOrigin = 'Anonymous';
+        image.src = filepath;
+
+        image.addEventListener('load', () => {
+            const { loadHurt } = this;
+
             this.loaded = true;
 
-            if (this.loadHurt) this.createHurtSprite();
+            if (loadHurt) this.createHurtSprite();
 
             this.loadCallback?.();
         });
     }
 
-    async loadSprite(): Promise<void> {
-        const sprite = this.sprite;
+    public async loadSprite(): Promise<void> {
+        const { sprite, id } = this;
 
-        const { default: path } = await import(`../../img/sprites/${this.id}.png`);
+        const { default: path } = await import(`../../img/sprites/${id}.png`);
 
         this.filepath = path;
         this.animationData = sprite.animations;
@@ -82,30 +81,33 @@ export default class Sprite {
 
         this.offsetX = sprite.offsetX ?? -16;
         this.offsetY = sprite.offsetY ?? -16;
-        this.offfsetAngle = sprite.offsetAngle ?? 0;
+        // this.offsetAngle = sprite.offsetAngle ?? 0;
 
         this.idleSpeed = sprite.idleSpeed ?? 450;
     }
 
-    async update(): Promise<void> {
+    public async update(): Promise<void> {
         await this.loadSprite();
 
         this.load();
     }
 
-    createAnimations(): Animations {
+    public createAnimations(): Animations {
+        const { animationData, width, height } = this;
+
         const animations: Animations = {};
 
-        for (const name in this.animationData)
-            if (Object.prototype.hasOwnProperty.call(this.animationData, name)) {
-                if (name === 'death')
-                    // Check if sprite has a death animation
-                    this.hasDeathAnimation = true;
+        for (const name in animationData) {
+            if (!Object.prototype.hasOwnProperty.call(animationData, name)) continue;
 
-                const a = this.animationData[name];
+            if (name === 'death')
+                // Check if sprite has a death animation
+                this.hasDeathAnimation = true;
 
-                animations[name] = new Animation(name, a.length, a.row, this.width, this.height);
-            }
+            const { length, row } = animationData[name];
+
+            animations[name] = new Animation(name, length, row, width, height);
+        }
 
         return animations;
     }
@@ -113,13 +115,13 @@ export default class Sprite {
     /**
      * This is when an entity gets hit, they turn red then white.
      */
-    createHurtSprite(): void {
+    private createHurtSprite(): void {
         if (!this.loaded) this.load();
 
         if (this.hurtSprite.loaded) return;
 
         const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
+        const context = canvas.getContext('2d')!;
         let spriteData: ImageData;
 
         canvas.width = this.image.width;
@@ -145,14 +147,13 @@ export default class Sprite {
                 width: this.width,
                 height: this.height,
                 type: 'hurt'
-            };
+            } as Sprite;
         } catch (error) {
-            log.error('Could not load hurt sprite.');
-            log.error(error);
+            log.error('Could not load hurt sprite.', error);
         }
     }
 
-    onLoad(callback: () => void): void {
+    public onLoad(callback: () => void): void {
         this.loadCallback = callback;
     }
 }
