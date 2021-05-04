@@ -13,11 +13,13 @@ import World from '../game/world';
 import log from '../util/log';
 import config from '../../config';
 import Character from '../game/entity/character/character';
+import Entities from './entities';
 
 class Incoming {
     player: Player;
     connection: any;
     world: World;
+    entities: Entities;
     database: any;
     commands: any;
 
@@ -27,6 +29,7 @@ class Incoming {
         this.player = player;
         this.connection = this.player.connection;
         this.world = this.player.world;
+        this.entities = this.world.entities
         this.database = this.player.database;
         this.commands = new Commands(this.player);
 
@@ -247,7 +250,7 @@ class Incoming {
 
     handleWho(message: Array<string>) {
         _.each(message, (id: string) => {
-            let entity: any = this.world.getEntityByInstance(id);
+            let entity: any = this.entities.get(id);
 
             if (!entity || entity.dead) return;
 
@@ -399,7 +402,7 @@ class Incoming {
                     posY = message.shift(),
                     id = message.shift(),
                     hasTarget = message.shift(),
-                    entity = this.world.getEntityByInstance(id);
+                    entity = this.entities.get(id);
 
                 if (!this.player.moving) {
                     log.debug(`Did not receive movement start packet for ${this.player.username}.`);
@@ -437,7 +440,7 @@ class Incoming {
                 let instance = message.shift(),
                     entityX = message.shift(),
                     entityY = message.shift(),
-                    oEntity = this.world.getEntityByInstance(instance);
+                    oEntity = this.entities.get(instance);
 
                 if (!oEntity || (oEntity.x === entityX && oEntity.y === entityY)) return;
 
@@ -495,7 +498,7 @@ class Incoming {
 
         switch (opcode) {
             case Packets.TargetOpcode.Talk:
-                let entity = this.world.getEntityByInstance(instance);
+                let entity = this.entities.get(instance);
 
                 if (!entity || !this.player.isAdjacent(entity)) return;
 
@@ -513,7 +516,7 @@ class Incoming {
                 break;
 
             case Packets.TargetOpcode.Attack:
-                let target: any = this.world.getEntityByInstance(instance);
+                let target: any = this.entities.get(instance);
 
                 if (!target || target.dead || !this.canAttack(this.player, target)) return;
 
@@ -547,8 +550,8 @@ class Incoming {
 
         switch (opcode) {
             case Packets.CombatOpcode.Initiate:
-                let attacker: any = this.world.getEntityByInstance(message.shift()),
-                    target: any = this.world.getEntityByInstance(message.shift());
+                let attacker: any = this.entities.get(message.shift()),
+                    target: any = this.entities.get(message.shift());
 
                 if (
                     !target ||
@@ -579,13 +582,13 @@ class Incoming {
 
         switch (type) {
             case Packets.ProjectileOpcode.Impact:
-                let projectile: any = this.world.getEntityByInstance(message.shift()),
-                    target: any = this.world.getEntityByInstance(message.shift());
+                let projectile: any = this.entities.get(message.shift()),
+                    target: any = this.entities.get(message.shift());
 
                 if (!target || target.dead || !projectile) return;
 
                 this.world.handleDamage(projectile.owner, target, projectile.damage);
-                this.world.removeProjectile(projectile);
+                this.entities.remove(projectile);
 
                 if (target.combat.started || target.dead || target.type !== 'mob') return;
 
@@ -694,7 +697,7 @@ class Incoming {
                 (ability = iSlot.ability), (abilityLevel = iSlot.abilityLevel);
 
                 if (this.player.inventory.remove(id, count ? count : item.count, item.index))
-                    this.world.dropItem(
+                    this.entities.dropItem(
                         id,
                         count ? count : 1,
                         this.player.x,
@@ -797,7 +800,7 @@ class Incoming {
 
     handleTrade(message: Array<any>) {
         let opcode = message.shift(),
-            oPlayer = this.world.getEntityByInstance(message.shift());
+            oPlayer = this.entities.get(message.shift());
 
         if (!oPlayer || !opcode) return;
 
