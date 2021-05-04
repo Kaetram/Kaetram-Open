@@ -11,6 +11,9 @@ import World from '../game/world';
 import Area from './areas/area';
 import Entity from '../game/entity/entity';
 import Spawns from '../../data/spawns.json';
+import Mobs from '../util/mobs';
+import NPCs from '../util/npcs';
+import Items from '../util/items';
 
 import Areas from './areas/areas';
 import AreasIndex from './areas/index';
@@ -179,11 +182,14 @@ class Map {
 
         // Legacy static entities (from Tiled);
         _.each(map.staticEntities, (entity: any, tileIndex) => {
-            this.staticEntities.push({
+            let e = {
                 tileIndex: tileIndex,
                 string: entity.type,
-                roaming: entity.roaming
-            });
+                roaming: entity.roaming,
+                type: this.getEntityType(entity.type)
+            };
+
+            this.staticEntities.push(e);
         });
 
         _.each(Spawns, (data) => {
@@ -195,19 +201,28 @@ class Map {
                 roaming: data.roaming,
                 miniboss: data.miniboss,
                 achievementId: data.achievementId,
-                boss: data.boss
+                boss: data.boss,
+                type: this.getEntityType(data.string)
             });
         });
     }
 
-    indexToGridPosition(tileIndex: number) {
+    getEntityType(string: string) {
+        if (string in Mobs.Properties) return 'mob';
+        if (string in NPCs.Properties) return 'npc';
+        if (string in Items.Data) return 'item';
+
+        return null;
+    }
+
+    indexToGridPosition(tileIndex: number, offset = 0) {
         tileIndex -= 1;
 
         let x = this.getX(tileIndex + 1, this.width),
             y = Math.floor(tileIndex / this.width);
 
         return {
-            x: x,
+            x: x + offset,
             y: y
         };
     }

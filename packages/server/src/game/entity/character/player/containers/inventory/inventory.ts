@@ -43,7 +43,7 @@ class Inventory extends Container {
 
         this.owner.save();
 
-        if (item.instance) this.owner.world.removeItem(item);
+        if (item.instance) this.owner.world.entities.removeItem(item);
 
         return true;
     }
