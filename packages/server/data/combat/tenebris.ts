@@ -16,129 +16,111 @@ class Tenebris extends Combat {
         character.spawnDistance = 24;
         super(character);
 
-        const self = this;
+        this.illusions = [];
+        this.firstIllusionKilled = false;
 
-        self.illusions = [];
-        self.firstIllusionKilled = false;
-
-        self.lastIllusion = new Date().getTime();
-        self.respawnDelay = 95000;
+        this.lastIllusion = new Date().getTime();
+        this.respawnDelay = 95000;
 
         character.onDeath(() => {
-            if (self.isIllusion())
-                if (!self.firstIllusionKilled) self.spawnTenbris();
+            if (this.isIllusion())
+                if (!this.firstIllusionKilled) this.spawnTenbris();
                 else {
-                    self.removeIllusions();
+                    this.removeIllusions();
 
-                    self.reset();
+                    this.reset();
                 }
         });
 
-        if (!self.isIllusion()) self.forceTalk(null, 'Who dares summon Tenebris!');
+        if (!this.isIllusion()) this.forceTalk(null, 'Who dares summon Tenebris!');
     }
 
     reset() {
-        const self = this;
-
-        self.illusions = [];
-        self.firstIllusionKilled = false;
+        this.illusions = [];
+        this.firstIllusionKilled = false;
 
         setTimeout(() => {
             const offset = Utils.positionOffset(4);
 
-            self.world.spawnMob(105, 48 + offset.x, 338 + offset.y);
-        }, self.respawnDelay);
+            this.entities.spawnMob(105, 48 + offset.x, 338 + offset.y);
+        }, this.respawnDelay);
     }
 
     hit(attacker: Character, target: Character, hitInfo: any) {
-        const self = this;
+        if (this.isAttacked()) this.beginIllusionAttack();
 
-        if (self.isAttacked()) self.beginIllusionAttack();
-
-        if (self.canSpawn()) self.spawnIllusions();
+        if (this.canSpawn()) this.spawnIllusions();
 
         super.hit(attacker, target, hitInfo);
     }
 
     spawnTenbris() {
-        const self = this;
-
-        self.world.spawnMob(104, self.character.x, self.character.y);
+        this.entities.spawnMob(104, this.character.x, this.character.y);
     }
 
     spawnIllusions() {
-        const self = this;
+        this.illusions.push(this.entities.spawnMob(105, this.character.x + 1, this.character.y + 1));
+        this.illusions.push(this.entities.spawnMob(105, this.character.x - 1, this.character.y + 1));
 
-        self.illusions.push(self.world.spawnMob(105, self.character.x + 1, self.character.y + 1));
-        self.illusions.push(self.world.spawnMob(105, self.character.x - 1, self.character.y + 1));
-
-        _.each(self.illusions, (illusion: Mob) => {
+        _.each(this.illusions, (illusion: Mob) => {
             illusion.onDeath(() => {
-                if (self.isLast()) self.lastIllusion = new Date().getTime();
+                if (this.isLast()) this.lastIllusion = new Date().getTime();
 
-                self.illusions.splice(self.illusions.indexOf(illusion), 1);
+                this.illusions.splice(this.illusions.indexOf(illusion), 1);
             });
 
-            if (self.isAttacked()) self.beginIllusionAttack();
+            if (this.isAttacked()) this.beginIllusionAttack();
         });
 
-        self.character.setPosition(62, 343);
+        this.character.setPosition(62, 343);
 
-        self.world.push(Packets.PushOpcode.Regions, {
-            regionId: self.character.region,
+        this.world.push(Packets.PushOpcode.Regions, {
+            regionId: this.character.region,
             message: new Messages.Teleport({
-                id: self.character.instance,
-                x: self.character.x,
-                y: self.character.y,
+                id: this.character.instance,
+                x: this.character.x,
+                y: this.character.y,
                 withAnimation: true
             })
         });
     }
 
     removeIllusions() {
-        const self = this;
+        this.lastIllusion = 0;
 
-        self.lastIllusion = 0;
+        const listCopy = this.illusions.slice();
 
-        const listCopy = self.illusions.slice();
-
-        for (let i = 0; i < listCopy.length; i++) self.world.kill(listCopy[i]);
+        for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
     }
 
     beginIllusionAttack() {
-        const self = this;
+        if (!this.hasIllusions()) return;
 
-        if (!self.hasIllusions()) return;
-
-        _.each(self.illusions, (illusion: Mob) => {
-            const target = self.getRandomTarget();
+        _.each(this.illusions, (illusion: Mob) => {
+            const target = this.getRandomTarget();
 
             if (!illusion.hasTarget && target) illusion.combat.begin(target);
         });
     }
 
     getRandomTarget() {
-        const self = this;
-
-        if (self.isAttacked()) {
-            const keys = Object.keys(self.attackers),
-                randomAttacker = self.attackers[keys[Utils.randomInt(0, keys.length)]];
+        if (this.isAttacked()) {
+            const keys = Object.keys(this.attackers),
+                randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;
         }
 
-        if (self.character.hasTarget()) return self.character.target;
+        if (this.character.hasTarget()) return this.character.target;
 
         return null;
     }
 
     forceTalk(instance: string, message: any) {
-        const self = this;
+        if (!this.world) return;
 
-        if (!self.world) return;
-
-        self.world.push(Packets.PushOpcode.Regions, {
-            regionId: self.character.region,
+        this.world.push(Packets.PushOpcode.Regions, {
+            regionId: this.character.region,
             message: new Messages.NPC(Packets.NPCOpcode.Talk, {
                 id: instance,
                 text: message,

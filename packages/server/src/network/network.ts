@@ -9,9 +9,11 @@ import Utils from '../util/utils';
 import Connection from './connection';
 import config from '../../config';
 import SocketHandler from './sockethandler';
+import Entities from '../controllers/entities';
 
 class Network {
     world: World;
+    entities: Entities;
     database: MongoDB;
     socketHandler: SocketHandler;
     region: Region;
@@ -22,6 +24,7 @@ class Network {
 
     constructor(world: World) {
         this.world = world;
+        this.entities = world.entities;
         this.database = world.database;
         this.socketHandler = world.socketHandler;
         this.region = world.region;
@@ -134,7 +137,7 @@ class Network {
 
     pushToPlayers(players: any, message: any) {
         _.each(players, (instance: string) => {
-            this.pushToPlayer(this.world.getPlayerByInstance(instance), message);
+            this.pushToPlayer(this.entities.get(instance), message);
         });
     }
 
@@ -149,7 +152,7 @@ class Network {
 
         _.each(region.players, (instance: string) => {
             if (instance !== ignoreId)
-                this.pushToPlayer(this.world.getEntityByInstance(instance), message);
+                this.pushToPlayer(this.entities.get(instance), message);
         });
     }
 

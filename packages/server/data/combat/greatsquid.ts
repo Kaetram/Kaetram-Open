@@ -10,20 +10,16 @@ class GreatSquid extends Combat {
         character.spawnDistance = 15;
         super(character);
 
-        const self = this;
+        this.character = character;
 
-        self.character = character;
-
-        self.lastTerror = new Date().getTime();
+        this.lastTerror = new Date().getTime();
     }
 
     hit(character: Character, target: Character, hitInfo: any) {
-        const self = this;
-
-        if (self.canUseTerror) {
+        if (this.canUseTerror) {
             hitInfo.type = Modules.Hits.Stun;
 
-            self.lastTerror = new Date().getTime();
+            this.lastTerror = new Date().getTime();
         }
 
         super.hit(character, target, hitInfo);

@@ -145,7 +145,7 @@ class API {
 
         let players = {};
 
-        _.each(this.world.players, (player) => {
+        this.world.entities.forEachPlayer((player: Player) => {
             players[player.username] = this.getPlayerData(player);
         });
 

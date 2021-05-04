@@ -127,7 +127,7 @@ class Handler {
                     );
             }
 
-            this.world.removePlayer(this.player);
+            this.world.entities.removePlayer(this.player);
         });
 
         this.player.onTalkToNPC((npc: NPC) => {
