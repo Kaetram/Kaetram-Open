@@ -1,5 +1,5 @@
 {
-    "configBasedir": "./",
+    "configBasedir": ".",
     "defaultSeverity": "warning",
     "extends": [
         "stylelint-config-standard"
@@ -13,5 +13,9 @@
         "indentation": 4,
         "csstools/media-use-custom-media": true,
         "plugin/no-low-performance-animation-properties": null
-    }
+    },
+    "ignoreFiles": [
+        "**/*.html",
+        "**/*.ts"
+    ]
 }
