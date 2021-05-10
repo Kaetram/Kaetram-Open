@@ -10,9 +10,6 @@ class Regions {
     width: number;
     height: number;
 
-    zoneWidth: number;
-    zoneHeight: number;
-
     regionWidth: number;
     regionHeight: number;
 
@@ -23,9 +20,6 @@ class Regions {
 
         this.width = this.map.width;
         this.height = this.map.height;
-
-        this.zoneWidth = this.map.zoneWidth; // 25
-        this.zoneHeight = this.map.zoneHeight; // 20
 
         this.regionWidth = this.map.regionWidth;
         this.regionHeight = this.map.regionHeight;
@@ -144,7 +138,7 @@ class Regions {
     }
 
     regionIdFromPosition(x: number, y: number) {
-        return Math.floor(x / this.zoneWidth) + '-' + Math.floor(y / this.zoneHeight);
+        return Math.floor(x / this.regionWidth) + '-' + Math.floor(y / this.regionHeight);
     }
 
     regionIdToPosition(id: string) {
@@ -160,8 +154,8 @@ class Regions {
         const position = id.split('-');
 
         return {
-            x: parseInt(position[0]) * this.zoneWidth,
-            y: parseInt(position[1]) * this.zoneHeight
+            x: parseInt(position[0]) * this.regionWidth,
+            y: parseInt(position[1]) * this.regionHeight
         };
     }
 

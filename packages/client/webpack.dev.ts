@@ -1,14 +1,13 @@
 import { HotModuleReplacementPlugin } from 'webpack';
+import type { Configuration } from 'webpack';
 
-import config, { exclude, plugins, rules } from './webpack.common';
-import type { Config } from './webpack.common';
+import config, { plugins, rules } from './webpack.common';
 
 plugins.unshift(new HotModuleReplacementPlugin());
 
 rules.push({
     test: /\.s?[ac]ss$/i,
-    use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
-    exclude
+    use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
 });
 
 export default Object.assign(config, {
@@ -20,4 +19,4 @@ export default Object.assign(config, {
         port: 9000
     },
     plugins
-} as Config);
+} as Configuration);

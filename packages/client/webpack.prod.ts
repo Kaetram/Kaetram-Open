@@ -3,10 +3,11 @@ import PreloadWebpackPlugin from '@vue/preload-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { GenerateSW } from 'workbox-webpack-plugin';
 
-import { name } from 'kaetram/package.json';
+import type { Configuration } from 'webpack';
 
-import config, { env, exclude, maxSize, plugins, resolve, rules } from './webpack.common';
-import type { Config } from './webpack.common';
+import config, { maxSize, plugins, resolve, rules } from './webpack.common';
+
+import { name } from 'kaetram/package.json';
 
 plugins.push(
     new CleanWebpackPlugin(),
@@ -26,17 +27,15 @@ plugins.push(
 
 rules.push({
     test: /\.s?[ac]ss$/i,
-    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
-    exclude
+    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
 });
 
 export default Object.assign(config, {
     mode: 'production',
     devtool: 'source-map',
     output: {
-        publicPath: env.ASSET_PATH || '/',
         path: resolve('dist')
     },
     module: { rules },
     plugins
-} as Config);
+} as Configuration);
