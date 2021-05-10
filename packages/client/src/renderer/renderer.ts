@@ -150,10 +150,12 @@ export default class Renderer {
 
         this.context = this.entitiesCanvas.getContext('2d')!; // Entities
 
-        this.backContext = (!Detect.supportsWebGL()
-            ? this.background.getContext('2d')
-            : this.background.getContext('webgl') ||
-              this.background.getContext('experimental-webgl'))!;
+        this.backContext = (
+            !Detect.supportsWebGL()
+                ? this.background.getContext('2d')
+                : this.background.getContext('webgl') ||
+                  this.background.getContext('experimental-webgl')
+        )!;
 
         this.foreContext = this.foreground.getContext('2d')!; // Foreground
         this.overlayContext = this.overlay.getContext('2d')!; // Lighting
