@@ -151,15 +151,8 @@ export default class Connection {
                     break;
 
                 case Packets.EquipmentOpcode.Equip: {
-                    const {
-                        type,
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    } = info as Equipment;
+                    const { type, name, string, count, ability, abilityLevel, power } =
+                        info as Equipment;
 
                     this.game.player.setEquipment(
                         type,
