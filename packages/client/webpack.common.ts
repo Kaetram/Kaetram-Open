@@ -16,7 +16,7 @@ import type {
     WebpackPluginInstance
 } from 'webpack';
 
-export const env = dotenvParseVariables(dotEnvExtended.load()) as Record<string, string>;
+export const env = dotenvParseVariables(dotEnvExtended.load());
 
 export const exclude = /(node_modules|bower_components)/;
 
@@ -32,7 +32,7 @@ export const plugins: WebpackPluginInstance[] = [
     }),
     new CopyWebpackPlugin({
         patterns: ['static']
-    }),
+    }) as () => void,
     new HtmlWebpackPlugin({
         template: resolve('index.html'),
         minify: {
