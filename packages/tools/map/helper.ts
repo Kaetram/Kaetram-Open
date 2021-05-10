@@ -1,10 +1,10 @@
-#!/usr/bin/env ts-node-script
+#!/usr/bin/env -S yarn ts-node-script
 
 import world from '@kaetram/server/data/map/world.json';
 
-export default class Helper {
+class Helper {
     #width = world.width;
-    #height = world.height;
+    // #height = world.height;
 
     public constructor() {
         // Palm Tree Stump
@@ -26,23 +26,23 @@ export default class Helper {
         return y * this.#width + x;
     }
 
-    private indexToGridPosition(tileIndex: number): { x: number; y: number } {
-        tileIndex -= 1;
+    // private indexToGridPosition(tileIndex: number): { x: number; y: number } {
+    //     tileIndex -= 1;
 
-        const x = this.getX(tileIndex + 1, this.#width),
-            y = Math.floor(tileIndex / this.#height);
+    //     const x = this.getX(tileIndex + 1, this.#width),
+    //         y = Math.floor(tileIndex / this.#height);
 
-        return {
-            x: x,
-            y: y
-        };
-    }
+    //     return {
+    //         x: x,
+    //         y: y
+    //     };
+    // }
 
-    private getX(index: number, width: number): number {
-        if (index === 0) return 0;
+    // private getX(index: number, width: number): number {
+    //     if (index === 0) return 0;
 
-        return index % width === 0 ? width - 1 : (index % width) - 1;
-    }
+    //     return index % width === 0 ? width - 1 : (index % width) - 1;
+    // }
 }
 
-new Helper();
+export default new Helper();
