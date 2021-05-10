@@ -1,10 +1,10 @@
 {
     "name": "@kaetram/client",
     "scripts": {
-        "dev": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack serve --progress --config webpack.dev.ts",
-        "build": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack-cli --progress --config webpack.prod.ts",
+        "dev": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack serve --config webpack.dev.ts",
+        "build": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack-cli --config webpack.prod.ts",
         "start": "sirv dist -p 9000 --no-logs",
-        "lint": "stylelint \"**/*.scss\""
+        "lint": "stylelint **/*.scss"
     },
     "dependencies": {
         "gl-tiled": "^1.0.0",
@@ -49,7 +49,7 @@
         "postcss-loader": "^5.2.0",
         "postcss-syntax": "^0.36.2",
         "sass": "^1.32.12",
-        "sass-loader": "^11.0.1",
+        "sass-loader": "^11.1.0",
         "sirv-cli": "^1.0.11",
         "style-loader": "^2.0.0",
         "stylelint": "^13.13.1",

@@ -234,6 +234,13 @@ export default class App {
         $('input[type="range"]').on('input', (_e, input: HTMLInputElement) =>
             this.updateRange($(input))
         );
+
+        if (!this.config.debug)
+            $.ajax({
+                url: 'https://c6.patreon.com/becomePatronButton.bundle.js',
+                dataType: 'script',
+                async: true
+            });
     }
 
     public ready(): void {
@@ -248,8 +255,6 @@ export default class App {
         const { loggingIn, loaded, statusMessage, game } = this;
 
         if (loggingIn || !loaded || statusMessage || !this.verifyForm()) return;
-
-        this.loaded = false;
 
         this.toggleLogin(true);
         game.connect();
