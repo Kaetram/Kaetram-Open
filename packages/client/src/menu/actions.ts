@@ -16,10 +16,10 @@ export default class Actions {
     body: JQuery;
     drop: JQuery<HTMLDivElement>;
     dropInput: JQuery<HTMLInputElement>;
-    activeClass: string;
-    miscButton: JQuery;
-    trade: JQuery;
-    follow: JQuery;
+    activeClass: string | null;
+    miscButton: JQuery | null;
+    trade!: JQuery;
+    follow!: JQuery;
 
     constructor(menu: MenuController) {
         this.menu = menu;
@@ -36,8 +36,8 @@ export default class Actions {
     }
 
     load(): void {
-        const dropAccept = $('#dropAccept'),
-            dropCancel = $('#dropCancel');
+        const dropAccept = $('#dropAccept');
+        const dropCancel = $('#dropCancel');
 
         dropAccept.on('click', (event) => {
             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);
@@ -54,8 +54,8 @@ export default class Actions {
 
         if (data)
             this.body.css({
-                left: `${data.mouseX - this.body.width() / 2}px`,
-                top: `${data.mouseY}${this.body.height() / 2}px`
+                left: `${data.mouseX - this.body.width()! / 2}px`,
+                top: `${data.mouseY}${this.body.height()! / 2}px`
             });
 
         switch (this.activeClass) {
@@ -75,7 +75,7 @@ export default class Actions {
             case 'player': {
                 this.add(this.getFollowButton());
 
-                if (data.pvp) this.add(this.getAttackButton());
+                if (data!.pvp) this.add(this.getAttackButton());
 
                 break;
             }
@@ -112,10 +112,10 @@ export default class Actions {
         if (misc) this.miscButton = button;
     }
 
-    removeMisc(): void {
-        this.miscButton.remove();
-        this.miscButton = null;
-    }
+    // removeMisc(): void {
+    //     this.miscButton.remove();
+    //     this.miscButton = null;
+    // }
 
     reset(): void {
         const buttons = this.getButtons();

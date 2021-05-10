@@ -1,12 +1,17 @@
-import Map, { MapAnimations } from '../map/map';
+import Map from '../map/map';
+
+interface MapAnimation {
+    tileid: number;
+    duration: number;
+}
 
 export default class Tile {
     id: number;
     index: number;
     map: Map;
-    x: number;
-    y: number;
-    animationInfo: MapAnimations;
+    x!: number;
+    y!: number;
+    animationInfo: MapAnimation[];
     animationIndex: number;
     lastTime: number;
     canDraw: boolean;
