@@ -11,7 +11,7 @@
         "dev": "yarn packages dev",
         "start": "yarn packages start",
         "build": "yarn packages build",
-        "lint": "eslint \"./packages/**/*.ts\"",
+        "lint": "eslint packages/**/*.ts",
         "test": "yarn packages test",
         "helper": "yarn packages helper",
         "map": "yarn packages map"
@@ -37,7 +37,7 @@
         "typescript": "^4.2.4"
     },
     "workspaces": [
-        "./packages/*"
+        "packages/*"
     ],
     "resolutions": {
         "caniuse-lite": "latest"

@@ -255,8 +255,9 @@ export default class Inventory {
         if (!item || !slot) return;
 
         slot.count -= info.count;
+        let itemCount = slot.count.toString();
 
-        const itemCount = slot.count === 1 ? '' : slot.count.toString();
+        if (slot.count === 1) itemCount = '';
 
         item.find(`#itemCount${info.index}`).text(itemCount);
 
