@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node-script
+#!/usr/bin/env -S yarn ts-node-script
 
 import { each, isArray } from 'lodash';
 import io from 'socket.io-client';
@@ -120,10 +120,10 @@ export default class Bot {
     }
 
     private move(bot: Entity): void {
-        const currentX = bot.x,
-            currentY = bot.y,
-            newX = currentX + Utils.randomInt(-3, 3),
-            newY = currentY + Utils.randomInt(-3, 3);
+        const currentX = bot.x;
+        const currentY = bot.y;
+        const newX = currentX + Utils.randomInt(-3, 3);
+        const newY = currentY + Utils.randomInt(-3, 3);
 
         setTimeout(() => {
             // Movement Request
