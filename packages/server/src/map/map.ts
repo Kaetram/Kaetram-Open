@@ -7,22 +7,17 @@ import Regions from './regions';
 import Utils from '../util/utils';
 import Modules from '../util/modules';
 import Objects from '../util/objects';
-import PVPAreas from './areas/pvpareas';
-import MusicAreas from './areas/musicareas';
-import ChestAreas from './areas/chestareas';
-import OverlayAreas from './areas/overlayareas';
-import CameraAreas from './areas/cameraareas';
-import AchievementAreas from './areas/achievementareas';
 import World from '../game/world';
-import Area from './area';
+import Area from './areas/area';
 import Entity from '../game/entity/entity';
 import Spawns from '../../data/spawns.json';
 
+import Areas from './areas/areas';
+import AreasIndex from './areas/index';
+
 import log from '../util/log';
 
-let map: any;
-
-const mapDestination = path.resolve(__dirname, '../../data/map/world.json');
+import map from '../../data/map/world.json';
 
 class Map {
     world: World;
@@ -39,7 +34,6 @@ class Map {
     height: number;
 
     collisions: any;
-    chestAreas: any;
     chests: any;
     tilesets: any;
     lights: any;
@@ -55,13 +49,10 @@ class Map {
     rocks: any;
     rockIndexes: any;
 
-    zoneWidth: number;
-    zoneHeight: number;
-
     regionWidth: number;
     regionHeight: number;
 
-    areas: any;
+    areas: { [name: string]: Areas };
 
     staticEntities: any;
 
@@ -75,20 +66,10 @@ class Map {
 
         this.ready = false;
 
-        this.create();
         this.load();
 
         this.regions = new Regions(this);
         this.grids = new Grids(this);
-    }
-
-    create(jsonData?: any) {
-        try {
-            map = jsonData || JSON.parse(fs.readFileSync(mapDestination, {
-                encoding: 'utf8',
-                flag: 'r'
-            }));
-        } catch (e) { log.error('Could not create the map file.'); };
     }
 
     load() {
@@ -99,17 +80,16 @@ class Map {
         this.width = map.width;
         this.height = map.height;
         this.collisions = map.collisions;
-        this.chestAreas = map.chestAreas;
-        this.chests = map.chests;
+        this.chests = map.areas.chest;
 
         this.loadStaticEntities();
 
         this.tilesets = map.tilesets;
-        this.lights = map.lights;
+        this.lights = map.areas.lights;
         this.plateau = map.plateau;
         this.objects = map.objects;
         this.cursors = map.cursors;
-        this.warps = map.warps;
+        this.warps = map.areas.warps;
 
         // Lumberjacking
         this.trees = map.trees;
@@ -119,15 +99,12 @@ class Map {
         this.rocks = map.rocks;
         this.rockIndexes = map.rockIndexes;
 
-        this.zoneWidth = 25;
-        this.zoneHeight = 25;
-
         /**
          * These are temporarily hardcoded,
          * but we will use a dynamic approach.
          */
-        this.regionWidth = this.width / this.zoneWidth;
-        this.regionHeight = this.height / this.zoneHeight;
+        this.regionWidth = 35;
+        this.regionHeight = 25;
 
         this.checksum = Utils.getChecksum(JSON.stringify(map));
 
@@ -151,37 +128,22 @@ class Map {
     }
 
     loadAreas() {
-        /**
-         * The structure for the new this.areas is as follows:
-         *
-         * this.areas = {
-         *      pvpAreas = {
-         *          allPvpAreas
-         *      },
-         *
-         *      musicAreas = {
-         *          allMusicAreas
-         *      },
-         *
-         *      ...
-         * }
-         */
+        _.each(map.areas, (area: any, key: string) => {
+            if (!(key in AreasIndex)) return;
 
-        this.areas['PVP'] = new PVPAreas();
-        this.areas['Music'] = new MusicAreas();
-        this.areas['Chests'] = new ChestAreas(this.world);
-        this.areas['Overlays'] = new OverlayAreas();
-        this.areas['Cameras'] = new CameraAreas();
-        this.areas['Achievements'] = new AchievementAreas();
+            this.areas[key] = new AreasIndex[key](area, this.world);
+        });
     }
 
     loadDoors() {
         this.doors = {};
 
-        _.each(map.doors, (door: any) => {
+        _.each(map.areas.doors, (door: any) => {
+            if (!door.destination) return;
+
             let orientation: number;
 
-            switch (door.o) {
+            switch (door.orientation) {
                 case 'u':
                     orientation = Modules.Orientation.Up;
                     break;
@@ -199,16 +161,15 @@ class Map {
                     break;
             }
 
-            let index = this.gridPositionToIndex(door.x, door.y) + 1;
+            let index = this.gridPositionToIndex(door.x, door.y, 1),
+                destination = this.getDoorDestination(door);
+
+            if (!destination) return;
 
             this.doors[index] = {
-                x: door.tx,
-                y: door.ty,
-                orientation: orientation,
-                portal: door.p ? door.p : 0,
-                level: door.l,
-                achievement: door.a,
-                rank: door.r
+                x: destination.x,
+                y: destination.y,
+                orientation: destination.orientation
             };
         });
     }
@@ -251,8 +212,8 @@ class Map {
         };
     }
 
-    gridPositionToIndex(x: number, y: number) {
-        return y * this.width + x;
+    gridPositionToIndex(x: number, y: number, offset: number = 0) {
+        return y * this.width + x + offset;
     }
 
     getX(index: number, width: number) {
@@ -290,10 +251,10 @@ class Map {
 
     nearLight(light: any, x: number, y: number) {
         let diff = Math.round(light.distance / 16),
-            startX = light.x - this.zoneWidth - diff,
-            startY = light.y - this.zoneHeight - diff,
-            endX = light.x + this.zoneWidth + diff,
-            endY = light.y + this.zoneHeight + diff;
+            startX = light.x - this.regionWidth - diff,
+            startY = light.y - this.regionHeight - diff,
+            endX = light.x + this.regionWidth + diff,
+            endY = light.y + this.regionHeight + diff;
 
         return x > startX && y > startY && x < endX && y < endY;
     }
@@ -332,7 +293,7 @@ class Map {
     }
 
     getObject(x: number, y: number, data: any) {
-        let index = this.gridPositionToIndex(x, y) - 1,
+        let index = this.gridPositionToIndex(x, y, -1),
             tiles = this.data[index];
 
         if (tiles instanceof Array) for (let i in tiles) if (tiles[i] in data) return tiles[i];
@@ -358,11 +319,19 @@ class Map {
     }
 
     isDoor(x: number, y: number) {
-        return !!this.doors[this.gridPositionToIndex(x, y) + 1];
+        return !!this.doors[this.gridPositionToIndex(x, y, 1)];
     }
 
-    getDoorDestination(x: number, y: number) {
-        return this.doors[this.gridPositionToIndex(x, y) + 1];
+    getDoorByPosition(x: number, y: number) {
+        return this.doors[this.gridPositionToIndex(x, y, 1)];
+    }
+
+    getDoorDestination(door: any) {
+        for (let i in map.areas.doors)
+            if (map.areas.doors[i].id === door.destination)
+                return map.areas.doors[i];
+                
+        return null;
     }
 
     isValidPosition(x: number, y: number) {
@@ -416,12 +385,6 @@ class Map {
     }
 
     getTileset(tileIndex: number) {
-        /**
-         if (id > this.tilesets[idx].firstGID - 1 &&
-         id < this.tilesets[idx].lastGID + 1)
-            return this.tilesets[idx];
-         */
-
         for (let id in this.tilesets)
             if (this.tilesets.hasOwnProperty(id))
                 if (
@@ -438,15 +401,37 @@ class Map {
 
         if (!warpName) return null;
 
-        let warp = this.warps[warpName.toLowerCase()];
+        let warp = this.getWarpByName(warpName.toLowerCase());
+
+        if (!warp) return;
 
         warp.name = warpName;
 
         return warp;
     }
 
+    getWarpByName(name: string) {
+        console.log(this.warps);
+
+        for (let i in this.warps)
+            if (this.warps[i].name === name)
+                return _.cloneDeep(this.warps[i]);
+
+        return null;
+    }
+
+    getChestAreas(): Areas {
+        return this.areas['chests'];
+    }
+
     isReady(callback: Function) {
         this.readyCallback = callback;
+    }
+
+    forEachAreas(callback: (areas: Areas, key: string) => void) {
+        _.each(this.areas, (a: Areas, name: string) => {
+            callback(a, name);
+        })
     }
 }
 

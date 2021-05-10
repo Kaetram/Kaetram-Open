@@ -36,6 +36,12 @@ export default {
         };
     },
 
+    connectionCounter: 0,
+
+    getConnectionId() {
+        return '1' + this.random(1000) + this.connectionCounter++;
+    },
+
     /**
      * We are just using some incremental seeds to prevent ids/instances
      * from ending up with the same numbers/variables.
@@ -117,5 +123,18 @@ export default {
 
     getChecksum(data: any) {
         return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
+    },
+
+    /**
+     * Helper function to avoid repetitive instances of comparison between
+     * the unix epoch minus an event. Cleans up the code a bit.
+     * 
+     * @param lastEvent The event we are subtracting from current time to obtain how much
+     * time has passed.
+     * @param threshold The threshold for how much time has passed in order to return true. 
+     */
+
+    timePassed(lastEvent: number, threshold: number) {
+        return Date.now() - lastEvent < threshold;
     }
 };
