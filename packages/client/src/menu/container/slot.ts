@@ -1,11 +1,11 @@
 export default class Slot {
     index: number;
-    string: string;
+    string: string | null;
     count: number;
-    ability: number;
-    abilityLevel: number;
-    edible: boolean;
-    equippable: boolean;
+    ability?: number;
+    abilityLevel?: number;
+    edible?: boolean;
+    equippable?: boolean;
 
     constructor(index: number) {
         this.index = index;
@@ -20,10 +20,10 @@ export default class Slot {
     }
 
     load(
-        string: string,
+        string: string | null,
         count: number,
-        ability: number,
-        abilityLevel: number,
+        ability?: number,
+        abilityLevel?: number,
         edible?: boolean,
         equippable?: boolean
     ): void {
