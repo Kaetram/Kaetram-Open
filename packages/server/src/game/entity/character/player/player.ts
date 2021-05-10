@@ -38,6 +38,7 @@ import Warp from './warp';
 import Doors from './doors';
 import Friends from './friends';
 import config from '../../../../../config';
+import Entities from '../../../../controllers/entities';
 
 class Player extends Character {
     public world: World;
@@ -48,6 +49,7 @@ class Player extends Character {
 
     public map: Map;
     public regions: Regions;
+    public entities: Entities;
     public globalObjects: GlobalObjects;
 
     public incoming: Incoming;
@@ -177,6 +179,7 @@ class Player extends Character {
 
         this.map = world.map;
         this.regions = world.map.regions;
+        this.entities = world.entities;
         this.globalObjects = world.globalObjects;
 
         this.incoming = new Incoming(this);
@@ -482,7 +485,7 @@ class Player extends Character {
          * Send player data to client here
          */
 
-        this.world.addPlayer(this);
+        this.entities.addPlayer(this);
 
         this.send(new Messages.Welcome(info));
     }
@@ -663,7 +666,7 @@ class Player extends Character {
     }
 
     isInvisible(instance: string) {
-        let entity = this.world.getEntityByInstance(instance);
+        let entity = this.entities.get(instance);
 
         if (!entity) return false;
 

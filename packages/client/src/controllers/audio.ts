@@ -155,6 +155,7 @@ export default class AudioController {
 
         if (song) {
             if (game.renderer.mobile) this.reset(this.song);
+
             else this.fadeSongOut();
 
             if (song.name in music && !music[song.name as Music]) {

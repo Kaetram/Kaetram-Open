@@ -25,7 +25,6 @@ export default class Settings {
     nameCheck: JQuery<HTMLInputElement>;
     levelCheck: JQuery<HTMLInputElement>;
     loaded: boolean;
-    value!: number;
 
     // TODO - Hide crypto mining option on mobiles and completely disable it.
     constructor(game: Game) {
@@ -59,93 +58,103 @@ export default class Settings {
     load(): void {
         if (this.loaded) return;
 
-        this.volume.val(this.getMusicLevel());
-        this.sfx.val(this.getSFXLevel());
-        this.brightness.val(this.getBrightness());
+        const {
+            volume,
+            sfx,
+            brightness,
+            game,
+            renderer,
+            button,
+            soundCheck,
+            audio,
+            cameraCheck,
+            debugCheck,
+            centreCheck,
+            nameCheck,
+            levelCheck
+        } = this;
 
-        this.game.app.updateRange(this.volume);
-        this.game.app.updateRange(this.sfx);
-        this.game.app.updateRange(this.brightness);
+        volume.val(this.getMusicLevel());
+        sfx.val(this.getSFXLevel());
+        brightness.val(this.getBrightness());
 
-        this.renderer.adjustBrightness(this.getBrightness());
+        game.app.updateRange(volume);
+        game.app.updateRange(sfx);
+        game.app.updateRange(brightness);
 
-        this.button.on('click', () => this.open());
+        renderer.adjustBrightness(this.getBrightness());
 
-        this.volume.on('input', () => {
-            if (this.audio.song) this.audio.song.volume = this.value / 100;
-        });
+        button.on('click', () => this.open());
 
-        this.brightness.on('input', () => this.renderer.adjustBrightness(this.value));
+        volume.on('input', () => this.setMusicLevel(volume.val() as number));
 
-        this.volume.on('change', () => this.setMusicLevel(this.value));
+        sfx.on('input', () => this.setSFXLevel(sfx.val() as number));
 
-        this.sfx.on('change', () => this.setSFXLevel(this.value));
+        brightness.on('input', () => this.setBrightness(brightness.val() as number));
 
-        this.brightness.on('change', () => this.setBrightness(this.value));
+        soundCheck.on('input', () => {
+            const isActive = soundCheck.prop('checked');
 
-        this.soundCheck.on('change', () => {
-            const isActive = this.soundCheck.prop('checked');
-
-            this.setSound(!isActive);
+            this.setSound(isActive);
 
             if (isActive) {
-                this.audio.reset(this.audio.song);
-                this.audio.song = null;
-            } else this.audio.update();
+                audio.reset(audio.song);
+                audio.song = null;
+            } else audio.update();
         });
 
-        this.cameraCheck.on('change', () => {
-            const active = this.cameraCheck.prop('checked');
+        cameraCheck.on('input', () => {
+            const active = cameraCheck.prop('checked');
 
-            if (active) this.renderer.camera.center();
-            else this.renderer.camera.decenter();
+            if (active) renderer.camera.center();
+            else renderer.camera.decenter();
 
             this.setCamera(active);
         });
 
-        this.debugCheck.on('change', () => {
-            const active = this.debugCheck.prop('checked');
+        debugCheck.on('input', () => {
+            const active = debugCheck.prop('checked');
 
-            this.renderer.debugging = active;
+            renderer.debugging = active;
 
             this.setDebug(active);
         });
 
-        this.centreCheck.on('change', () => {
-            const active = this.centreCheck.prop('checked');
+        centreCheck.on('input', () => {
+            const active = centreCheck.prop('checked');
 
-            this.renderer.autoCentre = active;
+            renderer.autoCentre = active;
 
             this.setCentre(active);
         });
 
-        this.nameCheck.on('change', () => {
-            const active = this.nameCheck.prop('checked');
+        nameCheck.on('input', () => {
+            const active = nameCheck.prop('checked');
 
-            this.renderer.drawNames = active;
-
-            this.setName(active);
-        });
-
-        this.levelCheck.on('change', () => {
-            const active = this.levelCheck.prop('checked');
-
-            this.renderer.drawLevels = active;
+            renderer.drawNames = active;
 
             this.setName(active);
         });
 
-        this.soundCheck.prop('checked', this.getSound());
+        levelCheck.on('input', () => {
+            const active = levelCheck.prop('checked');
 
-        this.cameraCheck.prop('checked', this.getCamera());
+            renderer.drawLevels = active;
 
-        this.debugCheck.prop('checked', this.getDebug());
+            this.setName(active);
+        });
 
-        this.centreCheck.prop('checked', this.getCentreCap());
+        soundCheck.prop('checked', this.getSound());
 
-        this.nameCheck.prop('checked', this.getName());
+        cameraCheck.prop('checked', this.getCamera());
 
-        this.levelCheck.prop('checked', this.getLevel());
+        debugCheck.prop('checked', this.getDebug());
+
+        centreCheck.prop('checked', this.getCentreCap());
+
+        nameCheck.prop('checked', this.getName());
+
+        levelCheck.prop('checked', this.getLevel());
 
         this.loaded = true;
     }
@@ -170,21 +179,26 @@ export default class Settings {
 
     clear(): void {
         this.button.off('click');
-        this.soundCheck.off('change');
-        this.cameraCheck.off('change');
-        this.debugCheck.off('change');
-        this.centreCheck.off('change');
-        this.nameCheck.off('change');
-        this.levelCheck.off('change');
 
-        this.brightness.off('change');
-        this.volume.off('change');
-        this.sfx.off('change');
+        this.soundCheck.off('input');
+        this.cameraCheck.off('input');
+        this.debugCheck.off('input');
+        this.centreCheck.off('input');
+        this.nameCheck.off('input');
+        this.levelCheck.off('input');
+
+        this.brightness.off('input');
+        this.volume.off('input');
+        this.sfx.off('input');
     }
 
     setMusicLevel(musicLevel: number): void {
-        this.storage.data.settings.music = musicLevel;
-        this.storage.save();
+        const { audio, storage } = this;
+
+        if (audio.song) audio.song.volume = musicLevel / 100;
+
+        storage.data.settings.music = musicLevel;
+        storage.save();
     }
 
     setSFXLevel(sfxLevel: number): void {
@@ -193,6 +207,8 @@ export default class Settings {
     }
 
     setBrightness(brightness: number): void {
+        this.renderer.adjustBrightness(brightness);
+
         this.storage.data.settings.brightness = brightness;
         this.storage.save();
     }
