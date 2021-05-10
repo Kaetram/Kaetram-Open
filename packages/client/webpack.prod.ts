@@ -5,12 +5,8 @@ import { GenerateSW } from 'workbox-webpack-plugin';
 
 import { name } from 'kaetram/package.json';
 
-import type { Compiler } from 'webpack';
-
 import config, { env, exclude, maxSize, plugins, resolve, rules } from './webpack.common';
 import type { Config } from './webpack.common';
-
-type Plugin = (compiler: Compiler) => void;
 
 plugins.push(
     new CleanWebpackPlugin(),
@@ -19,7 +15,7 @@ plugins.push(
         include: 'allAssets',
         fileWhitelist: [/\.woff$/i]
     }),
-    new MiniCssExtractPlugin() as Plugin,
+    new MiniCssExtractPlugin() as () => void,
     new GenerateSW({
         cacheId: name,
         maximumFileSizeToCacheInBytes: maxSize,
