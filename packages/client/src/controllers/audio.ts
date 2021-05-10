@@ -105,7 +105,7 @@ export default class AudioController {
     public async play(type: Modules.AudioTypes, name: Audio): Promise<void> {
         const { game, sounds } = this;
 
-        if (!this.isEnabled() || game.player?.dead) return;
+        if (!this.isEnabled() || game.player.dead) return;
 
         if (isSafari()) return; // ?
 
@@ -154,7 +154,8 @@ export default class AudioController {
         const song = this.getMusic(newSong);
 
         if (song) {
-            if (game.renderer?.mobile) this.reset(this.song);
+            if (game.renderer.mobile) this.reset(this.song);
+
             else this.fadeSongOut();
 
             if (song.name in music && !music[song.name as Music]) {
@@ -167,7 +168,7 @@ export default class AudioController {
             }
 
             this.play(Modules.AudioTypes.Music, song.name);
-        } else if (game.renderer?.mobile) this.reset(this.song);
+        } else if (game.renderer.mobile) this.reset(this.song);
         else this.fadeSongOut();
     }
 
@@ -278,6 +279,6 @@ export default class AudioController {
     }
 
     private isEnabled(): boolean | undefined {
-        return this.game.storage?.data.settings.soundEnabled;
+        return this.game.storage.data.settings.soundEnabled;
     }
 }

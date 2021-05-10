@@ -13,6 +13,14 @@ interface ShopMoveInfo {
     price: number;
 }
 
+interface ShopData {
+    id: number;
+    strings: string[];
+    names: string[];
+    counts: number[];
+    prices: number[];
+}
+
 export default class Shop {
     game: Game;
     body: JQuery;
@@ -26,10 +34,10 @@ export default class Shop {
     player: Player;
     menu: MenuController;
     container: Container;
-    data;
+    data: ShopData;
     openShop: number;
-    items;
-    counts;
+    items: [];
+    counts: [];
     close: JQuery;
 
     constructor(game: Game, menu: MenuController) {
@@ -56,8 +64,8 @@ export default class Shop {
         this.player = game.player;
         this.menu = menu;
 
-        this.container = null;
-        this.data = null;
+        this.container = null!;
+        this.data = null!;
 
         this.openShop = -1;
 
@@ -96,9 +104,9 @@ export default class Shop {
     }
 
     async move(info: ShopMoveInfo): Promise<void> {
-        const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
-            slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`),
-            slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
+        const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`);
+        const slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`);
+        const slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
 
         this.sellSlot.css({
             backgroundImage: slotImage.css('background-image'),
@@ -150,7 +158,7 @@ export default class Shop {
         this.update(this.data);
     }
 
-    update(data: { strings: string[] }): void {
+    update(data: ShopData): void {
         this.reset();
 
         this.container = new Container(data.strings.length);
@@ -163,29 +171,29 @@ export default class Shop {
 
     async load(): Promise<void> {
         for (let i = 0; i < this.container.size; i++) {
-            const shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`),
-                string = this.data.strings[i],
-                name = this.data.names[i],
-                count = this.data.counts[i],
-                price = this.data.prices[i];
+            const shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`);
+            const string = this.data.strings[i];
+            const name = this.data.names[i];
+            const count = this.data.counts[i];
+            const price = this.data.prices[i];
 
             if (!string || !name || !count) continue;
 
-            const itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`),
-                itemCount = $(`<div id="shopItemCount${i}" class="shopItemCount"></div>`),
-                itemPrice = $(`<div id="shopItemPrice${i}" class="shopItemPrice"></div>`),
-                itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`),
-                itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
+            const itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`);
+            const itemCount = $(`<div id="shopItemCount${i}" class="shopItemCount"></div>`);
+            const itemPrice = $(`<div id="shopItemPrice${i}" class="shopItemPrice"></div>`);
+            const itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`);
+            const itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
 
             itemImage.css('background-image', await this.container.getImageFormat(string));
-            itemCount.html(count);
+            itemCount.html(count.toString());
             itemPrice.html(`${price}g`);
             itemName.html(name);
             itemBuy.html('Buy');
 
             this.container.setSlot(i, {
-                string: string,
-                count: count
+                string,
+                count
             });
 
             // Bind the itemBuy to the local buy function.
@@ -200,12 +208,12 @@ export default class Shop {
             this.getShopList().append(listItem);
         }
 
-        const inventoryItems = this.menu.bank.getInventoryList(),
-            inventorySize = this.menu.inventory.getSize();
+        const inventoryItems = this.menu.bank.getInventoryList();
+        const inventorySize = this.menu.inventory.getSize();
 
         for (let j = 0; j < inventorySize; j++) {
-            const item = $(inventoryItems[j]).clone(),
-                slot = item.find(`#bankInventorySlot${j}`);
+            const item = $(inventoryItems[j]).clone();
+            const slot = item.find(`#bankInventorySlot${j}`);
 
             slot.attr('id', `shopInventorySlot${j}`);
 
@@ -219,7 +227,7 @@ export default class Shop {
         this.items = [];
         this.counts = [];
 
-        this.container = null;
+        this.container = null!;
 
         this.getShopList().empty();
         this.getInventoryList().empty();
