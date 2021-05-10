@@ -130,7 +130,6 @@ export default class App {
         rememberMe.on('change', () => {
             const { game } = this;
 
-        this.rememberMe.on('input', () => {
             if (!game.storage) return;
 
             const active = rememberMe.prop('checked');
