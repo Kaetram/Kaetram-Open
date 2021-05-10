@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node-script
+#!/usr/bin/env -S yarn ts-node-script
 
 import fs from 'fs';
 import path from 'path';
