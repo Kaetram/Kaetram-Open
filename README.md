@@ -55,14 +55,15 @@ the server.
 
 #### NOTE: Node.js
 
-> You need to use a Node.js version greater than or equal to `12.0.0` to have the most stable
+> You need to use a Node.js version greater than or equal to `v12.x`, following the
+> [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases/), to have the most stable
 > experience when developing/experimenting with Kaetram. Older versions would not work with our
-> current dependencies.
+> current package manager and dependencies.
 
 #### NOTE: MongoDB
 
 > MongoDB is not a requirement for Kaetram to run, but you can store and save user data if you
-> install it, so you can run an online environment with all the features enabled. To do this, see
+> install it and run an online environment with all the features enabled. To do this, see
 > [Configuration](#configuration), and set `OFFLINE_MODE=false` in the
 > [server configuration](packages/server/.env). _If you do choose to install MongoDB, a user is not
 > necessary, but you can enable authentication with the `MONGODB_AUTH` setting._
@@ -212,7 +213,8 @@ Open Collective &ndash; <https://opencollective.com/kaetram>
 For all inquiries about purchasing a different license or commission work, please contact
 **@Vanity** on [Discord][discord].
 
-This project is distributed under the **Mozilla Public License Version 2.0**. See
+This project is distributed under the
+**[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See
 [`LICENSE`][license] for more information.
 
 [license]: LICENSE 'Project License'
