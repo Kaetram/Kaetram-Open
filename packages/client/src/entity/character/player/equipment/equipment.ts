@@ -1,51 +1,38 @@
 export default class Equipment {
-    name: string;
-    string: string;
-    count: number;
-    ability: number;
-    abilityLevel: number;
-    power: number;
-    type: number;
+    public type!: number;
 
     constructor(
-        name: string,
-        string: string,
-        count: number,
-        ability: number,
-        abilityLevel: number,
-        power: number
-    ) {
-        this.name = name;
-        this.string = string;
-        this.count = count;
-        this.ability = ability;
-        this.abilityLevel = abilityLevel;
-        this.power = power || 0;
-    }
+        public name: string,
+        public string: string,
+        public count: number,
+        public ability: number,
+        public abilityLevel: number,
+        public power: number | undefined = 0
+    ) {}
 
-    exists(): boolean {
+    public exists(): boolean {
         return this.name !== null && this.name !== 'null';
     }
 
-    getName(): string {
-        return this.name;
-    }
+    // getName(): string {
+    //     return this.name;
+    // }
 
-    getString(): string {
+    public getString(): string {
         return this.string;
     }
 
-    getCount(): number {
-        return this.count;
-    }
+    // getCount(): number {
+    //     return this.count;
+    // }
 
-    getAbility(): number {
-        return this.ability;
-    }
+    // getAbility(): number {
+    //     return this.ability;
+    // }
 
-    getAbilityLevel(): number {
-        return this.abilityLevel;
-    }
+    // getAbilityLevel(): number {
+    //     return this.abilityLevel;
+    // }
 
     update(
         name: string,

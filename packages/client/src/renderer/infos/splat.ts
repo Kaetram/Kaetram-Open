@@ -12,9 +12,9 @@ export default class Splat {
     speed: number;
     updateSpeed: number;
     duration: number;
-    fill: string;
-    stroke: string;
-    destroyCallback: (id: string) => void;
+    fill!: string;
+    stroke!: string;
+    destroyCallback?(id: string): void;
 
     constructor(
         id: string,

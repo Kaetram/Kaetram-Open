@@ -179,6 +179,7 @@ export default class Settings {
 
     clear(): void {
         this.button.off('click');
+
         this.soundCheck.off('input');
         this.cameraCheck.off('input');
         this.debugCheck.off('input');

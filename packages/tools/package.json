@@ -12,7 +12,7 @@
         "@kaetram/common": "workspace:packages/common",
         "@kaetram/server": "workspace:packages/server",
         "@types/lodash": "^4.14.168",
-        "@types/node": "^14.14.39",
+        "@types/node": "^15.0.2",
         "@types/socket.io-client": "^1.4.36",
         "ts-node": "^9.1.1",
         "tslib": "^2.2.0",

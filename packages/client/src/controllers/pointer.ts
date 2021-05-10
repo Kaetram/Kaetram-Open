@@ -18,16 +18,18 @@ export default class PointerController {
 
     private container = $('#bubbles');
 
-    private camera!: Camera | undefined;
+    private camera?: Camera | null;
 
     public constructor(private game: Game) {}
 
     public create(id: string, type: Modules.Pointers, name?: string): void {
-        if (id in this.pointers) return;
+        const { pointers, container } = this;
+
+        if (id in pointers) return;
 
         switch (type) {
             case Modules.Pointers.Button:
-                this.pointers[id] = new Pointer(id, $(`#${name}`), type);
+                pointers[id] = new Pointer(id, $(`#${name}`), type);
 
                 break;
 
@@ -36,9 +38,9 @@ export default class PointerController {
 
                 this.setSize(element);
 
-                this.container.append(element);
+                container.append(element);
 
-                this.pointers[id] = new Pointer(id, element, type);
+                pointers[id] = new Pointer(id, element, type);
 
                 break;
             }
@@ -49,12 +51,12 @@ export default class PointerController {
         _.each(this.pointers, ({ type, x, y, element }) => {
             switch (type) {
                 case Modules.Pointers.Relative: {
-                    const scale = this.getScale(),
-                        offsetX = 0,
-                        offsetY = 0;
+                    const scale = this.getScale();
+
+                    const offsetX = 0;
+                    const offsetY = 0;
 
                     element.css({
-                        /* stylelint-disable */
                         left: `${x * scale - offsetX}px`,
                         top: `${y * scale - offsetY}px`
                     });
@@ -90,19 +92,21 @@ export default class PointerController {
     private set(pointer: Pointer, posX: number, posY: number): void {
         this.updateCamera();
 
-        if (!this.camera) return;
+        const { camera, game, scale } = this;
+
+        if (!camera) return;
 
         const { element } = pointer;
-        const { canvasWidth, canvasHeight } = this.game.renderer as Renderer;
+        const { canvasWidth, canvasHeight } = game.renderer;
 
-        const tileSize = 48, // 16 * this.scale
-            x = (posX - this.camera.x) * this.scale,
-            width = parseInt(element.css('width') + 24),
-            offset = width / 2 - tileSize / 2;
+        const tileSize = 48; // 16 * scale
+        const x = (posX - camera.x) * scale;
+        const width = parseInt(element.css('width') + 24);
+        const offset = width / 2 - tileSize / 2;
 
-        const y = (posY - this.camera.y) * this.scale - tileSize;
-        const outX = x / canvasWidth,
-            outY = y / canvasHeight;
+        const y = (posY - camera.y) * scale - tileSize;
+        const outX = x / canvasWidth;
+        const outY = y / canvasHeight;
 
         if (outX >= 1.5)
             // Right
@@ -173,9 +177,9 @@ export default class PointerController {
 
         if (!pointer) return;
 
-        const scale = this.getScale(),
-            offsetX = 0,
-            offsetY = 0;
+        const scale = this.getScale();
+        const offsetX = 0;
+        const offsetY = 0;
 
         pointer.setPosition(x, y);
 
@@ -189,7 +193,7 @@ export default class PointerController {
         _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
                 case Modules.Pointers.Entity: {
-                    const entity = this.game.entities?.get(pointer.id);
+                    const entity = this.game.entities.get(pointer.id);
 
                     if (entity) this.setToEntity(entity);
                     else this.destroy(pointer);
@@ -207,13 +211,15 @@ export default class PointerController {
     }
 
     private get(id: string): Pointer | null {
-        if (id in this.pointers) return this.pointers[id];
+        const { pointers } = this;
+
+        if (id in pointers) return pointers[id];
 
         return null;
     }
 
     private updateCamera(): void {
-        this.camera = this.game.renderer?.camera;
+        this.camera = this.game.renderer.camera;
     }
 
     private getScale(): number {

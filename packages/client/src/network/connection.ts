@@ -11,7 +11,7 @@ import MenuController from '../controllers/menu';
 import PointerController from '../controllers/pointer';
 import Character from '../entity/character/character';
 import Equipment from '../entity/character/player/equipment/equipment';
-import Player, { PartialPlayerData } from '../entity/character/player/player';
+import Player, { PlayerData } from '../entity/character/player/player';
 import Game from '../game';
 import log from '../lib/log';
 import Map from '../map/map';
@@ -49,9 +49,9 @@ export default class Connection {
     pointer: PointerController;
     inventory: Inventory;
     teamWar: TeamWar;
-    population: number;
-    queueColour: string[];
-    time: number;
+    population!: number;
+    queueColour!: string[];
+    time!: number;
 
     constructor(game: Game) {
         this.game = game;
@@ -77,7 +77,7 @@ export default class Connection {
     }
 
     load(): void {
-        this.messages.onHandshake((data: Partial<Game>) => {
+        this.messages.onHandshake((data: Game) => {
             this.game.id = data.id;
             this.game.development = data.development;
 
@@ -90,10 +90,10 @@ export default class Connection {
             this.app.updateLoader('Logging in');
 
             if (this.app.isRegistering()) {
-                const registerInfo = this.app.registerFields,
-                    username = registerInfo[0].val(),
-                    password = registerInfo[1].val(),
-                    email = registerInfo[3].val();
+                const registerInfo = this.app.registerFields;
+                const username = registerInfo[0].val();
+                const password = registerInfo[1].val();
+                const email = registerInfo[3].val();
 
                 this.socket.send(Packets.Intro, [
                     Packets.IntroOpcode.Register,
@@ -104,9 +104,9 @@ export default class Connection {
             } else if (this.app.isGuest())
                 this.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
             else {
-                const loginInfo = this.app.loginFields,
-                    name = loginInfo[0].val() as string,
-                    pass = loginInfo[1].val() as string;
+                const loginInfo = this.app.loginFields;
+                const name = loginInfo[0].val() as string;
+                const pass = loginInfo[1].val() as string;
 
                 this.socket.send(Packets.Intro, [Packets.IntroOpcode.Login, name, pass]);
 
@@ -122,7 +122,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onWelcome((data: PartialPlayerData) => {
+        this.messages.onWelcome((data: PlayerData) => {
             this.menu.loadHeader();
 
             this.game.player.load(data);
@@ -151,15 +151,8 @@ export default class Connection {
                     break;
 
                 case Packets.EquipmentOpcode.Equip: {
-                    const {
-                        type,
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    } = info as Equipment;
+                    const { type, name, string, count, ability, abilityLevel, power } =
+                        info as Equipment;
 
                     this.game.player.setEquipment(
                         type,
@@ -177,7 +170,7 @@ export default class Connection {
                 }
 
                 case Packets.EquipmentOpcode.Unequip: {
-                    const type = (info as string[]).shift();
+                    const type = (info as string[]).shift()!;
 
                     this.game.player.unequip(type);
 
@@ -193,12 +186,12 @@ export default class Connection {
             }
         });
 
-        this.messages.onSpawn((data: AnyEntity[]) => this.entities.create(data.shift()));
+        this.messages.onSpawn((data: AnyEntity[]) => this.entities.create(data.shift()!));
 
         this.messages.onEntityList((data: string[]) => {
-            const ids = _.map(this.entities.getAll(), 'id'),
-                known = _.intersection(ids, data),
-                newIds = _.difference(data, known);
+            const ids = _.map(this.entities.getAll(), 'id');
+            const known = _.intersection(ids, data);
+            const newIds = _.difference(data, known);
 
             this.entities.decrepit = _.reject(
                 this.entities.getAll(),
@@ -211,7 +204,7 @@ export default class Connection {
         });
 
         this.messages.onSync((data: Player) => {
-            const entity = this.entities.get(data.id) as Player;
+            const entity = this.entities.get<Player>(data.id);
 
             if (!entity || entity.type !== 'player') return;
 
@@ -257,7 +250,7 @@ export default class Connection {
         this.messages.onMovement((opcode, info: any) => {
             switch (opcode) {
                 case Packets.MovementOpcode.Move: {
-                    const entity = this.entities.get(info.id) as Character;
+                    const entity = this.entities.get<Character>(info.id);
 
                     if (!entity) return;
 
@@ -269,8 +262,8 @@ export default class Connection {
                 }
 
                 case Packets.MovementOpcode.Follow: {
-                    const follower = this.entities.get(info.attackerId) as Character,
-                        followee = this.entities.get(info.targetId) as Character;
+                    const follower = this.entities.get<Character>(info.attackerId);
+                    const followee = this.entities.get<Character>(info.targetId);
 
                     if (!followee || !follower) return;
 
@@ -280,8 +273,8 @@ export default class Connection {
                 }
 
                 case Packets.MovementOpcode.Stop: {
-                    const sEntity = this.entities.get(info.id) as Character,
-                        force = info.force;
+                    const sEntity = this.entities.get<Character>(info.id);
+                    const { force } = info;
 
                     if (!sEntity) return;
 
@@ -291,7 +284,7 @@ export default class Connection {
                 }
                 case Packets.MovementOpcode.Freeze:
                 case Packets.MovementOpcode.Stunned: {
-                    const pEntity = this.entities.get(info.id) as Character;
+                    const pEntity = this.entities.get<Character>(info.id);
 
                     if (!pEntity) return;
 
@@ -304,9 +297,9 @@ export default class Connection {
                 }
 
                 case Packets.MovementOpcode.Orientate: {
-                    const player = info.shift(),
-                        orientation = info.shift(),
-                        entity = this.entities.get(player) as Character;
+                    const player = info.shift();
+                    const orientation = info.shift();
+                    const entity = this.entities.get<Character>(player);
 
                     // entity.stop();
                     entity.performAction(orientation, Modules.Actions.Orientate);
@@ -317,8 +310,8 @@ export default class Connection {
         });
 
         this.messages.onTeleport((info: any) => {
-            const entity = this.entities.get(info.id) as Player,
-                isPlayer = info.id === this.game.player.id;
+            const entity = this.entities.get<Player>(info.id);
+            const isPlayer = info.id === this.game.player.id;
 
             if (!entity) return;
 
@@ -384,7 +377,7 @@ export default class Connection {
         });
 
         this.messages.onDespawn((id: string) => {
-            const entity = this.entities.get(id) as Character;
+            const entity = this.entities.get<Character>(id);
 
             if (!entity) return;
 
@@ -411,7 +404,7 @@ export default class Connection {
 
             this.bubble.destroy(entity.id);
 
-            if (this.game.player.hasTarget() && this.game.player.target.id === entity.id)
+            if (this.game.player.target && this.game.player.target.id === entity.id)
                 this.game.player.removeTarget();
 
             this.entities.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
@@ -419,7 +412,7 @@ export default class Connection {
             if (entity.id !== this.game.player.id && this.game.player.getDistance(entity) < 5)
                 this.audio.play(
                     Modules.AudioTypes.SFX,
-                    `kill${Math.floor(Math.random() * 2 + 1)}` as 'kill1' | 'kill2'
+                    `kill${Math.floor(Math.random() * 2 + 1) as 1 | 2}` as const
                 );
 
             entity.hitPoints = 0;
@@ -433,8 +426,8 @@ export default class Connection {
         });
 
         this.messages.onCombat((opcode, info: any) => {
-            const attacker = this.entities.get(info.attackerId) as Character,
-                target = this.entities.get(info.targetId) as Character;
+            const attacker = this.entities.get<Character>(info.attackerId);
+            const target = this.entities.get<Character>(info.targetId);
 
             if (!target || !attacker) return;
 
@@ -454,8 +447,8 @@ export default class Connection {
                     break;
 
                 case Packets.CombatOpcode.Hit: {
-                    const hit = info.hitInfo,
-                        isPlayer = target.id === this.game.player.id;
+                    const hit = info.hitInfo;
+                    const isPlayer = target.id === this.game.player.id;
 
                     if (!hit.isAoE && !hit.isPoison) {
                         attacker.lookAt(target);
@@ -513,7 +506,7 @@ export default class Connection {
         });
 
         this.messages.onAnimation((id: string, info: any) => {
-            const character = this.entities.get(id) as Character;
+            const character = this.entities.get<Character>(id);
 
             if (!character) return;
 
@@ -534,7 +527,7 @@ export default class Connection {
         });
 
         this.messages.onPoints((data: any) => {
-            const entity = this.entities.get(data.id) as Player;
+            const entity = this.entities.get<Player>(data.id);
 
             if (!entity) return;
 
@@ -542,7 +535,7 @@ export default class Connection {
                 entity.setHitPoints(data.hitPoints);
 
                 if (
-                    this.game.player.hasTarget() &&
+                    this.game.player.target &&
                     this.game.player.target.id === entity.id &&
                     this.input.overlay.updateCallback
                 )
@@ -601,8 +594,8 @@ export default class Connection {
         this.messages.onInventory((opcode, info: any) => {
             switch (opcode) {
                 case Packets.InventoryOpcode.Batch: {
-                    const inventorySize = info.shift() as number,
-                        data = info.shift() as Equipment[];
+                    const inventorySize = info.shift() as number;
+                    const data = info.shift() as Equipment[];
 
                     this.menu.loadInventory(inventorySize, data);
 
@@ -634,8 +627,8 @@ export default class Connection {
         this.messages.onBank((opcode, info: any) => {
             switch (opcode) {
                 case Packets.BankOpcode.Batch: {
-                    const bankSize = info.shift() as number,
-                        data = info.shift() as Slot[];
+                    const bankSize = info.shift() as number;
+                    const data = info.shift() as Slot[];
 
                     this.menu.loadBank(bankSize, data);
 
@@ -721,7 +714,7 @@ export default class Connection {
         });
 
         this.messages.onHeal((info: any) => {
-            const entity = this.entities.get(info.id) as Character;
+            const entity = this.entities.get<Character>(info.id);
 
             if (!entity) return;
 
@@ -828,13 +821,13 @@ export default class Connection {
         this.messages.onNPC((opcode, info: any) => {
             switch (opcode) {
                 case Packets.NPCOpcode.Talk: {
-                    const entity = this.entities.get(info.id),
-                        message = info.text,
-                        isNPC = !info.nonNPC;
+                    const entity = this.entities.get(info.id);
+                    const message = info.text;
+                    const isNPC = !info.nonNPC;
 
                     if (!entity) return;
 
-                    let sound: 'npc' | 'npc-end';
+                    let sound!: 'npc' | 'npc-end';
 
                     if (isNPC)
                         if (!message) {
@@ -871,8 +864,8 @@ export default class Connection {
                     break;
 
                 case Packets.NPCOpcode.Countdown: {
-                    const cEntity = this.entities.get(info.id),
-                        countdown = info.countdown;
+                    const cEntity = this.entities.get(info.id);
+                    const { countdown } = info;
 
                     cEntity?.setCountdown(countdown);
 
@@ -901,8 +894,8 @@ export default class Connection {
         });
 
         this.messages.onEnchant((opcode, info: any) => {
-            const type = info.type,
-                index = info.index;
+            const { type } = info;
+            const { index } = info;
 
             switch (opcode) {
                 case Packets.EnchantOpcode.Select:
@@ -974,12 +967,14 @@ export default class Connection {
         });
 
         this.messages.onShop((opcode, info: any) => {
-            const shopData = info.shopData;
+            const { shop } = this.menu;
+
+            const { shopData, id, index } = info;
 
             switch (opcode) {
                 case Packets.ShopOpcode.Open:
-                    this.menu.shop.open(shopData.id);
-                    this.menu.shop.update(shopData);
+                    shop.open(shopData.id);
+                    shop.update(shopData);
 
                     break;
 
@@ -990,17 +985,17 @@ export default class Connection {
                     break;
 
                 case Packets.ShopOpcode.Select:
-                    if (this.menu.shop.isShopOpen(info.id)) this.menu.shop.move(info);
+                    if (shop.isShopOpen(id)) shop.move(info);
 
                     break;
 
                 case Packets.ShopOpcode.Remove:
-                    if (this.menu.shop.isShopOpen(info.id)) this.menu.shop.moveBack(info.index);
+                    if (shop.isShopOpen(id)) shop.moveBack(index);
 
                     break;
 
                 case Packets.ShopOpcode.Refresh:
-                    if (this.menu.shop.isShopOpen(info.id)) this.menu.shop.update(info);
+                    if (shop.isShopOpen(id)) shop.update(info);
 
                     break;
             }

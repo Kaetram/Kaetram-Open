@@ -4,20 +4,23 @@ export const isIpad = (): boolean => /ipad/i.test(navigator.userAgent.toLowerCas
 
 export const isSafari = (): boolean => userAgentContains('Safari') && !userAgentContains('Chrome');
 
-interface IEDocument extends Document {
-    documentMode: number;
+declare global {
+    interface Document {
+        /** The documentMode is an IE only property. */
+        documentMode: number;
+    }
 }
 
-export const isInternetExplorer = (): boolean => !!(document as IEDocument).documentMode;
+export const isInternetExplorer = (): boolean => !!document.documentMode;
 
 export const isEdge = (): boolean => !isInternetExplorer() && !!window.StyleMedia;
 
 export const getUserAgent = (): string => navigator.userAgent.toString();
 
 export function isTablet(): boolean {
-    const userAgent = navigator.userAgent.toLowerCase(),
-        isAppleTablet = /ipad/i.test(userAgent),
-        isAndroidTablet = /android/i.test(userAgent);
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isAppleTablet = /ipad/i.test(userAgent);
+    const isAndroidTablet = /android/i.test(userAgent);
 
     return (isAppleTablet || isAndroidTablet) && window.innerWidth >= 640;
 }
