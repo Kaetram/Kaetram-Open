@@ -13,8 +13,6 @@ import Area from '../../../../map/areas/area';
 import Areas from '../../../../map/areas/areas';
 
 class Mob extends Character {
-    world: World;
-
     data: any;
     hitPoints: number;
     maxHitPoints: number;
@@ -44,14 +42,15 @@ class Mob extends Character {
     returnCallback: Function;
     deathCallback: Function;
 
+    forceTalkCallback: ((message: string) => void);
+    roamingCallback: (() => void);
+
     area: Area;
 
-    constructor(id: number, instance: string, x: number, y: number, world?: World) {
+    constructor(id: number, instance: string, x: number, y: number) {
         super(id, 'mob', instance, x, y);
 
         if (!Mobs.exists(id)) return;
-
-        this.world = world;
 
         this.data = Mobs.Ids[this.id];
         this.hitPoints = this.data.hitPoints;
@@ -84,7 +83,7 @@ class Mob extends Character {
     }
 
     load() {
-        this.handler = new MobHandler(this, this.world);
+        this.handler = new MobHandler(this);
 
         if (this.loadCallback) this.loadCallback();
     }
@@ -192,11 +191,6 @@ class Mob extends Character {
         return base;
     }
 
-    // We take the plateau level of where the entity spawns.
-    getPlateauLevel() {
-        return this.world.map.getPlateauLevel(this.spawnLocation[0], this.spawnLocation[1]);
-    }
-
     resetPosition() {
         this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
     }
@@ -215,6 +209,14 @@ class Mob extends Character {
 
     onRefresh(callback: Function) {
         this.refreshCallback = callback;
+    }
+
+    onForceTalk(callback: (message: string) => void) {
+        this.forceTalkCallback = callback;
+    }
+
+    onRoaming(callback: (() => void)) {
+        this.roamingCallback = callback;
     }
 }
 
