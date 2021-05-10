@@ -24,6 +24,6 @@ export default class ZoningController {
     }
 
     public getDirection(): Modules.Orientation {
-        return this.direction as Modules.Orientation;
+        return this.direction!;
     }
 }

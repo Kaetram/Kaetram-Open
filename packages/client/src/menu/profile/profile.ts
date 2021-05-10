@@ -19,11 +19,11 @@ export default class Profile {
     activePage: State;
     activeIndex: number;
     pages: Page[];
-    state: State;
-    professions: Professions;
-    settings: Settings;
-    quests: Quest;
-    guild: Guild;
+    state!: State;
+    professions!: Professions;
+    settings!: Settings;
+    quests!: Quest;
+    guild!: Guild;
 
     constructor(game: Game) {
         this.game = game;
@@ -34,7 +34,7 @@ export default class Profile {
         this.next = $('#next');
         this.previous = $('#previous');
 
-        this.activePage = null;
+        this.activePage = null!;
         this.activeIndex = 0;
         this.pages = [];
 

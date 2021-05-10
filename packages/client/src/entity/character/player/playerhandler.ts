@@ -1,40 +1,26 @@
-import EntitiesController from '../../../controllers/entities';
-import InputController from '../../../controllers/input';
+import Packets from '@kaetram/common/src/packets';
+
 import Game from '../../../game';
 import log from '../../../lib/log';
-import Map from '../../../map/map';
-import Packets from '@kaetram/common/src/packets';
-import Socket from '../../../network/socket';
-import Camera from '../../../renderer/camera';
-import Renderer from '../../../renderer/renderer';
 import Player from './player';
 
 export default class PlayerHandler {
-    game: Game;
-    map: Map;
-    camera: Camera;
-    input: InputController;
-    player: Player;
-    entities: EntitiesController;
-    socket: Socket;
-    renderer: Renderer;
+    map = this.game.map;
+    camera = this.game.getCamera();
+    input = this.game.input;
+    entities = this.game.entities;
+    socket = this.game.socket;
+    renderer = this.game.renderer;
 
-    constructor(game: Game, player: Player) {
-        this.game = game;
-        this.map = game.map;
-        this.camera = game.getCamera();
-        this.input = game.input;
-        this.player = player;
-        this.entities = game.entities;
-        this.socket = game.socket;
-        this.renderer = game.renderer;
-
+    constructor(private game: Game, private player: Player) {
         this.load();
     }
 
     load(): void {
-        this.player.onRequestPath((x, y) => {
-            if (this.player.dead || this.player.frozen) return null;
+        const { player, game, map, camera, input, entities, socket, renderer } = this;
+
+        player.onRequestPath((x, y) => {
+            if (player.dead || player.frozen) return null;
 
             /**
              * If the position is the same as the player's current position
@@ -42,20 +28,19 @@ export default class PlayerHandler {
              * a colliding tile and will interfere with combat.
              */
 
-            let ignores = [];
-            const isObject = this.map.isObject(x, y);
+            const isObject = map.isObject(x, y);
 
-            if (this.player.gridX === x && this.player.gridY === y) return ignores;
+            if (player.gridX === x && player.gridY === y) return [];
 
-            ignores = [this.player];
+            const ignores = [player];
 
-            if (!this.map.isColliding(x, y) && !isObject)
-                this.socket.send(Packets.Movement, [
+            if (!map.isColliding(x, y) && !isObject)
+                socket.send(Packets.Movement, [
                     Packets.MovementOpcode.Request,
                     x,
                     y,
-                    this.player.gridX,
-                    this.player.gridY
+                    player.gridX,
+                    player.gridY
                 ]);
 
             if (isObject)
@@ -65,156 +50,160 @@ export default class PlayerHandler {
                     },
                     gridX: x,
                     gridY: y
-                });
+                } as Player);
 
-            return this.game.findPath(this.player, x, y, ignores);
+            return game.findPath(player, x, y, ignores);
         });
 
-        this.player.onStartPathing((path) => {
+        player.onStartPathing((path) => {
+            if (!input) return;
+
             const i = path.length - 1;
 
-            this.player.moving = true;
+            player.moving = true;
 
-            this.input.selectedX = path[i][0];
-            this.input.selectedY = path[i][1];
-            this.input.selectedCellVisible = true;
+            [input.selectedX, input.selectedY] = path[i];
+            input.selectedCellVisible = true;
 
-            log.debug(`Movement speed: ${this.player.movementSpeed}`);
+            log.debug(`Movement speed: ${player.movementSpeed}`);
 
-            this.socket.send(Packets.Movement, [
+            socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Started,
-                this.input.selectedX,
-                this.input.selectedY,
-                this.player.gridX,
-                this.player.gridY,
-                this.player.movementSpeed,
+                input.selectedX,
+                input.selectedY,
+                player.gridX,
+                player.gridY,
+                player.movementSpeed,
                 this.getTargetId()
             ]);
         });
 
-        this.player.onStopPathing((x, y) => {
-            this.entities.unregisterPosition(this.player);
-            this.entities.registerPosition(this.player);
+        player.onStopPathing((x, y) => {
+            if (!input) return;
 
-            this.input.selectedCellVisible = false;
+            entities.unregisterPosition(player);
+            entities.registerPosition(player);
 
-            this.camera.clip();
+            input.selectedCellVisible = false;
+
+            camera.clip();
 
             let id = null;
-            const entity = this.game.getEntityAt(x, y, true);
+            const entity = game.getEntityAt(x, y, true);
 
-            if (entity) id = entity.id;
+            if (entity) ({ id } = entity);
 
             log.debug('Stopping pathing.');
 
-            const hasTarget = this.player.hasTarget();
-
-            this.socket.send(Packets.Movement, [
+            socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Stop,
                 x,
                 y,
                 id,
-                hasTarget,
-                this.player.orientation
+                !!player.target,
+                player.orientation
             ]);
 
-            this.socket.send(Packets.Target, [this.getTargetType(), this.getTargetId()]);
+            socket.send(Packets.Target, [this.getTargetType(), this.getTargetId()]);
 
-            if (hasTarget) {
-                this.player.lookAt(this.player.target);
+            if (player.target) {
+                player.lookAt(player.target);
 
-                if (this.player.target.type === 'object') this.player.removeTarget();
+                if (player.target.type === 'object') player.removeTarget();
             }
 
-            this.input.setPassiveTarget();
+            input.setPassiveTarget();
 
-            this.game.storage.setOrientation(this.player.orientation);
+            game.storage.setOrientation(player.orientation);
 
-            this.player.moving = false;
+            player.moving = false;
         });
 
-        this.player.onBeforeStep(() => this.entities.unregisterPosition(this.player));
+        player.onBeforeStep(() => entities.unregisterPosition(player));
 
-        this.player.onStep(() => {
-            if (this.player.hasNextStep()) this.entities.registerDuality(this.player);
+        player.onStep(() => {
+            if (player.hasNextStep()) entities.registerDuality(player);
 
-            if (!this.camera.centered || this.camera.lockX || this.camera.lockY) this.checkBounds();
+            if (!camera.centered || camera.lockX || camera.lockY) this.checkBounds();
 
-            this.socket.send(Packets.Movement, [
+            socket.send(Packets.Movement, [
                 Packets.MovementOpcode.Step,
-                this.player.gridX,
-                this.player.gridY
+                player.gridX,
+                player.gridY
             ]);
 
             if (!this.isAttackable()) return;
 
-            if (this.player.isRanged()) {
-                if (this.player.getDistance(this.player.target) < 7) this.player.stop(true);
-            } else {
-                this.input.selectedX = this.player.target.gridX;
-                this.input.selectedY = this.player.target.gridY;
-            }
+            if (player.target)
+                if (player.isRanged()) {
+                    if (player.getDistance(player.target) < 7) player.stop(true);
+                } else input.setPosition(player.target.gridX, player.target.gridY);
         });
 
-        this.player.onSecondStep(() => this.renderer.updateAnimatedTiles());
+        player.onSecondStep(() => renderer.updateAnimatedTiles());
 
-        this.player.onMove(() => {
+        player.onMove(() => {
             /**
              * This is a callback representing the absolute exact position of the player.
              */
 
-            if (this.camera.centered) this.camera.centreOn(this.player);
+            if (camera.centered) camera.centreOn(player);
 
-            if (this.player.hasTarget()) this.player.follow(this.player.target);
+            if (player.target) player.follow(player.target);
         });
 
-        this.player.onUpdateArmour((armourName) => {
-            this.player.setSprite(this.game.getSprite(armourName));
+        player.onUpdateArmour((armourName) => {
+            player.setSprite(game.getSprite(armourName));
 
-            if (this.game.menu && this.game.menu.profile) this.game.menu.profile.update();
+            if (game.menu && game.menu.profile) game.menu.profile.update();
         });
 
-        this.player.onUpdateEquipment(() => {
-            if (this.game.menu && this.game.menu.profile) this.game.menu.profile.update();
+        player.onUpdateEquipment(() => {
+            if (game.menu && game.menu.profile) game.menu.profile.update();
         });
     }
 
     isAttackable(): boolean {
-        const target = this.player.target as Player;
+        const { target } = this.player;
 
-        if (!target) return;
-
-        return target.type === 'mob' || (target.type === 'player' && target.pvp);
+        return target ? target.type === 'mob' || (target.type === 'player' && target.pvp) : false;
     }
 
     checkBounds(): void {
-        const x = this.player.gridX - this.camera.gridX,
-            y = this.player.gridY - this.camera.gridY;
+        const { player, camera, game, socket, renderer } = this;
 
-        if (x === 0) this.game.zoning.setLeft();
-        else if (y === 0) this.game.zoning.setUp();
-        else if (x === this.camera.gridWidth - 2) this.game.zoning.setRight();
-        else if (y === this.camera.gridHeight - 2) this.game.zoning.setDown();
+        const { zoning } = game;
+        if (!zoning) return;
 
-        if (this.game.zoning.direction !== null) {
-            const direction = this.game.zoning.getDirection();
+        const x = player.gridX - camera.gridX;
+        const y = player.gridY - camera.gridY;
 
-            this.camera.zone(direction);
+        if (x === 0) zoning.setLeft();
+        else if (y === 0) zoning.setUp();
+        else if (x === camera.gridWidth - 2) zoning.setRight();
+        else if (y === camera.gridHeight - 2) zoning.setDown();
 
-            this.socket.send(Packets.Movement, [Packets.MovementOpcode.Zone, direction]);
+        if (zoning.direction !== null) {
+            const direction = zoning.getDirection();
 
-            this.renderer.updateAnimatedTiles();
+            camera.zone(direction);
 
-            this.game.zoning.reset();
+            socket.send(Packets.Movement, [Packets.MovementOpcode.Zone, direction]);
+
+            renderer.updateAnimatedTiles();
+
+            zoning.reset();
         }
     }
 
-    getTargetId(): string {
-        return this.player.target ? this.player.target.id : null;
+    getTargetId(): string | null {
+        const { target } = this.player;
+
+        return target ? target.id : null;
     }
 
     getTargetType(): number {
-        const target = this.player.target;
+        const { target } = this.player;
 
         if (!target) return Packets.TargetOpcode.None;
 
