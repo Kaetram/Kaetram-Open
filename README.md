@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/github/package-json/v/Kaetram/Kaetram-Open)](https://github.com/Kaetram/Kaetram-Open/releases/latest 'Version')
 [![MPL-2.0 License](https://img.shields.io/github/license/Kaetram/Kaetram-Open)][license]
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fkaetram.com&style=flat)](https://kaetram.com 'Website')
-[![Workflow Status](https://img.shields.io/github/workflow/status/Kaetram/Kaetram-Open/Kaetram-Open%20CI)](https://github.com/Kaetram/Kaetram-Open/actions/workflows/build.yml 'Workflow Status')
+[![Workflow Status](https://img.shields.io/github/workflow/status/Kaetram/Kaetram-Open/Kaetram-Open%20CI)](https://github.com/Kaetram/Kaetram-Open/actions 'Workflow Status')
 [![Open Issues](https://img.shields.io/github/issues/Kaetram/Kaetram-Open)][issues]
 
 [![Watch](https://img.shields.io/github/watchers/Kaetram/Kaetram-Open?style=social&icon=github)](https://github.com/Kaetram/Kaetram-Open/subscription 'Watch')
@@ -12,17 +12,15 @@
 [![Discord](https://img.shields.io/discord/583033499741847574?logo=discord&color=7289da&style=flat)][discord]
 [![YouTube](https://img.shields.io/badge/YouTube-white?logo=youtube&logoColor=f00)](https://www.youtube.com/channel/UCBbxPvvBlEsBi3sWiPJA6wQ 'YouTube')
 
-Kaetram is an open-source game-engine created to aid those interested in entering the game
-development realm. The codebase is simple, clean, and intuitive. This project is intended to be used
-as a learning tool. The original idea is based on Little Workshop's demo game&mdash;BrowserQuest
-(BQ). This game uses original BQ assets as well as custom-made ones. The entire code-base has been
-written from scratch, using more modern approaches.
+Kaetram is an open-source game engine created to aid those interested in entering the game
+development realm, and intended to be used as a learning tool. The codebase is simple, clean, and
+intuitive. The original idea is based on Little Workshop's demo game&mdash;BrowserQuest (BQ), and
+uses original BQ assets as well as custom-made ones. The entire codebase has been rewritten from
+scratch using more modern approaches.
 
 Live Version &ndash; <https://kaetram.com>
 
 Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
-
-Patreon &ndash; <https://www.patreon.com/kaetram>
 
 ![Demo 1](https://i.imgur.com/slnzrZB.png 'Demo 1')
 
@@ -30,35 +28,11 @@ Patreon &ndash; <https://www.patreon.com/kaetram>
 
 ![Demo 3](https://i.imgur.com/cZTFqnd.png 'Demo 3')
 
-## Table of Contents
-
-- [Kaetram](#kaetram)
-  - [Table of Contents](#table-of-contents)
-  - [Technologies](#technologies)
-  - [Get Started](#get-started)
-    - [Prerequisites](#prerequisites)
-      - [NOTE: Node.js](#note-nodejs)
-      - [NOTE: MongoDB](#note-mongodb)
-    - [Installing](#installing)
-    - [Running](#running)
-    - [Configuration](#configuration)
-  - [Features](#features)
-    - [Regions](#regions)
-    - [Tilemap](#tilemap)
-    - [Map Parsing](#map-parsing)
-    - [Kaetram Hub](#kaetram-hub)
-  - [Roadmap](#roadmap)
-    - [TODO](#todo)
-      - [Gameplay](#gameplay)
-      - [Code-base Development](#code-base-development)
-      - [Miscellaneous](#miscellaneous)
-  - [License & Commission](#license--commission)
-
 ## Technologies
 
 BQ was intended as an experiment to showcase HTML5 capabilities, since then, technology has only
-served to advance. Kaetram contains a lot of ideas and [features](#features) that builds on top of
-its predecessor, a couple are:
+served to advance. Kaetram contains a lot of ideas and [features](#features) that build on top of
+its predecessor, a couple being:
 
 - Multiplayer using [Socket.IO](https://socket.io).
 - Enhanced rendering engine (includes dynamic lighting, overlays, animated tiles).
@@ -68,7 +42,7 @@ its predecessor, a couple are:
 - Supports RESTful API.
 - Discord server integration.
 - Cross-server private messaging and interactions.
-- Yarn v2 workspaces for monorepo packaging.
+- Yarn v3 with workspaces for monorepo packaging.
 - And much more!
 
 ## Get Started
@@ -87,9 +61,9 @@ the server.
 
 #### NOTE: MongoDB
 
-> MongoDB is a requirement for Kaetram to run with all the features enabled, but you can still run
-> your own limited version if you do not want to install MongoDB. To do this, see
-> [Configuration](#configuration), and set `OFFLINE_MODE=true` in the
+> MongoDB is not a requirement for Kaetram to run, but you can store and save user data if you
+> install it, so you can run an online environment with all the features enabled. To do this, see
+> [Configuration](#configuration), and set `OFFLINE_MODE=false` in the
 > [server configuration](packages/server/.env). _If you do choose to install MongoDB, a user is not
 > necessary, but you can enable authentication with the `MONGODB_AUTH` setting._
 
@@ -143,9 +117,9 @@ network settings in the client match those in the server.
 The region system sends data to the client according to the map data of the server. The collisions
 are checked both server-side and client-side to avoid cheating. The region system makes use of
 dynamic tiles, which are unlocked according to a player's progress. Furthermore, there is integrated
-support for instancing, where we can use a section of the map (or clone it) and reuse it for certain
-groups of players. The instancing is perfect for activities such as minigames, where we will want to
-run multiple instances in parallel.
+support for instancing, where we can use a section of the map (or clone it), and reuse it for
+certain groups of players. The instancing is perfect for activities such as minigames, where we will
+want to run multiple instances in parallel.
 
 ### Tilemap
 
@@ -206,7 +180,7 @@ See also the [open issues][issues] for a list of proposed features (and known is
 - Make bosses more responsive
 - All trees in the world must be cuttable
 
-#### Code-base Development
+#### Codebase Development
 
 - Write documentation outlining the entirety of the source code.
 - Improvements and optimizations to the lighting system.
@@ -214,6 +188,24 @@ See also the [open issues][issues] for a list of proposed features (and known is
 #### Miscellaneous
 
 - Add (continue) to NPC talking&mdash;spacebar when talking
+
+## Donations
+
+### Sponsor
+
+Patreon &ndash; <https://www.patreon.com/kaetram>
+
+Open Collective &ndash; <https://opencollective.com/kaetram>
+
+### Crypto
+
+`BTC` &ndash; `bc1qeh0tdlkuc5q82j2qk9h3sqmwe6uy75qpjtc0dv`
+
+`LTC` &ndash; `MMRo7dfAi2T8rJrx7m3DmzhsgHRC7XJ83f`
+
+`ETH` &ndash; `0x4c6de7175f789DAf0f531477753B07402EEfedaC`
+
+`BCH` &ndash; `bitcoincash:qzx6uqunqj4mtv74jng97pea0mfcl4nmyqsew92enu`
 
 ## License & Commission
 

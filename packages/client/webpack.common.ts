@@ -6,24 +6,17 @@ import dotenvParseVariables from 'dotenv-parse-variables';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-import { description, version } from 'kaetram/package.json';
+import { DefinePlugin, ProgressPlugin } from 'webpack';
+import type { Configuration, RuleSetRule, WebpackPluginInstance } from 'webpack';
 
-import { DefinePlugin } from 'webpack';
-import type {
-    Configuration,
-    RuleSetRule,
-    WebpackOptionsNormalized,
-    WebpackPluginInstance
-} from 'webpack';
-
-export const env = dotenvParseVariables(dotEnvExtended.load());
-
-export const exclude = /(node_modules|bower_components)/;
+import { version, description } from 'kaetram/package.json';
 
 export const resolve = (dir: string): string => path.resolve(__dirname, dir);
 
 /** 5 MiB */
 export const maxSize = 5e6;
+
+const env = dotenvParseVariables(dotEnvExtended.load());
 
 /** Plugins for both production and development. */
 export const plugins: WebpackPluginInstance[] = [
@@ -47,17 +40,30 @@ export const plugins: WebpackPluginInstance[] = [
         }
     }),
     new FaviconsWebpackPlugin({
-        logo: resolve('static/icon.png'),
         prefix: '',
+        logo: resolve('static/icon.png'),
+        manifest: {
+            display_override: 'fullscreen standalone minimal-ui browser'.split(' '),
+            screenshots: [
+                {
+                    src: 'screenshot.png',
+                    sizes: '750x1334',
+                    type: 'image/png'
+                }
+            ]
+        },
         favicons: {
+            version,
             appName: 'Kaetram',
             appDescription: description,
             background: '#000000',
             theme_color: '#000000',
             display: 'fullscreen',
-            version,
             pixel_art: true
         }
+    }),
+    new ProgressPlugin({
+        percentBy: 'entries'
     })
 ];
 
@@ -65,24 +71,19 @@ export const plugins: WebpackPluginInstance[] = [
 export const rules: RuleSetRule[] = [
     {
         test: /\.html?$/i,
-        loader: 'html-loader',
-        exclude
+        loader: 'html-loader'
     },
     {
         test: /\.ts?$/i,
-        use: ['babel-loader', 'ts-loader'],
-        exclude
+        use: ['babel-loader', 'ts-loader']
     },
     {
         test: /\.((png|svg|gif)|(mp3)|(ttf|woff|eot))$/i,
-        loader: 'file-loader',
-        exclude
+        loader: 'file-loader'
     }
 ];
 
-export type Config = Configuration & Pick<WebpackOptionsNormalized, 'devServer'>;
-
-const config: Config = {
+const config: Configuration = {
     name: 'Client',
     target: 'web',
     entry: 'index.html scss/main.scss src/main.ts'.split(' ').map((src) => resolve(src)),
