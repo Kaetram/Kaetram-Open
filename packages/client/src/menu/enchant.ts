@@ -1,49 +1,37 @@
 import $ from 'jquery';
 
-import MenuController from '../controllers/menu';
-import Game from '../game';
-import log from '../lib/log';
 import Packets from '@kaetram/common/src/packets';
+
+import log from '../lib/log';
 import * as Detect from '../utils/detect';
-import Slot from './container/slot';
+
+import type MenuController from '../controllers/menu';
+import type Game from '../game';
+import type Slot from './container/slot';
 
 export default class Enchant {
-    game: Game;
-    menu: MenuController;
-    body: JQuery;
-    container: JQuery;
-    enchantSlots: JQuery;
-    selectedItem: JQuery;
-    selectedShards: JQuery;
-    confirm: JQuery;
-    shardsCount: JQuery;
-    closeEnchant: JQuery;
+    private body = $('#enchant');
+    // private container = $('#enchantContainer');
+    private enchantSlots = $('#enchantInventorySlots');
 
-    constructor(game: Game, menu: MenuController) {
-        this.game = game;
-        this.menu = menu;
+    private selectedItem = $('#enchantSelectedItem');
+    private selectedShards = $('#enchantShards');
+    private confirm = $('#confirmEnchant');
+    private shardsCount = $('#shardsCount');
 
-        this.body = $('#enchant');
-        this.container = $('#enchantContainer');
-        this.enchantSlots = $('#enchantInventorySlots');
+    private closeEnchant = $('#closeEnchant');
 
-        this.selectedItem = $('#enchantSelectedItem');
-        this.selectedShards = $('#enchantShards');
-        this.confirm = $('#confirmEnchant');
-        this.shardsCount = $('#shardsCount');
-
-        this.closeEnchant = $('#closeEnchant');
-
+    public constructor(private game: Game, private menu: MenuController) {
         this.confirm.on('click', () => this.enchant());
 
         this.closeEnchant.on('click', () => this.hide());
     }
 
-    resize(): void {
+    public resize(): void {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         const list = this.getSlots();
         const inventoryList = this.menu.bank.getInventoryList();
 
@@ -63,7 +51,7 @@ export default class Enchant {
         this.selectedShards.on('click', () => this.remove('shards'));
     }
 
-    add(type: string, index: number): void {
+    public add(type: string, index: number): void {
         const image = this.getSlot(index).find(`#inventoryImage${index}`);
 
         switch (type) {
@@ -92,7 +80,7 @@ export default class Enchant {
         this.getSlot(index).find(`#inventoryItemCount${index}`).text('');
     }
 
-    moveBack(type: string, index: number): void {
+    public moveBack(type: string, index: number): void {
         const image = this.getSlot(index).find(`#inventoryImage${index}`);
         const itemCount = this.getSlot(index).find(`#inventoryItemCount${index}`);
         const { count } = this.getItemSlot(index);
@@ -122,37 +110,37 @@ export default class Enchant {
         }
     }
 
-    enchant(): void {
+    private enchant(): void {
         this.game.socket.send(Packets.Enchant, [Packets.EnchantOpcode.Enchant]);
     }
 
-    select(event: JQuery.ClickEvent): void {
+    private select(event: JQuery.ClickEvent): void {
         this.game.socket.send(Packets.Enchant, [
             Packets.EnchantOpcode.Select,
             event.currentTarget.id.slice(17)
         ]);
     }
 
-    remove(type: string): void {
+    private remove(type: string): void {
         this.game.socket.send(Packets.Enchant, [Packets.EnchantOpcode.Remove, type]);
     }
 
-    getInventorySize(): number {
+    private getInventorySize(): number {
         return this.menu.inventory.getSize();
     }
 
-    getItemSlot(index: number): Slot {
+    private getItemSlot(index: number): Slot {
         return this.menu.inventory.container.slots[index];
     }
 
-    display(): void {
+    public display(): void {
         log.info('Yes hello, I am displaying');
 
         this.body.fadeIn('fast');
         this.load();
     }
 
-    hide(): void {
+    public hide(): void {
         this.remove('item');
         this.remove('shards');
 
@@ -163,26 +151,26 @@ export default class Enchant {
         this.body.fadeOut('fast');
     }
 
-    clear(): void {
+    public clear(): void {
         this.enchantSlots.find('ul').empty();
 
         this.confirm.off('click');
         this.closeEnchant.off('click');
     }
 
-    hasImage(image: JQuery): boolean {
-        return image.css('background-image') !== 'none';
-    }
+    // hasImage(image: JQuery): boolean {
+    //     return image.css('background-image') !== 'none';
+    // }
 
-    getSlot(index: number): JQuery<HTMLLIElement> {
+    private getSlot(index: number): JQuery<HTMLLIElement> {
         return $(this.getSlots().find('li')[index]);
     }
 
-    getSlots(): JQuery<HTMLUListElement> {
+    private getSlots(): JQuery<HTMLUListElement> {
         return this.enchantSlots.find('ul');
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 }

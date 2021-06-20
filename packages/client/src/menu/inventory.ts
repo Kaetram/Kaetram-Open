@@ -1,44 +1,34 @@
 import $ from 'jquery';
 
-import Equipment from '../entity/character/player/equipment/equipment';
-import Game from '../game';
-import Packets from '@kaetram/common/src/packets';
-import * as Detect from '../utils/detect';
 import * as Modules from '@kaetram/common/src/modules';
-import Actions from './actions';
+import Packets from '@kaetram/common/src/packets';
+
+import * as Detect from '../utils/detect';
 import Container from './container/container';
-import Slot from './container/slot';
+
+import type Equipment from '../entity/character/player/equipment/equipment';
+import type Game from '../game';
+import type Slot from './container/slot';
 
 export default class Inventory {
-    game: Game;
-    actions: Actions;
-    body: JQuery;
-    button: JQuery<HTMLButtonElement>;
-    action: JQuery<HTMLDivElement>;
-    container: Container;
-    activeClass: string;
-    selectedSlot: JQuery | null;
-    selectedItem: Slot | null;
+    private actions = this.game.menu.actions;
 
-    constructor(game: Game, size: number, data: Equipment[]) {
-        this.game = game;
-        this.actions = game.menu.actions;
+    private body = $('#inventory');
+    private button = $('#inventoryButton');
+    // private action = $('#actionContainer');
 
-        this.body = $('#inventory');
-        this.button = $('#inventoryButton');
-        this.action = $('#actionContainer');
+    public container: Container;
 
+    private selectedSlot: JQuery | null = null;
+    private selectedItem: Slot | null = null;
+
+    public constructor(private game: Game, size: number, data: Equipment[]) {
         this.container = new Container(size);
-
-        this.activeClass = 'inventory';
-
-        this.selectedSlot = null;
-        this.selectedItem = null;
 
         this.load(data);
     }
 
-    async load(data: Equipment[]): Promise<void> {
+    private async load(data: Equipment[]): Promise<void> {
         const list = $('#inventory').find('ul');
 
         for (const [i, item] of data.entries()) {
@@ -83,7 +73,7 @@ export default class Inventory {
         this.button.on('click', () => this.open());
     }
 
-    open(): void {
+    public open(): void {
         this.game.menu.hideAll();
 
         if (this.isVisible()) this.hide();
@@ -92,7 +82,7 @@ export default class Inventory {
         this.game.socket.send(Packets.Click, ['inventory', this.button.hasClass('active')]);
     }
 
-    click(event: JQuery.ClickEvent): void {
+    private click(event: JQuery.ClickEvent): void {
         const index = event.currentTarget.id.slice(4);
         const slot = this.container.slots[index];
         const item = $(this.getList()[index]);
@@ -121,7 +111,7 @@ export default class Inventory {
         this.actions.hideDrop();
     }
 
-    clickDouble(event: JQuery.DoubleClickEvent): void {
+    private clickDouble(event: JQuery.DoubleClickEvent): void {
         const index = event.currentTarget.id.slice(4);
         const slot = this.container.slots[index];
 
@@ -140,7 +130,7 @@ export default class Inventory {
         this.actions.hideDrop();
     }
 
-    clickAction(event: string | JQuery.ClickEvent): void {
+    public clickAction(event: string | JQuery.ClickEvent): void {
         const action = (event as JQuery.ClickEvent).currentTarget?.id || event;
 
         if (!this.selectedSlot || !this.selectedItem) return;
@@ -209,7 +199,7 @@ export default class Inventory {
         this.actions.hide();
     }
 
-    async add(info: Slot): Promise<void> {
+    public async add(info: Slot): Promise<void> {
         const item = $(this.getList()[info.index]);
         const slot = this.container.slots[info.index];
 
@@ -248,7 +238,7 @@ export default class Inventory {
         }
     }
 
-    remove(info: Slot): void {
+    public remove(info: Slot): void {
         const item = $(this.getList()[info.index]);
         const slot = this.container.slots[info.index];
 
@@ -268,7 +258,7 @@ export default class Inventory {
         }
     }
 
-    async resize(): Promise<void> {
+    public async resize(): Promise<void> {
         const list = this.getList();
 
         for (const [i, element] of [...list].entries()) {
@@ -282,7 +272,7 @@ export default class Inventory {
         }
     }
 
-    clearSelection(): void {
+    private clearSelection(): void {
         if (!this.selectedSlot) return;
 
         this.selectedSlot.removeClass('select');
@@ -290,12 +280,12 @@ export default class Inventory {
         this.selectedItem = null;
     }
 
-    display(): void {
+    private display(): void {
         this.body.fadeIn('fast');
         this.button.addClass('active');
     }
 
-    hide(keepSelection?: boolean): void {
+    public hide(keepSelection?: boolean): void {
         this.button.removeClass('active');
 
         this.body.fadeOut('slow');
@@ -304,25 +294,25 @@ export default class Inventory {
         if (!keepSelection) this.clearSelection();
     }
 
-    clear(): void {
+    public clear(): void {
         $('#inventory').find('ul').empty();
 
         this.button?.off('click');
     }
 
-    getScale(): number {
-        return this.game.renderer.getScale();
-    }
+    // getScale(): number {
+    //     return this.game.renderer.getScale();
+    // }
 
-    getSize(): number {
+    public getSize(): number {
         return this.container.size;
     }
 
-    getList(): JQuery {
+    private getList(): JQuery {
         return $('#inventory').find('ul').find('li');
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 }

@@ -1,7 +1,8 @@
 import * as Modules from '@kaetram/common/src/modules';
 
-import Animation from './animation';
-import Sprite, { Animations } from './sprite';
+import type Animation from './animation';
+import type Sprite from './sprite';
+import type { Animations } from './sprite';
 
 export interface EntityRenderingData {
     scale: number;

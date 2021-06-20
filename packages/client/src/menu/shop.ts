@@ -1,10 +1,11 @@
 import $ from 'jquery';
 
-import MenuController from '../controllers/menu';
-import Player from '../entity/character/player/player';
-import Game from '../game';
 import Packets from '@kaetram/common/src/packets';
+
 import Container from './container/container';
+
+import type MenuController from '../controllers/menu';
+import type Game from '../game';
 
 interface ShopMoveInfo {
     id: string;
@@ -22,56 +23,30 @@ interface ShopData {
 }
 
 export default class Shop {
-    game: Game;
-    body: JQuery;
-    shop: JQuery;
-    inventory: JQuery;
-    sellSlot: JQuery;
-    sellSlotText: JQuery;
-    sellSlotReturn: JQuery;
-    sellSlotReturnText: JQuery;
-    confirmSell: JQuery;
-    player: Player;
-    menu: MenuController;
-    container: Container;
-    data: ShopData;
-    openShop: number;
-    items: [];
-    counts: [];
-    close: JQuery;
+    private body = $('#shop');
+    private shop = $('#shopContainer');
+    private inventory = $('#shopInventorySlots');
 
-    constructor(game: Game, menu: MenuController) {
-        this.game = game;
+    /**
+     * Represents what the player currently has queued for sale
+     * and `sellSlotReturn` shows the currency the player is receiving.
+     * The reason for this is because shops are written such that
+     * they can handle different currencies.
+     */
+    private sellSlot = $('#shopSellSlot');
+    private sellSlotText = $('#shopSellSlotText');
+    private sellSlotReturn = $('#shopSellSlotReturn');
+    private sellSlotReturnText = $('#shopSellSlotReturnText');
 
-        this.body = $('#shop');
-        this.shop = $('#shopContainer');
-        this.inventory = $('#shopInventorySlots');
+    private confirmSell = $('#confirmSell');
 
-        /**
-         * sellSlot represents what the player currently has queued for sale
-         * and sellSlotReturn shows the currency the player is receiving.
-         * The reason for this is because shops are written such that
-         * they can handle different currencies.
-         */
+    private container!: Container;
+    private data!: ShopData;
+    private openShop = -1;
 
-        this.sellSlot = $('#shopSellSlot');
-        this.sellSlotText = $('#shopSellSlotText');
-        this.sellSlotReturn = $('#shopSellSlotReturn');
-        this.sellSlotReturnText = $('#shopSellSlotReturnText');
+    private close: JQuery;
 
-        this.confirmSell = $('#confirmSell');
-
-        this.player = game.player;
-        this.menu = menu;
-
-        this.container = null!;
-        this.data = null!;
-
-        this.openShop = -1;
-
-        this.items = [];
-        this.counts = [];
-
+    public constructor(private game: Game, private menu: MenuController) {
         this.close = $('#closeShop');
 
         this.close.css('left', '97%');
@@ -82,28 +57,28 @@ export default class Shop {
         this.confirmSell.on('click', () => this.sell());
     }
 
-    buy(event: JQuery.ClickEvent): void {
+    private buy(event: JQuery.ClickEvent): void {
         const id = event.currentTarget.id.slice(11);
 
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, this.openShop, id, 1]);
     }
 
-    sell(): void {
+    private sell(): void {
         // The server will handle the selected item and verifications.
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Sell, this.openShop]);
     }
 
-    select(event: JQuery.ClickEvent): void {
+    private select(event: JQuery.ClickEvent): void {
         const id = event.currentTarget.id.slice(17);
 
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, this.openShop, id]);
     }
 
-    remove(): void {
+    private remove(): void {
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
     }
 
-    async move(info: ShopMoveInfo): Promise<void> {
+    public async move(info: ShopMoveInfo): Promise<void> {
         const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`);
         const slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`);
         const slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
@@ -118,7 +93,7 @@ export default class Shop {
             backgroundSize: this.sellSlot.css('background-size')
         });
 
-        var quantity: number = Number(slotText.text()) || 1;
+        const quantity: number = Number(slotText.text()) || 1;
 
         this.sellSlotText.text(slotText.text());
 
@@ -128,16 +103,14 @@ export default class Shop {
         slotText.text('');
     }
 
-    moveBack(index: number): void {
+    public moveBack(index: number): void {
         const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${index}`);
 
         inventorySlot
             .find(`#inventoryImage${index}`)
             .css('background-image', this.sellSlot.css('background-image'));
-        
-        inventorySlot
-            .find(`#inventoryItemCount${index}`)
-            .text(this.sellSlotText.text());
+
+        inventorySlot.find(`#inventoryItemCount${index}`).text(this.sellSlotText.text());
 
         this.sellSlot.css('background-image', '');
         this.sellSlotText.text('');
@@ -151,14 +124,14 @@ export default class Shop {
      * This is just a temporary fix, in reality, we do not want anyone to actually see the shop
      * do a full refresh when they buy an item or someone else buys an item.
      */
-    resize(): void {
+    public resize(): void {
         this.getInventoryList().empty();
         this.getShopList().empty();
 
         this.update(this.data);
     }
 
-    update(data: ShopData): void {
+    public update(data: ShopData): void {
         this.reset();
 
         this.container = new Container(data.strings.length);
@@ -169,7 +142,7 @@ export default class Shop {
         this.load();
     }
 
-    async load(): Promise<void> {
+    private async load(): Promise<void> {
         for (let i = 0; i < this.container.size; i++) {
             const shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`);
             const string = this.data.strings[i];
@@ -223,17 +196,14 @@ export default class Shop {
         }
     }
 
-    reset(): void {
-        this.items = [];
-        this.counts = [];
-
+    private reset(): void {
         this.container = null!;
 
         this.getShopList().empty();
         this.getInventoryList().empty();
     }
 
-    open(id: number): void {
+    public open(id: number): void {
         if (!id) return;
 
         this.openShop = id;
@@ -241,7 +211,7 @@ export default class Shop {
         this.body.fadeIn('slow');
     }
 
-    hide(): void {
+    public hide(): void {
         this.openShop = -1;
 
         this.sellSlot.css('background-image', '');
@@ -252,7 +222,7 @@ export default class Shop {
         this.body.fadeOut('fast');
     }
 
-    clear(): void {
+    public clear(): void {
         this.shop?.find('ul').empty();
 
         this.inventory?.find('ul').empty();
@@ -264,23 +234,23 @@ export default class Shop {
         this.confirmSell?.off('click');
     }
 
-    getScale(): number {
-        return this.game.renderer.getScale();
-    }
+    // getScale(): number {
+    //     return this.game.renderer.getScale();
+    // }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 
-    isShopOpen(shopId: number): boolean {
+    public isShopOpen(shopId: number): boolean {
         return this.isVisible() && this.openShop === shopId;
     }
 
-    getShopList(): JQuery<HTMLUListElement> {
+    private getShopList(): JQuery<HTMLUListElement> {
         return this.shop.find('ul');
     }
 
-    getInventoryList(): JQuery<HTMLUListElement> {
+    private getInventoryList(): JQuery<HTMLUListElement> {
         return this.inventory.find('ul');
     }
 }

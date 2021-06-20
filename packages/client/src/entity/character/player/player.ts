@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 import * as Modules from '@kaetram/common/src/modules';
 
-import Game from '../../../game';
 import Character from '../character';
 import Armour from './equipment/armour';
 import Boots from './equipment/boots';
@@ -10,75 +9,69 @@ import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
+import type Game from '../../../game';
+
 export type PlayerData = Player & {
     hitPoints: number[];
     mana: number[];
 };
 
 export default class Player extends Character {
-    username = '';
-    password = '';
-    email = '';
+    public username = '';
 
-    avatar = null;
-    rights = 0;
-    wanted = false;
+    public rights = 0;
+    public wanted = false;
 
-    experience = -1;
-    nextExperience = -1;
-    prevExperience = -1;
-    level = -1;
+    public experience = -1;
+    public nextExperience = -1;
+    public prevExperience = -1;
+    public level = -1;
 
-    pvpKills = -1;
-    pvpDeaths = -1;
+    public pvpKills = -1;
+    public pvpDeaths = -1;
 
-    hitPoints = -1;
-    maxHitPoints = -1;
+    public hitPoints = -1;
+    public maxHitPoints = -1;
 
-    mana = -1;
-    maxMana = -1;
+    public mana = -1;
+    public maxMana = -1;
 
-    prevX = 0;
-    prevY = 0;
+    public pvp = false;
 
-    direction = null;
+    public moveLeft = false;
+    public moveRight = false;
+    public moveUp = false;
+    public moveDown = false;
 
-    pvp = false;
+    public disableAction = false;
 
-    moveLeft = false;
-    moveRight = false;
-    moveUp = false;
-    moveDown = false;
+    public attackRange!: number;
+    public orientation!: number;
+    public movementSpeed!: number;
 
-    disableAction = false;
+    private lastLogin!: number | null;
 
-    attackRange!: number;
-    orientation!: number;
-    movementSpeed!: number;
+    public armour!: Armour;
+    public pendant!: Pendant;
+    public ring!: Ring;
+    public boots!: Boots;
+    public poison!: boolean;
 
-    lastLogin!: number | null;
+    private experienceCallback?(): void;
+    private updateArmourCallback?(string: string, power?: number): void;
+    private updateWeaponCallback?(string: string, power?: number): void;
+    private updateEquipmentCallback?(type: number, power?: number): void;
 
-    armour!: Armour;
-    pendant!: Pendant;
-    ring!: Ring;
-    boots!: Boots;
-    poison!: boolean;
+    // private tempcBlinkTimeout!: number;
+    public moving!: boolean;
 
-    experienceCallback?(): void;
-    updateArmourCallback?(string: string, power?: number): void;
-    updateWeaponCallback?(string: string, power?: number): void;
-    updateEquipmentCallback?(type: number, power?: number): void;
-
-    tempBlinkTimeout!: number;
-    moving!: boolean;
-
-    constructor() {
+    public constructor() {
         super('-1', Modules.Types.Player.toString());
 
         this.loadEquipment();
     }
 
-    load({
+    public load({
         instance,
         username,
         x,
@@ -114,7 +107,7 @@ export default class Player extends Character {
         this.type = 'player';
     }
 
-    loadHandler(game: Game): void {
+    public loadHandler(game: Game): void {
         /**
          * This is for other player characters
          */
@@ -123,15 +116,15 @@ export default class Player extends Character {
         this.handler.load();
     }
 
-    hasKeyboardMovement(): boolean {
+    public hasKeyboardMovement(): boolean {
         return this.moveLeft || this.moveRight || this.moveUp || this.moveDown;
     }
 
-    setId(id: string): void {
+    public setId(id: string): void {
         this.id = id;
     }
 
-    loadEquipment(): void {
+    private loadEquipment(): void {
         this.armour = null!;
         this.weapon = null!;
         this.pendant = null!;
@@ -139,32 +132,32 @@ export default class Player extends Character {
         this.boots = null!;
     }
 
-    isRanged(): boolean {
+    public isRanged(): boolean {
         return this.weapon?.ranged || false;
     }
 
-    hasWeapon(): boolean {
+    public hasWeapon(): boolean {
         return this.weapon?.exists() || false;
     }
 
-    setName(name: string): void {
+    public setName(name: string): void {
         this.username = name;
         this.name = name;
     }
 
-    getSpriteName(): string {
+    public getSpriteName(): string {
         return this.armour ? this.armour.string : 'clotharmor';
     }
 
-    setMana(mana: number): void {
+    public setMana(mana: number): void {
         this.mana = mana;
     }
 
-    setMaxMana(maxMana: number): void {
+    public setMaxMana(maxMana: number): void {
         this.maxMana = maxMana;
     }
 
-    setPoison(poison: boolean): void {
+    public setPoison(poison: boolean): void {
         if (this.poison === poison) return;
 
         this.poison = poison;
@@ -174,15 +167,7 @@ export default class Player extends Character {
         else $('#health').css('background', '-webkit-linear-gradient(right, #ff0000, #ef5a5a)');
     }
 
-    getX(): number {
-        return this.gridX;
-    }
-
-    getY(): number {
-        return this.gridY;
-    }
-
-    setExperience(experience: number, nextExperience: number, prevExperience: number): void {
+    public setExperience(experience: number, nextExperience: number, prevExperience: number): void {
         this.experience = experience;
         this.nextExperience = nextExperience;
         this.prevExperience = prevExperience || 0;
@@ -190,7 +175,7 @@ export default class Player extends Character {
         this.experienceCallback?.();
     }
 
-    setPointsData([hitPoints, maxHitPoints]: number[], [mana, maxMana]: number[]): void {
+    private setPointsData([hitPoints, maxHitPoints]: number[], [mana, maxMana]: number[]): void {
         this.setMaxHitPoints(maxHitPoints);
         this.setMaxMana(maxMana);
 
@@ -198,7 +183,7 @@ export default class Player extends Character {
         this.setMana(mana);
     }
 
-    setEquipment(
+    public setEquipment(
         type: number,
         name: string,
         string: string,
@@ -253,7 +238,7 @@ export default class Player extends Character {
         this.updateEquipmentCallback?.(type, power);
     }
 
-    unequip(type: string): void {
+    public unequip(type: string): void {
         switch (type) {
             case 'armour':
                 this.armour?.update('Cloth Armour', 'clotharmor', 1, -1, -1);
@@ -277,26 +262,26 @@ export default class Player extends Character {
         }
     }
 
-    tempBlink(): void {
-        this.blink(90);
+    // tempBlink(): void {
+    //     this.blink(90);
 
-        if (!this.tempBlinkTimeout)
-            this.tempBlinkTimeout = window.setTimeout(() => this.stopBlinking(), 500);
-    }
+    //     if (!this.tempBlinkTimeout)
+    //         this.tempBlinkTimeout = window.setTimeout(() => this.stopBlinking(), 500);
+    // }
 
-    onUpdateArmour(callback: (armourName: string, power: number) => void): void {
+    public onUpdateArmour(callback: (armourName: string, power: number) => void): void {
         this.updateArmourCallback = callback;
     }
 
-    onUpdateWeapon(callback: (string: string, power: number) => void): void {
+    public onUpdateWeapon(callback: (string: string, power: number) => void): void {
         this.updateWeaponCallback = callback;
     }
 
-    onUpdateEquipment(callback: (type: number, power: number) => void): void {
+    public onUpdateEquipment(callback: (type: number, power: number) => void): void {
         this.updateEquipmentCallback = callback;
     }
 
-    onExperience(callback: () => void): void {
+    public onExperience(callback: () => void): void {
         this.experienceCallback = callback;
     }
 }

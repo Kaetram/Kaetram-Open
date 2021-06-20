@@ -1,61 +1,35 @@
 import $ from 'jquery';
 
-import AudioController from '../../../controllers/audio';
-import Game from '../../../game';
-import Camera from '../../../renderer/camera';
-import Renderer from '../../../renderer/renderer';
-import Storage from '../../../utils/storage';
+import type Game from '../../../game';
 
 export default class Settings {
-    game: Game;
-    audio: AudioController;
-    storage: Storage;
-    renderer: Renderer;
-    camera: Camera;
-    body: JQuery;
-    button: JQuery;
-    volume: JQuery<HTMLInputElement>;
-    sfx: JQuery<HTMLInputElement>;
-    brightness: JQuery<HTMLInputElement>;
-    info: JQuery;
-    soundCheck: JQuery<HTMLInputElement>;
-    cameraCheck: JQuery<HTMLInputElement>;
-    debugCheck: JQuery<HTMLInputElement>;
-    centreCheck: JQuery<HTMLInputElement>;
-    nameCheck: JQuery<HTMLInputElement>;
-    levelCheck: JQuery<HTMLInputElement>;
-    loaded: boolean;
+    private audio = this.game.audio;
+    private storage = this.game.storage;
+    private renderer = this.game.renderer;
 
-    // TODO - Hide crypto mining option on mobiles and completely disable it.
-    constructor(game: Game) {
-        this.game = game;
-        this.audio = game.audio;
-        this.storage = game.storage;
-        this.renderer = game.renderer;
-        this.camera = game.renderer.camera;
+    private body = $('#settingsPage');
+    private button = $('#settingsButton');
 
-        this.body = $('#settingsPage');
-        this.button = $('#settingsButton');
+    private volume = $<HTMLInputElement>('#volume');
+    private sfx = $<HTMLInputElement>('#sfx');
+    private brightness = $<HTMLInputElement>('#brightness');
 
-        this.volume = $('#volume');
-        this.sfx = $('#sfx');
-        this.brightness = $('#brightness');
+    // info = $('#info');
 
-        this.info = $('#info');
+    private soundCheck = $<HTMLInputElement>('#soundCheck input');
+    private cameraCheck = $<HTMLInputElement>('#cameraCheck input');
+    private debugCheck = $<HTMLInputElement>('#debugCheck input');
+    private centreCheck = $<HTMLInputElement>('#centreCheck input');
+    private nameCheck = $<HTMLInputElement>('#nameCheck input');
+    private levelCheck = $<HTMLInputElement>('#levelCheck input');
 
-        this.soundCheck = $('#soundCheck input');
-        this.cameraCheck = $('#cameraCheck input');
-        this.debugCheck = $('#debugCheck input');
-        this.centreCheck = $('#centreCheck input');
-        this.nameCheck = $('#nameCheck input');
-        this.levelCheck = $('#levelCheck input');
+    private loaded = false;
 
-        this.loaded = false;
-
+    public constructor(private game: Game) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         if (this.loaded) return;
 
         const {
@@ -159,7 +133,7 @@ export default class Settings {
         this.loaded = true;
     }
 
-    open(): void {
+    private open(): void {
         this.game.menu.hideAll();
 
         this.button.toggleClass('active');
@@ -168,16 +142,16 @@ export default class Settings {
         else this.show();
     }
 
-    show(): void {
+    private show(): void {
         this.body.fadeIn('slow');
     }
 
-    hide(): void {
+    public hide(): void {
         this.body.fadeOut('fast');
         this.button.removeClass('active');
     }
 
-    clear(): void {
+    public clear(): void {
         this.button.off('click');
 
         this.soundCheck.off('input');
@@ -192,7 +166,7 @@ export default class Settings {
         this.sfx.off('input');
     }
 
-    setMusicLevel(musicLevel: number): void {
+    private setMusicLevel(musicLevel: number): void {
         const { audio, storage } = this;
 
         if (audio.song) audio.song.volume = musicLevel / 100;
@@ -201,85 +175,85 @@ export default class Settings {
         storage.save();
     }
 
-    setSFXLevel(sfxLevel: number): void {
+    private setSFXLevel(sfxLevel: number): void {
         this.storage.data.settings.sfx = sfxLevel;
         this.storage.save();
     }
 
-    setBrightness(brightness: number): void {
+    private setBrightness(brightness: number): void {
         this.renderer.adjustBrightness(brightness);
 
         this.storage.data.settings.brightness = brightness;
         this.storage.save();
     }
 
-    setSound(state: boolean): void {
+    private setSound(state: boolean): void {
         this.storage.data.settings.soundEnabled = state;
         this.storage.save();
     }
 
-    setCamera(state: boolean): void {
+    private setCamera(state: boolean): void {
         this.storage.data.settings.centerCamera = state;
         this.storage.save();
     }
 
-    setDebug(state: boolean): void {
+    private setDebug(state: boolean): void {
         this.storage.data.settings.debug = state;
         this.storage.save();
     }
 
-    setCentre(state: boolean): void {
+    private setCentre(state: boolean): void {
         this.storage.data.settings.autoCentre = state;
         this.storage.save();
     }
 
-    setName(state: boolean): void {
+    private setName(state: boolean): void {
         this.storage.data.settings.showNames = state;
         this.storage.save();
     }
 
-    setLevel(state: boolean): void {
-        this.storage.data.settings.showLevels = state;
-        this.storage.save();
-    }
+    // setLevel(state: boolean): void {
+    //     this.storage.data.settings.showLevels = state;
+    //     this.storage.save();
+    // }
 
-    getMusicLevel(): number {
+    private getMusicLevel(): number {
         return this.storage.data.settings.music;
     }
 
-    getSFXLevel(): number {
+    private getSFXLevel(): number {
         return this.storage.data.settings.sfx;
     }
 
-    getBrightness(): number {
+    private getBrightness(): number {
         return this.storage.data.settings.brightness;
     }
 
-    getSound(): boolean {
+    private getSound(): boolean {
         return this.storage.data.settings.soundEnabled;
     }
 
-    getCamera(): boolean {
+    private getCamera(): boolean {
         return this.storage.data.settings.centerCamera;
     }
 
-    getDebug(): boolean {
+    private getDebug(): boolean {
         return this.storage.data.settings.debug;
     }
 
-    getCentreCap(): boolean {
+    private getCentreCap(): boolean {
         return this.storage.data.settings.autoCentre;
     }
 
-    getName(): boolean {
+    private getName(): boolean {
         return this.storage.data.settings.showNames;
     }
 
-    getLevel(): boolean {
+    private getLevel(): boolean {
         return this.storage.data.settings.showLevels;
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 }
