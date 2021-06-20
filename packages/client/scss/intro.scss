@@ -735,8 +735,13 @@ footer div {
 }
 
 .patreon-widget {
+    display: none;
     float: right;
     padding: 1em;
     width: 176px;
-    height: 34px !important;
+    height: 35px !important;
+}
+
+.intro .patreon-widget {
+    display: block;
 }
