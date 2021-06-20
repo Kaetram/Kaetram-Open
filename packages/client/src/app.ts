@@ -236,7 +236,7 @@ export default class App {
             this.updateRange($(input))
         );
 
-        if (!this.config.debug)
+        if (!this.config.debug || location.hostname !== 'localhost')
             $.ajax({
                 url: 'https://c6.patreon.com/becomePatronButton.bundle.js',
                 dataType: 'script',
