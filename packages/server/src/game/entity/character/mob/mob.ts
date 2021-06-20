@@ -14,8 +14,8 @@ import Areas from '../../../../map/areas/areas';
 
 class Mob extends Character {
     data: any;
-    hitPoints: number;
-    maxHitPoints: number;
+    // hitPoints: number;
+    // maxHitPoints: number;
     drops: any;
 
     respawnDelay: number;
@@ -27,23 +27,23 @@ class Mob extends Character {
 
     achievementId: number;
 
-    roaming: boolean;
+    // roaming: boolean;
     maxRoamingDistance: number;
 
     handler: MobHandler;
 
-    alwaysAggressive: boolean;
+    // alwaysAggressive: boolean;
 
-    lastAttacker: Player;
+    declare lastAttacker: Player;
 
     loadCallback: Function;
     refreshCallback: Function;
     respawnCallback: Function;
     returnCallback: Function;
-    deathCallback: Function;
+    // deathCallback: Function;
 
-    forceTalkCallback: ((message: string) => void);
-    roamingCallback: (() => void);
+    forceTalkCallback: (message: string) => void;
+    roamingCallback: () => void;
 
     area: Area;
 
@@ -98,17 +98,17 @@ class Mob extends Character {
     getDrop() {
         if (!this.drops) return null;
 
-        let random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
-            dropObjects = Object.keys(this.drops),
-            item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
+        const random = Utils.randomInt(0, Constants.DROP_PROBABILITY);
+        const dropObjects = Object.keys(this.drops);
+        const item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
 
         if (random > this.drops[item]) return null;
 
-        let count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
+        const count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
 
         return {
             id: Items.stringToId(item),
-            count: count
+            count
         };
     }
 
@@ -160,7 +160,7 @@ class Mob extends Character {
     }
 
     addToChestArea(chestAreas: Areas) {
-        let area = chestAreas.inArea(this.x, this.y);
+        const area = chestAreas.inArea(this.x, this.y);
 
         if (area) area.addEntity(this);
     }
@@ -180,7 +180,7 @@ class Mob extends Character {
     }
 
     getState() {
-        let base = super.getState();
+        const base = super.getState();
 
         base.hitPoints = this.hitPoints;
         base.maxHitPoints = this.maxHitPoints;
@@ -215,7 +215,7 @@ class Mob extends Character {
         this.forceTalkCallback = callback;
     }
 
-    onRoaming(callback: (() => void)) {
+    onRoaming(callback: () => void) {
         this.roamingCallback = callback;
     }
 }

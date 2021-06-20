@@ -1,42 +1,35 @@
 import $ from 'jquery';
 
-import Equipment from '../entity/character/player/equipment/equipment';
-import Game from '../game';
-import Packets from '@kaetram/common/src/packets';
-import * as Detect from '../utils/detect';
 import * as Modules from '@kaetram/common/src/modules';
-import Actions from './actions';
+import Packets from '@kaetram/common/src/packets';
+
+import * as Detect from '../utils/detect';
 import Container from './container/container';
-import Slot from './container/slot';
+
+import type Equipment from '../entity/character/player/equipment/equipment';
+import type Game from '../game';
+import type Slot from './container/slot';
 
 export default class Inventory {
-    game: Game;
-    actions: Actions;
-    body: JQuery;
-    button: JQuery<HTMLButtonElement>;
-    action: JQuery<HTMLDivElement>;
-    container: Container;
-    activeClass: string;
-    selectedSlot: JQuery;
-    selectedItem: Slot;
+    private actions;
 
-    constructor(game: Game, size: number) {
-        this.game = game;
+    private body = $('#inventory');
+    private button = $('#inventoryButton');
+    // private action = $('#actionContainer');
+
+    public container: Container;
+
+    private selectedSlot: JQuery | null = null;
+    private selectedItem: Slot | null = null;
+
+    public constructor(private game: Game, size: number, data: Equipment[]) {
         this.actions = game.menu.actions;
-
-        this.body = $('#inventory');
-        this.button = $('#inventoryButton');
-        this.action = $('#actionContainer');
-
         this.container = new Container(size);
 
-        this.activeClass = 'inventory';
-
-        this.selectedSlot = null;
-        this.selectedItem = null;
+        this.load(data);
     }
 
-    async load(data: Equipment[]): Promise<void> {
+    private async load(data: Equipment[]): Promise<void> {
         const list = $('#inventory').find('ul');
 
         for (const [i, item] of data.entries()) {
@@ -54,14 +47,13 @@ export default class Inventory {
             itemSlot.on('click', (event) => this.click(event));
 
             const itemSlotList = $('<li></li>');
-            const count = item.count;
+
+            const { count, ability } = item;
             let itemCount = count.toString();
 
             if (count > 999999)
-                itemCount = `${count
-                    .toString()
-                    .slice(0, Math.max(0, count.toString().length - 6))}M`;
-            else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
+                itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
+            else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
             else if (count === 1) itemCount = '';
 
             itemSlotList.append(itemSlot);
@@ -69,9 +61,9 @@ export default class Inventory {
                 `<div id="itemCount${i}" class="inventoryItemCount">${itemCount}</div>`
             );
 
-            if (item.ability > -1) {
-                const eList = Object.keys(Modules.Enchantment), // enchantment list
-                    enchantment = eList[item.ability];
+            if (ability > -1) {
+                const eList = Object.keys(Modules.Enchantment); // enchantment list
+                const enchantment = eList[ability];
 
                 if (enchantment) itemSlotList.find(`#itemCount${i}`).text(enchantment);
             }
@@ -82,7 +74,7 @@ export default class Inventory {
         this.button.on('click', () => this.open());
     }
 
-    open(): void {
+    public open(): void {
         this.game.menu.hideAll();
 
         if (this.isVisible()) this.hide();
@@ -91,10 +83,10 @@ export default class Inventory {
         this.game.socket.send(Packets.Click, ['inventory', this.button.hasClass('active')]);
     }
 
-    click(event: JQuery.ClickEvent): void {
-        const index = event.currentTarget.id.slice(4),
-            slot = this.container.slots[index],
-            item = $(this.getList()[index]);
+    private click(event: JQuery.ClickEvent): void {
+        const index = event.currentTarget.id.slice(4);
+        const slot = this.container.slots[index];
+        const item = $(this.getList()[index]);
 
         this.clearSelection();
 
@@ -120,14 +112,14 @@ export default class Inventory {
         this.actions.hideDrop();
     }
 
-    clickDouble(event: JQuery.DoubleClickEvent): void {
-        const index = event.currentTarget.id.slice(4),
-            slot = this.container.slots[index];
+    private clickDouble(event: JQuery.DoubleClickEvent): void {
+        const index = event.currentTarget.id.slice(4);
+        const slot = this.container.slots[index];
 
         if (!slot.edible && !slot.equippable) return;
 
-        const item = $(this.getList()[index]),
-            sSlot = item.find(`#slot${index}`);
+        const item = $(this.getList()[index]);
+        const sSlot = item.find(`#slot${index}`);
 
         this.clearSelection();
 
@@ -139,7 +131,7 @@ export default class Inventory {
         this.actions.hideDrop();
     }
 
-    clickAction(event: string | JQuery.ClickEvent): void {
+    public clickAction(event: string | JQuery.ClickEvent): void {
         const action = (event as JQuery.ClickEvent).currentTarget?.id || event;
 
         if (!this.selectedSlot || !this.selectedItem) return;
@@ -208,9 +200,9 @@ export default class Inventory {
         this.actions.hide();
     }
 
-    async add(info: Slot): Promise<void> {
-        const item = $(this.getList()[info.index]),
-            slot = this.container.slots[info.index];
+    public async add(info: Slot): Promise<void> {
+        const item = $(this.getList()[info.index]);
+        const slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
 
@@ -230,34 +222,33 @@ export default class Inventory {
 
         cssSlot.css('background-size', '600%');
 
-        const count = slot.count;
+        const { count, ability } = slot;
         let itemCount = count.toString();
 
-        if (count > 999999)
-            itemCount = `${count.toString().slice(0, Math.max(0, count.toString().length - 6))}M`;
-        else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
+        if (count > 999999) itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
+        else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
         else if (count === 1) itemCount = '';
-        
+
         item.find(`#itemCount${info.index}`).text(itemCount);
 
-        if (slot.ability > -1) {
-            const eList = Object.keys(Modules.Enchantment), // enchantment list
-                enchantment = eList[slot.ability];
+        if (ability! > -1) {
+            const eList = Object.keys(Modules.Enchantment); // enchantment list
+            const enchantment = eList[ability!];
 
             if (enchantment) item.find(`#itemCount${info.index}`).text(enchantment);
         }
     }
 
-    remove(info: Slot): void {
-        const item = $(this.getList()[info.index]),
-            slot = this.container.slots[info.index];
+    public remove(info: Slot): void {
+        const item = $(this.getList()[info.index]);
+        const slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
 
         slot.count -= info.count;
         let itemCount = slot.count.toString();
-        
-        if (slot.count === 1) itemCount = ''
+
+        if (slot.count === 1) itemCount = '';
 
         item.find(`#itemCount${info.index}`).text(itemCount);
 
@@ -268,12 +259,12 @@ export default class Inventory {
         }
     }
 
-    async resize(): Promise<void> {
+    public async resize(): Promise<void> {
         const list = this.getList();
 
         for (const [i, element] of [...list].entries()) {
-            const item = $(element).find(`#slot${i}`),
-                slot = this.container.slots[i];
+            const item = $(element).find(`#slot${i}`);
+            const slot = this.container.slots[i];
 
             if (!slot) continue;
 
@@ -282,7 +273,7 @@ export default class Inventory {
         }
     }
 
-    clearSelection(): void {
+    private clearSelection(): void {
         if (!this.selectedSlot) return;
 
         this.selectedSlot.removeClass('select');
@@ -290,12 +281,12 @@ export default class Inventory {
         this.selectedItem = null;
     }
 
-    display(): void {
+    private display(): void {
         this.body.fadeIn('fast');
         this.button.addClass('active');
     }
 
-    hide(keepSelection?: boolean): void {
+    public hide(keepSelection?: boolean): void {
         this.button.removeClass('active');
 
         this.body.fadeOut('slow');
@@ -304,25 +295,25 @@ export default class Inventory {
         if (!keepSelection) this.clearSelection();
     }
 
-    clear(): void {
+    public clear(): void {
         $('#inventory').find('ul').empty();
 
         this.button?.off('click');
     }
 
-    getScale(): number {
-        return this.game.renderer.getScale();
-    }
+    // getScale(): number {
+    //     return this.game.renderer.getScale();
+    // }
 
-    getSize(): number {
+    public getSize(): number {
         return this.container.size;
     }
 
-    getList(): JQuery {
+    private getList(): JQuery {
         return $('#inventory').find('ul').find('li');
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 }

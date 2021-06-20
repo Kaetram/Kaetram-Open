@@ -13,11 +13,10 @@
         "noImplicitAny": false,
         "strictNullChecks": false,
 
-        "rootDir": "./",
+        "rootDir": ".",
         "baseUrl": "./packages",
         "paths": {
-            "@kaetram/*": ["./*"]
+            "@kaetram/*": ["*"]
         }
-    },
-    "exclude": ["node_modules", "**/*.spec.ts", "dist"]
+    }
 }

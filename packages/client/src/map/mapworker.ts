@@ -1,7 +1,5 @@
 /// <reference lib="webworker" />
 
-import _ from 'lodash';
-
 import mapData from '../../data/maps/map.json';
 
 type MapDataType = typeof mapData;
@@ -20,40 +18,34 @@ onmessage = () => {
 };
 
 function loadCollisionGrid() {
-    // const tileIndex = 0;
-
     data.grid = [];
 
-    for (let i = 0; i < data.height; i++) {
-        data.grid[i] = [];
-        for (let j = 0; j < data.width; j++) data.grid[i][j] = 0;
+    const { width, height, grid, collisions } = data;
+
+    for (let i = 0; i < height; i++) {
+        grid[i] = [];
+
+        for (let j = 0; j < width; j++) grid[i][j] = 0;
     }
 
-    _.each(data.collisions, (tileIndex) => {
-        const position = indexToGridPosition(tileIndex + 1);
-        data.grid[position.y][position.x] = 1;
-    });
+    for (const index of collisions) {
+        const { x, y } = indexToGridPosition(index + 1);
 
-    _.each(data.blocking, (tileIndex) => {
-        const position = indexToGridPosition(tileIndex + 1);
+        grid[y][x] = 1;
+    }
 
-        if (data.grid[position.y]) data.grid[position.y][position.x] = 1;
-    });
+    // for (const tileIndex of data.blocking) {
+    //     const { x, y } = indexToGridPosition(tileIndex + 1);
+
+    //     data.grid[y][x] = 1;
+    // }
 }
 
 function indexToGridPosition(index: number) {
-    let x = 0,
-        y = 0;
+    const x = getX(index, data.width);
+    const y = Math.floor((index - 1) / data.width);
 
-    index -= 1;
-
-    x = getX(index + 1, data.width);
-    y = Math.floor(index / data.width);
-
-    return {
-        x: x,
-        y: y
-    };
+    return { x, y };
 }
 
 function getX(index: number, width: number) {

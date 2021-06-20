@@ -1,167 +1,144 @@
-import Animation from './animation';
-import EntityHandler from './entityhandler';
-import Sprite, { Animations } from './sprite';
+import * as Modules from '@kaetram/common/src/modules';
+
+import type Animation from './animation';
+import type Sprite from './sprite';
+import type { Animations } from './sprite';
 
 export interface EntityRenderingData {
     scale: number;
     angle: number;
 
-    sprite?: Sprite;
-    width?: number;
-    height?: number;
-    ox?: number;
-    oy?: number;
-    shadowWidth?: number;
-    shadowHeight?: number;
-    shadowOffsetY?: number;
+    sprite: Sprite;
+    width: number;
+    height: number;
+
+    ox: number;
+    oy: number;
+
+    shadowWidth: number;
+    shadowHeight: number;
+    shadowOffsetY: number;
 }
 
-export default class Entity {
-    id: string;
-    kind: string;
-    x: number;
-    y: number;
-    gridX: number;
-    gridY: number;
-    name: string;
-    sprite: Sprite;
-    spriteFlipX: boolean;
-    spriteFlipY: boolean;
-    animations: Animations;
-    currentAnimation: Animation;
-    idleSpeed: number;
-    shadowOffsetY: number;
-    hidden: boolean;
-    spriteLoaded: boolean;
-    orientation: number;
-    visible: boolean;
-    fading: boolean;
-    handler: EntityHandler;
-    angled: boolean;
-    angle: number;
-    critical: boolean;
-    stunned: boolean;
-    terror: boolean;
-    nonPathable: boolean;
-    hasCounter: boolean;
-    countdownTime: number;
-    counter: number;
-    renderingData: EntityRenderingData;
-    dirty: boolean;
-    dirtyCallback: () => void;
-    fadingTime: number;
-    blinking: number;
-    type: string;
-    normalSprite;
-    hurtSprite;
-    readyCallback: () => void;
-    attackRange: number;
-    mana: number | number[];
-    maxMana: number;
-    experience: number;
-    level: number;
-    movementSpeed: number;
-    frozen: boolean;
-    teleporting: boolean;
-    dead: boolean;
-    hitPoints: number | number[];
-    pvp: boolean;
-    nameColour: string;
-    customScale: number;
-    nextGridX: number;
-    nextGridY: number;
-    fadingAlpha: number;
+export default abstract class Entity {
+    public x = 0;
+    public y = 0;
+    public gridX = 0;
+    public gridY = 0;
 
-    fadingDuration: number;
+    public name = '';
 
-    constructor(id: string, type: string) {
-        this.id = id;
-        this.type = type;
+    public sprite!: Sprite;
 
-        this.x = 0;
-        this.y = 0;
-        this.gridX = 0;
-        this.gridY = 0;
+    public spriteFlipX = false;
+    public spriteFlipY = false;
 
-        this.name = '';
+    private animations!: Animations;
+    public currentAnimation!: Animation | null;
+    protected idleSpeed = 450;
 
-        this.sprite = null;
-        this.spriteFlipX = false;
-        this.spriteFlipY = false;
+    public shadowOffsetY = 0;
+    public hidden = false;
 
-        this.animations = null;
-        this.currentAnimation = null;
-        this.idleSpeed = 450;
+    public spriteLoaded = false;
+    private visible = true;
+    public fading = false;
 
-        this.shadowOffsetY = 0;
-        this.hidden = false;
+    public angled = false;
+    public angle = 0;
 
-        this.spriteLoaded = false;
-        this.visible = true;
-        this.fading = false;
-        this.handler = new EntityHandler(this);
+    public critical = false;
+    public stunned = false;
+    public terror = false;
 
-        this.angled = false;
-        this.angle = 0;
+    // public nonPathable = false;
+    public hasCounter = false;
 
-        this.critical = false;
-        this.stunned = false;
-        this.terror = false;
+    public countdownTime = 0;
+    public counter = 0;
+    public fadingDuration = 1000;
 
-        this.nonPathable = false;
-        this.hasCounter = false;
+    public orientation!: Modules.Orientation;
 
-        this.countdownTime = 0;
-        this.counter = 0;
+    public renderingData = {
+        scale: -1,
+        angle: 0
+    } as EntityRenderingData;
 
-        this.fadingDuration = 1000;
+    // private dirty = false;
+    // private dirtyCallback?: () => void;
 
-        this.renderingData = {
-            scale: -1,
-            angle: 0
-        };
+    public fadingTime!: number;
+    private blinking!: number;
 
-        this.loadDirty();
+    public normalSprite!: Sprite;
+    public hurtSprite!: Sprite;
+
+    private readyCallback?(): void;
+
+    public attackRange!: number;
+    public mana!: number | number[];
+    public maxMana!: number;
+    public experience!: number;
+    public level!: number;
+    public movementSpeed!: number;
+    public frozen!: boolean;
+    public teleporting!: boolean;
+    public dead!: boolean;
+    public hitPoints!: number | number[];
+    public pvp!: boolean;
+    public nameColour!: string;
+    public customScale!: number;
+    public nextGridX!: number;
+    public nextGridY!: number;
+    public fadingAlpha!: number;
+
+    protected constructor(public id: string, public type: string) {
+        // this.loadDirty();
     }
 
-    /**
-     * This is important for when the client is
-     * on a mobile screen. So the sprite has to be
-     * handled differently.
-     */
-    loadDirty(): void {
-        this.dirty = true;
+    // /**
+    //  * This is important for when the client is
+    //  * on a mobile screen. So the sprite has to be
+    //  * handled differently.
+    //  */
+    // protected loadDirty(): void {
+    //     this.dirty = true;
 
-        this.dirtyCallback?.();
-    }
+    //     this.dirtyCallback?.();
+    // }
 
-    fadeIn(time: number): void {
+    public fadeIn(time: number): void {
         this.fading = true;
         this.fadingTime = time;
     }
 
-    blink(speed: number): void {
+    public blink(speed: number): void {
         this.blinking = window.setInterval(() => this.toggleVisibility(), speed);
     }
 
-    stopBlinking(): void {
-        if (this.blinking) clearInterval(this.blinking);
+    protected stopBlinking(): void {
+        const { blinking } = this;
+
+        if (blinking) clearInterval(blinking);
 
         this.setVisible(true);
     }
 
-    idle(o?: number): void {
-        o || this.orientation;
+    public idle(): void {
+        //
     }
 
-    setName(name: string): void {
+    public setName(name: string): void {
         this.name = name;
     }
 
-    setSprite(sprite: Sprite | undefined): void {
+    public setSprite(sprite: Sprite | undefined): void {
         if (!sprite || (this.sprite && this.sprite.name === sprite.name)) return;
 
-        if (this.type === 'player') sprite.loadHurt = true;
+        const { type } = this;
+
+        if (type === 'player') sprite.loadHurt = true;
 
         if (!sprite.loaded) sprite.load();
 
@@ -181,35 +158,39 @@ export default class Entity {
         this.readyCallback?.();
     }
 
-    setAnimation(name: string, speed: number, count?: number, onEndCount?: () => void): void {
-        if (!this.spriteLoaded || this.currentAnimation?.name === name) return;
+    public setAnimation(name: string, speed: number, count = 0, onEndCount?: () => void): void {
+        const { spriteLoaded, animations } = this;
 
-        const anim = this.getAnimationByName(name);
+        if (!spriteLoaded || this.currentAnimation?.name === name) return;
+
+        const anim = animations[name];
 
         if (!anim) return;
 
         this.currentAnimation = anim;
 
-        if (name.slice(0, 3) === 'atk') this.currentAnimation.reset();
+        const { currentAnimation } = this;
 
-        this.currentAnimation.setSpeed(speed);
+        if (name.startsWith('atk')) currentAnimation.reset();
 
-        this.currentAnimation.setCount(count || 0, onEndCount || (() => this.idle()));
+        currentAnimation.setSpeed(speed);
+
+        currentAnimation.setCount(count, onEndCount || (() => this.idle()));
     }
 
-    setPosition(x: number, y: number): void {
+    private setPosition(x: number, y: number): void {
         this.x = x;
         this.y = y;
     }
 
-    setGridPosition(x: number, y: number): void {
+    public setGridPosition(x: number, y: number): void {
         this.gridX = x;
         this.gridY = y;
 
         this.setPosition(x * 16, y * 16);
     }
 
-    setCountdown(count: number): void {
+    public setCountdown(count: number): void {
         this.counter = count;
 
         this.countdownTime = Date.now();
@@ -217,87 +198,83 @@ export default class Entity {
         this.hasCounter = true;
     }
 
-    setVisible(visible: boolean): void {
+    private setVisible(visible: boolean): void {
         this.visible = visible;
     }
 
-    setIdleSpeed(idleSpeed: number): void {
+    public setIdleSpeed(idleSpeed: number): void {
         this.idleSpeed = idleSpeed;
     }
 
-    hasWeapon(): boolean {
+    public hasWeapon(): boolean {
         return false;
     }
 
-    getDistance(entity: Entity): number {
-        const x = Math.abs(this.gridX - entity.gridX),
-            y = Math.abs(this.gridY - entity.gridY);
+    public getDistance(entity: Entity): number {
+        const { gridX, gridY } = this;
+
+        const x = Math.abs(gridX - entity.gridX);
+        const y = Math.abs(gridY - entity.gridY);
 
         return x > y ? x : y;
     }
 
-    getCoordDistance(toX: number, toY: number): number {
-        const x = Math.abs(this.gridX - toX),
-            y = Math.abs(this.gridY - toY);
+    // getCoordDistance(toX: number, toY: number): number {
+    //     const x = Math.abs(this.gridX - toX);
+    //     const y = Math.abs(this.gridY - toY);
 
-        return x > y ? x : y;
-    }
+    //     return x > y ? x : y;
+    // }
 
-    inAttackRadius(entity: Entity): boolean {
-        return (
-            entity &&
-            this.getDistance(entity) < 2 &&
-            !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-        );
-    }
+    // inAttackRadius(entity: Entity): boolean {
+    //     return (
+    //         entity &&
+    //         this.getDistance(entity) < 2 &&
+    //         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
+    //     );
+    // }
 
-    inExtraAttackRadius(entity: Entity): boolean {
-        return (
-            entity &&
-            this.getDistance(entity) < 3 &&
-            !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
-        );
-    }
+    // inExtraAttackRadius(entity: Entity): boolean {
+    //     return (
+    //         entity &&
+    //         this.getDistance(entity) < 3 &&
+    //         !(this.gridX !== entity.gridX && this.gridY !== entity.gridY)
+    //     );
+    // }
 
-    getAnimationByName(name: string): Animation {
-        if (name in this.animations) return this.animations[name];
+    // getSprite(): string {
+    //     return this.sprite.name;
+    // }
 
-        return null;
-    }
-
-    getSprite(): string {
-        return this.sprite.name;
-    }
-
-    getAngle(): number {
+    public getAngle(): number {
         return 0;
     }
 
-    toggleVisibility(): void {
+    private toggleVisibility(): void {
         this.setVisible(!this.visible);
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.visible;
     }
 
-    drawNames(): boolean {
+    public drawNames(): boolean {
         return true;
     }
 
-    hasShadow(): boolean {
+    public hasShadow(): boolean {
         return false;
     }
 
-    hasPath(): boolean {
+    public hasPath(): boolean {
         return false;
     }
 
-    onReady(callback: () => void): void {
-        this.readyCallback = callback;
-    }
+    // onReady(callback: () => void): void {
+    //     this.readyCallback = callback;
+    // }
 
-    onDirty(callback: () => void): void {
-        this.dirtyCallback = callback;
-    }
+    // onDirty(callback: () => void): void {
+    //     this.dirtyCallback = callback;
+    // }
 }

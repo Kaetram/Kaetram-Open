@@ -1,48 +1,44 @@
-#!/usr/bin/env ts-node-script
+#!/usr/bin/env -S yarn ts-node-script
 
-import fs from 'fs';
-import _ from 'lodash';
 import world from '@kaetram/server/data/map/world.json';
-import rawJson from './data/map.json';
 
-export default class Helper {
-    #width = 1000;
-    #height = 1000;
+class Helper {
+    #width = world.width;
+    #height = world.height;
 
     public constructor() {
         const stdin = process.openStdin();
 
         stdin.on('data', (data: string) => {
-            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
-                value = parseInt(message);
+            const message = data.toString().replace(/(\r\n|\n|\r)/gm, '');
+            const value = parseInt(message);
 
             if (isNaN(value)) return;
 
-            let position = this.indexToGridPosition(value + 1),
-                adjustedIndex = this.gridPositionToIndex(position.x, position.y, 700);
+            const position = this.indexToGridPosition(value + 1);
+            const adjustedIndex = this.gridPositionToIndex(position.x, position.y, 700);
 
             console.log(position);
             console.log(adjustedIndex);
         });
     }
 
-    private findDoorId(doors: any, x: number, y: number) {
-        for (let i in doors)
-            if (doors[i].x === x * 16 && doors[i].y === y * 16)
-                return doors[i].id;
+    // private findDoorId(doors: any, x: number, y: number) {
+    //     for (const i in doors)
+    //         if (doors[i].x === x * 16 && doors[i].y === y * 16) return doors[i].id;
 
-        return null;
-    }
+    //     return null;
+    // }
 
-    private getTileData(x: number, y: number): void {
-        const index = this.gridPositionToIndex(x, y);
+    // private getTileData(x: number, y: number): void {
+    //     const index = this.gridPositionToIndex(x, y);
 
-        console.log(
-            `"${index}": { "data": [${
-                world.data[index]
-            }], "isColliding": ${world.collisions.includes(index)} },`
-        );
-    }
+    //     console.log(
+    //         `"${index}": { "data": [${
+    //             world.data[index]
+    //         }], "isColliding": ${world.collisions.includes(index)} },`
+    //     );
+    // }
 
     private gridPositionToIndex(x: number, y: number, width?: number): number {
         return y * (width || this.#width) + x;
@@ -51,12 +47,12 @@ export default class Helper {
     private indexToGridPosition(tileIndex: number): { x: number; y: number } {
         tileIndex -= 1;
 
-        const x = this.getX(tileIndex + 1, this.#width),
-            y = Math.floor(tileIndex / this.#height);
+        const x = this.getX(tileIndex + 1, this.#width);
+        const y = Math.floor(tileIndex / this.#height);
 
         return {
-            x: x,
-            y: y
+            x,
+            y
         };
     }
 
@@ -67,4 +63,4 @@ export default class Helper {
     }
 }
 
-new Helper();
+export default new Helper();
