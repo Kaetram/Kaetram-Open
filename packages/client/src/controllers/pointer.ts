@@ -13,13 +13,15 @@ import type Camera from '../renderer/camera';
 export default class PointerController {
     private pointers: { [id: string]: Pointer } = {};
 
-    private scale = this.getScale();
+    private scale;
 
     private container = $('#bubbles');
 
     private camera?: Camera | null;
 
-    public constructor(private game: Game) {}
+    public constructor(private game: Game) {
+        this.scale = this.getScale();
+    }
 
     public create(id: string, type: Modules.Pointers, name?: string): void {
         const { pointers, container } = this;

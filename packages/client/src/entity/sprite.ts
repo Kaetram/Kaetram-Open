@@ -18,7 +18,7 @@ export interface Animations {
 }
 
 export default class Sprite {
-    public id = this.sprite.id;
+    public id;
 
     public name!: string;
     public type!: string;
@@ -47,7 +47,9 @@ export default class Sprite {
     public idleSpeed!: number;
     public hasDeathAnimation!: boolean;
 
-    public constructor(private sprite: SpriteData) {}
+    public constructor(private sprite: SpriteData) {
+        this.id = sprite.id;
+    }
 
     public load(): void {
         this.image = new Image();

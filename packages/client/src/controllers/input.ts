@@ -26,9 +26,9 @@ interface TargetData {
 }
 
 export default class InputController {
-    private app = this.game.app;
-    private renderer = this.game.renderer;
-    private map = this.game.map;
+    private app;
+    private renderer;
+    private map;
 
     public selectedCellVisible = false;
     private cursorVisible = true;
@@ -63,6 +63,10 @@ export default class InputController {
     private entity?: Entity;
 
     public constructor(private game: Game) {
+        this.app = game.app;
+        this.renderer = game.renderer;
+        this.map = game.map;
+
         this.load();
     }
 

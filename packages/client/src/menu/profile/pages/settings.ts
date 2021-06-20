@@ -3,9 +3,9 @@ import $ from 'jquery';
 import type Game from '../../../game';
 
 export default class Settings {
-    private audio = this.game.audio;
-    private storage = this.game.storage;
-    private renderer = this.game.renderer;
+    private audio;
+    private storage;
+    private renderer;
 
     private body = $('#settingsPage');
     private button = $('#settingsButton');
@@ -26,6 +26,10 @@ export default class Settings {
     private loaded = false;
 
     public constructor(private game: Game) {
+        this.audio = game.audio;
+        this.storage = game.storage;
+        this.renderer = game.renderer;
+
         this.load();
     }
 

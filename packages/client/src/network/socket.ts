@@ -8,16 +8,18 @@ import type { Socket as IOSocket } from 'socket.io-client';
 import type Game from '../game';
 
 export default class Socket {
-    private config = this.game.app.config;
+    private config;
+    public messages;
+
     private connection!: IOSocket;
 
     private listening = false;
-
     // disconnected = false;
 
-    public messages = new Messages(this.game.app);
-
-    public constructor(private game: Game) {}
+    public constructor(private game: Game) {
+        this.config = game.app.config;
+        this.messages = new Messages(game.app);
+    }
 
     /**
      * Asks the hub for a server to connect to.

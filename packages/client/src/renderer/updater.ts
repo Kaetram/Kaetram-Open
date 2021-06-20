@@ -8,14 +8,16 @@ import type Entity from '../entity/entity';
 import type Game from '../game';
 
 export default class Updater {
-    private input = this.game.input;
+    private input;
 
     private sprites: SpritesController | null = null;
 
     private timeDifferential!: number;
     private lastUpdate!: Date;
 
-    public constructor(private game: Game) {}
+    public constructor(private game: Game) {
+        this.input = game.input;
+    }
 
     public update(): void {
         this.timeDifferential = (Date.now() - this.lastUpdate?.getTime()) / 1000;
