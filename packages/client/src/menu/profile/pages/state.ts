@@ -31,7 +31,7 @@ export default class State extends Page {
         this.bootsSlot
     ];
 
-    public loaded = false;
+    // public loaded = false;
 
     public constructor(private game: Game) {
         super('#statePage');
@@ -41,7 +41,7 @@ export default class State extends Page {
         this.load();
     }
 
-    public resize(): void {
+    public override resize(): void {
         this.loadSlots();
     }
 

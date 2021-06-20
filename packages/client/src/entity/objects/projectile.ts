@@ -3,12 +3,12 @@ import Entity from '../entity';
 import type Character from '../character/character';
 
 export default class Projectile extends Entity {
-    public name = '';
+    // public name = '';
 
     public speed = 150;
-    public angle = 0;
+    // public angle = 0;
 
-    public readonly fadingDuration = 100;
+    public override readonly fadingDuration = 100;
 
     public target!: Character;
 
@@ -42,9 +42,9 @@ export default class Projectile extends Entity {
         return 1;
     }
 
-    public hasPath(): boolean {
-        return false;
-    }
+    // public hasPath(): boolean {
+    //     return false;
+    // }
 
     public updateAngle(): void {
         if (!this.target) return;
@@ -53,7 +53,7 @@ export default class Projectile extends Entity {
             Math.atan2(this.target.y - this.y, this.target.x - this.x) * (180 / Math.PI) - 90;
     }
 
-    public getAngle(): number {
+    public override getAngle(): number {
         return (this.angle * Math.PI) / 180;
     }
 
