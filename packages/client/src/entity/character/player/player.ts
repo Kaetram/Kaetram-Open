@@ -45,10 +45,6 @@ export default class Player extends Character {
 
     public disableAction = false;
 
-    public attackRange!: number;
-    public orientation!: number;
-    public movementSpeed!: number;
-
     private lastLogin!: number | null;
 
     public armour!: Armour;
