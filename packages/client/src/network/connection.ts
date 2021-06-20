@@ -1,82 +1,54 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import _ from 'lodash';
 
-import App from '../app';
-import AudioController from '../controllers/audio';
-import BubbleController from '../controllers/bubble';
-import EntitiesController, { AnyEntity } from '../controllers/entities';
-import InfoController from '../controllers/info';
-import InputController from '../controllers/input';
-import MenuController from '../controllers/menu';
-import PointerController from '../controllers/pointer';
-import Character from '../entity/character/character';
-import Equipment from '../entity/character/player/equipment/equipment';
-import Player, { PlayerData } from '../entity/character/player/player';
-import Game from '../game';
-import log from '../lib/log';
-import Map from '../map/map';
-import Slot from '../menu/container/slot';
-import Inventory from '../menu/inventory';
-import Overlay from '../renderer/overlay';
-import Renderer from '../renderer/renderer';
-import * as Detect from '../utils/detect';
 import * as Modules from '@kaetram/common/src/modules';
-import Storage from '../utils/storage';
-import TeamWar from './impl/teamwar';
-import Messages from './messages';
 import Packets from '@kaetram/common/src/packets';
-import Socket from './socket';
+
+import log from '../lib/log';
+import * as Detect from '../utils/detect';
+import TeamWar from './impl/teamwar';
+
+import type { AnyEntity } from '../controllers/entities';
+import type Character from '../entity/character/character';
+import type Equipment from '../entity/character/player/equipment/equipment';
+import type Player from '../entity/character/player/player';
+import type { PlayerData } from '../entity/character/player/player';
+import type Game from '../game';
+import type Slot from '../menu/container/slot';
 
 /**
  * TODO: Types to be done when common server and client types are made.
  */
 
 export default class Connection {
-    game: Game;
-    app: App;
-    audio: AudioController;
-    messages: Messages;
-    storage: Storage;
-    socket: Socket;
-    input: InputController;
-    menu: MenuController;
-    entities: EntitiesController;
-    map: Map;
-    overlays: Overlay;
-    renderer: Renderer;
-    bubble: BubbleController;
-    info: InfoController;
-    pointer: PointerController;
-    inventory: Inventory;
-    teamWar: TeamWar;
-    population!: number;
-    queueColour!: string[];
-    time!: number;
+    private app = this.game.app;
+    private audio = this.game.audio;
+    private messages = this.game.messages;
+    private storage = this.game.storage;
+    private socket = this.game.socket;
+    private input = this.game.input;
+    private menu = this.game.menu;
+    private entities = this.game.entities;
+    private map = this.game.map;
+    private overlays = this.game.overlays;
+    private renderer = this.game.renderer;
+    private bubble = this.game.bubble;
+    private info = this.game.info;
+    private pointer = this.game.pointer;
+    // private inventory = this.game.inventory;
 
-    constructor(game: Game) {
-        this.game = game;
-        this.app = game.app;
-        this.audio = game.audio;
-        this.messages = game.messages;
-        this.storage = game.storage;
-        this.socket = game.socket;
-        this.input = game.input;
-        this.menu = game.menu;
-        this.entities = game.entities;
-        this.map = game.map;
-        this.overlays = game.overlays;
-        this.renderer = game.renderer;
-        this.bubble = game.bubble;
-        this.info = game.info;
-        this.pointer = game.pointer;
-        this.inventory = game.inventory;
+    private teamWar = new TeamWar();
 
-        this.teamWar = new TeamWar();
+    // private population!: number;
+    // private queueColour!: string[];
+    private time!: number;
 
+    public constructor(private game: Game) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.messages.onHandshake((data: Game) => {
             this.game.id = data.id;
             this.game.development = data.development;
@@ -522,9 +494,9 @@ export default class Connection {
             }
         });
 
-        this.messages.onPopulation((population) => {
-            this.population = population;
-        });
+        // this.messages.onPopulation((population) => {
+        //     this.population = population;
+        // });
 
         this.messages.onPoints((data: any) => {
             const entity = this.entities.get<Player>(data.id);
@@ -1046,7 +1018,7 @@ export default class Connection {
                     this.overlays.updateOverlay(info.image);
 
                     if (!this.renderer.transitioning) this.renderer.updateDarkMask(info.colour);
-                    else this.queueColour = info.colour;
+                    // else this.queueColour = info.colour;
 
                     break;
 

@@ -1,22 +1,23 @@
 import Packets from '@kaetram/common/src/packets';
 
-import Game from '../../../game';
 import log from '../../../lib/log';
-import Player from './player';
+
+import type Game from '../../../game';
+import type Player from './player';
 
 export default class PlayerHandler {
-    map = this.game.map;
-    camera = this.game.getCamera();
-    input = this.game.input;
-    entities = this.game.entities;
-    socket = this.game.socket;
-    renderer = this.game.renderer;
+    private map = this.game.map;
+    private camera = this.game.getCamera();
+    private input = this.game.input;
+    private entities = this.game.entities;
+    private socket = this.game.socket;
+    private renderer = this.game.renderer;
 
-    constructor(private game: Game, private player: Player) {
+    public constructor(private game: Game, private player: Player) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         const { player, game, map, camera, input, entities, socket, renderer } = this;
 
         player.onRequestPath((x, y) => {
@@ -196,13 +197,13 @@ export default class PlayerHandler {
         }
     }
 
-    getTargetId(): string | null {
+    private getTargetId(): string | null {
         const { target } = this.player;
 
         return target ? target.id : null;
     }
 
-    getTargetType(): number {
+    private getTargetType(): number {
         const { target } = this.player;
 
         if (!target) return Packets.TargetOpcode.None;

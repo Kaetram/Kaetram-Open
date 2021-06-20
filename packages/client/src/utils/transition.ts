@@ -1,21 +1,16 @@
 export default class Transition {
-    inProgress: boolean;
-    endValue: number;
-    startValue: number;
-    duration: number;
-    startTime!: number;
-    updateFunction?(interval: number): void;
-    stopFunction?(): void;
-    count!: number;
+    public startValue = 0;
+    public endValue = 0;
+    private duration = 0;
+    public inProgress = false;
+    private startTime!: number;
 
-    constructor() {
-        this.startValue = 0;
-        this.endValue = 0;
-        this.duration = 0;
-        this.inProgress = false;
-    }
+    private count!: number;
 
-    start(
+    private updateFunction?(interval: number): void;
+    private stopFunction?(): void;
+
+    public start(
         currentTime: number,
         updateFunction: ((interval: number) => void) | undefined,
         stopFunction: (() => void) | undefined,
@@ -34,7 +29,7 @@ export default class Transition {
         this.count = 0;
     }
 
-    step(currentTime: number): void {
+    public step(currentTime: number): void {
         if (!this.inProgress) return;
 
         if (this.count > 0) this.count--;
@@ -53,19 +48,19 @@ export default class Transition {
         }
     }
 
-    restart(currentTime: number, startValue: number, endValue: number): void {
-        this.start(
-            currentTime,
-            this.updateFunction,
-            this.stopFunction,
-            startValue,
-            endValue,
-            this.duration
-        );
-        this.step(currentTime);
-    }
+    // restart(currentTime: number, startValue: number, endValue: number): void {
+    //     this.start(
+    //         currentTime,
+    //         this.updateFunction,
+    //         this.stopFunction,
+    //         startValue,
+    //         endValue,
+    //         this.duration
+    //     );
+    //     this.step(currentTime);
+    // }
 
-    stop(): void {
+    private stop(): void {
         this.inProgress = false;
     }
 }

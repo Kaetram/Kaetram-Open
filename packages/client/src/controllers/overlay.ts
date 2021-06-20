@@ -1,13 +1,13 @@
 import $ from 'jquery';
 
 import Character from '../entity/character/character';
+import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
 import Player from '../entity/character/player/player';
 import Item from '../entity/objects/item';
 
 import type Entity from '../entity/entity';
 import type InputController from './input';
-import Mob from '../entity/character/mob/mob';
 
 export default class OverlayController {
     private hovering!: Entity | null;

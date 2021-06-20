@@ -18,8 +18,6 @@ import type Weapon from '../entity/character/player/equipment/weapon';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
-import type Map from '../map/map';
-import type Renderer from '../renderer/renderer';
 
 interface EntitiesCollection {
     [id: string]: Entity;

@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Game from '../../../game';
 import Page from '../page';
 
 /**
@@ -16,21 +15,14 @@ interface ProfessionsInfo {
 }
 
 export default class Professions extends Page {
-    professions: JQuery;
-    professionsList: JQuery<HTMLUListElement>;
-    game: Game;
+    private professions = $('#professionsList');
+    private professionsList = this.professions.find('ul');
 
-    constructor(game: Game) {
+    public constructor() {
         super('#professionsPage');
-
-        this.professions = $('#professionsList');
-
-        this.professionsList = this.professions.find('ul');
-
-        this.game = game;
     }
 
-    load(professions: ProfessionsInfo[]): void {
+    public load(professions: ProfessionsInfo[]): void {
         _.each(professions, (profession) => {
             const item = this.getItem(profession.id);
             const name = this.getName(profession.id);
@@ -51,17 +43,17 @@ export default class Professions extends Page {
         });
     }
 
-    sync(info: ProfessionsInfo): void {
+    public sync(info: ProfessionsInfo): void {
         if (!info) return;
 
         $(`#professionName${info.id}`).find('p').text(`Level ${info.level} | ${info.percentage}%`);
     }
 
-    getItem(id: string): JQuery {
+    private getItem(id: string): JQuery {
         return $(`<div id="professionItem${id}" class="professionItem"></div>`);
     }
 
-    getName(id: string): JQuery {
+    private getName(id: string): JQuery {
         return $(`<div id="professionName${id}" class="professionName"></div>`);
     }
 }

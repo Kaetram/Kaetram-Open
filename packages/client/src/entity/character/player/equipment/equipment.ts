@@ -1,7 +1,7 @@
 export default class Equipment {
     public type!: number;
 
-    constructor(
+    public constructor(
         public name: string,
         public string: string,
         public count: number,
