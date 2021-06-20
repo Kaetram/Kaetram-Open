@@ -58,8 +58,8 @@ interface Resources {
 }
 
 export default class Map {
-    private supportsWorker = this.game.app.hasWorker();
-    private renderer = this.game.renderer;
+    private supportsWorker;
+    private renderer;
 
     public data: number[] = [];
     private objects: unknown[] = [];
@@ -90,8 +90,10 @@ export default class Map {
     private depth!: MapDepth;
 
     public constructor(private game: Game) {
-        this.load();
+        this.supportsWorker = game.app.hasWorker();
+        this.renderer = game.renderer;
 
+        this.load();
         this.ready();
     }
 

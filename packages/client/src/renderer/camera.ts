@@ -5,8 +5,8 @@ import Entity from '../entity/entity';
 import Renderer from './renderer';
 
 export default class Camera {
-    private map = this.renderer.map;
-    private app = this.renderer.game.app;
+    private map;
+    private app;
 
     // offset = 0.5;
 
@@ -19,7 +19,7 @@ export default class Camera {
     // private prevGridX = 0;
     // private prevGridY = 0;
 
-    private tileSize = this.renderer.tileSize;
+    private tileSize;
 
     // speed = 1;
     // private panning = false;
@@ -34,6 +34,11 @@ export default class Camera {
     private borderY!: number;
 
     public constructor(private renderer: Renderer) {
+        this.map = renderer.map;
+        this.app = renderer.game.app;
+
+        this.tileSize = renderer.tileSize;
+
         this.update();
     }
 

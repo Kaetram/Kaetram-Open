@@ -6,14 +6,23 @@ import type Game from '../../../game';
 import type Player from './player';
 
 export default class PlayerHandler {
-    private map = this.game.map;
-    private camera = this.game.getCamera();
-    private input = this.game.input;
-    private entities = this.game.entities;
-    private socket = this.game.socket;
-    private renderer = this.game.renderer;
+    private map;
+    private camera;
+    private input;
+    private entities;
+    private socket;
+    private renderer;
 
     public constructor(private game: Game, private player: Player) {
+        const { map, input, entities, socket, renderer } = game;
+
+        this.map = map;
+        this.camera = game.getCamera();
+        this.input = input;
+        this.entities = entities;
+        this.socket = socket;
+        this.renderer = renderer;
+
         this.load();
     }
 

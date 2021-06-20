@@ -22,20 +22,20 @@ import type Slot from '../menu/container/slot';
  */
 
 export default class Connection {
-    private app = this.game.app;
-    private audio = this.game.audio;
-    private messages = this.game.messages;
-    private storage = this.game.storage;
-    private socket = this.game.socket;
-    private input = this.game.input;
-    private menu = this.game.menu;
-    private entities = this.game.entities;
-    private map = this.game.map;
-    private overlays = this.game.overlays;
-    private renderer = this.game.renderer;
-    private bubble = this.game.bubble;
-    private info = this.game.info;
-    private pointer = this.game.pointer;
+    private app;
+    private audio;
+    private messages;
+    private storage;
+    private socket;
+    private input;
+    private menu;
+    private entities;
+    private map;
+    private overlays;
+    private renderer;
+    private bubble;
+    private info;
+    private pointer;
     // private inventory = this.game.inventory;
 
     private teamWar = new TeamWar();
@@ -45,6 +45,38 @@ export default class Connection {
     private time!: number;
 
     public constructor(private game: Game) {
+        const {
+            app,
+            audio,
+            messages,
+            storage,
+            socket,
+            input,
+            menu,
+            entities,
+            map,
+            overlays,
+            renderer,
+            bubble,
+            info,
+            pointer
+        } = game;
+
+        this.app = app;
+        this.audio = audio;
+        this.messages = messages;
+        this.storage = storage;
+        this.socket = socket;
+        this.input = input;
+        this.menu = menu;
+        this.entities = entities;
+        this.map = map;
+        this.overlays = overlays;
+        this.renderer = renderer;
+        this.bubble = bubble;
+        this.info = info;
+        this.pointer = pointer;
+
         this.load();
     }
 

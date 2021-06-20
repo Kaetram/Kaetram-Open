@@ -3,7 +3,7 @@ import $ from 'jquery';
 import type Game from '../game';
 
 export default class Header {
-    private player = this.game.player;
+    private player;
 
     private health = $('#health');
     private healthBar = $('#healthBar');
@@ -13,6 +13,8 @@ export default class Header {
     private expBar = $('#expBar');
 
     public constructor(private game: Game) {
+        this.player = game.player;
+
         this.load();
     }
 
