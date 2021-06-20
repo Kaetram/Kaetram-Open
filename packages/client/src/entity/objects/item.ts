@@ -1,7 +1,7 @@
 import Entity from '../entity';
 
 export default class Item extends Entity {
-    public type = 'item';
+    public override type = 'item';
 
     public dropped = false;
 
@@ -15,11 +15,11 @@ export default class Item extends Entity {
         super(id, kind);
     }
 
-    public idle(): void {
+    public override idle(): void {
         this.setAnimation('idle', 150);
     }
 
-    public hasShadow(): boolean {
+    public override hasShadow(): boolean {
         return true;
     }
 }

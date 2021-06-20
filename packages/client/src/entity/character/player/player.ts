@@ -22,21 +22,21 @@ export default class Player extends Character {
     public rights = 0;
     public wanted = false;
 
-    public experience = -1;
+    public override experience = -1;
     public nextExperience = -1;
     public prevExperience = -1;
-    public level = -1;
+    public override level = -1;
 
     public pvpKills = -1;
     public pvpDeaths = -1;
 
-    public hitPoints = -1;
-    public maxHitPoints = -1;
+    public override hitPoints = -1;
+    public override maxHitPoints = -1;
 
-    public mana = -1;
-    public maxMana = -1;
+    public override mana = -1;
+    public override maxMana = -1;
 
-    public pvp = false;
+    public override pvp = false;
 
     public moveLeft = false;
     public moveRight = false;
@@ -132,11 +132,11 @@ export default class Player extends Character {
         return this.weapon?.ranged || false;
     }
 
-    public hasWeapon(): boolean {
+    public override hasWeapon(): boolean {
         return this.weapon?.exists() || false;
     }
 
-    public setName(name: string): void {
+    public override setName(name: string): void {
         this.username = name;
         this.name = name;
     }
