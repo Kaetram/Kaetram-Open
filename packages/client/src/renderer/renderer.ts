@@ -70,37 +70,21 @@ const ROT_180_DEG = Math.PI;
 export default class Renderer {
     // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
 
-    private context = this.entitiesCanvas.getContext('2d')!; // Entities;
+    private context; // Entities;
 
-    public backContext = (!Detect.supportsWebGL()
-        ? this.background.getContext('2d')
-        : this.background.getContext('webgl') || this.background.getContext('experimental-webgl'))!;
+    public backContext;
 
-    private foreContext = this.foreground.getContext('2d')!; // Foreground
-    private overlayContext = this.overlay.getContext('2d')!; // Lighting
-    private textContext = this.textCanvas.getContext('2d')!; // Texts
-    private cursorContext = this.cursor.getContext('2d')!; // Cursor
+    private foreContext; // Foreground
+    private overlayContext; // Lighting
+    private textContext; // Texts
+    private cursorContext; // Cursor
 
-    private canvases = [
-        this.background,
-        this.entitiesCanvas,
-        this.foreground,
-        this.overlay,
-        this.textCanvas,
-        this.cursor
-    ];
+    private canvases: HTMLCanvasElement[];
 
-    private allContexts = [
-        this.context,
-        this.backContext,
-        this.foreContext,
-        this.overlayContext,
-        this.textContext,
-        this.cursorContext
-    ];
+    private allContexts: RenderingContext[];
 
-    private contexts = [this.context, this.textContext, this.overlayContext];
-    private drawingContexts = [this.backContext, this.foreContext]; // For drawing the map.
+    private contexts: CanvasRenderingContext2D[];
+    private drawingContexts: RenderingContext[]; // For drawing the map.
 
     private lightings: RendererLighting[] = [];
 
@@ -165,6 +149,36 @@ export default class Renderer {
         public cursor: HTMLCanvasElement,
         public game: Game
     ) {
+        this.context = entitiesCanvas.getContext('2d')!; // Entities;
+
+        this.backContext = (
+            !Detect.supportsWebGL()
+                ? background.getContext('2d')
+                : background.getContext('webgl') || background.getContext('experimental-webgl')
+        )!;
+
+        this.foreContext = foreground.getContext('2d')!; // Foreground
+        this.overlayContext = overlay.getContext('2d')!; // Lighting
+        this.textContext = textCanvas.getContext('2d')!; // Texts
+        this.cursorContext = cursor.getContext('2d')!; // Cursor
+
+        this.canvases = [background, entitiesCanvas, foreground, overlay, textCanvas, cursor];
+
+        const { context, backContext, foreContext, overlayContext, textContext, cursorContext } =
+            this;
+
+        this.allContexts = [
+            context,
+            backContext,
+            foreContext,
+            overlayContext,
+            textContext,
+            cursorContext
+        ];
+
+        this.contexts = [context, textContext, overlayContext];
+        this.drawingContexts = [backContext, foreContext];
+
         this.load();
     }
 

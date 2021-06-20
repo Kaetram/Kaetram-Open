@@ -11,7 +11,7 @@ import type Game from '../game';
 import type Slot from './container/slot';
 
 export default class Inventory {
-    private actions = this.game.menu.actions;
+    private actions;
 
     private body = $('#inventory');
     private button = $('#inventoryButton');
@@ -23,6 +23,7 @@ export default class Inventory {
     private selectedItem: Slot | null = null;
 
     public constructor(private game: Game, size: number, data: Equipment[]) {
+        this.actions = game.menu.actions;
         this.container = new Container(size);
 
         this.load(data);

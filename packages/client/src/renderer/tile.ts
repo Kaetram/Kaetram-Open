@@ -4,12 +4,14 @@ export default class Tile {
     public x!: number;
     public y!: number;
 
-    private animationInfo = this.map.getTileAnimation(this.id);
+    private animationInfo;
     private animationIndex = 0;
     private lastTime = 0;
     // private canDraw = true;
 
-    public constructor(public id: number, public index: number, private map: Map) {}
+    public constructor(public id: number, public index: number, map: Map) {
+        this.animationInfo = map.getTileAnimation(id);
+    }
 
     public setPosition(position: Pos): void {
         this.x = position.x;

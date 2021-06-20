@@ -8,7 +8,7 @@ import Page from '../page';
 import type Game from '../../../game';
 
 export default class State extends Page {
-    private player = this.game.player;
+    private player;
 
     private name = $('#profileName');
     private level = $('#profileLevel');
@@ -35,6 +35,8 @@ export default class State extends Page {
 
     public constructor(private game: Game) {
         super('#statePage');
+
+        this.player = game.player;
 
         this.load();
     }

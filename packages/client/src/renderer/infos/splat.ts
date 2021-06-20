@@ -5,8 +5,8 @@ export default class Splat {
     private lastTime = 0;
     private speed = 100;
 
-    private updateSpeed = this.type === Modules.Hits.Heal ? 2 : 1;
-    private duration = this.type === Modules.Hits.Heal ? 400 : 1000;
+    private updateSpeed;
+    private duration;
 
     public fill!: string;
     public stroke!: string;
@@ -20,7 +20,10 @@ export default class Splat {
         public x: number,
         public y: number,
         private statique: boolean
-    ) {}
+    ) {
+        this.updateSpeed = type === Modules.Hits.Heal ? 2 : 1;
+        this.duration = type === Modules.Hits.Heal ? 400 : 1000;
+    }
 
     public setColours(fill: string, stroke: string): void {
         this.fill = fill;

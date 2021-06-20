@@ -33,7 +33,7 @@ export interface Movable {
 export type AnyEntity = Entity & Player & Mob & Projectile & Weapon & Equipment & Movable;
 
 export default class EntitiesController {
-    private renderer = this.game.renderer;
+    private renderer;
 
     public grids!: Grids;
     public sprites!: SpritesController;
@@ -41,7 +41,9 @@ export default class EntitiesController {
     public entities: EntitiesCollection = {};
     public decrepit: Entity[] = [];
 
-    public constructor(private game: Game) {}
+    public constructor(private game: Game) {
+        this.renderer = game.renderer;
+    }
 
     public async load(): Promise<void> {
         const { game, sprites } = this;
