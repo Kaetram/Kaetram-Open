@@ -1,29 +1,17 @@
 import * as Modules from '@kaetram/common/src/modules';
 
 export default class Pointer {
-    id: string;
-    element: JQuery<HTMLElement>;
-    type: Modules.Pointers;
-    blinkInterval: number;
-    visible: boolean;
-    x: number;
-    y: number;
+    private blinkInterval!: number;
+    private visible = true;
 
-    constructor(id: string, element: JQuery, type: number) {
-        this.id = id;
-        this.element = element;
-        this.type = type;
+    public x = -1;
+    public y = -1;
 
-        this.blinkInterval = null;
-        this.visible = true;
-
-        this.x = -1;
-        this.y = -1;
-
+    public constructor(public id: string, public element: JQuery, public type: Modules.Pointers) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.blinkInterval = window.setInterval(() => {
             if (this.visible) this.hide();
             else this.show();
@@ -32,24 +20,24 @@ export default class Pointer {
         }, 600);
     }
 
-    destroy(): void {
+    public destroy(): void {
         clearInterval(this.blinkInterval);
 
         if (this.type === Modules.Pointers.Button) this.hide();
         else this.element.remove();
     }
 
-    setPosition(x: number, y: number): void {
+    public setPosition(x: number, y: number): void {
         this.x = x;
         this.y = y;
     }
 
-    show(): void {
+    private show(): void {
         if (this.type === Modules.Pointers.Button) this.element.addClass('active');
         else this.element.show();
     }
 
-    hide(): void {
+    private hide(): void {
         if (this.type === Modules.Pointers.Button) this.element.removeClass('active');
         else this.element.hide();
     }

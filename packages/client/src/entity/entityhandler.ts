@@ -1,104 +1,85 @@
-import EntitiesController from '../controllers/entities';
-import Game from '../game';
 import Packets from '@kaetram/common/src/packets';
-import Player from './character/player/player';
-import Entity from './entity';
+
+import Character from './character/character';
+
+import type EntitiesController from '../controllers/entities';
+import type Game from '../game';
 
 export default class EntityHandler {
-    entity: Player;
-    game: Game;
-    entities: EntitiesController;
+    private game!: Game;
+    private entities!: EntitiesController;
 
-    constructor(entity: Entity) {
-        this.entity = entity as Player;
-        this.game = null;
-        this.entities = null;
-    }
+    public constructor(private entity: Character) {}
 
-    load(): void {
-        if (!this.entity || !this.game) return;
+    public load(): void {
+        const { entity, game, entities } = this;
 
-        if (this.isCharacter()) {
-            this.entity.onRequestPath((x, y) => {
-                let ignores = [];
+        if ((!entity || !game) && !(entity instanceof Character)) return;
 
-                if (this.entity.gridX === x && this.entity.gridY === y) return ignores;
+        entity.onRequestPath((x, y) => {
+            if (entity.gridX === x && entity.gridY === y) return [];
 
-                ignores = [this.entity];
+            const ignores = [entity];
 
-                return this.game.findPath(this.entity, x, y, ignores);
+            return game.findPath(entity, x, y, ignores);
+        });
+
+        entity.onBeforeStep(() => entities.unregisterPosition(entity));
+
+        entity.onStep(() => {
+            entities.registerDuality(entity);
+
+            entity.forEachAttacker((attacker) => {
+                /**
+                 * This is the client-sided logic for representing PVP
+                 * fights. It basically adds another layer of movement
+                 * so the entity is always following the player.
+                 */
+
+                if (entity.type !== 'player') return;
+
+                if (attacker.type !== 'player') return;
+
+                if (!attacker.target) return;
+
+                if (attacker.target.id !== entity.id) return;
+
+                if (attacker.stunned) return;
+
+                attacker.follow(entity);
             });
 
-            this.entity.onBeforeStep(() => this.entities.unregisterPosition(this.entity));
+            if (entity.type === 'mob')
+                game.socket.send(Packets.Movement, [
+                    Packets.MovementOpcode.Entity,
+                    entity.id,
+                    entity.gridX,
+                    entity.gridY
+                ]);
 
-            this.entity.onStep(() => {
-                this.entities.registerDuality(this.entity);
+            if (
+                entity.attackRange > 1 &&
+                entity.target &&
+                entity.getDistance(entity.target) <= entity.attackRange
+            )
+                entity.stop(false);
+        });
 
-                this.entity.forEachAttacker((attacker) => {
-                    /**
-                     * This is the client-sided logic for representing PVP
-                     * fights. It basically adds another layer of movement
-                     * so the entity is always following the player.
-                     */
+        entity.onStopPathing(() => {
+            entities.grids.addToRenderingGrid(entity);
 
-                    if (this.entity.type !== 'player') return;
-
-                    if (attacker.type !== 'player') return;
-
-                    if (!attacker.hasTarget()) return;
-
-                    if (attacker.target.id !== this.entity.id) return;
-
-                    if (attacker.stunned) return;
-
-                    attacker.follow(this.entity);
-                });
-
-                if (this.entity.type === 'mob')
-                    this.game.socket.send(Packets.Movement, [
-                        Packets.MovementOpcode.Entity,
-                        this.entity.id,
-                        this.entity.gridX,
-                        this.entity.gridY
-                    ]);
-
-                if (
-                    this.entity.attackRange > 1 &&
-                    this.entity.hasTarget() &&
-                    this.entity.getDistance(this.entity.target) <= this.entity.attackRange
-                )
-                    this.entity.stop(false);
-            });
-
-            this.entity.onStopPathing(() => {
-                this.entities.grids.addToRenderingGrid(
-                    this.entity,
-                    this.entity.gridX,
-                    this.entity.gridY
-                );
-
-                this.entities.unregisterPosition(this.entity);
-                this.entities.registerPosition(this.entity);
-            });
-        }
+            entities.unregisterPosition(entity);
+            entities.registerPosition(entity);
+        });
     }
 
-    isCharacter(): boolean {
-        return (
-            this.entity.type &&
-            (this.entity.type === 'player' ||
-                this.entity.type === 'mob' ||
-                this.entity.type === 'npc')
-        );
-    }
-
-    setGame(game: Game): void {
+    public setGame(game: Game): void {
         this.game ||= game;
 
         this.setEntities(this.game.entities);
     }
 
-    setEntities(entities: EntitiesController): void {
+    private setEntities(entities: EntitiesController): void {
         this.entities ||= entities;
     }
 }

@@ -1,13 +1,7 @@
 export default class Timer {
-    time: number;
-    duration: number;
+    public constructor(public time: number, public duration: number) {}
 
-    constructor(start: number, duration: number) {
-        this.time = start;
-        this.duration = duration;
-    }
-
-    isOver(time: number): boolean {
+    public isOver(time: number): boolean {
         let over = false;
 
         if (time - this.time > this.duration) {

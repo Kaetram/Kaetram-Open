@@ -1,41 +1,34 @@
-import Game from '../game';
 import log from '../lib/log';
 
 export default class Overlay {
-    game: Game;
-    currentOverlay: string;
-    overlays: { [key: string]: HTMLImageElement };
+    public currentOverlay: string | null = null;
+    private overlays: { [key: string]: HTMLImageElement } = {};
 
-    constructor(game: Game) {
-        this.game = game;
-
-        this.overlays = {};
-        this.currentOverlay = null;
-
+    public constructor() {
         this.load();
     }
 
-    async load(): Promise<void> {
+    private async load(): Promise<void> {
         this.overlays['fog.png'] = await this.loadOverlay('fog.png');
     }
 
-    async loadOverlay(overlayName: string): Promise<HTMLImageElement> {
+    private async loadOverlay(overlayName: string): Promise<HTMLImageElement> {
         const overlay = new Image();
 
         overlay.crossOrigin = 'Anonymous';
-        overlay.src = (await import(`../../img/overlays/${overlayName}`)).default;
+        const { default: image } = await import(`../../img/overlays/${overlayName}`);
+        overlay.src = image;
 
         overlay.addEventListener('load', () => log.debug(`Loaded ${overlayName}`));
 
         return overlay;
     }
 
-    updateOverlay(overlay: string): void {
-        if (overlay in this.overlays) this.currentOverlay = overlay;
-        else this.currentOverlay = overlay;
+    public updateOverlay(overlay: string): void {
+        this.currentOverlay = overlay in this.overlays ? overlay : overlay;
     }
 
-    getFog(): string {
+    public getFog(): string | null {
         return this.currentOverlay;
     }
 }
