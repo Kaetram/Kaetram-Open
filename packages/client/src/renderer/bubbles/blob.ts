@@ -1,46 +1,34 @@
 import $ from 'jquery';
 
-import Entity from '../../entity/entity';
 import Timer from '../../utils/timer';
 
+import type Entity from '../../entity/entity';
+
 export default class Blob {
-    id: string;
-    element: JQuery;
-    duration: number;
-    time: number;
-    timer: Timer;
-    type: string;
-    info: Entity;
+    private timer;
+    public type!: string;
 
-    constructor(
-        id: string,
-        element: JQuery,
-        duration: number,
-        isObject: boolean | undefined,
-        info: Entity | undefined
+    public constructor(
+        public id: string,
+        public element: JQuery,
+        duration = 5000,
+        isObject?: boolean,
+        public info?: Entity
     ) {
-        this.id = id;
-        this.element = element;
-        this.duration = duration || 5000;
+        this.timer = new Timer(Date.now(), duration);
 
-        this.time = Date.now();
-        this.timer = new Timer(this.time, this.duration);
-
-        if (isObject) {
-            this.type = 'object';
-            this.info = info;
-        }
+        if (isObject) this.type = 'object';
     }
 
-    isOver(time: number): boolean {
+    public isOver(time: number): boolean {
         return this.timer.isOver(time);
     }
 
-    reset(time: number): void {
+    public reset(time: number): void {
         this.timer.time = time;
     }
 
-    destroy(): void {
+    public destroy(): void {
         $(this.element).remove();
     }
 }

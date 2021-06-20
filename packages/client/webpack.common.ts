@@ -7,7 +7,7 @@ import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 import { DefinePlugin, ProgressPlugin } from 'webpack';
-import type { Configuration, RuleSetRule, WebpackPluginInstance, Compiler } from 'webpack';
+import type { Configuration, RuleSetRule, WebpackPluginInstance } from 'webpack';
 
 import { version, description } from 'kaetram/package.json';
 
@@ -15,8 +15,6 @@ export const resolve = (dir: string): string => path.resolve(__dirname, dir);
 
 /** 5 MiB */
 export const maxSize = 5e6;
-
-export type Plugin = (compiler: Compiler) => void;
 
 const env = dotenvParseVariables(dotEnvExtended.load());
 
@@ -27,7 +25,7 @@ export const plugins: WebpackPluginInstance[] = [
     }),
     new CopyWebpackPlugin({
         patterns: ['static']
-    }) as Plugin,
+    }) as () => void,
     new HtmlWebpackPlugin({
         template: resolve('index.html'),
         minify: {

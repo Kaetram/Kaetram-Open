@@ -28,9 +28,12 @@ export default class BubbleController {
         isObject?: boolean,
         info?: Entity
     ): void {
-        const bubble = this.bubbles[id];
+        const { bubbles, game, container } = this;
+
+        const bubble = bubbles[id];
+
         if (bubble) {
-            bubble.reset(this.game.time);
+            bubble.reset(game.time);
 
             $(`#${id} p`).html(message);
         } else {
@@ -38,22 +41,22 @@ export default class BubbleController {
                 `<div id="${id}" class="bubble"><p>${message}</p><div class="bubbleTip"></div></div>`
             );
 
-            $(element).appendTo(this.container);
+            $(element).appendTo(container);
 
-            this.bubbles[id] = new Blob(id, element, duration, isObject, info);
+            bubbles[id] = new Blob(id, element, duration, isObject, info);
 
-            // return this.bubbles[id];
+            // return bubbles[id];
         }
     }
 
-    public setTo(info: Entity): void {
-        const bubble = this.get(info.id);
+    public setTo(info: Entity | undefined): void {
+        if (!info) return;
 
-        if (!bubble || !info) return;
+        const bubble = this.get(info.id);
 
         const camera = this.game.getCamera();
 
-        const scale = this.game.renderer?.getScale() as number;
+        const scale = this.game.renderer.getScale();
         const tileSize = 48; // 16 * scale
 
         const x = (info.x - camera.x) * scale;
@@ -66,10 +69,12 @@ export default class BubbleController {
     }
 
     public update(time: number): void {
-        _.each(this.bubbles, (bubble) => {
+        const { bubbles, game } = this;
+
+        _.each(bubbles, (bubble) => {
             if (!bubble) return;
 
-            const entity = this.game.entities?.get(bubble.id);
+            const entity = game.entities.get(bubble.id);
 
             if (entity) this.setTo(entity);
 
@@ -77,7 +82,7 @@ export default class BubbleController {
 
             if (bubble.isOver(time)) {
                 bubble.destroy();
-                delete this.bubbles[bubble.id];
+                delete bubbles[bubble.id];
             }
         });
     }

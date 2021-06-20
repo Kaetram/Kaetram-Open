@@ -3,30 +3,22 @@ import _ from 'lodash';
 import Character from '../entity/character/character';
 import Entity from '../entity/entity';
 import AStar from '../lib/astar';
+
 import type { FunctionTypes, PosTuple } from '../lib/astar';
 
 export default class PathFinder {
-    width: number;
-    height: number;
-    mode: FunctionTypes;
-    grid: number[][] | null;
-    blankGrid: number[][];
-    ignores: Character[];
+    private mode: FunctionTypes = 'DEFAULT';
 
-    constructor(width: number, height: number) {
-        this.width = width;
-        this.height = height;
+    private grid: number[][] | null = null;
 
-        this.mode = 'DEFAULT';
+    private blankGrid: number[][] = [];
+    private ignores: Character[] = [];
 
-        this.grid = null;
-        this.blankGrid = [];
-        this.ignores = [];
-
+    public constructor(private width: number, private height: number) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         for (let i = 0; i < this.height; i++) {
             this.blankGrid[i] = [];
 
@@ -36,7 +28,13 @@ export default class PathFinder {
         // log.info('Successfully loaded the pathfinder!');
     }
 
-    find(grid: number[][], entity: Entity, x: number, y: number, incomplete: boolean): number[][] {
+    public find(
+        grid: number[][],
+        entity: Entity,
+        x: number,
+        y: number,
+        incomplete: boolean
+    ): number[][] {
         const start: PosTuple = [entity.gridX, entity.gridY];
         const end: PosTuple = [x, y];
         let path;
@@ -51,16 +49,15 @@ export default class PathFinder {
         return path;
     }
 
-    findIncomplete(start: PosTuple, end: PosTuple): number[][] {
-        let incomplete: number[][] = [],
-            x,
-            y;
+    private findIncomplete(start: PosTuple, end: PosTuple): number[][] {
+        let incomplete: number[][] = [];
+        let x;
+        let y;
 
         const perfect = AStar(this.blankGrid, start, end, this.mode);
 
         for (let i = perfect.length - 1; i > 0; i--) {
-            x = perfect[i][0];
-            y = perfect[i][1];
+            [x, y] = perfect[i];
 
             if (this.grid?.[y][x] === 0) {
                 incomplete = AStar(this.grid, start, [x, y], this.mode);
@@ -71,8 +68,9 @@ export default class PathFinder {
         return incomplete;
     }
 
-    applyIgnore(ignored: boolean): void {
-        let x: number, y: number;
+    private applyIgnore(ignored: boolean): void {
+        let x: number;
+        let y: number;
 
         _.each(this.ignores, (entity) => {
             x = entity.hasPath() ? entity.nextGridX : entity.gridX;
@@ -82,13 +80,13 @@ export default class PathFinder {
         });
     }
 
-    ignoreEntity(entity: Character): void {
+    public ignoreEntity(entity: Character): void {
         if (!entity) return;
 
         this.ignores.push(entity);
     }
 
-    clearIgnores(): void {
+    public clearIgnores(): void {
         this.applyIgnore(false);
         this.ignores = [];
     }

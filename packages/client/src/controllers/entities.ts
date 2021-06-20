@@ -1,14 +1,15 @@
 import _ from 'lodash';
 
+import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
+
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
 import Player from '../entity/character/player/player';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
 import Projectile from '../entity/objects/projectile';
-import Packets from '@kaetram/common/src/packets';
 import Grids from '../renderer/grids';
-import * as Modules from '@kaetram/common/src/modules';
 import SpritesController from './sprites';
 
 import type Character from '../entity/character/character';
@@ -17,8 +18,6 @@ import type Weapon from '../entity/character/player/equipment/weapon';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
-import type Map from '../map/map';
-import type Renderer from '../renderer/renderer';
 
 interface EntitiesCollection {
     [id: string]: Entity;
@@ -34,7 +33,7 @@ export interface Movable {
 export type AnyEntity = Entity & Player & Mob & Projectile & Weapon & Equipment & Movable;
 
 export default class EntitiesController {
-    private renderer = this.game.renderer as Renderer;
+    private renderer;
 
     public grids!: Grids;
     public sprites!: SpritesController;
@@ -42,23 +41,27 @@ export default class EntitiesController {
     public entities: EntitiesCollection = {};
     public decrepit: Entity[] = [];
 
-    public constructor(private game: Game) {}
+    public constructor(private game: Game) {
+        this.renderer = game.renderer;
+    }
 
     public async load(): Promise<void> {
-        this.game.app.sendStatus('Loading sprites');
+        const { game, sprites } = this;
 
-        if (!this.sprites) {
+        game.app.sendStatus('Loading sprites');
+
+        if (!sprites) {
             const sprites = new SpritesController();
             await sprites.load();
 
             this.sprites = sprites;
 
-            this.game.input?.loadCursors();
+            game.input.loadCursors();
         }
 
-        this.game.app.sendStatus('Loading grids');
+        game.app.sendStatus('Loading grids');
 
-        this.grids ||= new Grids(this.game.map as Map);
+        this.grids ||= new Grids(game.map);
     }
 
     public update(): void {
@@ -66,11 +69,13 @@ export default class EntitiesController {
     }
 
     public create(info: AnyEntity): void {
-        let entity: Chest | NPC | null = null;
+        const { entities, game } = this;
+
+        let entity: Entity = null!;
 
         if (this.isPlayer(info.id)) return;
 
-        if (info.id in this.entities)
+        if (info.id in entities)
             // Don't initialize things twice.
             return;
 
@@ -128,8 +133,8 @@ export default class EntitiesController {
             }
 
             case 'projectile': {
-                const attacker = this.get(info.characterId) as Character & Entity,
-                    target = this.get(info.targetId) as Character & Entity;
+                const attacker = this.get<Character>(info.characterId);
+                const target = this.get<Character>(info.targetId);
 
                 if (!attacker || !target) return;
 
@@ -159,7 +164,7 @@ export default class EntitiesController {
                      */
 
                     if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
-                        this.game.socket?.send(Packets.Projectile, [
+                        game.socket.send(Packets.Projectile, [
                             Packets.ProjectileOpcode.Impact,
                             info.id,
                             target.id
@@ -167,7 +172,7 @@ export default class EntitiesController {
 
                     if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 
-                    this.game.info?.create(
+                    game.info.create(
                         Modules.Hits.Damage,
                         [info.damage, this.isPlayer(target.id)],
                         target.x,
@@ -177,7 +182,7 @@ export default class EntitiesController {
                     target.triggerHealthBar();
 
                     this.unregisterPosition(projectile);
-                    delete this.entities[projectile.getId()];
+                    delete entities[projectile.getId()];
                 });
 
                 this.addEntity(projectile);
@@ -205,9 +210,9 @@ export default class EntitiesController {
                 player.type = info.type;
                 player.movementSpeed = info.movementSpeed;
 
-                const hitPointsData = info.hitPoints as number[],
-                    manaData = info.mana as number[],
-                    equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
+                const hitPointsData = info.hitPoints as number[];
+                const manaData = info.mana as number[];
+                const equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
 
                 player.setHitPoints(hitPointsData[0]);
                 player.setMaxHitPoints(hitPointsData[1]);
@@ -229,7 +234,7 @@ export default class EntitiesController {
                     );
                 });
 
-                player.loadHandler(this.game);
+                player.loadHandler(game);
 
                 this.addEntity(player);
 
@@ -239,7 +244,7 @@ export default class EntitiesController {
 
         if (!entity) return;
 
-        const sprite = this.getSprite(info.type === 'item' ? `item-${info.string}` : info.string);
+        const sprite = this.getSprite(info.type === 'item' ? `item-${info.string}` : info.string)!;
 
         entity.setGridPosition(info.x, info.y);
         entity.setName(info.name);
@@ -257,9 +262,11 @@ export default class EntitiesController {
 
         this.addEntity(entity);
 
-        if (info.type !== 'item' && entity.handler) {
-            entity.handler.setGame(this.game);
-            entity.handler.load();
+        const { handler } = entity as Character;
+
+        if (info.type !== 'item' && handler) {
+            handler.setGame(game);
+            handler.load();
         }
 
         /**
@@ -273,58 +280,66 @@ export default class EntitiesController {
         return player ? player.id === id : false;
     }
 
-    public get(id: string): Entity {
-        return this.entities[id];
+    public get<E extends Entity>(id: string): E {
+        return this.entities[id] as E;
     }
 
     public removeEntity(entity: Entity): void {
-        this.grids.removeFromPathingGrid(entity.gridX, entity.gridY);
-        this.grids.removeFromRenderingGrid(entity, entity.gridX, entity.gridY);
+        const { grids, entities } = this;
 
-        delete this.entities[entity.id];
+        grids.removeFromPathingGrid(entity.gridX, entity.gridY);
+        grids.removeFromRenderingGrid(entity);
+
+        delete entities[entity.id];
     }
 
     public clean(): void {
-        // ids = ids[0];
+        const { decrepit, game, grids } = this;
 
-        if (this.decrepit.length === 0) return;
+        if (decrepit.length === 0) return;
 
-        _.each(this.decrepit, (entity: Entity) => {
-            const { player } = this.game;
+        _.each(decrepit, (entity: Entity) => {
+            const { player } = game;
 
             if (player ? entity.id === player.id : false) return;
 
             this.removeEntity(entity);
         });
 
-        this.grids.resetPathingGrid();
+        grids.resetPathingGrid();
     }
 
     public clearPlayers(exception: Player): void {
-        _.each(this.entities, (entity) => {
+        const { entities, grids } = this;
+
+        _.each(entities, (entity) => {
             if (entity.id !== exception.id && entity.type === 'player') this.removeEntity(entity);
         });
 
-        this.grids.resetPathingGrid();
+        grids.resetPathingGrid();
     }
 
     public addEntity(entity: Entity): void {
-        if (this.entities[entity.id]) return;
+        const { entities, renderer, game } = this;
 
-        this.entities[entity.id] = entity;
+        if (entities[entity.id]) return;
+
+        entities[entity.id] = entity;
         this.registerPosition(entity);
 
-        if (!(entity instanceof Item && entity.dropped) && !this.renderer.isPortableDevice())
-            entity.fadeIn(this.game.time);
+        if (!(entity instanceof Item && entity.dropped) && !renderer.isPortableDevice())
+            entity.fadeIn(game.time);
     }
 
     public removeItem(item: Entity): void {
         if (!item) return;
 
-        this.grids.removeFromItemGrid(item, item.gridX, item.gridY);
-        this.grids.removeFromRenderingGrid(item, item.gridX, item.gridY);
+        const { grids, entities } = this;
 
-        delete this.entities[item.id];
+        grids.removeFromItemGrid(item);
+        grids.removeFromRenderingGrid(item);
+
+        delete entities[item.id];
     }
 
     public registerPosition(entity: Entity): void {
@@ -340,22 +355,20 @@ export default class EntitiesController {
         //         this.grids.addToPathingGrid(entity.gridX, entity.gridY);
         // }
 
-        if (entity.type === 'item') this.grids.addToItemGrid(entity, entity.gridX, entity.gridY);
+        if (entity instanceof Item) this.grids.addToItemGrid(entity);
 
-        this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
+        this.grids.addToRenderingGrid(entity);
     }
 
-    public registerDuality(entity: Player): void {
+    public registerDuality(entity: Character): void {
         if (!entity) return;
 
-        this.grids.addToRenderingGrid(entity, entity.gridX, entity.gridY);
+        this.grids.addToRenderingGrid(entity);
 
-        // if (entity.nextGridX > -1 && entity.nextGridY > -1) {
-        //     if (!(entity instanceof Player))
-        //         this.grids.pathingGrid[(entity as Character).nextGridY][
-        //             (entity as Character).nextGridX
-        //         ] = 1;
-        // }
+        // if (entity.nextGridX > -1 && entity.nextGridY > -1 && !(entity instanceof Player))
+        //     this.grids.pathingGrid[(entity as Character).nextGridY][
+        //         (entity as Character).nextGridX
+        //     ] = 1;
     }
 
     public unregisterPosition(entity: Entity): void {
@@ -364,8 +377,8 @@ export default class EntitiesController {
         this.grids.removeEntity(entity);
     }
 
-    public getSprite(name: string): Sprite {
-        return this.sprites.sprites[name];
+    public getSprite(name: string | undefined): Sprite | undefined {
+        if (name) return this.sprites.sprites[name];
     }
 
     public getAll(): EntitiesCollection {
@@ -373,6 +386,6 @@ export default class EntitiesController {
     }
 
     public forEachEntity(callback: (entity: Entity) => void): void {
-        _.each(this.entities, (entity) => callback(entity));
+        _.each(this.entities, callback);
     }
 }

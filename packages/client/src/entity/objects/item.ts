@@ -1,30 +1,25 @@
 import Entity from '../entity';
 
 export default class Item extends Entity {
-    dropped: boolean;
-    count: number;
-    ability: number;
-    abilityLevel: number;
-    stackable: boolean;
+    public override type = 'item';
 
-    constructor(id: string, kind: string, count: number, ability: number, abilityLevel: number) {
+    public dropped = false;
+
+    public constructor(
+        id: string,
+        kind: string,
+        public count: number,
+        public ability: number,
+        public abilityLevel: number
+    ) {
         super(id, kind);
-
-        this.count = count;
-        this.ability = ability;
-        this.abilityLevel = abilityLevel;
-
-        this.dropped = false;
-        this.stackable = false;
-
-        this.type = 'item';
     }
 
-    idle(): void {
+    public override idle(): void {
         this.setAnimation('idle', 150);
     }
 
-    hasShadow(): boolean {
+    public override hasShadow(): boolean {
         return true;
     }
 }

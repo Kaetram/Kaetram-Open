@@ -1,40 +1,29 @@
-import Map, { MapAnimations } from '../map/map';
+import Map from '../map/map';
 
 export default class Tile {
-    id: number;
-    index: number;
-    map: Map;
-    x: number;
-    y: number;
-    animationInfo: MapAnimations;
-    animationIndex: number;
-    lastTime: number;
-    canDraw: boolean;
+    public x!: number;
+    public y!: number;
 
-    constructor(id: number, index: number, map: Map) {
-        this.id = id;
-        this.index = index;
-        this.map = map;
+    private animationInfo;
+    private animationIndex = 0;
+    private lastTime = 0;
+    // private canDraw = true;
 
+    public constructor(public id: number, public index: number, map: Map) {
         this.animationInfo = map.getTileAnimation(id);
-
-        this.animationIndex = 0;
-        this.lastTime = 0;
-
-        this.canDraw = true;
     }
 
-    setPosition(position: Pos): void {
+    public setPosition(position: Pos): void {
         this.x = position.x;
         this.y = position.y;
     }
 
-    update(): void {
+    private update(): void {
         this.id = this.animationInfo[this.animationIndex].tileid;
-        this.canDraw = true;
+        // this.canDraw = true;
     }
 
-    animate(time: number): void {
+    public animate(time: number): void {
         if (time - this.lastTime > this.animationInfo[this.animationIndex].duration) {
             this.update();
             this.lastTime = time;
@@ -45,7 +34,7 @@ export default class Tile {
         }
     }
 
-    getPosition(): [number, number] {
-        return this.x && this.y ? [this.x, this.y] : [0, 0];
-    }
+    // getPosition(): [x: number, y: number] {
+    //     return this.x && this.y ? [this.x, this.y] : [0, 0];
+    // }
 }

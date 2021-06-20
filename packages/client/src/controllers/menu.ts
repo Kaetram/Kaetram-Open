@@ -31,14 +31,14 @@ export default class MenuController {
 
     private notificationTimeout!: number | null;
 
-    public inventory!: Inventory | null;
-    public profile!: Profile | null;
-    public bank!: Bank | null;
-    public actions!: Actions | null;
-    public enchant!: Enchant | null;
-    public shop!: Shop | null;
-    private header!: Header | null;
-    public warp!: Warp | null;
+    public inventory!: Inventory;
+    public profile!: Profile;
+    public bank!: Bank;
+    public actions!: Actions;
+    public enchant!: Enchant;
+    public shop!: Shop;
+    private header!: Header;
+    public warp!: Warp;
 
     public constructor(public game: Game) {
         this.loadNotifications();
@@ -50,17 +50,19 @@ export default class MenuController {
     }
 
     public resize(): void {
-        this.inventory?.resize();
+        const { inventory, profile, bank, enchant, shop, header } = this;
 
-        this.profile?.resize();
+        inventory?.resize();
 
-        this.bank?.resize();
+        profile?.resize();
 
-        this.enchant?.resize();
+        bank?.resize();
 
-        if (this.shop?.isVisible()) this.shop.resize();
+        enchant?.resize();
 
-        this.header?.resize();
+        if (shop.isVisible()) shop.resize();
+
+        header?.resize();
 
         this.resizeNotification();
     }
@@ -70,9 +72,7 @@ export default class MenuController {
      * to completely refresh the inventory.
      */
     public loadInventory(size: number, data: Equipment[]): void {
-        this.inventory = new Inventory(this.game, size);
-
-        this.inventory.load(data);
+        this.inventory = new Inventory(this.game, size, data);
     }
 
     /**
@@ -80,15 +80,15 @@ export default class MenuController {
      * has two containers. The bank and the inventory.
      */
     public loadBank(size: number, data: Slot[]): void {
-        if (!this.inventory) {
+        const { inventory, game } = this;
+
+        if (!inventory) {
             log.error('Inventory not initialized.');
 
             return;
         }
 
-        this.bank = new Bank(this.game, this.inventory.container, size);
-
-        this.bank.load(data);
+        this.bank = new Bank(game, inventory.container, size, data);
 
         this.loadEnchant();
     }
@@ -118,9 +118,9 @@ export default class MenuController {
     }
 
     private loadNotifications(): void {
-        const ok = $('#ok'),
-            cancel = $('#cancel'),
-            done = $('#done');
+        const ok = $('#ok');
+        const cancel = $('#cancel');
+        const done = $('#done');
 
         /**
          * Simple warning dialogue
@@ -143,78 +143,82 @@ export default class MenuController {
     }
 
     public stop(): void {
-        this.inventory?.clear();
+        const { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
 
-        this.actions?.clear();
+        inventory.clear();
 
-        this.profile?.clean();
+        actions.clear();
 
-        this.game.input?.chatHandler.clear();
+        profile.clean();
 
-        this.bank?.clear();
+        game.input.chatHandler.clear();
 
-        this.enchant?.clear();
+        bank.clear();
 
-        this.warp?.clear();
+        enchant.clear();
 
-        this.shop?.clear();
+        warp.clear();
+
+        shop.clear();
     }
 
     public hideAll(): void {
-        if (this.inventory?.isVisible()) this.inventory.hide();
+        const { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
 
-        if (this.actions?.isVisible()) this.actions.hide();
+        if (inventory.isVisible()) inventory.hide();
 
-        if (this.profile?.isVisible() || this.profile?.settings.isVisible()) this.profile.hide();
+        if (actions.isVisible()) actions.hide();
 
-        if (this.game.input?.chatHandler?.input.is(':visible'))
-            this.game.input.chatHandler.hideInput();
+        if (profile.isVisible() || profile.settings.isVisible()) profile.hide();
 
-        if (this.bank?.isVisible()) this.bank.hide();
+        if (game.input.chatHandler.input.is(':visible')) game.input.chatHandler.hideInput();
 
-        if (this.enchant?.isVisible()) this.enchant.hide();
+        if (bank.isVisible()) bank.hide();
 
-        if (this.warp?.isVisible()) this.warp.hide();
+        if (enchant.isVisible()) enchant.hide();
 
-        if (this.shop?.isVisible()) this.shop.hide();
+        if (warp.isVisible()) warp.hide();
+
+        if (shop.isVisible()) shop.hide();
     }
 
     public addInventory(info: Slot): void {
-        this.bank?.addInventory(info);
+        this.bank.addInventory(info);
     }
 
     public removeInventory(info: Slot): void {
-        this.bank?.removeInventory(info);
+        this.bank.removeInventory(info);
     }
 
     private resizeNotification(): void {
+        const { notification } = this;
+
         if (this.isNotificationVisible())
-            this.notification.css(
-                'top',
-                `${window.innerHeight - (this.notification.height() as number)}px`
-            );
+            notification.css('top', `${window.innerHeight - notification.height()!}px`);
     }
 
-    public showNotification(title: string, message: string, colour: string): void {
-        const top = window.innerHeight - (this.notification.height() as number);
+    public showNotification(titleText: string, message: string, colour: string): void {
+        const { notification, description, title, notificationTimeout } = this;
+
+        const top = window.innerHeight - notification.height()!;
 
         if (this.isNotificationVisible()) {
             this.hideNotification();
 
-            window.setTimeout(() => this.showNotification(title, message, colour), 700);
+            window.setTimeout(() => this.showNotification(titleText, message, colour), 700);
 
             return;
         }
 
-        this.title.css('color', colour);
+        title.css('color', colour);
 
-        this.title.text(title);
-        this.description.text(message);
+        title.text(titleText);
+        description.text(message);
 
-        this.notification.addClass('active');
-        this.notification.css('top', `${top}px`);
+        notification.addClass('active');
+        notification.css('top', `${top}px`);
 
-        if (this.notificationTimeout) return;
+        if (notificationTimeout) return;
 
         this.notificationTimeout = window.setTimeout(() => this.hideNotification(), 4000);
     }
@@ -222,21 +226,25 @@ export default class MenuController {
     private hideNotification(): void {
         if (!this.isNotificationVisible()) return;
 
-        clearTimeout(this.notificationTimeout as number);
+        const { notificationTimeout, notification } = this;
+
+        clearTimeout(notificationTimeout!);
         this.notificationTimeout = null;
 
-        this.notification.removeClass('active');
-        this.notification.css('top', '100%');
+        notification.removeClass('active');
+        notification.css('top', '100%');
     }
 
-    public displayNotify(message: string): void {
+    public displayNotify(text: string): void {
         if (this.isNotifyVisible()) return;
 
-        this.notify.show();
-        this.fade.show();
-        this.message.show();
+        const { notify, fade, message } = this;
 
-        this.message.text(message);
+        notify.show();
+        fade.show();
+        message.show();
+
+        message.text(text);
     }
 
     public displayConfirm(message: string): void {
@@ -256,12 +264,12 @@ export default class MenuController {
         this.confirm.hide();
     }
 
-    public getQuestPage(): Quest | undefined {
-        return this.profile?.quests;
+    public getQuestPage(): Quest {
+        return this.profile.quests;
     }
 
-    public getProfessionPage(): Professions | undefined {
-        return this.profile?.professions;
+    public getProfessionPage(): Professions {
+        return this.profile.professions;
     }
 
     private isNotifyVisible(): boolean {

@@ -1,55 +1,40 @@
 import * as Modules from '@kaetram/common/src/modules';
 
 export default class Splat {
-    id: string;
-    type: number;
-    text: string;
-    x: number;
-    y: number;
-    statique: boolean;
-    opacity: number;
-    lastTime: number;
-    speed: number;
-    updateSpeed: number;
-    duration: number;
-    fill: string;
-    stroke: string;
-    destroyCallback: (id: string) => void;
+    public opacity = 1;
+    private lastTime = 0;
+    private speed = 100;
 
-    constructor(
-        id: string,
-        type: Modules.Hits,
-        text: string,
-        x: number,
-        y: number,
-        statique: boolean
+    private updateSpeed;
+    private duration;
+
+    public fill!: string;
+    public stroke!: string;
+
+    private destroyCallback?(id: string): void;
+
+    public constructor(
+        public id: string,
+        public type: Modules.Hits,
+        public text: string,
+        public x: number,
+        public y: number,
+        private statique: boolean
     ) {
-        this.id = id;
-        this.type = type;
-        this.text = text;
-        this.x = x;
-        this.y = y;
-
-        this.statique = statique;
-
-        this.opacity = 1;
-        this.lastTime = 0;
-        this.speed = 100;
-
         this.updateSpeed = type === Modules.Hits.Heal ? 2 : 1;
         this.duration = type === Modules.Hits.Heal ? 400 : 1000;
     }
 
-    setColours(fill: string, stroke: string): void {
+    public setColours(fill: string, stroke: string): void {
         this.fill = fill;
         this.stroke = stroke;
     }
 
-    setDuration(duration: number): void {
-        this.duration = duration;
-    }
+    // setDuration(duration: number): void {
+    //     this.duration = duration;
+    // }
 
-    tick(): void {
+    private tick(): void {
         if (!this.statique) this.y -= this.updateSpeed;
 
         this.opacity -= 70 / this.duration;
@@ -57,18 +42,18 @@ export default class Splat {
         if (this.opacity < 0) this.destroy();
     }
 
-    update(time: number): void {
+    public update(time: number): void {
         if (time - this.lastTime > this.speed) {
             this.lastTime = time;
             this.tick();
         }
     }
 
-    destroy(): void {
+    private destroy(): void {
         this.destroyCallback?.(this.id);
     }
 
-    onDestroy(callback: (id: string) => void): void {
+    public onDestroy(callback: (id: string) => void): void {
         this.destroyCallback = callback;
     }
 }

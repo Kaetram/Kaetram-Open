@@ -16,8 +16,10 @@ export default class SpritesController {
     }
 
     public async load(): Promise<void> {
+        const sprites = spriteData as SpriteData[];
+
         await Promise.all(
-            spriteData.map(async (data: SpriteData) => {
+            sprites.map(async (data) => {
                 const sprite = new Sprite(data);
 
                 await sprite.loadSprite();

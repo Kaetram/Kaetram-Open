@@ -1,42 +1,41 @@
 import $ from 'jquery';
 
-import Player from '../entity/character/player/player';
-import Game from '../game';
 import Packets from '@kaetram/common/src/packets';
+
 import Container from './container/container';
-import Slot from './container/slot';
+
+import type Game from '../game';
+import type Slot from './container/slot';
 
 export default class Bank {
-    game: Game;
-    inventoryContainer: Container;
-    player: Player;
-    body: JQuery<HTMLElement>;
-    bankSlots: JQuery<HTMLElement>;
-    bankInventorySlots: JQuery<HTMLElement>;
-    container: Container;
-    close: JQuery<HTMLElement>;
-    scale: number;
+    // player = this.game.player;
 
-    constructor(game: Game, inventoryContainer: Container, size: number) {
-        this.game = game;
-        this.inventoryContainer = inventoryContainer;
+    private body = $('#bank');
+    private bankSlots = $('#bankSlots');
+    private bankInventorySlots = $('#bankInventorySlots');
 
-        this.player = game.player;
+    private container: Container;
+    private close = $('#closeBank');
 
-        this.body = $('#bank');
-        this.bankSlots = $('#bankSlots');
-        this.bankInventorySlots = $('#bankInventorySlots');
+    private scale!: number;
 
+    public constructor(
+        private game: Game,
+        private inventoryContainer: Container,
+        size: number,
+        data: Slot[]
+    ) {
         this.container = new Container(size);
-        this.close = $('#closeBank');
 
         this.close.css('left', '97%');
         this.close.on('click', () => this.hide());
+
+        this.load(data);
     }
 
-    async load(data: Slot[]): Promise<void> {
-        const bankList = this.bankSlots.find('ul'),
-            inventoryList = this.bankInventorySlots.find('ul');
+    private async load(data: Slot[]): Promise<void> {
+        const bankList = this.bankSlots.find('ul');
+        const inventoryList = this.bankInventorySlots.find('ul');
 
         for (const [i, item] of data.entries()) {
             const slot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`);
@@ -55,7 +54,7 @@ export default class Bank {
 
             slot.on('click', (event) => this.click('bank', event));
 
-            const count = item.count;
+            const { count } = item;
             let itemCount: string = count.toString();
 
             if (count > 999999)
@@ -82,8 +81,8 @@ export default class Bank {
         }
 
         for (let j = 0; j < this.inventoryContainer.size; j++) {
-            const iItem = this.inventoryContainer.slots[j],
-                iSlot = $(`<div id="bankInventorySlot${j}" class="bankSlot"></div>`);
+            const iItem = this.inventoryContainer.slots[j];
+            const iSlot = $(`<div id="bankInventorySlot${j}" class="bankSlot"></div>`);
 
             iSlot.css({
                 marginRight: `${3 * this.getScale()}px`,
@@ -100,7 +99,7 @@ export default class Bank {
 
             iSlot.on('click', (event) => this.click('inventory', event));
 
-            const count = iItem.count;
+            const { count } = iItem;
             let itemCount = count.toString();
 
             if (count > 999999)
@@ -126,14 +125,14 @@ export default class Bank {
         }
     }
 
-    async resize(): Promise<void> {
-        const bankList = this.getBankList(),
-            inventoryList = this.getInventoryList();
+    public async resize(): Promise<void> {
+        const bankList = this.getBankList();
+        const inventoryList = this.getInventoryList();
 
         for (const [i, element] of [...bankList].entries()) {
-            const bankSlot = $(element).find(`#bankSlot${i}`),
-                image = bankSlot.find(`#bankImage${i}`),
-                slot = this.container.slots[i];
+            const bankSlot = $(element).find(`#bankSlot${i}`);
+            const image = bankSlot.find(`#bankImage${i}`);
+            const slot = this.container.slots[i];
 
             bankSlot.css({
                 marginRight: `${2 * this.getScale()}px`,
@@ -150,9 +149,9 @@ export default class Bank {
         }
 
         for (const [j, element] of [...inventoryList].entries()) {
-            const inventorySlot = $(element).find(`#bankInventorySlot${j}`),
-                iImage = inventorySlot.find(`#inventoryImage${j}`),
-                iSlot = this.inventoryContainer.slots[j];
+            const inventorySlot = $(element).find(`#bankInventorySlot${j}`);
+            const iImage = inventorySlot.find(`#inventoryImage${j}`);
+            const iSlot = this.inventoryContainer.slots[j];
 
             inventorySlot.css({
                 marginRight: `${3 * this.getScale()}px`,
@@ -163,16 +162,16 @@ export default class Bank {
         }
     }
 
-    click(type: string, event: JQuery.ClickEvent): void {
-        const isBank = type === 'bank',
-            index = event.currentTarget.id.slice(Math.max(0, isBank ? 8 : 17));
+    private click(type: string, event: JQuery.ClickEvent): void {
+        const isBank = type === 'bank';
+        const index = event.currentTarget.id.slice(Math.max(0, isBank ? 8 : 17));
 
         this.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
     }
 
-    async add(info: Slot): Promise<void> {
-        const item = $(this.getBankList()[info.index]),
-            slot = this.container.slots[info.index];
+    public async add(info: Slot): Promise<void> {
+        const item = $(this.getBankList()[info.index]);
+        const slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
 
@@ -180,9 +179,9 @@ export default class Bank {
 
         slot.setCount(info.count);
 
-        const bankSlot = item.find(`#bankSlot${info.index}`),
-            cssSlot = bankSlot.find(`#bankImage${info.index}`),
-            count = bankSlot.find(`#bankItemCount${info.index}`);
+        const bankSlot = item.find(`#bankSlot${info.index}`);
+        const cssSlot = bankSlot.find(`#bankImage${info.index}`);
+        const count = bankSlot.find(`#bankItemCount${info.index}`);
 
         cssSlot.css('background-image', await this.container.getImageFormat(info.string));
 
@@ -191,9 +190,9 @@ export default class Bank {
         if (slot.count > 1) count.text(slot.count);
     }
 
-    remove(info: Slot): void {
-        const item = $(this.getBankList()[info.index]),
-            slot = this.container.slots[info.index];
+    public remove(info: Slot): void {
+        const item = $(this.getBankList()[info.index]);
+        const slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
 
@@ -209,20 +208,20 @@ export default class Bank {
         } else divItem.find(`#bankItemCount${info.index}`).text(slot.count);
     }
 
-    async addInventory(info: Slot): Promise<void> {
+    public async addInventory(info: Slot): Promise<void> {
         const item = $(this.getInventoryList()[info.index]);
 
         if (!item) return;
 
-        const slot = item.find(`#bankInventorySlot${info.index}`),
-            image = slot.find(`#inventoryImage${info.index}`);
+        const slot = item.find(`#bankInventorySlot${info.index}`);
+        const image = slot.find(`#inventoryImage${info.index}`);
 
         image.css('background-image', await this.container.getImageFormat(info.string));
 
         if (info.count > 1) slot.find(`#inventoryItemCount${info.index}`).text(info.count);
     }
 
-    removeInventory(info: Slot): void {
+    public removeInventory(info: Slot): void {
         const item = $(this.getInventoryList()[info.index]);
 
         if (!item) return;
@@ -232,9 +231,9 @@ export default class Bank {
          * of the items in the inventory first.
          */
 
-        const itemContainer = this.inventoryContainer.slots[info.index],
-            slot = item.find(`#bankInventorySlot${info.index}`),
-            diff = itemContainer.count - info.count;
+        const itemContainer = this.inventoryContainer.slots[info.index];
+        const slot = item.find(`#bankInventorySlot${info.index}`);
+        const diff = itemContainer.count - info.count;
 
         if (diff > 1) slot.find(`#inventoryItemCount${info.index}`).text(diff);
         else if (diff === 1) slot.find(`#inventoryItemCount${info.index}`).text('');
@@ -244,33 +243,33 @@ export default class Bank {
         }
     }
 
-    display(): void {
+    public display(): void {
         this.body.fadeIn('slow');
     }
 
-    hide(): void {
+    public hide(): void {
         this.body.fadeOut('fast');
     }
 
-    clear(): void {
+    public clear(): void {
         this.bankSlots?.find('ul').empty();
 
         this.bankInventorySlots?.find('ul').empty();
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 
-    getScale(): number {
+    private getScale(): number {
         return this.game.app.getUIScale();
     }
 
-    getBankList(): JQuery<HTMLLIElement> {
+    private getBankList(): JQuery<HTMLLIElement> {
         return this.bankSlots.find('ul').find('li');
     }
 
-    getInventoryList(): JQuery<HTMLLIElement> {
+    public getInventoryList(): JQuery<HTMLLIElement> {
         return this.bankInventorySlots.find('ul').find('li');
     }
 }
