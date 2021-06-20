@@ -1,12 +1,9 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "noImplicitAny": true,
-        "strictNullChecks": true,
         "module": "esnext",
         "target": "esnext",
-        "rootDir": "./",
-        "baseUrl": "./"
-    },
-    "files": ["./types/index.d.ts"]
+        "noImplicitAny": true,
+        "strictNullChecks": true
+    }
 }

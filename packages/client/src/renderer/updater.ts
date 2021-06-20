@@ -1,34 +1,25 @@
-import InputController from '../controllers/input';
-import SpritesController from '../controllers/sprites';
-import Character from '../entity/character/character';
-import Player from '../entity/character/player/player';
-import Entity from '../entity/entity';
-import Projectile from '../entity/objects/projectile';
-import Game from '../game';
-import Map from '../map/map';
 import * as Modules from '@kaetram/common/src/modules';
-import Renderer from './renderer';
+
+import Character from '../entity/character/character';
+import Projectile from '../entity/objects/projectile';
+
+import type SpritesController from '../controllers/sprites';
+import type Entity from '../entity/entity';
+import type Game from '../game';
 
 export default class Updater {
-    game: Game;
-    map: Map;
-    player: Player;
-    renderer: Renderer;
-    input: InputController;
-    sprites: SpritesController;
-    timeDifferential: number;
-    lastUpdate: Date;
+    private input;
 
-    constructor(game: Game) {
-        this.game = game;
-        this.map = game.map;
-        this.player = game.player;
-        this.renderer = game.renderer;
+    private sprites: SpritesController | null = null;
+
+    private timeDifferential!: number;
+    private lastUpdate!: Date;
+
+    public constructor(private game: Game) {
         this.input = game.input;
-        this.sprites = null;
     }
 
-    update(): void {
+    public update(): void {
         this.timeDifferential = (Date.now() - this.lastUpdate?.getTime()) / 1000;
 
         this.updateEntities();
@@ -41,7 +32,7 @@ export default class Updater {
         this.lastUpdate = new Date();
     }
 
-    updateEntities(): void {
+    private updateEntities(): void {
         this.game.entities.forEachEntity((entity) => {
             if (!entity) return;
 
@@ -103,8 +94,8 @@ export default class Updater {
                                 break;
                             }
                         }
-                } else if (entity.type === 'projectile') {
-                    const projectile = entity as Projectile;
+                } else if (entity instanceof Projectile) {
+                    const projectile = entity;
                     const mDistance = projectile.speed * this.timeDifferential;
                     const dx = projectile.target.x - entity.x;
                     const dy = projectile.target.y - entity.y;
@@ -125,11 +116,11 @@ export default class Updater {
         });
     }
 
-    updateFading(entity: Entity): void {
+    private updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
-        const time = this.game.time,
-            dt = time - entity.fadingTime;
+        const { time } = this.game;
+        const dt = time - entity.fadingTime;
 
         if (dt > entity.fadingDuration) {
             entity.fading = false;
@@ -137,12 +128,12 @@ export default class Updater {
         } else entity.fadingAlpha = dt / entity.fadingDuration;
     }
 
-    updateKeyboard(): void {
-        const player = this.game.player,
-            position = {
-                x: player.gridX,
-                y: player.gridY
-            };
+    private updateKeyboard(): void {
+        const { player } = this.game;
+        const position = {
+            x: player.gridX,
+            y: player.gridY
+        };
 
         if (player.frozen) return;
 
@@ -154,7 +145,7 @@ export default class Updater {
         if (player.hasKeyboardMovement()) this.input.keyMove(position);
     }
 
-    updateAnimations(): void {
+    private updateAnimations(): void {
         const target = this.input.targetAnimation;
 
         if (target && this.input.selectedCellVisible) target.update(this.game.time);
@@ -166,17 +157,17 @@ export default class Updater {
         sparks?.update(this.game.time);
     }
 
-    updateInfos(): void {
-        this.game.info?.update(this.game.time);
+    private updateInfos(): void {
+        this.game.info.update(this.game.time);
     }
 
-    updateBubbles(): void {
+    private updateBubbles(): void {
         this.game.bubble?.update(this.game.time);
 
         this.game.pointer?.update();
     }
 
-    setSprites(sprites: SpritesController): void {
+    public setSprites(sprites: SpritesController): void {
         this.sprites = sprites;
     }
 }

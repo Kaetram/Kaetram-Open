@@ -1,29 +1,19 @@
 export default class Slot {
-    index: number;
-    string: string;
-    count: number;
-    ability: number;
-    abilityLevel: number;
-    edible: boolean;
-    equippable: boolean;
+    public string: string | null = null;
+    public count = -1;
 
-    constructor(index: number) {
-        this.index = index;
+    public ability? = -1;
+    public abilityLevel? = -1;
+    public edible? = false;
+    public equippable? = false;
 
-        this.string = null;
-        this.count = -1;
-        this.ability = -1;
-        this.abilityLevel = -1;
+    public constructor(public index: number) {}
 
-        this.edible = false;
-        this.equippable = false;
-    }
-
-    load(
-        string: string,
+    public load(
+        string: string | null,
         count: number,
-        ability: number,
-        abilityLevel: number,
+        ability?: number,
+        abilityLevel?: number,
         edible?: boolean,
         equippable?: boolean
     ): void {
@@ -36,7 +26,7 @@ export default class Slot {
         this.equippable = equippable;
     }
 
-    empty(): void {
+    public empty(): void {
         this.string = null;
         this.count = -1;
         this.ability = -1;
@@ -46,15 +36,15 @@ export default class Slot {
         this.equippable = false;
     }
 
-    isEmpty(): boolean {
+    public isEmpty(): boolean {
         return !this.string || this.count < 1;
     }
 
-    setCount(count: number): void {
+    public setCount(count: number): void {
         this.count = count;
     }
 
-    setString(string: string): void {
-        this.string = string;
-    }
+    // setString(string: string): void {
+    //     this.string = string;
+    // }
 }

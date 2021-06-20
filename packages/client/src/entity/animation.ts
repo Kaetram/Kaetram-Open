@@ -14,7 +14,7 @@ export default class Animation {
     private lastTime!: number;
     private speed!: number;
 
-    private endCountCallback!: () => void;
+    private endCountCallback?(): void;
 
     public constructor(
         public name: string,
@@ -27,56 +27,64 @@ export default class Animation {
     }
 
     private tick(): void {
-        let i = this.currentFrame.index;
+        const { currentFrame, length, count, width, height, row } = this;
 
-        i = i < this.length - 1 ? i + 1 : 0;
+        let i = currentFrame.index;
 
-        if (this.count > 0 && i === 0) {
+        i = i < length - 1 ? i + 1 : 0;
+
+        if (count > 0 && i === 0) {
             this.count -= 1;
 
-            if (this.count === 0) {
-                this.currentFrame.index = 0;
-                this.endCountCallback();
+            const { count } = this;
+
+            if (count === 0) {
+                currentFrame.index = 0;
+                this.endCountCallback?.();
                 return;
             }
         }
 
-        this.currentFrame.x = this.width * i;
-        this.currentFrame.y = this.height * this.row;
+        currentFrame.x = width * i;
+        currentFrame.y = height * row;
 
-        this.currentFrame.index = i;
+        currentFrame.index = i;
     }
 
-    update(time: number): boolean {
-        if (this.lastTime === 0 && this.name.slice(0, 3) === 'atk') this.lastTime = time;
+    public update(time: number): boolean {
+        const { lastTime, name } = this;
+
+        if (lastTime === 0 && name.slice(0, 3) === 'atk') this.lastTime = time;
 
         if (this.readyToAnimate(time)) {
             this.lastTime = time;
             this.tick();
 
             return true;
-        } else return false;
+        }
+        return false;
     }
 
-    setCount(count: number, onEndCount: () => void): void {
+    public setCount(count: number, onEndCount: () => void): void {
         this.count = count;
         this.endCountCallback = onEndCount;
     }
 
-    setSpeed(speed: number): void {
+    public setSpeed(speed: number): void {
         this.speed = speed;
     }
 
-    setRow(row: number): void {
+    public setRow(row: number): void {
         this.row = row;
     }
 
-    readyToAnimate(time: number): boolean {
+    private readyToAnimate(time: number): boolean {
         return time - this.lastTime > this.speed;
     }
 
-    reset(): void {
+    public reset(): void {
         this.lastTime = 0;
+
         this.currentFrame = {
             index: 0,
             x: 0,

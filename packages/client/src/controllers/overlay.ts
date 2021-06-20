@@ -1,7 +1,11 @@
 import $ from 'jquery';
 
-import type Character from '../entity/character/character';
-import type Player from '../entity/character/player/player';
+import Character from '../entity/character/character';
+import Mob from '../entity/character/mob/mob';
+import NPC from '../entity/character/npc/npc';
+import Player from '../entity/character/player/player';
+import Item from '../entity/objects/item';
+
 import type Entity from '../entity/entity';
 import type InputController from './input';
 
@@ -15,11 +19,13 @@ export default class OverlayController {
     private details = this.attackInfo.find('.details');
     private health = this.attackInfo.find('.health');
 
-    public updateCallback!: (id: string, data: number) => void;
+    public updateCallback?(id: string, data: number): void;
 
     public constructor(private input: InputController) {}
 
     public update(entity: Entity | undefined): void {
+        const { name, health, details } = this;
+
         if (!entity || !this.validEntity(entity)) {
             this.hovering = null;
 
@@ -32,42 +38,35 @@ export default class OverlayController {
 
         this.hovering = entity;
 
-        this.name.html(entity.type === 'player' ? (entity as Player).username : entity.name);
+        name.html(entity instanceof Player ? entity.username : entity.name);
 
-        if (this.hasHealth()) {
-            this.health.css({
+        if (this.hasHealth() && entity instanceof Character) {
+            health.css({
                 display: 'block',
-                /* stylelint-disable */
-                width: `${
-                    Math.ceil(
-                        ((entity?.hitPoints as number) / (entity as Character).maxHitPoints) * 100
-                    ) - 10
-                }%`
+                width: `${Math.ceil((entity.hitPoints / entity.maxHitPoints) * 100) - 10}%`
             });
 
-            this.details.html(
-                `${entity?.hitPoints as number} / ${(entity as Character).maxHitPoints}`
-            );
+            details.html(`${entity.hitPoints} / ${entity.maxHitPoints}`);
         } else {
-            this.health.hide();
-            this.details.html('');
+            health.hide();
+            details.html('');
         }
 
         this.onUpdate((entityId: string, hitPoints: number) => {
-            const hovering = this.hovering as Character;
+            const { hovering } = this;
             if (
                 hovering &&
                 hovering.id === entityId &&
-                hovering.type !== 'npc' &&
-                hovering.type !== 'item'
+                hovering instanceof NPC &&
+                hovering instanceof Item
             )
                 if (hitPoints < 1) this.hide();
                 else {
-                    this.health.css(
+                    health.css(
                         'width',
                         `${Math.ceil((hitPoints / hovering.maxHitPoints) * 100) - 10}%`
                     );
-                    this.details.html(`${hitPoints} / ${hovering.maxHitPoints}`);
+                    details.html(`${hitPoints} / ${hovering.maxHitPoints}`);
                 }
         });
     }
@@ -78,7 +77,7 @@ export default class OverlayController {
 
     private hasHealth(): boolean {
         return this.hovering
-            ? this.hovering.type === 'mob' || this.hovering.type === 'player'
+            ? this.hovering instanceof Mob || this.hovering instanceof Player
             : false;
     }
 

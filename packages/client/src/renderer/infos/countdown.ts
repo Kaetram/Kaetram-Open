@@ -1,21 +1,14 @@
 export default class Countdown {
-    id: string;
-    time: number;
-    string: string;
-    lastTime: number;
-    updateTime: number;
-    destroyCallback: (id: string) => void;
+    public string: string | null = null;
 
-    constructor(id: string, time: number) {
-        this.id = id;
-        this.time = time;
-        this.string = null;
+    private lastTime = 0;
+    private updateTime = 1000; // Update every second.
 
-        this.lastTime = 0;
-        this.updateTime = 1000; // Update every second.
-    }
+    private destroyCallback?(id: string): void;
 
-    tick(): void {
+    public constructor(public id: string, private time: number) {}
+
+    private tick(): void {
         if (this.time < 1) return;
 
         // Originally was gonna do this in the renderer
@@ -26,26 +19,26 @@ export default class Countdown {
         this.time--;
     }
 
-    update(time: number): void {
+    public update(time: number): void {
         if (time - this.lastTime > this.updateTime) this.lastTime = time;
     }
 
-    getStringFormat(): string {
+    private getStringFormat(): string {
         if (this.time < 60) return `00:${this.time}`;
 
-        const minutes = Math.floor(this.time / 60),
-            seconds = this.time - minutes * 60;
+        const minutes = Math.floor(this.time / 60);
+        const seconds = this.time - minutes * 60;
 
         if (minutes < 10) return `0${minutes}:${seconds}`;
 
         return `${minutes}:${seconds}`;
     }
 
-    destroy(): void {
+    private destroy(): void {
         this.destroyCallback?.(this.id);
     }
 
-    onDestroy(callback: (id: string) => void): void {
+    public onDestroy(callback: (id: string) => void): void {
         this.destroyCallback = callback;
     }
 }

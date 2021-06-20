@@ -17,25 +17,24 @@
         "map": "yarn packages map"
     },
     "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^4.22.0",
-        "@typescript-eslint/parser": "^4.22.0",
-        "@yarnpkg/pnpify": "^3.0.0-rc.3",
-        "autoprefixer": "^10.2.5",
-        "eslint": "^7.24.0",
-        "eslint-config-prettier": "^8.2.0",
-        "eslint-plugin-prettier": "^3.3.1",
-        "eslint-plugin-unicorn": "^29.0.0",
-        "eslint-visitor-keys": "^2.0.0",
-        "postcss": "^8.2.10",
+        "@typescript-eslint/eslint-plugin": "^4.27.0",
+        "@typescript-eslint/parser": "^4.27.0",
+        "@yarnpkg/pnpify": "^3.0.0-rc.6",
+        "autoprefixer": "^10.2.6",
+        "eslint": "^7.29.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "eslint-plugin-unicorn": "^33.0.1",
+        "eslint-visitor-keys": "^2.1.0",
+        "postcss": "^8.3.5",
         "postcss-custom-media": "^8.0.0",
         "postcss-html": "^0.36.0",
         "postcss-preset-env": "^6.7.0",
         "postcss-syntax": "^0.36.2",
         "postcss-value-parser": "^4.1.0",
-        "prettier": "^2.2.1",
-        "stylelint": "^13.12.0",
-        "ts-node": "^9.1.1",
-        "typescript": "^4.2.4"
+        "prettier": "^2.3.1",
+        "stylelint": "^13.13.1",
+        "typescript": "^4.3.4"
     },
     "workspaces": [
         "packages/*"
@@ -44,7 +43,7 @@
         "caniuse-lite": "latest"
     },
     "engines": {
-        "node": ">=12.0.0"
+        "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
     },
     "repository": "git+https://github.com/Veradictus/Kaetram-Open.git",
     "bugs": {

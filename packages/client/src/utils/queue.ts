@@ -6,25 +6,17 @@ import _ from 'lodash';
  * objects to delete
  */
 export default class Queue {
-    queue: string[];
+    private queue: string[] = [];
 
-    constructor() {
+    public reset(): void {
         this.queue = [];
     }
 
-    reset(): void {
-        this.queue = [];
-    }
-
-    add(object: string): void {
+    public add(object: string): void {
         this.queue.push(object);
     }
 
-    getQueue(): string[] {
-        return this.queue;
-    }
-
-    forEachQueue(callback: (object: string) => void): void {
-        _.each(this.queue, (object) => callback(object));
+    public forEachQueue(callback: (object: string) => void): void {
+        _.each(this.queue, callback);
     }
 }

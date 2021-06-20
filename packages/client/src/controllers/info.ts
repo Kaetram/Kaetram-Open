@@ -17,18 +17,26 @@ export default class InfoController {
 
     public constructor(private game: Game) {}
 
-    public create(type: Modules.Hits | Modules.Infos, data: unknown[], x: number, y: number): void {
+    public create(
+        type: Modules.Hits | Modules.Infos,
+        data: [number, boolean?] | null,
+        x: number,
+        y: number
+    ): void {
+        const { time } = this.game;
+
         switch (type) {
             case Modules.Hits.Damage:
             case Modules.Hits.Stun:
             case Modules.Hits.Critical: {
-                let damage = data.shift() as number | string;
-                const isTarget = data.shift() as boolean,
-                    dId = this.generateId(this.game.time, damage as number, x, y);
+                const [damage, isTarget] = data!;
+                const dId = this.generateId(time, damage, x, y);
 
-                if (damage < 1 || !isInt(damage as number)) (damage as string) = 'MISS';
+                let text = damage.toString();
 
-                const hitSplat = new Splat(dId, type, damage.toString(), x, y, false);
+                if (damage < 1 || !isInt(damage)) text = 'MISS';
+
+                const hitSplat = new Splat(dId, type, text, x, y, false);
                 let dColour = isTarget
                     ? Modules.DamageColours.received
                     : Modules.DamageColours.inflicted;
@@ -50,11 +58,14 @@ export default class InfoController {
             case Modules.Hits.Experience:
             case Modules.Hits.Profession:
             case Modules.Hits.Poison: {
-                const amount: number = data.shift() as number,
-                    id: string = this.generateId(this.game.time, amount, x, y);
-                let prefix = '+',
-                    suffix = '',
-                    colour: Modules.Colours | null = null;
+                const [amount] = data!;
+
+                const id: string = this.generateId(time, amount, x, y);
+
+                let prefix = '+';
+                let suffix = '';
+
+                let colour: Modules.Colours | null = null;
 
                 if (amount < 1 || !isInt(amount)) return;
 
@@ -92,9 +103,9 @@ export default class InfoController {
             }
 
             case Modules.Hits.LevelUp: {
-                const lId = this.generateId(this.game.time, -1, x, y),
-                    levelSplat = new Splat(lId, type, 'Level Up!', x, y, false),
-                    lColour = Modules.DamageColours.exp;
+                const lId = this.generateId(time, -1, x, y);
+                const levelSplat = new Splat(lId, type, 'Level Up!', x, y, false);
+                const lColour = Modules.DamageColours.exp;
 
                 levelSplat.setColours(lColour.fill, lColour.stroke);
 
@@ -110,8 +121,8 @@ export default class InfoController {
 
                 if (this.countdownExists()) return;
 
-                const time = data.shift() as number,
-                    countdown = new Countdown('countdown', time);
+                const [time] = data!;
+                const countdown = new Countdown('countdown', time);
 
                 this.addInfo(countdown);
 
@@ -143,7 +154,7 @@ export default class InfoController {
     }
 
     public forEachInfo(callback: (info: Info) => void): void {
-        _.each(this.infos, (info) => callback(info));
+        _.each(this.infos, callback);
     }
 
     private generateId(time: number, info: number, x: number, y: number): string {

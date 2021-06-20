@@ -8,7 +8,7 @@ import Page from '../page';
  * Replace this with a `common` interface linking to the server's `Achievement` class.
  */
 interface AchievementsInfo {
-    id: string;
+    id: number;
     name: string;
     progress: number;
     count: number;
@@ -20,7 +20,7 @@ interface AchievementsInfo {
  * Replace this with a `common` interface linking to the server's `Quest` class.
  */
 interface QuestInfo {
-    id: string;
+    id: number;
     name: string;
     description: string;
     stage: number;
@@ -28,43 +28,28 @@ interface QuestInfo {
 }
 
 export default class Quest extends Page {
-    achievements: JQuery;
-    quests: JQuery;
-    achievementsCount: JQuery;
-    questCount: JQuery;
-    achievementsList;
-    questList;
-    finishedAchievements: number;
-    finishedQuests: number;
-    achievementsLength: number;
-    questsLength: number;
-    finishedAchievement: number;
+    private quests = $('#questList');
+    private questList = this.quests.find('ul');
+    private questCount = $('#questCount');
+    private finishedQuests = 0;
+    private questsLength = 0;
 
-    constructor() {
+    private achievements = $('#achievementList');
+    private achievementsList = this.achievements.find('ul');
+    private achievementsCount = $('#achievementCount');
+    private finishedAchievements = 0;
+    private achievementsLength = 0;
+
+    public constructor() {
         super('#questPage');
-
-        this.achievements = $('#achievementList');
-        this.quests = $('#questList');
-
-        this.achievementsCount = $('#achievementCount');
-        this.questCount = $('#questCount');
-
-        this.achievementsList = this.achievements.find('ul');
-        this.questList = this.quests.find('ul');
-
-        this.finishedAchievements = 0;
-        this.finishedQuests = 0;
-
-        this.achievementsLength = 0;
-        this.questsLength = 0;
     }
 
-    loadAchievements(achievements: AchievementsInfo[]): void {
+    public loadAchievements(achievements: AchievementsInfo[]): void {
         this.achievementsLength = achievements.length;
 
         _.each(achievements, (achievement) => {
-            const item = this.getItem(false, achievement.id),
-                name = this.getName(false, achievement.id);
+            const item = this.getItem(false, achievement.id);
+            const name = this.getName(false, achievement.id);
 
             name.text('????????');
 
@@ -98,12 +83,12 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    loadQuests(quests: QuestInfo[]): void {
+    public loadQuests(quests: QuestInfo[]): void {
         this.questsLength = quests.length;
 
         _.each(quests, (quest) => {
-            const item = this.getItem(true, quest.id),
-                name = this.getName(true, quest.id);
+            const item = this.getItem(true, quest.id);
+            const name = this.getName(true, quest.id);
 
             name.text(quest.name);
 
@@ -127,7 +112,7 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    progress(info: AchievementsInfo): void {
+    public progress(info: AchievementsInfo): void {
         const item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
 
         if (!item) return;
@@ -145,7 +130,7 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    finish(info: AchievementsInfo): void {
+    public finish(info: AchievementsInfo): void {
         const item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
 
         if (!item) return;
@@ -166,24 +151,24 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    updateCount(): void {
-        if (this.finishedAchievement !== 0 && this.achievementsLength !== 0)
+    private updateCount(): void {
+        if (this.finishedAchievements !== 0 && this.achievementsLength !== 0)
             this.achievementsCount.html(`${this.finishedAchievements}/${this.achievementsLength}`);
 
         if (this.finishedQuests !== 0 && this.questsLength !== 0)
             this.questCount.html(`${this.finishedQuests}/${this.questsLength}`);
     }
 
-    clear(): void {
+    public clear(): void {
         this.achievementsList.empty();
         this.questList.empty();
     }
 
-    getQuest(id: string): JQuery {
+    private getQuest(id: number): JQuery {
         return $(this.questList.find('li')[id]).find(`#quest${id}`);
     }
 
-    getAchievement(id: string): JQuery {
+    private getAchievement(id: number): JQuery {
         return $(this.achievementsList.find('li')[id]).find(`#achievement${id}`);
     }
 
@@ -192,11 +177,11 @@ export default class Quest extends Page {
      * on their type of item and id (index).
      */
 
-    getItem(isQuest: boolean, id: string): JQuery {
+    private getItem(isQuest: boolean, id: number): JQuery {
         return $(`<div id="${isQuest ? 'quest' : 'achievement'}${id}" class="questItem"></div>`);
     }
 
-    getName(isQuest: boolean, id: string): JQuery {
+    private getName(isQuest: boolean, id: number): JQuery {
         return $(
             `<div id="${isQuest ? 'quest' : 'achievement'}${id}name" class="questName"></div>`
         );
