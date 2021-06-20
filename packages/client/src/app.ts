@@ -3,9 +3,10 @@ import _ from 'lodash';
 
 import * as Modules from '@kaetram/common/src/modules';
 
-import Game from './game';
 import install from './lib/pwa';
 import { isMobile, isTablet } from './utils/detect';
+
+import type Game from './game';
 
 export interface Config {
     /** Server host */

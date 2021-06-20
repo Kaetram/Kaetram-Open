@@ -1,47 +1,39 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Game from '../../game';
 import Packets from '@kaetram/common/src/packets';
-import Page from './page';
+
 import Guild from './pages/guild';
 import Professions from './pages/professions';
 import Quest from './pages/quest';
 import Settings from './pages/settings';
 import State from './pages/state';
 
+import type Game from '../../game';
+import type Page from './page';
+
 export default class Profile {
-    game: Game;
-    body: JQuery;
-    button: JQuery;
-    next: JQuery;
-    previous: JQuery;
-    activePage: State;
-    activeIndex: number;
-    pages: Page[];
-    state!: State;
-    professions!: Professions;
-    settings!: Settings;
-    quests!: Quest;
-    guild!: Guild;
+    private body = $('#profileDialog');
+    private button = $('#profileButton');
 
-    constructor(game: Game) {
-        this.game = game;
+    private next = $('#next');
+    private previous = $('#previous');
 
-        this.body = $('#profileDialog');
-        this.button = $('#profileButton');
+    private activePage!: State;
+    private activeIndex = 0;
+    private pages: Page[] = [];
 
-        this.next = $('#next');
-        this.previous = $('#previous');
+    private state!: State;
+    public professions!: Professions;
+    public settings!: Settings;
+    public quests!: Quest;
+    private guild!: Guild;
 
-        this.activePage = null!;
-        this.activeIndex = 0;
-        this.pages = [];
-
+    public constructor(private game: Game) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.button.on('click', () => this.open());
 
         this.next.on('click', () => {
@@ -55,11 +47,11 @@ export default class Profile {
         });
 
         this.state = new State(this.game);
-        this.professions = new Professions(this.game);
-        // this.ability = new Ability(this.game);
+        this.professions = new Professions();
+        // this.ability = new Ability();
         this.settings = new Settings(this.game);
         this.quests = new Quest();
-        this.guild = new Guild(this.game);
+        this.guild = new Guild();
 
         this.pages.push(this.state, this.professions, this.quests, this.guild);
 
@@ -69,7 +61,7 @@ export default class Profile {
             this.next.addClass('enabled');
     }
 
-    open(): void {
+    public open(): void {
         this.game.menu.hideAll();
         this.settings.hide();
 
@@ -86,18 +78,18 @@ export default class Profile {
         this.game.socket.send(Packets.Click, ['profile', this.button.hasClass('active')]);
     }
 
-    update(): void {
+    public update(): void {
         _.each(this.pages as State[], (page) => {
             // if (!page.update) console.log(page);
             page.update?.();
         });
     }
 
-    resize(): void {
+    public resize(): void {
         _.each(this.pages as State[], (page) => page?.resize());
     }
 
-    setPage(index: number): void {
+    public setPage(index: number): void {
         const page = this.pages[index];
 
         this.clear();
@@ -117,19 +109,19 @@ export default class Profile {
         page.show();
     }
 
-    show(): void {
+    private show(): void {
         this.body.fadeIn('slow');
         this.button.addClass('active');
     }
 
-    hide(): void {
+    public hide(): void {
         this.body.fadeOut('fast');
         this.button.removeClass('active');
 
         this.settings?.hide();
     }
 
-    clean(): void {
+    public clean(): void {
         this.button.off('click');
         this.next.off('click');
         this.previous.off('click');
@@ -139,11 +131,11 @@ export default class Profile {
         // this.state.clear();
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 
-    clear(): void {
+    private clear(): void {
         this.activePage?.hide();
     }
 }

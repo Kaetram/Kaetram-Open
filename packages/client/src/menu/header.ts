@@ -1,32 +1,22 @@
 import $ from 'jquery';
 
-import Player from '../entity/character/player/player';
-import Game from '../game';
+import type Game from '../game';
 
 export default class Header {
-    game: Game;
-    player: Player;
-    health: JQuery<HTMLElement>;
-    healthBar: JQuery<HTMLElement>;
-    healthBarText: JQuery<HTMLElement>;
-    exp: JQuery<HTMLElement>;
-    expBar: JQuery<HTMLElement>;
+    private player = this.game.player;
 
-    constructor(game: Game /* , menu: MenuController */) {
-        this.game = game;
-        this.player = game.player;
+    private health = $('#health');
+    private healthBar = $('#healthBar');
+    private healthBarText = $('#healthBarText');
 
-        this.health = $('#health');
-        this.healthBar = $('#healthBar');
-        this.healthBarText = $('#healthBarText');
+    private exp = $('#exp');
+    private expBar = $('#expBar');
 
-        this.exp = $('#exp');
-        this.expBar = $('#expBar');
-
+    public constructor(private game: Game) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.player.onHitPoints(() => this.calculateHealthBar());
 
         this.player.onMaxHitPoints(() => this.calculateHealthBar());
@@ -34,7 +24,7 @@ export default class Header {
         this.player.onExperience(() => this.calculateExpBar());
     }
 
-    calculateHealthBar(): void {
+    private calculateHealthBar(): void {
         const scale = this.getScale();
         const width = this.healthBar.width()!;
 
@@ -53,7 +43,7 @@ export default class Header {
         this.healthBarText.text(`${this.player.hitPoints}/${this.player.maxHitPoints}`);
     }
 
-    calculateExpBar(): void {
+    private calculateExpBar(): void {
         // const scale = this.getScale();
         const width = this.expBar.width()!;
 
@@ -64,12 +54,12 @@ export default class Header {
         this.exp.css('width', `${diff}px`);
     }
 
-    resize(): void {
+    public resize(): void {
         this.calculateHealthBar();
         this.calculateExpBar();
     }
 
-    getScale(): number {
+    private getScale(): number {
         let scale = this.game.app.getUIScale();
 
         if (scale < 2) scale = 2;
@@ -77,7 +67,7 @@ export default class Header {
         return scale;
     }
 
-    toggle(tClass: string): void {
+    private toggle(tClass: string): void {
         this.health.addClass(tClass);
 
         window.setTimeout(() => this.health.removeClass(tClass), 500);
