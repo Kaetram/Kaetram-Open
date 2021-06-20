@@ -9,7 +9,6 @@ import Pointer from '../renderer/pointers/pointer';
 import type Entity from '../entity/entity';
 import type Game from '../game';
 import type Camera from '../renderer/camera';
-import type Renderer from '../renderer/renderer';
 
 export default class PointerController {
     private pointers: { [id: string]: Pointer } = {};

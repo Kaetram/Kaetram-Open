@@ -2,20 +2,22 @@ import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
 import $ from 'jquery';
 import _ from 'lodash';
 
-import EntitiesController from '../controllers/entities';
-import InputController from '../controllers/input';
-import Character from '../entity/character/character';
-import Player from '../entity/character/player/player';
-import Entity from '../entity/entity';
-import Item from '../entity/objects/item';
-import Sprite from '../entity/sprite';
-import Game from '../game';
-import Map from '../map/map';
-import * as Detect from '../utils/detect';
 import * as Modules from '@kaetram/common/src/modules';
+
+import Character from '../entity/character/character';
+import Item from '../entity/objects/item';
+import * as Detect from '../utils/detect';
 import Camera from './camera';
-import Splat from './infos/splat';
 import Tile from './tile';
+
+import type EntitiesController from '../controllers/entities';
+import type InputController from '../controllers/input';
+import type Player from '../entity/character/player/player';
+import type Entity from '../entity/entity';
+import type Sprite from '../entity/sprite';
+import type Game from '../game';
+import type Map from '../map/map';
+import type Splat from './infos/splat';
 
 interface RendererTile {
     relativeTileId: number;
@@ -66,168 +68,107 @@ const ROT_NEG_90_DEG = ROT_90_DEG * -1;
 const ROT_180_DEG = Math.PI;
 
 export default class Renderer {
-    canvas: HTMLCanvasElement;
-    background: HTMLCanvasElement;
-    entitiesCanvas: HTMLCanvasElement;
-    foreground: HTMLCanvasElement;
-    overlay: HTMLCanvasElement;
-    textCanvas: HTMLCanvasElement;
-    cursor: HTMLCanvasElement;
-    context: CanvasRenderingContext2D;
-    backContext: CanvasRenderingContext2D | RenderingContext;
-    foreContext: CanvasRenderingContext2D;
-    overlayContext: CanvasRenderingContext2D;
-    textContext: CanvasRenderingContext2D;
-    cursorContext: CanvasRenderingContext2D;
-    canvases: HTMLCanvasElement[];
-    allContexts: (CanvasRenderingContext2D | RenderingContext)[];
-    contexts: CanvasRenderingContext2D[];
-    drawingContexts: (CanvasRenderingContext2D | RenderingContext)[];
-    lightings: RendererLighting[];
-    entities: EntitiesController;
-    game: Game;
-    camera: Camera;
-    input: InputController;
-    tileSize: number;
-    fontSize: number;
-    screenWidth: number;
-    screenHeight: number;
-    time: Date;
-    fps: number;
-    frameCount: number;
-    renderedFrame: number[];
-    lastTarget: number[];
-    animatedTiles: { [index: number]: Tile };
-    drawnTiles: Tile[];
-    resizeTimeout: number | null;
-    autoCentre: boolean;
-    drawTarget: boolean;
-    selectedCellVisible: boolean;
-    stopRendering: boolean;
-    animateTiles: boolean;
-    debugging: boolean;
-    brightness: number;
-    drawNames: boolean;
-    drawLevels: boolean;
-    forceRendering: boolean;
-    animatedTilesDrawCalls: number;
-    tiles: { [id: string]: RendererTile };
-    cells: { [id: number]: RendererCell };
-    scale!: number;
-    superScaling!: number;
-    lightTileSize!: number;
-    canvasWidth!: number;
-    canvasHeight!: number;
-    webGL!: boolean;
-    map!: Map;
-    mEdge!: boolean;
-    tablet!: boolean;
-    mobile!: boolean;
-    darkMask!: DarkMask;
-    shadowSprite!: Sprite;
-    sparksSprite!: Sprite;
-    realFPS!: number;
-    transitioning!: boolean;
-    transitionInterval!: number;
-    tileset: unknown;
+    // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
 
-    constructor(
-        background: HTMLCanvasElement,
-        entitiesCanvas: HTMLCanvasElement,
-        foreground: HTMLCanvasElement,
-        overlay: HTMLCanvasElement,
-        textCanvas: HTMLCanvasElement,
-        cursor: HTMLCanvasElement,
-        game: Game
+    private context = this.entitiesCanvas.getContext('2d')!; // Entities;
+
+    public backContext = (!Detect.supportsWebGL()
+        ? this.background.getContext('2d')
+        : this.background.getContext('webgl') || this.background.getContext('experimental-webgl'))!;
+
+    private foreContext = this.foreground.getContext('2d')!; // Foreground
+    private overlayContext = this.overlay.getContext('2d')!; // Lighting
+    private textContext = this.textCanvas.getContext('2d')!; // Texts
+    private cursorContext = this.cursor.getContext('2d')!; // Cursor
+
+    private canvases = [
+        this.background,
+        this.entitiesCanvas,
+        this.foreground,
+        this.overlay,
+        this.textCanvas,
+        this.cursor
+    ];
+
+    private allContexts = [
+        this.context,
+        this.backContext,
+        this.foreContext,
+        this.overlayContext,
+        this.textContext,
+        this.cursorContext
+    ];
+
+    private contexts = [this.context, this.textContext, this.overlayContext];
+    private drawingContexts = [this.backContext, this.foreContext]; // For drawing the map.
+
+    private lightings: RendererLighting[] = [];
+
+    private entities!: EntitiesController;
+    public camera!: Camera;
+    private input!: InputController;
+
+    public tileSize = 16;
+    private fontSize = 16;
+    private screenWidth = 0;
+    private screenHeight = 0;
+    private time = new Date();
+    private fps = 0;
+    private frameCount = 0;
+    private renderedFrame = [0, 0];
+    // lastTarget = [0, 0];
+
+    private animatedTiles: { [index: number]: Tile } = {};
+    private drawnTiles: Tile[] = [];
+
+    private resizeTimeout: number | null = null;
+
+    public autoCentre = false;
+    // drawTarget = false;
+    // selectedCellVisible = false;
+    private stopRendering = false;
+    private animateTiles = true;
+    public debugging = false;
+    private brightness = 100;
+    public drawNames = true;
+    public drawLevels = true;
+    public forceRendering = false;
+    // animatedTilesDrawCalls = 0;
+
+    private tiles: { [id: string]: RendererTile } = {};
+    private cells: { [id: number]: RendererCell } = {};
+
+    private scale!: number;
+    private superScaling!: number;
+    private lightTileSize!: number;
+    public canvasHeight!: number;
+    public canvasWidth!: number;
+    private webGL!: boolean;
+    public map!: Map;
+    private mEdge!: boolean;
+    private tablet!: boolean;
+    public mobile!: boolean;
+    private darkMask!: DarkMask;
+    private shadowSprite!: Sprite;
+    private sparksSprite!: Sprite;
+    private realFPS!: number;
+    public transitioning!: boolean;
+    private transitionInterval!: number;
+    private tileset: unknown;
+
+    public constructor(
+        public background: HTMLCanvasElement,
+        public entitiesCanvas: HTMLCanvasElement,
+        public foreground: HTMLCanvasElement,
+        public overlay: HTMLCanvasElement,
+        public textCanvas: HTMLCanvasElement,
+        public cursor: HTMLCanvasElement,
+        public game: Game
     ) {
-        this.canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
-        this.background = background;
-        this.entitiesCanvas = entitiesCanvas;
-        this.foreground = foreground;
-        this.overlay = overlay;
-        this.textCanvas = textCanvas;
-        this.cursor = cursor;
-
-        this.context = this.entitiesCanvas.getContext('2d')!; // Entities
-
-        this.backContext = (
-            !Detect.supportsWebGL()
-                ? this.background.getContext('2d')
-                : this.background.getContext('webgl') ||
-                  this.background.getContext('experimental-webgl')
-        )!;
-
-        this.foreContext = this.foreground.getContext('2d')!; // Foreground
-        this.overlayContext = this.overlay.getContext('2d')!; // Lighting
-        this.textContext = this.textCanvas.getContext('2d')!; // Texts
-        this.cursorContext = this.cursor.getContext('2d')!; // Cursor
-
-        this.canvases = [
-            this.background,
-            this.entitiesCanvas,
-            this.foreground,
-            this.overlay,
-            this.textCanvas,
-            this.cursor
-        ];
-
-        this.allContexts = [
-            this.context,
-            this.backContext,
-            this.foreContext,
-            this.overlayContext,
-            this.textContext,
-            this.cursorContext
-        ];
-
-        this.contexts = [this.context, this.textContext, this.overlayContext];
-        this.drawingContexts = [this.backContext, this.foreContext]; // For drawing the map.
-
-        this.lightings = [];
-
-        this.game = game;
-        this.camera = null!;
-        this.entities = null!;
-        this.input = null!;
-
-        this.tileSize = 16;
-        this.fontSize = 16;
-
-        this.screenWidth = 0;
-        this.screenHeight = 0;
-
-        this.time = new Date();
-
-        this.fps = 0;
-        this.frameCount = 0;
-        this.renderedFrame = [0, 0];
-        this.lastTarget = [0, 0];
-
-        this.animatedTiles = {};
-        this.drawnTiles = [];
-
-        this.resizeTimeout = null;
-        this.autoCentre = false;
-
-        this.drawTarget = false;
-        this.selectedCellVisible = false;
-
-        this.stopRendering = false;
-        this.animateTiles = true;
-        this.debugging = false;
-        this.brightness = 100;
-        this.drawNames = true;
-        this.drawLevels = true;
-        this.forceRendering = false;
-        this.animatedTilesDrawCalls = 0;
-
-        this.tiles = {};
-        this.cells = {};
-
         this.load();
     }
 
-    stop(): void {
+    public stop(): void {
         this.camera = null!;
         this.input = null!;
         this.stopRendering = true;
@@ -238,7 +179,7 @@ export default class Renderer {
         });
     }
 
-    load(): void {
+    private load(): void {
         this.scale = this.getScale();
         this.superScaling = this.getSuperScaling();
 
@@ -246,7 +187,7 @@ export default class Renderer {
         this.checkDevice();
     }
 
-    removeSmoothing(): void {
+    private removeSmoothing(): void {
         this.forAllContexts((context) => {
             if (!context) return;
 
@@ -261,7 +202,7 @@ export default class Renderer {
         });
     }
 
-    loadSizes(): void {
+    private loadSizes(): void {
         if (!this.camera) return;
 
         this.lightTileSize = this.tileSize * this.superScaling;
@@ -280,7 +221,7 @@ export default class Renderer {
         if (this.webGL) this.map.loadWebGL(this.backContext as WebGL2RenderingContext);
     }
 
-    loadCamera(): void {
+    public loadCamera(): void {
         const { storage } = this.game;
 
         this.camera = new Camera(this);
@@ -297,7 +238,7 @@ export default class Renderer {
         }
     }
 
-    loadLights(): void {
+    private loadLights(): void {
         this.darkMask = new DarkMask({
             lights: [],
             color: 'rgba(0, 0, 0, 0.84)'
@@ -306,7 +247,7 @@ export default class Renderer {
         this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    resize(): void {
+    public resize(): void {
         this.stopRendering = true;
 
         this.clear();
@@ -339,7 +280,7 @@ export default class Renderer {
             }, 500);
     }
 
-    render(): void {
+    public render(): void {
         if (this.stopRendering) return;
 
         this.clear();
@@ -378,7 +319,7 @@ export default class Renderer {
      * Context Drawing
      */
 
-    draw(): void {
+    private draw(): void {
         if (this.webGL) {
             // Do the WebGL Rendering here
             this.drawWebGL();
@@ -413,7 +354,7 @@ export default class Renderer {
         this.saveFrame();
     }
 
-    drawWebGL(): void {
+    private drawWebGL(): void {
         if (!this.map.webGLMap) return;
 
         const dt = this.game.time - this.game.lastTime;
@@ -440,7 +381,7 @@ export default class Renderer {
         this.foreContext.restore();
     }
 
-    drawAnimatedTiles(): void {
+    private drawAnimatedTiles(): void {
         if (!this.animateTiles || this.webGL) return;
 
         this.context.save();
@@ -457,7 +398,7 @@ export default class Renderer {
         this.context.restore();
     }
 
-    drawOverlays(): void {
+    private drawOverlays(): void {
         const overlay = this.game.overlays.getFog();
 
         if (overlay) {
@@ -485,7 +426,7 @@ export default class Renderer {
         }
     }
 
-    drawInfos(): void {
+    private drawInfos(): void {
         if (this.game.info.getCount() === 0) return;
 
         this.game.info.forEachInfo((info) => {
@@ -499,7 +440,7 @@ export default class Renderer {
         });
     }
 
-    drawDebugging(): void {
+    private drawDebugging(): void {
         if (!this.debugging) return;
 
         this.drawFPS();
@@ -512,7 +453,7 @@ export default class Renderer {
         this.drawPathing();
     }
 
-    drawEntities(): void {
+    private drawEntities(): void {
         if (this.game.player.dead) return;
 
         this.setCameraView(this.context);
@@ -524,7 +465,7 @@ export default class Renderer {
         });
     }
 
-    drawEntity(entity: Entity): void {
+    private drawEntity(entity: Entity): void {
         const {
             sprite,
             currentAnimation: animation,
@@ -600,7 +541,7 @@ export default class Renderer {
             );
         }
 
-        this.drawEntityBack(entity);
+        // this.drawEntityBack(entity);
 
         this.context.drawImage(
             sprite.image,
@@ -623,20 +564,17 @@ export default class Renderer {
         if (!this.game.overlays.getFog()) this.drawName(entity as Player & Item);
     }
 
-    /**
-     * Function used to draw special effects prior
-     * to rendering the entity.
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    drawEntityBack(_entity: Entity): void {
-        //
-    }
+    // /**
+    //  * Function used to draw special effects prior
+    //  * to rendering the entity.
+    //  */
+    // private drawEntityBack(entity: Entity): void {}
 
     /**
      * Function used to draw special effects after
      * having rendererd the entity
      */
-    drawEntityFore(entity: Entity): void {
+    private drawEntityFore(entity: Entity): void {
         if (entity instanceof Character) {
             if (entity.hasWeapon() && !entity.dead && !entity.teleporting) {
                 const weapon = this.entities.getSprite(entity.weapon.getString());
@@ -724,7 +662,7 @@ export default class Renderer {
         }
     }
 
-    drawHealth(entity: Character): void {
+    private drawHealth(entity: Character): void {
         if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
 
         const barLength = 16;
@@ -745,7 +683,7 @@ export default class Renderer {
         this.textContext.restore();
     }
 
-    drawName(entity: Player & Item): void {
+    private drawName(entity: Player & Item): void {
         if (entity.hidden || !entity.drawNames() || (!this.drawNames && !this.drawLevels)) return;
 
         let colour = entity.wanted ? 'red' : 'white';
@@ -805,7 +743,7 @@ export default class Renderer {
         this.textContext.restore();
     }
 
-    drawLighting(lighting: RendererLighting): void {
+    private drawLighting(lighting: RendererLighting): void {
         if (lighting.relative) {
             const lightX = (lighting.light.origX - this.camera.x / 16) * this.lightTileSize;
             const lightY = (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
@@ -821,7 +759,7 @@ export default class Renderer {
         lighting.render(this.overlayContext);
     }
 
-    drawCursor(): void {
+    private drawCursor(): void {
         const { input, cursorContext, tablet, mobile, superScaling } = this;
 
         if (tablet || mobile || this.hasRenderedMouse() || input.cursorMoved) return;
@@ -854,7 +792,7 @@ export default class Renderer {
         this.saveMouse();
     }
 
-    calculateFPS(): void {
+    private calculateFPS(): void {
         if (!this.debugging) return;
 
         const currentTime = new Date();
@@ -870,11 +808,11 @@ export default class Renderer {
         this.frameCount++;
     }
 
-    drawFPS(): void {
+    private drawFPS(): void {
         this.drawText(`FPS: ${this.realFPS}`, 10, 31, false, 'white');
     }
 
-    drawPosition(): void {
+    private drawPosition(): void {
         const { player } = this.game;
 
         this.drawText(
@@ -908,7 +846,7 @@ export default class Renderer {
         }
     }
 
-    drawCollisions(): void {
+    private drawCollisions(): void {
         const { pathingGrid } = this.entities.grids;
 
         if (!pathingGrid) return;
@@ -920,7 +858,7 @@ export default class Renderer {
         });
     }
 
-    drawPathing(): void {
+    private drawPathing(): void {
         if (!this.game.player.hasPath()) return;
 
         _.each(this.game.player.path, (path) =>
@@ -928,7 +866,7 @@ export default class Renderer {
         );
     }
 
-    drawSelectedCell(): void {
+    private drawSelectedCell(): void {
         if (!this.input.selectedCellVisible || this.input.keyMovement) return;
 
         // const posX = this.input.selectedX,
@@ -959,7 +897,7 @@ export default class Renderer {
      * Primitive drawing functions
      */
 
-    drawTile(context: CanvasRenderingContext2D, tileId: number, cellId: number): void {
+    private drawTile(context: CanvasRenderingContext2D, tileId: number, cellId: number): void {
         const originalTileId = tileId;
         let rotation!: number;
 
@@ -1020,7 +958,7 @@ export default class Renderer {
         this.drawImage(context, tileset, this.tiles[originalTileId], this.cells[cellId]);
     }
 
-    drawImage(
+    private drawImage(
         context: CanvasRenderingContext2D,
         image: CanvasImageSource,
         tile: RendererTile,
@@ -1079,7 +1017,7 @@ export default class Renderer {
         if (tile.rotation) context.restore();
     }
 
-    drawText(
+    private drawText(
         text: string,
         x: number,
         y: number,
@@ -1107,7 +1045,7 @@ export default class Renderer {
         }
     }
 
-    updateAnimatedTiles(): void {
+    public updateAnimatedTiles(): void {
         if (!this.animateTiles || this.webGL) return;
 
         this.forEachVisibleTile((id, index) => {
@@ -1134,7 +1072,7 @@ export default class Renderer {
         }, 2);
     }
 
-    drawCellRect(x: number, y: number, colour: string): void {
+    private drawCellRect(x: number, y: number, colour: string): void {
         const multiplier = this.tileSize * this.superScaling;
 
         this.context.save();
@@ -1150,7 +1088,7 @@ export default class Renderer {
         this.context.restore();
     }
 
-    drawCellHighlight(x: number, y: number, colour: string): void {
+    private drawCellHighlight(x: number, y: number, colour: string): void {
         this.drawCellRect(
             x * this.superScaling * this.tileSize,
             y * this.superScaling * this.tileSize,
@@ -1158,7 +1096,7 @@ export default class Renderer {
         );
     }
 
-    drawTargetCell(): void {
+    private drawTargetCell(): void {
         if (
             this.mobile ||
             this.tablet ||
@@ -1187,13 +1125,16 @@ export default class Renderer {
      * Primordial Rendering functions
      */
 
-    forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
+    private forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y)) callback(this.map.gridPositionToIndex(x, y) - 1);
         }, offset);
     }
 
-    forEachVisibleTile(callback: (data: number, index: number) => void, offset?: number): void {
+    private forEachVisibleTile(
+        callback: (data: number, index: number) => void,
+        offset?: number
+    ): void {
         if (!this.map || !this.map.mapLoaded) return;
 
         this.forEachVisibleIndex((index) => {
@@ -1204,11 +1145,11 @@ export default class Renderer {
         }, offset);
     }
 
-    forEachAnimatedTile(callback: (tile: Tile) => void): void {
+    private forEachAnimatedTile(callback: (tile: Tile) => void): void {
         _.each(this.animatedTiles, callback);
     }
 
-    forEachVisibleEntity(callback: (entity: Entity) => void): void {
+    private forEachVisibleEntity(callback: (entity: Entity) => void): void {
         if (!this.entities || !this.camera) return;
 
         const { grids } = this.entities;
@@ -1219,48 +1160,48 @@ export default class Renderer {
         });
     }
 
-    getScale(): number {
+    public getScale(): number {
         return this.game.getScaleFactor();
     }
 
-    getSuperScaling(): number {
+    public getSuperScaling(): number {
         return 3;
     }
 
-    clear(): void {
+    private clear(): void {
         this.forEachContext((context) =>
             context.clearRect(0, 0, context.canvas.width, context.canvas.height)
         );
     }
 
-    clearText(): void {
+    private clearText(): void {
         this.textContext.clearRect(0, 0, this.textCanvas.width, this.textCanvas.height);
         this.overlayContext.clearRect(0, 0, this.overlay.width, this.overlay.height);
     }
 
-    clearDrawing(): void {
+    private clearDrawing(): void {
         this.forEachDrawingContext((context) =>
             context.clearRect(0, 0, context.canvas.width, context.canvas.height)
         );
     }
 
-    save(): void {
+    private save(): void {
         this.forEachContext((context) => context.save());
     }
 
-    saveDrawing(): void {
+    private saveDrawing(): void {
         this.forEachDrawingContext((context) => context.save());
     }
 
-    restore(): void {
+    private restore(): void {
         this.forEachContext((context) => context.restore());
     }
 
-    restoreDrawing(): void {
+    private restoreDrawing(): void {
         this.forEachDrawingContext((context) => context.restore());
     }
 
-    hasRenderedFrame(): boolean {
+    private hasRenderedFrame(): boolean {
         if (this.forceRendering || (this.mobile && this.camera.centered)) return false;
 
         if (!this.camera || this.stopRendering || !this.input) return true;
@@ -1268,7 +1209,7 @@ export default class Renderer {
         return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
     }
 
-    saveFrame(): void {
+    private saveFrame(): void {
         if (this.mobile && this.camera.centered) return;
 
         this.renderedFrame[0] = this.camera.x;
@@ -1277,7 +1218,7 @@ export default class Renderer {
         this.forceRendering = false;
     }
 
-    transition(duration: number, forward: boolean, callback: () => void): void {
+    private transition(duration: number, forward: boolean, callback: () => void): void {
         const textCanvas = $('#textCanvas');
         const hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
         this.transitioning = true;
@@ -1302,43 +1243,43 @@ export default class Renderer {
      * Rendering Functions
      */
 
-    updateView(): void {
+    private updateView(): void {
         this.forEachContext((context) => this.setCameraView(context));
     }
 
-    updateDrawingView(): void {
+    private updateDrawingView(): void {
         this.forEachDrawingContext((context) => this.setCameraView(context));
     }
 
-    setCameraView(context: CanvasRenderingContext2D): void {
+    private setCameraView(context: CanvasRenderingContext2D): void {
         if (!this.camera || this.stopRendering) return;
 
         context.translate(-this.camera.x * this.superScaling, -this.camera.y * this.superScaling);
     }
 
-    clearScreen(context: CanvasRenderingContext2D): void {
+    private clearScreen(context: CanvasRenderingContext2D): void {
         context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
     }
 
-    hasRenderedMouse(): boolean {
+    private hasRenderedMouse(): boolean {
         return (
             this.input.lastMousePosition.x === this.input.mouse.x &&
             this.input.lastMousePosition.y === this.input.mouse.y
         );
     }
 
-    saveMouse(): void {
+    private saveMouse(): void {
         this.input.lastMousePosition.x = this.input.mouse.x;
         this.input.lastMousePosition.y = this.input.mouse.y;
     }
 
-    adjustBrightness(level: number): void {
+    public adjustBrightness(level: number): void {
         if (level < 0 || level > 100) return;
 
         $('#textCanvas').css('background', `rgba(0, 0, 0, ${0.5 - level / 200})`);
     }
 
-    loadStaticSprites(): void {
+    public loadStaticSprites(): void {
         this.shadowSprite = this.entities.getSprite('shadow16')!;
 
         if (!this.shadowSprite.loaded) this.shadowSprite.load();
@@ -1356,33 +1297,33 @@ export default class Renderer {
      * Miscellaneous functions
      */
 
-    forAllContexts(callback: (context: CanvasRenderingContext2D) => void): void {
+    private forAllContexts(callback: (context: CanvasRenderingContext2D) => void): void {
         _.each(this.allContexts, (context) => callback(context as CanvasRenderingContext2D));
     }
 
-    forEachContext(callback: (context: CanvasRenderingContext2D) => void): void {
+    private forEachContext(callback: (context: CanvasRenderingContext2D) => void): void {
         _.each(this.contexts, callback);
     }
 
-    forEachDrawingContext(callback: (context: CanvasRenderingContext2D) => void): void {
+    private forEachDrawingContext(callback: (context: CanvasRenderingContext2D) => void): void {
         _.each(this.drawingContexts, (context) => callback(context as CanvasRenderingContext2D));
     }
 
-    forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
+    private forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
         _.each(this.canvases, callback);
     }
 
-    forEachLighting(callback: (lighting: RendererLighting) => void): void {
+    private forEachLighting(callback: (lighting: RendererLighting) => void): void {
         _.each(this.lightings, callback);
     }
 
-    getX(index: number, width: number): number {
+    private getX(index: number, width: number): number {
         if (index === 0) return 0;
 
         return index % width === 0 ? width - 1 : (index % width) - 1;
     }
 
-    checkDevice(): void {
+    private checkDevice(): void {
         this.mobile = Detect.isMobile();
         this.tablet = Detect.isTablet();
         this.mEdge = Detect.isEdge();
@@ -1391,20 +1332,20 @@ export default class Renderer {
         // this.animateTiles = !this.mEdge;
     }
 
-    verifyCentration(): void {
+    public verifyCentration(): void {
         this.forceRendering = (this.mobile || this.tablet) && this.camera.centered;
     }
 
-    isPortableDevice(): boolean {
+    public isPortableDevice(): boolean {
         return this.mobile || this.tablet;
     }
 
-    updateDarkMask(color: string): void {
+    public updateDarkMask(color: string): void {
         this.darkMask.color = color;
         this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    parseObjects(objects: Pos[]): RectangleObject[] {
+    private parseObjects(objects: Pos[]): RectangleObject[] {
         const parsedObjects: RectangleObject[] = [];
 
         if (!objects) return parsedObjects;
@@ -1420,7 +1361,7 @@ export default class Renderer {
         return parsedObjects;
     }
 
-    addLight(
+    public addLight(
         x: number,
         y: number,
         distance: number,
@@ -1452,14 +1393,14 @@ export default class Renderer {
         this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    removeAllLights(): void {
+    public removeAllLights(): void {
         this.lightings = [];
         this.darkMask.lights = [];
 
         this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    removeNonRelativeLights(): void {
+    public removeNonRelativeLights(): void {
         _.each(this.lightings, (lighting, index) => {
             if (!lighting.light.relative) {
                 this.lightings.splice(index, 1);
@@ -1470,7 +1411,7 @@ export default class Renderer {
         this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    getLightData(
+    private getLightData(
         x: number,
         y: number,
         distance: number,
@@ -1489,7 +1430,7 @@ export default class Renderer {
         };
     }
 
-    hasLighting(lighting: RendererLighting): boolean {
+    private hasLighting(lighting: RendererLighting): boolean {
         for (let index = 0; index < this.lightings.length; index++) {
             const { light } = this.lightings[index];
 
@@ -1504,7 +1445,7 @@ export default class Renderer {
         return false;
     }
 
-    inRadius(lighting: RendererLighting): boolean {
+    private inRadius(lighting: RendererLighting): boolean {
         const position = {
             x: lighting.light.origX,
             y: lighting.light.origY,
@@ -1519,7 +1460,7 @@ export default class Renderer {
         );
     }
 
-    getMiddle(): Pos {
+    public getMiddle(): Pos {
         return {
             x: this.overlay.width / 2,
             y: this.overlay.height / 2
@@ -1530,19 +1471,19 @@ export default class Renderer {
      * Setters
      */
 
-    setTileset(tileset: unknown): void {
+    public setTileset(tileset: unknown): void {
         this.tileset = tileset;
     }
 
-    setMap(map: Map): void {
+    public setMap(map: Map): void {
         this.map = map;
     }
 
-    setEntities(entities: EntitiesController): void {
+    public setEntities(entities: EntitiesController): void {
         this.entities = entities;
     }
 
-    setInput(input: InputController): void {
+    public setInput(input: InputController): void {
         this.input = input;
     }
 
@@ -1550,7 +1491,7 @@ export default class Renderer {
      * Getters
      */
 
-    getTargetBounds(tx: number, ty: number): Bounds {
+    public getTargetBounds(tx: number, ty: number): Bounds {
         const sx = tx || this.input.selectedX;
         const sy = ty || this.input.selectedY;
 
@@ -1573,7 +1514,7 @@ export default class Renderer {
         return bounds;
     }
 
-    getTileset(): unknown {
+    public getTileset(): unknown {
         return this.tileset;
     }
 }

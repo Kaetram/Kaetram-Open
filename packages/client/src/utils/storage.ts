@@ -1,8 +1,7 @@
-const storage = window.localStorage;
-const name = 'data';
-import App from '../app';
-import { CursorsTiles } from '../map/map';
 import * as Modules from '@kaetram/common/src/modules';
+
+import type App from '../app';
+import type { CursorsTiles } from '../map/map';
 
 interface PlayerData {
     username: string;
@@ -35,25 +34,22 @@ interface RegionMapData {
 interface StorageData {
     new: boolean;
     clientVersion: number;
-
     player: PlayerData;
-
     settings: Settings;
-
     map: RegionMapData;
 }
 
+const storage = window.localStorage;
+const name = 'data';
+
 export default class Storage {
-    app: App;
-    data!: StorageData;
+    public data!: StorageData;
 
-    constructor(app: App) {
-        this.app = app;
-
+    public constructor(private app: App) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.data = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
 
         if (this.data.clientVersion !== parseFloat(this.app.config.version)) {
@@ -62,7 +58,7 @@ export default class Storage {
         }
     }
 
-    create(): StorageData {
+    private create(): StorageData {
         return {
             new: true,
             clientVersion: parseFloat(this.app.config.version),
@@ -97,21 +93,21 @@ export default class Storage {
         };
     }
 
-    save(): void {
+    public save(): void {
         if (this.data) storage.setItem(name, JSON.stringify(this.data));
     }
 
-    clear(): void {
+    public clear(): void {
         storage.removeItem(name);
         this.data = this.create();
     }
 
-    toggleRemember(toggle: boolean): void {
+    public toggleRemember(toggle: boolean): void {
         this.data.player.rememberMe = toggle;
         this.save();
     }
 
-    setOrientation(orientation: number): void {
+    public setOrientation(orientation: number): void {
         const player = this.getPlayer();
 
         player.orientation = orientation;
@@ -119,23 +115,23 @@ export default class Storage {
         this.save();
     }
 
-    setPlayer(option: keyof PlayerData, value: never): void {
-        const pData = this.getPlayer();
+    // setPlayer(option: keyof PlayerData, value: never): void {
+    //     const pData = this.getPlayer();
 
-        if (option in pData) pData[option] = value;
+    //     if (option in pData) pData[option] = value;
 
-        this.save();
-    }
+    //     this.save();
+    // }
 
-    setSettings(option: keyof Settings, value: never): void {
-        const sData = this.getSettings();
+    // setSettings(option: keyof Settings, value: never): void {
+    //     const sData = this.getSettings();
 
-        if (option in sData) sData[option] = value;
+    //     if (option in sData) sData[option] = value;
 
-        this.save();
-    }
+    //     this.save();
+    // }
 
-    setRegionData(
+    public setRegionData(
         regionData: number[],
         collisionData: number[],
         objects: unknown[],
@@ -149,26 +145,26 @@ export default class Storage {
         this.save();
     }
 
-    getPlayer(): PlayerData {
+    public getPlayer(): PlayerData {
         return this.data.player;
     }
 
-    getSettings(): Settings {
+    public getSettings(): Settings {
         return this.data.settings;
     }
 
-    getRegionData(): number[] {
+    public getRegionData(): number[] {
         return this.data.map.regionData;
     }
 
-    getCollisions(): number[] {
+    public getCollisions(): number[] {
         return this.data.map.collisions;
     }
 
-    getObjects(): unknown[] {
+    public getObjects(): unknown[] {
         return this.data.map.objects;
     }
-    getCursorTiles(): CursorsTiles {
+    public getCursorTiles(): CursorsTiles {
         return this.data.map.cursorTiles;
     }
 }

@@ -1,34 +1,23 @@
-import InputController from '../controllers/input';
-import SpritesController from '../controllers/sprites';
-import Character from '../entity/character/character';
-import Player from '../entity/character/player/player';
-import Entity from '../entity/entity';
-import Projectile from '../entity/objects/projectile';
-import Game from '../game';
-import Map from '../map/map';
 import * as Modules from '@kaetram/common/src/modules';
-import Renderer from './renderer';
+
+import Character from '../entity/character/character';
+import Projectile from '../entity/objects/projectile';
+
+import type SpritesController from '../controllers/sprites';
+import type Entity from '../entity/entity';
+import type Game from '../game';
 
 export default class Updater {
-    game: Game;
-    map: Map;
-    player: Player;
-    renderer: Renderer;
-    input: InputController;
-    sprites: SpritesController | null;
-    timeDifferential!: number;
-    lastUpdate!: Date;
+    private input = this.game.input;
 
-    constructor(game: Game) {
-        this.game = game;
-        this.map = game.map;
-        this.player = game.player;
-        this.renderer = game.renderer;
-        this.input = game.input;
-        this.sprites = null;
-    }
+    private sprites: SpritesController | null = null;
 
-    update(): void {
+    private timeDifferential!: number;
+    private lastUpdate!: Date;
+
+    public constructor(private game: Game) {}
+
+    public update(): void {
         this.timeDifferential = (Date.now() - this.lastUpdate?.getTime()) / 1000;
 
         this.updateEntities();
@@ -41,7 +30,7 @@ export default class Updater {
         this.lastUpdate = new Date();
     }
 
-    updateEntities(): void {
+    private updateEntities(): void {
         this.game.entities.forEachEntity((entity) => {
             if (!entity) return;
 
@@ -125,7 +114,7 @@ export default class Updater {
         });
     }
 
-    updateFading(entity: Entity): void {
+    private updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
         const { time } = this.game;
@@ -137,7 +126,7 @@ export default class Updater {
         } else entity.fadingAlpha = dt / entity.fadingDuration;
     }
 
-    updateKeyboard(): void {
+    private updateKeyboard(): void {
         const { player } = this.game;
         const position = {
             x: player.gridX,
@@ -154,7 +143,7 @@ export default class Updater {
         if (player.hasKeyboardMovement()) this.input.keyMove(position);
     }
 
-    updateAnimations(): void {
+    private updateAnimations(): void {
         const target = this.input.targetAnimation;
 
         if (target && this.input.selectedCellVisible) target.update(this.game.time);
@@ -166,17 +155,17 @@ export default class Updater {
         sparks?.update(this.game.time);
     }
 
-    updateInfos(): void {
+    private updateInfos(): void {
         this.game.info.update(this.game.time);
     }
 
-    updateBubbles(): void {
+    private updateBubbles(): void {
         this.game.bubble?.update(this.game.time);
 
         this.game.pointer?.update();
     }
 
-    setSprites(sprites: SpritesController): void {
+    public setSprites(sprites: SpritesController): void {
         this.sprites = sprites;
     }
 }

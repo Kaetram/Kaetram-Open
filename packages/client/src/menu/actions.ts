@@ -1,9 +1,8 @@
 import $ from 'jquery';
 
-import MenuController from '../controllers/menu';
-import Player from '../entity/character/player/player';
-import Game from '../game';
 import log from '../lib/log';
+
+import type MenuController from '../controllers/menu';
 
 interface ActionsData {
     mouseX: number;
@@ -12,30 +11,22 @@ interface ActionsData {
 }
 
 export default class Actions {
-    menu: MenuController;
-    body: JQuery;
-    drop: JQuery<HTMLDivElement>;
-    dropInput: JQuery<HTMLInputElement>;
-    activeClass: string | null;
-    miscButton: JQuery | null;
-    trade!: JQuery;
-    follow!: JQuery;
+    private body = $('#actionContainer');
 
-    constructor(menu: MenuController) {
-        this.menu = menu;
+    private drop = $('#dropDialog');
+    private dropInput = $('#dropCount');
 
-        this.body = $('#actionContainer');
-        this.drop = $('#dropDialog');
-        this.dropInput = $('#dropCount');
+    private activeClass: string | null = null;
+    private miscButton: JQuery | null = null;
 
-        this.activeClass = null;
+    private trade!: JQuery;
+    private follow!: JQuery;
 
-        this.miscButton = null;
-
+    public constructor(private menu: MenuController) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         const dropAccept = $('#dropAccept');
         const dropCancel = $('#dropCancel');
 
@@ -48,7 +39,7 @@ export default class Actions {
         });
     }
 
-    loadDefaults(activeClass: string, data?: ActionsData): void {
+    public loadDefaults(activeClass: string, data?: ActionsData): void {
         this.reset();
         this.activeClass = activeClass;
 
@@ -102,7 +93,7 @@ export default class Actions {
         }
     }
 
-    add(button: JQuery, misc?: boolean): void {
+    public add(button: JQuery, misc?: boolean): void {
         this.body.find('ul').prepend($('<li></li>').append(button));
 
         button.on('click', (event) => {
@@ -112,26 +103,26 @@ export default class Actions {
         if (misc) this.miscButton = button;
     }
 
-    // removeMisc(): void {
-    //     this.miscButton.remove();
-    //     this.miscButton = null;
-    // }
+    public removeMisc(): void {
+        this.miscButton?.remove();
+        this.miscButton = null;
+    }
 
-    reset(): void {
+    private reset(): void {
         const buttons = this.getButtons();
 
         for (let i = 0; i < buttons.length; i++) $(buttons[i]).remove();
     }
 
-    show(): void {
+    public show(): void {
         this.body.fadeIn('fast');
     }
 
-    hide(): void {
+    public hide(): void {
         this.body.fadeOut('slow');
     }
 
-    clear(): void {
+    public clear(): void {
         $('#dropAccept').off('click');
         $('#dropCancel').off('click');
 
@@ -139,7 +130,7 @@ export default class Actions {
         this.follow?.off('click');
     }
 
-    displayDrop(activeClass: string): void {
+    public displayDrop(activeClass: string): void {
         this.activeClass = activeClass;
 
         this.drop.fadeIn('fast');
@@ -148,42 +139,42 @@ export default class Actions {
         this.dropInput.select();
     }
 
-    hideDrop(): void {
+    public hideDrop(): void {
         this.drop.fadeOut('slow');
 
         this.dropInput.blur();
         this.dropInput.val('');
     }
 
-    getAttackButton(): JQuery {
+    private getAttackButton(): JQuery {
         return $('<div id="attack" class="actionButton">Attack</div>');
     }
 
-    getFollowButton(): JQuery {
+    private getFollowButton(): JQuery {
         return $('<div id="follow" class="actionButton">Follow</div>');
     }
 
-    getTradeButton(): JQuery {
-        return $('<div id="trade" class="actionButton">Trade</div>');
-    }
+    // getTradeButton(): JQuery {
+    //     return $('<div id="trade" class="actionButton">Trade</div>');
+    // }
 
-    getTalkButton(): JQuery {
+    private getTalkButton(): JQuery {
         return $('<div id="talkButton" class="actionButton">Talk</div>');
     }
 
-    getButtons(): JQuery {
+    private getButtons(): JQuery {
         return this.body.find('ul').find('li');
     }
 
-    getGame(): Game {
-        return this.menu.game;
-    }
+    // getGame(): Game {
+    //     return this.menu.game;
+    // }
 
-    getPlayer(): Player {
-        return this.menu.game.player;
-    }
+    // getPlayer(): Player {
+    //     return this.menu.game.player;
+    // }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 }

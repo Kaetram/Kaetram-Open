@@ -1,37 +1,30 @@
 import $ from 'jquery';
-import { io, Socket as IOSocket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
-import { Config } from '../app';
-import Game from '../game';
 import log from '../lib/log';
 import Messages from './messages';
 
+import type { Socket as IOSocket } from 'socket.io-client';
+import type Game from '../game';
+
 export default class Socket {
-    game: Game;
-    config: Config;
-    connection: IOSocket;
-    listening: boolean;
-    disconnected: boolean;
-    messages: Messages;
+    private config = this.game.app.config;
+    private connection!: IOSocket;
 
-    constructor(game: Game) {
-        this.game = game;
-        this.config = this.game.app.config;
-        this.connection = null!;
+    private listening = false;
 
-        this.listening = false;
+    // disconnected = false;
 
-        this.disconnected = false;
+    public messages = new Messages(this.game.app);
 
-        this.messages = new Messages(this.game.app);
-    }
+    public constructor(private game: Game) {}
 
     /**
      * Asks the hub for a server to connect to.
      * The connection assumes it is a hub, if it's not,
      * we default to normal server connection.
      */
-    async getServer(
+    private async getServer(
         callback: (data: { host: string; port: number } | 'error') => void
     ): Promise<void> {
         let url = `http://${this.config.ip}:${this.config.port}/server`;
@@ -47,7 +40,7 @@ export default class Socket {
         }
     }
 
-    connect(): void {
+    public connect(): void {
         this.getServer((result) => {
             let url;
 
@@ -70,12 +63,12 @@ export default class Socket {
 
                 this.game.app.toggleLogin(false);
 
-                if (this.game.isDebug())
-                    this.game.app.sendError(
-                        null,
-                        `Couldn't connect to ${this.config.ip}:${this.config.port}`
-                    );
-                else this.game.app.sendError(null, 'Could not connect to the game server.');
+                this.game.app.sendError(
+                    null,
+                    this.game.isDebug()
+                        ? `Couldn't connect to ${this.config.ip}:${this.config.port}`
+                        : 'Could not connect to the game server.'
+                );
             });
 
             this.connection.on('connect', () => {
@@ -101,7 +94,7 @@ export default class Socket {
         });
     }
 
-    receive(message: string): void {
+    private receive(message: string): void {
         if (!this.listening) return;
 
         if (message.startsWith('[')) {
@@ -112,7 +105,7 @@ export default class Socket {
         } else this.messages.handleUTF8(message);
     }
 
-    send(packet: number, data?: unknown[]): void {
+    public send(packet: number, data?: unknown[]): void {
         const json = JSON.stringify([packet, data]);
 
         if (this.connection?.connected) this.connection.send(json);
