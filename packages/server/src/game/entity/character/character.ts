@@ -3,6 +3,9 @@ import Modules from '../../../util/modules';
 import Mobs from '../../../util/mobs';
 import Combat from './combat/combat';
 import log from '../../../util/log';
+import Boots from './player/equipment/boots';
+import Pendant from './player/equipment/pendant';
+import Ring from './player/equipment/ring';
 
 class Character extends Entity {
     public level: number;
@@ -66,9 +69,9 @@ class Character extends Entity {
     public invincible: boolean;
     public lastAttacker: Character;
 
-    public pendant: any;
-    public ring: any;
-    public boots: any;
+    public pendant: Pendant;
+    public ring: Ring;
+    public boots: Boots;
 
     constructor(id: number, type: string, instance: string, x: number, y: number) {
         super(id, type, instance, x, y);
@@ -114,9 +117,9 @@ class Character extends Entity {
          * would become nonexistent.
          */
 
-        if (Mobs.hasCombatPlugin(this.id))
-            this.combat = new (Mobs.isNewCombatPlugin(this.id))(this);
-        else this.combat = new Combat(this);
+        this.combat = Mobs.hasCombatPlugin(this.id)
+            ? new (Mobs.isNewCombatPlugin(this.id))(this)
+            : new Combat(this);
     }
 
     setMinibossData() {
@@ -244,7 +247,7 @@ class Character extends Entity {
     }
 
     getState() {
-        let state = super.getState();
+        const state = super.getState();
 
         state.movementSpeed = this.movementSpeed;
 

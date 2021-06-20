@@ -56,7 +56,7 @@ class Player extends Character {
 
     public ready: boolean;
 
-    public moving: boolean;
+    // public moving: boolean;
     public potentialPosition: any;
     public futurePosition: any;
     public regionPosition: any;
@@ -87,13 +87,13 @@ class Player extends Character {
     public introduced: boolean;
     public currentSong: string;
     public acceptedTrade: boolean;
-    public invincible: boolean;
+    // public invincible: boolean;
     public noDamage: boolean;
     public isGuest: boolean;
 
     public canTalk: boolean;
 
-    public instanced: boolean;
+    // public instanced: boolean;
     public visible: boolean;
 
     public talkIndex: number;
@@ -105,7 +105,7 @@ class Player extends Character {
 
     public npcTalk: any;
 
-    public username: string;
+    // public username: string;
     public password: string;
     public email: string;
 
@@ -123,14 +123,14 @@ class Player extends Character {
 
     public nextExperience: number;
     public prevExperience: number;
-    public hitPoints: HitPoints;
+    public declare hitPoints: HitPoints;
     public mana: Mana;
 
     public armour: Armour;
     public weapon: Weapon;
-    public pendant: Pendant;
-    public ring: Ring;
-    public boots: Boots;
+    // public pendant: Pendant;
+    // public ring: Ring;
+    // public boots: Boots;
 
     public cameraArea: Area;
     public overlayArea: Area;
@@ -154,7 +154,7 @@ class Player extends Character {
 
     public selectedShopItem: any;
 
-    public deathCallback: Function;
+    // public deathCallback: Function;
     public teleportCallback: Function;
     public cheatScoreCallback: Function;
     public profileToggleCallback: Function;
@@ -199,7 +199,7 @@ class Player extends Character {
 
         this.disconnectTimeout = null;
         this.timeoutDuration = 1000 * 60 * 10; //10 minutes
-        this.lastRegionChange = new Date().getTime();
+        this.lastRegionChange = Date.now();
 
         this.handler = new Handler(this);
 
@@ -263,11 +263,11 @@ class Player extends Character {
 
         this.userAgent = data.userAgent;
 
-        let armour = data.armour,
-            weapon = data.weapon,
-            pendant = data.pendant,
-            ring = data.ring,
-            boots = data.boots;
+        const { armour } = data;
+        const { weapon } = data;
+        const { pendant } = data;
+        const { ring } = data;
+        const { boots } = data;
 
         this.setPosition(data.x, data.y);
         this.setArmour(armour[0], armour[1], armour[2], armour[3]);
@@ -446,7 +446,7 @@ class Player extends Character {
     }
 
     intro() {
-        if (this.ban > new Date().getTime()) {
+        if (this.ban > Date.now()) {
             this.connection.sendUTF8('ban');
             this.connection.close('Player: ' + this.username + ' is banned.');
         }
@@ -459,7 +459,7 @@ class Player extends Character {
 
         this.verifyRights();
 
-        let info = {
+        const info = {
             instance: this.instance,
             username: Utils.formatUsername(this.username),
             x: this.x,
@@ -491,16 +491,16 @@ class Player extends Character {
     }
 
     verifyRights() {
-        if (config.moderators.indexOf(this.username.toLowerCase()) > -1) this.rights = 1;
+        if (config.moderators.includes(this.username.toLowerCase())) this.rights = 1;
 
-        if (config.administrators.indexOf(this.username.toLowerCase()) > -1 || config.offlineMode)
+        if (config.administrators.includes(this.username.toLowerCase()) || config.offlineMode)
             this.rights = 2;
     }
 
     addExperience(exp: number) {
         this.experience += exp;
 
-        let oldLevel = this.level;
+        const oldLevel = this.level;
 
         this.level = Formulas.expToLevel(this.experience);
         this.nextExperience = Formulas.nextExp(this.experience);
@@ -515,7 +515,7 @@ class Player extends Character {
             this.popup('Level Up!', `Congratulations, you are now level ${this.level}!`, '#ff6600');
         }
 
-        let data: any = {
+        const data: any = {
             id: this.instance,
             level: this.level
         };
@@ -555,7 +555,7 @@ class Player extends Character {
     }
 
     healHitPoints(amount: number) {
-        let type = 'health';
+        const type = 'health';
 
         this.hitPoints.heal(amount);
 
@@ -565,14 +565,14 @@ class Player extends Character {
             this.region,
             new Messages.Heal({
                 id: this.instance,
-                type: type,
-                amount: amount
+                type,
+                amount
             })
         );
     }
 
     healManaPoints(amount: number) {
-        let type = 'mana';
+        const type = 'mana';
 
         this.mana.heal(amount);
 
@@ -582,14 +582,14 @@ class Player extends Character {
             this.region,
             new Messages.Heal({
                 id: this.instance,
-                type: type,
-                amount: amount
+                type,
+                amount
             })
         );
     }
 
     eat(id: number) {
-        let item = Items.getPlugin(id);
+        const item = Items.getPlugin(id);
 
         if (!item) return;
 
@@ -597,10 +597,10 @@ class Player extends Character {
     }
 
     equip(string: string, count: number, ability: number, abilityLevel: number) {
-        let data = Items.getData(string),
-            type,
-            id,
-            power;
+        const data = Items.getData(string);
+        let type;
+        let id;
+        let power;
 
         if (!data || data === 'null') return;
 
@@ -650,13 +650,13 @@ class Player extends Character {
 
         this.send(
             new Messages.Equipment(Packets.EquipmentOpcode.Equip, {
-                type: type,
+                type,
                 name: Items.idToName(id),
-                string: string,
-                count: count,
-                ability: ability,
-                abilityLevel: abilityLevel,
-                power: power
+                string,
+                count,
+                ability,
+                abilityLevel,
+                power
             })
         );
     }
@@ -666,7 +666,7 @@ class Player extends Character {
     }
 
     isInvisible(instance: string) {
-        let entity = this.entities.get(instance);
+        const entity = this.entities.get(instance);
 
         if (!entity) return false;
 
@@ -705,8 +705,8 @@ class Player extends Character {
             this.region,
             new Messages.Teleport({
                 id: this.instance,
-                x: x,
-                y: y,
+                x,
+                y,
                 withAnimation: animate
             })
         );
@@ -721,7 +721,7 @@ class Player extends Character {
      */
 
     handleObject(id: string) {
-        let info = this.globalObjects.getInfo(id);
+        const info = this.globalObjects.getInfo(id);
 
         if (!info) return;
 
@@ -733,12 +733,12 @@ class Player extends Character {
 
                 if (!data) return;
 
-                let message = this.globalObjects.talk(data.object, this);
+                const message = this.globalObjects.talk(data.object, this);
 
                 this.world.push(Packets.PushOpcode.Player, {
                     player: this,
                     message: new Messages.Bubble({
-                        id: id,
+                        id,
                         text: message,
                         duration: 5000,
                         isObject: true,
@@ -749,7 +749,7 @@ class Player extends Character {
                 break;
 
             case 'lumberjacking':
-                let lumberjacking = this.professions.getProfession(
+                const lumberjacking = this.professions.getProfession(
                     Modules.Professions.Lumberjacking
                 );
 
@@ -807,7 +807,7 @@ class Player extends Character {
 
         this.cameraArea = camera;
 
-        if (camera) {
+        if (camera)
             switch (camera.type) {
                 case 'lockX':
                     this.send(new Messages.Camera(Packets.CameraOpcode.LockX));
@@ -821,7 +821,7 @@ class Player extends Character {
                     this.send(new Messages.Camera(Packets.CameraOpcode.Player));
                     break;
             }
-        } else this.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
+        else this.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
     }
 
     updateMusic(info: Area) {
@@ -907,7 +907,7 @@ class Player extends Character {
 
     // We get dynamic trees surrounding the player
     getSurroundingTrees() {
-        let tiles = {
+        const tiles = {
             indexes: [],
             data: [],
             collisions: [],
@@ -915,22 +915,22 @@ class Player extends Character {
         };
 
         _.each(this.map.treeIndexes, (index: number) => {
-            let position = this.map.indexToGridPosition(index + 1),
-                treeRegion = this.regions.regionIdFromPosition(position.x, position.y);
+            const position = this.map.indexToGridPosition(index + 1);
+            const treeRegion = this.regions.regionIdFromPosition(position.x, position.y);
 
             if (!this.regions.isSurrounding(this.region, treeRegion)) return;
 
-            let objectId = this.map.getPositionObject(position.x, position.y),
-                cursor = this.map.getCursor(index, objectId);
+            const objectId = this.map.getPositionObject(position.x, position.y);
+            const cursor = this.map.getCursor(index, objectId);
 
             tiles.indexes.push(index);
             tiles.data.push(this.map.data[index]);
-            tiles.collisions.push(this.map.collisions.indexOf(index) > -1);
+            tiles.collisions.push(this.map.collisions.includes(index));
 
             if (objectId)
                 tiles.objectData[index] = {
                     isObject: !!objectId,
-                    cursor: cursor
+                    cursor
                 };
         });
 
@@ -938,8 +938,8 @@ class Player extends Character {
     }
 
     getMovementSpeed() {
-        let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
-            movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
+        const itemMovementSpeed = Items.getMovementSpeed(this.armour.name);
+        const movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
 
         /*
          * Here we can handle equipment/potions/abilities that alter
@@ -997,8 +997,8 @@ class Player extends Character {
 
     guessPosition(x: number, y: number) {
         this.potentialPosition = {
-            x: x,
-            y: y
+            x,
+            y
         };
     }
 
@@ -1016,8 +1016,8 @@ class Player extends Character {
             this.region,
             new Messages.Movement(Packets.MovementOpcode.Move, {
                 id: this.instance,
-                x: x,
-                y: y,
+                x,
+                y,
                 forced: false,
                 teleport: false
             }),
@@ -1041,8 +1041,8 @@ class Player extends Character {
          */
 
         this.futurePosition = {
-            x: x,
-            y: y
+            x,
+            y
         };
     }
 
@@ -1051,11 +1051,11 @@ class Player extends Character {
     }
 
     hasLoadedRegion(region: string) {
-        return this.regionsLoaded.indexOf(region) > -1;
+        return this.regionsLoaded.includes(region);
     }
 
     hasLoadedLight(light) {
-        return this.lightsLoaded.indexOf(light) > -1;
+        return this.lightsLoaded.includes(light);
     }
 
     timeout() {
@@ -1169,8 +1169,8 @@ class Player extends Character {
     }
 
     getHit(target?: Character) {
-        let defaultDamage = Formulas.getDamage(this, target),
-            isSpecial = Utils.randomInt(0, 100) < 30 + this.weapon.abilityLevel * 3;
+        const defaultDamage = Formulas.getDamage(this, target);
+        const isSpecial = Utils.randomInt(0, 100) < 30 + this.weapon.abilityLevel * 3;
 
         if (!isSpecial || !this.hasSpecialAttack())
             return new Hit(Modules.Hits.Damage, defaultDamage);
@@ -1183,8 +1183,8 @@ class Player extends Character {
                  * out of hand, it's easier to buff than to nerf..
                  */
 
-                let multiplier = 1.0 + this.weapon.abilityLevel,
-                    damage = defaultDamage * multiplier;
+                const multiplier = 1 + this.weapon.abilityLevel;
+                const damage = defaultDamage * multiplier;
 
                 return new Hit(Modules.Hits.Critical, damage);
 
@@ -1197,7 +1197,7 @@ class Player extends Character {
     }
 
     isMuted() {
-        let time = new Date().getTime();
+        const time = Date.now();
 
         return this.mute - time > 0;
     }
@@ -1217,27 +1217,27 @@ class Player extends Character {
     send(message: any) {
         this.world.push(Packets.PushOpcode.Player, {
             player: this,
-            message: message
+            message
         });
     }
 
     sendToRegion(message: any) {
         this.world.push(Packets.PushOpcode.Region, {
             regionId: this.region,
-            message: message
+            message
         });
     }
 
     sendToAdjacentRegions(regionId: string, message: any, ignoreId?: string) {
         this.world.push(Packets.PushOpcode.Regions, {
-            regionId: regionId,
-            message: message,
-            ignoreId: ignoreId
+            regionId,
+            message,
+            ignoreId
         });
     }
 
     sendEquipment() {
-        let info = {
+        const info = {
             armour: this.armour.getData(),
             weapon: this.weapon.getData(),
             pendant: this.pendant.getData(),
@@ -1259,7 +1259,7 @@ class Player extends Character {
     }
 
     sendToSpawn() {
-        let position = this.getSpawn();
+        const position = this.getSpawn();
 
         this.x = position.x;
         this.y = position.y;
@@ -1276,9 +1276,9 @@ class Player extends Character {
             return;
         }
 
-        let otherPlayer = this.world.getPlayerByName(playerName),
-            oFormattedName = Utils.formatUsername(playerName), // Formated username of the other player.
-            formattedName = Utils.formatUsername(this.username); // Formatted username of current instance.
+        const otherPlayer = this.world.getPlayerByName(playerName);
+        const oFormattedName = Utils.formatUsername(playerName); // Formated username of the other player.
+        const formattedName = Utils.formatUsername(this.username); // Formatted username of current instance.
 
         otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
         this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
@@ -1292,7 +1292,7 @@ class Player extends Character {
 
         if (!this.hitPoints || !this.mana) return;
 
-        let info = {
+        const info = {
             id: this.instance,
             attackRange: this.attackRange,
             hitPoints: this.getHitPoints(),
@@ -1319,9 +1319,9 @@ class Player extends Character {
 
         this.send(
             new Messages.Notification(Packets.NotificationOpcode.Popup, {
-                title: title,
-                message: message,
-                colour: colour
+                title,
+                message,
+                colour
             })
         );
     }
@@ -1330,18 +1330,18 @@ class Player extends Character {
         if (!message) return;
 
         // Prevent notify spams
-        if (new Date().getTime() - this.lastNotify < 250) return;
+        if (Date.now() - this.lastNotify < 250) return;
 
         message = Utils.parseMessage(message);
 
         this.send(
             new Messages.Notification(Packets.NotificationOpcode.Text, {
-                message: message,
-                colour: colour
+                message,
+                colour
             })
         );
 
-        this.lastNotify = new Date().getTime();
+        this.lastNotify = Date.now();
     }
 
     /**
@@ -1355,10 +1355,10 @@ class Player extends Character {
         this.send(
             new Messages.Chat({
                 name: source,
-                text: text,
-                colour: colour,
-                isGlobal: isGlobal,
-                withBubble: withBubble
+                text,
+                colour,
+                isGlobal,
+                withBubble
             })
         );
     }
@@ -1373,7 +1373,7 @@ class Player extends Character {
         this.send(
             new Messages.Movement(Packets.MovementOpcode.Stop, {
                 instance: this.instance,
-                force: force
+                force
             })
         );
     }
@@ -1387,7 +1387,7 @@ class Player extends Character {
     finishedAchievement(id: number) {
         if (!this.quests) return false;
 
-        let achievement = this.quests.getAchievement(id);
+        const achievement = this.quests.getAchievement(id);
 
         if (!achievement) return true;
 
@@ -1397,7 +1397,7 @@ class Player extends Character {
     finishAchievement(id: number) {
         if (!this.quests) return;
 
-        let achievement = this.quests.getAchievement(id);
+        const achievement = this.quests.getAchievement(id);
 
         if (!achievement || achievement.isFinished()) return;
 
@@ -1407,8 +1407,8 @@ class Player extends Character {
     checkRegions() {
         if (!this.regionPosition) return;
 
-        let diffX = Math.abs(this.regionPosition[0] - this.x),
-            diffY = Math.abs(this.regionPosition[1] - this.y);
+        const diffX = Math.abs(this.regionPosition[0] - this.x);
+        const diffY = Math.abs(this.regionPosition[1] - this.y);
 
         if (diffX >= 10 || diffY >= 10) {
             this.regionPosition = [this.x, this.y];
@@ -1452,7 +1452,7 @@ class Player extends Character {
     }
 
     hasAggressionTimer() {
-        return new Date().getTime() - this.lastRegionChange < 1200000; // 20 Minutes
+        return Date.now() - this.lastRegionChange < 1200000; // 20 Minutes
     }
 
     onOrientation(callback: Function) {
@@ -1475,9 +1475,9 @@ class Player extends Character {
         this.killCallback = callback;
     }
 
-    onDeath = (callback: Function) => {
+    onDeath(callback: Function) {
         this.deathCallback = callback;
-    };
+    }
 
     onTalkToNPC(callback: Function) {
         this.npcTalkCallback = callback;
