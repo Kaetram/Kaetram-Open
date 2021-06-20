@@ -12,29 +12,29 @@ import type Weapon from './player/equipment/weapon';
 export default class Character extends Entity {
     public weapon!: Weapon;
 
-    public nextGridX = -1;
-    public nextGridY = -1;
+    public override nextGridX = -1;
+    public override nextGridY = -1;
 
     // private prevGridX = -1;
     // private prevGridY = -1;
 
-    public orientation = Modules.Orientation.Down;
+    public override orientation = Modules.Orientation.Down;
 
-    public hitPoints = -1;
+    public override hitPoints = -1;
     public maxHitPoints = -1;
-    public mana = -1;
-    public maxMana = -1;
+    public override mana = -1;
+    public override maxMana = -1;
 
     public healthBarVisible = false;
 
-    public dead = false;
+    public override dead = false;
     private following = false;
     // private attacking = false;
     private interrupted = false;
 
-    public critical = false;
-    public frozen = false;
-    public stunned = false;
+    public override critical = false;
+    public override frozen = false;
+    public override stunned = false;
     public explosion = false;
     public healing = false;
 
@@ -47,9 +47,9 @@ export default class Character extends Entity {
 
     private readonly attackAnimationSpeed = 50;
     private readonly walkAnimationSpeed = 100;
-    public movementSpeed = -1;
+    public override movementSpeed = -1;
 
-    public attackRange = 1;
+    public override attackRange = 1;
 
     private criticalAnimation!: Animation;
     private terrorAnimation!: Animation;
@@ -229,7 +229,7 @@ export default class Character extends Entity {
         }
     }
 
-    public idle(o?: Modules.Orientation): void {
+    public override idle(o?: Modules.Orientation): void {
         const orientation = o || this.orientation;
 
         this.performAction(orientation, Modules.Actions.Idle);
@@ -476,15 +476,15 @@ export default class Character extends Entity {
     //     return Object.keys(this.attackers).length > 0;
     // }
 
-    public hasWeapon(): boolean {
+    public override hasWeapon(): boolean {
         return false;
     }
 
-    public hasShadow(): boolean {
+    public override hasShadow(): boolean {
         return true;
     }
 
-    public hasPath(): boolean {
+    public override hasPath(): boolean {
         return this.path !== null;
     }
 
