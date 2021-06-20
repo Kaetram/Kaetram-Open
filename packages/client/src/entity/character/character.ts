@@ -10,8 +10,6 @@ import EntityHandler from '../entityhandler';
 import type Weapon from './player/equipment/weapon';
 
 export default class Character extends Entity {
-    public teleporting!: boolean;
-
     public weapon!: Weapon;
 
     public nextGridX = -1;
@@ -55,16 +53,9 @@ export default class Character extends Entity {
 
     private criticalAnimation!: Animation;
     private terrorAnimation!: Animation;
-    public terror!: boolean;
     private stunAnimation!: Animation;
     private explosionAnimation!: Animation;
     private healingAnimation!: Animation;
-
-    public spriteFlipX!: boolean;
-    public spriteFlipY!: boolean;
-
-    public gridX!: number;
-    public gridY!: number;
 
     private newDestination!: Pos | null;
     private step!: number;
@@ -81,7 +72,6 @@ export default class Character extends Entity {
     private maxHitPointsCallback?(maxHitPoints: number): void;
 
     public instance!: string;
-    public type!: string;
     private forced!: boolean;
 
     public handler = new EntityHandler(this);
