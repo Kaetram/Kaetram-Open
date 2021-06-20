@@ -1,24 +1,18 @@
 import Character from '../character';
 
 export default class Mob extends Character {
-    hiddenName: boolean;
+    public override type = 'mob';
 
-    constructor(id: string, kind: string) {
-        super(id, kind);
+    // public hitPoints = -1;
+    // public maxHitPoints = -1;
 
-        this.hitPoints = -1;
-        this.maxHitPoints = -1;
+    public hiddenName = false;
 
-        this.hiddenName = false;
-
-        this.type = 'mob';
-    }
-
-    hasShadow(): boolean {
+    public override hasShadow(): boolean {
         return !this.hiddenName;
     }
 
-    drawNames(): boolean {
+    public override drawNames(): boolean {
         return !this.hiddenName;
     }
 }

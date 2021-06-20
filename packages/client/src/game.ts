@@ -1,7 +1,11 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
+import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
+
 import App from './app';
+
 import AudioController from './controllers/audio';
 import BubbleController from './controllers/bubble';
 import EntitiesController from './controllers/entities';
@@ -10,57 +14,60 @@ import InputController from './controllers/input';
 import MenuController from './controllers/menu';
 import Pointer from './controllers/pointer';
 import Zoning from './controllers/zoning';
+
 import Character from './entity/character/character';
 import Player from './entity/character/player/player';
 import PlayerHandler from './entity/character/player/playerhandler';
 import Entity from './entity/entity';
 import Sprite from './entity/sprite';
+
 import Map from './map/map';
+
 import Inventory from './menu/inventory';
+
 import Connection from './network/connection';
 import Messages from './network/messages';
-import Packets from '@kaetram/common/src/packets';
 import Socket from './network/socket';
+
 import Camera from './renderer/camera';
 import Overlay from './renderer/overlay';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
+
 import { getUserAgent, supportsWebGL } from './utils/detect';
-import * as Modules from '@kaetram/common/src/modules';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
 
 export default class Game {
     public id = -1;
 
-    public socket!: Socket | null;
-    public messages!: Messages | null;
-    public renderer!: Renderer | null;
-    private updater!: Updater | null;
-    public storage!: Storage | null;
-    public entities!: EntitiesController | null;
-    public input!: InputController | null;
-    public map!: Map | null;
-    private pathfinder!: Pathfinder | null;
-    public zoning!: Zoning | null;
-    public info!: InfoController | null;
-    public menu!: MenuController | null;
-    public audio!: AudioController | null;
-    public player!: Player | null;
+    public socket!: Socket;
+    public messages!: Messages;
+    public renderer!: Renderer;
+    private updater!: Updater;
+    public storage!: Storage;
+    public entities!: EntitiesController;
+    public input!: InputController;
+    public map!: Map;
+    private pathfinder!: Pathfinder;
+    public zoning!: Zoning;
+    public info!: InfoController;
+    public menu!: MenuController;
+    public audio!: AudioController;
+    public player!: Player;
 
     private stopped = false;
     public started = false;
     public ready = false;
 
     public time = Date.now();
+    public lastTime = Date.now();
 
     public pvp = false;
     // population = -1;
 
-    public lastTime = Date.now();
-
     public overlays!: Overlay;
-    private connectionHandler!: Connection;
+    // private connectionHandler!: Connection;
     public pointer!: Pointer;
     public bubble!: BubbleController;
     public camera!: Camera;
@@ -93,39 +100,39 @@ export default class Game {
         if (this.ready) {
             this.time = Date.now();
 
-            this.renderer?.render();
-            this.updater?.update();
+            this.renderer.render();
+            this.updater.update();
 
             if (!this.stopped) requestAnimationFrame(() => this.tick());
         }
     }
 
     private unload(): void {
-        this.socket = null;
-        this.messages = null;
-        this.renderer = null;
-        this.updater = null;
-        this.storage = null;
-        this.entities = null;
-        this.input = null;
-        this.map = null;
-        this.player = null;
-        this.pathfinder = null;
-        this.zoning = null;
-        this.info = null;
-        this.menu = null;
+        this.socket = null!;
+        this.messages = null!;
+        this.renderer = null!;
+        this.updater = null!;
+        this.storage = null!;
+        this.entities = null!;
+        this.input = null!;
+        this.map = null!;
+        this.player = null!;
+        this.pathfinder = null!;
+        this.zoning = null!;
+        this.info = null!;
+        this.menu = null!;
 
-        this.audio?.stop();
-        this.audio = null;
+        this.audio.stop();
+        this.audio = null!;
     }
 
     private loadRenderer(): void {
-        const background = document.querySelector('#background') as HTMLCanvasElement,
-            foreground = document.querySelector('#foreground') as HTMLCanvasElement,
-            overlay = document.querySelector('#overlay') as HTMLCanvasElement,
-            textCanvas = document.querySelector('#textCanvas') as HTMLCanvasElement,
-            entities = document.querySelector('#entities') as HTMLCanvasElement,
-            cursor = document.querySelector('#cursor') as HTMLCanvasElement;
+        const background = document.querySelector<HTMLCanvasElement>('#background')!;
+        const foreground = document.querySelector<HTMLCanvasElement>('#foreground')!;
+        const overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
+        const textCanvas = document.querySelector<HTMLCanvasElement>('#textCanvas')!;
+        const entities = document.querySelector<HTMLCanvasElement>('#entities')!;
+        const cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
 
         this.app.sendStatus('Initializing render engine');
 
@@ -135,23 +142,26 @@ export default class Game {
     }
 
     private loadControllers(): void {
-        const hasWorker = this.app.hasWorker();
+        const { app } = this;
 
-        this.app.sendStatus('Loading local storage');
+        const hasWorker = app.hasWorker();
 
-        this.setStorage(new Storage(this.app));
+        app.sendStatus('Loading local storage');
 
-        this.app.sendStatus(hasWorker ? 'Loading maps - asynchronous' : null);
+        this.setStorage(new Storage(app));
+
+        app.sendStatus(hasWorker ? 'Loading maps - asynchronous' : null);
 
         if (hasWorker) this.loadMap();
 
-        this.app.sendStatus('Initializing network socket');
+        app.sendStatus('Initializing network socket');
 
         this.setSocket(new Socket(this));
-        this.setMessages(this?.socket?.messages || null);
+        const { socket } = this;
+        this.setMessages(socket.messages);
         this.setInput(new InputController(this));
 
-        this.app.sendStatus('Loading controllers');
+        app.sendStatus('Loading controllers');
 
         this.setEntityController(new EntitiesController(this));
 
@@ -167,45 +177,52 @@ export default class Game {
 
         this.loadStorage();
 
-        if (!hasWorker) this.app.ready();
+        if (!hasWorker) app.ready();
     }
 
     public loadMap(): void {
         this.map = new Map(this);
-        this.overlays = new Overlay(this);
+        this.overlays = new Overlay();
 
-        this.map.onReady(async () => {
-            const map = this.map as Map;
+        const { map } = this;
+
+        map.onReady(async () => {
+            const { map, app, renderer, entities } = this;
+
+            if (!map) return;
 
             if (!this.isDebug()) map.loadRegionData();
 
-            this.app.sendStatus('Loading the pathfinder');
+            app.sendStatus('Loading the pathfinder');
 
             this.setPathfinder(new Pathfinder(map.width, map.height));
 
-            this.renderer?.setMap(map);
-            this.renderer?.loadCamera();
+            renderer.setMap(map);
+            renderer.loadCamera();
 
-            this.app.sendStatus('Loading updater');
+            app.sendStatus('Loading updater');
 
             this.setUpdater(new Updater(this));
 
-            await this.entities?.load();
+            await entities.load();
 
-            this.renderer?.setEntities(this.entities);
+            renderer.setEntities(entities);
 
-            if (supportsWebGL()) map.loadWebGL(this.renderer?.backContext as WebGLRenderingContext);
+            if (supportsWebGL()) map.loadWebGL(renderer.backContext as WebGLRenderingContext);
 
-            this.app.ready();
+            app.ready();
         });
     }
 
     public connect(): void {
-        this.app.cleanErrors();
+        const { app, socket } = this;
 
-        window.setTimeout(() => this.socket?.connect(), 1000);
+        app.cleanErrors();
 
-        this.connectionHandler = new Connection(this);
+        window.setTimeout(() => socket.connect(), 1000);
+
+        // this.connectionHandler =
+        new Connection(this);
     }
 
     /**
@@ -218,7 +235,7 @@ export default class Game {
 
         renderer.loadStaticSprites();
 
-        this.getCamera()?.setPlayer(player);
+        this.getCamera().setPlayer(player);
 
         entities.addEntity(player);
 
@@ -228,7 +245,7 @@ export default class Game {
         if (storage) player.setOrientation(storage.data.player.orientation);
         player.idle();
 
-        if (map) socket?.send(Packets.Ready, [true, map.preloadedData, getUserAgent()]);
+        if (map) socket.send(Packets.Ready, [true, map.preloadedData, getUserAgent()]);
         this.sendClientData();
 
         new PlayerHandler(this, player);
@@ -241,25 +258,24 @@ export default class Game {
 
         renderer.verifyCentration();
 
-        if (storage?.data.new) {
+        if (storage.data.new) {
             storage.data.new = false;
             storage.save();
         }
     }
 
     private loadStorage(): void {
-        const loginName = $('#loginNameInput'),
-            loginPassword = $('#loginPasswordInput');
+        const loginName = $('#loginNameInput');
+        const loginPassword = $('#loginPasswordInput');
 
         loginName.prop('readonly', false);
         loginPassword.prop('readonly', false);
 
         if (!this.hasRemember()) return;
 
-        if (this.getStorageUsername() !== '') loginName.val(this.getStorageUsername() as string);
+        if (this.getStorageUsername() !== '') loginName.val(this.getStorageUsername()!);
 
-        if (this.getStoragePassword() !== '')
-            loginPassword.val(this.getStoragePassword() as string);
+        if (this.getStoragePassword() !== '') loginPassword.val(this.getStoragePassword()!);
 
         $('#rememberMe').prop('checked', true);
     }
@@ -271,18 +287,20 @@ export default class Game {
         ignores: Character[],
         isObject?: boolean
     ): number[][] {
-        const grid = this.entities?.grids.pathingGrid as number[][];
+        const { entities, map, pathfinder } = this;
+
+        const grid = entities.grids.pathingGrid;
         let path: number[][] = [];
 
-        if (this.map?.isColliding(x, y) && !this.map.isObject(x, y)) return path;
+        if (map.isColliding(x, y) && !map.isObject(x, y)) return path;
 
-        if (!this.pathfinder) return path;
+        if (!pathfinder) return path;
 
-        if (ignores) _.each(ignores, (entity) => this.pathfinder?.ignoreEntity(entity));
+        if (ignores) _.each(ignores, (entity) => pathfinder.ignoreEntity(entity));
 
-        path = this.pathfinder.find(grid, character, x, y, false);
+        path = pathfinder.find(grid, character, x, y, false);
 
-        if (ignores) this.pathfinder.clearIgnores();
+        if (ignores) pathfinder.clearIgnores();
 
         if (isObject) path.pop(); // Remove the last path index
 
@@ -290,7 +308,7 @@ export default class Game {
     }
 
     public handleInput(inputType: number, data: number): void {
-        this.input?.handle(inputType, data);
+        this.input.handle(inputType, data);
     }
 
     /**
@@ -299,54 +317,57 @@ export default class Game {
      * menu-based errors.
      */
     public handleDisconnection(noError?: boolean): void {
-        if (!this.started) return;
+        const { started, renderer, menu, app } = this;
+
+        if (!started) return;
 
         this.stop();
-        this.renderer?.stop();
-        this.menu?.stop();
+        renderer.stop();
+        menu.stop();
 
         this.unload();
 
-        this.app.showMenu();
+        app.showMenu();
 
         if (noError) {
-            this.app.sendError(null, 'You have been disconnected from the server');
-            this.app.statusMessage = null;
+            app.sendError(null, 'You have been disconnected from the server');
+            app.statusMessage = null;
         }
 
         this.loadRenderer();
         this.loadControllers();
 
-        this.app.toggleLogin(false);
-        this.app.updateLoader('');
+        app.toggleLogin(false);
+        app.updateLoader('');
     }
 
     public respawn(): void {
-        this.audio?.play(Modules.AudioTypes.SFX, 'revive');
-        this.app.body.removeClass('death');
+        const { audio, app, socket, player } = this;
 
-        this.socket?.send(Packets.Respawn, [this.player?.id]);
+        audio.play(Modules.AudioTypes.SFX, 'revive');
+        app.body.removeClass('death');
+
+        socket.send(Packets.Respawn, [player.id]);
     }
 
     // tradeWith(player: Player): void {
-    //     if (!player || player.id === this.player?.id) return;
+    //     if (!player || player.id === this.player.id) return;
 
-    //     this.socket?.send(Packets.Trade, [Packets.TradeOpcode.Request, player.id]);
+    //     this.socket.send(Packets.Trade, [Packets.TradeOpcode.Request, player.id]);
     // }
 
     public resize(): void {
-        this.renderer?.resize();
+        this.renderer.resize();
 
-        this.pointer?.resize();
+        this.pointer.resize();
     }
 
     public sendClientData(): void {
-        const canvasWidth = this.renderer?.canvasWidth,
-            canvasHeight = this.renderer?.canvasHeight;
+        const { canvasWidth, canvasHeight } = this.renderer;
 
         if (!canvasWidth || !canvasHeight) return;
 
-        this.socket?.send(Packets.Client, [canvasWidth, canvasHeight]);
+        this.socket.send(Packets.Client, [canvasWidth, canvasHeight]);
     }
 
     public createPlayer(): void {
@@ -362,11 +383,11 @@ export default class Game {
     }
 
     public getCamera(): Camera {
-        return this.renderer?.camera as Camera;
+        return this.renderer.camera!;
     }
 
     public getSprite(spriteName: string): Sprite | undefined {
-        return this.entities?.getSprite(spriteName);
+        return this.entities.getSprite(spriteName);
     }
 
     public getEntityAt(x: number, y: number, ignoreSelf: boolean): Entity | undefined {
@@ -382,15 +403,15 @@ export default class Game {
     }
 
     private getStorageUsername(): string | undefined {
-        return this.storage?.data.player.username;
+        return this.storage.data.player.username;
     }
 
     private getStoragePassword(): string | undefined {
-        return this.storage?.data.player.password;
+        return this.storage.data.player.password;
     }
 
     public hasRemember(): boolean | undefined {
-        return this.storage?.data.player.rememberMe;
+        return this.storage.data.player.rememberMe;
     }
 
     public setRenderer(renderer: Renderer): void {
@@ -405,7 +426,7 @@ export default class Game {
         this.socket ||= socket;
     }
 
-    private setMessages(messages: Messages | null): void {
+    private setMessages(messages: Messages): void {
         this.messages ||= messages;
     }
 
@@ -420,7 +441,7 @@ export default class Game {
     private setInput(input: InputController): void {
         if (!this.input) {
             this.input = input;
-            this.renderer?.setInput(this.input);
+            this.renderer.setInput(this.input);
         }
     }
 

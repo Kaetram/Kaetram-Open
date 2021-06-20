@@ -1,28 +1,21 @@
 import $ from 'jquery';
 
-import Game from '../game';
 import Packets from '@kaetram/common/src/packets';
 
+import type Game from '../game';
+
 export default class Wrap {
-    game: Game;
-    mapFrame: JQuery;
-    button: JQuery;
-    close: JQuery;
-    warpCount: number;
+    private mapFrame = $('#mapFrame');
+    private button = $('#warpButton');
+    private close = $('#closeMapFrame');
 
-    constructor(game: Game) {
-        this.game = game;
+    private warpCount = 0;
 
-        this.mapFrame = $('#mapFrame');
-        this.button = $('#warpButton');
-        this.close = $('#closeMapFrame');
-
-        this.warpCount = 0;
-
+    public constructor(private game: Game) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.button.on('click', () => this.open());
 
         this.close.on('click', () => this.hide());
@@ -41,7 +34,7 @@ export default class Wrap {
         }
     }
 
-    open(): void {
+    public open(): void {
         this.game.menu.hideAll();
 
         this.toggle();
@@ -49,7 +42,7 @@ export default class Wrap {
         this.game.socket.send(Packets.Click, ['warp', this.button.hasClass('active')]);
     }
 
-    toggle(): void {
+    private toggle(): void {
         /**
          * Just so it fades out nicely.
          */
@@ -58,21 +51,21 @@ export default class Wrap {
         else this.display();
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.mapFrame.css('display') === 'block';
     }
 
-    display(): void {
+    private display(): void {
         this.mapFrame.fadeIn('slow');
         this.button.addClass('active');
     }
 
-    hide(): void {
+    public hide(): void {
         this.mapFrame.fadeOut('fast');
         this.button.removeClass('active');
     }
 
-    clear(): void {
+    public clear(): void {
         for (let i = 0; i < this.warpCount; i++) this.mapFrame.find(`#warp${i}`).off('click');
 
         this.close?.off('click');

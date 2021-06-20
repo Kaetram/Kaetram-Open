@@ -1,12 +1,7 @@
-import Game from '../../../game';
 import Page from '../page';
 
 export default class Ability extends Page {
-    game: Game;
-
-    constructor(game: Game) {
+    public constructor() {
         super('#skillPage');
-
-        this.game = game;
     }
 }

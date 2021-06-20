@@ -1,54 +1,55 @@
 import _ from 'lodash';
 
-import App from '../app';
 import Packets from '@kaetram/common/src/packets';
+
+import type App from '../app';
 
 /** @todo Change once handlers are typed */
 type Callback = (...data: never[]) => void;
 
 export default class Messages {
-    app: App;
-    messages: Callback[];
-    handshakeCallback: Callback;
-    welcomeCallback: Callback;
-    spawnCallback: Callback;
-    equipmentCallback: Callback;
-    entityListCallback: Callback;
-    syncCallback: Callback;
-    movementCallback: Callback;
-    teleportCallback: Callback;
-    despawnCallback: Callback;
-    combatCallback: Callback;
-    animationCallback: Callback;
-    projectileCallback: Callback;
-    populationCallback: Callback;
-    pointsCallback: Callback;
-    networkCallback: Callback;
-    chatCallback: Callback;
-    commandCallback: Callback;
-    inventoryCallback: Callback;
-    bankCallback: Callback;
-    abilityCallback: Callback;
-    questCallback: Callback;
-    notificationCallback: Callback;
-    blinkCallback: Callback;
-    healCallback: Callback;
-    experienceCallback: Callback;
-    deathCallback: Callback;
-    audioCallback: Callback;
-    npcCallback: Callback;
-    respawnCallback: Callback;
-    enchantCallback: Callback;
-    guildCallback: Callback;
-    pointerCallback: Callback;
-    pvpCallback: Callback;
-    shopCallback: Callback;
-    minigameCallback: Callback;
-    regionCallback: Callback;
-    overlayCallback: Callback;
-    cameraCallback: Callback;
-    bubbleCallback: Callback;
-    professionCallback: Callback;
+    private messages: Callback[] = [];
+
+    private handshakeCallback!: Callback;
+    private welcomeCallback!: Callback;
+    private spawnCallback!: Callback;
+    private equipmentCallback!: Callback;
+    private entityListCallback!: Callback;
+    private syncCallback!: Callback;
+    private movementCallback!: Callback;
+    private teleportCallback!: Callback;
+    private despawnCallback!: Callback;
+    private combatCallback!: Callback;
+    private animationCallback!: Callback;
+    private projectileCallback!: Callback;
+    private populationCallback!: Callback;
+    private pointsCallback!: Callback;
+    private networkCallback!: Callback;
+    private chatCallback!: Callback;
+    private commandCallback!: Callback;
+    private inventoryCallback!: Callback;
+    private bankCallback!: Callback;
+    private abilityCallback!: Callback;
+    private questCallback!: Callback;
+    private notificationCallback!: Callback;
+    private blinkCallback!: Callback;
+    private healCallback!: Callback;
+    private experienceCallback!: Callback;
+    private deathCallback!: Callback;
+    private audioCallback!: Callback;
+    private npcCallback!: Callback;
+    private respawnCallback!: Callback;
+    private enchantCallback!: Callback;
+    private guildCallback!: Callback;
+    private pointerCallback!: Callback;
+    private pvpCallback!: Callback;
+    private shopCallback!: Callback;
+    private minigameCallback!: Callback;
+    private regionCallback!: Callback;
+    private overlayCallback!: Callback;
+    private cameraCallback!: Callback;
+    private bubbleCallback!: Callback;
+    private professionCallback!: Callback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -60,11 +61,7 @@ export default class Messages {
      * Please respect the order of the Packets Enum and arrange functions
      * accordingly.
      */
-    constructor(app: App) {
-        this.app = app;
-
-        this.messages = [];
-
+    public constructor(private app: App) {
         this.messages[Packets.Handshake] = this.receiveHandshake;
         this.messages[Packets.Welcome] = this.receiveWelcome;
         this.messages[Packets.Spawn] = this.receiveSpawn;
@@ -107,18 +104,19 @@ export default class Messages {
         this.messages[Packets.Profession] = this.receiveProfession;
     }
 
-    handleData(data: never[]): void {
-        const packet = data.shift();
+    public handleData(data: number[]): void {
+        const packet = data.shift()!;
 
-        if (this.messages[packet] && _.isFunction(this.messages[packet]))
-            this.messages[packet].call(this, data as never);
+        const message = this.messages[packet];
+
+        if (message && _.isFunction(message)) message.call(this, data);
     }
 
-    handleBulkData(data: never[]): void {
+    public handleBulkData(data: never[]): void {
         _.each(data, (message) => this.handleData(message));
     }
 
-    handleUTF8(message: string): void {
+    public handleUTF8(message: string): void {
         this.app.toggleLogin(false);
 
         switch (message) {
@@ -192,253 +190,253 @@ export default class Messages {
      * Data Receivers
      */
 
-    receiveHandshake(data: never[]): void {
-        const info = data.shift();
+    private receiveHandshake(data: never[]): void {
+        const info = data.shift()!;
 
         this.handshakeCallback?.(info);
     }
 
-    receiveWelcome(data: never[]): void {
-        const playerData = data.shift();
+    private receiveWelcome(data: never[]): void {
+        const playerData = data.shift()!;
 
         this.welcomeCallback?.(playerData);
     }
 
-    receiveSpawn(data: never): void {
+    private receiveSpawn(data: never): void {
         this.spawnCallback?.(data);
     }
 
-    receiveEquipment(data: never[]): void {
-        const equipType = data.shift(),
-            equipInfo = data.shift();
+    private receiveEquipment(data: never[]): void {
+        const equipType = data.shift()!;
+        const equipInfo = data.shift()!;
 
         this.equipmentCallback?.(equipType, equipInfo);
     }
 
-    receiveEntityList(data: never[]): void {
-        this.entityListCallback?.(data.shift());
+    private receiveEntityList(data: never[]): void {
+        this.entityListCallback?.(data.shift()!);
     }
 
-    receiveSync(data: never[]): void {
-        this.syncCallback?.(data.shift());
+    private receiveSync(data: never[]): void {
+        this.syncCallback?.(data.shift()!);
     }
 
-    receiveMovement(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveMovement(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.movementCallback?.(opcode, info);
     }
 
-    receiveTeleport(data: never[]): void {
-        const info = data.shift();
+    private receiveTeleport(data: never[]): void {
+        const info = data.shift()!;
 
         this.teleportCallback?.(info);
     }
 
-    receiveDespawn(data: never[]): void {
-        const id = data.shift();
+    private receiveDespawn(data: never[]): void {
+        const id = data.shift()!;
 
         this.despawnCallback?.(id);
     }
 
-    receiveCombat(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveCombat(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.combatCallback?.(opcode, info);
     }
 
-    receiveAnimation(data: never[]): void {
-        const id = data.shift(),
-            info = data.shift();
+    private receiveAnimation(data: never[]): void {
+        const id = data.shift()!;
+        const info = data.shift()!;
 
         this.animationCallback?.(id, info);
     }
 
-    receiveProjectile(data: never[]): void {
-        const type = data.shift(),
-            info = data.shift();
+    private receiveProjectile(data: never[]): void {
+        const type = data.shift()!;
+        const info = data.shift()!;
 
         this.projectileCallback?.(type, info);
     }
 
-    receivePopulation(data: never[]): void {
-        this.populationCallback?.(data.shift());
+    private receivePopulation(data: never[]): void {
+        this.populationCallback?.(data.shift()!);
     }
 
-    receivePoints(data: never[]): void {
-        const pointsData = data.shift();
+    private receivePoints(data: never[]): void {
+        const pointsData = data.shift()!;
 
         this.pointsCallback?.(pointsData);
     }
 
-    receiveNetwork(data: never[]): void {
-        const opcode = data.shift();
+    private receiveNetwork(data: never[]): void {
+        const opcode = data.shift()!;
 
         this.networkCallback?.(opcode);
     }
 
-    receiveChat(data: never[]): void {
-        const info = data.shift();
+    private receiveChat(data: never[]): void {
+        const info = data.shift()!;
 
         this.chatCallback?.(info);
     }
 
-    receiveCommand(data: never[]): void {
-        const info = data.shift();
+    private receiveCommand(data: never[]): void {
+        const info = data.shift()!;
 
         this.commandCallback?.(info);
     }
 
-    receiveInventory(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveInventory(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.inventoryCallback?.(opcode, info);
     }
 
-    receiveBank(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveBank(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.bankCallback?.(opcode, info);
     }
 
-    receiveAbility(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveAbility(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.abilityCallback?.(opcode, info);
     }
 
-    receiveQuest(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveQuest(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.questCallback?.(opcode, info);
     }
 
-    receiveNotification(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveNotification(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.notificationCallback?.(opcode, info);
     }
 
-    receiveBlink(data: never[]): void {
-        const instance = data.shift();
+    private receiveBlink(data: never[]): void {
+        const instance = data.shift()!;
 
         this.blinkCallback?.(instance);
     }
 
-    receiveHeal(data: never[]): void {
-        this.healCallback?.(data.shift());
+    private receiveHeal(data: never[]): void {
+        this.healCallback?.(data.shift()!);
     }
 
-    receiveExperience(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveExperience(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.experienceCallback?.(opcode, info);
     }
 
-    receiveDeath(data: never[]): void {
-        this.deathCallback?.(data.shift());
+    private receiveDeath(data: never[]): void {
+        this.deathCallback?.(data.shift()!);
     }
 
-    receiveAudio(data: never[]): void {
-        this.audioCallback?.(data.shift());
+    private receiveAudio(data: never[]): void {
+        this.audioCallback?.(data.shift()!);
     }
 
-    receiveNPC(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveNPC(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.npcCallback?.(opcode, info);
     }
 
-    receiveRespawn(data: never[]): void {
-        const id = data.shift(),
-            x = data.shift(),
-            y = data.shift();
+    private receiveRespawn(data: never[]): void {
+        const id = data.shift()!;
+        const x = data.shift()!;
+        const y = data.shift()!;
 
         this.respawnCallback?.(id, x, y);
     }
 
-    receiveEnchant(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveEnchant(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.enchantCallback?.(opcode, info);
     }
 
-    receiveGuild(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveGuild(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.guildCallback?.(opcode, info);
     }
 
-    receivePointer(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receivePointer(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.pointerCallback?.(opcode, info);
     }
 
-    receivePVP(data: never[]): void {
-        const id = data.shift(),
-            pvp = data.shift();
+    private receivePVP(data: never[]): void {
+        const id = data.shift()!;
+        const pvp = data.shift()!;
 
         this.pvpCallback?.(id, pvp);
     }
 
-    receiveShop(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveShop(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.shopCallback?.(opcode, info);
     }
 
-    receiveMinigame(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveMinigame(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.minigameCallback?.(opcode, info);
     }
 
-    receiveRegion(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift(),
-            force = data.shift();
+    private receiveRegion(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
+        const force = data.shift()!;
 
         this.regionCallback?.(opcode, info, force);
     }
 
-    receiveOverlay(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveOverlay(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.overlayCallback?.(opcode, info);
     }
 
-    receiveCamera(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveCamera(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.cameraCallback?.(opcode, info);
     }
 
-    receiveBubble(data: never[]): void {
-        const info = data.shift();
+    private receiveBubble(data: never[]): void {
+        const info = data.shift()!;
 
         this.bubbleCallback?.(info);
     }
 
-    receiveProfession(data: never[]): void {
-        const opcode = data.shift(),
-            info = data.shift();
+    private receiveProfession(data: never[]): void {
+        const opcode = data.shift()!;
+        const info = data.shift()!;
 
         this.professionCallback?.(opcode, info);
     }
@@ -447,163 +445,163 @@ export default class Messages {
      * Universal Callbacks
      */
 
-    onHandshake(callback: Callback): void {
+    public onHandshake(callback: Callback): void {
         this.handshakeCallback = callback;
     }
 
-    onWelcome(callback: Callback): void {
+    public onWelcome(callback: Callback): void {
         this.welcomeCallback = callback;
     }
 
-    onSpawn(callback: Callback): void {
+    public onSpawn(callback: Callback): void {
         this.spawnCallback = callback;
     }
 
-    onEquipment(callback: Callback): void {
+    public onEquipment(callback: Callback): void {
         this.equipmentCallback = callback;
     }
 
-    onEntityList(callback: Callback): void {
+    public onEntityList(callback: Callback): void {
         this.entityListCallback = callback;
     }
 
-    onSync(callback: Callback): void {
+    public onSync(callback: Callback): void {
         this.syncCallback = callback;
     }
 
-    onMovement(callback: Callback): void {
+    public onMovement(callback: Callback): void {
         this.movementCallback = callback;
     }
 
-    onTeleport(callback: Callback): void {
+    public onTeleport(callback: Callback): void {
         this.teleportCallback = callback;
     }
 
-    onDespawn(callback: Callback): void {
+    public onDespawn(callback: Callback): void {
         this.despawnCallback = callback;
     }
 
-    onCombat(callback: Callback): void {
+    public onCombat(callback: Callback): void {
         this.combatCallback = callback;
     }
 
-    onAnimation(callback: Callback): void {
+    public onAnimation(callback: Callback): void {
         this.animationCallback = callback;
     }
 
-    onProjectile(callback: Callback): void {
+    public onProjectile(callback: Callback): void {
         this.projectileCallback = callback;
     }
 
-    onPopulation(callback: Callback): void {
+    public onPopulation(callback: Callback): void {
         this.populationCallback = callback;
     }
 
-    onPoints(callback: Callback): void {
+    public onPoints(callback: Callback): void {
         this.pointsCallback = callback;
     }
 
-    onNetwork(callback: Callback): void {
+    public onNetwork(callback: Callback): void {
         this.networkCallback = callback;
     }
 
-    onChat(callback: Callback): void {
+    public onChat(callback: Callback): void {
         this.chatCallback = callback;
     }
 
-    onCommand(callback: Callback): void {
+    public onCommand(callback: Callback): void {
         this.commandCallback = callback;
     }
 
-    onInventory(callback: Callback): void {
+    public onInventory(callback: Callback): void {
         this.inventoryCallback = callback;
     }
 
-    onBank(callback: Callback): void {
+    public onBank(callback: Callback): void {
         this.bankCallback = callback;
     }
 
-    onAbility(callback: Callback): void {
+    public onAbility(callback: Callback): void {
         this.abilityCallback = callback;
     }
 
-    onQuest(callback: Callback): void {
+    public onQuest(callback: Callback): void {
         this.questCallback = callback;
     }
 
-    onNotification(callback: Callback): void {
+    public onNotification(callback: Callback): void {
         this.notificationCallback = callback;
     }
 
-    onBlink(callback: Callback): void {
+    public onBlink(callback: Callback): void {
         this.blinkCallback = callback;
     }
 
-    onHeal(callback: Callback): void {
+    public onHeal(callback: Callback): void {
         this.healCallback = callback;
     }
 
-    onExperience(callback: Callback): void {
+    public onExperience(callback: Callback): void {
         this.experienceCallback = callback;
     }
 
-    onDeath(callback: Callback): void {
+    public onDeath(callback: Callback): void {
         this.deathCallback = callback;
     }
 
-    onAudio(callback: Callback): void {
+    public onAudio(callback: Callback): void {
         this.audioCallback = callback;
     }
 
-    onNPC(callback: Callback): void {
+    public onNPC(callback: Callback): void {
         this.npcCallback = callback;
     }
 
-    onRespawn(callback: Callback): void {
+    public onRespawn(callback: Callback): void {
         this.respawnCallback = callback;
     }
 
-    onEnchant(callback: Callback): void {
+    public onEnchant(callback: Callback): void {
         this.enchantCallback = callback;
     }
 
-    onGuild(callback: Callback): void {
+    public onGuild(callback: Callback): void {
         this.guildCallback = callback;
     }
 
-    onPointer(callback: Callback): void {
+    public onPointer(callback: Callback): void {
         this.pointerCallback = callback;
     }
 
-    onPVP(callback: Callback): void {
+    public onPVP(callback: Callback): void {
         this.pvpCallback = callback;
     }
 
-    onShop(callback: Callback): void {
+    public onShop(callback: Callback): void {
         this.shopCallback = callback;
     }
 
-    onMinigame(callback: Callback): void {
+    public onMinigame(callback: Callback): void {
         this.minigameCallback = callback;
     }
 
-    onRegion(callback: Callback): void {
+    public onRegion(callback: Callback): void {
         this.regionCallback = callback;
     }
 
-    onOverlay(callback: Callback): void {
+    public onOverlay(callback: Callback): void {
         this.overlayCallback = callback;
     }
 
-    onCamera(callback: Callback): void {
+    public onCamera(callback: Callback): void {
         this.cameraCallback = callback;
     }
 
-    onBubble(callback: Callback): void {
+    public onBubble(callback: Callback): void {
         this.bubbleCallback = callback;
     }
 
-    onProfession(callback: Callback): void {
+    public onProfession(callback: Callback): void {
         this.professionCallback = callback;
     }
 }
