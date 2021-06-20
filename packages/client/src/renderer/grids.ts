@@ -1,7 +1,8 @@
-import Entity from '../entity/entity';
-import Item from '../entity/objects/item';
+import type Entity from '../entity/entity';
+import type Item from '../entity/objects/item';
+import type Map from '../map/map';
+
 import log from '../lib/log';
-import Map from '../map/map';
 
 export default class Grids {
     public renderingGrid: { [id: string]: Entity }[][] = [];

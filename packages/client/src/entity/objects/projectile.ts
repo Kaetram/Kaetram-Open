@@ -1,5 +1,6 @@
-import Character from '../character/character';
 import Entity from '../entity';
+
+import type Character from '../character/character';
 
 export default class Projectile extends Entity {
     public name = '';

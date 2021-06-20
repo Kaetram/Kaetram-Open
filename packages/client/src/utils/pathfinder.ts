@@ -7,22 +7,18 @@ import AStar from '../lib/astar';
 import type { FunctionTypes, PosTuple } from '../lib/astar';
 
 export default class PathFinder {
-    mode: FunctionTypes;
-    grid: number[][] | null;
-    blankGrid: number[][];
-    ignores: Character[];
+    private mode: FunctionTypes = 'DEFAULT';
 
-    constructor(private width: number, private height: number) {
-        this.mode = 'DEFAULT';
+    private grid: number[][] | null = null;
 
-        this.grid = null;
-        this.blankGrid = [];
-        this.ignores = [];
+    private blankGrid: number[][] = [];
+    private ignores: Character[] = [];
 
+    public constructor(private width: number, private height: number) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         for (let i = 0; i < this.height; i++) {
             this.blankGrid[i] = [];
 
@@ -32,7 +28,13 @@ export default class PathFinder {
         // log.info('Successfully loaded the pathfinder!');
     }
 
-    find(grid: number[][], entity: Entity, x: number, y: number, incomplete: boolean): number[][] {
+    public find(
+        grid: number[][],
+        entity: Entity,
+        x: number,
+        y: number,
+        incomplete: boolean
+    ): number[][] {
         const start: PosTuple = [entity.gridX, entity.gridY];
         const end: PosTuple = [x, y];
         let path;
@@ -47,7 +49,7 @@ export default class PathFinder {
         return path;
     }
 
-    findIncomplete(start: PosTuple, end: PosTuple): number[][] {
+    private findIncomplete(start: PosTuple, end: PosTuple): number[][] {
         let incomplete: number[][] = [];
         let x;
         let y;
@@ -66,7 +68,7 @@ export default class PathFinder {
         return incomplete;
     }
 
-    applyIgnore(ignored: boolean): void {
+    private applyIgnore(ignored: boolean): void {
         let x: number;
         let y: number;
 
@@ -78,13 +80,13 @@ export default class PathFinder {
         });
     }
 
-    ignoreEntity(entity: Character): void {
+    public ignoreEntity(entity: Character): void {
         if (!entity) return;
 
         this.ignores.push(entity);
     }
 
-    clearIgnores(): void {
+    public clearIgnores(): void {
         this.applyIgnore(false);
         this.ignores = [];
     }

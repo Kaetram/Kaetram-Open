@@ -182,7 +182,7 @@ export default class Game {
 
     public loadMap(): void {
         this.map = new Map(this);
-        this.overlays = new Overlay(this);
+        this.overlays = new Overlay();
 
         const { map } = this;
 

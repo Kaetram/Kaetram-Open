@@ -6,6 +6,7 @@ import Transition from '../../utils/transition';
 import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
+
 import type Weapon from './player/equipment/weapon';
 
 export default class Character extends Entity {
@@ -15,6 +16,7 @@ export default class Character extends Entity {
 
     public nextGridX = -1;
     public nextGridY = -1;
+
     // private prevGridX = -1;
     // private prevGridY = -1;
 

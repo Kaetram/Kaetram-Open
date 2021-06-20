@@ -3,7 +3,6 @@ import Packets from '@kaetram/common/src/packets';
 
 import Animation from '../entity/animation';
 import log from '../lib/log';
-import Actions from '../menu/actions';
 import Chat from './chat';
 import Overlay from './overlay';
 
@@ -12,6 +11,7 @@ import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
 import type { Cursors } from '../map/map';
+import type Actions from '../menu/actions';
 
 interface TargetData {
     sprite: Sprite;

@@ -1,32 +1,30 @@
 import $ from 'jquery';
 
-export default class Page {
-    body: JQuery;
-    loaded: boolean;
+export default abstract class Page {
+    private body: JQuery;
+    public loaded = false;
 
-    constructor(element: string) {
+    protected constructor(element: string) {
         this.body = $(element);
-
-        this.loaded = false;
     }
 
-    show(): void {
+    public show(): void {
         this.body.fadeIn('slow');
     }
 
-    hide(): void {
+    public hide(): void {
         this.body.fadeOut('slow');
     }
 
-    isVisible(): boolean {
+    public isVisible(): boolean {
         return this.body.css('display') === 'block';
     }
 
-    resize(): void {
+    public resize(): void {
         // not implemented
     }
 
-    async getImageFormat(name: string): Promise<string> {
+    public async getImageFormat(name: string): Promise<string> {
         const { default: image } = await import(`../../../img/sprites/item-${name}.png`);
 
         return `url("${image}")`;
