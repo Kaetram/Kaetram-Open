@@ -10,7 +10,7 @@ class PirateCaptain extends Combat {
     lastTeleportIndex: number;
     lastTeleport: number;
     location: any;
-    character: any;
+    declare character: Mob;
 
     constructor(character: Mob) {
         character.spawnDistance = 20;
@@ -32,10 +32,10 @@ class PirateCaptain extends Combat {
     }
 
     load() {
-        let south = { x: 251, y: 574 },
-            west = { x: 243, y: 569 },
-            east = { x: 258, y: 568 },
-            north = { x: 251, y: 563 };
+        const south = { x: 251, y: 574 };
+            const west = { x: 243, y: 569 };
+            const east = { x: 258, y: 568 };
+            const north = { x: 251, y: 563 };
 
         this.teleportLocations.push(north, south, west, east);
     }
@@ -52,7 +52,7 @@ class PirateCaptain extends Combat {
 
         this.stop();
 
-        this.lastTeleport = new Date().getTime();
+        this.lastTeleport = Date.now();
         this.lastTeleportIndex = position.index;
 
         this.character.setPosition(position.x, position.y);
@@ -76,8 +76,8 @@ class PirateCaptain extends Combat {
     }
 
     getRandomPosition() {
-        let random = Utils.randomInt(0, this.teleportLocations.length - 1),
-            position = this.teleportLocations[random];
+        const random = Utils.randomInt(0, this.teleportLocations.length - 1);
+            const position = this.teleportLocations[random];
 
         if (!position || random === this.lastTeleportIndex) return null;
 
@@ -90,7 +90,7 @@ class PirateCaptain extends Combat {
 
     canTeleport() {
         //Just randomize the teleportation for shits and giggles.
-        return new Date().getTime() - this.lastTeleport > 10000 && Utils.randomInt(0, 4) === 2;
+        return Date.now() - this.lastTeleport > 10000 && Utils.randomInt(0, 4) === 2;
     }
 
     getHealthPercentage() {
