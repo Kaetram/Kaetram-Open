@@ -3219,8 +3219,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@kaetram/server", "workspace:packages/server"],
             ["@types/lodash", "npm:4.14.170"],
             ["@types/node", "npm:15.12.4"],
-            ["@types/socket.io-client", "npm:3.0.0"],
             ["lodash", "npm:4.17.21"],
+            ["socket.io-client", "npm:4.1.2"],
             ["ts-node", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:10.0.0"],
             ["tslib", "npm:2.3.0"],
             ["typescript", "patch:typescript@npm%3A4.3.4#~builtin<compat/typescript>::version=4.3.4&hash=d8b4e7"]
@@ -3897,16 +3897,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-sizzle-npm-2.3.3-9403924950-586a9fb1f6.zip/node_modules/@types/sizzle/",
           "packageDependencies": [
             ["@types/sizzle", "npm:2.3.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/socket.io-client", [
-        ["npm:3.0.0", {
-          "packageLocation": "./.yarn/cache/@types-socket.io-client-npm-3.0.0-c689b7a282-6eef7529af.zip/node_modules/@types/socket.io-client/",
-          "packageDependencies": [
-            ["@types/socket.io-client", "npm:3.0.0"],
-            ["socket.io-client", "npm:4.1.2"]
           ],
           "linkType": "HARD",
         }]
