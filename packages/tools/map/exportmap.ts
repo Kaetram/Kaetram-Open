@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+
 import log from '@kaetram/server/src/util/log';
 
 import { MapData } from './mapdata';

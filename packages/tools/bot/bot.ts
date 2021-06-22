@@ -1,13 +1,15 @@
 #!/usr/bin/env -S yarn ts-node-script
 
 import { each, isArray } from 'lodash';
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 import Packets from '@kaetram/common/src/packets';
 import log from '@kaetram/server/src/util/log';
 import Utils from '@kaetram/server/src/util/utils';
 
 import Entity from './entity';
+
+import type { Socket } from 'socket.io-client';
 
 const gVer = 1;
 
@@ -19,7 +21,7 @@ interface PacketInfo {
 
 export default class Bot {
     #bots: Entity[] = [];
-    #botCount = 300 as const;
+    #botCount = 300;
 
     public constructor() {
         this.load();
@@ -73,22 +75,17 @@ export default class Bot {
             } else this.handlePackets(connection, message as never, 'utf8');
         });
 
-        connection.on('disconnect', () => {
-            //
-        });
+        // connection.on('disconnect', () => {});
     }
 
-    private handlePackets(
-        connection: SocketIOClient.Socket,
-        message: string[] | [number, PacketInfo],
-        type?: string
-    ): void {
+    private handlePackets(connection: Socket, message: [number, PacketInfo], type?: string): void {
         if (type === 'utf8' || !isArray(message)) {
             log.info(`Received UTF8 message ${message}.`);
+
             return;
         }
 
-        const opcode = message.shift() as number;
+        const [opcode, info] = message;
 
         switch (opcode) {
             case Packets.Handshake:
@@ -97,8 +94,6 @@ export default class Bot {
                 break;
 
             case Packets.Welcome: {
-                const info = message.shift() as PacketInfo;
-
                 this.#bots.push(new Entity(info.instance, info.x, info.y, connection));
 
                 break;
@@ -109,11 +104,7 @@ export default class Bot {
         }
     }
 
-    private send(
-        connection: SocketIOClient.Socket,
-        packet: number,
-        data: (string | number)[]
-    ): void {
+    private send(connection: Socket, packet: number, data: (string | number)[]): void {
         const json = JSON.stringify([packet, data]);
 
         if (connection && connection.connected) connection.send(json);
@@ -145,6 +136,7 @@ export default class Bot {
 
         setTimeout(() => {
             // Stop Movement
+
             this.send(bot.connection, 9, [3, newX, newY]);
         }, 1000);
 
