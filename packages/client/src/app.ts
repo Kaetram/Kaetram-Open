@@ -29,7 +29,7 @@ export default class App {
         port: parseInt(process.env.PORT!),
         version: process.env.VERSION!,
         ssl: !!process.env.SSL,
-        debug: process.env.NODE_ENV === 'development',
+        debug: import.meta.env.DEV,
         worldSwitch: !!process.env.WORLD_SWITCH
     };
 
@@ -236,7 +236,7 @@ export default class App {
             this.updateRange($(input))
         );
 
-        if (!this.config.debug || location.hostname !== 'localhost')
+        if (!this.config.debug && location.hostname !== 'localhost')
             $.ajax({
                 url: 'https://c6.patreon.com/becomePatronButton.bundle.js',
                 dataType: 'script',
