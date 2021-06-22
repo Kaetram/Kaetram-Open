@@ -3,18 +3,17 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "start": "vite preview --port 9000",
-        "lint": "stylelint **/*.scss"
+        "start": "vite preview --port 9000"
     },
     "dependencies": {
+        "@kaetram/common": "workspace:packages/common",
         "gl-tiled": "^1.0.0",
         "illuminated": "^1.2.3",
         "jquery": "^3.6.0",
         "lodash": "^4.17.21",
-        "socket.io-client": "4.1.2"
+        "socket.io-client": "^4.1.2"
     },
     "devDependencies": {
-        "@kaetram/common": "workspace:packages/common",
         "@types/dotenv-parse-variables": "^2.0.0",
         "@types/jquery": "^3.5.5",
         "@types/lodash": "^4.14.170",
