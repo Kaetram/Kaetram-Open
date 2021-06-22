@@ -11,7 +11,7 @@
         "dev": "yarn packages dev",
         "start": "yarn packages start",
         "build": "yarn packages build",
-        "lint": "eslint packages/**/*.ts",
+        "lint": "eslint packages/**/*.ts && stylelint packages/**/*.scss",
         "test": "yarn packages test",
         "helper": "yarn packages helper",
         "map": "yarn packages map"
