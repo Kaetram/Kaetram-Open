@@ -1869,8 +1869,8 @@ __metadata:
     "@kaetram/server": "workspace:packages/server"
     "@types/lodash": ^4.14.170
     "@types/node": ^15.12.4
-    "@types/socket.io-client": ^3.0.0
     lodash: ^4.17.21
+    socket.io-client: ^4.1.2
     ts-node: ^10.0.0
     tslib: ^2.3.0
     typescript: ^4.3.4
@@ -2394,15 +2394,6 @@ __metadata:
   version: 2.3.3
   resolution: "@types/sizzle@npm:2.3.3"
   checksum: 586a9fb1f6ff3e325e0f2cc1596a460615f0bc8a28f6e276ac9b509401039dd242fa8b34496d3a30c52f5b495873922d09a9e76c50c2ab2bcc70ba3fb9c4e160
-  languageName: node
-  linkType: hard
-
-"@types/socket.io-client@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@types/socket.io-client@npm:3.0.0"
-  dependencies:
-    socket.io-client: "*"
-  checksum: 6eef7529afc1d732fb4091864aa6396a2f676ad25eda0035dd1f2c228cbcaf8520b15236ee0f2c714e061307eeab2b6c8edad637bc83a317c326ae70729d88b0
   languageName: node
   linkType: hard
 
@@ -10923,7 +10914,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"socket.io-client@npm:*, socket.io-client@npm:^4.1.2":
+"socket.io-client@npm:^4.1.2":
   version: 4.1.2
   resolution: "socket.io-client@npm:4.1.2"
   dependencies:
