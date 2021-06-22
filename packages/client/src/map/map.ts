@@ -4,6 +4,7 @@ import _ from 'lodash';
 import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
 import { isInt } from '../utils/util';
+import MapWorker from './mapworker?worker';
 
 import type Game from '../game';
 import type { GLTilemap, ILayer, ITilemap, ITileset, ITileAnimationFrame } from 'gl-tiled';
@@ -111,7 +112,7 @@ export default class Map {
         if (this.supportsWorker) {
             log.debug('Parsing map with Web Workers...');
 
-            const worker = new Worker(new URL('./mapworker.ts', import.meta.url));
+            const worker = new MapWorker();
 
             worker.postMessage(1);
 
@@ -189,7 +190,7 @@ export default class Map {
         tileset.index = this.rawTilesets.indexOf(rawTileset);
         tileset.name = rawTileset.imageName;
 
-        const { default: path } = await import(`../../img/tilesets/${tileset.name}`);
+        const { default: path } = await import(`../../img/tilesets/${rawTileset.name}.png`);
 
         tileset.crossOrigin = 'Anonymous';
         tileset.path = path;
