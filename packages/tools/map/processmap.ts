@@ -3,10 +3,11 @@ import zlib from 'zlib';
 
 import log from '../../server/src/util/log';
 import {
+    Area,
     Entity,
     Layer,
+    LayerObject,
     MapData,
-    ObjectGroup,
     ProcessedMap,
     Property,
     Tile,
@@ -21,10 +22,12 @@ export default class ProcessMap {
     public constructor(private data: MapData) {}
 
     public parse(): void {
+        const { width, height, tilewidth: tileSize } = this.data;
+
         this.#map = {
-            width: this.data.width,
-            height: this.data.height,
-            tileSize: this.data.tilewidth,
+            width,
+            height,
+            tileSize,
             version: Date.now(),
 
             data: [],
@@ -57,8 +60,10 @@ export default class ProcessMap {
     }
 
     private parseTilesets(): void {
-        if (Array.isArray(this.data.tilesets))
-            _.each(this.data.tilesets, (tileset) => {
+        const { tilesets } = this.data;
+
+        if (Array.isArray(tilesets))
+            _.each(tilesets, (tileset) => {
                 const name = tileset.name.toLowerCase();
 
                 switch (name) {
@@ -103,49 +108,53 @@ export default class ProcessMap {
     }
 
     private parseTileset(tileset: Tileset): void {
+        const { name, firstgid: firstGID, tilecount, image, tiles } = tileset;
+
         this.#map.tilesets.push({
-            name: tileset.name,
-            firstGID: tileset.firstgid,
-            lastGID: tileset.firstgid + tileset.tilecount - 1,
-            imageName: tileset.image.includes('/') ? tileset.image.split('/')[2] : tileset.image,
-            scale: tileset.name === 'tilesheet' ? 2 : 1
+            name,
+            firstGID,
+            lastGID: firstGID + tilecount - 1,
+            imageName: image.includes('/') ? image.split('/')[2] : image,
+            scale: name === 'tilesheet' ? 2 : 1
         });
 
-        _.each(tileset.tiles, (tile) => {
+        _.each(tiles, (tile) => {
             const tileId = this.getTileId(tileset, tile);
 
-            _.each(tile.properties, (property: any) => {
-                this.parseProperties(tileId, property, tile.objectgroup);
+            _.each(tile.properties, (property) => {
+                this.parseProperties(tileId, property);
             });
         });
     }
 
-    private parseProperties(tileId: number, property: Property, objectGroup?: ObjectGroup): void {
-        const name = property.name,
-            value = (parseInt(property.value, 10) as never) || property.value;
+    private parseProperties(tileId: number, property: Property): void {
+        const { name } = property;
 
-        if (this.isColliding(name) && !(tileId in this.#map.polygons))
-            this.#collisionTiles[tileId] = true;
+        const value = (parseInt(property.value, 10) as never) || property.value;
+
+        const { polygons, high, objects, trees, rocks, cursors } = this.#map;
+
+        if (this.isColliding(name) && !(tileId in polygons)) this.#collisionTiles[tileId] = true;
 
         switch (name) {
             case 'v':
-                this.#map.high.push(tileId);
+                high.push(tileId);
                 break;
 
             case 'o':
-                this.#map.objects.push(tileId);
+                objects.push(tileId);
                 break;
 
             case 'tree':
-                this.#map.trees[tileId] = value;
+                trees[tileId] = value;
                 break;
 
             case 'rock':
-                this.#map.rocks[tileId] = value;
+                rocks[tileId] = value;
                 break;
 
             case 'cursor':
-                this.#map.cursors[tileId] = value;
+                cursors[tileId] = value;
                 break;
         }
     }
@@ -153,7 +162,7 @@ export default class ProcessMap {
     private parseTileLayer(layer: Layer): void {
         const name = layer.name.toLowerCase();
 
-        layer.data = this.getLayerData(layer.data, layer.compression) as number[];
+        layer.data = this.getLayerData(layer.data, layer.compression)!;
 
         if (name === 'blocking') {
             this.parseBlocking(layer);
@@ -175,18 +184,19 @@ export default class ProcessMap {
         this.formatData();
     }
 
-    private parseTileLayerData(data: number[]): void {
-        _.each(data, (value, index) => {
+    private parseTileLayerData(mapData: number[]): void {
+        const { data, collisions, trees, treeIndexes, rocks, rockIndexes } = this.#map;
+
+        _.each(mapData, (value, index) => {
             if (value < 1) return;
 
-            if (!this.#map.data[index]) this.#map.data[index] = value;
-            else if (_.isArray(this.#map.data[index]))
-                (this.#map.data[index] as number[]).push(value);
-            else this.#map.data[index] = [this.#map.data[index] as number, value];
+            if (!data[index]) data[index] = value;
+            else if (_.isArray(data[index])) (data[index] as number[]).push(value);
+            else data[index] = [data[index] as number, value];
 
-            if (value in this.#collisionTiles) this.#map.collisions.push(index);
-            if (value in this.#map.trees) this.#map.treeIndexes.push(index);
-            if (value in this.#map.rocks) this.#map.rockIndexes.push(index);
+            if (value in this.#collisionTiles) collisions.push(index);
+            if (value in trees) treeIndexes.push(index);
+            if (value in rocks) rockIndexes.push(index);
         });
     }
 
@@ -199,90 +209,95 @@ export default class ProcessMap {
     }
 
     private parseStaticEntities(layer: Layer): void {
+        const { entities, staticEntities } = this.#map;
+
         _.each(layer.data, (value, index) => {
             if (value < 1) return;
 
-            if (value in this.#map.entities)
-                this.#map.staticEntities[index] = this.#map.entities[value];
+            if (value in entities) staticEntities[index] = entities[value];
         });
     }
 
     private parsePlateau(layer: Layer): void {
         const level = parseInt(layer.name.split('plateau')[1]);
 
+        const { collisions, plateau } = this.#map;
+
         _.each(layer.data, (value, index) => {
             if (value < 1) return;
 
             // We skip collisions
-            if (this.#map.collisions.includes(value)) return;
+            if (collisions.includes(value)) return;
 
-            this.#map.plateau[index] = level;
+            plateau[index] = level;
         });
     }
 
     /**
      * We parse through pre-defined object layers and add them
      * to the map data.
-     * 
+     *
      * @param layer An object layer from Tiled map.
      */
-
-    private parseObjectLayer(layer: any) {
-        let name = layer.name,
-            objects = layer.objects;
+    private parseObjectLayer(layer: Layer) {
+        const { name, objects } = layer;
 
         if (!objects) return;
-        if (!(name in this.#map.areas))
-            this.#map.areas[name] = [];
 
-        _.each(objects, (info: any) => {
+        const { areas } = this.#map;
+
+        if (!(name in areas)) areas[name] = [];
+
+        _.each(objects, (info) => {
             this.parseObject(name, info);
         });
     }
 
     /**
-     * 
-     * @param name The object info in the map that we are storing the data in.
+     * @param objectName The object info in the map that we are storing the data in.
      * @param info The raw data received from Tiled.
      */
+    private parseObject(objectName: string, info: LayerObject) {
+        const { id, name, x, y, width, height, properties } = info;
 
-    private parseObject(name: keyof ProcessedMap, info: any) {
-        let object: any = {
-            id: info.id,
-            name: info.name,
-            x: info.x / this.#map.tileSize,
-            y: info.y / this.#map.tileSize,
-            width: info.width / this.#map.tileSize,
-            height: info.height / this.#map.tileSize,
+        const { tileSize, areas } = this.#map;
+
+        const object: Area = {
+            id,
+            name,
+            x: x / tileSize,
+            y: y / tileSize,
+            width: width / tileSize,
+            height: height / tileSize,
             polygon: this.extractPolygon(info)
         };
 
-        _.each(info.properties, (property: any) => {
-            object[property.name] = property.value;
+        _.each(properties, ({ name, value }) => {
+            object[name] = value;
         });
 
-        this.#map.areas[name].push(object);
+        areas[objectName].push(object);
     }
 
     /**
      * Polygons are drawn without the offset, we add the `x` and `y` position
      * of the object to get the true position of the polygon.
-     * 
+     *
      * @param info The raw data from Tiled
      * @returns A modified array of polygons adjusted for `tileSize`.
      */
-
-    private extractPolygon(info: any) {
+    private extractPolygon(info: LayerObject) {
         if (!info.polygon) return;
 
-        let polygon: any = [];
-        
-        console.log(info);
+        const polygon: Pos[] = [];
 
-        _.each(info.polygon, (point: any) => {
-            polygon.push({ 
-                x: (info.x + point.x) / this.#map.tileSize,
-                y: (info.y + point.y) / this.#map.tileSize
+        const { tileSize } = this.#map;
+        // console.log(info);
+
+        _.each(info.polygon, (point) => {
+            polygon.push({
+                x: (info.x + point.x) / tileSize,
+                y: (info.y + point.y) / tileSize
             });
         });
 
@@ -317,11 +332,12 @@ export default class ProcessMap {
      * to the server.
      */
     private formatData(): void {
-        _.each(this.#map.data, (value, index) => {
-            if (!value) this.#map.data[index] = 0;
+        const { data } = this.#map;
 
-            //if (_.isArray(value))
-            //    this.map.data[index] = value.reverse();
+        _.each(data, (value, index) => {
+            if (!value) data[index] = 0;
+
+            // if (_.isArray(value)) data[index] = value.reverse();
         });
     }
 
@@ -357,8 +373,8 @@ export default class ProcessMap {
 
         if (!inflatedData) return;
 
-        const size = this.#map.width * this.#map.height * 4,
-            layerData: number[] = [];
+        const size = this.#map.width * this.#map.height * 4;
+        const layerData: number[] = [];
 
         if (inflatedData.length !== size) {
             log.error('Invalid buffer detected while parsing layer.');
@@ -393,17 +409,19 @@ export default class ProcessMap {
      * We are only sending essential information to the client.
      */
     public getClientMap(): string {
+        const { width, height, depth, version, high, tilesets, animations, tileSize } = this.#map;
+
         return JSON.stringify({
-            width: this.#map.width,
-            height: this.#map.height,
-            depth: this.#map.depth,
+            width,
+            height,
+            depth,
+            version,
+            high,
+            tilesets,
+            animations,
+            tileSize,
             collisions: [],
-            lights: [],
-            version: this.#map.version,
-            high: this.#map.high,
-            tilesets: this.#map.tilesets,
-            animations: this.#map.animations,
-            tileSize: this.#map.tileSize
+            lights: []
         });
     }
 
