@@ -133,8 +133,8 @@ export default class EntitiesController {
             }
 
             case 'projectile': {
-                const attacker = this.get<Character>(info.characterId);
-                const target = this.get<Character>(info.targetId);
+                const attacker = this.get<Character>(info.characterId),
+                    target = this.get<Character>(info.targetId);
 
                 if (!attacker || !target) return;
 
@@ -210,9 +210,9 @@ export default class EntitiesController {
                 player.type = info.type;
                 player.movementSpeed = info.movementSpeed;
 
-                const hitPointsData = info.hitPoints as number[];
-                const manaData = info.mana as number[];
-                const equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
+                const hitPointsData = info.hitPoints as number[],
+                    manaData = info.mana as number[],
+                    equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
 
                 player.setHitPoints(hitPointsData[0]);
                 player.setMaxHitPoints(hitPointsData[1]);

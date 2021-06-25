@@ -37,13 +37,14 @@ class Commands {
     handlePlayerCommands(command: string, blocks: Array<string>) {
         switch (command) {
             case 'players':
-                let population = this.world.getPopulation(),
-                    singular = population === 1;
+                let population = this.world.getPopulation();
+                let singular = population === 1;
 
                 if (this.player.rights > 1)
-                    this,this.entities.forEachPlayer((player: Player) => {
-                        this.player.notify(player.username);
-                    });
+                    this,
+                        this.entities.forEachPlayer((player: Player) => {
+                            this.player.notify(player.username);
+                        });
 
                 this.player.notify(
                     `There ${singular ? 'is' : 'are'} currently ${population} ${
@@ -113,8 +114,8 @@ class Commands {
 
             case 'pm':
             case 'msg':
-                let otherPlayer = blocks.shift(),
-                    message = blocks.join(' ');
+                let otherPlayer = blocks.shift();
+                let message = blocks.join(' ');
 
                 this.player.sendMessage(otherPlayer, message);
 
@@ -132,9 +133,9 @@ class Commands {
         switch (command) {
             case 'mute':
             case 'ban':
-                let duration = blocks.shift(),
-                    targetName = blocks.join(' '),
-                    user: Player = this.world.getPlayerByName(targetName);
+                let duration = blocks.shift();
+                let targetName = blocks.join(' ');
+                let user: Player = this.world.getPlayerByName(targetName);
 
                 if (!user) return;
 
@@ -156,8 +157,8 @@ class Commands {
                 return;
 
             case 'unmute':
-                let uTargetName = blocks.join(' '),
-                    uUser = this.world.getPlayerByName(uTargetName);
+                let uTargetName = blocks.join(' ');
+                let uUser = this.world.getPlayerByName(uTargetName);
 
                 if (!uTargetName) return;
 
@@ -174,10 +175,10 @@ class Commands {
 
         switch (command) {
             case 'spawn':
-                let spawnId = parseInt(blocks.shift()),
-                    count = parseInt(blocks.shift()),
-                    ability = parseInt(blocks.shift()),
-                    abilityLevel = parseInt(blocks.shift());
+                let spawnId = parseInt(blocks.shift());
+                let count = parseInt(blocks.shift());
+                let ability = parseInt(blocks.shift());
+                let abilityLevel = parseInt(blocks.shift());
 
                 if (!spawnId || !count) return;
 
@@ -199,8 +200,8 @@ class Commands {
                 return;
 
             case 'drop':
-                let id = parseInt(blocks.shift()),
-                    dCount = parseInt(blocks.shift());
+                let id = parseInt(blocks.shift());
+                let dCount = parseInt(blocks.shift());
 
                 if (!id) return;
 
@@ -221,9 +222,9 @@ class Commands {
                 return;
 
             case 'teleport':
-                let x = parseInt(blocks.shift()),
-                    y = parseInt(blocks.shift()),
-                    withAnimation = parseInt(blocks.shift());
+                let x = parseInt(blocks.shift());
+                let y = parseInt(blocks.shift());
+                let withAnimation = parseInt(blocks.shift());
 
                 if (x && y) this.player.teleport(x, y, false, !!withAnimation);
 
@@ -313,9 +314,9 @@ class Commands {
                 return;
 
             case 'region':
-                let tileX = parseInt(blocks.shift()),
-                    tileY = parseInt(blocks.shift()),
-                    tileInfo = parseInt(blocks.shift());
+                let tileX = parseInt(blocks.shift());
+                let tileY = parseInt(blocks.shift());
+                let tileInfo = parseInt(blocks.shift());
 
                 if (!tileX || !tileY) return;
 

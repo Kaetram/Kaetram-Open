@@ -118,9 +118,9 @@ export default class MenuController {
     }
 
     private loadNotifications(): void {
-        const ok = $('#ok');
-        const cancel = $('#cancel');
-        const done = $('#done');
+        const ok = $('#ok'),
+            cancel = $('#cancel'),
+            done = $('#done');
 
         /**
          * Simple warning dialogue
@@ -198,9 +198,8 @@ export default class MenuController {
     }
 
     public showNotification(titleText: string, message: string, colour: string): void {
-        const { notification, description, title, notificationTimeout } = this;
-
-        const top = window.innerHeight - notification.height()!;
+        const { notification, description, title, notificationTimeout } = this,
+            top = window.innerHeight - notification.height()!;
 
         if (this.isNotificationVisible()) {
             this.hideNotification();

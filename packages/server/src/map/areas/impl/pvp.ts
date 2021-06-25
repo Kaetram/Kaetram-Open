@@ -4,7 +4,6 @@ import Areas from '../areas';
 import World from '../../../game/world';
 
 export default class PVP extends Areas {
-
     constructor(data: any, world?: World) {
         super(data, world);
 
@@ -12,5 +11,4 @@ export default class PVP extends Areas {
 
         super.message('PVP');
     }
-
 }
