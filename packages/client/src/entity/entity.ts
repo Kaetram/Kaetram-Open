@@ -211,10 +211,9 @@ export default abstract class Entity {
     }
 
     public getDistance(entity: Entity): number {
-        const { gridX, gridY } = this;
-
-        const x = Math.abs(gridX - entity.gridX);
-        const y = Math.abs(gridY - entity.gridY);
+        const { gridX, gridY } = this,
+            x = Math.abs(gridX - entity.gridX),
+            y = Math.abs(gridY - entity.gridY);
 
         return x > y ? x : y;
     }

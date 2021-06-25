@@ -52,10 +52,9 @@ export default class PointerController {
         _.each(this.pointers, ({ type, x, y, element }) => {
             switch (type) {
                 case Modules.Pointers.Relative: {
-                    const scale = this.getScale();
-
-                    const offsetX = 0;
-                    const offsetY = 0;
+                    const scale = this.getScale(),
+                        offsetX = 0,
+                        offsetY = 0;
 
                     element.css({
                         left: `${x * scale - offsetX}px`,
@@ -97,17 +96,15 @@ export default class PointerController {
 
         if (!camera) return;
 
-        const { element } = pointer;
-        const { canvasWidth, canvasHeight } = game.renderer;
-
-        const tileSize = 48; // 16 * scale
-        const x = (posX - camera.x) * scale;
-        const width = parseInt(element.css('width') + 24);
-        const offset = width / 2 - tileSize / 2;
-
-        const y = (posY - camera.y) * scale - tileSize;
-        const outX = x / canvasWidth;
-        const outY = y / canvasHeight;
+        const { element } = pointer,
+            { canvasWidth, canvasHeight } = game.renderer,
+            tileSize = 48, // 16 * scale
+            x = (posX - camera.x) * scale,
+            width = parseInt(element.css('width') + 24),
+            offset = width / 2 - tileSize / 2,
+            y = (posY - camera.y) * scale - tileSize,
+            outX = x / canvasWidth,
+            outY = y / canvasHeight;
 
         if (outX >= 1.5)
             // Right
@@ -178,9 +175,9 @@ export default class PointerController {
 
         if (!pointer) return;
 
-        const scale = this.getScale();
-        const offsetX = 0;
-        const offsetY = 0;
+        const scale = this.getScale(),
+            offsetX = 0,
+            offsetY = 0;
 
         pointer.setPosition(x, y);
 

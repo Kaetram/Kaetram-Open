@@ -98,9 +98,9 @@ class Mob extends Character {
     getDrop() {
         if (!this.drops) return null;
 
-        const random = Utils.randomInt(0, Constants.DROP_PROBABILITY);
-        const dropObjects = Object.keys(this.drops);
-        const item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
+        const random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
+            dropObjects = Object.keys(this.drops),
+            item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
 
         if (random > this.drops[item]) return null;
 

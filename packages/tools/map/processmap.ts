@@ -128,11 +128,9 @@ export default class ProcessMap {
     }
 
     private parseProperties(tileId: number, property: Property): void {
-        const { name } = property;
-
-        const value = (parseInt(property.value, 10) as never) || property.value;
-
-        const { polygons, high, objects, trees, rocks, cursors } = this.#map;
+        const { name } = property,
+            value = (parseInt(property.value, 10) as never) || property.value,
+            { polygons, high, objects, trees, rocks, cursors } = this.#map;
 
         if (this.isColliding(name) && !(tileId in polygons)) this.#collisionTiles[tileId] = true;
 
@@ -219,9 +217,8 @@ export default class ProcessMap {
     }
 
     private parsePlateau(layer: Layer): void {
-        const level = parseInt(layer.name.split('plateau')[1]);
-
-        const { collisions, plateau } = this.#map;
+        const level = parseInt(layer.name.split('plateau')[1]),
+            { collisions, plateau } = this.#map;
 
         _.each(layer.data, (value, index) => {
             if (value < 1) return;
@@ -240,11 +237,10 @@ export default class ProcessMap {
      * @param layer An object layer from Tiled map.
      */
     private parseObjectLayer(layer: Layer) {
-        const { name, objects } = layer;
+        const { name, objects } = layer,
+            { areas } = this.#map;
 
         if (!objects) return;
-
-        const { areas } = this.#map;
 
         if (!(name in areas)) areas[name] = [];
 
@@ -258,19 +254,17 @@ export default class ProcessMap {
      * @param info The raw data received from Tiled.
      */
     private parseObject(objectName: string, info: LayerObject) {
-        const { id, name, x, y, width, height, properties } = info;
-
-        const { tileSize, areas } = this.#map;
-
-        const object: Area = {
-            id,
-            name,
-            x: x / tileSize,
-            y: y / tileSize,
-            width: width / tileSize,
-            height: height / tileSize,
-            polygon: this.extractPolygon(info)
-        };
+        const { id, name, x, y, width, height, properties } = info,
+            { tileSize, areas } = this.#map,
+            object: Area = {
+                id,
+                name,
+                x: x / tileSize,
+                y: y / tileSize,
+                width: width / tileSize,
+                height: height / tileSize,
+                polygon: this.extractPolygon(info)
+            };
 
         _.each(properties, ({ name, value }) => {
             object[name] = value;
@@ -289,9 +283,8 @@ export default class ProcessMap {
     private extractPolygon(info: LayerObject) {
         if (!info.polygon) return;
 
-        const polygon: Pos[] = [];
-
-        const { tileSize } = this.#map;
+        const polygon: Pos[] = [],
+            { tileSize } = this.#map;
         // console.log(info);
 
         _.each(info.polygon, (point) => {
@@ -373,8 +366,8 @@ export default class ProcessMap {
 
         if (!inflatedData) return;
 
-        const size = this.#map.width * this.#map.height * 4;
-        const layerData: number[] = [];
+        const size = this.#map.width * this.#map.height * 4,
+            layerData: number[] = [];
 
         if (inflatedData.length !== size) {
             log.error('Invalid buffer detected while parsing layer.');

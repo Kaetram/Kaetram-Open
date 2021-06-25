@@ -29,16 +29,15 @@ export default class WebSocket {
         this.version = config.gver;
         this.type = type;
 
-        this.socketHandler = socketHandler;        
+        this.socketHandler = socketHandler;
     }
 
     loadServer() {
-        this.httpServer = http.createServer(this.httpResponse)
-            .listen(this.port, this.host, () => {
-                log.info(`[${this.type}] Server is now listening on port: ${this.port}.`);
+        this.httpServer = http.createServer(this.httpResponse).listen(this.port, this.host, () => {
+            log.info(`[${this.type}] Server is now listening on port: ${this.port}.`);
 
-                if (this.initializedCallback) this.initializedCallback();
-            });
+            if (this.initializedCallback) this.initializedCallback();
+        });
     }
 
     /**
@@ -57,7 +56,9 @@ export default class WebSocket {
 
         if (!status) {
             connection.sendUTF8('updated');
-            connection.close(`Wrong client version, expected ${this.version} and received ${gameVersion}.`);
+            connection.close(
+                `Wrong client version, expected ${this.version} and received ${gameVersion}.`
+            );
         }
 
         return status;
@@ -66,9 +67,8 @@ export default class WebSocket {
     onAdd(callback: (connection: Connection) => void) {
         this.addCallback = callback;
     }
-    
+
     onInitialize(callback: () => void) {
         this.initializedCallback = callback;
     }
-
 }

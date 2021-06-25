@@ -66,12 +66,11 @@ class Doors {
 
     getTiles(door: any) {
         let tiles = {
-            indexes: [],
-            data: [],
-            collisions: []
-        };
-
-        let status = this.getStatus(door),
+                indexes: [],
+                data: [],
+                collisions: []
+            },
+            status = this.getStatus(door),
             doorState = {
                 open: door.openIds,
                 closed: door.closedIds

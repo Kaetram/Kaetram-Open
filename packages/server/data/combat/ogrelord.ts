@@ -89,7 +89,7 @@ class OgreLord extends Combat {
 
     spawnMinions() {
         let xs = [414, 430, 415, 420, 429],
-            ys = [172, 173, 183, 185, 180];
+             ys = [172, 173, 183, 185, 180];
 
         this.lastSpawn = new Date().getTime();
 
@@ -140,7 +140,7 @@ class OgreLord extends Combat {
     getRandomTarget() {
         if (this.isAttacked()) {
             const keys = Object.keys(this.attackers),
-                randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
+                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;
         }
