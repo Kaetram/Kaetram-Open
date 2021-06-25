@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import log from '../lib/log';
 import { isInt } from '../utils/util';
-import MapWorker from './mapworker.ts?worker';
+import MapWorker from './mapworker?worker';
 
 import type rawMapData from '../../data/maps/map.json';
 import type Game from '../game';
