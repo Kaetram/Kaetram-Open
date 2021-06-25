@@ -1,5 +1,7 @@
 import log from './log';
 
+import { registerSW } from 'virtual:pwa-register';
+
 /**
  * The `BeforeInstallPromptEvent` is fired at the `Window.onbeforeinstallprompt` handler
  * before a user is prompted to "install" a web site to a home screen on mobile.
@@ -62,17 +64,8 @@ async function init(): Promise<void> {
         deferredPrompt = event;
     });
 
-    const { Workbox } = await import('workbox-window');
-
-    const wb = new Workbox('/service-worker.js');
-
-    wb.addEventListener('installed', (event) => {
-        if (event.isUpdate && confirm('New content is available!. Click OK to refresh'))
-            window.location.reload();
-    });
-
-    wb.register();
+    registerSW();
 }
 
 // Check compatibility for the browser and environment we're running this in.
-if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) init();
+if (import.meta.env.PROD && 'serviceWorker' in navigator) init();
