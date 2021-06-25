@@ -82,7 +82,6 @@ class Region {
     }
 
     load() {
-
         this.mapRegions.forEachRegion((regionId: string) => {
             this.regions[regionId] = {
                 entities: {},
@@ -115,15 +114,17 @@ class Region {
         try {
             let checksum = Utils.getChecksum(data);
 
-            if (checksum === this.map.checksum)
-                return;
+            if (checksum === this.map.checksum) return;
 
             this.map.load();
 
             log.debug('Successfully loaded new map data.');
 
             this.updateRegions();
-        } catch (e) { log.error('Could not parse new map file.'); log.debug(e); }
+        } catch (e) {
+            log.error('Could not parse new map file.');
+            log.debug(e);
+        }
     }
 
     addEntityToInstance(entity: Entity, player: Player) {
@@ -241,9 +242,7 @@ class Region {
                 }
             }
 
-        for (let i in tileData)
-            if (tileData[i].index == 73008)
-                console.log(tileData[i]);
+        for (let i in tileData) if (tileData[i].index == 73008) console.log(tileData[i]);
 
         //No need to send empty data...
         if (tileData.length > 0)
@@ -419,8 +418,7 @@ class Region {
                     for (let x = bounds.startX; x < bounds.endX; x++) {
                         let index = this.gridPositionToIndex(x - 1, y),
                             tileData = this.map.data[index],
-                            isCollision =
-                                this.map.collisions.indexOf(index) > -1 || !tileData,
+                            isCollision = this.map.collisions.indexOf(index) > -1 || !tileData,
                             objectId: any;
 
                         if (tileData !== 0) {

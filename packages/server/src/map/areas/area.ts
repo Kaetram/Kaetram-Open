@@ -4,7 +4,6 @@ import Mob from '../../game/entity/character/mob/mob';
 import Player from '../../game/entity/character/player/player';
 
 class Area {
-
     public id: number;
     public x: number;
     public y: number;
@@ -103,11 +102,11 @@ class Area {
 
     inPolygon(x: number, y: number): boolean {
         for (let i = 0, j = this.polygon.length - 1; i < this.polygon.length; j = i++) {
-            let xi = this.polygon[i].x, yi = this.polygon[i].y,
-                xj = this.polygon[j].x, yj = this.polygon[j].y;
-
-            let intersect = ((yi > y) != (yj > y)) &&
-                (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            let xi = this.polygon[i].x,
+                yi = this.polygon[i].y,
+                xj = this.polygon[j].x,
+                yj = this.polygon[j].y,
+                intersect = yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
 
             if (intersect) return true;
         }

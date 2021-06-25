@@ -46,7 +46,7 @@ class SkeletonKing extends Combat {
 
     spawnMinions() {
         let x = this.character.x,
-            y = this.character.y;
+             y = this.character.y;
 
         this.lastSpawn = new Date().getTime();
 
@@ -82,7 +82,7 @@ class SkeletonKing extends Combat {
     getRandomTarget() {
         if (this.isAttacked()) {
             const keys = Object.keys(this.attackers),
-                randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
+                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;
         }

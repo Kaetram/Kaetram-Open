@@ -4,7 +4,6 @@ import Areas from '../areas';
 import World from '../../../game/world';
 
 export default class Achievements extends Areas {
-
     constructor(data: any, world?: World) {
         super(data, world);
 
@@ -14,5 +13,4 @@ export default class Achievements extends Areas {
 
         super.message('achievement');
     }
-
 }
