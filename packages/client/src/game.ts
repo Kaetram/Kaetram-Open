@@ -144,15 +144,11 @@ export default class Game {
     private loadControllers(): void {
         const { app } = this;
 
-        const hasWorker = app.hasWorker();
-
         app.sendStatus('Loading local storage');
 
         this.setStorage(new Storage(app));
 
-        app.sendStatus(hasWorker ? 'Loading maps - asynchronous' : null);
-
-        if (hasWorker) this.loadMap();
+        this.loadMap();
 
         app.sendStatus('Initializing network socket');
 
@@ -176,8 +172,6 @@ export default class Game {
         this.setMenu(new MenuController(this));
 
         this.loadStorage();
-
-        if (!hasWorker) app.ready();
     }
 
     public loadMap(): void {
