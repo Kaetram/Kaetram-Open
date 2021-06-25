@@ -470,10 +470,6 @@ export default class App {
         this.game = game;
     }
 
-    public hasWorker(): boolean {
-        return !!window.Worker;
-    }
-
     public getScaleFactor(): number {
         return 3;
     }
