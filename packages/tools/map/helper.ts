@@ -23,7 +23,7 @@ class Helper {
         });
     }
 
-    // private findDoorId(doors: any, x: number, y: number) {
+    // private findDoorId(doors: Door[], x: number, y: number) {
     //     for (const i in doors)
     //         if (doors[i].x === x * 16 && doors[i].y === y * 16) return doors[i].id;
 
