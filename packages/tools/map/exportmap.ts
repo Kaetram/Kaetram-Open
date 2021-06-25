@@ -8,11 +8,10 @@ import log from '@kaetram/server/src/util/log';
 import { MapData } from './mapdata';
 import ProcessMap from './processmap';
 
-const resolve = (dir: string): string => path.resolve(__dirname, dir);
-const relative = (dir: string): string => path.relative('../../', dir);
-
-const serverDestination = '../../server/data/map/world.json';
-const clientDestination = '../../client/data/maps/map.json';
+const resolve = (dir: string): string => path.resolve(__dirname, dir),
+    relative = (dir: string): string => path.relative('../../', dir),
+    serverDestination = '../../server/data/map/world.json',
+    clientDestination = '../../client/data/maps/map.json';
 
 export default class ExportMap {
     /** The map file we are parsing */

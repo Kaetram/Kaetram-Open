@@ -10,13 +10,13 @@ class Helper {
         const stdin = process.openStdin();
 
         stdin.on('data', (data: string) => {
-            const message = data.toString().replace(/(\r\n|\n|\r)/gm, '');
-            const value = parseInt(message);
+            const message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+                value = parseInt(message);
 
             if (isNaN(value)) return;
 
-            const position = this.indexToGridPosition(value + 1);
-            const adjustedIndex = this.gridPositionToIndex(position.x, position.y, 700);
+            const position = this.indexToGridPosition(value + 1),
+                adjustedIndex = this.gridPositionToIndex(position.x, position.y, 700);
 
             console.log(position);
             console.log(adjustedIndex);
@@ -47,8 +47,8 @@ class Helper {
     private indexToGridPosition(tileIndex: number): { x: number; y: number } {
         tileIndex -= 1;
 
-        const x = this.getX(tileIndex + 1, this.#width);
-        const y = Math.floor(tileIndex / this.#height);
+        const x = this.getX(tileIndex + 1, this.#width),
+            y = Math.floor(tileIndex / this.#height);
 
         return {
             x,

@@ -304,11 +304,10 @@ class Combat {
 
     getNewPosition() {
         let position = {
-            x: this.character.x,
-            y: this.character.y
-        };
-
-        let random = Utils.randomInt(0, 3);
+                x: this.character.x,
+                y: this.character.y
+            },
+            random = Utils.randomInt(0, 3);
 
         if (random === 0) position.x++;
         else if (random === 1) position.y--;

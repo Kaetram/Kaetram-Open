@@ -67,13 +67,10 @@ export default class AudioController {
     public constructor(private game: Game) {}
 
     public async parse(path: 'music' | 'sounds', name: Audio, channels: number): Promise<void> {
-        const { format, audibles, music, sounds } = this;
-
-        const { default: fullPath } = await import(`../../audio/${path}/${name}.${format}`);
-
-        const sound = document.createElement('audio') as AudioElement;
-
-        const event = (): void => sound.removeEventListener('canplaythrough', event, false);
+        const { format, audibles, music, sounds } = this,
+            { default: fullPath } = await import(`../../audio/${path}/${name}.${format}`),
+            sound = document.createElement('audio') as AudioElement,
+            event = (): void => sound.removeEventListener('canplaythrough', event, false);
 
         sound.addEventListener('canplaythrough', event, false);
 
