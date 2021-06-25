@@ -1,3 +1,20 @@
+export interface Door {
+    height: number;
+    id: number;
+    name: string;
+    properties: {
+        name: string;
+        type: string;
+        value: number;
+    }[];
+    rotation: number;
+    type: string;
+    visible: boolean;
+    width: number;
+    x: number;
+    y: number;
+}
+
 export interface Property {
     name: keyof Entity;
     value: never;
@@ -23,16 +40,22 @@ export interface Tileset {
     name: string;
     tiles: Tile[];
 }
-export interface Layer {
-    objects: {
-        id: number;
-        name: string;
-        properties: { value: number | string; name: string }[];
-        x: number;
-        y: number;
-        width: number;
-        height: number;
+interface LayerObject {
+    id: number;
+    name: string;
+    properties: {
+        value: never;
+        name: keyof Area;
     }[];
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    polygon: Pos[];
+}
+
+export interface Layer {
+    objects: LayerObject[];
     type: 'tilelayer' | 'objectgroup';
     name: string;
     data: number[];
@@ -63,11 +86,12 @@ interface Entities {
 
 export interface Area {
     id: number;
+    name: string;
     x: number;
     y: number;
     width: number;
     height: number;
-    properties: { [property: string]: string | number }
+    polygon?: Pos[];
 }
 
 export interface ProcessedMap {
