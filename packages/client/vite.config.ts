@@ -4,6 +4,7 @@ import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
 
 import { VitePWA } from 'vite-plugin-pwa';
+import legacy from '@vitejs/plugin-legacy';
 import { minifyHtml } from 'vite-plugin-html';
 import compress from 'vite-plugin-compress';
 
@@ -18,7 +19,9 @@ export default defineConfig(({ command }) => {
     return {
         cacheDir: '.cache',
         resolve: {
-            alias: { 'socket.io-client': 'socket.io-client/dist/socket.io.js' }
+            alias: isProduction
+                ? undefined
+                : { 'socket.io-client': 'socket.io-client/dist/socket.io.js' }
         },
         plugins: [
             VitePWA({
@@ -31,53 +34,15 @@ export default defineConfig(({ command }) => {
                     display: 'fullscreen',
                     background_color: '#000000',
                     theme_color: '#000000',
-                    icons: [
-                        {
-                            src: '/icons/android-chrome-36x36.png',
-                            sizes: '36x36',
+                    icons: [36, 48, 72, 96, 144, 192, 256, 384, 512].map((size) => {
+                        const sizes = `${size}x${size}`;
+
+                        return {
+                            src: `/icons/android-chrome-${sizes}.png`,
+                            sizes,
                             type: 'image/png'
-                        },
-                        {
-                            src: '/icons/android-chrome-48x48.png',
-                            sizes: '48x48',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icons/android-chrome-72x72.png',
-                            sizes: '72x72',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icons/android-chrome-96x96.png',
-                            sizes: '96x96',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icons/android-chrome-144x144.png',
-                            sizes: '144x144',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icons/android-chrome-192x192.png',
-                            sizes: '192x192',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icons/android-chrome-256x256.png',
-                            sizes: '256x256',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icons/android-chrome-384x384.png',
-                            sizes: '384x384',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icons/android-chrome-512x512.png',
-                            sizes: '512x512',
-                            type: 'image/png'
-                        }
-                    ],
+                        };
+                    }),
                     screenshots: [
                         {
                             src: 'screenshot.png',
@@ -85,9 +50,10 @@ export default defineConfig(({ command }) => {
                             type: 'image/png'
                         }
                     ],
-                    categories: 'entertainment games'.split(' ')
+                    categories: ['entertainment', 'games']
                 }
             }),
+            legacy(),
             minifyHtml(isProduction && { processScripts: ['application/ld+json'] }),
             compress({ brotli })
         ],
@@ -99,9 +65,9 @@ export default defineConfig(({ command }) => {
         define: { 'process.env': env },
         css: {
             postcss: {
-                plugins: 'autoprefixer postcss-preset-env postcss-custom-media'
-                    .split(' ')
-                    .map((plugin) => require(plugin))
+                plugins: ['autoprefixer', 'postcss-preset-env', 'postcss-custom-media'].map(
+                    (plugin) => require(plugin)
+                )
             }
         }
     };
