@@ -263,11 +263,11 @@ class Player extends Character {
 
         this.userAgent = data.userAgent;
 
-        const { armour } = data;
-        const { weapon } = data;
-        const { pendant } = data;
-        const { ring } = data;
-        const { boots } = data;
+        const { armour } = data,
+            { weapon } = data,
+            { pendant } = data,
+            { ring } = data,
+            { boots } = data;
 
         this.setPosition(data.x, data.y);
         this.setArmour(armour[0], armour[1], armour[2], armour[3]);
@@ -598,9 +598,7 @@ class Player extends Character {
 
     equip(string: string, count: number, ability: number, abilityLevel: number) {
         const data = Items.getData(string);
-        let type;
-        let id;
-        let power;
+        let type, id, power;
 
         if (!data || data === 'null') return;
 
@@ -915,13 +913,13 @@ class Player extends Character {
         };
 
         _.each(this.map.treeIndexes, (index: number) => {
-            const position = this.map.indexToGridPosition(index + 1);
-            const treeRegion = this.regions.regionIdFromPosition(position.x, position.y);
+            const position = this.map.indexToGridPosition(index + 1),
+                treeRegion = this.regions.regionIdFromPosition(position.x, position.y);
 
             if (!this.regions.isSurrounding(this.region, treeRegion)) return;
 
-            const objectId = this.map.getPositionObject(position.x, position.y);
-            const cursor = this.map.getCursor(index, objectId);
+            const objectId = this.map.getPositionObject(position.x, position.y),
+                cursor = this.map.getCursor(index, objectId);
 
             tiles.indexes.push(index);
             tiles.data.push(this.map.data[index]);
@@ -938,8 +936,8 @@ class Player extends Character {
     }
 
     getMovementSpeed() {
-        const itemMovementSpeed = Items.getMovementSpeed(this.armour.name);
-        const movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
+        const itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
+            movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
 
         /*
          * Here we can handle equipment/potions/abilities that alter
@@ -1169,8 +1167,8 @@ class Player extends Character {
     }
 
     getHit(target?: Character) {
-        const defaultDamage = Formulas.getDamage(this, target);
-        const isSpecial = Utils.randomInt(0, 100) < 30 + this.weapon.abilityLevel * 3;
+        const defaultDamage = Formulas.getDamage(this, target),
+            isSpecial = Utils.randomInt(0, 100) < 30 + this.weapon.abilityLevel * 3;
 
         if (!isSpecial || !this.hasSpecialAttack())
             return new Hit(Modules.Hits.Damage, defaultDamage);
@@ -1276,9 +1274,9 @@ class Player extends Character {
             return;
         }
 
-        const otherPlayer = this.world.getPlayerByName(playerName);
-        const oFormattedName = Utils.formatUsername(playerName); // Formated username of the other player.
-        const formattedName = Utils.formatUsername(this.username); // Formatted username of current instance.
+        const otherPlayer = this.world.getPlayerByName(playerName),
+            oFormattedName = Utils.formatUsername(playerName), // Formated username of the other player.
+            formattedName = Utils.formatUsername(this.username); // Formatted username of current instance.
 
         otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
         this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
@@ -1407,8 +1405,8 @@ class Player extends Character {
     checkRegions() {
         if (!this.regionPosition) return;
 
-        const diffX = Math.abs(this.regionPosition[0] - this.x);
-        const diffY = Math.abs(this.regionPosition[1] - this.y);
+        const diffX = Math.abs(this.regionPosition[0] - this.x),
+            diffY = Math.abs(this.regionPosition[1] - this.y);
 
         if (diffX >= 10 || diffY >= 10) {
             this.regionPosition = [this.x, this.y];

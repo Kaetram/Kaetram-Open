@@ -7,12 +7,12 @@ import SocketHandler from './sockethandler';
 
 class Connection {
     public id: string;
-    
+
     private type: string;
 
     public socket: Socket;
     public socketHandler: SocketHandler;
-    
+
     private listenCallback: Function;
     private closeCallback: Function;
 
@@ -21,7 +21,7 @@ class Connection {
         this.type = type;
         this.socket = socket;
         this.socketHandler = socketHandler;
-        
+
         this.socket.on('message', (message: any) => {
             try {
                 if (this.listenCallback) this.listenCallback(JSON.parse(message));
@@ -37,7 +37,7 @@ class Connection {
             if (this.closeCallback) this.closeCallback();
 
             this.socketHandler.remove(this.id);
-        }); 
+        });
     }
 
     listen(callback: Function) {

@@ -13,7 +13,6 @@ class Home {
     private region: Region;
     private map: Map;
 
-
     private startRegion: string;
     private endRegion: string;
 

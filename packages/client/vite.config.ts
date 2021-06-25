@@ -11,10 +11,9 @@ import compress from 'vite-plugin-compress';
 import { name, description } from 'kaetram/package.json';
 
 export default defineConfig(({ command }) => {
-    const isProduction = command === 'build';
-
-    const brotli = false;
-    const env = dotenvParseVariables(dotenv.load());
+    const isProduction = command === 'build',
+        brotli = false,
+        env = dotenvParseVariables(dotenv.load());
 
     return {
         cacheDir: '.cache',

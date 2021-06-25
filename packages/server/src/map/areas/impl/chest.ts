@@ -5,7 +5,6 @@ import World from '../../../game/world';
 import Utils from '../../../util/utils';
 
 export default class Chest extends Areas {
-
     constructor(data: any, world?: World) {
         super(data, world);
 
@@ -16,8 +15,7 @@ export default class Chest extends Areas {
             chestArea.cx = rawData.spawnX;
             chestArea.cy = rawData.spawnY;
 
-            if (rawData.achievement)
-                chestArea.achievement = rawData.achievement;
+            if (rawData.achievement) chestArea.achievement = rawData.achievement;
 
             chestArea.onEmpty(() => {
                 this.spawnChest(chestArea);
@@ -38,7 +36,8 @@ export default class Chest extends Areas {
             chestArea.items,
             chestArea.cx,
             chestArea.cy,
-            false, null
+            false,
+            null
         );
 
         chestArea.lastSpawn = Date.now();
@@ -48,8 +47,7 @@ export default class Chest extends Areas {
         if (!chestArea.chest) return;
 
         this.world.entities.removeChest(chestArea.chest);
-        
+
         chestArea.chest = null;
     }
-
 }
