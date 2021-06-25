@@ -3,6 +3,7 @@ body {
     padding: 0;
     margin: 0;
     overflow: hidden;
+    touch-action: manipulation;
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: -moz-crisp-edges;
     image-rendering: -o-pixelated;

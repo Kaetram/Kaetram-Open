@@ -1,10 +1,11 @@
 import glTiled from 'gl-tiled';
 import _ from 'lodash';
 
-import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
 import { isInt } from '../utils/util';
+import MapWorker from './mapworker?worker';
 
+import type rawMapData from '../../data/maps/map.json';
 import type Game from '../game';
 import type { GLTilemap, ILayer, ITilemap, ITileset, ITileAnimationFrame } from 'gl-tiled';
 import type { MapData } from './mapworker';
@@ -20,10 +21,12 @@ interface TilesetImageElement extends HTMLImageElement {
     index: number;
 }
 
-export type MapHigh = typeof mapData.high;
-export type MapTileset = typeof mapData.tilesets[0];
+type RawMapData = typeof rawMapData;
+
+export type MapHigh = RawMapData['high'];
+export type MapTileset = RawMapData['tilesets'][0];
 export type MapTilesets = MapTileset[];
-export type MapDepth = typeof mapData.depth;
+export type MapDepth = RawMapData['depth'];
 
 export type Cursors =
     | 'hand'
@@ -58,7 +61,6 @@ interface Resources {
 }
 
 export default class Map {
-    private supportsWorker;
     private renderer;
 
     public data: number[] = [];
@@ -90,7 +92,6 @@ export default class Map {
     private depth!: MapDepth;
 
     public constructor(private game: Game) {
-        this.supportsWorker = game.app.hasWorker();
         this.renderer = game.renderer;
 
         this.load();
@@ -108,27 +109,19 @@ export default class Map {
     }
 
     private load(): void {
-        if (this.supportsWorker) {
-            log.debug('Parsing map with Web Workers...');
+        log.debug('Parsing map with Web Workers...');
 
-            const worker = new Worker(new URL('./mapworker.ts', import.meta.url));
+        const worker = new MapWorker();
 
-            worker.postMessage(1);
+        worker.postMessage(1);
 
-            worker.addEventListener('message', (event) => {
-                const map: MapData = event.data;
+        worker.addEventListener('message', (event) => {
+            const map: MapData = event.data;
 
-                this.parseMap(map);
-                this.grid = map.grid;
-                this.mapLoaded = true;
-            });
-        } else {
-            log.debug('Parsing map with JSON...');
-
-            this.parseMap(mapData as MapData);
-            this.loadCollisions();
+            this.parseMap(map);
+            this.grid = map.grid;
             this.mapLoaded = true;
-        }
+        });
     }
 
     public synchronize(tileData: TileData[]): void {
@@ -189,7 +182,7 @@ export default class Map {
         tileset.index = this.rawTilesets.indexOf(rawTileset);
         tileset.name = rawTileset.imageName;
 
-        const { default: path } = await import(`../../img/tilesets/${tileset.name}`);
+        const { default: path } = await import(`../../img/tilesets/${rawTileset.name}.png`);
 
         tileset.crossOrigin = 'Anonymous';
         tileset.path = path;
@@ -360,26 +353,6 @@ export default class Map {
 
     private synchronizeWebGL(): void {
         this.loadWebGL(this.renderer.backContext as WebGLRenderingContext);
-    }
-
-    private loadCollisions(): void {
-        this.grid = [];
-
-        for (let i = 0; i < this.height; i++) {
-            this.grid[i] = [];
-            for (let j = 0; j < this.width; j++) this.grid[i][j] = 0;
-        }
-
-        _.each(this.collisions, (index) => {
-            const position = this.indexToGridPosition(index + 1);
-            this.grid[position.y][position.x] = 1;
-        });
-
-        _.each(this.blocking, (index) => {
-            const position = this.indexToGridPosition(index + 1);
-
-            if (this.grid[position.y]) this.grid[position.y][position.x] = 1;
-        });
     }
 
     public updateCollisions(): void {
