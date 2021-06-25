@@ -43,15 +43,12 @@ export default class Camera {
     }
 
     public update(): void {
-        const { renderer, app, tileSize, map } = this;
-
-        const scale = renderer.getScale();
-
-        const borderWidth = app.border.width()!;
-        const borderHeight = app.border.height()!;
-
-        const factorWidth = Math.ceil(borderWidth / tileSize / scale);
-        const factorHeight = Math.ceil(borderHeight / tileSize / scale);
+        const { renderer, app, tileSize, map } = this,
+            scale = renderer.getScale(),
+            borderWidth = app.border.width()!,
+            borderHeight = app.border.height()!,
+            factorWidth = Math.ceil(borderWidth / tileSize / scale),
+            factorHeight = Math.ceil(borderHeight / tileSize / scale);
 
         this.gridWidth = factorWidth;
         this.gridHeight = factorHeight;
@@ -139,13 +136,11 @@ export default class Camera {
     public centreOn(player: Player | null): void {
         if (!player) return;
 
-        const { gridWidth, gridHeight, tileSize, borderX, borderY, lockX, lockY } = this;
-
-        const width = Math.floor(gridWidth / 2);
-        const height = Math.floor(gridHeight / 2);
-
-        const nextX = player.x - width * tileSize;
-        const nextY = player.y - height * tileSize;
+        const { gridWidth, gridHeight, tileSize, borderX, borderY, lockX, lockY } = this,
+            width = Math.floor(gridWidth / 2),
+            height = Math.floor(gridHeight / 2),
+            nextX = player.x - width * tileSize,
+            nextY = player.y - height * tileSize;
 
         if (nextX >= 0 && nextX <= borderX && !lockX) {
             this.x = nextX;
@@ -161,10 +156,9 @@ export default class Camera {
     public forceCentre(entity: Entity): void {
         if (!entity) return;
 
-        const { gridWidth, gridHeight, tileSize } = this;
-
-        const width = Math.floor(gridWidth / 2);
-        const height = Math.floor(gridHeight / 2);
+        const { gridWidth, gridHeight, tileSize } = this,
+            width = Math.floor(gridWidth / 2),
+            height = Math.floor(gridHeight / 2);
 
         this.x = entity.x - width * tileSize;
         this.gridX = Math.round(entity.x / 16) - width;

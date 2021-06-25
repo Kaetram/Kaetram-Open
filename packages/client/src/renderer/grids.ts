@@ -14,9 +14,8 @@ export default class Grids {
     }
 
     private load(): void {
-        const { map, renderingGrid, pathingGrid, itemGrid } = this;
-
-        const { height, width, grid } = map;
+        const { map, renderingGrid, pathingGrid, itemGrid } = this,
+            { height, width, grid } = map;
 
         for (let i = 0; i < height; i++) {
             renderingGrid[i] = [];

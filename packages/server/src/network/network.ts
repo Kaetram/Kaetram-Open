@@ -151,8 +151,7 @@ class Network {
         if (!region) return;
 
         _.each(region.players, (instance: string) => {
-            if (instance !== ignoreId)
-                this.pushToPlayer(this.entities.get(instance), message);
+            if (instance !== ignoreId) this.pushToPlayer(this.entities.get(instance), message);
         });
     }
 
