@@ -19,12 +19,11 @@
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.28.0",
         "@typescript-eslint/parser": "^4.28.0",
-        "@yarnpkg/pnpify": "^3.0.0-rc.6",
+        "@yarnpkg/pnpify": "^3.0.0-rc.7",
         "eslint": "^7.29.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^3.4.0",
         "eslint-plugin-unicorn": "^33.0.1",
-        "eslint-visitor-keys": "^2.1.0",
         "postcss": "^8.3.5",
         "postcss-value-parser": "^4.1.0",
         "prettier": "^2.3.1",
