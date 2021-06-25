@@ -35,8 +35,8 @@ export default class PathFinder {
         y: number,
         incomplete: boolean
     ): number[][] {
-        const start: PosTuple = [entity.gridX, entity.gridY];
-        const end: PosTuple = [x, y];
+        const start: PosTuple = [entity.gridX, entity.gridY],
+            end: PosTuple = [x, y];
         let path;
 
         this.grid = grid;
@@ -50,9 +50,9 @@ export default class PathFinder {
     }
 
     private findIncomplete(start: PosTuple, end: PosTuple): number[][] {
-        let incomplete: number[][] = [];
-        let x;
-        let y;
+        let incomplete: number[][] = [],
+            x,
+            y;
 
         const perfect = AStar(this.blankGrid, start, end, this.mode);
 
@@ -69,8 +69,7 @@ export default class PathFinder {
     }
 
     private applyIgnore(ignored: boolean): void {
-        let x: number;
-        let y: number;
+        let x: number, y: number;
 
         _.each(this.ignores, (entity) => {
             x = entity.hasPath() ? entity.nextGridX : entity.gridX;

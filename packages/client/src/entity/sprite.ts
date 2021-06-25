@@ -71,9 +71,8 @@ export default class Sprite {
     }
 
     public async loadSprite(): Promise<void> {
-        const { sprite, id } = this;
-
-        const { default: path } = await import(`../../img/sprites/${id}.png`);
+        const { sprite, id } = this,
+            { default: path } = await import(`../../img/sprites/${id}.png`);
 
         this.filepath = path;
         this.animationData = sprite.animations;
@@ -95,9 +94,8 @@ export default class Sprite {
     }
 
     public createAnimations(): Animations {
-        const { animationData, width, height } = this;
-
-        const animations: Animations = {};
+        const { animationData, width, height } = this,
+            animations: Animations = {};
 
         for (const name in animationData) {
             if (!Object.prototype.hasOwnProperty.call(animationData, name)) continue;
@@ -122,8 +120,8 @@ export default class Sprite {
 
         if (this.hurtSprite.loaded) return;
 
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d')!;
+        const canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d')!;
         let spriteData: ImageData;
 
         canvas.width = this.image.width;

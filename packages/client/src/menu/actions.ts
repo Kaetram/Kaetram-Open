@@ -27,8 +27,8 @@ export default class Actions {
     }
 
     private load(): void {
-        const dropAccept = $('#dropAccept');
-        const dropCancel = $('#dropCancel');
+        const dropAccept = $('#dropAccept'),
+            dropCancel = $('#dropCancel');
 
         dropAccept.on('click', (event) => {
             if (this.activeClass === 'inventory') this.menu.inventory.clickAction(event);

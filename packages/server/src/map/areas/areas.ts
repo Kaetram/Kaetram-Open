@@ -4,7 +4,6 @@ import World from '../../game/world';
 import log from '../../util/log';
 
 export default class Areas {
-
     public data: any;
     public world: World;
     public areas: Area[];
@@ -31,7 +30,7 @@ export default class Areas {
     public message(type: string) {
         log.info(`Loaded ${this.areas.length} ${type} areas.`);
     }
-    
+
     public inArea(x: number, y: number): Area {
         return _.find(this.areas, (area: Area) => {
             return area.contains(x, y);
