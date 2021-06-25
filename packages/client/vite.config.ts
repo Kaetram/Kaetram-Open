@@ -40,7 +40,8 @@ export default defineConfig(({ command }) => {
                         return {
                             src: `/icons/android-chrome-${sizes}.png`,
                             sizes,
-                            type: 'image/png'
+                            type: 'image/png',
+                            purpose: 'any maskable'
                         };
                     }),
                     screenshots: [
