@@ -48,8 +48,8 @@ export default class Quest extends Page {
         this.achievementsLength = achievements.length;
 
         _.each(achievements, (achievement) => {
-            const item = this.getItem(false, achievement.id);
-            const name = this.getName(false, achievement.id);
+            const item = this.getItem(false, achievement.id),
+                name = this.getName(false, achievement.id);
 
             name.text('????????');
 
@@ -87,8 +87,8 @@ export default class Quest extends Page {
         this.questsLength = quests.length;
 
         _.each(quests, (quest) => {
-            const item = this.getItem(true, quest.id);
-            const name = this.getName(true, quest.id);
+            const item = this.getItem(true, quest.id),
+                name = this.getName(true, quest.id);
 
             name.text(quest.name);
 

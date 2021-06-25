@@ -12,4 +12,4 @@ export default {
     music,
     overlay,
     pvp
-}
+};

@@ -230,7 +230,6 @@ class Handler {
                     return this.player.updateCamera(info);
 
                 case 'achievements':
-
                     if (!info || !info.achievement) return;
 
                     if (!this.player.achievementsLoaded) return;
@@ -240,13 +239,11 @@ class Handler {
                     break;
 
                 case 'door':
-                    
                     break;
             }
-
         });
     }
-    
+
     detectLights(x: number, y: number) {
         _.each(this.map.lights, (light) => {
             if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(light)) {
