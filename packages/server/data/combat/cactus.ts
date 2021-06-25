@@ -41,7 +41,7 @@ class Cactus extends Combat {
          **/
 
         const defense = attacker.armour.getDefense(),
-            calculatedDamage = Math.floor(damage / 2 - defense * 5);
+             calculatedDamage = Math.floor(damage / 2 - defense * 5);
 
         if (calculatedDamage < 1) return;
 

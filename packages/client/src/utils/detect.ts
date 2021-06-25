@@ -18,9 +18,9 @@ export const isEdge = (): boolean => !isInternetExplorer() && !!window.StyleMedi
 export const getUserAgent = (): string => navigator.userAgent.toString();
 
 export function isTablet(): boolean {
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isAppleTablet = /ipad/i.test(userAgent);
-    const isAndroidTablet = /android/i.test(userAgent);
+    const userAgent = navigator.userAgent.toLowerCase(),
+        isAppleTablet = /ipad/i.test(userAgent),
+        isAndroidTablet = /android/i.test(userAgent);
 
     return (isAppleTablet || isAndroidTablet) && window.innerWidth >= 640;
 }

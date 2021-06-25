@@ -39,8 +39,8 @@ interface StorageData {
     map: RegionMapData;
 }
 
-const storage = window.localStorage;
-const name = 'data';
+const storage = window.localStorage,
+    name = 'data';
 
 export default class Storage {
     public data!: StorageData;

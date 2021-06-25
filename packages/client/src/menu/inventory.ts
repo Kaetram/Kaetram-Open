@@ -46,9 +46,8 @@ export default class Inventory {
 
             itemSlot.on('click', (event) => this.click(event));
 
-            const itemSlotList = $('<li></li>');
-
-            const { count, ability } = item;
+            const itemSlotList = $('<li></li>'),
+                { count, ability } = item;
             let itemCount = count.toString();
 
             if (count > 999999)
@@ -62,8 +61,8 @@ export default class Inventory {
             );
 
             if (ability > -1) {
-                const eList = Object.keys(Modules.Enchantment); // enchantment list
-                const enchantment = eList[ability];
+                const eList = Object.keys(Modules.Enchantment), // enchantment list
+                    enchantment = eList[ability];
 
                 if (enchantment) itemSlotList.find(`#itemCount${i}`).text(enchantment);
             }
@@ -84,9 +83,9 @@ export default class Inventory {
     }
 
     private click(event: JQuery.ClickEvent): void {
-        const index = event.currentTarget.id.slice(4);
-        const slot = this.container.slots[index];
-        const item = $(this.getList()[index]);
+        const index = event.currentTarget.id.slice(4),
+            slot = this.container.slots[index],
+            item = $(this.getList()[index]);
 
         this.clearSelection();
 
@@ -113,13 +112,13 @@ export default class Inventory {
     }
 
     private clickDouble(event: JQuery.DoubleClickEvent): void {
-        const index = event.currentTarget.id.slice(4);
-        const slot = this.container.slots[index];
+        const index = event.currentTarget.id.slice(4),
+            slot = this.container.slots[index];
 
         if (!slot.edible && !slot.equippable) return;
 
-        const item = $(this.getList()[index]);
-        const sSlot = item.find(`#slot${index}`);
+        const item = $(this.getList()[index]),
+            sSlot = item.find(`#slot${index}`);
 
         this.clearSelection();
 
@@ -201,8 +200,8 @@ export default class Inventory {
     }
 
     public async add(info: Slot): Promise<void> {
-        const item = $(this.getList()[info.index]);
-        const slot = this.container.slots[info.index];
+        const item = $(this.getList()[info.index]),
+            slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
 
@@ -232,16 +231,16 @@ export default class Inventory {
         item.find(`#itemCount${info.index}`).text(itemCount);
 
         if (ability! > -1) {
-            const eList = Object.keys(Modules.Enchantment); // enchantment list
-            const enchantment = eList[ability!];
+            const eList = Object.keys(Modules.Enchantment), // enchantment list
+                enchantment = eList[ability!];
 
             if (enchantment) item.find(`#itemCount${info.index}`).text(enchantment);
         }
     }
 
     public remove(info: Slot): void {
-        const item = $(this.getList()[info.index]);
-        const slot = this.container.slots[info.index];
+        const item = $(this.getList()[info.index]),
+            slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
 
@@ -263,8 +262,8 @@ export default class Inventory {
         const list = this.getList();
 
         for (const [i, element] of [...list].entries()) {
-            const item = $(element).find(`#slot${i}`);
-            const slot = this.container.slots[i];
+            const item = $(element).find(`#slot${i}`),
+                slot = this.container.slots[i];
 
             if (!slot) continue;
 

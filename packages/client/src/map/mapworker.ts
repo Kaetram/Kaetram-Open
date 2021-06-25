@@ -9,9 +9,8 @@ export interface MapData extends MapDataType {
     blocking: number[];
 }
 
-const data = mapData as MapData;
-
-const { width, height, collisions } = data;
+const data = mapData as MapData,
+    { width, height, collisions } = data;
 
 onmessage = () => {
     loadCollisionGrid();
@@ -44,8 +43,8 @@ function loadCollisionGrid() {
 }
 
 function indexToGridPosition(index: number) {
-    const x = index % width;
-    const y = Math.floor(index / width);
+    const x = index % width,
+        y = Math.floor(index / width);
 
     return { x, y };
 }

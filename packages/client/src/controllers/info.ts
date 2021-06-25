@@ -29,8 +29,8 @@ export default class InfoController {
             case Modules.Hits.Damage:
             case Modules.Hits.Stun:
             case Modules.Hits.Critical: {
-                const [damage, isTarget] = data!;
-                const dId = this.generateId(time, damage, x, y);
+                const [damage, isTarget] = data!,
+                    dId = this.generateId(time, damage, x, y);
 
                 let text = damage.toString();
 
@@ -58,14 +58,12 @@ export default class InfoController {
             case Modules.Hits.Experience:
             case Modules.Hits.Profession:
             case Modules.Hits.Poison: {
-                const [amount] = data!;
+                const [amount] = data!,
+                    id: string = this.generateId(time, amount, x, y);
 
-                const id: string = this.generateId(time, amount, x, y);
-
-                let prefix = '+';
-                let suffix = '';
-
-                let colour: Modules.Colours | null = null;
+                let prefix = '+',
+                    suffix = '',
+                    colour: Modules.Colours | null = null;
 
                 if (amount < 1 || !isInt(amount)) return;
 
@@ -103,9 +101,9 @@ export default class InfoController {
             }
 
             case Modules.Hits.LevelUp: {
-                const lId = this.generateId(time, -1, x, y);
-                const levelSplat = new Splat(lId, type, 'Level Up!', x, y, false);
-                const lColour = Modules.DamageColours.exp;
+                const lId = this.generateId(time, -1, x, y),
+                    levelSplat = new Splat(lId, type, 'Level Up!', x, y, false),
+                    lColour = Modules.DamageColours.exp;
 
                 levelSplat.setColours(lColour.fill, lColour.stroke);
 
@@ -121,8 +119,8 @@ export default class InfoController {
 
                 if (this.countdownExists()) return;
 
-                const [time] = data!;
-                const countdown = new Countdown('countdown', time);
+                const [time] = data!,
+                    countdown = new Countdown('countdown', time);
 
                 this.addInfo(countdown);
 
