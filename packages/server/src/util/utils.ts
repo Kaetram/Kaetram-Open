@@ -128,10 +128,10 @@ export default {
     /**
      * Helper function to avoid repetitive instances of comparison between
      * the unix epoch minus an event. Cleans up the code a bit.
-     * 
+     *
      * @param lastEvent The event we are subtracting from current time to obtain how much
      * time has passed.
-     * @param threshold The threshold for how much time has passed in order to return true. 
+     * @param threshold The threshold for how much time has passed in order to return true.
      */
 
     timePassed(lastEvent: number, threshold: number) {

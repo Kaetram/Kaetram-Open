@@ -127,8 +127,8 @@ export default class Map {
     public synchronize(tileData: TileData[]): void {
         // Use traditional for-loop instead of _
         for (const tile of tileData) {
-            const collisionIndex = this.collisions.indexOf(tile.index);
-            const objectIndex = this.objects.indexOf(tile.index);
+            const collisionIndex = this.collisions.indexOf(tile.index),
+                objectIndex = this.objects.indexOf(tile.index);
 
             this.data[tile.index] = tile.data;
 
@@ -223,9 +223,8 @@ export default class Map {
 
     // Load the webGL map into the memory.
     public loadWebGL(context: WebGLRenderingContext): void {
-        const map = this.formatWebGL();
-
-        const resources: Resources = {};
+        const map = this.formatWebGL(),
+            resources: Resources = {};
 
         for (let i = 0; i < this.tilesets.length; i++)
             resources[this.tilesets[i].name] = {
@@ -299,9 +298,8 @@ export default class Map {
             };
 
             for (let j = 0; j < this.data.length; j++) {
-                const tile = this.data[j];
-
-                const { data } = layerObject as { data: number[] };
+                const tile = this.data[j],
+                    { data } = layerObject as { data: number[] };
 
                 if (Array.isArray(tile))
                     if (tile[i]) data[j] = tile[i];
@@ -370,8 +368,8 @@ export default class Map {
     public indexToGridPosition(index: number): Pos {
         index -= 1;
 
-        const x = this.getX(index + 1, this.width);
-        const y = Math.floor(index / this.width);
+        const x = this.getX(index + 1, this.width),
+            y = Math.floor(index / this.width);
 
         return {
             x,
@@ -442,10 +440,10 @@ export default class Map {
     }
 
     public loadRegionData(): void {
-        const regionData = this.game.storage.getRegionData();
-        const collisions = this.game.storage.getCollisions();
-        const objects = this.game.storage.getObjects();
-        const cursorTiles = this.game.storage.getCursorTiles();
+        const regionData = this.game.storage.getRegionData(),
+            collisions = this.game.storage.getCollisions(),
+            objects = this.game.storage.getObjects(),
+            cursorTiles = this.game.storage.getCursorTiles();
 
         if (regionData.length === 0) return;
 

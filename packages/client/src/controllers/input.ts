@@ -98,10 +98,9 @@ export default class InputController {
     }
 
     public handle(inputType: Modules.InputType, data: Modules.Keys | JQuery.Event): void {
-        const { chatHandler, game } = this;
-        const { menu, socket } = game;
-
-        const player = this.getPlayer();
+        const { chatHandler, game } = this,
+            { menu, socket } = game,
+            player = this.getPlayer();
 
         switch (inputType) {
             case Modules.InputType.Key:
@@ -261,9 +260,8 @@ export default class InputController {
     }
 
     private leftClick(position: Pos | undefined, keyMovement?: boolean): void {
-        const { renderer, chatHandler, map, game } = this;
-
-        const player = this.getPlayer();
+        const { renderer, chatHandler, map, game } = this,
+            player = this.getPlayer();
 
         if (player.stunned || !position) return;
 
@@ -365,8 +363,8 @@ export default class InputController {
 
         if (!renderer || renderer.mobile || !renderer.camera) return;
 
-        const position = this.getCoords();
-        const player = this.getPlayer();
+        const position = this.getCoords(),
+            player = this.getPlayer();
 
         if (!position) return;
 
@@ -419,10 +417,9 @@ export default class InputController {
     }
 
     public setCoords(event: JQuery.MouseMoveEvent<Document>): void {
-        const { app, renderer, mouse } = this;
-
-        const offset = app.canvas.offset()!;
-        const { width, height } = renderer.background;
+        const { app, renderer, mouse } = this,
+            offset = app.canvas.offset()!,
+            { width, height } = renderer.background;
 
         this.cursorMoved = false;
 
@@ -458,28 +455,24 @@ export default class InputController {
 
         if (!renderer.camera) return;
 
-        const tileScale = renderer.tileSize * renderer.getSuperScaling();
-
-        const offsetX = mouse.x % tileScale;
-        const offsetY = mouse.y % tileScale;
-
-        const camera = game.getCamera();
-
-        const x = (mouse.x - offsetX) / tileScale + camera.gridX;
-        const y = (mouse.y - offsetY) / tileScale + camera.gridY;
+        const tileScale = renderer.tileSize * renderer.getSuperScaling(),
+            offsetX = mouse.x % tileScale,
+            offsetY = mouse.y % tileScale,
+            camera = game.getCamera(),
+            x = (mouse.x - offsetX) / tileScale + camera.gridX,
+            y = (mouse.y - offsetY) / tileScale + camera.gridY;
 
         return { x, y };
     }
 
     public getTargetData(): TargetData | undefined {
-        const { targetAnimation, renderer, game, selectedX, selectedY } = this;
-
-        const sprite = game.getSprite('target');
+        const { targetAnimation, renderer, game, selectedX, selectedY } = this,
+            sprite = game.getSprite('target');
 
         if (!sprite) return;
 
-        const frame = targetAnimation.currentFrame;
-        const superScale = renderer.getSuperScaling();
+        const frame = targetAnimation.currentFrame,
+            superScale = renderer.getSuperScaling();
 
         if (!sprite.loaded) sprite.load();
 

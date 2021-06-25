@@ -143,8 +143,8 @@ export default class Character extends Entity {
         count?: number,
         onEndCount?: () => void
     ): void {
-        const o = ['atk', 'walk', 'idle'];
-        const { orientation, currentAnimation } = this;
+        const o = ['atk', 'walk', 'idle'],
+            { orientation, currentAnimation } = this;
 
         if (currentAnimation?.name === 'death') return;
 
@@ -289,10 +289,10 @@ export default class Character extends Entity {
      * hacks previously present in BQ.
      */
     public nextStep(): void {
-        let stop = false;
-        let x: number;
-        let y: number;
-        let path: number[][] | null;
+        let stop = false,
+            x: number,
+            y: number,
+            path: number[][] | null;
 
         if (this.step % 2 === 0 && this.secondStepCallback) this.secondStepCallback();
 

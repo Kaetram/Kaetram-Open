@@ -32,10 +32,10 @@ class PirateCaptain extends Combat {
     }
 
     load() {
-        const south = { x: 251, y: 574 };
-            const west = { x: 243, y: 569 };
-            const east = { x: 258, y: 568 };
-            const north = { x: 251, y: 563 };
+        const south = { x: 251, y: 574 },
+             west = { x: 243, y: 569 },
+             east = { x: 258, y: 568 },
+             north = { x: 251, y: 563 };
 
         this.teleportLocations.push(north, south, west, east);
     }
@@ -76,8 +76,8 @@ class PirateCaptain extends Combat {
     }
 
     getRandomPosition() {
-        const random = Utils.randomInt(0, this.teleportLocations.length - 1);
-            const position = this.teleportLocations[random];
+        const random = Utils.randomInt(0, this.teleportLocations.length - 1),
+             position = this.teleportLocations[random];
 
         if (!position || random === this.lastTeleportIndex) return null;
 
