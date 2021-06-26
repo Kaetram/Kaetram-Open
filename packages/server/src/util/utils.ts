@@ -8,28 +8,29 @@ import crypto from 'crypto';
 
 import Packets from '../network/packets';
 import log from '../util/log';
+import zlib from 'zlib';
 
 export default {
-    random(range: number) {
+    random(range: number): number {
         return Math.floor(Math.random() * range);
     },
 
-    randomRange(min: number, max: number) {
+    randomRange(min: number, max: number): number {
         return min + Math.random() * (max - min);
     },
 
-    randomInt(min: number, max: number) {
+    randomInt(min: number, max: number): number {
         return min + Math.floor(Math.random() * (max - min + 1));
     },
 
-    getDistance(startX: number, startY: number, toX: number, toY: number) {
-        let x = Math.abs(startX - toX),
+    getDistance(startX: number, startY: number, toX: number, toY: number): number {
+        const x = Math.abs(startX - toX),
             y = Math.abs(startY - toY);
 
         return x > y ? x : y;
     },
 
-    positionOffset(radius: number) {
+    positionOffset(radius: number): any {
         return {
             x: this.randomInt(0, radius),
             y: this.randomInt(0, radius)
@@ -38,7 +39,7 @@ export default {
 
     connectionCounter: 0,
 
-    getConnectionId() {
+    getConnectionId(): string {
         return '1' + this.random(1000) + this.connectionCounter++;
     },
 
@@ -52,20 +53,20 @@ export default {
     instanceSeed: 0,
     socketSeed: 0,
 
-    generateRandomId() {
+    generateRandomId(): string {
         return ++this.idSeed + '' + this.randomInt(0, 25000);
     },
 
-    generateClientId() {
+    generateClientId(): string {
         return ++this.clientSeed + '' + this.randomInt(0, 25000);
     },
 
-    generateInstance() {
+    generateInstance(): string {
         return ++this.instanceSeed + '' + this.randomInt(0, 25000);
     },
 
-    validPacket(packet: number) {
-        let keys = Object.keys(Packets),
+    validPacket(packet: number): boolean {
+        const keys = Object.keys(Packets),
             filtered = [];
 
         for (let i = 0; i < keys.length; i++)
@@ -74,11 +75,11 @@ export default {
         return packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1;
     },
 
-    getCurrentEpoch() {
-        return new Date().getTime();
+    getCurrentEpoch(): number {
+        return Date.now();
     },
 
-    formatUsername(username: string) {
+    formatUsername(username: string): string {
         return username.replace(/\w\S*/g, (string) => {
             return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
         });
@@ -89,9 +90,9 @@ export default {
      * characters (primarily used for colour codes). This function will be expanded
      * if necessary in the nearby future.
      */
-    parseMessage(message: string) {
+    parseMessage(message: string): string {
         try {
-            let messageBlocks = message.split('@');
+            const messageBlocks = message.split('@');
 
             if (messageBlocks.length % 2 === 0) {
                 log.warning('Improper message block format!');
@@ -105,7 +106,7 @@ export default {
                     messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
             });
 
-            let codeCount = messageBlocks.length / 2 - 1;
+            const codeCount = messageBlocks.length / 2 - 1;
 
             for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
 
@@ -121,7 +122,7 @@ export default {
      * @param data Any form of data, string, numbers, etc.
      */
 
-    getChecksum(data: any) {
+    getChecksum(data: string): string {
         return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
     },
 
@@ -134,7 +135,31 @@ export default {
      * @param threshold The threshold for how much time has passed in order to return true. 
      */
 
-    timePassed(lastEvent: number, threshold: number) {
+    timePassed(lastEvent: number, threshold: number): boolean {
         return Date.now() - lastEvent < threshold;
+    },
+
+    /**
+     * Compresses the data and returns a base64 of it in string format.
+     * @param data Any string, generally a JSON string.
+     * @param compression Compression format, can be gzip or zlib
+     */
+
+    compressData(data: string, compression = 'gzip'): string {
+        if (!data) return null;
+    
+        return compression === 'gzip' ? 
+            zlib.gzipSync(data).toString('base64') : 
+            zlib.deflateSync(data).toString('base64');
+    },
+
+    /**
+     * We get the data size in bytes of `data`. This will be send to the
+     * client as a buffer size variable to decompress the data.
+     * @param data The data to calculate the size of, will be stringified.
+     */
+    
+    getBufferSize(data: any) {
+        return encodeURI(JSON.stringify(data)).split(/%..|./).length - 1;
     }
 };
