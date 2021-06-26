@@ -10,7 +10,6 @@ import log from '../../util/log';
 import SocketHandler from '../sockethandler';
 
 export default class SocketIO extends WebSocket {
-
     constructor(socketHandler: SocketHandler) {
         super(config.host, config.socketioPort, 'SocketIO', socketHandler);
         super.loadServer();
@@ -18,7 +17,7 @@ export default class SocketIO extends WebSocket {
         this.server = new Server(this.httpServer, {
             cors: {
                 origin: '*'
-            } 
+            }
         });
 
         this.server.on('connection', (socket: Socket) => {
@@ -27,7 +26,12 @@ export default class SocketIO extends WebSocket {
 
             log.info(`Received connection from: ${socket.conn.remoteAddress}.`);
 
-            let connection = new Connection(Utils.getConnectionId(), this.type, socket, this.socketHandler);
+            let connection = new Connection(
+                Utils.getConnectionId(),
+                this.type,
+                socket,
+                this.socketHandler
+            );
 
             socket.on('client', (data: any) => {
                 if (!this.verifyVersion(connection, data.gVer)) return;
@@ -36,5 +40,4 @@ export default class SocketIO extends WebSocket {
             });
         });
     }
-
 }

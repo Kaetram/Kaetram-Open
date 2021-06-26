@@ -118,8 +118,7 @@ class Map {
 
         this.ready = true;
 
-        if (this.world.ready)
-            return;
+        if (this.world.ready) return;
 
         this.readyInterval = setInterval(() => {
             if (this.readyCallback) this.readyCallback();
@@ -127,7 +126,6 @@ class Map {
             clearInterval(this.readyInterval);
             this.readyInterval = null;
         }, 75);
-
     }
 
     loadAreas() {
@@ -343,9 +341,8 @@ class Map {
 
     getDoorDestination(door: any) {
         for (let i in map.areas.doors)
-            if (map.areas.doors[i].id === door.destination)
-                return map.areas.doors[i];
-                
+            if (map.areas.doors[i].id === door.destination) return map.areas.doors[i];
+
         return null;
     }
 
@@ -429,8 +426,7 @@ class Map {
         console.log(this.warps);
 
         for (let i in this.warps)
-            if (this.warps[i].name === name)
-                return _.cloneDeep(this.warps[i]);
+            if (this.warps[i].name === name) return _.cloneDeep(this.warps[i]);
 
         return null;
     }
@@ -446,7 +442,7 @@ class Map {
     forEachAreas(callback: (areas: Areas, key: string) => void) {
         _.each(this.areas, (a: Areas, name: string) => {
             callback(a, name);
-        })
+        });
     }
 }
 

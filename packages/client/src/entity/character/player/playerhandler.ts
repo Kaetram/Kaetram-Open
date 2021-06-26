@@ -180,13 +180,12 @@ export default class PlayerHandler {
     }
 
     checkBounds(): void {
-        const { player, camera, game, socket, renderer } = this;
-
-        const { zoning } = game;
+        const { player, camera, game, socket, renderer } = this,
+            { zoning } = game;
         if (!zoning) return;
 
-        const x = player.gridX - camera.gridX;
-        const y = player.gridY - camera.gridY;
+        const x = player.gridX - camera.gridX,
+            y = player.gridY - camera.gridY;
 
         if (x === 0) zoning.setLeft();
         else if (y === 0) zoning.setUp();

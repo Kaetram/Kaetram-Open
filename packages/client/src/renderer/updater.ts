@@ -95,11 +95,11 @@ export default class Updater {
                             }
                         }
                 } else if (entity instanceof Projectile) {
-                    const projectile = entity;
-                    const mDistance = projectile.speed * this.timeDifferential;
-                    const dx = projectile.target.x - entity.x;
-                    const dy = projectile.target.y - entity.y;
-                    const tDistance = Math.sqrt(dx * dx + dy * dy);
+                    const projectile = entity,
+                        mDistance = projectile.speed * this.timeDifferential,
+                        dx = projectile.target.x - entity.x,
+                        dy = projectile.target.y - entity.y,
+                        tDistance = Math.sqrt(dx * dx + dy * dy);
 
                     let amount = mDistance / tDistance;
 
@@ -119,8 +119,8 @@ export default class Updater {
     private updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
-        const { time } = this.game;
-        const dt = time - entity.fadingTime;
+        const { time } = this.game,
+            dt = time - entity.fadingTime;
 
         if (dt > entity.fadingDuration) {
             entity.fading = false;
@@ -129,11 +129,11 @@ export default class Updater {
     }
 
     private updateKeyboard(): void {
-        const { player } = this.game;
-        const position = {
-            x: player.gridX,
-            y: player.gridY
-        };
+        const { player } = this.game,
+            position = {
+                x: player.gridX,
+                y: player.gridY
+            };
 
         if (player.frozen) return;
 
