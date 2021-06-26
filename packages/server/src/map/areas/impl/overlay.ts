@@ -4,7 +4,6 @@ import Areas from '../areas';
 import World from '../../../game/world';
 
 export default class Overlay extends Areas {
-
     constructor(data: any, world?: World) {
         super(data, world);
 
@@ -17,5 +16,4 @@ export default class Overlay extends Areas {
 
         super.message('camera');
     }
-
 }

@@ -127,12 +127,12 @@ export default class Game {
     }
 
     private loadRenderer(): void {
-        const background = document.querySelector<HTMLCanvasElement>('#background')!;
-        const foreground = document.querySelector<HTMLCanvasElement>('#foreground')!;
-        const overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
-        const textCanvas = document.querySelector<HTMLCanvasElement>('#textCanvas')!;
-        const entities = document.querySelector<HTMLCanvasElement>('#entities')!;
-        const cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
+        const background = document.querySelector<HTMLCanvasElement>('#background')!,
+            foreground = document.querySelector<HTMLCanvasElement>('#foreground')!,
+            overlay = document.querySelector<HTMLCanvasElement>('#overlay')!,
+            textCanvas = document.querySelector<HTMLCanvasElement>('#textCanvas')!,
+            entities = document.querySelector<HTMLCanvasElement>('#entities')!,
+            cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
 
         this.app.sendStatus('Initializing render engine');
 
@@ -144,15 +144,11 @@ export default class Game {
     private loadControllers(): void {
         const { app } = this;
 
-        const hasWorker = app.hasWorker();
-
         app.sendStatus('Loading local storage');
 
         this.setStorage(new Storage(app));
 
-        app.sendStatus(hasWorker ? 'Loading maps - asynchronous' : null);
-
-        if (hasWorker) this.loadMap();
+        this.loadMap();
 
         app.sendStatus('Initializing network socket');
 
@@ -176,8 +172,6 @@ export default class Game {
         this.setMenu(new MenuController(this));
 
         this.loadStorage();
-
-        if (!hasWorker) app.ready();
     }
 
     public loadMap(): void {
@@ -265,8 +259,8 @@ export default class Game {
     }
 
     private loadStorage(): void {
-        const loginName = $('#loginNameInput');
-        const loginPassword = $('#loginPasswordInput');
+        const loginName = $('#loginNameInput'),
+            loginPassword = $('#loginPasswordInput');
 
         loginName.prop('readonly', false);
         loginPassword.prop('readonly', false);
@@ -287,9 +281,8 @@ export default class Game {
         ignores: Character[],
         isObject?: boolean
     ): number[][] {
-        const { entities, map, pathfinder } = this;
-
-        const grid = entities.grids.pathingGrid;
+        const { entities, map, pathfinder } = this,
+            grid = entities.grids.pathingGrid;
         let path: number[][] = [];
 
         if (map.isColliding(x, y) && !map.isObject(x, y)) return path;

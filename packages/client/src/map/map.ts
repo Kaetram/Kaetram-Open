@@ -1,10 +1,11 @@
 import glTiled from 'gl-tiled';
 import _ from 'lodash';
 
-import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
 import { isInt } from '../utils/util';
+import MapWorker from './mapworker?worker';
 
+import type rawMapData from '../../data/maps/map.json';
 import type Game from '../game';
 import type { GLTilemap, ILayer, ITilemap, ITileset, ITileAnimationFrame } from 'gl-tiled';
 import type { MapData } from './mapworker';
@@ -20,10 +21,12 @@ interface TilesetImageElement extends HTMLImageElement {
     index: number;
 }
 
-export type MapHigh = typeof mapData.high;
-export type MapTileset = typeof mapData.tilesets[0];
+type RawMapData = typeof rawMapData;
+
+export type MapHigh = RawMapData['high'];
+export type MapTileset = RawMapData['tilesets'][0];
 export type MapTilesets = MapTileset[];
-export type MapDepth = typeof mapData.depth;
+export type MapDepth = RawMapData['depth'];
 
 export type Cursors =
     | 'hand'
@@ -58,7 +61,6 @@ interface Resources {
 }
 
 export default class Map {
-    private supportsWorker;
     private renderer;
 
     public data: number[] = [];
@@ -90,7 +92,6 @@ export default class Map {
     private depth!: MapDepth;
 
     public constructor(private game: Game) {
-        this.supportsWorker = game.app.hasWorker();
         this.renderer = game.renderer;
 
         this.load();
@@ -108,34 +109,26 @@ export default class Map {
     }
 
     private load(): void {
-        if (this.supportsWorker) {
-            log.debug('Parsing map with Web Workers...');
+        log.debug('Parsing map with Web Workers...');
 
-            const worker = new Worker(new URL('./mapworker.ts', import.meta.url));
+        const worker = new MapWorker();
 
-            worker.postMessage(1);
+        worker.postMessage(1);
 
-            worker.addEventListener('message', (event) => {
-                const map: MapData = event.data;
+        worker.addEventListener('message', (event) => {
+            const map: MapData = event.data;
 
-                this.parseMap(map);
-                this.grid = map.grid;
-                this.mapLoaded = true;
-            });
-        } else {
-            log.debug('Parsing map with JSON...');
-
-            this.parseMap(mapData as MapData);
-            this.loadCollisions();
+            this.parseMap(map);
+            this.grid = map.grid;
             this.mapLoaded = true;
-        }
+        });
     }
 
     public synchronize(tileData: TileData[]): void {
         // Use traditional for-loop instead of _
         for (const tile of tileData) {
-            const collisionIndex = this.collisions.indexOf(tile.index);
-            const objectIndex = this.objects.indexOf(tile.index);
+            const collisionIndex = this.collisions.indexOf(tile.index),
+                objectIndex = this.objects.indexOf(tile.index);
 
             this.data[tile.index] = tile.data;
 
@@ -189,7 +182,7 @@ export default class Map {
         tileset.index = this.rawTilesets.indexOf(rawTileset);
         tileset.name = rawTileset.imageName;
 
-        const { default: path } = await import(`../../img/tilesets/${tileset.name}`);
+        const { default: path } = await import(`../../img/tilesets/${rawTileset.name}.png`);
 
         tileset.crossOrigin = 'Anonymous';
         tileset.path = path;
@@ -230,9 +223,8 @@ export default class Map {
 
     // Load the webGL map into the memory.
     public loadWebGL(context: WebGLRenderingContext): void {
-        const map = this.formatWebGL();
-
-        const resources: Resources = {};
+        const map = this.formatWebGL(),
+            resources: Resources = {};
 
         for (let i = 0; i < this.tilesets.length; i++)
             resources[this.tilesets[i].name] = {
@@ -306,9 +298,8 @@ export default class Map {
             };
 
             for (let j = 0; j < this.data.length; j++) {
-                const tile = this.data[j];
-
-                const { data } = layerObject as { data: number[] };
+                const tile = this.data[j],
+                    { data } = layerObject as { data: number[] };
 
                 if (Array.isArray(tile))
                     if (tile[i]) data[j] = tile[i];
@@ -362,26 +353,6 @@ export default class Map {
         this.loadWebGL(this.renderer.backContext as WebGLRenderingContext);
     }
 
-    private loadCollisions(): void {
-        this.grid = [];
-
-        for (let i = 0; i < this.height; i++) {
-            this.grid[i] = [];
-            for (let j = 0; j < this.width; j++) this.grid[i][j] = 0;
-        }
-
-        _.each(this.collisions, (index) => {
-            const position = this.indexToGridPosition(index + 1);
-            this.grid[position.y][position.x] = 1;
-        });
-
-        _.each(this.blocking, (index) => {
-            const position = this.indexToGridPosition(index + 1);
-
-            if (this.grid[position.y]) this.grid[position.y][position.x] = 1;
-        });
-    }
-
     public updateCollisions(): void {
         _.each(this.collisions, (index) => {
             const position = this.indexToGridPosition(index + 1);
@@ -397,8 +368,8 @@ export default class Map {
     public indexToGridPosition(index: number): Pos {
         index -= 1;
 
-        const x = this.getX(index + 1, this.width);
-        const y = Math.floor(index / this.width);
+        const x = this.getX(index + 1, this.width),
+            y = Math.floor(index / this.width);
 
         return {
             x,
@@ -469,10 +440,10 @@ export default class Map {
     }
 
     public loadRegionData(): void {
-        const regionData = this.game.storage.getRegionData();
-        const collisions = this.game.storage.getCollisions();
-        const objects = this.game.storage.getObjects();
-        const cursorTiles = this.game.storage.getCursorTiles();
+        const regionData = this.game.storage.getRegionData(),
+            collisions = this.game.storage.getCollisions(),
+            objects = this.game.storage.getObjects(),
+            cursorTiles = this.game.storage.getCursorTiles();
 
         if (regionData.length === 0) return;
 
