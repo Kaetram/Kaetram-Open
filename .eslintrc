@@ -20,7 +20,6 @@
         "prettier/prettier": "warn",
 
         "curly": ["warn", "multi"],
-        "one-var": ["warn", "never"],
         "yoda": "warn",
         "array-callback-return": "error",
         "default-case-last": "error",

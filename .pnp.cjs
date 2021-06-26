@@ -3117,12 +3117,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash", "npm:4.14.170"],
             ["@types/mini-css-extract-plugin", "npm:1.4.3"],
             ["@types/node", "npm:15.12.4"],
+            ["@types/pako", "npm:1.0.1"],
             ["@types/workbox-webpack-plugin", "npm:5.1.7"],
             ["@typescript-eslint/eslint-plugin", "virtual:678c8e8916a43d8cbe10142293ff031601435843cf0ef5ec06538d0d99fcdf569f32e96c825f984291b2eab0a0e5d86b16a508c6741bc594417a0c71fa5b2e90#npm:4.27.0"],
             ["@typescript-eslint/parser", "virtual:678c8e8916a43d8cbe10142293ff031601435843cf0ef5ec06538d0d99fcdf569f32e96c825f984291b2eab0a0e5d86b16a508c6741bc594417a0c71fa5b2e90#npm:4.27.0"],
             ["@vue/preload-webpack-plugin", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:2.0.0"],
             ["babel-core", "npm:6.26.3"],
             ["babel-loader", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:8.2.2"],
+            ["browserify-zlib", "npm:0.2.0"],
             ["clean-webpack-plugin", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:4.0.0-alpha.0"],
             ["copy-webpack-plugin", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:9.0.0"],
             ["cross-env", "npm:7.0.3"],
@@ -3141,6 +3143,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["kaetram", "workspace:."],
             ["lodash", "npm:4.17.21"],
             ["mini-css-extract-plugin", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:1.6.0"],
+            ["pako", "npm:2.0.3"],
             ["postcss", "npm:8.3.5"],
             ["postcss-html", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:0.36.0"],
             ["postcss-loader", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:6.1.0"],
@@ -3841,6 +3844,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-normalize-package-data-npm-2.4.0-ed928aaaa8-fd22ba86a1.zip/node_modules/@types/normalize-package-data/",
           "packageDependencies": [
             ["@types/normalize-package-data", "npm:2.4.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/pako", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/@types-pako-npm-1.0.1-9e979aac42-998b8be64d.zip/node_modules/@types/pako/",
+          "packageDependencies": [
+            ["@types/pako", "npm:1.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -5547,6 +5559,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["braces", "npm:3.0.2"],
             ["fill-range", "npm:7.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["browserify-zlib", [
+        ["npm:0.2.0", {
+          "packageLocation": "./.yarn/cache/browserify-zlib-npm-0.2.0-eab4087284-5cd9d6a665.zip/node_modules/browserify-zlib/",
+          "packageDependencies": [
+            ["browserify-zlib", "npm:0.2.0"],
+            ["pako", "npm:1.0.11"]
           ],
           "linkType": "HARD",
         }]
@@ -11548,6 +11570,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/pako-npm-1.0.11-b8f1b69d3e-1be2bfa1f8.zip/node_modules/pako/",
           "packageDependencies": [
             ["pako", "npm:1.0.11"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.0.3", {
+          "packageLocation": "./.yarn/cache/pako-npm-2.0.3-92007e2210-7008da1379.zip/node_modules/pako/",
+          "packageDependencies": [
+            ["pako", "npm:2.0.3"]
           ],
           "linkType": "HARD",
         }]

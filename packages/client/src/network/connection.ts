@@ -1014,7 +1014,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onRegion((opcode, info: any) => {
+        this.messages.onRegion((opcode: number, bufferSize: number, info: any) => {
             switch (opcode) {
                 case Packets.RegionOpcode.Render:
                     this.map.synchronize(info);
