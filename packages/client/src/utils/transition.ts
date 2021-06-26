@@ -38,8 +38,8 @@ export default class Transition {
 
             if (elapsed > this.duration) elapsed = this.duration;
 
-            const diff = this.endValue - this.startValue;
-            const interval = Math.round(this.startValue + (diff / this.duration) * elapsed);
+            const diff = this.endValue - this.startValue,
+                interval = Math.round(this.startValue + (diff / this.duration) * elapsed);
 
             if (elapsed === this.duration || interval === this.endValue) {
                 this.stop();

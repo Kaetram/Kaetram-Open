@@ -6,6 +6,6 @@
         "noImplicitAny": true,
         "strictNullChecks": true,
         "noImplicitOverride": true,
-        "types": ["@kaetram/common"]
+        "types": ["@kaetram/common", "vite/client"]
     }
 }

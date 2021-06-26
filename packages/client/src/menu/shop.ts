@@ -79,9 +79,9 @@ export default class Shop {
     }
 
     public async move(info: ShopMoveInfo): Promise<void> {
-        const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`);
-        const slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`);
-        const slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
+        const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
+            slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`),
+            slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
 
         this.sellSlot.css({
             backgroundImage: slotImage.css('background-image'),
@@ -144,19 +144,19 @@ export default class Shop {
 
     private async load(): Promise<void> {
         for (let i = 0; i < this.container.size; i++) {
-            const shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`);
-            const string = this.data.strings[i];
-            const name = this.data.names[i];
-            const count = this.data.counts[i];
-            const price = this.data.prices[i];
+            const shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`),
+                string = this.data.strings[i],
+                name = this.data.names[i],
+                count = this.data.counts[i],
+                price = this.data.prices[i];
 
             if (!string || !name || !count) continue;
 
-            const itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`);
-            const itemCount = $(`<div id="shopItemCount${i}" class="shopItemCount"></div>`);
-            const itemPrice = $(`<div id="shopItemPrice${i}" class="shopItemPrice"></div>`);
-            const itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`);
-            const itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
+            const itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`),
+                itemCount = $(`<div id="shopItemCount${i}" class="shopItemCount"></div>`),
+                itemPrice = $(`<div id="shopItemPrice${i}" class="shopItemPrice"></div>`),
+                itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`),
+                itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
 
             itemImage.css('background-image', await this.container.getImageFormat(string));
             itemCount.html(count.toString());
@@ -181,12 +181,12 @@ export default class Shop {
             this.getShopList().append(listItem);
         }
 
-        const inventoryItems = this.menu.bank.getInventoryList();
-        const inventorySize = this.menu.inventory.getSize();
+        const inventoryItems = this.menu.bank.getInventoryList(),
+            inventorySize = this.menu.inventory.getSize();
 
         for (let j = 0; j < inventorySize; j++) {
-            const item = $(inventoryItems[j]).clone();
-            const slot = item.find(`#bankInventorySlot${j}`);
+            const item = $(inventoryItems[j]).clone(),
+                slot = item.find(`#bankInventorySlot${j}`);
 
             slot.attr('id', `shopInventorySlot${j}`);
 
