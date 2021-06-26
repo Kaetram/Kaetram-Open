@@ -2,6 +2,8 @@ import _ from 'lodash';
 
 import Packets from '@kaetram/common/src/packets';
 
+import Pako from 'pako';
+
 import type App from '../app';
 
 /** @todo Change once handlers are typed */
@@ -408,10 +410,18 @@ export default class Messages {
 
     private receiveRegion(data: never[]): void {
         const opcode = data.shift()!;
-        const info = data.shift()!;
-        const force = data.shift()!;
+        const bufferSize = data.shift()!;
+        const info: string = data.shift()!;
 
-        this.regionCallback?.(opcode, info, force);
+        const bufferData = atob(info)
+            .split('')
+            .map((x) => {
+                return x.charCodeAt(0);
+            });
+
+        const inflatedString: string = Pako.inflate(new Uint8Array(bufferData), { to: 'string' });
+
+        this.regionCallback?.(opcode, bufferSize, JSON.parse(inflatedString) as never);
     }
 
     private receiveOverlay(data: never[]): void {
