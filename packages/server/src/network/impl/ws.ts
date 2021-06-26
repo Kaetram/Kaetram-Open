@@ -10,7 +10,6 @@ import log from '../../util/log';
 import SocketHandler from '../sockethandler';
 
 export default class WS extends WebSocket {
-
     constructor(socketHandler: SocketHandler) {
         super(config.host, config.websocketPort, 'WebSocket', socketHandler);
 
@@ -26,10 +25,14 @@ export default class WS extends WebSocket {
 
             // TODO - Handle client version....
 
-            let connection = new Connection(Utils.getConnectionId(), this.type, socket, this.socketHandler);
+            let connection = new Connection(
+                Utils.getConnectionId(),
+                this.type,
+                socket,
+                this.socketHandler
+            );
 
             if (this.addCallback) this.addCallback(connection);
         });
     }
-
 }

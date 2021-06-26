@@ -60,12 +60,12 @@ interface RendererLighting extends RendererLight, Lighting {
     light: RendererLamp;
 }
 
-const HORIZONTAL_FLIP_FLAG = 0x80000000;
-const VERTICAL_FLIP_FLAG = 0x40000000;
-const DIAGONAL_FLIP_FLAG = 0x20000000;
-const ROT_90_DEG = Math.PI / 2;
-const ROT_NEG_90_DEG = ROT_90_DEG * -1;
-const ROT_180_DEG = Math.PI;
+const HORIZONTAL_FLIP_FLAG = 0x80000000,
+    VERTICAL_FLIP_FLAG = 0x40000000,
+    DIAGONAL_FLIP_FLAG = 0x20000000,
+    ROT_90_DEG = Math.PI / 2,
+    ROT_NEG_90_DEG = ROT_90_DEG * -1,
+    ROT_180_DEG = Math.PI;
 
 export default class Renderer {
     // canvas = document.querySelector<HTMLCanvasElement>('#canvas')!;
@@ -497,13 +497,13 @@ export default class Renderer {
 
         if (!sprite || !animation || !entity.isVisible()) return;
 
-        const frame = animation.currentFrame;
-        const x = frame.x * this.superScaling;
-        const y = frame.y * this.superScaling;
-        const dx = entity.x * this.superScaling;
-        const dy = entity.y * this.superScaling;
-        const flipX = dx + this.tileSize * this.superScaling;
-        const flipY = dy + data.height;
+        const frame = animation.currentFrame,
+            x = frame.x * this.superScaling,
+            y = frame.y * this.superScaling,
+            dx = entity.x * this.superScaling,
+            dy = entity.y * this.superScaling,
+            flipX = dx + this.tileSize * this.superScaling,
+            flipY = dy + data.height;
 
         this.context.save();
 
@@ -596,17 +596,17 @@ export default class Renderer {
                 if (weapon) {
                     if (!weapon.loaded) weapon.load();
 
-                    const animation = entity.currentAnimation!;
-                    const weaponAnimationData = weapon.animationData[animation.name];
-                    const frame = animation.currentFrame;
-                    const index =
-                        frame.index < weaponAnimationData.length
-                            ? frame.index
-                            : frame.index % weaponAnimationData.length;
-                    const weaponX = weapon.width * index * this.superScaling;
-                    const weaponY = weapon.height * animation.row * this.superScaling;
-                    const weaponWidth = weapon.width * this.superScaling;
-                    const weaponHeight = weapon.height * this.superScaling;
+                    const animation = entity.currentAnimation!,
+                        weaponAnimationData = weapon.animationData[animation.name],
+                        frame = animation.currentFrame,
+                        index =
+                            frame.index < weaponAnimationData.length
+                                ? frame.index
+                                : frame.index % weaponAnimationData.length,
+                        weaponX = weapon.width * index * this.superScaling,
+                        weaponY = weapon.height * animation.row * this.superScaling,
+                        weaponWidth = weapon.width * this.superScaling,
+                        weaponHeight = weapon.height * this.superScaling;
 
                     this.context.drawImage(
                         weapon.image,
@@ -628,14 +628,14 @@ export default class Renderer {
                 if (sprite) {
                     if (!sprite.loaded) sprite.load();
 
-                    const animation = entity.getEffectAnimation()!;
-                    const { index } = animation.currentFrame;
-                    const x = sprite.width * index * this.superScaling;
-                    const y = sprite.height * animation.row * this.superScaling;
-                    const width = sprite.width * this.superScaling;
-                    const height = sprite.height * this.superScaling;
-                    const offsetX = sprite.offsetX * this.superScaling;
-                    const offsetY = sprite.offsetY * this.superScaling;
+                    const animation = entity.getEffectAnimation()!,
+                        { index } = animation.currentFrame,
+                        x = sprite.width * index * this.superScaling,
+                        y = sprite.height * animation.row * this.superScaling,
+                        width = sprite.width * this.superScaling,
+                        height = sprite.height * this.superScaling,
+                        offsetX = sprite.offsetX * this.superScaling,
+                        offsetY = sprite.offsetY * this.superScaling;
 
                     this.context.drawImage(
                         sprite.image,
@@ -655,12 +655,12 @@ export default class Renderer {
         }
 
         if (entity instanceof Item) {
-            const { sparksAnimation } = this.entities.sprites;
-            const sparksFrame = sparksAnimation.currentFrame;
-            const sparksX = this.sparksSprite.width * sparksFrame.index * this.superScaling;
-            const sparksY = this.sparksSprite.height * sparksAnimation.row * this.superScaling;
-            const sparksWidth = this.sparksSprite.width * this.superScaling;
-            const sparksHeight = this.sparksSprite.height * this.superScaling;
+            const { sparksAnimation } = this.entities.sprites,
+                sparksFrame = sparksAnimation.currentFrame,
+                sparksX = this.sparksSprite.width * sparksFrame.index * this.superScaling,
+                sparksY = this.sparksSprite.height * sparksAnimation.row * this.superScaling,
+                sparksWidth = this.sparksSprite.width * this.superScaling,
+                sparksHeight = this.sparksSprite.height * this.superScaling;
 
             this.context.drawImage(
                 this.sparksSprite.image,
@@ -679,13 +679,13 @@ export default class Renderer {
     private drawHealth(entity: Character): void {
         if (!entity.hitPoints || entity.hitPoints < 0 || !entity.healthBarVisible) return;
 
-        const barLength = 16;
-        const healthX = entity.x * this.superScaling - barLength / 2 + 8;
-        const healthY = (entity.y - entity.sprite.height / 4) * this.superScaling;
-        const healthWidth = Math.round(
-            (entity.hitPoints / entity.maxHitPoints) * barLength * this.superScaling
-        );
-        const healthHeight = 2 * this.superScaling;
+        const barLength = 16,
+            healthX = entity.x * this.superScaling - barLength / 2 + 8,
+            healthY = (entity.y - entity.sprite.height / 4) * this.superScaling,
+            healthWidth = Math.round(
+                (entity.hitPoints / entity.maxHitPoints) * barLength * this.superScaling
+            ),
+            healthHeight = 2 * this.superScaling;
 
         this.textContext.save();
         this.setCameraView(this.textContext);
@@ -714,8 +714,8 @@ export default class Renderer {
         this.textContext.font = '11px AdvoCut';
 
         if (!entity.hasCounter) {
-            const x = entity.x + 8;
-            const y = entity.y - Math.floor(entity.sprite.height / 3);
+            const x = entity.x + 8,
+                y = entity.y - Math.floor(entity.sprite.height / 3);
 
             if (this.drawNames && entity instanceof Character)
                 this.drawText(
@@ -759,8 +759,8 @@ export default class Renderer {
 
     private drawLighting(lighting: RendererLighting): void {
         if (lighting.relative) {
-            const lightX = (lighting.light.origX - this.camera.x / 16) * this.lightTileSize;
-            const lightY = (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
+            const lightX = (lighting.light.origX - this.camera.x / 16) * this.lightTileSize,
+                lightY = (lighting.light.origY - this.camera.y / 16) * this.lightTileSize;
 
             lighting.light.position = new Vec2(lightX, lightY);
             lighting.compute(this.overlay.width, this.overlay.height);
@@ -778,8 +778,8 @@ export default class Renderer {
 
         if (tablet || mobile || this.hasRenderedMouse() || input.cursorMoved) return;
 
-        const { cursor, mouse } = input;
-        const scaling = 14 * superScaling;
+        const { cursor, mouse } = input,
+            scaling = 14 * superScaling;
 
         this.clearScreen(cursorContext);
         cursorContext.save();
@@ -809,8 +809,8 @@ export default class Renderer {
     private calculateFPS(): void {
         if (!this.debugging) return;
 
-        const currentTime = new Date();
-        const timeDiff = currentTime.getTime() - this.time.getTime();
+        const currentTime = new Date(),
+            timeDiff = currentTime.getTime() - this.time.getTime();
 
         if (timeDiff >= 1000) {
             this.realFPS = this.frameCount;
@@ -944,8 +944,8 @@ export default class Renderer {
          */
 
         if (!(originalTileId in this.tiles)) {
-            const setWidth = tileset.width / this.tileSize;
-            const relativeTileId = tileId - tileset.firstGID + 1;
+            const setWidth = tileset.width / this.tileSize,
+                relativeTileId = tileId - tileset.firstGID + 1;
 
             this.tiles[originalTileId] = {
                 relativeTileId,
@@ -979,8 +979,7 @@ export default class Renderer {
         cell: RendererCell
     ): void {
         // const scale = this.superScaling;
-        let dx!: number;
-        let dy!: number; // this.superScaling * 1.5;
+        let dx!: number, dy!: number; // this.superScaling * 1.5;
 
         if (!context) return;
 
@@ -1040,8 +1039,8 @@ export default class Renderer {
         strokeColour?: string,
         fontSize?: number
     ): void {
-        const strokeSize = 3;
-        const context = this.textContext;
+        const strokeSize = 3,
+            context = this.textContext;
 
         if (text && x && y) {
             context.save();
@@ -1076,8 +1075,8 @@ export default class Renderer {
              */
 
             if (!(index in this.animatedTiles)) {
-                const tile = new Tile(id, index, this.map);
-                const position = this.map.indexToGridPosition(tile.index);
+                const tile = new Tile(id, index, this.map),
+                    position = this.map.indexToGridPosition(tile.index);
 
                 tile.setPosition(position);
 
@@ -1233,8 +1232,8 @@ export default class Renderer {
     }
 
     private transition(duration: number, forward: boolean, callback: () => void): void {
-        const textCanvas = $('#textCanvas');
-        const hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
+        const textCanvas = $('#textCanvas'),
+            hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
         this.transitioning = true;
 
         this.transitionInterval = window.setInterval(() => {
@@ -1384,12 +1383,12 @@ export default class Renderer {
         relative: boolean,
         objects?: Pos[]
     ): void {
-        const light = new Lamp(this.getLightData(x, y, distance, diffuse, color)) as RendererLamp;
-        const lighting = new Lighting({
-            light,
-            objects: this.parseObjects(objects!)
-            // diffuse: light.diffuse
-        }) as RendererLighting;
+        const light = new Lamp(this.getLightData(x, y, distance, diffuse, color)) as RendererLamp,
+            lighting = new Lighting({
+                light,
+                objects: this.parseObjects(objects!)
+                // diffuse: light.diffuse
+            }) as RendererLighting;
 
         light.origX = light.position.x;
         light.origY = light.position.y;
@@ -1506,24 +1505,22 @@ export default class Renderer {
      */
 
     public getTargetBounds(tx: number, ty: number): Bounds {
-        const sx = tx || this.input.selectedX;
-        const sy = ty || this.input.selectedY;
-
-        const x = (sx * this.tileSize - this.camera.x) * this.superScaling;
-        const y = (sy * this.tileSize - this.camera.y) * this.superScaling;
-        const width = this.tileSize * this.superScaling;
-        const height = this.tileSize * this.superScaling;
-
-        const bounds: Bounds = {
-            x,
-            y,
-            width,
-            height,
-            left: x,
-            right: x + width,
-            top: y,
-            bottom: y + height
-        };
+        const sx = tx || this.input.selectedX,
+            sy = ty || this.input.selectedY,
+            x = (sx * this.tileSize - this.camera.x) * this.superScaling,
+            y = (sy * this.tileSize - this.camera.y) * this.superScaling,
+            width = this.tileSize * this.superScaling,
+            height = this.tileSize * this.superScaling,
+            bounds: Bounds = {
+                x,
+                y,
+                width,
+                height,
+                left: x,
+                right: x + width,
+                top: y,
+                bottom: y + height
+            };
 
         return bounds;
     }

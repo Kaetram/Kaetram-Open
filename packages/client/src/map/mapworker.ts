@@ -9,7 +9,8 @@ export interface MapData extends MapDataType {
     blocking: number[];
 }
 
-const data = mapData as MapData;
+const data = mapData as MapData,
+    { width, height, collisions } = data;
 
 onmessage = () => {
     loadCollisionGrid();
@@ -18,38 +19,32 @@ onmessage = () => {
 };
 
 function loadCollisionGrid() {
-    data.grid = [];
+    const grid: number[][] = [];
 
-    const { width, height, grid, collisions } = data;
+    for (let y = 0; y < height; y++) {
+        grid[y] = [];
 
-    for (let i = 0; i < height; i++) {
-        grid[i] = [];
-
-        for (let j = 0; j < width; j++) grid[i][j] = 0;
+        for (let x = 0; x < width; x++) grid[y][x] = 0;
     }
 
     for (const index of collisions) {
-        const { x, y } = indexToGridPosition(index + 1);
+        const { x, y } = indexToGridPosition(index);
 
         grid[y][x] = 1;
     }
 
-    // for (const tileIndex of data.blocking) {
-    //     const { x, y } = indexToGridPosition(tileIndex + 1);
+    // for (const tileIndex of blocking) {
+    //     const { x, y } = indexToGridPosition(tileIndex);
 
     //     data.grid[y][x] = 1;
     // }
+
+    data.grid = grid;
 }
 
 function indexToGridPosition(index: number) {
-    const x = getX(index, data.width);
-    const y = Math.floor((index - 1) / data.width);
+    const x = index % width,
+        y = Math.floor(index / width);
 
     return { x, y };
-}
-
-function getX(index: number, width: number) {
-    if (index === 0) return 0;
-
-    return index % width === 0 ? width - 1 : (index % width) - 1;
 }

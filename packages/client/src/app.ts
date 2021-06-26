@@ -29,7 +29,7 @@ export default class App {
         port: parseInt(process.env.PORT!),
         version: process.env.VERSION!,
         ssl: !!process.env.SSL,
-        debug: process.env.NODE_ENV === 'development',
+        debug: import.meta.env.DEV,
         worldSwitch: !!process.env.WORLD_SWITCH
     };
 
@@ -185,9 +185,8 @@ export default class App {
         $(document).on('keydown', ({ which }) => which !== Modules.Keys.Enter);
 
         $(document).on('keydown', ({ which, keyCode }) => {
-            const key = which || keyCode || 0;
-
-            const { game } = this;
+            const key = which || keyCode || 0,
+                { game } = this;
 
             if (!game) return;
 
@@ -198,9 +197,8 @@ export default class App {
         });
 
         $(document).on('keyup', ({ which }) => {
-            const { game } = this;
-
-            const key = which;
+            const { game } = this,
+                key = which;
 
             if (!game || !game.started) return;
 
@@ -236,7 +234,7 @@ export default class App {
             this.updateRange($(input))
         );
 
-        if (!this.config.debug || location.hostname !== 'localhost')
+        if (!this.config.debug && location.hostname !== 'localhost')
             $.ajax({
                 url: 'https://c6.patreon.com/becomePatronButton.bundle.js',
                 dataType: 'script',
@@ -317,9 +315,8 @@ export default class App {
     }
 
     private displayScroll(content: string): void {
-        const { parchment, game, body, helpButton } = this;
-
-        const state = parchment.attr('class');
+        const { parchment, game, body, helpButton } = this,
+            state = parchment.attr('class');
 
         if (game.started) {
             parchment.removeClass().addClass(content);
@@ -340,8 +337,8 @@ export default class App {
 
         switch (activeForm) {
             case 'loadCharacter': {
-                const nameInput: JQuery<HTMLInputElement> = $('#loginNameInput');
-                const passwordInput: JQuery<HTMLInputElement> = $('#loginPasswordInput');
+                const nameInput: JQuery<HTMLInputElement> = $('#loginNameInput'),
+                    passwordInput: JQuery<HTMLInputElement> = $('#loginPasswordInput');
 
                 if (this.loginFields.length === 0) this.loginFields = [nameInput, passwordInput];
 
@@ -359,12 +356,12 @@ export default class App {
             }
 
             case 'createCharacter': {
-                const characterName: JQuery<HTMLInputElement> = $('#registerNameInput');
-                const registerPassword: JQuery<HTMLInputElement> = $('#registerPasswordInput');
-                const registerPasswordConfirmation: JQuery<HTMLInputElement> = $(
-                    '#registerPasswordConfirmationInput'
-                );
-                const email: JQuery<HTMLInputElement> = $('#registerEmailInput');
+                const characterName: JQuery<HTMLInputElement> = $('#registerNameInput'),
+                    registerPassword: JQuery<HTMLInputElement> = $('#registerPasswordInput'),
+                    registerPasswordConfirmation: JQuery<HTMLInputElement> = $(
+                        '#registerPasswordConfirmationInput'
+                    ),
+                    email: JQuery<HTMLInputElement> = $('#registerEmailInput');
 
                 if (this.registerFields.length === 0)
                     this.registerFields = [
@@ -445,8 +442,8 @@ export default class App {
     }
 
     public cleanErrors(): void {
-        const activeForm = this.getActiveForm();
-        const fields = activeForm === 'loadCharacter' ? this.loginFields : this.registerFields;
+        const activeForm = this.getActiveForm(),
+            fields = activeForm === 'loadCharacter' ? this.loginFields : this.registerFields;
 
         for (let i = 0; i < fields.length; i++) fields[i].removeClass('field-error');
 
@@ -470,17 +467,13 @@ export default class App {
         this.game = game;
     }
 
-    public hasWorker(): boolean {
-        return !!window.Worker;
-    }
-
     public getScaleFactor(): number {
         return 3;
     }
 
     public getUIScale(): number {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        const width = window.innerWidth,
+            height = window.innerHeight;
 
         return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
     }
@@ -525,10 +518,9 @@ export default class App {
     }
 
     public updateRange(obj: JQuery<HTMLInputElement>): void {
-        const min = parseInt(obj.attr('min')!);
-        const max = parseInt(obj.attr('max')!);
-
-        const val = (parseInt(obj.val() as string) - min) / (max - min);
+        const min = parseInt(obj.attr('min')!),
+            max = parseInt(obj.attr('max')!),
+            val = (parseInt(obj.val() as string) - min) / (max - min);
 
         obj.css({
             backgroundImage: `-webkit-gradient(linear, left top, right top, color-stop(${val}, #4d4d4d), color-stop(${val}, #c5c5c5))`

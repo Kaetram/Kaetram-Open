@@ -85,9 +85,8 @@ class Container {
 
                 for (let i = 0; i < this.slots.length; i++) {
                     if (this.slots[i].id === id) {
-                        let rSlot = this.slots[i];
-
-                        let available = maxStackSize - rSlot.count;
+                        let rSlot = this.slots[i],
+                            available = maxStackSize - rSlot.count;
 
                         if (available >= remainingItems) {
                             rSlot.increment(remainingItems);

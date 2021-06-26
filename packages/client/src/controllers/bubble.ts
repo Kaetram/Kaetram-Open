@@ -28,9 +28,8 @@ export default class BubbleController {
         isObject?: boolean,
         info?: Entity
     ): void {
-        const { bubbles, game, container } = this;
-
-        const bubble = bubbles[id];
+        const { bubbles, game, container } = this,
+            bubble = bubbles[id];
 
         if (bubble) {
             bubble.reset(game.time);
@@ -52,18 +51,15 @@ export default class BubbleController {
     public setTo(info: Entity | undefined): void {
         if (!info) return;
 
-        const bubble = this.get(info.id);
-
-        const camera = this.game.getCamera();
-
-        const scale = this.game.renderer.getScale();
-        const tileSize = 48; // 16 * scale
-
-        const x = (info.x - camera.x) * scale;
-        const width = parseInt(bubble.element.css('width')) + 24;
-        const offset = width / 2 - tileSize / 2;
-        const offsetY = -20;
-        const y = (info.y - camera.y) * scale - tileSize * 2 - offsetY;
+        const bubble = this.get(info.id),
+            camera = this.game.getCamera(),
+            scale = this.game.renderer.getScale(),
+            tileSize = 48, // 16 * scale
+            x = (info.x - camera.x) * scale,
+            width = parseInt(bubble.element.css('width')) + 24,
+            offset = width / 2 - tileSize / 2,
+            offsetY = -20,
+            y = (info.y - camera.y) * scale - tileSize * 2 - offsetY;
 
         bubble.element.css({ left: `${x - offset + 3}px`, top: `${y}px` });
     }
