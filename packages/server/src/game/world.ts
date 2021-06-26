@@ -493,7 +493,7 @@ class World {
     isFull() {
         return this.getPopulation() >= this.maxPlayers;
     }
-    
+
     getGrids() {
         return this.map.grids;
     }

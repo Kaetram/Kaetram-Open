@@ -1,8 +1,7 @@
 import _ from 'lodash';
+import { inflate } from 'pako';
 
 import Packets from '@kaetram/common/src/packets';
-
-import Pako from 'pako';
 
 import type App from '../app';
 
@@ -107,9 +106,8 @@ export default class Messages {
     }
 
     public handleData(data: number[]): void {
-        const packet = data.shift()!;
-
-        const message = this.messages[packet];
+        const packet = data.shift()!,
+            message = this.messages[packet];
 
         if (message && _.isFunction(message)) message.call(this, data);
     }
@@ -209,8 +207,8 @@ export default class Messages {
     }
 
     private receiveEquipment(data: never[]): void {
-        const equipType = data.shift()!;
-        const equipInfo = data.shift()!;
+        const equipType = data.shift()!,
+            equipInfo = data.shift()!;
 
         this.equipmentCallback?.(equipType, equipInfo);
     }
@@ -224,8 +222,8 @@ export default class Messages {
     }
 
     private receiveMovement(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.movementCallback?.(opcode, info);
     }
@@ -243,22 +241,22 @@ export default class Messages {
     }
 
     private receiveCombat(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.combatCallback?.(opcode, info);
     }
 
     private receiveAnimation(data: never[]): void {
-        const id = data.shift()!;
-        const info = data.shift()!;
+        const id = data.shift()!,
+            info = data.shift()!;
 
         this.animationCallback?.(id, info);
     }
 
     private receiveProjectile(data: never[]): void {
-        const type = data.shift()!;
-        const info = data.shift()!;
+        const type = data.shift()!,
+            info = data.shift()!;
 
         this.projectileCallback?.(type, info);
     }
@@ -292,36 +290,36 @@ export default class Messages {
     }
 
     private receiveInventory(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.inventoryCallback?.(opcode, info);
     }
 
     private receiveBank(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.bankCallback?.(opcode, info);
     }
 
     private receiveAbility(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.abilityCallback?.(opcode, info);
     }
 
     private receiveQuest(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.questCallback?.(opcode, info);
     }
 
     private receiveNotification(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.notificationCallback?.(opcode, info);
     }
@@ -337,8 +335,8 @@ export default class Messages {
     }
 
     private receiveExperience(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.experienceCallback?.(opcode, info);
     }
@@ -352,88 +350,84 @@ export default class Messages {
     }
 
     private receiveNPC(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.npcCallback?.(opcode, info);
     }
 
     private receiveRespawn(data: never[]): void {
-        const id = data.shift()!;
-        const x = data.shift()!;
-        const y = data.shift()!;
+        const id = data.shift()!,
+            x = data.shift()!,
+            y = data.shift()!;
 
         this.respawnCallback?.(id, x, y);
     }
 
     private receiveEnchant(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.enchantCallback?.(opcode, info);
     }
 
     private receiveGuild(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.guildCallback?.(opcode, info);
     }
 
     private receivePointer(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.pointerCallback?.(opcode, info);
     }
 
     private receivePVP(data: never[]): void {
-        const id = data.shift()!;
-        const pvp = data.shift()!;
+        const id = data.shift()!,
+            pvp = data.shift()!;
 
         this.pvpCallback?.(id, pvp);
     }
 
     private receiveShop(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.shopCallback?.(opcode, info);
     }
 
     private receiveMinigame(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.minigameCallback?.(opcode, info);
     }
 
     private receiveRegion(data: never[]): void {
-        const opcode = data.shift()!;
-        const bufferSize = data.shift()!;
-        const info: string = data.shift()!;
-
-        const bufferData = atob(info)
-            .split('')
-            .map((x) => {
-                return x.charCodeAt(0);
-            });
-
-        const inflatedString: string = Pako.inflate(new Uint8Array(bufferData), { to: 'string' });
+        const opcode = data.shift()!,
+            bufferSize = data.shift()!,
+            info: string = data.shift()!,
+            bufferData = atob(info)
+                .split('')
+                .map((char) => char.charCodeAt(0)),
+            inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' });
 
         this.regionCallback?.(opcode, bufferSize, JSON.parse(inflatedString) as never);
     }
 
     private receiveOverlay(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.overlayCallback?.(opcode, info);
     }
 
     private receiveCamera(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.cameraCallback?.(opcode, info);
     }
@@ -445,8 +439,8 @@ export default class Messages {
     }
 
     private receiveProfession(data: never[]): void {
-        const opcode = data.shift()!;
-        const info = data.shift()!;
+        const opcode = data.shift()!,
+            info = data.shift()!;
 
         this.professionCallback?.(opcode, info);
     }

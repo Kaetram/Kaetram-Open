@@ -108,8 +108,8 @@ class Main {
                     break;
 
                 case 'resetPositions':
-                    const newX = parseInt(blocks.shift()),
-                        newY = parseInt(blocks.shift());
+                    const newX = parseInt(blocks.shift());
+                    const newY = parseInt(blocks.shift());
 
                     //x: 325, y: 87
 
@@ -145,8 +145,8 @@ class Main {
                     break;
 
                 case 'give':
-                    const itemId = blocks.shift(),
-                        itemCount = parseInt(blocks.shift());
+                    const itemId = blocks.shift();
+                    const itemCount = parseInt(blocks.shift());
 
                     username = blocks.join(' ');
 

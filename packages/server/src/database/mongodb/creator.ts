@@ -41,7 +41,6 @@ class Creator {
             } catch (e) {
                 log.error(`Error while saving data for ${player.username}`);
             }
-
         });
     }
 

@@ -145,7 +145,7 @@ class QueenAnt extends Combat {
     getRandomTarget() {
         if (this.isAttacked()) {
             const keys = Object.keys(this.attackers),
-                randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
+                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;
         }
