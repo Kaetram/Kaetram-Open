@@ -1774,12 +1774,14 @@ __metadata:
     "@types/lodash": ^4.14.170
     "@types/mini-css-extract-plugin": ^1.4.3
     "@types/node": ^15.12.4
+    "@types/pako": ^1.0.1
     "@types/workbox-webpack-plugin": ^5.1.7
     "@typescript-eslint/eslint-plugin": ^4.27.0
     "@typescript-eslint/parser": ^4.27.0
     "@vue/preload-webpack-plugin": ^2.0.0
     babel-core: ^6.26.3
     babel-loader: ^8.2.2
+    browserify-zlib: ^0.2.0
     clean-webpack-plugin: ^4.0.0-alpha.0
     copy-webpack-plugin: ^9.0.0
     cross-env: ^7.0.3
@@ -1798,6 +1800,7 @@ __metadata:
     kaetram: "workspace:."
     lodash: ^4.17.21
     mini-css-extract-plugin: ^1.6.0
+    pako: ^2.0.3
     postcss: ^8.3.5
     postcss-html: ^0.36.0
     postcss-loader: ^6.1.0
@@ -2348,6 +2351,13 @@ __metadata:
   version: 2.4.0
   resolution: "@types/normalize-package-data@npm:2.4.0"
   checksum: fd22ba86a186a033dbe173840fd2ad091032be6d48163198869d058821acca7373d9f39cfd0caf42f3b92bc737723814fe1b4e9e90eacaa913836610aa197d3b
+  languageName: node
+  linkType: hard
+
+"@types/pako@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@types/pako@npm:1.0.1"
+  checksum: 998b8be64d79fc656637adf25526137f582d72eceacb10b5de88c5adcaa3a1da27b061dedf0c9e953002fbe2cac30123dad87344ab6b2ae99463b2846459c67d
   languageName: node
   linkType: hard
 
@@ -3696,6 +3706,15 @@ __metadata:
   dependencies:
     fill-range: ^7.0.1
   checksum: e2a8e769a863f3d4ee887b5fe21f63193a891c68b612ddb4b68d82d1b5f3ff9073af066c343e9867a393fe4c2555dcb33e89b937195feb9c1613d259edfcd459
+  languageName: node
+  linkType: hard
+
+"browserify-zlib@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "browserify-zlib@npm:0.2.0"
+  dependencies:
+    pako: ~1.0.5
+  checksum: 5cd9d6a665190fedb4a97dfbad8dabc8698d8a507298a03f42c734e96d58ca35d3c7d4085e283440bbca1cd1938cff85031728079bedb3345310c58ab1ec92d6
   languageName: node
   linkType: hard
 
@@ -8868,10 +8887,17 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"pako@npm:^1.0.5":
+"pako@npm:^1.0.5, pako@npm:~1.0.5":
   version: 1.0.11
   resolution: "pako@npm:1.0.11"
   checksum: 1be2bfa1f807608c7538afa15d6f25baa523c30ec870a3228a89579e474a4d992f4293859524e46d5d87fd30fa17c5edf34dbef0671251d9749820b488660b16
+  languageName: node
+  linkType: hard
+
+"pako@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "pako@npm:2.0.3"
+  checksum: 7008da1379db232d562e5ef0f7fb11f7fedc5672cbdf622fa8a9bf0af75e430c63250a3de1c3a6b128da52dc6196c2082a88184d882ff704ee80631136f7aa39
   languageName: node
   linkType: hard
 
