@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { inflate } from 'pako';
 
 import Packets from '@kaetram/common/src/packets';
 
@@ -407,10 +408,14 @@ export default class Messages {
 
     private receiveRegion(data: never[]): void {
         const opcode = data.shift()!,
-            info = data.shift()!,
-            force = data.shift()!;
+            bufferSize = data.shift()!,
+            info: string = data.shift()!,
+            bufferData = atob(info)
+                .split('')
+                .map((char) => char.charCodeAt(0)),
+            inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' });
 
-        this.regionCallback?.(opcode, info, force);
+        this.regionCallback?.(opcode, bufferSize, JSON.parse(inflatedString) as never);
     }
 
     private receiveOverlay(data: never[]): void {
