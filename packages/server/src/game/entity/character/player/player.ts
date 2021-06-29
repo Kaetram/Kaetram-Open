@@ -92,6 +92,7 @@ class Player extends Character {
     public isGuest: boolean;
 
     public canTalk: boolean;
+    public webSocketClient: boolean;
 
     // public instanced: boolean;
     public visible: boolean;
@@ -224,6 +225,7 @@ class Player extends Character {
         this.pvp = false;
 
         this.canTalk = true;
+        this.webSocketClient = connection.type === 'WebSocket';
 
         this.instanced = false;
         this.visible = true;
