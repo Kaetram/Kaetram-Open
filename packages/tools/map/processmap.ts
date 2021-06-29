@@ -17,8 +17,6 @@ import {
 export default class ProcessMap {
     #map!: ProcessedMap;
 
-    #collisionTiles: { [tileId: number]: boolean } = {};
-
     public constructor(private data: MapData) {}
 
     public parse(): void {
@@ -33,6 +31,7 @@ export default class ProcessMap {
             data: [],
 
             collisions: [],
+            tileCollisions: [],
             polygons: {},
             entities: {},
             staticEntities: {},
@@ -132,7 +131,7 @@ export default class ProcessMap {
             value = (parseInt(property.value, 10) as never) || property.value,
             { polygons, high, objects, trees, rocks, cursors } = this.#map;
 
-        if (this.isColliding(name) && !(tileId in polygons)) this.#collisionTiles[tileId] = true;
+        if (this.isColliding(name) && !(tileId in polygons)) this.#map.tileCollisions.push(tileId);
 
         switch (name) {
             case 'v':
@@ -192,7 +191,7 @@ export default class ProcessMap {
             else if (_.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
 
-            if (value in this.#collisionTiles) collisions.push(index);
+            if (this.#map.tileCollisions.includes(value)) collisions.push(index);
             if (value in trees) treeIndexes.push(index);
             if (value in rocks) rockIndexes.push(index);
         });
