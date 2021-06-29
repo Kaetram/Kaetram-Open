@@ -218,38 +218,7 @@ class Region {
     }
 
     sendRegion(player: Player, region: string, force?: boolean): void {
-        const tileData = this.getRegionData(region, player, force),
-            dynamicTiles = this.getDynamicTiles(player);
-
-        // Send dynamic tiles alongside the region
-        for (let i = 0; i < tileData.length; i++) {
-            const tile = tileData[i],
-                index = dynamicTiles.indexes.indexOf(tile.index);
-
-            if (index > -1) {
-                tileData[i].data = dynamicTiles.data[index];
-                tileData[i].isCollision = dynamicTiles.collisions[index];
-            }
-        }
-
-        // Send dynamic tiles independently
-        if (tileData.length < 1)
-            for (let i = 0; i < dynamicTiles.indexes.length; i++) {
-                tileData[i] = {};
-
-                tileData[i].index = dynamicTiles.indexes[i];
-                tileData[i].data = dynamicTiles.data[i];
-                tileData[i].isCollision = dynamicTiles.collisions[i];
-
-                const data = dynamicTiles.objectData,
-                    index = tileData[i].index;
-
-                if (data && index in data) {
-                    tileData[i].isObject = data[index].isObject;
-
-                    if (data[index].cursor) tileData[i].cursor = data[index].cursor;
-                }
-            }
+        let tileData = this.getRegionData(region, player, force);
 
         //No need to send empty data...
         if (tileData.length > 0)
@@ -258,16 +227,33 @@ class Region {
 
     // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
     getDynamicTiles(player: Player) {
-        const dynamicTiles: any = player.doors.getAllTiles(),
-            trees = player.getSurroundingTrees();
+        let dynamicTiles = {},
+            doors: any = player.doors.getAllTiles(),
+            trees: any = player.getSurroundingTrees();
 
-        // Start with the doors and append afterwards.
+        doors.indexes.push.apply(doors.indexes, trees.indexes);
+        doors.data.push.apply(doors.data, trees.data);
+        doors.collisions.push.apply(doors.collisions, trees.collisions);
+        
+        if (trees.objectData) doors.objectData = trees.objectData;
 
-        dynamicTiles.indexes.push.apply(dynamicTiles.indexes, trees.indexes);
-        dynamicTiles.data.push.apply(dynamicTiles.data, trees.data);
-        dynamicTiles.collisions.push.apply(dynamicTiles.collisions, trees.collisions);
+        for (let i in doors.indexes) {
+            let tile: any = {
+                data: doors.data[i],
+                isCollision: doors.collisions[i]
+            }, index = doors.indexes[i];
 
-        if (trees.objectData) dynamicTiles.objectData = trees.objectData;
+            if (!doors.objectData) break;
+
+            if (index in doors.objectData) {
+                tile.isObject = doors.objectData[index].isObject;
+
+                if (doors.objectData[index].cursor)
+                    tile.cursor = doors.objectData[index].cursor;
+            }
+
+            dynamicTiles[index] = tile;
+        }
 
         return dynamicTiles;
     }
@@ -418,65 +404,84 @@ class Region {
         });
     }
 
-    /**
-     * Compare the user's screen size and chip away the amount of data
-     * we are sending.
-     */
-    formatRegionData(_player: Player, _data: any) {}
-
     getRegionData(region: string, player: Player, force?: boolean) {
-        const data = [];
+        let data = [];
 
         if (!player) return data;
 
+        let dynamicTiles = this.getDynamicTiles(player);
+
         this.mapRegions.forEachSurroundingRegion(region, (regionId: string) => {
-            if (!player.hasLoadedRegion(regionId) || force) {
-                player.loadRegion(regionId);
+            if (player.hasLoadedRegion(regionId) && !force) return;
 
-                const bounds = this.getRegionBounds(regionId);
+            const bounds = this.getRegionBounds(regionId);
 
-                for (let y = bounds.startY; y < bounds.endY; y++) {
-                    for (let x = bounds.startX; x < bounds.endX; x++) {
-                        let index = this.gridPositionToIndex(x - 1, y),
-                            tileData = this.map.data[index],
-                            isCollision =
-                                this.map.collisions.indexOf(index) > -1 || !tileData,
-                            objectId: any;
+            this.forEachTile(bounds, player.webSocketClient, (tile: any) => {
+                if (tile.index in dynamicTiles) {
+                    let dynamicTile = dynamicTiles[tile.index]
 
-                        if (tileData !== 0) {
-                            if (tileData instanceof Array) {
-                                for (let j = 0; j < tileData.length; j++) {
-                                    if (this.map.isObject(tileData[j])) {
-                                        objectId = tileData[j];
-                                        break;
-                                    }
-                                }
-                            } else if (this.map.isObject(tileData)) objectId = tileData;
-                        }
+                    tile.data = dynamicTile.data;
+                    tile.isCollision = dynamicTile.isCollision;
 
-                        const info: any = {
-                            index: index
-                        };
-
-                        if (tileData) info.data = tileData;
-
-                        if (isCollision) info.isCollision = isCollision;
-
-                        if (objectId) {
-                            info.isObject = !!objectId;
-
-                            const cursor = this.map.getCursor(info.index, objectId);
-
-                            if (cursor) info.cursor = cursor;
-                        }
-
-                        data.push(info);
-                    }
+                    if (dynamicTile.isObject) tile.isObject = dynamicTile.isObject
+                    if (dynamicTile.cursor) tile.cursor = dynamicTile.cursor;
                 }
-            }
+
+                if (player.webSocketClient) delete tile.index;
+
+                data.push(tile);
+            });
         });
 
         return data;
+    }
+
+    forEachTile(bounds: any, webSocket: boolean, callback: (tile: any) => void) {
+        this.forEachGrid(bounds, (x: number, y: number) => {
+            let index = this.gridPositionToIndex(x - 1, y),
+                tileData = this.map.data[index],
+                isCollision =
+                    this.map.collisions.indexOf(index) > -1 || !tileData,
+                objectId: any;
+
+            if (tileData !== 0) {
+                if (tileData instanceof Array) {
+                    for (let j = 0; j < tileData.length; j++) {
+                        if (this.map.isObject(tileData[j])) {
+                            objectId = tileData[j];
+                            break;
+                        }
+                    }
+                } else if (this.map.isObject(tileData)) objectId = tileData;
+            }
+
+            let info: any = {
+                index: index
+            };
+
+            if (webSocket)
+                info.position = { x: x, y: y };
+
+            if (tileData) info.data = tileData;
+
+            if (isCollision) info.isCollision = isCollision;
+
+            if (objectId) {
+                info.isObject = !!objectId;
+
+                const cursor = this.map.getCursor(info.index, objectId);
+
+                if (cursor) info.cursor = cursor;
+            }
+
+            callback(info);
+        });
+    }
+
+    forEachGrid(bounds: any, callback: (x: number, y: number) => void) {
+        for (let y = bounds.startY; y < bounds.endY; y++)
+            for (let x = bounds.startX; x < bounds.endX; x++)
+                callback(x, y);
     }
 
     getRegionBounds(regionId: string) {
