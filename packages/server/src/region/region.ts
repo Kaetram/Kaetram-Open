@@ -82,6 +82,7 @@ class Region {
     }
 
     load() {
+
         this.mapRegions.forEachRegion((regionId: string) => {
             this.regions[regionId] = {
                 entities: {},
@@ -127,7 +128,7 @@ class Region {
         }
     }
 
-    addEntityToInstance(entity: Entity, player: Player) {
+    addEntityToInstance(entity: Entity, player: Player): void {
         if (!entity) return;
 
         this.add(entity, player.region);
@@ -135,7 +136,7 @@ class Region {
         player.updateRegion();
     }
 
-    createInstance(player: Player, regionId: string) {
+    createInstance(player: Player, regionId: string): void {
         /**
          * We create an instance at the player's current surrounding
          * region IDs. These will have to be disposed of whenever we're done.
@@ -163,7 +164,7 @@ class Region {
         });
     }
 
-    deleteInstance(player: Player) {
+    deleteInstance(player: Player): void {
         player.instanced = false;
 
         this.handle(player);
@@ -176,7 +177,7 @@ class Region {
         });
     }
 
-    parseRegions() {
+    parseRegions(): void {
         if (!this.loaded) return;
 
         this.mapRegions.forEachRegion((regionId: string) => {
@@ -188,8 +189,15 @@ class Region {
         });
     }
 
+    syncRegions(player: Player): void {
+        this.handle(player);
+        this.push(player);
+
+        this.sendTilesetInfo(player);
+    }
+
     // If `regionId` is not null, we update adjacent regions
-    updateRegions(regionId?: string) {
+    updateRegions(regionId?: string): void {
         if (regionId)
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
                 const region = this.regions[id];
@@ -205,10 +213,11 @@ class Region {
                 player.regionsLoaded = [];
 
                 this.sendRegion(player, player.region, true);
+                this.sendTilesetInfo(player);
             });
     }
 
-    sendRegion(player: Player, region: string, force?: boolean) {
+    sendRegion(player: Player, region: string, force?: boolean): void {
         const tileData = this.getRegionData(region, player, force),
             dynamicTiles = this.getDynamicTiles(player);
 
@@ -242,7 +251,9 @@ class Region {
                 }
             }
 
-        for (let i in tileData) if (tileData[i].index == 73008) console.log(tileData[i]);
+        for (let i in tileData)
+            if (tileData[i].index == 73008)
+                console.log(tileData[i]);
 
         //No need to send empty data...
         if (tileData.length > 0)
@@ -263,6 +274,20 @@ class Region {
         if (trees.objectData) dynamicTiles.objectData = trees.objectData;
 
         return dynamicTiles;
+    }
+
+    sendTilesetInfo(player: Player) {
+        let tileCollisions = this.map.collisions,
+            tilesetData = {};
+
+        for (let i in this.map.collisions)
+            tilesetData[tileCollisions[i]] = { c: true };
+
+        for (let i in this.map.high)
+            if (i in tilesetData) tilesetData[i].h = this.map.high[i];
+            else tilesetData[i] = { h: this.map.high[i] };
+
+        player.send(new Messages.Region(Packets.RegionOpcode.Tileset, tilesetData));
     }
 
     sendSpawns(regionId: string) {
@@ -418,7 +443,8 @@ class Region {
                     for (let x = bounds.startX; x < bounds.endX; x++) {
                         let index = this.gridPositionToIndex(x - 1, y),
                             tileData = this.map.data[index],
-                            isCollision = this.map.collisions.indexOf(index) > -1 || !tileData,
+                            isCollision =
+                                this.map.collisions.indexOf(index) > -1 || !tileData,
                             objectId: any;
 
                         if (tileData !== 0) {

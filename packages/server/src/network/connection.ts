@@ -1,8 +1,10 @@
 /* global module */
 
 import { Socket } from 'socket.io';
+import ws from 'ws';
 
 import log from '../util/log';
+import WS from './impl/ws';
 import SocketHandler from './sockethandler';
 
 class Connection {
@@ -10,13 +12,13 @@ class Connection {
 
     private type: string;
 
-    public socket: Socket;
+    public socket: Socket | ws.Socket;
     public socketHandler: SocketHandler;
 
     private listenCallback: Function;
     private closeCallback: Function;
 
-    constructor(id: string, type: string, socket: Socket, socketHandler: SocketHandler) {
+    constructor(id: string, type: string, socket: Socket | ws.Socket, socketHandler: SocketHandler) {
         this.id = id;
         this.type = type;
         this.socket = socket;
@@ -59,7 +61,7 @@ class Connection {
     close(reason?: string) {
         if (reason) log.info('[Connection] Closing - ' + reason);
 
-        this.socket.disconnect(true);
+        this.type === 'WebSocket' ? this.socket.destroy() : this.socket.disconnect(true);
     }
 
     getCloseSignal() {

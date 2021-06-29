@@ -29,7 +29,7 @@ class Incoming {
         this.player = player;
         this.connection = this.player.connection;
         this.world = this.player.world;
-        this.entities = this.world.entities;
+        this.entities = this.world.entities
         this.database = this.player.database;
         this.commands = new Commands(this.player);
 
@@ -210,8 +210,7 @@ class Incoming {
 
         this.player.ready = true;
 
-        this.world.region.handle(this.player);
-        this.world.region.push(this.player);
+        this.world.region.syncRegions(this.player);
 
         this.player.sendEquipment();
 
@@ -349,8 +348,8 @@ class Incoming {
 
         switch (opcode) {
             case Packets.MovementOpcode.Request:
-                let requestX = message.shift();
-                let requestY = message.shift();
+                let requestX = message.shift(),
+                    requestY = message.shift();
 
                 if (this.preventNoClip(requestX, requestY))
                     this.player.guessPosition(requestX, requestY);
@@ -360,12 +359,12 @@ class Incoming {
                 break;
 
             case Packets.MovementOpcode.Started:
-                let selectedX = message.shift();
-                let selectedY = message.shift();
-                let pX = message.shift();
-                let pY = message.shift();
-                let movementSpeed = message.shift();
-                let targetId = message.shift();
+                let selectedX = message.shift(),
+                    selectedY = message.shift(),
+                    pX = message.shift(),
+                    pY = message.shift(),
+                    movementSpeed = message.shift(),
+                    targetId = message.shift();
 
                 if (!movementSpeed || movementSpeed != this.player.movementSpeed)
                     this.player.incrementCheatScore(1);
@@ -388,8 +387,8 @@ class Incoming {
                 break;
 
             case Packets.MovementOpcode.Step:
-                let x = message.shift();
-                let y = message.shift();
+                let x = message.shift(),
+                    y = message.shift();
 
                 if (this.player.stunned || !this.preventNoClip(x, y)) return;
 
@@ -398,11 +397,11 @@ class Incoming {
                 break;
 
             case Packets.MovementOpcode.Stop:
-                let posX = message.shift();
-                let posY = message.shift();
-                let id = message.shift();
-                let hasTarget = message.shift();
-                let entity = this.entities.get(id);
+                let posX = message.shift(),
+                    posY = message.shift(),
+                    id = message.shift(),
+                    hasTarget = message.shift(),
+                    entity = this.entities.get(id);
 
                 if (!this.player.moving) {
                     log.debug(`Did not receive movement start packet for ${this.player.username}.`);
@@ -437,10 +436,10 @@ class Incoming {
                 break;
 
             case Packets.MovementOpcode.Entity:
-                let instance = message.shift();
-                let entityX = message.shift();
-                let entityY = message.shift();
-                let oEntity = this.entities.get(instance);
+                let instance = message.shift(),
+                    entityX = message.shift(),
+                    entityY = message.shift(),
+                    oEntity = this.entities.get(instance);
 
                 if (!oEntity || (oEntity.x === entityX && oEntity.y === entityY)) return;
 
@@ -550,8 +549,8 @@ class Incoming {
 
         switch (opcode) {
             case Packets.CombatOpcode.Initiate:
-                let attacker: any = this.entities.get(message.shift());
-                let target: any = this.entities.get(message.shift());
+                let attacker: any = this.entities.get(message.shift()),
+                    target: any = this.entities.get(message.shift());
 
                 if (
                     !target ||
@@ -582,8 +581,8 @@ class Incoming {
 
         switch (type) {
             case Packets.ProjectileOpcode.Impact:
-                let projectile: any = this.entities.get(message.shift());
-                let target: any = this.entities.get(message.shift());
+                let projectile: any = this.entities.get(message.shift()),
+                    target: any = this.entities.get(message.shift());
 
                 if (!target || target.dead || !projectile) return;
 
@@ -679,8 +678,8 @@ class Incoming {
 
         switch (opcode) {
             case Packets.InventoryOpcode.Remove:
-                let item = message.shift();
-                let count: number;
+                let item = message.shift(),
+                    count: number;
 
                 if (!item) return;
 
@@ -709,10 +708,10 @@ class Incoming {
                 break;
 
             case Packets.InventoryOpcode.Select:
-                let index = message.shift();
-                let slot = this.player.inventory.slots[index];
-                let string = slot.string;
-                let sCount = slot.count;
+                let index = message.shift(),
+                    slot = this.player.inventory.slots[index],
+                    string = slot.string,
+                    sCount = slot.count;
 
                 (ability = slot.ability), (abilityLevel = slot.abilityLevel);
 
@@ -741,9 +740,9 @@ class Incoming {
 
         switch (opcode) {
             case Packets.BankOpcode.Select:
-                let type = message.shift();
-                let index = message.shift();
-                let isBank = type === 'bank';
+                let type = message.shift(),
+                    index = message.shift(),
+                    isBank = type === 'bank';
 
                 if (isBank) {
                     let bankSlot = this.player.bank.getInfo(index);
@@ -821,9 +820,9 @@ class Incoming {
 
         switch (opcode) {
             case Packets.EnchantOpcode.Select:
-                let index = message.shift();
-                let item = this.player.inventory.slots[index];
-                let type = 'item';
+                let index = message.shift(),
+                    item = this.player.inventory.slots[index],
+                    type = 'item';
 
                 if (item.id < 1) return;
 
@@ -879,8 +878,8 @@ class Incoming {
 
         switch (opcode) {
             case Packets.ShopOpcode.Buy:
-                let buyId = message.shift();
-                let amount = message.shift();
+                let buyId = message.shift(),
+                    amount = message.shift();
 
                 if (!buyId || !amount) {
                     this.player.notify('Incorrect purchase packets.');
