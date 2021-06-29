@@ -61,7 +61,7 @@ class Connection {
     close(reason?: string) {
         if (reason) log.info('[Connection] Closing - ' + reason);
 
-        this.type === 'WebSocket' ? this.socket.destroy() : this.socket.disconnect(true);
+        this.type === 'WebSocket' ? this.socket.close() : this.socket.disconnect(true);
     }
 
     getCloseSignal() {
