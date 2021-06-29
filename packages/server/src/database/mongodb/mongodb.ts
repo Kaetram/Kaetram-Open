@@ -42,7 +42,9 @@ class MongoDB {
         let client = new MongoClient(url, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
-            wtimeout: 5
+            writeConcern: {
+                wtimeout: 5
+            }
         });
 
         if (this.connection) {
