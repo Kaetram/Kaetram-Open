@@ -416,19 +416,7 @@ class Region {
 
             const bounds = this.getRegionBounds(regionId);
 
-            this.forEachTile(bounds, player.webSocketClient, (tile: any) => {
-                if (tile.index in dynamicTiles) {
-                    let dynamicTile = dynamicTiles[tile.index]
-
-                    tile.data = dynamicTile.data;
-                    tile.isCollision = dynamicTile.isCollision;
-
-                    if (dynamicTile.isObject) tile.isObject = dynamicTile.isObject
-                    if (dynamicTile.cursor) tile.cursor = dynamicTile.cursor;
-                }
-
-                if (player.webSocketClient) delete tile.index;
-
+            this.forEachTile(bounds, player.webSocketClient, dynamicTiles, (tile: any) => {
                 data.push(tile);
             });
         });
@@ -436,7 +424,7 @@ class Region {
         return data;
     }
 
-    forEachTile(bounds: any, webSocket: boolean, callback: (tile: any) => void) {
+    forEachTile(bounds: any, webSocket: boolean, dynamicTiles: any, callback: (tile: any) => void) {
         this.forEachGrid(bounds, (x: number, y: number) => {
             let index = this.gridPositionToIndex(x - 1, y),
                 tileData = this.map.data[index],
@@ -459,19 +447,30 @@ class Region {
                 index: index
             };
 
-            if (webSocket)
+            if (info.index in dynamicTiles) {
+                let dynamicTile = dynamicTiles[info.index];
+
+                info.data = dynamicTile.data;
+                info.isCollision = dynamicTile.isCollision;
+
+                if (dynamicTile.isObject) info.isObject = dynamicTile.isObject;
+                if (dynamicTile.cursor) info.cursor = dynamicTile.cursor;
+            } else {
+                if (tileData) info.data = tileData;
+                if (isCollision) info.isCollision = isCollision;
+                if (objectId) {
+                    info.isObject = !!objectId;
+    
+                    const cursor = this.map.getCursor(info.index, objectId);
+    
+                    if (cursor) info.cursor = cursor;
+                }
+            }
+
+            if (webSocket) {
+                delete info.index;
+
                 info.position = { x: x, y: y };
-
-            if (tileData) info.data = tileData;
-
-            if (isCollision) info.isCollision = isCollision;
-
-            if (objectId) {
-                info.isObject = !!objectId;
-
-                const cursor = this.map.getCursor(info.index, objectId);
-
-                if (cursor) info.cursor = cursor;
             }
 
             callback(info);
