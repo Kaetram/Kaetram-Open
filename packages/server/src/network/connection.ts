@@ -10,7 +10,7 @@ import SocketHandler from './sockethandler';
 class Connection {
     public id: string;
 
-    private type: string;
+    public type: string;
 
     public socket: Socket | ws.Socket;
     public socketHandler: SocketHandler;
