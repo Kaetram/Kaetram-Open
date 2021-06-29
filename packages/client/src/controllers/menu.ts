@@ -60,7 +60,7 @@ export default class MenuController {
 
         enchant?.resize();
 
-        if (shop.isVisible()) shop.resize();
+        if (shop?.isVisible()) shop.resize();
 
         header?.resize();
 
@@ -145,41 +145,41 @@ export default class MenuController {
     public stop(): void {
         const { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
 
-        inventory.clear();
+        inventory?.clear();
 
-        actions.clear();
+        actions?.clear();
 
-        profile.clean();
+        profile?.clean();
 
         game.input.chatHandler.clear();
 
-        bank.clear();
+        bank?.clear();
 
-        enchant.clear();
+        enchant?.clear();
 
-        warp.clear();
+        warp?.clear();
 
-        shop.clear();
+        shop?.clear();
     }
 
     public hideAll(): void {
         const { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
 
-        if (inventory.isVisible()) inventory.hide();
+        if (inventory?.isVisible()) inventory.hide();
 
-        if (actions.isVisible()) actions.hide();
+        if (actions?.isVisible()) actions.hide();
 
-        if (profile.isVisible() || profile.settings.isVisible()) profile.hide();
+        if (profile?.isVisible() || profile.settings.isVisible()) profile.hide();
 
         if (game.input.chatHandler.input.is(':visible')) game.input.chatHandler.hideInput();
 
-        if (bank.isVisible()) bank.hide();
+        if (bank?.isVisible()) bank.hide();
 
-        if (enchant.isVisible()) enchant.hide();
+        if (enchant?.isVisible()) enchant.hide();
 
-        if (warp.isVisible()) warp.hide();
+        if (warp?.isVisible()) warp.hide();
 
-        if (shop.isVisible()) shop.hide();
+        if (shop?.isVisible()) shop.hide();
     }
 
     public addInventory(info: Slot): void {
