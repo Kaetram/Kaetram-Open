@@ -251,10 +251,6 @@ class Region {
                 }
             }
 
-        for (let i in tileData)
-            if (tileData[i].index == 73008)
-                console.log(tileData[i]);
-
         //No need to send empty data...
         if (tileData.length > 0)
             player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
@@ -277,10 +273,10 @@ class Region {
     }
 
     sendTilesetInfo(player: Player) {
-        let tileCollisions = this.map.collisions,
+        let tileCollisions = this.map.tileCollisions,
             tilesetData = {};
 
-        for (let i in this.map.collisions)
+        for (let i in this.map.tileCollisions)
             tilesetData[tileCollisions[i]] = { c: true };
 
         for (let i in this.map.high)
