@@ -9,7 +9,7 @@ class Loader {
     }
 
     getInventory(player, callback) {
-        this.database.getDatabase((database) => {
+        this.database.getConnection((database) => {
             let inventory = database.collection('player_inventory'),
                 cursor = inventory.find({ username: player.username });
 
@@ -35,7 +35,7 @@ class Loader {
     }
 
     getBank(player, callback) {
-        this.database.getDatabase((database) => {
+        this.database.getConnection((database) => {
             let bank = database.collection('player_bank'),
                 cursor = bank.find({ username: player.username });
 
@@ -61,7 +61,7 @@ class Loader {
     }
 
     getQuests(player, callback) {
-        this.database.getDatabase((database) => {
+        this.database.getConnection((database) => {
             let quests = database.collection('player_quests'),
                 cursor = quests.find({ username: player.username });
 
@@ -82,7 +82,7 @@ class Loader {
     }
 
     getAchievements(player, callback) {
-        this.database.getDatabase((database) => {
+        this.database.getConnection((database) => {
             let achievements = database.collection('player_achievements'),
                 cursor = achievements.find({ username: player.username });
 
@@ -103,7 +103,7 @@ class Loader {
     }
 
     getProfessions(player, callback) {
-        this.database.getDatabase((database) => {
+        this.database.getConnection((database) => {
             let professions = database.collection('player_professions'),
                 cursor = professions.find({ username: player.username });
 
@@ -124,7 +124,7 @@ class Loader {
     }
 
     getFriends(player, callback) {
-        this.database.getDatabase((database) => {
+        this.database.getConnection((database) => {
             let friends = database.collection('player_friends'),
                 cursor = friends.find({ username: player.username });
 

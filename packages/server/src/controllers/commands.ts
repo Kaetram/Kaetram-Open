@@ -122,7 +122,7 @@ class Commands {
                 return;
 
             case 'ping':
-                this.player.pingTime = new Date().getTime();
+                this.player.pingTime = Date.now();
                 this.player.send(new Messages.Network(Packets.NetworkOpcode.Ping));
 
                 break;
@@ -141,7 +141,7 @@ class Commands {
 
                 if (!duration) duration = 24;
 
-                let timeFrame = new Date().getTime() + duration * 60 * 60;
+                let timeFrame = Date.now() + duration * 60 * 60;
 
                 if (command === 'mute') user.mute = timeFrame;
                 else if (command === 'ban') {
@@ -162,7 +162,7 @@ class Commands {
 
                 if (!uTargetName) return;
 
-                uUser.mute = new Date().getTime() - 3600;
+                uUser.mute = Date.now() - 3600;
 
                 uUser.save();
 
