@@ -38,7 +38,7 @@ class TeamWar extends Minigame {
 
         this.countdown = 120;
         this.updateTick = 1000;
-        this.lastSync = new Date().getTime();
+        this.lastSync = Date.now();
         this.syncThreshold = 10000;
 
         this.load();
@@ -50,7 +50,7 @@ class TeamWar extends Minigame {
 
             this.buildTeams();
 
-            if (new Date().getTime() - this.lastSync > this.syncThreshold) this.synchronize();
+            if (Date.now() - this.lastSync > this.syncThreshold) this.synchronize();
 
             this.started = true;
         }, this.updateTick);

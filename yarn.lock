@@ -1397,7 +1397,7 @@ __metadata:
     "@types/dotenv-parse-variables": ^2.0.0
     "@types/lodash": ^4.14.170
     "@types/mongodb": ^3.6.18
-    "@types/node": ^15.12.4
+    "@types/node": ^15.12.5
     "@types/underscore": ^1.11.2
     bcryptjs: ^2.4.3
     body-parser: ^1.19.0
@@ -1815,6 +1815,13 @@ __metadata:
   version: 13.13.52
   resolution: "@types/node@npm:13.13.52"
   checksum: 8f1afff497ebeba209e2dc340d823284e087a47632afe99a7daa30eaff80893e520f222ad400cd1f2d3b8288e93cf3eaded52a8e64eaefb8aacfe6c35de98f42
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^15.12.5":
+  version: 15.12.5
+  resolution: "@types/node@npm:15.12.5"
+  checksum: 4550941a5db67f21bf1c54b2f76ef6fb56ced08583b6049fceef5972ef73791225c41b9a30ce36f496fded284dd736973b5e2107f4bd036d41f35550e3af3450
   languageName: node
   linkType: hard
 
@@ -6286,6 +6293,7 @@ fsevents@~2.3.2:
   version: 0.0.0-use.local
   resolution: "kaetram@workspace:."
   dependencies:
+    "@types/node": ^15.12.5
     "@typescript-eslint/eslint-plugin": ^4.28.0
     "@typescript-eslint/parser": ^4.28.0
     "@yarnpkg/pnpify": ^3.0.0-rc.7

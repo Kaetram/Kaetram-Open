@@ -29,7 +29,7 @@ class Snek extends Combat {
     }
 
     getPoisonData() {
-        return new Date().getTime().toString() + ':30000:1';
+        return Date.now().toString() + ':30000:1';
     }
 }
 

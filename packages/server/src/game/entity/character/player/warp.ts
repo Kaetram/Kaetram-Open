@@ -6,11 +6,11 @@ import Player from './player';
 import Map from '../../../../map/map';
 
 class Warp {
-    player: Player;
-    map: Map;
+    private player: Player;
+    private map: Map;
 
-    lastWarp: number;
-    warpTimeout: number;
+    public lastWarp: number;
+    private warpTimeout: number;
 
     constructor(player: Player) {
         this.player = player;
@@ -20,7 +20,7 @@ class Warp {
         this.warpTimeout = 30000;
     }
 
-    warp(id: number) {
+    warp(id: number): void {
         if (!this.isCooldown()) {
             this.player.notify('You must wait another ' + this.getDuration() + ' to warp.');
             return;
@@ -44,25 +44,25 @@ class Warp {
 
         this.player.notify(`You have been warped to ${data.name}`);
 
-        this.lastWarp = new Date().getTime();
+        this.lastWarp = Date.now();
     }
 
-    setLastWarp(lastWarp: number) {
+    setLastWarp(lastWarp: number): void {
         if (isNaN(lastWarp)) {
             this.lastWarp = 0;
             this.player.save();
         } else this.lastWarp = lastWarp;
     }
 
-    isCooldown() {
+    isCooldown(): boolean {
         return this.getDifference() > this.warpTimeout || this.player.rights > 1;
     }
 
-    hasRequirement(levelRequirement: number) {
+    hasRequirement(levelRequirement: number): boolean {
         return this.player.level >= levelRequirement || this.player.rights > 1;
     }
 
-    getDuration() {
+    getDuration(): string {
         let difference = this.warpTimeout - this.getDifference();
 
         if (!difference) return '5 minutes';
@@ -72,8 +72,8 @@ class Warp {
             : Math.floor(difference / 1000) + ' seconds';
     }
 
-    getDifference() {
-        return new Date().getTime() - this.lastWarp;
+    getDifference(): number {
+        return Date.now() - this.lastWarp;
     }
 }
 

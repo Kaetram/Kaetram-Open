@@ -103,7 +103,7 @@ class Handler {
         });
 
         this.player.onRegion(() => {
-            this.player.lastRegionChange = new Date().getTime();
+            this.player.lastRegionChange = Date.now();
 
             this.world.region.handle(this.player);
             this.world.region.push(this.player);
@@ -267,7 +267,7 @@ class Handler {
         if (!this.player.poison) return;
 
         let info: any = this.player.poison.split(':'),
-            timeDiff = new Date().getTime() - info[0];
+            timeDiff = Date.now() - info[0];
 
         if (timeDiff > info[1]) {
             this.player.setPoison('');

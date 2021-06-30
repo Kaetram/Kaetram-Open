@@ -106,7 +106,7 @@ class Combat {
 
         if (this.character.type === 'player') log.debug('Starting player attack.');
 
-        this.lastAction = new Date().getTime();
+        this.lastAction = Date.now();
 
         this.attackLoop = setInterval(() => {
             this.parseAttack();
@@ -323,7 +323,7 @@ class Combat {
             !this.character.hasTarget() &&
             this.retaliate &&
             !this.character.moving &&
-            new Date().getTime() - this.character.lastMovement > 1500
+            Date.now() - this.character.lastMovement > 1500
         );
     }
 
@@ -464,7 +464,7 @@ class Combat {
     }
 
     getTime() {
-        return new Date().getTime();
+        return Date.now();
     }
 
     colliding(x: number, y: number) {
@@ -492,7 +492,7 @@ class Combat {
     }
 
     canHit() {
-        let currentTime = new Date().getTime(),
+        let currentTime = Date.now(),
             diff = currentTime - this.lastHit;
 
         // 5 millisecond margin of error.

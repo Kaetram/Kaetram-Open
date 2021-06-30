@@ -48,7 +48,7 @@ class SkeletonKing extends Combat {
         let x = this.character.x,
              y = this.character.y;
 
-        this.lastSpawn = new Date().getTime();
+        this.lastSpawn = Date.now();
 
         if (!this.colliding(x + 2, y - 2)) this.minions.push(this.entities.spawnMob(17, x + 2, y + 2));
 
@@ -60,7 +60,7 @@ class SkeletonKing extends Combat {
 
         _.each(this.minions, (minion: Mob) => {
             minion.onDeath(() => {
-                if (this.isLast()) this.lastSpawn = new Date().getTime();
+                if (this.isLast()) this.lastSpawn = Date.now();
 
                 this.minions.splice(this.minions.indexOf(minion), 1);
             });
@@ -102,7 +102,7 @@ class SkeletonKing extends Combat {
 
     canSpawn() {
         return (
-            new Date().getTime() - this.lastSpawn > 25000 && !this.hasMinions() && this.isAttacked()
+            Date.now() - this.lastSpawn > 25000 && !this.hasMinions() && this.isAttacked()
         );
     }
 }
