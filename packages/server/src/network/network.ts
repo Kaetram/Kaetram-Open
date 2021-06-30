@@ -68,7 +68,7 @@ class Network {
     handlePlayerConnection(connection: any) {
         let clientId = Utils.generateClientId(),
             player = new Player(this.world, this.database, connection, clientId),
-            timeDifference = new Date().getTime() - this.getSocketTime(connection);
+            timeDifference = Date.now() - this.getSocketTime(connection);
 
         if (!config.debug && timeDifference < this.differenceThreshold) {
             connection.sendUTF8('toofast');
@@ -77,7 +77,7 @@ class Network {
             return;
         }
 
-        this.socketHandler.ips[connection.socket.conn.remoteAddress] = new Date().getTime();
+        this.socketHandler.ips[connection.socket.conn.remoteAddress] = Date.now();
 
         this.addToPackets(player);
 

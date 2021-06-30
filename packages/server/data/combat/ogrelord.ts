@@ -91,7 +91,7 @@ class OgreLord extends Combat {
         let xs = [414, 430, 415, 420, 429],
              ys = [172, 173, 183, 185, 180];
 
-        this.lastSpawn = new Date().getTime();
+        this.lastSpawn = Date.now();
 
         this.forceTalk('Now you shall see my true power!');
 
@@ -100,7 +100,7 @@ class OgreLord extends Combat {
 
         _.each(this.minions, (minion: Mob) => {
             minion.onDeath(() => {
-                if (this.isLast()) this.lastSpawn = new Date().getTime();
+                if (this.isLast()) this.lastSpawn = Date.now();
 
                 this.minions.splice(this.minions.indexOf(minion), 1);
             });
@@ -160,7 +160,7 @@ class OgreLord extends Combat {
 
     canSpawn() {
         return (
-            new Date().getTime() - this.lastSpawn > 50000 && !this.hasMinions() && this.isAttacked()
+            Date.now() - this.lastSpawn > 50000 && !this.hasMinions() && this.isAttacked()
         );
     }
 }

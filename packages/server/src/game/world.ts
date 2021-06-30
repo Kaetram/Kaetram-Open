@@ -22,6 +22,7 @@ import Entities from '../controllers/entities';
 import SocketHandler from '../network/sockethandler';
 import MongoDB from '../database/mongodb/mongodb';
 import API from '../network/api';
+import Player from './entity/character/player/player';
 
 class World {
     public socketHandler: SocketHandler;
@@ -247,7 +248,7 @@ class World {
     }
 
     parseTrees() {
-        let time = new Date().getTime(),
+        let time = Date.now(),
             treeTypes = Object.keys(Modules.Trees);
 
         _.each(this.cutTrees, (tree, key) => {
@@ -269,7 +270,7 @@ class World {
     }
 
     parseRocks() {
-        let time = new Date().getTime(),
+        let time = Date.now(),
             rockTypes = Object.keys(Modules.Rocks);
 
         _.each(this.depletedRocks, (rock, key) => {
@@ -323,7 +324,7 @@ class World {
 
         this.cutTrees[id] = {
             data: {},
-            time: new Date().getTime(),
+            time: Date.now(),
             treeId: treeId
         };
 
@@ -458,39 +459,41 @@ class World {
     }
 
     globalMessage(
-        source: any,
-        message: any,
+        source: string,
+        message: string,
         colour?: string,
         isGlobal?: boolean,
         withBubble?: boolean
-    ) {
+    ): void {
         this.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Chat({
                 name: source,
                 text: message,
-                colour: colour,
-                isGlobal: isGlobal,
-                withBubble: withBubble
+                colour,
+                isGlobal,
+                withBubble
             })
         });
     }
 
-    cleanCombat(character: Character) {
+    cleanCombat(character: Character): void {
         this.entities.forEachEntity((entity: Entity) => {
+            if (entity.instance !== character.instance) return;
+
             if (entity instanceof Character && entity.combat.hasAttacker(entity))
                 entity.combat.removeAttacker(entity);
         });
     }
 
-    isOnline(username: string) {
+    isOnline(username: string): boolean {
         return this.entities.isOnline(username);
     }
 
-    getPlayerByName(username: string) {
-        return this.entities.getPlayer(username);
+    getPlayerByName(username: string): Player {
+        return this.entities.getPlayer(username) as Player;
     }
 
-    isFull() {
+    isFull(): boolean {
         return this.getPopulation() >= this.maxPlayers;
     }
 

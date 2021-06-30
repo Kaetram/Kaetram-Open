@@ -354,7 +354,7 @@ class Incoming {
                 if (this.preventNoClip(requestX, requestY))
                     this.player.guessPosition(requestX, requestY);
 
-                this.player.movementStart = new Date().getTime();
+                this.player.movementStart = Date.now();
 
                 break;
 
@@ -427,7 +427,7 @@ class Incoming {
                 }
 
                 this.player.moving = false;
-                this.player.lastMovement = new Date().getTime();
+                this.player.lastMovement = Date.now();
 
                 let diff = this.player.lastMovement - this.player.movementStart;
 
@@ -602,7 +602,7 @@ class Incoming {
 
         switch (opcode) {
             case Packets.NetworkOpcode.Pong:
-                let time = new Date().getTime();
+                let time = Date.now();
 
                 this.player.notify(`Latency of ${time - this.player.pingTime}ms`, 'red');
                 break;

@@ -12,21 +12,21 @@ class GreatSquid extends Combat {
 
         this.character = character;
 
-        this.lastTerror = new Date().getTime();
+        this.lastTerror = Date.now();
     }
 
     hit(character: Character, target: Character, hitInfo: any) {
         if (this.canUseTerror) {
             hitInfo.type = Modules.Hits.Stun;
 
-            this.lastTerror = new Date().getTime();
+            this.lastTerror = Date.now();
         }
 
         super.hit(character, target, hitInfo);
     }
 
     canUseTerror() {
-        return new Date().getTime() - this.lastTerror > 15000;
+        return Date.now() - this.lastTerror > 15000;
     }
 }
 

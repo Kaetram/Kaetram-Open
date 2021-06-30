@@ -48,6 +48,7 @@
         "object-shorthand": "warn",
         "operator-assignment": "warn",
 
+        "prefer-const": "off",
         "no-fallthrough": "off",
 
         "prefer-destructuring": [
