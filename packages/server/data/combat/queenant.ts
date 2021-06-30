@@ -109,7 +109,7 @@ class QueenAnt extends Combat {
     }
 
     spawnMinions() {
-        this.lastSpawn = new Date().getTime();
+        this.lastSpawn = Date.now();
 
         for (let i = 0; i < this.minionCount; i++)
             this.minions.push(this.entities.spawnMob(13, this.character.x, this.character.y));
@@ -119,7 +119,7 @@ class QueenAnt extends Combat {
             minion.spawnDistance = 12;
 
             minion.onDeath(() => {
-                if (this.isLast()) this.lastSpawn = new Date().getTime();
+                if (this.isLast()) this.lastSpawn = Date.now();
 
                 this.minions.splice(this.minions.indexOf(minion), 1);
             });
@@ -139,7 +139,7 @@ class QueenAnt extends Combat {
     }
 
     resetAoE() {
-        this.lastAoE = new Date().getTime();
+        this.lastAoE = Date.now();
     }
 
     getRandomTarget() {
@@ -185,12 +185,12 @@ class QueenAnt extends Combat {
     }
 
     canCastAoE() {
-        return new Date().getTime() - this.lastAoE > 30000;
+        return Date.now() - this.lastAoE > 30000;
     }
 
     canSpawn() {
         return (
-            new Date().getTime() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked()
+            Date.now() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked()
         );
     }
 }
