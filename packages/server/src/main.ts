@@ -1,11 +1,11 @@
 import World from './game/world';
-import WebSocket from './network/websocket';
 import Database from './database/database';
 import log from './util/log';
 import Parser from './util/parser';
 import config from '../config';
 import Connection from './network/connection';
 import SocketHandler from './network/sockethandler';
+import Player from './game/entity/character/player/player';
 
 class Main {
     socketHandler: SocketHandler;
@@ -59,21 +59,26 @@ class Main {
         this.loadConsole();
     }
 
-    loadConsole() {
+    private loadConsole(): void {
         const stdin = process.openStdin();
 
-        stdin.addListener('data', (data) => {
+        stdin.addListener('data', (data: Buffer) => {
             const message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
                 type = message.charAt(0);
 
             if (type !== '/') return;
 
-            const blocks = message.substring(1).split(' '),
+            const blocks = message.slice(1).split(' '),
                 command = blocks.shift();
 
             if (!command) return;
 
-            let username, player;
+            let username: string,
+                player: Player,
+                newX: number,
+                newY: number,
+                itemId: number,
+                itemCount: number;
 
             switch (command) {
                 case 'players':
@@ -108,8 +113,8 @@ class Main {
                     break;
 
                 case 'resetPositions':
-                    const newX = parseInt(blocks.shift());
-                    const newY = parseInt(blocks.shift());
+                    newX = parseInt(blocks.shift());
+                    newY = parseInt(blocks.shift());
 
                     //x: 325, y: 87
 
@@ -145,8 +150,8 @@ class Main {
                     break;
 
                 case 'give':
-                    const itemId = blocks.shift();
-                    const itemCount = parseInt(blocks.shift());
+                    itemId = blocks.shift();
+                    itemCount = parseInt(blocks.shift());
 
                     username = blocks.join(' ');
 
@@ -166,7 +171,7 @@ class Main {
         });
     }
 
-    getPopulation() {
+    getPopulation(): number {
         return this.world.getPopulation();
     }
 }

@@ -4,9 +4,10 @@ import _ from 'lodash';
 import bcryptjs from 'bcryptjs';
 import log from '../../util/log';
 import config from '../../../config';
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, MongoError } from 'mongodb';
 import Loader from './loader';
 import Creator from './creator';
+import Player from '../../game/entity/character/player/player';
 
 class MongoDB {
     host: string;
@@ -20,7 +21,7 @@ class MongoDB {
 
     connection: Db;
 
-    constructor(host, port, user, password, database) {
+    constructor(host: string, port: number, user: string, password: string, database: string) {
         this.host = host;
         this.port = port;
         this.user = user;
@@ -33,13 +34,13 @@ class MongoDB {
         this.connection = null;
     }
 
-    getDatabase(callback, type?) {
+    public getConnection(callback: (connection: Db) => void): void {
         let url = `mongodb://${this.host}:${this.port}/${this.database}`;
 
         if (config.mongodbAuth)
             url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
 
-        let client = new MongoClient(url, {
+        let client: MongoClient = new MongoClient(url, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
             writeConcern: {
@@ -52,7 +53,7 @@ class MongoDB {
             return;
         }
 
-        client.connect((error, newClient) => {
+        client.connect((error: MongoError, newClient: MongoClient) => {
             if (error) {
                 log.error('Could not connect to MongoDB database.');
                 log.error(`Error Info: ${error}`);
@@ -65,8 +66,8 @@ class MongoDB {
         });
     }
 
-    login(player) {
-        this.getDatabase((database) => {
+    login(player: Player): void {
+        this.getConnection((database) => {
             let dataCursor = database.collection('player_data').find({ username: player.username }),
                 equipmentCursor = database
                     .collection('player_equipment')
@@ -80,10 +81,10 @@ class MongoDB {
                     regionsCursor.toArray().then((regionData) => {
                         if (playerData.length === 0) this.register(player);
                         else {
-                            let playerInfo = playerData[0],
-                                equipmentInfo = equipmentData[0],
-                                regions = regionData[0];
-
+                            let [ playerInfo ] = playerData,
+                                [ equipmentInfo ] = equipmentData,
+                                [ regions ] = regionData;
+                                
                             playerInfo['armour'] = equipmentInfo.armour;
                             playerInfo['weapon'] = equipmentInfo.weapon;
                             playerInfo['pendant'] = equipmentInfo.pendant;
@@ -101,11 +102,11 @@ class MongoDB {
         });
     }
 
-    verify(player, callback) {
-        this.getDatabase((database) => {
+    verify(player: Player, callback): void {
+        this.getConnection((database) => {
             let dataCursor = database.collection('player_data').find({ username: player.username });
 
-            dataCursor.toArray().then((data) => {
+            dataCursor.toArray().then((data: any) => {
                 if (data.length === 0) callback({ status: 'error' });
                 else {
                     let info = data[0];
@@ -122,7 +123,7 @@ class MongoDB {
     }
 
     register(player) {
-        this.getDatabase((database) => {
+        this.getConnection((database) => {
             let playerData = database.collection('player_data'),
                 cursor = playerData.find({ username: player.username });
 
@@ -140,7 +141,7 @@ class MongoDB {
     }
 
     exists(player, callback) {
-        this.getDatabase((database) => {
+        this.getConnection((database) => {
             let playerData = database.collection('player_data'),
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
@@ -159,7 +160,7 @@ class MongoDB {
     }
 
     delete(player) {
-        this.getDatabase((database) => {
+        this.getConnection((database) => {
             let collections = [
                 'player_data',
                 'player_equipment',
@@ -188,7 +189,7 @@ class MongoDB {
     }
 
     registeredCount(callback) {
-        this.getDatabase((database) => {
+        this.getConnection((database) => {
             let collection = database.collection('player_data');
 
             collection.countDocuments().then((count) => {
@@ -198,7 +199,7 @@ class MongoDB {
     }
 
     resetPositions(newX, newY, callback) {
-        this.getDatabase((database) => {
+        this.getConnection((database) => {
             let collection = database.collection('player_data'),
                 cursor = collection.find();
 

@@ -2,6 +2,7 @@ import bcryptjs from 'bcryptjs';
 import MongoDB from './mongodb';
 import log from '../../util/log';
 import config from '../../../config';
+import Player from '../../game/entity/character/player/player';
 
 class Creator {
     database: MongoDB;
@@ -10,8 +11,8 @@ class Creator {
         this.database = database;
     }
 
-    save(player) {
-        this.database.getDatabase((database) => {
+    save(player: Player): void {
+        this.database.getConnection((database) => {
             /* Handle the player databases */
 
             let playerData = database.collection('player_data'),
@@ -22,7 +23,7 @@ class Creator {
                 playerRegions = database.collection('player_regions'),
                 playerAbilities = database.collection('player_abilities'),
                 playerProfessions = database.collection('player_professions'),
-                playerFriends = database.collection('player_friends'),
+                //playerFriends = database.collection('player_friends'),
                 playerInventory = database.collection('player_inventory');
 
             try {
@@ -44,7 +45,7 @@ class Creator {
         });
     }
 
-    saveData(collection, player) {
+    saveData(collection, player: Player): void {
         Creator.getPlayerData(player, (data) => {
             collection.updateOne(
                 {
@@ -66,7 +67,7 @@ class Creator {
         });
     }
 
-    saveEquipment(collection, player) {
+    saveEquipment(collection, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -86,7 +87,7 @@ class Creator {
         );
     }
 
-    saveQuests(collection, player) {
+    saveQuests(collection, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -106,7 +107,7 @@ class Creator {
         );
     }
 
-    saveAchievements(collection, player) {
+    saveAchievements(collection, player: Player): void {
         collection.updateOne(
             { username: player.username },
             { $set: player.quests.getAchievements() },
@@ -123,7 +124,7 @@ class Creator {
         );
     }
 
-    saveBank(collection, player) {
+    saveBank(collection, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -143,7 +144,7 @@ class Creator {
         );
     }
 
-    saveRegions(collection, player) {
+    saveRegions(collection, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -168,7 +169,7 @@ class Creator {
         );
     }
 
-    saveAbilities(collection, player) {
+    saveAbilities(collection, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -188,7 +189,7 @@ class Creator {
         );
     }
 
-    saveProfessions(collection, player) {
+    saveProfessions(collection, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -208,7 +209,7 @@ class Creator {
         );
     }
 
-    saveFriends(collection, player) {
+    saveFriends(collection, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -250,16 +251,16 @@ class Creator {
         );
     }
 
-    static getPasswordHash(password, callback) {
-        bcryptjs.hash(password, 10, (error, hash) => {
+    static getPasswordHash(password: string, callback: (hash: string) => void): void {
+        bcryptjs.hash(password, 10, (error: any, hash: string) => {
             if (error) throw error;
 
             callback(hash);
         });
     }
 
-    static getPlayerData(player, callback) {
-        Creator.getPasswordHash(player.password, (hash) => {
+    static getPlayerData(player: Player, callback: (data: any) => void): void {
+        Creator.getPasswordHash(player.password, (hash: string) => {
             callback({
                 username: player.username,
                 password: hash,
@@ -275,13 +276,12 @@ class Creator {
                 pvpKills: player.pvpKills,
                 pvpDeaths: player.pvpDeaths,
                 orientation: player.orientation,
-                rank: player.rank,
                 ban: player.ban,
                 mute: player.mute,
                 membership: player.membership,
                 lastLogin: player.lastLogin,
-                lastWarp: player.lastWarp,
-                guildName: player.guildName,
+                lastWarp: player.warp.lastWarp,
+                //guildName: player.guildName,
                 invisibleIds: player.formatInvisibles(),
                 userAgent: player.userAgent,
                 mapVersion: player.mapVersion
@@ -289,7 +289,7 @@ class Creator {
         });
     }
 
-    static getPlayerEquipment(player) {
+    static getPlayerEquipment(player: Player): any {
         return {
             username: player.username,
             armour: [
@@ -331,7 +331,7 @@ class Creator {
      * The above object arrays should just be concatenated.
      */
 
-    static getFullData(player) {
+    static getFullData(player: Player): any {
         let position = player.getSpawn();
 
         return {
@@ -344,11 +344,10 @@ class Creator {
             rights: player.rights ? player.rights : 0,
             hitPoints: player.hitPoints ? player.hitPoints : 100,
             mana: player.mana ? player.mana : 20,
-            poisoned: player.poisoned ? player.poisoned : 0,
+            poison: player.poison ? player.poison : 0,
             experience: player.experience ? player.experience : 0,
             ban: player.ban ? player.ban : 0,
             mute: player.mute ? player.mute : 0,
-            rank: player.rank ? player.rank : 0,
             membership: player.membership ? player.membership : 0,
             lastLogin: player.lastLogin ? player.lastLogin : 0,
             pvpKills: player.pvpKills ? player.pvpKills : 0,

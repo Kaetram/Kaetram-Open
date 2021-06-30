@@ -19,7 +19,7 @@ class Tenebris extends Combat {
         this.illusions = [];
         this.firstIllusionKilled = false;
 
-        this.lastIllusion = new Date().getTime();
+        this.lastIllusion = Date.now();
         this.respawnDelay = 95000;
 
         character.onDeath(() => {
@@ -64,7 +64,7 @@ class Tenebris extends Combat {
 
         _.each(this.illusions, (illusion: Mob) => {
             illusion.onDeath(() => {
-                if (this.isLast()) this.lastIllusion = new Date().getTime();
+                if (this.isLast()) this.lastIllusion = Date.now();
 
                 this.illusions.splice(this.illusions.indexOf(illusion), 1);
             });
@@ -137,7 +137,7 @@ class Tenebris extends Combat {
         return (
             !this.isIllusion() &&
             !this.hasIllusions &&
-            new Date().getTime() - this.lastIllusion === 45000 &&
+            Date.now() - this.lastIllusion === 45000 &&
             Utils.randomInt(0, 4) === 2
         );
     }
