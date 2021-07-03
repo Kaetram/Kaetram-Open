@@ -44,8 +44,8 @@ class API {
         });
     }
 
-    handle(router: express.Router) {
-        router.get('/', (_request: any, response: any) => {
+    handle(router: express.Router): void {
+        router.get('/', (_request: express.Request, response: express.Response) => {
             response.json({
                 name: config.name,
                 port: config.port, // Sends the server port.
@@ -55,20 +55,20 @@ class API {
             });
         });
 
-        router.post('/player', (request: any, response: any) => {
+        router.post('/player', (request: express.Request, response: express.Response) => {
             this.handlePlayer(request, response);
         });
 
-        router.post('/chat', (request: any, response: any) => {
+        router.post('/chat', (request: express.Request, response: express.Response) => {
             this.handleChat(request, response);
         });
 
-        router.get('/players', (request: any, response: any) => {
+        router.get('/players', (request: express.Request, response: express.Response) => {
             this.handlePlayers(request, response);
         });
     }
 
-    handlePlayer(request: any, response: any) {
+    handlePlayer(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(request.body.accessToken)) {
             this.returnError(
                 response,
@@ -78,7 +78,7 @@ class API {
             return;
         }
 
-        let username = request.body.username;
+        let { username } = request.body;
 
         if (!username) {
             this.returnError(
@@ -103,7 +103,7 @@ class API {
         response.json(this.getPlayerData(player));
     }
 
-    handleChat(request: any, response: any) {
+    handleChat(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(request.body.accessToken)) {
             this.returnError(
                 response,
@@ -115,8 +115,7 @@ class API {
 
         let text = Utils.parseMessage(request.body.text),
             source = Utils.parseMessage(request.body.source),
-            colour = request.body.colour,
-            username = request.body.username;
+            { colour, username } = request.body;
 
         if (username) {
             let player = this.world.getPlayerByName(username);
@@ -133,7 +132,7 @@ class API {
         response.json({ status: 'success' });
     }
 
-    handlePlayers(request: any, response: any) {
+    handlePlayers(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(request.query.accessToken)) {
             this.returnError(
                 response,
@@ -152,7 +151,7 @@ class API {
         response.json(players);
     }
 
-    pingHub() {
+    pingHub(): void {
         let url = this.getUrl('ping'),
             data = {
                 form: {
@@ -167,11 +166,11 @@ class API {
             try {
                 let data = JSON.parse(body);
 
-                if (data.status === 'success') {
-                    if (!this.hubConnected) {
-                        log.notice('Connected to Kaetram Hub successfully!');
-                        this.hubConnected = true;
-                    }
+                if (data.status !== 'success') return;
+
+                if (!this.hubConnected) {
+                    log.notice('Connected to Kaetram Hub successfully!');
+                    this.hubConnected = true;
                 }
             } catch (e) {
                 log.error('Could not connect to Kaetram Hub.');
@@ -180,66 +179,72 @@ class API {
         });
     }
 
-    sendChat(source: string, text: string, withArrow?: boolean) {
+    sendChat(source: string, text: string, withArrow?: boolean): void {
         let url = this.getUrl('chat'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
                     serverId: config.serverId,
-                    source: source,
-                    text: text,
-                    withArrow: withArrow
+                    source,
+                    text,
+                    withArrow
                 }
             };
 
-        request.post(url, data, (_error: any, _response: any, body: any) => {
-            try {
-                let data = JSON.parse(body);
+        request.post(
+            url,
+            data,
+            (_error: express.ErrorRequestHandler, _response: express.Response, body: string) => {
+                try {
+                    let data = JSON.parse(body);
 
-                if (data.status === 'error') console.log(data);
+                    if (data.status === 'error') console.log(data);
 
                 //TODO - Do something with this?
-            } catch (e) {
-                log.error('Could not send message to hub.');
-            }
+                } catch (e) {
+                    log.error('Could not send message to hub.');
+                }
         });
     }
 
-    sendPrivateMessage(source: Player, target: string, text: string) {
+    sendPrivateMessage(source: Player, target: string, text: string): void {
         let url = this.getUrl('privateMessage'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
                     source: Utils.formatUsername(source.username),
                     target: Utils.formatUsername(target),
-                    text: text
+                    text
                 }
             };
 
-        request.post(url, data, (_error: any, _response: any, body: any) => {
-            try {
-                let data = JSON.parse(body);
+        request.post(
+            url,
+            data,
+            (_error: express.ErrorRequestHandler, _response: express.Response, body: string) => {
+                try {
+                    let data = JSON.parse(body);
 
-                if (data.error) {
-                    source.notify(`Player @aquamarine@${target}@white@ is not online.`);
-                    return;
+                    if (data.error) {
+                        source.notify(`Player @aquamarine@${target}@white@ is not online.`);
+                        return;
+                    }
+
+                    // No error has occurred.
+
+                    // TODO - Add chat colours/format to config.
+                    source.chat(`[To ${target}]`, text, 'aquamarine');
+                } catch (e) {
+                    log.error('Could not send privateMessage to hub.');
                 }
-
-                // No error has occurred.
-
-                // TODO - Add chat colours/format to config.
-                source.chat(`[To ${target}]`, text, 'aquamarine');
-            } catch (e) {
-                log.error('Could not send privateMessage to hub.');
-            }
         });
     }
 
-    verifyToken(token: string) {
+    verifyToken(token: string): boolean {
         return token === config.accessToken;
     }
 
-    getPlayerData(player: Player) {
+    getPlayerData(player: Player): any {
         if (!player) return {};
 
         return {
@@ -257,14 +262,18 @@ class API {
         };
     }
 
-    getUrl(path: string) {
+    getUrl(path: string): string {
         return `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
-    returnError(response: any, error: any, message: string) {
+    returnError(
+        response: express.Response,
+        error: express.ErrorRequestHandler,
+        message: string
+    ): void {
         response.json({
-            error: error,
-            message: message
+            error,
+            message
         });
     }
 }
