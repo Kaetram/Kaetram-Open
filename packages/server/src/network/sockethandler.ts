@@ -1,11 +1,7 @@
-import config from '../../config';
-
 import SocketIO from './impl/socketio';
 import WS from './impl/ws';
 
 import Connection from './connection';
-
-import Utils from '../util/utils';
 
 export default class SocketHandler {
     private socketIO: SocketIO;
@@ -27,7 +23,7 @@ export default class SocketHandler {
         this.load();
     }
 
-    load() {
+    load(): void {
         this.socketIO.onInitialize(() => {
             this.readyCallback();
         });
@@ -49,7 +45,7 @@ export default class SocketHandler {
      * @param connection The connection we are adding.
      */
 
-    add(connection: Connection) {
+    add(connection: Connection): void {
         this.connections[connection.id] = connection;
 
         if (this.connectionCallback) this.connectionCallback(connection);
@@ -61,7 +57,7 @@ export default class SocketHandler {
      * @param id The connection id we are removing.
      */
 
-    remove(id: string) {
+    remove(id: string): void {
         delete this.connections[id];
     }
 
@@ -83,7 +79,7 @@ export default class SocketHandler {
      * @param callback The void function callback
      */
 
-    onReady(callback: () => void) {
+    onReady(callback: () => void): void {
         this.readyCallback = callback;
     }
 
@@ -93,7 +89,7 @@ export default class SocketHandler {
      * @param callback The callback containing the Connection that occurs.
      */
 
-    onConnection(callback: (connection: Connection) => void) {
+    onConnection(callback: (connection: Connection) => void): void {
         this.connectionCallback = callback;
     }
 }
