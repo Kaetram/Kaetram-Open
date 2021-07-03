@@ -77,7 +77,7 @@ class Main {
                 player: Player,
                 newX: number,
                 newY: number,
-                itemId: number,
+                itemId: string,
                 itemCount: number;
 
             switch (command) {

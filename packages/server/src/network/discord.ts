@@ -1,4 +1,4 @@
-import { Client, WebhookClient } from 'discord.js';
+import { Client, WebhookClient, Message } from 'discord.js';
 import Utils from '../util/utils';
 import World from '../game/world';
 import log from '../util/log';
@@ -33,7 +33,7 @@ class Discord {
             log.notice('Successfully connected to the Discord server.');
         });
 
-        this.client.on('message', (message) => {
+        this.client.on('message', (message: Message) => {
             if (message.author.id === config.discordWebhookId) return;
 
             if (message.channel.id !== config.discordServerId) return;
@@ -51,7 +51,7 @@ class Discord {
      * Sends a message to the Discord server using the webhook.
      */
 
-    sendWebhook(source: any, message: any, withArrow?: any) {
+    sendWebhook(source: string, message: string, withArrow?: boolean): void {
         if (!config.discordEnabled) return;
 
         let formattedSource = Utils.formatUsername(source);
