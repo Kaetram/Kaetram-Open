@@ -15,10 +15,14 @@ class Connection {
     public socket: Socket | ws.Socket;
     public socketHandler: SocketHandler;
 
-    private listenCallback: Function;
-    private closeCallback: Function;
+    private listenCallback: (message: JSON) => void;
+    private closeCallback: () => void;
 
-    constructor(id: string, type: string, socket: Socket | ws.Socket, socketHandler: SocketHandler) {
+    constructor(id: string,
+        type: string,
+        socket: Socket | ws.Socket,
+        socketHandler: SocketHandler
+    ) {
         this.id = id;
         this.type = type;
         this.socket = socket;
@@ -42,29 +46,29 @@ class Connection {
         });
     }
 
-    listen(callback: Function) {
+    listen(callback: (message: JSON) => void): void {
         this.listenCallback = callback;
     }
 
-    onClose(callback: Function) {
+    onClose(callback: () => void): void {
         this.closeCallback = callback;
     }
 
-    send(message: any) {
+    send(message: string): void {
         this.sendUTF8(JSON.stringify(message));
     }
 
-    sendUTF8(data: any) {
+    sendUTF8(data: any): void {
         this.socket.send(data);
     }
 
-    close(reason?: string) {
+    close(reason?: string): void {
         if (reason) log.info('[Connection] Closing - ' + reason);
 
         this.type === 'WebSocket' ? this.socket.close() : this.socket.disconnect(true);
     }
 
-    getCloseSignal() {
+    getCloseSignal(): string {
         return this.type === 'WebSocket' ? 'close' : 'disconnect';
     }
 }

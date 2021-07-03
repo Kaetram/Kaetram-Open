@@ -32,7 +32,7 @@ export default class WebSocket {
         this.socketHandler = socketHandler;
     }
 
-    loadServer() {
+    loadServer(): void {
         this.httpServer = http.createServer(this.httpResponse).listen(this.port, this.host, () => {
             log.info(`[${this.type}] Server is now listening on port: ${this.port}.`);
 
@@ -45,7 +45,7 @@ export default class WebSocket {
      * to access the server.
      */
 
-    httpResponse(_request: any, response: any) {
+    httpResponse(_request: http.IncomingMessage, response: http.ServerResponse): void {
         response.writeHead(200, { 'Content-Type': 'text/plain' });
         response.write('This is server, why are you here?');
         response.end();
@@ -64,11 +64,11 @@ export default class WebSocket {
         return status;
     }
 
-    onAdd(callback: (connection: Connection) => void) {
+    onAdd(callback: (connection: Connection) => void): void {
         this.addCallback = callback;
     }
 
-    onInitialize(callback: () => void) {
+    onInitialize(callback: () => void): void {
         this.initializedCallback = callback;
     }
 }
