@@ -18,6 +18,15 @@ import Entities from '../controllers/entities';
 
 const map = path.resolve(__dirname, '../../data/map/world.json');
 
+type Bounds = {
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+};
+
+type Tile = string | string[];
+
 class Region {
     /**
      * Region Generation.
@@ -37,9 +46,9 @@ class Region {
 
     loaded: boolean;
 
-    addCallback: Function;
-    removeCallback: Function;
-    incomingCallback: Function;
+    addCallback: (entity: Entity, regionId: string) => void;
+    removeCallback: (entity: Entity, oldRegions: string[]) => void;
+    incomingCallback: (entity: Entity, regionId: string) => void;
 
     constructor(world: World) {
         this.map = world.map;
@@ -66,8 +75,8 @@ class Region {
             }
         });
 
-        this.onRemove((entity: Entity, oldRegions: any) => {
-            if (!oldRegions || oldRegions.length < 1 || !entity || !entity.username) return;
+        this.onRemove((entity: Entity, oldRegions: string[]) => {
+            if (!oldRegions || oldRegions.length === 0 || !entity || !entity.username) return;
         });
 
         this.onIncoming((entity: Entity, regionId: string) => {
@@ -81,8 +90,7 @@ class Region {
         this.loadWatcher();
     }
 
-    load() {
-
+    load(): void {
         this.mapRegions.forEachRegion((regionId: string) => {
             this.regions[regionId] = {
                 entities: {},
@@ -96,15 +104,15 @@ class Region {
         log.info('Finished loading regions!');
     }
 
-    loadWatcher() {
-        fs.watch(map, (_eventType, _fileName) => {
+    loadWatcher(): void {
+        fs.watch(map, () => {
             this.update();
         });
 
         log.info('Finished loading file watcher!');
     }
 
-    update() {
+    update(): void {
         let data = fs.readFileSync(map, {
             encoding: 'utf8',
             flag: 'r'
@@ -156,7 +164,7 @@ class Region {
         this.push(player);
 
         this.world.push(Packets.PushOpcode.OldRegions, {
-            player: player,
+            player,
             message: new Messages.Region(Packets.RegionOpcode.Update, {
                 id: player.instance,
                 type: 'remove'
@@ -181,7 +189,7 @@ class Region {
         if (!this.loaded) return;
 
         this.mapRegions.forEachRegion((regionId: string) => {
-            if (this.regions[regionId].incoming.length < 1) return;
+            if (this.regions[regionId].incoming.length === 0) return;
 
             this.sendSpawns(regionId);
 
@@ -231,25 +239,24 @@ class Region {
             doors: any = player.doors.getAllTiles(),
             trees: any = player.getSurroundingTrees();
 
-        doors.indexes.push.apply(doors.indexes, trees.indexes);
-        doors.data.push.apply(doors.data, trees.data);
-        doors.collisions.push.apply(doors.collisions, trees.collisions);
-        
+        doors.indexes = [...doors.indexes, trees.indexes];
+        doors.data = [...doors.data, trees.data];
+        doors.collisions = [...doors.collisions, trees.collisions];
         if (trees.objectData) doors.objectData = trees.objectData;
 
         for (let i in doors.indexes) {
             let tile: any = {
-                data: doors.data[i],
-                isCollision: doors.collisions[i]
-            }, index = doors.indexes[i];
+                    data: doors.data[i],
+                    isCollision: doors.collisions[i]
+                },
+                index = doors.indexes[i];
 
             if (!doors.objectData) break;
 
             if (index in doors.objectData) {
                 tile.isObject = doors.objectData[index].isObject;
 
-                if (doors.objectData[index].cursor)
-                    tile.cursor = doors.objectData[index].cursor;
+                if (doors.objectData[index].cursor) tile.cursor = doors.objectData[index].cursor;
             }
 
             dynamicTiles[index] = tile;
@@ -258,12 +265,11 @@ class Region {
         return dynamicTiles;
     }
 
-    sendTilesetInfo(player: Player) {
-        let tileCollisions = this.map.tileCollisions,
-            tilesetData = {};
+    sendTilesetInfo(player: Player): void {
+        let tilesetData = {};
 
         for (let i in this.map.tileCollisions)
-            tilesetData[tileCollisions[i]] = { c: true };
+            tilesetData[this.map.tileCollisions[i]] = { c: true };
 
         for (let i in this.map.high)
             if (i in tilesetData) tilesetData[i].h = this.map.high[i];
@@ -272,21 +278,21 @@ class Region {
         player.send(new Messages.Region(Packets.RegionOpcode.Tileset, tilesetData));
     }
 
-    sendSpawns(regionId: string) {
+    sendSpawns(regionId: string): void {
         if (!regionId) return;
 
         _.each(this.regions[regionId].incoming, (entity: Entity) => {
             if (!entity || !entity.instance || entity.instanced) return;
 
             this.world.push(Packets.PushOpcode.Regions, {
-                regionId: regionId,
+                regionId,
                 message: new Messages.Spawn(entity),
                 ignoreId: entity.isPlayer() ? entity.instance : null
             });
         });
     }
 
-    add(entity: Entity, regionId: string) {
+    add(entity: Entity, regionId: string): string[] {
         const newRegions = [];
 
         if (entity && regionId && regionId in this.regions) {
@@ -311,7 +317,7 @@ class Region {
         return newRegions;
     }
 
-    remove(entity: Entity) {
+    remove(entity: Entity): string[] {
         const oldRegions = [];
 
         if (entity && entity.region) {
@@ -337,7 +343,7 @@ class Region {
         return oldRegions;
     }
 
-    incoming(entity: Entity, regionId: string) {
+    incoming(entity: Entity, regionId: string): void {
         if (!entity || !regionId) return;
 
         const region = this.regions[regionId];
@@ -347,7 +353,7 @@ class Region {
         if (this.incomingCallback) this.incomingCallback(entity, regionId);
     }
 
-    handle(entity: Entity, region?: string) {
+    handle(entity: Entity, region?: string): boolean {
         let regionsChanged = false;
 
         if (!entity) return regionsChanged;
@@ -370,8 +376,8 @@ class Region {
         return regionsChanged;
     }
 
-    push(player: Player) {
-        let entities: any;
+    push(player: Player): void {
+        let entities: string[];
 
         if (!player || !(player.region in this.regions)) return;
 
@@ -388,13 +394,13 @@ class Region {
         player.send(new Messages.List(entities));
     }
 
-    changeTileAt(player: Player, newTile: any, x: number, y: number) {
+    changeTileAt(player: Player, newTile: Tile, x: number, y: number): void {
         const index = this.gridPositionToIndex(x, y);
 
         player.send(Region.getModify(index, newTile));
     }
 
-    changeGlobalTile(newTile: any, x: number, y: number) {
+    changeGlobalTile(newTile: Tile, x: number, y: number): void {
         const index = this.gridPositionToIndex(x, y);
 
         this.map.data[index] = newTile;
@@ -404,7 +410,7 @@ class Region {
         });
     }
 
-    getRegionData(region: string, player: Player, force?: boolean) {
+    getRegionData(region: string, player: Player, force?: boolean): any {
         let data = [];
 
         if (!player) return data;
@@ -424,24 +430,26 @@ class Region {
         return data;
     }
 
-    forEachTile(bounds: any, webSocket: boolean, dynamicTiles: any, callback: (tile: any) => void) {
+    forEachTile(
+        bounds: Bounds,
+        webSocket: boolean,
+        dynamicTiles: any,
+        callback: (tile: any) => void
+    ): void {
         this.forEachGrid(bounds, (x: number, y: number) => {
             let index = this.gridPositionToIndex(x - 1, y),
                 tileData = this.map.data[index],
-                isCollision =
-                    this.map.collisions.indexOf(index) > -1 || !tileData,
+                isCollision = this.map.collisions.includes(index) || !tileData,
                 objectId: any;
 
-            if (tileData !== 0) {
-                if (tileData instanceof Array) {
-                    for (let j = 0; j < tileData.length; j++) {
-                        if (this.map.isObject(tileData[j])) {
-                            objectId = tileData[j];
-                            break;
-                        }
+            if (tileData !== 0)
+                if (Array.isArray(tileData))
+                    for (let tile of tileData)
+                    if (this.map.isObject(tile)) {
+                        objectId = tile;
+                        break;
                     }
-                } else if (this.map.isObject(tileData)) objectId = tileData;
-            }
+                else if (this.map.isObject(tileData)) objectId = tileData;
 
             let info: any = {
                 index: index
@@ -460,9 +468,7 @@ class Region {
                 if (isCollision) info.isCollision = isCollision;
                 if (objectId) {
                     info.isObject = !!objectId;
-    
                     const cursor = this.map.getCursor(info.index, objectId);
-    
                     if (cursor) info.cursor = cursor;
                 }
             }
@@ -470,20 +476,19 @@ class Region {
             if (webSocket) {
                 delete info.index;
 
-                info.position = { x: x, y: y };
+                info.position = { x, y };
             }
 
             callback(info);
         });
     }
 
-    forEachGrid(bounds: any, callback: (x: number, y: number) => void) {
+    forEachGrid(bounds: Bounds, callback: (x: number, y: number) => void): void {
         for (let y = bounds.startY; y < bounds.endY; y++)
-            for (let x = bounds.startX; x < bounds.endX; x++)
-                callback(x, y);
+            for (let x = bounds.startX; x < bounds.endX; x++) callback(x, y);
     }
 
-    getRegionBounds(regionId: string) {
+    getRegionBounds(regionId: string): Bounds {
         const regionCoordinates = this.mapRegions.regionIdToCoordinates(regionId);
 
         return {
@@ -494,36 +499,36 @@ class Region {
         };
     }
 
-    static getModify(index: number, newTile: any) {
+    static getModify(index: number, newTile: Tile): typeof Messages.Region {
         return new Messages.Region(Packets.RegionOpcode.Modify, {
-            index: index,
-            newTile: newTile
+            index,
+            newTile
         });
     }
 
-    static instanceToRegionId(instancedRegionId: string) {
+    static instanceToRegionId(instancedRegionId: string): string {
         const region = instancedRegionId.split('-');
 
         return region[0] + '-' + region[1];
     }
 
-    static regionIdToInstance(entity: Entity, regionId: string) {
+    static regionIdToInstance(entity: Entity, regionId: string): string {
         return regionId + '-' + entity.instance;
     }
 
-    gridPositionToIndex(x: number, y: number) {
+    gridPositionToIndex(x: number, y: number): number {
         return y * this.map.width + x + 1;
     }
 
-    onAdd(callback: Function) {
+    onAdd(callback: (entity: Entity, regionId: string) => void): void {
         this.addCallback = callback;
     }
 
-    onRemove(callback: Function) {
+    onRemove(callback: (entity: Entity, oldRegions: string[]) => void): void {
         this.removeCallback = callback;
     }
 
-    onIncoming(callback: Function) {
+    onIncoming(callback: (entity: Entity, regionId: string) => void): void {
         this.incomingCallback = callback;
     }
 }
