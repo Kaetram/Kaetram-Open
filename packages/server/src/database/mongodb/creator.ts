@@ -280,7 +280,7 @@ class Creator {
                 mute: player.mute,
                 membership: player.membership,
                 lastLogin: player.lastLogin,
-                lastWarp: player.warp.lastWarp,
+                lastWarp: player.warp?.lastWarp,
                 //guildName: player.guildName,
                 invisibleIds: player.formatInvisibles(),
                 userAgent: player.userAgent,
