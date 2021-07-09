@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import Messages from '../network/messages';
 import Packets from '../network/packets';

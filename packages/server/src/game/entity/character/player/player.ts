@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import log from '../../../../util/log';
 import Character from '../character';
@@ -37,8 +35,18 @@ import Trade from './trade';
 import Warp from './warp';
 import Doors from './doors';
 import Friends from './friends';
+import Minigame from '@kaetram/src/minigames/minigame';
+import NPC from '../../npc/npc';
 import config from '../../../../../config';
 import Entities from '../../../../controllers/entities';
+
+type VoidCallback = () => void; // TODO - Move this into `@kaetram/common`
+type TeleportCallback = (x: number, y: number, isDoor?: boolean) => void;
+type KillCallback = (character: Character) => void;
+type InterfaceCallback = (state: boolean) => void;
+type NPCTalkCallback = (npc: NPC) => void;
+type DoorCallback = (x: number, y: number) => void;
+type HitCallback = (attacker: Character, damage?: number) => void;
 
 class Player extends Character {
     public world: World;
@@ -57,15 +65,13 @@ class Player extends Character {
     public ready: boolean;
 
     // public moving: boolean;
-    public potentialPosition: any;
-    public futurePosition: any;
-    public regionPosition: any;
+    public regionPosition: number[];
 
     public newRegion: boolean;
 
-    public team: any; // TODO
-    public userAgent: any; // TODO
-    public minigame: any; // TODO
+    public team: string; // TODO
+    public userAgent: string;
+    public minigame: Minigame; // TODO
 
     public disconnectTimeout: any;
     public timeoutDuration: number;
@@ -101,16 +107,16 @@ class Player extends Character {
     public cheatScore: number;
     public defaultMovementSpeed: number;
 
-    public regionsLoaded: any;
-    public lightsLoaded: any;
+    public regionsLoaded: string[];
+    public lightsLoaded: string[];
 
-    public npcTalk: any;
+    public npcTalk: number;
 
     // public username: string;
     public password: string;
     public email: string;
 
-    public kind: any; // TO REMOVE;
+    public kind: string; // TO REMOVE;
     public rights: number;
     public experience: number;
     public ban: number;
@@ -139,7 +145,7 @@ class Player extends Character {
     public permanentPVP: boolean;
     public movementStart: number;
 
-    public pingTime: any;
+    public pingTime: number;
 
     public regionWidth: number;
     public regionHeight: number;
@@ -155,19 +161,17 @@ class Player extends Character {
 
     public selectedShopItem: any;
 
-    // public deathCallback: Function;
-    public teleportCallback: Function;
-    public cheatScoreCallback: Function;
-    public profileToggleCallback: Function;
-    public inventoryToggleCallback: Function;
-    public warpToggleCallback: Function;
-    public orientationCallback: Function;
-    public regionCallback: Function;
-    public killCallback: Function;
-    public attackCallback: Function;
-    public npcTalkCallback: Function;
-    public doorCallback: Function;
-    public readyCallback: Function;
+    public teleportCallback: TeleportCallback;
+    public cheatScoreCallback: VoidCallback;
+    public profileToggleCallback: InterfaceCallback;
+    public inventoryToggleCallback: InterfaceCallback;
+    public warpToggleCallback: InterfaceCallback;
+    public orientationCallback: VoidCallback;
+    public regionCallback: VoidCallback;
+    public killCallback: KillCallback;
+    public npcTalkCallback: NPCTalkCallback;
+    public doorCallback: DoorCallback;
+    public readyCallback: VoidCallback;
 
     constructor(world: World, database: MongoDB, connection: Connection, clientId: string) {
         super(-1, 'player', connection.id, -1, -1);
@@ -188,8 +192,6 @@ class Player extends Character {
         this.ready = false;
 
         this.moving = false;
-        this.potentialPosition = null;
-        this.futurePosition = null;
         this.regionPosition = null;
 
         this.newRegion = false;
@@ -240,7 +242,7 @@ class Player extends Character {
         this.npcTalk = null;
     }
 
-    load(data: any) {
+    load(data: any): void {
         this.kind = data.kind;
         this.rights = data.rights;
         this.experience = data.experience;
@@ -269,9 +271,10 @@ class Player extends Character {
             { weapon } = data,
             { pendant } = data,
             { ring } = data,
-            { boots } = data;
+            { boots } = data,
+            { x, y } = data;
 
-        this.setPosition(data.x, data.y);
+        this.setPosition(x, y);
         this.setArmour(armour[0], armour[1], armour[2], armour[3]);
         this.setWeapon(weapon[0], weapon[1], weapon[2], weapon[3]);
         this.setPendant(pendant[0], pendant[1], pendant[2], pendant[3]);
@@ -279,7 +282,7 @@ class Player extends Character {
         this.setBoots(boots[0], boots[1], boots[2], boots[3]);
     }
 
-    destroy() {
+    destroy(): void {
         clearTimeout(this.disconnectTimeout);
 
         this.disconnectTimeout = null;
@@ -299,7 +302,7 @@ class Player extends Character {
         this.connection = null;
     }
 
-    loadRegions(regions: any) {
+    loadRegions(regions: any): void {
         if (!regions) return;
 
         if (this.mapVersion !== this.map.version) {
@@ -315,7 +318,7 @@ class Player extends Character {
         if (regions.gameVersion === config.gver) this.regionsLoaded = regions.regions.split(',');
     }
 
-    loadProfessions() {
+    loadProfessions(): void {
         if (config.offlineMode) return;
 
         this.database.loader.getProfessions(this, (info: any) => {
@@ -329,7 +332,7 @@ class Player extends Character {
         });
     }
 
-    loadFriends() {
+    loadFriends(): void {
         if (config.offlineMode) return;
 
         this.database.loader.getFriends(this, (info: any) => {
@@ -339,7 +342,7 @@ class Player extends Character {
         });
     }
 
-    loadInventory() {
+    loadInventory(): void {
         if (config.offlineMode) {
             this.inventory.loadEmpty();
             return;
@@ -366,7 +369,7 @@ class Player extends Character {
         );
     }
 
-    loadBank() {
+    loadBank(): void {
         if (config.offlineMode) {
             this.bank.loadEmpty();
             return;
@@ -385,7 +388,7 @@ class Player extends Character {
         });
     }
 
-    loadQuests() {
+    loadQuests(): void {
         if (config.offlineMode) return;
 
         this.database.loader.getAchievements(this, (ids: any, progress: any) => {
@@ -447,7 +450,7 @@ class Player extends Character {
         });
     }
 
-    intro() {
+    intro(): void {
         if (this.ban > Date.now()) {
             this.connection.sendUTF8('ban');
             this.connection.close('Player: ' + this.username + ' is banned.');
@@ -995,13 +998,6 @@ class Player extends Character {
         this.boots = new Boots(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
-    guessPosition(x: number, y: number) {
-        this.potentialPosition = {
-            x,
-            y
-        };
-    }
-
     setPosition(x: number, y: number) {
         if (this.dead) return;
 
@@ -1031,19 +1027,6 @@ class Player extends Character {
         if (this.orientationCallback)
             // Will be necessary in the future.
             this.orientationCallback;
-    }
-
-    setFuturePosition(x: number, y: number) {
-        /**
-         * Most likely will be used for anti-cheating methods
-         * of calculating the actual time and duration for the
-         * displacement.
-         */
-
-        this.futurePosition = {
-            x,
-            y
-        };
     }
 
     loadRegion(regionId: string) {
@@ -1153,7 +1136,7 @@ class Player extends Character {
         };
     }
 
-    getRemoteAddress() {
+    getRemoteAddress(): string {
         return this.connection.socket.conn.remoteAddress;
     }
 
@@ -1168,12 +1151,14 @@ class Player extends Character {
         return { x: 325, y: 87 };
     }
 
-    getHit(target?: Character) {
+    getHit(target?: Character): Hit {
         const defaultDamage = Formulas.getDamage(this, target),
             isSpecial = Utils.randomInt(0, 100) < 30 + this.weapon.abilityLevel * 3;
 
         if (!isSpecial || !this.hasSpecialAttack())
             return new Hit(Modules.Hits.Damage, defaultDamage);
+
+        let multiplier: number, damage: number;
 
         switch (this.weapon.ability) {
             case Modules.Enchantment.Critical:
@@ -1183,8 +1168,8 @@ class Player extends Character {
                  * out of hand, it's easier to buff than to nerf..
                  */
 
-                const multiplier = 1 + this.weapon.abilityLevel;
-                const damage = defaultDamage * multiplier;
+                multiplier = 1 + this.weapon.abilityLevel;
+                damage = defaultDamage * multiplier;
 
                 return new Hit(Modules.Hits.Critical, damage);
 
@@ -1196,17 +1181,17 @@ class Player extends Character {
         }
     }
 
-    isMuted() {
+    isMuted(): boolean {
         const time = Date.now();
 
         return this.mute - time > 0;
     }
 
-    isRanged() {
+    isRanged(): boolean {
         return this.weapon && this.weapon.isRanged();
     }
 
-    isDead() {
+    isDead(): boolean {
         return this.getHitPoints() < 1 || this.dead;
     }
 
@@ -1214,21 +1199,21 @@ class Player extends Character {
      * Miscellaneous
      */
 
-    send(message: any) {
+    send(message: typeof Messages): void {
         this.world.push(Packets.PushOpcode.Player, {
             player: this,
             message
         });
     }
 
-    sendToRegion(message: any) {
+    sendToRegion(message: typeof Messages): void {
         this.world.push(Packets.PushOpcode.Region, {
             regionId: this.region,
             message
         });
     }
 
-    sendToAdjacentRegions(regionId: string, message: any, ignoreId?: string) {
+    sendToAdjacentRegions(regionId: string, message: typeof Messages, ignoreId?: string): void {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId,
             message,
@@ -1236,7 +1221,7 @@ class Player extends Character {
         });
     }
 
-    sendEquipment() {
+    sendEquipment(): void {
         const info = {
             armour: this.armour.getData(),
             weapon: this.weapon.getData(),
@@ -1248,7 +1233,7 @@ class Player extends Character {
         this.send(new Messages.Equipment(Packets.EquipmentOpcode.Batch, info));
     }
 
-    sendProfessions() {
+    sendProfessions(): void {
         if (!this.professions) return;
 
         this.send(
@@ -1258,14 +1243,14 @@ class Player extends Character {
         );
     }
 
-    sendToSpawn() {
+    sendToSpawn(): void {
         const position = this.getSpawn();
 
         this.x = position.x;
         this.y = position.y;
     }
 
-    sendMessage(playerName: string, message: string) {
+    sendMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
             this.world.api.sendPrivateMessage(this, playerName, message);
             return;
@@ -1284,7 +1269,7 @@ class Player extends Character {
         this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
     }
 
-    sync() {
+    sync(): void {
         /**
          * Function to be used for syncing up health,
          * mana, exp, and other variables
@@ -1311,7 +1296,7 @@ class Player extends Character {
         this.save();
     }
 
-    popup(title: string, message: string, colour: string) {
+    popup(title: string, message: string, colour: string): void {
         if (!title) return;
 
         title = Utils.parseMessage(title);
@@ -1326,7 +1311,7 @@ class Player extends Character {
         );
     }
 
-    notify(message: string, colour?: string) {
+    notify(message: string, colour?: string): void {
         if (!message) return;
 
         // Prevent notify spams
@@ -1349,7 +1334,13 @@ class Player extends Character {
      * show special messages to the player.
      */
 
-    chat(source: string, text: string, colour?: string, isGlobal?: boolean, withBubble?: boolean) {
+    chat(
+        source: string,
+        text: string,
+        colour?: string,
+        isGlobal?: boolean,
+        withBubble?: boolean
+    ): void {
         if (!source || !text) return;
 
         this.send(
@@ -1363,7 +1354,7 @@ class Player extends Character {
         );
     }
 
-    stopMovement(force?: boolean) {
+    stopMovement(force?: boolean): void {
         /**
          * Forcefully stopping the player will simply halt
          * them in between tiles. Should only be used if they are
@@ -1378,13 +1369,13 @@ class Player extends Character {
         );
     }
 
-    finishedTutorial() {
+    finishedTutorial(): boolean {
         if (!this.quests || !config.tutorialEnabled) return true;
 
         return this.quests.getQuest(0).isFinished();
     }
 
-    finishedAchievement(id: number) {
+    finishedAchievement(id: number): boolean {
         if (!this.quests) return false;
 
         const achievement = this.quests.getAchievement(id);
@@ -1394,7 +1385,7 @@ class Player extends Character {
         return achievement.isFinished();
     }
 
-    finishAchievement(id: number) {
+    finishAchievement(id: number): void {
         if (!this.quests) return;
 
         const achievement = this.quests.getAchievement(id);
@@ -1404,7 +1395,7 @@ class Player extends Character {
         achievement.finish();
     }
 
-    checkRegions() {
+    checkRegions(): void {
         if (!this.regionPosition) return;
 
         const diffX = Math.abs(this.regionPosition[0] - this.x),
@@ -1417,7 +1408,7 @@ class Player extends Character {
         }
     }
 
-    movePlayer() {
+    movePlayer(): void {
         /**
          * Server-sided callbacks towards movement should
          * not be able to be overwritten. In the case that
@@ -1429,17 +1420,17 @@ class Player extends Character {
         this.send(new Messages.Movement(Packets.MovementOpcode.Started));
     }
 
-    walkRandomly() {
+    walkRandomly(): void {
         setInterval(() => {
             this.setPosition(this.x + Utils.randomInt(-5, 5), this.y + Utils.randomInt(-5, 5));
         }, 2000);
     }
 
-    killCharacter(character: Character) {
+    killCharacter(character: Character): void {
         if (this.killCallback) this.killCallback(character);
     }
 
-    save() {
+    save(): void {
         if (config.offlineMode || this.isGuest) return;
 
         if ((!this.questsLoaded || !this.achievementsLoaded) && !this.new) return;
@@ -1451,63 +1442,59 @@ class Player extends Character {
         return this.world.map.inTutorialArea(this);
     }
 
-    hasAggressionTimer() {
+    hasAggressionTimer(): boolean {
         return Date.now() - this.lastRegionChange < 1200000; // 20 Minutes
     }
 
-    onOrientation(callback: Function) {
+    onOrientation(callback: VoidCallback): void {
         this.orientationCallback = callback;
     }
 
-    onRegion(callback: Function) {
+    onRegion(callback: VoidCallback): void {
         this.regionCallback = callback;
     }
 
-    onAttack(callback: Function) {
-        this.attackCallback = callback;
-    }
-
-    onHit(callback: Function) {
+    onHit(callback: HitCallback): void {
         this.hitCallback = callback;
     }
 
-    onKill(callback: Function) {
+    onKill(callback: KillCallback): void {
         this.killCallback = callback;
     }
 
-    onDeath(callback: Function) {
+    onDeath(callback: VoidCallback): void {
         this.deathCallback = callback;
     }
 
-    onTalkToNPC(callback: Function) {
+    onTalkToNPC(callback: NPCTalkCallback): void {
         this.npcTalkCallback = callback;
     }
 
-    onDoor(callback: Function) {
+    onDoor(callback: DoorCallback): void {
         this.doorCallback = callback;
     }
 
-    onTeleport(callback: Function) {
+    onTeleport(callback: TeleportCallback): void {
         this.teleportCallback = callback;
     }
 
-    onProfile(callback: Function) {
+    onProfile(callback: InterfaceCallback): void {
         this.profileToggleCallback = callback;
     }
 
-    onInventory(callback: Function) {
+    onInventory(callback: InterfaceCallback): void {
         this.inventoryToggleCallback = callback;
     }
 
-    onWarp(callback: Function) {
+    onWarp(callback: InterfaceCallback): void {
         this.warpToggleCallback = callback;
     }
 
-    onCheatScore(callback: Function) {
+    onCheatScore(callback: VoidCallback): void {
         this.cheatScoreCallback = callback;
     }
 
-    onReady(callback: Function) {
+    onReady(callback: VoidCallback): void {
         this.readyCallback = callback;
     }
 }

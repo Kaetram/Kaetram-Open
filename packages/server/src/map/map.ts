@@ -279,7 +279,7 @@ class Map {
     }
 
     isObject(object: any) {
-        return this.objects.indexOf(object) > -1;
+        return this.objects.includes(object);
     }
 
     getPositionObject(x: number, y: number) {
@@ -375,7 +375,7 @@ class Map {
 
         let tileIndex = this.gridPositionToIndex(x, y);
 
-        return this.collisions.indexOf(tileIndex) > -1;
+        return this.collisions.includes(tileIndex);
     }
 
     /* For preventing NPCs from roaming in null areas. */

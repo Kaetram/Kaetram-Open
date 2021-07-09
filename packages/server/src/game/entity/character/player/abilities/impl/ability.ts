@@ -1,5 +1,3 @@
-/* global module */
-
 import Abilities from '../../../../../../util/abilities';
 
 class Ability {

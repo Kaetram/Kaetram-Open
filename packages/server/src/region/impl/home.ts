@@ -1,5 +1,3 @@
-/* global module */
-
 /**
  * Class used for storing hardcoded values and actions for a specific area
  * in the game.

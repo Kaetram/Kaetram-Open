@@ -1,12 +1,10 @@
-/* global module */
-
 import _ from 'lodash';
 
 export default {
     Data: {},
     Ids: {},
 
-    isShopNPC(npcId: number) {
+    isShopNPC(npcId: number): boolean {
         return npcId in this.Ids;
     },
 
