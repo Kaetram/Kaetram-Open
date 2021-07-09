@@ -1,5 +1,3 @@
-/* global module */
-
 import Modules from '../../../../util/modules';
 import Utils from '../../../../util/utils';
 import Player from './player';

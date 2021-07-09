@@ -1,5 +1,3 @@
-/* global module */
-
 import Quest from '../quest';
 import Player from '../../player';
 import NPC from '../../../../npc/npc';
