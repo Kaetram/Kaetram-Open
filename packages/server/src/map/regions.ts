@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 
 import Map from './map';
@@ -175,7 +173,7 @@ class Regions {
     isSurrounding(regionId: string, toRegionId: string) {
         if (!regionId || !toRegionId) return false;
 
-        return this.getSurroundingRegions(regionId, 1, true).indexOf(toRegionId) > -1;
+        return this.getSurroundingRegions(regionId, 1, true).includes(toRegionId);
     }
 }
 

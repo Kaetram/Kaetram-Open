@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import Packets from '../../network/packets';
 import Messages from '../../network/messages';
@@ -59,7 +57,7 @@ class TeamWar extends Minigame {
     start() {}
 
     add(player: Player) {
-        if (this.lobby.indexOf(player) > -1) return;
+        if (this.lobby.includes(player)) return;
 
         this.lobby.push(player);
 
@@ -127,11 +125,11 @@ class TeamWar extends Minigame {
     }
 
     getTeam(player: Player) {
-        if (this.redTeam.indexOf(player) > -1) return 'red';
+        if (this.redTeam.includes(player)) return 'red';
 
-        if (this.blueTeam.indexOf(player) > -1) return 'blue';
+        if (this.blueTeam.includes(player)) return 'blue';
 
-        if (this.lobby.indexOf(player) > -1) return 'lobby';
+        if (this.lobby.includes(player)) return 'lobby';
 
         return null;
     }

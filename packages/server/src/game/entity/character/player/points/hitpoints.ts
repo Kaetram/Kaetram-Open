@@ -1,5 +1,3 @@
-/* global module */
-
 import Points from './points';
 
 class HitPoints extends Points {

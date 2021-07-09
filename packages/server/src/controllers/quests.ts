@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import Introduction from '../game/entity/character/player/quests/impl/introduction';
 import BulkySituation from '../game/entity/character/player/quests/impl/bulkysituation';

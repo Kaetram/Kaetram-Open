@@ -1,5 +1,3 @@
-/* global module */
-
 class Points {
     public points: number;
     public maxPoints: number;
