@@ -1,5 +1,3 @@
-/* global module */
-
 let Modules = {
     Orientation: {
         Up: 0,

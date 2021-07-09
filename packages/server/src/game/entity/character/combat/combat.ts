@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import Hit from './hit';
 import CombatQueue from './combatqueue';

@@ -1,5 +1,3 @@
-/* global module */
-
 import Utils from './utils';
 import Constants from './constants';
 import Trees from '../../data/professions/trees';

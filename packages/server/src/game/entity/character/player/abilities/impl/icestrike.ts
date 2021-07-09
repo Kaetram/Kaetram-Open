@@ -1,5 +1,3 @@
-/* global module */
-
 import Ability from './ability';
 
 class IceStrike extends Ability {

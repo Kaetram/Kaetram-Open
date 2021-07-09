@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import Messages from '../../../../../network/messages';
 import Packets from '../../../../../network/packets';
@@ -146,11 +144,11 @@ class Quest {
     hasMob(mob: Mob) {
         if (!this.data.mobs) return;
 
-        return this.data.mobs.indexOf(mob.id) > -1;
+        return this.data.mobs.includes(mob.id);
     }
 
     hasNPC(id: number) {
-        return this.data.npcs.indexOf(id) > -1;
+        return this.data.npcs.includes(id);
     }
 
     hasItemReward() {

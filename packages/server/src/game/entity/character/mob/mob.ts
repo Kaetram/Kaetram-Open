@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import Character from '../character';
 import Mobs from '../../../../util/mobs';

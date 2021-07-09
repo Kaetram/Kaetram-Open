@@ -50,7 +50,7 @@ class Parser {
             key = key.toLowerCase();
 
             Mobs.Properties[key] = {
-                key: key,
+                key,
                 id: value.id,
                 name: value.name || key,
                 drops: value.drops || null,

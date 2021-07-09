@@ -1,5 +1,3 @@
-/* global module */
-
 import Items from '../../../../../util/items';
 
 class Equipment {

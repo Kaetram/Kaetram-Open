@@ -1,5 +1,3 @@
-/* global module */
-
 import Entity from '../entity';
 
 class Projectile extends Entity {

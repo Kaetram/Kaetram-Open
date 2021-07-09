@@ -1,5 +1,3 @@
-/* global module */
-
 import { Socket } from 'socket.io';
 import ws from 'ws';
 

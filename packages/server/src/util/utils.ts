@@ -1,6 +1,5 @@
 /**
- * This package is used for creating functions used all throughout the
- * game server.
+ * Useful utility functions that are used all throughout.
  */
 
 import _ from 'lodash';
@@ -9,6 +8,11 @@ import crypto from 'crypto';
 import Packets from '../network/packets';
 import log from '../util/log';
 import zlib from 'zlib';
+
+type Pos = {
+    x: number;
+    y: number;
+};
 
 export default {
     random(range: number): number {
@@ -30,7 +34,7 @@ export default {
         return x > y ? x : y;
     },
 
-    positionOffset(radius: number): any {
+    positionOffset(radius: number): Pos {
         return {
             x: this.randomInt(0, radius),
             y: this.randomInt(0, radius)
@@ -81,7 +85,7 @@ export default {
 
     formatUsername(username: string): string {
         return username.replace(/\w\S*/g, (string) => {
-            return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
+            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
         });
     },
 
@@ -147,10 +151,9 @@ export default {
 
     compressData(data: string, compression = 'gzip'): string {
         if (!data) return null;
-    
-        return compression === 'gzip' ? 
-            zlib.gzipSync(data).toString('base64') : 
-            zlib.deflateSync(data).toString('base64');
+        return compression === 'gzip'
+            ? zlib.gzipSync(data).toString('base64')
+            : zlib.deflateSync(data).toString('base64');
     },
 
     /**
@@ -158,8 +161,8 @@ export default {
      * client as a buffer size variable to decompress the data.
      * @param data The data to calculate the size of, will be stringified.
      */
-    
-    getBufferSize(data: any) {
+
+    getBufferSize(data: JSON): number {
         return encodeURI(JSON.stringify(data)).split(/%..|./).length - 1;
     }
 };

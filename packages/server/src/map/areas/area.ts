@@ -1,5 +1,3 @@
-/* global module */
-
 import Mob from '../../game/entity/character/mob/mob';
 import Player from '../../game/entity/character/player/player';
 
@@ -63,8 +61,7 @@ class Area {
     }
 
     addEntity(mob: Mob) {
-        if (this.entities.indexOf(mob) > 0) return;
-
+        if (!this.entities.includes(mob)) return;
         this.entities.push(mob);
         mob.area = this;
 

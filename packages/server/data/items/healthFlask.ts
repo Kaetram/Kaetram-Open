@@ -1,5 +1,3 @@
-/* global module */
-
 import Player from '../../src/game/entity/character/player/player';
 import Items from '../../src/util/items';
 

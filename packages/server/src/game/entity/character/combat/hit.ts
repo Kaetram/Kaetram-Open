@@ -1,5 +1,3 @@
-/* global module */
-
 class Hit {
     type: any;
     damage: number;

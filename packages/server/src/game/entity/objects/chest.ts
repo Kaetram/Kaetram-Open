@@ -1,5 +1,3 @@
-/* global module */
-
 import Entity from '../entity';
 import Player from '../character/player/player';
 import Utils from '../../../util/utils';

@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import bcryptjs from 'bcryptjs';
 import log from '../../util/log';
