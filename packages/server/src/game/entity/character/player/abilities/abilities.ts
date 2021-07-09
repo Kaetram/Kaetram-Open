@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import Player from '../player';
 import Ability from './impl/ability';
@@ -52,7 +50,7 @@ class Abilities {
     }
 
     isShortcut(ability: Ability) {
-        return this.shortcuts.indexOf(ability.name) > -1;
+        return this.shortcuts.includes(ability.name);
     }
 
     getArray() {

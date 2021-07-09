@@ -1,5 +1,3 @@
-/* global module */
-
 import Packets from '../network/packets';
 import _ from 'lodash';
 import Messages from '../network/messages';
@@ -351,9 +349,8 @@ class Incoming {
                 let requestX = message.shift(),
                     requestY = message.shift();
 
-                if (this.preventNoClip(requestX, requestY))
-                    this.player.guessPosition(requestX, requestY);
-
+                this.preventNoClip(requestX, requestY);
+                
                 this.player.movementStart = Date.now();
 
                 break;

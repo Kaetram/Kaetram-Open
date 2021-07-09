@@ -1,5 +1,3 @@
-/* global module */
-
 class Minigame {
     id: number;
     name: string;

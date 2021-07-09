@@ -1,5 +1,3 @@
-/* global module */
-
 import Player from './player';
 
 // TODO - Actually write a good trading system.

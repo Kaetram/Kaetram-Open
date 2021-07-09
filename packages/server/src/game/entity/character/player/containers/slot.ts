@@ -1,6 +1,14 @@
 import log from '../../../../../util/log';
 import Items from '../../../../../util/items';
 
+type SlotData = {
+    index: number;
+    string: string;
+    count: number;
+    ability: number;
+    abilityLevel: number;
+};
+
 class Slot {
     public index: number;
 
@@ -25,11 +33,11 @@ class Slot {
         this.string = null;
     }
 
-    load(id: any, count: any, ability: any, abilityLevel: any) {
-        this.id = parseInt(id);
-        this.count = parseInt(count);
-        this.ability = parseInt(ability);
-        this.abilityLevel = parseInt(abilityLevel);
+    load(id: number, count: number, ability: number, abilityLevel: number): void {
+        this.id = id;
+        this.count = count;
+        this.ability = ability;
+        this.abilityLevel = abilityLevel;
 
         this.string = Items.idToString(this.id);
         this.edible = Items.isEdible(this.id);
@@ -47,13 +55,13 @@ class Slot {
         this.string = null;
     }
 
-    increment(amount: number) {
+    increment(amount: number): void {
         this.count += amount;
 
         this.verify();
     }
 
-    decrement(amount: number) {
+    decrement(amount: number): void {
         this.count -= amount;
 
         if (this.count < 1)
@@ -62,11 +70,11 @@ class Slot {
         this.verify();
     }
 
-    verify() {
+    verify(): void {
         if (isNaN(this.count) || this.count < 1) this.count = 1;
     }
 
-    getData() {
+    getData(): SlotData {
         return {
             index: this.index,
             string: this.string,

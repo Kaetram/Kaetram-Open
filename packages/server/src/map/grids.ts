@@ -1,5 +1,3 @@
-/* global module */
-
 import _ from 'lodash';
 import Map from './map';
 import Entity from '../game/entity/entity';

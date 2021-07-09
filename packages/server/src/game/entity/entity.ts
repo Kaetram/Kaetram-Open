@@ -1,5 +1,3 @@
-/* global module */
-
 import Mobs from '../../util/mobs';
 import Items from '../../util/items';
 import NPCs from '../../util/npcs';
@@ -175,7 +173,7 @@ class Entity {
     }
 
     hasInvisibleId(entityId: number) {
-        return this.invisiblesIds.indexOf(entityId) > -1;
+        return this.invisiblesIds.includes(entityId);
     }
 
     hasInvisibleInstance(instance: string) {

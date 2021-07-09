@@ -1,5 +1,3 @@
-/* global module */
-
 export default {
     Properties: {},
     Ids: {},
