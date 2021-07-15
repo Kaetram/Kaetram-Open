@@ -12,6 +12,7 @@ import log from '../util/log';
 import config from '../../config';
 import Character from '../game/entity/character/character';
 import Entities from './entities';
+import NPC from '../game/entity/npc/npc';
 
 class Incoming {
     player: Player;
@@ -478,7 +479,7 @@ class Incoming {
         }
     }
 
-    handleRequest(message: Array<any>) {
+    handleRequest(message: Array<any>): void {
         let id = message.shift();
 
         if (id !== this.player.instance) return;
@@ -486,15 +487,17 @@ class Incoming {
         this.world.region.push(this.player);
     }
 
-    handleTarget(message: Array<any>) {
+    handleTarget(message: Array<any>): void {
         let opcode = message.shift(),
             instance = message.shift();
 
         log.debug(`Target [opcode]: ${instance} [${opcode}]`);
 
+        let entity;
+
         switch (opcode) {
             case Packets.TargetOpcode.Talk:
-                let entity = this.entities.get(instance);
+                entity = this.entities.get(instance);
 
                 if (!entity || !this.player.isAdjacent(entity)) return;
 
@@ -507,22 +510,22 @@ class Incoming {
 
                 if (entity.dead) return;
 
-                if (this.player.npcTalkCallback) this.player.npcTalkCallback(entity);
+                if (this.player.npcTalkCallback) this.player.npcTalkCallback(entity as NPC);
 
                 break;
 
             case Packets.TargetOpcode.Attack:
-                let target: any = this.entities.get(instance);
+                entity = this.entities.get(instance);
 
-                if (!target || target.dead || !this.canAttack(this.player, target)) return;
+                if (!entity || entity.dead || !this.canAttack(this.player, entity)) return;
 
                 this.player.cheatScore = 0;
 
                 this.world.push(Packets.PushOpcode.Regions, {
-                    regionId: target.region,
+                    regionId: entity.region,
                     message: new Messages.Combat(Packets.CombatOpcode.Initiate, {
                         attackerId: this.player.instance,
-                        targetId: target.instance
+                        targetId: entity.instance
                     })
                 });
 
