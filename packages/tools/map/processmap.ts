@@ -262,18 +262,25 @@ export default class ProcessMap {
             let name = prop.name as keyof ProcessedArea,
                 { value } = prop;
 
-            object[name] = [
-                'id',
-                'x',
-                'y',
-                'distance',
-                'darkness',
-                'diffuse',
-                'level',
-                'achievement'
-            ].includes(name)
-                ? (parseInt(value) as never)
-                : value;
+            if (
+                [
+                    'id',
+                    'x',
+                    'y',
+                    'distance',
+                    'darkness',
+                    'diffuse',
+                    'level',
+                    'achievement'
+                ].includes(name)
+            ) {
+                let number = parseInt(value);
+                if (isNaN(number)) number = -1;
+
+                value = number as never;
+            }
+
+            object[name] = value;
         });
 
         areas[objectName].push(object);
