@@ -396,6 +396,8 @@ export default class Region {
         this.mapRegions.forEachSurroundingRegion(region, (regionId: string) => {
             if (player.hasLoadedRegion(regionId) && !force) return;
 
+            player.loadRegion(regionId);
+
             const bounds = this.getRegionBounds(regionId);
 
             this.forEachTile(bounds, player.webSocketClient, dynamicTiles, (tile) => {
