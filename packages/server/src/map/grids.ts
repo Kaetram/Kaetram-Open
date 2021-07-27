@@ -5,6 +5,7 @@ import Map from './map';
 
 export default class Grids {
     map: Map;
+
     entityGrid: { [instance: string]: Entity }[][];
 
     constructor(map: Map) {
