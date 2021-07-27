@@ -2,17 +2,9 @@ import _ from 'lodash';
 import zlib from 'zlib';
 
 import log from '../../server/src/util/log';
-import type {
-    ProcessedArea,
-    Entity,
-    Layer,
-    LayerObject,
-    MapData,
-    ProcessedMap,
-    Property,
-    Tile,
-    Tileset
-} from './mapdata';
+
+import type { Entity, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+import type { ProcessedMap, ProcessedArea } from '@kaetram/common/types/map';
 
 export default class ProcessMap {
     #map!: ProcessedMap;
@@ -266,7 +258,10 @@ export default class ProcessMap {
                 polygon: this.extractPolygon(info)
             };
 
-        _.each(properties, ({ name, value }) => {
+        _.each(properties, (prop) => {
+            let name = prop.name as keyof ProcessedArea,
+                { value } = prop;
+
             object[name] = [
                 'id',
                 'x',
