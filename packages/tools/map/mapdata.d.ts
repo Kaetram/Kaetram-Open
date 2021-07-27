@@ -45,7 +45,7 @@ interface LayerObject {
     name: string;
     properties: {
         value: never;
-        name: keyof Area;
+        name: keyof ProcessedArea;
     }[];
     x: number;
     y: number;
@@ -71,27 +71,67 @@ export interface MapData {
 }
 
 export interface Entity {
-    roaming: boolean;
+    roaming?: boolean;
     type?: string;
-    v: never;
-    o: never;
-    tree: never;
-    rock: never;
-    cursor: never;
+    v?: never;
+    o?: never;
+    tree?: never;
+    rock?: never;
+    cursor?: never;
 }
 
 interface Entities {
     [tileId: number]: Entity;
 }
 
-export interface Area {
+export interface ProcessedArea {
+    // Common
     id: number;
-    name: string;
     x: number;
     y: number;
+
+    // Area
     width: number;
     height: number;
     polygon?: Pos[];
+
+    // Door
+    destination?: number;
+    orientation?: number;
+
+    // Light
+    distance?: number;
+
+    // Chest
+    entities?: number;
+    items?: string;
+    spawnX?: number;
+    spawnY?: number;
+    achievement?: number;
+
+    // Warp
+    name: string; //? also common
+    level?: number;
+
+    // Camera
+    type?: string;
+
+    // Music
+    songName?: string;
+
+    // Overlay
+    darkness?: number;
+    fog?: string;
+}
+
+export type Tree = 'Oak' | 'IceOak' | 'Palm' | 'IcePalm';
+
+export interface ProcessedTileset {
+    name: string;
+    firstGID: number;
+    lastGID: number;
+    imageName: string;
+    scale: number;
 }
 
 export interface ProcessedMap {
@@ -103,30 +143,24 @@ export interface ProcessedMap {
     data: (number | number[])[];
 
     collisions: number[];
-    tileCollisions: number[]
+    tileCollisions: number[];
     polygons: { [tileId: number]: Pos[] };
     entities: Entities;
     staticEntities: Entities;
 
-    tilesets: {
-        name: string;
-        firstGID: number;
-        lastGID: number;
-        imageName: string;
-        scale: number;
-    }[];
-    animations?: [];
+    tilesets: ProcessedTileset[];
+    animations?: unknown[];
     depth?: number;
 
     plateau: { [index: number]: number };
 
     high: number[];
     objects: number[];
-    trees: { [tileId: number]: 'Oak' | 'IceOak' | 'Palm' | 'IcePalm' };
+    trees: { [tileId: number]: Tree };
     treeIndexes: number[];
     rocks: Record<string, never>;
     rockIndexes: number[];
-    areas: { [name: string]: Area[] };
+    areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
-    layers: [];
+    layers: unknown[];
 }
