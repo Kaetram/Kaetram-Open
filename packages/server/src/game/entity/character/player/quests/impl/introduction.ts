@@ -1,15 +1,17 @@
-import Quest from '../quest';
-import Player from '../../player';
+import Packets from '@kaetram/common/src/packets';
+
+import Messages from '../../../../../../network/messages';
 import NPC from '../../../../npc/npc';
 import Character from '../../../character';
-import Packets from '../../../../../../network/packets';
-import Messages from '../../../../../../network/messages';
+import { Door } from '../../doors';
+import Player from '../../player';
+import Quest, { QuestData } from '../quest';
 
-class Introduction extends Quest {
+export default class Introduction extends Quest {
     lastNPC: NPC;
-    finishedCallback: Function;
+    finishedCallback?(): void;
 
-    constructor(player: Player, data: any) {
+    constructor(player: Player, data: QuestData) {
         super(player, data);
 
         this.player = player;
@@ -18,7 +20,7 @@ class Introduction extends Quest {
         this.lastNPC = null;
     }
 
-    load(stage: number) {
+    load(stage: number): void {
         if (!this.player.inTutorial()) {
             this.setStage(9999);
             this.update();
@@ -35,7 +37,7 @@ class Introduction extends Quest {
         this.loadCallbacks();
     }
 
-    loadCallbacks() {
+    loadCallbacks(): void {
         this.onNPCTalk((npc: NPC) => {
             let conversation = this.getConversation(npc.id);
 
@@ -86,7 +88,7 @@ class Introduction extends Quest {
         });
     }
 
-    progress(type: string) {
+    progress(type: string): void {
         let task = this.data.task[this.stage];
 
         if (!task || task !== type) return;
@@ -135,26 +137,26 @@ class Introduction extends Quest {
         if (this.getTask() === 'door') this.player.updateRegion();
     }
 
-    isFinished() {
+    isFinished(): boolean {
         return super.isFinished() || !this.player.inTutorial();
     }
 
-    toggleChat() {
+    toggleChat(): void {
         this.player.canTalk = !this.player.canTalk;
     }
 
-    setStage(stage: number) {
+    setStage(stage: number): void {
         super.setStage(stage);
 
         this.clearPointers();
     }
 
-    finish() {
+    finish(): void {
         this.toggleChat();
         super.finish();
     }
 
-    hasDoorUnlocked(door: any) {
+    hasDoorUnlocked(door: Door): boolean {
         switch (door.id) {
             case 0:
                 return this.stage > 6;
@@ -169,7 +171,7 @@ class Introduction extends Quest {
         return false;
     }
 
-    verifyDoor(destX: number, destY: number) {
+    verifyDoor(destX: number, destY: number): boolean {
         let doorData = this.data.doors[this.stage];
 
         if (!doorData) return;
@@ -177,15 +179,13 @@ class Introduction extends Quest {
         return doorData[0] === destX && doorData[1] === destY;
     }
 
-    getSpawn() {
+    getSpawn(): Pos {
         if (this.stage > 7) return { x: 331, y: 12 };
 
         return { x: 375, y: 41 };
     }
 
-    onFinishedLoading(callback: Function) {
+    onFinishedLoading(callback: () => void): void {
         this.finishedCallback = callback;
     }
 }
-
-export default Introduction;

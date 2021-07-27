@@ -1,7 +1,6 @@
+import Connection from './connection';
 import SocketIO from './impl/socketio';
 import WS from './impl/ws';
-
-import Connection from './connection';
 
 export default class SocketHandler {
     private socketIO: SocketIO;

@@ -1,8 +1,8 @@
-import Equipment from './equipment';
 import Items from '../../../../../util/items';
-import Modules from '../../../../../util/modules';
+import * as Modules from '@kaetram/common/src/modules';
+import Equipment from './equipment';
 
-class Armour extends Equipment {
+export default class Armour extends Equipment {
     public defense: number;
 
     constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
@@ -11,21 +11,19 @@ class Armour extends Equipment {
         this.defense = Items.getArmourLevel(name);
     }
 
-    hasAntiStun() {
+    hasAntiStun(): boolean {
         return this.ability === 6;
     }
 
-    setDefense(defense: number) {
+    setDefense(defense: number): void {
         this.defense = defense;
     }
 
-    getDefense() {
+    getDefense(): number {
         return this.defense;
     }
 
-    getType() {
+    getType(): Modules.Equipment {
         return Modules.Equipment.Armour;
     }
 }
-
-export default Armour;

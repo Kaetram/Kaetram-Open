@@ -1,12 +1,11 @@
-import log from '../util/log';
-import config from '../../config';
+import http from 'http';
+import { Server } from 'socket.io';
+import ws from 'ws';
 
+import config from '../../config';
+import log from '../util/log';
 import Connection from './connection';
 import SocketHandler from './sockethandler';
-
-import { Server, Socket } from 'socket.io';
-import ws from 'ws';
-import http from 'http';
 
 export default class WebSocket {
     public host: string;

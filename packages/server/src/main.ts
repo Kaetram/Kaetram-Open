@@ -1,15 +1,16 @@
-import World from './game/world';
-import Database from './database/database';
-import log from './util/log';
-import Parser from './util/parser';
 import config from '../config';
+import Database from './database/database';
+import MongoDB from './database/mongodb/mongodb';
+import Player from './game/entity/character/player/player';
+import World from './game/world';
 import Connection from './network/connection';
 import SocketHandler from './network/sockethandler';
-import Player from './game/entity/character/player/player';
+import log from './util/log';
+import Parser from './util/parser';
 
 class Main {
     socketHandler: SocketHandler;
-    database: any;
+    database: MongoDB;
     parser: Parser;
     world: World;
 
@@ -43,14 +44,14 @@ class Main {
         });
 
         this.socketHandler.onConnection((connection: Connection) => {
-            if (this.world.allowConnections) {
+            if (this.world.allowConnections)
                 if (this.world.isFull()) {
                     log.info('All the worlds are currently full. Please try again later.');
 
                     connection.sendUTF8('full');
                     connection.close();
                 } else this.world.playerConnectCallback(connection);
-            } else {
+            else {
                 connection.sendUTF8('disallowed');
                 connection.close();
             }
@@ -77,7 +78,7 @@ class Main {
                 player: Player,
                 newX: number,
                 newY: number,
-                itemId: string,
+                itemId: number,
                 itemCount: number;
 
             switch (command) {
@@ -116,7 +117,7 @@ class Main {
                     newX = parseInt(blocks.shift());
                     newY = parseInt(blocks.shift());
 
-                    //x: 325, y: 87
+                    // x: 325, y: 87
 
                     if (!newX || !newY) {
                         log.info(
@@ -127,7 +128,7 @@ class Main {
 
                     /**
                      * We are iterating through all of the users in the database
-                     * and resetting their position to the paramters inputted.
+                     * and resetting their position to the parameters inputted.
                      * This is to be used when doing some game-breaking map
                      * updates. This command is best used in tandem with the
                      * `allowConnectionsToggle` to prevent users from logging
@@ -150,7 +151,7 @@ class Main {
                     break;
 
                 case 'give':
-                    itemId = blocks.shift();
+                    itemId = parseInt(blocks.shift());
                     itemCount = parseInt(blocks.shift());
 
                     username = blocks.join(' ');
@@ -176,6 +177,4 @@ class Main {
     }
 }
 
-export default Main;
-
-new Main();
+export default new Main();

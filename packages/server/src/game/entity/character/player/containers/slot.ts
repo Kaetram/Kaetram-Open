@@ -1,5 +1,5 @@
-import log from '../../../../../util/log';
 import Items from '../../../../../util/items';
+import log from '../../../../../util/log';
 
 type SlotData = {
     index: number;
@@ -9,7 +9,7 @@ type SlotData = {
     abilityLevel: number;
 };
 
-class Slot {
+export default class Slot {
     public index: number;
 
     public id: number;
@@ -46,7 +46,7 @@ class Slot {
         this.verify();
     }
 
-    empty() {
+    empty(): void {
         this.id = -1;
         this.count = -1;
         this.ability = -1;
@@ -84,5 +84,3 @@ class Slot {
         };
     }
 }
-
-export default Slot;

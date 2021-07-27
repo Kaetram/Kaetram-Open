@@ -1,5 +1,16 @@
-class Hit {
-    type: any;
+import type * as Modules from '@kaetram/common/src/modules';
+
+export interface HitData {
+    type: Modules.Hits;
+    damage: number;
+    isRanged: boolean;
+    isAoE: boolean;
+    hasTerror: boolean;
+    isPoison: boolean;
+}
+
+export default class Hit {
+    type: Modules.Hits;
     damage: number;
 
     ranged: boolean;
@@ -7,7 +18,7 @@ class Hit {
     terror: boolean;
     poison: boolean;
 
-    constructor(type: any, damage: number) {
+    constructor(type: Modules.Hits, damage: number) {
         this.type = type;
         this.damage = damage;
 
@@ -17,23 +28,23 @@ class Hit {
         this.poison = false;
     }
 
-    isRanged() {
+    isRanged(): boolean {
         return this.ranged;
     }
 
-    isAoE() {
+    isAoE(): boolean {
         return this.aoe;
     }
 
-    isPoison() {
+    isPoison(): boolean {
         return this.poison;
     }
 
-    getDamage() {
+    getDamage(): number {
         return this.damage;
     }
 
-    getData() {
+    getData(): HitData {
         return {
             type: this.type,
             damage: this.damage,
@@ -44,5 +55,3 @@ class Hit {
         };
     }
 }
-
-export default Hit;

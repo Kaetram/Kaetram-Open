@@ -1,8 +1,9 @@
-import { Client, WebhookClient, Message } from 'discord.js';
-import Utils from '../util/utils';
+import { Client, Message, WebhookClient } from 'discord.js';
+
+import config from '../../config';
 import World from '../game/world';
 import log from '../util/log';
-import config from '../../config';
+import Utils from '../util/utils';
 
 /**
  * This class will be used in Kaetram-Hub as well.
@@ -10,7 +11,7 @@ import config from '../../config';
  * approach is used.
  */
 
-class Discord {
+export default class Discord {
     world: World;
     client: Client;
     webhook: WebhookClient;
@@ -59,5 +60,3 @@ class Discord {
         this.webhook.send(`**[Kaetram]** ${formattedSource}${withArrow ? ' »' : ''} ${message}`);
     }
 }
-
-export default Discord;

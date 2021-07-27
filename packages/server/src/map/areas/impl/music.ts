@@ -1,13 +1,13 @@
+import { ProcessedArea } from '@kaetram/tools/map/mapdata';
+import World from '../../../game/world';
 import Area from '../area';
 import Areas from '../areas';
 
-import World from '../../../game/world';
-
 export default class Music extends Areas {
-    constructor(data: any, world?: World) {
+    constructor(data: ProcessedArea[], world?: World) {
         super(data, world);
 
-        super.load(this.data, (musicArea: Area, rawData: any) => {
+        super.load(this.data, (musicArea: Area, rawData) => {
             musicArea.song = rawData.songName;
         });
 

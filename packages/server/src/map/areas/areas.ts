@@ -1,22 +1,28 @@
 import _ from 'lodash';
-import Area from './area';
+
 import World from '../../game/world';
 import log from '../../util/log';
+import Area from './area';
 
-export default class Areas {
-    public data: any;
+import type { ProcessedArea } from '@kaetram/tools/map/mapdata';
+
+export default abstract class Areas {
+    public data: ProcessedArea[];
     public world: World;
     public areas: Area[];
 
-    constructor(data: any, world?: World) {
+    constructor(data: ProcessedArea[], world?: World) {
         this.data = data;
         this.world = world;
 
         this.areas = [];
     }
 
-    public load(mapAreas: any, callback?: Function) {
-        _.each(mapAreas, (a: any) => {
+    public load(
+        mapAreas: ProcessedArea[],
+        callback?: (area: Area, mapArea: ProcessedArea) => void
+    ): void {
+        _.each(mapAreas, (a) => {
             let area: Area = new Area(a.id, a.x, a.y, a.width, a.height);
 
             if (a.polygon) area.polygon = a.polygon;
@@ -27,7 +33,7 @@ export default class Areas {
         });
     }
 
-    public message(type: string) {
+    public message(type: string): void {
         log.info(`Loaded ${this.areas.length} ${type} areas.`);
     }
 
