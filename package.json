@@ -61,8 +61,5 @@
         "rendering-engine",
         "taptapadventure",
         "tileset"
-    ],
-    "dependencies": {
-        "@types/node": "^15.12.5"
-    }
+    ]
 }
