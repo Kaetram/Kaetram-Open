@@ -1,20 +1,41 @@
-import MongoDB from './mongodb';
+import Player from '../../game/entity/character/player/player';
 import log from '../../util/log';
+import MongoDB from './mongodb';
 
-class Loader {
+import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';
+import type { ContainerArray } from '../../game/entity/character/player/containers/container';
+import type { FriendsArray } from '../../game/entity/character/player/friends';
+import type {
+    ProfessionsArray,
+    ProfessionsData
+} from '../../game/entity/character/player/professions/professions';
+
+export default class Loader {
     database: MongoDB;
 
-    constructor(database) {
+    constructor(database: MongoDB) {
         this.database = database;
     }
 
-    getInventory(player, callback) {
+    private parseArray(value: string): number[] {
+        return value.split(' ').map((string) => parseInt(string));
+    }
+
+    getInventory(
+        player: Player,
+        callback: (
+            ids: number[],
+            counts: number[],
+            abilities: number[],
+            abilityLevels: number[]
+        ) => void
+    ): void {
         this.database.getConnection((database) => {
-            let inventory = database.collection('player_inventory'),
+            let inventory = database.collection<ContainerArray>('player_inventory'),
                 cursor = inventory.find({ username: player.username });
 
             cursor.toArray().then((inventoryArray) => {
-                let info = inventoryArray[0];
+                let [info] = inventoryArray;
 
                 if (info) {
                     if (info.username !== player.username)
@@ -24,23 +45,31 @@ class Loader {
                         );
 
                     callback(
-                        info.ids.split(' '),
-                        info.counts.split(' '),
-                        info.abilities.split(' '),
-                        info.abilityLevels.split(' ')
+                        this.parseArray(info.ids),
+                        this.parseArray(info.counts),
+                        this.parseArray(info.abilities),
+                        this.parseArray(info.abilityLevels)
                     );
                 } else callback(null, null, null, null);
             });
         });
     }
 
-    getBank(player, callback) {
+    getBank(
+        player: Player,
+        callback: (
+            ids: number[],
+            counts: number[],
+            abilities: number[],
+            abilityLevels: number[]
+        ) => void
+    ): void {
         this.database.getConnection((database) => {
-            let bank = database.collection('player_bank'),
+            let bank = database.collection<ContainerArray>('player_bank'),
                 cursor = bank.find({ username: player.username });
 
             cursor.toArray().then((bankArray) => {
-                let info = bankArray[0];
+                let [info] = bankArray;
 
                 if (info) {
                     if (info.username !== player.username)
@@ -50,23 +79,23 @@ class Loader {
                         );
 
                     callback(
-                        info.ids.split(' '),
-                        info.counts.split(' '),
-                        info.abilities.split(' '),
-                        info.abilityLevels.split(' ')
+                        this.parseArray(info.ids),
+                        this.parseArray(info.counts),
+                        this.parseArray(info.abilities),
+                        this.parseArray(info.abilityLevels)
                     );
                 }
             });
         });
     }
 
-    getQuests(player, callback) {
+    getQuests(player: Player, callback: (ids: string[], stage: string[]) => void): void {
         this.database.getConnection((database) => {
-            let quests = database.collection('player_quests'),
+            let quests = database.collection<PlayerQuests>('player_quests'),
                 cursor = quests.find({ username: player.username });
 
             cursor.toArray().then((questArray) => {
-                let info = questArray[0];
+                let [info] = questArray;
 
                 if (info) {
                     if (info.username !== player.username)
@@ -81,13 +110,13 @@ class Loader {
         });
     }
 
-    getAchievements(player, callback) {
+    getAchievements(player: Player, callback: (ids: string[], progress: string[]) => void): void {
         this.database.getConnection((database) => {
-            let achievements = database.collection('player_achievements'),
+            let achievements = database.collection<PlayerAchievements>('player_achievements'),
                 cursor = achievements.find({ username: player.username });
 
             cursor.toArray().then((achievementsArray) => {
-                let info = achievementsArray[0];
+                let [info] = achievementsArray;
 
                 if (info) {
                     if (info.username !== player.username)
@@ -102,13 +131,13 @@ class Loader {
         });
     }
 
-    getProfessions(player, callback) {
+    getProfessions(player: Player, callback: (data: ProfessionsData) => void): void {
         this.database.getConnection((database) => {
-            let professions = database.collection('player_professions'),
+            let professions = database.collection<ProfessionsArray>('player_professions'),
                 cursor = professions.find({ username: player.username });
 
             cursor.toArray().then((professionsArray) => {
-                let info = professionsArray[0];
+                let [info] = professionsArray;
 
                 if (info && info.data) {
                     if (info.username !== player.username)
@@ -123,13 +152,13 @@ class Loader {
         });
     }
 
-    getFriends(player, callback) {
+    getFriends(player: Player, callback: (friends: unknown) => void): void {
         this.database.getConnection((database) => {
-            let friends = database.collection('player_friends'),
+            let friends = database.collection<FriendsArray>('player_friends'),
                 cursor = friends.find({ username: player.username });
 
             cursor.toArray().then((friendsArray) => {
-                let info = friendsArray[0];
+                let [info] = friendsArray;
 
                 if (info && info.friends) {
                     if (info.username !== player.username)
@@ -144,5 +173,3 @@ class Loader {
         });
     }
 }
-
-export default Loader;

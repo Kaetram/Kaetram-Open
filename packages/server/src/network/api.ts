@@ -1,15 +1,29 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import request from 'request';
-import _ from 'lodash';
+import { urlencoded, json } from 'body-parser';
+import axios from 'axios';
 import World from '../game/world';
 import APIConstants from '../util/apiconstants';
 import Utils from '../util/utils';
 import Player from '../game/entity/character/player/player';
 import config from '../../config';
 import log from '../util/log';
+import type Mana from '../game/entity/character/player/points/mana';
 
-class API {
+interface PlayerData {
+    serverId: string;
+    x: number;
+    y: number;
+    experience: number;
+    level: number;
+    hitPoints: number;
+    mana: Mana;
+    pvpKills: number;
+    orientation: number;
+    lastLogin: number;
+    mapVersion: number;
+}
+
+export default class API {
     /**
      * API will have a variety of uses. Including communication
      * between multiple worlds (planned for the future).
@@ -28,42 +42,42 @@ class API {
 
         if (!config.apiEnabled) return;
 
-        let app = express();
+        const app = express();
 
-        app.use(bodyParser.urlencoded({ extended: true }));
-        app.use(bodyParser.json());
+        app.use(urlencoded({ extended: true }));
+        app.use(json());
 
-        let router = express.Router();
+        const router = express.Router();
 
         this.handle(router);
 
         app.use('/', router);
 
         app.listen(config.apiPort, () => {
-            log.notice(config.name + ' API has successfully initialized.');
+            log.notice(`${config.name} API has successfully initialized.`);
         });
     }
 
     handle(router: express.Router): void {
-        router.get('/', (_request: express.Request, response: express.Response) => {
+        router.get('/', (_request, response) => {
             response.json({
                 name: config.name,
-                port: config.port, // Sends the server port.
+                port: config.apiPort, // Sends the server port.
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
                 playerCount: this.world.getPopulation()
             });
         });
 
-        router.post('/player', (request: express.Request, response: express.Response) => {
+        router.post('/player', (request, response) => {
             this.handlePlayer(request, response);
         });
 
-        router.post('/chat', (request: express.Request, response: express.Response) => {
+        router.post('/chat', (request, response) => {
             this.handleChat(request, response);
         });
 
-        router.get('/players', (request: express.Request, response: express.Response) => {
+        router.get('/players', (request, response) => {
             this.handlePlayers(request, response);
         });
     }
@@ -77,30 +91,6 @@ class API {
             );
             return;
         }
-
-        let { username } = request.body;
-
-        if (!username) {
-            this.returnError(
-                response,
-                APIConstants.MALFORMED_PARAMETERS,
-                'No `username` variable received.'
-            );
-            return;
-        }
-
-        if (!this.world.isOnline(username)) {
-            this.returnError(
-                response,
-                APIConstants.PLAYER_NOT_ONLINE,
-                `Player ${username} is not online.`
-            );
-            return;
-        }
-
-        let player = this.world.getPlayerByName(username);
-
-        response.json(this.getPlayerData(player));
     }
 
     handleChat(request: express.Request, response: express.Response): void {
@@ -113,14 +103,14 @@ class API {
             return;
         }
 
-        let text = Utils.parseMessage(request.body.text),
+        const text = Utils.parseMessage(request.body.text),
             source = Utils.parseMessage(request.body.source),
             { colour, username } = request.body;
 
         if (username) {
-            let player = this.world.getPlayerByName(username);
+            const player = this.world.getPlayerByName(username);
 
-            if (player) player.chat(source, text, colour);
+            player?.chat(source, text, colour);
 
             response.json({ status: 'success' });
 
@@ -133,7 +123,7 @@ class API {
     }
 
     handlePlayers(request: express.Request, response: express.Response): void {
-        if (!this.verifyToken(request.query.accessToken)) {
+        if (!this.verifyToken(request.query.accessToken as string)) {
             this.returnError(
                 response,
                 APIConstants.MALFORMED_PARAMETERS,
@@ -142,7 +132,7 @@ class API {
             return;
         }
 
-        let players = {};
+        const players = {};
 
         this.world.entities.forEachPlayer((player: Player) => {
             players[player.username] = this.getPlayerData(player);
@@ -151,8 +141,8 @@ class API {
         response.json(players);
     }
 
-    pingHub(): void {
-        let url = this.getUrl('ping'),
+    async pingHub(): Promise<void> {
+        const url = this.getUrl('ping'),
             data = {
                 form: {
                     serverId: config.serverId,
@@ -160,27 +150,24 @@ class API {
                     port: config.apiPort,
                     remoteServerHost: config.remoteServerHost
                 }
-            };
+            },
+            res = await axios.post(url, data);
 
-        request.post(url, data, (_error: any, _response: any, body: any) => {
-            try {
-                let data = JSON.parse(body);
+        try {
+            const data = JSON.parse(res.data);
 
-                if (data.status !== 'success') return;
-
-                if (!this.hubConnected) {
-                    log.notice('Connected to Kaetram Hub successfully!');
-                    this.hubConnected = true;
-                }
-            } catch (e) {
-                log.error('Could not connect to Kaetram Hub.');
-                this.hubConnected = false;
+            if (data.status === 'success' && !this.hubConnected) {
+                log.notice('Connected to Kaetram Hub successfully!');
+                this.hubConnected = true;
             }
-        });
+        } catch {
+            log.error('Could not connect to Kaetram Hub.');
+            this.hubConnected = false;
+        }
     }
 
-    sendChat(source: string, text: string, withArrow?: boolean): void {
-        let url = this.getUrl('chat'),
+    async sendChat(source: string, text: string, withArrow?: boolean): Promise<void> {
+        const url = this.getUrl('chat'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
@@ -189,26 +176,22 @@ class API {
                     text,
                     withArrow
                 }
-            };
+            },
+            res = await axios.post(url, data);
 
-        request.post(
-            url,
-            data,
-            (_error: express.ErrorRequestHandler, _response: express.Response, body: string) => {
-                try {
-                    let data = JSON.parse(body);
+        try {
+            const data = JSON.parse(res.data);
 
-                    if (data.status === 'error') console.log(data);
+            if (data.status === 'error') console.log(data);
 
-                //TODO - Do something with this?
-                } catch (e) {
-                    log.error('Could not send message to hub.');
-                }
-        });
+            // TODO - Do something with this?
+        } catch {
+            log.error('Could not send message to hub.');
+        }
     }
 
-    sendPrivateMessage(source: Player, target: string, text: string): void {
-        let url = this.getUrl('privateMessage'),
+    async sendPrivateMessage(source: Player, target: string, text: string): Promise<void> {
+        const url = this.getUrl('privateMessage'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
@@ -216,35 +199,26 @@ class API {
                     target: Utils.formatUsername(target),
                     text
                 }
-            };
+            },
+            res = await axios.post(url, data);
 
-        request.post(
-            url,
-            data,
-            (_error: express.ErrorRequestHandler, _response: express.Response, body: string) => {
-                try {
-                    let data = JSON.parse(body);
+        try {
+            const data = JSON.parse(res.data);
 
-                    if (data.error) {
-                        source.notify(`Player @aquamarine@${target}@white@ is not online.`);
-                        return;
-                    }
-
-                    // No error has occurred.
-
-                    // TODO - Add chat colours/format to config.
-                    source.chat(`[To ${target}]`, text, 'aquamarine');
-                } catch (e) {
-                    log.error('Could not send privateMessage to hub.');
-                }
-        });
+            if (data.error) {
+                source.notify(`Player @aquamarine@${target}@white@ is not online.`);
+                return;
+            }
+        } catch {
+            log.error('Could not send privateMessage to hub.');
+        }
     }
 
     verifyToken(token: string): boolean {
         return token === config.accessToken;
     }
 
-    getPlayerData(player: Player): any {
+    getPlayerData(player: Player): Partial<PlayerData> {
         if (!player) return {};
 
         return {
@@ -266,16 +240,10 @@ class API {
         return `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
-    returnError(
-        response: express.Response,
-        error: express.ErrorRequestHandler,
-        message: string
-    ): void {
+    returnError(response: express.Response, error: APIConstants, message: string): void {
         response.json({
             error,
             message
         });
     }
 }
-
-export default API;

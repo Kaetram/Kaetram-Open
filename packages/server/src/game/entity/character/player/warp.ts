@@ -1,9 +1,7 @@
-import Modules from '../../../../util/modules';
-import Utils from '../../../../util/utils';
-import Player from './player';
 import Map from '../../../../map/map';
+import Player from './player';
 
-class Warp {
+export default class Warp {
     private player: Player;
     private map: Map;
 
@@ -74,5 +72,3 @@ class Warp {
         return Date.now() - this.lastWarp;
     }
 }
-
-export default Warp;

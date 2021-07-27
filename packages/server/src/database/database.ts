@@ -1,12 +1,14 @@
-import MongoDB from './mongodb/mongodb';
 import config from '../../config';
 import log from '../util/log';
+import MongoDB from './mongodb/mongodb';
 
-class Database {
-    database: any;
-    databaseType: string;
+export type DatabaseTypes = 'mongo' | 'mongodb';
 
-    constructor(databaseType) {
+export default class Database {
+    database: MongoDB;
+    databaseType: DatabaseTypes;
+
+    constructor(databaseType: DatabaseTypes) {
         this.database = null;
         this.databaseType = databaseType;
 
@@ -28,7 +30,7 @@ class Database {
         }
     }
 
-    getDatabase(): any {
+    getDatabase(): MongoDB {
         if (!this.database)
             log.error(
                 '[Database] No database is currently present. It is advised against proceeding in this state.'
@@ -37,5 +39,3 @@ class Database {
         return this.database;
     }
 }
-
-export default Database;

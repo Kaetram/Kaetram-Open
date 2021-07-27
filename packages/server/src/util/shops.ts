@@ -1,26 +1,38 @@
 import _ from 'lodash';
 
+interface ShopData {
+    id?: number;
+    key: string;
+    npcId: number;
+    currency: number;
+    prices: number[];
+    items: number[];
+    count: number[];
+    originalCount: number[];
+    stockDuration: number;
+}
+
 export default {
-    Data: {},
-    Ids: {},
+    Data: {} as { [id: string]: ShopData },
+    Ids: {} as { [id: number]: ShopData },
 
     isShopNPC(npcId: number): boolean {
         return npcId in this.Ids;
     },
 
-    getItems(npcId: number) {
+    getItems(npcId: number): number[] {
         return this.Ids[npcId].items;
     },
 
-    shopIdToNPC(shopId: string) {
+    shopIdToNPC(shopId: string): number {
         return this.Data[shopId].npcId;
     },
 
-    getItemCount(id: number) {
+    getItemCount(id: number): number {
         return this.getItems(id).length;
     },
 
-    increment(npcId: number, itemId: number, count: number) {
+    increment(npcId: number, itemId: number, count: number): void {
         let shop = this.Ids[npcId],
             index = shop.items.indexOf(itemId);
 
@@ -29,7 +41,7 @@ export default {
         shop.count[index] += count;
     },
 
-    decrement(npcId: number, buyId: number, count: number) {
+    decrement(npcId: number, buyId: number, count: number): void {
         let shop = this.Ids[npcId];
 
         if (!buyId || buyId < 0) return;
@@ -39,7 +51,7 @@ export default {
         if (shop.count[buyId] < 0) shop.count[buyId] = 0;
     },
 
-    getCost(npcId: number, buyId: number, count: number) {
+    getCost(npcId: number, buyId: number, count: number): number {
         /**
          * Reason for the shopId variable is because some shops
          * may have different prices for the same item. A way to
@@ -53,7 +65,7 @@ export default {
         return shop.prices[buyId] * count;
     },
 
-    getStock(npcId: number, buyId: number) {
+    getStock(npcId: number, buyId: number): number {
         let shop = this.Ids[npcId];
 
         if (!shop || !buyId || buyId < 0) return null;
@@ -61,7 +73,7 @@ export default {
         return shop.count[buyId];
     },
 
-    getOriginalStock(shopId: number, buyId: number) {
+    getOriginalStock(shopId: number, buyId: number): number {
         let shop = this.Ids[shopId];
 
         if (!buyId || buyId < 0) return;
@@ -69,8 +81,8 @@ export default {
         return shop.originalCount[buyId];
     },
 
-    getCount(npcId: number) {
-        let count = this.Ids[npcId].count,
+    getCount(npcId: number): number[] {
+        let { count } = this.Ids[npcId],
             counts = [];
 
         if (_.isArray(count)) return count;
@@ -80,7 +92,7 @@ export default {
         return counts;
     },
 
-    getItem(npcId: number, buyId: number) {
+    getItem(npcId: number, buyId: number): number {
         if (!buyId || buyId < 0) return;
 
         return this.Ids[npcId].items[buyId];

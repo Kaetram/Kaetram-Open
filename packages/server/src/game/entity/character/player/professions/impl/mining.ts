@@ -1,20 +1,15 @@
-import _ from 'lodash';
-import Profession from './profession';
-import Packets from '../../../../../../network/packets';
-import Messages from '../../../../../../network/messages';
-import Modules from '../../../../../../util/modules';
-import Formulas from '../../../../../../util/formulas';
-import Utils from '../../../../../../util/utils';
 import Rocks from '../../../../../../../data/professions/rocks';
+import Utils from '../../../../../../util/utils';
 import Player from '../../player';
+import Profession from './profession';
 
-class Mining extends Profession {
+export default class Mining extends Profession {
     tick: number;
 
-    miningInterval: any;
+    miningInterval: NodeJS.Timeout;
     started: boolean;
 
-    rockId: any;
+    rockId: string;
 
     constructor(id: number, player: Player) {
         super(id, player, 'Mining');
@@ -25,18 +20,17 @@ class Mining extends Profession {
         this.started = false;
     }
 
-    start() {
+    start(): void {
         if (this.started) return;
 
         this.miningInterval = setInterval(() => {
-            try {
-            } catch (e) {}
+            //
         }, this.tick);
 
         this.started = true;
     }
 
-    stop() {
+    stop(): void {
         if (!this.started) return;
 
         this.rockId = null;
@@ -49,7 +43,7 @@ class Mining extends Profession {
     }
 
     // TODO
-    handle(id: any, rockId: any) {
+    handle(id: string, rockId: string): void {
         if (!this.player.hasMiningWeapon()) {
             this.player.notify('You do not have a pickaxe to mine this rock with.');
             return;
@@ -68,9 +62,7 @@ class Mining extends Profession {
         this.start();
     }
 
-    getRockDestroyChance() {
+    getRockDestroyChance(): boolean {
         return Utils.randomInt(0, Rocks.Chances[this.rockId]) === 2;
     }
 }
-
-export default Mining;

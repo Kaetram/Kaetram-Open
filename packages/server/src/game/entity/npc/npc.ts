@@ -1,7 +1,7 @@
-import Entity from '../entity';
 import Player from '../character/player/player';
+import Entity from '../entity';
 
-class NPC extends Entity {
+export default class NPC extends Entity {
     talkIndex: number;
 
     constructor(id: number, instance: string, x: number, y: number) {
@@ -10,7 +10,7 @@ class NPC extends Entity {
         this.talkIndex = 0;
     }
 
-    talk(messages?: any, player?: Player) {
+    talk(messages?: string[], player?: Player): string {
         if (!player) return;
 
         if (player.npcTalk !== this.id) {
@@ -26,5 +26,3 @@ class NPC extends Entity {
         return message;
     }
 }
-
-export default NPC;

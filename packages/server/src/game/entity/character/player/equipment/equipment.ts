@@ -1,6 +1,26 @@
 import Items from '../../../../../util/items';
+import type * as Modules from '@kaetram/common/src/modules';
 
-class Equipment {
+interface ItemData {
+    name: string;
+    string: string;
+    id: number;
+    count: number;
+    ability: number;
+    abilityLevel: number;
+}
+
+export interface EquipmentData {
+    type: Modules.Equipment;
+    name: string;
+    string: string;
+    count: number;
+    ability: number;
+    abilityLevel: number;
+    power: number;
+}
+
+export default abstract class Equipment {
     public name: string;
     public id: number;
     public count: number;
@@ -15,35 +35,33 @@ class Equipment {
         this.abilityLevel = !isNaN(abilityLevel) ? abilityLevel : -1;
     }
 
-    getName() {
+    getName(): string {
         return this.name;
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    getCount() {
+    getCount(): number {
         return this.count;
     }
 
-    getAbility() {
+    getAbility(): number {
         return this.ability;
     }
 
-    getAbilityLevel() {
+    getAbilityLevel(): number {
         return this.abilityLevel;
     }
 
-    getBaseAmplifier() {
-        return 1.0;
+    getBaseAmplifier(): number {
+        return 1;
     }
 
-    getType() {
-        return -1;
-    }
+    abstract getType(): Modules.Equipment;
 
-    getData() {
+    getData(): EquipmentData {
         return {
             type: this.getType(),
             name: Items.idToName(this.id),
@@ -55,11 +73,11 @@ class Equipment {
         };
     }
 
-    getString() {
+    getString(): string {
         return Items.idToString(this.id);
     }
 
-    getItem() {
+    getItem(): ItemData {
         return {
             name: this.name,
             string: Items.idToString(this.id),
@@ -70,5 +88,3 @@ class Equipment {
         };
     }
 }
-
-export default Equipment;

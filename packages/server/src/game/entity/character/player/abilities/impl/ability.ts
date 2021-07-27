@@ -1,12 +1,12 @@
-import Abilities from '../../../../../../util/abilities';
+import Abilities, { AbilitiesData } from '../../../../../../util/abilities';
 
-class Ability {
+abstract class Ability {
     public name: string;
     public type: number;
 
     public level: number;
 
-    public data: any;
+    public data: AbilitiesData;
 
     constructor(name: string, type: number) {
         this.name = name;
@@ -17,7 +17,7 @@ class Ability {
         this.data = Abilities.Data[name];
     }
 
-    setLevel(level: number) {
+    setLevel(level: number): void {
         this.level = level;
     }
 }

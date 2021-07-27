@@ -1,21 +1,17 @@
-import _ from 'lodash';
-import Container from '../container';
-import Messages from '../../../../../../network/messages';
-import Packets from '../../../../../../network/packets';
-import Constants from './constants';
-import Player from '../../player';
+import Packets from '@kaetram/common/src/packets';
 
-class Inventory extends Container {
+import Messages from '../../../../../../network/messages';
+import Item from '../../../../objects/item';
+import Player from '../../player';
+import Container from '../container';
+import Constants from './constants';
+
+export default class Inventory extends Container {
     constructor(owner: Player, size: number) {
         super('Inventory', owner, size);
     }
 
-    load(
-        ids: Array<number>,
-        counts: Array<number>,
-        abilities: Array<number>,
-        abilityLevels: Array<number>
-    ) {
+    load(ids: number[], counts: number[], abilities: number[], abilityLevels: number[]): void {
         super.load(ids, counts, abilities, abilityLevels);
 
         this.owner.send(
@@ -23,7 +19,7 @@ class Inventory extends Container {
         );
     }
 
-    add(item: any) {
+    add(item: Partial<Item>): boolean {
         if (!this.canHold(item.id, item.count)) {
             this.owner.send(
                 new Messages.Notification(Packets.NotificationOpcode.Text, {
@@ -33,7 +29,7 @@ class Inventory extends Container {
             return false;
         }
 
-        let slot = super.add(item.id, item.count, item.ability, item.abilityLevel);
+        let slot = this.addItem(item.id, item.count, item.ability, item.abilityLevel);
 
         if (!slot) return false;
 
@@ -41,12 +37,12 @@ class Inventory extends Container {
 
         this.owner.save();
 
-        if (item.instance) this.owner.world.entities.removeItem(item);
+        if (item.instance) this.owner.world.entities.removeItem(item as Item);
 
         return true;
     }
 
-    remove(id: number, count: number, index?: number) {
+    remove(id: number, count: number, index?: number): boolean {
         if (!id || !count) return false;
 
         if (!index) index = this.getIndex(id);
@@ -55,8 +51,8 @@ class Inventory extends Container {
 
         this.owner.send(
             new Messages.Inventory(Packets.InventoryOpcode.Remove, {
-                index: index,
-                count: count
+                index,
+                count
             })
         );
 
@@ -65,5 +61,3 @@ class Inventory extends Container {
         return true;
     }
 }
-
-export default Inventory;

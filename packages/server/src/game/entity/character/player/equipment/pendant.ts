@@ -1,8 +1,8 @@
-import Equipment from './equipment';
 import Items from '../../../../../util/items';
-import Modules from '../../../../../util/modules';
+import * as Modules from '@kaetram/common/src/modules';
+import Equipment from './equipment';
 
-class Pendant extends Equipment {
+export default class Pendant extends Equipment {
     public pendantLevel: number;
 
     constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
@@ -11,13 +11,11 @@ class Pendant extends Equipment {
         this.pendantLevel = Items.getPendantLevel(name);
     }
 
-    getBaseAmplifier() {
-        return 1.0 + this.pendantLevel / 100;
+    getBaseAmplifier(): number {
+        return 1 + this.pendantLevel / 100;
     }
 
-    getType() {
+    getType(): Modules.Equipment {
         return Modules.Equipment.Pendant;
     }
 }
-
-export default Pendant;

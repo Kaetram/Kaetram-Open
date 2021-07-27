@@ -1,13 +1,11 @@
 import { Server, Socket } from 'socket.io';
 
 import config from '../../../config';
-
-import WebSocket from '../websocket';
-import Connection from '../connection';
-
-import Utils from '../../util/utils';
 import log from '../../util/log';
+import Utils from '../../util/utils';
+import Connection from '../connection';
 import SocketHandler from '../sockethandler';
+import WebSocket from '../websocket';
 
 export default class SocketIO extends WebSocket {
     constructor(socketHandler: SocketHandler) {
@@ -33,7 +31,7 @@ export default class SocketIO extends WebSocket {
                 this.socketHandler
             );
 
-            socket.on('client', (data: any) => {
+            socket.on('client', (data) => {
                 if (!this.verifyVersion(connection, data.gVer)) return;
 
                 if (this.addCallback) this.addCallback(connection);
