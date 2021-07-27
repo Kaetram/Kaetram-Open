@@ -104,7 +104,7 @@ export interface ObjectData {
 
 interface SurroundingTrees {
     indexes: number[];
-    data: number[];
+    data: number[][];
     collisions: boolean[];
     objectData: ObjectData;
 }
@@ -592,7 +592,7 @@ export default class Player extends Character {
         this.sync();
     }
 
-    heal(amount: number): void {
+    override heal(amount: number): void {
         /**
          * Passed from the superclass...
          */
@@ -888,7 +888,7 @@ export default class Player extends Character {
         this.sync();
     }
 
-    applyDamage(damage: number): void {
+    override applyDamage(damage: number): void {
         this.playerHitPoints.decrement(damage);
     }
 
@@ -918,11 +918,11 @@ export default class Player extends Character {
         return this.mana.getMaxMana();
     }
 
-    getHitPoints(): number {
+    override getHitPoints(): number {
         return this.playerHitPoints.getHitPoints();
     }
 
-    getMaxHitPoints(): number {
+    override getMaxHitPoints(): number {
         return this.playerHitPoints.getMaxHitPoints();
     }
 
@@ -930,11 +930,11 @@ export default class Player extends Character {
         return this.quests.getQuest<Introduction>(Modules.Quests.Introduction);
     }
 
-    getWeaponLevel(): number {
+    override getWeaponLevel(): number {
         return this.weapon.getLevel();
     }
 
-    getArmourLevel(): number {
+    override getArmourLevel(): number {
         return this.armour.getDefense();
     }
 
@@ -956,7 +956,7 @@ export default class Player extends Character {
 
     // We get dynamic trees surrounding the player
     getSurroundingTrees(): SurroundingTrees {
-        const tiles = {
+        const tiles: SurroundingTrees = {
             indexes: [],
             data: [],
             collisions: [],
@@ -973,7 +973,7 @@ export default class Player extends Character {
                 cursor = this.map.getCursor(index, objectId);
 
             tiles.indexes.push(index);
-            tiles.data.push(this.map.data[index]);
+            tiles.data.push(this.map.data[index] as number[]);
             tiles.collisions.push(this.map.collisions.includes(index));
 
             if (objectId)
@@ -1044,7 +1044,7 @@ export default class Player extends Character {
         this.boots = new Boots(Items.idToString(id), id, count, ability, abilityLevel);
     }
 
-    setPosition(x: number, y: number): void {
+    override setPosition(x: number, y: number): void {
         if (this.dead) return;
 
         if (this.map.isOutOfBounds(x, y)) {
@@ -1111,7 +1111,7 @@ export default class Player extends Character {
         return this.boots && this.boots.name !== 'null' && this.boots.id !== -1;
     }
 
-    hasMaxHitPoints(): boolean {
+    override hasMaxHitPoints(): boolean {
         return this.getHitPoints() >= this.playerHitPoints.getMaxHitPoints();
     }
 
@@ -1119,7 +1119,7 @@ export default class Player extends Character {
         return this.mana.getMana() >= this.mana.getMaxMana();
     }
 
-    hasSpecialAttack(): boolean {
+    override hasSpecialAttack(): boolean {
         return (
             this.weapon &&
             (this.weapon.hasCritical() || this.weapon.hasExplosive() || this.weapon.hasStun())
@@ -1130,7 +1130,7 @@ export default class Player extends Character {
         return true;
     }
 
-    getState(): PlayerState {
+    override getState(): PlayerState {
         return {
             type: this.type,
             id: this.instance,
@@ -1233,11 +1233,11 @@ export default class Player extends Character {
         return this.mute - time > 0;
     }
 
-    isRanged(): boolean {
+    override isRanged(): boolean {
         return this.weapon && this.weapon.isRanged();
     }
 
-    isDead(): boolean {
+    override isDead(): boolean {
         return this.getHitPoints() < 1 || this.dead;
     }
 
@@ -1504,7 +1504,7 @@ export default class Player extends Character {
         this.killCallback = callback;
     }
 
-    onDeath(callback: VoidCallback): void {
+    override onDeath(callback: VoidCallback): void {
         this.deathCallback = callback;
     }
 

@@ -20,7 +20,7 @@ export default class Introduction extends Quest {
         this.lastNPC = null;
     }
 
-    load(stage: number): void {
+    override load(stage: number): void {
         if (!this.player.inTutorial()) {
             this.setStage(9999);
             this.update();
@@ -137,7 +137,7 @@ export default class Introduction extends Quest {
         if (this.getTask() === 'door') this.player.updateRegion();
     }
 
-    isFinished(): boolean {
+    override isFinished(): boolean {
         return super.isFinished() || !this.player.inTutorial();
     }
 
@@ -145,18 +145,18 @@ export default class Introduction extends Quest {
         this.player.canTalk = !this.player.canTalk;
     }
 
-    setStage(stage: number): void {
+    override setStage(stage: number): void {
         super.setStage(stage);
 
         this.clearPointers();
     }
 
-    finish(): void {
+    override finish(): void {
         this.toggleChat();
         super.finish();
     }
 
-    hasDoorUnlocked(door: Door): boolean {
+    override hasDoorUnlocked(door: Door): boolean {
         switch (door.id) {
             case 0:
                 return this.stage > 6;

@@ -2,12 +2,7 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "commonjs",
-
-        // TODO
-        "noImplicitAny": false,
-        "noImplicitOverride": false,
         "strictNullChecks": false,
-
         "types": ["@types/node", "@kaetram/common"]
     },
     "files": ["./src/main.ts"]

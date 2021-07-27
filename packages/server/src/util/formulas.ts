@@ -1,4 +1,5 @@
-import * as Modules from '@kaetram/common/src/modules';
+import { Tree } from '@kaetram/common/types/map';
+
 import Trees from '../../data/professions/trees';
 import Character from '../game/entity/character/character';
 import Player from '../game/entity/character/player/player';
@@ -9,10 +10,10 @@ export default {
     LevelExp: [] as number[],
 
     // Chances of getting logs from a tree.
-    getTreeChance(player: Player, treeId: Modules.Trees): number {
+    getTreeChance(player: Player, treeId: Tree): number {
         let lumberjackingLevel = player.getLumberjackingLevel(),
             weaponLumberjackingLevel = player.getWeaponLumberjackingLevel(),
-            treeLevel = Trees.Levels[treeId],
+            treeLevel = Trees.Levels[treeId as Tree],
             probability = treeLevel * 10 - lumberjackingLevel * weaponLumberjackingLevel;
 
         if (probability < 2) probability = 2;
@@ -143,7 +144,7 @@ export default {
         if (experience < 0) return -1;
 
         for (let i = Constants.MAX_LEVEL; i > 0; i--)
-            if (experience > this.LevelExp[i]) return this.LevelExp[i];
+            if (experience >= this.LevelExp[i]) return this.LevelExp[i];
 
         return 0;
     },

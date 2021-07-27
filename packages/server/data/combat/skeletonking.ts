@@ -37,7 +37,7 @@ export default class SkeletonKing extends Combat {
         for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
     }
 
-    hit(character: Character, target: Character, hitInfo: HitData): void {
+    override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.isAttacked()) this.beginMinionAttack();
 
         if (this.canSpawn()) this.spawnMinions();

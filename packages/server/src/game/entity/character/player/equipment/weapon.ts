@@ -21,7 +21,7 @@ export default class Weapon extends Equipment {
         this.breakable = false;
     }
 
-    getBaseAmplifier(): number {
+    override getBaseAmplifier(): number {
         let base = super.getBaseAmplifier();
 
         return base + 0.05 * this.abilityLevel;

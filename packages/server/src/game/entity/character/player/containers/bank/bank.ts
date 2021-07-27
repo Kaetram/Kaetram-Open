@@ -20,7 +20,12 @@ export default class Bank extends Container {
         this.open = false;
     }
 
-    load(ids: number[], counts: number[], abilities: number[], abilityLevels: number[]): void {
+    override load(
+        ids: number[],
+        counts: number[],
+        abilities: number[],
+        abilityLevels: number[]
+    ): void {
         super.load(ids, counts, abilities, abilityLevels);
 
         this.owner.send(new Messages.Bank(Packets.BankOpcode.Batch, [this.size, this.slots]));
@@ -45,7 +50,7 @@ export default class Bank extends Container {
         return true;
     }
 
-    remove(id: number, count: number, index: number): boolean {
+    override remove(id: number, count: number, index: number): boolean {
         if (!super.remove(index, id, count)) return false;
 
         this.owner.send(

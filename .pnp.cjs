@@ -2357,6 +2357,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.13"],
             ["@types/lodash", "npm:4.14.170"],
             ["@types/node", "npm:16.4.3"],
+            ["@types/sanitizer", "npm:0.0.28"],
             ["@types/ws", "npm:7.4.7"],
             ["axios", "npm:0.21.1"],
             ["bcryptjs", "npm:2.4.3"],
@@ -3008,6 +3009,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@types/responselike", "npm:1.0.0"],
             ["@types/node", "npm:15.12.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/sanitizer", [
+        ["npm:0.0.28", {
+          "packageLocation": "./.yarn/cache/@types-sanitizer-npm-0.0.28-c2e7296fbb-1deb96a6ba.zip/node_modules/@types/sanitizer/",
+          "packageDependencies": [
+            ["@types/sanitizer", "npm:0.0.28"]
           ],
           "linkType": "HARD",
         }]

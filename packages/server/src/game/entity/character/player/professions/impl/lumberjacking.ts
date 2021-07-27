@@ -1,4 +1,5 @@
 import * as Modules from '@kaetram/common/src/modules';
+import { Tree } from '@kaetram/common/types/map';
 
 import Trees from '../../../../../../../data/professions/trees';
 import Messages from '../../../../../../network/messages';
@@ -13,7 +14,7 @@ export default class Lumberjacking extends Profession {
     cuttingInterval: NodeJS.Timeout;
     started: boolean;
 
-    treeId: Modules.Trees; // TODO
+    treeId: Tree; // TODO
 
     queuedTrees: Record<string, never>;
 
@@ -72,7 +73,7 @@ export default class Lumberjacking extends Profession {
         this.started = true;
     }
 
-    stop(): void {
+    override stop(): void {
         if (!this.started) return;
 
         this.treeId = null;
@@ -85,13 +86,13 @@ export default class Lumberjacking extends Profession {
     }
 
     // TODO
-    handle(id: string, treeId: Modules.Trees): void {
+    handle(id: string, treeId: Tree): void {
         if (!this.player.hasLumberjackingWeapon()) {
             this.player.notify('You do not have an axe to cut this tree with.');
             return;
         }
 
-        this.treeId = treeId;
+        this.treeId = treeId as Tree;
         this.targetId = id;
 
         if (this.level < Trees.Levels[this.treeId]) {

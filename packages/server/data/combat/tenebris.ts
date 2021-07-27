@@ -47,7 +47,7 @@ export default class Tenebris extends Combat {
         }, this.respawnDelay);
     }
 
-    hit(attacker: Character, target: Character, hitInfo: HitData): void {
+    override hit(attacker: Character, target: Character, hitInfo: HitData): void {
         if (this.isAttacked()) this.beginIllusionAttack();
 
         if (this.canSpawn()) this.spawnIllusions();
