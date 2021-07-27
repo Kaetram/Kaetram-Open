@@ -1,3 +1,4 @@
+import { Rock } from '@kaetram/common/types/map';
 import Rocks from '../../../../../../../data/professions/rocks';
 import Utils from '../../../../../../util/utils';
 import Player from '../../player';
@@ -9,7 +10,7 @@ export default class Mining extends Profession {
     miningInterval: NodeJS.Timeout;
     started: boolean;
 
-    rockId: string;
+    rockId: Rock;
 
     constructor(id: number, player: Player) {
         super(id, player, 'Mining');
@@ -30,7 +31,7 @@ export default class Mining extends Profession {
         this.started = true;
     }
 
-    stop(): void {
+    override stop(): void {
         if (!this.started) return;
 
         this.rockId = null;
@@ -43,7 +44,7 @@ export default class Mining extends Profession {
     }
 
     // TODO
-    handle(id: string, rockId: string): void {
+    handle(id: string, rockId: Rock): void {
         if (!this.player.hasMiningWeapon()) {
             this.player.notify('You do not have a pickaxe to mine this rock with.');
             return;

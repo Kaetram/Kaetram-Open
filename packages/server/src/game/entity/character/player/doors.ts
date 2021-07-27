@@ -28,7 +28,7 @@ interface IDs {
 
 interface DoorTiles {
     indexes: number[];
-    data: number[];
+    data: number[][];
     collisions: boolean[];
     objectData?: ObjectData;
 }
@@ -93,7 +93,7 @@ export default class Doors {
     }
 
     getTiles(door: Door): DoorTiles {
-        let tiles = {
+        let tiles: DoorTiles = {
                 indexes: [],
                 data: [],
                 collisions: []
@@ -114,7 +114,7 @@ export default class Doors {
     }
 
     getAllTiles(): DoorTiles {
-        let allTiles = {
+        let allTiles: DoorTiles = {
             indexes: [],
             data: [],
             collisions: []

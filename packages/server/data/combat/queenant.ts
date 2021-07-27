@@ -66,13 +66,13 @@ export default class QueenAnt extends Combat {
         });
     }
 
-    begin(attacker: Character): void {
+    override begin(attacker: Character): void {
         this.resetAoE();
 
         super.begin(attacker);
     }
 
-    hit(attacker: Character, target: Character, hitInfo: HitData): void {
+    override hit(attacker: Character, target: Character, hitInfo: HitData): void {
         if (this.frozen) return;
 
         if (this.canCastAoE()) {

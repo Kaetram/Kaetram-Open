@@ -83,7 +83,7 @@ export default {
 
     getCount(npcId: number): number[] {
         let { count } = this.Ids[npcId],
-            counts = [];
+            counts: number[] = [];
 
         if (_.isArray(count)) return count;
 

@@ -19,7 +19,14 @@ type Bounds = {
     endY: number;
 };
 
-type Tile = number | number[];
+export type Tile = number | number[];
+
+export interface TilesetData {
+    [i: number]: {
+        c?: boolean;
+        h?: number;
+    };
+}
 
 interface RegionData {
     entities: { [instance: string]: Entity };
@@ -27,13 +34,17 @@ interface RegionData {
     incoming: Entity[];
 }
 
-interface RegionTileData {
+export interface RegionTileData {
     index: number;
     position: Pos;
-    data: number;
+    data: number[];
     isCollision: boolean;
     isObject: boolean;
     cursor: string;
+}
+
+interface DynamicTiles {
+    [index: number]: Partial<RegionTileData>;
 }
 
 export default class Region {
@@ -210,8 +221,8 @@ export default class Region {
     }
 
     // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
-    getDynamicTiles(player: Player): { [index: number]: RegionTileData } {
-        let dynamicTiles = {},
+    getDynamicTiles(player: Player): DynamicTiles {
+        let dynamicTiles: DynamicTiles = {},
             doors = player.doors.getAllTiles(),
             trees = player.getSurroundingTrees();
 
@@ -242,7 +253,7 @@ export default class Region {
     }
 
     sendTilesetInfo(player: Player): void {
-        let tilesetData = {};
+        let tilesetData: TilesetData = {};
 
         for (let i in this.map.tileCollisions)
             tilesetData[this.map.tileCollisions[i]] = { c: true };
@@ -269,7 +280,7 @@ export default class Region {
     }
 
     add(entity: Entity, regionId: string): string[] {
-        const newRegions = [];
+        const newRegions: string[] = [];
 
         if (entity && regionId && regionId in this.regions) {
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
@@ -294,7 +305,7 @@ export default class Region {
     }
 
     remove(entity: Entity): string[] {
-        const oldRegions = [];
+        const oldRegions: string[] = [];
 
         if (entity && entity.region) {
             const region = this.regions[entity.region];
@@ -387,7 +398,7 @@ export default class Region {
     }
 
     getRegionData(region: string, player: Player, force?: boolean): RegionTileData[] {
-        let data = [];
+        let data: RegionTileData[] = [];
 
         if (!player) return data;
 
@@ -411,9 +422,7 @@ export default class Region {
     forEachTile(
         bounds: Bounds,
         webSocket: boolean,
-        dynamicTiles: {
-            [index: number]: RegionTileData;
-        },
+        dynamicTiles: DynamicTiles,
         callback: (tile: RegionTileData) => void
     ): void {
         this.forEachGrid(bounds, (x: number, y: number) => {
@@ -444,7 +453,7 @@ export default class Region {
                 if (dynamicTile.isObject) info.isObject = dynamicTile.isObject;
                 if (dynamicTile.cursor) info.cursor = dynamicTile.cursor;
             } else {
-                if (tileData) info.data = tileData as number;
+                if (tileData) info.data = tileData as number[];
                 if (isCollision) info.isCollision = isCollision;
                 if (objectId) {
                     info.isObject = !!objectId;

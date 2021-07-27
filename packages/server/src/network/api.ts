@@ -132,7 +132,7 @@ export default class API {
             return;
         }
 
-        const players = {};
+        const players: { [username: string]: Partial<PlayerData> } = {};
 
         this.world.entities.forEachPlayer((player: Player) => {
             players[player.username] = this.getPlayerData(player);

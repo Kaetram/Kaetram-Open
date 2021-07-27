@@ -11,7 +11,7 @@ export default class Boots extends Equipment {
         this.bootsLevel = Items.getBootsLevel(name);
     }
 
-    getBaseAmplifier(): number {
+    override getBaseAmplifier(): number {
         return 1 + this.bootsLevel / 200;
     }
 

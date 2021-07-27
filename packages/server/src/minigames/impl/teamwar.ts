@@ -159,7 +159,7 @@ export default class TeamWar extends Minigame {
     }
 
     // Expand on the super `getState()`
-    getState(player?: Player): TeamWarState {
+    override getState(player?: Player): TeamWarState {
         let state = super.getState() as TeamWarState;
 
         // Player can only be in team `red`, `blue`, or `lobby`.

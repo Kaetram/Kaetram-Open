@@ -56,7 +56,7 @@ export default class OgreLord extends Combat {
         this.loaded = true;
     }
 
-    hit(character: Character, target: Character, hitInfo: HitData): void {
+    override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.isAttacked()) this.beginMinionAttack();
 
         if (!character.isNonDiagonal(target)) {
