@@ -9,7 +9,6 @@ import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import Slot from '../game/entity/character/player/containers/slot';
 import Player from '../game/entity/character/player/player';
-import NPC from '../game/entity/npc/npc';
 import Projectile from '../game/entity/objects/projectile';
 import World from '../game/world';
 import Messages from '../network/messages';
@@ -18,6 +17,7 @@ import log from '../util/log';
 import Utils from '../util/utils';
 import Commands from './commands';
 import Entities from './entities';
+import NPC from '../game/entity/npc/npc';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
@@ -489,7 +489,7 @@ export default class Incoming {
     }
 
     handleRequest(message: [string]): void {
-        const [id] = message;
+        let [id] = message;
 
         if (id !== this.player.instance) return;
 
@@ -497,13 +497,13 @@ export default class Incoming {
     }
 
     handleTarget(message: [number, string]): void {
-        const [opcode, instance] = message;
+        let [opcode, instance] = message;
 
         log.debug(`Target [opcode]: ${instance} [${opcode}]`);
 
         switch (opcode) {
             case Packets.TargetOpcode.Talk: {
-                const entity = this.entities.get(instance);
+                let entity = this.entities.get(instance);
 
                 if (!entity || !this.player.isAdjacent(entity)) return;
 
