@@ -1,16 +1,35 @@
 import _ from 'lodash';
-import Modules from '../../../../../util/modules';
-import Player from '../player';
-import World from '../../../../world';
-import Profession from './impl/profession';
-import professions from './impl';
-import log from '../../../../../util/log';
 
-class Professions {
+import log from '../../../../../util/log';
+import * as Modules from '@kaetram/common/src/modules';
+import World from '../../../../world';
+import Player from '../player';
+import professions from './impl';
+import Profession from './impl/profession';
+
+export interface ProfessionsInfo {
+    id: number;
+    name: string;
+    level: number;
+    percentage: number;
+}
+
+export interface ProfessionsData {
+    [id: number]: {
+        experience: number;
+    };
+}
+
+export interface ProfessionsArray {
+    username: string;
+    data: ProfessionsData;
+}
+
+export default class Professions {
     player: Player;
     world: World;
 
-    professions: any;
+    professions: { [id: number]: Profession };
 
     constructor(player: Player) {
         this.player = player;
@@ -21,7 +40,7 @@ class Professions {
         this.load();
     }
 
-    load() {
+    load(): void {
         let pList = Object.keys(Modules.Professions); // professions enum list
 
         /**
@@ -31,18 +50,18 @@ class Professions {
 
         _.each(pList, (profession) => {
             try {
-                let ProfessionClass = professions[profession.toLowerCase()],
+                let ProfessionClass = professions[profession],
                     id = Modules.Professions[profession];
 
-                this.professions[id] = new ProfessionClass(id, this.player);
-            } catch (e) {
+                if (ProfessionClass) this.professions[id] = new ProfessionClass(id, this.player);
+            } catch (error) {
                 log.debug(`Could not load ${profession} profession.`);
-                log.error(e);
+                log.error(error);
             }
         });
     }
 
-    update(info: any) {
+    update(info: ProfessionsData): void {
         _.each(info, (data, id) => {
             if (!(id in this.professions)) return;
 
@@ -50,19 +69,19 @@ class Professions {
         });
     }
 
-    getProfession(id: number) {
+    getProfession<P extends Profession>(id: number): P {
         if (!(id in this.professions)) return null;
 
-        return this.professions[id];
+        return this.professions[id] as P;
     }
 
-    stopAll() {
+    stopAll(): void {
         this.forEachProfession((profession: Profession) => {
             profession.stop();
         });
     }
 
-    forEachProfession(callback: Function) {
+    forEachProfession(callback: (profession: Profession) => void): void {
         _.each(this.professions, (profession) => {
             callback(profession);
         });
@@ -73,7 +92,7 @@ class Professions {
      * to load the professions profile tab.
      */
 
-    getInfo() {
+    getInfo(): ProfessionsInfo[] {
         let data = [];
 
         _.each(this.professions, (profession: Profession) => {
@@ -88,7 +107,7 @@ class Professions {
         return data;
     }
 
-    getArray() {
+    getArray(): ProfessionsArray {
         let data = {};
 
         _.each(this.professions, (profession: Profession) => {
@@ -97,9 +116,7 @@ class Professions {
 
         return {
             username: this.player.username,
-            data: data
+            data
         };
     }
 }
-
-export default Professions;

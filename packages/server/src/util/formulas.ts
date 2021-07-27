@@ -1,13 +1,15 @@
-import Utils from './utils';
-import Constants from './constants';
+import * as Modules from '@kaetram/common/src/modules';
 import Trees from '../../data/professions/trees';
 import Character from '../game/entity/character/character';
+import Player from '../game/entity/character/player/player';
+import Constants from './constants';
+import Utils from './utils';
 
 export default {
-    LevelExp: [],
+    LevelExp: [] as number[],
 
     // Chances of getting logs from a tree.
-    getTreeChance(player: any, treeId: string) {
+    getTreeChance(player: Player, treeId: Modules.Trees): number {
         let lumberjackingLevel = player.getLumberjackingLevel(),
             weaponLumberjackingLevel = player.getWeaponLumberjackingLevel(),
             treeLevel = Trees.Levels[treeId],
@@ -18,14 +20,14 @@ export default {
         return probability;
     },
 
-    getDamage(attacker: Character, target: Character, special?: boolean) {
+    getDamage(attacker: Character, target: Character, special?: boolean): number {
         let maxDamage = this.getMaxDamage(attacker, target, special),
             accuracy = Utils.randomInt(0, attacker.level);
 
         return Utils.randomInt(accuracy, maxDamage);
     },
 
-    getMaxDamage(attacker: Character, target: Character, special?: boolean) {
+    getMaxDamage(attacker: Character, target: Character, special?: boolean): number {
         if (!attacker || !target) return;
 
         let damageDealt = 0,
@@ -94,7 +96,7 @@ export default {
         return damage;
     },
 
-    getCritical(attacker: any, target: Character) {
+    getCritical(attacker: Player, target: Character): number {
         if (!attacker || !target) return;
 
         /**
@@ -107,7 +109,7 @@ export default {
         return (damage *= multiplier);
     },
 
-    getWeaponBreak(attacker: Character, target: Character) {
+    getWeaponBreak(attacker: Character, target: Character): boolean {
         if (!attacker || !target) return;
 
         // let targetArmour: number = target.getArmourLevel();
@@ -121,7 +123,7 @@ export default {
         return breakChance > 75;
     },
 
-    getAoEDamage(attacker: Character, target: Character) {
+    getAoEDamage(attacker: Character, target: Character): number {
         /**
          * Preliminary setup until this function is expanded
          * and fits in the necessary algorithms.
@@ -130,14 +132,14 @@ export default {
         return this.getDamage(attacker, target);
     },
 
-    nextExp(experience: number) {
+    nextExp(experience: number): number {
         if (experience < 0) return -1;
 
         for (let i = 1; i < this.LevelExp.length; i++)
             if (experience < this.LevelExp[i]) return this.LevelExp[i];
     },
 
-    prevExp(experience: number) {
+    prevExp(experience: number): number {
         if (experience < 0) return -1;
 
         for (let i = Constants.MAX_LEVEL; i > 0; i--)
@@ -146,7 +148,7 @@ export default {
         return 0;
     },
 
-    expToLevel(experience: number) {
+    expToLevel(experience: number): number {
         if (experience < 0) return -1;
 
         for (let i = 1; i < this.LevelExp.length; i++) if (experience < this.LevelExp[i]) return i;
@@ -154,11 +156,11 @@ export default {
         return Constants.MAX_LEVEL;
     },
 
-    getMaxHitPoints(level: number) {
+    getMaxHitPoints(level: number): number {
         return 100 + level * 30;
     },
 
-    getMaxMana(level: number) {
+    getMaxMana(level: number): number {
         return 10 + level * 8;
     }
 };

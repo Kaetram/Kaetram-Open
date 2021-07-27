@@ -1,8 +1,8 @@
-import Equipment from './equipment';
 import Items from '../../../../../util/items';
-import Modules from '../../../../../util/modules';
+import * as Modules from '@kaetram/common/src/modules';
+import Equipment from './equipment';
 
-class Boots extends Equipment {
+export default class Boots extends Equipment {
     public bootsLevel: number;
 
     constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
@@ -11,13 +11,11 @@ class Boots extends Equipment {
         this.bootsLevel = Items.getBootsLevel(name);
     }
 
-    getBaseAmplifier() {
-        return 1.0 + this.bootsLevel / 200;
+    getBaseAmplifier(): number {
+        return 1 + this.bootsLevel / 200;
     }
 
-    getType() {
+    getType(): Modules.Equipment {
         return Modules.Equipment.Boots;
     }
 }
-
-export default Boots;

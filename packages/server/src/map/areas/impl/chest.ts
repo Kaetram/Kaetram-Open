@@ -1,16 +1,17 @@
+import World from '../../../game/world';
+import Utils from '../../../util/utils';
 import Area from '../area';
 import Areas from '../areas';
 
-import World from '../../../game/world';
-import Utils from '../../../util/utils';
+import type { ProcessedArea } from '@kaetram/tools/map/mapdata';
 
 export default class Chest extends Areas {
-    constructor(data: any, world?: World) {
+    constructor(data: ProcessedArea[], world?: World) {
         super(data, world);
 
-        super.load(this.data, (chestArea: Area, rawData: any) => {
+        super.load(this.data, (chestArea, rawData) => {
             chestArea.maxEntities = rawData.entities || 0;
-            chestArea.items = rawData.items;
+            chestArea.items = rawData.items.split(',');
 
             chestArea.cx = rawData.spawnX;
             chestArea.cy = rawData.spawnY;
@@ -29,7 +30,7 @@ export default class Chest extends Areas {
         super.message('chest');
     }
 
-    spawnChest(chestArea: Area) {
+    spawnChest(chestArea: Area): void {
         if (Utils.timePassed(chestArea.lastSpawn, chestArea.spawnDelay)) return;
 
         chestArea.chest = this.world.entities.spawnChest(
@@ -43,7 +44,7 @@ export default class Chest extends Areas {
         chestArea.lastSpawn = Date.now();
     }
 
-    removeChest(chestArea: Area) {
+    removeChest(chestArea: Area): void {
         if (!chestArea.chest) return;
 
         this.world.entities.removeChest(chestArea.chest);

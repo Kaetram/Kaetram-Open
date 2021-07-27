@@ -1,10 +1,24 @@
-import Mobs from '../../util/mobs';
 import Items from '../../util/items';
+import Mobs from '../../util/mobs';
 import NPCs from '../../util/npcs';
 import Combat from './character/combat/combat';
-import Player from './character/player/player';
+import type Mob from './character/mob/mob';
+import type Player from './character/player/player';
+import type NPC from './npc/npc';
+import type Item from './objects/item';
 
-class Entity {
+export interface EntityState {
+    string?: string;
+    type: string;
+    id: string;
+    name: string;
+    x: number;
+    y: number;
+    nameColour?: string;
+    customScale?: number;
+}
+
+abstract class Entity {
     public id: number;
     public type: string;
     public instance: string;
@@ -17,19 +31,19 @@ class Entity {
     public combat: Combat;
 
     public dead: boolean;
-    public recentRegions: any;
-    public invisibles: any;
-    public invisiblesIds: any;
+    public recentRegions: string[];
+    public invisibles: { [instance: string]: Entity };
+    public invisiblesIds: number[];
 
     public username: string;
     public instanced: boolean;
     public region: string;
 
-    setPositionCallback: Function;
+    setPositionCallback?(): void;
 
-    specialState: any;
-    customScale: any;
-    roaming: any;
+    specialState: 'boss' | 'miniboss' | 'achievementNpc' | 'area' | 'questNpc' | 'questMob';
+    customScale: number;
+    roaming: boolean;
 
     constructor(id: number, type: string, instance: string, x?: number, y?: number) {
         this.id = id;
@@ -51,56 +65,28 @@ class Entity {
         this.invisiblesIds = []; // For Entity IDs
     }
 
-    talk() {
-        return null;
-    }
-
-    getCombat() {
-        return null;
-    }
-
-    /** Uninitialized Variables **/
-
-    isOutsideSpawn(): boolean {
-        return false;
-    }
-
-    removeTarget() {}
-
-    return() {}
-
-    openChest(_player?: Player) {}
-
-    hasTarget(): boolean {
-        return false;
-    }
-
-    setTarget(_target: any) {}
-
-    /****************************/
-
-    getDistance(entity: Entity) {
+    getDistance(entity: Entity): number {
         let x = Math.abs(this.x - entity.x),
             y = Math.abs(this.y - entity.y);
 
         return x > y ? x : y;
     }
 
-    getCoordDistance(toX: number, toY: number) {
+    getCoordDistance(toX: number, toY: number): number {
         let x = Math.abs(this.x - toX),
             y = Math.abs(this.y - toY);
 
         return x > y ? x : y;
     }
 
-    setPosition(x: number, y: number) {
+    setPosition(x: number, y: number): void {
         this.x = x;
         this.y = y;
 
         if (this.setPositionCallback) this.setPositionCallback();
     }
 
-    updatePosition() {
+    updatePosition(): void {
         this.oldX = this.x;
         this.oldY = this.y;
     }
@@ -111,76 +97,76 @@ class Entity {
      * Especially useful for ranged attacks and whatnot.
      */
 
-    isNear(entity: Entity, distance: number) {
+    isNear(entity: Entity, distance: number): boolean {
         let dx = Math.abs(this.x - entity.x),
             dy = Math.abs(this.y - entity.y);
 
         return dx <= distance && dy <= distance;
     }
 
-    isAdjacent(entity: Entity) {
+    isAdjacent(entity: Entity): boolean {
         return entity && this.getDistance(entity) < 2;
     }
 
-    isNonDiagonal(entity: Entity) {
+    isNonDiagonal(entity: Entity): boolean {
         return this.isAdjacent(entity) && !(entity.x !== this.x && entity.y !== this.y);
     }
 
-    hasSpecialAttack() {
+    hasSpecialAttack(): boolean {
         return false;
     }
 
-    isMob() {
+    isMob(): this is Mob {
         return this.type === 'mob';
     }
 
-    isNPC() {
+    isNPC(): this is NPC {
         return this.type === 'npc';
     }
 
-    isItem() {
+    isItem(): this is Item {
         return this.type === 'item';
     }
 
-    isPlayer() {
+    isPlayer(): this is Player {
         return this.type === 'player';
     }
 
-    onSetPosition(callback: Function) {
+    onSetPosition(callback: () => void): void {
         this.setPositionCallback = callback;
     }
 
-    addInvisible(entity: Entity) {
+    addInvisible(entity: Entity): void {
         this.invisibles[entity.instance] = entity;
     }
 
-    addInvisibleId(entityId: number) {
+    addInvisibleId(entityId: number): void {
         this.invisiblesIds.push(entityId);
     }
 
-    removeInvisible(entity: Entity) {
+    removeInvisible(entity: Entity): void {
         delete this.invisibles[entity.instance];
     }
 
-    removeInvisibleId(entityId: number) {
+    removeInvisibleId(entityId: number): void {
         let index = this.invisiblesIds.indexOf(entityId);
 
         if (index > -1) this.invisiblesIds.splice(index, 1);
     }
 
-    hasInvisible(entity: Entity) {
+    hasInvisible(entity: Entity): boolean {
         return entity.instance in this.invisibles;
     }
 
-    hasInvisibleId(entityId: number) {
+    hasInvisibleId(entityId: number): boolean {
         return this.invisiblesIds.includes(entityId);
     }
 
-    hasInvisibleInstance(instance: string) {
+    hasInvisibleInstance(instance: string): boolean {
         return instance in this.invisibles;
     }
 
-    getState() {
+    getState(): EntityState {
         let string = this.isMob()
                 ? Mobs.idToString(this.id)
                 : this.isNPC()
@@ -191,11 +177,11 @@ class Entity {
                 : this.isNPC()
                 ? NPCs.idToName(this.id)
                 : Items.idToName(this.id),
-            data: any = {
+            data: EntityState = {
                 type: this.type,
                 id: this.instance,
-                string: string,
-                name: name,
+                string,
+                name,
                 x: this.x,
                 y: this.y
             };
@@ -207,7 +193,7 @@ class Entity {
         return data;
     }
 
-    getNameColour() {
+    getNameColour(): string {
         switch (this.specialState) {
             case 'boss':
                 return '#F60404';

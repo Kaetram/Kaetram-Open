@@ -1,4 +1,9 @@
-class Minigame {
+export interface MinigameState {
+    id: number;
+    name: string;
+}
+
+export default abstract class Minigame {
     id: number;
     name: string;
 
@@ -7,21 +12,19 @@ class Minigame {
         this.name = name;
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    getName() {
+    getName(): string {
         return this.name;
     }
 
     // Used to mark if `player` is in a minigame instance.
-    getState(): any {
+    getState(): MinigameState {
         return {
             id: this.id,
             name: this.name
         };
     }
 }
-
-export default Minigame;

@@ -12,7 +12,7 @@ import World from '../game/world';
 import Grids from '../map/grids';
 import Map from '../map/map';
 import Messages from '../network/messages';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Region from '../region/region';
 
 import log from '../util/log';
@@ -22,7 +22,7 @@ import Items from '../util/items';
 import Mobs from '../util/mobs';
 import NPCs from '../util/npcs';
 import Formulas from '../util/formulas';
-import Modules from '../util/modules';
+import * as Modules from '@kaetram/common/src/modules';
 
 export default class Entities {
     private world: World;
@@ -62,14 +62,14 @@ export default class Entities {
     private spawn() {
         // Spawns the static entities such as mobs, items, and npcs
 
-        _.each(this.map.staticEntities, (entityInfo: any) => {
-            let key = entityInfo.string,
+        _.each(this.map.staticEntities, (entityInfo) => {
+            const key = entityInfo.string,
                 instance = Utils.generateInstance(),
                 position = this.map.indexToGridPosition(entityInfo.tileIndex, 1);
 
             switch (entityInfo.type) {
-                case 'item':
-                    let item = this.createItem(
+                case 'item': {
+                    const item = this.createItem(
                         Items.stringToId(key),
                         instance,
                         position.x,
@@ -81,23 +81,25 @@ export default class Entities {
                     this.addItem(item);
 
                     break;
+                }
 
-                case 'npc':
-                    let npc = new NPC(NPCs.stringToId(key), instance, position.x, position.y);
+                case 'npc': {
+                    const npc = new NPC(NPCs.stringToId(key), instance, position.x, position.y);
 
                     this.addNPC(npc);
 
                     break;
+                }
 
-                case 'mob':
-                    let mob = new Mob(Mobs.stringToId(key), instance, position.x, position.y);
+                case 'mob': {
+                    const mob = new Mob(Mobs.stringToId(key), instance, position.x, position.y);
 
                     mob.static = true;
                     mob.roaming = entityInfo.roaming;
 
                     if (entityInfo.miniboss) {
                         // TODO - Rename `achievementId` -> `achievement`
-                        if (entityInfo.achievementId) mob.achievementId = entityInfo.achievement;
+                        if (entityInfo.achievementId) mob.achievementId = entityInfo.achievementId;
 
                         mob.miniboss = entityInfo.miniboss;
                     }
@@ -132,7 +134,7 @@ export default class Entities {
                     mob.onRoaming(() => {
                         if (this.mobs.dead) return;
 
-                        let newX =
+                        const newX =
                                 mob.spawnLocation[0] +
                                 Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
                             newY =
@@ -170,14 +172,14 @@ export default class Entities {
                          * them walking into other regions (or clipping).
                          */
 
-                        let plateauLevel = this.map.getPlateauLevel(
+                        const plateauLevel = this.map.getPlateauLevel(
                             mob.spawnLocation[0],
                             mob.spawnLocation[1]
                         );
 
                         if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
 
-                        //if (config.debug)
+                        // if (config.debug)
                         //    this.forceTalk('Yes hello, I am moving.');
 
                         mob.setPosition(newX, newY);
@@ -195,6 +197,7 @@ export default class Entities {
                     this.addMob(mob);
 
                     break;
+                }
             }
         });
 
@@ -202,15 +205,15 @@ export default class Entities {
 
         // Spawns the static chests throughout the world.
 
-        _.each(this.map.chests, (info: any) => {
-            this.spawnChest(info.items, info.gridX, info.gridY, true, info.achievement);
+        _.each(this.map.chests, (info) => {
+            this.spawnChest(info.items.split(','), info.x, info.y, true, info.achievement);
         });
 
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
     }
 
     spawnMob(id: number, gridX: number, gridY: number): Mob {
-        let mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
+        const mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
 
         this.addMob(mob);
 
@@ -218,32 +221,32 @@ export default class Entities {
     }
 
     spawnChest(
-        items: string,
+        items: string[],
         gridX: number,
         gridY: number,
         isStatic?: boolean,
-        achievement?: string
-    ) {
-        let chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);
+        achievement?: number
+    ): Chest {
+        const chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);
 
         chest.addItems(items);
 
         if (isStatic) {
             chest.static = isStatic;
 
-            chest.onRespawn(this.addChest.bind(this, chest));
+            chest.onRespawn(() => this.addChest(chest));
         }
 
         chest.onOpen((player?: Player) => {
             this.removeChest(chest);
 
-            let item = chest.getItem();
+            const item = chest.getItem();
 
             if (!item) return;
 
             this.dropItem(Items.stringToId(item.string), item.count, chest.x, chest.y);
 
-            if (player && chest.achievement) player.finishAchievement(parseInt(chest.achievement));
+            if (player && chest.achievement) player.finishAchievement(chest.achievement);
         });
 
         this.addChest(chest);
@@ -251,22 +254,23 @@ export default class Entities {
         return chest;
     }
 
-    spawnProjectile(info: any) {
-        let attacker = info.shift(),
-            target = info.shift();
-
+    spawnProjectile([attacker, target]: Character[]): Projectile {
         if (!attacker || !target) return null;
 
-        let startX = attacker.gridX,
-            startY = attacker.gridY,
-            type = attacker.getProjectile(),
-            hit = null,
-            projectile = new Projectile(type, Utils.generateInstance());
+        const startX = attacker.x, // gridX
+            startY = attacker.y, // gridY
+            type = attacker.getProjectile();
+        let hit = null;
+        const projectile = new Projectile(type, Utils.generateInstance());
 
         projectile.setStart(startX, startY);
         projectile.setTarget(target);
 
-        if (attacker.type === 'player') hit = attacker.getHit(target);
+        if (attacker.type === 'player') {
+            const player = attacker as Player;
+
+            hit = player.getHit(target);
+        }
 
         projectile.damage = hit ? hit.damage : Formulas.getDamage(attacker, target, true);
         projectile.hitType = hit ? hit.type : Modules.Hits.Damage;
@@ -282,7 +286,7 @@ export default class Entities {
      * Add Entities
      */
 
-    add(entity: Entity, region: string) {
+    add(entity: Entity, region: string): void {
         if (entity.instance in this.entities)
             log.warning(`Entity ${entity.instance} already exists.`);
 
@@ -340,21 +344,21 @@ export default class Entities {
         }
     }
 
-    addNPC(npc: NPC) {
+    addNPC(npc: NPC): void {
         this.add(npc, npc.region);
 
         this.npcs[npc.instance] = npc;
     }
 
-    addItem(item: Item) {
-        if (item.static) item.onRespawn(this.addItem.bind(this, item));
+    addItem(item: Item): void {
+        if (item.static) item.onRespawn(() => this.addItem(item));
 
         this.add(item, item.region);
 
         this.items[item.instance] = item;
     }
 
-    addMob(mob: Mob) {
+    addMob(mob: Mob): void {
         this.add(mob, mob.region);
 
         this.mobs[mob.instance] = mob;
@@ -368,7 +372,7 @@ export default class Entities {
         });
     }
 
-    addPlayer(player: Player) {
+    addPlayer(player: Player): void {
         this.add(player, player.region);
 
         this.players[player.instance] = player;
@@ -376,13 +380,13 @@ export default class Entities {
         if (this.world.populationCallback) this.world.populationCallback();
     }
 
-    addChest(chest: Chest) {
+    addChest(chest: Chest): void {
         this.add(chest, chest.region);
 
         this.chests[chest.instance] = chest;
     }
 
-    addProjectile(projectile: Projectile) {
+    addProjectile(projectile: Projectile): void {
         this.add(projectile, projectile.owner.region);
 
         this.projectiles[projectile.instance] = projectile;
@@ -392,7 +396,7 @@ export default class Entities {
      * Remove Entities
      */
 
-    remove(entity: Entity) {
+    remove(entity: Entity): void {
         this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
 
         this.region.remove(entity);
@@ -404,7 +408,7 @@ export default class Entities {
         delete this.projectiles[entity.instance];
     }
 
-    removeItem(item: Item) {
+    removeItem(item: Item): void {
         this.remove(item);
 
         this.world.push(Packets.PushOpcode.Broadcast, {
@@ -414,7 +418,7 @@ export default class Entities {
         if (item.static) item.respawn();
     }
 
-    removePlayer(player: Player) {
+    removePlayer(player: Player): void {
         this.remove(player);
 
         this.world.push(Packets.PushOpcode.Regions, {
@@ -435,7 +439,7 @@ export default class Entities {
         player = null;
     }
 
-    removeChest(chest: Chest) {
+    removeChest(chest: Chest): void {
         this.remove(chest);
 
         this.world.push(Packets.PushOpcode.Broadcast, {
@@ -450,25 +454,25 @@ export default class Entities {
      * Getters
      */
 
-    isOnline(username: string) {
+    isOnline(username: string): boolean {
         return !!this.getPlayer(username);
     }
 
-    get(instance: string) {
-        if (instance in this.entities) return this.entities[instance];
+    get<E extends Entity>(instance: string): E | undefined {
+        if (instance in this.entities) return this.entities[instance] as E;
     }
 
-    getPlayer(username: string) {
+    getPlayer(username: string): Player {
         return _.find(this.players, (player: Player) => {
             return player.username.toLowerCase() === username.toLowerCase();
         });
     }
 
-    forEachEntity(callback: (entity: Entity) => void) {
+    forEachEntity(callback: (entity: Entity) => void): void {
         _.each(this.entities, callback);
     }
 
-    forEachPlayer(callback: (player: Player) => void) {
+    forEachPlayer(callback: (player: Player) => void): void {
         _.each(this.players, callback);
     }
 
@@ -494,8 +498,8 @@ export default class Entities {
         gridY: number,
         ability?: number,
         abilityLevel?: number
-    ) {
-        let item = this.createItem(
+    ): void {
+        const item = this.createItem(
             id,
             Utils.generateInstance(),
             gridX,

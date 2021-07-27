@@ -1,6 +1,19 @@
 import Entity from '../entity';
+import * as Modules from '@kaetram/common/src/modules';
+import Character from '../character/character';
 
-class Projectile extends Entity {
+export interface ProjectileData {
+    id: string;
+    name: string;
+    characterId: string;
+    targetId: string;
+    damage: number;
+    special: never;
+    hitType: Modules.Hits;
+    type: string;
+}
+
+export default class Projectile extends Entity {
     startX: number;
     startY: number;
 
@@ -11,13 +24,13 @@ class Projectile extends Entity {
 
     damage: number;
 
-    hitType: any; // TODO
-    owner: any; // TODO
+    hitType: Modules.Hits; // TODO
+    owner: Character; // TODO
 
     static: boolean;
-    special: any;
+    special: never;
 
-    constructor(id: number, instance: string) {
+    constructor(id: Modules.Projectiles, instance: string) {
         super(id, 'projectile', instance);
 
         this.startX = -1;
@@ -35,7 +48,7 @@ class Projectile extends Entity {
         this.owner = null;
     }
 
-    setStart(x: number, y: number) {
+    setStart(x: number, y: number): void {
         this.x = x;
         this.y = y;
     }
@@ -44,21 +57,21 @@ class Projectile extends Entity {
      * TODO - Merge setTarget() && setStaticTarget into one function.
      */
 
-    setTarget(target: Entity) {
+    setTarget(target: Entity): void {
         this.target = target;
 
         this.destX = target.x;
         this.destY = target.y;
     }
 
-    setStaticTarget(x: number, y: number) {
+    setStaticTarget(x: number, y: number): void {
         this.static = true;
 
         this.destX = x;
         this.destY = y;
     }
 
-    getData() {
+    getData(): ProjectileData {
         /**
          * Refrain from creating a projectile unless
          * an owner and a target are available.
@@ -78,5 +91,3 @@ class Projectile extends Entity {
         };
     }
 }
-
-export default Projectile;

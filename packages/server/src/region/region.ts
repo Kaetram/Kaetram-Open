@@ -1,20 +1,16 @@
 import _ from 'lodash';
-import fs from 'fs';
-import path from 'path';
 
-import Messages from '../network/messages';
-import Packets from '../network/packets';
+import Packets from '@kaetram/common/src/packets';
+
+import config from '../../config';
+import Entities from '../controllers/entities';
 import Player from '../game/entity/character/player/player';
 import Entity from '../game/entity/entity';
+import World from '../game/world';
 import Map from '../map/map';
 import Regions from '../map/regions';
-import World from '../game/world';
-import config from '../../config';
+import Messages, { Packet } from '../network/messages';
 import log from '../util/log';
-import Utils from '../util/utils';
-import Entities from '../controllers/entities';
-
-const map = path.resolve(__dirname, '../../data/map/world.json');
 
 type Bounds = {
     startX: number;
@@ -23,9 +19,24 @@ type Bounds = {
     endY: number;
 };
 
-type Tile = string | string[];
+type Tile = number | number[];
 
-class Region {
+interface RegionData {
+    entities: { [instance: string]: Entity };
+    players: string[];
+    incoming: Entity[];
+}
+
+interface RegionTileData {
+    index: number;
+    position: Pos;
+    data: number;
+    isCollision: boolean;
+    isObject: boolean;
+    cursor: string;
+}
+
+export default class Region {
     /**
      * Region Generation.
      * This is used in order to send the client data about the new region
@@ -40,7 +51,7 @@ class Region {
     world: World;
     entities: Entities;
 
-    regions: any;
+    regions: { [id: string]: RegionData };
 
     loaded: boolean;
 
@@ -85,7 +96,6 @@ class Region {
         });
 
         this.load();
-        this.loadWatcher();
     }
 
     load(): void {
@@ -100,38 +110,6 @@ class Region {
         this.loaded = true;
 
         log.info('Finished loading regions!');
-    }
-
-    loadWatcher(): void {
-        fs.watch(map, () => {
-            this.update();
-        });
-
-        log.info('Finished loading file watcher!');
-    }
-
-    update(): void {
-        let data = fs.readFileSync(map, {
-            encoding: 'utf8',
-            flag: 'r'
-        });
-
-        if (!data) return;
-
-        try {
-            let checksum = Utils.getChecksum(data);
-
-            if (checksum === this.map.checksum) return;
-
-            this.map.load();
-
-            log.debug('Successfully loaded new map data.');
-
-            this.updateRegions();
-        } catch (e) {
-            log.error('Could not parse new map file.');
-            log.debug(e);
-        }
     }
 
     addEntityToInstance(entity: Entity, player: Player): void {
@@ -226,24 +204,24 @@ class Region {
     sendRegion(player: Player, region: string, force?: boolean): void {
         let tileData = this.getRegionData(region, player, force);
 
-        //No need to send empty data...
+        // No need to send empty data...
         if (tileData.length > 0)
-            player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData, force));
+            player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData));
     }
 
     // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
-    getDynamicTiles(player: Player) {
+    getDynamicTiles(player: Player): { [index: number]: RegionTileData } {
         let dynamicTiles = {},
-            doors: any = player.doors.getAllTiles(),
-            trees: any = player.getSurroundingTrees();
+            doors = player.doors.getAllTiles(),
+            trees = player.getSurroundingTrees();
 
-        doors.indexes = [...doors.indexes, trees.indexes];
-        doors.data = [...doors.data, trees.data];
-        doors.collisions = [...doors.collisions, trees.collisions];
+        doors.indexes.push(...trees.indexes);
+        doors.data.push(...trees.data);
+        doors.collisions.push(...trees.collisions);
         if (trees.objectData) doors.objectData = trees.objectData;
 
         for (let i in doors.indexes) {
-            let tile: any = {
+            let tile: Partial<RegionTileData> = {
                     data: doors.data[i],
                     isCollision: doors.collisions[i]
                 },
@@ -346,7 +324,7 @@ class Region {
 
         const region = this.regions[regionId];
 
-        if (region && !_.includes(region.entities, entity.instance)) region.incoming.push(entity);
+        if (region && !(entity.instance in region.entities)) region.incoming.push(entity);
 
         if (this.incomingCallback) this.incomingCallback(entity, regionId);
     }
@@ -382,7 +360,7 @@ class Region {
         entities = _.keys(this.regions[player.region].entities);
 
         entities = _.reject(entities, (instance) => {
-            return instance === player.instance; //TODO //|| player.isInvisible(instance);
+            return instance === player.instance; // TODO //|| player.isInvisible(instance);
         });
 
         entities = _.map(entities, (instance: string) => {
@@ -408,7 +386,7 @@ class Region {
         });
     }
 
-    getRegionData(region: string, player: Player, force?: boolean): any {
+    getRegionData(region: string, player: Player, force?: boolean): RegionTileData[] {
         let data = [];
 
         if (!player) return data;
@@ -420,7 +398,7 @@ class Region {
 
             const bounds = this.getRegionBounds(regionId);
 
-            this.forEachTile(bounds, player.webSocketClient, dynamicTiles, (tile: any) => {
+            this.forEachTile(bounds, player.webSocketClient, dynamicTiles, (tile) => {
                 data.push(tile);
             });
         });
@@ -431,26 +409,28 @@ class Region {
     forEachTile(
         bounds: Bounds,
         webSocket: boolean,
-        dynamicTiles: any,
-        callback: (tile: any) => void
+        dynamicTiles: {
+            [index: number]: RegionTileData;
+        },
+        callback: (tile: RegionTileData) => void
     ): void {
         this.forEachGrid(bounds, (x: number, y: number) => {
             let index = this.gridPositionToIndex(x - 1, y),
                 tileData = this.map.data[index],
                 isCollision = this.map.collisions.includes(index) || !tileData,
-                objectId: any;
+                objectId: number;
 
             if (tileData !== 0)
-                if (Array.isArray(tileData))
+                if (Array.isArray(tileData)) {
                     for (let tile of tileData)
-                    if (this.map.isObject(tile)) {
-                        objectId = tile;
-                        break;
-                    }
-                else if (this.map.isObject(tileData)) objectId = tileData;
+                        if (this.map.isObject(tile)) {
+                            objectId = tile;
+                            break;
+                        }
+                } else if (this.map.isObject(tileData)) objectId = tileData;
 
-            let info: any = {
-                index: index
+            let info: Partial<RegionTileData> = {
+                index
             };
 
             if (info.index in dynamicTiles) {
@@ -462,7 +442,7 @@ class Region {
                 if (dynamicTile.isObject) info.isObject = dynamicTile.isObject;
                 if (dynamicTile.cursor) info.cursor = dynamicTile.cursor;
             } else {
-                if (tileData) info.data = tileData;
+                if (tileData) info.data = tileData as number;
                 if (isCollision) info.isCollision = isCollision;
                 if (objectId) {
                     info.isObject = !!objectId;
@@ -477,7 +457,7 @@ class Region {
                 info.position = { x, y };
             }
 
-            callback(info);
+            callback(info as RegionTileData);
         });
     }
 
@@ -497,7 +477,7 @@ class Region {
         };
     }
 
-    static getModify(index: number, newTile: Tile): typeof Messages.Region {
+    static getModify(index: number, newTile: Tile): Packet {
         return new Messages.Region(Packets.RegionOpcode.Modify, {
             index,
             newTile
@@ -530,5 +510,3 @@ class Region {
         this.incomingCallback = callback;
     }
 }
-
-export default Region;

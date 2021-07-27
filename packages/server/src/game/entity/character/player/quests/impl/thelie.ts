@@ -1,17 +1,16 @@
-import Quest from '../quest';
 import Player from '../../player';
+import Quest from '../quest';
+import { QuestData } from '../quest';
 
-class Thelie extends Quest {
-    constructor(player: Player, data: any) {
+export default class Thelie extends Quest {
+    constructor(player: Player, data: QuestData) {
         super(player, data);
 
         this.player = player;
         this.data = data;
     }
 
-    load(stage: number) {
+    load(stage: number): void {
         super.load(stage);
     }
 }
-
-export default Thelie;

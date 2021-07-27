@@ -1,29 +1,28 @@
-import Hit from './hit';
+import type Hit from './hit';
+import type { HitData } from './hit';
 
-class CombatQueue {
-    hitQueue: any;
+export default class CombatQueue {
+    hitQueue: Hit[];
 
     constructor() {
         this.hitQueue = [];
     }
 
-    add(hit: Hit) {
+    add(hit: Hit): void {
         this.hitQueue.push(hit);
     }
 
-    hasQueue() {
+    hasQueue(): boolean {
         return this.hitQueue.length > 0;
     }
 
-    clear() {
+    clear(): void {
         this.hitQueue = [];
     }
 
-    getHit() {
-        if (this.hitQueue.length < 1) return null;
+    getHit(): HitData {
+        if (this.hitQueue.length === 0) return null;
 
         return this.hitQueue.shift().getData();
     }
 }
-
-export default CombatQueue;

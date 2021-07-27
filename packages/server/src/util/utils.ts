@@ -2,17 +2,13 @@
  * Useful utility functions that are used all throughout.
  */
 
-import _ from 'lodash';
 import crypto from 'crypto';
-
-import Packets from '../network/packets';
-import log from '../util/log';
+import _ from 'lodash';
 import zlib from 'zlib';
 
-type Pos = {
-    x: number;
-    y: number;
-};
+import Packets from '@kaetram/common/src/packets';
+
+import log from '../util/log';
 
 export default {
     random(range: number): number {
@@ -84,9 +80,10 @@ export default {
     },
 
     formatUsername(username: string): string {
-        return username.replace(/\w\S*/g, (string) => {
-            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-        });
+        return username.replace(
+            /\w\S*/g,
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+        );
     },
 
     /**
@@ -115,7 +112,7 @@ export default {
             for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
 
             return messageBlocks.join('');
-        } catch (e) {
+        } catch {
             return '';
         }
     },
@@ -162,7 +159,7 @@ export default {
      * @param data The data to calculate the size of, will be stringified.
      */
 
-    getBufferSize(data: JSON): number {
+    getBufferSize(data: unknown): number {
         return encodeURI(JSON.stringify(data)).split(/%..|./).length - 1;
     }
 };
