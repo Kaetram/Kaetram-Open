@@ -4,10 +4,10 @@
  * @experiemntal Hardcoding regions and areas is still a work in progress.
  */
 
-import Region from '../region';
 import Map from '../../map/map';
+import Region from '../region';
 
-class Home {
+export default class Home {
     private region: Region;
     private map: Map;
 
@@ -22,7 +22,7 @@ class Home {
         this.endRegion = '4-10';
     }
 
-    get() {
+    get(): void {
         let startPosition = this.region.getRegionBounds(this.startRegion),
             endPosition = this.region.getRegionBounds(this.endRegion),
             info = {
@@ -35,7 +35,7 @@ class Home {
          * Clones the region we're starting off with. After which we'll be hard-coding data into it.
          */
 
-        for (let y = startPosition.startY; y < endPosition.endY; y++) {
+        for (let y = startPosition.startY; y < endPosition.endY; y++)
             for (let x = startPosition.startX; x < endPosition.endX; x++) {
                 let tileIndex = this.region.gridPositionToIndex(x, y);
 
@@ -43,8 +43,5 @@ class Home {
                 info.data.push(this.map.data[tileIndex]);
                 info.collisions.push(this.map.isColliding(x, y));
             }
-        }
     }
 }
-
-export default Home;

@@ -1,25 +1,26 @@
 import Mob from '../../game/entity/character/mob/mob';
 import Player from '../../game/entity/character/player/player';
+import Chest from '../../game/entity/objects/chest';
 
-class Area {
+export default class Area {
     public id: number;
     public x: number;
     public y: number;
     public width: number;
     public height: number;
 
-    public polygon: any[];
+    public polygon: Pos[];
 
-    public entities: any;
-    public chest: any;
-    public items: any;
+    public entities: Mob[];
+    public chest: Chest;
+    public items: string[];
 
     public hasRespawned: boolean;
 
     // Overlay properties
-    public darkness: string;
+    public darkness: number;
     public type: string;
-    public fog: boolean;
+    public fog: string;
 
     // Properties it can hold
     public achievement: number;
@@ -38,8 +39,8 @@ class Area {
     public spawnDelay: number;
     public lastSpawn: number;
 
-    private spawnCallback: Function;
-    private emptyCallback: Function;
+    private spawnCallback?(): void;
+    private emptyCallback?(): void;
 
     constructor(id: number, x: number, y: number, width: number, height: number) {
         this.id = id;
@@ -60,7 +61,7 @@ class Area {
         this.spawnDelay = 0;
     }
 
-    addEntity(mob: Mob) {
+    addEntity(mob: Mob): void {
         if (!this.entities.includes(mob)) return;
         this.entities.push(mob);
         mob.area = this;
@@ -71,19 +72,19 @@ class Area {
         if (this.spawnCallback) this.spawnCallback();
     }
 
-    removeEntity(mob: Mob) {
+    removeEntity(mob: Mob): void {
         let index = this.entities.indexOf(mob);
 
         if (index > -1) this.entities.splice(index, 1);
 
         if (this.entities.length === 0 && this.emptyCallback) {
-            if (mob.lastAttacker) this.handleAchievement(mob.lastAttacker);
+            if (mob.lastAttacker) this.handleAchievement(mob.lastAttacker as Player);
 
             this.emptyCallback();
         }
     }
 
-    handleAchievement(player: Player) {
+    handleAchievement(player: Player): void {
         if (!this.achievement) return;
 
         player.finishAchievement(this.achievement);
@@ -103,7 +104,7 @@ class Area {
                 yi = this.polygon[i].y,
                 xj = this.polygon[j].x,
                 yj = this.polygon[j].y,
-                intersect = yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+                intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
 
             if (intersect) return true;
         }
@@ -111,17 +112,15 @@ class Area {
         return false;
     }
 
-    setMaxEntities(maxEntities: number) {
+    setMaxEntities(maxEntities: number): void {
         this.maxEntities = maxEntities;
     }
 
-    onEmpty(callback: Function) {
+    onEmpty(callback: () => void): void {
         this.emptyCallback = callback;
     }
 
-    onSpawn(callback: Function) {
+    onSpawn(callback: () => void): void {
         this.spawnCallback = callback;
     }
 }
-
-export default Area;

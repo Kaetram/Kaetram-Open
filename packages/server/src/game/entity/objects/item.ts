@@ -1,6 +1,13 @@
 import Entity from '../entity';
+import { EntityState } from '../entity';
 
-class Item extends Entity {
+interface ItemState extends EntityState {
+    count: number;
+    ability: number;
+    abilityLevel: number;
+}
+
+export default class Item extends Entity {
     static: boolean;
     dropped: boolean;
     shard: boolean;
@@ -15,12 +22,12 @@ class Item extends Entity {
     blinkDelay: number;
     despawnDelay: number;
 
-    blinkTimeout: any;
-    despawnTimeout: any;
+    blinkTimeout: NodeJS.Timeout;
+    despawnTimeout: NodeJS.Timeout;
 
-    blinkCallback: Function;
-    respawnCallback: Function;
-    despawnCallback: Function;
+    blinkCallback?(): void;
+    respawnCallback?(): void;
+    despawnCallback?(): void;
 
     constructor(
         id: number,
@@ -54,7 +61,7 @@ class Item extends Entity {
         this.despawnTimeout = null;
     }
 
-    destroy() {
+    destroy(): void {
         if (this.blinkTimeout) clearTimeout(this.blinkTimeout);
 
         if (this.despawnTimeout) clearTimeout(this.despawnTimeout);
@@ -62,7 +69,7 @@ class Item extends Entity {
         if (this.static) this.respawn();
     }
 
-    despawn() {
+    despawn(): void {
         this.blinkTimeout = setTimeout(() => {
             if (this.blinkCallback) this.blinkCallback();
 
@@ -72,18 +79,18 @@ class Item extends Entity {
         }, this.blinkDelay);
     }
 
-    respawn() {
+    respawn(): void {
         setTimeout(() => {
             if (this.respawnCallback) this.respawnCallback();
         }, this.respawnTime);
     }
 
-    getData() {
+    getData(): number[] {
         return [this.id, this.count, this.ability, this.abilityLevel];
     }
 
-    getState() {
-        let state = super.getState();
+    getState(): ItemState {
+        let state = super.getState() as ItemState;
 
         state.count = this.count;
         state.ability = this.ability;
@@ -92,29 +99,27 @@ class Item extends Entity {
         return state;
     }
 
-    setCount(count: number) {
+    setCount(count: number): void {
         this.count = count;
     }
 
-    setAbility(ability: number) {
+    setAbility(ability: number): void {
         this.ability = ability;
     }
 
-    setAbilityLevel(abilityLevel: number) {
+    setAbilityLevel(abilityLevel: number): void {
         this.abilityLevel = abilityLevel;
     }
 
-    onRespawn(callback: Function) {
+    onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 
-    onBlink(callback: Function) {
+    onBlink(callback: () => void): void {
         this.blinkCallback = callback;
     }
 
-    onDespawn(callback: Function) {
+    onDespawn(callback: () => void): void {
         this.despawnCallback = callback;
     }
 }
-
-export default Item;

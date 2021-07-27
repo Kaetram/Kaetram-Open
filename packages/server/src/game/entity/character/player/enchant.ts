@@ -1,13 +1,17 @@
-import log from '../../../../util/log';
 import _ from 'lodash';
-import Items from '../../../../util/items';
-import Messages from '../../../../network/messages';
-import Packets from '../../../../network/packets';
-import Utils from '../../../../util/utils';
-import Modules from '../../../../util/modules';
-import Player from './player';
 
-class Enchant {
+import Messages from '../../../../network/messages';
+import Packets from '@kaetram/common/src/packets';
+import Items from '../../../../util/items';
+import log from '../../../../util/log';
+import * as Modules from '@kaetram/common/src/modules';
+import Utils from '../../../../util/utils';
+import Player from './player';
+import Slot from './containers/slot';
+
+export type EnchantType = 'item' | 'shards';
+
+export default class Enchant {
     /**
      * Tier 1 - Damage/Armour boost (1-5%)
      * Tier 2 - Damage boost (1-10% & 10% for special ability or special ability level up)
@@ -18,8 +22,8 @@ class Enchant {
 
     player: Player;
 
-    selectedItem: any;
-    selectedShards: any;
+    selectedItem: Slot;
+    selectedShards: Slot;
 
     constructor(player: Player) {
         this.player = player;
@@ -28,12 +32,10 @@ class Enchant {
         this.selectedShards = null;
     }
 
-    add(type, item) {
-        let isItem = item === 'item';
-
-        if (isItem && !Items.isEnchantable(item.id)) return;
-
+    add(type: EnchantType, item: Slot): void {
         if (type === 'item') {
+            if (!Items.isEnchantable(item.id)) return;
+
             if (this.selectedItem) this.remove('item');
 
             this.selectedItem = item;
@@ -45,21 +47,21 @@ class Enchant {
 
         this.player.send(
             new Messages.Enchant(Packets.EnchantOpcode.Select, {
-                type: type,
+                type,
                 index: item.index
             })
         );
     }
 
-    remove(type) {
+    remove(type: EnchantType): void {
         let index = -1;
 
         if (type === 'item' && this.selectedItem) {
-            index = this.selectedItem.index;
+            ({ index } = this.selectedItem);
 
             this.selectedItem = null;
         } else if (type === 'shards' && this.selectedShards) {
-            index = this.selectedShards.index;
+            ({ index } = this.selectedShards);
 
             this.selectedShards = null;
         }
@@ -68,13 +70,13 @@ class Enchant {
 
         this.player.send(
             new Messages.Enchant(Packets.EnchantOpcode.Remove, {
-                type: type,
-                index: index
+                type,
+                index
             })
         );
     }
 
-    convert(shard) {
+    convert(shard: Slot): void {
         if (!Items.isShard(shard.id) || !this.player.inventory.hasSpace()) return;
 
         let tier = Items.getShardTier(shard.id);
@@ -93,7 +95,7 @@ class Enchant {
         }
     }
 
-    enchant() {
+    enchant(): void {
         if (!this.selectedItem) {
             this.player.notify('You have not selected an item to enchant.');
             return;
@@ -139,7 +141,7 @@ class Enchant {
         this.player.sync();
     }
 
-    generateAbility(tier) {
+    generateAbility(tier: number): void {
         let type = Items.getType(this.selectedItem.id),
             probability = Utils.randomInt(0, 100);
 
@@ -201,13 +203,11 @@ class Enchant {
         });
     }
 
-    verify() {
+    verify(): boolean {
         return Items.isEnchantable(this.selectedItem.id) && Items.isShard(this.selectedShards.id);
     }
 
-    hasAbility(item) {
+    hasAbility(item: Slot): boolean {
         return item.ability !== -1;
     }
 }
-
-export default Enchant;

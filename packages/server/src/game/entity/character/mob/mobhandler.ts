@@ -1,20 +1,16 @@
-import Utils from '../../../../util/utils';
-import Messages from '../../../../network/messages';
-import Mobs from '../../../../util/mobs';
-import Packets from '../../../../network/packets';
-import Combat from '../combat/combat';
-import World from '../../../world';
-import Mob from './mob';
 import Map from '../../../../map/map';
-import Character from '../character';
+import Mobs from '../../../../util/mobs';
+import Combat from '../combat/combat';
+import Player from '../player/player';
+import Mob from './mob';
 
-class MobHandler {
+export default class MobHandler {
     mob: Mob;
     combat: Combat;
     map: Map;
 
-    roamingInterval: any;
-    spawnLocation: any;
+    roamingInterval: NodeJS.Timeout;
+    spawnLocation;
     maxRoamingDistance: number;
 
     constructor(mob: Mob) {
@@ -29,7 +25,7 @@ class MobHandler {
         this.loadCallbacks();
     }
 
-    load() {
+    load(): void {
         if (!this.mob.roaming) return;
 
         this.roamingInterval = setInterval(() => {
@@ -37,7 +33,7 @@ class MobHandler {
         }, 5000);
     }
 
-    loadCallbacks() {
+    loadCallbacks(): void {
         // Combat plugin has its own set of callbacks.
         if (Mobs.hasCombatPlugin(this.mob.id)) return;
 
@@ -48,17 +44,17 @@ class MobHandler {
         this.mob.onDeath(() => {
             if (!this.mob.miniboss || !this.combat) return;
 
-            this.combat.forEachAttacker((attacker: Character) => {
-                if (attacker) attacker.finishAchievement(this.mob.achievementId);
+            this.combat.forEachAttacker((attacker) => {
+                const player = attacker as Player;
+
+                player?.finishAchievement(this.mob.achievementId);
             });
         });
 
-        //TODO - Implement posion on Mobs
+        // TODO - Implement posion on Mobs
     }
 
-    forceTalk(message: string) {
+    forceTalk(message: string): void {
         this.mob.forceTalkCallback(message);
     }
 }
-
-export default MobHandler;

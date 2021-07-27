@@ -1,21 +1,21 @@
-import _ from 'lodash';
-import Profession from './profession';
+import * as Modules from '@kaetram/common/src/modules';
+
+import Trees from '../../../../../../../data/professions/trees';
 import Messages from '../../../../../../network/messages';
-import Modules from '../../../../../../util/modules';
 import Formulas from '../../../../../../util/formulas';
 import Utils from '../../../../../../util/utils';
-import Trees from '../../../../../../../data/professions/trees';
 import Player from '../../player';
+import Profession from './profession';
 
-class Lumberjacking extends Profession {
+export default class Lumberjacking extends Profession {
     tick: number;
 
-    cuttingInterval: any;
+    cuttingInterval: NodeJS.Timeout;
     started: boolean;
 
-    treeId: any; // TODO
+    treeId: Modules.Trees; // TODO
 
-    queuedTrees: any;
+    queuedTrees: Record<string, never>;
 
     constructor(id: number, player: Player) {
         super(id, player, 'Lumberjacking');
@@ -26,7 +26,7 @@ class Lumberjacking extends Profession {
         this.started = false;
     }
 
-    start() {
+    start(): void {
         if (this.started) return;
 
         this.cuttingInterval = setInterval(() => {
@@ -62,15 +62,17 @@ class Lumberjacking extends Profession {
                     });
 
                     if (this.getTreeDestroyChance())
-                        this.world.destroyTree(this.targetId, Modules.Trees[this.treeId]);
+                        this.world.destroyTree(this.targetId, Modules.Trees[this.treeId] as never);
                 }
-            } catch (e) {}
+            } catch {
+                //
+            }
         }, this.tick);
 
         this.started = true;
     }
 
-    stop() {
+    stop(): void {
         if (!this.started) return;
 
         this.treeId = null;
@@ -83,7 +85,7 @@ class Lumberjacking extends Profession {
     }
 
     // TODO
-    handle(id: any, treeId: any) {
+    handle(id: string, treeId: Modules.Trees): void {
         if (!this.player.hasLumberjackingWeapon()) {
             this.player.notify('You do not have an axe to cut this tree with.');
             return;
@@ -102,13 +104,11 @@ class Lumberjacking extends Profession {
         this.start();
     }
 
-    getTreeDestroyChance() {
+    getTreeDestroyChance(): boolean {
         return Utils.randomInt(0, Trees.Chances[this.treeId]) === 2;
     }
 
-    getQueueCount() {
+    getQueueCount(): number {
         return Object.keys(this.queuedTrees).length;
     }
 }
-
-export default Lumberjacking;

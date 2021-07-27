@@ -1,10 +1,20 @@
-import Objects from '../util/objects';
+import Objects, { ObjectsData } from '../util/objects';
 import Utils from '../util/utils';
 import Map from '../map/map';
 import World from '../game/world';
 import Player from '../game/entity/character/player/player';
+import * as Modules from '@kaetram/common/src/modules';
 
-class GlobalObjects {
+interface SignData {
+    object: ObjectsData;
+    info: {
+        id: string;
+        x: number;
+        y: number;
+    };
+}
+
+export default class GlobalObjects {
     world: World;
     map: Map;
 
@@ -13,17 +23,17 @@ class GlobalObjects {
         this.map = world.map;
     }
 
-    getInfo(id: string) {
-        let position = Objects.getPosition(id),
+    getInfo(id: string): { type: string; tree?: Modules.Trees } {
+        const position = Objects.getPosition(id),
             objectId = this.map.getPositionObject(position.x, position.y);
 
         if (objectId in this.map.trees)
             return {
                 type: 'lumberjacking',
-                tree: this.map.trees[objectId]
+                tree: this.map.trees[objectId] as never
             };
 
-        let object = Objects.getObject(id);
+        const object = Objects.getObject(id);
 
         if (!object) return null;
 
@@ -37,19 +47,19 @@ class GlobalObjects {
      * position data for the client to display the bubble.
      */
 
-    getSignData(id: string) {
-        let object = Objects.getObject(id);
+    getSignData(id: string): SignData {
+        const object = Objects.getObject(id);
 
         if (!object) return null;
 
-        let position = Objects.getPosition(id);
+        const position = Objects.getPosition(id);
 
         object.id = id;
 
         return {
-            object: object,
+            object,
             info: {
-                id: id,
+                id,
                 x: position.x * 16,
                 y: position.y * 16 + 8 // offset for the chat bubble
             }
@@ -60,7 +70,7 @@ class GlobalObjects {
      * Ripped from `npc.js` but with some minor adjustments.
      */
 
-    talk(object: any, player: Player) {
+    talk(object: ObjectsData, player: Player): string {
         if (player.npcTalk !== object.id) {
             player.npcTalk = object.id;
             player.talkIndex = 0;
@@ -69,7 +79,7 @@ class GlobalObjects {
         let message = object.messages[player.talkIndex];
 
         if (message && message.includes('@player@')) {
-            message = message.replace('@player@', '@red@' + Utils.formatUsername(player.username));
+            message = message.replace('@player@', `@red@${Utils.formatUsername(player.username)}`);
             message = Utils.parseMessage(message);
         }
 
@@ -79,5 +89,3 @@ class GlobalObjects {
         return message;
     }
 }
-
-export default GlobalObjects;

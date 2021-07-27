@@ -1,14 +1,49 @@
-import _ from 'lodash';
+import Packets from '@kaetram/common/src/packets';
+
 import Messages from '../../../../../network/messages';
-import Packets from '../../../../../network/packets';
 import Utils from '../../../../../util/utils';
-import Player from '../player';
 import NPC from '../../../npc/npc';
 import Mob from '../../mob/mob';
+import { Door } from '../doors';
+import Player from '../player';
 
-class Quest {
+interface QuestInfo {
+    id: number;
+    name: string;
+    description: string;
+    stage: number;
+    finished: boolean;
+}
+
+type Task = 'click' | 'door' | 'kill' | 'talk' | 'item';
+
+interface ItemReward {
+    id: number;
+    count: number;
+}
+
+export interface QuestData {
+    id: number;
+    name: string;
+    description: string;
+    npcs: number[];
+    mobs?: number[];
+    stages: number;
+    questReq?: number[];
+    itemReq?: { [key: string]: number };
+    itemReward?: ItemReward;
+    conversations?: { [key: string]: { [key: string]: string[] } };
+    pointers?: { [key: string]: (number | string)[] };
+    doors?: { [key: string]: number[] };
+    task?: { [key: string]: Task };
+    kill?: { [key: string]: number };
+}
+
+type NPCTalkCallback = (npc: NPC) => void;
+
+export default class Quest {
     public player: Player;
-    public data: any;
+    public data: QuestData;
 
     public id: number;
     public name: string;
@@ -16,9 +51,9 @@ class Quest {
 
     public stage: number;
 
-    npcTalkCallback: Function;
+    npcTalkCallback: NPCTalkCallback;
 
-    constructor(player: Player, data: any) {
+    constructor(player: Player, data: QuestData) {
         this.player = player;
         this.data = data;
 
@@ -29,15 +64,15 @@ class Quest {
         this.stage = 0;
     }
 
-    load(stage: number) {
+    load(stage: number): void {
         if (!stage) this.update();
         else this.stage = stage;
     }
 
-    finish() {
+    finish(): void {
         let item = this.getItemReward();
 
-        if (item) {
+        if (item)
             if (this.hasInventorySpace(item.id, item.count))
                 this.player.inventory.add({
                     id: item.id,
@@ -51,7 +86,6 @@ class Quest {
 
                 return;
             }
-        }
 
         this.setStage(9999);
 
@@ -65,20 +99,20 @@ class Quest {
         this.update();
     }
 
-    setStage(stage: number) {
+    setStage(stage: number): void {
         this.stage = stage;
         this.update();
     }
 
-    triggerTalk(npc: NPC) {
-        if (this.npcTalkCallback) this.npcTalkCallback(npc);
+    triggerTalk(npc: NPC): void {
+        this.npcTalkCallback?.(npc);
     }
 
-    update() {
+    update(): void {
         return this.player.save();
     }
 
-    getConversation(id: number) {
+    getConversation(id: number): string[] {
         let conversation = this.data.conversations[id];
 
         if (!conversation || !conversation[this.stage]) return [''];
@@ -86,33 +120,33 @@ class Quest {
         return conversation[this.stage];
     }
 
-    updatePointers() {
+    updatePointers(): void {
         if (!this.data.pointers) return;
 
         let pointer = this.data.pointers[this.stage];
 
         if (!pointer) return;
 
-        let opcode = pointer[0];
+        let [opcode] = pointer;
 
         if (opcode === 4)
             this.player.send(
                 new Messages.Pointer(opcode, {
                     id: Utils.generateRandomId(),
-                    button: pointer[1]
+                    button: pointer[1] as string
                 })
             );
         else
             this.player.send(
                 new Messages.Pointer(opcode, {
                     id: Utils.generateRandomId(),
-                    x: pointer[1],
-                    y: pointer[2]
+                    x: pointer[1] as number,
+                    y: pointer[2] as number
                 })
             );
     }
 
-    forceTalk(npc: NPC, message: string) {
+    forceTalk(npc: NPC, message: string): void {
         if (!npc) return;
 
         this.player.talkIndex = 0;
@@ -125,7 +159,7 @@ class Quest {
         );
     }
 
-    resetTalkIndex() {
+    resetTalkIndex(): void {
         /**
          * Resets the player's talk index for the next dialogue to take place.
          */
@@ -133,69 +167,69 @@ class Quest {
         this.player.talkIndex = 0;
     }
 
-    clearPointers() {
+    clearPointers(): void {
         this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}));
     }
 
-    onNPCTalk(callback: Function) {
+    onNPCTalk(callback: NPCTalkCallback): void {
         this.npcTalkCallback = callback;
     }
 
-    hasMob(mob: Mob) {
+    hasMob(mob: Mob): boolean {
         if (!this.data.mobs) return;
 
         return this.data.mobs.includes(mob.id);
     }
 
-    hasNPC(id: number) {
+    hasNPC(id: number): boolean {
         return this.data.npcs.includes(id);
     }
 
-    hasItemReward() {
+    hasItemReward(): boolean {
         return !!this.data.itemReward;
     }
 
-    hasInventorySpace(id: number, count: number) {
+    hasInventorySpace(id: number, count: number): boolean {
         return this.player.inventory.canHold(id, count);
     }
 
-    hasDoorUnlocked(door: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    hasDoorUnlocked(door: Door): boolean {
         return this.stage > 9998;
     }
 
-    isFinished() {
+    isFinished(): boolean {
         return this.stage > 9998;
     }
 
-    getId() {
+    getId(): number {
         return this.id;
     }
 
-    getName() {
+    getName(): string {
         return this.name;
     }
 
-    getTask() {
+    getTask(): Task {
         return this.data.task[this.stage];
     }
 
-    getItem() {
+    getItem(): number {
         return this.data.itemReq ? this.data.itemReq[this.stage] : null;
     }
 
-    getStage() {
+    getStage(): number {
         return this.stage;
     }
 
-    getItemReward() {
+    getItemReward(): ItemReward {
         return this.hasItemReward() ? this.data.itemReward : null;
     }
-
-    getDescription() {
+    getDescription(): string {
         return this.description;
     }
 
-    getInfo() {
+    getInfo(): QuestInfo {
         return {
             id: this.getId(),
             name: this.getName(),
@@ -205,5 +239,3 @@ class Quest {
         };
     }
 }
-
-export default Quest;

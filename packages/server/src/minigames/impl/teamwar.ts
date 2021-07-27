@@ -1,19 +1,26 @@
 import _ from 'lodash';
-import Packets from '../../network/packets';
-import Messages from '../../network/messages';
-import Minigame from '../minigame';
-import Utils from '../../util/utils';
-import World from '../../game/world';
-import Player from '../../game/entity/character/player/player';
 
-class TeamWar extends Minigame {
+import Player from '../../game/entity/character/player/player';
+import World from '../../game/world';
+import Messages from '../../network/messages';
+import Packets from '@kaetram/common/src/packets';
+import Utils from '../../util/utils';
+import Minigame, { MinigameState } from '../minigame';
+
+type Team = 'red' | 'blue' | 'lobby';
+
+interface TeamWarState extends MinigameState {
+    team: Team;
+}
+
+export default class TeamWar extends Minigame {
     world: World;
 
-    lobby: any;
-    redTeam: any;
-    blueTeam: any;
+    lobby: Player[];
+    redTeam: Player[];
+    blueTeam: Player[];
 
-    updateInterval: any;
+    updateInterval: NodeJS.Timeout;
 
     started: boolean;
 
@@ -42,7 +49,7 @@ class TeamWar extends Minigame {
         this.load();
     }
 
-    load() {
+    load(): void {
         this.updateInterval = setInterval(() => {
             if (this.count() < 5 || this.countdown > 0) return;
 
@@ -54,9 +61,9 @@ class TeamWar extends Minigame {
         }, this.updateTick);
     }
 
-    start() {}
+    // start(): void {}
 
-    add(player: Player) {
+    add(player: Player): void {
         if (this.lobby.includes(player)) return;
 
         this.lobby.push(player);
@@ -64,7 +71,7 @@ class TeamWar extends Minigame {
         player.minigame = this.getState(player);
     }
 
-    remove(player: Player) {
+    remove(player: Player): void {
         let index = this.lobby.indexOf(player);
 
         if (index < 0) return;
@@ -78,8 +85,8 @@ class TeamWar extends Minigame {
      * sending into the game map.
      */
 
-    buildTeams() {
-        let tmp = this.lobby.slice(),
+    buildTeams(): void {
+        let tmp = [...this.lobby],
             half = Math.ceil(tmp.length / 2),
             random = Utils.randomInt(0, 1);
 
@@ -87,11 +94,11 @@ class TeamWar extends Minigame {
         else (this.blueTeam = tmp.splice(0, half)), (this.redTeam = tmp);
     }
 
-    count() {
+    count(): number {
         return this.lobby.length;
     }
 
-    synchronize() {
+    synchronize(): void {
         if (this.started) return;
 
         _.each(this.lobby, (player: Player) => {
@@ -99,14 +106,14 @@ class TeamWar extends Minigame {
         });
     }
 
-    sendCountdown(player: Player) {
+    sendCountdown(player: Player): void {
         /**
          * We handle this logic client-sided. If a countdown does not exist,
          * we create one, otherwise we synchronize it with the packets we receive.
          */
 
         this.world.push(Packets.PushOpcode.Player, {
-            player: player,
+            player,
             message: new Messages.Minigame(Packets.MinigameOpcode.TeamWar, {
                 opcode: Packets.MinigameOpcode.TeamWarOpcode.Countdown,
                 countdown: this.countdown
@@ -114,17 +121,17 @@ class TeamWar extends Minigame {
         });
     }
 
-    inLobby(player: Player) {
+    inLobby(player: Player): boolean {
         // TODO - Update these when new lobby is available.
         return player.x > 0 && player.x < 10 && player.y > 10 && player.y < 0;
     }
 
     // Used for radius
-    getRandom(radius?: number) {
+    getRandom(radius?: number): number {
         return Utils.randomInt(0, radius || 4);
     }
 
-    getTeam(player: Player) {
+    getTeam(player: Player): Team {
         if (this.redTeam.includes(player)) return 'red';
 
         if (this.blueTeam.includes(player)) return 'blue';
@@ -136,7 +143,7 @@ class TeamWar extends Minigame {
 
     // Both these spawning areas randomize the spawning to a radius of 4
     // The spawning area for the red team
-    getRedTeamSpawn() {
+    getRedTeamSpawn(): Pos {
         return {
             x: 133 + this.getRandom(),
             y: 471 + this.getRandom()
@@ -144,7 +151,7 @@ class TeamWar extends Minigame {
     }
 
     // The spawning area for the blue team
-    getBlueTeamSpawn() {
+    getBlueTeamSpawn(): Pos {
         return {
             x: 163 + this.getRandom(),
             y: 499 + this.getRandom()
@@ -152,8 +159,8 @@ class TeamWar extends Minigame {
     }
 
     // Expand on the super `getState()`
-    getState(player?: Player) {
-        let state = super.getState();
+    getState(player?: Player): TeamWarState {
+        let state = super.getState() as TeamWarState;
 
         // Player can only be in team `red`, `blue`, or `lobby`.
         state.team = this.getTeam(player);
@@ -163,5 +170,3 @@ class TeamWar extends Minigame {
         return state;
     }
 }
-
-export default TeamWar;

@@ -1,30 +1,55 @@
 import _ from 'lodash';
-
-import log from '../util/log';
-
+import Packets from '@kaetram/common/src/packets';
 import config from '../../config';
-import Discord from '../network/discord';
-import Map from '../map/map';
-import Messages from '../network/messages';
-import Mobs from '../util/mobs';
-import Character from './entity/character/character';
-import Minigames from '../controllers/minigames';
-import Packets from '../network/packets';
-import Modules from '../util/modules';
-import Shops from '../controllers/shops';
-import Region from '../region/region';
-import GlobalObjects from '../controllers/globalobjects';
-import Network from '../network/network';
-import Trees from '../../data/professions/trees';
 import Rocks from '../../data/professions/rocks';
-import Entity from './entity/entity';
+import Trees from '../../data/professions/trees';
 import Entities from '../controllers/entities';
-import SocketHandler from '../network/sockethandler';
+import GlobalObjects from '../controllers/globalobjects';
+import Minigames from '../controllers/minigames';
+import Shops from '../controllers/shops';
 import MongoDB from '../database/mongodb/mongodb';
+import Map from '../map/map';
 import API from '../network/api';
+import Discord from '../network/discord';
+import Messages, { Packet } from '../network/messages';
+import Network from '../network/network';
+import SocketHandler from '../network/sockethandler';
+import Region from '../region/region';
+import log from '../util/log';
+import Mobs from '../util/mobs';
+import * as Modules from '@kaetram/common/src/modules';
+import Character from './entity/character/character';
 import Player from './entity/character/player/player';
+import Entity from './entity/entity';
+import Mob from './entity/character/mob/mob';
+import Connection from '../network/connection';
+import Grids from '../map/grids';
 
-class World {
+type PlayerConnectCallback = (connection: Connection) => void;
+
+interface WorldPacket {
+    [key: string]: unknown;
+    message: Packet;
+}
+
+interface DynamicObject {
+    [id: number]: {
+        index: number;
+        objectTile: number;
+    };
+}
+
+interface DynamicData<T> {
+    [id: number]: T & {
+        data: {
+            index: number;
+            oldTiles: number;
+        }[];
+        time: number;
+    };
+}
+
+export default class World {
     public socketHandler: SocketHandler;
     public database: MongoDB;
 
@@ -33,11 +58,11 @@ class World {
     public debug: boolean;
     public allowConnections: boolean;
 
-    public trees: { [key: string]: any };
-    public cutTrees: { [key: string]: any };
+    public trees: DynamicObject;
+    public cutTrees: DynamicData<{ treeId: number }>;
 
-    public rocks: { [key: string]: any };
-    public depletedRocks: { [key: string]: any };
+    public rocks: DynamicObject;
+    public depletedRocks: DynamicData<{ rockId: number }>;
 
     public loadedRegions: boolean;
     public ready: boolean;
@@ -52,8 +77,8 @@ class World {
     public minigames: Minigames;
     public globalObjects: GlobalObjects;
 
-    public playerConnectCallback: Function;
-    public populationCallback: Function;
+    public playerConnectCallback: PlayerConnectCallback;
+    public populationCallback?(): void;
 
     constructor(socketHandler: SocketHandler, database: MongoDB) {
         this.socketHandler = socketHandler;
@@ -78,7 +103,7 @@ class World {
         this.ready = false;
     }
 
-    load(onWorldLoad: Function) {
+    load(onWorldLoad: () => void): void {
         log.info('************ World Information ***********');
 
         /**
@@ -98,7 +123,7 @@ class World {
         });
     }
 
-    loaded() {
+    loaded(): void {
         /**
          * The following are all globally based 'plugins'. We load them
          * in a batch here in order to keep it organized and neat.
@@ -121,14 +146,10 @@ class World {
         log.info('******************************************');
     }
 
-    async tick() {
-        let update = 1000 / this.updateTime;
-
-        const setIntervalAsync = (fn: any, ms: any) => {
-            fn().then(() => {
-                setTimeout(() => setIntervalAsync(fn, ms), ms);
-            });
-        };
+    async tick(): Promise<void> {
+        let update = 1000 / this.updateTime,
+            setIntervalAsync = (fn: () => Promise<void>, ms: number) =>
+                fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
 
         setIntervalAsync(async () => {
             this.network.parsePackets();
@@ -152,7 +173,7 @@ class World {
      * Entity related functions *
      ****************************/
 
-    kill(character: Character) {
+    kill(character: Character): void {
         character.applyDamage(character.hitPoints);
 
         this.push(Packets.PushOpcode.Regions, [
@@ -173,12 +194,12 @@ class World {
         this.handleDeath(character, true);
     }
 
-    handleDamage(attacker: Character, target: Character, damage: number) {
+    handleDamage(attacker: Character, target: Character, damage: number): void {
         if (!attacker || !target || isNaN(damage) || target.invincible) return;
 
         if (target.type === 'player' && target.hitCallback) target.hitCallback(attacker, damage);
 
-        //Stop screwing with this - it's so the target retaliates.
+        // Stop screwing with this - it's so the target retaliates.
 
         target.hit(attacker);
         target.applyDamage(damage, attacker);
@@ -194,11 +215,13 @@ class World {
 
         // If target has died...
         if (target.getHitPoints() < 1) {
-            if (target.type === 'mob') attacker.addExperience(Mobs.getXp(target.id));
+            const player = attacker as Player;
 
-            if (attacker.type === 'player') attacker.killCharacter(target);
+            if (target.type === 'mob') player.addExperience(Mobs.getXp(target.id));
 
-            target.combat.forEachAttacker((attacker: Character) => {
+            if (player.type === 'player') player.killCharacter(target);
+
+            target.combat.forEachAttacker((attacker) => {
                 attacker.removeTarget();
             });
 
@@ -220,34 +243,40 @@ class World {
         }
     }
 
-    handleDeath(character: Character, ignoreDrops?: boolean, lastAttacker?: Character) {
+    handleDeath(character: Character, ignoreDrops?: boolean, lastAttacker?: Character): void {
         if (!character) return;
 
         if (character.type === 'mob') {
-            let deathX = character.x,
-                deathY = character.y;
+            const mob = character as Mob;
 
-            if (lastAttacker) character.lastAttacker = lastAttacker;
+            let deathX = mob.x,
+                deathY = mob.y;
 
-            if (character.deathCallback) character.deathCallback();
+            if (lastAttacker) mob.lastAttacker = lastAttacker;
 
-            this.entities.remove(character);
+            if (mob.deathCallback) mob.deathCallback();
 
-            character.dead = true;
+            this.entities.remove(mob);
 
-            character.destroy();
+            mob.dead = true;
 
-            character.combat.stop();
+            mob.destroy();
+
+            mob.combat.stop();
 
             if (!ignoreDrops) {
-                let drop = character.getDrop();
+                let drop = mob.getDrop();
 
                 if (drop) this.entities.dropItem(drop.id, drop.count, deathX, deathY);
             }
-        } else if (character.type === 'player') character.die();
+        } else if (character.type === 'player') {
+            const player = character as Player;
+
+            player.die();
+        }
     }
 
-    parseTrees() {
+    parseTrees(): void {
         let time = Date.now(),
             treeTypes = Object.keys(Modules.Trees);
 
@@ -256,7 +285,7 @@ class World {
 
             if (time - tree.time < Trees.Regrowth[type]) return;
 
-            _.each(tree.data, (tile: any) => {
+            _.each(tree.data, (tile) => {
                 this.map.data[tile.index] = tile.oldTiles;
             });
 
@@ -269,7 +298,7 @@ class World {
         });
     }
 
-    parseRocks() {
+    parseRocks(): void {
         let time = Date.now(),
             rockTypes = Object.keys(Modules.Rocks);
 
@@ -278,7 +307,7 @@ class World {
 
             if (time - rock.time < Rocks.Respawn[type]) return;
 
-            _.each(rock.data, (tile: any) => {
+            _.each(rock.data, (tile) => {
                 this.map.data[tile.index] = tile.oldTiles;
             });
 
@@ -291,7 +320,7 @@ class World {
         });
     }
 
-    isTreeCut(id: string) {
+    isTreeCut(id: string): boolean {
         if (id in this.cutTrees) return true;
 
         for (let i in this.cutTrees) if (id in this.cutTrees[i]) return true;
@@ -299,7 +328,7 @@ class World {
         return false;
     }
 
-    isRockDepleted(id: string) {
+    isRockDepleted(id: string): boolean {
         if (id in this.depletedRocks) return true;
 
         for (let i in this.depletedRocks) if (id in this.depletedRocks[i]) return true;
@@ -315,7 +344,7 @@ class World {
      * using the data from `this.trees`.
      */
 
-    destroyTree(id: any, treeId: any) {
+    destroyTree(id: string, treeId: number): void {
         let position = this.map.idToPosition(id);
 
         if (!(id in this.trees)) this.trees[id] = {};
@@ -325,20 +354,20 @@ class World {
         this.cutTrees[id] = {
             data: {},
             time: Date.now(),
-            treeId: treeId
+            treeId
         };
 
-        _.each(this.trees[id], (tile: any, key) => {
+        _.each(this.trees[id], (tile, key) => {
             let tiles = this.map.data[tile.index];
 
             // Store the original tiles for respawning.
             this.cutTrees[id].data[key] = {
-                oldTiles: [].concat(tiles), // concat to create a new array
+                oldTiles: [tiles].flat(), // concat to create a new array
                 index: tile.index
             };
 
             // We do not remove tiles that do not have another tile behind them.
-            if (tiles instanceof Array) {
+            if (Array.isArray(tiles)) {
                 let index = tiles.indexOf(tile.objectTile);
 
                 // We map the uncut trunk to the cut trunk tile.
@@ -361,12 +390,12 @@ class World {
      * Because this method is not exactly perfect, trees have to be
      * placed one tile apart such that the algorithm does not 'leak'
      * and cut both trees.
-     * `refId` - The intial object we click on.
+     * `refId` - The initial object we click on.
      * `data` - The array we are working with.
      * `type` - The type of tile we are looking for.
      */
 
-    getSearchTile(type: string, x: number, y: number) {
+    getSearchTile(type: string, x: number, y: number): number | number[] {
         switch (type) {
             case 'tree':
                 return this.map.getTree(x, y);
@@ -376,7 +405,7 @@ class World {
         }
     }
 
-    search(x: number, y: number, refId: any, data: any, type: string) {
+    search(x: number, y: number, refId: string, data: DynamicObject, type: string): boolean {
         let objectTile = this.getSearchTile(type, x, y);
 
         if (!objectTile) return false;
@@ -387,7 +416,7 @@ class World {
 
         data[refId][id] = {
             index: this.map.gridPositionToIndex(x, y) - 1,
-            objectTile: objectTile
+            objectTile
         };
 
         if (this.search(x + 1, y, refId, data, type)) return true;
@@ -401,11 +430,12 @@ class World {
         return false;
     }
 
-    push(type: number, info: any) {
+    push(type: number, info: WorldPacket | WorldPacket[]): void {
         if (_.isArray(info)) {
             _.each(info, (i) => {
                 this.push(type, i);
             });
+
             return;
         }
 
@@ -422,37 +452,45 @@ class World {
                 break;
 
             case Packets.PushOpcode.Selectively:
-                this.network.pushSelectively(info.message, info.ignores);
+                this.network.pushSelectively(info.message, info.ignores as string[]);
 
                 break;
 
             case Packets.PushOpcode.Player:
-                this.network.pushToPlayer(info.player, info.message);
+                this.network.pushToPlayer(info.player as Player, info.message);
 
                 break;
 
             case Packets.PushOpcode.Players:
-                this.network.pushToPlayers(info.players, info.message);
+                this.network.pushToPlayers(info.players as string[], info.message);
 
                 break;
 
             case Packets.PushOpcode.Region:
-                this.network.pushToRegion(info.regionId, info.message, info.ignoreId);
+                this.network.pushToRegion(
+                    info.regionId as string,
+                    info.message,
+                    info.ignoreId as string
+                );
 
                 break;
 
             case Packets.PushOpcode.Regions:
-                this.network.pushToAdjacentRegions(info.regionId, info.message, info.ignoreId);
+                this.network.pushToAdjacentRegions(
+                    info.regionId as string,
+                    info.message,
+                    info.ignoreId as string
+                );
 
                 break;
 
             case Packets.PushOpcode.NameArray:
-                this.network.pushToNameArray(info.names, info.message);
+                this.network.pushToNameArray(info.names as string[], info.message);
 
                 break;
 
             case Packets.PushOpcode.OldRegions:
-                this.network.pushToOldRegions(info.player, info.message);
+                this.network.pushToOldRegions(info.player as Player, info.message);
 
                 break;
         }
@@ -497,21 +535,19 @@ class World {
         return this.getPopulation() >= this.maxPlayers;
     }
 
-    getGrids() {
+    getGrids(): Grids {
         return this.map.grids;
     }
 
-    getPopulation() {
+    getPopulation(): number {
         return _.size(this.entities.players);
     }
 
-    onPlayerConnection(callback: Function) {
+    onPlayerConnection(callback: PlayerConnectCallback): void {
         this.playerConnectCallback = callback;
     }
 
-    onPopulationChange(callback: Function) {
+    onPopulationChange(callback: () => void): void {
         this.populationCallback = callback;
     }
 }
-
-export default World;

@@ -1,8 +1,7 @@
-import _ from 'lodash';
-import Profession from './profession';
 import Player from '../../player';
+import Profession from './profession';
 
-class Fishing extends Profession {
+export default class Fishing extends Profession {
     tick: number;
 
     constructor(id: number, player: Player) {
@@ -11,5 +10,3 @@ class Fishing extends Profession {
         this.tick = 1000;
     }
 }
-
-export default Fishing;
