@@ -7,7 +7,7 @@ import Mob from '../../mob/mob';
 import { Door } from '../doors';
 import Player from '../player';
 
-interface QuestInfo {
+export interface QuestInfo {
     id: number;
     name: string;
     description: string;

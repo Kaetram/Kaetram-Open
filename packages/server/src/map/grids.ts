@@ -59,7 +59,7 @@ export default class Grids {
     }
 
     getSurroundingEntities(entity: Entity, radius?: number, include?: boolean): Entity[] {
-        let entities = [];
+        let entities: Entity[] = [];
 
         if (!this.checkBounds(entity.x, entity.y, radius)) return;
 

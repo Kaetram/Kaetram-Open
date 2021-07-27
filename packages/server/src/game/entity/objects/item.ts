@@ -89,7 +89,7 @@ export default class Item extends Entity {
         return [this.id, this.count, this.ability, this.abilityLevel];
     }
 
-    getState(): ItemState {
+    override getState(): ItemState {
         let state = super.getState() as ItemState;
 
         state.count = this.count;

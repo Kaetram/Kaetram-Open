@@ -11,7 +11,7 @@ export default class Ring extends Equipment {
         this.ringLevel = Items.getRingLevel(name);
     }
 
-    getBaseAmplifier(): number {
+    override getBaseAmplifier(): number {
         return 1 + this.ringLevel / 100;
     }
 

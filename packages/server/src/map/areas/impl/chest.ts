@@ -3,7 +3,7 @@ import Utils from '../../../util/utils';
 import Area from '../area';
 import Areas from '../areas';
 
-import type { ProcessedArea } from '@kaetram/tools/map/mapdata';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Chest extends Areas {
     constructor(data: ProcessedArea[], world?: World) {

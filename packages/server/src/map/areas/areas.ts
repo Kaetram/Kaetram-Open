@@ -4,7 +4,7 @@ import World from '../../game/world';
 import log from '../../util/log';
 import Area from './area';
 
-import type { ProcessedArea } from '@kaetram/tools/map/mapdata';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default abstract class Areas {
     public data: ProcessedArea[];

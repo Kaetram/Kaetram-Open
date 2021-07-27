@@ -21,20 +21,20 @@ export default class Achievement {
 
     public progress: number;
 
-    public data: {
+    public data: Partial<{
         item: number;
         itemCount: number;
-        isDoorReward?: boolean;
+        isDoorReward: boolean;
         reward: number | string;
-        name?: string;
-        description?: string;
-        count?: number;
-        text?: string[];
-        type?: number;
-        npc?: number;
-        mob?: number;
-        rewardType?: number;
-    };
+        name: string;
+        description: string;
+        count: number;
+        text: string[];
+        type: number;
+        npc: number;
+        mob: number;
+        rewardType: number;
+    }>;
 
     public name: string;
     public description: string;
@@ -47,7 +47,7 @@ export default class Achievement {
 
         this.progress = 0;
 
-        this.data = Data[this.id];
+        this.data = Data[this.id.toString() as keyof typeof Data];
 
         if (!this.data.reward) this.data.reward = 'door';
 
