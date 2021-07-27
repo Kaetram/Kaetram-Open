@@ -2,10 +2,6 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "esnext",
-        "target": "esnext",
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "noImplicitOverride": true,
         "types": ["@kaetram/common", "vite/client"]
     }
 }
