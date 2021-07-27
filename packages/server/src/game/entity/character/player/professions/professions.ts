@@ -11,7 +11,7 @@ export interface ProfessionsInfo {
     id: number;
     name: string;
     level: number;
-    percentage: number;
+    percentage: string;
 }
 
 export interface ProfessionsData {
@@ -41,7 +41,7 @@ export default class Professions {
     }
 
     load(): void {
-        let pList = Object.keys(Modules.Professions); // professions enum list
+        let pList = Object.keys(Modules.Professions) as (keyof typeof professions)[]; // professions enum list
 
         /**
          * We are accessing all the professions in the Modules.Professions
@@ -65,7 +65,7 @@ export default class Professions {
         _.each(info, (data, id) => {
             if (!(id in this.professions)) return;
 
-            this.professions[id].load(data);
+            this.professions[id as unknown as number].load(data);
         });
     }
 
@@ -93,7 +93,7 @@ export default class Professions {
      */
 
     getInfo(): ProfessionsInfo[] {
-        let data = [];
+        let data: ProfessionsInfo[] = [];
 
         _.each(this.professions, (profession: Profession) => {
             data.push({
@@ -108,7 +108,7 @@ export default class Professions {
     }
 
     getArray(): ProfessionsArray {
-        let data = {};
+        let data: ProfessionsData = {};
 
         _.each(this.professions, (profession: Profession) => {
             data[profession.id] = profession.getData();

@@ -17,7 +17,7 @@ export default class BulkySituation extends Quest {
         this.lastNPC = null;
     }
 
-    load(stage: number): void {
+    override load(stage: number): void {
         super.load(stage);
 
         if (this.stage > 9998) return;
@@ -79,9 +79,9 @@ export default class BulkySituation extends Quest {
         this.update();
     }
 
-    finish(): void {
-        super.finish();
-    }
+    // override finish(): void {
+    //     super.finish();
+    // }
 
     hasRequirement(): boolean {
         return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());

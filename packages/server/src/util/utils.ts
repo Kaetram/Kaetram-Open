@@ -72,7 +72,7 @@ export default {
         for (let i = 0; i < keys.length; i++)
             if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
 
-        return packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1;
+        return packet > -1 && packet < Packets[filtered[filtered.length - 1] as never] + 1;
     },
 
     getCurrentEpoch(): number {

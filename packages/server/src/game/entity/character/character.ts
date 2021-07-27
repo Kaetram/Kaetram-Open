@@ -210,7 +210,7 @@ export default class Character extends Entity {
         return this.maxHitPoints;
     }
 
-    setPosition(x: number, y: number): void {
+    override setPosition(x: number, y: number): void {
         this.previousX = this.x;
         this.previousY = this.y;
 
@@ -257,7 +257,7 @@ export default class Character extends Entity {
         return this.armourLevel;
     }
 
-    getState(): CharacterState {
+    override getState(): CharacterState {
         const state = super.getState() as CharacterState;
 
         state.movementSpeed = this.movementSpeed;

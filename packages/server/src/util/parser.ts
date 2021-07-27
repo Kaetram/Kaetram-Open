@@ -131,8 +131,6 @@ export default class Parser {
         let itemCounter = 0;
 
         _.each(itemData, (value, key) => {
-            key = key.toLowerCase();
-
             const {
                 id,
                 type,
@@ -184,7 +182,7 @@ export default class Parser {
 
             Items.Ids[id] = Items.Data[key];
 
-            if (plugin) Items.Plugins[id] = itemPlugins[plugin];
+            if (plugin) Items.Plugins[id] = itemPlugins[plugin as keyof typeof itemPlugins];
 
             itemCounter++;
         });

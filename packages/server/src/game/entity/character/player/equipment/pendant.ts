@@ -11,7 +11,7 @@ export default class Pendant extends Equipment {
         this.pendantLevel = Items.getPendantLevel(name);
     }
 
-    getBaseAmplifier(): number {
+    override getBaseAmplifier(): number {
         return 1 + this.pendantLevel / 100;
     }
 

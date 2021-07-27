@@ -22,7 +22,7 @@ export default class Combat {
     world: World;
     entities: Entities;
 
-    attackers: { [id: number]: Player };
+    attackers: { [id: string]: Character };
 
     retaliate: boolean;
 
@@ -468,7 +468,7 @@ export default class Combat {
         });
     }
 
-    forEachAttacker(callback: (attacker: Player) => void): void {
+    forEachAttacker(callback: (attacker: Character) => void): void {
         _.each(this.attackers, (attacker) => {
             callback(attacker);
         });

@@ -24,6 +24,7 @@ import Entity from './entity/entity';
 import Mob from './entity/character/mob/mob';
 import Connection from '../network/connection';
 import Grids from '../map/grids';
+import { Rock, Tree } from '@kaetram/common/types/map';
 
 type PlayerConnectCallback = (connection: Connection) => void;
 
@@ -33,18 +34,22 @@ interface WorldPacket {
 }
 
 interface DynamicObject {
-    [id: number]: {
-        index: number;
-        objectTile: number;
+    [key: string]: {
+        [id: string]: {
+            index: number;
+            objectTile: number | number[];
+        };
     };
 }
 
 interface DynamicData<T> {
-    [id: number]: T & {
+    [id: string]: T & {
         data: {
-            index: number;
-            oldTiles: number;
-        }[];
+            [key: string]: {
+                index: number;
+                oldTiles: number | number[];
+            };
+        };
         time: number;
     };
 }
@@ -148,8 +153,10 @@ export default class World {
 
     async tick(): Promise<void> {
         let update = 1000 / this.updateTime,
-            setIntervalAsync = (fn: () => Promise<void>, ms: number) =>
-                fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
+            setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (
+                fn: () => Promise<void>,
+                ms: number
+            ) => fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
 
         setIntervalAsync(async () => {
             this.network.parsePackets();
@@ -283,7 +290,7 @@ export default class World {
         _.each(this.cutTrees, (tree, key) => {
             let type = treeTypes[tree.treeId];
 
-            if (time - tree.time < Trees.Regrowth[type]) return;
+            if (time - tree.time < Trees.Regrowth[type as Tree]) return;
 
             _.each(tree.data, (tile) => {
                 this.map.data[tile.index] = tile.oldTiles;
@@ -305,7 +312,7 @@ export default class World {
         _.each(this.depletedRocks, (rock, key) => {
             let type = rockTypes[rock.rockId];
 
-            if (time - rock.time < Rocks.Respawn[type]) return;
+            if (time - rock.time < Rocks.Respawn[type as Rock]) return;
 
             _.each(rock.data, (tile) => {
                 this.map.data[tile.index] = tile.oldTiles;
@@ -347,12 +354,12 @@ export default class World {
     destroyTree(id: string, treeId: number): void {
         let position = this.map.idToPosition(id);
 
-        if (!(id in this.trees)) this.trees[id] = {};
+        if (!(id in this.trees)) this.trees[id] = {} as never;
 
         this.search(position.x + 1, position.y, id, this.trees, 'tree');
 
         this.cutTrees[id] = {
-            data: {},
+            data: {} as never,
             time: Date.now(),
             treeId
         };
@@ -368,10 +375,11 @@ export default class World {
 
             // We do not remove tiles that do not have another tile behind them.
             if (Array.isArray(tiles)) {
-                let index = tiles.indexOf(tile.objectTile);
+                let objectTile = tile.objectTile as keyof typeof Trees.Stumps,
+                    index = tiles.indexOf(objectTile);
 
                 // We map the uncut trunk to the cut trunk tile.
-                if (tile.objectTile in Trees.Stumps) tiles[index] = Trees.Stumps[tile.objectTile];
+                if (objectTile in Trees.Stumps) tiles[index] = Trees.Stumps[objectTile];
                 else tiles.splice(index, 1);
             }
         });
@@ -412,9 +420,11 @@ export default class World {
 
         let id = x + '-' + y;
 
-        if (id in data[refId]) return false;
+        const what = data[refId as keyof typeof data];
 
-        data[refId][id] = {
+        if (id in what) return false;
+
+        what[id as keyof typeof what] = {
             index: this.map.gridPositionToIndex(x, y) - 1,
             objectTile
         };

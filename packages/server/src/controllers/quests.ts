@@ -7,7 +7,7 @@ import Achievement from '../game/entity/character/player/achievement';
 import Player from '../game/entity/character/player/player';
 import BulkySituation from '../game/entity/character/player/quests/impl/bulkysituation';
 import Introduction from '../game/entity/character/player/quests/impl/introduction';
-import Quest, { QuestData } from '../game/entity/character/player/quests/quest';
+import Quest, { QuestData, QuestInfo } from '../game/entity/character/player/quests/quest';
 import NPC from '../game/entity/npc/npc';
 
 import type { AchievementData } from '../game/entity/character/player/achievement';
@@ -131,7 +131,7 @@ export default class Quests {
     }
 
     getAchievementData(): { achievements: AchievementData[] } {
-        let achievements = [];
+        let achievements: AchievementData[] = [];
 
         this.forEachAchievement((achievement: Achievement) => {
             achievements.push(achievement.getInfo());
@@ -142,8 +142,8 @@ export default class Quests {
         };
     }
 
-    getQuestData(): { quests: QuestData[] } {
-        let quests = [];
+    getQuestData(): { quests: QuestInfo[] } {
+        let quests: QuestInfo[] = [];
 
         this.forEachQuest((quest: Quest) => {
             quests.push(quest.getInfo());

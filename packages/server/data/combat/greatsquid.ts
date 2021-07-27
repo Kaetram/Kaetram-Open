@@ -17,7 +17,7 @@ export default class GreatSquid extends Combat {
         this.lastTerror = Date.now();
     }
 
-    hit(character: Character, target: Character, hitInfo: HitData): void {
+    override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.canUseTerror) {
             hitInfo.type = Modules.Hits.Stun;
 

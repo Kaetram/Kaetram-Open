@@ -113,7 +113,7 @@ export default class Mob extends Character {
         };
     }
 
-    getProjectileName(): string {
+    override getProjectileName(): string {
         return this.data.projectileName ? this.data.projectileName : 'projectile-pinearrow';
     }
 
@@ -144,7 +144,7 @@ export default class Mob extends Character {
         this.setPosition(this.x, this.y);
     }
 
-    isRanged(): boolean {
+    override isRanged(): boolean {
         return this.attackRange > 1;
     }
 
@@ -180,7 +180,7 @@ export default class Mob extends Character {
         }, this.respawnDelay);
     }
 
-    getState(): MobState {
+    override getState(): MobState {
         const base = super.getState() as MobState;
 
         base.hitPoints = this.hitPoints;

@@ -56,7 +56,7 @@ export default class Regions {
             { x } = position,
             { y } = position;
 
-        let list = [];
+        let list: Pos[] = [];
 
         for (
             let i = -offset;
@@ -86,7 +86,7 @@ export default class Regions {
             return gX < 0 || gY < 0 || gX >= this.regionWidth || gY >= this.regionHeight;
         });
 
-        return stringFormat ? this.regionsToCoordinates(list) : list;
+        return (stringFormat ? this.regionsToCoordinates(list) : list) as never;
     }
 
     getAdjacentRegions<StringFormat = false>(
@@ -111,7 +111,7 @@ export default class Regions {
          */
 
         const centreRegion = this.regionIdToPosition(id),
-            adjacentRegions = [];
+            adjacentRegions: Pos[] = [];
 
         _.each(surroundingRegions, (region) => {
             if (region.x !== centreRegion.x && region.y !== centreRegion.y) return;
@@ -119,7 +119,9 @@ export default class Regions {
             adjacentRegions.push(region);
         });
 
-        return stringFormat ? this.regionsToCoordinates(adjacentRegions) : adjacentRegions;
+        return (
+            stringFormat ? this.regionsToCoordinates(adjacentRegions) : adjacentRegions
+        ) as never;
     }
 
     forEachRegion(callback: (region: string) => void): void {
@@ -177,7 +179,7 @@ export default class Regions {
      * Converts an array of regions from object type to string format.
      */
     regionsToCoordinates(regions: Pos[]): string[] {
-        const stringList = [];
+        const stringList: string[] = [];
 
         _.each(regions, (region) => {
             stringList.push(region.x + '-' + region.y);

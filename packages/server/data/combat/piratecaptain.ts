@@ -40,7 +40,7 @@ export default class PirateCaptain extends Combat {
         this.teleportLocations.push(north, south, west, east);
     }
 
-    hit(character: Character, target: Character, hitInfo: HitData): void {
+    override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.canTeleport()) this.teleport();
         else super.hit(character, target, hitInfo);
     }
