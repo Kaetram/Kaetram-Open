@@ -1,13 +1,14 @@
-import Quest from '../quest';
-import Player from '../../player';
-import NPC from '../../../../npc/npc';
-import Packets from '../../../../../../network/packets';
 import Messages from '../../../../../../network/messages';
+import Packets from '@kaetram/common/src/packets';
+import NPC from '../../../../npc/npc';
+import Player from '../../player';
+import Quest from '../quest';
+import { QuestData } from '../quest';
 
-class BulkySituation extends Quest {
+export default class BulkySituation extends Quest {
     lastNPC: NPC;
 
-    constructor(player: Player, data: any) {
+    constructor(player: Player, data: QuestData) {
         super(player, data);
 
         this.player = player;
@@ -16,7 +17,7 @@ class BulkySituation extends Quest {
         this.lastNPC = null;
     }
 
-    load(stage: number) {
+    load(stage: number): void {
         super.load(stage);
 
         if (this.stage > 9998) return;
@@ -24,7 +25,7 @@ class BulkySituation extends Quest {
         this.loadCallbacks();
     }
 
-    loadCallbacks() {
+    loadCallbacks(): void {
         this.onNPCTalk((npc: NPC) => {
             if (this.hasRequirement()) {
                 this.progress('item');
@@ -46,7 +47,7 @@ class BulkySituation extends Quest {
         });
     }
 
-    progress(type: string) {
+    progress(type: string): void {
         let task = this.data.task[this.stage];
 
         if (!task || task !== type) return;
@@ -78,13 +79,11 @@ class BulkySituation extends Quest {
         this.update();
     }
 
-    finish() {
+    finish(): void {
         super.finish();
     }
 
-    hasRequirement() {
+    hasRequirement(): boolean {
         return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());
     }
 }
-
-export default BulkySituation;

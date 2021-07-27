@@ -1,18 +1,20 @@
-import Entity from '../entity';
-import Player from '../character/player/player';
 import Utils from '../../../util/utils';
+import Player from '../character/player/player';
+import Entity from '../entity';
 
-class Chest extends Entity {
+type OpenCallback = (player: Player) => void;
+
+export default class Chest extends Entity {
     respawnDuration: number;
     static: boolean;
 
-    items: any;
-    achievement: string;
+    items: string[];
+    achievement: number;
 
-    openCallback: Function;
-    respawnCallback: Function;
+    openCallback: OpenCallback;
+    respawnCallback?(): void;
 
-    constructor(id: number, instance: string, x: number, y: number, achievement?: string) {
+    constructor(id: number, instance: string, x: number, y: number, achievement?: number) {
         super(id, 'chest', instance, x, y);
 
         this.respawnDuration = 25000;
@@ -23,21 +25,21 @@ class Chest extends Entity {
         this.items = [];
     }
 
-    addItems(items: string) {
-        this.items = items.split(',');
+    addItems(items: string[]): void {
+        this.items = items;
     }
 
-    openChest(player?: Player) {
+    openChest(player?: Player): void {
         if (this.openCallback) this.openCallback(player);
     }
 
-    respawn() {
+    respawn(): void {
         setTimeout(() => {
             if (this.respawnCallback) this.respawnCallback();
         }, this.respawnDuration);
     }
 
-    getItem() {
+    getItem(): { string: string; count: number } {
         let random = Utils.randomInt(0, this.items.length - 1),
             item = this.items[random],
             count = 1,
@@ -61,17 +63,15 @@ class Chest extends Entity {
 
         return {
             string: item,
-            count: count
+            count
         };
     }
 
-    onOpen(callback: Function) {
+    onOpen(callback: OpenCallback): void {
         this.openCallback = callback;
     }
 
-    onRespawn(callback: Function) {
+    onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 }
-
-export default Chest;

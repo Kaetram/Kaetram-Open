@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import Map from './map';
 
-class Regions {
+export default class Regions {
     map: Map;
 
     width: number;
@@ -11,7 +11,7 @@ class Regions {
     regionWidth: number;
     regionHeight: number;
 
-    linkedRegions: {};
+    linkedRegions: { [id: string]: Pos[] };
 
     constructor(map: Map) {
         this.map = map;
@@ -27,12 +27,12 @@ class Regions {
         this.loadDoors();
     }
 
-    loadDoors() {
-        const doors = this.map.doors;
+    loadDoors(): void {
+        const { doors } = this.map;
 
         _.each(doors, (door) => {
-            const regionId = this.regionIdFromPosition(door.x, door.y),
-                linkedRegionId = this.regionIdFromPosition(door.tx, door.ty),
+            let regionId = this.regionIdFromPosition(door.x, door.y),
+                linkedRegionId = this.regionIdFromPosition(door.x, door.y), //? tx, ty
                 linkedRegionPosition = this.regionIdToPosition(linkedRegionId);
 
             if (regionId in this.linkedRegions)
@@ -47,10 +47,14 @@ class Regions {
     // y y x y x
     // y y x y y
 
-    getSurroundingRegions(id: string, offset = 1, stringFormat?: boolean) {
+    getSurroundingRegions<StringFormat = false>(
+        id: string,
+        offset = 1,
+        stringFormat?: StringFormat
+    ): (StringFormat extends true ? string : Pos)[] {
         const position = this.regionIdToPosition(id),
-            x = position.x,
-            y = position.y;
+            { x } = position,
+            { y } = position;
 
         let list = [];
 
@@ -85,7 +89,11 @@ class Regions {
         return stringFormat ? this.regionsToCoordinates(list) : list;
     }
 
-    getAdjacentRegions(id: string, offset: number, stringFormat?: boolean) {
+    getAdjacentRegions<StringFormat = false>(
+        id: string,
+        offset: number,
+        stringFormat?: StringFormat
+    ): (StringFormat extends true ? string : Pos)[] {
         const surroundingRegions = this.getSurroundingRegions(id, offset);
 
         /**
@@ -114,12 +122,16 @@ class Regions {
         return stringFormat ? this.regionsToCoordinates(adjacentRegions) : adjacentRegions;
     }
 
-    forEachRegion(callback: Function) {
+    forEachRegion(callback: (region: string) => void): void {
         for (let x = 0; x < this.regionWidth; x++)
             for (let y = 0; y < this.regionHeight; y++) callback(x + '-' + y);
     }
 
-    forEachSurroundingRegion(regionId: string, callback: Function, offset?: number) {
+    forEachSurroundingRegion(
+        regionId: string,
+        callback: (region: string) => void,
+        offset?: number
+    ): void {
         if (!regionId) return;
 
         _.each(this.getSurroundingRegions(regionId, offset), (region) => {
@@ -127,7 +139,11 @@ class Regions {
         });
     }
 
-    forEachAdjacentRegion(regionId: string, callback: Function, offset?: number) {
+    forEachAdjacentRegion(
+        regionId: string,
+        callback: (region: string) => void,
+        offset?: number
+    ): void {
         if (!regionId) return;
 
         _.each(this.getAdjacentRegions(regionId, offset), (region) => {
@@ -135,11 +151,11 @@ class Regions {
         });
     }
 
-    regionIdFromPosition(x: number, y: number) {
+    regionIdFromPosition(x: number, y: number): string {
         return Math.floor(x / this.regionWidth) + '-' + Math.floor(y / this.regionHeight);
     }
 
-    regionIdToPosition(id: string) {
+    regionIdToPosition(id: string): Pos {
         const position = id.split('-');
 
         return {
@@ -148,7 +164,7 @@ class Regions {
         };
     }
 
-    regionIdToCoordinates(id: string) {
+    regionIdToCoordinates(id: string): Pos {
         const position = id.split('-');
 
         return {
@@ -160,21 +176,19 @@ class Regions {
     /**
      * Converts an array of regions from object type to string format.
      */
-    regionsToCoordinates(regions: any) {
+    regionsToCoordinates(regions: Pos[]): string[] {
         const stringList = [];
 
-        _.each(regions, (region: any) => {
+        _.each(regions, (region) => {
             stringList.push(region.x + '-' + region.y);
         });
 
         return stringList;
     }
 
-    isSurrounding(regionId: string, toRegionId: string) {
+    isSurrounding(regionId: string, toRegionId: string): boolean {
         if (!regionId || !toRegionId) return false;
 
         return this.getSurroundingRegions(regionId, 1, true).includes(toRegionId);
     }
 }
-
-export default Regions;

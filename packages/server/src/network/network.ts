@@ -1,17 +1,20 @@
 import _ from 'lodash';
-import World from '../game/world';
+
+import config from '../../config';
+import Entities from '../controllers/entities';
 import MongoDB from '../database/mongodb/mongodb';
-import Messages from './messages';
-import Region from '../region/region';
-import Map from '../map/map';
 import Player from '../game/entity/character/player/player';
+import World from '../game/world';
+import Map from '../map/map';
+import Region from '../region/region';
 import Utils from '../util/utils';
 import Connection from './connection';
-import config from '../../config';
+import Messages, { Packet } from './messages';
 import SocketHandler from './sockethandler';
-import Entities from '../controllers/entities';
 
-class Network {
+type PacketsList = unknown[] & { id: string };
+
+export default class Network {
     world: World;
     entities: Entities;
     database: MongoDB;
@@ -19,7 +22,7 @@ class Network {
     region: Region;
     map: Map;
 
-    packets: any;
+    packets: { [id: string]: PacketsList };
     differenceThreshold: number;
 
     constructor(world: World) {
@@ -58,7 +61,7 @@ class Network {
 
                 if (conn) {
                     conn.send(this.packets[id]);
-                    this.packets[id] = [];
+                    this.packets[id] = [] as PacketsList;
                     this.packets[id].id = id;
                 } else this.socketHandler.remove(id);
             }
@@ -94,7 +97,7 @@ class Network {
     }
 
     addToPackets(player: Player): void {
-        this.packets[player.instance] = [];
+        this.packets[player.instance] = [] as PacketsList;
     }
 
     /*****************************************
@@ -105,8 +108,8 @@ class Network {
      * Broadcast a message to everyone in the world.
      */
 
-    pushBroadcast(message: typeof Messages): void {
-        _.each(this.packets, (packet: any) => {
+    pushBroadcast(message: Packet): void {
+        _.each(this.packets, (packet) => {
             packet.push(message.serialize());
         });
     }
@@ -115,8 +118,8 @@ class Network {
      * Broadcast a message to everyone with exceptions.
      */
 
-    pushSelectively(message: typeof Messages, ignores?: string[]): void {
-        _.each(this.packets, (packet: any) => {
+    pushSelectively(message: Packet, ignores?: string[]): void {
+        _.each(this.packets, (packet) => {
             if (ignores.includes(packet.id)) return;
 
             packet.push(message.serialize());
@@ -127,7 +130,7 @@ class Network {
      * Push a message to a single player.
      */
 
-    pushToPlayer(player: Player, message: typeof Messages): void {
+    pushToPlayer(player: Player, message: Packet): void {
         if (player && player.instance in this.packets)
             this.packets[player.instance].push(message.serialize());
     }
@@ -136,8 +139,8 @@ class Network {
      * Specify an array of player instances to send message to
      */
 
-    pushToPlayers(players: Player, message: typeof Messages): void {
-        _.each(players, (instance: string) => {
+    pushToPlayers(players: string[], message: Packet): void {
+        _.each(players, (instance) => {
             this.pushToPlayer(this.entities.get(instance) as Player, message);
         });
     }
@@ -146,7 +149,7 @@ class Network {
      * Send a message to the region the player is currently in.
      */
 
-    pushToRegion(regionId: string, message: typeof Messages, ignoreId?: string): void {
+    pushToRegion(regionId: string, message: Packet, ignoreId?: string): void {
         let region = this.region.regions[regionId];
 
         if (!region) return;
@@ -164,7 +167,7 @@ class Network {
      * G  G  G
      */
 
-    pushToAdjacentRegions(regionId: string, message: typeof Messages, ignoreId?: string): void {
+    pushToAdjacentRegions(regionId: string, message: Packet, ignoreId?: string): void {
         this.map.regions.forEachSurroundingRegion(regionId, (id: string) => {
             this.pushToRegion(id, message, ignoreId);
         });
@@ -174,7 +177,7 @@ class Network {
      * Sends a message to an array of player names
      */
 
-    pushToNameArray(names: string[], message: typeof Messages): void {
+    pushToNameArray(names: string[], message: Packet): void {
         _.each(names, (name: string) => {
             let player = this.world.getPlayerByName(name);
 
@@ -186,7 +189,7 @@ class Network {
      * Sends a message to the region the player just left from
      */
 
-    pushToOldRegions(player: Player, message: typeof Messages): void {
+    pushToOldRegions(player: Player, message: Packet): void {
         _.each(player.recentRegions, (id: string) => {
             this.pushToRegion(id, message);
         });
@@ -198,5 +201,3 @@ class Network {
         return this.socketHandler.ips[connection.socket.conn.remoteAddress];
     }
 }
-
-export default Network;

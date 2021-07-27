@@ -1,10 +1,21 @@
-import Player from './player';
 import log from '../../../../util/log';
+import Player from './player';
 
-class Friends {
+type Status = 'offline';
+
+interface FriendsList {
+    [username: string]: Status;
+}
+
+export interface FriendsArray {
+    username: string;
+    friends: FriendsList;
+}
+
+export default class Friends {
     player: Player;
 
-    friends: any;
+    friends: FriendsList;
 
     constructor(player: Player) {
         this.player = player;
@@ -12,11 +23,11 @@ class Friends {
         this.friends = {};
     }
 
-    update(info: any) {
+    update(info: unknown): void {
         log.info(info);
     }
 
-    add(username: string) {
+    add(username: string): void {
         if (username in this.friends) {
             this.player.notify('That player is already in your friends list.');
             return;
@@ -25,13 +36,14 @@ class Friends {
         this.friends[username] = 'offline';
     }
 
-    remove(username: string) {
+    remove(username: string): void {
         delete this.friends[username];
     }
 
-    getArray() {
-        return this.friends;
+    getArray(): FriendsArray {
+        return {
+            username: this.player.username,
+            friends: this.friends
+        };
     }
 }
-
-export default Friends;

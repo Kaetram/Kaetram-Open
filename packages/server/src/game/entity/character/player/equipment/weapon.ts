@@ -1,8 +1,8 @@
-import Equipment from './equipment';
 import Items from '../../../../../util/items';
-import Modules from '../../../../../util/modules';
+import * as Modules from '@kaetram/common/src/modules';
+import Equipment from './equipment';
 
-class Weapon extends Equipment {
+export default class Weapon extends Equipment {
     public level: number;
     public ranged: boolean;
     public lumberjacking: number;
@@ -21,39 +21,37 @@ class Weapon extends Equipment {
         this.breakable = false;
     }
 
-    getBaseAmplifier() {
+    getBaseAmplifier(): number {
         let base = super.getBaseAmplifier();
 
         return base + 0.05 * this.abilityLevel;
     }
 
-    hasCritical() {
+    hasCritical(): boolean {
         return this.ability === 1;
     }
 
-    hasExplosive() {
+    hasExplosive(): boolean {
         return this.ability === 4;
     }
 
-    hasStun() {
+    hasStun(): boolean {
         return this.ability === 5;
     }
 
-    isRanged() {
+    isRanged(): boolean {
         return this.ranged;
     }
 
-    setLevel(level: number) {
+    setLevel(level: number): void {
         this.level = level;
     }
 
-    getLevel() {
+    getLevel(): number {
         return this.level;
     }
 
-    getType() {
+    getType(): Modules.Equipment {
         return Modules.Equipment.Weapon;
     }
 }
-
-export default Weapon;

@@ -1,20 +1,26 @@
-import _ from 'lodash';
-import Character from '../character';
-import Mobs from '../../../../util/mobs';
-import Utils from '../../../../util/utils';
-import Items from '../../../../util/items';
-import Constants from '../../../../util/constants';
-import World from '../../../world';
-import MobHandler from './mobhandler';
-import Player from '../player/player';
 import Area from '../../../../map/areas/area';
 import Areas from '../../../../map/areas/areas';
+import Constants from '../../../../util/constants';
+import Items from '../../../../util/items';
+import Mobs, { MobData, MobDrops } from '../../../../util/mobs';
+import Utils from '../../../../util/utils';
+import Character, { CharacterState } from '../character';
+import Player from '../player/player';
+import MobHandler from './mobhandler';
 
-class Mob extends Character {
-    data: any;
+interface MobState extends CharacterState {
+    hitPoints: number;
+    maxHitPoints: number;
+    attackRange: number;
+    level: number;
+    hiddenName: boolean;
+}
+
+export default class Mob extends Character {
+    data: MobData;
     // hitPoints: number;
     // maxHitPoints: number;
-    drops: any;
+    drops: MobDrops;
 
     respawnDelay: number;
 
@@ -32,16 +38,13 @@ class Mob extends Character {
 
     // alwaysAggressive: boolean;
 
-    declare lastAttacker: Player;
-
-    loadCallback: Function;
-    refreshCallback: Function;
-    respawnCallback: Function;
-    returnCallback: Function;
+    loadCallback?(): void;
+    refreshCallback?(): void;
+    respawnCallback?(): void;
     // deathCallback: Function;
 
     forceTalkCallback: (message: string) => void;
-    roamingCallback: () => void;
+    roamingCallback?(): void;
 
     area: Area;
 
@@ -80,20 +83,20 @@ class Mob extends Character {
         this.projectileName = this.getProjectileName();
     }
 
-    load() {
+    load(): void {
         this.handler = new MobHandler(this);
 
         if (this.loadCallback) this.loadCallback();
     }
 
-    refresh() {
+    refresh(): void {
         this.hitPoints = this.data.hitPoints;
         this.maxHitPoints = this.data.hitPoints;
 
         if (this.refreshCallback) this.refreshCallback();
     }
 
-    getDrop() {
+    getDrop(): { id: number; count: number } {
         if (!this.drops) return null;
 
         const random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
@@ -110,11 +113,11 @@ class Mob extends Character {
         };
     }
 
-    getProjectileName() {
+    getProjectileName(): string {
         return this.data.projectileName ? this.data.projectileName : 'projectile-pinearrow';
     }
 
-    canAggro(player: Player) {
+    canAggro(player: Player): boolean {
         if (this.hasTarget()) return false;
 
         if (!this.aggressive) return false;
@@ -126,48 +129,48 @@ class Mob extends Character {
         return this.isNear(player, this.aggroRange);
     }
 
-    destroy() {
+    destroy(): void {
         this.dead = true;
         this.clearTarget();
         this.resetPosition();
         this.respawn();
 
-        if (this.area) this.area.removeEntity(this);
+        this.area?.removeEntity(this);
     }
 
-    return() {
+    return(): void {
         this.clearTarget();
         this.resetPosition();
         this.setPosition(this.x, this.y);
     }
 
-    isRanged() {
+    isRanged(): boolean {
         return this.attackRange > 1;
     }
 
-    distanceToSpawn() {
+    distanceToSpawn(): number {
         return this.getCoordDistance(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
-    isAtSpawn() {
+    isAtSpawn(): boolean {
         return this.x === this.spawnLocation[0] && this.y === this.spawnLocation[1];
     }
 
-    isOutsideSpawn() {
+    isOutsideSpawn(): boolean {
         return this.distanceToSpawn() > this.spawnDistance;
     }
 
-    addToChestArea(chestAreas: Areas) {
+    addToChestArea(chestAreas: Areas): void {
         const area = chestAreas.inArea(this.x, this.y);
 
-        if (area) area.addEntity(this);
+        area?.addEntity(this);
     }
 
-    respawn() {
+    respawn(): void {
         /**
          * Some entities are static (only spawned once during an event)
          * Meanwhile, other entities act as an illusion to another entity,
-         * so the resawning script is handled elsewhere.
+         * so the respawning script is handled elsewhere.
          */
 
         if (!this.static || this.respawnDelay === -1) return;
@@ -177,8 +180,8 @@ class Mob extends Character {
         }, this.respawnDelay);
     }
 
-    getState() {
-        const base = super.getState();
+    getState(): MobState {
+        const base = super.getState() as MobState;
 
         base.hitPoints = this.hitPoints;
         base.maxHitPoints = this.maxHitPoints;
@@ -189,33 +192,27 @@ class Mob extends Character {
         return base;
     }
 
-    resetPosition() {
+    resetPosition(): void {
         this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
-    onLoad(callback: Function) {
+    onLoad(callback: () => void): void {
         this.loadCallback = callback;
     }
 
-    onRespawn(callback: Function) {
+    onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 
-    onReturn = (callback: Function) => {
-        this.returnCallback = callback;
-    };
-
-    onRefresh(callback: Function) {
+    onRefresh(callback: () => void): void {
         this.refreshCallback = callback;
     }
 
-    onForceTalk(callback: (message: string) => void) {
+    onForceTalk(callback: (message: string) => void): void {
         this.forceTalkCallback = callback;
     }
 
-    onRoaming(callback: () => void) {
+    onRoaming(callback: () => void): void {
         this.roamingCallback = callback;
     }
 }
-
-export default Mob;
