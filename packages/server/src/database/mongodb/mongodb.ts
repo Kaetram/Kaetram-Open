@@ -1,11 +1,11 @@
 import bcryptjs from 'bcryptjs';
 import _ from 'lodash';
-import { Db, MongoClient, MongoError } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 
 import config from '../../../config';
 import Player, { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
 import log from '../../util/log';
-import Creator from './creator';
+import Creator, { FullPlayerData } from './creator';
 import Loader from './loader';
 
 export default class MongoDB {
@@ -37,12 +37,8 @@ export default class MongoDB {
         let url = config.mongodbAuth
                 ? `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`
                 : `mongodb://${this.host}:${this.port}/${this.database}`,
-            client: MongoClient = new MongoClient(url, {
-                useUnifiedTopology: true,
-                useNewUrlParser: true,
-                writeConcern: {
-                    wtimeout: 5
-                }
+            client = new MongoClient(url, {
+                wtimeoutMS: 5
             });
 
         if (this.connection) {
@@ -50,7 +46,7 @@ export default class MongoDB {
             return;
         }
 
-        client.connect((error: MongoError, newClient: MongoClient) => {
+        client.connect((error, newClient) => {
             if (error) {
                 log.error('Could not connect to MongoDB database.');
                 log.error(`Error Info: ${error}`);
@@ -65,7 +61,9 @@ export default class MongoDB {
 
     login(player: Player): void {
         this.getConnection((database) => {
-            let dataCursor = database.collection('player_data').find({ username: player.username }),
+            let dataCursor = database
+                    .collection<FullPlayerData>('player_data')
+                    .find({ username: player.username }),
                 equipmentCursor = database
                     .collection<PlayerEquipment>('player_equipment')
                     .find({ username: player.username }),
