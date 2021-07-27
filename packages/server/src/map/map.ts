@@ -21,8 +21,9 @@ import type {
     ProcessedMap,
     ProcessedArea,
     ProcessedTileset,
-    Tree
-} from '@kaetram/tools/map/mapdata';
+    Tree,
+    Rock
+} from '@kaetram/common/types/map';
 
 const map = mapData as ProcessedMap;
 
@@ -63,7 +64,7 @@ export default class Map {
     };
     treeIndexes: number[];
 
-    rocks: Record<string, never>;
+    rocks: { [tileId: number]: Rock };
     rockIndexes: number[];
 
     regionWidth: number;
@@ -156,7 +157,7 @@ export default class Map {
         _.each(map.areas, (area, key: string) => {
             if (!(key in AreasIndex)) return;
 
-            this.areas[key] = new AreasIndex[key](area, this.world);
+            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](area, this.world);
         });
     }
 

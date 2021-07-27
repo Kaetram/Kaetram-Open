@@ -1400,6 +1400,7 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.170
     "@types/node": ^16.4.3
+    "@types/sanitizer": ^0.0.28
     "@types/ws": ^7.4.7
     axios: ^0.21.1
     bcryptjs: ^2.4.3
@@ -1900,6 +1901,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e99fc7cc6265407987b30deda54c1c24bb1478803faf6037557a774b2f034c5b097ffd65847daa87e82a61a250d919f35c3588654b0fdaa816906650f596d1b0
+  languageName: node
+  linkType: hard
+
+"@types/sanitizer@npm:^0.0.28":
+  version: 0.0.28
+  resolution: "@types/sanitizer@npm:0.0.28"
+  checksum: 1deb96a6ba06df841ba90c532f466133d651a5bbc6b7438b41bcd0beb49763dc6929cd62516a705d20c6ad3b110f860fbf62618fef2f9b18ed875b8dc1121316
   languageName: node
   linkType: hard
 

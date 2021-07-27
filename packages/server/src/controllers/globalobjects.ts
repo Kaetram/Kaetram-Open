@@ -4,6 +4,7 @@ import Map from '../map/map';
 import World from '../game/world';
 import Player from '../game/entity/character/player/player';
 import * as Modules from '@kaetram/common/src/modules';
+import { Tree } from '@kaetram/common/types/map';
 
 interface SignData {
     object: ObjectsData;
@@ -23,14 +24,14 @@ export default class GlobalObjects {
         this.map = world.map;
     }
 
-    getInfo(id: string): { type: string; tree?: Modules.Trees } {
+    getInfo(id: string): { type: string; tree?: Tree } {
         const position = Objects.getPosition(id),
             objectId = this.map.getPositionObject(position.x, position.y);
 
         if (objectId in this.map.trees)
             return {
                 type: 'lumberjacking',
-                tree: this.map.trees[objectId] as never
+                tree: this.map.trees[objectId]
             };
 
         const object = Objects.getObject(id);

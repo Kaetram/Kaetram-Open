@@ -28,7 +28,7 @@ export default class Cactus extends Combat {
 
         this.character.onDeath(() => {
             this.forEachAttacker((attacker) => {
-                this.damageAttacker(this.character.maxHitPoints, attacker);
+                this.damageAttacker(this.character.maxHitPoints, attacker as Player);
             });
 
             log.debug('Oh noes, le cactus did a die. :(');

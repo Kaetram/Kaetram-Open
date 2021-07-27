@@ -5,18 +5,19 @@ import Packets from '@kaetram/common/src/packets';
 
 import Utils from '../util/utils';
 
+import type { ProcessedArea } from '@kaetram/common/types/map';
 import type { ShopData } from '../controllers/shops';
 import type { HitData } from '../game/entity/character/combat/hit';
 import type { AchievementData } from '../game/entity/character/player/achievement';
 import type Slot from '../game/entity/character/player/containers/slot';
 import type { EquipmentData } from '../game/entity/character/player/equipment/equipment';
-import type { ProfessionsInfo } from '../game/entity/character/player/professions/professions';
-import type { QuestData } from '../game/entity/character/player/quests/quest';
-import type Entity from '../game/entity/entity';
-import type { ProjectileData } from '../game/entity/objects/projectile';
 import type { PlayerExperience } from '../game/entity/character/player/player';
-import type { ProcessedArea } from '@kaetram/tools/map/mapdata';
-import { EntityState } from '../game/entity/entity';
+import type { ProfessionsInfo } from '../game/entity/character/player/professions/professions';
+import type { QuestInfo } from '../game/entity/character/player/quests/quest';
+import type Entity from '../game/entity/entity';
+import type { EntityState } from '../game/entity/entity';
+import type { ProjectileData } from '../game/entity/objects/projectile';
+import type { RegionTileData, Tile, TilesetData } from '../region/region';
 
 export abstract class Packet<Info = unknown, Opcode = number | string> {
     protected abstract id: number;
@@ -234,7 +235,7 @@ export default {
     Quest: class extends Packet<
         | { id: number; stage?: number }
         | { achievements: AchievementData[] }
-        | { quests: QuestData[] }
+        | { quests: QuestInfo[] }
         | {
               id: number;
               name: string;
@@ -331,13 +332,26 @@ export default {
 
         private bufferSize: number;
 
-        public constructor(opcode: number, info: unknown) {
+        public constructor(
+            opcode: number,
+            info:
+                | RegionTileData[]
+                | TilesetData
+                | { id: string; type: 'remove' }
+                | { index: number; data: number }
+                | { index: number; newTile: Tile }
+        ) {
             super(opcode, Utils.compressData(JSON.stringify(info)));
 
             this.bufferSize = Utils.getBufferSize(info);
         }
 
-        public serialize(): [id: number, opcode: number, bufferSize: number, info: string] {
+        public override serialize(): [
+            id: number,
+            opcode: number,
+            bufferSize: number,
+            info: string
+        ] {
             return [this.id, this.opcode, this.bufferSize, this.info];
         }
     },

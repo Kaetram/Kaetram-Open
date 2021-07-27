@@ -11,7 +11,12 @@ export default class Inventory extends Container {
         super('Inventory', owner, size);
     }
 
-    load(ids: number[], counts: number[], abilities: number[], abilityLevels: number[]): void {
+    override load(
+        ids: number[],
+        counts: number[],
+        abilities: number[],
+        abilityLevels: number[]
+    ): void {
         super.load(ids, counts, abilities, abilityLevels);
 
         this.owner.send(
@@ -42,7 +47,7 @@ export default class Inventory extends Container {
         return true;
     }
 
-    remove(id: number, count: number, index?: number): boolean {
+    override remove(id: number, count: number, index?: number): boolean {
         if (!id || !count) return false;
 
         if (!index) index = this.getIndex(id);
