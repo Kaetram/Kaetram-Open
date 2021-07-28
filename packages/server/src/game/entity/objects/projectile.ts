@@ -1,6 +1,8 @@
-import Entity from '../entity';
 import * as Modules from '@kaetram/common/src/modules';
-import Character from '../character/character';
+
+import Entity from '../entity';
+
+import type Character from '../character/character';
 
 export interface ProjectileData {
     id: string;
@@ -14,17 +16,17 @@ export interface ProjectileData {
 }
 
 export default class Projectile extends Entity {
-    startX: number;
-    startY: number;
+    startX = -1;
+    startY = -1;
 
-    destX: number;
-    destY: number;
+    destX = -1;
+    destY = -1;
 
-    target: Entity | null;
+    target: Entity | null = null;
 
-    damage: number;
+    damage = -1;
 
-    hitType: Modules.Hits | null; // TODO
+    hitType: Modules.Hits | null = null; // TODO
     owner?: Character; // TODO
 
     static = false;
@@ -32,18 +34,6 @@ export default class Projectile extends Entity {
 
     constructor(id: Modules.Projectiles, instance: string) {
         super(id, 'projectile', instance);
-
-        this.startX = -1;
-        this.startY = -1;
-
-        this.destX = -1;
-        this.destY = -1;
-
-        this.target = null;
-
-        this.damage = -1;
-
-        this.hitType = null;
     }
 
     setStart(x: number, y: number): void {

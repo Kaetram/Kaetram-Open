@@ -1,18 +1,12 @@
 import _ from 'lodash';
 
-import Entity from '../game/entity/entity';
-import Map from './map';
+import type Entity from '../game/entity/entity';
+import type Map from './map';
 
 export default class Grids {
-    map: Map;
+    entityGrid: { [instance: string]: Entity }[][] = [];
 
-    entityGrid: { [instance: string]: Entity }[][];
-
-    constructor(map: Map) {
-        this.map = map;
-
-        this.entityGrid = [];
-
+    constructor(private map: Map) {
         this.load();
     }
 

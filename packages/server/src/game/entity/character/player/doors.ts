@@ -2,10 +2,12 @@ import _ from 'lodash';
 
 import config from '../../../../../config';
 import doorData from '../../../../../data/doors.json';
-import Map from '../../../../map/map';
-import Regions from '../../../../map/regions';
-import World from '../../../world';
-import Player, { ObjectData } from './player';
+
+import type Map from '../../../../map/map';
+import type Regions from '../../../../map/regions';
+import type World from '../../../world';
+import type Player from './player';
+import type { ObjectData } from './player';
 
 type DoorStatus = 'open' | 'closed' | undefined;
 
@@ -34,21 +36,18 @@ interface DoorTiles {
     collisions: boolean[];
     objectData?: ObjectData;
 }
+
 export default class Doors {
-    public world: World;
-    public player: Player;
-    public map: Map;
-    public regions: Regions;
+    public world;
+    public map;
+    public regions;
 
-    public doors: { [id: number]: Door };
+    public doors: { [id: number]: Door } = {};
 
-    constructor(player: Player) {
+    constructor(private player: Player) {
         this.world = player.world;
-        this.player = player;
         this.map = this.world.map;
         this.regions = this.map.regions;
-
-        this.doors = {};
 
         this.load();
     }

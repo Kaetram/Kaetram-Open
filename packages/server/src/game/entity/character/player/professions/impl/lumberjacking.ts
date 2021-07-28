@@ -1,18 +1,19 @@
 import * as Modules from '@kaetram/common/src/modules';
-import { Tree } from '@kaetram/common/types/map';
 
 import Trees from '../../../../../../../data/professions/trees';
 import Messages from '../../../../../../network/messages';
 import Formulas from '../../../../../../util/formulas';
 import Utils from '../../../../../../util/utils';
-import Player from '../../player';
 import Profession from './profession';
 
-export default class Lumberjacking extends Profession {
-    tick: number;
+import type { Tree } from '@kaetram/common/types/map';
+import type Player from '../../player';
 
-    cuttingInterval: NodeJS.Timeout | null;
-    started: boolean;
+export default class Lumberjacking extends Profession {
+    tick = 1000;
+
+    cuttingInterval: NodeJS.Timeout | null = null;
+    started = false;
 
     treeId!: Tree; // TODO
 
@@ -20,11 +21,6 @@ export default class Lumberjacking extends Profession {
 
     constructor(id: number, player: Player) {
         super(id, player, 'Lumberjacking');
-
-        this.tick = 1000;
-
-        this.cuttingInterval = null;
-        this.started = false;
     }
 
     start(): void {

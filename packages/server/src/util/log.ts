@@ -8,17 +8,11 @@ import config from '../../config';
  * Can be adapted and expanded, without using megabytes of npm repos.
  */
 class Log {
-    logLevel: string;
-    stream: fs.WriteStream | null;
-    debugging: boolean;
+    // Stream can be used to keep a log of what happened.
+    logLevel = config.debugLevel || 'all';
+    stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
 
-    constructor() {
-        // Stream can be used to keep a log of what happened.
-        this.logLevel = config.debugLevel || 'all';
-        this.stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
-
-        this.debugging = config.debug;
-    }
+    debugging = config.debug;
 
     info(message: unknown) {
         if (this.isLoggable('info')) return;

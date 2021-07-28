@@ -1,11 +1,13 @@
 import _ from 'lodash';
 
-import Player from '../../game/entity/character/player/player';
-import World from '../../game/world';
-import Messages from '../../network/messages';
 import Packets from '@kaetram/common/src/packets';
+
+import Messages from '../../network/messages';
 import Utils from '../../util/utils';
 import Minigame, { MinigameState } from '../minigame';
+
+import type Player from '../../game/entity/character/player/player';
+import type World from '../../game/world';
 
 type Team = 'red' | 'blue' | 'lobby' | null;
 
@@ -14,37 +16,21 @@ interface TeamWarState extends MinigameState {
 }
 
 export default class TeamWar extends Minigame {
-    world: World;
+    lobby: Player[] = [];
+    redTeam: Player[] = [];
+    blueTeam: Player[] = [];
 
-    lobby: Player[];
-    redTeam: Player[];
-    blueTeam: Player[];
+    updateInterval: NodeJS.Timeout | null = null;
 
-    updateInterval: NodeJS.Timeout | null;
+    started = false;
 
-    started: boolean;
+    countdown = 120;
+    updateTick = 1000;
+    lastSync = Date.now();
+    syncThreshold = 10000;
 
-    countdown: number;
-    updateTick: number;
-    lastSync: number;
-    syncThreshold: number;
-
-    constructor(world: World) {
+    constructor(private world: World) {
         super(0, 'TeamWar');
-
-        this.world = world;
-
-        this.lobby = [];
-        this.redTeam = [];
-        this.blueTeam = [];
-
-        this.updateInterval = null;
-        this.started = false;
-
-        this.countdown = 120;
-        this.updateTick = 1000;
-        this.lastSync = Date.now();
-        this.syncThreshold = 10000;
 
         this.load();
     }

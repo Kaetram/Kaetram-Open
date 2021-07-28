@@ -3,80 +3,54 @@ import _ from 'lodash';
 import * as Modules from '@kaetram/common/src/modules';
 import Packets from '@kaetram/common/src/packets';
 
-import Entities from '../../../../controllers/entities';
 import Messages from '../../../../network/messages';
 import Formulas from '../../../../util/formulas';
 import log from '../../../../util/log';
 import Utils from '../../../../util/utils';
-import World from '../../../world';
-import Character from '../character';
 import CombatQueue from './combatqueue';
-import Hit from './hit';
+import Hit, { HitData } from './hit';
 
-import type { HitData } from './hit';
-import Player from '../player/player';
-import Mob from '../mob/mob';
+import type Entities from '../../../../controllers/entities';
+import type World from '../../../world';
+import type Character from '../character';
+import type Mob from '../mob/mob';
+import type Player from '../player/player';
 
 export default class Combat {
-    character: Character;
-    world: World;
+    world!: World;
     entities!: Entities;
 
-    attackers: { [id: string]: Character };
+    attackers: { [id: string]: Character } = {};
 
-    retaliate: boolean;
+    retaliate = false;
 
-    queue: CombatQueue;
+    queue = new CombatQueue();
 
-    attacking: boolean;
+    attacking = false;
 
-    attackLoop: NodeJS.Timeout;
-    followLoop: NodeJS.Timeout;
-    checkLoop: NodeJS.Timeout;
+    attackLoop: NodeJS.Timeout | null = null;
+    followLoop: NodeJS.Timeout | null = null;
+    checkLoop: NodeJS.Timeout | null = null;
 
-    first: boolean;
-    started: boolean;
-    lastAction: number;
-    lastHit: number;
+    first = false;
+    started = false;
+    lastAction = -1;
+    lastHit = -1;
 
-    lastActionThreshold: number;
+    lastActionThreshold = 7000;
 
-    cleanTimeout: NodeJS.Timeout;
+    cleanTimeout: NodeJS.Timeout | null = null;
 
     forgetCallback?(): void;
 
-    constructor(character: Character) {
-        this.character = character;
-        this.world = null!;
-
-        this.attackers = {};
-
-        this.retaliate = false;
-
-        this.queue = new CombatQueue();
-
-        this.attacking = false;
-
-        this.attackLoop = null!;
-        this.followLoop = null!;
-        this.checkLoop = null!;
-
-        this.first = false;
-        this.started = false;
-        this.lastAction = -1;
-        this.lastHit = -1;
-
-        this.lastActionThreshold = 7000;
-
-        this.cleanTimeout = null!;
-
-        this.character.onSubAoE((radius: number, hasTerror: boolean) => {
+    constructor(public character: Character) {
+        character.onSubAoE((radius: number, hasTerror: boolean) => {
             this.dealAoE(radius, hasTerror);
         });
 
-        this.character.onDamage((target, hitInfo) => {
+        character.onDamage((target, hitInfo) => {
             if (this.isPlayer()) {
-                const player = this.character as Player;
+                const player = character as Player;
 
                 if (player.hasBreakableWeapon() && Formulas.getWeaponBreak(player, target))
                     player.breakWeapon();
@@ -132,9 +106,9 @@ export default class Combat {
 
         if (this.character.type === 'player') log.debug('Stopping player attack.');
 
-        clearInterval(this.attackLoop);
-        clearInterval(this.followLoop);
-        clearInterval(this.checkLoop);
+        if (this.attackLoop) clearInterval(this.attackLoop);
+        if (this.followLoop) clearInterval(this.followLoop);
+        if (this.checkLoop) clearInterval(this.checkLoop);
 
         this.attackLoop = null!;
         this.followLoop = null!;

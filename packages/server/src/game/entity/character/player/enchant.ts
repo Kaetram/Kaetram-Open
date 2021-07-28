@@ -1,13 +1,15 @@
 import _ from 'lodash';
 
-import Messages from '../../../../network/messages';
+import * as Modules from '@kaetram/common/src/modules';
 import Packets from '@kaetram/common/src/packets';
+
+import Messages from '../../../../network/messages';
 import Items from '../../../../util/items';
 import log from '../../../../util/log';
-import * as Modules from '@kaetram/common/src/modules';
 import Utils from '../../../../util/utils';
-import Player from './player';
-import Slot from './containers/slot';
+
+import type Slot from './containers/slot';
+import type Player from './player';
 
 export type EnchantType = 'item' | 'shards';
 
@@ -20,17 +22,10 @@ export default class Enchant {
      * Tier 5 - Damage boost (1-25% & 25% for special ability or special ability level up)
      */
 
-    player: Player;
+    selectedItem!: Slot;
+    selectedShards!: Slot;
 
-    selectedItem: Slot;
-    selectedShards: Slot;
-
-    constructor(player: Player) {
-        this.player = player;
-
-        this.selectedItem = null!;
-        this.selectedShards = null!;
-    }
+    constructor(private player: Player) {}
 
     add(type: EnchantType, item: Slot): void {
         if (type === 'item') {

@@ -3,12 +3,12 @@ import * as Modules from '@kaetram/common/src/modules';
 import Equipment from './equipment';
 
 export default class Weapon extends Equipment {
-    public level: number;
-    public ranged: boolean;
-    public lumberjacking: number;
-    public mining: number;
+    public level;
+    public ranged;
+    public lumberjacking;
+    public mining;
 
-    public breakable: boolean;
+    public breakable = false;
 
     constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
         super(name, id, count, ability, abilityLevel);
@@ -17,8 +17,6 @@ export default class Weapon extends Equipment {
         this.ranged = Items.isArcherWeapon(name);
         this.lumberjacking = Items.getLumberjackingLevel(name);
         this.mining = Items.getMiningLevel(name);
-
-        this.breakable = false;
     }
 
     override getBaseAmplifier(): number {

@@ -1,24 +1,20 @@
-import { Rock } from '@kaetram/common/types/map';
 import Rocks from '../../../../../../../data/professions/rocks';
 import Utils from '../../../../../../util/utils';
-import Player from '../../player';
 import Profession from './profession';
 
-export default class Mining extends Profession {
-    tick: number;
+import type { Rock } from '@kaetram/common/types/map';
+import type Player from '../../player';
 
-    miningInterval: NodeJS.Timeout | null;
-    started: boolean;
+export default class Mining extends Profession {
+    tick = 1000;
+
+    miningInterval: NodeJS.Timeout | null = null;
+    started = false;
 
     rockId!: Rock;
 
     constructor(id: number, player: Player) {
         super(id, player, 'Mining');
-
-        this.tick = 1000;
-
-        this.miningInterval = null;
-        this.started = false;
     }
 
     start(): void {

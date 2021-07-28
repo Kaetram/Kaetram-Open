@@ -3,8 +3,9 @@ import _ from 'lodash';
 import Constants from '../../../../../util/constants';
 import Items from '../../../../../util/items';
 import log from '../../../../../util/log';
-import Player from '../player';
 import Slot from './slot';
+
+import type Player from '../player';
 
 export interface ContainerArray {
     username: string;
@@ -14,20 +15,10 @@ export interface ContainerArray {
     abilityLevels: string;
 }
 
-export default class Container {
-    public type: string;
-    public owner: Player;
-    public size: number;
+export default abstract class Container {
+    public slots: Slot[] = [];
 
-    public slots: Slot[];
-
-    constructor(type: string, owner: Player, size: number) {
-        this.type = type;
-        this.owner = owner;
-        this.size = size;
-
-        this.slots = [];
-
+    constructor(private type: string, public owner: Player, public size: number) {
         for (let i = 0; i < this.size; i++) this.slots.push(new Slot(i));
     }
 

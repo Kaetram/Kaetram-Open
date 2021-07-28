@@ -2,12 +2,13 @@ import _ from 'lodash';
 
 import Packets from '@kaetram/common/src/packets';
 
-import Player from '../game/entity/character/player/player';
-import World from '../game/world';
 import Messages from '../network/messages';
 import Items from '../util/items';
 import log from '../util/log';
 import Shop from '../util/shops';
+
+import type Player from '../game/entity/character/player/player';
+import type World from '../game/world';
 
 export interface ShopData {
     id: number;
@@ -18,17 +19,10 @@ export interface ShopData {
 }
 
 export default class Shops {
-    world: World;
+    interval = 60000;
+    shopInterval: NodeJS.Timeout | null = null;
 
-    interval: number;
-    shopInterval: NodeJS.Timeout | null;
-
-    constructor(world: World) {
-        this.world = world;
-
-        this.interval = 60000;
-        this.shopInterval = null;
-
+    constructor(private world: World) {
         this.load();
     }
 

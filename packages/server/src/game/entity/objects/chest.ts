@@ -1,28 +1,21 @@
 import Utils from '../../../util/utils';
-import Player from '../character/player/player';
 import Entity from '../entity';
+
+import type Player from '../character/player/player';
 
 type OpenCallback = (player?: Player) => void;
 
 export default class Chest extends Entity {
-    respawnDuration: number;
-    static: boolean;
+    respawnDuration = 25000;
+    static = false;
 
-    items: string[];
-    achievement?: number;
+    items: string[] = [];
 
     openCallback?: OpenCallback;
     respawnCallback?(): void;
 
-    constructor(id: number, instance: string, x: number, y: number, achievement?: number) {
+    constructor(id: number, instance: string, x: number, y: number, public achievement?: number) {
         super(id, 'chest', instance, x, y);
-
-        this.respawnDuration = 25000;
-        this.static = false;
-
-        this.achievement = achievement;
-
-        this.items = [];
     }
 
     addItems(items: string[]): void {

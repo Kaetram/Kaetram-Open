@@ -24,6 +24,7 @@ import Boots from './equipment/boots';
 import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
+import Friends from './friends';
 import Handler from './handler';
 import HitPoints from './points/hitpoints';
 import Mana from './points/mana';
@@ -31,21 +32,16 @@ import Professions from './professions/professions';
 import Trade from './trade';
 import Warp from './warp';
 
-import type Entities from '../../../../controllers/entities';
-import type GlobalObjects from '../../../../controllers/globalobjects';
-import type { FullPlayerData } from '../../../../database/mongodb/creator';
 import type MongoDB from '../../../../database/mongodb/mongodb';
 import type Area from '../../../../map/areas/area';
-import type Map from '../../../../map/map';
-import type Regions from '../../../../map/regions';
 import type { MinigameState } from '../../../../minigames/minigame';
 import type Connection from '../../../../network/connection';
 import type World from '../../../world';
 import type NPC from '../../npc/npc';
+import type { FullPlayerData } from './../../../../database/mongodb/creator';
 import type { EquipmentData } from './equipment/equipment';
-import type Friends from './friends';
+import type Lumberjacking from './professions/impl/lumberjacking';
 import type Introduction from './quests/impl/introduction';
-import Lumberjacking from './professions/impl/lumberjacking';
 
 type VoidCallback = () => void;
 type TeleportCallback = (x: number, y: number, isDoor?: boolean) => void;
@@ -110,68 +106,59 @@ interface SurroundingTrees {
 }
 
 export default class Player extends Character {
-    public world: World;
-    public database: MongoDB;
-    public connection: Connection;
+    public map;
+    public regions;
+    public entities;
+    public globalObjects;
 
-    public clientId: string;
+    public incoming;
 
-    public map: Map;
-    public regions: Regions;
-    public entities: Entities;
-    public globalObjects: GlobalObjects;
+    public ready = false;
 
-    public incoming: Incoming;
+    public regionPosition: number[] | null = null;
 
-    public ready: boolean;
-
-    // public moving: boolean;
-    public regionPosition: number[] | null;
-
-    public newRegion: boolean;
+    public newRegion = false;
 
     public team?: string; // TODO
     public userAgent?: string;
     public minigame?: MinigameState; // TODO
 
-    public disconnectTimeout: NodeJS.Timeout | null;
-    public timeoutDuration: number;
-    public lastRegionChange: number;
+    public disconnectTimeout: NodeJS.Timeout | null = null;
+    public timeoutDuration = 1000 * 60 * 10; // 10 minutes
+    public lastRegionChange = Date.now();
 
-    public handler: Handler;
+    public handler;
 
-    public inventory: Inventory;
-    public professions: Professions;
-    public abilities: Abilities;
-    public friends!: Friends; //
-    public enchant: Enchant;
-    public bank: Bank;
-    public quests: Quests;
-    public trade: Trade;
-    public doors: Doors;
-    public warp: Warp;
+    public inventory;
+    public professions;
+    public abilities;
+    public friends;
+    public enchant;
+    public bank;
+    public quests;
+    public trade;
+    public doors;
+    public warp;
 
-    public introduced: boolean;
-    public currentSong: string | null;
-    public acceptedTrade: boolean;
-    // public invincible: boolean;
-    public noDamage: boolean;
-    public isGuest: boolean;
+    public introduced = false;
+    public currentSong: string | null = null;
+    public acceptedTrade = false;
+    public noDamage = false;
+    public isGuest = false;
 
-    public canTalk: boolean;
-    public webSocketClient: boolean;
+    public canTalk = true;
+    public webSocketClient;
 
-    // public instanced: boolean;
-    public visible: boolean;
+    public visible = true;
 
-    public talkIndex: number;
-    public cheatScore: number;
-    public defaultMovementSpeed: number;
+    public talkIndex = 0;
+    public cheatScore = 0;
+    public defaultMovementSpeed = 250; // For fallback.
 
-    public regionsLoaded: string[];
-    public lightsLoaded: number[];
+    public regionsLoaded: string[] = [];
+    public lightsLoaded: number[] = [];
 
-    public npcTalk: number | string | null;
+    public npcTalk: number | string | null = null;
 
     // public username: string;
     public password!: string;
@@ -209,14 +196,14 @@ export default class Player extends Character {
     public regionWidth!: number;
     public regionHeight!: number;
 
-    questsLoaded!: boolean;
-    achievementsLoaded!: boolean;
+    questsLoaded = false;
+    achievementsLoaded = false;
 
-    public new!: boolean;
+    public new = false;
     public lastNotify!: number;
-    public profileDialogOpen!: boolean;
-    public inventoryOpen!: boolean;
-    public warpOpen!: boolean;
+    public profileDialogOpen = false;
+    public inventoryOpen = false;
+    public warpOpen = false;
 
     public selectedShopItem!: { id: number; index: number } | null;
 
@@ -232,14 +219,13 @@ export default class Player extends Character {
     public doorCallback!: DoorCallback;
     public readyCallback!: VoidCallback;
 
-    constructor(world: World, database: MongoDB, connection: Connection, clientId: string) {
+    constructor(
+        public world: World,
+        public database: MongoDB,
+        public connection: Connection,
+        public clientId: string
+    ) {
         super(-1, 'player', connection.id, -1, -1);
-
-        this.world = world;
-        this.database = database;
-        this.connection = connection;
-
-        this.clientId = clientId;
 
         this.map = world.map;
         this.regions = world.map.regions;
@@ -248,23 +234,12 @@ export default class Player extends Character {
 
         this.incoming = new Incoming(this);
 
-        this.ready = false;
-
-        this.moving = false;
-        this.regionPosition = null;
-
-        this.newRegion = false;
-
-        this.disconnectTimeout = null;
-        this.timeoutDuration = 1000 * 60 * 10; // 10 minutes
-        this.lastRegionChange = Date.now();
-
         this.handler = new Handler(this);
 
         this.inventory = new Inventory(this, 20);
         this.professions = new Professions(this);
         this.abilities = new Abilities(this);
-        // this.friends = new Friends(this);
+        this.friends = new Friends(this);
         this.enchant = new Enchant(this);
         this.bank = new Bank(this, 56);
         this.quests = new Quests(this);
@@ -272,29 +247,7 @@ export default class Player extends Character {
         this.doors = new Doors(this);
         this.warp = new Warp(this);
 
-        this.introduced = false;
-        this.currentSong = null;
-        this.acceptedTrade = false;
-        this.invincible = false;
-        this.noDamage = false;
-        this.isGuest = false;
-
-        this.pvp = false;
-
-        this.canTalk = true;
         this.webSocketClient = connection.type === 'WebSocket';
-
-        this.instanced = false;
-        this.visible = true;
-
-        this.talkIndex = 0;
-        this.cheatScore = 0;
-        this.defaultMovementSpeed = 250; // For fallback.
-
-        this.regionsLoaded = [];
-        this.lightsLoaded = [];
-
-        this.npcTalk = null;
     }
 
     load(data: FullPlayerData): void {

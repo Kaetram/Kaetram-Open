@@ -1,21 +1,12 @@
-import Messages from '../../../../../../network/messages';
 import Packets from '@kaetram/common/src/packets';
-import NPC from '../../../../npc/npc';
-import Player from '../../player';
+
+import Messages from '../../../../../../network/messages';
 import Quest from '../quest';
-import { QuestData } from '../quest';
+
+import type NPC from '../../../../npc/npc';
 
 export default class BulkySituation extends Quest {
-    lastNPC: NPC | null;
-
-    constructor(player: Player, data: QuestData) {
-        super(player, data);
-
-        this.player = player;
-        this.data = data;
-
-        this.lastNPC = null;
-    }
+    lastNPC: NPC | null = null;
 
     override load(stage: number): void {
         super.load(stage);

@@ -2,15 +2,16 @@ import _ from 'lodash';
 
 import achievementData from '../../data/achievements.json';
 import questData from '../../data/quests.json';
-import Mob from '../game/entity/character/mob/mob';
 import Achievement from '../game/entity/character/player/achievement';
-import Player from '../game/entity/character/player/player';
 import BulkySituation from '../game/entity/character/player/quests/impl/bulkysituation';
 import Introduction from '../game/entity/character/player/quests/impl/introduction';
-import Quest, { QuestData, QuestInfo } from '../game/entity/character/player/quests/quest';
-import NPC from '../game/entity/npc/npc';
 
+import type Mob from '../game/entity/character/mob/mob';
 import type { AchievementData } from '../game/entity/character/player/achievement';
+import type Player from '../game/entity/character/player/player';
+import type Quest from '../game/entity/character/player/quests/quest';
+import type { QuestData, QuestInfo } from '../game/entity/character/player/quests/quest';
+import type NPC from '../game/entity/npc/npc';
 
 export interface PlayerQuests {
     username: string;
@@ -25,20 +26,13 @@ export interface PlayerAchievements {
 }
 
 export default class Quests {
-    public player: Player;
-
-    public quests: { [id: number]: Quest };
-    public achievements: { [id: number]: Achievement };
+    public quests: { [id: number]: Quest } = {};
+    public achievements: { [id: number]: Achievement } = {};
 
     questsReadyCallback?(): void;
     achievementsReadyCallback?(): void;
 
-    constructor(player: Player) {
-        this.player = player;
-
-        this.quests = {};
-        this.achievements = {};
-
+    constructor(private player: Player) {
         this.load();
     }
 

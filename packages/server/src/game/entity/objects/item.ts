@@ -1,5 +1,6 @@
 import Entity from '../entity';
-import { EntityState } from '../entity';
+
+import type { EntityState } from '../entity';
 
 interface ItemState extends EntityState {
     count: number;
@@ -8,22 +9,22 @@ interface ItemState extends EntityState {
 }
 
 export default class Item extends Entity {
-    static: boolean;
-    dropped: boolean;
-    shard: boolean;
+    static = false;
+    dropped = false;
+    shard = false;
 
-    count: number;
-    ability?: number;
-    abilityLevel?: number;
-    tier: number;
+    count = 1;
+    ability;
+    abilityLevel;
+    tier = 1;
 
-    respawnTime: number;
-    despawnDuration: number;
-    blinkDelay: number;
-    despawnDelay: number;
+    respawnTime = 30000;
+    despawnDuration = 4000;
+    blinkDelay = 20000;
+    despawnDelay = 1000;
 
-    blinkTimeout: NodeJS.Timeout | null;
-    despawnTimeout: NodeJS.Timeout | null;
+    blinkTimeout: NodeJS.Timeout | null = null;
+    despawnTimeout: NodeJS.Timeout | null = null;
 
     blinkCallback?(): void;
     respawnCallback?(): void;
@@ -39,26 +40,12 @@ export default class Item extends Entity {
     ) {
         super(id, 'item', instance, x, y);
 
-        this.static = false;
-        this.dropped = false;
-        this.shard = false;
-
-        this.count = 1;
         this.ability = ability;
         this.abilityLevel = abilityLevel;
-        this.tier = 1;
 
         if (isNaN(ability!)) this.ability = -1;
 
         if (isNaN(abilityLevel!)) this.abilityLevel = -1;
-
-        this.respawnTime = 30000;
-        this.despawnDuration = 4000;
-        this.blinkDelay = 20000;
-        this.despawnDelay = 1000;
-
-        this.blinkTimeout = null;
-        this.despawnTimeout = null;
     }
 
     destroy(): void {

@@ -3,7 +3,7 @@ import * as Modules from '@kaetram/common/src/modules';
 import Equipment from './equipment';
 
 export default class Ring extends Equipment {
-    public ringLevel: number;
+    public ringLevel;
 
     constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
         super(name, id, count, ability, abilityLevel);
