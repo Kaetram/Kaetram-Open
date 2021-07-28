@@ -1,21 +1,20 @@
-import Player from '../game/entity/character/player/player';
-import World from '../game/world';
-import Messages from '../network/messages';
 import Packets from '@kaetram/common/src/packets';
+
+import Messages from '../network/messages';
 import log from '../util/log';
-import type Entities from './entities';
 
 import type Achievement from '../game/entity/character/player/achievement';
+import type Player from '../game/entity/character/player/player';
 
 export default class Commands {
-    player: Player;
-    world: World;
-    entities: Entities;
+    world;
+    entities;
 
-    constructor(player: Player) {
-        this.player = player;
-        this.world = player.world;
-        this.entities = this.world.entities;
+    constructor(private player: Player) {
+        const { world } = player;
+
+        this.world = world;
+        this.entities = world.entities;
     }
 
     parse(rawText: string): void {

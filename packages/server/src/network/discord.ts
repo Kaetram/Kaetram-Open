@@ -1,22 +1,21 @@
 import { Client, Message, WebhookClient } from 'discord.js';
 
 import config from '../../config';
-import World from '../game/world';
 import log from '../util/log';
 import Utils from '../util/utils';
+
+import type World from '../game/world';
 
 /**
  * This class will be used in Kaetram-Hub as well.
  * But we will leave it in servers if the standalone
  * approach is used.
  */
-
 export default class Discord {
-    world!: World;
     client!: Client;
     webhook!: WebhookClient;
 
-    constructor(world: World) {
+    constructor(private world: World) {
         if (!config.discordEnabled) return;
 
         if (config.hubEnabled) {
@@ -24,8 +23,6 @@ export default class Discord {
             config.discordEnabled = false;
             return;
         }
-
-        this.world = world;
 
         this.client = new Client();
         this.webhook = new WebhookClient(config.discordWebhookId, config.discordWebhookToken);

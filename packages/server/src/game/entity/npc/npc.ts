@@ -2,12 +2,10 @@ import Player from '../character/player/player';
 import Entity from '../entity';
 
 export default class NPC extends Entity {
-    talkIndex: number;
+    talkIndex = 0;
 
     constructor(id: number, instance: string, x: number, y: number) {
         super(id, 'npc', instance, x, y);
-
-        this.talkIndex = 0;
     }
 
     talk(messages: string[], player?: Player): string | undefined {

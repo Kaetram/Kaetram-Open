@@ -1,8 +1,9 @@
 import Packets from '@kaetram/common/src/packets';
 
 import Messages from '../../../../../../network/messages';
-import Player from '../../player';
 import Container from '../container';
+
+import type Player from '../../player';
 
 interface BankInfo {
     id: number;
@@ -12,12 +13,10 @@ interface BankInfo {
 }
 
 export default class Bank extends Container {
-    public open: boolean;
+    public open = false;
 
     constructor(owner: Player, size: number) {
         super('Bank', owner, size);
-
-        this.open = false;
     }
 
     override load(

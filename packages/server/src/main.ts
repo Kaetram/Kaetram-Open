@@ -1,26 +1,22 @@
 import config from '../config';
 import Database from './database/database';
-import MongoDB from './database/mongodb/mongodb';
-import Player from './game/entity/character/player/player';
 import World from './game/world';
-import Connection from './network/connection';
 import SocketHandler from './network/sockethandler';
 import log from './util/log';
 import Parser from './util/parser';
 
+import type Player from './game/entity/character/player/player';
+import type Connection from './network/connection';
+
 class Main {
-    socketHandler: SocketHandler;
-    database: MongoDB;
-    parser: Parser;
-    world: World;
+    socketHandler = new SocketHandler();
+    database = new Database(config.database).getDatabase()!;
+    parser = new Parser();
+
+    world!: World;
 
     constructor() {
         log.info('Initializing ' + config.name + ' game engine...');
-
-        this.socketHandler = new SocketHandler();
-        this.database = new Database(config.database).getDatabase()!;
-        this.parser = new Parser();
-        this.world = null!;
 
         this.socketHandler.onReady(() => {
             /**

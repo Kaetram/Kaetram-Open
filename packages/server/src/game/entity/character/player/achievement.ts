@@ -1,9 +1,11 @@
+import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
+
 import Data from '../../../../../data/achievements.json';
 import Messages from '../../../../network/messages';
-import Packets from '@kaetram/common/src/packets';
-import * as Modules from '@kaetram/common/src/modules';
-import NPC from '../../npc/npc';
-import Player from './player';
+
+import type NPC from '../../npc/npc';
+import type Player from './player';
 
 export interface AchievementData {
     id: number;
@@ -16,10 +18,7 @@ export interface AchievementData {
 }
 
 export default class Achievement {
-    public id: number;
-    public player: Player;
-
-    public progress: number;
+    public progress = 0;
 
     public data: Partial<{
         item: number;
@@ -36,25 +35,18 @@ export default class Achievement {
         rewardType: number;
     }>;
 
-    public name: string;
-    public description: string;
+    public name;
+    public description;
 
-    public discovered: boolean;
+    public discovered = false;
 
-    constructor(id: number, player: Player) {
-        this.id = id;
-        this.player = player;
-
-        this.progress = 0;
-
+    constructor(public id: number, private player: Player) {
         this.data = Data[this.id.toString() as keyof typeof Data];
 
         if (!this.data.reward) this.data.reward = 'door';
 
         this.name = this.data.name!;
         this.description = this.data.description!;
-
-        this.discovered = false;
     }
 
     step(): void {

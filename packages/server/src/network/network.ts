@@ -1,41 +1,31 @@
 import _ from 'lodash';
 
 import config from '../../config';
-import Entities from '../controllers/entities';
-import MongoDB from '../database/mongodb/mongodb';
 import Player from '../game/entity/character/player/player';
-import World from '../game/world';
-import Map from '../map/map';
-import Region from '../region/region';
 import Utils from '../util/utils';
-import Connection from './connection';
 import Messages, { Packet } from './messages';
-import SocketHandler from './sockethandler';
+
+import type World from '../game/world';
+import type Connection from './connection';
 
 type PacketsList = unknown[] & { id?: string };
 
 export default class Network {
-    world: World;
-    entities: Entities;
-    database: MongoDB;
-    socketHandler: SocketHandler;
-    region: Region;
-    map: Map;
+    entities;
+    database;
+    socketHandler;
+    region;
+    map;
 
-    packets: { [id: string]: PacketsList };
-    differenceThreshold: number;
+    packets: { [id: string]: PacketsList } = {};
+    differenceThreshold = 4000;
 
-    constructor(world: World) {
-        this.world = world;
+    constructor(private world: World) {
         this.entities = world.entities;
         this.database = world.database;
         this.socketHandler = world.socketHandler;
         this.region = world.region;
         this.map = world.map;
-
-        this.packets = {};
-
-        this.differenceThreshold = 4000;
 
         this.load();
     }
@@ -78,8 +68,6 @@ export default class Network {
 
             return;
         }
-
-        this.socketHandler.ips[connection.socket.conn.remoteAddress] = Date.now();
 
         this.addToPackets(player);
 

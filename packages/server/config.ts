@@ -2,7 +2,7 @@ import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
 import { camelCase } from 'lodash';
 
-import type { DatabaseTypes } from './src/database/database';
+import type { DatabaseType } from './src/database/database';
 
 interface Config {
     name: string;
@@ -23,7 +23,7 @@ interface Config {
     hubAccessToken: string;
     remoteServerHost: string;
 
-    database: DatabaseTypes;
+    database: DatabaseType;
     offlineMode: boolean;
 
     mongodbHost: string;

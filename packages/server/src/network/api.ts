@@ -1,13 +1,15 @@
-import express from 'express';
-import { urlencoded, json } from 'body-parser';
 import axios from 'axios';
-import World from '../game/world';
-import APIConstants from '../util/apiconstants';
-import Utils from '../util/utils';
-import Player from '../game/entity/character/player/player';
+import { json, urlencoded } from 'body-parser';
+import express from 'express';
+
 import config from '../../config';
+import APIConstants from '../util/apiconstants';
 import log from '../util/log';
+import Utils from '../util/utils';
+
+import type Player from '../game/entity/character/player/player';
 import type Mana from '../game/entity/character/player/points/mana';
+import type World from '../game/world';
 
 interface PlayerData {
     serverId: string;
@@ -33,12 +35,9 @@ interface PlayerData {
  * the simplicity of the current API.
  */
 export default class API {
-    world: World;
     hubConnected = false;
 
-    constructor(world: World) {
-        this.world = world;
-
+    constructor(private world: World) {
         if (!config.apiEnabled) return;
 
         const app = express();

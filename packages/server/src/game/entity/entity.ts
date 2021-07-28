@@ -1,7 +1,8 @@
 import Items from '../../util/items';
 import Mobs from '../../util/mobs';
 import NPCs from '../../util/npcs';
-import Combat from './character/combat/combat';
+
+import type Combat from './character/combat/combat';
 import type Mob from './character/mob/mob';
 import type Player from './character/player/player';
 import type NPC from './npc/npc';
@@ -19,50 +20,43 @@ export interface EntityState {
 }
 
 abstract class Entity {
-    public id: number;
-    public type: string;
-    public instance: string;
+    public x;
+    public y;
 
-    public x: number;
-    public y: number;
-    public oldX: number;
-    public oldY: number;
+    public oldX;
+    public oldY;
 
-    public combat: Combat;
+    public combat!: Combat;
 
-    public dead: boolean;
-    public recentRegions: string[];
-    public invisibles: { [instance: string]: Entity };
-    public invisiblesIds: number[];
+    public dead = false;
+    public recentRegions: string[] = [];
+    /** Entity Instances */
+    public invisibles: { [instance: string]: Entity } = {};
+    /** Entity IDs */
+    public invisiblesIds: number[] = [];
 
     public username!: string;
-    public instanced!: boolean;
+    public instanced = false;
     public region!: string | null;
 
     setPositionCallback?(): void;
 
     specialState!: 'boss' | 'miniboss' | 'achievementNpc' | 'area' | 'questNpc' | 'questMob';
     customScale!: number;
-    roaming!: boolean;
+    roaming = false;
 
-    constructor(id: number, type: string, instance: string, x?: number, y?: number) {
-        this.id = id;
-        this.type = type;
-        this.instance = instance;
-
+    constructor(
+        public id: number,
+        public type: string,
+        public instance: string,
+        x?: number,
+        y?: number
+    ) {
         this.x = x!;
         this.y = y!;
 
         this.oldX = x!;
         this.oldY = y!;
-
-        this.combat = null!;
-
-        this.dead = false;
-        this.recentRegions = [];
-
-        this.invisibles = {}; // For Entity Instances
-        this.invisiblesIds = []; // For Entity IDs
     }
 
     getDistance(entity: Entity): number {

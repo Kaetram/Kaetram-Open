@@ -1,35 +1,28 @@
 import http from 'http';
-import { Server } from 'socket.io';
-import ws from 'ws';
 
 import config from '../../config';
 import log from '../util/log';
-import Connection from './connection';
-import SocketHandler from './sockethandler';
 
-export default class WebSocket {
-    public host: string;
-    public port: number;
+import type { Server } from 'socket.io';
+import type ws from 'ws';
+import type Connection from './connection';
+import type SocketHandler from './sockethandler';
 
-    public version: string;
-    public type: string;
+export default abstract class WebSocket {
+    private version = config.gver;
 
     public server!: Server | ws.Server; // The SocketIO server
     public httpServer!: http.Server;
-    public socketHandler: SocketHandler;
 
     public addCallback?: (connection: Connection) => void;
     private initializedCallback?(): void;
 
-    constructor(host: string, port: number, type: string, socketHandler: SocketHandler) {
-        this.host = host;
-        this.port = port;
-
-        this.version = config.gver;
-        this.type = type;
-
-        this.socketHandler = socketHandler;
-    }
+    constructor(
+        protected host: string,
+        protected port: number,
+        protected type: string,
+        protected socketHandler: SocketHandler
+    ) {}
 
     loadServer(): void {
         this.httpServer = http.createServer(this.httpResponse).listen(this.port, this.host, () => {
