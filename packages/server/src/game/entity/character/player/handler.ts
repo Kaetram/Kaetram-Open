@@ -24,7 +24,7 @@ export default class Handler {
     map: Map;
 
     updateTicks: number;
-    updateInterval: NodeJS.Timeout;
+    updateInterval: NodeJS.Timeout | null;
 
     constructor(player: Player) {
         this.player = player;
@@ -39,7 +39,7 @@ export default class Handler {
     }
 
     destroy(): void {
-        clearInterval(this.updateInterval);
+        if (this.updateInterval) clearInterval(this.updateInterval);
         this.updateInterval = null;
     }
 
@@ -98,8 +98,7 @@ export default class Handler {
             if (this.player.quests.isAchievementMob(mob)) {
                 let achievement = this.player.quests.getAchievementByMob(mob);
 
-                if (achievement && achievement.isStarted())
-                    this.player.quests.getAchievementByMob(mob).step();
+                if (achievement && achievement.isStarted()) achievement.step();
             }
         });
 
@@ -114,7 +113,7 @@ export default class Handler {
             this.player.stopHealing();
 
             /* Avoid a memory leak */
-            clearInterval(this.updateInterval);
+            if (this.updateInterval) clearInterval(this.updateInterval);
             this.updateInterval = null;
 
             if (this.player.ready) {
@@ -133,13 +132,13 @@ export default class Handler {
 
         this.player.onTalkToNPC((npc: NPC) => {
             if (this.player.quests.isQuestNPC(npc)) {
-                this.player.quests.getQuestByNPC(npc).triggerTalk(npc);
+                this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
 
                 return;
             }
 
             if (this.player.quests.isAchievementNPC(npc)) {
-                this.player.quests.getAchievementByNPC(npc).converse(npc);
+                this.player.quests.getAchievementByNPC(npc)!.converse(npc);
 
                 return;
             }
@@ -171,7 +170,7 @@ export default class Handler {
             );
         });
 
-        this.player.onTeleport((x: number, y: number, isDoor: boolean) => {
+        this.player.onTeleport((x: number, y: number, isDoor?: boolean) => {
             if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
                 this.player.doorCallback(x, y);
                 return;
@@ -200,7 +199,7 @@ export default class Handler {
     }
 
     detectAggro(): void {
-        let region = this.world.region.regions[this.player.region];
+        let region = this.world.region.regions[this.player.region!];
 
         if (!region) return;
 

@@ -1,10 +1,10 @@
+import { Tree } from '@kaetram/common/types/map';
+
+import Player from '../game/entity/character/player/player';
+import World from '../game/world';
+import Map from '../map/map';
 import Objects, { ObjectsData } from '../util/objects';
 import Utils from '../util/utils';
-import Map from '../map/map';
-import World from '../game/world';
-import Player from '../game/entity/character/player/player';
-import * as Modules from '@kaetram/common/src/modules';
-import { Tree } from '@kaetram/common/types/map';
 
 interface SignData {
     object: ObjectsData;
@@ -24,7 +24,7 @@ export default class GlobalObjects {
         this.map = world.map;
     }
 
-    getInfo(id: string): { type: string; tree?: Tree } {
+    getInfo(id: string): { type: string; tree?: Tree } | null {
         const position = Objects.getPosition(id),
             objectId = this.map.getPositionObject(position.x, position.y);
 
@@ -48,7 +48,7 @@ export default class GlobalObjects {
      * position data for the client to display the bubble.
      */
 
-    getSignData(id: string): SignData {
+    getSignData(id: string): SignData | null {
         const object = Objects.getObject(id);
 
         if (!object) return null;
@@ -73,7 +73,7 @@ export default class GlobalObjects {
 
     talk(object: ObjectsData, player: Player): string {
         if (player.npcTalk !== object.id) {
-            player.npcTalk = object.id;
+            player.npcTalk = object.id!;
             player.talkIndex = 0;
         }
 

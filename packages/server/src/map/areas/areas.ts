@@ -11,7 +11,7 @@ export default abstract class Areas {
     public world: World;
     public areas: Area[];
 
-    constructor(data: ProcessedArea[], world?: World) {
+    constructor(data: ProcessedArea[], world: World) {
         this.data = data;
         this.world = world;
 
@@ -37,7 +37,7 @@ export default abstract class Areas {
         log.info(`Loaded ${this.areas.length} ${type} areas.`);
     }
 
-    public inArea(x: number, y: number): Area {
+    public inArea(x: number, y: number): Area | undefined {
         return _.find(this.areas, (area: Area) => {
             return area.contains(x, y);
         });

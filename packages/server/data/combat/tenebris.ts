@@ -102,11 +102,11 @@ export default class Tenebris extends Combat {
         _.each(this.illusions, (illusion: Mob) => {
             const target = this.getRandomTarget();
 
-            if (!illusion.hasTarget && target) illusion.combat.begin(target);
+            if (!illusion.target && target) illusion.combat.begin(target);
         });
     }
 
-    getRandomTarget(): Character {
+    getRandomTarget(): Character | null {
         if (this.isAttacked()) {
             const keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
@@ -114,12 +114,12 @@ export default class Tenebris extends Combat {
             if (randomAttacker) return randomAttacker;
         }
 
-        if (this.character.hasTarget()) return this.character.target;
+        if (this.character.target) return this.character.target;
 
         return null;
     }
 
-    forceTalk(instance: string, message: string): void {
+    forceTalk(instance: string | null, message: string): void {
         if (!this.world) return;
 
         this.world.push(Packets.PushOpcode.Regions, {

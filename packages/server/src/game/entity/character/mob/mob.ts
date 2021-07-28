@@ -17,36 +17,36 @@ interface MobState extends CharacterState {
 }
 
 export default class Mob extends Character {
-    data: MobData;
+    data!: MobData;
     // hitPoints: number;
     // maxHitPoints: number;
-    drops: MobDrops;
+    drops!: MobDrops;
 
-    respawnDelay: number;
+    respawnDelay!: number;
 
-    boss: boolean;
-    static: boolean;
-    hiddenName: boolean;
-    miniboss: boolean;
+    boss!: boolean;
+    static!: boolean;
+    hiddenName!: boolean;
+    miniboss!: boolean;
 
-    achievementId: number;
+    achievementId!: number;
 
     // roaming: boolean;
-    maxRoamingDistance: number;
+    maxRoamingDistance!: number;
 
-    handler: MobHandler;
+    handler!: MobHandler;
 
     // alwaysAggressive: boolean;
 
     loadCallback?(): void;
     refreshCallback?(): void;
     respawnCallback?(): void;
-    // deathCallback: Function;
+    // deathCallback?: Function;
 
-    forceTalkCallback: (message: string) => void;
+    forceTalkCallback?: (message: string) => void;
     roamingCallback?(): void;
 
-    area: Area;
+    area!: Area;
 
     constructor(id: number, instance: string, x: number, y: number) {
         super(id, 'mob', instance, x, y);
@@ -96,7 +96,7 @@ export default class Mob extends Character {
         if (this.refreshCallback) this.refreshCallback();
     }
 
-    getDrop(): { id: number; count: number } {
+    getDrop(): { id: number; count: number } | null {
         if (!this.drops) return null;
 
         const random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
@@ -108,7 +108,7 @@ export default class Mob extends Character {
         const count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
 
         return {
-            id: Items.stringToId(item),
+            id: Items.stringToId(item)!,
             count
         };
     }
@@ -118,7 +118,7 @@ export default class Mob extends Character {
     }
 
     canAggro(player: Player): boolean {
-        if (this.hasTarget()) return false;
+        if (this.target) return false;
 
         if (!this.aggressive) return false;
 

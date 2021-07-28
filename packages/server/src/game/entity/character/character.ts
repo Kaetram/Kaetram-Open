@@ -11,9 +11,9 @@ import Ring from './player/equipment/ring';
 type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
 type HitCallback = (attacker: Character, damage?: number) => void;
-type DamagedCallback = (damage: number, attacker: Character) => void;
+type DamagedCallback = (damage: number, attacker?: Character) => void;
 type MovementCallback = (x: number, y: number) => void;
-type TargetCallback = (target: Pos) => void;
+type TargetCallback = (target: Character | null) => void;
 type PoisonCallback = (poison: string) => void;
 type SubAoECallback = (radius: number, hasTerror: boolean) => void;
 
@@ -36,57 +36,57 @@ export default class Character extends Entity {
     public hitPoints: number;
     public maxHitPoints: number;
 
-    public poison: string;
+    public poison: string | null;
     public aggressive: boolean;
     public aggroRange: number;
 
-    public target: Character;
+    public target: Character | null;
     public potentialTarget: unknown; // TODO
 
-    stunTimeout: NodeJS.Timeout;
+    stunTimeout: NodeJS.Timeout | null;
 
     public projectile: Modules.Projectiles;
     public projectileName: string;
 
-    healingInterval: NodeJS.Timeout;
-    updated: boolean;
+    healingInterval: NodeJS.Timeout | null;
+    updated = false;
 
-    public weaponLevel: number;
-    public armourLevel: number;
-    public stunned: boolean;
+    public weaponLevel!: number;
+    public armourLevel!: number;
+    public stunned!: boolean;
 
-    stunCallback: StunCallback;
-    hitCallback: HitCallback;
-    damagedCallback: DamagedCallback;
-    movementCallback: MovementCallback;
-    targetCallback: TargetCallback;
+    stunCallback?: StunCallback;
+    hitCallback?: HitCallback;
+    damagedCallback?: DamagedCallback;
+    movementCallback?: MovementCallback;
+    targetCallback?: TargetCallback;
     hitPointsCallback?(): void;
-    poisonCallback: PoisonCallback;
+    poisonCallback?: PoisonCallback;
     removeTargetCallback?(): void;
     healthChangeCallback?(): void;
-    damageCallback: DamageCallback;
-    subAoECallback: SubAoECallback;
+    damageCallback?: DamageCallback;
+    subAoECallback?: SubAoECallback;
     deathCallback?(): void;
 
     returnCallback?(): void;
 
-    moving: boolean;
-    lastMovement: number;
+    moving!: boolean;
+    lastMovement!: number;
 
-    pvp: boolean;
+    pvp!: boolean;
 
-    spawnLocation: [x: number, y: number];
+    spawnLocation!: [x: number, y: number];
 
-    frozen: boolean;
+    frozen!: boolean;
 
-    alwaysAggressive: boolean;
+    alwaysAggressive!: boolean;
 
-    public invincible: boolean;
-    public lastAttacker: Character;
+    public invincible = false;
+    public lastAttacker!: Character | null;
 
-    public pendant: Pendant;
-    public ring: Ring;
-    public boots: Boots;
+    public pendant!: Pendant;
+    public ring!: Ring;
+    public boots!: Boots;
 
     constructor(id: number, type: string, instance: string, x: number, y: number) {
         super(id, type, instance, x, y);
@@ -133,7 +133,7 @@ export default class Character extends Entity {
          */
 
         this.combat = Mobs.hasCombatPlugin(this.id)
-            ? new (Mobs.isNewCombatPlugin(this.id))(this)
+            ? new (Mobs.isNewCombatPlugin(this.id)!)(this)
             : new Combat(this);
     }
 
@@ -164,7 +164,7 @@ export default class Character extends Entity {
     }
 
     stopHealing(): void {
-        clearInterval(this.healingInterval);
+        if (this.healingInterval) clearInterval(this.healingInterval);
         this.healingInterval = null;
     }
 
@@ -219,7 +219,7 @@ export default class Character extends Entity {
         if (this.movementCallback) this.movementCallback(x, y);
     }
 
-    setTarget(target: Character): void {
+    setTarget(target: Character | null): void {
         this.target = target;
 
         if (this.targetCallback) this.targetCallback(target);
@@ -275,10 +275,6 @@ export default class Character extends Entity {
         this.clearTarget();
     }
 
-    hasTarget(): boolean {
-        return !(this.target === null);
-    }
-
     hasPotentialTarget(potentialTarget: unknown): boolean {
         return this.potentialTarget === potentialTarget;
     }
@@ -287,7 +283,7 @@ export default class Character extends Entity {
         this.target = null;
     }
 
-    onTarget(callback: () => void): void {
+    onTarget(callback: TargetCallback): void {
         this.targetCallback = callback;
     }
 

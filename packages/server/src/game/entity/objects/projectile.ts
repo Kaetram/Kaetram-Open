@@ -9,7 +9,7 @@ export interface ProjectileData {
     targetId: string;
     damage: number;
     special: never;
-    hitType: Modules.Hits;
+    hitType: Modules.Hits | null;
     type: string;
 }
 
@@ -20,14 +20,14 @@ export default class Projectile extends Entity {
     destX: number;
     destY: number;
 
-    target: Entity;
+    target: Entity | null;
 
     damage: number;
 
-    hitType: Modules.Hits; // TODO
-    owner: Character; // TODO
+    hitType: Modules.Hits | null; // TODO
+    owner?: Character; // TODO
 
-    static: boolean;
+    static = false;
     special: never;
 
     constructor(id: Modules.Projectiles, instance: string) {
@@ -44,8 +44,6 @@ export default class Projectile extends Entity {
         this.damage = -1;
 
         this.hitType = null;
-
-        this.owner = null;
     }
 
     setStart(x: number, y: number): void {
@@ -71,7 +69,7 @@ export default class Projectile extends Entity {
         this.destY = y;
     }
 
-    getData(): ProjectileData {
+    getData(): ProjectileData | undefined {
         /**
          * Refrain from creating a projectile unless
          * an owner and a target are available.

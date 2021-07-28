@@ -24,7 +24,7 @@ export default class WS extends WebSocket {
         const server = new ws.Server({ port: this.port });
 
         server.on('connection', (socket, request) => {
-            const mappedAddress = request.socket.remoteAddress,
+            let mappedAddress = request.socket.remoteAddress!,
                 [, remoteAddress] = mappedAddress.split('::ffff:');
 
             socket.conn = { remoteAddress };

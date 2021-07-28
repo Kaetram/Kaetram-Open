@@ -20,9 +20,9 @@ export default class CombatQueue {
         this.hitQueue = [];
     }
 
-    getHit(): HitData {
+    getHit(): HitData | null {
         if (this.hitQueue.length === 0) return null;
 
-        return this.hitQueue.shift().getData();
+        return this.hitQueue.shift()!.getData();
     }
 }

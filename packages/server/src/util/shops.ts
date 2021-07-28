@@ -65,7 +65,7 @@ export default {
         return shop.prices[buyId] * count;
     },
 
-    getStock(npcId: number, buyId: number): number {
+    getStock(npcId: number, buyId: number): number | null {
         let shop = this.Ids[npcId];
 
         if (!shop || !buyId || buyId < 0) return null;
@@ -73,7 +73,7 @@ export default {
         return shop.count[buyId];
     },
 
-    getOriginalStock(shopId: number, buyId: number): number {
+    getOriginalStock(shopId: number, buyId: number): number | undefined {
         let shop = this.Ids[shopId];
 
         if (!buyId || buyId < 0) return;
@@ -92,7 +92,7 @@ export default {
         return counts;
     },
 
-    getItem(npcId: number, buyId: number): number {
+    getItem(npcId: number, buyId: number): number | undefined {
         if (!buyId || buyId < 0) return;
 
         return this.Ids[npcId].items[buyId];

@@ -70,7 +70,7 @@ export default class Entities {
             switch (entityInfo.type) {
                 case 'item': {
                     const item = this.createItem(
-                        Items.stringToId(key),
+                        Items.stringToId(key)!,
                         instance,
                         position.x,
                         position.y
@@ -84,7 +84,7 @@ export default class Entities {
                 }
 
                 case 'npc': {
-                    const npc = new NPC(NPCs.stringToId(key), instance, position.x, position.y);
+                    const npc = new NPC(NPCs.stringToId(key)!, instance, position.x, position.y);
 
                     this.addNPC(npc);
 
@@ -92,7 +92,7 @@ export default class Entities {
                 }
 
                 case 'mob': {
-                    const mob = new Mob(Mobs.stringToId(key), instance, position.x, position.y);
+                    const mob = new Mob(Mobs.stringToId(key)!, instance, position.x, position.y);
 
                     mob.static = true;
                     mob.roaming = entityInfo.roaming;
@@ -206,7 +206,7 @@ export default class Entities {
         // Spawns the static chests throughout the world.
 
         _.each(this.map.chests, (info) => {
-            this.spawnChest(info.items.split(','), info.x, info.y, true, info.achievement);
+            this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
         });
 
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
@@ -244,7 +244,7 @@ export default class Entities {
 
             if (!item) return;
 
-            this.dropItem(Items.stringToId(item.string), item.count, chest.x, chest.y);
+            this.dropItem(Items.stringToId(item.string)!, item.count, chest.x, chest.y);
 
             if (player && chest.achievement) player.finishAchievement(chest.achievement);
         });
@@ -254,7 +254,7 @@ export default class Entities {
         return chest;
     }
 
-    spawnProjectile([attacker, target]: Character[]): Projectile {
+    spawnProjectile([attacker, target]: Character[]): Projectile | null {
         if (!attacker || !target) return null;
 
         const startX = attacker.x, // gridX
@@ -286,7 +286,7 @@ export default class Entities {
      * Add Entities
      */
 
-    add(entity: Entity, region: string): void {
+    add(entity: Entity, region: string | null): void {
         if (entity.instance in this.entities)
             log.warning(`Entity ${entity.instance} already exists.`);
 
@@ -387,7 +387,7 @@ export default class Entities {
     }
 
     addProjectile(projectile: Projectile): void {
-        this.add(projectile, projectile.owner.region);
+        this.add(projectile, projectile.owner!.region);
 
         this.projectiles[projectile.instance] = projectile;
     }
@@ -436,7 +436,6 @@ export default class Entities {
 
         // Unsure about this since garbage collector should handle it.
         player.destroy();
-        player = null;
     }
 
     removeChest(chest: Chest): void {
@@ -458,11 +457,13 @@ export default class Entities {
         return !!this.getPlayer(username);
     }
 
-    get<E extends Entity>(instance: string): E | undefined {
+    get<E extends Entity>(instance: string): E | null {
         if (instance in this.entities) return this.entities[instance] as E;
+
+        return null;
     }
 
-    getPlayer(username: string): Player {
+    getPlayer(username: string): Player | undefined {
         return _.find(this.players, (player: Player) => {
             return player.username.toLowerCase() === username.toLowerCase();
         });

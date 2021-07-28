@@ -1,4 +1,3 @@
-import Map from '../../../../map/map';
 import Mobs from '../../../../util/mobs';
 import Combat from '../combat/combat';
 import Player from '../player/player';
@@ -7,9 +6,9 @@ import Mob from './mob';
 export default class MobHandler {
     mob: Mob;
     combat: Combat;
-    map: Map;
+    // map: Map;
 
-    roamingInterval: NodeJS.Timeout;
+    roamingInterval: NodeJS.Timeout | null;
     spawnLocation;
     maxRoamingDistance: number;
 
@@ -29,7 +28,7 @@ export default class MobHandler {
         if (!this.mob.roaming) return;
 
         this.roamingInterval = setInterval(() => {
-            this.mob.roamingCallback();
+            this.mob.roamingCallback?.();
         }, 5000);
     }
 
@@ -55,6 +54,6 @@ export default class MobHandler {
     }
 
     forceTalk(message: string): void {
-        this.mob.forceTalkCallback(message);
+        this.mob.forceTalkCallback?.(message);
     }
 }

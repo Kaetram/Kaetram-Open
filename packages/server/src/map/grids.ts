@@ -58,7 +58,7 @@ export default class Grids {
             delete this.entityGrid[y][x][entity.instance];
     }
 
-    getSurroundingEntities(entity: Entity, radius?: number, include?: boolean): Entity[] {
+    getSurroundingEntities(entity: Entity, radius: number, include?: boolean): Entity[] | void {
         let entities: Entity[] = [];
 
         if (!this.checkBounds(entity.x, entity.y, radius)) return;
@@ -77,7 +77,7 @@ export default class Grids {
         return entities;
     }
 
-    checkBounds(x: number, y: number, radius?: number): boolean {
+    checkBounds(x: number, y: number, radius: number): boolean {
         return (
             x + radius < this.map.width &&
             x - radius > 0 &&
