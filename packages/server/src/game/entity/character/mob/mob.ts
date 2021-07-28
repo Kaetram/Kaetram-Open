@@ -1,12 +1,13 @@
-import Area from '../../../../map/areas/area';
-import Areas from '../../../../map/areas/areas';
 import Constants from '../../../../util/constants';
 import Items from '../../../../util/items';
 import Mobs, { MobData, MobDrops } from '../../../../util/mobs';
 import Utils from '../../../../util/utils';
 import Character, { CharacterState } from '../character';
-import Player from '../player/player';
 import MobHandler from './mobhandler';
+
+import type Area from '../../../../map/areas/area';
+import type Areas from '../../../../map/areas/areas';
+import type Player from '../player/player';
 
 interface MobState extends CharacterState {
     hitPoints: number;
@@ -24,15 +25,14 @@ export default class Mob extends Character {
 
     respawnDelay!: number;
 
-    boss!: boolean;
-    static!: boolean;
-    hiddenName!: boolean;
-    miniboss!: boolean;
+    boss = false;
+    static = false;
+    hiddenName = false;
+    miniboss = false;
 
     achievementId!: number;
 
-    // roaming: boolean;
-    maxRoamingDistance!: number;
+    maxRoamingDistance = 3;
 
     handler!: MobHandler;
 
@@ -53,32 +53,26 @@ export default class Mob extends Character {
 
         if (!Mobs.exists(id)) return;
 
-        this.data = Mobs.Ids[this.id];
-        this.hitPoints = this.data.hitPoints;
-        this.maxHitPoints = this.data.hitPoints;
-        this.drops = this.data.drops;
+        const data = Mobs.Ids[id];
 
-        this.respawnDelay = this.data.spawnDelay;
+        this.data = data;
+        this.hitPoints = data.hitPoints;
+        this.maxHitPoints = data.hitPoints;
+        this.drops = data.drops;
 
-        this.level = this.data.level;
+        this.respawnDelay = data.spawnDelay;
 
-        this.armourLevel = this.data.armour;
-        this.weaponLevel = this.data.weapon;
-        this.attackRange = this.data.attackRange;
+        this.level = data.level;
+
+        this.armourLevel = data.armour;
+        this.weaponLevel = data.weapon;
+        this.attackRange = data.attackRange;
         this.aggroRange = this.data.aggroRange;
-        this.aggressive = this.data.aggressive;
-        this.attackRate = this.data.attackRate;
-        this.movementSpeed = this.data.movementSpeed;
+        this.aggressive = data.aggressive;
+        this.attackRate = data.attackRate;
+        this.movementSpeed = data.movementSpeed;
 
         this.spawnLocation = [x, y];
-
-        this.dead = false;
-        this.boss = false;
-        this.static = false;
-        this.hiddenName = false;
-
-        this.roaming = false;
-        this.maxRoamingDistance = 3;
 
         this.projectileName = this.getProjectileName();
     }

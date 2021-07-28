@@ -1,11 +1,12 @@
 import Packets from '@kaetram/common/src/packets';
 
 import Messages from '../../../../../../network/messages';
-import Item from '../../../../objects/item';
-import { ItemData } from '../../equipment/equipment';
-import Player from '../../player';
 import Container from '../container';
 import Constants from './constants';
+
+import type Item from '../../../../objects/item';
+import type { ItemData } from '../../equipment/equipment';
+import type Player from '../../player';
 
 export default class Inventory extends Container {
     constructor(owner: Player, size: number) {

@@ -5,15 +5,9 @@ import type World from '../game/world';
 import type Minigame from '../minigames/minigame';
 
 export default class Minigames {
-    public world: World;
+    public minigames: { [game: string]: Minigame } = {};
 
-    public minigames: { [game: string]: Minigame };
-
-    constructor(world: World) {
-        this.world = world;
-
-        this.minigames = {};
-
+    constructor(private world: World) {
         this.load();
     }
 

@@ -1,27 +1,20 @@
-import type { Socket } from 'socket.io';
-
 import log from '../util/log';
-import SocketHandler from './sockethandler';
+
+import type { Socket } from 'socket.io';
+import type SocketHandler from './sockethandler';
 
 type ListenCallback = (message: [number, never]) => void;
 
 export default class Connection {
-    public id: string;
-
-    public type: string;
-
-    public socket: Socket;
-    public socketHandler: SocketHandler;
-
     private listenCallback?: ListenCallback;
     private closeCallback?(): void;
 
-    constructor(id: string, type: string, socket: Socket, socketHandler: SocketHandler) {
-        this.id = id;
-        this.type = type;
-        this.socket = socket;
-        this.socketHandler = socketHandler;
-
+    constructor(
+        public id: string,
+        public type: string,
+        public socket: Socket,
+        private socketHandler: SocketHandler
+    ) {
         this.socket.on('message', (message) => {
             try {
                 if (this.listenCallback) this.listenCallback(JSON.parse(message));

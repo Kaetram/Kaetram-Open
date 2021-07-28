@@ -1,5 +1,8 @@
 import _ from 'lodash';
+
+import * as Modules from '@kaetram/common/src/modules';
 import Packets from '@kaetram/common/src/packets';
+
 import config from '../../config';
 import Rocks from '../../data/professions/rocks';
 import Trees from '../../data/professions/trees';
@@ -7,24 +10,24 @@ import Entities from '../controllers/entities';
 import GlobalObjects from '../controllers/globalobjects';
 import Minigames from '../controllers/minigames';
 import Shops from '../controllers/shops';
-import MongoDB from '../database/mongodb/mongodb';
+import Grids from '../map/grids';
 import Map from '../map/map';
 import API from '../network/api';
 import Discord from '../network/discord';
 import Messages, { Packet } from '../network/messages';
 import Network from '../network/network';
-import SocketHandler from '../network/sockethandler';
 import Region from '../region/region';
 import log from '../util/log';
 import Mobs from '../util/mobs';
-import * as Modules from '@kaetram/common/src/modules';
 import Character from './entity/character/character';
-import Player from './entity/character/player/player';
-import Entity from './entity/entity';
-import Mob from './entity/character/mob/mob';
-import Connection from '../network/connection';
-import Grids from '../map/grids';
-import { Rock, Tree } from '@kaetram/common/types/map';
+
+import type { Rock, Tree } from '@kaetram/common/types/map';
+import type MongoDB from '../database/mongodb/mongodb';
+import type Connection from '../network/connection';
+import type SocketHandler from '../network/sockethandler';
+import type Mob from './entity/character/mob/mob';
+import type Player from './entity/character/player/player';
+import type Entity from './entity/entity';
 
 type PlayerConnectCallback = (connection: Connection) => void;
 
@@ -55,22 +58,21 @@ interface DynamicData<T> {
 }
 
 export default class World {
-    public socketHandler: SocketHandler;
-    public database: MongoDB;
+    public maxPlayers;
+    public updateTime;
+    public debug = false;
+    public allowConnections = false;
 
-    public maxPlayers: number;
-    public updateTime: number;
-    public debug: boolean;
-    public allowConnections: boolean;
+    // Lumberjacking Variables
+    public trees: DynamicObject = {};
+    public cutTrees: DynamicData<{ treeId: number }> = {};
 
-    public trees: DynamicObject;
-    public cutTrees: DynamicData<{ treeId: number }>;
+    // Mining Variables
+    public rocks: DynamicObject = {};
+    public depletedRocks: DynamicData<{ rockId: number }> = {};
 
-    public rocks: DynamicObject;
-    public depletedRocks: DynamicData<{ rockId: number }>;
-
-    public loadedRegions: boolean;
-    public ready: boolean;
+    public loadedRegions = false;
+    public ready = false;
 
     public map!: Map;
     public api!: API;
@@ -85,27 +87,12 @@ export default class World {
     public playerConnectCallback?: PlayerConnectCallback;
     public populationCallback?(): void;
 
-    constructor(socketHandler: SocketHandler, database: MongoDB) {
+    constructor(public socketHandler: SocketHandler, public database: MongoDB) {
         this.socketHandler = socketHandler;
         this.database = database;
 
         this.maxPlayers = config.maxPlayers;
         this.updateTime = config.updateTime;
-
-        this.debug = false;
-        this.allowConnections = false;
-
-        // Lumberjacking Variables
-        this.trees = {};
-        this.cutTrees = {};
-
-        // Mining Variables
-        this.rocks = {};
-        this.depletedRocks = {};
-
-        this.loadedRegions = false;
-
-        this.ready = false;
     }
 
     load(onWorldLoad: () => void): void {

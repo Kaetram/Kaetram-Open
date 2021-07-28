@@ -1,24 +1,19 @@
-import Connection from './connection';
 import SocketIO from './impl/socketio';
 import WS from './impl/ws';
 
-export default class SocketHandler {
-    private socketIO: SocketIO;
-    private ws: WS;
+import type Connection from './connection';
 
-    public ips: { [id: string]: number };
-    public connections: { [id: string]: Connection };
+export default class SocketHandler {
+    private socketIO = new SocketIO(this);
+    private ws = new WS(this);
+
+    public ips: { [id: string]: number } = {};
+    public connections: { [id: string]: Connection } = {};
 
     private readyCallback?(): void;
     private connectionCallback?: (connection: Connection) => void;
 
     constructor() {
-        this.ips = {};
-        this.connections = {};
-
-        this.socketIO = new SocketIO(this);
-        this.ws = new WS(this);
-
         this.load();
     }
 

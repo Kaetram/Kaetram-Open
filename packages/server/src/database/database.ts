@@ -2,17 +2,13 @@ import config from '../../config';
 import log from '../util/log';
 import MongoDB from './mongodb/mongodb';
 
-export type DatabaseTypes = 'mongo' | 'mongodb';
+export type DatabaseType = 'mongo' | 'mongodb';
 
 export default class Database {
-    database: MongoDB | null;
-    databaseType: DatabaseTypes;
+    database: MongoDB | null = null;
 
-    constructor(databaseType: DatabaseTypes) {
-        this.database = null;
-        this.databaseType = databaseType;
-
-        switch (this.databaseType) {
+    constructor(databaseType: DatabaseType) {
+        switch (databaseType) {
             case 'mongo':
             case 'mongodb':
                 this.database = new MongoDB(
@@ -25,7 +21,7 @@ export default class Database {
                 break;
 
             default:
-                log.error('The database ' + this.databaseType + ' could not be found.');
+                log.error('The database ' + databaseType + ' could not be found.');
                 break;
         }
     }

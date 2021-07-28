@@ -1,19 +1,11 @@
-import Abilities, { AbilitiesData } from '../../../../../../util/abilities';
+import Abilities from '../../../../../../util/abilities';
 
-abstract class Ability {
-    public name: string;
-    public type: number;
+export default abstract class Ability {
+    public level = -1;
 
-    public level: number;
+    public data;
 
-    public data: AbilitiesData;
-
-    constructor(name: string, type: number) {
-        this.name = name;
-        this.type = type;
-
-        this.level = -1;
-
+    constructor(public name: string, public type: number) {
         this.data = Abilities.Data[name];
     }
 
@@ -21,5 +13,3 @@ abstract class Ability {
         this.level = level;
     }
 }
-
-export default Ability;

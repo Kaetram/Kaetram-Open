@@ -1,10 +1,9 @@
-import { Tree } from '@kaetram/common/types/map';
-
-import Player from '../game/entity/character/player/player';
-import World from '../game/world';
-import Map from '../map/map';
 import Objects, { ObjectsData } from '../util/objects';
 import Utils from '../util/utils';
+
+import type { Tree } from '@kaetram/common/types/map';
+import type Player from '../game/entity/character/player/player';
+import type World from '../game/world';
 
 interface SignData {
     object: ObjectsData;
@@ -16,11 +15,9 @@ interface SignData {
 }
 
 export default class GlobalObjects {
-    world: World;
-    map: Map;
+    map;
 
     constructor(world: World) {
-        this.world = world;
         this.map = world.map;
     }
 

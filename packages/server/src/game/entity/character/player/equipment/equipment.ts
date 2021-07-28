@@ -1,4 +1,5 @@
 import Items from '../../../../../util/items';
+
 import type * as Modules from '@kaetram/common/src/modules';
 
 export interface ItemData {
@@ -22,15 +23,17 @@ export interface EquipmentData {
 }
 
 export default abstract class Equipment {
-    public name: string;
-    public id: number;
-    public count: number;
-    public ability: number;
-    public abilityLevel: number;
+    public count;
+    public ability;
+    public abilityLevel;
 
-    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
-        this.name = name;
-        this.id = id;
+    constructor(
+        public name: string,
+        public id: number,
+        count: number,
+        ability: number,
+        abilityLevel: number
+    ) {
         this.count = count ? count : 0;
         this.ability = !isNaN(ability) ? ability : -1;
         this.abilityLevel = !isNaN(abilityLevel) ? abilityLevel : -1;

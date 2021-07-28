@@ -1,24 +1,16 @@
 import Packets from '@kaetram/common/src/packets';
 
 import Messages from '../../../../../../network/messages';
-import NPC from '../../../../npc/npc';
-import Character from '../../../character';
-import { Door } from '../../doors';
-import Player from '../../player';
-import Quest, { QuestData } from '../quest';
+import Quest from '../quest';
+
+import type NPC from '../../../../npc/npc';
+import type Character from '../../../character';
+import type { Door } from '../../doors';
 
 export default class Introduction extends Quest {
-    lastNPC: NPC | null;
+    lastNPC: NPC | null = null;
+
     finishedCallback?(): void;
-
-    constructor(player: Player, data: QuestData) {
-        super(player, data);
-
-        this.player = player;
-        this.data = data;
-
-        this.lastNPC = null;
-    }
 
     override load(stage: number): void {
         if (!this.player.inTutorial()) {

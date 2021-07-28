@@ -1,10 +1,10 @@
-import { Tree } from '@kaetram/common/types/map';
-
 import Trees from '../../data/professions/trees';
-import Character from '../game/entity/character/character';
-import Player from '../game/entity/character/player/player';
 import Constants from './constants';
 import Utils from './utils';
+
+import type { Tree } from '@kaetram/common/types/map';
+import type Character from '../game/entity/character/character';
+import type Player from '../game/entity/character/player/player';
 
 export default {
     LevelExp: [] as number[],

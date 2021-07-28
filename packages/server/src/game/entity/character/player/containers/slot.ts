@@ -10,28 +10,17 @@ type SlotData = {
 };
 
 export default class Slot {
-    public index: number;
+    public id = -1;
+    public count = -1;
+    public ability = -1;
+    public abilityLevel = -1;
 
-    public id: number;
-    public count: number;
-    public ability: number;
-    public abilityLevel: number;
-
-    public string: string;
+    public string!: string;
 
     public edible = false;
     public equippable = false;
 
-    constructor(index: number) {
-        this.index = index;
-
-        this.id = -1;
-        this.count = -1;
-        this.ability = -1;
-        this.abilityLevel = -1;
-
-        this.string = null!;
-    }
+    constructor(public index: number) {}
 
     load(id: number, count: number, ability: number, abilityLevel: number): void {
         this.id = id;

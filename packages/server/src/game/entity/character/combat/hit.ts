@@ -10,23 +10,12 @@ export interface HitData {
 }
 
 export default class Hit {
-    type: Modules.Hits;
-    damage: number;
+    ranged = false;
+    aoe = false;
+    terror = false;
+    poison = false;
 
-    ranged: boolean;
-    aoe: boolean;
-    terror: boolean;
-    poison: boolean;
-
-    constructor(type: Modules.Hits, damage: number) {
-        this.type = type;
-        this.damage = damage;
-
-        this.ranged = false;
-        this.aoe = false;
-        this.terror = false;
-        this.poison = false;
-    }
+    constructor(public type: Modules.Hits, public damage: number) {}
 
     isRanged(): boolean {
         return this.ranged;

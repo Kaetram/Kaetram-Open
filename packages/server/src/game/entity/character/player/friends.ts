@@ -1,5 +1,6 @@
 import log from '../../../../util/log';
-import Player from './player';
+
+import type Player from './player';
 
 type Status = 'offline';
 
@@ -13,15 +14,9 @@ export interface FriendsArray {
 }
 
 export default class Friends {
-    player: Player;
+    friends: FriendsList = {};
 
-    friends: FriendsList;
-
-    constructor(player: Player) {
-        this.player = player;
-
-        this.friends = {};
-    }
+    constructor(private player: Player) {}
 
     update(info: unknown): void {
         log.info(info);

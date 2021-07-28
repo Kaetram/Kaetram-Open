@@ -4,8 +4,9 @@ import config from '../../../config';
 import log from '../../util/log';
 import Utils from '../../util/utils';
 import Connection from '../connection';
-import SocketHandler from '../sockethandler';
 import WebSocket from '../websocket';
+
+import type SocketHandler from '../sockethandler';
 
 export default class SocketIO extends WebSocket {
     constructor(socketHandler: SocketHandler) {

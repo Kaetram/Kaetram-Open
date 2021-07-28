@@ -1,45 +1,32 @@
-import Map from '../../../../../../map/map';
-import Messages from '../../../../../../network/messages';
+import * as Modules from '@kaetram/common/src/modules';
 import Packets from '@kaetram/common/src/packets';
-import Region from '../../../../../../region/region';
+
+import Messages from '../../../../../../network/messages';
 import Constants from '../../../../../../util/constants';
 import Formulas from '../../../../../../util/formulas';
-import * as Modules from '@kaetram/common/src/modules';
-import World from '../../../../../world';
-import Player from '../../player';
+
+import type Player from '../../player';
 
 export default abstract class Profession {
-    public id: number;
-    public player: Player;
-    public name: string;
+    public world;
 
-    public world: World;
+    public map;
+    public region;
 
-    public map: Map;
-    public region: Region;
+    public experience = 0;
 
-    public experience: number;
-
-    public targetId: string | null; // Double Check
+    public targetId: string | null = null; // Double Check
 
     public level!: number;
 
     public nextExperience?: number;
     public prevExperience!: number;
 
-    constructor(id: number, player: Player, name: string) {
-        this.id = id;
-        this.player = player;
-        this.name = name; // The profession name
-
+    constructor(public id: number, public player: Player, public name: string) {
         this.world = player.world;
 
         this.map = this.world.map;
         this.region = this.world.region;
-
-        this.experience = 0;
-
-        this.targetId = null;
     }
 
     load(data: { experience: number }): void {
