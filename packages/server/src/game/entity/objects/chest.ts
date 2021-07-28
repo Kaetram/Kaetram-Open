@@ -2,16 +2,16 @@ import Utils from '../../../util/utils';
 import Player from '../character/player/player';
 import Entity from '../entity';
 
-type OpenCallback = (player: Player) => void;
+type OpenCallback = (player?: Player) => void;
 
 export default class Chest extends Entity {
     respawnDuration: number;
     static: boolean;
 
     items: string[];
-    achievement: number;
+    achievement?: number;
 
-    openCallback: OpenCallback;
+    openCallback?: OpenCallback;
     respawnCallback?(): void;
 
     constructor(id: number, instance: string, x: number, y: number, achievement?: number) {
@@ -39,7 +39,7 @@ export default class Chest extends Entity {
         }, this.respawnDuration);
     }
 
-    getItem(): { string: string; count: number } {
+    getItem(): { string: string; count: number } | null {
         let random = Utils.randomInt(0, this.items.length - 1),
             item = this.items[random],
             count = 1,
@@ -48,9 +48,9 @@ export default class Chest extends Entity {
         if (item.includes(':')) {
             let itemData = item.split(':');
 
-            item = itemData.shift(); // name
-            count = parseInt(itemData.shift()); // count
-            probability = parseInt(itemData.shift()); // probability
+            item = itemData.shift()!; // name
+            count = parseInt(itemData.shift()!); // count
+            probability = parseInt(itemData.shift()!); // probability
         }
 
         /**

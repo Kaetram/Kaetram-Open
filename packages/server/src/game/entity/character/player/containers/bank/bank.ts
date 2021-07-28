@@ -50,7 +50,7 @@ export default class Bank extends Container {
         return true;
     }
 
-    override remove(id: number, count: number, index: number): boolean {
+    override remove(id: number, count: number, index: number): boolean | undefined {
         if (!super.remove(index, id, count)) return false;
 
         this.owner.send(

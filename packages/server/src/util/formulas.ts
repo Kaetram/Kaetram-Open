@@ -22,13 +22,13 @@ export default {
     },
 
     getDamage(attacker: Character, target: Character, special?: boolean): number {
-        let maxDamage = this.getMaxDamage(attacker, target, special),
+        let maxDamage = this.getMaxDamage(attacker, target, special)!,
             accuracy = Utils.randomInt(0, attacker.level);
 
         return Utils.randomInt(accuracy, maxDamage);
     },
 
-    getMaxDamage(attacker: Character, target: Character, special?: boolean): number {
+    getMaxDamage(attacker: Character, target: Character, special?: boolean): number | undefined {
         if (!attacker || !target) return;
 
         let damageDealt = 0,
@@ -97,7 +97,7 @@ export default {
         return damage;
     },
 
-    getCritical(attacker: Player, target: Character): number {
+    getCritical(attacker: Player, target: Character): number | undefined {
         if (!attacker || !target) return;
 
         /**
@@ -110,7 +110,7 @@ export default {
         return (damage *= multiplier);
     },
 
-    getWeaponBreak(attacker: Character, target: Character): boolean {
+    getWeaponBreak(attacker: Character, target: Character): boolean | undefined {
         if (!attacker || !target) return;
 
         // let targetArmour: number = target.getArmourLevel();
@@ -133,7 +133,7 @@ export default {
         return this.getDamage(attacker, target);
     },
 
-    nextExp(experience: number): number {
+    nextExp(experience: number): number | undefined {
         if (experience < 0) return -1;
 
         for (let i = 1; i < this.LevelExp.length; i++)

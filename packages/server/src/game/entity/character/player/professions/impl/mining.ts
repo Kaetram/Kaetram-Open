@@ -7,10 +7,10 @@ import Profession from './profession';
 export default class Mining extends Profession {
     tick: number;
 
-    miningInterval: NodeJS.Timeout;
+    miningInterval: NodeJS.Timeout | null;
     started: boolean;
 
-    rockId: Rock;
+    rockId!: Rock;
 
     constructor(id: number, player: Player) {
         super(id, player, 'Mining');
@@ -34,10 +34,10 @@ export default class Mining extends Profession {
     override stop(): void {
         if (!this.started) return;
 
-        this.rockId = null;
+        this.rockId = null!;
         this.targetId = null;
 
-        clearInterval(this.miningInterval);
+        if (this.miningInterval) clearInterval(this.miningInterval);
         this.miningInterval = null;
 
         this.started = false;

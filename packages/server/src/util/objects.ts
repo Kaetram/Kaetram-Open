@@ -25,9 +25,7 @@ export default {
         };
     },
 
-    getCursor(id: string): string | null {
+    getCursor(id: string): string | undefined {
         if (id in this.Data && this.Data[id].cursor) return this.Data[id].cursor;
-
-        return null;
     }
 };

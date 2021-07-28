@@ -72,17 +72,17 @@ export default class World {
     public loadedRegions: boolean;
     public ready: boolean;
 
-    public map: Map;
-    public api: API;
-    public shops: Shops;
-    public region: Region;
-    public entities: Entities;
-    public network: Network;
-    public discord: Discord;
-    public minigames: Minigames;
-    public globalObjects: GlobalObjects;
+    public map!: Map;
+    public api!: API;
+    public shops!: Shops;
+    public region!: Region;
+    public entities!: Entities;
+    public network!: Network;
+    public discord!: Discord;
+    public minigames!: Minigames;
+    public globalObjects!: GlobalObjects;
 
-    public playerConnectCallback: PlayerConnectCallback;
+    public playerConnectCallback?: PlayerConnectCallback;
     public populationCallback?(): void;
 
     constructor(socketHandler: SocketHandler, database: MongoDB) {
@@ -201,7 +201,11 @@ export default class World {
         this.handleDeath(character, true);
     }
 
-    handleDamage(attacker: Character, target: Character, damage: number): void {
+    handleDamage(
+        attacker: Character | undefined,
+        target: Character | undefined,
+        damage: number
+    ): void {
         if (!attacker || !target || isNaN(damage) || target.invincible) return;
 
         if (target.type === 'player' && target.hitCallback) target.hitCallback(attacker, damage);
@@ -403,7 +407,7 @@ export default class World {
      * `type` - The type of tile we are looking for.
      */
 
-    getSearchTile(type: string, x: number, y: number): number | number[] {
+    getSearchTile(type: string, x: number, y: number): number | number[] | undefined {
         switch (type) {
             case 'tree':
                 return this.map.getTree(x, y);

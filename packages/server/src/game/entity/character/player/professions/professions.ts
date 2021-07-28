@@ -69,7 +69,7 @@ export default class Professions {
         });
     }
 
-    getProfession<P extends Profession>(id: number): P {
+    getProfession<P extends Profession>(id: number): P | null {
         if (!(id in this.professions)) return null;
 
         return this.professions[id] as P;

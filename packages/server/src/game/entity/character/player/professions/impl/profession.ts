@@ -20,12 +20,12 @@ export default abstract class Profession {
 
     public experience: number;
 
-    public targetId: string; // Double Check
+    public targetId: string | null; // Double Check
 
-    public level: number;
+    public level!: number;
 
-    public nextExperience: number;
-    public prevExperience: number;
+    public nextExperience?: number;
+    public prevExperience!: number;
 
     constructor(id: number, player: Player, name: string) {
         this.id = id;
@@ -109,12 +109,12 @@ export default abstract class Profession {
     }
 
     isTarget(): boolean {
-        return this.player.target.instance === this.targetId;
+        return this.player.target!.instance === this.targetId;
     }
 
     getPercentage(): string {
         let experience = this.experience - this.prevExperience,
-            nextExperience = this.nextExperience - this.prevExperience;
+            nextExperience = this.nextExperience! - this.prevExperience;
 
         return ((experience / nextExperience) * 100).toFixed(2);
     }

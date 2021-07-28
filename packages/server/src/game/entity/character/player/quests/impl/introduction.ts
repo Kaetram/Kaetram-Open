@@ -8,7 +8,7 @@ import Player from '../../player';
 import Quest, { QuestData } from '../quest';
 
 export default class Introduction extends Quest {
-    lastNPC: NPC;
+    lastNPC: NPC | null;
     finishedCallback?(): void;
 
     constructor(player: Player, data: QuestData) {
@@ -84,12 +84,12 @@ export default class Introduction extends Quest {
         });
 
         this.player.onKill((character: Character) => {
-            if (this.data.kill[this.stage] === character.id) this.progress('kill');
+            if (this.data.kill![this.stage] === character.id) this.progress('kill');
         });
     }
 
     progress(type: string): void {
-        let task = this.data.task[this.stage];
+        let task = this.data.task![this.stage];
 
         if (!task || task !== type) return;
 
@@ -171,8 +171,8 @@ export default class Introduction extends Quest {
         return false;
     }
 
-    verifyDoor(destX: number, destY: number): boolean {
-        let doorData = this.data.doors[this.stage];
+    verifyDoor(destX: number, destY: number): boolean | void {
+        let doorData = this.data.doors![this.stage];
 
         if (!doorData) return;
 

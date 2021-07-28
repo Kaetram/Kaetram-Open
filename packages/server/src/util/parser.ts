@@ -23,7 +23,7 @@ import { ItemsData } from './items';
 import { ObjectsData } from './objects';
 
 export default class Parser {
-    private readyCallback: () => void;
+    private readyCallback?(): void;
 
     constructor() {
         this.load();
@@ -89,9 +89,9 @@ export default class Parser {
                 isPoisonous: isPoisonous || false,
                 attackRate: attackRate || 1000,
                 movementSpeed: movementSpeed || 200,
-                projectileName: projectileName || null,
+                projectileName,
                 spawnDelay: spawnDelay || 60000,
-                combatPlugin: combatPlugin || null,
+                combatPlugin,
                 hiddenName: hiddenName || false
             };
 
@@ -131,6 +131,8 @@ export default class Parser {
         let itemCounter = 0;
 
         _.each(itemData, (value, key) => {
+            key = key.toLowerCase();
+
             const {
                 id,
                 type,
@@ -161,10 +163,10 @@ export default class Parser {
                 type: type || 'object',
                 attack: attack || 0,
                 defense: defense || 0,
-                movementSpeed: movementSpeed || null,
-                pendantLevel: pendantLevel || null,
-                ringLevel: ringLevel || null,
-                bootsLevel: bootsLevel || null,
+                movementSpeed,
+                pendantLevel,
+                ringLevel,
+                bootsLevel,
                 name: name || key,
                 price: price || 1,
                 storeCount: storeCount || 1,
@@ -173,9 +175,9 @@ export default class Parser {
                 healsHealth: healsHealth || 0,
                 healsMana: healsMana || 0,
                 maxStackSize: maxStackSize || -1,
-                plugin: plugin || null,
+                plugin,
                 customData: customData || null,
-                requirement: requirement || null,
+                requirement,
                 lumberjacking: lumberjacking || 0,
                 mining: mining || 0
             };

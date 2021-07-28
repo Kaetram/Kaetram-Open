@@ -12,7 +12,7 @@ import Connection from './connection';
 import Messages, { Packet } from './messages';
 import SocketHandler from './sockethandler';
 
-type PacketsList = unknown[] & { id: string };
+type PacketsList = unknown[] & { id?: string };
 
 export default class Network {
     world: World;
@@ -118,9 +118,9 @@ export default class Network {
      * Broadcast a message to everyone with exceptions.
      */
 
-    pushSelectively(message: Packet, ignores?: string[]): void {
+    pushSelectively(message: Packet, ignores: string[]): void {
         _.each(this.packets, (packet) => {
-            if (ignores.includes(packet.id)) return;
+            if (ignores.includes(packet.id!)) return;
 
             packet.push(message.serialize());
         });

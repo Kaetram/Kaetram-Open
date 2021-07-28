@@ -19,8 +19,8 @@ export default class Slot {
 
     public string: string;
 
-    public edible: boolean;
-    public equippable: boolean;
+    public edible = false;
+    public equippable = false;
 
     constructor(index: number) {
         this.index = index;
@@ -30,7 +30,7 @@ export default class Slot {
         this.ability = -1;
         this.abilityLevel = -1;
 
-        this.string = null;
+        this.string = null!;
     }
 
     load(id: number, count: number, ability: number, abilityLevel: number): void {
@@ -52,7 +52,7 @@ export default class Slot {
         this.ability = -1;
         this.abilityLevel = -1;
 
-        this.string = null;
+        this.string = null!;
     }
 
     increment(amount: number): void {
