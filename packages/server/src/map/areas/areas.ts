@@ -1,22 +1,15 @@
 import _ from 'lodash';
 
-import World from '../../game/world';
 import log from '../../util/log';
 import Area from './area';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';
+import type World from '../../game/world';
 
 export default abstract class Areas {
-    public data: ProcessedArea[];
-    public world: World;
-    public areas: Area[];
+    public areas: Area[] = [];
 
-    constructor(data: ProcessedArea[], world: World) {
-        this.data = data;
-        this.world = world;
-
-        this.areas = [];
-    }
+    constructor(public data: ProcessedArea[], public world: World) {}
 
     public load(
         mapAreas: ProcessedArea[],

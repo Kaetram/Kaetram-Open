@@ -10,9 +10,9 @@ import type { AbilitiesArray } from '../../game/entity/character/player/abilitie
 import type { ContainerArray } from '../../game/entity/character/player/containers/container';
 import type { FriendsArray } from '../../game/entity/character/player/friends';
 import type Player from '../../game/entity/character/player/player';
+import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
 import type { ProfessionsArray } from '../../game/entity/character/player/professions/professions';
 import type MongoDB from './mongodb';
-import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
 
 interface PlayerData {
     username: string;
@@ -40,11 +40,7 @@ interface PlayerData {
 export type FullPlayerData = PlayerData & PlayerEquipment;
 
 export default class Creator {
-    database: MongoDB;
-
-    constructor(database: MongoDB) {
-        this.database = database;
-    }
+    constructor(private database: MongoDB) {}
 
     save(player: Player): void {
         this.database.getConnection((database) => {

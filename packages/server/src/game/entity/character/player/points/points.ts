@@ -1,13 +1,11 @@
-export default class Points {
+export default abstract class Points {
     public points: number;
     public maxPoints: number;
 
     healCallback?(): void;
 
     constructor(points: number, maxPoints: number) {
-        if (isNaN(points)) points = maxPoints;
-
-        this.points = points;
+        this.points = isNaN(points) ? maxPoints : points;
         this.maxPoints = maxPoints;
     }
 

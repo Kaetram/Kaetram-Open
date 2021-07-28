@@ -1,4 +1,4 @@
-let Rocks = {
+export default {
     // The rock ids of the rock we're mining
     Rocks: {
         BlueSteel: 264 // TODO - Make the item
@@ -24,6 +24,4 @@ let Rocks = {
     },
 
     EmptyRock: {}
-};
-
-export default Rocks;
+} as const;

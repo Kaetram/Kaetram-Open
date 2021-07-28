@@ -1,11 +1,12 @@
 import _ from 'lodash';
 
-import log from '../../../../../util/log';
 import * as Modules from '@kaetram/common/src/modules';
-import World from '../../../../world';
-import Player from '../player';
+
+import log from '../../../../../util/log';
 import professions from './impl';
-import Profession from './impl/profession';
+
+import type Player from '../player';
+import type Profession from './impl/profession';
 
 export interface ProfessionsInfo {
     id: number;
@@ -26,16 +27,12 @@ export interface ProfessionsArray {
 }
 
 export default class Professions {
-    player: Player;
-    world: World;
+    world;
 
-    professions: { [id: number]: Profession };
+    professions: { [id: number]: Profession } = {};
 
-    constructor(player: Player) {
-        this.player = player;
+    constructor(private player: Player) {
         this.world = player.world;
-
-        this.professions = {};
 
         this.load();
     }

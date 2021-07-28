@@ -1,22 +1,20 @@
 import Mobs from '../../../../util/mobs';
-import Combat from '../combat/combat';
-import Player from '../player/player';
-import Mob from './mob';
+
+import type Player from '../player/player';
+import type Mob from './mob';
 
 export default class MobHandler {
-    mob: Mob;
-    combat: Combat;
+    combat;
     // map: Map;
 
-    roamingInterval: NodeJS.Timeout | null;
     spawnLocation;
-    maxRoamingDistance: number;
+    maxRoamingDistance;
 
-    constructor(mob: Mob) {
-        this.mob = mob;
+    roamingInterval: NodeJS.Timeout | null = null;
+
+    constructor(private mob: Mob) {
         this.combat = mob.combat;
 
-        this.roamingInterval = null;
         this.spawnLocation = mob.spawnLocation;
         this.maxRoamingDistance = mob.maxRoamingDistance;
 

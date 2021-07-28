@@ -4,36 +4,29 @@ import * as Modules from '@kaetram/common/src/modules';
 import Packets from '@kaetram/common/src/packets';
 
 import config from '../../../../../config';
-import Areas from '../../../../map/areas/areas';
-import Map from '../../../../map/map';
 import Messages from '../../../../network/messages';
 import log from '../../../../util/log';
 import Npcs from '../../../../util/npcs';
 import Shops from '../../../../util/shops';
 import Utils from '../../../../util/utils';
-import World from '../../../world';
-import Entity from '../../entity';
-import NPC from '../../npc/npc';
 import Hit from '../combat/hit';
-import Mob from '../mob/mob';
-import Player from './player';
+
+import type Areas from '../../../../map/areas/areas';
+import type Entity from '../../entity';
+import type NPC from '../../npc/npc';
+import type Mob from '../mob/mob';
+import type Player from './player';
 
 export default class Handler {
-    player: Player;
-    world: World;
-    map: Map;
+    world;
+    map;
 
-    updateTicks: number;
-    updateInterval: NodeJS.Timeout | null;
+    updateTicks = 0;
+    updateInterval: NodeJS.Timeout | null = null;
 
-    constructor(player: Player) {
-        this.player = player;
-
+    constructor(private player: Player) {
         this.world = player.world;
         this.map = player.world.map;
-
-        this.updateTicks = 0;
-        this.updateInterval = null;
 
         this.load();
     }

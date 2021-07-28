@@ -3,10 +3,11 @@ import * as Modules from '@kaetram/common/src/modules';
 import Mobs from '../../../util/mobs';
 import Entity, { EntityState } from '../entity';
 import Combat from './combat/combat';
-import { HitData } from './combat/hit';
-import Boots from './player/equipment/boots';
-import Pendant from './player/equipment/pendant';
-import Ring from './player/equipment/ring';
+
+import type { HitData } from './combat/hit';
+import type Boots from './player/equipment/boots';
+import type Pendant from './player/equipment/pendant';
+import type Ring from './player/equipment/ring';
 
 type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
@@ -21,39 +22,42 @@ export interface CharacterState extends EntityState {
     movementSpeed: number;
 }
 
-export default class Character extends Entity {
-    public level: number;
-    public movementSpeed: number;
-    public attackRange: number;
-    public attackRate: number;
-    public healingRate: number;
+export default abstract class Character extends Entity {
+    public level = -1;
 
-    public spawnDistance: number;
+    public movementSpeed = 250;
+    public attackRange = 1;
+    public attackRate = 1000;
+    public healingRate = 10000;
 
-    public previousX: number;
-    public previousY: number;
+    public spawnDistance = 7;
 
-    public hitPoints: number;
-    public maxHitPoints: number;
+    public previousX = -1;
+    public previousY = -1;
 
-    public poison: string | null;
-    public aggressive: boolean;
-    public aggroRange: number;
+    public hitPoints = -1;
+    public maxHitPoints = -1;
 
-    public target: Character | null;
-    public potentialTarget: unknown; // TODO
+    /* States */
+    public poison: string | null = null;
+    public aggressive = false;
+    public aggroRange = 2;
 
-    stunTimeout: NodeJS.Timeout | null;
+    public target: Character | null = null;
+    public potentialTarget: unknown = null;
 
-    public projectile: Modules.Projectiles;
-    public projectileName: string;
+    stunTimeout: NodeJS.Timeout | null = null;
 
-    healingInterval: NodeJS.Timeout | null;
+    public projectile = Modules.Projectiles.Arrow;
+    public projectileName = 'projectile-pinearrow';
+
+    healingInterval: NodeJS.Timeout | null = null;
+
     updated = false;
 
     public weaponLevel!: number;
     public armourLevel!: number;
-    public stunned!: boolean;
+    public stunned = false;
 
     stunCallback?: StunCallback;
     hitCallback?: HitCallback;
@@ -70,16 +74,16 @@ export default class Character extends Entity {
 
     returnCallback?(): void;
 
-    moving!: boolean;
+    moving = false;
     lastMovement!: number;
 
-    pvp!: boolean;
+    pvp = false;
 
     spawnLocation!: [x: number, y: number];
 
-    frozen!: boolean;
+    frozen = false;
 
-    alwaysAggressive!: boolean;
+    alwaysAggressive = false;
 
     public invincible = false;
     public lastAttacker!: Character | null;
@@ -90,37 +94,6 @@ export default class Character extends Entity {
 
     constructor(id: number, type: string, instance: string, x: number, y: number) {
         super(id, type, instance, x, y);
-
-        this.level = -1;
-
-        this.movementSpeed = 250;
-        this.attackRange = 1;
-        this.attackRate = 1000;
-        this.healingRate = 10000;
-
-        this.spawnDistance = 7;
-
-        this.previousX = -1;
-        this.previousY = -1;
-
-        this.hitPoints = -1;
-        this.maxHitPoints = -1;
-
-        /* States */
-        this.dead = false;
-        this.poison = null;
-        this.aggressive = false;
-        this.aggroRange = 2;
-
-        this.target = null;
-        this.potentialTarget = null;
-
-        this.stunTimeout = null;
-
-        this.projectile = Modules.Projectiles.Arrow;
-        this.projectileName = 'projectile-pinearrow';
-
-        this.healingInterval = null;
 
         this.loadCombat();
         this.startHealing();

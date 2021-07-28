@@ -4,13 +4,7 @@ export interface MinigameState {
 }
 
 export default abstract class Minigame {
-    id: number;
-    name: string;
-
-    constructor(id: number, name: string) {
-        this.id = id;
-        this.name = name;
-    }
+    constructor(private id: number, private name: string) {}
 
     getId(): number {
         return this.id;

@@ -1,56 +1,43 @@
 import _ from 'lodash';
+
+import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
+
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
-import Player from '../game/entity/character/player/player';
-import Entity from '../game/entity/entity';
 import NPC from '../game/entity/npc/npc';
 import Chest from '../game/entity/objects/chest';
 import Item from '../game/entity/objects/item';
 import Projectile from '../game/entity/objects/projectile';
-
-import World from '../game/world';
-import Grids from '../map/grids';
-import Map from '../map/map';
 import Messages from '../network/messages';
-import Packets from '@kaetram/common/src/packets';
-import Region from '../region/region';
-
-import log from '../util/log';
-import Utils from '../util/utils';
-
+import Formulas from '../util/formulas';
 import Items from '../util/items';
+import log from '../util/log';
 import Mobs from '../util/mobs';
 import NPCs from '../util/npcs';
-import Formulas from '../util/formulas';
-import * as Modules from '@kaetram/common/src/modules';
+import Utils from '../util/utils';
+
+import type Player from '../game/entity/character/player/player';
+import type Entity from '../game/entity/entity';
+import type World from '../game/world';
 
 export default class Entities {
-    private world: World;
-    private region: Region;
-    private map: Map;
-    private grids: Grids;
+    private region;
+    private map;
+    private grids;
 
-    public players: { [key: string]: Player };
-    public entities: { [key: string]: Entity };
-    public items: { [key: string]: Item };
-    public mobs: { [key: string]: Mob };
-    public chests: { [key: string]: Chest };
-    public npcs: { [key: string]: NPC };
-    public projectiles: { [key: string]: Projectile };
+    public players: { [instance: string]: Player } = {};
+    public entities: { [instance: string]: Entity } = {};
+    public items: { [instance: string]: Item } = {};
+    public mobs: { [instance: string]: Mob } = {};
+    public chests: { [instance: string]: Chest } = {};
+    public npcs: { [instance: string]: NPC } = {};
+    public projectiles: { [instance: string]: Projectile } = {};
 
-    constructor(world: World) {
-        this.world = world;
+    constructor(private world: World) {
         this.region = world.region;
         this.map = world.map;
         this.grids = world.map.grids;
-
-        this.players = {};
-        this.entities = {};
-        this.items = {};
-        this.chests = {};
-        this.mobs = {};
-        this.npcs = {};
-        this.projectiles = {};
 
         this.spawn();
     }

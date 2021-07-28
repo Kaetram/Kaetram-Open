@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-import Player from '../player';
-import Ability from './impl/ability';
+import type Player from '../player';
+import type Ability from './impl/ability';
 
 export interface AbilitiesArray {
     username: string;
@@ -11,23 +11,13 @@ export interface AbilitiesArray {
 }
 
 export default class Abilities {
-    player: Player;
+    abilities: { [name: string]: Ability } = {};
 
-    abilities: { [name: string]: Ability };
+    shortcuts: string[] = [];
 
-    shortcuts: string[];
+    shortcutSize = 5;
 
-    shortcutSize: number;
-
-    constructor(player: Player) {
-        this.player = player;
-
-        this.abilities = {};
-
-        this.shortcuts = [];
-
-        this.shortcutSize = 5;
-    }
+    constructor(private player: Player) {}
 
     addAbility(ability: Ability): void {
         this.abilities[ability.name] = ability;
