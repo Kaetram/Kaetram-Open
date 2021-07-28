@@ -31,7 +31,7 @@ export default class Warp {
             return;
         }
 
-        if (!this.hasRequirement(data.level)) {
+        if (!this.hasRequirement(data.level!)) {
             this.player.notify(`You must be at least level ${data.level} to warp here!`);
             return;
         }

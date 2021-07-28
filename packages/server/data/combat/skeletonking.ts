@@ -80,11 +80,11 @@ export default class SkeletonKing extends Combat {
         _.each(this.minions, (minion: Mob) => {
             const randomTarget = this.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
+            if (!minion.target && randomTarget) minion.combat.begin(randomTarget);
         });
     }
 
-    getRandomTarget(): Character {
+    getRandomTarget(): Character | null {
         if (this.isAttacked()) {
             const keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
@@ -92,7 +92,7 @@ export default class SkeletonKing extends Combat {
             if (randomAttacker) return randomAttacker;
         }
 
-        if (this.character.hasTarget()) return this.character.target;
+        if (this.character.target) return this.character.target;
 
         return null;
     }

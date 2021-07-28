@@ -10,7 +10,7 @@ export default class Thelie extends Quest {
         this.data = data;
     }
 
-    load(stage: number): void {
+    override load(stage: number): void {
         super.load(stage);
     }
 }

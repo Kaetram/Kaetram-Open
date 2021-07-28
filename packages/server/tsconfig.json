@@ -2,8 +2,6 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "commonjs",
-        "strictNullChecks": false,
         "types": ["@types/node", "@kaetram/common"]
-    },
-    "files": ["./src/main.ts"]
+    }
 }

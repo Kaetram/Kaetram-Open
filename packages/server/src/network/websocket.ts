@@ -14,12 +14,12 @@ export default class WebSocket {
     public version: string;
     public type: string;
 
-    public server: Server | ws.Server; // The SocketIO server
-    public httpServer: http.Server;
+    public server!: Server | ws.Server; // The SocketIO server
+    public httpServer!: http.Server;
     public socketHandler: SocketHandler;
 
-    public addCallback: (connection: Connection) => void;
-    private initializedCallback: () => void;
+    public addCallback?: (connection: Connection) => void;
+    private initializedCallback?(): void;
 
     constructor(host: string, port: number, type: string, socketHandler: SocketHandler) {
         this.host = host;

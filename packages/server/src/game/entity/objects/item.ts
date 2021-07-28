@@ -3,8 +3,8 @@ import { EntityState } from '../entity';
 
 interface ItemState extends EntityState {
     count: number;
-    ability: number;
-    abilityLevel: number;
+    ability?: number;
+    abilityLevel?: number;
 }
 
 export default class Item extends Entity {
@@ -13,8 +13,8 @@ export default class Item extends Entity {
     shard: boolean;
 
     count: number;
-    ability: number;
-    abilityLevel: number;
+    ability?: number;
+    abilityLevel?: number;
     tier: number;
 
     respawnTime: number;
@@ -22,8 +22,8 @@ export default class Item extends Entity {
     blinkDelay: number;
     despawnDelay: number;
 
-    blinkTimeout: NodeJS.Timeout;
-    despawnTimeout: NodeJS.Timeout;
+    blinkTimeout: NodeJS.Timeout | null;
+    despawnTimeout: NodeJS.Timeout | null;
 
     blinkCallback?(): void;
     respawnCallback?(): void;
@@ -48,9 +48,9 @@ export default class Item extends Entity {
         this.abilityLevel = abilityLevel;
         this.tier = 1;
 
-        if (isNaN(ability)) this.ability = -1;
+        if (isNaN(ability!)) this.ability = -1;
 
-        if (isNaN(abilityLevel)) this.abilityLevel = -1;
+        if (isNaN(abilityLevel!)) this.abilityLevel = -1;
 
         this.respawnTime = 30000;
         this.despawnDuration = 4000;
@@ -85,7 +85,7 @@ export default class Item extends Entity {
         }, this.respawnTime);
     }
 
-    getData(): number[] {
+    getData(): [id: number, count: number, ability?: number, abilityLevel?: number] {
         return [this.id, this.count, this.ability, this.abilityLevel];
     }
 

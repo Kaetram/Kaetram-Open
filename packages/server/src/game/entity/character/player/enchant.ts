@@ -28,8 +28,8 @@ export default class Enchant {
     constructor(player: Player) {
         this.player = player;
 
-        this.selectedItem = null;
-        this.selectedShards = null;
+        this.selectedItem = null!;
+        this.selectedShards = null!;
     }
 
     add(type: EnchantType, item: Slot): void {
@@ -59,11 +59,11 @@ export default class Enchant {
         if (type === 'item' && this.selectedItem) {
             ({ index } = this.selectedItem);
 
-            this.selectedItem = null;
+            this.selectedItem = null!;
         } else if (type === 'shards' && this.selectedShards) {
             ({ index } = this.selectedShards);
 
-            this.selectedShards = null;
+            this.selectedShards = null!;
         }
 
         if (index < 0) return;
@@ -79,7 +79,7 @@ export default class Enchant {
     convert(shard: Slot): void {
         if (!Items.isShard(shard.id) || !this.player.inventory.hasSpace()) return;
 
-        let tier = Items.getShardTier(shard.id);
+        let tier = Items.getShardTier(shard.id)!;
 
         if (shard.count < 11 && tier > 5) return;
 
@@ -121,7 +121,7 @@ export default class Enchant {
          * and reason them out.
          */
 
-        let tier = Items.getShardTier(this.selectedShards.id);
+        let tier = Items.getShardTier(this.selectedShards.id)!;
 
         if (tier < 1) return;
 

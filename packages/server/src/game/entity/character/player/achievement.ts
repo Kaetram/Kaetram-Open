@@ -8,7 +8,7 @@ import Player from './player';
 export interface AchievementData {
     id: number;
     name: string;
-    type: number;
+    type?: number;
     description: string;
     count: number;
     progress: number;
@@ -51,8 +51,8 @@ export default class Achievement {
 
         if (!this.data.reward) this.data.reward = 'door';
 
-        this.name = this.data.name;
-        this.description = this.data.description;
+        this.name = this.data.name!;
+        this.description = this.data.description!;
 
         this.discovered = false;
     }
@@ -81,7 +81,7 @@ export default class Achievement {
             this.player.send(
                 new Messages.NPC(Packets.NPCOpcode.Talk, {
                     id: npc.instance,
-                    text: npc.talk(this.data.text, this.player)
+                    text: npc.talk(this.data.text!, this.player)
                 })
             );
 
@@ -142,15 +142,15 @@ export default class Achievement {
     }
 
     isThreshold(): boolean {
-        return this.progress >= this.data.count;
+        return this.progress >= this.data.count!;
     }
 
     hasItem(): boolean {
         if (
             this.data.type === Modules.Achievements.Type.Scavenge &&
-            this.player.inventory.contains(this.data.item)
+            this.player.inventory.contains(this.data.item!)
         ) {
-            this.player.inventory.remove(this.data.item, this.data.itemCount);
+            this.player.inventory.remove(this.data.item!, this.data.itemCount!);
 
             return true;
         }

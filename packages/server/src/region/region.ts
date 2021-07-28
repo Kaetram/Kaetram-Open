@@ -47,6 +47,10 @@ interface DynamicTiles {
     [index: number]: Partial<RegionTileData>;
 }
 
+type AddCallback = (entity: Entity, regionId: string | null) => void;
+type RemoveCallback = (entity: Entity, oldRegions: string[]) => void;
+type IncomingCallback = (entity: Entity, regionId: string) => void;
+
 export default class Region {
     /**
      * Region Generation.
@@ -66,9 +70,9 @@ export default class Region {
 
     loaded: boolean;
 
-    addCallback: (entity: Entity, regionId: string) => void;
-    removeCallback: (entity: Entity, oldRegions: string[]) => void;
-    incomingCallback: (entity: Entity, regionId: string) => void;
+    addCallback?: AddCallback;
+    removeCallback?: RemoveCallback;
+    incomingCallback?: IncomingCallback;
 
     constructor(world: World) {
         this.map = world.map;
@@ -80,7 +84,7 @@ export default class Region {
         this.regions = {};
         this.loaded = false;
 
-        this.onAdd((entity: Entity, regionId: string) => {
+        this.onAdd((entity, regionId) => {
             if (!entity || !entity.username) return;
 
             if (config.debug)
@@ -131,7 +135,7 @@ export default class Region {
         player.updateRegion();
     }
 
-    createInstance(player: Player, regionId: string): void {
+    createInstance(player: Player, regionId: string | null): void {
         /**
          * We create an instance at the player's current surrounding
          * region IDs. These will have to be disposed of whenever we're done.
@@ -212,7 +216,7 @@ export default class Region {
             });
     }
 
-    sendRegion(player: Player, region: string, force?: boolean): void {
+    sendRegion(player: Player, region: string | null, force?: boolean): void {
         let tileData = this.getRegionData(region, player, force);
 
         // No need to send empty data...
@@ -279,7 +283,7 @@ export default class Region {
         });
     }
 
-    add(entity: Entity, regionId: string): string[] {
+    add(entity: Entity, regionId: string | null): string[] {
         const newRegions: string[] = [];
 
         if (entity && regionId && regionId in this.regions) {
@@ -340,7 +344,7 @@ export default class Region {
         if (this.incomingCallback) this.incomingCallback(entity, regionId);
     }
 
-    handle(entity: Entity, region?: string): boolean {
+    handle(entity: Entity, region: string | null = null): boolean {
         let regionsChanged = false;
 
         if (!entity) return regionsChanged;
@@ -366,9 +370,9 @@ export default class Region {
     push(player: Player): void {
         let entities: string[];
 
-        if (!player || !(player.region in this.regions)) return;
+        if (!player || !(player.region! in this.regions)) return;
 
-        entities = _.keys(this.regions[player.region].entities);
+        entities = _.keys(this.regions[player.region!].entities);
 
         entities = _.reject(entities, (instance) => {
             return instance === player.instance; // TODO //|| player.isInvisible(instance);
@@ -397,7 +401,7 @@ export default class Region {
         });
     }
 
-    getRegionData(region: string, player: Player, force?: boolean): RegionTileData[] {
+    getRegionData(region: string | null, player: Player, force?: boolean): RegionTileData[] {
         let data: RegionTileData[] = [];
 
         if (!player) return data;
@@ -429,7 +433,7 @@ export default class Region {
             let index = this.gridPositionToIndex(x - 1, y),
                 tileData = this.map.data[index],
                 isCollision = this.map.collisions.includes(index) || !tileData,
-                objectId: number;
+                objectId!: number;
 
             if (tileData !== 0)
                 if (Array.isArray(tileData)) {
@@ -444,8 +448,8 @@ export default class Region {
                 index
             };
 
-            if (info.index in dynamicTiles) {
-                let dynamicTile = dynamicTiles[info.index];
+            if (info.index! in dynamicTiles) {
+                let dynamicTile = dynamicTiles[info.index!];
 
                 info.data = dynamicTile.data;
                 info.isCollision = dynamicTile.isCollision;
@@ -457,7 +461,7 @@ export default class Region {
                 if (isCollision) info.isCollision = isCollision;
                 if (objectId) {
                     info.isObject = !!objectId;
-                    const cursor = this.map.getCursor(info.index, objectId);
+                    const cursor = this.map.getCursor(info.index!, objectId);
                     if (cursor) info.cursor = cursor;
                 }
             }
@@ -509,15 +513,15 @@ export default class Region {
         return y * this.map.width + x + 1;
     }
 
-    onAdd(callback: (entity: Entity, regionId: string) => void): void {
+    onAdd(callback: AddCallback): void {
         this.addCallback = callback;
     }
 
-    onRemove(callback: (entity: Entity, oldRegions: string[]) => void): void {
+    onRemove(callback: RemoveCallback): void {
         this.removeCallback = callback;
     }
 
-    onIncoming(callback: (entity: Entity, regionId: string) => void): void {
+    onIncoming(callback: IncomingCallback): void {
         this.incomingCallback = callback;
     }
 }

@@ -72,10 +72,10 @@ export default class PirateCaptain extends Combat {
             attacker.removeTarget();
         });
 
-        if (this.character.hasTarget()) this.begin(this.character.target);
+        if (this.character.target) this.begin(this.character.target);
     }
 
-    getRandomPosition(): { x: number; y: number; index: number } {
+    getRandomPosition(): { x: number; y: number; index: number } | null {
         const random = Utils.randomInt(0, this.teleportLocations.length - 1),
             position = this.teleportLocations[random];
 

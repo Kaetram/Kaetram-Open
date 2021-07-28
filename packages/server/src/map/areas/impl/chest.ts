@@ -6,15 +6,15 @@ import Areas from '../areas';
 import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Chest extends Areas {
-    constructor(data: ProcessedArea[], world?: World) {
+    constructor(data: ProcessedArea[], world: World) {
         super(data, world);
 
         super.load(this.data, (chestArea, rawData) => {
             chestArea.maxEntities = rawData.entities || 0;
-            chestArea.items = rawData.items.split(',');
+            chestArea.items = rawData.items!.split(',');
 
-            chestArea.cx = rawData.spawnX;
-            chestArea.cy = rawData.spawnY;
+            chestArea.cx = rawData.spawnX!;
+            chestArea.cy = rawData.spawnY!;
 
             if (rawData.achievement) chestArea.achievement = rawData.achievement;
 
@@ -37,8 +37,7 @@ export default class Chest extends Areas {
             chestArea.items,
             chestArea.cx,
             chestArea.cy,
-            false,
-            null
+            false
         );
 
         chestArea.lastSpawn = Date.now();

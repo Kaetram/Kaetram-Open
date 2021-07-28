@@ -51,14 +51,19 @@ export default class Container {
         this.load(data, data, data, data);
     }
 
-    protected addItem(id: number, count: number, ability: number, abilityLevel: number): Slot {
+    protected addItem(
+        id: number,
+        count: number,
+        ability: number,
+        abilityLevel: number
+    ): Slot | undefined {
         // log.info('Trying to pickup ' + count + ' x ' + id);
         let maxStackSize =
             Items.maxStackSize(id) === -1 ? Constants.MAX_STACK : Items.maxStackSize(id);
 
         // log.info('Max stack size = ' + maxStackSize);
 
-        if (!id || count < 0 || count > maxStackSize) return null;
+        if (!id || count < 0 || count > maxStackSize) return;
 
         if (!Items.isStackable(id)) {
             if (this.hasSpace()) {
@@ -129,7 +134,7 @@ export default class Container {
         return remainingSpace >= count;
     }
 
-    remove(index: number, id: number, count: number): boolean {
+    remove(index: number, id: number, count: number): boolean | undefined {
         /**
          * Perform item validity prior to calling the method.
          */
@@ -146,14 +151,14 @@ export default class Container {
         return true;
     }
 
-    getSlot(id: number): Slot {
+    getSlot(id: number): Slot | null {
         for (let i = 0; i < this.slots.length; i++)
             if (this.slots[i].id === id) return this.slots[i];
 
         return null;
     }
 
-    contains(id: number, count?: number): boolean {
+    contains(id: number | undefined, count?: number): boolean {
         if (!count) count = 1;
 
         for (let index in this.slots) {

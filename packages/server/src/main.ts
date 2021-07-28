@@ -18,9 +18,9 @@ class Main {
         log.info('Initializing ' + config.name + ' game engine...');
 
         this.socketHandler = new SocketHandler();
-        this.database = new Database(config.database).getDatabase();
+        this.database = new Database(config.database).getDatabase()!;
         this.parser = new Parser();
-        this.world = null;
+        this.world = null!;
 
         this.socketHandler.onReady(() => {
             /**
@@ -50,7 +50,7 @@ class Main {
 
                     connection.sendUTF8('full');
                     connection.close();
-                } else this.world.playerConnectCallback(connection);
+                } else this.world.playerConnectCallback?.(connection);
             else {
                 connection.sendUTF8('disallowed');
                 connection.close();
@@ -70,7 +70,7 @@ class Main {
             if (type !== '/') return;
 
             const blocks = message.slice(1).split(' '),
-                command = blocks.shift();
+                command = blocks.shift()!;
 
             if (!command) return;
 
@@ -114,8 +114,8 @@ class Main {
                     break;
 
                 case 'resetPositions':
-                    newX = parseInt(blocks.shift());
-                    newY = parseInt(blocks.shift());
+                    newX = parseInt(blocks.shift()!);
+                    newY = parseInt(blocks.shift()!);
 
                     // x: 325, y: 87
 
@@ -151,8 +151,8 @@ class Main {
                     break;
 
                 case 'give':
-                    itemId = parseInt(blocks.shift());
-                    itemCount = parseInt(blocks.shift());
+                    itemId = parseInt(blocks.shift()!);
+                    itemCount = parseInt(blocks.shift()!);
 
                     username = blocks.join(' ');
 

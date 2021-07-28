@@ -24,7 +24,7 @@ interface PlayerData {
     invisibleIds?: string;
     experience: number;
     rights: number;
-    poison: string | number;
+    poison: string | null;
     hitPoints: number;
     mana: number;
     pvpKills: number;
@@ -379,8 +379,8 @@ export default class Creator {
             y: position.y,
             rights: player.rights || 0,
             hitPoints: player.hitPoints || 100,
-            mana: player.mana || 20,
-            poison: player.poison || 0,
+            mana: player.mana?.getMana() || 20,
+            poison: player.poison || null,
             experience: player.experience || 0,
             ban: player.ban || 0,
             mute: player.mute || 0,
