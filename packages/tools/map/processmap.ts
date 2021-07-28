@@ -274,7 +274,7 @@ export default class ProcessMap {
                     'achievement'
                 ].includes(name)
             ) {
-                let number = parseInt(value);
+                let number = parseFloat(value);
                 if (isNaN(number)) number = -1;
 
                 value = number as never;
