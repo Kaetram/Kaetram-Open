@@ -8,6 +8,6 @@ export default class Trade {
 
     constructor(player: Player) {
         this.player = player;
-        this.oPlayer = null;
+        this.oPlayer = null!;
     }
 }

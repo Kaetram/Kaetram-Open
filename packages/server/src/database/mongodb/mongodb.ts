@@ -30,7 +30,7 @@ export default class MongoDB {
         this.loader = new Loader(this);
         this.creator = new Creator(this);
 
-        this.connection = null;
+        this.connection = null!;
     }
 
     public getConnection(callback: (connection: Db) => void): void {
@@ -53,7 +53,7 @@ export default class MongoDB {
                 return;
             }
 
-            this.connection = newClient.db(this.database);
+            this.connection = newClient!.db(this.database);
 
             callback(this.connection);
         });

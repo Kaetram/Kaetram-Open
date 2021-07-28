@@ -9,35 +9,35 @@ export default class Area {
     public width: number;
     public height: number;
 
-    public polygon: Pos[];
+    public polygon!: Pos[];
 
     public entities: Mob[];
-    public chest: Chest;
+    public chest: Chest | null;
     public items: string[];
 
     public hasRespawned: boolean;
 
     // Overlay properties
-    public darkness: number;
-    public type: string;
-    public fog: string;
+    public darkness!: number;
+    public type!: string;
+    public fog!: string;
 
     // Properties it can hold
-    public achievement: number;
-    public cameraType: string;
-    public song: string;
+    public achievement!: number;
+    public cameraType!: string;
+    public song!: string;
 
     // Door coordinates
-    public tx: number;
-    public ty: number;
+    public tx!: number;
+    public ty!: number;
 
     // Chest coordinates
-    public cx: number;
-    public cy: number;
+    public cx!: number;
+    public cy!: number;
 
     public maxEntities: number;
     public spawnDelay: number;
-    public lastSpawn: number;
+    public lastSpawn!: number;
 
     private spawnCallback?(): void;
     private emptyCallback?(): void;

@@ -11,12 +11,12 @@ import Profession from './profession';
 export default class Lumberjacking extends Profession {
     tick: number;
 
-    cuttingInterval: NodeJS.Timeout;
+    cuttingInterval: NodeJS.Timeout | null;
     started: boolean;
 
-    treeId: Tree; // TODO
+    treeId!: Tree; // TODO
 
-    queuedTrees: Record<string, never>;
+    queuedTrees!: Record<string, never>;
 
     constructor(id: number, player: Player) {
         super(id, player, 'Lumberjacking');
@@ -32,7 +32,7 @@ export default class Lumberjacking extends Profession {
 
         this.cuttingInterval = setInterval(() => {
             try {
-                if (!this.player || !this.isTarget() || this.world.isTreeCut(this.targetId)) {
+                if (!this.player || !this.isTarget() || this.world.isTreeCut(this.targetId!)) {
                     this.stop();
                     return;
                 }
@@ -76,10 +76,10 @@ export default class Lumberjacking extends Profession {
     override stop(): void {
         if (!this.started) return;
 
-        this.treeId = null;
+        this.treeId = null!;
         this.targetId = null;
 
-        clearInterval(this.cuttingInterval);
+        if (this.cuttingInterval) clearInterval(this.cuttingInterval);
         this.cuttingInterval = null;
 
         this.started = false;

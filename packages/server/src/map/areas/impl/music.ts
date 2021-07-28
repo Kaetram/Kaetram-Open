@@ -4,11 +4,11 @@ import Area from '../area';
 import Areas from '../areas';
 
 export default class Music extends Areas {
-    constructor(data: ProcessedArea[], world?: World) {
+    constructor(data: ProcessedArea[], world: World) {
         super(data, world);
 
         super.load(this.data, (musicArea: Area, rawData) => {
-            musicArea.song = rawData.songName;
+            musicArea.song = rawData.songName!;
         });
 
         super.message('music');

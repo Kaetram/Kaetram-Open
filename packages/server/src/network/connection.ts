@@ -13,7 +13,7 @@ export default class Connection {
     public socket: Socket;
     public socketHandler: SocketHandler;
 
-    private listenCallback: ListenCallback;
+    private listenCallback?: ListenCallback;
     private closeCallback?(): void;
 
     constructor(id: string, type: string, socket: Socket, socketHandler: SocketHandler) {

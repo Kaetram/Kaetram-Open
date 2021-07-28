@@ -51,7 +51,7 @@ export default class Quest {
 
     public stage: number;
 
-    npcTalkCallback: NPCTalkCallback;
+    npcTalkCallback?: NPCTalkCallback;
 
     constructor(player: Player, data: QuestData) {
         this.player = player;
@@ -113,7 +113,7 @@ export default class Quest {
     }
 
     getConversation(id: number): string[] {
-        let conversation = this.data.conversations[id];
+        let conversation = this.data.conversations![id];
 
         if (!conversation || !conversation[this.stage]) return [''];
 
@@ -175,7 +175,7 @@ export default class Quest {
         this.npcTalkCallback = callback;
     }
 
-    hasMob(mob: Mob): boolean {
+    hasMob(mob: Mob): boolean | undefined {
         if (!this.data.mobs) return;
 
         return this.data.mobs.includes(mob.id);
@@ -211,19 +211,19 @@ export default class Quest {
     }
 
     getTask(): Task {
-        return this.data.task[this.stage];
+        return this.data.task![this.stage];
     }
 
-    getItem(): number {
-        return this.data.itemReq ? this.data.itemReq[this.stage] : null;
+    getItem(): number | undefined {
+        return this.data.itemReq?.[this.stage];
     }
 
     getStage(): number {
         return this.stage;
     }
 
-    getItemReward(): ItemReward {
-        return this.hasItemReward() ? this.data.itemReward : null;
+    getItemReward(): ItemReward | undefined {
+        return this.data.itemReward;
     }
     getDescription(): string {
         return this.description;

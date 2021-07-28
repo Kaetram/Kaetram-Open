@@ -8,10 +8,10 @@ import type NPC from './npc/npc';
 import type Item from './objects/item';
 
 export interface EntityState {
-    string?: string;
+    string?: string | null;
     type: string;
     id: string;
-    name: string;
+    name: string | null;
     x: number;
     y: number;
     nameColour?: string;
@@ -35,28 +35,28 @@ abstract class Entity {
     public invisibles: { [instance: string]: Entity };
     public invisiblesIds: number[];
 
-    public username: string;
-    public instanced: boolean;
-    public region: string;
+    public username!: string;
+    public instanced!: boolean;
+    public region!: string | null;
 
     setPositionCallback?(): void;
 
-    specialState: 'boss' | 'miniboss' | 'achievementNpc' | 'area' | 'questNpc' | 'questMob';
-    customScale: number;
-    roaming: boolean;
+    specialState!: 'boss' | 'miniboss' | 'achievementNpc' | 'area' | 'questNpc' | 'questMob';
+    customScale!: number;
+    roaming!: boolean;
 
     constructor(id: number, type: string, instance: string, x?: number, y?: number) {
         this.id = id;
         this.type = type;
         this.instance = instance;
 
-        this.x = x;
-        this.y = y;
+        this.x = x!;
+        this.y = y!;
 
-        this.oldX = x;
-        this.oldY = y;
+        this.oldX = x!;
+        this.oldY = y!;
 
-        this.combat = null;
+        this.combat = null!;
 
         this.dead = false;
         this.recentRegions = [];

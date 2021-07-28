@@ -23,19 +23,18 @@ interface PlayerData {
     mapVersion: number;
 }
 
+/**
+ * API will have a variety of uses. Including communication
+ * between multiple worlds (planned for the future).
+ *
+ * `accessToken` - A randomly generated token that can be used
+ * to verify the validity between the client and the server.
+ * This is a rudimentary security method, but is enough considering
+ * the simplicity of the current API.
+ */
 export default class API {
-    /**
-     * API will have a variety of uses. Including communication
-     * between multiple worlds (planned for the future).
-     *
-     * `accessToken` - A randomly generated token that can be used
-     * to verify the validity between the client and the server.
-     * This is a rudimentary security method, but is enough considering
-     * the simplicity of the current API.
-     */
-
     world: World;
-    hubConnected: boolean;
+    hubConnected = false;
 
     constructor(world: World) {
         this.world = world;

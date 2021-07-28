@@ -2,6 +2,7 @@ import Packets from '@kaetram/common/src/packets';
 
 import Messages from '../../../../../../network/messages';
 import Item from '../../../../objects/item';
+import { ItemData } from '../../equipment/equipment';
 import Player from '../../player';
 import Container from '../container';
 import Constants from './constants';
@@ -24,8 +25,8 @@ export default class Inventory extends Container {
         );
     }
 
-    add(item: Partial<Item>): boolean {
-        if (!this.canHold(item.id, item.count)) {
+    add(item: ItemData): boolean {
+        if (!this.canHold(item.id!, item.count!)) {
             this.owner.send(
                 new Messages.Notification(Packets.NotificationOpcode.Text, {
                     message: Constants.InventoryFull
@@ -34,7 +35,7 @@ export default class Inventory extends Container {
             return false;
         }
 
-        let slot = this.addItem(item.id, item.count, item.ability, item.abilityLevel);
+        let slot = this.addItem(item.id!, item.count!, item.ability!, item.abilityLevel!);
 
         if (!slot) return false;
 
@@ -47,7 +48,7 @@ export default class Inventory extends Container {
         return true;
     }
 
-    override remove(id: number, count: number, index?: number): boolean {
+    override remove(id: number | undefined, count: number | undefined, index?: number): boolean {
         if (!id || !count) return false;
 
         if (!index) index = this.getIndex(id);

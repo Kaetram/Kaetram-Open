@@ -11,7 +11,7 @@ export interface MobData {
     key: string;
     name: string;
     xp: number;
-    combatPlugin?: string;
+    combatPlugin: string;
     hitPoints: number;
     drops: MobDrops;
     spawnDelay: number;
@@ -34,19 +34,19 @@ export default {
     Ids: {} as { [id: number]: MobData },
     Plugins: {} as { [name: string]: CombatPlugin },
 
-    idToString(id: number): string {
+    idToString(id: number): string | null {
         if (id in this.Ids) return this.Ids[id].key;
 
         return null;
     },
 
-    idToName(id: number): string {
+    idToName(id: number): string | null {
         if (id in this.Ids) return this.Ids[id].name;
 
         return null;
     },
 
-    stringToId(name: string): number {
+    stringToId(name: string): number | null {
         if (name in this.Properties) return this.Properties[name].id;
 
         return null;
@@ -66,12 +66,12 @@ export default {
         return id in this.Ids && this.Ids[id].combatPlugin in this.Plugins;
     },
 
-    isNewCombatPlugin(id: number): CombatPlugin {
+    isNewCombatPlugin(id: number): CombatPlugin | undefined {
         if (id in this.Ids && this.Ids[id].combatPlugin in this.Plugins)
             return this.Plugins[this.Ids[id].combatPlugin];
     },
 
-    isHidden(name: string): boolean {
+    isHidden(name: string): boolean | undefined {
         if (name in this.Properties) return this.Properties[name].hiddenName;
 
         return false;

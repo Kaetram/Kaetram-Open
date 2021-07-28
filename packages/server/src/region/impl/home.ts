@@ -1,12 +1,17 @@
-/**
- * Class used for storing hardcoded values and actions for a specific area
- * in the game.
- * @experiemntal Hardcoding regions and areas is still a work in progress.
- */
-
 import Map from '../../map/map';
 import Region from '../region';
 
+interface HomeData {
+    indexes: number[];
+    data: number[][];
+    collisions: boolean[];
+}
+
+/**
+ * Class used for storing hardcoded values and actions for a specific area
+ * in the game.
+ * @experimental Hardcoding regions and areas is still a work in progress.
+ */
 export default class Home {
     private region: Region;
     private map: Map;
@@ -25,7 +30,7 @@ export default class Home {
     get(): void {
         let startPosition = this.region.getRegionBounds(this.startRegion),
             endPosition = this.region.getRegionBounds(this.endRegion),
-            info = {
+            info: HomeData = {
                 indexes: [],
                 data: [],
                 collisions: []
@@ -40,7 +45,7 @@ export default class Home {
                 let tileIndex = this.region.gridPositionToIndex(x, y);
 
                 info.indexes.push(tileIndex);
-                info.data.push(this.map.data[tileIndex]);
+                info.data.push(this.map.data[tileIndex] as number[]);
                 info.collisions.push(this.map.isColliding(x, y));
             }
     }
