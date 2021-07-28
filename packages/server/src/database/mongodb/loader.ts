@@ -1,21 +1,17 @@
-import Player from '../../game/entity/character/player/player';
 import log from '../../util/log';
-import MongoDB from './mongodb';
 
 import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';
 import type { ContainerArray } from '../../game/entity/character/player/containers/container';
 import type { FriendsArray } from '../../game/entity/character/player/friends';
+import type Player from '../../game/entity/character/player/player';
 import type {
     ProfessionsArray,
     ProfessionsData
 } from '../../game/entity/character/player/professions/professions';
+import type MongoDB from './mongodb';
 
 export default class Loader {
-    database: MongoDB;
-
-    constructor(database: MongoDB) {
-        this.database = database;
-    }
+    constructor(private database: MongoDB) {}
 
     private parseArray(value: string): number[] {
         return value.split(' ').map((string) => parseInt(string));

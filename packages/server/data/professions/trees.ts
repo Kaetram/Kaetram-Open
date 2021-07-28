@@ -1,4 +1,4 @@
-let Trees = {
+export default {
     /**
      * Oak trees are considered the green trees in the starting area,
      * as well as any dead trees found throughout the world. The same
@@ -86,6 +86,4 @@ let Trees = {
         6594: 2176,
         6658: 2240
     }
-};
-
-export default Trees;
+} as const;

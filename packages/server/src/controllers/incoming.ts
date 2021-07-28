@@ -5,43 +5,37 @@ import Packets from '@kaetram/common/src/packets';
 
 import config from '../../config';
 import Creator from '../database/mongodb/creator';
-import Character from '../game/entity/character/character';
-import Mob from '../game/entity/character/mob/mob';
-import Slot from '../game/entity/character/player/containers/slot';
-import Player from '../game/entity/character/player/player';
-import Projectile from '../game/entity/objects/projectile';
-import World from '../game/world';
 import Messages from '../network/messages';
 import Items from '../util/items';
 import log from '../util/log';
 import Utils from '../util/utils';
 import Commands from './commands';
-import Entities from './entities';
-import NPC from '../game/entity/npc/npc';
 
-import type MongoDB from '../database/mongodb/mongodb';
-import type Connection from '../network/connection';
-import Chest from '../game/entity/objects/chest';
-import Item from '../game/entity/objects/item';
-import { EnchantType } from '../game/entity/character/player/enchant';
+import type Character from '../game/entity/character/character';
+import type Mob from '../game/entity/character/mob/mob';
+import type Slot from '../game/entity/character/player/containers/slot';
+import type { EnchantType } from '../game/entity/character/player/enchant';
+import type Player from '../game/entity/character/player/player';
+import type NPC from '../game/entity/npc/npc';
+import type Chest from '../game/entity/objects/chest';
+import type Item from '../game/entity/objects/item';
+import type Projectile from '../game/entity/objects/projectile';
 
 export default class Incoming {
-    player: Player;
-    connection: Connection;
-    world: World;
-    entities: Entities;
-    database: MongoDB;
-    commands: Commands;
+    connection;
+    world;
+    entities;
+    database;
+    commands;
 
     introduced = false;
 
-    constructor(player: Player) {
-        this.player = player;
-        this.connection = this.player.connection;
-        this.world = this.player.world;
+    constructor(private player: Player) {
+        this.connection = player.connection;
+        this.world = player.world;
         this.entities = this.world.entities;
-        this.database = this.player.database;
-        this.commands = new Commands(this.player);
+        this.database = player.database;
+        this.commands = new Commands(player);
 
         this.connection.listen(([packet, message]) => {
             if (!Utils.validPacket(packet)) {
@@ -51,7 +45,7 @@ export default class Incoming {
                 return;
             }
 
-            this.player.refreshTimeout();
+            player.refreshTimeout();
 
             switch (packet) {
                 case Packets.Intro:

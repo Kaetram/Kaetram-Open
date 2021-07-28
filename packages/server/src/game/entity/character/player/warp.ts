@@ -1,19 +1,13 @@
-import Map from '../../../../map/map';
-import Player from './player';
+import type Player from './player';
 
 export default class Warp {
-    private player: Player;
-    private map: Map;
+    private map;
 
-    public lastWarp: number;
-    private warpTimeout: number;
+    public lastWarp = 0;
+    private warpTimeout = 30000;
 
-    constructor(player: Player) {
-        this.player = player;
+    constructor(private player: Player) {
         this.map = player.map;
-
-        this.lastWarp = 0;
-        this.warpTimeout = 30000;
     }
 
     warp(id: number): void {

@@ -1,5 +1,4 @@
-import Map from '../../map/map';
-import Region from '../region';
+import type Region from '../region';
 
 interface HomeData {
     indexes: number[];
@@ -13,14 +12,12 @@ interface HomeData {
  * @experimental Hardcoding regions and areas is still a work in progress.
  */
 export default class Home {
-    private region: Region;
-    private map: Map;
+    private map;
 
-    private startRegion: string;
-    private endRegion: string;
+    private startRegion;
+    private endRegion;
 
-    constructor(region: Region) {
-        this.region = region;
+    constructor(private region: Region) {
         this.map = region.map;
 
         this.startRegion = '0-4';

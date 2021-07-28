@@ -3,14 +3,12 @@ import _ from 'lodash';
 import Packets from '@kaetram/common/src/packets';
 
 import config from '../../config';
-import Entities from '../controllers/entities';
 import Player from '../game/entity/character/player/player';
-import Entity from '../game/entity/entity';
-import World from '../game/world';
-import Map from '../map/map';
-import Regions from '../map/regions';
 import Messages, { Packet } from '../network/messages';
 import log from '../util/log';
+
+import type Entity from '../game/entity/entity';
+import type World from '../game/world';
 
 type Bounds = {
     startX: number;
@@ -51,38 +49,32 @@ type AddCallback = (entity: Entity, regionId: string | null) => void;
 type RemoveCallback = (entity: Entity, oldRegions: string[]) => void;
 type IncomingCallback = (entity: Entity, regionId: string) => void;
 
+/**
+ * Region Generation.
+ * This is used in order to send the client data about the new region
+ * it is about to enter. This has to be greatly expanded to generated
+ * instanced areas where other entities will not be pushed to surrounding
+ * players, even if they share the same coordinates.
+ */
 export default class Region {
-    /**
-     * Region Generation.
-     * This is used in order to send the client data about the new region
-     * it is about to enter. This has to be greatly expanded to generated
-     * instanced areas where other entities will not be pushed to surrounding
-     * players, even if they share the same coordinates.
-     */
+    map;
+    mapRegions;
 
-    map: Map;
-    mapRegions: Regions;
+    entities;
 
-    world: World;
-    entities: Entities;
+    regions: { [id: string]: RegionData } = {};
 
-    regions: { [id: string]: RegionData };
-
-    loaded: boolean;
+    loaded = false;
 
     addCallback?: AddCallback;
     removeCallback?: RemoveCallback;
     incomingCallback?: IncomingCallback;
 
-    constructor(world: World) {
+    constructor(private world: World) {
         this.map = world.map;
         this.mapRegions = world.map.regions;
 
-        this.world = world;
         this.entities = world.entities;
-
-        this.regions = {};
-        this.loaded = false;
 
         this.onAdd((entity, regionId) => {
             if (!entity || !entity.username) return;

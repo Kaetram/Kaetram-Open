@@ -1,15 +1,13 @@
 import ws from 'ws';
 
 import config from '../../../config';
-
-import WebSocket from '../websocket';
+import log from '../../util/log';
+import Utils from '../../util/utils';
 import Connection from '../connection';
+import SocketHandler from '../sockethandler';
+import WebSocket from '../websocket';
 
 import type { Socket } from 'socket.io';
-
-import Utils from '../../util/utils';
-import log from '../../util/log';
-import SocketHandler from '../sockethandler';
 
 declare module 'ws' {
     interface WebSocket {

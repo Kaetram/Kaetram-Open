@@ -3,35 +3,26 @@ import _ from 'lodash';
 import { Db, MongoClient } from 'mongodb';
 
 import config from '../../../config';
-import Player, { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
 import log from '../../util/log';
 import Creator, { FullPlayerData } from './creator';
 import Loader from './loader';
 
+import type Player from '../../game/entity/character/player/player';
+import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
+
 export default class MongoDB {
-    host: string;
-    port: number;
-    user: string;
-    password: string;
-    database: string;
+    loader = new Loader(this);
+    creator = new Creator(this);
 
-    loader: Loader;
-    creator: Creator;
+    connection!: Db;
 
-    connection: Db;
-
-    constructor(host: string, port: number, user: string, password: string, database: string) {
-        this.host = host;
-        this.port = port;
-        this.user = user;
-        this.password = password;
-        this.database = database;
-
-        this.loader = new Loader(this);
-        this.creator = new Creator(this);
-
-        this.connection = null!;
-    }
+    constructor(
+        private host: string,
+        private port: number,
+        private user: string,
+        private password: string,
+        private database: string
+    ) {}
 
     public getConnection(callback: (connection: Db) => void): void {
         let url = config.mongodbAuth

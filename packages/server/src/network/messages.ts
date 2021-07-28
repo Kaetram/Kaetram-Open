@@ -21,8 +21,10 @@ import type { RegionTileData, Tile, TilesetData } from '../region/region';
 
 export abstract class Packet<Info = unknown, Opcode = number | string> {
     protected abstract id: number;
-    protected opcode?: Opcode;
+    protected opcode;
 
+    public constructor(info: Info);
+    public constructor(opcode: Opcode, info?: Info);
     public constructor(infoOrOpcode: Info | Opcode, protected info?: Info) {
         if (info) this.opcode = infoOrOpcode as Opcode;
         else this.info = infoOrOpcode as Info;

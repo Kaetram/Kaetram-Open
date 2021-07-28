@@ -1,28 +1,22 @@
 import _ from 'lodash';
 
-import Map from './map';
+import type Map from './map';
 
 export default class Regions {
-    map: Map;
+    width;
+    height;
 
-    width: number;
-    height: number;
+    regionWidth;
+    regionHeight;
 
-    regionWidth: number;
-    regionHeight: number;
+    linkedRegions: { [id: string]: Pos[] } = {};
 
-    linkedRegions: { [id: string]: Pos[] };
+    constructor(private map: Map) {
+        this.width = map.width;
+        this.height = map.height;
 
-    constructor(map: Map) {
-        this.map = map;
-
-        this.width = this.map.width;
-        this.height = this.map.height;
-
-        this.regionWidth = this.map.regionWidth;
-        this.regionHeight = this.map.regionHeight;
-
-        this.linkedRegions = {};
+        this.regionWidth = map.regionWidth;
+        this.regionHeight = map.regionHeight;
 
         this.loadDoors();
     }

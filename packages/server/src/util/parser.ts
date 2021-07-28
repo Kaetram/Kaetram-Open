@@ -2,8 +2,8 @@ import _ from 'lodash';
 
 import abilityData from '../../data/abilities.json';
 import combatPlugins from '../../data/combat';
-import itemData from '../../data/items.json';
 import itemPlugins from '../../data/items';
+import itemData from '../../data/items.json';
 import mobData from '../../data/mobs.json';
 import npcData from '../../data/npcs.json';
 import objectData from '../../data/objects.json';
@@ -17,10 +17,11 @@ import Mobs from './mobs';
 import NPCs from './npcs';
 import Objects from './objects';
 import Shops from './shops';
-import { MobData } from './mobs';
-import { NPCData } from './npcs';
-import { ItemsData } from './items';
-import { ObjectsData } from './objects';
+
+import type { ItemsData } from './items';
+import type { MobData } from './mobs';
+import type { NPCData } from './npcs';
+import type { ObjectsData } from './objects';
 
 export default class Parser {
     private readyCallback?(): void;

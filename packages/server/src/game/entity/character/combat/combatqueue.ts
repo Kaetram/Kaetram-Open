@@ -2,11 +2,7 @@ import type Hit from './hit';
 import type { HitData } from './hit';
 
 export default class CombatQueue {
-    hitQueue: Hit[];
-
-    constructor() {
-        this.hitQueue = [];
-    }
+    hitQueue: Hit[] = [];
 
     add(hit: Hit): void {
         this.hitQueue.push(hit);

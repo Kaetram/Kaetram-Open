@@ -1,21 +1,15 @@
-import Mob from '../../game/entity/character/mob/mob';
-import Player from '../../game/entity/character/player/player';
-import Chest from '../../game/entity/objects/chest';
+import type Mob from '../../game/entity/character/mob/mob';
+import type Player from '../../game/entity/character/player/player';
+import type Chest from '../../game/entity/objects/chest';
 
 export default class Area {
-    public id: number;
-    public x: number;
-    public y: number;
-    public width: number;
-    public height: number;
-
     public polygon!: Pos[];
 
-    public entities: Mob[];
-    public chest: Chest | null;
-    public items: string[];
+    public entities: Mob[] = [];
+    public chest: Chest | null = null;
+    public items: string[] = [];
 
-    public hasRespawned: boolean;
+    public hasRespawned = true;
 
     // Overlay properties
     public darkness!: number;
@@ -35,31 +29,20 @@ export default class Area {
     public cx!: number;
     public cy!: number;
 
-    public maxEntities: number;
-    public spawnDelay: number;
+    public maxEntities = 0;
+    public spawnDelay = 0;
     public lastSpawn!: number;
 
     private spawnCallback?(): void;
     private emptyCallback?(): void;
 
-    constructor(id: number, x: number, y: number, width: number, height: number) {
-        this.id = id;
-
-        this.x = x;
-        this.y = y;
-
-        this.width = width;
-        this.height = height;
-
-        this.entities = [];
-        this.items = [];
-
-        this.hasRespawned = true;
-        this.chest = null;
-
-        this.maxEntities = 0;
-        this.spawnDelay = 0;
-    }
+    constructor(
+        public id: number,
+        public x: number,
+        public y: number,
+        public width: number,
+        public height: number
+    ) {}
 
     addEntity(mob: Mob): void {
         if (!this.entities.includes(mob)) return;

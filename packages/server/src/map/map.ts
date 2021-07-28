@@ -4,26 +4,26 @@ import * as Modules from '@kaetram/common/src/modules';
 
 import mapData from '../../data/map/world.json';
 import Spawns from '../../data/spawns.json';
-import Entity from '../game/entity/entity';
-import World from '../game/world';
 import Items from '../util/items';
 import Mobs from '../util/mobs';
 import NPCs from '../util/npcs';
 import Objects from '../util/objects';
 import Utils from '../util/utils';
 import AreasIndex from './areas';
-import Area from './areas/area';
-import Areas from './areas/areas';
 import Grids from './grids';
 import Regions from './regions';
 
 import type {
-    ProcessedMap,
     ProcessedArea,
+    ProcessedMap,
     ProcessedTileset,
-    Tree,
-    Rock
+    Rock,
+    Tree
 } from '@kaetram/common/types/map';
+import type Entity from '../game/entity/entity';
+import type World from '../game/world';
+import type Area from './areas/area';
+import type Areas from './areas/areas';
 
 const map = mapData as ProcessedMap;
 
@@ -36,11 +36,10 @@ interface Door {
 type EntityType = 'mob' | 'npc' | 'item' | null;
 
 export default class Map {
-    world: World;
-    ready: boolean;
+    ready = false;
 
-    regions: Regions;
-    grids: Grids;
+    regions;
+    grids;
 
     version!: number;
 
@@ -89,11 +88,7 @@ export default class Map {
     readyInterval!: NodeJS.Timeout | null;
     readyCallback?(): void;
 
-    constructor(world: World) {
-        this.world = world;
-
-        this.ready = false;
-
+    constructor(private world: World) {
         this.load();
 
         this.regions = new Regions(this);

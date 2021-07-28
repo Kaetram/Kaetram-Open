@@ -2,10 +2,11 @@ import Packets from '@kaetram/common/src/packets';
 
 import Messages from '../../../../../network/messages';
 import Utils from '../../../../../util/utils';
-import NPC from '../../../npc/npc';
-import Mob from '../../mob/mob';
-import { Door } from '../doors';
-import Player from '../player';
+
+import type NPC from '../../../npc/npc';
+import type Mob from '../../mob/mob';
+import type { Door } from '../doors';
+import type Player from '../player';
 
 export interface QuestInfo {
     id: number;
@@ -41,27 +42,19 @@ export interface QuestData {
 
 type NPCTalkCallback = (npc: NPC) => void;
 
-export default class Quest {
-    public player: Player;
-    public data: QuestData;
+export default abstract class Quest {
+    public id;
+    public name;
+    public description;
 
-    public id: number;
-    public name: string;
-    public description: string;
-
-    public stage: number;
+    public stage = 0;
 
     npcTalkCallback?: NPCTalkCallback;
 
-    constructor(player: Player, data: QuestData) {
-        this.player = player;
-        this.data = data;
-
+    constructor(public player: Player, public data: QuestData) {
         this.id = data.id;
         this.name = data.name;
         this.description = data.description;
-
-        this.stage = 0;
     }
 
     load(stage: number): void {
