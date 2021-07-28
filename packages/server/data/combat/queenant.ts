@@ -7,13 +7,12 @@ import Messages from '../../src/network/messages';
 import Utils from '../../src/util/utils';
 import type { HitData } from '../../src/game/entity/character/combat/hit';
 
+/**
+ * The queen ant is a little more complex as it uses
+ * AoE attacks and has a stun timer.
+ */
 export default class QueenAnt extends Combat {
-    /*
-     * The queen ant is a little more complex as it uses
-     * AoE attacks and has a stun timer.
-     */
-
-    aoeTimeout: NodeJS.Timeout;
+    aoeTimeout: NodeJS.Timeout | null;
     aoeCountdown: number;
     aoeRadius: number;
     lastAoE: number;
@@ -61,7 +60,7 @@ export default class QueenAnt extends Combat {
         });
 
         this.character.onReturn(() => {
-            clearTimeout(this.aoeTimeout);
+            if (this.aoeTimeout) clearTimeout(this.aoeTimeout);
             this.aoeTimeout = null;
         });
     }
@@ -135,7 +134,7 @@ export default class QueenAnt extends Combat {
         _.each(this.minions, (minion: Mob) => {
             const randomTarget = this.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
+            if (!minion.target && randomTarget) minion.combat.begin(randomTarget);
         });
     }
 
@@ -143,7 +142,7 @@ export default class QueenAnt extends Combat {
         this.lastAoE = Date.now();
     }
 
-    getRandomTarget(): Character {
+    getRandomTarget(): Character | null {
         if (this.isAttacked()) {
             const keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
@@ -151,7 +150,7 @@ export default class QueenAnt extends Combat {
             if (randomAttacker) return randomAttacker;
         }
 
-        if (this.character.hasTarget()) return this.character.target;
+        if (this.character.target) return this.character.target;
 
         return null;
     }

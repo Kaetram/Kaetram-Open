@@ -23,7 +23,7 @@ export default class Cactus extends Combat {
 
             this.damageAttacker(damage, player);
 
-            log.debug(`Entity ${this.character.id} damaged ${damage} by ${attacker.instance}.`);
+            log.debug(`Entity ${this.character.id} damaged ${damage} by ${player.instance}.`);
         });
 
         this.character.onDeath(() => {

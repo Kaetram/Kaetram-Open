@@ -7,7 +7,7 @@ import Packets from '@kaetram/common/src/packets';
 import Utils from '../../util/utils';
 import Minigame, { MinigameState } from '../minigame';
 
-type Team = 'red' | 'blue' | 'lobby';
+type Team = 'red' | 'blue' | 'lobby' | null;
 
 interface TeamWarState extends MinigameState {
     team: Team;
@@ -20,7 +20,7 @@ export default class TeamWar extends Minigame {
     redTeam: Player[];
     blueTeam: Player[];
 
-    updateInterval: NodeJS.Timeout;
+    updateInterval: NodeJS.Timeout | null;
 
     started: boolean;
 
@@ -68,7 +68,7 @@ export default class TeamWar extends Minigame {
 
         this.lobby.push(player);
 
-        player.minigame = this.getState(player);
+        player.minigame = this.getState(player)!;
     }
 
     remove(player: Player): void {
@@ -159,11 +159,11 @@ export default class TeamWar extends Minigame {
     }
 
     // Expand on the super `getState()`
-    override getState(player?: Player): TeamWarState {
+    override getState(player?: Player): TeamWarState | null {
         let state = super.getState() as TeamWarState;
 
         // Player can only be in team `red`, `blue`, or `lobby`.
-        state.team = this.getTeam(player);
+        state.team = this.getTeam(player!);
 
         if (!state.team) return null;
 

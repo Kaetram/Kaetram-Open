@@ -12,9 +12,9 @@ import Utils from '../util/utils';
  */
 
 export default class Discord {
-    world: World;
-    client: Client;
-    webhook: WebhookClient;
+    world!: World;
+    client!: Client;
+    webhook!: WebhookClient;
 
     constructor(world: World) {
         if (!config.discordEnabled) return;

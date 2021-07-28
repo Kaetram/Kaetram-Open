@@ -1,13 +1,14 @@
 import Items from '../../../../../util/items';
 import type * as Modules from '@kaetram/common/src/modules';
 
-interface ItemData {
-    name: string;
-    string: string;
-    id: number;
-    count: number;
-    ability: number;
-    abilityLevel: number;
+export interface ItemData {
+    count?: number;
+    id?: number;
+    instance?: string;
+    name?: string;
+    string?: string;
+    ability?: number;
+    abilityLevel?: number;
 }
 
 export interface EquipmentData {

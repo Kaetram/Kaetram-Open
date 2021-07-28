@@ -6,7 +6,7 @@ import Quest from '../quest';
 import { QuestData } from '../quest';
 
 export default class BulkySituation extends Quest {
-    lastNPC: NPC;
+    lastNPC: NPC | null;
 
     constructor(player: Player, data: QuestData) {
         super(player, data);
@@ -48,7 +48,7 @@ export default class BulkySituation extends Quest {
     }
 
     progress(type: string): void {
-        let task = this.data.task[this.stage];
+        let task = this.data.task![this.stage];
 
         if (!task || task !== type) return;
 

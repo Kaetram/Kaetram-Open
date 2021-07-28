@@ -24,10 +24,10 @@ export default class Loader {
     getInventory(
         player: Player,
         callback: (
-            ids: number[],
-            counts: number[],
-            abilities: number[],
-            abilityLevels: number[]
+            ids: number[] | null,
+            counts: number[] | null,
+            abilities: number[] | null,
+            abilityLevels: number[] | null
         ) => void
     ): void {
         this.database.getConnection((database) => {
@@ -89,7 +89,10 @@ export default class Loader {
         });
     }
 
-    getQuests(player: Player, callback: (ids: string[], stage: string[]) => void): void {
+    getQuests(
+        player: Player,
+        callback: (ids: string[] | null, stage: string[] | null) => void
+    ): void {
         this.database.getConnection((database) => {
             let quests = database.collection<PlayerQuests>('player_quests'),
                 cursor = quests.find({ username: player.username });

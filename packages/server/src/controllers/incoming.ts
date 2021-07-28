@@ -33,10 +33,10 @@ export default class Incoming {
     database: MongoDB;
     commands: Commands;
 
-    introduced: boolean;
+    introduced = false;
 
     constructor(player: Player) {
-        this.player = player as Player;
+        this.player = player;
         this.connection = this.player.connection;
         this.world = this.player.world;
         this.entities = this.world.entities;
@@ -189,8 +189,8 @@ export default class Incoming {
             });
         else if (isGuest) {
             this.player.username = `Guest${Utils.randomInt(0, 2000000)}`;
-            this.player.password = null;
-            this.player.email = null;
+            this.player.password = null!;
+            this.player.email = null!;
             this.player.isGuest = true;
 
             this.database.login(this.player);
@@ -450,7 +450,7 @@ export default class Incoming {
 
                 oEntity.setPosition(entityX, entityY);
 
-                if (oEntity.hasTarget()) oEntity.combat.forceAttack();
+                if (oEntity.target) oEntity.combat.forceAttack();
 
                 break;
             }
@@ -604,7 +604,7 @@ export default class Incoming {
 
                 if (target.combat.started || target.dead || target.type !== 'mob') return;
 
-                target.combat.begin(projectile.owner);
+                target.combat.begin(projectile.owner!);
 
                 break;
             }
@@ -687,18 +687,18 @@ export default class Incoming {
 
     handleInventory(message: [number, ...unknown[]]): void {
         const [opcode] = message;
-        let id: number, ability: number, abilityLevel: number;
+        let id!: number, ability!: number, abilityLevel!: number;
 
         switch (opcode) {
             case Packets.InventoryOpcode.Remove: {
                 const item = message[1] as Slot;
-                let count: number;
+                let count!: number;
 
                 if (!item) return;
 
                 if (item.count > 1) count = message[2] as number;
 
-                id = Items.stringToId(item.string);
+                id = Items.stringToId(item.string)!;
 
                 const iSlot = this.player.inventory.slots[item.index];
 
@@ -728,7 +728,7 @@ export default class Incoming {
 
                 if (!slot || slot.id < 1) return;
 
-                id = Items.stringToId(string);
+                id = Items.stringToId(string)!;
 
                 if (equippable) {
                     if (!this.player.canEquip(string)) return;

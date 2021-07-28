@@ -16,8 +16,8 @@ export default class OgreLord extends Combat {
     lastSpawn: number;
     loaded: boolean;
 
-    talkingInterval: NodeJS.Timeout;
-    updateInterval: NodeJS.Timeout;
+    talkingInterval!: NodeJS.Timeout | null;
+    updateInterval!: NodeJS.Timeout | null;
 
     constructor(character: Character) {
         super(character);
@@ -46,7 +46,7 @@ export default class OgreLord extends Combat {
 
     load(): void {
         this.talkingInterval = setInterval(() => {
-            if (this.character.hasTarget()) this.forceTalk(this.getMessage());
+            if (this.character.target) this.forceTalk(this.getMessage());
         }, 9000);
 
         this.updateInterval = setInterval(() => {
@@ -120,7 +120,7 @@ export default class OgreLord extends Combat {
         _.each(this.minions, (minion: Mob) => {
             const randomTarget = this.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
+            if (!minion.target && randomTarget) minion.combat.begin(randomTarget);
         });
     }
 
@@ -131,8 +131,8 @@ export default class OgreLord extends Combat {
 
         for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
 
-        clearInterval(this.talkingInterval);
-        clearInterval(this.updateInterval);
+        if (this.talkingInterval) clearInterval(this.talkingInterval);
+        if (this.updateInterval) clearInterval(this.updateInterval);
 
         this.talkingInterval = null;
         this.updateInterval = null;
@@ -140,7 +140,7 @@ export default class OgreLord extends Combat {
         this.loaded = false;
     }
 
-    getRandomTarget(): Character {
+    getRandomTarget(): Character | null {
         if (this.isAttacked()) {
             const keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
@@ -148,7 +148,7 @@ export default class OgreLord extends Combat {
             if (randomAttacker) return randomAttacker;
         }
 
-        if (this.character.hasTarget()) return this.character.target;
+        if (this.character.target) return this.character.target;
 
         return null;
     }

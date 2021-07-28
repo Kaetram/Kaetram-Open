@@ -60,7 +60,7 @@ export default class Quests {
         });
     }
 
-    updateQuests(ids: string[], stages: string[]): void {
+    updateQuests(ids: string[] | null, stages: string[] | null): void {
         if (!ids || !stages) {
             _.each(this.quests, (quest: Quest) => {
                 quest.load(0);
@@ -84,13 +84,13 @@ export default class Quests {
         if (this.achievementsReadyCallback) this.achievementsReadyCallback();
     }
 
-    getQuest<Q extends Quest>(id: number): Q {
+    getQuest<Q extends Quest>(id: number): Q | null {
         if (id in this.quests) return this.quests[id] as Q;
 
         return null;
     }
 
-    getAchievement(id: number): Achievement {
+    getAchievement(id: number): Achievement | null {
         if (!this.achievements || !this.achievements[id]) return null;
 
         return this.achievements[id];
@@ -200,7 +200,7 @@ export default class Quests {
         return Object.keys(this.achievements).length;
     }
 
-    getQuestByNPC(npc: NPC): Quest {
+    getQuestByNPC(npc: NPC): Quest | null {
         /**
          * Iterate through the quest list in the order it has been
          * added so that NPC's that are required by multiple quests
@@ -217,7 +217,7 @@ export default class Quests {
         return null;
     }
 
-    getAchievementByNPC(npc: NPC): Achievement {
+    getAchievementByNPC(npc: NPC): Achievement | null {
         for (let id in this.achievements)
             if (
                 Object.prototype.hasOwnProperty.call(this.achievements, id) &&
@@ -229,7 +229,7 @@ export default class Quests {
         return null;
     }
 
-    getAchievementByMob(mob: Mob): Achievement {
+    getAchievementByMob(mob: Mob): Achievement | null {
         for (let id in this.achievements)
             if (
                 Object.prototype.hasOwnProperty.call(this.achievements, id) &&

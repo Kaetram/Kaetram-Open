@@ -21,7 +21,7 @@ export default abstract class Minigame {
     }
 
     // Used to mark if `player` is in a minigame instance.
-    getState(): MinigameState {
+    getState(): MinigameState | null {
         return {
             id: this.id,
             name: this.name

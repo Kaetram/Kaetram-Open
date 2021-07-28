@@ -7,6 +7,8 @@ import Regions from '../../../../map/regions';
 import World from '../../../world';
 import Player, { ObjectData } from './player';
 
+type DoorStatus = 'open' | 'closed' | undefined;
+
 export interface Door {
     id: number;
     requirement: string;
@@ -17,8 +19,8 @@ export interface Door {
     x?: number;
     y?: number;
 
-    status?: never;
-    level?: never;
+    status?: DoorStatus;
+    level?: number;
 }
 
 interface IDs {
@@ -32,7 +34,6 @@ interface DoorTiles {
     collisions: boolean[];
     objectData?: ObjectData;
 }
-
 export default class Doors {
     public world: World;
     public player: Player;
@@ -69,26 +70,26 @@ export default class Doors {
         });
     }
 
-    getStatus(door: Door): 'open' | 'closed' {
+    getStatus(door: Door): DoorStatus {
         if (door.status) return door.status;
 
         if (config.offlineMode) return 'open';
 
         switch (door.requirement) {
             case 'quest': {
-                let quest = this.player.quests.getQuest(door.questId);
+                let quest = this.player.quests.getQuest(door.questId!);
 
                 return quest && quest.hasDoorUnlocked(door) ? 'open' : 'closed';
             }
 
             case 'achievement': {
-                let achievement = this.player.quests.getAchievement(door.achievementId);
+                let achievement = this.player.quests.getAchievement(door.achievementId!);
 
                 return achievement && achievement.isFinished() ? 'open' : 'closed';
             }
 
             case 'level':
-                return this.player.level >= door.level ? 'open' : 'closed';
+                return this.player.level >= door.level! ? 'open' : 'closed';
         }
     }
 
@@ -104,7 +105,7 @@ export default class Doors {
                 closed: door.closedIds
             };
 
-        _.each(doorState[status], (value, key) => {
+        _.each(doorState[status!], (value, key) => {
             tiles.indexes.push(parseInt(key));
             tiles.data.push(value.data);
             tiles.collisions.push(value.isColliding);
@@ -122,7 +123,7 @@ export default class Doors {
 
         _.each(this.doors, (door) => {
             /* There's no need to send dynamic data if the player is not nearby. */
-            let doorRegion = this.regions.regionIdFromPosition(door.x, door.y);
+            let doorRegion = this.regions.regionIdFromPosition(door.x!, door.y!);
 
             if (!this.regions.isSurrounding(this.player.region, doorRegion)) return;
 
@@ -155,7 +156,7 @@ export default class Doors {
         return tiles.collisions[index];
     }
 
-    getDoor(x: number, y: number): Door {
+    getDoor(x: number, y: number): Door | null {
         for (let i in this.doors)
             if (
                 Object.prototype.hasOwnProperty.call(this.doors, i) &&

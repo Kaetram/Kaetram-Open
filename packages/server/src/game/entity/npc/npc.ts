@@ -10,7 +10,7 @@ export default class NPC extends Entity {
         this.talkIndex = 0;
     }
 
-    talk(messages?: string[], player?: Player): string {
+    talk(messages: string[], player?: Player): string | undefined {
         if (!player) return;
 
         if (player.npcTalk !== this.id) {

@@ -30,7 +30,7 @@ export abstract class Packet<Info = unknown, Opcode = number | string> {
 
     public serialize(): [id: number, ...opcode: Opcode[], info: Info] {
         let { id, info, opcode } = this,
-            data: [number, ...Opcode[], Info] = [id, info];
+            data: [number, ...Opcode[], Info] = [id, info!];
 
         if (opcode !== undefined) data.splice(1, 0, opcode);
 
@@ -60,7 +60,7 @@ export default {
         hitPoints: number[];
         mana: number[];
         experience: number;
-        nextExperience: number;
+        nextExperience?: number;
         prevExperience: number;
         level: number;
         lastLogin: number;
@@ -125,7 +125,7 @@ export default {
 
     Movement: class extends Packet<
         | [instance: string, orientation: number]
-        | { instance: string; force: boolean }
+        | { instance: string; force?: boolean }
         | { id: string; state: boolean }
         | {
               id: string;
@@ -148,7 +148,7 @@ export default {
         id: string;
         x: number;
         y: number;
-        withAnimation: boolean;
+        withAnimation?: boolean;
     }> {
         id = Packets.Teleport;
     },
@@ -163,8 +163,8 @@ export default {
 
     // TODO - Revise this when going over combat.
     Combat: class extends Packet<{
-        attackerId: string;
-        targetId: string;
+        attackerId: string | null;
+        targetId: string | null;
         x?: number;
         y?: number;
         hitInfo?: HitData;
@@ -196,9 +196,9 @@ export default {
         | {
               name: string;
               text: string;
-              colour: string;
-              isGlobal: boolean;
-              withBubble: boolean;
+              colour?: string;
+              isGlobal?: boolean;
+              withBubble?: boolean;
           }
         | {
               id: string;
@@ -281,8 +281,8 @@ export default {
         | Record<string, never>
         | { id: string; countdown: number }
         | {
-              id: string;
-              text: string;
+              id: string | null;
+              text?: string;
               nonNPC?: boolean;
           }
     > {
@@ -318,7 +318,7 @@ export default {
         | ShopData
         | { id: number; index: number }
         | { id: number; slotId: number; currency: string; price: number }
-        | { instance: string; npcId: number; shopData: ShopData }
+        | { instance: string; npcId: number; shopData?: ShopData }
     > {
         id = Packets.Shop;
     },
@@ -352,7 +352,7 @@ export default {
             bufferSize: number,
             info: string
         ] {
-            return [this.id, this.opcode, this.bufferSize, this.info];
+            return [this.id, this.opcode!, this.bufferSize, this.info!];
         }
     },
 

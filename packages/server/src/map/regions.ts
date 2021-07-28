@@ -91,9 +91,9 @@ export default class Regions {
 
     getAdjacentRegions<StringFormat = false>(
         id: string,
-        offset: number,
+        offset?: number,
         stringFormat?: StringFormat
-    ): (StringFormat extends true ? string : Pos)[] {
+    ): (StringFormat extends true ? string : Pos)[] | undefined {
         const surroundingRegions = this.getSurroundingRegions(id, offset);
 
         /**
@@ -130,7 +130,7 @@ export default class Regions {
     }
 
     forEachSurroundingRegion(
-        regionId: string,
+        regionId: string | null,
         callback: (region: string) => void,
         offset?: number
     ): void {
@@ -188,7 +188,7 @@ export default class Regions {
         return stringList;
     }
 
-    isSurrounding(regionId: string, toRegionId: string): boolean {
+    isSurrounding(regionId: string | null, toRegionId: string): boolean {
         if (!regionId || !toRegionId) return false;
 
         return this.getSurroundingRegions(regionId, 1, true).includes(toRegionId);

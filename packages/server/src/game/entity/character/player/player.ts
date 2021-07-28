@@ -74,7 +74,7 @@ export interface PlayerExperience {
     level: number;
     amount: number;
     experience: number;
-    nextExperience: number;
+    nextExperience?: number;
     prevExperience: number;
 }
 
@@ -98,7 +98,7 @@ interface PlayerState extends CharacterState {
 export interface ObjectData {
     [index: number]: {
         isObject: boolean;
-        cursor: string;
+        cursor?: string;
     };
 }
 
@@ -126,15 +126,15 @@ export default class Player extends Character {
     public ready: boolean;
 
     // public moving: boolean;
-    public regionPosition: number[];
+    public regionPosition: number[] | null;
 
     public newRegion: boolean;
 
-    public team: string; // TODO
-    public userAgent: string;
-    public minigame: MinigameState; // TODO
+    public team?: string; // TODO
+    public userAgent?: string;
+    public minigame?: MinigameState; // TODO
 
-    public disconnectTimeout: NodeJS.Timeout;
+    public disconnectTimeout: NodeJS.Timeout | null;
     public timeoutDuration: number;
     public lastRegionChange: number;
 
@@ -143,7 +143,7 @@ export default class Player extends Character {
     public inventory: Inventory;
     public professions: Professions;
     public abilities: Abilities;
-    public friends: Friends;
+    public friends!: Friends; //
     public enchant: Enchant;
     public bank: Bank;
     public quests: Quests;
@@ -152,7 +152,7 @@ export default class Player extends Character {
     public warp: Warp;
 
     public introduced: boolean;
-    public currentSong: string;
+    public currentSong: string | null;
     public acceptedTrade: boolean;
     // public invincible: boolean;
     public noDamage: boolean;
@@ -171,66 +171,66 @@ export default class Player extends Character {
     public regionsLoaded: string[];
     public lightsLoaded: number[];
 
-    public npcTalk: number | string;
+    public npcTalk: number | string | null;
 
     // public username: string;
-    public password: string;
-    public email: string;
+    public password!: string;
+    public email!: string;
 
-    public rights: number;
-    public experience: number;
-    public ban: number;
-    public mute: number;
-    public lastLogin: number;
-    public pvpKills: number;
-    public pvpDeaths: number;
-    public orientation: number;
-    public mapVersion: number;
+    public rights!: number;
+    public experience!: number;
+    public ban!: number;
+    public mute!: number;
+    public lastLogin!: number;
+    public pvpKills!: number;
+    public pvpDeaths!: number;
+    public orientation!: number;
+    public mapVersion!: number;
 
-    public nextExperience: number;
-    public prevExperience: number;
-    public playerHitPoints: HitPoints;
-    public mana: Mana;
+    public nextExperience?: number;
+    public prevExperience!: number;
+    public playerHitPoints!: HitPoints;
+    public mana!: Mana;
 
-    public armour: Armour;
-    public weapon: Weapon;
+    public armour!: Armour;
+    public weapon!: Weapon;
     // public pendant: Pendant;
     // public ring: Ring;
     // public boots: Boots;
 
-    public cameraArea: Area;
-    public overlayArea: Area;
+    public cameraArea?: Area | null;
+    public overlayArea?: Area;
 
-    public permanentPVP: boolean;
-    public movementStart: number;
+    public permanentPVP?: boolean;
+    public movementStart!: number;
 
-    public pingTime: number;
+    public pingTime!: number;
 
-    public regionWidth: number;
-    public regionHeight: number;
+    public regionWidth!: number;
+    public regionHeight!: number;
 
-    questsLoaded: boolean;
-    achievementsLoaded: boolean;
+    questsLoaded!: boolean;
+    achievementsLoaded!: boolean;
 
-    public new: boolean;
-    public lastNotify: number;
-    public profileDialogOpen: boolean;
-    public inventoryOpen: boolean;
-    public warpOpen: boolean;
+    public new!: boolean;
+    public lastNotify!: number;
+    public profileDialogOpen!: boolean;
+    public inventoryOpen!: boolean;
+    public warpOpen!: boolean;
 
-    public selectedShopItem: { id: number; index: number };
+    public selectedShopItem!: { id: number; index: number } | null;
 
-    public teleportCallback: TeleportCallback;
-    public cheatScoreCallback: VoidCallback;
-    public profileToggleCallback: InterfaceCallback;
-    public inventoryToggleCallback: InterfaceCallback;
-    public warpToggleCallback: InterfaceCallback;
-    public orientationCallback: VoidCallback;
-    public regionCallback: VoidCallback;
-    public killCallback: KillCallback;
-    public npcTalkCallback: NPCTalkCallback;
-    public doorCallback: DoorCallback;
-    public readyCallback: VoidCallback;
+    public teleportCallback!: TeleportCallback;
+    public cheatScoreCallback!: VoidCallback;
+    public profileToggleCallback!: InterfaceCallback;
+    public inventoryToggleCallback!: InterfaceCallback;
+    public warpToggleCallback!: InterfaceCallback;
+    public orientationCallback!: VoidCallback;
+    public regionCallback!: VoidCallback;
+    public killCallback!: KillCallback;
+    public npcTalkCallback!: NPCTalkCallback;
+    public doorCallback!: DoorCallback;
+    public readyCallback!: VoidCallback;
 
     constructor(world: World, database: MongoDB, connection: Connection, clientId: string) {
         super(-1, 'player', connection.id, -1, -1);
@@ -254,10 +254,6 @@ export default class Player extends Character {
         this.regionPosition = null;
 
         this.newRegion = false;
-
-        this.team = null;
-        this.userAgent = null;
-        this.minigame = null;
 
         this.disconnectTimeout = null;
         this.timeoutDuration = 1000 * 60 * 10; // 10 minutes
@@ -336,23 +332,23 @@ export default class Player extends Character {
     }
 
     destroy(): void {
-        clearTimeout(this.disconnectTimeout);
+        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
 
         this.disconnectTimeout = null;
 
         this.handler.destroy();
 
-        this.handler = null;
-        this.inventory = null;
-        this.abilities = null;
-        this.enchant = null;
-        this.bank = null;
-        this.quests = null;
-        this.trade = null;
-        this.doors = null;
-        this.warp = null;
+        this.handler = null!;
+        this.inventory = null!;
+        this.abilities = null!;
+        this.enchant = null!;
+        this.bank = null!;
+        this.quests = null!;
+        this.trade = null!;
+        this.doors = null!;
+        this.warp = null!;
 
-        this.connection = null;
+        this.connection = null!;
     }
 
     loadRegions(regions: PlayerRegions): void {
@@ -409,7 +405,7 @@ export default class Player extends Character {
 
             if (ids.length !== this.inventory.size) this.save();
 
-            this.inventory.load(ids, counts, skills, skillLevels);
+            this.inventory.load(ids, counts, skills!, skillLevels!);
             this.inventory.check();
         });
     }
@@ -649,7 +645,7 @@ export default class Player extends Character {
 
     equip(string: string, count: number, ability: number, abilityLevel: number): void {
         const data = Items.getData(string);
-        let type, id, power;
+        let type!: Modules.Equipment, id, power;
 
         if (!data || data === 'null') return;
 
@@ -661,7 +657,7 @@ export default class Player extends Character {
         else if (Items.isRing(string)) type = Modules.Equipment.Ring;
         else if (Items.isBoots(string)) type = Modules.Equipment.Boots;
 
-        id = Items.stringToId(string);
+        id = Items.stringToId(string)!;
         power = Items.getLevelRequirement(string);
 
         switch (type) {
@@ -801,7 +797,7 @@ export default class Player extends Character {
                     Modules.Professions.Lumberjacking
                 );
 
-                lumberjacking?.handle(id, info.tree);
+                lumberjacking?.handle(id, info.tree!);
 
                 break;
             }
@@ -834,7 +830,7 @@ export default class Player extends Character {
         this.sendToAdjacentRegions(this.region, new Messages.PVP(this.instance, this.pvp));
     }
 
-    updateOverlay(overlay: Area): void {
+    updateOverlay(overlay: Area | undefined): void {
         if (this.overlayArea === overlay) return;
 
         this.overlayArea = overlay;
@@ -851,7 +847,7 @@ export default class Player extends Character {
         } else this.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
     }
 
-    updateCamera(camera: Area): void {
+    updateCamera(camera: Area | undefined): void {
         if (this.cameraArea === camera) return;
 
         this.cameraArea = camera;
@@ -873,7 +869,7 @@ export default class Player extends Character {
         else this.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
     }
 
-    updateMusic(info: Area): void {
+    updateMusic(info?: Area): void {
         if (!info || info.song === this.currentSong) return;
 
         this.currentSong = info.song;
@@ -927,7 +923,7 @@ export default class Player extends Character {
     }
 
     getTutorial(): Introduction {
-        return this.quests.getQuest<Introduction>(Modules.Quests.Introduction);
+        return this.quests.getQuest<Introduction>(Modules.Quests.Introduction)!;
     }
 
     override getWeaponLevel(): number {
@@ -939,7 +935,7 @@ export default class Player extends Character {
     }
 
     getLumberjackingLevel(): number {
-        return this.professions.getProfession(Modules.Professions.Lumberjacking).getLevel();
+        return this.professions.getProfession(Modules.Professions.Lumberjacking)!.getLevel();
     }
 
     getWeaponLumberjackingLevel(): number {
@@ -1170,7 +1166,7 @@ export default class Player extends Character {
         return { x: 325, y: 87 };
     }
 
-    getHit(target?: Character): Hit {
+    getHit(target: Character): Hit | undefined {
         const defaultDamage = Formulas.getDamage(this, target),
             isSpecial = Utils.randomInt(0, 100) < 30 + this.weapon.abilityLevel * 3;
 
@@ -1220,7 +1216,7 @@ export default class Player extends Character {
     }
 
     refreshTimeout(): void {
-        clearTimeout(this.disconnectTimeout);
+        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
 
         this.disconnectTimeout = setTimeout(() => {
             this.timeout();
@@ -1259,7 +1255,7 @@ export default class Player extends Character {
         });
     }
 
-    sendToAdjacentRegions(regionId: string, message: Packet, ignoreId?: string): void {
+    sendToAdjacentRegions(regionId: string | null, message: Packet, ignoreId?: string): void {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId,
             message,
@@ -1418,7 +1414,7 @@ export default class Player extends Character {
     finishedTutorial(): boolean {
         if (!this.quests || !config.tutorialEnabled) return true;
 
-        return this.quests.getQuest(0).isFinished();
+        return this.quests.getQuest(0)!.isFinished();
     }
 
     finishedAchievement(id: number): boolean {

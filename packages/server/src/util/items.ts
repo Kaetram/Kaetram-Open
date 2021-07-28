@@ -48,7 +48,7 @@ export default {
         return id in this.Plugins;
     },
 
-    getPlugin(id: number): ItemsPlugin {
+    getPlugin(id: number): ItemsPlugin | null {
         if (this.hasPlugin(id)) return this.Plugins[id];
 
         return null;
@@ -66,7 +66,7 @@ export default {
         return 'null';
     },
 
-    stringToId(name: string): number {
+    stringToId(name: string): number | null {
         if (name in this.Data) return this.Data[name].id;
         log.error('Item: ' + name + ' not found in the database.');
 
@@ -171,7 +171,7 @@ export default {
         return false;
     },
 
-    getType(id: number): string {
+    getType(id: number): string | null {
         if (id in this.Ids) return this.Ids[id].type;
 
         return null;
@@ -189,7 +189,7 @@ export default {
         return false;
     },
 
-    getCustomData(id: number): { healAmount: number; manaAmount: number } {
+    getCustomData(id: number): { healAmount: number; manaAmount: number } | null {
         if (id in this.Ids) return this.Ids[id].customData;
 
         return null;
@@ -209,7 +209,7 @@ export default {
         return this.getType(id) !== 'object' && this.getType(id) !== 'craft';
     },
 
-    getShardTier(id: number): number {
+    getShardTier(id: number): number | undefined {
         switch (id) {
             case 253:
                 return 1;
@@ -241,13 +241,13 @@ export default {
         return false;
     },
 
-    getMovementSpeed(string: string): number {
+    getMovementSpeed(string: string): number | null {
         if (string in this.Data) return this.Data[string].movementSpeed;
 
         return null;
     },
 
-    healsMana(id: number): boolean {
+    healsMana(id: number): boolean | undefined {
         if (id in this.Ids) return this.Ids[id].healsMana > 0;
     },
 

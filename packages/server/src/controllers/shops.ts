@@ -21,7 +21,7 @@ export default class Shops {
     world: World;
 
     interval: number;
-    shopInterval: NodeJS.Timeout;
+    shopInterval: NodeJS.Timeout | null;
 
     constructor(world: World) {
         this.world = world;
@@ -37,7 +37,7 @@ export default class Shops {
             _.each(Shop.Data, (info) => {
                 for (let i = 0; i < info.count.length; i++)
                     if (info.count[i] < info.originalCount[i])
-                        Shop.increment(info.id, info.items[i], 1);
+                        Shop.increment(info.id!, info.items[i], 1);
             });
         }, this.interval);
     }
@@ -108,7 +108,7 @@ export default class Shops {
             return;
         }
 
-        let currency = this.getCurrency(npcId),
+        let currency = this.getCurrency(npcId)!,
             price = this.getSellPrice(npcId, item.id, item.count);
 
         Shop.increment(npcId, item.id, item.count);
@@ -144,7 +144,7 @@ export default class Shops {
         });
     }
 
-    getCurrency(npcId: number): number {
+    getCurrency(npcId: number): number | null {
         let shop = Shop.Ids[npcId];
 
         if (!shop) return null;
@@ -164,7 +164,7 @@ export default class Shops {
         return Math.floor(Shop.getCost(npcId, buyId, count) / 2);
     }
 
-    getShopData(npcId: number): ShopData {
+    getShopData(npcId: number): ShopData | undefined {
         let shop = Shop.Ids[npcId];
 
         if (!shop || !_.isArray(shop.items)) return;

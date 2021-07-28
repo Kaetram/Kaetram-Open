@@ -146,8 +146,9 @@ export default {
      * @param compression Compression format, can be gzip or zlib
      */
 
-    compressData(data: string, compression = 'gzip'): string {
-        if (!data) return null;
+    compressData(data: string, compression = 'gzip'): string | undefined {
+        if (!data) return;
+
         return compression === 'gzip'
             ? zlib.gzipSync(data).toString('base64')
             : zlib.deflateSync(data).toString('base64');

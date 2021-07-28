@@ -23,7 +23,7 @@ export default class Commands {
 
         if (blocks.length === 0) return;
 
-        const command = blocks.shift();
+        const command = blocks.shift()!;
 
         this.handlePlayerCommands(command, blocks);
 
@@ -96,11 +96,11 @@ export default class Commands {
                 return;
 
             case 'getintroduction':
-                log.info(this.player.quests.getQuest(0).getStage());
+                log.info(this.player.quests.getQuest(0)!.getStage());
                 return;
 
             case 'resetintro': {
-                const introduction = this.player.quests.getQuest(0);
+                const introduction = this.player.quests.getQuest(0)!;
 
                 introduction.setStage(0);
                 introduction.clearPointers();
@@ -115,7 +115,7 @@ export default class Commands {
 
             case 'pm':
             case 'msg': {
-                const otherPlayer = blocks.shift(),
+                const otherPlayer = blocks.shift()!,
                     message = blocks.join(' ');
 
                 this.player.sendMessage(otherPlayer, message);
@@ -135,7 +135,7 @@ export default class Commands {
         switch (command) {
             case 'mute':
             case 'ban': {
-                let duration = parseInt(blocks.shift());
+                let duration = parseInt(blocks.shift()!);
                 const targetName = blocks.join(' '),
                     user: Player = this.world.getPlayerByName(targetName);
 
@@ -179,10 +179,10 @@ export default class Commands {
 
         switch (command) {
             case 'spawn': {
-                const spawnId = parseInt(blocks.shift()),
-                    count = parseInt(blocks.shift()),
-                    ability = parseInt(blocks.shift()),
-                    abilityLevel = parseInt(blocks.shift());
+                const spawnId = parseInt(blocks.shift()!),
+                    count = parseInt(blocks.shift()!),
+                    ability = parseInt(blocks.shift()!),
+                    abilityLevel = parseInt(blocks.shift()!);
 
                 if (!spawnId || !count) return;
 
@@ -207,8 +207,8 @@ export default class Commands {
                 return;
 
             case 'drop': {
-                const id = parseInt(blocks.shift());
-                let dCount = parseInt(blocks.shift());
+                const id = parseInt(blocks.shift()!);
+                let dCount = parseInt(blocks.shift()!);
 
                 if (!id) return;
 
@@ -230,9 +230,9 @@ export default class Commands {
                 return;
 
             case 'teleport': {
-                const x = parseInt(blocks.shift()),
-                    y = parseInt(blocks.shift()),
-                    withAnimation = parseInt(blocks.shift());
+                const x = parseInt(blocks.shift()!),
+                    y = parseInt(blocks.shift()!),
+                    withAnimation = parseInt(blocks.shift()!);
 
                 if (x && y) this.player.teleport(x, y, false, !!withAnimation);
 
@@ -263,7 +263,7 @@ export default class Commands {
                 return;
 
             case 'mob': {
-                const npcId = parseInt(blocks.shift());
+                const npcId = parseInt(blocks.shift()!);
 
                 this.entities.spawnMob(npcId, this.player.x, this.player.y);
 
@@ -272,8 +272,8 @@ export default class Commands {
 
             case 'pointer':
                 if (blocks.length > 1) {
-                    const posX = parseInt(blocks.shift()),
-                        posY = parseInt(blocks.shift());
+                    const posX = parseInt(blocks.shift()!),
+                        posY = parseInt(blocks.shift()!);
 
                     if (!posX || !posY) return;
 
@@ -285,7 +285,7 @@ export default class Commands {
                         })
                     );
                 } else {
-                    const instance = blocks.shift();
+                    const instance = blocks.shift()!;
 
                     if (!instance) return;
 
@@ -306,7 +306,7 @@ export default class Commands {
                 return;
 
             case 'attackaoe': {
-                let radius = parseInt(blocks.shift());
+                let radius = parseInt(blocks.shift()!);
 
                 if (!radius) radius = 1;
 
@@ -316,7 +316,7 @@ export default class Commands {
             }
 
             case 'addexp': {
-                const exp = parseInt(blocks.shift());
+                const exp = parseInt(blocks.shift()!);
 
                 if (!exp) return;
 
@@ -326,9 +326,9 @@ export default class Commands {
             }
 
             case 'region': {
-                const tileX = parseInt(blocks.shift()),
-                    tileY = parseInt(blocks.shift()),
-                    tileInfo = parseInt(blocks.shift());
+                const tileX = parseInt(blocks.shift()!),
+                    tileY = parseInt(blocks.shift()!),
+                    tileInfo = parseInt(blocks.shift()!);
 
                 if (!tileX || !tileY) return;
 
@@ -368,7 +368,7 @@ export default class Commands {
                 return;
 
             case 'addexperience':
-                this.player.addExperience(parseInt(blocks.shift()));
+                this.player.addExperience(parseInt(blocks.shift()!));
                 return;
 
             case 'attackrange':
@@ -384,12 +384,12 @@ export default class Commands {
                 return;
 
             case 'finishQuest':
-                this.player.quests.getQuest(1).finish();
+                this.player.quests.getQuest(1)!.finish();
 
                 break;
 
             case 'finishAchievement':
-                this.player.quests.getAchievement(0).finish();
+                this.player.quests.getAchievement(0)!.finish();
 
                 break;
 
@@ -401,14 +401,14 @@ export default class Commands {
                 break;
 
             case 'resetAchievement': {
-                const achievementId = parseInt(blocks.shift());
+                const achievementId = parseInt(blocks.shift()!);
 
                 if (!achievementId) {
                     this.player.notify('Invalid command format. /resetAchievement <achievementId>');
                     return;
                 }
 
-                this.player.quests.getAchievement(achievementId).setProgress(0);
+                this.player.quests.getAchievement(achievementId)!.setProgress(0);
                 this.player.updateRegion();
 
                 break;
@@ -448,7 +448,7 @@ export default class Commands {
                 break;
 
             case 'ms': {
-                let movementSpeed = parseInt(blocks.shift());
+                let movementSpeed = parseInt(blocks.shift()!);
 
                 if (!movementSpeed) {
                     this.player.notify('No movement speed specified.');

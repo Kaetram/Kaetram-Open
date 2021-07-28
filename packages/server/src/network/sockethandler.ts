@@ -9,8 +9,8 @@ export default class SocketHandler {
     public ips: { [id: string]: number };
     public connections: { [id: string]: Connection };
 
-    private readyCallback: () => void;
-    private connectionCallback: (connection: Connection) => void;
+    private readyCallback?(): void;
+    private connectionCallback?: (connection: Connection) => void;
 
     constructor() {
         this.ips = {};
@@ -24,7 +24,7 @@ export default class SocketHandler {
 
     load(): void {
         this.socketIO.onInitialize(() => {
-            this.readyCallback();
+            this.readyCallback?.();
         });
 
         this.socketIO.onAdd((connection: Connection) => {
