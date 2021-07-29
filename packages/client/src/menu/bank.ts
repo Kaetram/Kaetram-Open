@@ -33,7 +33,7 @@ export default class Bank {
         this.load(data);
     }
 
-    private async load(data: Slot[]): Promise<void> {
+    private load(data: Slot[]): void {
         const bankList = this.bankSlots.find('ul'),
             inventoryList = this.bankInventorySlots.find('ul');
 
@@ -50,7 +50,7 @@ export default class Bank {
             const image = $(`<div id="bankImage${i}" class="bankImage"></div>`);
 
             if (item.string)
-                image.css('background-image', await this.container.getImageFormat(item.string));
+                image.css('background-image', this.container.getImageFormat(item.string));
 
             slot.on('click', (event) => this.click('bank', event));
 
@@ -92,10 +92,7 @@ export default class Bank {
             const slotImage = $(`<div id="inventoryImage${j}" class="bankImage"></div>`);
 
             if (iItem.string)
-                slotImage.css(
-                    'background-image',
-                    await this.container.getImageFormat(iItem.string)
-                );
+                slotImage.css('background-image', this.container.getImageFormat(iItem.string));
 
             iSlot.on('click', (event) => this.click('inventory', event));
 
@@ -125,7 +122,7 @@ export default class Bank {
         }
     }
 
-    public async resize(): Promise<void> {
+    public resize(): void {
         const bankList = this.getBankList(),
             inventoryList = this.getInventoryList();
 
@@ -145,7 +142,7 @@ export default class Bank {
                 marginLeft: '0'
             });
 
-            image.css('background-image', await this.container.getImageFormat(slot.string));
+            image.css('background-image', this.container.getImageFormat(slot.string));
         }
 
         for (const [j, element] of [...inventoryList].entries()) {
@@ -158,7 +155,7 @@ export default class Bank {
                 marginBottom: `${6 * this.getScale()}px`
             });
 
-            iImage.css('background-image', await this.container.getImageFormat(iSlot.string));
+            iImage.css('background-image', this.container.getImageFormat(iSlot.string));
         }
     }
 
@@ -169,7 +166,7 @@ export default class Bank {
         this.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
     }
 
-    public async add(info: Slot): Promise<void> {
+    public add(info: Slot): void {
         const item = $(this.getBankList()[info.index]),
             slot = this.container.slots[info.index];
 
@@ -183,7 +180,7 @@ export default class Bank {
             cssSlot = bankSlot.find(`#bankImage${info.index}`),
             count = bankSlot.find(`#bankItemCount${info.index}`);
 
-        cssSlot.css('background-image', await this.container.getImageFormat(info.string));
+        cssSlot.css('background-image', this.container.getImageFormat(info.string));
 
         if (this.scale < 3) cssSlot.css('background-size', '600%');
 
@@ -208,7 +205,7 @@ export default class Bank {
         } else divItem.find(`#bankItemCount${info.index}`).text(slot.count);
     }
 
-    public async addInventory(info: Slot): Promise<void> {
+    public addInventory(info: Slot): void {
         const item = $(this.getInventoryList()[info.index]);
 
         if (!item) return;
@@ -216,7 +213,7 @@ export default class Bank {
         const slot = item.find(`#bankInventorySlot${info.index}`),
             image = slot.find(`#inventoryImage${info.index}`);
 
-        image.css('background-image', await this.container.getImageFormat(info.string));
+        image.css('background-image', this.container.getImageFormat(info.string));
 
         if (info.count > 1) slot.find(`#inventoryItemCount${info.index}`).text(info.count);
     }
