@@ -6,7 +6,7 @@ import Packets from '@kaetram/common/src/packets';
 import config from '../../../../../config';
 import Messages from '../../../../network/messages';
 import log from '../../../../util/log';
-import Npcs from '../../../../util/npcs';
+import NPCs from '../../../../util/npcs';
 import Shops from '../../../../util/shops';
 import Utils from '../../../../util/utils';
 import Hit from '../combat/hit';
@@ -18,25 +18,20 @@ import type Mob from '../mob/mob';
 import type Player from './player';
 
 export default class Handler {
-    world;
-    map;
+    private world;
+    private map;
 
-    updateTicks = 0;
-    updateInterval: NodeJS.Timeout | null = null;
+    private updateTicks = 0;
+    private updateInterval: NodeJS.Timeout | null = null;
 
-    constructor(private player: Player) {
+    public constructor(private player: Player) {
         this.world = player.world;
         this.map = player.world.map;
 
         this.load();
     }
 
-    destroy(): void {
-        if (this.updateInterval) clearInterval(this.updateInterval);
-        this.updateInterval = null;
-    }
-
-    load(): void {
+    private load(): void {
         this.updateInterval = setInterval(() => {
             this.detectAggro();
 
@@ -141,7 +136,7 @@ export default class Handler {
                 return;
             }
 
-            switch (Npcs.getType(npc.id)) {
+            switch (NPCs.getType(npc.id)) {
                 case 'banker':
                     this.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
                     return;
@@ -151,7 +146,7 @@ export default class Handler {
                     break;
             }
 
-            let text = Npcs.getText(npc.id);
+            let text = NPCs.getText(npc.id);
 
             if (!text) return;
 
@@ -191,7 +186,12 @@ export default class Handler {
         });
     }
 
-    detectAggro(): void {
+    public destroy(): void {
+        if (this.updateInterval) clearInterval(this.updateInterval);
+        this.updateInterval = null;
+    }
+
+    private detectAggro(): void {
         let region = this.world.region.regions[this.player.region!];
 
         if (!region) return;
@@ -207,7 +207,7 @@ export default class Handler {
         });
     }
 
-    detectAreas(x: number, y: number): void {
+    private detectAreas(x: number, y: number): void {
         this.map.forEachAreas((areas: Areas, name: string) => {
             let info = areas.inArea(x, y);
 
@@ -239,7 +239,7 @@ export default class Handler {
         });
     }
 
-    detectLights(x: number, y: number): void {
+    private detectLights(x: number, y: number): void {
         _.each(this.map.lights, (light) => {
             const { id } = light;
 
@@ -252,7 +252,7 @@ export default class Handler {
         });
     }
 
-    detectClipping(x: number, y: number): void {
+    private detectClipping(x: number, y: number): void {
         let isColliding = this.map.isColliding(x, y);
 
         if (!isColliding) return;
@@ -260,7 +260,7 @@ export default class Handler {
         this.player.incoming.handleNoClip(x, y);
     }
 
-    handlePoison(): void {
+    private handlePoison(): void {
         if (!this.player.poison) return;
 
         let info = this.player.poison.split(':'),
@@ -281,7 +281,7 @@ export default class Handler {
         this.player.combat.hit(this.player, this.player, hit.getData());
     }
 
-    canEntitySee(entity: Entity): boolean {
+    private canEntitySee(entity: Entity): boolean {
         return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
     }
 }

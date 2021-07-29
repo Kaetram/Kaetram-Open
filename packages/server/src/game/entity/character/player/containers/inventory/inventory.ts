@@ -9,11 +9,11 @@ import type { ItemData } from '../../equipment/equipment';
 import type Player from '../../player';
 
 export default class Inventory extends Container {
-    constructor(owner: Player, size: number) {
+    public constructor(owner: Player, size: number) {
         super('Inventory', owner, size);
     }
 
-    override load(
+    public override load(
         ids: number[],
         counts: number[],
         abilities: number[],
@@ -26,7 +26,7 @@ export default class Inventory extends Container {
         );
     }
 
-    add(item: ItemData): boolean {
+    public add(item: ItemData): boolean {
         if (!this.canHold(item.id!, item.count!)) {
             this.owner.send(
                 new Messages.Notification(Packets.NotificationOpcode.Text, {
@@ -49,7 +49,11 @@ export default class Inventory extends Container {
         return true;
     }
 
-    override remove(id: number | undefined, count: number | undefined, index?: number): boolean {
+    public override remove(
+        id: number | undefined,
+        count: number | undefined,
+        index?: number
+    ): boolean {
         if (!id || !count) return false;
 
         if (!index) index = this.getIndex(id);

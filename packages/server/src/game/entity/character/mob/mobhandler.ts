@@ -4,15 +4,14 @@ import type Player from '../player/player';
 import type Mob from './mob';
 
 export default class MobHandler {
-    combat;
-    // map: Map;
+    private combat;
 
-    spawnLocation;
-    maxRoamingDistance;
+    private spawnLocation;
+    private maxRoamingDistance;
 
-    roamingInterval: NodeJS.Timeout | null = null;
+    private roamingInterval: NodeJS.Timeout | null = null;
 
-    constructor(private mob: Mob) {
+    public constructor(private mob: Mob) {
         this.combat = mob.combat;
 
         this.spawnLocation = mob.spawnLocation;
@@ -22,7 +21,7 @@ export default class MobHandler {
         this.loadCallbacks();
     }
 
-    load(): void {
+    private load(): void {
         if (!this.mob.roaming) return;
 
         this.roamingInterval = setInterval(() => {
@@ -30,7 +29,7 @@ export default class MobHandler {
         }, 5000);
     }
 
-    loadCallbacks(): void {
+    private loadCallbacks(): void {
         // Combat plugin has its own set of callbacks.
         if (Mobs.hasCombatPlugin(this.mob.id)) return;
 
@@ -51,7 +50,7 @@ export default class MobHandler {
         // TODO - Implement posion on Mobs
     }
 
-    forceTalk(message: string): void {
+    private forceTalk(message: string): void {
         this.mob.forceTalkCallback?.(message);
     }
 }

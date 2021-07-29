@@ -31,21 +31,21 @@ abstract class Entity {
     public dead = false;
     public recentRegions: string[] = [];
     /** Entity Instances */
-    public invisibles: { [instance: string]: Entity } = {};
+    private invisibles: { [instance: string]: Entity } = {};
     /** Entity IDs */
-    public invisiblesIds: number[] = [];
+    protected invisiblesIds: number[] = [];
 
     public username!: string;
     public instanced = false;
     public region!: string | null;
 
-    setPositionCallback?(): void;
+    private setPositionCallback?(): void;
 
-    specialState!: 'boss' | 'miniboss' | 'achievementNpc' | 'area' | 'questNpc' | 'questMob';
-    customScale!: number;
-    roaming = false;
+    public specialState!: 'boss' | 'miniboss' | 'achievementNpc' | 'area' | 'questNpc' | 'questMob';
+    public customScale!: number;
+    public roaming = false;
 
-    constructor(
+    protected constructor(
         public id: number,
         public type: string,
         public instance: string,
@@ -59,28 +59,28 @@ abstract class Entity {
         this.oldY = y!;
     }
 
-    getDistance(entity: Entity): number {
+    public getDistance(entity: Entity): number {
         let x = Math.abs(this.x - entity.x),
             y = Math.abs(this.y - entity.y);
 
         return x > y ? x : y;
     }
 
-    getCoordDistance(toX: number, toY: number): number {
+    public getCoordDistance(toX: number, toY: number): number {
         let x = Math.abs(this.x - toX),
             y = Math.abs(this.y - toY);
 
         return x > y ? x : y;
     }
 
-    setPosition(x: number, y: number): void {
+    public setPosition(x: number, y: number): void {
         this.x = x;
         this.y = y;
 
-        if (this.setPositionCallback) this.setPositionCallback();
+        this.setPositionCallback?.();
     }
 
-    updatePosition(): void {
+    public updatePosition(): void {
         this.oldX = this.x;
         this.oldY = this.y;
     }
@@ -90,77 +90,76 @@ abstract class Entity {
      * within a given range to another entity.
      * Especially useful for ranged attacks and whatnot.
      */
-
-    isNear(entity: Entity, distance: number): boolean {
+    protected isNear(entity: Entity, distance: number): boolean {
         let dx = Math.abs(this.x - entity.x),
             dy = Math.abs(this.y - entity.y);
 
         return dx <= distance && dy <= distance;
     }
 
-    isAdjacent(entity: Entity): boolean {
+    public isAdjacent(entity: Entity): boolean {
         return entity && this.getDistance(entity) < 2;
     }
 
-    isNonDiagonal(entity: Entity): boolean {
+    public isNonDiagonal(entity: Entity): boolean {
         return this.isAdjacent(entity) && !(entity.x !== this.x && entity.y !== this.y);
     }
 
-    hasSpecialAttack(): boolean {
+    protected hasSpecialAttack(): boolean {
         return false;
     }
 
-    isMob(): this is Mob {
+    public isMob(): this is Mob {
         return this.type === 'mob';
     }
 
-    isNPC(): this is NPC {
+    private isNPC(): this is NPC {
         return this.type === 'npc';
     }
 
-    isItem(): this is Item {
+    private isItem(): this is Item {
         return this.type === 'item';
     }
 
-    isPlayer(): this is Player {
+    public isPlayer(): this is Player {
         return this.type === 'player';
     }
 
-    onSetPosition(callback: () => void): void {
+    public onSetPosition(callback: () => void): void {
         this.setPositionCallback = callback;
     }
 
-    addInvisible(entity: Entity): void {
+    private addInvisible(entity: Entity): void {
         this.invisibles[entity.instance] = entity;
     }
 
-    addInvisibleId(entityId: number): void {
+    private addInvisibleId(entityId: number): void {
         this.invisiblesIds.push(entityId);
     }
 
-    removeInvisible(entity: Entity): void {
+    private removeInvisible(entity: Entity): void {
         delete this.invisibles[entity.instance];
     }
 
-    removeInvisibleId(entityId: number): void {
+    private removeInvisibleId(entityId: number): void {
         let index = this.invisiblesIds.indexOf(entityId);
 
         if (index > -1) this.invisiblesIds.splice(index, 1);
     }
 
-    hasInvisible(entity: Entity): boolean {
+    public hasInvisible(entity: Entity): boolean {
         return entity.instance in this.invisibles;
     }
 
-    hasInvisibleId(entityId: number): boolean {
+    public hasInvisibleId(entityId: number): boolean {
         return this.invisiblesIds.includes(entityId);
     }
 
-    hasInvisibleInstance(instance: string): boolean {
+    private hasInvisibleInstance(instance: string): boolean {
         return instance in this.invisibles;
     }
 
-    getState(): EntityState {
+    public getState(): EntityState {
         let string = this.isMob()
                 ? Mobs.idToString(this.id)
                 : this.isNPC()
@@ -187,7 +186,7 @@ abstract class Entity {
         return data;
     }
 
-    getNameColour(): string {
+    private getNameColour(): string {
         switch (this.specialState) {
             case 'boss':
                 return '#F60404';

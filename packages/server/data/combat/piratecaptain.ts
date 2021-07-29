@@ -12,7 +12,7 @@ export default class PirateCaptain extends Combat {
     location: Pos;
     // declare character: Character;
 
-    constructor(character: Character) {
+    public constructor(character: Character) {
         character.spawnDistance = 20;
         super(character);
 

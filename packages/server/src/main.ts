@@ -9,14 +9,15 @@ import type Player from './game/entity/character/player/player';
 import type Connection from './network/connection';
 
 class Main {
-    socketHandler = new SocketHandler();
-    database = new Database(config.database).getDatabase()!;
-    parser = new Parser();
+    private socketHandler = new SocketHandler();
+    private database = new Database(config.database).getDatabase()!;
 
-    world!: World;
+    private world!: World;
 
-    constructor() {
+    public constructor() {
         log.info('Initializing ' + config.name + ' game engine...');
+
+        new Parser();
 
         this.socketHandler.onReady(() => {
             /**
@@ -168,7 +169,7 @@ class Main {
         });
     }
 
-    getPopulation(): number {
+    private getPopulation(): number {
         return this.world.getPopulation();
     }
 }

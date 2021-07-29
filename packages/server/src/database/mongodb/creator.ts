@@ -40,9 +40,9 @@ interface PlayerData {
 export type FullPlayerData = PlayerData & PlayerEquipment;
 
 export default class Creator {
-    constructor(private database: MongoDB) {}
+    public constructor(private database: MongoDB) {}
 
-    save(player: Player): void {
+    public save(player: Player): void {
         this.database.getConnection((database) => {
             /* Handle the player databases */
 
@@ -76,7 +76,7 @@ export default class Creator {
         });
     }
 
-    saveData(collection: Collection<PlayerData>, player: Player): void {
+    private saveData(collection: Collection<PlayerData>, player: Player): void {
         Creator.getPlayerData(player, (data) => {
             collection.updateOne(
                 {
@@ -98,7 +98,7 @@ export default class Creator {
         });
     }
 
-    saveEquipment(collection: Collection<PlayerEquipment>, player: Player): void {
+    private saveEquipment(collection: Collection<PlayerEquipment>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -118,7 +118,7 @@ export default class Creator {
         );
     }
 
-    saveQuests(collection: Collection<PlayerQuests>, player: Player): void {
+    private saveQuests(collection: Collection<PlayerQuests>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -138,7 +138,7 @@ export default class Creator {
         );
     }
 
-    saveAchievements(collection: Collection<PlayerAchievements>, player: Player): void {
+    private saveAchievements(collection: Collection<PlayerAchievements>, player: Player): void {
         collection.updateOne(
             { username: player.username },
             { $set: player.quests.getAchievements() },
@@ -155,7 +155,7 @@ export default class Creator {
         );
     }
 
-    saveBank(collection: Collection<ContainerArray>, player: Player): void {
+    private saveBank(collection: Collection<ContainerArray>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -175,7 +175,7 @@ export default class Creator {
         );
     }
 
-    saveRegions(collection: Collection<PlayerRegions>, player: Player): void {
+    private saveRegions(collection: Collection<PlayerRegions>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -200,7 +200,7 @@ export default class Creator {
         );
     }
 
-    saveAbilities(collection: Collection<AbilitiesArray>, player: Player): void {
+    private saveAbilities(collection: Collection<AbilitiesArray>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -220,7 +220,7 @@ export default class Creator {
         );
     }
 
-    saveProfessions(collection: Collection<ProfessionsArray>, player: Player): void {
+    private saveProfessions(collection: Collection<ProfessionsArray>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -240,7 +240,7 @@ export default class Creator {
         );
     }
 
-    saveFriends(collection: Collection<FriendsArray>, player: Player): void {
+    private saveFriends(collection: Collection<FriendsArray>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -260,7 +260,7 @@ export default class Creator {
         );
     }
 
-    saveInventory(
+    private saveInventory(
         collection: Collection<ContainerArray>,
         player: Player,
         callback: () => void
@@ -286,7 +286,7 @@ export default class Creator {
         );
     }
 
-    static getPasswordHash(password: string, callback: (hash: string) => void): void {
+    private static getPasswordHash(password: string, callback: (hash: string) => void): void {
         bcryptjs.hash(password, 10, (error, hash) => {
             if (error) throw error;
 
@@ -294,7 +294,7 @@ export default class Creator {
         });
     }
 
-    static getPlayerData(player: Player, callback: (data: PlayerData) => void): void {
+    private static getPlayerData(player: Player, callback: (data: PlayerData) => void): void {
         Creator.getPasswordHash(player.password, (hash) => {
             callback({
                 username: player.username,
@@ -322,7 +322,7 @@ export default class Creator {
         });
     }
 
-    static getPlayerEquipment(player: Player): PlayerEquipment {
+    private static getPlayerEquipment(player: Player): PlayerEquipment {
         return {
             username: player.username,
             armour: [
@@ -363,18 +363,17 @@ export default class Creator {
      * fairly soon as it is just unnecessary code for speed development.
      * The above object arrays should just be concatenated.
      */
-
-    static getFullData(player: Player): FullPlayerData {
+    public static getFullData(player: Player): FullPlayerData {
         let position = player.getSpawn();
 
         return {
             username: player.username,
             password: player.password,
-            email: player.email ? player.email : 'null',
+            email: player.email || 'null',
             x: position.x,
             y: position.y,
             rights: player.rights || 0,
-            hitPoints: player.hitPoints || 100,
+            hitPoints: player.playerHitPoints?.getHitPoints() || 100,
             mana: player.mana?.getMana() || 20,
             poison: player.poison || null,
             experience: player.experience || 0,

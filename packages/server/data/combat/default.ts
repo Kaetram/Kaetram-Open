@@ -6,9 +6,8 @@ import Combat from '../../src/game/entity/character/combat/combat';
  * It just shorteness the amount of work that needs to be done
  * when adding special entities.
  */
-
 export default class Default extends Combat {
-    constructor(character: Character) {
+    public constructor(character: Character) {
         super(character);
 
         this.character = character;

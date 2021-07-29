@@ -11,12 +11,12 @@ import type Player from '../../game/entity/character/player/player';
 import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
 
 export default class MongoDB {
-    loader = new Loader(this);
-    creator = new Creator(this);
+    public loader = new Loader(this);
+    public creator = new Creator(this);
 
-    connection!: Db;
+    private connection!: Db;
 
-    constructor(
+    public constructor(
         private host: string,
         private port: number,
         private user: string,
@@ -50,7 +50,7 @@ export default class MongoDB {
         });
     }
 
-    login(player: Player): void {
+    public login(player: Player): void {
         this.getConnection((database) => {
             let dataCursor = database
                     .collection<FullPlayerData>('player_data')
@@ -88,7 +88,7 @@ export default class MongoDB {
         });
     }
 
-    verify(player: Player, callback: (data: { status: 'success' | 'error' }) => void): void {
+    public verify(player: Player, callback: (data: { status: 'success' | 'error' }) => void): void {
         this.getConnection((database) => {
             let dataCursor = database.collection('player_data').find({ username: player.username });
 
@@ -108,7 +108,7 @@ export default class MongoDB {
         });
     }
 
-    register(player: Player): void {
+    public register(player: Player): void {
         this.getConnection((database) => {
             let playerData = database.collection('player_data'),
                 cursor = playerData.find({ username: player.username });
@@ -126,7 +126,10 @@ export default class MongoDB {
         });
     }
 
-    exists(player: Player, callback: (data: { exists: boolean; type?: string }) => void): void {
+    public exists(
+        player: Player,
+        callback: (data: { exists: boolean; type?: string }) => void
+    ): void {
         this.getConnection((database) => {
             let playerData = database.collection('player_data'),
                 emailCursor = playerData.find({ email: player.email }),
@@ -145,7 +148,7 @@ export default class MongoDB {
         });
     }
 
-    delete(player: Player): void {
+    public delete(player: Player): void {
         this.getConnection((database) => {
             let collections = [
                 'player_data',
@@ -174,7 +177,7 @@ export default class MongoDB {
         });
     }
 
-    registeredCount(callback: (count: number) => void): void {
+    public registeredCount(callback: (count: number) => void): void {
         this.getConnection((database) => {
             let collection = database.collection('player_data');
 
@@ -184,7 +187,7 @@ export default class MongoDB {
         });
     }
 
-    resetPositions(newX: number, newY: number, callback: (status: string) => void): void {
+    public resetPositions(newX: number, newY: number, callback: (status: string) => void): void {
         this.getConnection((database) => {
             let collection = database.collection('player_data'),
                 cursor = collection.find();

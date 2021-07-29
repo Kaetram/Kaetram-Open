@@ -19,14 +19,14 @@ export interface ShopData {
 }
 
 export default class Shops {
-    interval = 60000;
-    shopInterval: NodeJS.Timeout | null = null;
+    private interval = 60000;
+    private shopInterval: NodeJS.Timeout | null = null;
 
-    constructor(private world: World) {
+    public constructor(private world: World) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.shopInterval = setInterval(() => {
             _.each(Shop.Data, (info) => {
                 for (let i = 0; i < info.count.length; i++)
@@ -36,7 +36,7 @@ export default class Shops {
         }, this.interval);
     }
 
-    open(player: Player, npcId: number): void {
+    public open(player: Player, npcId: number): void {
         player.send(
             new Messages.Shop(Packets.ShopOpcode.Open, {
                 instance: player.instance,
@@ -46,7 +46,7 @@ export default class Shops {
         );
     }
 
-    buy(player: Player, npcId: number, buyId: number, count: number): void {
+    public buy(player: Player, npcId: number, buyId: number, count: number): void {
         let cost = Shop.getCost(npcId, buyId, count),
             currency = this.getCurrency(npcId),
             stock = Shop.getStock(npcId, buyId);
@@ -88,7 +88,7 @@ export default class Shops {
         this.refresh(npcId);
     }
 
-    sell(player: Player, npcId: number, slotId: number): void {
+    public sell(player: Player, npcId: number, slotId: number): void {
         let item = player.inventory.slots[slotId],
             shop = Shop.Ids[npcId];
 
@@ -117,7 +117,7 @@ export default class Shops {
         this.refresh(npcId);
     }
 
-    remove(player: Player): void {
+    public remove(player: Player): void {
         let selectedItem = player.selectedShopItem;
 
         if (!selectedItem) return;
@@ -132,13 +132,13 @@ export default class Shops {
         player.selectedShopItem = null;
     }
 
-    refresh(shop: number): void {
+    public refresh(shop: number): void {
         this.world.push(Packets.PushOpcode.Broadcast, {
             message: new Messages.Shop(Packets.ShopOpcode.Refresh, this.getShopData(shop))
         });
     }
 
-    getCurrency(npcId: number): number | null {
+    public getCurrency(npcId: number): number | null {
         let shop = Shop.Ids[npcId];
 
         if (!shop) return null;
@@ -146,7 +146,7 @@ export default class Shops {
         return shop.currency;
     }
 
-    getSellPrice(npcId: number, itemId: number, count = 1): number {
+    public getSellPrice(npcId: number, itemId: number, count = 1): number {
         let shop = Shop.Ids[npcId];
 
         if (!shop) return 1;
@@ -158,7 +158,7 @@ export default class Shops {
         return Math.floor(Shop.getCost(npcId, buyId, count) / 2);
     }
 
-    getShopData(npcId: number): ShopData | undefined {
+    private getShopData(npcId: number): ShopData | undefined {
         let shop = Shop.Ids[npcId];
 
         if (!shop || !_.isArray(shop.items)) return;

@@ -11,16 +11,16 @@ import type Connection from './connection';
 type PacketsList = unknown[] & { id?: string };
 
 export default class Network {
-    entities;
-    database;
-    socketHandler;
-    region;
-    map;
+    private entities;
+    private database;
+    private socketHandler;
+    private region;
+    private map;
 
-    packets: { [id: string]: PacketsList } = {};
-    differenceThreshold = 4000;
+    public packets: { [id: string]: PacketsList } = {};
+    private differenceThreshold = 4000;
 
-    constructor(private world: World) {
+    public constructor(private world: World) {
         this.entities = world.entities;
         this.database = world.database;
         this.socketHandler = world.socketHandler;
@@ -30,7 +30,7 @@ export default class Network {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.world.onPlayerConnection((connection: Connection) => {
             this.handlePlayerConnection(connection);
         });
@@ -40,11 +40,10 @@ export default class Network {
         });
     }
 
-    parsePackets(): void {
-        /**
-         * This parses through the packet pool and sends them
-         */
-
+    /**
+     * This parses through the packet pool and sends them
+     */
+    public parsePackets(): void {
         for (let id in this.packets)
             if (this.packets[id].length > 0) {
                 let conn = this.socketHandler.get(id);
@@ -57,7 +56,7 @@ export default class Network {
             }
     }
 
-    handlePlayerConnection(connection: Connection): void {
+    private handlePlayerConnection(connection: Connection): void {
         let clientId = Utils.generateClientId(),
             player = new Player(this.world, this.database, connection, clientId),
             timeDifference = Date.now() - this.getSocketTime(connection);
@@ -80,11 +79,11 @@ export default class Network {
         );
     }
 
-    handlePopulationChange(): void {
+    private handlePopulationChange(): void {
         this.pushBroadcast(new Messages.Population(this.world.getPopulation()));
     }
 
-    addToPackets(player: Player): void {
+    private addToPackets(player: Player): void {
         this.packets[player.instance] = [] as PacketsList;
     }
 
@@ -95,8 +94,7 @@ export default class Network {
     /**
      * Broadcast a message to everyone in the world.
      */
-
-    pushBroadcast(message: Packet): void {
+    public pushBroadcast(message: Packet): void {
         _.each(this.packets, (packet) => {
             packet.push(message.serialize());
         });
@@ -105,8 +103,7 @@ export default class Network {
     /**
      * Broadcast a message to everyone with exceptions.
      */
-
-    pushSelectively(message: Packet, ignores: string[]): void {
+    public pushSelectively(message: Packet, ignores: string[]): void {
         _.each(this.packets, (packet) => {
             if (ignores.includes(packet.id!)) return;
 
@@ -117,8 +114,7 @@ export default class Network {
     /**
      * Push a message to a single player.
      */
-
-    pushToPlayer(player: Player, message: Packet): void {
+    public pushToPlayer(player: Player, message: Packet): void {
         if (player && player.instance in this.packets)
             this.packets[player.instance].push(message.serialize());
     }
@@ -126,8 +122,7 @@ export default class Network {
     /**
      * Specify an array of player instances to send message to
      */
-
-    pushToPlayers(players: string[], message: Packet): void {
+    public pushToPlayers(players: string[], message: Packet): void {
         _.each(players, (instance) => {
             this.pushToPlayer(this.entities.get(instance) as Player, message);
         });
@@ -136,8 +131,7 @@ export default class Network {
     /**
      * Send a message to the region the player is currently in.
      */
-
-    pushToRegion(regionId: string, message: Packet, ignoreId?: string): void {
+    public pushToRegion(regionId: string, message: Packet, ignoreId?: string): void {
         let region = this.region.regions[regionId];
 
         if (!region) return;
@@ -154,8 +148,7 @@ export default class Network {
      * G  P  G
      * G  G  G
      */
-
-    pushToAdjacentRegions(regionId: string, message: Packet, ignoreId?: string): void {
+    public pushToAdjacentRegions(regionId: string, message: Packet, ignoreId?: string): void {
         this.map.regions.forEachSurroundingRegion(regionId, (id: string) => {
             this.pushToRegion(id, message, ignoreId);
         });
@@ -164,8 +157,7 @@ export default class Network {
     /**
      * Sends a message to an array of player names
      */
-
-    pushToNameArray(names: string[], message: Packet): void {
+    public pushToNameArray(names: string[], message: Packet): void {
         _.each(names, (name: string) => {
             let player = this.world.getPlayerByName(name);
 
@@ -176,8 +168,7 @@ export default class Network {
     /**
      * Sends a message to the region the player just left from
      */
-
-    pushToOldRegions(player: Player, message: Packet): void {
+    public pushToOldRegions(player: Player, message: Packet): void {
         _.each(player.recentRegions, (id: string) => {
             this.pushToRegion(id, message);
         });
@@ -185,7 +176,7 @@ export default class Network {
         player.recentRegions = [];
     }
 
-    getSocketTime(connection: Connection): number {
+    private getSocketTime(connection: Connection): number {
         return this.socketHandler.ips[connection.socket.conn.remoteAddress];
     }
 }

@@ -13,7 +13,7 @@ export default class Tenebris extends Combat {
     lastIllusion: number;
     respawnDelay: number;
 
-    constructor(character: Character) {
+    public constructor(character: Character) {
         character.spawnDistance = 24;
         super(character);
 

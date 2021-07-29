@@ -5,7 +5,7 @@ import type Player from './player';
 export default class Trade {
     public oPlayer: Player;
 
-    constructor(private player: Player) {
+    public constructor(private player: Player) {
         this.oPlayer = null!;
     }
 }
