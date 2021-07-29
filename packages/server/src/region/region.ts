@@ -10,12 +10,12 @@ import log from '../util/log';
 import type Entity from '../game/entity/entity';
 import type World from '../game/world';
 
-type Bounds = {
+interface Bounds {
     startX: number;
     startY: number;
     endX: number;
     endY: number;
-};
+}
 
 export type Tile = number | number[];
 
@@ -57,20 +57,20 @@ type IncomingCallback = (entity: Entity, regionId: string) => void;
  * players, even if they share the same coordinates.
  */
 export default class Region {
-    map;
-    mapRegions;
+    public map;
+    private mapRegions;
 
-    entities;
+    private entities;
 
-    regions: { [id: string]: RegionData } = {};
+    public regions: { [id: string]: RegionData } = {};
 
-    loaded = false;
+    private loaded = false;
 
-    addCallback?: AddCallback;
-    removeCallback?: RemoveCallback;
-    incomingCallback?: IncomingCallback;
+    private addCallback?: AddCallback;
+    private removeCallback?: RemoveCallback;
+    private incomingCallback?: IncomingCallback;
 
-    constructor(private world: World) {
+    public constructor(private world: World) {
         this.map = world.map;
         this.mapRegions = world.map.regions;
 
@@ -105,7 +105,7 @@ export default class Region {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.mapRegions.forEachRegion((regionId: string) => {
             this.regions[regionId] = {
                 entities: {},
@@ -119,7 +119,7 @@ export default class Region {
         log.info('Finished loading regions!');
     }
 
-    addEntityToInstance(entity: Entity, player: Player): void {
+    private addEntityToInstance(entity: Entity, player: Player): void {
         if (!entity) return;
 
         this.add(entity, player.region);
@@ -127,12 +127,11 @@ export default class Region {
         player.updateRegion();
     }
 
-    createInstance(player: Player, regionId: string | null): void {
-        /**
-         * We create an instance at the player's current surrounding
-         * region IDs. These will have to be disposed of whenever we're done.
-         */
-
+    /**
+     * We create an instance at the player's current surrounding
+     * region IDs. These will have to be disposed of whenever we're done.
+     */
+    public createInstance(player: Player, regionId: string | null): void {
         player.instanced = true;
 
         this.mapRegions.forEachSurroundingRegion(regionId, (region: string) => {
@@ -155,7 +154,7 @@ export default class Region {
         });
     }
 
-    deleteInstance(player: Player): void {
+    public deleteInstance(player: Player): void {
         player.instanced = false;
 
         this.handle(player);
@@ -168,7 +167,7 @@ export default class Region {
         });
     }
 
-    parseRegions(): void {
+    public parseRegions(): void {
         if (!this.loaded) return;
 
         this.mapRegions.forEachRegion((regionId: string) => {
@@ -180,7 +179,7 @@ export default class Region {
         });
     }
 
-    syncRegions(player: Player): void {
+    public syncRegions(player: Player): void {
         this.handle(player);
         this.push(player);
 
@@ -188,7 +187,7 @@ export default class Region {
     }
 
     // If `regionId` is not null, we update adjacent regions
-    updateRegions(regionId?: string): void {
+    public updateRegions(regionId?: string): void {
         if (regionId)
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
                 const region = this.regions[id];
@@ -208,7 +207,7 @@ export default class Region {
             });
     }
 
-    sendRegion(player: Player, region: string | null, force?: boolean): void {
+    public sendRegion(player: Player, region: string | null, force?: boolean): void {
         let tileData = this.getRegionData(region, player, force);
 
         // No need to send empty data...
@@ -217,7 +216,7 @@ export default class Region {
     }
 
     // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
-    getDynamicTiles(player: Player): DynamicTiles {
+    private getDynamicTiles(player: Player): DynamicTiles {
         let dynamicTiles: DynamicTiles = {},
             doors = player.doors.getAllTiles(),
             trees = player.getSurroundingTrees();
@@ -248,7 +247,7 @@ export default class Region {
         return dynamicTiles;
     }
 
-    sendTilesetInfo(player: Player): void {
+    private sendTilesetInfo(player: Player): void {
         let tilesetData: TilesetData = {};
 
         for (let i in this.map.tileCollisions)
@@ -261,7 +260,7 @@ export default class Region {
         player.send(new Messages.Region(Packets.RegionOpcode.Tileset, tilesetData));
     }
 
-    sendSpawns(regionId: string): void {
+    private sendSpawns(regionId: string): void {
         if (!regionId) return;
 
         _.each(this.regions[regionId].incoming, (entity: Entity) => {
@@ -275,7 +274,7 @@ export default class Region {
         });
     }
 
-    add(entity: Entity, regionId: string | null): string[] {
+    private add(entity: Entity, regionId: string | null): string[] {
         const newRegions: string[] = [];
 
         if (entity && regionId && regionId in this.regions) {
@@ -295,12 +294,12 @@ export default class Region {
             if (entity instanceof Player) this.regions[regionId].players.push(entity.instance);
         }
 
-        if (this.addCallback) this.addCallback(entity, regionId);
+        this.addCallback?.(entity, regionId);
 
         return newRegions;
     }
 
-    remove(entity: Entity): string[] {
+    public remove(entity: Entity): string[] {
         const oldRegions: string[] = [];
 
         if (entity && entity.region) {
@@ -321,27 +320,27 @@ export default class Region {
             entity.region = null;
         }
 
-        if (this.removeCallback) this.removeCallback(entity, oldRegions);
+        this.removeCallback?.(entity, oldRegions);
 
         return oldRegions;
     }
 
-    incoming(entity: Entity, regionId: string): void {
+    private incoming(entity: Entity, regionId: string): void {
         if (!entity || !regionId) return;
 
         const region = this.regions[regionId];
 
         if (region && !(entity.instance in region.entities)) region.incoming.push(entity);
 
-        if (this.incomingCallback) this.incomingCallback(entity, regionId);
+        this.incomingCallback?.(entity, regionId);
     }
 
-    handle(entity: Entity, region: string | null = null): boolean {
+    public handle(entity: Entity, region: string | null = null): boolean {
         let regionsChanged = false;
 
         if (!entity) return regionsChanged;
 
-        let regionId = region ? region : this.mapRegions.regionIdFromPosition(entity.x, entity.y);
+        let regionId = region || this.mapRegions.regionIdFromPosition(entity.x, entity.y);
 
         if (entity.instanced) regionId = Region.regionIdToInstance(entity, regionId);
 
@@ -359,7 +358,7 @@ export default class Region {
         return regionsChanged;
     }
 
-    push(player: Player): void {
+    public push(player: Player): void {
         let entities: string[];
 
         if (!player || !(player.region! in this.regions)) return;
@@ -377,13 +376,13 @@ export default class Region {
         player.send(new Messages.List(entities));
     }
 
-    changeTileAt(player: Player, newTile: Tile, x: number, y: number): void {
+    private changeTileAt(player: Player, newTile: Tile, x: number, y: number): void {
         const index = this.gridPositionToIndex(x, y);
 
         player.send(Region.getModify(index, newTile));
     }
 
-    changeGlobalTile(newTile: Tile, x: number, y: number): void {
+    private changeGlobalTile(newTile: Tile, x: number, y: number): void {
         const index = this.gridPositionToIndex(x, y);
 
         this.map.data[index] = newTile;
@@ -393,7 +392,11 @@ export default class Region {
         });
     }
 
-    getRegionData(region: string | null, player: Player, force?: boolean): RegionTileData[] {
+    private getRegionData(
+        region: string | null,
+        player: Player,
+        force?: boolean
+    ): RegionTileData[] {
         let data: RegionTileData[] = [];
 
         if (!player) return data;
@@ -415,7 +418,7 @@ export default class Region {
         return data;
     }
 
-    forEachTile(
+    private forEachTile(
         bounds: Bounds,
         webSocket: boolean,
         dynamicTiles: DynamicTiles,
@@ -468,12 +471,12 @@ export default class Region {
         });
     }
 
-    forEachGrid(bounds: Bounds, callback: (x: number, y: number) => void): void {
+    private forEachGrid(bounds: Bounds, callback: (x: number, y: number) => void): void {
         for (let y = bounds.startY; y < bounds.endY; y++)
             for (let x = bounds.startX; x < bounds.endX; x++) callback(x, y);
     }
 
-    getRegionBounds(regionId: string): Bounds {
+    public getRegionBounds(regionId: string): Bounds {
         const regionCoordinates = this.mapRegions.regionIdToCoordinates(regionId);
 
         return {
@@ -484,36 +487,36 @@ export default class Region {
         };
     }
 
-    static getModify(index: number, newTile: Tile): Packet {
+    private static getModify(index: number, newTile: Tile): Packet {
         return new Messages.Region(Packets.RegionOpcode.Modify, {
             index,
             newTile
         });
     }
 
-    static instanceToRegionId(instancedRegionId: string): string {
+    private static instanceToRegionId(instancedRegionId: string): string {
         const region = instancedRegionId.split('-');
 
         return region[0] + '-' + region[1];
     }
 
-    static regionIdToInstance(entity: Entity, regionId: string): string {
+    private static regionIdToInstance(entity: Entity, regionId: string): string {
         return regionId + '-' + entity.instance;
     }
 
-    gridPositionToIndex(x: number, y: number): number {
+    public gridPositionToIndex(x: number, y: number): number {
         return y * this.map.width + x + 1;
     }
 
-    onAdd(callback: AddCallback): void {
+    private onAdd(callback: AddCallback): void {
         this.addCallback = callback;
     }
 
-    onRemove(callback: RemoveCallback): void {
+    private onRemove(callback: RemoveCallback): void {
         this.removeCallback = callback;
     }
 
-    onIncoming(callback: IncomingCallback): void {
+    private onIncoming(callback: IncomingCallback): void {
         this.incomingCallback = callback;
     }
 }

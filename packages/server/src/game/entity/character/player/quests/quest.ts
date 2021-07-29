@@ -49,20 +49,20 @@ export default abstract class Quest {
 
     public stage = 0;
 
-    npcTalkCallback?: NPCTalkCallback;
+    private npcTalkCallback?: NPCTalkCallback;
 
-    constructor(public player: Player, public data: QuestData) {
+    public constructor(public player: Player, public data: QuestData) {
         this.id = data.id;
         this.name = data.name;
         this.description = data.description;
     }
 
-    load(stage: number): void {
+    public load(stage: number): void {
         if (!stage) this.update();
         else this.stage = stage;
     }
 
-    finish(): void {
+    public finish(): void {
         let item = this.getItemReward();
 
         if (item)
@@ -92,20 +92,20 @@ export default abstract class Quest {
         this.update();
     }
 
-    setStage(stage: number): void {
+    public setStage(stage: number): void {
         this.stage = stage;
         this.update();
     }
 
-    triggerTalk(npc: NPC): void {
+    public triggerTalk(npc: NPC): void {
         this.npcTalkCallback?.(npc);
     }
 
-    update(): void {
+    public update(): void {
         return this.player.save();
     }
 
-    getConversation(id: number): string[] {
+    protected getConversation(id: number): string[] {
         let conversation = this.data.conversations![id];
 
         if (!conversation || !conversation[this.stage]) return [''];
@@ -113,7 +113,7 @@ export default abstract class Quest {
         return conversation[this.stage];
     }
 
-    updatePointers(): void {
+    public updatePointers(): void {
         if (!this.data.pointers) return;
 
         let pointer = this.data.pointers[this.stage];
@@ -139,7 +139,7 @@ export default abstract class Quest {
             );
     }
 
-    forceTalk(npc: NPC, message: string): void {
+    private forceTalk(npc: NPC, message: string): void {
         if (!npc) return;
 
         this.player.talkIndex = 0;
@@ -152,73 +152,72 @@ export default abstract class Quest {
         );
     }
 
-    resetTalkIndex(): void {
-        /**
-         * Resets the player's talk index for the next dialogue to take place.
-         */
-
+    /**
+     * Resets the player's talk index for the next dialogue to take place.
+     */
+    protected resetTalkIndex(): void {
         this.player.talkIndex = 0;
     }
 
-    clearPointers(): void {
+    public clearPointers(): void {
         this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}));
     }
 
-    onNPCTalk(callback: NPCTalkCallback): void {
+    protected onNPCTalk(callback: NPCTalkCallback): void {
         this.npcTalkCallback = callback;
     }
 
-    hasMob(mob: Mob): boolean | undefined {
+    public hasMob(mob: Mob): boolean | undefined {
         if (!this.data.mobs) return;
 
         return this.data.mobs.includes(mob.id);
     }
 
-    hasNPC(id: number): boolean {
+    public hasNPC(id: number): boolean {
         return this.data.npcs.includes(id);
     }
 
-    hasItemReward(): boolean {
+    private hasItemReward(): boolean {
         return !!this.data.itemReward;
     }
 
-    hasInventorySpace(id: number, count: number): boolean {
+    private hasInventorySpace(id: number, count: number): boolean {
         return this.player.inventory.canHold(id, count);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    hasDoorUnlocked(door: Door): boolean {
+    public hasDoorUnlocked(door: Door): boolean {
         return this.stage > 9998;
     }
 
-    isFinished(): boolean {
+    public isFinished(): boolean {
         return this.stage > 9998;
     }
 
-    getId(): number {
+    private getId(): number {
         return this.id;
     }
 
-    getName(): string {
+    private getName(): string {
         return this.name;
     }
 
-    getTask(): Task {
+    protected getTask(): Task {
         return this.data.task![this.stage];
     }
 
-    getItem(): number | undefined {
+    protected getItem(): number | undefined {
         return this.data.itemReq?.[this.stage];
     }
 
-    getStage(): number {
+    public getStage(): number {
         return this.stage;
     }
 
-    getItemReward(): ItemReward | undefined {
+    private getItemReward(): ItemReward | undefined {
         return this.data.itemReward;
     }
-    getDescription(): string {
+    private getDescription(): string {
         return this.description;
     }
 

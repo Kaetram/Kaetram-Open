@@ -6,7 +6,7 @@ import Areas from '../areas';
 import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Chest extends Areas {
-    constructor(data: ProcessedArea[], world: World) {
+    public constructor(data: ProcessedArea[], world: World) {
         super(data, world);
 
         super.load(this.data, (chestArea, rawData) => {
@@ -30,7 +30,7 @@ export default class Chest extends Areas {
         super.message('chest');
     }
 
-    spawnChest(chestArea: Area): void {
+    private spawnChest(chestArea: Area): void {
         if (Utils.timePassed(chestArea.lastSpawn, chestArea.spawnDelay)) return;
 
         chestArea.chest = this.world.entities.spawnChest(
@@ -43,7 +43,7 @@ export default class Chest extends Areas {
         chestArea.lastSpawn = Date.now();
     }
 
-    removeChest(chestArea: Area): void {
+    private removeChest(chestArea: Area): void {
         if (!chestArea.chest) return;
 
         this.world.entities.removeChest(chestArea.chest);

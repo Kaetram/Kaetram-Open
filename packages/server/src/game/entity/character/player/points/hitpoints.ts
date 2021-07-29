@@ -1,38 +1,38 @@
 import Points from './points';
 
 export default class HitPoints extends Points {
-    hitPointsCallback?(): void;
-    maxHitPointsCallback?(): void;
+    private hitPointsCallback?(): void;
+    private maxHitPointsCallback?(): void;
 
-    constructor(hitPoints: number, maxHitPoints: number) {
+    public constructor(hitPoints: number, maxHitPoints: number) {
         super(hitPoints, maxHitPoints);
     }
 
-    setHitPoints(hitPoints: number): void {
+    public setHitPoints(hitPoints: number): void {
         super.setPoints(hitPoints);
 
-        if (this.hitPointsCallback) this.hitPointsCallback();
+        this.hitPointsCallback?.();
     }
 
-    setMaxHitPoints(maxHitPoints: number): void {
+    public setMaxHitPoints(maxHitPoints: number): void {
         super.setMaxPoints(maxHitPoints);
 
-        if (this.maxHitPointsCallback) this.maxHitPointsCallback();
+        this.maxHitPointsCallback?.();
     }
 
-    getHitPoints(): number {
+    public getHitPoints(): number {
         return this.points;
     }
 
-    getMaxHitPoints(): number {
+    public getMaxHitPoints(): number {
         return this.maxPoints;
     }
 
-    onHitPoints(callback: () => void): () => void {
+    public onHitPoints(callback: () => void): () => void {
         return (this.hitPointsCallback = callback);
     }
 
-    onMaxHitPoints(callback: () => void): () => void {
+    public onMaxHitPoints(callback: () => void): () => void {
         return (this.maxHitPointsCallback = callback);
     }
 }

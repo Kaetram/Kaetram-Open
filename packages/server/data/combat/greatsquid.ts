@@ -8,7 +8,7 @@ import type { HitData } from '../../src/game/entity/character/combat/hit';
 export default class GreatSquid extends Combat {
     lastTerror: number;
 
-    constructor(character: Character) {
+    public constructor(character: Character) {
         character.spawnDistance = 15;
         super(character);
 

@@ -3,15 +3,15 @@ import _ from 'lodash';
 import type Map from './map';
 
 export default class Regions {
-    width;
-    height;
+    private width;
+    private height;
 
-    regionWidth;
-    regionHeight;
+    private regionWidth;
+    private regionHeight;
 
-    linkedRegions: { [id: string]: Pos[] } = {};
+    private linkedRegions: { [id: string]: Pos[] } = {};
 
-    constructor(private map: Map) {
+    public constructor(private map: Map) {
         this.width = map.width;
         this.height = map.height;
 
@@ -21,7 +21,7 @@ export default class Regions {
         this.loadDoors();
     }
 
-    loadDoors(): void {
+    private loadDoors(): void {
         const { doors } = this.map;
 
         _.each(doors, (door) => {
@@ -41,7 +41,7 @@ export default class Regions {
     // y y x y x
     // y y x y y
 
-    getSurroundingRegions<StringFormat = false>(
+    private getSurroundingRegions<StringFormat = false>(
         id: string,
         offset = 1,
         stringFormat?: StringFormat
@@ -83,7 +83,7 @@ export default class Regions {
         return (stringFormat ? this.regionsToCoordinates(list) : list) as never;
     }
 
-    getAdjacentRegions<StringFormat = false>(
+    private getAdjacentRegions<StringFormat = false>(
         id: string,
         offset?: number,
         stringFormat?: StringFormat
@@ -118,12 +118,12 @@ export default class Regions {
         ) as never;
     }
 
-    forEachRegion(callback: (region: string) => void): void {
+    public forEachRegion(callback: (region: string) => void): void {
         for (let x = 0; x < this.regionWidth; x++)
             for (let y = 0; y < this.regionHeight; y++) callback(x + '-' + y);
     }
 
-    forEachSurroundingRegion(
+    public forEachSurroundingRegion(
         regionId: string | null,
         callback: (region: string) => void,
         offset?: number
@@ -135,7 +135,7 @@ export default class Regions {
         });
     }
 
-    forEachAdjacentRegion(
+    public forEachAdjacentRegion(
         regionId: string,
         callback: (region: string) => void,
         offset?: number
@@ -147,11 +147,11 @@ export default class Regions {
         });
     }
 
-    regionIdFromPosition(x: number, y: number): string {
+    public regionIdFromPosition(x: number, y: number): string {
         return Math.floor(x / this.regionWidth) + '-' + Math.floor(y / this.regionHeight);
     }
 
-    regionIdToPosition(id: string): Pos {
+    private regionIdToPosition(id: string): Pos {
         const position = id.split('-');
 
         return {
@@ -160,7 +160,7 @@ export default class Regions {
         };
     }
 
-    regionIdToCoordinates(id: string): Pos {
+    public regionIdToCoordinates(id: string): Pos {
         const position = id.split('-');
 
         return {
@@ -172,7 +172,7 @@ export default class Regions {
     /**
      * Converts an array of regions from object type to string format.
      */
-    regionsToCoordinates(regions: Pos[]): string[] {
+    private regionsToCoordinates(regions: Pos[]): string[] {
         const stringList: string[] = [];
 
         _.each(regions, (region) => {
@@ -182,7 +182,7 @@ export default class Regions {
         return stringList;
     }
 
-    isSurrounding(regionId: string | null, toRegionId: string): boolean {
+    public isSurrounding(regionId: string | null, toRegionId: string): boolean {
         if (!regionId || !toRegionId) return false;
 
         return this.getSurroundingRegions(regionId, 1, true).includes(toRegionId);

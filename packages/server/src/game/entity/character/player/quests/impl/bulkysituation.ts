@@ -6,9 +6,9 @@ import Quest from '../quest';
 import type NPC from '../../../../npc/npc';
 
 export default class BulkySituation extends Quest {
-    lastNPC: NPC | null = null;
+    private lastNPC: NPC | null = null;
 
-    override load(stage: number): void {
+    public override load(stage: number): void {
         super.load(stage);
 
         if (this.stage > 9998) return;
@@ -16,7 +16,7 @@ export default class BulkySituation extends Quest {
         this.loadCallbacks();
     }
 
-    loadCallbacks(): void {
+    private loadCallbacks(): void {
         this.onNPCTalk((npc: NPC) => {
             if (this.hasRequirement()) {
                 this.progress('item');
@@ -38,7 +38,7 @@ export default class BulkySituation extends Quest {
         });
     }
 
-    progress(type: string): void {
+    private progress(type: string): void {
         let task = this.data.task![this.stage];
 
         if (!task || task !== type) return;
@@ -74,7 +74,7 @@ export default class BulkySituation extends Quest {
     //     super.finish();
     // }
 
-    hasRequirement(): boolean {
+    private hasRequirement(): boolean {
         return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());
     }
 }

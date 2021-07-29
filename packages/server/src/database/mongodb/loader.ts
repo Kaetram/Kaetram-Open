@@ -11,13 +11,13 @@ import type {
 import type MongoDB from './mongodb';
 
 export default class Loader {
-    constructor(private database: MongoDB) {}
+    public constructor(private database: MongoDB) {}
 
     private parseArray(value: string): number[] {
         return value.split(' ').map((string) => parseInt(string));
     }
 
-    getInventory(
+    public getInventory(
         player: Player,
         callback: (
             ids: number[] | null,
@@ -51,7 +51,7 @@ export default class Loader {
         });
     }
 
-    getBank(
+    public getBank(
         player: Player,
         callback: (
             ids: number[],
@@ -85,7 +85,7 @@ export default class Loader {
         });
     }
 
-    getQuests(
+    public getQuests(
         player: Player,
         callback: (ids: string[] | null, stage: string[] | null) => void
     ): void {
@@ -109,7 +109,10 @@ export default class Loader {
         });
     }
 
-    getAchievements(player: Player, callback: (ids: string[], progress: string[]) => void): void {
+    public getAchievements(
+        player: Player,
+        callback: (ids: string[], progress: string[]) => void
+    ): void {
         this.database.getConnection((database) => {
             let achievements = database.collection<PlayerAchievements>('player_achievements'),
                 cursor = achievements.find({ username: player.username });
@@ -130,7 +133,7 @@ export default class Loader {
         });
     }
 
-    getProfessions(player: Player, callback: (data: ProfessionsData) => void): void {
+    public getProfessions(player: Player, callback: (data: ProfessionsData) => void): void {
         this.database.getConnection((database) => {
             let professions = database.collection<ProfessionsArray>('player_professions'),
                 cursor = professions.find({ username: player.username });
@@ -151,7 +154,7 @@ export default class Loader {
         });
     }
 
-    getFriends(player: Player, callback: (friends: unknown) => void): void {
+    public getFriends(player: Player, callback: (friends: unknown) => void): void {
         this.database.getConnection((database) => {
             let friends = database.collection<FriendsArray>('player_friends'),
                 cursor = friends.find({ username: player.username });

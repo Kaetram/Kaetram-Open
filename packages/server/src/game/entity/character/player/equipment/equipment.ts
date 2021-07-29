@@ -27,45 +27,45 @@ export default abstract class Equipment {
     public ability;
     public abilityLevel;
 
-    constructor(
+    protected constructor(
         public name: string,
         public id: number,
         count: number,
         ability: number,
         abilityLevel: number
     ) {
-        this.count = count ? count : 0;
+        this.count = count || 0;
         this.ability = !isNaN(ability) ? ability : -1;
         this.abilityLevel = !isNaN(abilityLevel) ? abilityLevel : -1;
     }
 
-    getName(): string {
+    public getName(): string {
         return this.name;
     }
 
-    getId(): number {
+    public getId(): number {
         return this.id;
     }
 
-    getCount(): number {
+    public getCount(): number {
         return this.count;
     }
 
-    getAbility(): number {
+    public getAbility(): number {
         return this.ability;
     }
 
-    getAbilityLevel(): number {
+    public getAbilityLevel(): number {
         return this.abilityLevel;
     }
 
-    getBaseAmplifier(): number {
+    public getBaseAmplifier(): number {
         return 1;
     }
 
-    abstract getType(): Modules.Equipment;
+    protected abstract getType(): Modules.Equipment;
 
-    getData(): EquipmentData {
+    public getData(): EquipmentData {
         return {
             type: this.getType(),
             name: Items.idToName(this.id),
@@ -77,11 +77,11 @@ export default abstract class Equipment {
         };
     }
 
-    getString(): string {
+    public getString(): string {
         return Items.idToString(this.id);
     }
 
-    getItem(): ItemData {
+    public getItem(): ItemData {
         return {
             name: this.name,
             string: Items.idToString(this.id),

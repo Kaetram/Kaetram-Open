@@ -35,9 +35,9 @@ interface PlayerData {
  * the simplicity of the current API.
  */
 export default class API {
-    hubConnected = false;
+    private hubConnected = false;
 
-    constructor(private world: World) {
+    public constructor(private world: World) {
         if (!config.apiEnabled) return;
 
         const app = express();
@@ -56,7 +56,7 @@ export default class API {
         });
     }
 
-    handle(router: express.Router): void {
+    private handle(router: express.Router): void {
         router.get('/', (_request, response) => {
             response.json({
                 name: config.name,
@@ -80,7 +80,7 @@ export default class API {
         });
     }
 
-    handlePlayer(request: express.Request, response: express.Response): void {
+    private handlePlayer(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(request.body.accessToken)) {
             this.returnError(
                 response,
@@ -91,7 +91,7 @@ export default class API {
         }
     }
 
-    handleChat(request: express.Request, response: express.Response): void {
+    private handleChat(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(request.body.accessToken)) {
             this.returnError(
                 response,
@@ -120,7 +120,7 @@ export default class API {
         response.json({ status: 'success' });
     }
 
-    handlePlayers(request: express.Request, response: express.Response): void {
+    private handlePlayers(request: express.Request, response: express.Response): void {
         if (!this.verifyToken(request.query.accessToken as string)) {
             this.returnError(
                 response,
@@ -139,7 +139,7 @@ export default class API {
         response.json(players);
     }
 
-    async pingHub(): Promise<void> {
+    public async pingHub(): Promise<void> {
         const url = this.getUrl('ping'),
             data = {
                 form: {
@@ -164,7 +164,7 @@ export default class API {
         }
     }
 
-    async sendChat(source: string, text: string, withArrow?: boolean): Promise<void> {
+    public async sendChat(source: string, text: string, withArrow?: boolean): Promise<void> {
         const url = this.getUrl('chat'),
             data = {
                 form: {
@@ -188,7 +188,7 @@ export default class API {
         }
     }
 
-    async sendPrivateMessage(source: Player, target: string, text: string): Promise<void> {
+    public async sendPrivateMessage(source: Player, target: string, text: string): Promise<void> {
         const url = this.getUrl('privateMessage'),
             data = {
                 form: {
@@ -212,11 +212,11 @@ export default class API {
         }
     }
 
-    verifyToken(token: string): boolean {
+    private verifyToken(token: string): boolean {
         return token === config.accessToken;
     }
 
-    getPlayerData(player: Player): Partial<PlayerData> {
+    private getPlayerData(player: Player): Partial<PlayerData> {
         if (!player) return {};
 
         return {
@@ -234,11 +234,11 @@ export default class API {
         };
     }
 
-    getUrl(path: string): string {
+    private getUrl(path: string): string {
         return `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
-    returnError(response: express.Response, error: APIConstants, message: string): void {
+    private returnError(response: express.Response, error: APIConstants, message: string): void {
         response.json({
             error,
             message

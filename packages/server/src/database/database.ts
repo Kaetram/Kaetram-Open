@@ -5,9 +5,9 @@ import MongoDB from './mongodb/mongodb';
 export type DatabaseType = 'mongo' | 'mongodb';
 
 export default class Database {
-    database: MongoDB | null = null;
+    private database: MongoDB | null = null;
 
-    constructor(databaseType: DatabaseType) {
+    public constructor(databaseType: DatabaseType) {
         switch (databaseType) {
             case 'mongo':
             case 'mongodb':
@@ -26,7 +26,7 @@ export default class Database {
         }
     }
 
-    getDatabase(): MongoDB | null {
+    public getDatabase(): MongoDB | null {
         if (!this.database)
             log.error(
                 '[Database] No database is currently present. It is advised against proceeding in this state.'

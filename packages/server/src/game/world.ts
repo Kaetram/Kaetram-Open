@@ -58,20 +58,20 @@ interface DynamicData<T> {
 }
 
 export default class World {
-    public maxPlayers;
-    public updateTime;
-    public debug = false;
+    private maxPlayers;
+    private updateTime;
+    // private debug = false;
     public allowConnections = false;
 
     // Lumberjacking Variables
-    public trees: DynamicObject = {};
-    public cutTrees: DynamicData<{ treeId: number }> = {};
+    private trees: DynamicObject = {};
+    private cutTrees: DynamicData<{ treeId: number }> = {};
 
     // Mining Variables
-    public rocks: DynamicObject = {};
-    public depletedRocks: DynamicData<{ rockId: number }> = {};
+    private rocks: DynamicObject = {};
+    private depletedRocks: DynamicData<{ rockId: number }> = {};
 
-    public loadedRegions = false;
+    // private loadedRegions = false;
     public ready = false;
 
     public map!: Map;
@@ -87,7 +87,7 @@ export default class World {
     public playerConnectCallback?: PlayerConnectCallback;
     public populationCallback?(): void;
 
-    constructor(public socketHandler: SocketHandler, public database: MongoDB) {
+    public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
         this.socketHandler = socketHandler;
         this.database = database;
 
@@ -95,7 +95,7 @@ export default class World {
         this.updateTime = config.updateTime;
     }
 
-    load(onWorldLoad: () => void): void {
+    public load(onWorldLoad: () => void): void {
         log.info('************ World Information ***********');
 
         /**
@@ -115,7 +115,7 @@ export default class World {
         });
     }
 
-    loaded(): void {
+    private loaded(): void {
         /**
          * The following are all globally based 'plugins'. We load them
          * in a batch here in order to keep it organized and neat.
@@ -138,7 +138,7 @@ export default class World {
         log.info('******************************************');
     }
 
-    async tick(): Promise<void> {
+    private async tick(): Promise<void> {
         let update = 1000 / this.updateTime,
             setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (
                 fn: () => Promise<void>,
@@ -167,7 +167,7 @@ export default class World {
      * Entity related functions *
      ****************************/
 
-    kill(character: Character): void {
+    public kill(character: Character): void {
         character.applyDamage(character.hitPoints);
 
         this.push(Packets.PushOpcode.Regions, [
@@ -188,7 +188,7 @@ export default class World {
         this.handleDeath(character, true);
     }
 
-    handleDamage(
+    public handleDamage(
         attacker: Character | undefined,
         target: Character | undefined,
         damage: number
@@ -241,7 +241,11 @@ export default class World {
         }
     }
 
-    handleDeath(character: Character, ignoreDrops?: boolean, lastAttacker?: Character): void {
+    public handleDeath(
+        character: Character,
+        ignoreDrops?: boolean,
+        lastAttacker?: Character
+    ): void {
         if (!character) return;
 
         if (character.type === 'mob') {
@@ -252,7 +256,7 @@ export default class World {
 
             if (lastAttacker) mob.lastAttacker = lastAttacker;
 
-            if (mob.deathCallback) mob.deathCallback();
+            mob.deathCallback?.();
 
             this.entities.remove(mob);
 
@@ -274,7 +278,7 @@ export default class World {
         }
     }
 
-    parseTrees(): void {
+    private parseTrees(): void {
         let time = Date.now(),
             treeTypes = Object.keys(Modules.Trees);
 
@@ -296,7 +300,7 @@ export default class World {
         });
     }
 
-    parseRocks(): void {
+    private parseRocks(): void {
         let time = Date.now(),
             rockTypes = Object.keys(Modules.Rocks);
 
@@ -318,7 +322,7 @@ export default class World {
         });
     }
 
-    isTreeCut(id: string): boolean {
+    public isTreeCut(id: string): boolean {
         if (id in this.cutTrees) return true;
 
         for (let i in this.cutTrees) if (id in this.cutTrees[i]) return true;
@@ -326,7 +330,7 @@ export default class World {
         return false;
     }
 
-    isRockDepleted(id: string): boolean {
+    public isRockDepleted(id: string): boolean {
         if (id in this.depletedRocks) return true;
 
         for (let i in this.depletedRocks) if (id in this.depletedRocks[i]) return true;
@@ -341,8 +345,7 @@ export default class World {
      * We run a tick that re-spawns them after a while
      * using the data from `this.trees`.
      */
-
-    destroyTree(id: string, treeId: number): void {
+    public destroyTree(id: string, treeId: number): void {
         let position = this.map.idToPosition(id);
 
         if (!(id in this.trees)) this.trees[id] = {} as never;
@@ -394,7 +397,7 @@ export default class World {
      * `type` - The type of tile we are looking for.
      */
 
-    getSearchTile(type: string, x: number, y: number): number | number[] | undefined {
+    private getSearchTile(type: string, x: number, y: number): number | number[] | undefined {
         switch (type) {
             case 'tree':
                 return this.map.getTree(x, y);
@@ -404,7 +407,13 @@ export default class World {
         }
     }
 
-    search(x: number, y: number, refId: string, data: DynamicObject, type: string): boolean {
+    private search(
+        x: number,
+        y: number,
+        refId: string,
+        data: DynamicObject,
+        type: string
+    ): boolean {
         let objectTile = this.getSearchTile(type, x, y);
 
         if (!objectTile) return false;
@@ -431,7 +440,7 @@ export default class World {
         return false;
     }
 
-    push(type: number, info: WorldPacket | WorldPacket[]): void {
+    public push(type: number, info: WorldPacket | WorldPacket[]): void {
         if (_.isArray(info)) {
             _.each(info, (i) => {
                 this.push(type, i);
@@ -497,7 +506,7 @@ export default class World {
         }
     }
 
-    globalMessage(
+    public globalMessage(
         source: string,
         message: string,
         colour?: string,
@@ -515,7 +524,7 @@ export default class World {
         });
     }
 
-    cleanCombat(character: Character): void {
+    public cleanCombat(character: Character): void {
         this.entities.forEachEntity((entity: Entity) => {
             if (entity.instance !== character.instance) return;
 
@@ -524,31 +533,31 @@ export default class World {
         });
     }
 
-    isOnline(username: string): boolean {
+    public isOnline(username: string): boolean {
         return this.entities.isOnline(username);
     }
 
-    getPlayerByName(username: string): Player {
+    public getPlayerByName(username: string): Player {
         return this.entities.getPlayer(username) as Player;
     }
 
-    isFull(): boolean {
+    public isFull(): boolean {
         return this.getPopulation() >= this.maxPlayers;
     }
 
-    getGrids(): Grids {
+    public getGrids(): Grids {
         return this.map.grids;
     }
 
-    getPopulation(): number {
+    public getPopulation(): number {
         return _.size(this.entities.players);
     }
 
-    onPlayerConnection(callback: PlayerConnectCallback): void {
+    public onPlayerConnection(callback: PlayerConnectCallback): void {
         this.playerConnectCallback = callback;
     }
 
-    onPopulationChange(callback: () => void): void {
+    public onPopulationChange(callback: () => void): void {
         this.populationCallback = callback;
     }
 }

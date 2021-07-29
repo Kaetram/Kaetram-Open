@@ -17,33 +17,33 @@ import type Mob from '../mob/mob';
 import type Player from '../player/player';
 
 export default class Combat {
-    world!: World;
-    entities!: Entities;
+    public world!: World;
+    public entities!: Entities;
 
-    attackers: { [id: string]: Character } = {};
+    public attackers: { [id: string]: Character } = {};
 
-    retaliate = false;
+    private retaliate = false;
 
-    queue = new CombatQueue();
+    private queue = new CombatQueue();
 
-    attacking = false;
+    // private attacking = false;
 
-    attackLoop: NodeJS.Timeout | null = null;
-    followLoop: NodeJS.Timeout | null = null;
-    checkLoop: NodeJS.Timeout | null = null;
+    private attackLoop: NodeJS.Timeout | null = null;
+    private followLoop: NodeJS.Timeout | null = null;
+    private checkLoop: NodeJS.Timeout | null = null;
 
-    first = false;
-    started = false;
-    lastAction = -1;
-    lastHit = -1;
+    // private first = false;
+    public started = false;
+    private lastAction = -1;
+    public lastHit = -1;
 
-    lastActionThreshold = 7000;
+    public lastActionThreshold = 7000;
 
-    cleanTimeout: NodeJS.Timeout | null = null;
+    // private cleanTimeout: NodeJS.Timeout | null = null;
 
-    forgetCallback?(): void;
+    private forgetCallback?(): void;
 
-    constructor(public character: Character) {
+    public constructor(public character: Character) {
         character.onSubAoE((radius: number, hasTerror: boolean) => {
             this.dealAoE(radius, hasTerror);
         });
@@ -68,7 +68,7 @@ export default class Combat {
         });
     }
 
-    begin(attacker: Character): void {
+    public begin(attacker: Character): void {
         this.start();
 
         this.character.setTarget(attacker);
@@ -79,7 +79,7 @@ export default class Combat {
         this.attack(attacker);
     }
 
-    start(): void {
+    public start(): void {
         if (this.started) return;
 
         if (this.character.type === 'player') log.debug('Starting player attack.');
@@ -101,7 +101,7 @@ export default class Combat {
         this.started = true;
     }
 
-    stop(): void {
+    public stop(): void {
         if (!this.started) return;
 
         if (this.character.type === 'player') log.debug('Stopping player attack.');
@@ -117,7 +117,7 @@ export default class Combat {
         this.started = false;
     }
 
-    parseAttack(): void {
+    private parseAttack(): void {
         if (!this.world || !this.queue || this.character.stunned) return;
 
         if (this.character.target && this.inProximity()) {
@@ -133,7 +133,7 @@ export default class Combat {
         } else this.queue.clear();
     }
 
-    parseFollow(): void {
+    private parseFollow(): void {
         if (this.character.frozen || this.character.stunned) return;
 
         if (this.isMob()) {
@@ -163,7 +163,7 @@ export default class Combat {
         }
     }
 
-    parseCheck(): void {
+    private parseCheck(): void {
         if (this.getTime() - this.lastAction > this.lastActionThreshold) {
             this.stop();
 
@@ -171,7 +171,7 @@ export default class Combat {
         }
     }
 
-    attack(target: Character): void {
+    public attack(target: Character): void {
         let hit: Hit | undefined;
 
         if (this.isPlayer()) {
@@ -185,7 +185,7 @@ export default class Combat {
         this.queue.add(hit);
     }
 
-    forceAttack(): void {
+    public forceAttack(): void {
         if (!this.character.target || !this.inProximity()) return;
 
         // this.stop();
@@ -195,7 +195,7 @@ export default class Combat {
         this.hit(this.character, this.character.target, this.queue.getHit()!);
     }
 
-    sync(): void {
+    private sync(): void {
         if (this.character.type !== 'mob') return;
 
         this.world.push(Packets.PushOpcode.Regions, {
@@ -209,11 +209,10 @@ export default class Combat {
         });
     }
 
-    dealAoE(radius: number, hasTerror = false): void {
-        /**
-         * TODO - Find a way to implement special effects without hardcoding them.
-         */
-
+    /**
+     * TODO - Find a way to implement special effects without hardcoding them.
+     */
+    public dealAoE(radius: number, hasTerror = false): void {
         if (!this.world) return;
 
         let entities = this.world
@@ -233,23 +232,23 @@ export default class Combat {
         });
     }
 
-    attackCount(count: number, target: Character): void {
+    private attackCount(count: number, target: Character): void {
         for (let i = 0; i < count; i++) this.attack(target);
     }
 
-    addAttacker(character: Character): void {
+    public addAttacker(character: Character): void {
         if (this.hasAttacker(character)) return;
 
         this.attackers[character.instance] = character;
     }
 
-    removeAttacker(character: Character): void {
+    public removeAttacker(character: Character): void {
         if (this.hasAttacker(character)) delete this.attackers[character.instance];
 
         if (!this.isAttacked()) this.sendToSpawn();
     }
 
-    sendToSpawn(): void {
+    private sendToSpawn(): void {
         if (!this.isMob()) return;
 
         const mob = this.character as Mob;
@@ -268,13 +267,13 @@ export default class Combat {
         });
     }
 
-    hasAttacker(character: Character): boolean | void {
+    public hasAttacker(character: Character): boolean | void {
         if (!this.isAttacked()) return;
 
         return character.instance in this.attackers;
     }
 
-    onSameTile(): boolean | void {
+    private onSameTile(): boolean | void {
         if (!this.character.target || this.character.type !== 'mob') return;
 
         return (
@@ -283,11 +282,11 @@ export default class Combat {
         );
     }
 
-    isAttacked(): boolean {
+    public isAttacked(): boolean {
         return this.attackers && Object.keys(this.attackers).length > 0;
     }
 
-    getNewPosition(): Pos {
+    private getNewPosition(): Pos {
         let position = {
                 x: this.character.x,
                 y: this.character.y
@@ -318,7 +317,7 @@ export default class Combat {
         return position;
     }
 
-    isRetaliating(): boolean {
+    public isRetaliating(): boolean {
         return (
             this.isPlayer() &&
             !this.character.target &&
@@ -328,7 +327,7 @@ export default class Combat {
         );
     }
 
-    inProximity(): boolean | void {
+    private inProximity(): boolean | void {
         if (!this.character.target) return;
 
         let targetDistance = this.character.getDistance(this.character.target),
@@ -339,7 +338,7 @@ export default class Combat {
         return this.character.isNonDiagonal(this.character.target);
     }
 
-    getClosestAttacker(): Character | null {
+    private getClosestAttacker(): Character | null {
         let closest = null,
             lowestDistance = 100;
 
@@ -352,20 +351,20 @@ export default class Combat {
         return closest;
     }
 
-    setWorld(world: World): void {
+    public setWorld(world: World): void {
         if (!this.world) this.world = world;
 
         if (!this.entities) this.entities = world.entities;
     }
 
-    forget(): void {
+    public forget(): void {
         this.attackers = {};
         this.character.removeTarget();
 
-        if (this.forgetCallback) this.forgetCallback();
+        this.forgetCallback?.();
     }
 
-    move(character: Character, x: number, y: number): void {
+    private move(character: Character, x: number, y: number): void {
         /**
          * The server and mob types can parse the mob movement
          */
@@ -375,7 +374,12 @@ export default class Combat {
         character.setPosition(x, y);
     }
 
-    hit(character: Character, target: Character, hitInfo: HitData, override?: boolean): void {
+    public hit(
+        character: Character,
+        target: Character,
+        hitInfo: HitData,
+        override?: boolean
+    ): void {
         if (!this.canHit() && !override) return;
 
         if (character.isRanged() || hitInfo.isRanged) {
@@ -401,12 +405,12 @@ export default class Combat {
             this.world.handleDamage(character, target, hitInfo.damage);
         }
 
-        if (character.damageCallback) character.damageCallback(target, hitInfo);
+        character.damageCallback?.(target, hitInfo);
 
         this.lastHit = this.getTime();
     }
 
-    follow(character: Character, target: Character): void {
+    private follow(character: Character, target: Character): void {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId: character.region,
             message: new Messages.Movement(Packets.MovementOpcode.Follow, {
@@ -418,7 +422,7 @@ export default class Combat {
         });
     }
 
-    end(): void {
+    public end(): void {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId: this.character.region,
             message: new Messages.Combat(Packets.CombatOpcode.Finish, {
@@ -428,7 +432,7 @@ export default class Combat {
         });
     }
 
-    sendFollow(): void {
+    private sendFollow(): void {
         if (!this.character.target || this.character.target.isDead()) return;
 
         // let ignores = [this.character.instance, this.character.target.instance];
@@ -442,17 +446,17 @@ export default class Combat {
         });
     }
 
-    forEachAttacker(callback: (attacker: Character) => void): void {
+    public forEachAttacker(callback: (attacker: Character) => void): void {
         _.each(this.attackers, (attacker) => {
             callback(attacker);
         });
     }
 
-    onForget(callback: () => void): void {
+    public onForget(callback: () => void): void {
         this.forgetCallback = callback;
     }
 
-    targetOutOfBounds(): boolean | void {
+    public targetOutOfBounds(): boolean | void {
         if (!this.character.target || !this.isMob()) return;
 
         let [x, y] = this.character.spawnLocation,
@@ -461,27 +465,27 @@ export default class Combat {
         return Utils.getDistance(x, y, target.x, target.y) > spawnDistance;
     }
 
-    getTime(): number {
+    public getTime(): number {
         return Date.now();
     }
 
-    colliding(x: number, y: number): boolean {
+    public colliding(x: number, y: number): boolean {
         return this.world.map.isColliding(x, y);
     }
 
-    isPlayer(): boolean {
+    private isPlayer(): boolean {
         return this.character.type === 'player';
     }
 
-    isMob(): boolean {
+    private isMob(): boolean {
         return this.character.type === 'mob';
     }
 
-    isTargetMob(): boolean {
+    private isTargetMob(): boolean {
         return this.character.target?.type === 'mob';
     }
 
-    canAttackAoE(target: Character): boolean {
+    private canAttackAoE(target: Character): boolean {
         return (
             this.isMob() ||
             target.type === 'mob' ||
@@ -489,7 +493,7 @@ export default class Combat {
         );
     }
 
-    canHit(): boolean {
+    public canHit(): boolean {
         let currentTime = Date.now(),
             diff = currentTime - this.lastHit;
 
