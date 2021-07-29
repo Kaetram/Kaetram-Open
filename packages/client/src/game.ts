@@ -213,7 +213,7 @@ export default class Game {
 
         app.cleanErrors();
 
-        window.setTimeout(() => socket.connect(), 1000);
+        socket.connect();
 
         // this.connectionHandler =
         new Connection(this);
