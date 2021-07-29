@@ -5,7 +5,7 @@ import type Chest from '../../game/entity/objects/chest';
 export default class Area {
     public polygon!: Pos[];
 
-    public entities: Mob[] = [];
+    private entities: Mob[] = [];
     public chest: Chest | null = null;
     public items: string[] = [];
 
@@ -36,7 +36,7 @@ export default class Area {
     private spawnCallback?(): void;
     private emptyCallback?(): void;
 
-    constructor(
+    public constructor(
         public id: number,
         public x: number,
         public y: number,
@@ -44,7 +44,7 @@ export default class Area {
         public height: number
     ) {}
 
-    addEntity(mob: Mob): void {
+    public addEntity(mob: Mob): void {
         if (!this.entities.includes(mob)) return;
         this.entities.push(mob);
         mob.area = this;
@@ -52,10 +52,10 @@ export default class Area {
         // Grab a spawn delay from an mob to create an offset for the chest.
         if (!this.spawnDelay) this.spawnDelay = mob.respawnDelay;
 
-        if (this.spawnCallback) this.spawnCallback();
+        this.spawnCallback?.();
     }
 
-    removeEntity(mob: Mob): void {
+    public removeEntity(mob: Mob): void {
         let index = this.entities.indexOf(mob);
 
         if (index > -1) this.entities.splice(index, 1);
@@ -67,21 +67,21 @@ export default class Area {
         }
     }
 
-    handleAchievement(player: Player): void {
+    private handleAchievement(player: Player): void {
         if (!this.achievement) return;
 
         player.finishAchievement(this.achievement);
     }
 
-    contains(x: number, y: number): boolean {
+    public contains(x: number, y: number): boolean {
         return this.polygon ? this.inPolygon(x, y) : this.inRectangularArea(x, y);
     }
 
-    inRectangularArea(x: number, y: number): boolean {
+    private inRectangularArea(x: number, y: number): boolean {
         return x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
     }
 
-    inPolygon(x: number, y: number): boolean {
+    private inPolygon(x: number, y: number): boolean {
         for (let i = 0, j = this.polygon.length - 1; i < this.polygon.length; j = i++) {
             let xi = this.polygon[i].x,
                 yi = this.polygon[i].y,
@@ -95,15 +95,15 @@ export default class Area {
         return false;
     }
 
-    setMaxEntities(maxEntities: number): void {
+    private setMaxEntities(maxEntities: number): void {
         this.maxEntities = maxEntities;
     }
 
-    onEmpty(callback: () => void): void {
+    public onEmpty(callback: () => void): void {
         this.emptyCallback = callback;
     }
 
-    onSpawn(callback: () => void): void {
+    public onSpawn(callback: () => void): void {
         this.spawnCallback = callback;
     }
 }

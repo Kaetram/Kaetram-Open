@@ -7,17 +7,17 @@ import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
 
 export default class Commands {
-    world;
-    entities;
+    private world;
+    private entities;
 
-    constructor(private player: Player) {
+    public constructor(private player: Player) {
         const { world } = player;
 
         this.world = world;
         this.entities = world.entities;
     }
 
-    parse(rawText: string): void {
+    public parse(rawText: string): void {
         const blocks = rawText.slice(1).split(' ');
 
         if (blocks.length === 0) return;
@@ -31,7 +31,7 @@ export default class Commands {
         if (this.player.rights > 1) this.handleAdminCommands(command, blocks);
     }
 
-    handlePlayerCommands(command: string, blocks: string[]): void {
+    private handlePlayerCommands(command: string, blocks: string[]): void {
         switch (command) {
             case 'players': {
                 const population = this.world.getPopulation(),
@@ -130,7 +130,7 @@ export default class Commands {
         }
     }
 
-    handleModeratorCommands(command: string, blocks: string[]): void {
+    private handleModeratorCommands(command: string, blocks: string[]): void {
         switch (command) {
             case 'mute':
             case 'ban': {
@@ -173,7 +173,7 @@ export default class Commands {
         }
     }
 
-    handleAdminCommands(command: string, blocks: string[]): void {
+    private handleAdminCommands(command: string, blocks: string[]): void {
         let username: string, player: Player;
 
         switch (command) {
@@ -188,8 +188,8 @@ export default class Commands {
                 this.player.inventory.add({
                     id: spawnId,
                     count,
-                    ability: ability ? ability : -1,
-                    abilityLevel: abilityLevel ? abilityLevel : -1
+                    ability: ability || -1,
+                    abilityLevel: abilityLevel || -1
                 });
 
                 return;

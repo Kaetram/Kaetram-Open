@@ -4,20 +4,20 @@ export default class Mana extends Points {
     manaCallback?(): void;
     maxManaCallback?(): void;
 
-    constructor(mana: number, maxMana: number) {
+    public constructor(mana: number, maxMana: number) {
         super(mana, maxMana);
     }
 
     setMana(mana: number): void {
         this.points = mana;
 
-        if (this.manaCallback) this.manaCallback();
+        this.manaCallback?.();
     }
 
     setMaxMana(maxMana: number): void {
         this.maxPoints = maxMana;
 
-        if (this.maxManaCallback) this.maxManaCallback();
+        this.maxManaCallback?.();
     }
 
     getMana(): number {

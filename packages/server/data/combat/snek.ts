@@ -5,7 +5,7 @@ import log from '../../src/util/log';
 import { HitData } from '@kaetram/server/src/game/entity/character/combat/hit';
 
 export default class Snek extends Combat {
-    constructor(character: Character) {
+    public constructor(character: Character) {
         character.spawnDistance = 15;
         super(character);
 

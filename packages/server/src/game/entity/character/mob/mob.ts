@@ -18,37 +18,32 @@ interface MobState extends CharacterState {
 }
 
 export default class Mob extends Character {
-    data!: MobData;
-    // hitPoints: number;
-    // maxHitPoints: number;
-    drops!: MobDrops;
+    private data!: MobData;
+    private drops!: MobDrops;
 
-    respawnDelay!: number;
+    public respawnDelay!: number;
 
-    boss = false;
-    static = false;
-    hiddenName = false;
-    miniboss = false;
+    public boss = false;
+    public static = false;
+    public hiddenName = false;
+    public miniboss = false;
 
-    achievementId!: number;
+    public achievementId!: number;
 
-    maxRoamingDistance = 3;
+    public maxRoamingDistance = 3;
 
-    handler!: MobHandler;
+    // private handler!: MobHandler;
 
-    // alwaysAggressive: boolean;
+    public area!: Area;
 
-    loadCallback?(): void;
-    refreshCallback?(): void;
-    respawnCallback?(): void;
-    // deathCallback?: Function;
+    private loadCallback?(): void;
+    private refreshCallback?(): void;
+    private respawnCallback?(): void;
 
-    forceTalkCallback?: (message: string) => void;
-    roamingCallback?(): void;
+    public forceTalkCallback?: (message: string) => void;
+    public roamingCallback?(): void;
 
-    area!: Area;
-
-    constructor(id: number, instance: string, x: number, y: number) {
+    public constructor(id: number, instance: string, x: number, y: number) {
         super(id, 'mob', instance, x, y);
 
         if (!Mobs.exists(id)) return;
@@ -77,20 +72,21 @@ export default class Mob extends Character {
         this.projectileName = this.getProjectileName();
     }
 
-    load(): void {
-        this.handler = new MobHandler(this);
+    public load(): void {
+        // this.handler =
+        new MobHandler(this);
 
-        if (this.loadCallback) this.loadCallback();
+        this.loadCallback?.();
     }
 
-    refresh(): void {
+    public refresh(): void {
         this.hitPoints = this.data.hitPoints;
         this.maxHitPoints = this.data.hitPoints;
 
-        if (this.refreshCallback) this.refreshCallback();
+        this.refreshCallback?.();
     }
 
-    getDrop(): { id: number; count: number } | null {
+    public getDrop(): { id: number; count: number } | null {
         if (!this.drops) return null;
 
         const random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
@@ -107,11 +103,11 @@ export default class Mob extends Character {
         };
     }
 
-    override getProjectileName(): string {
-        return this.data.projectileName ? this.data.projectileName : 'projectile-pinearrow';
+    public override getProjectileName(): string {
+        return this.data.projectileName || 'projectile-pinearrow';
     }
 
-    canAggro(player: Player): boolean {
+    public canAggro(player: Player): boolean {
         if (this.target) return false;
 
         if (!this.aggressive) return false;
@@ -123,7 +119,7 @@ export default class Mob extends Character {
         return this.isNear(player, this.aggroRange);
     }
 
-    destroy(): void {
+    public destroy(): void {
         this.dead = true;
         this.clearTarget();
         this.resetPosition();
@@ -132,49 +128,48 @@ export default class Mob extends Character {
         this.area?.removeEntity(this);
     }
 
-    return(): void {
+    public return(): void {
         this.clearTarget();
         this.resetPosition();
         this.setPosition(this.x, this.y);
     }
 
-    override isRanged(): boolean {
+    public override isRanged(): boolean {
         return this.attackRange > 1;
     }
 
-    distanceToSpawn(): number {
+    private distanceToSpawn(): number {
         return this.getCoordDistance(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
-    isAtSpawn(): boolean {
+    public isAtSpawn(): boolean {
         return this.x === this.spawnLocation[0] && this.y === this.spawnLocation[1];
     }
 
-    isOutsideSpawn(): boolean {
+    public isOutsideSpawn(): boolean {
         return this.distanceToSpawn() > this.spawnDistance;
     }
 
-    addToChestArea(chestAreas: Areas): void {
+    public addToChestArea(chestAreas: Areas): void {
         const area = chestAreas.inArea(this.x, this.y);
 
         area?.addEntity(this);
     }
 
-    respawn(): void {
-        /**
-         * Some entities are static (only spawned once during an event)
-         * Meanwhile, other entities act as an illusion to another entity,
-         * so the respawning script is handled elsewhere.
-         */
-
+    /**
+     * Some entities are static (only spawned once during an event)
+     * Meanwhile, other entities act as an illusion to another entity,
+     * so the respawning script is handled elsewhere.
+     */
+    private respawn(): void {
         if (!this.static || this.respawnDelay === -1) return;
 
         setTimeout(() => {
-            if (this.respawnCallback) this.respawnCallback();
+            this.respawnCallback?.();
         }, this.respawnDelay);
     }
 
-    override getState(): MobState {
+    public override getState(): MobState {
         const base = super.getState() as MobState;
 
         base.hitPoints = this.hitPoints;
@@ -186,27 +181,27 @@ export default class Mob extends Character {
         return base;
     }
 
-    resetPosition(): void {
+    private resetPosition(): void {
         this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
-    onLoad(callback: () => void): void {
+    public onLoad(callback: () => void): void {
         this.loadCallback = callback;
     }
 
-    onRespawn(callback: () => void): void {
+    public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 
-    onRefresh(callback: () => void): void {
+    public onRefresh(callback: () => void): void {
         this.refreshCallback = callback;
     }
 
-    onForceTalk(callback: (message: string) => void): void {
+    public onForceTalk(callback: (message: string) => void): void {
         this.forceTalkCallback = callback;
     }
 
-    onRoaming(callback: () => void): void {
+    public onRoaming(callback: () => void): void {
         this.roamingCallback = callback;
     }
 }

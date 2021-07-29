@@ -10,37 +10,37 @@ export interface HitData {
 }
 
 export default class Hit {
-    ranged = false;
-    aoe = false;
-    terror = false;
-    poison = false;
+    private ranged = false;
+    private aoe = false;
+    private terror = false;
+    public poison = false;
 
-    constructor(public type: Modules.Hits, public damage: number) {}
+    public constructor(public type: Modules.Hits, public damage: number) {}
 
-    isRanged(): boolean {
+    private isRanged(): boolean {
         return this.ranged;
     }
 
-    isAoE(): boolean {
+    private isAoE(): boolean {
         return this.aoe;
     }
 
-    isPoison(): boolean {
+    private isPoison(): boolean {
         return this.poison;
     }
 
-    getDamage(): number {
+    private getDamage(): number {
         return this.damage;
     }
 
-    getData(): HitData {
+    public getData(): HitData {
         return {
             type: this.type,
-            damage: this.damage,
+            damage: this.getDamage(),
             isRanged: this.isRanged(),
             isAoE: this.isAoE(),
             hasTerror: this.terror,
-            isPoison: this.poison
+            isPoison: this.isPoison()
         };
     }
 }

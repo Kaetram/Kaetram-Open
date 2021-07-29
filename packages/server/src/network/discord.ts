@@ -12,10 +12,10 @@ import type World from '../game/world';
  * approach is used.
  */
 export default class Discord {
-    client!: Client;
-    webhook!: WebhookClient;
+    private client!: Client;
+    private webhook!: WebhookClient;
 
-    constructor(private world: World) {
+    public constructor(private world: World) {
         if (!config.discordEnabled) return;
 
         if (config.hubEnabled) {
@@ -48,8 +48,7 @@ export default class Discord {
     /**
      * Sends a message to the Discord server using the webhook.
      */
-
-    sendWebhook(source: string, message: string, withArrow?: boolean): void {
+    public sendWebhook(source: string, message: string, withArrow?: boolean): void {
         if (!config.discordEnabled) return;
 
         let formattedSource = Utils.formatUsername(source);

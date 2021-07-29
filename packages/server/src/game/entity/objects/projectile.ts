@@ -16,23 +16,23 @@ export interface ProjectileData {
 }
 
 export default class Projectile extends Entity {
-    startX = -1;
-    startY = -1;
+    // startX = -1;
+    // startY = -1;
 
-    destX = -1;
-    destY = -1;
+    private destX = -1;
+    private destY = -1;
 
-    target: Entity | null = null;
+    private target: Entity | null = null;
 
-    damage = -1;
+    public damage = -1;
 
-    hitType: Modules.Hits | null = null; // TODO
-    owner?: Character; // TODO
+    public hitType: Modules.Hits | null = null; // TODO
+    public owner?: Character; // TODO
 
-    static = false;
-    special: never;
+    private static = false;
+    private special: never;
 
-    constructor(id: Modules.Projectiles, instance: string) {
+    public constructor(id: Modules.Projectiles, instance: string) {
         super(id, 'projectile', instance);
     }
 
@@ -44,7 +44,6 @@ export default class Projectile extends Entity {
     /**
      * TODO - Merge setTarget() && setStaticTarget into one function.
      */
-
     setTarget(target: Entity): void {
         this.target = target;
 

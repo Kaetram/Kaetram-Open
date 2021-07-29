@@ -8,6 +8,8 @@ import Formulas from '../../../../../../util/formulas';
 import type Player from '../../player';
 
 export default abstract class Profession {
+    protected tick = 1000;
+
     public world;
 
     public map;
@@ -22,7 +24,7 @@ export default abstract class Profession {
     public nextExperience?: number;
     public prevExperience!: number;
 
-    constructor(public id: number, public player: Player, public name: string) {
+    protected constructor(public id: number, public player: Player, public name: string) {
         this.world = player.world;
 
         this.map = this.world.map;

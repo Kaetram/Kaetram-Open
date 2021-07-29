@@ -13,11 +13,11 @@ export default class SocketHandler {
     private readyCallback?(): void;
     private connectionCallback?: (connection: Connection) => void;
 
-    constructor() {
+    public constructor() {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.socketIO.onInitialize(() => {
             this.readyCallback?.();
         });
@@ -38,11 +38,10 @@ export default class SocketHandler {
      *
      * @param connection The connection we are adding.
      */
-
-    add(connection: Connection): void {
+    private add(connection: Connection): void {
         this.connections[connection.id] = connection;
 
-        if (this.connectionCallback) this.connectionCallback(connection);
+        this.connectionCallback?.(connection);
     }
 
     /**
@@ -50,8 +49,7 @@ export default class SocketHandler {
      *
      * @param id The connection id we are removing.
      */
-
-    remove(id: string): void {
+    public remove(id: string): void {
         delete this.connections[id];
     }
 
@@ -61,8 +59,7 @@ export default class SocketHandler {
      * @param id The id of the connection we are trying to get.
      * @returns The connection element or null.
      */
-
-    get(id: string): Connection {
+    public get(id: string): Connection {
         return this.connections[id];
     }
 
@@ -72,8 +69,7 @@ export default class SocketHandler {
      *
      * @param callback The void function callback
      */
-
-    onReady(callback: () => void): void {
+    public onReady(callback: () => void): void {
         this.readyCallback = callback;
     }
 
@@ -82,8 +78,7 @@ export default class SocketHandler {
      *
      * @param callback The callback containing the Connection that occurs.
      */
-
-    onConnection(callback: (connection: Connection) => void): void {
+    public onConnection(callback: (connection: Connection) => void): void {
         this.connectionCallback = callback;
     }
 }

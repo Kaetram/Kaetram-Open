@@ -9,28 +9,28 @@ interface ItemState extends EntityState {
 }
 
 export default class Item extends Entity {
-    static = false;
-    dropped = false;
-    shard = false;
+    public static = false;
+    public dropped = false;
+    // shard = false;
 
-    count = 1;
-    ability;
-    abilityLevel;
-    tier = 1;
+    public count = 1;
+    public ability;
+    public abilityLevel;
+    // tier = 1;
 
-    respawnTime = 30000;
-    despawnDuration = 4000;
-    blinkDelay = 20000;
-    despawnDelay = 1000;
+    private respawnTime = 30000;
+    private despawnDuration = 4000;
+    private blinkDelay = 20000;
+    // private despawnDelay = 1000;
 
-    blinkTimeout: NodeJS.Timeout | null = null;
-    despawnTimeout: NodeJS.Timeout | null = null;
+    private blinkTimeout: NodeJS.Timeout | null = null;
+    private despawnTimeout: NodeJS.Timeout | null = null;
 
-    blinkCallback?(): void;
-    respawnCallback?(): void;
-    despawnCallback?(): void;
+    private blinkCallback?(): void;
+    private respawnCallback?(): void;
+    private despawnCallback?(): void;
 
-    constructor(
+    public constructor(
         id: number,
         instance: string,
         x: number,
@@ -48,7 +48,7 @@ export default class Item extends Entity {
         if (isNaN(abilityLevel!)) this.abilityLevel = -1;
     }
 
-    destroy(): void {
+    public destroy(): void {
         if (this.blinkTimeout) clearTimeout(this.blinkTimeout);
 
         if (this.despawnTimeout) clearTimeout(this.despawnTimeout);
@@ -56,27 +56,27 @@ export default class Item extends Entity {
         if (this.static) this.respawn();
     }
 
-    despawn(): void {
+    public despawn(): void {
         this.blinkTimeout = setTimeout(() => {
-            if (this.blinkCallback) this.blinkCallback();
+            this.blinkCallback?.();
 
             this.despawnTimeout = setTimeout(() => {
-                if (this.despawnCallback) this.despawnCallback();
+                this.despawnCallback?.();
             }, this.despawnDuration);
         }, this.blinkDelay);
     }
 
-    respawn(): void {
+    public respawn(): void {
         setTimeout(() => {
-            if (this.respawnCallback) this.respawnCallback();
+            this.respawnCallback?.();
         }, this.respawnTime);
     }
 
-    getData(): [id: number, count: number, ability?: number, abilityLevel?: number] {
+    private getData(): [id: number, count: number, ability?: number, abilityLevel?: number] {
         return [this.id, this.count, this.ability, this.abilityLevel];
     }
 
-    override getState(): ItemState {
+    public override getState(): ItemState {
         let state = super.getState() as ItemState;
 
         state.count = this.count;
@@ -86,27 +86,27 @@ export default class Item extends Entity {
         return state;
     }
 
-    setCount(count: number): void {
+    private setCount(count: number): void {
         this.count = count;
     }
 
-    setAbility(ability: number): void {
+    private setAbility(ability: number): void {
         this.ability = ability;
     }
 
-    setAbilityLevel(abilityLevel: number): void {
+    private setAbilityLevel(abilityLevel: number): void {
         this.abilityLevel = abilityLevel;
     }
 
-    onRespawn(callback: () => void): void {
+    public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 
-    onBlink(callback: () => void): void {
+    public onBlink(callback: () => void): void {
         this.blinkCallback = callback;
     }
 
-    onDespawn(callback: () => void): void {
+    public onDespawn(callback: () => void): void {
         this.despawnCallback = callback;
     }
 }

@@ -8,7 +8,7 @@ import type Character from '../../src/game/entity/character/character';
 import type Player from '../../src/game/entity/character/player/player';
 
 export default class Cactus extends Combat {
-    constructor(character: Character) {
+    public constructor(character: Character) {
         character.spawnDistance = 10;
         character.alwaysAggressive = true;
 
@@ -38,13 +38,12 @@ export default class Cactus extends Combat {
     damageAttacker(damage: number, attacker: Player): void {
         if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
-        /**
-         * This is the formula for dealing damage when a player
-         * attacks the cactus. Eventually the damage will cancel out
-         * as the armour gets better.
-         **/
-
         const defense = attacker.armour.getDefense(),
+            /**
+             * This is the formula for dealing damage when a player
+             * attacks the cactus. Eventually the damage will cancel out
+             * as the armour gets better.
+             */
             calculatedDamage = Math.floor(damage / 2 - defense * 5);
 
         if (calculatedDamage < 1) return;

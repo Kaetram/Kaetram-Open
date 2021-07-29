@@ -1,13 +1,13 @@
 import Items from '../../../../../util/items';
 import log from '../../../../../util/log';
 
-type SlotData = {
+interface SlotData {
     index: number;
     string: string;
     count: number;
     ability: number;
     abilityLevel: number;
-};
+}
 
 export default class Slot {
     public id = -1;
@@ -20,9 +20,9 @@ export default class Slot {
     public edible = false;
     public equippable = false;
 
-    constructor(public index: number) {}
+    public constructor(public index: number) {}
 
-    load(id: number, count: number, ability: number, abilityLevel: number): void {
+    public load(id: number, count: number, ability: number, abilityLevel: number): void {
         this.id = id;
         this.count = count;
         this.ability = ability;
@@ -35,7 +35,7 @@ export default class Slot {
         this.verify();
     }
 
-    empty(): void {
+    public empty(): void {
         this.id = -1;
         this.count = -1;
         this.ability = -1;
@@ -44,13 +44,13 @@ export default class Slot {
         this.string = null!;
     }
 
-    increment(amount: number): void {
+    public increment(amount: number): void {
         this.count += amount;
 
         this.verify();
     }
 
-    decrement(amount: number): void {
+    public decrement(amount: number): void {
         this.count -= amount;
 
         if (this.count < 1)
@@ -59,11 +59,11 @@ export default class Slot {
         this.verify();
     }
 
-    verify(): void {
+    private verify(): void {
         if (isNaN(this.count) || this.count < 1) this.count = 1;
     }
 
-    getData(): SlotData {
+    public getData(): SlotData {
         return {
             index: this.index,
             string: this.string,

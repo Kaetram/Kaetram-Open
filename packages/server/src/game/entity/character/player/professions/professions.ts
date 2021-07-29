@@ -31,7 +31,7 @@ export default class Professions {
 
     professions: { [id: number]: Profession } = {};
 
-    constructor(private player: Player) {
+    public constructor(private player: Player) {
         this.world = player.world;
 
         this.load();
@@ -88,7 +88,6 @@ export default class Professions {
      * This is the data we send to the client in order
      * to load the professions profile tab.
      */
-
     getInfo(): ProfessionsInfo[] {
         let data: ProfessionsInfo[] = [];
 

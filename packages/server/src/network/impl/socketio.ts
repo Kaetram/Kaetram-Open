@@ -9,7 +9,7 @@ import WebSocket from '../websocket';
 import type SocketHandler from '../sockethandler';
 
 export default class SocketIO extends WebSocket {
-    constructor(socketHandler: SocketHandler) {
+    public constructor(socketHandler: SocketHandler) {
         super(config.host, config.socketioPort, 'SocketIO', socketHandler);
         super.loadServer();
 
@@ -35,7 +35,7 @@ export default class SocketIO extends WebSocket {
             socket.on('client', (data) => {
                 if (!this.verifyVersion(connection, data.gVer)) return;
 
-                if (this.addCallback) this.addCallback(connection);
+                this.addCallback?.(connection);
             });
         });
     }
