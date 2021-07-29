@@ -10,7 +10,7 @@ body {
     image-rendering: pixelated;
     background:
         linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6)),
-        url('../img/tile.png') center center;
+        url('/img/tile.png') center center;
     background-size: auto;
 }
 
@@ -56,12 +56,12 @@ section {
 
 @font-face {
     font-family: 'AdvoCut';
-    src: url('../fonts/advocut/advocut-webfont.eot');
+    src: url('/fonts/advocut/advocut-webfont.eot');
     src:
-        url('../fonts/advocut/advocut-webfont.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/advocut/advocut-webfont.woff') format('woff'),
-        url('../fonts/advocut/advocut-webfont.ttf') format('truetype'),
-        url('../fonts/advocut/advocut-webfont.svg#AndinaRegular') format('svg');
+        url('/fonts/advocut/advocut-webfont.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/advocut/advocut-webfont.woff') format('woff'),
+        url('/fonts/advocut/advocut-webfont.ttf') format('truetype'),
+        url('/fonts/advocut/advocut-webfont.svg#AndinaRegular') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -91,7 +91,7 @@ body {
 
 .left-ornament,
 .right-ornament {
-    background-image: url('../img/1/spritesheet.png');
+    background-image: url('/img/1/spritesheet.png');
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: -moz-crisp-edges;
     image-rendering: -o-pixelated;
@@ -174,7 +174,7 @@ body {
     width: 11px;
     height: 10px;
     top: 10px;
-    background-image: url('../img/thingy.png');
+    background-image: url('/img/thingy.png');
     margin: 0 auto;
     position: relative;
 }
@@ -423,7 +423,7 @@ html [type='button'],
 
     .left-ornament,
     .right-ornament {
-        background-image: url('../img/3/spritesheet.png');
+        background-image: url('/img/3/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
         image-rendering: -moz-crisp-edges;
         image-rendering: -o-pixelated;
@@ -532,7 +532,7 @@ html [type='button'],
     #play {
         width: 306px;
         height: 81px;
-        background-image: url('../img/3/buttons.png');
+        background-image: url('/img/3/buttons.png');
     }
 
     #login {
@@ -661,7 +661,7 @@ html [type='button'],
 
     .left-ornament,
     .right-ornament {
-        background-image: url('../img/2/spritesheet.png');
+        background-image: url('/img/2/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
         image-rendering: -moz-crisp-edges;
         image-rendering: -o-pixelated;
@@ -769,7 +769,7 @@ html [type='button'],
     #play {
         width: 204px;
         height: 54px;
-        background-image: url('../img/2/buttons.png');
+        background-image: url('/img/2/buttons.png');
     }
 
     #login {
@@ -1005,7 +1005,7 @@ html [type='button'],
     #play {
         width: 102px;
         height: 27px;
-        background-image: url('../img/1/buttons.png');
+        background-image: url('/img/1/buttons.png');
     }
 
     #login {

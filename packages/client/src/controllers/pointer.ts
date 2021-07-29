@@ -3,7 +3,6 @@ import _ from 'lodash';
 
 import * as Modules from '@kaetram/common/src/modules';
 
-import pointer from '../../img/sprites/pointer.png';
 import Pointer from '../renderer/pointers/pointer';
 
 import type Entity from '../entity/entity';
@@ -68,6 +67,8 @@ export default class PointerController {
     }
 
     private setSize(element: JQuery): void {
+        const pointer = '/img/sprites/pointer.png';
+
         element.css({
             top: '30px',
             width: '64px',

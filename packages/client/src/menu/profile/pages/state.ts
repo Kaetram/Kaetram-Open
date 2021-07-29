@@ -77,21 +77,12 @@ export default class State extends Page {
         );
     }
 
-    private async loadSlots(): Promise<void> {
-        this.weaponSlot.css(
-            'background-image',
-            await this.getImageFormat(this.player.weapon.string)
-        );
-        this.armourSlot.css(
-            'background-image',
-            await this.getImageFormat(this.player.armour.string)
-        );
-        this.pendantSlot.css(
-            'background-image',
-            await this.getImageFormat(this.player.pendant.string)
-        );
-        this.ringSlot.css('background-image', await this.getImageFormat(this.player.ring.string));
-        this.bootsSlot.css('background-image', await this.getImageFormat(this.player.boots.string));
+    private loadSlots(): void {
+        this.weaponSlot.css('background-image', this.getImageFormat(this.player.weapon.string));
+        this.armourSlot.css('background-image', this.getImageFormat(this.player.armour.string));
+        this.pendantSlot.css('background-image', this.getImageFormat(this.player.pendant.string));
+        this.ringSlot.css('background-image', this.getImageFormat(this.player.ring.string));
+        this.bootsSlot.css('background-image', this.getImageFormat(this.player.boots.string));
 
         this.forEachSlot((slot) => slot.css('background-size', '600%'));
     }
