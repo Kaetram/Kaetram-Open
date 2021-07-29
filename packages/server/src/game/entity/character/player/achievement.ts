@@ -40,7 +40,7 @@ export default class Achievement {
 
     public discovered = false;
 
-    constructor(public id: number, private player: Player) {
+    public constructor(public id: number, private player: Player) {
         this.data = Data[this.id.toString() as keyof typeof Data];
 
         if (!this.data.reward) this.data.reward = 'door';
@@ -49,7 +49,7 @@ export default class Achievement {
         this.description = this.data.description!;
     }
 
-    step(): void {
+    public step(): void {
         if (this.isThreshold()) return;
 
         this.progress++;
@@ -67,7 +67,7 @@ export default class Achievement {
         );
     }
 
-    converse(npc: NPC): void {
+    public converse(npc: NPC): void {
         if (this.isThreshold() || this.hasItem()) this.finish(npc);
         else {
             this.player.send(
@@ -88,7 +88,7 @@ export default class Achievement {
         }
     }
 
-    finish(npc?: NPC): void {
+    public finish(npc?: NPC): void {
         let { rewardType, item, itemCount, reward } = this.data;
 
         switch (rewardType) {
@@ -129,15 +129,15 @@ export default class Achievement {
         if (npc && this.player.npcTalkCallback) this.player.npcTalkCallback(npc);
     }
 
-    update(): void {
+    private update(): void {
         this.player.save();
     }
 
-    isThreshold(): boolean {
+    private isThreshold(): boolean {
         return this.progress >= this.data.count!;
     }
 
-    hasItem(): boolean {
+    private hasItem(): boolean {
         if (
             this.data.type === Modules.Achievements.Type.Scavenge &&
             this.player.inventory.contains(this.data.item!)
@@ -150,21 +150,21 @@ export default class Achievement {
         return false;
     }
 
-    setProgress(progress: number, skipRegion?: boolean): void {
+    public setProgress(progress: number, skipRegion?: boolean): void {
         this.progress = progress;
 
         if (this.data.isDoorReward && !skipRegion) this.player.updateRegion();
     }
 
-    isStarted(): boolean {
+    public isStarted(): boolean {
         return this.progress > 0;
     }
 
-    isFinished(): boolean {
+    public isFinished(): boolean {
         return this.progress > 9998;
     }
 
-    getInfo(): AchievementData {
+    public getInfo(): AchievementData {
         return {
             id: this.id,
             name: this.name,

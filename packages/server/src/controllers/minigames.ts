@@ -7,17 +7,17 @@ import type Minigame from '../minigames/minigame';
 export default class Minigames {
     public minigames: { [game: string]: Minigame } = {};
 
-    constructor(private world: World) {
+    public constructor(private world: World) {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         this.minigames.TeamWar = new TeamWar(this.world);
 
         log.info(`Finished loading ${Object.keys(this.minigames).length} minigames.`);
     }
 
-    getTeamWar(): Minigame {
+    public getTeamWar(): Minigame {
         return this.minigames.TeamWar;
     }
 }

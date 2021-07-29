@@ -15,11 +15,11 @@ interface BankInfo {
 export default class Bank extends Container {
     public open = false;
 
-    constructor(owner: Player, size: number) {
+    public constructor(owner: Player, size: number) {
         super('Bank', owner, size);
     }
 
-    override load(
+    public override load(
         ids: number[],
         counts: number[],
         abilities: number[],
@@ -30,7 +30,7 @@ export default class Bank extends Container {
         this.owner.send(new Messages.Bank(Packets.BankOpcode.Batch, [this.size, this.slots]));
     }
 
-    add(id: number, count: number, ability: number, abilityLevel: number): boolean {
+    public add(id: number, count: number, ability: number, abilityLevel: number): boolean {
         if (!this.canHold(id, count)) {
             this.owner.send(
                 new Messages.Notification(Packets.NotificationOpcode.Text, {
@@ -49,7 +49,7 @@ export default class Bank extends Container {
         return true;
     }
 
-    override remove(id: number, count: number, index: number): boolean | undefined {
+    public override remove(id: number, count: number, index: number): boolean | undefined {
         if (!super.remove(index, id, count)) return false;
 
         this.owner.send(
@@ -65,8 +65,7 @@ export default class Bank extends Container {
     /**
      * We return the slot data without the extra information.
      */
-
-    getInfo(index: number): BankInfo {
+    public getInfo(index: number): BankInfo {
         let slot = this.slots[index];
 
         return {

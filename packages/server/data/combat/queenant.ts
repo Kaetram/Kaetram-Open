@@ -21,7 +21,7 @@ export default class QueenAnt extends Combat {
     minions: Mob[];
     frozen: boolean;
 
-    constructor(character: Character) {
+    public constructor(character: Character) {
         character.spawnDistance = 18;
         super(character);
 
@@ -46,7 +46,6 @@ export default class QueenAnt extends Combat {
              * This is to prevent the boss from dealing
              * any powerful AoE attack after dying.
              */
-
             this.lastSpawn = 0;
 
             if (this.aoeTimeout) {

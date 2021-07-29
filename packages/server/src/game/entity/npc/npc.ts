@@ -1,14 +1,15 @@
-import Player from '../character/player/player';
 import Entity from '../entity';
 
-export default class NPC extends Entity {
-    talkIndex = 0;
+import type Player from '../character/player/player';
 
-    constructor(id: number, instance: string, x: number, y: number) {
+export default class NPC extends Entity {
+    // talkIndex = 0;
+
+    public constructor(id: number, instance: string, x: number, y: number) {
         super(id, 'npc', instance, x, y);
     }
 
-    talk(messages: string[], player?: Player): string | undefined {
+    public talk(messages: string[], player?: Player): string | undefined {
         if (!player) return;
 
         if (player.npcTalk !== this.id) {

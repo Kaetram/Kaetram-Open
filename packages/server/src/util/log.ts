@@ -9,46 +9,46 @@ import config from '../../config';
  */
 class Log {
     // Stream can be used to keep a log of what happened.
-    logLevel = config.debugLevel || 'all';
-    stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
+    private logLevel = config.debugLevel || 'all';
+    private stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
 
-    debugging = config.debug;
+    private debugging = config.debug;
 
-    info(message: unknown) {
+    public info(message: unknown) {
         if (this.isLoggable('info')) return;
 
         this.send(null, `[${new Date()}] INFO ${message}`);
     }
 
-    debug(message: unknown) {
+    public debug(message: unknown) {
         if (!this.debugging) return;
 
         this.send('\u001B[36m%s\u001B[0m', `[${new Date()}] DEBUG ${message}`);
     }
 
-    warning(message: unknown) {
+    public warning(message: unknown) {
         if (this.isLoggable('warning')) return;
 
         this.send('\u001B[33m%s\u001B[0m', `[${new Date()}] WARNING ${message}`);
     }
 
-    error(message: unknown) {
+    public error(message: unknown) {
         if (this.isLoggable('error')) return;
 
         this.send('\u001B[31m%s\u001B[0m', `[${new Date()}] ERROR ${message}`);
     }
 
-    notice(message: unknown) {
+    public notice(message: unknown) {
         if (this.isLoggable('notice')) return;
 
         this.send('\u001B[32m%s\u001B[0m', `[${new Date()}] NOTICE ${message}`);
     }
 
-    trace(message: unknown) {
+    public trace(message: unknown) {
         this.send('\u001B[35m%s\u001B[0m', `[${new Date()}] TRACE ${message}`, true);
     }
 
-    send(colour: string | null, message: unknown, trace?: boolean) {
+    private send(colour: string | null, message: unknown, trace?: boolean) {
         this.stream?.write(message + '\n');
 
         if (!colour) console.log(message);
@@ -56,7 +56,7 @@ class Log {
         else console.log(colour, message);
     }
 
-    isLoggable(type: string) {
+    private isLoggable(type: string) {
         return this.logLevel !== 'all' && this.logLevel !== type;
     }
 

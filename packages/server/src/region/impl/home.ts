@@ -17,14 +17,14 @@ export default class Home {
     private startRegion;
     private endRegion;
 
-    constructor(private region: Region) {
+    public constructor(private region: Region) {
         this.map = region.map;
 
         this.startRegion = '0-4';
         this.endRegion = '4-10';
     }
 
-    get(): void {
+    private get(): void {
         let startPosition = this.region.getRegionBounds(this.startRegion),
             endPosition = this.region.getRegionBounds(this.endRegion),
             info: HomeData = {

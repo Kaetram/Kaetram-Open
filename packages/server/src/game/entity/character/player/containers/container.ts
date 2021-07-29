@@ -18,15 +18,19 @@ export interface ContainerArray {
 export default abstract class Container {
     public slots: Slot[] = [];
 
-    constructor(private type: string, public owner: Player, public size: number) {
+    protected constructor(private type: string, public owner: Player, public size: number) {
         for (let i = 0; i < this.size; i++) this.slots.push(new Slot(i));
     }
 
-    load(ids: number[], counts: number[], abilities: number[], abilityLevels: number[]): void {
-        /**
-         * Fill each slot with manual data or the database
-         */
-
+    /**
+     * Fill each slot with manual data or the database
+     */
+    public load(
+        ids: number[],
+        counts: number[],
+        abilities: number[],
+        abilityLevels: number[]
+    ): void {
         if (ids.length !== this.slots.length)
             log.error('[' + this.type + '] Mismatch in container size.');
 
@@ -34,7 +38,7 @@ export default abstract class Container {
             this.slots[i].load(ids[i], counts[i], abilities[i], abilityLevels[i]);
     }
 
-    loadEmpty(): void {
+    public loadEmpty(): void {
         let data = [];
 
         for (let i = 0; i < this.size; i++) data.push(-1);
@@ -106,7 +110,7 @@ export default abstract class Container {
         }
     }
 
-    canHold(id: number, count: number): boolean {
+    public canHold(id: number, count: number): boolean {
         if (!Items.isStackable(id)) return this.hasSpace();
 
         if (this.hasSpace()) return true;
@@ -125,7 +129,7 @@ export default abstract class Container {
         return remainingSpace >= count;
     }
 
-    remove(index: number, id: number, count: number): boolean | undefined {
+    public remove(index: number, id: number, count: number): boolean | undefined {
         /**
          * Perform item validity prior to calling the method.
          */
@@ -142,14 +146,14 @@ export default abstract class Container {
         return true;
     }
 
-    getSlot(id: number): Slot | null {
+    private getSlot(id: number): Slot | null {
         for (let i = 0; i < this.slots.length; i++)
             if (this.slots[i].id === id) return this.slots[i];
 
         return null;
     }
 
-    contains(id: number | undefined, count?: number): boolean {
+    public contains(id: number | undefined, count?: number): boolean {
         if (!count) count = 1;
 
         for (let index in this.slots) {
@@ -161,47 +165,37 @@ export default abstract class Container {
         return false;
     }
 
-    containsSpaces(count: number): boolean {
-        let emptySpaces = [];
-
-        for (let i = 0; i < this.slots.length; i++)
-            if (this.slots[i].id === -1) emptySpaces.push(this.slots[i]);
-
-        return emptySpaces.length === count;
-    }
-
-    hasSpace(): boolean {
+    public hasSpace(): boolean {
         return this.getEmptySlot() > -1;
     }
 
-    getEmptySlot(): number {
+    private getEmptySlot(): number {
         for (let i = 0; i < this.slots.length; i++) if (this.slots[i].id === -1) return i;
 
         return -1;
     }
 
-    getIndex(id: number): number {
-        /**
-         * Used when the index is not determined,
-         * returns the first item found based on the id.
-         */
-
+    /**
+     * Used when the index is not determined,
+     * returns the first item found based on the id.
+     */
+    public getIndex(id: number): number {
         for (let i = 0; i < this.slots.length; i++) if (this.slots[i].id === id) return i;
 
         return -1;
     }
 
-    check(): void {
+    public check(): void {
         _.each(this.slots, (slot: Slot) => {
             if (isNaN(slot.id)) slot.empty();
         });
     }
 
-    forEachSlot(callback: (slot: Slot) => void): void {
+    public forEachSlot(callback: (slot: Slot) => void): void {
         for (let i = 0; i < this.slots.length; i++) callback(this.slots[i]);
     }
 
-    getArray(): ContainerArray {
+    public getArray(): ContainerArray {
         let ids = '',
             counts = '',
             abilities = '',

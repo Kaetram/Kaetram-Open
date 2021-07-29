@@ -22,15 +22,15 @@ import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
 
 export default class Incoming {
-    connection;
-    world;
-    entities;
-    database;
-    commands;
+    private connection;
+    private world;
+    private entities;
+    private database;
+    private commands;
 
-    introduced = false;
+    private introduced = false;
 
-    constructor(private player: Player) {
+    public constructor(private player: Player) {
         this.connection = player.connection;
         this.world = player.world;
         this.entities = this.world.entities;
@@ -139,7 +139,7 @@ export default class Incoming {
         });
     }
 
-    handleIntro(message: [number, string, string, string]): void {
+    private handleIntro(message: [number, string, string, string]): void {
         const [loginType, username, password] = message,
             isRegistering = loginType === Packets.IntroOpcode.Register,
             isGuest = loginType === Packets.IntroOpcode.Guest,
@@ -198,7 +198,7 @@ export default class Incoming {
             });
     }
 
-    handleReady(message: [string, string, string]): void {
+    private handleReady(message: [string, string, string]): void {
         const [isReady, preloadedData, userAgent] = message;
 
         if (!isReady) return;
@@ -239,12 +239,12 @@ export default class Incoming {
         if (config.hubEnabled)
             this.world.api.sendChat(Utils.formatUsername(this.player.username), 'has logged in!');
 
-        if (this.player.readyCallback) this.player.readyCallback();
+        this.player.readyCallback?.();
 
         this.player.sync();
     }
 
-    handleWho(message: string[]): void {
+    private handleWho(message: string[]): void {
         _.each(message, (id: string) => {
             const entity = this.entities.get<Mob & NPC>(id);
 
@@ -273,7 +273,7 @@ export default class Incoming {
         });
     }
 
-    handleEquipment(message: [number, string]): void {
+    private handleEquipment(message: [number, string]): void {
         const [opcode, type] = message;
 
         switch (opcode) {
@@ -336,7 +336,7 @@ export default class Incoming {
         }
     }
 
-    handleMovement(message: [number, ...unknown[]]): void {
+    private handleMovement(message: [number, ...unknown[]]): void {
         const [opcode] = message;
         let orientation: number;
 
@@ -482,7 +482,7 @@ export default class Incoming {
         }
     }
 
-    handleRequest(message: [string]): void {
+    private handleRequest(message: [string]): void {
         let [id] = message;
 
         if (id !== this.player.instance) return;
@@ -490,7 +490,7 @@ export default class Incoming {
         this.world.region.push(this.player);
     }
 
-    handleTarget(message: [number, string]): void {
+    private handleTarget(message: [number, string]): void {
         let [opcode, instance] = message;
 
         log.debug(`Target [opcode]: ${instance} [${opcode}]`);
@@ -511,7 +511,7 @@ export default class Incoming {
 
                 if (entity.dead) return;
 
-                if (this.player.npcTalkCallback) this.player.npcTalkCallback(entity as NPC);
+                this.player.npcTalkCallback?.(entity as NPC);
 
                 break;
             }
@@ -550,7 +550,7 @@ export default class Incoming {
         }
     }
 
-    handleCombat(message: [number, string, string]): void {
+    private handleCombat(message: [number, string, string]): void {
         const [opcode] = message;
 
         switch (opcode) {
@@ -583,7 +583,7 @@ export default class Incoming {
         }
     }
 
-    handleProjectile(message: [number, string, string]): void {
+    private handleProjectile(message: [number, string, string]): void {
         const [type] = message;
 
         switch (type) {
@@ -605,7 +605,7 @@ export default class Incoming {
         }
     }
 
-    handleNetwork(message: [number]): void {
+    private handleNetwork(message: [number]): void {
         const [opcode] = message;
 
         switch (opcode) {
@@ -619,7 +619,7 @@ export default class Incoming {
         }
     }
 
-    handleChat(message: [string]): void {
+    private handleChat(message: [string]): void {
         const text = sanitizer.escape(sanitizer.sanitize(message[0]));
 
         if (!text || text.length === 0 || !/\S/.test(text)) return;
@@ -665,7 +665,7 @@ export default class Incoming {
         }
     }
 
-    handleCommand(message: [number, Pos]): void {
+    private handleCommand(message: [number, Pos]): void {
         const [opcode, position] = message;
 
         if (this.player.rights < 2) return;
@@ -679,7 +679,7 @@ export default class Incoming {
         }
     }
 
-    handleInventory(message: [number, ...unknown[]]): void {
+    private handleInventory(message: [number, ...unknown[]]): void {
         const [opcode] = message;
         let id!: number, ability!: number, abilityLevel!: number;
 
@@ -702,10 +702,10 @@ export default class Incoming {
 
                 ({ ability, abilityLevel } = iSlot);
 
-                if (this.player.inventory.remove(id, count ? count : item.count, item.index))
+                if (this.player.inventory.remove(id, count || item.count, item.index))
                     this.entities.dropItem(
                         id,
-                        count ? count : 1,
+                        count || 1,
                         this.player.x,
                         this.player.y,
                         ability,
@@ -741,7 +741,7 @@ export default class Incoming {
         }
     }
 
-    handleBank(message: [number, string, number]): void {
+    private handleBank(message: [number, string, number]): void {
         const [opcode, type, index] = message;
 
         switch (opcode) {
@@ -781,7 +781,7 @@ export default class Incoming {
         }
     }
 
-    handleRespawn(message: [string]): void {
+    private handleRespawn(message: [string]): void {
         const [instance] = message;
 
         if (this.player.instance !== instance) return;
@@ -804,7 +804,7 @@ export default class Incoming {
         this.player.revertPoints();
     }
 
-    handleTrade(message: [number, string]): void {
+    private handleTrade(message: [number, string]): void {
         const [opcode] = message,
             oPlayer = this.entities.get(message[1]);
 
@@ -822,7 +822,7 @@ export default class Incoming {
         }
     }
 
-    handleEnchant(message: [number, unknown]): void {
+    private handleEnchant(message: [number, unknown]): void {
         const [opcode] = message;
 
         switch (opcode) {
@@ -852,7 +852,7 @@ export default class Incoming {
         }
     }
 
-    handleClick(message: [string, boolean]): void {
+    private handleClick(message: [string, boolean]): void {
         const [type, state] = message;
 
         switch (type) {
@@ -873,13 +873,13 @@ export default class Incoming {
         }
     }
 
-    handleWarp(message: [string]): void {
+    private handleWarp(message: [string]): void {
         const id = parseInt(message[0]) - 1;
 
         this.player.warp?.warp(id);
     }
 
-    handleShop(message: [number, number, ...unknown[]]): void {
+    private handleShop(message: [number, number, ...unknown[]]): void {
         const [opcode, npcId] = message;
 
         switch (opcode) {
@@ -961,7 +961,7 @@ export default class Incoming {
         }
     }
 
-    handleCamera(message: string[]): void {
+    private handleCamera(message: string[]): void {
         log.info(`${this.player.x} ${this.player.y}`);
         console.log(message);
 
@@ -974,8 +974,7 @@ export default class Incoming {
      * Receive client information such as screen size, will be expanded
      * for more functionality when needed.
      */
-
-    handleClient(message: [number, number]): void {
+    private handleClient(message: [number, number]): void {
         const [canvasWidth, canvasHeight] = message;
 
         if (!canvasWidth || !canvasHeight) return;
@@ -990,18 +989,17 @@ export default class Incoming {
         this.player.regionHeight = Math.ceil(canvasHeight / 48);
     }
 
-    canAttack(attacker: Character, target: Character): boolean {
-        /**
-         * Used to prevent client-sided manipulation. The client will send the packet to start combat
-         * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
-         */
-
+    /**
+     * Used to prevent client-sided manipulation. The client will send the packet to start combat
+     * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
+     */
+    private canAttack(attacker: Character, target: Character): boolean {
         if (attacker.type === 'mob' || target.type === 'mob') return true;
 
         return attacker.type === 'player' && target.type === 'player' && attacker.pvp && target.pvp;
     }
 
-    preventNoClip(x: number, y: number): boolean {
+    private preventNoClip(x: number, y: number): boolean {
         const isMapColliding = this.world.map.isColliding(x, y),
             isInstanceColliding = this.player.doors.hasCollision(x, y);
 
@@ -1015,7 +1013,7 @@ export default class Incoming {
         return true;
     }
 
-    handleNoClip(x: number, y: number): void {
+    public handleNoClip(x: number, y: number): void {
         this.player.stopMovement(true);
         this.player.notify(
             'We have detected no-clipping in your client. Please submit a bug report.'

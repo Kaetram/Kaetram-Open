@@ -9,7 +9,7 @@ import type World from '../../game/world';
 export default abstract class Areas {
     public areas: Area[] = [];
 
-    constructor(public data: ProcessedArea[], public world: World) {}
+    protected constructor(public data: ProcessedArea[], public world: World) {}
 
     public load(
         mapAreas: ProcessedArea[],
@@ -22,7 +22,7 @@ export default abstract class Areas {
 
             this.areas.push(area);
 
-            if (callback) callback(this.areas[this.areas.length - 1], a);
+            callback?.(this.areas[this.areas.length - 1], a);
         });
     }
 

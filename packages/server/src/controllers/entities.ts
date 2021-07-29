@@ -27,14 +27,14 @@ export default class Entities {
     private grids;
 
     public players: { [instance: string]: Player } = {};
-    public entities: { [instance: string]: Entity } = {};
-    public items: { [instance: string]: Item } = {};
-    public mobs: { [instance: string]: Mob } = {};
-    public chests: { [instance: string]: Chest } = {};
-    public npcs: { [instance: string]: NPC } = {};
-    public projectiles: { [instance: string]: Projectile } = {};
+    private entities: { [instance: string]: Entity } = {};
+    private items: { [instance: string]: Item } = {};
+    private mobs: { [instance: string]: Mob } = {};
+    private chests: { [instance: string]: Chest } = {};
+    private npcs: { [instance: string]: NPC } = {};
+    private projectiles: { [instance: string]: Projectile } = {};
 
-    constructor(private world: World) {
+    public constructor(private world: World) {
         this.region = world.region;
         this.map = world.map;
         this.grids = world.map.grids;
@@ -45,7 +45,6 @@ export default class Entities {
     /**
      * Spawn Entities
      */
-
     private spawn() {
         // Spawns the static entities such as mobs, items, and npcs
 
@@ -158,7 +157,6 @@ export default class Entities {
                          * levels of plateau in order to properly roam entities without
                          * them walking into other regions (or clipping).
                          */
-
                         const plateauLevel = this.map.getPlateauLevel(
                             mob.spawnLocation[0],
                             mob.spawnLocation[1]
@@ -199,7 +197,7 @@ export default class Entities {
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
     }
 
-    spawnMob(id: number, gridX: number, gridY: number): Mob {
+    public spawnMob(id: number, gridX: number, gridY: number): Mob {
         const mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
 
         this.addMob(mob);
@@ -207,7 +205,7 @@ export default class Entities {
         return mob;
     }
 
-    spawnChest(
+    public spawnChest(
         items: string[],
         gridX: number,
         gridY: number,
@@ -241,7 +239,7 @@ export default class Entities {
         return chest;
     }
 
-    spawnProjectile([attacker, target]: Character[]): Projectile | null {
+    public spawnProjectile([attacker, target]: Character[]): Projectile | null {
         if (!attacker || !target) return null;
 
         const startX = attacker.x, // gridX
@@ -272,8 +270,7 @@ export default class Entities {
     /**
      * Add Entities
      */
-
-    add(entity: Entity, region: string | null): void {
+    private add(entity: Entity, region: string | null): void {
         if (entity.instance in this.entities)
             log.warning(`Entity ${entity.instance} already exists.`);
 
@@ -331,13 +328,13 @@ export default class Entities {
         }
     }
 
-    addNPC(npc: NPC): void {
+    private addNPC(npc: NPC): void {
         this.add(npc, npc.region);
 
         this.npcs[npc.instance] = npc;
     }
 
-    addItem(item: Item): void {
+    private addItem(item: Item): void {
         if (item.static) item.onRespawn(() => this.addItem(item));
 
         this.add(item, item.region);
@@ -345,7 +342,7 @@ export default class Entities {
         this.items[item.instance] = item;
     }
 
-    addMob(mob: Mob): void {
+    private addMob(mob: Mob): void {
         this.add(mob, mob.region);
 
         this.mobs[mob.instance] = mob;
@@ -359,21 +356,21 @@ export default class Entities {
         });
     }
 
-    addPlayer(player: Player): void {
+    public addPlayer(player: Player): void {
         this.add(player, player.region);
 
         this.players[player.instance] = player;
 
-        if (this.world.populationCallback) this.world.populationCallback();
+        this.world.populationCallback?.();
     }
 
-    addChest(chest: Chest): void {
+    private addChest(chest: Chest): void {
         this.add(chest, chest.region);
 
         this.chests[chest.instance] = chest;
     }
 
-    addProjectile(projectile: Projectile): void {
+    private addProjectile(projectile: Projectile): void {
         this.add(projectile, projectile.owner!.region);
 
         this.projectiles[projectile.instance] = projectile;
@@ -382,8 +379,7 @@ export default class Entities {
     /**
      * Remove Entities
      */
-
-    remove(entity: Entity): void {
+    public remove(entity: Entity): void {
         this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
 
         this.region.remove(entity);
@@ -395,7 +391,7 @@ export default class Entities {
         delete this.projectiles[entity.instance];
     }
 
-    removeItem(item: Item): void {
+    public removeItem(item: Item): void {
         this.remove(item);
 
         this.world.push(Packets.PushOpcode.Broadcast, {
@@ -405,7 +401,7 @@ export default class Entities {
         if (item.static) item.respawn();
     }
 
-    removePlayer(player: Player): void {
+    public removePlayer(player: Player): void {
         this.remove(player);
 
         this.world.push(Packets.PushOpcode.Regions, {
@@ -415,7 +411,7 @@ export default class Entities {
 
         if (player.ready) player.save();
 
-        if (this.world.populationCallback) this.world.populationCallback();
+        this.world.populationCallback?.();
 
         this.world.cleanCombat(player);
 
@@ -425,7 +421,7 @@ export default class Entities {
         player.destroy();
     }
 
-    removeChest(chest: Chest): void {
+    public removeChest(chest: Chest): void {
         this.remove(chest);
 
         this.world.push(Packets.PushOpcode.Broadcast, {
@@ -439,36 +435,34 @@ export default class Entities {
     /**
      * Getters
      */
-
-    isOnline(username: string): boolean {
+    public isOnline(username: string): boolean {
         return !!this.getPlayer(username);
     }
 
-    get<E extends Entity>(instance: string): E | null {
+    public get<E extends Entity>(instance: string): E | null {
         if (instance in this.entities) return this.entities[instance] as E;
 
         return null;
     }
 
-    getPlayer(username: string): Player | undefined {
+    public getPlayer(username: string): Player | undefined {
         return _.find(this.players, (player: Player) => {
             return player.username.toLowerCase() === username.toLowerCase();
         });
     }
 
-    forEachEntity(callback: (entity: Entity) => void): void {
+    public forEachEntity(callback: (entity: Entity) => void): void {
         _.each(this.entities, callback);
     }
 
-    forEachPlayer(callback: (player: Player) => void): void {
+    public forEachPlayer(callback: (player: Player) => void): void {
         _.each(this.players, callback);
     }
 
     /**
      * Miscellaneous Functions
      */
-
-    createItem(
+    private createItem(
         id: number,
         instance: string,
         gridX: number,
@@ -479,7 +473,7 @@ export default class Entities {
         return new Item(id, instance, gridX, gridY, ability, abilityLevel);
     }
 
-    dropItem(
+    public dropItem(
         id: number,
         count: number,
         gridX: number,

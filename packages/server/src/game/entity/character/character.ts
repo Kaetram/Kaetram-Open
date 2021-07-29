@@ -46,44 +46,43 @@ export default abstract class Character extends Entity {
     public target: Character | null = null;
     public potentialTarget: unknown = null;
 
-    stunTimeout: NodeJS.Timeout | null = null;
+    public stunTimeout: NodeJS.Timeout | null = null;
 
     public projectile = Modules.Projectiles.Arrow;
     public projectileName = 'projectile-pinearrow';
 
-    healingInterval: NodeJS.Timeout | null = null;
+    private healingInterval: NodeJS.Timeout | null = null;
 
-    updated = false;
+    private updated = false;
 
     public weaponLevel!: number;
     public armourLevel!: number;
     public stunned = false;
 
-    stunCallback?: StunCallback;
-    hitCallback?: HitCallback;
-    damagedCallback?: DamagedCallback;
-    movementCallback?: MovementCallback;
-    targetCallback?: TargetCallback;
-    hitPointsCallback?(): void;
-    poisonCallback?: PoisonCallback;
-    removeTargetCallback?(): void;
-    healthChangeCallback?(): void;
-    damageCallback?: DamageCallback;
-    subAoECallback?: SubAoECallback;
-    deathCallback?(): void;
+    private stunCallback?: StunCallback;
+    public hitCallback?: HitCallback;
+    private damagedCallback?: DamagedCallback;
+    private movementCallback?: MovementCallback;
+    private targetCallback?: TargetCallback;
+    private hitPointsCallback?(): void;
+    private poisonCallback?: PoisonCallback;
+    private removeTargetCallback?(): void;
+    private healthChangeCallback?(): void;
+    public damageCallback?: DamageCallback;
+    private subAoECallback?: SubAoECallback;
+    public deathCallback?(): void;
+    private returnCallback?(): void;
 
-    returnCallback?(): void;
+    public moving = false;
+    public lastMovement!: number;
 
-    moving = false;
-    lastMovement!: number;
+    public pvp = false;
 
-    pvp = false;
+    public spawnLocation!: [x: number, y: number];
 
-    spawnLocation!: [x: number, y: number];
+    public frozen = false;
 
-    frozen = false;
-
-    alwaysAggressive = false;
+    public alwaysAggressive = false;
 
     public invincible = false;
     public lastAttacker!: Character | null;
@@ -92,14 +91,14 @@ export default abstract class Character extends Entity {
     public ring!: Ring;
     public boots!: Boots;
 
-    constructor(id: number, type: string, instance: string, x: number, y: number) {
+    protected constructor(id: number, type: string, instance: string, x: number, y: number) {
         super(id, type, instance, x, y);
 
         this.loadCombat();
         this.startHealing();
     }
 
-    loadCombat(): void {
+    private loadCombat(): void {
         /**
          * Ternary could be used here, but readability
          * would become nonexistent.
@@ -110,7 +109,7 @@ export default abstract class Character extends Entity {
             : new Combat(this);
     }
 
-    setMinibossData(): void {
+    public setMinibossData(): void {
         /* We only update the mob data once to prevent any issues. */
 
         if (this.updated) return;
@@ -124,7 +123,7 @@ export default abstract class Character extends Entity {
         this.updated = true;
     }
 
-    startHealing(): void {
+    private startHealing(): void {
         this.healingInterval = setInterval(() => {
             if (this.dead) return;
 
@@ -136,101 +135,101 @@ export default abstract class Character extends Entity {
         }, this.healingRate);
     }
 
-    stopHealing(): void {
+    public stopHealing(): void {
         if (this.healingInterval) clearInterval(this.healingInterval);
         this.healingInterval = null;
     }
 
-    setStun(stun: boolean): void {
+    public setStun(stun: boolean): void {
         this.stunned = stun;
 
-        if (this.stunCallback) this.stunCallback(stun);
+        this.stunCallback?.(stun);
     }
 
-    hit(attacker: Character): void {
-        if (this.hitCallback) this.hitCallback(attacker);
+    public hit(attacker: Character): void {
+        this.hitCallback?.(attacker);
     }
 
-    heal(amount: number): void {
+    public heal(amount: number): void {
         this.setHitPoints(this.hitPoints + amount);
 
         if (this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
     }
 
-    isRanged(): boolean {
+    public isRanged(): boolean {
         return this.attackRange > 1;
     }
 
-    applyDamage(damage: number, attacker?: Character): void {
+    public applyDamage(damage: number, attacker?: Character): void {
         this.hitPoints -= damage;
 
-        if (this.damagedCallback) this.damagedCallback(damage, attacker);
+        this.damagedCallback?.(damage, attacker);
     }
 
-    isDead(): boolean {
+    public isDead(): boolean {
         return this.hitPoints < 1 || this.dead;
     }
 
-    getCombat(): Combat {
+    public getCombat(): Combat {
         return this.combat;
     }
 
-    getHitPoints(): number {
+    public getHitPoints(): number {
         return this.hitPoints;
     }
 
-    getMaxHitPoints(): number {
+    public getMaxHitPoints(): number {
         return this.maxHitPoints;
     }
 
-    override setPosition(x: number, y: number): void {
+    public override setPosition(x: number, y: number): void {
         this.previousX = this.x;
         this.previousY = this.y;
 
         super.setPosition(x, y);
 
-        if (this.movementCallback) this.movementCallback(x, y);
+        this.movementCallback?.(x, y);
     }
 
-    setTarget(target: Character | null): void {
+    public setTarget(target: Character | null): void {
         this.target = target;
 
-        if (this.targetCallback) this.targetCallback(target);
+        this.targetCallback?.(target);
     }
 
-    setPotentialTarget(potentialTarget: unknown): void {
+    private setPotentialTarget(potentialTarget: unknown): void {
         this.potentialTarget = potentialTarget;
     }
 
-    setHitPoints(hitPoints: number): void {
+    public setHitPoints(hitPoints: number): void {
         this.hitPoints = hitPoints;
 
-        if (this.hitPointsCallback) this.hitPointsCallback();
+        this.hitPointsCallback?.();
     }
 
-    setPoison(poison: string): void {
+    public setPoison(poison: string): void {
         this.poison = poison;
 
-        if (this.poisonCallback) this.poisonCallback(poison);
+        this.poisonCallback?.(poison);
     }
 
-    getProjectile(): Modules.Projectiles {
+    public getProjectile(): Modules.Projectiles {
         return this.projectile;
     }
 
-    getProjectileName(): string {
+    public getProjectileName(): string {
         return this.projectileName;
     }
 
-    getWeaponLevel(): number {
+    public getWeaponLevel(): number {
         return this.weaponLevel;
     }
 
-    getArmourLevel(): number {
+    public getArmourLevel(): number {
         return this.armourLevel;
     }
 
-    override getState(): CharacterState {
+    public override getState(): CharacterState {
         const state = super.getState() as CharacterState;
 
         state.movementSpeed = this.movementSpeed;
@@ -238,70 +237,70 @@ export default abstract class Character extends Entity {
         return state;
     }
 
-    hasMaxHitPoints(): boolean {
+    protected hasMaxHitPoints(): boolean {
         return this.hitPoints >= this.maxHitPoints;
     }
 
-    removeTarget(): void {
-        if (this.removeTargetCallback) this.removeTargetCallback();
+    public removeTarget(): void {
+        this.removeTargetCallback?.();
 
         this.clearTarget();
     }
 
-    hasPotentialTarget(potentialTarget: unknown): boolean {
+    private hasPotentialTarget(potentialTarget: unknown): boolean {
         return this.potentialTarget === potentialTarget;
     }
 
-    clearTarget(): void {
+    public clearTarget(): void {
         this.target = null;
     }
 
-    onTarget(callback: TargetCallback): void {
+    public onTarget(callback: TargetCallback): void {
         this.targetCallback = callback;
     }
 
-    onRemoveTarget(callback: () => void): void {
+    public onRemoveTarget(callback: () => void): void {
         this.removeTargetCallback = callback;
     }
 
-    onMovement(callback: MovementCallback): void {
+    public onMovement(callback: MovementCallback): void {
         this.movementCallback = callback;
     }
 
-    onHit(callback: HitCallback): void {
+    public onHit(callback: HitCallback): void {
         this.hitCallback = callback;
     }
 
-    onHealthChange(callback: () => void): void {
+    public onHealthChange(callback: () => void): void {
         this.healthChangeCallback = callback;
     }
 
-    onDamage(callback: DamageCallback): void {
+    public onDamage(callback: DamageCallback): void {
         this.damageCallback = callback;
     }
 
     /** When the entity gets hit. */
-    onDamaged(callback: DamagedCallback): void {
+    public onDamaged(callback: DamagedCallback): void {
         this.damagedCallback = callback;
     }
 
-    onStunned(callback: StunCallback): void {
+    public onStunned(callback: StunCallback): void {
         this.stunCallback = callback;
     }
 
-    onSubAoE(callback: SubAoECallback): void {
+    public onSubAoE(callback: SubAoECallback): void {
         this.subAoECallback = callback;
     }
 
-    onPoison(callback: PoisonCallback): void {
+    public onPoison(callback: PoisonCallback): void {
         this.poisonCallback = callback;
     }
 
-    onDeath(callback: () => void): void {
+    public onDeath(callback: () => void): void {
         this.deathCallback = callback;
     }
 
-    onReturn(callback: () => void): void {
+    public onReturn(callback: () => void): void {
         this.returnCallback = callback;
     }
 }

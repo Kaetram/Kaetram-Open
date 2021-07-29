@@ -5,18 +5,17 @@ import Mob from '../../src/game/entity/character/mob/mob';
 import Utils from '../../src/util/utils';
 import { HitData } from '@kaetram/server/src/game/entity/character/combat/hit';
 
+/**
+ * First of its kind, the Skeleton King will spawn 4 minions.
+ * Two sorcerers on (x + 1, y + 1) & (x - 1, y + 1)
+ *
+ * And two death knights on (x + 1, y - 1) & (x - 1, y - 1)
+ */
 export default class SkeletonKing extends Combat {
-    /**
-     * First of its kind, the Skeleton King will spawn 4 minions.
-     * Two sorcerers on (x + 1, y + 1) & (x - 1, y + 1)
-     *
-     * And two death knights on (x + 1, y - 1) & (x - 1, y - 1)
-     */
-
     lastSpawn: number;
     minions: Mob[];
 
-    constructor(character: Character) {
+    public constructor(character: Character) {
         character.spawnDistance = 10;
         super(character);
 

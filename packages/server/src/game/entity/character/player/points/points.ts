@@ -2,41 +2,41 @@ export default abstract class Points {
     public points: number;
     public maxPoints: number;
 
-    healCallback?(): void;
+    private healCallback?(): void;
 
-    constructor(points: number, maxPoints: number) {
+    protected constructor(points: number, maxPoints: number) {
         this.points = isNaN(points) ? maxPoints : points;
         this.maxPoints = maxPoints;
     }
 
-    heal(amount: number): void {
+    public heal(amount: number): void {
         this.setPoints(this.points + amount);
 
-        if (this.healCallback) this.healCallback();
+        this.healCallback?.();
     }
 
-    increment(amount: number): void {
+    public increment(amount: number): void {
         this.points += amount;
     }
 
-    decrement(amount: number): void {
+    public decrement(amount: number): void {
         this.points -= amount;
     }
 
-    setPoints(points: number): void {
+    protected setPoints(points: number): void {
         this.points = points;
 
         if (this.points >= this.maxPoints) this.points = this.maxPoints;
     }
-    setMaxPoints(maxPoints: number): void {
+    protected setMaxPoints(maxPoints: number): void {
         this.maxPoints = maxPoints;
     }
 
-    getData(): number[] {
+    public getData(): number[] {
         return [this.points, this.maxPoints];
     }
 
-    onHeal(callback: () => void): void {
+    public onHeal(callback: () => void): void {
         this.healCallback = callback;
     }
 }

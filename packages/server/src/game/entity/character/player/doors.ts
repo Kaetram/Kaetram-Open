@@ -3,9 +3,6 @@ import _ from 'lodash';
 import config from '../../../../../config';
 import doorData from '../../../../../data/doors.json';
 
-import type Map from '../../../../map/map';
-import type Regions from '../../../../map/regions';
-import type World from '../../../world';
 import type Player from './player';
 import type { ObjectData } from './player';
 
@@ -44,7 +41,7 @@ export default class Doors {
 
     public doors: { [id: number]: Door } = {};
 
-    constructor(private player: Player) {
+    public constructor(private player: Player) {
         this.world = player.world;
         this.map = this.world.map;
         this.regions = this.map.regions;
@@ -52,7 +49,7 @@ export default class Doors {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         _.each(doorData, (door: Door) => {
             this.doors[door.id] = {
                 id: door.id,
@@ -69,7 +66,7 @@ export default class Doors {
         });
     }
 
-    getStatus(door: Door): DoorStatus {
+    private getStatus(door: Door): DoorStatus {
         if (door.status) return door.status;
 
         if (config.offlineMode) return 'open';
@@ -92,7 +89,7 @@ export default class Doors {
         }
     }
 
-    getTiles(door: Door): DoorTiles {
+    private getTiles(door: Door): DoorTiles {
         let tiles: DoorTiles = {
                 indexes: [],
                 data: [],
@@ -113,7 +110,7 @@ export default class Doors {
         return tiles;
     }
 
-    getAllTiles(): DoorTiles {
+    public getAllTiles(): DoorTiles {
         let allTiles: DoorTiles = {
             indexes: [],
             data: [],
@@ -136,7 +133,7 @@ export default class Doors {
         return allTiles;
     }
 
-    hasCollision(x: number, y: number): boolean {
+    public hasCollision(x: number, y: number): boolean {
         let tiles = this.getAllTiles(),
             tileIndex = this.world.map.gridPositionToIndex(x, y),
             index = tiles.indexes.indexOf(tileIndex);
@@ -155,7 +152,7 @@ export default class Doors {
         return tiles.collisions[index];
     }
 
-    getDoor(x: number, y: number): Door | null {
+    public getDoor(x: number, y: number): Door | null {
         for (let i in this.doors)
             if (
                 Object.prototype.hasOwnProperty.call(this.doors, i) &&
@@ -167,17 +164,17 @@ export default class Doors {
         return null;
     }
 
-    isDoor(x: number, y: number, callback: (door: boolean) => void): void {
+    public isDoor(x: number, y: number, callback: (door: boolean) => void): void {
         this.forEachDoor((door) => {
             callback(door.x === x && door.y === y);
         });
     }
 
-    isClosed(door: Door): boolean {
+    public isClosed(door: Door): boolean {
         return this.getStatus(door) === 'closed';
     }
 
-    forEachDoor(callback: (door: Door) => void): void {
+    private forEachDoor(callback: (door: Door) => void): void {
         _.each(this.doors, (door) => {
             callback(door);
         });

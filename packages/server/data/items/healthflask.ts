@@ -8,7 +8,7 @@ export default class HealthFlask implements Item {
     healAmount: number;
     manaAmount: number;
 
-    constructor(id: number) {
+    public constructor(id: number) {
         this.id = id;
 
         const customData = Items.getCustomData(this.id);
