@@ -8,15 +8,15 @@ export default class Overlay {
         this.load();
     }
 
-    private async load(): Promise<void> {
-        this.overlays.fog = await this.loadOverlay('fog');
+    private load(): void {
+        this.overlays.fog = this.loadOverlay('fog');
     }
 
-    private async loadOverlay(overlayName: string): Promise<HTMLImageElement> {
+    private loadOverlay(overlayName: string): HTMLImageElement {
         const overlay = new Image();
 
         overlay.crossOrigin = 'Anonymous';
-        const { default: image } = await import(`../../img/overlays/${overlayName}.png`);
+        const image = `/img/overlays/${overlayName}.png`;
         overlay.src = image;
 
         overlay.addEventListener('load', () => log.debug(`Loaded ${overlayName}`));
