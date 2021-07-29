@@ -78,7 +78,7 @@ export default class Shop {
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
     }
 
-    public async move(info: ShopMoveInfo): Promise<void> {
+    public move(info: ShopMoveInfo): void {
         const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
             slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`),
             slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
@@ -89,7 +89,7 @@ export default class Shop {
         });
 
         this.sellSlotReturn.css({
-            backgroundImage: await this.container.getImageFormat(info.currency),
+            backgroundImage: this.container.getImageFormat(info.currency),
             backgroundSize: this.sellSlot.css('background-size')
         });
 
@@ -142,7 +142,7 @@ export default class Shop {
         this.load();
     }
 
-    private async load(): Promise<void> {
+    private load(): void {
         for (let i = 0; i < this.container.size; i++) {
             const shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`),
                 string = this.data.strings[i],
@@ -158,7 +158,7 @@ export default class Shop {
                 itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`),
                 itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
 
-            itemImage.css('background-image', await this.container.getImageFormat(string));
+            itemImage.css('background-image', this.container.getImageFormat(string));
             itemCount.html(count.toString());
             itemPrice.html(`${price}g`);
             itemName.html(name);

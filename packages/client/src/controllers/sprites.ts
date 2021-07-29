@@ -15,18 +15,16 @@ export default class SpritesController {
         this.loadAnimations();
     }
 
-    public async load(): Promise<void> {
+    public load(): void {
         const sprites = spriteData as SpriteData[];
 
-        await Promise.all(
-            sprites.map(async (data) => {
-                const sprite = new Sprite(data);
+        for (const data of sprites) {
+            const sprite = new Sprite(data);
 
-                await sprite.loadSprite();
+            sprite.loadSprite();
 
-                this.sprites[data.id] = sprite;
-            })
-        );
+            this.sprites[data.id] = sprite;
+        }
 
         log.debug('Finished loading sprite data...');
     }

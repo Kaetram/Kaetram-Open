@@ -29,7 +29,7 @@ export default class Inventory {
         this.load(data);
     }
 
-    private async load(data: Equipment[]): Promise<void> {
+    private load(data: Equipment[]): void {
         const list = $('#inventory').find('ul');
 
         for (const [i, item] of data.entries()) {
@@ -38,7 +38,7 @@ export default class Inventory {
             const itemSlot = $(`<div id="slot${i}" class="itemSlot"></div>`);
 
             if (item.string !== 'null')
-                itemSlot.css('background-image', await this.container.getImageFormat(item.string));
+                itemSlot.css('background-image', this.container.getImageFormat(item.string));
 
             itemSlot.css('background-size', '600%');
 
@@ -199,7 +199,7 @@ export default class Inventory {
         this.actions.hide();
     }
 
-    public async add(info: Slot): Promise<void> {
+    public add(info: Slot): void {
         const item = $(this.getList()[info.index]),
             slot = this.container.slots[info.index];
 
@@ -217,7 +217,7 @@ export default class Inventory {
 
         const cssSlot = item.find(`#slot${info.index}`);
 
-        cssSlot.css('background-image', await this.container.getImageFormat(slot.string));
+        cssSlot.css('background-image', this.container.getImageFormat(slot.string));
 
         cssSlot.css('background-size', '600%');
 
@@ -258,7 +258,7 @@ export default class Inventory {
         }
     }
 
-    public async resize(): Promise<void> {
+    public resize(): void {
         const list = this.getList();
 
         for (const [i, element] of [...list].entries()) {
@@ -268,7 +268,7 @@ export default class Inventory {
             if (!slot) continue;
 
             if (Detect.isMobile()) item.css('background-size', '600%');
-            else item.css('background-image', await this.container.getImageFormat(slot.string));
+            else item.css('background-image', this.container.getImageFormat(slot.string));
         }
     }
 
