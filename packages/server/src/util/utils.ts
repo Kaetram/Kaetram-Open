@@ -122,7 +122,6 @@ export default {
      * of maps in order to determine if an update is necessary.
      * @param data Any form of data, string, numbers, etc.
      */
-
     getChecksum(data: string): string {
         return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
     },
@@ -135,7 +134,6 @@ export default {
      * time has passed.
      * @param threshold The threshold for how much time has passed in order to return true.
      */
-
     timePassed(lastEvent: number, threshold: number): boolean {
         return Date.now() - lastEvent < threshold;
     },
@@ -145,7 +143,6 @@ export default {
      * @param data Any string, generally a JSON string.
      * @param compression Compression format, can be gzip or zlib
      */
-
     compressData(data: string, compression = 'gzip'): string | undefined {
         if (!data) return;
 
@@ -159,7 +156,6 @@ export default {
      * client as a buffer size variable to decompress the data.
      * @param data The data to calculate the size of, will be stringified.
      */
-
     getBufferSize(data: unknown): number {
         return encodeURI(JSON.stringify(data)).split(/%..|./).length - 1;
     }

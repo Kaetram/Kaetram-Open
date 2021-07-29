@@ -1,10 +1,9 @@
+/**
+ * - Oak trees are considered the green trees in the starting area,
+ * as well as any dead trees found throughout the world. The same
+ * applies for the ice oak trees (i.e. ice dead trees are still ice oak).
+ */
 export default {
-    /**
-     * Oak trees are considered the green trees in the starting area,
-     * as well as any dead trees found throughout the world. The same
-     * applies for the ice oak trees (i.e. ice dead trees are still ice oak).
-     */
-
     // The log ids of the tree
     Logs: {
         Oak: 264,

@@ -26,7 +26,7 @@ import type { ObjectsData } from './objects';
 export default class Parser {
     private readyCallback?(): void;
 
-    constructor() {
+    public constructor() {
         this.load();
 
         this.loadMobData();
@@ -38,7 +38,7 @@ export default class Parser {
         this.loadObjects();
     }
 
-    load(): void {
+    private load(): void {
         this.onReady(() => {
             Mobs.Plugins = combatPlugins;
 
@@ -47,7 +47,7 @@ export default class Parser {
         });
     }
 
-    loadMobData(): void {
+    private loadMobData(): void {
         let mobCounter = 0;
 
         _.each(mobData, (value, key) => {
@@ -104,7 +104,7 @@ export default class Parser {
         log.info('Finished loading ' + mobCounter + ' mobs.');
     }
 
-    loadNPCData(): void {
+    private loadNPCData(): void {
         let npcCounter = 0;
 
         _.each(npcData, (value, key) => {
@@ -128,7 +128,7 @@ export default class Parser {
         log.info('Finished loading ' + npcCounter + ' NPCs.');
     }
 
-    loadItemData(): void {
+    private loadItemData(): void {
         let itemCounter = 0;
 
         _.each(itemData, (value, key) => {
@@ -193,7 +193,7 @@ export default class Parser {
         log.info('Finished loading ' + itemCounter + ' items.');
     }
 
-    loadAbilityData(): void {
+    private loadAbilityData(): void {
         let skillCounter = 0;
 
         _.each(abilityData, (value, key) => {
@@ -215,7 +215,7 @@ export default class Parser {
         log.info('Finished loading ' + skillCounter + ' skills.');
     }
 
-    loadShops(): void {
+    private loadShops(): void {
         let shopCounter = 0;
 
         _.each(shopsData, (value, key) => {
@@ -265,7 +265,7 @@ export default class Parser {
 
     **/
 
-    loadLevels(): void {
+    private loadLevels(): void {
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
@@ -274,7 +274,7 @@ export default class Parser {
         }
     }
 
-    loadObjects(): void {
+    private loadObjects(): void {
         let objectCounter = 0;
 
         _.each(objectData, (value, key) => {
@@ -293,10 +293,10 @@ export default class Parser {
 
         log.info('Finished loading ' + objectCounter + ' global objects.');
 
-        if (this.readyCallback) this.readyCallback();
+        this.readyCallback?.();
     }
 
-    onReady(callback: () => void): void {
+    private onReady(callback: () => void): void {
         this.readyCallback = callback;
     }
 }

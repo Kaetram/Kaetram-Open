@@ -10,20 +10,18 @@ import type { Tree } from '@kaetram/common/types/map';
 import type Player from '../../player';
 
 export default class Lumberjacking extends Profession {
-    tick = 1000;
+    private cuttingInterval: NodeJS.Timeout | null = null;
+    private started = false;
 
-    cuttingInterval: NodeJS.Timeout | null = null;
-    started = false;
+    private treeId!: Tree; // TODO
 
-    treeId!: Tree; // TODO
+    private queuedTrees!: Record<string, never>;
 
-    queuedTrees!: Record<string, never>;
-
-    constructor(id: number, player: Player) {
+    public constructor(id: number, player: Player) {
         super(id, player, 'Lumberjacking');
     }
 
-    start(): void {
+    private start(): void {
         if (this.started) return;
 
         this.cuttingInterval = setInterval(() => {
@@ -69,7 +67,7 @@ export default class Lumberjacking extends Profession {
         this.started = true;
     }
 
-    override stop(): void {
+    public override stop(): void {
         if (!this.started) return;
 
         this.treeId = null!;
@@ -82,7 +80,7 @@ export default class Lumberjacking extends Profession {
     }
 
     // TODO
-    handle(id: string, treeId: Tree): void {
+    public handle(id: string, treeId: Tree): void {
         if (!this.player.hasLumberjackingWeapon()) {
             this.player.notify('You do not have an axe to cut this tree with.');
             return;
@@ -101,11 +99,11 @@ export default class Lumberjacking extends Profession {
         this.start();
     }
 
-    getTreeDestroyChance(): boolean {
+    private getTreeDestroyChance(): boolean {
         return Utils.randomInt(0, Trees.Chances[this.treeId]) === 2;
     }
 
-    getQueueCount(): number {
+    private getQueueCount(): number {
         return Object.keys(this.queuedTrees).length;
     }
 }

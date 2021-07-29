@@ -8,11 +8,11 @@ import type Character from '../../../character';
 import type { Door } from '../../doors';
 
 export default class Introduction extends Quest {
-    lastNPC: NPC | null = null;
+    private lastNPC: NPC | null = null;
 
-    finishedCallback?(): void;
+    private finishedCallback?(): void;
 
-    override load(stage: number): void {
+    public override load(stage: number): void {
         if (!this.player.inTutorial()) {
             this.setStage(9999);
             this.update();
@@ -29,7 +29,7 @@ export default class Introduction extends Quest {
         this.loadCallbacks();
     }
 
-    loadCallbacks(): void {
+    private loadCallbacks(): void {
         this.onNPCTalk((npc: NPC) => {
             let conversation = this.getConversation(npc.id);
 
@@ -80,7 +80,7 @@ export default class Introduction extends Quest {
         });
     }
 
-    progress(type: string): void {
+    private progress(type: string): void {
         let task = this.data.task![this.stage];
 
         if (!task || task !== type) return;
@@ -129,26 +129,26 @@ export default class Introduction extends Quest {
         if (this.getTask() === 'door') this.player.updateRegion();
     }
 
-    override isFinished(): boolean {
+    public override isFinished(): boolean {
         return super.isFinished() || !this.player.inTutorial();
     }
 
-    toggleChat(): void {
+    private toggleChat(): void {
         this.player.canTalk = !this.player.canTalk;
     }
 
-    override setStage(stage: number): void {
+    public override setStage(stage: number): void {
         super.setStage(stage);
 
         this.clearPointers();
     }
 
-    override finish(): void {
+    public override finish(): void {
         this.toggleChat();
         super.finish();
     }
 
-    override hasDoorUnlocked(door: Door): boolean {
+    public override hasDoorUnlocked(door: Door): boolean {
         switch (door.id) {
             case 0:
                 return this.stage > 6;
@@ -163,7 +163,7 @@ export default class Introduction extends Quest {
         return false;
     }
 
-    verifyDoor(destX: number, destY: number): boolean | void {
+    private verifyDoor(destX: number, destY: number): boolean | void {
         let doorData = this.data.doors![this.stage];
 
         if (!doorData) return;
@@ -171,13 +171,13 @@ export default class Introduction extends Quest {
         return doorData[0] === destX && doorData[1] === destY;
     }
 
-    getSpawn(): Pos {
+    public getSpawn(): Pos {
         if (this.stage > 7) return { x: 331, y: 12 };
 
         return { x: 375, y: 41 };
     }
 
-    onFinishedLoading(callback: () => void): void {
+    public onFinishedLoading(callback: () => void): void {
         this.finishedCallback = callback;
     }
 }

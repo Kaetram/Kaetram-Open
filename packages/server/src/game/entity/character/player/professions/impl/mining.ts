@@ -6,18 +6,16 @@ import type { Rock } from '@kaetram/common/types/map';
 import type Player from '../../player';
 
 export default class Mining extends Profession {
-    tick = 1000;
+    private miningInterval: NodeJS.Timeout | null = null;
+    private started = false;
 
-    miningInterval: NodeJS.Timeout | null = null;
-    started = false;
+    private rockId!: Rock;
 
-    rockId!: Rock;
-
-    constructor(id: number, player: Player) {
+    public constructor(id: number, player: Player) {
         super(id, player, 'Mining');
     }
 
-    start(): void {
+    private start(): void {
         if (this.started) return;
 
         this.miningInterval = setInterval(() => {
@@ -27,7 +25,7 @@ export default class Mining extends Profession {
         this.started = true;
     }
 
-    override stop(): void {
+    public override stop(): void {
         if (!this.started) return;
 
         this.rockId = null!;
@@ -40,7 +38,7 @@ export default class Mining extends Profession {
     }
 
     // TODO
-    handle(id: string, rockId: Rock): void {
+    private handle(id: string, rockId: Rock): void {
         if (!this.player.hasMiningWeapon()) {
             this.player.notify('You do not have a pickaxe to mine this rock with.');
             return;
@@ -59,7 +57,7 @@ export default class Mining extends Profession {
         this.start();
     }
 
-    getRockDestroyChance(): boolean {
+    private getRockDestroyChance(): boolean {
         return Utils.randomInt(0, Rocks.Chances[this.rockId]) === 2;
     }
 }

@@ -19,7 +19,7 @@ export default class OgreLord extends Combat {
     talkingInterval!: NodeJS.Timeout | null;
     updateInterval!: NodeJS.Timeout | null;
 
-    constructor(character: Character) {
+    public constructor(character: Character) {
         super(character);
 
         this.character = character;

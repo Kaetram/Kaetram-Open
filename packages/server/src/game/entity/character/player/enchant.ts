@@ -22,12 +22,12 @@ export default class Enchant {
      * Tier 5 - Damage boost (1-25% & 25% for special ability or special ability level up)
      */
 
-    selectedItem!: Slot;
-    selectedShards!: Slot;
+    private selectedItem!: Slot;
+    private selectedShards!: Slot;
 
-    constructor(private player: Player) {}
+    public constructor(private player: Player) {}
 
-    add(type: EnchantType, item: Slot): void {
+    public add(type: EnchantType, item: Slot): void {
         if (type === 'item') {
             if (!Items.isEnchantable(item.id)) return;
 
@@ -48,7 +48,7 @@ export default class Enchant {
         );
     }
 
-    remove(type: EnchantType): void {
+    public remove(type: EnchantType): void {
         let index = -1;
 
         if (type === 'item' && this.selectedItem) {
@@ -71,7 +71,7 @@ export default class Enchant {
         );
     }
 
-    convert(shard: Slot): void {
+    public convert(shard: Slot): void {
         if (!Items.isShard(shard.id) || !this.player.inventory.hasSpace()) return;
 
         let tier = Items.getShardTier(shard.id)!;
@@ -90,7 +90,7 @@ export default class Enchant {
         }
     }
 
-    enchant(): void {
+    public enchant(): void {
         if (!this.selectedItem) {
             this.player.notify('You have not selected an item to enchant.');
             return;
@@ -136,7 +136,7 @@ export default class Enchant {
         this.player.sync();
     }
 
-    generateAbility(tier: number): void {
+    private generateAbility(tier: number): void {
         let type = Items.getType(this.selectedItem.id),
             probability = Utils.randomInt(0, 100);
 
@@ -198,11 +198,11 @@ export default class Enchant {
         });
     }
 
-    verify(): boolean {
+    private verify(): boolean {
         return Items.isEnchantable(this.selectedItem.id) && Items.isShard(this.selectedShards.id);
     }
 
-    hasAbility(item: Slot): boolean {
+    private hasAbility(item: Slot): boolean {
         return item.ability !== -1;
     }
 }

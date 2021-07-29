@@ -11,35 +11,35 @@ export interface AbilitiesArray {
 }
 
 export default class Abilities {
-    abilities: { [name: string]: Ability } = {};
+    private abilities: { [name: string]: Ability } = {};
 
-    shortcuts: string[] = [];
+    private shortcuts: string[] = [];
 
-    shortcutSize = 5;
+    private shortcutSize = 5;
 
-    constructor(private player: Player) {}
+    public constructor(private player: Player) {}
 
-    addAbility(ability: Ability): void {
+    private addAbility(ability: Ability): void {
         this.abilities[ability.name] = ability;
     }
 
-    addShortcut(ability: Ability): void {
+    private addShortcut(ability: Ability): void {
         if (this.shortcutSize >= 5) return;
 
         this.shortcuts.push(ability.name);
     }
 
-    removeAbility(ability: Ability): void {
+    private removeAbility(ability: Ability): void {
         if (this.isShortcut(ability)) this.removeShortcut(this.shortcuts.indexOf(ability.name));
 
         delete this.abilities[ability.name];
     }
 
-    removeShortcut(index: number): void {
+    private removeShortcut(index: number): void {
         if (index > -1) this.shortcuts.splice(index, 1);
     }
 
-    hasAbility(ability: Ability): boolean {
+    private hasAbility(ability: Ability): boolean {
         _.each(this.abilities, (uAbility: Ability) => {
             if (uAbility.name === ability.name) return true;
         });
@@ -47,11 +47,11 @@ export default class Abilities {
         return false;
     }
 
-    isShortcut(ability: Ability): boolean {
+    private isShortcut(ability: Ability): boolean {
         return this.shortcuts.includes(ability.name);
     }
 
-    getArray(): AbilitiesArray {
+    public getArray(): AbilitiesArray {
         let abilities = '',
             abilityLevels = '',
             shortcuts = this.shortcuts.toString();

@@ -4,13 +4,12 @@ import type Entity from '../game/entity/entity';
 import type Map from './map';
 
 export default class Grids {
-    entityGrid: { [instance: string]: Entity }[][] = [];
+    private entityGrid: { [instance: string]: Entity }[][] = [];
 
-    constructor(private map: Map) {
+    public constructor(private map: Map) {
         this.load();
     }
-
-    load(): void {
+    private load(): void {
         for (let i = 0; i < this.map.height; i++) {
             this.entityGrid[i] = [];
 
@@ -18,7 +17,7 @@ export default class Grids {
         }
     }
 
-    updateEntityPosition(entity: Entity): void {
+    public updateEntityPosition(entity: Entity): void {
         if (entity && entity.oldX === entity.x && entity.oldY === entity.y) return;
 
         this.removeFromEntityGrid(entity, entity.oldX, entity.oldY);
@@ -27,7 +26,7 @@ export default class Grids {
         entity.updatePosition();
     }
 
-    addToEntityGrid(entity: Entity, x: number, y: number): void {
+    public addToEntityGrid(entity: Entity, x: number, y: number): void {
         if (
             entity &&
             x > 0 &&
@@ -39,7 +38,7 @@ export default class Grids {
             this.entityGrid[y][x][entity.instance] = entity;
     }
 
-    removeFromEntityGrid(entity: Entity, x: number, y: number): void {
+    public removeFromEntityGrid(entity: Entity, x: number, y: number): void {
         if (
             entity &&
             x > 0 &&
@@ -52,7 +51,11 @@ export default class Grids {
             delete this.entityGrid[y][x][entity.instance];
     }
 
-    getSurroundingEntities(entity: Entity, radius: number, include?: boolean): Entity[] | void {
+    public getSurroundingEntities(
+        entity: Entity,
+        radius: number,
+        include?: boolean
+    ): Entity[] | void {
         let entities: Entity[] = [];
 
         if (!this.checkBounds(entity.x, entity.y, radius)) return;
@@ -71,7 +74,7 @@ export default class Grids {
         return entities;
     }
 
-    checkBounds(x: number, y: number, radius: number): boolean {
+    private checkBounds(x: number, y: number, radius: number): boolean {
         return (
             x + radius < this.map.width &&
             x - radius > 0 &&

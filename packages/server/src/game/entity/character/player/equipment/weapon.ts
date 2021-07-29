@@ -10,7 +10,13 @@ export default class Weapon extends Equipment {
 
     public breakable = false;
 
-    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
+    public constructor(
+        name: string,
+        id: number,
+        count: number,
+        ability: number,
+        abilityLevel: number
+    ) {
         super(name, id, count, ability, abilityLevel);
 
         this.level = Items.getWeaponLevel(name);
@@ -19,37 +25,37 @@ export default class Weapon extends Equipment {
         this.mining = Items.getMiningLevel(name);
     }
 
-    override getBaseAmplifier(): number {
+    public override getBaseAmplifier(): number {
         let base = super.getBaseAmplifier();
 
         return base + 0.05 * this.abilityLevel;
     }
 
-    hasCritical(): boolean {
+    public hasCritical(): boolean {
         return this.ability === 1;
     }
 
-    hasExplosive(): boolean {
+    public hasExplosive(): boolean {
         return this.ability === 4;
     }
 
-    hasStun(): boolean {
+    public hasStun(): boolean {
         return this.ability === 5;
     }
 
-    isRanged(): boolean {
+    public isRanged(): boolean {
         return this.ranged;
     }
 
-    setLevel(level: number): void {
+    public setLevel(level: number): void {
         this.level = level;
     }
 
-    getLevel(): number {
+    public getLevel(): number {
         return this.level;
     }
 
-    getType(): Modules.Equipment {
+    protected getType(): Modules.Equipment {
         return Modules.Equipment.Weapon;
     }
 }

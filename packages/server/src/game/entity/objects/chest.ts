@@ -6,33 +6,39 @@ import type Player from '../character/player/player';
 type OpenCallback = (player?: Player) => void;
 
 export default class Chest extends Entity {
-    respawnDuration = 25000;
-    static = false;
+    private respawnDuration = 25000;
+    public static = false;
 
-    items: string[] = [];
+    private items: string[] = [];
 
-    openCallback?: OpenCallback;
-    respawnCallback?(): void;
+    private openCallback?: OpenCallback;
+    private respawnCallback?(): void;
 
-    constructor(id: number, instance: string, x: number, y: number, public achievement?: number) {
+    public constructor(
+        id: number,
+        instance: string,
+        x: number,
+        y: number,
+        public achievement?: number
+    ) {
         super(id, 'chest', instance, x, y);
     }
 
-    addItems(items: string[]): void {
+    public addItems(items: string[]): void {
         this.items = items;
     }
 
-    openChest(player?: Player): void {
-        if (this.openCallback) this.openCallback(player);
+    public openChest(player?: Player): void {
+        this.openCallback?.(player);
     }
 
-    respawn(): void {
+    public respawn(): void {
         setTimeout(() => {
-            if (this.respawnCallback) this.respawnCallback();
+            this.respawnCallback?.();
         }, this.respawnDuration);
     }
 
-    getItem(): { string: string; count: number } | null {
+    public getItem(): { string: string; count: number } | null {
         let random = Utils.randomInt(0, this.items.length - 1),
             item = this.items[random],
             count = 1,
@@ -60,11 +66,11 @@ export default class Chest extends Entity {
         };
     }
 
-    onOpen(callback: OpenCallback): void {
+    public onOpen(callback: OpenCallback): void {
         this.openCallback = callback;
     }
 
-    onRespawn(callback: () => void): void {
+    public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 }

@@ -16,7 +16,7 @@ declare module 'ws' {
 }
 
 export default class WS extends WebSocket {
-    constructor(socketHandler: SocketHandler) {
+    public constructor(socketHandler: SocketHandler) {
         super(config.host, config.websocketPort, 'WebSocket', socketHandler);
 
         const server = new ws.Server({ port: this.port });
@@ -38,7 +38,7 @@ export default class WS extends WebSocket {
                 this.socketHandler
             );
 
-            if (this.addCallback) this.addCallback(connection);
+            this.addCallback?.(connection);
         });
 
         this.server = server;

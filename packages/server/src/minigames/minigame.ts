@@ -4,18 +4,18 @@ export interface MinigameState {
 }
 
 export default abstract class Minigame {
-    constructor(private id: number, private name: string) {}
+    protected constructor(private id: number, private name: string) {}
 
-    getId(): number {
+    public getId(): number {
         return this.id;
     }
 
-    getName(): string {
+    public getName(): string {
         return this.name;
     }
 
     // Used to mark if `player` is in a minigame instance.
-    getState(): MinigameState | null {
+    protected getState(): MinigameState | null {
         return {
             id: this.id,
             name: this.name

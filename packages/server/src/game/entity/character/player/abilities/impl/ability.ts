@@ -5,11 +5,11 @@ export default abstract class Ability {
 
     public data;
 
-    constructor(public name: string, public type: number) {
+    protected constructor(public name: string, public type: number) {
         this.data = Abilities.Data[name];
     }
 
-    setLevel(level: number): void {
+    private setLevel(level: number): void {
         this.level = level;
     }
 }

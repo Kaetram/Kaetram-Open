@@ -17,18 +17,18 @@ export default abstract class WebSocket {
     public addCallback?: (connection: Connection) => void;
     private initializedCallback?(): void;
 
-    constructor(
+    protected constructor(
         protected host: string,
         protected port: number,
         protected type: string,
         protected socketHandler: SocketHandler
     ) {}
 
-    loadServer(): void {
+    public loadServer(): void {
         this.httpServer = http.createServer(this.httpResponse).listen(this.port, this.host, () => {
             log.info(`[${this.type}] Server is now listening on port: ${this.port}.`);
 
-            if (this.initializedCallback) this.initializedCallback();
+            this.initializedCallback?.();
         });
     }
 
@@ -36,14 +36,13 @@ export default abstract class WebSocket {
      * Returns an empty response if someone uses HTTP protocol
      * to access the server.
      */
-
-    httpResponse(_request: http.IncomingMessage, response: http.ServerResponse): void {
+    private httpResponse(_request: http.IncomingMessage, response: http.ServerResponse): void {
         response.writeHead(200, { 'Content-Type': 'text/plain' });
         response.write('This is server, why are you here?');
         response.end();
     }
 
-    verifyVersion(connection: Connection, gameVersion: string): boolean {
+    public verifyVersion(connection: Connection, gameVersion: string): boolean {
         let status = gameVersion === this.version;
 
         if (!status) {
@@ -56,11 +55,11 @@ export default abstract class WebSocket {
         return status;
     }
 
-    onAdd(callback: (connection: Connection) => void): void {
+    public onAdd(callback: (connection: Connection) => void): void {
         this.addCallback = callback;
     }
 
-    onInitialize(callback: () => void): void {
+    public onInitialize(callback: () => void): void {
         this.initializedCallback = callback;
     }
 }

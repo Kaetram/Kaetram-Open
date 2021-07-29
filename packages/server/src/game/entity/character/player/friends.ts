@@ -14,15 +14,15 @@ export interface FriendsArray {
 }
 
 export default class Friends {
-    friends: FriendsList = {};
+    private friends: FriendsList = {};
 
-    constructor(private player: Player) {}
+    public constructor(private player: Player) {}
 
-    update(info: unknown): void {
+    public update(info: unknown): void {
         log.info(info);
     }
 
-    add(username: string): void {
+    public add(username: string): void {
         if (username in this.friends) {
             this.player.notify('That player is already in your friends list.');
             return;
@@ -31,11 +31,11 @@ export default class Friends {
         this.friends[username] = 'offline';
     }
 
-    remove(username: string): void {
+    public remove(username: string): void {
         delete this.friends[username];
     }
 
-    getArray(): FriendsArray {
+    public getArray(): FriendsArray {
         return {
             username: this.player.username,
             friends: this.friends

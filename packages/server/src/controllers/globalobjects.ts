@@ -15,13 +15,13 @@ interface SignData {
 }
 
 export default class GlobalObjects {
-    map;
+    private map;
 
-    constructor(world: World) {
+    public constructor(world: World) {
         this.map = world.map;
     }
 
-    getInfo(id: string): { type: string; tree?: Tree } | null {
+    public getInfo(id: string): { type: string; tree?: Tree } | null {
         const position = Objects.getPosition(id),
             objectId = this.map.getPositionObject(position.x, position.y);
 
@@ -44,8 +44,7 @@ export default class GlobalObjects {
      * Used for objects that display text bubbles. Returns formatted
      * position data for the client to display the bubble.
      */
-
-    getSignData(id: string): SignData | null {
+    public getSignData(id: string): SignData | null {
         const object = Objects.getObject(id);
 
         if (!object) return null;
@@ -67,8 +66,7 @@ export default class GlobalObjects {
     /**
      * Ripped from `npc.js` but with some minor adjustments.
      */
-
-    talk(object: ObjectsData, player: Player): string {
+    public talk(object: ObjectsData, player: Player): string {
         if (player.npcTalk !== object.id) {
             player.npcTalk = object.id!;
             player.talkIndex = 0;
