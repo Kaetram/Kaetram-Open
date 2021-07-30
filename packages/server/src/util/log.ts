@@ -1,68 +1,62 @@
 import fs from 'fs';
+
 import config from '../../config';
 
+/**
+ * Simple logging file that serves to be used globally
+ * and to neatly display logs, errors, warnings, and notices.
+ * Can be adapted and expanded, without using megabytes of npm repos.
+ */
 class Log {
-    /**
-     * Simple logging file that serves to be used globally
-     * and to neatly display logs, errors, warnings, and notices.
-     * Can be adapted and expanded, without using megabytes of npm repos.
-     **/
+    // Stream can be used to keep a log of what happened.
+    private logLevel = config.debugLevel || 'all';
+    private stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
 
-    logLevel: string;
-    stream: any;
-    debugging: boolean;
+    private debugging = config.debug;
 
-    constructor() {
-        // Stream can be used to keep a log of what happened.
-        this.logLevel = config.debugLevel || 'all';
-        this.stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
-
-        this.debugging = config.debug;
-    }
-
-    info(message: any) {
+    public info(message: unknown) {
         if (this.isLoggable('info')) return;
 
         this.send(null, `[${new Date()}] INFO ${message}`);
     }
 
-    debug(message: any) {
+    public debug(message: unknown) {
         if (!this.debugging) return;
 
-        this.send('\x1b[36m%s\x1b[0m', `[${new Date()}] DEBUG ${message}`);
+        this.send('\u001B[36m%s\u001B[0m', `[${new Date()}] DEBUG ${message}`);
     }
 
-    warning(message: any) {
+    public warning(message: unknown) {
         if (this.isLoggable('warning')) return;
 
-        this.send('\x1b[33m%s\x1b[0m', `[${new Date()}] WARNING ${message}`);
+        this.send('\u001B[33m%s\u001B[0m', `[${new Date()}] WARNING ${message}`);
     }
 
-    error(message: any) {
+    public error(message: unknown) {
         if (this.isLoggable('error')) return;
 
-        this.send('\x1b[31m%s\x1b[0m', `[${new Date()}] ERROR ${message}`);
+        this.send('\u001B[31m%s\u001B[0m', `[${new Date()}] ERROR ${message}`);
     }
 
-    notice(message: any) {
+    public notice(message: unknown) {
         if (this.isLoggable('notice')) return;
 
-        this.send('\x1b[32m%s\x1b[0m', `[${new Date()}] NOTICE ${message}`);
+        this.send('\u001B[32m%s\u001B[0m', `[${new Date()}] NOTICE ${message}`);
     }
 
-    trace(message: any) {
-        this.send('\x1b[35m%s\x1b[0m', `[${new Date()}] TRACE ${message}`, true);
+    public trace(message: unknown) {
+        this.send('\u001B[35m%s\u001B[0m', `[${new Date()}] TRACE ${message}`, true);
     }
 
-    send(colour: any, message: any, trace?: boolean) {
-        if (this.stream) this.stream.write(message + '\n');
+    private send(colour: string | null, message: unknown, trace?: boolean) {
+        this.stream?.write(message + '\n');
 
         if (!colour) console.log(message);
         else if (trace) console.trace(colour, message);
         else console.log(colour, message);
     }
 
-    isLoggable(type: string) {
+    private isLoggable(type: string) {
         return this.logLevel !== 'all' && this.logLevel !== type;
     }
 

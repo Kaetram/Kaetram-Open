@@ -1,25 +1,27 @@
-/* global module */
-
-import Equipment from './equipment';
 import Items from '../../../../../util/items';
-import Modules from '../../../../../util/modules';
+import * as Modules from '@kaetram/common/src/modules';
+import Equipment from './equipment';
 
-class Ring extends Equipment {
-    public ringLevel: number;
+export default class Ring extends Equipment {
+    public ringLevel;
 
-    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
+    public constructor(
+        name: string,
+        id: number,
+        count: number,
+        ability: number,
+        abilityLevel: number
+    ) {
         super(name, id, count, ability, abilityLevel);
 
         this.ringLevel = Items.getRingLevel(name);
     }
 
-    getBaseAmplifier() {
-        return 1.0 + this.ringLevel / 100;
+    public override getBaseAmplifier(): number {
+        return 1 + this.ringLevel / 100;
     }
 
-    getType() {
+    protected getType(): Modules.Equipment {
         return Modules.Equipment.Ring;
     }
 }
-
-export default Ring;
