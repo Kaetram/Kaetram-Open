@@ -1,7 +1,7 @@
 import log from '../util/log';
 
-import type { Socket } from 'socket.io';
 import type SocketHandler from './sockethandler';
+import type { SocketType, AnySocket } from './websocket';
 
 type ListenCallback = (message: [number, never]) => void;
 
@@ -11,8 +11,8 @@ export default class Connection {
 
     public constructor(
         public id: string,
-        public type: string,
-        public socket: Socket,
+        public type: SocketType,
+        public socket: AnySocket,
         private socketHandler: SocketHandler
     ) {
         this.socket.on('message', (message) => {
@@ -52,7 +52,7 @@ export default class Connection {
     public close(reason?: string): void {
         if (reason) log.info(`[Connection] Closing - ${reason}`);
 
-        this.socket.disconnect(true);
+        this.type === 'WebSocket' ? this.socket.close() : this.socket.disconnect(true);
     }
 
     public getCloseSignal(): 'close' | 'disconnect' {

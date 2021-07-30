@@ -1,10 +1,10 @@
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 
 import config from '../../../config';
 import log from '../../util/log';
 import Utils from '../../util/utils';
 import Connection from '../connection';
-import WebSocket from '../websocket';
+import WebSocket, { AnySocket } from '../websocket';
 
 import type SocketHandler from '../sockethandler';
 
@@ -19,7 +19,7 @@ export default class SocketIO extends WebSocket {
             }
         });
 
-        this.server.on('connection', (socket: Socket) => {
+        this.server.on('connection', (socket) => {
             if (socket.handshake.headers['cf-connecting-ip'])
                 socket.conn.remoteAddress = socket.handshake.headers['cf-connecting-ip'];
 
@@ -28,7 +28,7 @@ export default class SocketIO extends WebSocket {
             let connection = new Connection(
                 Utils.getConnectionId(),
                 this.type,
-                socket,
+                socket as AnySocket,
                 this.socketHandler
             );
 
