@@ -410,7 +410,8 @@ export default class Messages {
         const opcode = data.shift()!,
             bufferSize = data.shift()!,
             info: string = data.shift()!,
-            bufferData = atob(info)
+            bufferData = window
+                .atob(info)
                 .split('')
                 .map((char) => char.charCodeAt(0)),
             inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' });

@@ -56,7 +56,7 @@ export default async function install(): Promise<void> {
     deferredPrompt = null;
 }
 
-async function init(): Promise<void> {
+function init(): void {
     window.addEventListener('beforeinstallprompt', (event) => {
         // Prevent Chrome 67 and earlier from automatically showing the prompt.
         event.preventDefault();
@@ -64,7 +64,7 @@ async function init(): Promise<void> {
         deferredPrompt = event;
     });
 
-    registerSW();
+    registerSW({ immediate: true });
 }
 
 // Check compatibility for the browser and environment we're running this in.
