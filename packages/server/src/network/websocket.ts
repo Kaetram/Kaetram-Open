@@ -3,10 +3,13 @@ import http from 'http';
 import config from '../../config';
 import log from '../util/log';
 
-import type { Server } from 'socket.io';
+import type { Socket, Server } from 'socket.io';
 import type ws from 'ws';
 import type Connection from './connection';
 import type SocketHandler from './sockethandler';
+
+export type AnySocket = Socket & ws.Server;
+export type SocketType = 'WebSocket' | 'SocketIO';
 
 export default abstract class WebSocket {
     private version = config.gver;
@@ -20,7 +23,7 @@ export default abstract class WebSocket {
     protected constructor(
         protected host: string,
         protected port: number,
-        protected type: string,
+        protected type: SocketType,
         protected socketHandler: SocketHandler
     ) {}
 
