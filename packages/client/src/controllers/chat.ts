@@ -17,7 +17,7 @@ export default class ChatController {
     private fadingTimeout!: number | null;
 
     public constructor(private game: Game) {
-        const { button, input } = this;
+        let { button, input } = this;
 
         button.on('click', () => {
             button.trigger('blur');
@@ -28,7 +28,7 @@ export default class ChatController {
     }
 
     public add(source: string, text: string, colour?: string): void {
-        const element = $(`<p>${source} » ${text}</p>`);
+        let element = $(`<p>${source} » ${text}</p>`);
 
         this.showChat();
 
@@ -91,7 +91,7 @@ export default class ChatController {
     }
 
     private hideChat(): void {
-        const { fadingTimeout, chat, fadingDuration } = this;
+        let { fadingTimeout, chat, fadingDuration } = this;
 
         if (fadingTimeout) {
             clearTimeout(fadingTimeout);
@@ -108,7 +108,7 @@ export default class ChatController {
     }
 
     public hideInput(): void {
-        const { button, input } = this;
+        let { button, input } = this;
 
         button.removeClass('active');
 

@@ -60,6 +60,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/sdks", "npm:2.4.1-rc.4"],
             ["eslint", "npm:7.31.0"],
             ["eslint-config-prettier", "virtual:678c8e8916a43d8cbe10142293ff031601435843cf0ef5ec06538d0d99fcdf569f32e96c825f984291b2eab0a0e5d86b16a508c6741bc594417a0c71fa5b2e90#npm:8.3.0"],
+            ["eslint-plugin-prefer-let", "npm:1.1.0"],
             ["eslint-plugin-prettier", "virtual:678c8e8916a43d8cbe10142293ff031601435843cf0ef5ec06538d0d99fcdf569f32e96c825f984291b2eab0a0e5d86b16a508c6741bc594417a0c71fa5b2e90#npm:3.4.0"],
             ["eslint-plugin-unicorn", "virtual:678c8e8916a43d8cbe10142293ff031601435843cf0ef5ec06538d0d99fcdf569f32e96c825f984291b2eab0a0e5d86b16a508c6741bc594417a0c71fa5b2e90#npm:34.0.1"],
             ["postcss", "npm:8.3.6"],
@@ -5857,6 +5858,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["eslint-plugin-prefer-let", [
+        ["npm:1.1.0", {
+          "packageLocation": "./.yarn/cache/eslint-plugin-prefer-let-npm-1.1.0-8f0e78d5b6-54b1bd7171.zip/node_modules/eslint-plugin-prefer-let/",
+          "packageDependencies": [
+            ["eslint-plugin-prefer-let", "npm:1.1.0"],
+            ["requireindex", "npm:1.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["eslint-plugin-prettier", [
         ["npm:3.4.0", {
           "packageLocation": "./.yarn/cache/eslint-plugin-prettier-npm-3.4.0-36b0696d09-30a07e8d12.zip/node_modules/eslint-plugin-prettier/",
@@ -8084,6 +8095,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/sdks", "npm:2.4.1-rc.4"],
             ["eslint", "npm:7.31.0"],
             ["eslint-config-prettier", "virtual:678c8e8916a43d8cbe10142293ff031601435843cf0ef5ec06538d0d99fcdf569f32e96c825f984291b2eab0a0e5d86b16a508c6741bc594417a0c71fa5b2e90#npm:8.3.0"],
+            ["eslint-plugin-prefer-let", "npm:1.1.0"],
             ["eslint-plugin-prettier", "virtual:678c8e8916a43d8cbe10142293ff031601435843cf0ef5ec06538d0d99fcdf569f32e96c825f984291b2eab0a0e5d86b16a508c6741bc594417a0c71fa5b2e90#npm:3.4.0"],
             ["eslint-plugin-unicorn", "virtual:678c8e8916a43d8cbe10142293ff031601435843cf0ef5ec06538d0d99fcdf569f32e96c825f984291b2eab0a0e5d86b16a508c6741bc594417a0c71fa5b2e90#npm:34.0.1"],
             ["postcss", "npm:8.3.6"],
@@ -10874,6 +10886,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/require-from-string-npm-2.0.2-8557e0db12-a03ef68954.zip/node_modules/require-from-string/",
           "packageDependencies": [
             ["require-from-string", "npm:2.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["requireindex", [
+        ["npm:1.2.0", {
+          "packageLocation": "./.yarn/cache/requireindex-npm-1.2.0-483c52ddaf-50d8b10a1f.zip/node_modules/requireindex/",
+          "packageDependencies": [
+            ["requireindex", "npm:1.2.0"]
           ],
           "linkType": "HARD",
         }]

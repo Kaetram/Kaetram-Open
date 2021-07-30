@@ -230,7 +230,7 @@ export default abstract class Character extends Entity {
     }
 
     public override getState(): CharacterState {
-        const state = super.getState() as CharacterState;
+        let state = super.getState() as CharacterState;
 
         state.movementSpeed = this.movementSpeed;
 

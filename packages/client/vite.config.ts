@@ -11,7 +11,7 @@ import compress from 'vite-plugin-compress';
 import { name, description } from 'kaetram/package.json';
 
 export default defineConfig(({ command }) => {
-    const isProduction = command === 'build',
+    let isProduction = command === 'build',
         brotli = false,
         env = dotenvParseVariables(dotenv.load());
 
@@ -35,7 +35,7 @@ export default defineConfig(({ command }) => {
                     background_color: '#000000',
                     theme_color: '#000000',
                     icons: [192, 512].map((size) => {
-                        const sizes = `${size}x${size}`;
+                        let sizes = `${size}x${size}`;
 
                         return {
                             src: `/img/icons/android-chrome-${sizes}.png`,

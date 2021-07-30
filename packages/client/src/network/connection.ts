@@ -45,7 +45,7 @@ export default class Connection {
     private time!: number;
 
     public constructor(private game: Game) {
-        const {
+        let {
             app,
             audio,
             messages,
@@ -94,7 +94,7 @@ export default class Connection {
             this.app.updateLoader('Logging in');
 
             if (this.app.isRegistering()) {
-                const registerInfo = this.app.registerFields,
+                let registerInfo = this.app.registerFields,
                     username = registerInfo[0].val(),
                     password = registerInfo[1].val(),
                     email = registerInfo[3].val();
@@ -108,7 +108,7 @@ export default class Connection {
             } else if (this.app.isGuest())
                 this.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
             else {
-                const loginInfo = this.app.loginFields,
+                let loginInfo = this.app.loginFields,
                     name = loginInfo[0].val() as string,
                     pass = loginInfo[1].val() as string;
 
@@ -155,7 +155,7 @@ export default class Connection {
                     break;
 
                 case Packets.EquipmentOpcode.Equip: {
-                    const { type, name, string, count, ability, abilityLevel, power } =
+                    let { type, name, string, count, ability, abilityLevel, power } =
                         info as Equipment;
 
                     this.game.player.setEquipment(
@@ -174,7 +174,7 @@ export default class Connection {
                 }
 
                 case Packets.EquipmentOpcode.Unequip: {
-                    const type = (info as string[]).shift()!;
+                    let type = (info as string[]).shift()!;
 
                     this.game.player.unequip(type);
 
@@ -193,7 +193,7 @@ export default class Connection {
         this.messages.onSpawn((data: AnyEntity[]) => this.entities.create(data.shift()!));
 
         this.messages.onEntityList((data: string[]) => {
-            const ids = _.map(this.entities.getAll(), 'id'),
+            let ids = _.map(this.entities.getAll(), 'id'),
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
 
@@ -208,7 +208,7 @@ export default class Connection {
         });
 
         this.messages.onSync((data: Player) => {
-            const entity = this.entities.get<Player>(data.id);
+            let entity = this.entities.get<Player>(data.id);
 
             if (!entity || entity.type !== 'player') return;
 
@@ -254,7 +254,7 @@ export default class Connection {
         this.messages.onMovement((opcode, info: any) => {
             switch (opcode) {
                 case Packets.MovementOpcode.Move: {
-                    const entity = this.entities.get<Character>(info.id);
+                    let entity = this.entities.get<Character>(info.id);
 
                     if (!entity) return;
 
@@ -266,7 +266,7 @@ export default class Connection {
                 }
 
                 case Packets.MovementOpcode.Follow: {
-                    const follower = this.entities.get<Character>(info.attackerId),
+                    let follower = this.entities.get<Character>(info.attackerId),
                         followee = this.entities.get<Character>(info.targetId);
 
                     if (!followee || !follower) return;
@@ -277,7 +277,7 @@ export default class Connection {
                 }
 
                 case Packets.MovementOpcode.Stop: {
-                    const sEntity = this.entities.get<Character>(info.id),
+                    let sEntity = this.entities.get<Character>(info.id),
                         { force } = info;
 
                     if (!sEntity) return;
@@ -288,7 +288,7 @@ export default class Connection {
                 }
                 case Packets.MovementOpcode.Freeze:
                 case Packets.MovementOpcode.Stunned: {
-                    const pEntity = this.entities.get<Character>(info.id);
+                    let pEntity = this.entities.get<Character>(info.id);
 
                     if (!pEntity) return;
 
@@ -301,7 +301,7 @@ export default class Connection {
                 }
 
                 case Packets.MovementOpcode.Orientate: {
-                    const player = info.shift(),
+                    let player = info.shift(),
                         orientation = info.shift(),
                         entity = this.entities.get<Character>(player);
 
@@ -314,7 +314,7 @@ export default class Connection {
         });
 
         this.messages.onTeleport((info: any) => {
-            const entity = this.entities.get<Player>(info.id),
+            let entity = this.entities.get<Player>(info.id),
                 isPlayer = info.id === this.game.player.id;
 
             if (!entity) return;
@@ -330,7 +330,7 @@ export default class Connection {
              * hitbox. Make sure you keep an eye out for this.
              */
 
-            const doTeleport = () => {
+            let doTeleport = () => {
                 this.entities.unregisterPosition(entity);
                 entity.setGridPosition(info.x, info.y);
 
@@ -355,7 +355,7 @@ export default class Connection {
             };
 
             if (info.withAnimation) {
-                const originalSprite = entity.sprite;
+                let originalSprite = entity.sprite;
 
                 entity.teleporting = true;
 
@@ -381,7 +381,7 @@ export default class Connection {
         });
 
         this.messages.onDespawn((id: string) => {
-            const entity = this.entities.get<Character>(id);
+            let entity = this.entities.get<Character>(id);
 
             if (!entity) return;
 
@@ -430,7 +430,7 @@ export default class Connection {
         });
 
         this.messages.onCombat((opcode, info: any) => {
-            const attacker = this.entities.get<Character>(info.attackerId),
+            let attacker = this.entities.get<Character>(info.attackerId),
                 target = this.entities.get<Character>(info.targetId);
 
             if (!target || !attacker) return;
@@ -451,7 +451,7 @@ export default class Connection {
                     break;
 
                 case Packets.CombatOpcode.Hit: {
-                    const hit = info.hitInfo,
+                    let hit = info.hitInfo,
                         isPlayer = target.id === this.game.player.id;
 
                     if (!hit.isAoE && !hit.isPoison) {
@@ -510,7 +510,7 @@ export default class Connection {
         });
 
         this.messages.onAnimation((id: string, info: any) => {
-            const character = this.entities.get<Character>(id);
+            let character = this.entities.get<Character>(id);
 
             if (!character) return;
 
@@ -531,7 +531,7 @@ export default class Connection {
         // });
 
         this.messages.onPoints((data: any) => {
-            const entity = this.entities.get<Player>(data.id);
+            let entity = this.entities.get<Player>(data.id);
 
             if (!entity) return;
 
@@ -557,7 +557,7 @@ export default class Connection {
             log.debug(info);
 
             if (info.withBubble) {
-                const entity = this.entities.get(info.id);
+                let entity = this.entities.get(info.id);
 
                 if (entity) {
                     info.name = info.name.charAt(0).toUpperCase() + info.name.slice(1);
@@ -598,7 +598,7 @@ export default class Connection {
         this.messages.onInventory((opcode, info: any) => {
             switch (opcode) {
                 case Packets.InventoryOpcode.Batch: {
-                    const inventorySize = info.shift() as number,
+                    let inventorySize = info.shift() as number,
                         data = info.shift() as Equipment[];
 
                     this.menu.loadInventory(inventorySize, data);
@@ -607,7 +607,7 @@ export default class Connection {
                 }
 
                 case Packets.InventoryOpcode.Add: {
-                    const slot = info as Slot;
+                    let slot = info as Slot;
 
                     if (this.menu.bank) this.menu.addInventory(slot);
 
@@ -617,7 +617,7 @@ export default class Connection {
                 }
 
                 case Packets.InventoryOpcode.Remove: {
-                    const slot = info as Slot;
+                    let slot = info as Slot;
 
                     if (this.menu.bank) this.menu.removeInventory(slot);
 
@@ -631,7 +631,7 @@ export default class Connection {
         this.messages.onBank((opcode, info: any) => {
             switch (opcode) {
                 case Packets.BankOpcode.Batch: {
-                    const bankSize = info.shift() as number,
+                    let bankSize = info.shift() as number,
                         data = info.shift() as Slot[];
 
                     this.menu.loadBank(bankSize, data);
@@ -640,7 +640,7 @@ export default class Connection {
                 }
 
                 case Packets.BankOpcode.Add: {
-                    // const slot = info as Slot;
+                    // let slot = info as Slot;
 
                     if (!this.menu.bank) return;
 
@@ -650,7 +650,7 @@ export default class Connection {
                 }
 
                 case Packets.BankOpcode.Remove: {
-                    // const slot = info as Slot;
+                    // let slot = info as Slot;
 
                     this.menu.bank.remove(info);
 
@@ -710,7 +710,7 @@ export default class Connection {
         });
 
         this.messages.onBlink((instance) => {
-            const item = this.entities.get(instance);
+            let item = this.entities.get(instance);
 
             if (!item) return;
 
@@ -718,7 +718,7 @@ export default class Connection {
         });
 
         this.messages.onHeal((info: any) => {
-            const entity = this.entities.get<Character>(info.id);
+            let entity = this.entities.get<Character>(info.id);
 
             if (!entity) return;
 
@@ -744,7 +744,7 @@ export default class Connection {
         });
 
         this.messages.onExperience((opcode, info: any) => {
-            const entity = this.entities.get(info.id);
+            let entity = this.entities.get(info.id);
 
             switch (opcode) {
                 case Packets.ExperienceOpcode.Combat:
@@ -799,7 +799,7 @@ export default class Connection {
         });
 
         this.messages.onDeath((id) => {
-            const entity = this.entities.get(id);
+            let entity = this.entities.get(id);
 
             if (!entity || id !== this.game.player.id) return;
 
@@ -825,7 +825,7 @@ export default class Connection {
         this.messages.onNPC((opcode, info: any) => {
             switch (opcode) {
                 case Packets.NPCOpcode.Talk: {
-                    const entity = this.entities.get(info.id),
+                    let entity = this.entities.get(info.id),
                         message = info.text,
                         isNPC = !info.nonNPC;
 
@@ -868,7 +868,7 @@ export default class Connection {
                     break;
 
                 case Packets.NPCOpcode.Countdown: {
-                    const cEntity = this.entities.get(info.id),
+                    let cEntity = this.entities.get(info.id),
                         { countdown } = info;
 
                     cEntity?.setCountdown(countdown);
@@ -898,7 +898,7 @@ export default class Connection {
         });
 
         this.messages.onEnchant((opcode, info: any) => {
-            const { type } = info,
+            let { type } = info,
                 { index } = info;
 
             switch (opcode) {
@@ -927,7 +927,7 @@ export default class Connection {
         this.messages.onPointer((opcode, info: any) => {
             switch (opcode) {
                 case Packets.PointerOpcode.NPC: {
-                    const entity = this.entities.get(info.id);
+                    let entity = this.entities.get(info.id);
 
                     if (!entity) return;
 
@@ -964,14 +964,14 @@ export default class Connection {
         this.messages.onPVP((id, pvp) => {
             if (this.game.player.id === id) this.game.pvp = pvp;
             else {
-                const entity = this.entities.get(id);
+                let entity = this.entities.get(id);
 
                 if (entity) entity.pvp = pvp;
             }
         });
 
         this.messages.onShop((opcode, info: any) => {
-            const { shop } = this.menu,
+            let { shop } = this.menu,
                 { shopData, id, index } = info;
 
             switch (opcode) {
@@ -1026,7 +1026,7 @@ export default class Connection {
                     break;
 
                 case Packets.RegionOpcode.Update: {
-                    const entity = this.entities.get(info.id);
+                    let entity = this.entities.get(info.id);
 
                     if (!entity || entity.id === this.game.player.id) return;
 
@@ -1112,7 +1112,7 @@ export default class Connection {
                     break;
 
                 case Packets.CameraOpcode.Player: {
-                    const middle = this.renderer.getMiddle();
+                    let middle = this.renderer.getMiddle();
 
                     this.renderer.removeAllLights();
                     this.renderer.addLight(middle.x, middle.y, 160, 0.8, 'rgba(0,0,0,0.3)', false);

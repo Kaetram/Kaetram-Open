@@ -25,7 +25,7 @@ import type World from '../game/world';
 import type Area from './areas/area';
 import type Areas from './areas/areas';
 
-const map = mapData as ProcessedMap;
+let map = mapData as ProcessedMap;
 
 interface Door {
     x: number;
