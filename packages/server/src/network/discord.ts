@@ -1,21 +1,21 @@
-import { Client, WebhookClient } from 'discord.js';
-import Utils from '../util/utils';
-import World from '../game/world';
-import log from '../util/log';
+import { Client, Message, WebhookClient } from 'discord.js';
+
 import config from '../../config';
+import log from '../util/log';
+import Utils from '../util/utils';
+
+import type World from '../game/world';
 
 /**
  * This class will be used in Kaetram-Hub as well.
  * But we will leave it in servers if the standalone
  * approach is used.
  */
+export default class Discord {
+    private client!: Client;
+    private webhook!: WebhookClient;
 
-class Discord {
-    world: World;
-    client: Client;
-    webhook: WebhookClient;
-
-    constructor(world: World) {
+    public constructor(private world: World) {
         if (!config.discordEnabled) return;
 
         if (config.hubEnabled) {
@@ -24,8 +24,6 @@ class Discord {
             return;
         }
 
-        this.world = world;
-
         this.client = new Client();
         this.webhook = new WebhookClient(config.discordWebhookId, config.discordWebhookToken);
 
@@ -33,7 +31,7 @@ class Discord {
             log.notice('Successfully connected to the Discord server.');
         });
 
-        this.client.on('message', (message) => {
+        this.client.on('message', (message: Message) => {
             if (message.author.id === config.discordWebhookId) return;
 
             if (message.channel.id !== config.discordServerId) return;
@@ -50,8 +48,7 @@ class Discord {
     /**
      * Sends a message to the Discord server using the webhook.
      */
-
-    sendWebhook(source: any, message: any, withArrow?: any) {
+    public sendWebhook(source: string, message: string, withArrow?: boolean): void {
         if (!config.discordEnabled) return;
 
         let formattedSource = Utils.formatUsername(source);
@@ -59,5 +56,3 @@ class Discord {
         this.webhook.send(`**[Kaetram]** ${formattedSource}${withArrow ? ' »' : ''} ${message}`);
     }
 }
-
-export default Discord;

@@ -2,10 +2,6 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "commonjs",
-        "target": "esnext",
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "noImplicitOverride": true,
         "types": ["@types/node", "@kaetram/common"]
     }
 }

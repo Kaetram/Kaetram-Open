@@ -1,26 +1,16 @@
-/* global module */
+import type Player from './player';
 
-import Modules from '../../../../util/modules';
-import Utils from '../../../../util/utils';
-import Player from './player';
-import Map from '../../../../map/map';
+export default class Warp {
+    private map;
 
-class Warp {
-    player: Player;
-    map: Map;
+    public lastWarp = 0;
+    private warpTimeout = 30000;
 
-    lastWarp: number;
-    warpTimeout: number;
-
-    constructor(player: Player) {
-        this.player = player;
+    public constructor(private player: Player) {
         this.map = player.map;
-
-        this.lastWarp = 0;
-        this.warpTimeout = 30000;
     }
 
-    warp(id: number) {
+    public warp(id: number): void {
         if (!this.isCooldown()) {
             this.player.notify('You must wait another ' + this.getDuration() + ' to warp.');
             return;
@@ -35,7 +25,7 @@ class Warp {
             return;
         }
 
-        if (!this.hasRequirement(data.level)) {
+        if (!this.hasRequirement(data.level!)) {
             this.player.notify(`You must be at least level ${data.level} to warp here!`);
             return;
         }
@@ -44,25 +34,25 @@ class Warp {
 
         this.player.notify(`You have been warped to ${data.name}`);
 
-        this.lastWarp = new Date().getTime();
+        this.lastWarp = Date.now();
     }
 
-    setLastWarp(lastWarp: number) {
+    public setLastWarp(lastWarp: number): void {
         if (isNaN(lastWarp)) {
             this.lastWarp = 0;
             this.player.save();
         } else this.lastWarp = lastWarp;
     }
 
-    isCooldown() {
+    private isCooldown(): boolean {
         return this.getDifference() > this.warpTimeout || this.player.rights > 1;
     }
 
-    hasRequirement(levelRequirement: number) {
+    private hasRequirement(levelRequirement: number): boolean {
         return this.player.level >= levelRequirement || this.player.rights > 1;
     }
 
-    getDuration() {
+    private getDuration(): string {
         let difference = this.warpTimeout - this.getDifference();
 
         if (!difference) return '5 minutes';
@@ -72,9 +62,7 @@ class Warp {
             : Math.floor(difference / 1000) + ' seconds';
     }
 
-    getDifference() {
-        return new Date().getTime() - this.lastWarp;
+    private getDifference(): number {
+        return Date.now() - this.lastWarp;
     }
 }
-
-export default Warp;

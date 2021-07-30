@@ -1,11 +1,7 @@
-/* global module */
-
 import Ability from './ability';
 
-class IceStrike extends Ability {
-    constructor(name: string, type: number) {
+export default class IceStrike extends Ability {
+    public constructor(name: string, type: number) {
         super(name, type);
     }
 }
-
-export default IceStrike;

@@ -1,21 +1,15 @@
-import Player from './player';
 import Messages from '../../../../network/messages';
 
-class BuildUp {
-    private player: Player;
-    private effects: any;
+import type Player from './player';
 
-    constructor(player: Player) {
-        this.player = player;
+export default class BuildUp {
+    // private effects = {};
 
-        this.effects = {}; // The buildup effects
-    }
+    public constructor(private player: Player) {}
 
-    process() {}
+    // process() {}
 
-    send(opcode: number, info: any) {
+    private send(opcode: number, info: never): void {
         this.player.send(new Messages.BuildUp(opcode, info));
     }
 }
-
-export default BuildUp;

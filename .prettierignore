@@ -9,6 +9,6 @@
 *.md
 
 dist/
-data/
+data/**/*.json
 
 *.scss

@@ -1,27 +1,15 @@
-/* global module */
-
 import Abilities from '../../../../../../util/abilities';
 
-class Ability {
-    public name: string;
-    public type: number;
+export default abstract class Ability {
+    public level = -1;
 
-    public level: number;
+    public data;
 
-    public data: any;
-
-    constructor(name: string, type: number) {
-        this.name = name;
-        this.type = type;
-
-        this.level = -1;
-
+    protected constructor(public name: string, public type: number) {
         this.data = Abilities.Data[name];
     }
 
-    setLevel(level: number) {
+    private setLevel(level: number): void {
         this.level = level;
     }
 }
-
-export default Ability;
