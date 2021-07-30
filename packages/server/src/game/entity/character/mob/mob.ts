@@ -1,101 +1,92 @@
-/* global module */
-
-import _ from 'lodash';
-import Character from '../character';
-import Mobs from '../../../../util/mobs';
-import Utils from '../../../../util/utils';
-import Items from '../../../../util/items';
 import Constants from '../../../../util/constants';
-import World from '../../../world';
+import Items from '../../../../util/items';
+import Mobs, { MobData, MobDrops } from '../../../../util/mobs';
+import Utils from '../../../../util/utils';
+import Character, { CharacterState } from '../character';
 import MobHandler from './mobhandler';
-import Player from '../player/player';
-import Area from '../../../../map/areas/area';
-import Areas from '../../../../map/areas/areas';
 
-class Mob extends Character {
-    data: any;
-    // hitPoints: number;
-    // maxHitPoints: number;
-    drops: any;
+import type Area from '../../../../map/areas/area';
+import type Areas from '../../../../map/areas/areas';
+import type Player from '../player/player';
 
-    respawnDelay: number;
-
-    boss: boolean;
-    static: boolean;
+interface MobState extends CharacterState {
+    hitPoints: number;
+    maxHitPoints: number;
+    attackRange: number;
+    level: number;
     hiddenName: boolean;
-    miniboss: boolean;
+}
 
-    achievementId: number;
+export default class Mob extends Character {
+    private data!: MobData;
+    private drops!: MobDrops;
 
-    // roaming: boolean;
-    maxRoamingDistance: number;
+    public respawnDelay!: number;
 
-    handler: MobHandler;
+    public boss = false;
+    public static = false;
+    public hiddenName = false;
+    public miniboss = false;
 
-    // alwaysAggressive: boolean;
+    public achievementId!: number;
 
-    declare lastAttacker: Player;
+    public maxRoamingDistance = 3;
 
-    loadCallback: Function;
-    refreshCallback: Function;
-    respawnCallback: Function;
-    returnCallback: Function;
-    // deathCallback: Function;
+    // private handler!: MobHandler;
 
-    forceTalkCallback: (message: string) => void;
-    roamingCallback: () => void;
+    public area!: Area;
 
-    area: Area;
+    private loadCallback?(): void;
+    private refreshCallback?(): void;
+    private respawnCallback?(): void;
 
-    constructor(id: number, instance: string, x: number, y: number) {
+    public forceTalkCallback?: (message: string) => void;
+    public roamingCallback?(): void;
+
+    public constructor(id: number, instance: string, x: number, y: number) {
         super(id, 'mob', instance, x, y);
 
         if (!Mobs.exists(id)) return;
 
-        this.data = Mobs.Ids[this.id];
-        this.hitPoints = this.data.hitPoints;
-        this.maxHitPoints = this.data.hitPoints;
-        this.drops = this.data.drops;
+        const data = Mobs.Ids[id];
 
-        this.respawnDelay = this.data.spawnDelay;
+        this.data = data;
+        this.hitPoints = data.hitPoints;
+        this.maxHitPoints = data.hitPoints;
+        this.drops = data.drops;
 
-        this.level = this.data.level;
+        this.respawnDelay = data.spawnDelay;
 
-        this.armourLevel = this.data.armour;
-        this.weaponLevel = this.data.weapon;
-        this.attackRange = this.data.attackRange;
+        this.level = data.level;
+
+        this.armourLevel = data.armour;
+        this.weaponLevel = data.weapon;
+        this.attackRange = data.attackRange;
         this.aggroRange = this.data.aggroRange;
-        this.aggressive = this.data.aggressive;
-        this.attackRate = this.data.attackRate;
-        this.movementSpeed = this.data.movementSpeed;
+        this.aggressive = data.aggressive;
+        this.attackRate = data.attackRate;
+        this.movementSpeed = data.movementSpeed;
 
         this.spawnLocation = [x, y];
-
-        this.dead = false;
-        this.boss = false;
-        this.static = false;
-        this.hiddenName = false;
-
-        this.roaming = false;
-        this.maxRoamingDistance = 3;
 
         this.projectileName = this.getProjectileName();
     }
 
-    load() {
-        this.handler = new MobHandler(this);
+    public load(): void {
+        // this.handler =
+        new MobHandler(this);
 
-        if (this.loadCallback) this.loadCallback();
+        this.loadCallback?.();
     }
 
-    refresh() {
+    public refresh(): void {
         this.hitPoints = this.data.hitPoints;
         this.maxHitPoints = this.data.hitPoints;
 
-        if (this.refreshCallback) this.refreshCallback();
+        this.refreshCallback?.();
     }
 
-    getDrop() {
+    public getDrop(): { id: number; count: number } | null {
         if (!this.drops) return null;
 
         const random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
@@ -107,17 +98,17 @@ class Mob extends Character {
         const count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
 
         return {
-            id: Items.stringToId(item),
+            id: Items.stringToId(item)!,
             count
         };
     }
 
-    getProjectileName() {
-        return this.data.projectileName ? this.data.projectileName : 'projectile-pinearrow';
+    public override getProjectileName(): string {
+        return this.data.projectileName || 'projectile-pinearrow';
     }
 
-    canAggro(player: Player) {
-        if (this.hasTarget()) return false;
+    public canAggro(player: Player): boolean {
+        if (this.target) return false;
 
         if (!this.aggressive) return false;
 
@@ -128,59 +119,58 @@ class Mob extends Character {
         return this.isNear(player, this.aggroRange);
     }
 
-    destroy() {
+    public destroy(): void {
         this.dead = true;
         this.clearTarget();
         this.resetPosition();
         this.respawn();
 
-        if (this.area) this.area.removeEntity(this);
+        this.area?.removeEntity(this);
     }
 
-    return() {
+    public return(): void {
         this.clearTarget();
         this.resetPosition();
         this.setPosition(this.x, this.y);
     }
 
-    isRanged() {
+    public override isRanged(): boolean {
         return this.attackRange > 1;
     }
 
-    distanceToSpawn() {
+    private distanceToSpawn(): number {
         return this.getCoordDistance(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
-    isAtSpawn() {
+    public isAtSpawn(): boolean {
         return this.x === this.spawnLocation[0] && this.y === this.spawnLocation[1];
     }
 
-    isOutsideSpawn() {
+    public isOutsideSpawn(): boolean {
         return this.distanceToSpawn() > this.spawnDistance;
     }
 
-    addToChestArea(chestAreas: Areas) {
+    public addToChestArea(chestAreas: Areas): void {
         const area = chestAreas.inArea(this.x, this.y);
 
-        if (area) area.addEntity(this);
+        area?.addEntity(this);
     }
 
-    respawn() {
-        /**
-         * Some entities are static (only spawned once during an event)
-         * Meanwhile, other entities act as an illusion to another entity,
-         * so the resawning script is handled elsewhere.
-         */
-
+    /**
+     * Some entities are static (only spawned once during an event)
+     * Meanwhile, other entities act as an illusion to another entity,
+     * so the respawning script is handled elsewhere.
+     */
+    private respawn(): void {
         if (!this.static || this.respawnDelay === -1) return;
 
         setTimeout(() => {
-            if (this.respawnCallback) this.respawnCallback();
+            this.respawnCallback?.();
         }, this.respawnDelay);
     }
 
-    getState() {
-        const base = super.getState();
+    public override getState(): MobState {
+        const base = super.getState() as MobState;
 
         base.hitPoints = this.hitPoints;
         base.maxHitPoints = this.maxHitPoints;
@@ -191,33 +181,27 @@ class Mob extends Character {
         return base;
     }
 
-    resetPosition() {
+    private resetPosition(): void {
         this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
     }
 
-    onLoad(callback: Function) {
+    public onLoad(callback: () => void): void {
         this.loadCallback = callback;
     }
 
-    onRespawn(callback: Function) {
+    public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 
-    onReturn = (callback: Function) => {
-        this.returnCallback = callback;
-    };
-
-    onRefresh(callback: Function) {
+    public onRefresh(callback: () => void): void {
         this.refreshCallback = callback;
     }
 
-    onForceTalk(callback: (message: string) => void) {
+    public onForceTalk(callback: (message: string) => void): void {
         this.forceTalkCallback = callback;
     }
 
-    onRoaming(callback: () => void) {
+    public onRoaming(callback: () => void): void {
         this.roamingCallback = callback;
     }
 }
-
-export default Mob;

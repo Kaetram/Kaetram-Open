@@ -1,33 +1,56 @@
-import config from '../../../../../config';
 import _ from 'lodash';
-import World from '../../../world';
-import Player from './player';
-import Map from '../../../../map/map';
-import Regions from '../../../../map/regions';
 
-import DoorData from '../../../../../data/doors.json';
+import config from '../../../../../config';
+import doorData from '../../../../../data/doors.json';
 
-class Doors {
-    public world: World;
-    public player: Player;
-    public map: Map;
-    public regions: Regions;
+import type Player from './player';
+import type { ObjectData } from './player';
 
-    public doors: any;
+type DoorStatus = 'open' | 'closed' | undefined;
 
-    constructor(player: Player) {
+export interface Door {
+    id: number;
+    requirement: string;
+    achievementId?: number;
+    questId?: number;
+    closedIds: { [key: string]: IDs };
+    openIds: { [key: string]: IDs };
+    x?: number;
+    y?: number;
+
+    status?: DoorStatus;
+    level?: number;
+}
+
+interface IDs {
+    data: number[];
+    isColliding: boolean;
+}
+
+interface DoorTiles {
+    indexes: number[];
+    data: number[][];
+    collisions: boolean[];
+    objectData?: ObjectData;
+}
+
+export default class Doors {
+    public world;
+    public map;
+    public regions;
+
+    public doors: { [id: number]: Door } = {};
+
+    public constructor(private player: Player) {
         this.world = player.world;
-        this.player = player;
         this.map = this.world.map;
         this.regions = this.map.regions;
-
-        this.doors = {};
 
         this.load();
     }
 
-    load() {
-        _.each(DoorData, (door: any) => {
+    private load(): void {
+        _.each(doorData, (door: Door) => {
             this.doors[door.id] = {
                 id: door.id,
                 x: door.x,
@@ -43,29 +66,31 @@ class Doors {
         });
     }
 
-    getStatus(door: any) {
+    private getStatus(door: Door): DoorStatus {
         if (door.status) return door.status;
 
-        if (config.offlineMode) return true;
+        if (config.offlineMode) return 'open';
 
         switch (door.requirement) {
-            case 'quest':
-                let quest = this.player.quests.getQuest(door.questId);
+            case 'quest': {
+                let quest = this.player.quests.getQuest(door.questId!);
 
                 return quest && quest.hasDoorUnlocked(door) ? 'open' : 'closed';
+            }
 
-            case 'achievement':
-                let achievement = this.player.quests.getAchievement(door.achievementId);
+            case 'achievement': {
+                let achievement = this.player.quests.getAchievement(door.achievementId!);
 
                 return achievement && achievement.isFinished() ? 'open' : 'closed';
+            }
 
             case 'level':
-                return this.player.level >= door.level ? 'open' : 'closed';
+                return this.player.level >= door.level! ? 'open' : 'closed';
         }
     }
 
-    getTiles(door: any) {
-        let tiles = {
+    private getTiles(door: Door): DoorTiles {
+        let tiles: DoorTiles = {
                 indexes: [],
                 data: [],
                 collisions: []
@@ -76,7 +101,7 @@ class Doors {
                 closed: door.closedIds
             };
 
-        _.each(doorState[status], (value: any, key: string) => {
+        _.each(doorState[status!], (value, key) => {
             tiles.indexes.push(parseInt(key));
             tiles.data.push(value.data);
             tiles.collisions.push(value.isColliding);
@@ -85,30 +110,30 @@ class Doors {
         return tiles;
     }
 
-    getAllTiles() {
-        let allTiles = {
+    public getAllTiles(): DoorTiles {
+        let allTiles: DoorTiles = {
             indexes: [],
             data: [],
             collisions: []
         };
 
-        _.each(this.doors, (door: any) => {
+        _.each(this.doors, (door) => {
             /* There's no need to send dynamic data if the player is not nearby. */
-            let doorRegion = this.regions.regionIdFromPosition(door.x, door.y);
+            let doorRegion = this.regions.regionIdFromPosition(door.x!, door.y!);
 
             if (!this.regions.isSurrounding(this.player.region, doorRegion)) return;
 
             let tiles = this.getTiles(door);
 
-            allTiles.indexes.push.apply(allTiles.indexes, tiles.indexes);
-            allTiles.data.push.apply(allTiles.data, tiles.data);
-            allTiles.collisions.push.apply(allTiles.collisions, tiles.collisions);
+            allTiles.indexes.push(...tiles.indexes);
+            allTiles.data.push(...tiles.data);
+            allTiles.collisions.push(...tiles.collisions);
         });
 
         return allTiles;
     }
 
-    hasCollision(x: number, y: number) {
+    public hasCollision(x: number, y: number): boolean {
         let tiles = this.getAllTiles(),
             tileIndex = this.world.map.gridPositionToIndex(x, y),
             index = tiles.indexes.indexOf(tileIndex);
@@ -127,29 +152,31 @@ class Doors {
         return tiles.collisions[index];
     }
 
-    getDoor(x: number, y: number) {
+    public getDoor(x: number, y: number): Door | null {
         for (let i in this.doors)
-            if (this.doors.hasOwnProperty(i))
-                if (this.doors[i].x === x && this.doors[i].y === y) return this.doors[i];
+            if (
+                Object.prototype.hasOwnProperty.call(this.doors, i) &&
+                this.doors[i].x === x &&
+                this.doors[i].y === y
+            )
+                return this.doors[i];
 
         return null;
     }
 
-    isDoor(x: number, y: number, callback: Function) {
-        this.forEachDoor((door: any) => {
+    public isDoor(x: number, y: number, callback: (door: boolean) => void): void {
+        this.forEachDoor((door) => {
             callback(door.x === x && door.y === y);
         });
     }
 
-    isClosed(door: any) {
+    public isClosed(door: Door): boolean {
         return this.getStatus(door) === 'closed';
     }
 
-    forEachDoor(callback: Function) {
+    private forEachDoor(callback: (door: Door) => void): void {
         _.each(this.doors, (door) => {
             callback(door);
         });
     }
 }
-
-export default Doors;

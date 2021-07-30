@@ -1,29 +1,23 @@
 import TeamWar from '../minigames/impl/teamwar';
-import World from '../game/world';
 import log from '../util/log';
 
-class Minigames {
-    public world: World;
+import type World from '../game/world';
+import type Minigame from '../minigames/minigame';
 
-    public minigames: any;
+export default class Minigames {
+    public minigames: { [game: string]: Minigame } = {};
 
-    constructor(world: World) {
-        this.world = world;
-
-        this.minigames = {};
-
+    public constructor(private world: World) {
         this.load();
     }
 
-    load() {
-        this.minigames['TeamWar'] = new TeamWar(this.world);
+    private load(): void {
+        this.minigames.TeamWar = new TeamWar(this.world);
 
         log.info(`Finished loading ${Object.keys(this.minigames).length} minigames.`);
     }
 
-    getTeamWar() {
-        return this.minigames['TeamWar'];
+    public getTeamWar(): Minigame {
+        return this.minigames.TeamWar;
     }
 }
-
-export default Minigames;
