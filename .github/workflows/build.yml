@@ -32,5 +32,7 @@ jobs:
               run: yarn install --immutable --immutable-cache --check-cache
             - name: Build Packages
               run: yarn build
-            # - run: yarn test
-            # - run: yarn lint
+            - name: Lint Code
+              run: yarn lint
+            # - name: Run Tests
+            #   run: yarn test
