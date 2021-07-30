@@ -8,6 +8,7 @@
     "homepage": "https://kaetram.com/",
     "license": "MPL-2.0",
     "scripts": {
+        "postinstall": "husky install",
         "packages": "yarn workspaces foreach --no-private -piv run",
         "dev": "yarn packages dev",
         "start": "yarn packages start",
