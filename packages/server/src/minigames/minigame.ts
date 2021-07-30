@@ -1,29 +1,24 @@
-/* global module */
-
-class Minigame {
+export interface MinigameState {
     id: number;
     name: string;
+}
 
-    constructor(id: number, name: string) {
-        this.id = id;
-        this.name = name;
-    }
+export default abstract class Minigame {
+    protected constructor(private id: number, private name: string) {}
 
-    getId() {
+    public getId(): number {
         return this.id;
     }
 
-    getName() {
+    public getName(): string {
         return this.name;
     }
 
     // Used to mark if `player` is in a minigame instance.
-    getState(): any {
+    protected getState(): MinigameState | null {
         return {
             id: this.id,
             name: this.name
         };
     }
 }
-
-export default Minigame;

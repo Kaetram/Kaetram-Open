@@ -1,35 +1,25 @@
-import config from '../../config';
-
 import SocketIO from './impl/socketio';
 import WS from './impl/ws';
 
-import Connection from './connection';
-
-import Utils from '../util/utils';
+import type Connection from './connection';
 
 export default class SocketHandler {
-    private socketIO: SocketIO;
-    private ws: WS;
+    private socketIO = new SocketIO(this);
+    private ws = new WS(this);
 
-    public ips: { [id: string]: number };
-    public connections: { [id: string]: Connection };
+    public ips: { [id: string]: number } = {};
+    public connections: { [id: string]: Connection } = {};
 
-    private readyCallback: () => void;
-    private connectionCallback: (connection: Connection) => void;
+    private readyCallback?(): void;
+    private connectionCallback?: (connection: Connection) => void;
 
-    constructor() {
-        this.ips = {};
-        this.connections = {};
-
-        this.socketIO = new SocketIO(this);
-        this.ws = new WS(this);
-
+    public constructor() {
         this.load();
     }
 
-    load() {
+    private load(): void {
         this.socketIO.onInitialize(() => {
-            this.readyCallback();
+            this.readyCallback?.();
         });
 
         this.socketIO.onAdd((connection: Connection) => {
@@ -48,11 +38,10 @@ export default class SocketHandler {
      *
      * @param connection The connection we are adding.
      */
-
-    add(connection: Connection) {
+    private add(connection: Connection): void {
         this.connections[connection.id] = connection;
 
-        if (this.connectionCallback) this.connectionCallback(connection);
+        this.connectionCallback?.(connection);
     }
 
     /**
@@ -60,8 +49,7 @@ export default class SocketHandler {
      *
      * @param id The connection id we are removing.
      */
-
-    remove(id: string) {
+    public remove(id: string): void {
         delete this.connections[id];
     }
 
@@ -71,8 +59,7 @@ export default class SocketHandler {
      * @param id The id of the connection we are trying to get.
      * @returns The connection element or null.
      */
-
-    get(id: string): Connection {
+    public get(id: string): Connection {
         return this.connections[id];
     }
 
@@ -82,8 +69,7 @@ export default class SocketHandler {
      *
      * @param callback The void function callback
      */
-
-    onReady(callback: () => void) {
+    public onReady(callback: () => void): void {
         this.readyCallback = callback;
     }
 
@@ -92,8 +78,7 @@ export default class SocketHandler {
      *
      * @param callback The callback containing the Connection that occurs.
      */
-
-    onConnection(callback: (connection: Connection) => void) {
+    public onConnection(callback: (connection: Connection) => void): void {
         this.connectionCallback = callback;
     }
 }

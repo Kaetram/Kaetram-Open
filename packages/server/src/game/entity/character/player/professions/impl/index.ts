@@ -1,5 +1,5 @@
-import fishing from './fishing';
-import lumberjacking from './lumberjacking';
-import mining from './mining';
+import Fishing from './fishing';
+import Lumberjacking from './lumberjacking';
+import Mining from './mining';
 
-export default { fishing, lumberjacking, mining };
+export default { Fishing, Lumberjacking, Mining };

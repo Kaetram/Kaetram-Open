@@ -1,11 +1,7 @@
-/* global module */
-
 import Ability from './ability';
 
-class FireStrike extends Ability {
-    constructor(name: string, type: number) {
+export default class FireStrike extends Ability {
+    public constructor(name: string, type: number) {
         super(name, type);
     }
 }
-
-export default FireStrike;

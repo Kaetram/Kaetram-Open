@@ -1,45 +1,71 @@
-/* global module */
+import Packets from '@kaetram/common/src/packets';
 
-import _ from 'lodash';
 import Messages from '../../../../../network/messages';
-import Packets from '../../../../../network/packets';
 import Utils from '../../../../../util/utils';
-import Player from '../player';
-import NPC from '../../../npc/npc';
-import Mob from '../../mob/mob';
 
-class Quest {
-    public player: Player;
-    public data: any;
+import type NPC from '../../../npc/npc';
+import type Mob from '../../mob/mob';
+import type { Door } from '../doors';
+import type Player from '../player';
 
-    public id: number;
-    public name: string;
-    public description: string;
+export interface QuestInfo {
+    id: number;
+    name: string;
+    description: string;
+    stage: number;
+    finished: boolean;
+}
 
-    public stage: number;
+type Task = 'click' | 'door' | 'kill' | 'talk' | 'item';
 
-    npcTalkCallback: Function;
+interface ItemReward {
+    id: number;
+    count: number;
+}
 
-    constructor(player: Player, data: any) {
-        this.player = player;
-        this.data = data;
+export interface QuestData {
+    id: number;
+    name: string;
+    description: string;
+    npcs: number[];
+    mobs?: number[];
+    stages: number;
+    questReq?: number[];
+    itemReq?: { [key: string]: number };
+    itemReward?: ItemReward;
+    conversations?: { [key: string]: { [key: string]: string[] } };
+    pointers?: { [key: string]: (number | string)[] };
+    doors?: { [key: string]: number[] };
+    task?: { [key: string]: Task };
+    kill?: { [key: string]: number };
+}
 
+type NPCTalkCallback = (npc: NPC) => void;
+
+export default abstract class Quest {
+    public id;
+    public name;
+    public description;
+
+    public stage = 0;
+
+    private npcTalkCallback?: NPCTalkCallback;
+
+    public constructor(public player: Player, public data: QuestData) {
         this.id = data.id;
         this.name = data.name;
         this.description = data.description;
-
-        this.stage = 0;
     }
 
-    load(stage: number) {
+    public load(stage: number): void {
         if (!stage) this.update();
         else this.stage = stage;
     }
 
-    finish() {
+    public finish(): void {
         let item = this.getItemReward();
 
-        if (item) {
+        if (item)
             if (this.hasInventorySpace(item.id, item.count))
                 this.player.inventory.add({
                     id: item.id,
@@ -53,7 +79,6 @@ class Quest {
 
                 return;
             }
-        }
 
         this.setStage(9999);
 
@@ -67,54 +92,54 @@ class Quest {
         this.update();
     }
 
-    setStage(stage: number) {
+    public setStage(stage: number): void {
         this.stage = stage;
         this.update();
     }
 
-    triggerTalk(npc: NPC) {
-        if (this.npcTalkCallback) this.npcTalkCallback(npc);
+    public triggerTalk(npc: NPC): void {
+        this.npcTalkCallback?.(npc);
     }
 
-    update() {
+    public update(): void {
         return this.player.save();
     }
 
-    getConversation(id: number) {
-        let conversation = this.data.conversations[id];
+    protected getConversation(id: number): string[] {
+        let conversation = this.data.conversations![id];
 
         if (!conversation || !conversation[this.stage]) return [''];
 
         return conversation[this.stage];
     }
 
-    updatePointers() {
+    public updatePointers(): void {
         if (!this.data.pointers) return;
 
         let pointer = this.data.pointers[this.stage];
 
         if (!pointer) return;
 
-        let opcode = pointer[0];
+        let [opcode] = pointer;
 
         if (opcode === 4)
             this.player.send(
                 new Messages.Pointer(opcode, {
                     id: Utils.generateRandomId(),
-                    button: pointer[1]
+                    button: pointer[1] as string
                 })
             );
         else
             this.player.send(
                 new Messages.Pointer(opcode, {
                     id: Utils.generateRandomId(),
-                    x: pointer[1],
-                    y: pointer[2]
+                    x: pointer[1] as number,
+                    y: pointer[2] as number
                 })
             );
     }
 
-    forceTalk(npc: NPC, message: string) {
+    private forceTalk(npc: NPC, message: string): void {
         if (!npc) return;
 
         this.player.talkIndex = 0;
@@ -127,77 +152,76 @@ class Quest {
         );
     }
 
-    resetTalkIndex() {
-        /**
-         * Resets the player's talk index for the next dialogue to take place.
-         */
-
+    /**
+     * Resets the player's talk index for the next dialogue to take place.
+     */
+    protected resetTalkIndex(): void {
         this.player.talkIndex = 0;
     }
 
-    clearPointers() {
+    public clearPointers(): void {
         this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}));
     }
 
-    onNPCTalk(callback: Function) {
+    protected onNPCTalk(callback: NPCTalkCallback): void {
         this.npcTalkCallback = callback;
     }
 
-    hasMob(mob: Mob) {
+    public hasMob(mob: Mob): boolean | undefined {
         if (!this.data.mobs) return;
 
-        return this.data.mobs.indexOf(mob.id) > -1;
+        return this.data.mobs.includes(mob.id);
     }
 
-    hasNPC(id: number) {
-        return this.data.npcs.indexOf(id) > -1;
+    public hasNPC(id: number): boolean {
+        return this.data.npcs.includes(id);
     }
 
-    hasItemReward() {
+    private hasItemReward(): boolean {
         return !!this.data.itemReward;
     }
 
-    hasInventorySpace(id: number, count: number) {
+    private hasInventorySpace(id: number, count: number): boolean {
         return this.player.inventory.canHold(id, count);
     }
 
-    hasDoorUnlocked(door: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public hasDoorUnlocked(door: Door): boolean {
         return this.stage > 9998;
     }
 
-    isFinished() {
+    public isFinished(): boolean {
         return this.stage > 9998;
     }
 
-    getId() {
+    private getId(): number {
         return this.id;
     }
 
-    getName() {
+    private getName(): string {
         return this.name;
     }
 
-    getTask() {
-        return this.data.task[this.stage];
+    protected getTask(): Task {
+        return this.data.task![this.stage];
     }
 
-    getItem() {
-        return this.data.itemReq ? this.data.itemReq[this.stage] : null;
+    protected getItem(): number | undefined {
+        return this.data.itemReq?.[this.stage];
     }
 
-    getStage() {
+    public getStage(): number {
         return this.stage;
     }
 
-    getItemReward() {
-        return this.hasItemReward() ? this.data.itemReward : null;
+    private getItemReward(): ItemReward | undefined {
+        return this.data.itemReward;
     }
-
-    getDescription() {
+    private getDescription(): string {
         return this.description;
     }
 
-    getInfo() {
+    getInfo(): QuestInfo {
         return {
             id: this.getId(),
             name: this.getName(),
@@ -207,5 +231,3 @@ class Quest {
         };
     }
 }
-
-export default Quest;

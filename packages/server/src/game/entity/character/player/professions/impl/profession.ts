@@ -1,48 +1,37 @@
-import Modules from '../../../../../../util/modules';
-import Formulas from '../../../../../../util/formulas';
-import Constants from '../../../../../../util/constants';
+import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
+
 import Messages from '../../../../../../network/messages';
-import Packets from '../../../../../../network/packets';
-import Player from '../../player';
-import World from '../../../../../world';
-import Map from '../../../../../../map/map';
-import Region from '../../../../../../region/region';
+import Constants from '../../../../../../util/constants';
+import Formulas from '../../../../../../util/formulas';
 
-class Profession {
-    public id: number;
-    public player: Player;
-    public name: string;
+import type Player from '../../player';
 
-    public world: World;
+export default abstract class Profession {
+    protected tick = 1000;
 
-    public map: Map;
-    public region: Region;
+    public world;
 
-    public experience: number;
+    public map;
+    public region;
 
-    public targetId: string; // Double Check
+    public experience = 0;
 
-    public level: number;
+    public targetId: string | null = null; // Double Check
 
-    public nextExperience: number;
-    public prevExperience: number;
+    public level!: number;
 
-    constructor(id: number, player: Player, name: string) {
-        this.id = id;
-        this.player = player;
-        this.name = name; // The profession name
+    public nextExperience?: number;
+    public prevExperience!: number;
 
+    protected constructor(public id: number, public player: Player, public name: string) {
         this.world = player.world;
 
         this.map = this.world.map;
         this.region = this.world.region;
-
-        this.experience = 0;
-
-        this.targetId = null;
     }
 
-    load(data: any) {
+    load(data: { experience: number }): void {
         this.experience = data.experience;
 
         this.level = Formulas.expToLevel(this.experience);
@@ -51,7 +40,7 @@ class Profession {
         this.prevExperience = Formulas.prevExp(this.experience);
     }
 
-    addExperience(experience: number) {
+    addExperience(experience: number): void {
         this.experience += experience;
 
         let oldLevel = this.level;
@@ -86,11 +75,11 @@ class Profession {
         this.player.save();
     }
 
-    stop(): any {
-        return 'Not implemented.';
+    stop(): void {
+        //
     }
 
-    getLevel() {
+    getLevel(): number {
         let level = Formulas.expToLevel(this.experience);
 
         if (level > Constants.MAX_PROFESSION_LEVEL) level = Constants.MAX_PROFESSION_LEVEL;
@@ -98,7 +87,7 @@ class Profession {
         return level;
     }
 
-    sync() {
+    sync(): void {
         this.player.sendToAdjacentRegions(
             this.player.region,
             new Messages.Sync({
@@ -108,18 +97,18 @@ class Profession {
         );
     }
 
-    isTarget() {
-        return this.player.target === this.targetId;
+    isTarget(): boolean {
+        return this.player.target!.instance === this.targetId;
     }
 
-    getPercentage() {
+    getPercentage(): string {
         let experience = this.experience - this.prevExperience,
-            nextExperience = this.nextExperience - this.prevExperience;
+            nextExperience = this.nextExperience! - this.prevExperience;
 
         return ((experience / nextExperience) * 100).toFixed(2);
     }
 
-    getOrientation() {
+    getOrientation(): Modules.Orientation {
         if (!this.targetId) return Modules.Orientation.Up;
 
         let position = this.map.idToPosition(this.targetId);
@@ -127,15 +116,13 @@ class Profession {
         if (position.x > this.player.x) return Modules.Orientation.Right;
         else if (position.x < this.player.x) return Modules.Orientation.Left;
         else if (position.y > this.player.y) return Modules.Orientation.Down;
-        else position.y < this.player.y;
+        position.y < this.player.y;
         return Modules.Orientation.Up;
     }
 
-    getData() {
+    getData(): { experience: number } {
         return {
             experience: this.experience
         };
     }
 }
-
-export default Profession;
