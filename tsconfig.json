@@ -1,17 +1,18 @@
 {
     "compilerOptions": {
         "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "importHelpers": false,
-        "removeComments": true,
-        "sourceMap": true,
+        "target": "esnext",
+
+        "esModuleInterop": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "esModuleInterop": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
 
-        /** These values should be set to true once refactoring codebase. */
-        "noImplicitAny": false,
-        "strictNullChecks": false,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "strictNullChecks": true,
 
         "rootDir": ".",
         "baseUrl": "./packages",

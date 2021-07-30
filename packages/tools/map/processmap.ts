@@ -2,17 +2,9 @@ import _ from 'lodash';
 import zlib from 'zlib';
 
 import log from '../../server/src/util/log';
-import {
-    Area,
-    Entity,
-    Layer,
-    LayerObject,
-    MapData,
-    ProcessedMap,
-    Property,
-    Tile,
-    Tileset
-} from './mapdata';
+
+import type { Entity, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+import type { ProcessedMap, ProcessedArea } from '@kaetram/common/types/map';
 
 export default class ProcessMap {
     #map!: ProcessedMap;
@@ -129,9 +121,9 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         const { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { polygons, high, objects, trees, rocks, cursors } = this.#map;
+            { polygons, high, objects, trees, rocks, cursors, tileCollisions } = this.#map;
 
-        if (this.isColliding(name) && !(tileId in polygons)) this.#map.tileCollisions.push(tileId);
+        if (this.isColliding(name) && !(tileId in polygons)) tileCollisions.push(tileId);
 
         switch (name) {
             case 'v':
@@ -182,7 +174,8 @@ export default class ProcessMap {
     }
 
     private parseTileLayerData(mapData: number[]): void {
-        const { data, collisions, trees, treeIndexes, rocks, rockIndexes } = this.#map;
+        const { data, collisions, trees, treeIndexes, rocks, rockIndexes, tileCollisions } =
+            this.#map;
 
         _.each(mapData, (value, index) => {
             if (value < 1) return;
@@ -191,7 +184,7 @@ export default class ProcessMap {
             else if (_.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
 
-            if (this.#map.tileCollisions.includes(value)) collisions.push(index);
+            if (tileCollisions.includes(value)) collisions.push(index);
             if (value in trees) treeIndexes.push(index);
             if (value in rocks) rockIndexes.push(index);
         });
@@ -255,7 +248,7 @@ export default class ProcessMap {
     private parseObject(objectName: string, info: LayerObject) {
         const { id, name, x, y, width, height, properties } = info,
             { tileSize, areas } = this.#map,
-            object: Area = {
+            object: ProcessedArea = {
                 id,
                 name,
                 x: x / tileSize,
@@ -265,7 +258,28 @@ export default class ProcessMap {
                 polygon: this.extractPolygon(info)
             };
 
-        _.each(properties, ({ name, value }) => {
+        _.each(properties, (prop) => {
+            let name = prop.name as keyof ProcessedArea,
+                { value } = prop;
+
+            if (
+                [
+                    'id',
+                    'x',
+                    'y',
+                    'distance',
+                    'darkness',
+                    'diffuse',
+                    'level',
+                    'achievement'
+                ].includes(name)
+            ) {
+                let number = parseFloat(value);
+                if (isNaN(number)) number = -1;
+
+                value = number as never;
+            }
+
             object[name] = value;
         });
 

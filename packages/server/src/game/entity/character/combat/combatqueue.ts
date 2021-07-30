@@ -1,31 +1,24 @@
-/* global module */
+import type Hit from './hit';
+import type { HitData } from './hit';
 
-import Hit from './hit';
+export default class CombatQueue {
+    private hitQueue: Hit[] = [];
 
-class CombatQueue {
-    hitQueue: any;
-
-    constructor() {
-        this.hitQueue = [];
-    }
-
-    add(hit: Hit) {
+    public add(hit: Hit): void {
         this.hitQueue.push(hit);
     }
 
-    hasQueue() {
+    public hasQueue(): boolean {
         return this.hitQueue.length > 0;
     }
 
-    clear() {
+    public clear(): void {
         this.hitQueue = [];
     }
 
-    getHit() {
-        if (this.hitQueue.length < 1) return null;
+    public getHit(): HitData | null {
+        if (this.hitQueue.length === 0) return null;
 
-        return this.hitQueue.shift().getData();
+        return this.hitQueue.shift()!.getData();
     }
 }
-
-export default CombatQueue;

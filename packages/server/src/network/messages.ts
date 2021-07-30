@@ -1,559 +1,393 @@
 /* eslint-disable max-classes-per-file */
 
-import Packets from './packets';
+import type * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
 
 import Utils from '../util/utils';
 
-const Messages: any = {};
+import type { ProcessedArea } from '@kaetram/common/types/map';
+import type { ShopData } from '../controllers/shops';
+import type { HitData } from '../game/entity/character/combat/hit';
+import type { AchievementData } from '../game/entity/character/player/achievement';
+import type Slot from '../game/entity/character/player/containers/slot';
+import type { EquipmentData } from '../game/entity/character/player/equipment/equipment';
+import type { PlayerExperience } from '../game/entity/character/player/player';
+import type { ProfessionsInfo } from '../game/entity/character/player/professions/professions';
+import type { QuestInfo } from '../game/entity/character/player/quests/quest';
+import type Entity from '../game/entity/entity';
+import type { EntityState } from '../game/entity/entity';
+import type { ProjectileData } from '../game/entity/objects/projectile';
+import type { RegionTileData, Tile, TilesetData } from '../region/region';
 
-Messages.Handshake = class {
-    info: any;
+export abstract class Packet<Info = unknown, Opcode = number | string> {
+    protected abstract id: number;
+    protected opcode;
 
-    constructor(info: any) {
-        this.info = info;
+    public constructor(info: Info);
+    public constructor(opcode: Opcode, info?: Info);
+    public constructor(infoOrOpcode: Info | Opcode, protected info?: Info) {
+        if (info) this.opcode = infoOrOpcode as Opcode;
+        else this.info = infoOrOpcode as Info;
     }
 
-    serialize() {
-        return [Packets.Handshake, this.info];
+    public serialize(): [id: number, ...opcode: Opcode[], info: Info] {
+        let { id, info, opcode } = this,
+            data: [number, ...Opcode[], Info] = [id, info!];
+
+        if (opcode !== undefined) data.splice(1, 0, opcode);
+
+        return data;
     }
-};
-
-Messages.Welcome = class {
-    info: any;
-
-    constructor(info: any) {
-        this.info = info; //array of info
-    }
-
-    serialize() {
-        return [Packets.Welcome, this.info];
-    }
-};
-
-Messages.Spawn = class {
-    entity: any;
-
-    constructor(entity: any) {
-        this.entity = entity;
-    }
-
-    serialize() {
-        return [Packets.Spawn, this.entity.getState()];
-    }
-};
-
-Messages.List = class {
-    list: any;
-
-    constructor(list: any) {
-        this.list = list;
-    }
-
-    serialize() {
-        return [Packets.List, this.list];
-    }
-};
-
-Messages.Sync = class {
-    info: any;
-
-    constructor(info: any) {
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Sync, this.info];
-    }
-};
-
-Messages.Equipment = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Equipment, this.opcode, this.info];
-    }
-};
-
-Messages.Movement = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Movement, this.opcode, this.info];
-    }
-};
-
-Messages.Teleport = class {
-    info: any;
-
-    constructor(info: any) {
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Teleport, this.info];
-    }
-};
-
-Messages.Despawn = class {
-    id: any;
-
-    constructor(id: any) {
-        this.id = id;
-    }
-
-    serialize() {
-        return [Packets.Despawn, this.id];
-    }
-};
-
-Messages.Animation = class {
-    id: any;
-    info: any;
-
-    constructor(id: any, info: any) {
-        this.id = id;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Animation, this.id, this.info];
-    }
-};
-
-// TODO - Revise this when going over combat.
-Messages.Combat = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Combat, this.opcode, this.info];
-    }
-};
-
-Messages.Projectile = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Projectile, this.opcode, this.info];
-    }
-};
-
-Messages.Population = class {
-    playerCount: number;
-
-    constructor(playerCount: number) {
-        this.playerCount = playerCount;
-    }
-
-    serialize() {
-        return [Packets.Population, this.playerCount];
-    }
-};
-
-Messages.Points = class {
-    info: any;
-
-    constructor(info: any) {
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Points, this.info];
-    }
-};
-
-Messages.Network = class {
-    opcode: number;
-
-    constructor(opcode: number) {
-        this.opcode = opcode;
-    }
-
-    serialize() {
-        return [Packets.Network, this.opcode];
-    }
-};
-
-Messages.Chat = class {
-    info: any;
-
-    constructor(info: any) {
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Chat, this.info];
-    }
-};
-
-Messages.Command = class {
-    info: any;
-
-    constructor(info: any) {
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Command, this.info];
-    }
-};
-
-/**
- * Should we just have a packet that represents containers
- * as a whole or just send it separately for each?
- */
-
-Messages.Inventory = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Inventory, this.opcode, this.info];
-    }
-};
-
-Messages.Bank = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Bank, this.opcode, this.info];
-    }
-};
-
-Messages.Ability = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Ability, this.opcode, this.info];
-    }
-};
-
-Messages.Quest = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Quest, this.opcode, this.info];
-    }
-};
-
-Messages.Notification = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Notification, this.opcode, this.info];
-    }
-};
-
-Messages.Blink = class {
-    instance: string;
-
-    constructor(instance: string) {
-        this.instance = instance;
-    }
-
-    serialize() {
-        return [Packets.Blink, this.instance];
-    }
-};
-
-Messages.Heal = class {
-    info: any;
-
-    constructor(info: any) {
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Heal, this.info];
-    }
-};
-
-Messages.Experience = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Experience, this.opcode, this.info];
-    }
-};
-
-Messages.Death = class {
-    id: string;
-
-    constructor(id: any) {
-        this.id = id;
-    }
-
-    serialize() {
-        return [Packets.Death, this.id];
-    }
-};
-
-Messages.Audio = class {
-    song: string;
-
-    constructor(song: string) {
-        this.song = song;
-    }
-
-    serialize() {
-        return [Packets.Audio, this.song];
-    }
-};
-
-Messages.NPC = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.NPC, this.opcode, this.info];
-    }
-};
-
-Messages.Respawn = class {
-    instance: string;
-    x: number;
-    y: number;
-
-    constructor(instance: string, x: number, y: number) {
-        this.instance = instance;
-        this.x = x;
-        this.y = y;
-    }
-
-    serialize() {
-        return [Packets.Respawn, this.instance, this.x, this.y];
-    }
-};
-
-Messages.Enchant = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Enchant, this.opcode, this.info];
+}
+
+type ContainerPacket =
+    | [size: number, slots: Slot[]]
+    | Slot
+    | {
+          index: number;
+          count: number;
+      };
+
+export default {
+    Handshake: class extends Packet<{ id: string; development: boolean }> {
+        id = Packets.Handshake;
+    },
+
+    Welcome: class extends Packet<{
+        instance: string;
+        username: string;
+        x: number;
+        y: number;
+        rights: number;
+        hitPoints: number[];
+        mana: number[];
+        experience: number;
+        nextExperience?: number;
+        prevExperience: number;
+        level: number;
+        lastLogin: number;
+        pvpKills: number;
+        pvpDeaths: number;
+        orientation: number;
+        movementSpeed: number;
+    }> {
+        id = Packets.Welcome;
+    },
+
+    Spawn: class extends Packet<EntityState> {
+        id = Packets.Spawn;
+
+        public constructor(entity: Entity) {
+            super(entity.getState());
+        }
+    },
+
+    List: class extends Packet<string[]> {
+        id = Packets.List;
+    },
+
+    Sync: class extends Packet<{
+        id: string;
+        orientation?: Modules.Orientation;
+        attackRange?: number;
+        playerHitPoints?: number;
+        maxHitPoints?: number;
+        mana?: number;
+        maxMana?: number;
+        level?: number;
+        armour?: string;
+        weapon?: EquipmentData;
+        poison?: boolean;
+        movementSpeed?: number;
+    }> {
+        id = Packets.Sync;
+    },
+
+    Equipment: class extends Packet<
+        | [string]
+        | {
+              armour: EquipmentData;
+              weapon: EquipmentData;
+              pendant: EquipmentData;
+              ring: EquipmentData;
+              boots: EquipmentData;
+          }
+        | {
+              type: Modules.Equipment;
+              name: string;
+              string: string;
+              count: number;
+              ability: number;
+              abilityLevel: number;
+              power: number;
+          }
+    > {
+        id = Packets.Equipment;
+    },
+
+    Movement: class extends Packet<
+        | [instance: string, orientation: number]
+        | { instance: string; force?: boolean }
+        | { id: string; state: boolean }
+        | {
+              id: string;
+              x: number;
+              y: number;
+              forced?: boolean;
+              teleport?: boolean;
+          }
+        | {
+              attackerId: string;
+              targetId: string;
+              isRanged?: boolean;
+              attackRange?: number;
+          }
+    > {
+        id = Packets.Movement;
+    },
+
+    Teleport: class extends Packet<{
+        id: string;
+        x: number;
+        y: number;
+        withAnimation?: boolean;
+    }> {
+        id = Packets.Teleport;
+    },
+
+    Despawn: class extends Packet<string> {
+        id = Packets.Despawn;
+    },
+
+    Animation: class extends Packet<{ action: Modules.Actions }, string> {
+        id = Packets.Animation;
+    },
+
+    // TODO - Revise this when going over combat.
+    Combat: class extends Packet<{
+        attackerId: string | null;
+        targetId: string | null;
+        x?: number;
+        y?: number;
+        hitInfo?: HitData;
+    }> {
+        id = Packets.Combat;
+    },
+
+    Projectile: class extends Packet<ProjectileData> {
+        id = Packets.Projectile;
+    },
+
+    Population: class extends Packet<number> {
+        id = Packets.Population;
+    },
+
+    Points: class extends Packet<{
+        id: string;
+        hitPoints: number;
+        mana: null;
+    }> {
+        id = Packets.Points;
+    },
+
+    Network: class extends Packet<typeof Packets.NetworkOpcode> {
+        id = Packets.Network;
+    },
+
+    Chat: class extends Packet<
+        | {
+              name: string;
+              text: string;
+              colour?: string;
+              isGlobal?: boolean;
+              withBubble?: boolean;
+          }
+        | {
+              id: string;
+              name: string;
+              withBubble: boolean;
+              text: string;
+              duration: number;
+          }
+    > {
+        id = Packets.Chat;
+    },
+
+    Command: class extends Packet<{ command: string }> {
+        id = Packets.Command;
+    },
+
+    /**
+     * Should we just have a packet that represents containers
+     * as a whole or just send it separately for each?
+     */
+
+    Inventory: class extends Packet<ContainerPacket> {
+        id = Packets.Inventory;
+    },
+
+    Bank: class extends Packet<ContainerPacket> {
+        id = Packets.Bank;
+    },
+
+    Ability: class extends Packet<never> {
+        id = Packets.Ability;
+    },
+
+    Quest: class extends Packet<
+        | { id: number; stage?: number }
+        | { achievements: AchievementData[] }
+        | { quests: QuestInfo[] }
+        | {
+              id: number;
+              name: string;
+              progress?: number;
+              count?: number;
+              isQuest: boolean;
+          }
+    > {
+        id = Packets.Quest;
+    },
+
+    Notification: class extends Packet<{
+        title?: string;
+        message: string;
+        colour?: string;
+    }> {
+        id = Packets.Notification;
+    },
+
+    Blink: class extends Packet<string> {
+        id = Packets.Blink;
+    },
+
+    Heal: class extends Packet<{ id: string; type: string; amount: number }> {
+        id = Packets.Heal;
+    },
+
+    Experience: class extends Packet<
+        { instance: string } | { id: string; amount: number } | PlayerExperience
+    > {
+        id = Packets.Experience;
+    },
+
+    Death: class extends Packet<string> {
+        id = Packets.Death;
+    },
+
+    Audio: class extends Packet<string> {
+        id = Packets.Audio;
+    },
+
+    NPC: class extends Packet<
+        | Record<string, never>
+        | { id: string; countdown: number }
+        | {
+              id: string | null;
+              text?: string;
+              nonNPC?: boolean;
+          }
+    > {
+        id = Packets.NPC;
+    },
+
+    Respawn: class extends Packet<Pos, string> {
+        id = Packets.Respawn;
+    },
+
+    Enchant: class extends Packet<{ type: string; index: number }> {
+        id = Packets.Enchant;
+    },
+
+    Guild: class extends Packet<never> {
+        id = Packets.Guild;
+    },
+
+    Pointer: class extends Packet<{
+        id?: string;
+        x?: number;
+        y?: number;
+        button?: string;
+    }> {
+        id = Packets.Pointer;
+    },
+
+    PVP: class extends Packet<boolean, string> {
+        id = Packets.PVP;
+    },
+
+    Shop: class extends Packet<
+        | ShopData
+        | { id: number; index: number }
+        | { id: number; slotId: number; currency: string; price: number }
+        | { instance: string; npcId: number; shopData?: ShopData }
+    > {
+        id = Packets.Shop;
+    },
+
+    Minigame: class extends Packet<{ opcode: number; countdown: number }> {
+        id = Packets.Minigame;
+    },
+
+    Region: class extends Packet<string, number> {
+        id = Packets.Region;
+
+        private bufferSize: number;
+
+        public constructor(
+            opcode: number,
+            info:
+                | RegionTileData[]
+                | TilesetData
+                | { id: string; type: 'remove' }
+                | { index: number; data: number }
+                | { index: number; newTile: Tile }
+        ) {
+            super(opcode, Utils.compressData(JSON.stringify(info)));
+
+            this.bufferSize = Utils.getBufferSize(info);
+        }
+
+        public override serialize(): [
+            id: number,
+            opcode: number,
+            bufferSize: number,
+            info: string
+        ] {
+            return [this.id, this.opcode!, this.bufferSize, this.info!];
+        }
+    },
+
+    Overlay: class extends Packet<ProcessedArea | { image: string; colour: string }> {
+        id = Packets.Overlay;
+    },
+
+    Camera: class extends Packet<typeof Packets.CameraOpcode> {
+        id = Packets.Camera;
+    },
+
+    Bubble: class extends Packet<{
+        id: string;
+        text: string;
+        duration: number;
+        isObject: boolean;
+        info: { id: string; x: number; y: number };
+    }> {
+        id = Packets.Bubble;
+    },
+
+    Profession: class extends Packet<
+        | { data: ProfessionsInfo[] }
+        | {
+              id: number;
+              level: number;
+              percentage: string;
+          }
+    > {
+        id = Packets.Profession;
+    },
+
+    BuildUp: class extends Packet<never> {
+        id = Packets.BuildUp;
     }
 };
-
-Messages.Guild = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Guild, this.opcode, this.info];
-    }
-};
-
-Messages.Pointer = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Pointer, this.opcode, this.info];
-    }
-};
-
-Messages.PVP = class {
-    id: string;
-    pvp: boolean;
-
-    constructor(id: string, pvp: boolean) {
-        this.id = id;
-        this.pvp = pvp;
-    }
-
-    serialize() {
-        return [Packets.PVP, this.id, this.pvp];
-    }
-};
-
-Messages.Shop = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Shop, this.opcode, this.info];
-    }
-};
-
-Messages.Minigame = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Minigame, this.opcode, this.info];
-    }
-};
-
-Messages.Region = class {
-    opcode: number;
-    bufferSize: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.bufferSize = Utils.getBufferSize(info);
-        this.info = Utils.compressData(JSON.stringify(info));
-    }
-
-    serialize() {
-        return [Packets.Region, this.opcode, this.bufferSize, this.info];
-    }
-};
-
-Messages.Overlay = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Overlay, this.opcode, this.info];
-    }
-};
-
-Messages.Camera = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Camera, this.opcode, this.info];
-    }
-};
-
-Messages.Bubble = class {
-    info: any;
-
-    constructor(info: any) {
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Bubble, this.info];
-    }
-};
-
-Messages.Profession = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.Profession, this.opcode, this.info];
-    }
-};
-
-Messages.BuildUp = class {
-    opcode: number;
-    info: any;
-
-    constructor(opcode: number, info: any) {
-        this.opcode = opcode;
-        this.info = info;
-    }
-
-    serialize() {
-        return [Packets.BuildUp, this.opcode, this.info];
-    }
-};
-
-export default Messages;

@@ -1,10 +1,9 @@
-import Area from '../area';
+import { ProcessedArea } from '@kaetram/common/types/map';
+import World from '../../../game/world';
 import Areas from '../areas';
 
-import World from '../../../game/world';
-
 export default class PVP extends Areas {
-    constructor(data: any, world?: World) {
+    public constructor(data: ProcessedArea[], world: World) {
         super(data, world);
 
         super.load(this.data);
