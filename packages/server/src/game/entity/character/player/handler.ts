@@ -1,50 +1,37 @@
-/* global module */
-
 import _ from 'lodash';
-import log from '../../../../util/log';
+
+import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
+
 import config from '../../../../../config';
 import Messages from '../../../../network/messages';
-import Modules from '../../../../util/modules';
-import Packets from '../../../../network/packets';
-import Npcs from '../../../../util/npcs';
-import Hit from '../combat/hit';
-import Utils from '../../../../util/utils';
+import log from '../../../../util/log';
+import NPCs from '../../../../util/npcs';
 import Shops from '../../../../util/shops';
-import Player from './player';
-import Character from '../character';
-import NPC from '../../npc/npc';
-import World from '../../../world';
-import Entity from '../../entity';
-import Map from '../../../../map/map';
-import Area from '../../../../map/areas/area';
-import Areas from '../../../../map/areas/areas';
+import Utils from '../../../../util/utils';
+import Hit from '../combat/hit';
 
-class Handler {
-    player: Player;
-    world: World;
-    map: Map;
+import type Areas from '../../../../map/areas/areas';
+import type Entity from '../../entity';
+import type NPC from '../../npc/npc';
+import type Mob from '../mob/mob';
+import type Player from './player';
 
-    updateTicks: number;
-    updateInterval: any;
+export default class Handler {
+    private world;
+    private map;
 
-    constructor(player: Player) {
-        this.player = player;
+    private updateTicks = 0;
+    private updateInterval: NodeJS.Timeout | null = null;
 
+    public constructor(private player: Player) {
         this.world = player.world;
         this.map = player.world.map;
-
-        this.updateTicks = 0;
-        this.updateInterval = null;
 
         this.load();
     }
 
-    destroy() {
-        clearInterval(this.updateInterval);
-        this.updateInterval = null;
-    }
-
-    load() {
+    private load(): void {
         this.updateInterval = setInterval(() => {
             this.detectAggro();
 
@@ -77,7 +64,7 @@ class Handler {
             this.player.professions.stopAll();
         });
 
-        this.player.onHit((attacker: Character, damage: number) => {
+        this.player.onHit((attacker, damage) => {
             /**
              * Handles actions whenever the player
              * instance is hit by 'damage' amount
@@ -88,22 +75,23 @@ class Handler {
             log.debug(`Player has been hit - damage: ${damage}`);
         });
 
-        this.player.onKill((character: any) => {
+        this.player.onKill((character) => {
             if (!this.player.quests) {
                 log.warning(`${this.player.username} does not have quests initialized.`);
                 return;
             }
 
-            if (this.player.quests.isAchievementMob(character)) {
-                let achievement = this.player.quests.getAchievementByMob(character);
+            const mob = character as Mob;
 
-                if (achievement && achievement.isStarted())
-                    this.player.quests.getAchievementByMob(character).step();
+            if (this.player.quests.isAchievementMob(mob)) {
+                let achievement = this.player.quests.getAchievementByMob(mob);
+
+                if (achievement && achievement.isStarted()) achievement.step();
             }
         });
 
         this.player.onRegion(() => {
-            this.player.lastRegionChange = new Date().getTime();
+            this.player.lastRegionChange = Date.now();
 
             this.world.region.handle(this.player);
             this.world.region.push(this.player);
@@ -113,7 +101,7 @@ class Handler {
             this.player.stopHealing();
 
             /* Avoid a memory leak */
-            clearInterval(this.updateInterval);
+            if (this.updateInterval) clearInterval(this.updateInterval);
             this.updateInterval = null;
 
             if (this.player.ready) {
@@ -132,13 +120,13 @@ class Handler {
 
         this.player.onTalkToNPC((npc: NPC) => {
             if (this.player.quests.isQuestNPC(npc)) {
-                this.player.quests.getQuestByNPC(npc).triggerTalk(npc);
+                this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
 
                 return;
             }
 
             if (this.player.quests.isAchievementNPC(npc)) {
-                this.player.quests.getAchievementByNPC(npc).converse(npc);
+                this.player.quests.getAchievementByNPC(npc)!.converse(npc);
 
                 return;
             }
@@ -148,7 +136,7 @@ class Handler {
                 return;
             }
 
-            switch (Npcs.getType(npc.id)) {
+            switch (NPCs.getType(npc.id)) {
                 case 'banker':
                     this.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
                     return;
@@ -158,7 +146,7 @@ class Handler {
                     break;
             }
 
-            let text = Npcs.getText(npc.id);
+            let text = NPCs.getText(npc.id);
 
             if (!text) return;
 
@@ -170,14 +158,14 @@ class Handler {
             );
         });
 
-        this.player.onTeleport((x: number, y: number, isDoor: boolean) => {
+        this.player.onTeleport((x: number, y: number, isDoor?: boolean) => {
             if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
                 this.player.doorCallback(x, y);
                 return;
             }
         });
 
-        this.player.onPoison((info: any) => {
+        this.player.onPoison((info) => {
             this.player.sync();
 
             if (info) this.player.notify('You have been poisoned.');
@@ -198,21 +186,28 @@ class Handler {
         });
     }
 
-    detectAggro() {
-        let region = this.world.region.regions[this.player.region];
+    public destroy(): void {
+        if (this.updateInterval) clearInterval(this.updateInterval);
+        this.updateInterval = null;
+    }
+
+    private detectAggro(): void {
+        let region = this.world.region.regions[this.player.region!];
 
         if (!region) return;
 
-        _.each(region.entities, (character: Character) => {
+        _.each(region.entities, (character) => {
             if (character && character.type === 'mob' && this.canEntitySee(character)) {
-                let aggro = character.canAggro(this.player);
+                const mob = character as Mob;
 
-                if (aggro) character.combat.begin(this.player);
+                let aggro = mob.canAggro(this.player);
+
+                if (aggro) mob.combat.begin(this.player);
             }
         });
     }
 
-    detectAreas(x: number, y: number) {
+    private detectAreas(x: number, y: number): void {
         this.map.forEachAreas((areas: Areas, name: string) => {
             let info = areas.inArea(x, y);
 
@@ -244,18 +239,20 @@ class Handler {
         });
     }
 
-    detectLights(x: number, y: number) {
+    private detectLights(x: number, y: number): void {
         _.each(this.map.lights, (light) => {
-            if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(light)) {
+            const { id } = light;
+
+            if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(id)) {
                 // Add a half a tile offset so the light is centered on the tile.
 
-                this.player.lightsLoaded.push(light);
+                this.player.lightsLoaded.push(id);
                 this.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
             }
         });
     }
 
-    detectClipping(x: number, y: number) {
+    private detectClipping(x: number, y: number): void {
         let isColliding = this.map.isColliding(x, y);
 
         if (!isColliding) return;
@@ -263,27 +260,28 @@ class Handler {
         this.player.incoming.handleNoClip(x, y);
     }
 
-    handlePoison() {
+    private handlePoison(): void {
         if (!this.player.poison) return;
 
-        let info: any = this.player.poison.split(':'),
-            timeDiff = new Date().getTime() - info[0];
+        let info = this.player.poison.split(':'),
+            date = parseInt(info[0]),
+            time = parseInt(info[1]),
+            damage = parseInt(info[2]),
+            timeDiff = Date.now() - date;
 
-        if (timeDiff > info[1]) {
+        if (timeDiff > time) {
             this.player.setPoison('');
             return;
         }
 
-        let hit = new Hit(Modules.Hits.Poison, info[2]);
+        let hit = new Hit(Modules.Hits.Poison, damage);
 
         hit.poison = true;
 
         this.player.combat.hit(this.player, this.player, hit.getData());
     }
 
-    canEntitySee(entity: Entity) {
+    private canEntitySee(entity: Entity): boolean {
         return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
     }
 }
-
-export default Handler;

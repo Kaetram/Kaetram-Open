@@ -1,51 +1,36 @@
-/* global module */
-
-import _ from 'lodash';
 import bcryptjs from 'bcryptjs';
-import log from '../../util/log';
+import _ from 'lodash';
+import { Db, MongoClient } from 'mongodb';
+
 import config from '../../../config';
-import { MongoClient, Db } from 'mongodb';
+import log from '../../util/log';
+import Creator, { FullPlayerData } from './creator';
 import Loader from './loader';
-import Creator from './creator';
 
-class MongoDB {
-    host: string;
-    port: number;
-    user: string;
-    password: string;
-    database: string;
+import type Player from '../../game/entity/character/player/player';
+import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
 
-    loader: Loader;
-    creator: Creator;
+export default class MongoDB {
+    public loader = new Loader(this);
+    public creator = new Creator(this);
 
-    connection: Db;
+    private connection!: Db;
 
-    constructor(host, port, user, password, database) {
-        this.host = host;
-        this.port = port;
-        this.user = user;
-        this.password = password;
-        this.database = database;
+    public constructor(
+        private host: string,
+        private port: number,
+        private user: string,
+        private password: string,
+        private database: string
+    ) {}
 
-        this.loader = new Loader(this);
-        this.creator = new Creator(this);
-
-        this.connection = null;
-    }
-
-    getDatabase(callback, type?) {
-        let url = `mongodb://${this.host}:${this.port}/${this.database}`;
-
-        if (config.mongodbAuth)
-            url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
-
-        let client = new MongoClient(url, {
-            useUnifiedTopology: true,
-            useNewUrlParser: true,
-            writeConcern: {
-                wtimeout: 5
-            }
-        });
+    public getConnection(callback: (connection: Db) => void): void {
+        let url = config.mongodbAuth
+                ? `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`
+                : `mongodb://${this.host}:${this.port}/${this.database}`,
+            client = new MongoClient(url, {
+                wtimeoutMS: 5
+            });
 
         if (this.connection) {
             callback(this.connection);
@@ -59,20 +44,22 @@ class MongoDB {
                 return;
             }
 
-            this.connection = newClient.db(this.database);
+            this.connection = newClient!.db(this.database);
 
             callback(this.connection);
         });
     }
 
-    login(player) {
-        this.getDatabase((database) => {
-            let dataCursor = database.collection('player_data').find({ username: player.username }),
+    public login(player: Player): void {
+        this.getConnection((database) => {
+            let dataCursor = database
+                    .collection<FullPlayerData>('player_data')
+                    .find({ username: player.username }),
                 equipmentCursor = database
-                    .collection('player_equipment')
+                    .collection<PlayerEquipment>('player_equipment')
                     .find({ username: player.username }),
                 regionsCursor = database
-                    .collection('player_regions')
+                    .collection<PlayerRegions>('player_regions')
                     .find({ username: player.username });
 
             dataCursor.toArray().then((playerData) => {
@@ -80,15 +67,15 @@ class MongoDB {
                     regionsCursor.toArray().then((regionData) => {
                         if (playerData.length === 0) this.register(player);
                         else {
-                            let playerInfo = playerData[0],
-                                equipmentInfo = equipmentData[0],
-                                regions = regionData[0];
+                            let [playerInfo] = playerData,
+                                [equipmentInfo] = equipmentData,
+                                [regions] = regionData;
 
-                            playerInfo['armour'] = equipmentInfo.armour;
-                            playerInfo['weapon'] = equipmentInfo.weapon;
-                            playerInfo['pendant'] = equipmentInfo.pendant;
-                            playerInfo['ring'] = equipmentInfo.ring;
-                            playerInfo['boots'] = equipmentInfo.boots;
+                            playerInfo.armour = equipmentInfo.armour;
+                            playerInfo.weapon = equipmentInfo.weapon;
+                            playerInfo.pendant = equipmentInfo.pendant;
+                            playerInfo.ring = equipmentInfo.ring;
+                            playerInfo.boots = equipmentInfo.boots;
 
                             player.load(playerInfo);
                             player.loadRegions(regions);
@@ -101,14 +88,14 @@ class MongoDB {
         });
     }
 
-    verify(player, callback) {
-        this.getDatabase((database) => {
+    public verify(player: Player, callback: (data: { status: 'success' | 'error' }) => void): void {
+        this.getConnection((database) => {
             let dataCursor = database.collection('player_data').find({ username: player.username });
 
             dataCursor.toArray().then((data) => {
                 if (data.length === 0) callback({ status: 'error' });
                 else {
-                    let info = data[0];
+                    let [info] = data;
 
                     bcryptjs.compare(player.password, info.password, (error, result) => {
                         if (error) throw error;
@@ -121,8 +108,8 @@ class MongoDB {
         });
     }
 
-    register(player) {
-        this.getDatabase((database) => {
+    public register(player: Player): void {
+        this.getConnection((database) => {
             let playerData = database.collection('player_data'),
                 cursor = playerData.find({ username: player.username });
 
@@ -139,8 +126,11 @@ class MongoDB {
         });
     }
 
-    exists(player, callback) {
-        this.getDatabase((database) => {
+    public exists(
+        player: Player,
+        callback: (data: { exists: boolean; type?: string }) => void
+    ): void {
+        this.getConnection((database) => {
             let playerData = database.collection('player_data'),
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
@@ -148,18 +138,18 @@ class MongoDB {
             log.debug('Looking for - ' + player.email + ' or ' + player.username);
 
             emailCursor.toArray().then((emailArray) => {
-                if (emailArray.length === 0) {
+                if (emailArray.length === 0)
                     usernameCursor.toArray().then((usernameArray) => {
                         if (usernameArray.length === 0) callback({ exists: false });
                         else callback({ exists: true, type: 'user' });
                     });
-                } else callback({ exists: true, type: 'email' });
+                else callback({ exists: true, type: 'email' });
             });
         });
     }
 
-    delete(player) {
-        this.getDatabase((database) => {
+    public delete(player: Player): void {
+        this.getConnection((database) => {
             let collections = [
                 'player_data',
                 'player_equipment',
@@ -187,8 +177,8 @@ class MongoDB {
         });
     }
 
-    registeredCount(callback) {
-        this.getDatabase((database) => {
+    public registeredCount(callback: (count: number) => void): void {
+        this.getConnection((database) => {
             let collection = database.collection('player_data');
 
             collection.countDocuments().then((count) => {
@@ -197,13 +187,13 @@ class MongoDB {
         });
     }
 
-    resetPositions(newX, newY, callback) {
-        this.getDatabase((database) => {
+    public resetPositions(newX: number, newY: number, callback: (status: string) => void): void {
+        this.getConnection((database) => {
             let collection = database.collection('player_data'),
                 cursor = collection.find();
 
             cursor.toArray().then((playerList) => {
-                _.each(playerList, (playerInfo: any) => {
+                _.each(playerList, (playerInfo) => {
                     delete playerInfo._id;
 
                     playerInfo.x = newX;
@@ -228,5 +218,3 @@ class MongoDB {
         });
     }
 }
-
-export default MongoDB;

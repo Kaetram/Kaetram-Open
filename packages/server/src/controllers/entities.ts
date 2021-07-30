@@ -1,56 +1,43 @@
 import _ from 'lodash';
+
+import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
+
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
-import Player from '../game/entity/character/player/player';
-import Entity from '../game/entity/entity';
 import NPC from '../game/entity/npc/npc';
 import Chest from '../game/entity/objects/chest';
 import Item from '../game/entity/objects/item';
 import Projectile from '../game/entity/objects/projectile';
-
-import World from '../game/world';
-import Grids from '../map/grids';
-import Map from '../map/map';
 import Messages from '../network/messages';
-import Packets from '../network/packets';
-import Region from '../region/region';
-
-import log from '../util/log';
-import Utils from '../util/utils';
-
+import Formulas from '../util/formulas';
 import Items from '../util/items';
+import log from '../util/log';
 import Mobs from '../util/mobs';
 import NPCs from '../util/npcs';
-import Formulas from '../util/formulas';
-import Modules from '../util/modules';
+import Utils from '../util/utils';
+
+import type Player from '../game/entity/character/player/player';
+import type Entity from '../game/entity/entity';
+import type World from '../game/world';
 
 export default class Entities {
-    private world: World;
-    private region: Region;
-    private map: Map;
-    private grids: Grids;
+    private region;
+    private map;
+    private grids;
 
-    public players: { [key: string]: Player };
-    public entities: { [key: string]: Entity };
-    public items: { [key: string]: Item };
-    public mobs: { [key: string]: Mob };
-    public chests: { [key: string]: Chest };
-    public npcs: { [key: string]: NPC };
-    public projectiles: { [key: string]: Projectile };
+    public players: { [instance: string]: Player } = {};
+    private entities: { [instance: string]: Entity } = {};
+    private items: { [instance: string]: Item } = {};
+    private mobs: { [instance: string]: Mob } = {};
+    private chests: { [instance: string]: Chest } = {};
+    private npcs: { [instance: string]: NPC } = {};
+    private projectiles: { [instance: string]: Projectile } = {};
 
-    constructor(world: World) {
-        this.world = world;
+    public constructor(private world: World) {
         this.region = world.region;
         this.map = world.map;
         this.grids = world.map.grids;
-
-        this.players = {};
-        this.entities = {};
-        this.items = {};
-        this.chests = {};
-        this.mobs = {};
-        this.npcs = {};
-        this.projectiles = {};
 
         this.spawn();
     }
@@ -58,19 +45,18 @@ export default class Entities {
     /**
      * Spawn Entities
      */
-
     private spawn() {
         // Spawns the static entities such as mobs, items, and npcs
 
-        _.each(this.map.staticEntities, (entityInfo: any) => {
-            let key = entityInfo.string,
+        _.each(this.map.staticEntities, (entityInfo) => {
+            const key = entityInfo.string,
                 instance = Utils.generateInstance(),
                 position = this.map.indexToGridPosition(entityInfo.tileIndex, 1);
 
             switch (entityInfo.type) {
-                case 'item':
-                    let item = this.createItem(
-                        Items.stringToId(key),
+                case 'item': {
+                    const item = this.createItem(
+                        Items.stringToId(key)!,
                         instance,
                         position.x,
                         position.y
@@ -81,23 +67,25 @@ export default class Entities {
                     this.addItem(item);
 
                     break;
+                }
 
-                case 'npc':
-                    let npc = new NPC(NPCs.stringToId(key), instance, position.x, position.y);
+                case 'npc': {
+                    const npc = new NPC(NPCs.stringToId(key)!, instance, position.x, position.y);
 
                     this.addNPC(npc);
 
                     break;
+                }
 
-                case 'mob':
-                    let mob = new Mob(Mobs.stringToId(key), instance, position.x, position.y);
+                case 'mob': {
+                    const mob = new Mob(Mobs.stringToId(key)!, instance, position.x, position.y);
 
                     mob.static = true;
                     mob.roaming = entityInfo.roaming;
 
                     if (entityInfo.miniboss) {
                         // TODO - Rename `achievementId` -> `achievement`
-                        if (entityInfo.achievementId) mob.achievementId = entityInfo.achievement;
+                        if (entityInfo.achievementId) mob.achievementId = entityInfo.achievementId;
 
                         mob.miniboss = entityInfo.miniboss;
                     }
@@ -132,7 +120,7 @@ export default class Entities {
                     mob.onRoaming(() => {
                         if (this.mobs.dead) return;
 
-                        let newX =
+                        const newX =
                                 mob.spawnLocation[0] +
                                 Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
                             newY =
@@ -169,15 +157,14 @@ export default class Entities {
                          * levels of plateau in order to properly roam entities without
                          * them walking into other regions (or clipping).
                          */
-
-                        let plateauLevel = this.map.getPlateauLevel(
+                        const plateauLevel = this.map.getPlateauLevel(
                             mob.spawnLocation[0],
                             mob.spawnLocation[1]
                         );
 
                         if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
 
-                        //if (config.debug)
+                        // if (config.debug)
                         //    this.forceTalk('Yes hello, I am moving.');
 
                         mob.setPosition(newX, newY);
@@ -195,6 +182,7 @@ export default class Entities {
                     this.addMob(mob);
 
                     break;
+                }
             }
         });
 
@@ -202,48 +190,48 @@ export default class Entities {
 
         // Spawns the static chests throughout the world.
 
-        _.each(this.map.chests, (info: any) => {
-            this.spawnChest(info.items, info.gridX, info.gridY, true, info.achievement);
+        _.each(this.map.chests, (info) => {
+            this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
         });
 
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
     }
 
-    spawnMob(id: number, gridX: number, gridY: number): Mob {
-        let mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
+    public spawnMob(id: number, gridX: number, gridY: number): Mob {
+        const mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
 
         this.addMob(mob);
 
         return mob;
     }
 
-    spawnChest(
-        items: string,
+    public spawnChest(
+        items: string[],
         gridX: number,
         gridY: number,
         isStatic?: boolean,
-        achievement?: string
-    ) {
-        let chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);
+        achievement?: number
+    ): Chest {
+        const chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);
 
         chest.addItems(items);
 
         if (isStatic) {
             chest.static = isStatic;
 
-            chest.onRespawn(this.addChest.bind(this, chest));
+            chest.onRespawn(() => this.addChest(chest));
         }
 
         chest.onOpen((player?: Player) => {
             this.removeChest(chest);
 
-            let item = chest.getItem();
+            const item = chest.getItem();
 
             if (!item) return;
 
-            this.dropItem(Items.stringToId(item.string), item.count, chest.x, chest.y);
+            this.dropItem(Items.stringToId(item.string)!, item.count, chest.x, chest.y);
 
-            if (player && chest.achievement) player.finishAchievement(parseInt(chest.achievement));
+            if (player && chest.achievement) player.finishAchievement(chest.achievement);
         });
 
         this.addChest(chest);
@@ -251,22 +239,23 @@ export default class Entities {
         return chest;
     }
 
-    spawnProjectile(info: any) {
-        let attacker = info.shift(),
-            target = info.shift();
-
+    public spawnProjectile([attacker, target]: Character[]): Projectile | null {
         if (!attacker || !target) return null;
 
-        let startX = attacker.gridX,
-            startY = attacker.gridY,
-            type = attacker.getProjectile(),
-            hit = null,
-            projectile = new Projectile(type, Utils.generateInstance());
+        const startX = attacker.x, // gridX
+            startY = attacker.y, // gridY
+            type = attacker.getProjectile();
+        let hit = null;
+        const projectile = new Projectile(type, Utils.generateInstance());
 
         projectile.setStart(startX, startY);
         projectile.setTarget(target);
 
-        if (attacker.type === 'player') hit = attacker.getHit(target);
+        if (attacker.type === 'player') {
+            const player = attacker as Player;
+
+            hit = player.getHit(target);
+        }
 
         projectile.damage = hit ? hit.damage : Formulas.getDamage(attacker, target, true);
         projectile.hitType = hit ? hit.type : Modules.Hits.Damage;
@@ -281,8 +270,7 @@ export default class Entities {
     /**
      * Add Entities
      */
-
-    add(entity: Entity, region: string) {
+    private add(entity: Entity, region: string | null): void {
         if (entity.instance in this.entities)
             log.warning(`Entity ${entity.instance} already exists.`);
 
@@ -340,21 +328,21 @@ export default class Entities {
         }
     }
 
-    addNPC(npc: NPC) {
+    private addNPC(npc: NPC): void {
         this.add(npc, npc.region);
 
         this.npcs[npc.instance] = npc;
     }
 
-    addItem(item: Item) {
-        if (item.static) item.onRespawn(this.addItem.bind(this, item));
+    private addItem(item: Item): void {
+        if (item.static) item.onRespawn(() => this.addItem(item));
 
         this.add(item, item.region);
 
         this.items[item.instance] = item;
     }
 
-    addMob(mob: Mob) {
+    private addMob(mob: Mob): void {
         this.add(mob, mob.region);
 
         this.mobs[mob.instance] = mob;
@@ -368,22 +356,22 @@ export default class Entities {
         });
     }
 
-    addPlayer(player: Player) {
+    public addPlayer(player: Player): void {
         this.add(player, player.region);
 
         this.players[player.instance] = player;
 
-        if (this.world.populationCallback) this.world.populationCallback();
+        this.world.populationCallback?.();
     }
 
-    addChest(chest: Chest) {
+    private addChest(chest: Chest): void {
         this.add(chest, chest.region);
 
         this.chests[chest.instance] = chest;
     }
 
-    addProjectile(projectile: Projectile) {
-        this.add(projectile, projectile.owner.region);
+    private addProjectile(projectile: Projectile): void {
+        this.add(projectile, projectile.owner!.region);
 
         this.projectiles[projectile.instance] = projectile;
     }
@@ -391,8 +379,7 @@ export default class Entities {
     /**
      * Remove Entities
      */
-
-    remove(entity: Entity) {
+    public remove(entity: Entity): void {
         this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
 
         this.region.remove(entity);
@@ -404,7 +391,7 @@ export default class Entities {
         delete this.projectiles[entity.instance];
     }
 
-    removeItem(item: Item) {
+    public removeItem(item: Item): void {
         this.remove(item);
 
         this.world.push(Packets.PushOpcode.Broadcast, {
@@ -414,7 +401,7 @@ export default class Entities {
         if (item.static) item.respawn();
     }
 
-    removePlayer(player: Player) {
+    public removePlayer(player: Player): void {
         this.remove(player);
 
         this.world.push(Packets.PushOpcode.Regions, {
@@ -424,7 +411,7 @@ export default class Entities {
 
         if (player.ready) player.save();
 
-        if (this.world.populationCallback) this.world.populationCallback();
+        this.world.populationCallback?.();
 
         this.world.cleanCombat(player);
 
@@ -432,10 +419,9 @@ export default class Entities {
 
         // Unsure about this since garbage collector should handle it.
         player.destroy();
-        player = null;
     }
 
-    removeChest(chest: Chest) {
+    public removeChest(chest: Chest): void {
         this.remove(chest);
 
         this.world.push(Packets.PushOpcode.Broadcast, {
@@ -449,34 +435,34 @@ export default class Entities {
     /**
      * Getters
      */
-
-    isOnline(username: string) {
+    public isOnline(username: string): boolean {
         return !!this.getPlayer(username);
     }
 
-    get(instance: string) {
-        if (instance in this.entities) return this.entities[instance];
+    public get<E extends Entity>(instance: string): E | null {
+        if (instance in this.entities) return this.entities[instance] as E;
+
+        return null;
     }
 
-    getPlayer(username: string) {
+    public getPlayer(username: string): Player | undefined {
         return _.find(this.players, (player: Player) => {
             return player.username.toLowerCase() === username.toLowerCase();
         });
     }
 
-    forEachEntity(callback: (entity: Entity) => void) {
+    public forEachEntity(callback: (entity: Entity) => void): void {
         _.each(this.entities, callback);
     }
 
-    forEachPlayer(callback: (player: Player) => void) {
+    public forEachPlayer(callback: (player: Player) => void): void {
         _.each(this.players, callback);
     }
 
     /**
      * Miscellaneous Functions
      */
-
-    createItem(
+    private createItem(
         id: number,
         instance: string,
         gridX: number,
@@ -487,15 +473,15 @@ export default class Entities {
         return new Item(id, instance, gridX, gridY, ability, abilityLevel);
     }
 
-    dropItem(
+    public dropItem(
         id: number,
         count: number,
         gridX: number,
         gridY: number,
         ability?: number,
         abilityLevel?: number
-    ) {
-        let item = this.createItem(
+    ): void {
+        const item = this.createItem(
             id,
             Utils.generateInstance(),
             gridX,

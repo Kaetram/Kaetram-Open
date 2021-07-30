@@ -1,61 +1,61 @@
-/* global module */
-
-import Equipment from './equipment';
 import Items from '../../../../../util/items';
-import Modules from '../../../../../util/modules';
+import * as Modules from '@kaetram/common/src/modules';
+import Equipment from './equipment';
 
-class Weapon extends Equipment {
-    public level: number;
-    public ranged: boolean;
-    public lumberjacking: number;
-    public mining: number;
+export default class Weapon extends Equipment {
+    public level;
+    public ranged;
+    public lumberjacking;
+    public mining;
 
-    public breakable: boolean;
+    public breakable = false;
 
-    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
+    public constructor(
+        name: string,
+        id: number,
+        count: number,
+        ability: number,
+        abilityLevel: number
+    ) {
         super(name, id, count, ability, abilityLevel);
 
         this.level = Items.getWeaponLevel(name);
         this.ranged = Items.isArcherWeapon(name);
         this.lumberjacking = Items.getLumberjackingLevel(name);
         this.mining = Items.getMiningLevel(name);
-
-        this.breakable = false;
     }
 
-    getBaseAmplifier() {
+    public override getBaseAmplifier(): number {
         let base = super.getBaseAmplifier();
 
         return base + 0.05 * this.abilityLevel;
     }
 
-    hasCritical() {
+    public hasCritical(): boolean {
         return this.ability === 1;
     }
 
-    hasExplosive() {
+    public hasExplosive(): boolean {
         return this.ability === 4;
     }
 
-    hasStun() {
+    public hasStun(): boolean {
         return this.ability === 5;
     }
 
-    isRanged() {
+    public isRanged(): boolean {
         return this.ranged;
     }
 
-    setLevel(level: number) {
+    public setLevel(level: number): void {
         this.level = level;
     }
 
-    getLevel() {
+    public getLevel(): number {
         return this.level;
     }
 
-    getType() {
+    protected getType(): Modules.Equipment {
         return Modules.Equipment.Weapon;
     }
 }
-
-export default Weapon;

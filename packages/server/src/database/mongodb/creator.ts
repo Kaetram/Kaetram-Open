@@ -1,29 +1,61 @@
 import bcryptjs from 'bcryptjs';
-import MongoDB from './mongodb';
-import log from '../../util/log';
+
+import * as Modules from '../../../../common/src/modules';
 import config from '../../../config';
+import log from '../../util/log';
 
-class Creator {
-    database: MongoDB;
+import type { Collection } from 'mongodb';
+import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';
+import type { AbilitiesArray } from '../../game/entity/character/player/abilities/abilities';
+import type { ContainerArray } from '../../game/entity/character/player/containers/container';
+import type { FriendsArray } from '../../game/entity/character/player/friends';
+import type Player from '../../game/entity/character/player/player';
+import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
+import type { ProfessionsArray } from '../../game/entity/character/player/professions/professions';
+import type MongoDB from './mongodb';
 
-    constructor(database) {
-        this.database = database;
-    }
+interface PlayerData {
+    username: string;
+    password: string;
+    email: string;
+    x: number;
+    y: number;
+    userAgent?: string;
+    invisibleIds?: string;
+    experience: number;
+    rights: number;
+    poison: string | null;
+    hitPoints: number;
+    mana: number;
+    pvpKills: number;
+    pvpDeaths: number;
+    orientation: Modules.Orientation;
+    ban: number;
+    mute: number;
+    lastLogin: number;
+    lastWarp: number;
+    mapVersion: number;
+}
 
-    save(player) {
-        this.database.getDatabase((database) => {
+export type FullPlayerData = PlayerData & PlayerEquipment;
+
+export default class Creator {
+    public constructor(private database: MongoDB) {}
+
+    public save(player: Player): void {
+        this.database.getConnection((database) => {
             /* Handle the player databases */
 
-            let playerData = database.collection('player_data'),
-                playerEquipment = database.collection('player_equipment'),
-                playerQuests = database.collection('player_quests'),
-                playerAchievements = database.collection('player_achievements'),
-                playerBank = database.collection('player_bank'),
-                playerRegions = database.collection('player_regions'),
-                playerAbilities = database.collection('player_abilities'),
-                playerProfessions = database.collection('player_professions'),
-                playerFriends = database.collection('player_friends'),
-                playerInventory = database.collection('player_inventory');
+            let playerData = database.collection<PlayerData>('player_data'),
+                playerEquipment = database.collection<PlayerEquipment>('player_equipment'),
+                playerQuests = database.collection<PlayerQuests>('player_quests'),
+                playerAchievements = database.collection<PlayerAchievements>('player_achievements'),
+                playerBank = database.collection<ContainerArray>('player_bank'),
+                playerRegions = database.collection<PlayerRegions>('player_regions'),
+                playerAbilities = database.collection<AbilitiesArray>('player_abilities'),
+                playerProfessions = database.collection<ProfessionsArray>('player_professions'),
+                // playerFriends = database.collection<FriendsArray>('player_friends'),
+                playerInventory = database.collection<ContainerArray>('player_inventory');
 
             try {
                 this.saveData(playerData, player);
@@ -34,17 +66,17 @@ class Creator {
                 this.saveRegions(playerRegions, player);
                 this.saveAbilities(playerAbilities, player);
                 this.saveProfessions(playerProfessions, player);
-                //this.saveFriends(playerFriends, player);
+                // this.saveFriends(playerFriends, player);
                 this.saveInventory(playerInventory, player, () => {
                     log.debug(`Successfully saved all data for player ${player.username}.`);
                 });
-            } catch (e) {
+            } catch {
                 log.error(`Error while saving data for ${player.username}`);
             }
         });
     }
 
-    saveData(collection, player) {
+    private saveData(collection: Collection<PlayerData>, player: Player): void {
         Creator.getPlayerData(player, (data) => {
             collection.updateOne(
                 {
@@ -66,7 +98,7 @@ class Creator {
         });
     }
 
-    saveEquipment(collection, player) {
+    private saveEquipment(collection: Collection<PlayerEquipment>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -86,7 +118,7 @@ class Creator {
         );
     }
 
-    saveQuests(collection, player) {
+    private saveQuests(collection: Collection<PlayerQuests>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -106,7 +138,7 @@ class Creator {
         );
     }
 
-    saveAchievements(collection, player) {
+    private saveAchievements(collection: Collection<PlayerAchievements>, player: Player): void {
         collection.updateOne(
             { username: player.username },
             { $set: player.quests.getAchievements() },
@@ -123,7 +155,7 @@ class Creator {
         );
     }
 
-    saveBank(collection, player) {
+    private saveBank(collection: Collection<ContainerArray>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -143,7 +175,7 @@ class Creator {
         );
     }
 
-    saveRegions(collection, player) {
+    private saveRegions(collection: Collection<PlayerRegions>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -168,7 +200,7 @@ class Creator {
         );
     }
 
-    saveAbilities(collection, player) {
+    private saveAbilities(collection: Collection<AbilitiesArray>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -188,7 +220,7 @@ class Creator {
         );
     }
 
-    saveProfessions(collection, player) {
+    private saveProfessions(collection: Collection<ProfessionsArray>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -208,7 +240,7 @@ class Creator {
         );
     }
 
-    saveFriends(collection, player) {
+    private saveFriends(collection: Collection<FriendsArray>, player: Player): void {
         collection.updateOne(
             {
                 username: player.username
@@ -228,7 +260,11 @@ class Creator {
         );
     }
 
-    saveInventory(collection, player, callback) {
+    private saveInventory(
+        collection: Collection<ContainerArray>,
+        player: Player,
+        callback: () => void
+    ): void {
         collection.updateOne(
             {
                 username: player.username
@@ -250,7 +286,7 @@ class Creator {
         );
     }
 
-    static getPasswordHash(password, callback) {
+    private static getPasswordHash(password: string, callback: (hash: string) => void): void {
         bcryptjs.hash(password, 10, (error, hash) => {
             if (error) throw error;
 
@@ -258,7 +294,7 @@ class Creator {
         });
     }
 
-    static getPlayerData(player, callback) {
+    private static getPlayerData(player: Player, callback: (data: PlayerData) => void): void {
         Creator.getPasswordHash(player.password, (hash) => {
             callback({
                 username: player.username,
@@ -267,7 +303,6 @@ class Creator {
                 x: player.x,
                 y: player.y,
                 experience: player.experience,
-                kind: player.kind,
                 rights: player.rights,
                 poison: player.poison,
                 hitPoints: player.getHitPoints(),
@@ -275,13 +310,11 @@ class Creator {
                 pvpKills: player.pvpKills,
                 pvpDeaths: player.pvpDeaths,
                 orientation: player.orientation,
-                rank: player.rank,
                 ban: player.ban,
                 mute: player.mute,
-                membership: player.membership,
                 lastLogin: player.lastLogin,
-                lastWarp: player.lastWarp,
-                guildName: player.guildName,
+                lastWarp: player.warp?.lastWarp,
+                // guildName: player.guildName,
                 invisibleIds: player.formatInvisibles(),
                 userAgent: player.userAgent,
                 mapVersion: player.mapVersion
@@ -289,38 +322,38 @@ class Creator {
         });
     }
 
-    static getPlayerEquipment(player) {
+    private static getPlayerEquipment(player: Player): PlayerEquipment {
         return {
             username: player.username,
             armour: [
-                player.armour ? player.armour.getId() : 114,
-                player.armour ? player.armour.getCount() : -1,
-                player.armour ? player.armour.getAbility() : -1,
-                player.armour ? player.armour.getAbilityLevel() : -1
+                player.armour?.getId() ?? 114,
+                player.armour?.getCount() ?? -1,
+                player.armour?.getAbility() ?? -1,
+                player.armour?.getAbilityLevel() ?? -1
             ],
             weapon: [
-                player.weapon ? player.weapon.getId() : -1,
-                player.weapon ? player.weapon.getCount() : -1,
-                player.weapon ? player.weapon.getAbility() : -1,
-                player.weapon ? player.weapon.getAbilityLevel() : -1
+                player.weapon?.getId() ?? -1,
+                player.weapon?.getCount() ?? -1,
+                player.weapon?.getAbility() ?? -1,
+                player.weapon?.getAbilityLevel() ?? -1
             ],
             pendant: [
-                player.pendant ? player.pendant.getId() : -1,
-                player.pendant ? player.pendant.getCount() : -1,
-                player.pendant ? player.pendant.getAbility() : -1,
-                player.pendant ? player.pendant.getAbilityLevel() : -1
+                player.pendant?.getId() ?? -1,
+                player.pendant?.getCount() ?? -1,
+                player.pendant?.getAbility() ?? -1,
+                player.pendant?.getAbilityLevel() ?? -1
             ],
             ring: [
-                player.ring ? player.ring.getId() : -1,
-                player.ring ? player.ring.getCount() : -1,
-                player.ring ? player.ring.getAbility() : -1,
-                player.ring ? player.ring.getAbilityLevel() : -1
+                player.ring?.getId() ?? -1,
+                player.ring?.getCount() ?? -1,
+                player.ring?.getAbility() ?? -1,
+                player.ring?.getAbilityLevel() ?? -1
             ],
             boots: [
-                player.boots ? player.boots.getId() : -1,
-                player.boots ? player.boots.getCount() : -1,
-                player.boots ? player.boots.getAbility() : -1,
-                player.boots ? player.boots.getAbilityLevel() : -1
+                player.boots?.getId() ?? -1,
+                player.boots?.getCount() ?? -1,
+                player.boots?.getAbility() ?? -1,
+                player.boots?.getAbilityLevel() ?? -1
             ]
         };
     }
@@ -330,64 +363,58 @@ class Creator {
      * fairly soon as it is just unnecessary code for speed development.
      * The above object arrays should just be concatenated.
      */
-
-    static getFullData(player) {
+    public static getFullData(player: Player): FullPlayerData {
         let position = player.getSpawn();
 
         return {
             username: player.username,
             password: player.password,
-            email: player.email ? player.email : 'null',
+            email: player.email || 'null',
             x: position.x,
             y: position.y,
-            kind: player.kind ? player.kind : 0,
-            rights: player.rights ? player.rights : 0,
-            hitPoints: player.hitPoints ? player.hitPoints : 100,
-            mana: player.mana ? player.mana : 20,
-            poisoned: player.poisoned ? player.poisoned : 0,
-            experience: player.experience ? player.experience : 0,
-            ban: player.ban ? player.ban : 0,
-            mute: player.mute ? player.mute : 0,
-            rank: player.rank ? player.rank : 0,
-            membership: player.membership ? player.membership : 0,
-            lastLogin: player.lastLogin ? player.lastLogin : 0,
-            pvpKills: player.pvpKills ? player.pvpKills : 0,
-            pvpDeaths: player.pvpDeaths ? player.pvpDeaths : 0,
-            orientation: player.orientation ? player.orientation : 0,
-            lastWarp: player.warp.lastWarp ? player.warp.lastWarp : 0,
-            mapVersion: player.mapVersion ? player.mapVersion : 0,
+            rights: player.rights || 0,
+            hitPoints: player.playerHitPoints?.getHitPoints() || 100,
+            mana: player.mana?.getMana() || 20,
+            poison: player.poison || null,
+            experience: player.experience || 0,
+            ban: player.ban || 0,
+            mute: player.mute || 0,
+            lastLogin: player.lastLogin || 0,
+            pvpKills: player.pvpKills || 0,
+            pvpDeaths: player.pvpDeaths || 0,
+            orientation: player.orientation || 0,
+            lastWarp: player.warp.lastWarp || 0,
+            mapVersion: player.mapVersion || 0,
             armour: [
-                player.armour ? player.armour.getId() : 114,
-                player.armour ? player.armour.getCount() : -1,
-                player.armour ? player.armour.getAbility() : -1,
-                player.armour ? player.armour.getAbilityLevel() : -1
+                player.armour?.getId() || 114,
+                player.armour?.getCount() || -1,
+                player.armour?.getAbility() || -1,
+                player.armour?.getAbilityLevel() || -1
             ],
             weapon: [
-                player.weapon ? player.weapon.getId() : -1,
-                player.weapon ? player.weapon.getCount() : -1,
-                player.weapon ? player.weapon.getAbility() : -1,
-                player.weapon ? player.weapon.getAbilityLevel() : -1
+                player.weapon?.getId() || -1,
+                player.weapon?.getCount() || -1,
+                player.weapon?.getAbility() || -1,
+                player.weapon?.getAbilityLevel() || -1
             ],
             pendant: [
-                player.pendant ? player.pendant.getId() : -1,
-                player.pendant ? player.pendant.getCount() : -1,
-                player.pendant ? player.pendant.getAbility() : -1,
-                player.pendant ? player.pendant.getAbilityLevel() : -1
+                player.pendant?.getId() || -1,
+                player.pendant?.getCount() || -1,
+                player.pendant?.getAbility() || -1,
+                player.pendant?.getAbilityLevel() || -1
             ],
             ring: [
-                player.ring ? player.ring.getId() : -1,
-                player.ring ? player.ring.getCount() : -1,
-                player.ring ? player.ring.getAbility() : -1,
-                player.ring ? player.ring.getAbilityLevel() : -1
+                player.ring?.getId() || -1,
+                player.ring?.getCount() || -1,
+                player.ring?.getAbility() || -1,
+                player.ring?.getAbilityLevel() || -1
             ],
             boots: [
-                player.boots ? player.boots.getId() : -1,
-                player.boots ? player.boots.getCount() : -1,
-                player.boots ? player.boots.getAbility() : -1,
-                player.boots ? player.boots.getAbilityLevel() : -1
+                player.boots?.getId() || -1,
+                player.boots?.getCount() || -1,
+                player.boots?.getAbility() || -1,
+                player.boots?.getAbilityLevel() || -1
             ]
-        };
+        } as FullPlayerData;
     }
 }
-
-export default Creator;

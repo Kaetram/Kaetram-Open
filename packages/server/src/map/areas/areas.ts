@@ -1,37 +1,36 @@
 import _ from 'lodash';
-import Area from './area';
-import World from '../../game/world';
+
 import log from '../../util/log';
+import Area from './area';
 
-export default class Areas {
-    public data: any;
-    public world: World;
-    public areas: Area[];
+import type { ProcessedArea } from '@kaetram/common/types/map';
+import type World from '../../game/world';
 
-    constructor(data: any, world?: World) {
-        this.data = data;
-        this.world = world;
+export default abstract class Areas {
+    public areas: Area[] = [];
 
-        this.areas = [];
-    }
+    protected constructor(public data: ProcessedArea[], public world: World) {}
 
-    public load(mapAreas: any, callback?: Function) {
-        _.each(mapAreas, (a: any) => {
+    public load(
+        mapAreas: ProcessedArea[],
+        callback?: (area: Area, mapArea: ProcessedArea) => void
+    ): void {
+        _.each(mapAreas, (a) => {
             let area: Area = new Area(a.id, a.x, a.y, a.width, a.height);
 
             if (a.polygon) area.polygon = a.polygon;
 
             this.areas.push(area);
 
-            if (callback) callback(this.areas[this.areas.length - 1], a);
+            callback?.(this.areas[this.areas.length - 1], a);
         });
     }
 
-    public message(type: string) {
+    public message(type: string): void {
         log.info(`Loaded ${this.areas.length} ${type} areas.`);
     }
 
-    public inArea(x: number, y: number): Area {
+    public inArea(x: number, y: number): Area | undefined {
         return _.find(this.areas, (area: Area) => {
             return area.contains(x, y);
         });

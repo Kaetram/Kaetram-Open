@@ -1,50 +1,46 @@
-/* global module */
+import type * as Modules from '@kaetram/common/src/modules';
 
-class Hit {
-    type: any;
+export interface HitData {
+    type: Modules.Hits;
     damage: number;
+    isRanged: boolean;
+    isAoE: boolean;
+    hasTerror: boolean;
+    isPoison: boolean;
+}
 
-    ranged: boolean;
-    aoe: boolean;
-    terror: boolean;
-    poison: boolean;
+export default class Hit {
+    private ranged = false;
+    private aoe = false;
+    private terror = false;
+    public poison = false;
 
-    constructor(type: any, damage: number) {
-        this.type = type;
-        this.damage = damage;
+    public constructor(public type: Modules.Hits, public damage: number) {}
 
-        this.ranged = false;
-        this.aoe = false;
-        this.terror = false;
-        this.poison = false;
-    }
-
-    isRanged() {
+    private isRanged(): boolean {
         return this.ranged;
     }
 
-    isAoE() {
+    private isAoE(): boolean {
         return this.aoe;
     }
 
-    isPoison() {
+    private isPoison(): boolean {
         return this.poison;
     }
 
-    getDamage() {
+    private getDamage(): number {
         return this.damage;
     }
 
-    getData() {
+    public getData(): HitData {
         return {
             type: this.type,
-            damage: this.damage,
+            damage: this.getDamage(),
             isRanged: this.isRanged(),
             isAoE: this.isAoE(),
             hasTerror: this.terror,
-            isPoison: this.poison
+            isPoison: this.isPoison()
         };
     }
 }
-
-export default Hit;
