@@ -1,55 +1,44 @@
-import _ from 'lodash';
-import Profession from './profession';
-import Packets from '../../../../../../network/packets';
-import Messages from '../../../../../../network/messages';
-import Modules from '../../../../../../util/modules';
-import Formulas from '../../../../../../util/formulas';
-import Utils from '../../../../../../util/utils';
 import Rocks from '../../../../../../../data/professions/rocks';
-import Player from '../../player';
+import Utils from '../../../../../../util/utils';
+import Profession from './profession';
 
-class Mining extends Profession {
-    tick: number;
+import type { Rock } from '@kaetram/common/types/map';
+import type Player from '../../player';
 
-    miningInterval: any;
-    started: boolean;
+export default class Mining extends Profession {
+    private miningInterval: NodeJS.Timeout | null = null;
+    private started = false;
 
-    rockId: any;
+    private rockId!: Rock;
 
-    constructor(id: number, player: Player) {
+    public constructor(id: number, player: Player) {
         super(id, player, 'Mining');
-
-        this.tick = 1000;
-
-        this.miningInterval = null;
-        this.started = false;
     }
 
-    start() {
+    private start(): void {
         if (this.started) return;
 
         this.miningInterval = setInterval(() => {
-            try {
-            } catch (e) {}
+            //
         }, this.tick);
 
         this.started = true;
     }
 
-    stop() {
+    public override stop(): void {
         if (!this.started) return;
 
-        this.rockId = null;
+        this.rockId = null!;
         this.targetId = null;
 
-        clearInterval(this.miningInterval);
+        if (this.miningInterval) clearInterval(this.miningInterval);
         this.miningInterval = null;
 
         this.started = false;
     }
 
     // TODO
-    handle(id: any, rockId: any) {
+    private handle(id: string, rockId: Rock): void {
         if (!this.player.hasMiningWeapon()) {
             this.player.notify('You do not have a pickaxe to mine this rock with.');
             return;
@@ -68,9 +57,7 @@ class Mining extends Profession {
         this.start();
     }
 
-    getRockDestroyChance() {
+    private getRockDestroyChance(): boolean {
         return Utils.randomInt(0, Rocks.Chances[this.rockId]) === 2;
     }
 }
-
-export default Mining;

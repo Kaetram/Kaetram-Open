@@ -1,51 +1,71 @@
-/* global module */
-
 import Items from '../../../../../util/items';
 
-class Equipment {
-    public name: string;
-    public id: number;
-    public count: number;
-    public ability: number;
-    public abilityLevel: number;
+import type * as Modules from '@kaetram/common/src/modules';
 
-    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
-        this.name = name;
-        this.id = id;
-        this.count = count ? count : 0;
+export interface ItemData {
+    count?: number;
+    id?: number;
+    instance?: string;
+    name?: string;
+    string?: string;
+    ability?: number;
+    abilityLevel?: number;
+}
+
+export interface EquipmentData {
+    type: Modules.Equipment;
+    name: string;
+    string: string;
+    count: number;
+    ability: number;
+    abilityLevel: number;
+    power: number;
+}
+
+export default abstract class Equipment {
+    public count;
+    public ability;
+    public abilityLevel;
+
+    protected constructor(
+        public name: string,
+        public id: number,
+        count: number,
+        ability: number,
+        abilityLevel: number
+    ) {
+        this.count = count || 0;
         this.ability = !isNaN(ability) ? ability : -1;
         this.abilityLevel = !isNaN(abilityLevel) ? abilityLevel : -1;
     }
 
-    getName() {
+    public getName(): string {
         return this.name;
     }
 
-    getId() {
+    public getId(): number {
         return this.id;
     }
 
-    getCount() {
+    public getCount(): number {
         return this.count;
     }
 
-    getAbility() {
+    public getAbility(): number {
         return this.ability;
     }
 
-    getAbilityLevel() {
+    public getAbilityLevel(): number {
         return this.abilityLevel;
     }
 
-    getBaseAmplifier() {
-        return 1.0;
+    public getBaseAmplifier(): number {
+        return 1;
     }
 
-    getType() {
-        return -1;
-    }
+    protected abstract getType(): Modules.Equipment;
 
-    getData() {
+    public getData(): EquipmentData {
         return {
             type: this.getType(),
             name: Items.idToName(this.id),
@@ -57,11 +77,11 @@ class Equipment {
         };
     }
 
-    getString() {
+    public getString(): string {
         return Items.idToString(this.id);
     }
 
-    getItem() {
+    public getItem(): ItemData {
         return {
             name: this.name,
             string: Items.idToString(this.id),
@@ -72,5 +92,3 @@ class Equipment {
         };
     }
 }
-
-export default Equipment;

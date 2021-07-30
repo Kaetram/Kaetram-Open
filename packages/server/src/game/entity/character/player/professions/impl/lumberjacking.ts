@@ -1,37 +1,32 @@
-import _ from 'lodash';
-import Profession from './profession';
+import * as Modules from '@kaetram/common/src/modules';
+
+import Trees from '../../../../../../../data/professions/trees';
 import Messages from '../../../../../../network/messages';
-import Modules from '../../../../../../util/modules';
 import Formulas from '../../../../../../util/formulas';
 import Utils from '../../../../../../util/utils';
-import Trees from '../../../../../../../data/professions/trees';
-import Player from '../../player';
+import Profession from './profession';
 
-class Lumberjacking extends Profession {
-    tick: number;
+import type { Tree } from '@kaetram/common/types/map';
+import type Player from '../../player';
 
-    cuttingInterval: any;
-    started: boolean;
+export default class Lumberjacking extends Profession {
+    private cuttingInterval: NodeJS.Timeout | null = null;
+    private started = false;
 
-    treeId: any; // TODO
+    private treeId!: Tree; // TODO
 
-    queuedTrees: any;
+    private queuedTrees!: Record<string, never>;
 
-    constructor(id: number, player: Player) {
+    public constructor(id: number, player: Player) {
         super(id, player, 'Lumberjacking');
-
-        this.tick = 1000;
-
-        this.cuttingInterval = null;
-        this.started = false;
     }
 
-    start() {
+    private start(): void {
         if (this.started) return;
 
         this.cuttingInterval = setInterval(() => {
             try {
-                if (!this.player || !this.isTarget() || this.world.isTreeCut(this.targetId)) {
+                if (!this.player || !this.isTarget() || this.world.isTreeCut(this.targetId!)) {
                     this.stop();
                     return;
                 }
@@ -62,34 +57,36 @@ class Lumberjacking extends Profession {
                     });
 
                     if (this.getTreeDestroyChance())
-                        this.world.destroyTree(this.targetId, Modules.Trees[this.treeId]);
+                        this.world.destroyTree(this.targetId, Modules.Trees[this.treeId] as never);
                 }
-            } catch (e) {}
+            } catch {
+                //
+            }
         }, this.tick);
 
         this.started = true;
     }
 
-    stop() {
+    public override stop(): void {
         if (!this.started) return;
 
-        this.treeId = null;
+        this.treeId = null!;
         this.targetId = null;
 
-        clearInterval(this.cuttingInterval);
+        if (this.cuttingInterval) clearInterval(this.cuttingInterval);
         this.cuttingInterval = null;
 
         this.started = false;
     }
 
     // TODO
-    handle(id: any, treeId: any) {
+    public handle(id: string, treeId: Tree): void {
         if (!this.player.hasLumberjackingWeapon()) {
             this.player.notify('You do not have an axe to cut this tree with.');
             return;
         }
 
-        this.treeId = treeId;
+        this.treeId = treeId as Tree;
         this.targetId = id;
 
         if (this.level < Trees.Levels[this.treeId]) {
@@ -102,13 +99,11 @@ class Lumberjacking extends Profession {
         this.start();
     }
 
-    getTreeDestroyChance() {
+    private getTreeDestroyChance(): boolean {
         return Utils.randomInt(0, Trees.Chances[this.treeId]) === 2;
     }
 
-    getQueueCount() {
+    private getQueueCount(): number {
         return Object.keys(this.queuedTrees).length;
     }
 }
-
-export default Lumberjacking;

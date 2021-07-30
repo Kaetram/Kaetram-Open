@@ -1,14 +1,23 @@
-export default {
-    Data: {},
+export interface ObjectsData {
+    id?: string;
+    x?: number;
+    y?: number;
+    type: string;
+    messages: string[];
+    cursor?: string;
+}
 
-    getObject(id: string) {
+export default {
+    Data: {} as { [id: string]: ObjectsData },
+
+    getObject(id: string): ObjectsData | null {
         if (id in this.Data) return this.Data[id];
 
         return null;
     },
 
-    getPosition(id: string) {
-        let info = id.split('-');
+    getPosition(id: string): Pos {
+        const info = id.split('-');
 
         return {
             x: parseInt(info[0]),
@@ -16,9 +25,7 @@ export default {
         };
     },
 
-    getCursor(id: string) {
-        if (id in this.Data) if (this.Data[id].cursor) return this.Data[id].cursor;
-
-        return null;
+    getCursor(id: string): string | undefined {
+        if (id in this.Data && this.Data[id].cursor) return this.Data[id].cursor;
     }
 };

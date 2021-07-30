@@ -1,37 +1,36 @@
 import _ from 'lodash';
-import Slot from './slot';
-import log from '../../../../../util/log';
-import Items from '../../../../../util/items';
+
 import Constants from '../../../../../util/constants';
-import Player from '../player';
+import Items from '../../../../../util/items';
+import log from '../../../../../util/log';
+import Slot from './slot';
 
-class Container {
-    public type: string;
-    public owner: Player;
-    public size: number;
+import type Player from '../player';
 
-    public slots: any;
+export interface ContainerArray {
+    username: string;
+    ids: string;
+    counts: string;
+    abilities: string;
+    abilityLevels: string;
+}
 
-    constructor(type: string, owner: Player, size: number) {
-        this.type = type;
-        this.owner = owner;
-        this.size = size;
+export default abstract class Container {
+    public slots: Slot[] = [];
 
-        this.slots = [];
-
+    protected constructor(private type: string, public owner: Player, public size: number) {
         for (let i = 0; i < this.size; i++) this.slots.push(new Slot(i));
     }
 
-    load(
-        ids: Array<number>,
-        counts: Array<number>,
-        abilities: Array<number>,
-        abilityLevels: Array<number>
-    ) {
-        /**
-         * Fill each slot with manual data or the database
-         */
-
+    /**
+     * Fill each slot with manual data or the database
+     */
+    public load(
+        ids: number[],
+        counts: number[],
+        abilities: number[],
+        abilityLevels: number[]
+    ): void {
         if (ids.length !== this.slots.length)
             log.error('[' + this.type + '] Mismatch in container size.');
 
@@ -39,7 +38,7 @@ class Container {
             this.slots[i].load(ids[i], counts[i], abilities[i], abilityLevels[i]);
     }
 
-    loadEmpty() {
+    public loadEmpty(): void {
         let data = [];
 
         for (let i = 0; i < this.size; i++) data.push(-1);
@@ -47,70 +46,71 @@ class Container {
         this.load(data, data, data, data);
     }
 
-    add(id: number, count: number, ability: number, abilityLevel: number) {
-        //log.info('Trying to pickup ' + count + ' x ' + id);
+    protected addItem(
+        id: number,
+        count: number,
+        ability: number,
+        abilityLevel: number
+    ): Slot | undefined {
+        // log.info('Trying to pickup ' + count + ' x ' + id);
         let maxStackSize =
             Items.maxStackSize(id) === -1 ? Constants.MAX_STACK : Items.maxStackSize(id);
 
-        //log.info('Max stack size = ' + maxStackSize);
+        // log.info('Max stack size = ' + maxStackSize);
 
-        if (!id || count < 0 || count > maxStackSize) return null;
+        if (!id || count < 0 || count > maxStackSize) return;
 
         if (!Items.isStackable(id)) {
             if (this.hasSpace()) {
-                let nsSlot = this.slots[this.getEmptySlot()]; //non-stackable slot
+                let nsSlot = this.slots[this.getEmptySlot()]; // non-stackable slot
 
                 nsSlot.load(id, count, ability, abilityLevel);
 
                 return nsSlot;
             }
+        } else if (maxStackSize === -1 || this.type === 'Bank') {
+            let sSlot = this.getSlot(id);
+
+            if (sSlot) {
+                sSlot.increment(count);
+                return sSlot;
+            }
+            if (this.hasSpace()) {
+                let slot = this.slots[this.getEmptySlot()];
+
+                slot.load(id, count, ability, abilityLevel);
+
+                return slot;
+            }
         } else {
-            if (maxStackSize === -1 || this.type === 'Bank') {
-                let sSlot = this.getSlot(id);
+            let remainingItems = count;
 
-                if (sSlot) {
-                    sSlot.increment(count);
-                    return sSlot;
-                } else {
-                    if (this.hasSpace()) {
-                        let slot = this.slots[this.getEmptySlot()];
+            for (let i = 0; i < this.slots.length; i++)
+                if (this.slots[i].id === id) {
+                    let rSlot = this.slots[i],
+                        available = maxStackSize - rSlot.count;
 
-                        slot.load(id, count, ability, abilityLevel);
+                    if (available >= remainingItems) {
+                        rSlot.increment(remainingItems);
 
-                        return slot;
-                    }
-                }
-            } else {
-                let remainingItems = count;
-
-                for (let i = 0; i < this.slots.length; i++) {
-                    if (this.slots[i].id === id) {
-                        let rSlot = this.slots[i],
-                            available = maxStackSize - rSlot.count;
-
-                        if (available >= remainingItems) {
-                            rSlot.increment(remainingItems);
-
-                            return rSlot;
-                        } else if (available > 0) {
-                            rSlot.increment(available);
-                            remainingItems -= available;
-                        }
+                        return rSlot;
+                    } else if (available > 0) {
+                        rSlot.increment(available);
+                        remainingItems -= available;
                     }
                 }
 
-                if (remainingItems > 0 && this.hasSpace()) {
-                    let rrSlot = this.slots[this.getEmptySlot()];
+            if (remainingItems > 0 && this.hasSpace()) {
+                let rrSlot = this.slots[this.getEmptySlot()];
 
-                    rrSlot.load(id, remainingItems, ability, abilityLevel);
+                rrSlot.load(id, remainingItems, ability, abilityLevel);
 
-                    return rrSlot;
-                }
+                return rrSlot;
             }
         }
     }
 
-    canHold(id: number, count: number) {
+    public canHold(id: number, count: number): boolean {
         if (!Items.isStackable(id)) return this.hasSpace();
 
         if (this.hasSpace()) return true;
@@ -129,7 +129,7 @@ class Container {
         return remainingSpace >= count;
     }
 
-    remove(index: number, id: number, count: number): any {
+    public remove(index: number, id: number, count: number): boolean | undefined {
         /**
          * Perform item validity prior to calling the method.
          */
@@ -138,22 +138,22 @@ class Container {
 
         if (!slot) return false;
 
-        if (Items.isStackable(id)) {
+        if (Items.isStackable(id))
             if (count >= slot.count) slot.empty();
             else slot.decrement(count);
-        } else slot.empty();
+        else slot.empty();
 
         return true;
     }
 
-    getSlot(id: number) {
+    private getSlot(id: number): Slot | null {
         for (let i = 0; i < this.slots.length; i++)
             if (this.slots[i].id === id) return this.slots[i];
 
         return null;
     }
 
-    contains(id: number, count?: number) {
+    public contains(id: number | undefined, count?: number): boolean {
         if (!count) count = 1;
 
         for (let index in this.slots) {
@@ -165,47 +165,37 @@ class Container {
         return false;
     }
 
-    containsSpaces(count: number) {
-        let emptySpaces = [];
-
-        for (let i = 0; i < this.slots.length; i++)
-            if (this.slots[i].id === -1) emptySpaces.push(this.slots[i]);
-
-        return emptySpaces.length === count;
-    }
-
-    hasSpace() {
+    public hasSpace(): boolean {
         return this.getEmptySlot() > -1;
     }
 
-    getEmptySlot() {
+    private getEmptySlot(): number {
         for (let i = 0; i < this.slots.length; i++) if (this.slots[i].id === -1) return i;
 
         return -1;
     }
 
-    getIndex(id: number) {
-        /**
-         * Used when the index is not determined,
-         * returns the first item found based on the id.
-         */
-
+    /**
+     * Used when the index is not determined,
+     * returns the first item found based on the id.
+     */
+    public getIndex(id: number): number {
         for (let i = 0; i < this.slots.length; i++) if (this.slots[i].id === id) return i;
 
         return -1;
     }
 
-    check() {
+    public check(): void {
         _.each(this.slots, (slot: Slot) => {
             if (isNaN(slot.id)) slot.empty();
         });
     }
 
-    forEachSlot(callback: Function) {
+    public forEachSlot(callback: (slot: Slot) => void): void {
         for (let i = 0; i < this.slots.length; i++) callback(this.slots[i]);
     }
 
-    getArray() {
+    public getArray(): ContainerArray {
         let ids = '',
             counts = '',
             abilities = '',
@@ -227,5 +217,3 @@ class Container {
         };
     }
 }
-
-export default Container;
