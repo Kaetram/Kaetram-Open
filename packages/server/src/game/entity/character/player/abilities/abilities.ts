@@ -1,49 +1,45 @@
-/* global module */
-
 import _ from 'lodash';
-import Player from '../player';
-import Ability from './impl/ability';
 
-class Abilities {
-    player: Player;
+import type Player from '../player';
+import type Ability from './impl/ability';
 
-    abilities: any;
+export interface AbilitiesArray {
+    username: string;
+    abilities: string;
+    abilityLevels: string;
+    shortcuts: string;
+}
 
-    shortcuts: any;
+export default class Abilities {
+    private abilities: { [name: string]: Ability } = {};
 
-    shortcutSize: number;
+    private shortcuts: string[] = [];
 
-    constructor(player: Player) {
-        this.player = player;
+    private shortcutSize = 5;
 
-        this.abilities = {};
+    public constructor(private player: Player) {}
 
-        this.shortcuts = [];
-
-        this.shortcutSize = 5;
-    }
-
-    addAbility(ability: Ability) {
+    private addAbility(ability: Ability): void {
         this.abilities[ability.name] = ability;
     }
 
-    addShortcut(ability: Ability) {
+    private addShortcut(ability: Ability): void {
         if (this.shortcutSize >= 5) return;
 
         this.shortcuts.push(ability.name);
     }
 
-    removeAbility(ability: Ability) {
+    private removeAbility(ability: Ability): void {
         if (this.isShortcut(ability)) this.removeShortcut(this.shortcuts.indexOf(ability.name));
 
         delete this.abilities[ability.name];
     }
 
-    removeShortcut(index: number) {
+    private removeShortcut(index: number): void {
         if (index > -1) this.shortcuts.splice(index, 1);
     }
 
-    hasAbility(ability: Ability) {
+    private hasAbility(ability: Ability): boolean {
         _.each(this.abilities, (uAbility: Ability) => {
             if (uAbility.name === ability.name) return true;
         });
@@ -51,11 +47,11 @@ class Abilities {
         return false;
     }
 
-    isShortcut(ability: Ability) {
-        return this.shortcuts.indexOf(ability.name) > -1;
+    private isShortcut(ability: Ability): boolean {
+        return this.shortcuts.includes(ability.name);
     }
 
-    getArray() {
+    public getArray(): AbilitiesArray {
         let abilities = '',
             abilityLevels = '',
             shortcuts = this.shortcuts.toString();
@@ -67,11 +63,9 @@ class Abilities {
 
         return {
             username: this.player.username,
-            abilities: abilities,
-            abilityLevels: abilityLevels,
-            shortcuts: shortcuts
+            abilities,
+            abilityLevels,
+            shortcuts
         };
     }
 }
-
-export default Abilities;

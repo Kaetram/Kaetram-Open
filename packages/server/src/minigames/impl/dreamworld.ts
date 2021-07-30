@@ -1,7 +1,3 @@
-/* global module */
-
 import Minigame from '../minigame';
 
-class DreamWorld extends Minigame {}
-
-export default DreamWorld;
+export default class DreamWorld extends Minigame {}

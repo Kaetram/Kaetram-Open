@@ -1,35 +1,32 @@
-import log from '../../../../../util/log';
 import Items from '../../../../../util/items';
+import log from '../../../../../util/log';
 
-class Slot {
-    public index: number;
+interface SlotData {
+    index: number;
+    string: string;
+    count: number;
+    ability: number;
+    abilityLevel: number;
+}
 
-    public id: number;
-    public count: number;
-    public ability: number;
-    public abilityLevel: number;
+export default class Slot {
+    public id = -1;
+    public count = -1;
+    public ability = -1;
+    public abilityLevel = -1;
 
-    public string: string;
+    public string!: string;
 
-    public edible: boolean;
-    public equippable: boolean;
+    public edible = false;
+    public equippable = false;
 
-    constructor(index: number) {
-        this.index = index;
+    public constructor(public index: number) {}
 
-        this.id = -1;
-        this.count = -1;
-        this.ability = -1;
-        this.abilityLevel = -1;
-
-        this.string = null;
-    }
-
-    load(id: any, count: any, ability: any, abilityLevel: any) {
-        this.id = parseInt(id);
-        this.count = parseInt(count);
-        this.ability = parseInt(ability);
-        this.abilityLevel = parseInt(abilityLevel);
+    public load(id: number, count: number, ability: number, abilityLevel: number): void {
+        this.id = id;
+        this.count = count;
+        this.ability = ability;
+        this.abilityLevel = abilityLevel;
 
         this.string = Items.idToString(this.id);
         this.edible = Items.isEdible(this.id);
@@ -38,22 +35,22 @@ class Slot {
         this.verify();
     }
 
-    empty() {
+    public empty(): void {
         this.id = -1;
         this.count = -1;
         this.ability = -1;
         this.abilityLevel = -1;
 
-        this.string = null;
+        this.string = null!;
     }
 
-    increment(amount: number) {
+    public increment(amount: number): void {
         this.count += amount;
 
         this.verify();
     }
 
-    decrement(amount: number) {
+    public decrement(amount: number): void {
         this.count -= amount;
 
         if (this.count < 1)
@@ -62,11 +59,11 @@ class Slot {
         this.verify();
     }
 
-    verify() {
+    private verify(): void {
         if (isNaN(this.count) || this.count < 1) this.count = 1;
     }
 
-    getData() {
+    public getData(): SlotData {
         return {
             index: this.index,
             string: this.string,
@@ -76,5 +73,3 @@ class Slot {
         };
     }
 }
-
-export default Slot;

@@ -1,28 +1,32 @@
 import _ from 'lodash';
+
+import abilityData from '../../data/abilities.json';
+import combatPlugins from '../../data/combat';
+import itemPlugins from '../../data/items';
+import itemData from '../../data/items.json';
+import mobData from '../../data/mobs.json';
+import npcData from '../../data/npcs.json';
+import objectData from '../../data/objects.json';
+import shopsData from '../../data/shops.json';
+import log from '../util/log';
+import Abilities from './abilities';
+import Constants from './constants';
+import Formulas from './formulas';
+import Items from './items';
 import Mobs from './mobs';
 import NPCs from './npcs';
-import Items from './items';
-import Abilities from './abilities';
-import Shops from './shops';
 import Objects from './objects';
-import Formulas from './formulas';
-import Constants from './constants';
-import log from '../util/log';
+import Shops from './shops';
 
-import combatPlugins from '../../data/combat/index';
-import itemPlugins from '../../data/items/index';
+import type { ItemsData } from './items';
+import type { MobData } from './mobs';
+import type { NPCData } from './npcs';
+import type { ObjectsData } from './objects';
 
-import NPCData from '../../data/npcs.json';
-import ItemData from '../../data/items.json';
-import MobData from '../../data/mobs.json';
-import AbilityData from '../../data/abilities.json';
-import ShopsData from '../../data/shops.json';
-import ObjectData from '../../data/objects.json';
+export default class Parser {
+    private readyCallback?(): void;
 
-class Parser {
-    private readyCallback: () => void;
-
-    constructor() {
+    public constructor() {
         this.load();
 
         this.loadMobData();
@@ -34,7 +38,7 @@ class Parser {
         this.loadObjects();
     }
 
-    load(): void {
+    private load(): void {
         this.onReady(() => {
             Mobs.Plugins = combatPlugins;
 
@@ -43,32 +47,53 @@ class Parser {
         });
     }
 
-    loadMobData(): void {
+    private loadMobData(): void {
         let mobCounter = 0;
 
-        _.each(MobData, (value: any, key) => {
+        _.each(mobData, (value, key) => {
             key = key.toLowerCase();
 
+            let {
+                id,
+                name,
+                drops,
+                hitPoints,
+                armour,
+                weapon,
+                xp,
+                level,
+                aggroRange,
+                attackRange,
+                aggressive,
+                isPoisonous,
+                attackRate,
+                movementSpeed,
+                projectileName,
+                spawnDelay,
+                combatPlugin,
+                hiddenName
+            } = value as MobData;
+
             Mobs.Properties[key] = {
-                key: key,
-                id: value.id,
-                name: value.name || key,
-                drops: value.drops || null,
-                hitPoints: value.hitPoints || 10,
-                armour: value.armour || 0,
-                weapon: value.weapon || 0,
-                xp: value.xp || 0,
-                level: value.level || 0,
-                aggroRange: value.aggroRange || 2,
-                attackRange: value.attackRange || 1,
-                aggressive: value.aggressive || false,
-                isPoisonous: value.isPoisonous || false,
-                attackRate: value.attackRate || 1000,
-                movementSpeed: value.movementSpeed || 200,
-                projectileName: value.projectileName || null,
-                spawnDelay: value.spawnDelay || 60000,
-                combatPlugin: value.combatPlugin || null,
-                hiddenName: value.hiddenName || false
+                key,
+                id,
+                name: name || key,
+                drops: drops || null,
+                hitPoints: hitPoints || 10,
+                armour: armour || 0,
+                weapon: weapon || 0,
+                xp: xp || 0,
+                level: level || 0,
+                aggroRange: aggroRange || 2,
+                attackRange: attackRange || 1,
+                aggressive: aggressive || false,
+                isPoisonous: isPoisonous || false,
+                attackRate: attackRate || 1000,
+                movementSpeed: movementSpeed || 200,
+                projectileName,
+                spawnDelay: spawnDelay || 60000,
+                combatPlugin,
+                hiddenName: hiddenName || false
             };
 
             Mobs.Ids[value.id] = Mobs.Properties[key];
@@ -79,21 +104,23 @@ class Parser {
         log.info('Finished loading ' + mobCounter + ' mobs.');
     }
 
-    loadNPCData(): void {
+    private loadNPCData(): void {
         let npcCounter = 0;
 
-        _.each(NPCData, (value: any, key) => {
+        _.each(npcData, (value, key) => {
             key = key.toLowerCase();
 
+            let { id, name, text, type } = value as NPCData;
+
             NPCs.Properties[key] = {
-                key: key,
-                id: value.id,
-                name: value.name || key,
-                text: value.text || null,
-                type: value.type || null
+                key,
+                id,
+                name: name || key,
+                text: text || null,
+                type: type || null
             };
 
-            NPCs.Ids[value.id] = NPCs.Properties[key];
+            NPCs.Ids[id] = NPCs.Properties[key];
 
             npcCounter++;
         });
@@ -101,40 +128,64 @@ class Parser {
         log.info('Finished loading ' + npcCounter + ' NPCs.');
     }
 
-    loadItemData(): void {
+    private loadItemData(): void {
         let itemCounter = 0;
 
-        _.each(ItemData, (value: any, key) => {
+        _.each(itemData, (value, key) => {
             key = key.toLowerCase();
 
+            const {
+                id,
+                type,
+                attack,
+                defense,
+                movementSpeed,
+                pendantLevel,
+                ringLevel,
+                bootsLevel,
+                name,
+                price,
+                storeCount,
+                stackable,
+                edible,
+                healsHealth,
+                healsMana,
+                maxStackSize,
+                plugin,
+                customData,
+                requirement,
+                lumberjacking,
+                mining
+            } = value as ItemsData;
+
             Items.Data[key] = {
-                key: key,
-                id: value.id || -1,
-                type: value.type || 'object',
-                attack: value.attack || 0,
-                defense: value.defense || 0,
-                movementSpeed: value.movementSpeed || null,
-                pendantLevel: value.pendantLevel || null,
-                ringLevel: value.ringLevel || null,
-                bootsLevel: value.bootsLevel || null,
-                name: value.name || key,
-                price: value.price || 1,
-                storeCount: value.storeCount || 1,
-                stackable: value.stackable || 0,
-                edible: value.edible || 0,
-                healsHealth: value.healsHealth || 0,
-                healsMana: value.healsMana || 0,
-                maxStackSize: value.maxStackSize || -1,
-                plugin: value.plugin || null,
-                customData: value.customData || null,
-                requirement: value.requirement || null,
-                lumberjacking: value.lumberjacking || 0,
-                mining: value.mining || 0
+                key,
+                id: id || -1,
+                type: type || 'object',
+                attack: attack || 0,
+                defense: defense || 0,
+                movementSpeed,
+                pendantLevel,
+                ringLevel,
+                bootsLevel,
+                name: name || key,
+                price: price || 1,
+                storeCount: storeCount || 1,
+                stackable: stackable || false,
+                edible: edible || false,
+                healsHealth: healsHealth || 0,
+                healsMana: healsMana || 0,
+                maxStackSize: maxStackSize || -1,
+                plugin,
+                customData: customData || null,
+                requirement,
+                lumberjacking: lumberjacking || 0,
+                mining: mining || 0
             };
 
-            Items.Ids[value.id] = Items.Data[key];
+            Items.Ids[id] = Items.Data[key];
 
-            if (value.plugin) Items.Plugins[value.id] = itemPlugins[value.plugin];
+            if (plugin) Items.Plugins[id] = itemPlugins[plugin as keyof typeof itemPlugins];
 
             itemCounter++;
         });
@@ -142,14 +193,14 @@ class Parser {
         log.info('Finished loading ' + itemCounter + ' items.');
     }
 
-    loadAbilityData(): void {
+    private loadAbilityData(): void {
         let skillCounter = 0;
 
-        _.each(AbilityData, (value, key) => {
+        _.each(abilityData, (value, key) => {
             key = key.toLowerCase();
 
             Abilities.Data[key] = {
-                key: key,
+                key,
                 id: value.id,
                 type: value.type,
                 mana: value.mana || 0,
@@ -164,14 +215,14 @@ class Parser {
         log.info('Finished loading ' + skillCounter + ' skills.');
     }
 
-    loadShops(): void {
+    private loadShops(): void {
         let shopCounter = 0;
 
-        _.each(ShopsData, (value, key) => {
+        _.each(shopsData, (value, key) => {
             key = key.toLowerCase();
 
             Shops.Data[key] = {
-                key: key,
+                key,
                 npcId: value.npcId,
                 items: value.items,
                 count: value.count,
@@ -214,7 +265,7 @@ class Parser {
 
     **/
 
-    loadLevels(): void {
+    private loadLevels(): void {
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
@@ -223,16 +274,18 @@ class Parser {
         }
     }
 
-    loadObjects(): void {
+    private loadObjects(): void {
         let objectCounter = 0;
 
-        _.each(ObjectData, (value: any, key) => {
+        _.each(objectData, (value, key) => {
+            const { x, y, type, messages, cursor } = value as ObjectsData;
+
             Objects.Data[key] = {
-                x: value.x,
-                y: value.y,
-                type: value.type,
-                messages: value.messages,
-                cursor: value.cursor
+                x,
+                y,
+                type,
+                messages,
+                cursor
             };
 
             objectCounter++;
@@ -240,12 +293,10 @@ class Parser {
 
         log.info('Finished loading ' + objectCounter + ' global objects.');
 
-        if (this.readyCallback) this.readyCallback();
+        this.readyCallback?.();
     }
 
-    onReady(callback: () => void): void {
+    private onReady(callback: () => void): void {
         this.readyCallback = callback;
     }
 }
-
-export default Parser;

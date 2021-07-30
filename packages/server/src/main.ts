@@ -1,25 +1,23 @@
-import World from './game/world';
-import WebSocket from './network/websocket';
+import config from '../config';
 import Database from './database/database';
+import World from './game/world';
+import SocketHandler from './network/sockethandler';
 import log from './util/log';
 import Parser from './util/parser';
-import config from '../config';
-import Connection from './network/connection';
-import SocketHandler from './network/sockethandler';
+
+import type Player from './game/entity/character/player/player';
+import type Connection from './network/connection';
 
 class Main {
-    socketHandler: SocketHandler;
-    database: any;
-    parser: Parser;
-    world: World;
+    private socketHandler = new SocketHandler();
+    private database = new Database(config.database).getDatabase()!;
 
-    constructor() {
+    private world!: World;
+
+    public constructor() {
         log.info('Initializing ' + config.name + ' game engine...');
 
-        this.socketHandler = new SocketHandler();
-        this.database = new Database(config.database).getDatabase();
-        this.parser = new Parser();
-        this.world = null;
+        new Parser();
 
         this.socketHandler.onReady(() => {
             /**
@@ -43,14 +41,14 @@ class Main {
         });
 
         this.socketHandler.onConnection((connection: Connection) => {
-            if (this.world.allowConnections) {
+            if (this.world.allowConnections)
                 if (this.world.isFull()) {
                     log.info('All the worlds are currently full. Please try again later.');
 
                     connection.sendUTF8('full');
                     connection.close();
-                } else this.world.playerConnectCallback(connection);
-            } else {
+                } else this.world.playerConnectCallback?.(connection);
+            else {
                 connection.sendUTF8('disallowed');
                 connection.close();
             }
@@ -59,21 +57,26 @@ class Main {
         this.loadConsole();
     }
 
-    loadConsole() {
+    private loadConsole(): void {
         const stdin = process.openStdin();
 
-        stdin.addListener('data', (data) => {
+        stdin.addListener('data', (data: Buffer) => {
             const message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
                 type = message.charAt(0);
 
             if (type !== '/') return;
 
-            const blocks = message.substring(1).split(' '),
-                command = blocks.shift();
+            const blocks = message.slice(1).split(' '),
+                command = blocks.shift()!;
 
             if (!command) return;
 
-            let username, player;
+            let username: string,
+                player: Player,
+                newX: number,
+                newY: number,
+                itemId: number,
+                itemCount: number;
 
             switch (command) {
                 case 'players':
@@ -108,10 +111,10 @@ class Main {
                     break;
 
                 case 'resetPositions':
-                    const newX = parseInt(blocks.shift());
-                    const newY = parseInt(blocks.shift());
+                    newX = parseInt(blocks.shift()!);
+                    newY = parseInt(blocks.shift()!);
 
-                    //x: 325, y: 87
+                    // x: 325, y: 87
 
                     if (!newX || !newY) {
                         log.info(
@@ -122,7 +125,7 @@ class Main {
 
                     /**
                      * We are iterating through all of the users in the database
-                     * and resetting their position to the paramters inputted.
+                     * and resetting their position to the parameters inputted.
                      * This is to be used when doing some game-breaking map
                      * updates. This command is best used in tandem with the
                      * `allowConnectionsToggle` to prevent users from logging
@@ -145,8 +148,8 @@ class Main {
                     break;
 
                 case 'give':
-                    const itemId = blocks.shift();
-                    const itemCount = parseInt(blocks.shift());
+                    itemId = parseInt(blocks.shift()!);
+                    itemCount = parseInt(blocks.shift()!);
 
                     username = blocks.join(' ');
 
@@ -166,11 +169,9 @@ class Main {
         });
     }
 
-    getPopulation() {
+    private getPopulation(): number {
         return this.world.getPopulation();
     }
 }
 
-export default Main;
-
-new Main();
+export default new Main();

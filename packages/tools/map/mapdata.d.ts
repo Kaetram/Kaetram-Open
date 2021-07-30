@@ -45,7 +45,7 @@ interface LayerObject {
     name: string;
     properties: {
         value: never;
-        name: keyof Area;
+        name: keyof ProcessedArea;
     }[];
     x: number;
     y: number;
@@ -71,62 +71,11 @@ export interface MapData {
 }
 
 export interface Entity {
-    roaming: boolean;
+    roaming?: boolean;
     type?: string;
-    v: never;
-    o: never;
-    tree: never;
-    rock: never;
-    cursor: never;
-}
-
-interface Entities {
-    [tileId: number]: Entity;
-}
-
-export interface Area {
-    id: number;
-    name: string;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    polygon?: Pos[];
-}
-
-export interface ProcessedMap {
-    width: number;
-    height: number;
-    tileSize: number;
-    version: number;
-
-    data: (number | number[])[];
-
-    collisions: number[];
-    tileCollisions: number[]
-    polygons: { [tileId: number]: Pos[] };
-    entities: Entities;
-    staticEntities: Entities;
-
-    tilesets: {
-        name: string;
-        firstGID: number;
-        lastGID: number;
-        imageName: string;
-        scale: number;
-    }[];
-    animations?: [];
-    depth?: number;
-
-    plateau: { [index: number]: number };
-
-    high: number[];
-    objects: number[];
-    trees: { [tileId: number]: 'Oak' | 'IceOak' | 'Palm' | 'IcePalm' };
-    treeIndexes: number[];
-    rocks: Record<string, never>;
-    rockIndexes: number[];
-    areas: { [name: string]: Area[] };
-    cursors: { [tileId: number]: string };
-    layers: [];
+    v?: never;
+    o?: never;
+    tree?: never;
+    rock?: never;
+    cursor?: never;
 }

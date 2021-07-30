@@ -2,32 +2,32 @@ import _ from 'lodash';
 import Combat from '../../src/game/entity/character/combat/combat';
 import Character from '../../src/game/entity/character/character';
 import Mob from '../../src/game/entity/character/mob/mob';
-import Packets from '../../src/network/packets';
+import Packets from '@kaetram/common/src/packets';
 import Messages from '../../src/network/messages';
 import Utils from '../../src/util/utils';
+import type { HitData } from '../../src/game/entity/character/combat/hit';
 
-class QueenAnt extends Combat {
-    /*
-     * The queen ant is a little more complex as it uses
-     * AoE attacks and has a stun timer.
-     */
-
-    aoeTimeout: any;
+/**
+ * The queen ant is a little more complex as it uses
+ * AoE attacks and has a stun timer.
+ */
+export default class QueenAnt extends Combat {
+    aoeTimeout: NodeJS.Timeout | null;
     aoeCountdown: number;
     aoeRadius: number;
     lastAoE: number;
     minionCount: number;
     lastSpawn: number;
-    minions: Array<any>;
+    minions: Mob[];
     frozen: boolean;
 
-    constructor(character: Mob) {
+    public constructor(character: Character) {
         character.spawnDistance = 18;
         super(character);
 
         this.character = character;
 
-        this.lastActionThreshold = 10000; //AoE Attack Threshold.
+        this.lastActionThreshold = 10000; // AoE Attack Threshold.
 
         this.aoeTimeout = null;
 
@@ -46,7 +46,6 @@ class QueenAnt extends Combat {
              * This is to prevent the boss from dealing
              * any powerful AoE attack after dying.
              */
-
             this.lastSpawn = 0;
 
             if (this.aoeTimeout) {
@@ -54,24 +53,24 @@ class QueenAnt extends Combat {
                 this.aoeTimeout = null;
             }
 
-            const listCopy = this.minions.slice();
+            const listCopy = [...this.minions];
 
             for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
         });
 
         this.character.onReturn(() => {
-            clearTimeout(this.aoeTimeout);
+            if (this.aoeTimeout) clearTimeout(this.aoeTimeout);
             this.aoeTimeout = null;
         });
     }
 
-    begin(attacker: Character) {
+    override begin(attacker: Character): void {
         this.resetAoE();
 
         super.begin(attacker);
     }
 
-    hit(attacker: Character, target: Character, hitInfo: any) {
+    override hit(attacker: Character, target: Character, hitInfo: HitData): void {
         if (this.frozen) return;
 
         if (this.canCastAoE()) {
@@ -86,7 +85,7 @@ class QueenAnt extends Combat {
         super.hit(attacker, target, hitInfo);
     }
 
-    doAoE() {
+    doAoE(): void {
         /**
          * The reason this function does not use its superclass
          * representation is because of the setTimeout function
@@ -108,8 +107,8 @@ class QueenAnt extends Combat {
         }, 5000);
     }
 
-    spawnMinions() {
-        this.lastSpawn = new Date().getTime();
+    spawnMinions(): void {
+        this.lastSpawn = Date.now();
 
         for (let i = 0; i < this.minionCount; i++)
             this.minions.push(this.entities.spawnMob(13, this.character.x, this.character.y));
@@ -119,7 +118,7 @@ class QueenAnt extends Combat {
             minion.spawnDistance = 12;
 
             minion.onDeath(() => {
-                if (this.isLast()) this.lastSpawn = new Date().getTime();
+                if (this.isLast()) this.lastSpawn = Date.now();
 
                 this.minions.splice(this.minions.indexOf(minion), 1);
             });
@@ -128,39 +127,39 @@ class QueenAnt extends Combat {
         });
     }
 
-    beginMinionAttack() {
+    beginMinionAttack(): void {
         if (!this.hasMinions()) return;
 
         _.each(this.minions, (minion: Mob) => {
             const randomTarget = this.getRandomTarget();
 
-            if (!minion.hasTarget() && randomTarget) minion.combat.begin(randomTarget);
+            if (!minion.target && randomTarget) minion.combat.begin(randomTarget);
         });
     }
 
-    resetAoE() {
-        this.lastAoE = new Date().getTime();
+    resetAoE(): void {
+        this.lastAoE = Date.now();
     }
 
-    getRandomTarget() {
+    getRandomTarget(): Character | null {
         if (this.isAttacked()) {
             const keys = Object.keys(this.attackers),
-                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
+                randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;
         }
 
-        if (this.character.hasTarget()) return this.character.target;
+        if (this.character.target) return this.character.target;
 
         return null;
     }
 
-    pushFreeze(state: boolean) {
+    pushFreeze(state: boolean): void {
         this.character.frozen = state;
         this.character.stunned = state;
     }
 
-    pushCountdown(count: number) {
+    pushCountdown(count: number): void {
         this.world.push(Packets.PushOpcode.Regions, {
             regionId: this.character.region,
             message: new Messages.NPC(Packets.NPCOpcode.Countdown, {
@@ -171,28 +170,24 @@ class QueenAnt extends Combat {
     }
 
     // TODO
-    getMinions() {
+    getMinions(): void {
         // var self = this,
         //     grids = this.world.getGrids();
     }
 
-    isLast() {
+    isLast(): boolean {
         return this.minions.length === 1;
     }
 
-    hasMinions() {
+    hasMinions(): boolean {
         return this.minions.length > 0;
     }
 
-    canCastAoE() {
-        return new Date().getTime() - this.lastAoE > 30000;
+    canCastAoE(): boolean {
+        return Date.now() - this.lastAoE > 30000;
     }
 
-    canSpawn() {
-        return (
-            new Date().getTime() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked()
-        );
+    canSpawn(): boolean {
+        return Date.now() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked();
     }
 }
-
-export default QueenAnt;
