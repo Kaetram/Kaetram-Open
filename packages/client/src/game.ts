@@ -180,7 +180,7 @@ export default class Game {
 
         const { map } = this;
 
-        map.onReady(async () => {
+        map.onReady(() => {
             const { map, app, renderer, entities } = this;
 
             if (!map) return;
@@ -198,7 +198,7 @@ export default class Game {
 
             this.setUpdater(new Updater(this));
 
-            await entities.load();
+            entities.load();
 
             renderer.setEntities(entities);
 
@@ -213,7 +213,7 @@ export default class Game {
 
         app.cleanErrors();
 
-        window.setTimeout(() => socket.connect(), 1000);
+        socket.connect();
 
         // this.connectionHandler =
         new Connection(this);
