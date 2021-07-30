@@ -81,7 +81,7 @@ export default class Handler {
                 return;
             }
 
-            const mob = character as Mob;
+            let mob = character as Mob;
 
             if (this.player.quests.isAchievementMob(mob)) {
                 let achievement = this.player.quests.getAchievementByMob(mob);
@@ -198,9 +198,8 @@ export default class Handler {
 
         _.each(region.entities, (character) => {
             if (character && character.type === 'mob' && this.canEntitySee(character)) {
-                const mob = character as Mob;
-
-                let aggro = mob.canAggro(this.player);
+                let mob = character as Mob,
+                    aggro = mob.canAggro(this.player);
 
                 if (aggro) mob.combat.begin(this.player);
             }
@@ -241,7 +240,7 @@ export default class Handler {
 
     private detectLights(x: number, y: number): void {
         _.each(this.map.lights, (light) => {
-            const { id } = light;
+            let { id } = light;
 
             if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(id)) {
                 // Add a half a tile offset so the light is centered on the tile.

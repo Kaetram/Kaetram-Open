@@ -24,7 +24,7 @@ export default {
     },
 
     getDistance(startX: number, startY: number, toX: number, toY: number): number {
-        const x = Math.abs(startX - toX),
+        let x = Math.abs(startX - toX),
             y = Math.abs(startY - toY);
 
         return x > y ? x : y;
@@ -66,7 +66,7 @@ export default {
     },
 
     validPacket(packet: number): boolean {
-        const keys = Object.keys(Packets),
+        let keys = Object.keys(Packets),
             filtered = [];
 
         for (let i = 0; i < keys.length; i++)
@@ -93,7 +93,7 @@ export default {
      */
     parseMessage(message: string): string {
         try {
-            const messageBlocks = message.split('@');
+            let messageBlocks = message.split('@');
 
             if (messageBlocks.length % 2 === 0) {
                 log.warning('Improper message block format!');
@@ -107,7 +107,7 @@ export default {
                     messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
             });
 
-            const codeCount = messageBlocks.length / 2 - 1;
+            let codeCount = messageBlocks.length / 2 - 1;
 
             for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
 

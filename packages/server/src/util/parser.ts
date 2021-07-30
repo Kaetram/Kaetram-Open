@@ -134,7 +134,7 @@ export default class Parser {
         _.each(itemData, (value, key) => {
             key = key.toLowerCase();
 
-            const {
+            let {
                 id,
                 type,
                 attack,
@@ -269,7 +269,7 @@ export default class Parser {
         Formulas.LevelExp[0] = 0;
 
         for (let i = 1; i < Constants.MAX_LEVEL; i++) {
-            const points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
+            let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }
     }
@@ -278,7 +278,7 @@ export default class Parser {
         let objectCounter = 0;
 
         _.each(objectData, (value, key) => {
-            const { x, y, type, messages, cursor } = value as ObjectsData;
+            let { x, y, type, messages, cursor } = value as ObjectsData;
 
             Objects.Data[key] = {
                 x,

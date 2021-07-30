@@ -39,7 +39,7 @@ interface StorageData {
     map: RegionMapData;
 }
 
-const storage = window.localStorage,
+let storage = window.localStorage,
     name = 'data';
 
 export default class Storage {
@@ -108,7 +108,7 @@ export default class Storage {
     }
 
     public setOrientation(orientation: number): void {
-        const player = this.getPlayer();
+        let player = this.getPlayer();
 
         player.orientation = orientation;
 
@@ -116,7 +116,7 @@ export default class Storage {
     }
 
     // setPlayer(option: keyof PlayerData, value: never): void {
-    //     const pData = this.getPlayer();
+    //     let pData = this.getPlayer();
 
     //     if (option in pData) pData[option] = value;
 
@@ -124,7 +124,7 @@ export default class Storage {
     // }
 
     // setSettings(option: keyof Settings, value: never): void {
-    //     const sData = this.getSettings();
+    //     let sData = this.getSettings();
 
     //     if (option in sData) sData[option] = value;
 

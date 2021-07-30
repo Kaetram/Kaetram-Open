@@ -11,7 +11,7 @@ export default class HealthFlask implements Item {
     public constructor(id: number) {
         this.id = id;
 
-        const customData = Items.getCustomData(this.id);
+        let customData = Items.getCustomData(this.id);
 
         this.healAmount = customData?.healAmount || 0;
         this.manaAmount = customData?.manaAmount || 0;

@@ -6,6 +6,7 @@
         "plugin:unicorn/recommended",
         "plugin:prettier/recommended"
     ],
+    "plugins": ["prefer-let"],
     "rules": {
         "@typescript-eslint/no-non-null-assertion": "off",
 
@@ -25,8 +26,10 @@
 
         "prettier/prettier": "warn",
 
-        "no-fallthrough": "off",
+        "prefer-let/prefer-let": "error",
+
         "prefer-const": "off",
+        "no-fallthrough": "off",
 
         "curly": ["warn", "multi"],
         "one-var": ["warn", "consecutive"],

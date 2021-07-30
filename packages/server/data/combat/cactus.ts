@@ -17,7 +17,7 @@ export default class Cactus extends Combat {
         this.character = character;
 
         this.character.onDamaged((damage, attacker) => {
-            const player = attacker as Player;
+            let player = attacker as Player;
 
             if (!player || !player.armour || player.isRanged()) return;
 
@@ -38,7 +38,7 @@ export default class Cactus extends Combat {
     damageAttacker(damage: number, attacker: Player): void {
         if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
-        const defense = attacker.armour.getDefense(),
+        let defense = attacker.armour.getDefense(),
             /**
              * This is the formula for dealing damage when a player
              * attacks the cactus. Eventually the damage will cancel out
@@ -48,7 +48,7 @@ export default class Cactus extends Combat {
 
         if (calculatedDamage < 1) return;
 
-        const hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
+        let hitInfo = new Hit(Modules.Hits.Damage, calculatedDamage).getData();
 
         this.hit(this.character, attacker, hitInfo, true);
     }

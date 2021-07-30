@@ -67,7 +67,7 @@ export default class AudioController {
     public constructor(private game: Game) {}
 
     public parse(path: 'music' | 'sounds', name: Audio, channels: number): void {
-        const { format, audibles, music, sounds } = this,
+        let { format, audibles, music, sounds } = this,
             fullPath = `/audio/${path}/${name}.${format}`,
             sound = document.createElement('audio') as AudioElement,
             event = (): void => sound.removeEventListener('canplaythrough', event, false);
@@ -100,7 +100,7 @@ export default class AudioController {
     }
 
     public play(type: Modules.AudioTypes, name: Audio): void {
-        const { game, sounds } = this;
+        let { game, sounds } = this;
 
         if (!this.isEnabled() || game.player.dead) return;
 
@@ -110,7 +110,7 @@ export default class AudioController {
             case Modules.AudioTypes.Music: {
                 this.fadeOut(this.song, () => this.reset(this.song));
 
-                const song = this.get(name);
+                let song = this.get(name);
 
                 if (!song) return;
 
@@ -128,7 +128,7 @@ export default class AudioController {
             case Modules.AudioTypes.SFX: {
                 if (!sounds[name as Sounds]) this.parse('sounds', name, 4);
 
-                const sound = this.get(name);
+                let sound = this.get(name);
 
                 if (!sound) return;
 
@@ -144,11 +144,11 @@ export default class AudioController {
     public update(): void {
         if (!this.isEnabled()) return;
 
-        const { newSong, game, music, audibles } = this;
+        let { newSong, game, music, audibles } = this;
 
         if (!newSong || newSong === this.song) return;
 
-        const song = this.getMusic(newSong);
+        let song = this.getMusic(newSong);
 
         if (song) {
             if (game.renderer.mobile) this.reset(this.song);
@@ -157,7 +157,7 @@ export default class AudioController {
             if (song.name in music && !music[song.name as Music]) {
                 this.parse('music', song.name, 1);
 
-                const [music] = audibles[song.name]!;
+                let [music] = audibles[song.name]!;
 
                 music.loop = true;
                 music.addEventListener('ended', () => music.play(), false);
@@ -176,7 +176,7 @@ export default class AudioController {
         song.fadingIn = window.setInterval(() => {
             song.volume += 0.02;
 
-            const musicVolume = this.getMusicVolume()!;
+            let musicVolume = this.getMusicVolume()!;
 
             if (song.volume >= musicVolume - 0.02) {
                 song.volume = musicVolume;
@@ -243,7 +243,7 @@ export default class AudioController {
     }
 
     private get(name: Audio): AudioElement | undefined {
-        const { audibles } = this;
+        let { audibles } = this;
 
         if (!audibles[name]) return;
 
@@ -263,13 +263,13 @@ export default class AudioController {
     }
 
     private getSFXVolume(): number | null {
-        const { storage } = this.game;
+        let { storage } = this.game;
 
         return storage ? storage.data.settings.sfx / 100 : null;
     }
 
     private getMusicVolume(): number | null {
-        const { storage } = this.game;
+        let { storage } = this.game;
 
         return storage ? storage.data.settings.music / 100 : null;
     }

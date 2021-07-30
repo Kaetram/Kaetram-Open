@@ -118,7 +118,7 @@ export default abstract class Entity {
     }
 
     protected stopBlinking(): void {
-        const { blinking } = this;
+        let { blinking } = this;
 
         if (blinking) clearInterval(blinking);
 
@@ -136,7 +136,7 @@ export default abstract class Entity {
     public setSprite(sprite: Sprite | undefined): void {
         if (!sprite || (this.sprite && this.sprite.name === sprite.name)) return;
 
-        const { type } = this;
+        let { type } = this;
 
         if (type === 'player') sprite.loadHurt = true;
 
@@ -159,17 +159,17 @@ export default abstract class Entity {
     }
 
     public setAnimation(name: string, speed: number, count = 0, onEndCount?: () => void): void {
-        const { spriteLoaded, animations } = this;
+        let { spriteLoaded, animations } = this;
 
         if (!spriteLoaded || this.currentAnimation?.name === name) return;
 
-        const anim = animations[name];
+        let anim = animations[name];
 
         if (!anim) return;
 
         this.currentAnimation = anim;
 
-        const { currentAnimation } = this;
+        let { currentAnimation } = this;
 
         if (name.startsWith('atk')) currentAnimation.reset();
 
@@ -211,7 +211,7 @@ export default abstract class Entity {
     }
 
     public getDistance(entity: Entity): number {
-        const { gridX, gridY } = this,
+        let { gridX, gridY } = this,
             x = Math.abs(gridX - entity.gridX),
             y = Math.abs(gridY - entity.gridY);
 
@@ -219,8 +219,8 @@ export default abstract class Entity {
     }
 
     // getCoordDistance(toX: number, toY: number): number {
-    //     const x = Math.abs(this.gridX - toX);
-    //     const y = Math.abs(this.gridY - toY);
+    //     let x = Math.abs(this.gridX - toX);
+    //     let y = Math.abs(this.gridY - toY);
 
     //     return x > y ? x : y;
     // }

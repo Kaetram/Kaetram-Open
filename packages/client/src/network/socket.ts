@@ -34,7 +34,7 @@ export default class Socket {
         if (this.config.ssl) url = `https://${this.config.ip}/server`;
 
         try {
-            const response = await $.get(url);
+            let response = await $.get(url);
 
             callback(typeof response === 'string' ? 'error' : response);
         } catch {
@@ -87,7 +87,7 @@ export default class Socket {
             });
 
             this.connection.on('message', (message) => {
-                const actualMessage = message.message || message;
+                let actualMessage = message.message || message;
 
                 this.receive(actualMessage);
             });
@@ -100,7 +100,7 @@ export default class Socket {
         if (!this.listening) return;
 
         if (message.startsWith('[')) {
-            const data = JSON.parse(message);
+            let data = JSON.parse(message);
 
             if (data.length > 1) this.messages.handleBulkData(data);
             else this.messages.handleData(JSON.parse(message).shift());
@@ -108,7 +108,7 @@ export default class Socket {
     }
 
     public send(packet: number, data?: unknown[]): void {
-        const json = JSON.stringify([packet, data]);
+        let json = JSON.stringify([packet, data]);
 
         if (this.connection?.connected) this.connection.send(json);
     }
