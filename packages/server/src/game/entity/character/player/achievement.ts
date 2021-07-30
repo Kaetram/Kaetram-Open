@@ -1,41 +1,55 @@
-import Messages from '../../../../network/messages';
-import Packets from '../../../../network/packets';
-import Modules from '../../../../util/modules';
-import Player from './player';
-import NPC from '../../npc/npc';
+import * as Modules from '@kaetram/common/src/modules';
+import Packets from '@kaetram/common/src/packets';
 
 import Data from '../../../../../data/achievements.json';
+import Messages from '../../../../network/messages';
 
-class Achievement {
-    public id: number;
-    public player: Player;
+import type NPC from '../../npc/npc';
+import type Player from './player';
 
-    public progress: number;
+export interface AchievementData {
+    id: number;
+    name: string;
+    type?: number;
+    description: string;
+    count: number;
+    progress: number;
+    finished: boolean;
+}
 
-    public data: any;
+export default class Achievement {
+    public progress = 0;
 
-    public name: string;
-    public description: string;
+    public data: Partial<{
+        item: number;
+        itemCount: number;
+        isDoorReward: boolean;
+        reward: number | string;
+        name: string;
+        description: string;
+        count: number;
+        text: string[];
+        type: number;
+        npc: number;
+        mob: number;
+        rewardType: number;
+    }>;
 
-    public discovered: boolean;
+    public name;
+    public description;
 
-    constructor(id: number, player: Player) {
-        this.id = id;
-        this.player = player;
+    public discovered = false;
 
-        this.progress = 0;
-
-        this.data = Data[this.id];
+    public constructor(public id: number, private player: Player) {
+        this.data = Data[this.id.toString() as keyof typeof Data];
 
         if (!this.data.reward) this.data.reward = 'door';
 
-        this.name = this.data.name;
-        this.description = this.data.description;
-
-        this.discovered = false;
+        this.name = this.data.name!;
+        this.description = this.data.description!;
     }
 
-    step() {
+    public step(): void {
         if (this.isThreshold()) return;
 
         this.progress++;
@@ -53,13 +67,13 @@ class Achievement {
         );
     }
 
-    converse(npc: NPC) {
+    public converse(npc: NPC): void {
         if (this.isThreshold() || this.hasItem()) this.finish(npc);
         else {
             this.player.send(
                 new Messages.NPC(Packets.NPCOpcode.Talk, {
                     id: npc.instance,
-                    text: npc.talk(this.data.text, this.player)
+                    text: npc.talk(this.data.text!, this.player)
                 })
             );
 
@@ -74,8 +88,8 @@ class Achievement {
         }
     }
 
-    finish(npc: NPC) {
-        let rewardType = this.data.rewardType;
+    public finish(npc?: NPC): void {
+        let { rewardType, item, itemCount, reward } = this.data;
 
         switch (rewardType) {
             case Modules.Achievements.Rewards.Item:
@@ -87,14 +101,14 @@ class Achievement {
                 }
 
                 this.player.inventory.add({
-                    id: this.data.item,
-                    count: this.data.itemCount
+                    id: item,
+                    count: itemCount
                 });
 
                 break;
 
             case Modules.Achievements.Rewards.Experience:
-                this.player.addExperience(this.data.reward);
+                this.player.addExperience(reward as number);
 
                 break;
         }
@@ -115,20 +129,20 @@ class Achievement {
         if (npc && this.player.npcTalkCallback) this.player.npcTalkCallback(npc);
     }
 
-    update() {
+    private update(): void {
         this.player.save();
     }
 
-    isThreshold() {
-        return this.progress >= this.data.count;
+    private isThreshold(): boolean {
+        return this.progress >= this.data.count!;
     }
 
-    hasItem() {
+    private hasItem(): boolean {
         if (
             this.data.type === Modules.Achievements.Type.Scavenge &&
-            this.player.inventory.contains(this.data.item)
+            this.player.inventory.contains(this.data.item!)
         ) {
-            this.player.inventory.remove(this.data.item, this.data.itemCount);
+            this.player.inventory.remove(this.data.item!, this.data.itemCount!);
 
             return true;
         }
@@ -136,21 +150,21 @@ class Achievement {
         return false;
     }
 
-    setProgress(progress: number, skipRegion?: boolean) {
+    public setProgress(progress: number, skipRegion?: boolean): void {
         this.progress = progress;
 
         if (this.data.isDoorReward && !skipRegion) this.player.updateRegion();
     }
 
-    isStarted() {
+    public isStarted(): boolean {
         return this.progress > 0;
     }
 
-    isFinished() {
+    public isFinished(): boolean {
         return this.progress > 9998;
     }
 
-    getInfo() {
+    public getInfo(): AchievementData {
         return {
             id: this.id,
             name: this.name,
@@ -162,5 +176,3 @@ class Achievement {
         };
     }
 }
-
-export default Achievement;

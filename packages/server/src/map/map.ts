@@ -1,83 +1,101 @@
-import fs from 'fs';
 import _ from 'lodash';
-import path from 'path';
 
-import Grids from './grids';
-import Regions from './regions';
-import Utils from '../util/utils';
-import Modules from '../util/modules';
-import Objects from '../util/objects';
-import World from '../game/world';
-import Area from './areas/area';
-import Entity from '../game/entity/entity';
+import * as Modules from '@kaetram/common/src/modules';
+
+import mapData from '../../data/map/world.json';
 import Spawns from '../../data/spawns.json';
+import Items from '../util/items';
 import Mobs from '../util/mobs';
 import NPCs from '../util/npcs';
-import Items from '../util/items';
+import Objects from '../util/objects';
+import Utils from '../util/utils';
+import AreasIndex from './areas';
+import Grids from './grids';
+import Regions from './regions';
 
-import Areas from './areas/areas';
-import AreasIndex from './areas/index';
+import type {
+    ProcessedArea,
+    ProcessedMap,
+    ProcessedTileset,
+    Rock,
+    Tree
+} from '@kaetram/common/types/map';
+import type Entity from '../game/entity/entity';
+import type World from '../game/world';
+import type Area from './areas/area';
+import type Areas from './areas/areas';
 
-import log from '../util/log';
+const map = mapData as ProcessedMap;
 
-import map from '../../data/map/world.json';
+interface Door {
+    x: number;
+    y: number;
+    orientation?: number;
+}
 
-class Map {
-    world: World;
-    ready: boolean;
+type EntityType = 'mob' | 'npc' | 'item' | null;
 
-    regions: Regions;
-    grids: Grids;
+export default class Map {
+    private ready = false;
 
-    version: number;
+    public regions;
+    public grids;
 
-    data: any[];
+    public version!: number;
 
-    width: number;
-    height: number;
+    public data!: (number | number[])[];
 
-    collisions: any;
-    tileCollisions: any;
-    high: any;
-    chests: any;
-    tilesets: any;
-    lights: any;
-    plateau: any;
-    objects: any;
-    cursors: any;
-    doors: any;
-    warps: any;
+    public width!: number;
+    public height!: number;
 
-    trees: any;
-    treeIndexes: any;
+    public collisions!: number[];
+    public tileCollisions!: number[];
+    public high!: number[];
+    public chests!: ProcessedArea[];
+    public tilesets!: ProcessedTileset[];
+    public lights!: ProcessedArea[];
+    public plateau!: { [index: number]: number };
+    public objects!: number[];
+    public cursors!: { [tileId: number]: string };
+    public doors!: { [index: number]: Door };
+    public warps!: ProcessedArea[];
 
-    rocks: any;
-    rockIndexes: any;
+    public trees!: {
+        [tileId: number]: Tree;
+    };
+    public treeIndexes!: number[];
 
-    regionWidth: number;
-    regionHeight: number;
+    public rocks!: { [tileId: number]: Rock };
+    public rockIndexes!: number[];
 
-    areas: { [name: string]: Areas };
+    public regionWidth!: number;
+    public regionHeight!: number;
 
-    staticEntities: any;
+    private areas!: { [name: string]: Areas };
 
-    checksum: string;
+    public staticEntities!: {
+        tileIndex: number;
+        string: string;
+        roaming: boolean;
+        achievementId?: number;
+        boss?: boolean;
+        miniboss?: boolean;
+        type: EntityType;
+    }[];
 
-    readyInterval: any;
-    readyCallback: Function;
+    private checksum!: string;
 
-    constructor(world: World) {
-        this.world = world;
+    private readyInterval!: NodeJS.Timeout | null;
+    private readyCallback?(): void;
 
-        this.ready = false;
-
+    public constructor(private world: World) {
         this.load();
 
         this.regions = new Regions(this);
         this.grids = new Grids(this);
     }
 
-    load() {
+    load(): void {
         this.version = map.version || 0;
 
         this.data = map.data;
@@ -122,51 +140,49 @@ class Map {
 
         this.ready = true;
 
-        if (this.world.ready)
-            return;
+        if (this.world.ready) return;
 
         this.readyInterval = setInterval(() => {
-            if (this.readyCallback) this.readyCallback();
+            this.readyCallback?.();
 
-            clearInterval(this.readyInterval);
+            if (this.readyInterval) clearInterval(this.readyInterval);
             this.readyInterval = null;
         }, 75);
-
     }
 
-    loadAreas() {
-        _.each(map.areas, (area: any, key: string) => {
+    private loadAreas(): void {
+        _.each(map.areas, (area, key: string) => {
             if (!(key in AreasIndex)) return;
 
-            this.areas[key] = new AreasIndex[key](area, this.world);
+            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](area, this.world);
         });
     }
 
-    loadDoors() {
+    private loadDoors(): void {
         this.doors = {};
 
-        _.each(map.areas.doors, (door: any) => {
+        _.each(map.areas.doors, (door) => {
             if (!door.destination) return;
 
-            let orientation: number;
+            // let orientation: Modules.Orientation;
 
-            switch (door.orientation) {
-                case 'u':
-                    orientation = Modules.Orientation.Up;
-                    break;
+            // switch (door.orientation) {
+            //     case 'u':
+            //         orientation = Modules.Orientation.Up;
+            //         break;
 
-                case 'd':
-                    orientation = Modules.Orientation.Down;
-                    break;
+            //     case 'd':
+            //         orientation = Modules.Orientation.Down;
+            //         break;
 
-                case 'l':
-                    orientation = Modules.Orientation.Left;
-                    break;
+            //     case 'l':
+            //         orientation = Modules.Orientation.Left;
+            //         break;
 
-                case 'r':
-                    orientation = Modules.Orientation.Right;
-                    break;
-            }
+            //     case 'r':
+            //         orientation = Modules.Orientation.Right;
+            //         break;
+            // }
 
             let index = this.gridPositionToIndex(door.x, door.y, 1),
                 destination = this.getDoorDestination(door);
@@ -181,13 +197,13 @@ class Map {
         });
     }
 
-    loadStaticEntities() {
+    private loadStaticEntities(): void {
         this.staticEntities = [];
 
         // Legacy static entities (from Tiled);
-        _.each(map.staticEntities, (entity: any, tileIndex) => {
+        _.each(map.staticEntities, (entity, tileIndex) => {
             let e = {
-                tileIndex: tileIndex,
+                tileIndex: parseInt(tileIndex),
                 string: entity.type,
                 roaming: entity.roaming,
                 type: this.getEntityType(entity.type)
@@ -200,7 +216,7 @@ class Map {
             let tileIndex = this.gridPositionToIndex(data.x, data.y);
 
             this.staticEntities.push({
-                tileIndex: tileIndex,
+                tileIndex,
                 string: data.string,
                 roaming: data.roaming,
                 miniboss: data.miniboss,
@@ -211,7 +227,7 @@ class Map {
         });
     }
 
-    getEntityType(string: string) {
+    private getEntityType(string: string): EntityType {
         if (string in Mobs.Properties) return 'mob';
         if (string in NPCs.Properties) return 'npc';
         if (string in Items.Data) return 'item';
@@ -219,7 +235,7 @@ class Map {
         return null;
     }
 
-    indexToGridPosition(tileIndex: number, offset = 0) {
+    public indexToGridPosition(tileIndex: number, offset = 0): Pos {
         tileIndex -= 1;
 
         let x = this.getX(tileIndex + 1, this.width),
@@ -227,22 +243,22 @@ class Map {
 
         return {
             x: x + offset,
-            y: y
+            y
         };
     }
 
-    gridPositionToIndex(x: number, y: number, offset: number = 0) {
+    public gridPositionToIndex(x: number, y: number, offset = 0): number {
         return y * this.width + x + offset;
     }
 
-    getX(index: number, width: number) {
+    private getX(index: number, width: number): number {
         if (index === 0) return 0;
 
         return index % width === 0 ? width - 1 : (index % width) - 1;
     }
 
-    getRandomPosition(area: Area) {
-        let pos: any = {},
+    private getRandomPosition(area: Area): Pos {
+        let pos = {} as Pos,
             valid = false;
 
         while (!valid) {
@@ -254,11 +270,18 @@ class Map {
         return pos;
     }
 
-    inArea(posX: number, posY: number, x: number, y: number, width: number, height: number) {
+    private inArea(
+        posX: number,
+        posY: number,
+        x: number,
+        y: number,
+        width: number,
+        height: number
+    ): boolean {
         return posX >= x && posY >= y && posX <= width + x && posY <= height + y;
     }
 
-    inTutorialArea(entity: Entity) {
+    public inTutorialArea(entity: Entity): boolean {
         if (entity.x === -1 || entity.y === -1) return true;
 
         return (
@@ -268,8 +291,8 @@ class Map {
         );
     }
 
-    nearLight(light: any, x: number, y: number) {
-        let diff = Math.round(light.distance / 16),
+    public nearLight(light: ProcessedArea, x: number, y: number): boolean {
+        let diff = Math.round(light.distance! / 16),
             startX = light.x - this.regionWidth - diff,
             startY = light.y - this.regionHeight - diff,
             endX = light.x + this.regionWidth + diff,
@@ -278,82 +301,82 @@ class Map {
         return x > startX && y > startY && x < endX && y < endY;
     }
 
-    isObject(object: any) {
-        return this.objects.indexOf(object) > -1;
+    public isObject(object: number): boolean {
+        return this.objects.includes(object);
     }
 
-    getPositionObject(x: number, y: number) {
+    public getPositionObject(x: number, y: number): number {
         let index = this.gridPositionToIndex(x, y),
-            tiles: any = this.data[index],
-            objectId: any;
+            tiles = this.data[index],
+            objectId!: number;
 
-        if (tiles instanceof Array)
-            for (let i in tiles)
-                if (this.isObject(tiles[i])) objectId = tiles[i];
-                else if (this.isObject(tiles)) objectId = tiles;
+        if (Array.isArray(tiles)) {
+            for (let i in tiles) if (this.isObject(tiles[i])) objectId = tiles[i];
+        } else if (this.isObject(tiles)) objectId = tiles;
 
         return objectId;
     }
 
-    getCursor(tileIndex: number, tileId: number) {
+    public getCursor(tileIndex: number, tileId: number): string | undefined {
         if (tileId in this.cursors) return this.cursors[tileId];
 
         let cursor = Objects.getCursor(this.getObjectId(tileIndex));
 
-        if (!cursor) return null;
+        if (!cursor) return;
 
         return cursor;
     }
 
-    getObjectId(tileIndex: number) {
+    private getObjectId(tileIndex: number): string {
         let position = this.indexToGridPosition(tileIndex + 1);
 
         return position.x + '-' + position.y;
     }
 
-    getObject(x: number, y: number, data: any) {
+    private getObject(
+        x: number,
+        y: number,
+        data: { [id: number]: string }
+    ): number | number[] | undefined {
         let index = this.gridPositionToIndex(x, y, -1),
             tiles = this.data[index];
 
-        if (tiles instanceof Array) for (let i in tiles) if (tiles[i] in data) return tiles[i];
+        if (Array.isArray(tiles)) for (let i in tiles) if (tiles[i] in data) return tiles[i];
 
-        if (tiles in data) return tiles;
-
-        return null;
+        if ((tiles as number) in data) return tiles;
     }
 
-    getTree(x: number, y: number) {
+    public getTree(x: number, y: number): number | number[] | undefined {
         return this.getObject(x, y, this.trees);
     }
 
-    getRock(x: number, y: number) {
+    public getRock(x: number, y: number): number | number[] | undefined {
         return this.getObject(x, y, this.rocks);
     }
 
     // Transforms an object's `instance` or `id` into position
-    idToPosition(id: string) {
+    public idToPosition(id: string): Pos {
         let split = id.split('-');
 
         return { x: parseInt(split[0]), y: parseInt(split[1]) };
     }
 
-    isDoor(x: number, y: number) {
+    public isDoor(x: number, y: number): boolean {
         return !!this.doors[this.gridPositionToIndex(x, y, 1)];
     }
 
-    getDoorByPosition(x: number, y: number) {
+    public getDoorByPosition(x: number, y: number): Door {
         return this.doors[this.gridPositionToIndex(x, y, 1)];
     }
 
-    getDoorDestination(door: any) {
+    private getDoorDestination(door: ProcessedArea): ProcessedArea | null {
         for (let i in map.areas.doors)
-            if (map.areas.doors[i].id === door.destination)
-                return map.areas.doors[i];
-                
+            if (map.areas.doors[i].id === door.destination) return map.areas.doors[i];
+
         return null;
     }
 
-    isValidPosition(x: number, y: number) {
+    private isValidPosition(x: number, y: number): boolean {
         return (
             Number.isInteger(x) &&
             Number.isInteger(y) &&
@@ -362,24 +385,24 @@ class Map {
         );
     }
 
-    isOutOfBounds(x: number, y: number) {
+    public isOutOfBounds(x: number, y: number): boolean {
         return x < 0 || x >= this.width || y < 0 || y >= this.height;
     }
 
-    isPlateau(index: number) {
+    private isPlateau(index: number): boolean {
         return index in this.plateau;
     }
 
-    isColliding(x: number, y: number) {
+    public isColliding(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return false;
 
         let tileIndex = this.gridPositionToIndex(x, y);
 
-        return this.collisions.indexOf(tileIndex) > -1;
+        return this.collisions.includes(tileIndex);
     }
 
     /* For preventing NPCs from roaming in null areas. */
-    isEmpty(x: number, y: number) {
+    public isEmpty(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return true;
 
         let tileIndex = this.gridPositionToIndex(x, y);
@@ -387,7 +410,7 @@ class Map {
         return this.data[tileIndex] === 0;
     }
 
-    getPlateauLevel(x: number, y: number) {
+    public getPlateauLevel(x: number, y: number): number {
         let index = this.gridPositionToIndex(x, y);
 
         if (!this.isPlateau(index)) return 0;
@@ -395,7 +418,7 @@ class Map {
         return this.plateau[index];
     }
 
-    getActualTileIndex(tileIndex: number) {
+    private getActualTileIndex(tileIndex: number): number | undefined {
         let tileset = this.getTileset(tileIndex);
 
         if (!tileset) return;
@@ -403,22 +426,22 @@ class Map {
         return tileIndex - tileset.firstGID - 1;
     }
 
-    getTileset(tileIndex: number) {
+    private getTileset(tileIndex: number): ProcessedTileset | null {
         for (let id in this.tilesets)
-            if (this.tilesets.hasOwnProperty(id))
-                if (
-                    tileIndex > this.tilesets[id].firstGID - 1 &&
-                    tileIndex < this.tilesets[id].lastGID + 1
-                )
-                    return this.tilesets[id];
+            if (
+                Object.prototype.hasOwnProperty.call(this.tilesets, id) &&
+                tileIndex > this.tilesets[id].firstGID - 1 &&
+                tileIndex < this.tilesets[id].lastGID + 1
+            )
+                return this.tilesets[id];
 
         return null;
     }
 
-    getWarpById(id: number) {
+    public getWarpById(id: number): ProcessedArea | undefined {
         let warpName = Object.keys(Modules.Warps)[id];
 
-        if (!warpName) return null;
+        if (!warpName) return;
 
         let warp = this.getWarpByName(warpName.toLowerCase());
 
@@ -429,29 +452,26 @@ class Map {
         return warp;
     }
 
-    getWarpByName(name: string) {
+    private getWarpByName(name: string): ProcessedArea | null {
         console.log(this.warps);
 
         for (let i in this.warps)
-            if (this.warps[i].name === name)
-                return _.cloneDeep(this.warps[i]);
+            if (this.warps[i].name === name) return _.cloneDeep(this.warps[i]);
 
         return null;
     }
 
-    getChestAreas(): Areas {
-        return this.areas['chests'];
+    public getChestAreas(): Areas {
+        return this.areas.chests;
     }
 
-    isReady(callback: Function) {
+    public isReady(callback: () => void): void {
         this.readyCallback = callback;
     }
 
-    forEachAreas(callback: (areas: Areas, key: string) => void) {
+    public forEachAreas(callback: (areas: Areas, key: string) => void): void {
         _.each(this.areas, (a: Areas, name: string) => {
             callback(a, name);
-        })
+        });
     }
 }
-
-export default Map;

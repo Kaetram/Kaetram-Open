@@ -26,7 +26,6 @@
         "default-case-last": "error",
         "dot-notation": "error",
         "eqeqeq": "error",
-        "guard-for-in": "error",
         "max-classes-per-file": "error",
 
         "no-useless-backreference": "error",
@@ -48,6 +47,7 @@
         "object-shorthand": "warn",
         "operator-assignment": "warn",
 
+        "prefer-const": "off",
         "no-fallthrough": "off",
 
         "prefer-destructuring": [

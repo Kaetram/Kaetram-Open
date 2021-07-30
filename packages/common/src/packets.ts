@@ -51,7 +51,7 @@ enum Packets {
     BuildUp
 }
 
-export enum IntroOpcode {
+enum IntroOpcode {
     Login,
     Register,
     Guest
@@ -202,7 +202,8 @@ enum RegionOpcode {
     Modify,
     Collision,
     Update,
-    Reset
+    Reset,
+    Tileset
 }
 
 enum OverlayOpcode {
@@ -270,4 +271,4 @@ export default {
     PushOpcode,
     CommandOpcode,
     ProfessionOpcode
-};
+} as const;

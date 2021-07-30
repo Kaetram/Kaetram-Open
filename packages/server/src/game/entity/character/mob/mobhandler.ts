@@ -1,27 +1,19 @@
-import Utils from '../../../../util/utils';
-import Messages from '../../../../network/messages';
 import Mobs from '../../../../util/mobs';
-import Packets from '../../../../network/packets';
-import Combat from '../combat/combat';
-import World from '../../../world';
-import Mob from './mob';
-import Map from '../../../../map/map';
-import Character from '../character';
 
-class MobHandler {
-    mob: Mob;
-    combat: Combat;
-    map: Map;
+import type Player from '../player/player';
+import type Mob from './mob';
 
-    roamingInterval: any;
-    spawnLocation: any;
-    maxRoamingDistance: number;
+export default class MobHandler {
+    private combat;
 
-    constructor(mob: Mob) {
-        this.mob = mob;
+    private spawnLocation;
+    private maxRoamingDistance;
+
+    private roamingInterval: NodeJS.Timeout | null = null;
+
+    public constructor(private mob: Mob) {
         this.combat = mob.combat;
 
-        this.roamingInterval = null;
         this.spawnLocation = mob.spawnLocation;
         this.maxRoamingDistance = mob.maxRoamingDistance;
 
@@ -29,15 +21,15 @@ class MobHandler {
         this.loadCallbacks();
     }
 
-    load() {
+    private load(): void {
         if (!this.mob.roaming) return;
 
         this.roamingInterval = setInterval(() => {
-            this.mob.roamingCallback();
+            this.mob.roamingCallback?.();
         }, 5000);
     }
 
-    loadCallbacks() {
+    private loadCallbacks(): void {
         // Combat plugin has its own set of callbacks.
         if (Mobs.hasCombatPlugin(this.mob.id)) return;
 
@@ -48,17 +40,17 @@ class MobHandler {
         this.mob.onDeath(() => {
             if (!this.mob.miniboss || !this.combat) return;
 
-            this.combat.forEachAttacker((attacker: Character) => {
-                if (attacker) attacker.finishAchievement(this.mob.achievementId);
+            this.combat.forEachAttacker((attacker) => {
+                const player = attacker as Player;
+
+                player?.finishAchievement(this.mob.achievementId);
             });
         });
 
-        //TODO - Implement posion on Mobs
+        // TODO - Implement posion on Mobs
     }
 
-    forceTalk(message: string) {
-        this.mob.forceTalkCallback(message);
+    private forceTalk(message: string): void {
+        this.mob.forceTalkCallback?.(message);
     }
 }
-
-export default MobHandler;

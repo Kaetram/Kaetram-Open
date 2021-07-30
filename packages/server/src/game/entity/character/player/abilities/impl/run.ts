@@ -1,11 +1,7 @@
-/* global module */
-
 import Ability from './ability';
 
-class Run extends Ability {
-    constructor(name: string, type: number) {
+export default class Run extends Ability {
+    public constructor(name: string, type: number) {
         super(name, type);
     }
 }
-
-export default Run;

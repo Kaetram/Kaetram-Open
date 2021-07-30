@@ -1,45 +1,44 @@
-/* global module */
-
-import Entity from '../entity';
-import Player from '../character/player/player';
 import Utils from '../../../util/utils';
+import Entity from '../entity';
 
-class Chest extends Entity {
-    respawnDuration: number;
-    static: boolean;
+import type Player from '../character/player/player';
 
-    items: any;
-    achievement: string;
+type OpenCallback = (player?: Player) => void;
 
-    openCallback: Function;
-    respawnCallback: Function;
+export default class Chest extends Entity {
+    private respawnDuration = 25000;
+    public static = false;
 
-    constructor(id: number, instance: string, x: number, y: number, achievement?: string) {
+    private items: string[] = [];
+
+    private openCallback?: OpenCallback;
+    private respawnCallback?(): void;
+
+    public constructor(
+        id: number,
+        instance: string,
+        x: number,
+        y: number,
+        public achievement?: number
+    ) {
         super(id, 'chest', instance, x, y);
-
-        this.respawnDuration = 25000;
-        this.static = false;
-
-        this.achievement = achievement;
-
-        this.items = [];
     }
 
-    addItems(items: string) {
-        this.items = items.split(',');
+    public addItems(items: string[]): void {
+        this.items = items;
     }
 
-    openChest(player?: Player) {
-        if (this.openCallback) this.openCallback(player);
+    public openChest(player?: Player): void {
+        this.openCallback?.(player);
     }
 
-    respawn() {
+    public respawn(): void {
         setTimeout(() => {
-            if (this.respawnCallback) this.respawnCallback();
+            this.respawnCallback?.();
         }, this.respawnDuration);
     }
 
-    getItem() {
+    public getItem(): { string: string; count: number } | null {
         let random = Utils.randomInt(0, this.items.length - 1),
             item = this.items[random],
             count = 1,
@@ -48,9 +47,9 @@ class Chest extends Entity {
         if (item.includes(':')) {
             let itemData = item.split(':');
 
-            item = itemData.shift(); // name
-            count = parseInt(itemData.shift()); // count
-            probability = parseInt(itemData.shift()); // probability
+            item = itemData.shift()!; // name
+            count = parseInt(itemData.shift()!); // count
+            probability = parseInt(itemData.shift()!); // probability
         }
 
         /**
@@ -63,17 +62,15 @@ class Chest extends Entity {
 
         return {
             string: item,
-            count: count
+            count
         };
     }
 
-    onOpen(callback: Function) {
+    public onOpen(callback: OpenCallback): void {
         this.openCallback = callback;
     }
 
-    onRespawn(callback: Function) {
+    public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 }
-
-export default Chest;
