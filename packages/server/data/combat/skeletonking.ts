@@ -31,7 +31,7 @@ export default class SkeletonKing extends Combat {
     reset(): void {
         this.lastSpawn = 0;
 
-        const listCopy = [...this.minions];
+        let listCopy = [...this.minions];
 
         for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
     }
@@ -77,7 +77,7 @@ export default class SkeletonKing extends Combat {
         if (!this.hasMinions()) return;
 
         _.each(this.minions, (minion: Mob) => {
-            const randomTarget = this.getRandomTarget();
+            let randomTarget = this.getRandomTarget();
 
             if (!minion.target && randomTarget) minion.combat.begin(randomTarget);
         });
@@ -85,7 +85,7 @@ export default class SkeletonKing extends Combat {
 
     getRandomTarget(): Character | null {
         if (this.isAttacked()) {
-            const keys = Object.keys(this.attackers),
+            let keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;

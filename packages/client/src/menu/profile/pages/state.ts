@@ -88,7 +88,7 @@ export default class State extends Page {
     }
 
     public update(): void {
-        const weaponPower = this.player.weapon.power,
+        let weaponPower = this.player.weapon.power,
             armourPower = this.player.armour.power;
 
         this.level.text(this.player.level);

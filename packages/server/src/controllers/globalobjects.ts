@@ -22,7 +22,7 @@ export default class GlobalObjects {
     }
 
     public getInfo(id: string): { type: string; tree?: Tree } | null {
-        const position = Objects.getPosition(id),
+        let position = Objects.getPosition(id),
             objectId = this.map.getPositionObject(position.x, position.y);
 
         if (objectId in this.map.trees)
@@ -31,7 +31,7 @@ export default class GlobalObjects {
                 tree: this.map.trees[objectId]
             };
 
-        const object = Objects.getObject(id);
+        let object = Objects.getObject(id);
 
         if (!object) return null;
 
@@ -45,11 +45,11 @@ export default class GlobalObjects {
      * position data for the client to display the bubble.
      */
     public getSignData(id: string): SignData | null {
-        const object = Objects.getObject(id);
+        let object = Objects.getObject(id);
 
         if (!object) return null;
 
-        const position = Objects.getPosition(id);
+        let position = Objects.getPosition(id);
 
         object.id = id;
 

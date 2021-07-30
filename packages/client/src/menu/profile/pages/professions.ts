@@ -24,7 +24,7 @@ export default class Professions extends Page {
 
     public load(professions: ProfessionsInfo[]): void {
         _.each(professions, (profession) => {
-            const item = this.getItem(profession.id),
+            let item = this.getItem(profession.id),
                 name = this.getName(profession.id),
                 info = $('<p></p>');
 
@@ -35,7 +35,7 @@ export default class Professions extends Page {
 
             item.append(name);
 
-            const listItem = $('<li></li>');
+            let listItem = $('<li></li>');
 
             listItem.append(item);
 

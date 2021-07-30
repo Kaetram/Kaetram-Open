@@ -24,7 +24,7 @@ export default class OverlayController {
     public constructor(private input: InputController) {}
 
     public update(entity: Entity | undefined): void {
-        const { name, health, details } = this;
+        let { name, health, details } = this;
 
         if (!entity || !this.validEntity(entity)) {
             this.hovering = null;
@@ -53,7 +53,7 @@ export default class OverlayController {
         }
 
         this.onUpdate((entityId: string, hitPoints: number) => {
-            const { hovering } = this;
+            let { hovering } = this;
             if (
                 hovering &&
                 hovering.id === entityId &&

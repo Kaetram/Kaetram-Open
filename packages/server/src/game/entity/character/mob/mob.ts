@@ -48,7 +48,7 @@ export default class Mob extends Character {
 
         if (!Mobs.exists(id)) return;
 
-        const data = Mobs.Ids[id];
+        let data = Mobs.Ids[id];
 
         this.data = data;
         this.hitPoints = data.hitPoints;
@@ -89,13 +89,13 @@ export default class Mob extends Character {
     public getDrop(): { id: number; count: number } | null {
         if (!this.drops) return null;
 
-        const random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
+        let random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
             dropObjects = Object.keys(this.drops),
             item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
 
         if (random > this.drops[item]) return null;
 
-        const count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
+        let count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
 
         return {
             id: Items.stringToId(item)!,
@@ -151,7 +151,7 @@ export default class Mob extends Character {
     }
 
     public addToChestArea(chestAreas: Areas): void {
-        const area = chestAreas.inArea(this.x, this.y);
+        let area = chestAreas.inArea(this.x, this.y);
 
         area?.addEntity(this);
     }
@@ -170,7 +170,7 @@ export default class Mob extends Character {
     }
 
     public override getState(): MobState {
-        const base = super.getState() as MobState;
+        let base = super.getState() as MobState;
 
         base.hitPoints = this.hitPoints;
         base.maxHitPoints = this.maxHitPoints;

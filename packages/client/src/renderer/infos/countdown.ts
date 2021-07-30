@@ -26,7 +26,7 @@ export default class Countdown {
     private getStringFormat(): string {
         if (this.time < 60) return `00:${this.time}`;
 
-        const minutes = Math.floor(this.time / 60),
+        let minutes = Math.floor(this.time / 60),
             seconds = this.time - minutes * 60;
 
         if (minutes < 10) return `0${minutes}:${seconds}`;
