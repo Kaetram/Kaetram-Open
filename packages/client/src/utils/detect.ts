@@ -33,7 +33,7 @@ export function iOSVersion(): number | undefined {
         // https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
         return;
 
-    const match = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);
+    const match = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+?)/);
 
     if (match !== undefined && match !== null) {
         const version = [
