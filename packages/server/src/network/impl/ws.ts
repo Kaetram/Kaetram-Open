@@ -5,9 +5,7 @@ import log from '../../util/log';
 import Utils from '../../util/utils';
 import Connection from '../connection';
 import SocketHandler from '../sockethandler';
-import WebSocket from '../websocket';
-
-import type { Socket } from 'socket.io';
+import WebSocket, { AnySocket } from '../websocket';
 
 declare module 'ws' {
     interface WebSocket {
@@ -34,7 +32,7 @@ export default class WS extends WebSocket {
             const connection = new Connection(
                 Utils.getConnectionId(),
                 this.type,
-                socket as Socket,
+                socket as AnySocket,
                 this.socketHandler
             );
 
