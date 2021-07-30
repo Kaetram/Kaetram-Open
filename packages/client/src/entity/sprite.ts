@@ -70,9 +70,9 @@ export default class Sprite {
         });
     }
 
-    public async loadSprite(): Promise<void> {
+    public loadSprite(): void {
         const { sprite, id } = this,
-            { default: path } = await import(`../../img/sprites/${id}.png`);
+            path = `/img/sprites/${id}.png`;
 
         this.filepath = path;
         this.animationData = sprite.animations;
@@ -87,8 +87,8 @@ export default class Sprite {
         this.idleSpeed = sprite.idleSpeed ?? 450;
     }
 
-    public async update(): Promise<void> {
-        await this.loadSprite();
+    public update(): void {
+        this.loadSprite();
 
         this.load();
     }

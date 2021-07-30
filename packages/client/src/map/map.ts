@@ -173,16 +173,16 @@ export default class Map {
         });
     }
 
-    private async loadTileset(
+    private loadTileset(
         rawTileset: MapTileset,
         callback: (tileset: TilesetImageElement) => void
-    ): Promise<void> {
+    ): void {
         const tileset = new Image() as TilesetImageElement;
 
         tileset.index = this.rawTilesets.indexOf(rawTileset);
         tileset.name = rawTileset.imageName;
 
-        const { default: path } = await import(`../../img/tilesets/${rawTileset.name}.png`);
+        const path = `/img/tilesets/${rawTileset.name}.png`;
 
         tileset.crossOrigin = 'Anonymous';
         tileset.path = path;

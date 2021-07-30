@@ -169,7 +169,7 @@ footer div {
 .parchment-middle,
 .parchment-right,
 #respawn {
-    background-image: url('../img/3/spritesheet.png');
+    background-image: url('/img/3/spritesheet.png');
     -ms-interpolation-mode: nearest-neighbor;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges;
@@ -349,7 +349,7 @@ footer div {
     padding: 0;
     background: none;
 
-    /* background: url('../img/1/border.png') no-repeat;
+    /* background: url('/img/1/border.png') no-repeat;
     background-size: 100% 100%; */
 }
 
@@ -374,7 +374,7 @@ footer div {
     .parchment-middle,
     .parchment-right,
     #respawn {
-        background-image: url('../img/3/spritesheet.png');
+        background-image: url('/img/3/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: -moz-crisp-edges;
@@ -500,7 +500,7 @@ footer div {
     .parchment-middle,
     .parchment-right,
     #respawn {
-        background-image: url('../img/2/spritesheet.png');
+        background-image: url('/img/2/spritesheet.png');
         -ms-interpolation-mode: nearest-neighbor;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: -moz-crisp-edges;

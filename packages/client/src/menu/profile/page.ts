@@ -24,8 +24,8 @@ export default abstract class Page {
         // not implemented
     }
 
-    public async getImageFormat(name: string): Promise<string> {
-        const { default: image } = await import(`../../../img/sprites/item-${name}.png`);
+    public getImageFormat(name: string): string {
+        const image = `/img/sprites/item-${name}.png`;
 
         return `url("${image}")`;
     }
