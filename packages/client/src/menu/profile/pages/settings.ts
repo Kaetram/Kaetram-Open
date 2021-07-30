@@ -36,7 +36,7 @@ export default class Settings {
     private load(): void {
         if (this.loaded) return;
 
-        const {
+        let {
             volume,
             sfx,
             brightness,
@@ -71,7 +71,7 @@ export default class Settings {
         brightness.on('input', () => this.setBrightness(brightness.val() as number));
 
         soundCheck.on('input', () => {
-            const isActive = soundCheck.prop('checked');
+            let isActive = soundCheck.prop('checked');
 
             this.setSound(isActive);
 
@@ -82,7 +82,7 @@ export default class Settings {
         });
 
         cameraCheck.on('input', () => {
-            const active = cameraCheck.prop('checked');
+            let active = cameraCheck.prop('checked');
 
             if (active) renderer.camera.center();
             else renderer.camera.decenter();
@@ -91,7 +91,7 @@ export default class Settings {
         });
 
         debugCheck.on('input', () => {
-            const active = debugCheck.prop('checked');
+            let active = debugCheck.prop('checked');
 
             renderer.debugging = active;
 
@@ -99,7 +99,7 @@ export default class Settings {
         });
 
         centreCheck.on('input', () => {
-            const active = centreCheck.prop('checked');
+            let active = centreCheck.prop('checked');
 
             renderer.autoCentre = active;
 
@@ -107,7 +107,7 @@ export default class Settings {
         });
 
         nameCheck.on('input', () => {
-            const active = nameCheck.prop('checked');
+            let active = nameCheck.prop('checked');
 
             renderer.drawNames = active;
 
@@ -115,7 +115,7 @@ export default class Settings {
         });
 
         levelCheck.on('input', () => {
-            const active = levelCheck.prop('checked');
+            let active = levelCheck.prop('checked');
 
             renderer.drawLevels = active;
 
@@ -171,7 +171,7 @@ export default class Settings {
     }
 
     private setMusicLevel(musicLevel: number): void {
-        const { audio, storage } = this;
+        let { audio, storage } = this;
 
         if (audio.song) audio.song.volume = musicLevel / 100;
 

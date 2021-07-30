@@ -11,18 +11,18 @@ export default class Commands {
     private entities;
 
     public constructor(private player: Player) {
-        const { world } = player;
+        let { world } = player;
 
         this.world = world;
         this.entities = world.entities;
     }
 
     public parse(rawText: string): void {
-        const blocks = rawText.slice(1).split(' ');
+        let blocks = rawText.slice(1).split(' ');
 
         if (blocks.length === 0) return;
 
-        const command = blocks.shift()!;
+        let command = blocks.shift()!;
 
         this.handlePlayerCommands(command, blocks);
 
@@ -34,7 +34,7 @@ export default class Commands {
     private handlePlayerCommands(command: string, blocks: string[]): void {
         switch (command) {
             case 'players': {
-                const population = this.world.getPopulation(),
+                let population = this.world.getPopulation(),
                     singular = population === 1;
 
                 if (this.player.rights > 1)
@@ -67,7 +67,7 @@ export default class Commands {
                 return;
 
             case 'progress': {
-                const tutorialQuest = this.player.getTutorial();
+                let tutorialQuest = this.player.getTutorial();
 
                 this.player.send(
                     new Messages.Quest(Packets.QuestOpcode.Progress, {
@@ -99,7 +99,7 @@ export default class Commands {
                 return;
 
             case 'resetintro': {
-                const introduction = this.player.quests.getQuest(0)!;
+                let introduction = this.player.quests.getQuest(0)!;
 
                 introduction.setStage(0);
                 introduction.clearPointers();
@@ -114,7 +114,7 @@ export default class Commands {
 
             case 'pm':
             case 'msg': {
-                const otherPlayer = blocks.shift()!,
+                let otherPlayer = blocks.shift()!,
                     message = blocks.join(' ');
 
                 this.player.sendMessage(otherPlayer, message);
@@ -134,15 +134,15 @@ export default class Commands {
         switch (command) {
             case 'mute':
             case 'ban': {
-                let duration = parseInt(blocks.shift()!);
-                const targetName = blocks.join(' '),
+                let duration = parseInt(blocks.shift()!),
+                    targetName = blocks.join(' '),
                     user: Player = this.world.getPlayerByName(targetName);
 
                 if (!user) return;
 
                 if (!duration) duration = 24;
 
-                const timeFrame = Date.now() + duration * 60 * 60;
+                let timeFrame = Date.now() + duration * 60 * 60;
 
                 if (command === 'mute') user.mute = timeFrame;
                 else if (command === 'ban') {
@@ -159,7 +159,7 @@ export default class Commands {
             }
 
             case 'unmute': {
-                const uTargetName = blocks.join(' '),
+                let uTargetName = blocks.join(' '),
                     uUser = this.world.getPlayerByName(uTargetName);
 
                 if (!uTargetName) return;
@@ -178,7 +178,7 @@ export default class Commands {
 
         switch (command) {
             case 'spawn': {
-                const spawnId = parseInt(blocks.shift()!),
+                let spawnId = parseInt(blocks.shift()!),
                     count = parseInt(blocks.shift()!),
                     ability = parseInt(blocks.shift()!),
                     abilityLevel = parseInt(blocks.shift()!);
@@ -206,8 +206,8 @@ export default class Commands {
                 return;
 
             case 'drop': {
-                const id = parseInt(blocks.shift()!);
-                let dCount = parseInt(blocks.shift()!);
+                let id = parseInt(blocks.shift()!),
+                    dCount = parseInt(blocks.shift()!);
 
                 if (!id) return;
 
@@ -229,7 +229,7 @@ export default class Commands {
                 return;
 
             case 'teleport': {
-                const x = parseInt(blocks.shift()!),
+                let x = parseInt(blocks.shift()!),
                     y = parseInt(blocks.shift()!),
                     withAnimation = parseInt(blocks.shift()!);
 
@@ -262,7 +262,7 @@ export default class Commands {
                 return;
 
             case 'mob': {
-                const npcId = parseInt(blocks.shift()!);
+                let npcId = parseInt(blocks.shift()!);
 
                 this.entities.spawnMob(npcId, this.player.x, this.player.y);
 
@@ -271,7 +271,7 @@ export default class Commands {
 
             case 'pointer':
                 if (blocks.length > 1) {
-                    const posX = parseInt(blocks.shift()!),
+                    let posX = parseInt(blocks.shift()!),
                         posY = parseInt(blocks.shift()!);
 
                     if (!posX || !posY) return;
@@ -284,7 +284,7 @@ export default class Commands {
                         })
                     );
                 } else {
-                    const instance = blocks.shift()!;
+                    let instance = blocks.shift()!;
 
                     if (!instance) return;
 
@@ -315,7 +315,7 @@ export default class Commands {
             }
 
             case 'addexp': {
-                const exp = parseInt(blocks.shift()!);
+                let exp = parseInt(blocks.shift()!);
 
                 if (!exp) return;
 
@@ -325,13 +325,13 @@ export default class Commands {
             }
 
             case 'region': {
-                const tileX = parseInt(blocks.shift()!),
+                let tileX = parseInt(blocks.shift()!),
                     tileY = parseInt(blocks.shift()!),
                     tileInfo = parseInt(blocks.shift()!);
 
                 if (!tileX || !tileY) return;
 
-                const tileIndex = this.world.region.gridPositionToIndex(tileX - 1, tileY);
+                let tileIndex = this.world.region.gridPositionToIndex(tileX - 1, tileY);
 
                 log.info(`Sending Tile: ${tileIndex}`);
 
@@ -400,7 +400,7 @@ export default class Commands {
                 break;
 
             case 'resetAchievement': {
-                const achievementId = parseInt(blocks.shift()!);
+                let achievementId = parseInt(blocks.shift()!);
 
                 if (!achievementId) {
                     this.player.notify('Invalid command format. /resetAchievement <achievementId>');

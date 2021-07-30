@@ -11,7 +11,7 @@ import Entity from './entity';
 
 import type { Socket } from 'socket.io-client';
 
-const gVer = 1;
+let gVer = 1;
 
 interface PacketInfo {
     instance: string;
@@ -28,7 +28,7 @@ export default class Bot {
     }
 
     private load(): void {
-        const connecting = setInterval(() => {
+        let connecting = setInterval(() => {
             this.connect();
 
             if (--this.#botCount < 1) clearInterval(connecting);
@@ -44,7 +44,7 @@ export default class Bot {
     }
 
     private connect(): void {
-        const connection = io('ws://127.0.0.1:9001', {
+        let connection = io('ws://127.0.0.1:9001', {
             forceNew: true,
             reconnection: false
         });
@@ -65,7 +65,7 @@ export default class Bot {
 
         connection.on('message', (message: string) => {
             if (message.startsWith('[')) {
-                const data = JSON.parse(message);
+                let data = JSON.parse(message);
 
                 if (data.length > 1)
                     each(data, (msg) => {
@@ -85,7 +85,7 @@ export default class Bot {
             return;
         }
 
-        const [opcode, info] = message;
+        let [opcode, info] = message;
 
         switch (opcode) {
             case Packets.Handshake:
@@ -105,13 +105,13 @@ export default class Bot {
     }
 
     private send(connection: Socket, packet: number, data: (string | number)[]): void {
-        const json = JSON.stringify([packet, data]);
+        let json = JSON.stringify([packet, data]);
 
         if (connection && connection.connected) connection.send(json);
     }
 
     private move(bot: Entity): void {
-        const currentX = bot.x,
+        let currentX = bot.x,
             currentY = bot.y,
             newX = currentX + Utils.randomInt(-3, 3),
             newY = currentY + Utils.randomInt(-3, 3);

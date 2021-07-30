@@ -23,6 +23,7 @@
         "@yarnpkg/sdks": "^2.4.1-rc.4",
         "eslint": "^7.31.0",
         "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prefer-let": "^1.1.0",
         "eslint-plugin-prettier": "^3.4.0",
         "eslint-plugin-unicorn": "^34.0.1",
         "postcss": "^8.3.6",

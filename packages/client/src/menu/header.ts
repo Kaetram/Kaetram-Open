@@ -27,14 +27,13 @@ export default class Header {
     }
 
     private calculateHealthBar(): void {
-        const scale = this.getScale(),
-            width = this.healthBar.width()!;
-
-        // 11 is due to the offset of the #health in the #healthBar
-        let diff = Math.floor(
-            width * (this.player.hitPoints / this.player.maxHitPoints) - 11 * scale
-        );
-        const prevWidth = this.health.width()!;
+        let scale = this.getScale(),
+            width = this.healthBar.width()!,
+            // 11 is due to the offset of the #health in the #healthBar
+            diff = Math.floor(
+                width * (this.player.hitPoints / this.player.maxHitPoints) - 11 * scale
+            ),
+            prevWidth = this.health.width()!;
 
         if (this.player.poison) this.toggle('poison');
         else this.toggle(diff - 1 > prevWidth ? 'green' : 'white');
@@ -46,8 +45,8 @@ export default class Header {
     }
 
     private calculateExpBar(): void {
-        // const scale = this.getScale();
-        const width = this.expBar.width()!,
+        // let scale = this.getScale();
+        let width = this.expBar.width()!,
             experience = this.player.experience - this.player.prevExperience,
             nextExperience = this.player.nextExperience - this.player.prevExperience,
             diff = Math.floor(width * (experience / nextExperience));

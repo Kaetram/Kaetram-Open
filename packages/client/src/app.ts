@@ -83,7 +83,7 @@ export default class App {
     }
 
     private load(): void {
-        const {
+        let {
             forms,
             registerButton,
             cancelButton,
@@ -129,17 +129,17 @@ export default class App {
         git.on('click', () => this.displayScroll('git'));
 
         rememberMe.on('change', () => {
-            const { game } = this;
+            let { game } = this;
 
             if (!game.storage) return;
 
-            const active = rememberMe.prop('checked');
+            let active = rememberMe.prop('checked');
 
             game.storage.toggleRemember(!active);
         });
 
         respawn.on('click', () => {
-            const { game } = this;
+            let { game } = this;
 
             if (game.player.dead) game.respawn();
         });
@@ -155,8 +155,8 @@ export default class App {
         if (config.worldSwitch)
             $.get('https://hub.kaetram.com/all', (servers) => {
                 let serverIndex = 0;
-                for (const [i, server] of servers.entries()) {
-                    const row = $(document.createElement('tr'));
+                for (let [i, server] of servers.entries()) {
+                    let row = $(document.createElement('tr'));
                     row.append($(document.createElement('td')).text(server.serverId));
                     row.append(
                         $(document.createElement('td')).text(
@@ -171,7 +171,7 @@ export default class App {
 
                     if (server.serverId === window.localStorage.getItem('world')) serverIndex = i;
                 }
-                const currentWorld = servers[serverIndex];
+                let currentWorld = servers[serverIndex];
 
                 $('#current-world-index').text(serverIndex);
                 $('#current-world-id').text(currentWorld.serverId);
@@ -185,7 +185,7 @@ export default class App {
         $(document).on('keydown', ({ which }) => which !== Modules.Keys.Enter);
 
         $(document).on('keydown', ({ which, keyCode }) => {
-            const key = which || keyCode || 0,
+            let key = which || keyCode || 0,
                 { game } = this;
 
             if (!game) return;
@@ -197,7 +197,7 @@ export default class App {
         });
 
         $(document).on('keyup', ({ which }) => {
-            const { game } = this,
+            let { game } = this,
                 key = which;
 
             if (!game || !game.started) return;
@@ -206,7 +206,7 @@ export default class App {
         });
 
         $(document).on('mousemove', (event: JQuery.MouseMoveEvent<Document>) => {
-            const { game } = this;
+            let { game } = this;
 
             if (!game || !game.input || !game.started || event.target.id !== 'textCanvas') return;
 
@@ -221,7 +221,7 @@ export default class App {
         });
 
         canvas.on('click', (event) => {
-            const { game } = this;
+            let { game } = this;
 
             if (!game || !game.started || event.button !== 0) return;
 
@@ -251,7 +251,7 @@ export default class App {
     }
 
     private login(): void {
-        const { loggingIn, loaded, statusMessage, game } = this;
+        let { loggingIn, loaded, statusMessage, game } = this;
 
         if (loggingIn || !loaded || statusMessage || !this.verifyForm()) return;
 
@@ -262,7 +262,7 @@ export default class App {
     }
 
     public fadeMenu(): void {
-        const { body, footer } = this;
+        let { body, footer } = this;
 
         this.updateLoader(null);
 
@@ -277,7 +277,7 @@ export default class App {
     }
 
     public showMenu(): void {
-        const { body, footer } = this;
+        let { body, footer } = this;
 
         body.removeClass('game');
         body.removeClass('started');
@@ -289,7 +289,7 @@ export default class App {
     // showDeath(): void {}
 
     public openScroll(origin: string | undefined, destination: string): void {
-        const { loggingIn, parchmentAnimating, parchment } = this;
+        let { loggingIn, parchmentAnimating, parchment } = this;
 
         if (!destination || loggingIn) return;
 
@@ -315,7 +315,7 @@ export default class App {
     }
 
     private displayScroll(content: string): void {
-        const { parchment, game, body, helpButton } = this,
+        let { parchment, game, body, helpButton } = this,
             state = parchment.attr('class');
 
         if (game.started) {
@@ -331,13 +331,13 @@ export default class App {
     }
 
     private verifyForm(): boolean {
-        const activeForm = this.getActiveForm();
+        let activeForm = this.getActiveForm();
 
         if (activeForm === 'null') return false;
 
         switch (activeForm) {
             case 'loadCharacter': {
-                const nameInput: JQuery<HTMLInputElement> = $('#loginNameInput'),
+                let nameInput: JQuery<HTMLInputElement> = $('#loginNameInput'),
                     passwordInput: JQuery<HTMLInputElement> = $('#loginPasswordInput');
 
                 if (this.loginFields.length === 0) this.loginFields = [nameInput, passwordInput];
@@ -356,7 +356,7 @@ export default class App {
             }
 
             case 'createCharacter': {
-                const characterName: JQuery<HTMLInputElement> = $('#registerNameInput'),
+                let characterName: JQuery<HTMLInputElement> = $('#registerNameInput'),
                     registerPassword: JQuery<HTMLInputElement> = $('#registerPasswordInput'),
                     registerPasswordConfirmation: JQuery<HTMLInputElement> = $(
                         '#registerPasswordConfirmationInput'
@@ -443,7 +443,7 @@ export default class App {
     }
 
     public cleanErrors(): void {
-        const activeForm = this.getActiveForm(),
+        let activeForm = this.getActiveForm(),
             fields = activeForm === 'loadCharacter' ? this.loginFields : this.registerFields;
 
         for (let i = 0; i < fields.length; i++) fields[i].removeClass('field-error');
@@ -473,7 +473,7 @@ export default class App {
     }
 
     public getUIScale(): number {
-        const width = window.innerWidth,
+        let width = window.innerWidth,
             height = window.innerHeight;
 
         return width <= 1000 ? 1 : width <= 1500 || height <= 870 ? 2 : 3;
@@ -484,10 +484,10 @@ export default class App {
     }
 
     public updateLoader(message: string | null): void {
-        const { loading } = this;
+        let { loading } = this;
 
         if (message) {
-            const dots =
+            let dots =
                 '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
 
             loading.html(message + dots);
@@ -495,7 +495,7 @@ export default class App {
     }
 
     public toggleLogin(toggle: boolean): void {
-        const { loading, loginButton, registerButton } = this;
+        let { loading, loginButton, registerButton } = this;
 
         this.revertLoader();
 
@@ -511,7 +511,7 @@ export default class App {
     }
 
     private toggleTyping(state: boolean): void {
-        const { loginFields, registerFields } = this;
+        let { loginFields, registerFields } = this;
 
         if (loginFields) _.each(loginFields, (field) => field.prop('readonly', state));
 
@@ -519,7 +519,7 @@ export default class App {
     }
 
     public updateRange(obj: JQuery<HTMLInputElement>): void {
-        const min = parseInt(obj.attr('min')!),
+        let min = parseInt(obj.attr('min')!),
             max = parseInt(obj.attr('max')!),
             val = (parseInt(obj.val() as string) - min) / (max - min);
 

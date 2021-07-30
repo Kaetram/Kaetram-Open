@@ -1,1 +1,1 @@
-export const isInt = (n: number): boolean => n % 1 === 0;
+export let isInt = (n: number): boolean => n % 1 === 0;

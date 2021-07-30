@@ -9,7 +9,7 @@ export interface MapData extends MapDataType {
     blocking: number[];
 }
 
-const data = mapData as MapData,
+let data = mapData as MapData,
     { width, height, collisions } = data;
 
 onmessage = () => {
@@ -19,7 +19,7 @@ onmessage = () => {
 };
 
 function loadCollisionGrid() {
-    const grid: number[][] = [];
+    let grid: number[][] = [];
 
     for (let y = 0; y < height; y++) {
         grid[y] = [];
@@ -27,14 +27,14 @@ function loadCollisionGrid() {
         for (let x = 0; x < width; x++) grid[y][x] = 0;
     }
 
-    for (const index of collisions) {
-        const { x, y } = indexToGridPosition(index);
+    for (let index of collisions) {
+        let { x, y } = indexToGridPosition(index);
 
         grid[y][x] = 1;
     }
 
-    // for (const tileIndex of blocking) {
-    //     const { x, y } = indexToGridPosition(tileIndex);
+    // for (let tileIndex of blocking) {
+    //     let { x, y } = indexToGridPosition(tileIndex);
 
     //     data.grid[y][x] = 1;
     // }
@@ -43,7 +43,7 @@ function loadCollisionGrid() {
 }
 
 function indexToGridPosition(index: number) {
-    const x = index % width,
+    let x = index % width,
         y = Math.floor(index / width);
 
     return { x, y };

@@ -16,10 +16,10 @@ export default class SpritesController {
     }
 
     public load(): void {
-        const sprites = spriteData as SpriteData[];
+        let sprites = spriteData as SpriteData[];
 
-        for (const data of sprites) {
-            const sprite = new Sprite(data);
+        for (let data of sprites) {
+            let sprite = new Sprite(data);
 
             sprite.loadSprite();
 

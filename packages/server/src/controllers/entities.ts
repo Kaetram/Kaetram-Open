@@ -49,13 +49,13 @@ export default class Entities {
         // Spawns the static entities such as mobs, items, and npcs
 
         _.each(this.map.staticEntities, (entityInfo) => {
-            const key = entityInfo.string,
+            let key = entityInfo.string,
                 instance = Utils.generateInstance(),
                 position = this.map.indexToGridPosition(entityInfo.tileIndex, 1);
 
             switch (entityInfo.type) {
                 case 'item': {
-                    const item = this.createItem(
+                    let item = this.createItem(
                         Items.stringToId(key)!,
                         instance,
                         position.x,
@@ -70,7 +70,7 @@ export default class Entities {
                 }
 
                 case 'npc': {
-                    const npc = new NPC(NPCs.stringToId(key)!, instance, position.x, position.y);
+                    let npc = new NPC(NPCs.stringToId(key)!, instance, position.x, position.y);
 
                     this.addNPC(npc);
 
@@ -78,7 +78,7 @@ export default class Entities {
                 }
 
                 case 'mob': {
-                    const mob = new Mob(Mobs.stringToId(key)!, instance, position.x, position.y);
+                    let mob = new Mob(Mobs.stringToId(key)!, instance, position.x, position.y);
 
                     mob.static = true;
                     mob.roaming = entityInfo.roaming;
@@ -120,7 +120,7 @@ export default class Entities {
                     mob.onRoaming(() => {
                         if (this.mobs.dead) return;
 
-                        const newX =
+                        let newX =
                                 mob.spawnLocation[0] +
                                 Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
                             newY =
@@ -157,7 +157,7 @@ export default class Entities {
                          * levels of plateau in order to properly roam entities without
                          * them walking into other regions (or clipping).
                          */
-                        const plateauLevel = this.map.getPlateauLevel(
+                        let plateauLevel = this.map.getPlateauLevel(
                             mob.spawnLocation[0],
                             mob.spawnLocation[1]
                         );
@@ -198,7 +198,7 @@ export default class Entities {
     }
 
     public spawnMob(id: number, gridX: number, gridY: number): Mob {
-        const mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
+        let mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
 
         this.addMob(mob);
 
@@ -212,7 +212,7 @@ export default class Entities {
         isStatic?: boolean,
         achievement?: number
     ): Chest {
-        const chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);
+        let chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);
 
         chest.addItems(items);
 
@@ -225,7 +225,7 @@ export default class Entities {
         chest.onOpen((player?: Player) => {
             this.removeChest(chest);
 
-            const item = chest.getItem();
+            let item = chest.getItem();
 
             if (!item) return;
 
@@ -242,17 +242,17 @@ export default class Entities {
     public spawnProjectile([attacker, target]: Character[]): Projectile | null {
         if (!attacker || !target) return null;
 
-        const startX = attacker.x, // gridX
+        let startX = attacker.x, // gridX
             startY = attacker.y, // gridY
-            type = attacker.getProjectile();
-        let hit = null;
-        const projectile = new Projectile(type, Utils.generateInstance());
+            type = attacker.getProjectile(),
+            hit = null,
+            projectile = new Projectile(type, Utils.generateInstance());
 
         projectile.setStart(startX, startY);
         projectile.setTarget(target);
 
         if (attacker.type === 'player') {
-            const player = attacker as Player;
+            let player = attacker as Player;
 
             hit = player.getHit(target);
         }
@@ -481,7 +481,7 @@ export default class Entities {
         ability?: number,
         abilityLevel?: number
     ): void {
-        const item = this.createItem(
+        let item = this.createItem(
             id,
             Utils.generateInstance(),
             gridX,

@@ -4259,6 +4259,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-prefer-let@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "eslint-plugin-prefer-let@npm:1.1.0"
+  dependencies:
+    requireindex: ~1.2.0
+  checksum: 54b1bd7171d0ea78bfae5f0063de5b88502d2a582186cf3f1c2cb50e966eb64cba3dc7e12f4d4aa3faea28d9023c891437b5e4b4a0390f4321755a1587016932
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-prettier@npm:^3.4.0":
   version: 3.4.0
   resolution: "eslint-plugin-prettier@npm:3.4.0"
@@ -6249,6 +6258,7 @@ fsevents@~2.3.2:
     "@yarnpkg/sdks": ^2.4.1-rc.4
     eslint: ^7.31.0
     eslint-config-prettier: ^8.3.0
+    eslint-plugin-prefer-let: ^1.1.0
     eslint-plugin-prettier: ^3.4.0
     eslint-plugin-unicorn: ^34.0.1
     postcss: ^8.3.6
@@ -8699,6 +8709,13 @@ fsevents@~2.3.2:
   version: 2.0.2
   resolution: "require-from-string@npm:2.0.2"
   checksum: a03ef6895445f33a4015300c426699bc66b2b044ba7b670aa238610381b56d3f07c686251740d575e22f4c87531ba662d06937508f0f3c0f1ddc04db3130560b
+  languageName: node
+  linkType: hard
+
+"requireindex@npm:~1.2.0":
+  version: 1.2.0
+  resolution: "requireindex@npm:1.2.0"
+  checksum: 50d8b10a1ff1fdf6aea7a1870bc7bd238b0fb1917d8d7ca17fd03afc38a65dcd7a8a4eddd031f89128b5f0065833d5c92c4fef67f2c04e8624057fe626c9cf94
   languageName: node
   linkType: hard
 
