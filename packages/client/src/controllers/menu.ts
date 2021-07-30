@@ -50,7 +50,7 @@ export default class MenuController {
     }
 
     public resize(): void {
-        const { inventory, profile, bank, enchant, shop, header } = this;
+        let { inventory, profile, bank, enchant, shop, header } = this;
 
         inventory?.resize();
 
@@ -80,7 +80,7 @@ export default class MenuController {
      * has two containers. The bank and the inventory.
      */
     public loadBank(size: number, data: Slot[]): void {
-        const { inventory, game } = this;
+        let { inventory, game } = this;
 
         if (!inventory) {
             log.error('Inventory not initialized.');
@@ -118,7 +118,7 @@ export default class MenuController {
     }
 
     private loadNotifications(): void {
-        const ok = $('#ok'),
+        let ok = $('#ok'),
             cancel = $('#cancel'),
             done = $('#done');
 
@@ -143,7 +143,7 @@ export default class MenuController {
     }
 
     public stop(): void {
-        const { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
+        let { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
 
         inventory?.clear();
 
@@ -163,7 +163,7 @@ export default class MenuController {
     }
 
     public hideAll(): void {
-        const { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
+        let { inventory, actions, profile, game, bank, enchant, warp, shop } = this;
 
         if (inventory?.isVisible()) inventory.hide();
 
@@ -191,14 +191,14 @@ export default class MenuController {
     }
 
     private resizeNotification(): void {
-        const { notification } = this;
+        let { notification } = this;
 
         if (this.isNotificationVisible())
             notification.css('top', `${window.innerHeight - notification.height()!}px`);
     }
 
     public showNotification(titleText: string, message: string, colour: string): void {
-        const { notification, description, title, notificationTimeout } = this,
+        let { notification, description, title, notificationTimeout } = this,
             top = window.innerHeight - notification.height()!;
 
         if (this.isNotificationVisible()) {
@@ -225,7 +225,7 @@ export default class MenuController {
     private hideNotification(): void {
         if (!this.isNotificationVisible()) return;
 
-        const { notificationTimeout, notification } = this;
+        let { notificationTimeout, notification } = this;
 
         clearTimeout(notificationTimeout!);
         this.notificationTimeout = null;
@@ -237,7 +237,7 @@ export default class MenuController {
     public displayNotify(text: string): void {
         if (this.isNotifyVisible()) return;
 
-        const { notify, fade, message } = this;
+        let { notify, fade, message } = this;
 
         notify.show();
         fade.show();

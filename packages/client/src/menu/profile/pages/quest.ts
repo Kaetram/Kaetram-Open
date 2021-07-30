@@ -48,7 +48,7 @@ export default class Quest extends Page {
         this.achievementsLength = achievements.length;
 
         _.each(achievements, (achievement) => {
-            const item = this.getItem(false, achievement.id),
+            let item = this.getItem(false, achievement.id),
                 name = this.getName(false, achievement.id);
 
             name.text('????????');
@@ -73,7 +73,7 @@ export default class Quest extends Page {
 
             item.append(name);
 
-            const listItem = $('<li></li>');
+            let listItem = $('<li></li>');
 
             listItem.append(item);
 
@@ -87,7 +87,7 @@ export default class Quest extends Page {
         this.questsLength = quests.length;
 
         _.each(quests, (quest) => {
-            const item = this.getItem(true, quest.id),
+            let item = this.getItem(true, quest.id),
                 name = this.getName(true, quest.id);
 
             name.text(quest.name);
@@ -102,7 +102,7 @@ export default class Quest extends Page {
 
             item.append(name);
 
-            const listItem = $('<li></li>');
+            let listItem = $('<li></li>');
 
             listItem.append(item);
 
@@ -113,11 +113,11 @@ export default class Quest extends Page {
     }
 
     public progress(info: AchievementsInfo): void {
-        const item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
+        let item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
 
         if (!item) return;
 
-        const name = item.find(`${info.isQuest ? '#quest' : '#achievement'}${info.id}name`);
+        let name = item.find(`${info.isQuest ? '#quest' : '#achievement'}${info.id}name`);
 
         if (!name) return;
 
@@ -131,11 +131,11 @@ export default class Quest extends Page {
     }
 
     public finish(info: AchievementsInfo): void {
-        const item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
+        let item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
 
         if (!item) return;
 
-        const name = item.find(`${info.isQuest ? '#quest' : '#achievement'}${info.id}name`);
+        let name = item.find(`${info.isQuest ? '#quest' : '#achievement'}${info.id}name`);
 
         if (!name) return;
 

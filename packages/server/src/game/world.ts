@@ -213,7 +213,7 @@ export default class World {
 
         // If target has died...
         if (target.getHitPoints() < 1) {
-            const player = attacker as Player;
+            let player = attacker as Player;
 
             if (target.type === 'mob') player.addExperience(Mobs.getXp(target.id));
 
@@ -249,9 +249,8 @@ export default class World {
         if (!character) return;
 
         if (character.type === 'mob') {
-            const mob = character as Mob;
-
-            let deathX = mob.x,
+            let mob = character as Mob,
+                deathX = mob.x,
                 deathY = mob.y;
 
             if (lastAttacker) mob.lastAttacker = lastAttacker;
@@ -272,7 +271,7 @@ export default class World {
                 if (drop) this.entities.dropItem(drop.id, drop.count, deathX, deathY);
             }
         } else if (character.type === 'player') {
-            const player = character as Player;
+            let player = character as Player;
 
             player.die();
         }
@@ -418,9 +417,8 @@ export default class World {
 
         if (!objectTile) return false;
 
-        let id = x + '-' + y;
-
-        const what = data[refId as keyof typeof data];
+        let id = x + '-' + y,
+            what = data[refId as keyof typeof data];
 
         if (id in what) return false;
 

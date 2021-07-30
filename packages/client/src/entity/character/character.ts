@@ -84,7 +84,7 @@ export default class Character extends Entity {
 
     private loadGlobals(): void {
         // Critical Hit Animation
-        const critical = new Animation('atk_down', 10, 0, 48, 48);
+        let critical = new Animation('atk_down', 10, 0, 48, 48);
         critical.setSpeed(30);
 
         critical.setCount(1, () => {
@@ -96,7 +96,7 @@ export default class Character extends Entity {
         this.criticalAnimation = critical;
 
         // Terror Animation
-        const terror = new Animation('explosion', 8, 0, 64, 64);
+        let terror = new Animation('explosion', 8, 0, 64, 64);
         terror.setSpeed(50);
 
         terror.setCount(1, () => {
@@ -108,12 +108,12 @@ export default class Character extends Entity {
         this.terrorAnimation = terror;
 
         // Stunned Animation
-        const stun = new Animation('atk_down', 6, 0, 48, 48);
+        let stun = new Animation('atk_down', 6, 0, 48, 48);
         stun.setSpeed(30);
         this.stunAnimation = stun;
 
         // Explosion Animation
-        const explosion = new Animation('explosion', 8, 0, 64, 64);
+        let explosion = new Animation('explosion', 8, 0, 64, 64);
         explosion.setSpeed(50);
 
         explosion.setCount(1, () => {
@@ -125,7 +125,7 @@ export default class Character extends Entity {
         this.explosionAnimation = explosion;
 
         // Healing Animation
-        const healing = new Animation('explosion', 8, 0, 48, 48);
+        let healing = new Animation('explosion', 8, 0, 48, 48);
         healing.setSpeed(50);
 
         healing.setCount(1, () => {
@@ -143,7 +143,7 @@ export default class Character extends Entity {
         count?: number,
         onEndCount?: () => void
     ): void {
-        const o = ['atk', 'walk', 'idle'],
+        let o = ['atk', 'walk', 'idle'],
             { orientation, currentAnimation } = this;
 
         if (currentAnimation?.name === 'death') return;
@@ -200,7 +200,7 @@ export default class Character extends Entity {
     // }
 
     private hasAttacker(character: Character): boolean {
-        const { attackers } = this;
+        let { attackers } = this;
 
         if (!attackers[0]) return false;
 
@@ -230,7 +230,7 @@ export default class Character extends Entity {
     }
 
     public override idle(o?: Modules.Orientation): void {
-        const orientation = o || this.orientation;
+        let orientation = o || this.orientation;
 
         this.performAction(orientation, Modules.Actions.Idle);
     }
@@ -252,7 +252,7 @@ export default class Character extends Entity {
     }
 
     public lookAt(character: Entity): void {
-        const { gridX, gridY } = this;
+        let { gridX, gridY } = this;
 
         if (character.gridX > gridX) this.setOrientation(Modules.Orientation.Right);
         else if (character.gridX < gridX) this.setOrientation(Modules.Orientation.Left);
@@ -342,7 +342,7 @@ export default class Character extends Entity {
     }
 
     private updateMovement(): void {
-        const { path, step } = this;
+        let { path, step } = this;
 
         if (!path) return;
 
@@ -533,7 +533,7 @@ export default class Character extends Entity {
          * parameter. But we are throwing in an extra.
          */
 
-        const character = new Character(`${x}-${y}`, 'object');
+        let character = new Character(`${x}-${y}`, 'object');
         character.setGridPosition(x, y);
 
         this.setTarget(character);

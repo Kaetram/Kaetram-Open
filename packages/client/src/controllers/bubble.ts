@@ -28,7 +28,7 @@ export default class BubbleController {
         isObject?: boolean,
         info?: Entity
     ): void {
-        const { bubbles, game, container } = this,
+        let { bubbles, game, container } = this,
             bubble = bubbles[id];
 
         if (bubble) {
@@ -36,7 +36,7 @@ export default class BubbleController {
 
             $(`#${id} p`).html(message);
         } else {
-            const element = $(
+            let element = $(
                 `<div id="${id}" class="bubble"><p>${message}</p><div class="bubbleTip"></div></div>`
             );
 
@@ -51,7 +51,7 @@ export default class BubbleController {
     public setTo(info: Entity | undefined): void {
         if (!info) return;
 
-        const bubble = this.get(info.id),
+        let bubble = this.get(info.id),
             camera = this.game.getCamera(),
             scale = this.game.renderer.getScale(),
             tileSize = 48, // 16 * scale
@@ -65,12 +65,12 @@ export default class BubbleController {
     }
 
     public update(time: number): void {
-        const { bubbles, game } = this;
+        let { bubbles, game } = this;
 
         _.each(bubbles, (bubble) => {
             if (!bubble) return;
 
-            const entity = game.entities.get(bubble.id);
+            let entity = game.entities.get(bubble.id);
 
             if (entity) this.setTo(entity);
 
@@ -94,7 +94,7 @@ export default class BubbleController {
     }
 
     public destroy(id: string): void {
-        const bubble = this.get(id);
+        let bubble = this.get(id);
 
         if (!bubble) return;
 

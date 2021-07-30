@@ -40,12 +40,12 @@ export default class API {
     public constructor(private world: World) {
         if (!config.apiEnabled) return;
 
-        const app = express();
+        let app = express();
 
         app.use(urlencoded({ extended: true }));
         app.use(json());
 
-        const router = express.Router();
+        let router = express.Router();
 
         this.handle(router);
 
@@ -101,12 +101,12 @@ export default class API {
             return;
         }
 
-        const text = Utils.parseMessage(request.body.text),
+        let text = Utils.parseMessage(request.body.text),
             source = Utils.parseMessage(request.body.source),
             { colour, username } = request.body;
 
         if (username) {
-            const player = this.world.getPlayerByName(username);
+            let player = this.world.getPlayerByName(username);
 
             player?.chat(source, text, colour);
 
@@ -130,7 +130,7 @@ export default class API {
             return;
         }
 
-        const players: { [username: string]: Partial<PlayerData> } = {};
+        let players: { [username: string]: Partial<PlayerData> } = {};
 
         this.world.entities.forEachPlayer((player: Player) => {
             players[player.username] = this.getPlayerData(player);
@@ -140,7 +140,7 @@ export default class API {
     }
 
     public async pingHub(): Promise<void> {
-        const url = this.getUrl('ping'),
+        let url = this.getUrl('ping'),
             data = {
                 form: {
                     serverId: config.serverId,
@@ -152,7 +152,7 @@ export default class API {
             res = await axios.post(url, data);
 
         try {
-            const data = JSON.parse(res.data);
+            let data = JSON.parse(res.data);
 
             if (data.status === 'success' && !this.hubConnected) {
                 log.notice('Connected to Kaetram Hub successfully!');
@@ -165,7 +165,7 @@ export default class API {
     }
 
     public async sendChat(source: string, text: string, withArrow?: boolean): Promise<void> {
-        const url = this.getUrl('chat'),
+        let url = this.getUrl('chat'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
@@ -178,7 +178,7 @@ export default class API {
             res = await axios.post(url, data);
 
         try {
-            const data = JSON.parse(res.data);
+            let data = JSON.parse(res.data);
 
             if (data.status === 'error') console.log(data);
 
@@ -189,7 +189,7 @@ export default class API {
     }
 
     public async sendPrivateMessage(source: Player, target: string, text: string): Promise<void> {
-        const url = this.getUrl('privateMessage'),
+        let url = this.getUrl('privateMessage'),
             data = {
                 form: {
                     hubAccessToken: config.hubAccessToken,
@@ -201,7 +201,7 @@ export default class API {
             res = await axios.post(url, data);
 
         try {
-            const data = JSON.parse(res.data);
+            let data = JSON.parse(res.data);
 
             if (data.error) {
                 source.notify(`Player @aquamarine@${target}@white@ is not online.`);

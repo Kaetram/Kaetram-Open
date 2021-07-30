@@ -7,15 +7,15 @@ class Helper {
     #height = world.height;
 
     public constructor() {
-        const stdin = process.openStdin();
+        let stdin = process.openStdin();
 
         stdin.on('data', (data: string) => {
-            const message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
                 value = parseInt(message);
 
             if (isNaN(value)) return;
 
-            const position = this.indexToGridPosition(value + 1),
+            let position = this.indexToGridPosition(value + 1),
                 adjustedIndex = this.gridPositionToIndex(position.x, position.y, 700);
 
             console.log(position);
@@ -24,14 +24,14 @@ class Helper {
     }
 
     // private findDoorId(doors: Door[], x: number, y: number) {
-    //     for (const i in doors)
+    //     for (let i in doors)
     //         if (doors[i].x === x * 16 && doors[i].y === y * 16) return doors[i].id;
 
     //     return null;
     // }
 
     // private getTileData(x: number, y: number): void {
-    //     const index = this.gridPositionToIndex(x, y);
+    //     let index = this.gridPositionToIndex(x, y);
 
     //     console.log(
     //         `"${index}": { "data": [${
@@ -47,7 +47,7 @@ class Helper {
     private indexToGridPosition(tileIndex: number): { x: number; y: number } {
         tileIndex -= 1;
 
-        const x = this.getX(tileIndex + 1, this.#width),
+        let x = this.getX(tileIndex + 1, this.#width),
             y = Math.floor(tileIndex / this.#height);
 
         return {

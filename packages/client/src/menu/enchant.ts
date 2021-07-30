@@ -32,13 +32,13 @@ export default class Enchant {
     }
 
     private load(): void {
-        const list = this.getSlots(),
+        let list = this.getSlots(),
             inventoryList = this.menu.bank.getInventoryList();
 
         list.empty();
 
         for (let i = 0; i < this.getInventorySize(); i++) {
-            const item = $(inventoryList[i]).clone(),
+            let item = $(inventoryList[i]).clone(),
                 slot = item.find(`#bankInventorySlot${i}`);
 
             slot.on('click', (event) => this.select(event));
@@ -52,7 +52,7 @@ export default class Enchant {
     }
 
     public add(type: string, index: number): void {
-        const image = this.getSlot(index).find(`#inventoryImage${index}`);
+        let image = this.getSlot(index).find(`#inventoryImage${index}`);
 
         switch (type) {
             case 'item':
@@ -67,7 +67,7 @@ export default class Enchant {
 
                 if (Detect.isMobile()) this.selectedShards.css('background-size', '600%');
 
-                const { count } = this.getItemSlot(index);
+                let { count } = this.getItemSlot(index);
 
                 if (count > 1) this.shardsCount.text(count);
 
@@ -81,7 +81,7 @@ export default class Enchant {
     }
 
     public moveBack(type: string, index: number): void {
-        const image = this.getSlot(index).find(`#inventoryImage${index}`),
+        let image = this.getSlot(index).find(`#inventoryImage${index}`),
             itemCount = this.getSlot(index).find(`#inventoryItemCount${index}`),
             { count } = this.getItemSlot(index);
 

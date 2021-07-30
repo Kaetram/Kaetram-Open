@@ -22,7 +22,7 @@ export default class Regions {
     }
 
     private loadDoors(): void {
-        const { doors } = this.map;
+        let { doors } = this.map;
 
         _.each(doors, (door) => {
             let regionId = this.regionIdFromPosition(door.x, door.y),
@@ -46,11 +46,10 @@ export default class Regions {
         offset = 1,
         stringFormat?: StringFormat
     ): (StringFormat extends true ? string : Pos)[] {
-        const position = this.regionIdToPosition(id),
+        let position = this.regionIdToPosition(id),
             { x } = position,
-            { y } = position;
-
-        let list: Pos[] = [];
+            { y } = position,
+            list: Pos[] = [];
 
         for (
             let i = -offset;
@@ -74,7 +73,7 @@ export default class Regions {
         });
 
         list = _.reject(list, (regionPosition) => {
-            const gX = regionPosition.x,
+            let gX = regionPosition.x,
                 gY = regionPosition.y;
 
             return gX < 0 || gY < 0 || gX >= this.regionWidth || gY >= this.regionHeight;
@@ -88,7 +87,7 @@ export default class Regions {
         offset?: number,
         stringFormat?: StringFormat
     ): (StringFormat extends true ? string : Pos)[] | undefined {
-        const surroundingRegions = this.getSurroundingRegions(id, offset);
+        let surroundingRegions = this.getSurroundingRegions(id, offset);
 
         /**
          * We will leave this hardcoded to surrounding areas of
@@ -104,7 +103,7 @@ export default class Regions {
          * 11-2 12-2 13-2
          */
 
-        const centreRegion = this.regionIdToPosition(id),
+        let centreRegion = this.regionIdToPosition(id),
             adjacentRegions: Pos[] = [];
 
         _.each(surroundingRegions, (region) => {
@@ -152,7 +151,7 @@ export default class Regions {
     }
 
     private regionIdToPosition(id: string): Pos {
-        const position = id.split('-');
+        let position = id.split('-');
 
         return {
             x: parseInt(position[0], 10),
@@ -161,7 +160,7 @@ export default class Regions {
     }
 
     public regionIdToCoordinates(id: string): Pos {
-        const position = id.split('-');
+        let position = id.split('-');
 
         return {
             x: parseInt(position[0]) * this.regionWidth,
@@ -173,7 +172,7 @@ export default class Regions {
      * Converts an array of regions from object type to string format.
      */
     private regionsToCoordinates(regions: Pos[]): string[] {
-        const stringList: string[] = [];
+        let stringList: string[] = [];
 
         _.each(regions, (region) => {
             stringList.push(region.x + '-' + region.y);

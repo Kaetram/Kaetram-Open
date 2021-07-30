@@ -46,13 +46,11 @@ function AStar(
     end: [number, number],
     f: FunctionTypes
 ): number[][] {
-    const cols = grid[0].length,
+    let cols = grid[0].length,
         rows = grid.length,
-        limit = cols * rows;
-
-    let f2 = Math.max;
-
-    const list: Record<number, number> = {},
+        limit = cols * rows,
+        f2 = Math.max,
+        list: Record<number, number> = {},
         result: [x: number, y: number][] = [],
         open: Result[] = [
             {
@@ -62,15 +60,13 @@ function AStar(
                 g: 0,
                 v: start[0] + start[1] * cols
             }
-        ];
-
-    let length = 1,
+        ],
+        length = 1,
         distance: MathFunction,
         find: Successor,
         current: Result,
-        next: Result[];
-
-    const endPos = { x: end[0], y: end[1], v: end[0] + end[1] * cols };
+        next: Result[],
+        endPos = { x: end[0], y: end[1], v: end[0] + end[1] * cols };
 
     switch (f) {
         case 'Diagonal':
@@ -102,7 +98,7 @@ function AStar(
             min = 0;
 
         for (let i = 0; i < length; ++i) {
-            const openF = open[i].f!;
+            let openF = open[i].f!;
 
             if (openF < max) {
                 max = openF;
@@ -116,7 +112,7 @@ function AStar(
             next = successors(find, current.x, current.y, grid, rows, cols);
 
             for (let i = 0, j = next.length; i < j; ++i) {
-                const adj = next[i];
+                let adj = next[i];
 
                 adj.p = current;
                 adj.f = adj.g = 0;
@@ -144,21 +140,7 @@ function AStar(
     return result;
 }
 
-const diagonalSuccessors: Successor = (
-        $N,
-        $S,
-        $E,
-        $W,
-        N,
-        S,
-        E,
-        W,
-        grid,
-        _rows,
-        _cols,
-        result,
-        i
-    ) => {
+let diagonalSuccessors: Successor = ($N, $S, $E, $W, N, S, E, W, grid, _rows, _cols, result, i) => {
         if ($N) {
             $E && !grid[N][E] && (result[i++] = { x: E, y: N });
             $W && !grid[N][W] && (result[i++] = { x: W, y: N });
@@ -212,7 +194,7 @@ function successors(
     rows: number,
     cols: number
 ) {
-    const N = y - 1,
+    let N = y - 1,
         S = y + 1,
         E = x + 1,
         W = x - 1,
@@ -220,9 +202,8 @@ function successors(
         $S = S < rows && !grid[S][x],
         $E = E < cols && !grid[y][E],
         $W = W > -1 && !grid[y][W],
-        result = [];
-
-    let i = 0;
+        result = [],
+        i = 0;
 
     $N && (result[i++] = { x, y: N });
     $E && (result[i++] = { x: E, y });
@@ -232,9 +213,9 @@ function successors(
     return find($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i);
 }
 
-const diagonal: MathFunction = (start, end, f1, f2) => f2(f1(start.x - end.x), f1(start.y - end.y)),
+let diagonal: MathFunction = (start, end, f1, f2) => f2(f1(start.x - end.x), f1(start.y - end.y)),
     euclidean: MathFunction = (start, end, _f1, f2) => {
-        const x = start.x - end.x,
+        let x = start.x - end.x,
             y = start.y - end.y;
 
         return f2(x * x + y * y);

@@ -46,12 +46,12 @@ export default class EntitiesController {
     }
 
     public load(): Promise<void> {
-        const { game, sprites } = this;
+        let { game, sprites } = this;
 
         game.app.sendStatus('Loading sprites');
 
         if (!sprites) {
-            const sprites = new SpritesController();
+            let sprites = new SpritesController();
             sprites.load();
 
             this.sprites = sprites;
@@ -69,9 +69,8 @@ export default class EntitiesController {
     }
 
     public create(info: AnyEntity): void {
-        const { entities, game } = this;
-
-        let entity: Entity = null!;
+        let { entities, game } = this,
+            entity: Entity = null!;
 
         if (this.isPlayer(info.id)) return;
 
@@ -87,7 +86,7 @@ export default class EntitiesController {
                  * the proper way -ahem- Kaetram V1.0
                  */
 
-                const chest = new Chest(info.id, info.string);
+                let chest = new Chest(info.id, info.string);
 
                 entity = chest;
 
@@ -95,7 +94,7 @@ export default class EntitiesController {
             }
 
             case 'npc': {
-                const npc = new NPC(info.id, info.string);
+                let npc = new NPC(info.id, info.string);
 
                 entity = npc;
 
@@ -103,7 +102,7 @@ export default class EntitiesController {
             }
 
             case 'item': {
-                const item = new Item(
+                let item = new Item(
                     info.id,
                     info.string,
                     info.count,
@@ -117,7 +116,7 @@ export default class EntitiesController {
             }
 
             case 'mob': {
-                const mob = new Mob(info.id, info.string);
+                let mob = new Mob(info.id, info.string);
 
                 mob.setHitPoints(info.hitPoints);
                 mob.setMaxHitPoints(info.maxHitPoints);
@@ -133,14 +132,14 @@ export default class EntitiesController {
             }
 
             case 'projectile': {
-                const attacker = this.get<Character>(info.characterId),
+                let attacker = this.get<Character>(info.characterId),
                     target = this.get<Character>(info.targetId);
 
                 if (!attacker || !target) return;
 
                 attacker.lookAt(target);
 
-                const projectile = new Projectile(info.id, info.string, attacker); // ? info.projectileType
+                let projectile = new Projectile(info.id, info.string, attacker); // ? info.projectileType
 
                 projectile.name = info.name;
 
@@ -194,7 +193,7 @@ export default class EntitiesController {
             }
 
             case 'player': {
-                const player = new Player();
+                let player = new Player();
 
                 player.setId(info.id);
                 player.setName(info.name);
@@ -210,7 +209,7 @@ export default class EntitiesController {
                 player.type = info.type;
                 player.movementSpeed = info.movementSpeed;
 
-                const hitPointsData = info.hitPoints as number[],
+                let hitPointsData = info.hitPoints as number[],
                     manaData = info.mana as number[],
                     equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
 
@@ -244,7 +243,7 @@ export default class EntitiesController {
 
         if (!entity) return;
 
-        const sprite = this.getSprite(info.type === 'item' ? `item-${info.string}` : info.string)!;
+        let sprite = this.getSprite(info.type === 'item' ? `item-${info.string}` : info.string)!;
 
         entity.setGridPosition(info.x, info.y);
         entity.setName(info.name);
@@ -262,7 +261,7 @@ export default class EntitiesController {
 
         this.addEntity(entity);
 
-        const { handler } = entity as Character;
+        let { handler } = entity as Character;
 
         if (info.type !== 'item' && handler) {
             handler.setGame(game);
@@ -275,7 +274,7 @@ export default class EntitiesController {
     }
 
     private isPlayer(id: string): boolean {
-        const { player } = this.game;
+        let { player } = this.game;
 
         return player ? player.id === id : false;
     }
@@ -285,7 +284,7 @@ export default class EntitiesController {
     }
 
     public removeEntity(entity: Entity): void {
-        const { grids, entities } = this;
+        let { grids, entities } = this;
 
         grids.removeFromPathingGrid(entity.gridX, entity.gridY);
         grids.removeFromRenderingGrid(entity);
@@ -294,12 +293,12 @@ export default class EntitiesController {
     }
 
     public clean(): void {
-        const { decrepit, game, grids } = this;
+        let { decrepit, game, grids } = this;
 
         if (decrepit.length === 0) return;
 
         _.each(decrepit, (entity: Entity) => {
-            const { player } = game;
+            let { player } = game;
 
             if (player ? entity.id === player.id : false) return;
 
@@ -310,7 +309,7 @@ export default class EntitiesController {
     }
 
     public clearPlayers(exception: Player): void {
-        const { entities, grids } = this;
+        let { entities, grids } = this;
 
         _.each(entities, (entity) => {
             if (entity.id !== exception.id && entity.type === 'player') this.removeEntity(entity);
@@ -320,7 +319,7 @@ export default class EntitiesController {
     }
 
     public addEntity(entity: Entity): void {
-        const { entities, renderer, game } = this;
+        let { entities, renderer, game } = this;
 
         if (entities[entity.id]) return;
 
@@ -334,7 +333,7 @@ export default class EntitiesController {
     public removeItem(item: Entity): void {
         if (!item) return;
 
-        const { grids, entities } = this;
+        let { grids, entities } = this;
 
         grids.removeFromItemGrid(item);
         grids.removeFromRenderingGrid(item);
