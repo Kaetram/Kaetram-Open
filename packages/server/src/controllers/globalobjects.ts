@@ -1,20 +1,28 @@
-import Objects from '../util/objects';
+import Objects, { ObjectsData } from '../util/objects';
 import Utils from '../util/utils';
-import Map from '../map/map';
-import World from '../game/world';
-import Player from '../game/entity/character/player/player';
 
-class GlobalObjects {
-    world: World;
-    map: Map;
+import type { Tree } from '@kaetram/common/types/map';
+import type Player from '../game/entity/character/player/player';
+import type World from '../game/world';
 
-    constructor(world: World) {
-        this.world = world;
+interface SignData {
+    object: ObjectsData;
+    info: {
+        id: string;
+        x: number;
+        y: number;
+    };
+}
+
+export default class GlobalObjects {
+    private map;
+
+    public constructor(world: World) {
         this.map = world.map;
     }
 
-    getInfo(id: string) {
-        let position = Objects.getPosition(id),
+    public getInfo(id: string): { type: string; tree?: Tree } | null {
+        const position = Objects.getPosition(id),
             objectId = this.map.getPositionObject(position.x, position.y);
 
         if (objectId in this.map.trees)
@@ -23,7 +31,7 @@ class GlobalObjects {
                 tree: this.map.trees[objectId]
             };
 
-        let object = Objects.getObject(id);
+        const object = Objects.getObject(id);
 
         if (!object) return null;
 
@@ -36,20 +44,19 @@ class GlobalObjects {
      * Used for objects that display text bubbles. Returns formatted
      * position data for the client to display the bubble.
      */
-
-    getSignData(id: string) {
-        let object = Objects.getObject(id);
+    public getSignData(id: string): SignData | null {
+        const object = Objects.getObject(id);
 
         if (!object) return null;
 
-        let position = Objects.getPosition(id);
+        const position = Objects.getPosition(id);
 
         object.id = id;
 
         return {
-            object: object,
+            object,
             info: {
-                id: id,
+                id,
                 x: position.x * 16,
                 y: position.y * 16 + 8 // offset for the chat bubble
             }
@@ -59,17 +66,16 @@ class GlobalObjects {
     /**
      * Ripped from `npc.js` but with some minor adjustments.
      */
-
-    talk(object: any, player: Player) {
+    public talk(object: ObjectsData, player: Player): string {
         if (player.npcTalk !== object.id) {
-            player.npcTalk = object.id;
+            player.npcTalk = object.id!;
             player.talkIndex = 0;
         }
 
         let message = object.messages[player.talkIndex];
 
         if (message && message.includes('@player@')) {
-            message = message.replace('@player@', '@red@' + Utils.formatUsername(player.username));
+            message = message.replace('@player@', `@red@${Utils.formatUsername(player.username)}`);
             message = Utils.parseMessage(message);
         }
 
@@ -79,5 +85,3 @@ class GlobalObjects {
         return message;
     }
 }
-
-export default GlobalObjects;

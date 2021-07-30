@@ -1,31 +1,28 @@
-/* global module */
+import Packets from '@kaetram/common/src/packets';
 
-import _ from 'lodash';
 import Messages from '../network/messages';
-import Packets from '../network/packets';
-import World from '../game/world';
-import Player from '../game/entity/character/player/player';
 import log from '../util/log';
-import Achievement from '../game/entity/character/player/achievement';
-import Entities from './entities';
 
-class Commands {
-    player: Player;
-    world: World;
-    entities: Entities;
+import type Achievement from '../game/entity/character/player/achievement';
+import type Player from '../game/entity/character/player/player';
 
-    constructor(player: Player) {
-        this.player = player;
-        this.world = player.world;
-        this.entities = this.world.entities;
+export default class Commands {
+    private world;
+    private entities;
+
+    public constructor(private player: Player) {
+        const { world } = player;
+
+        this.world = world;
+        this.entities = world.entities;
     }
 
-    parse(rawText: string) {
-        let blocks = rawText.substring(1).split(' ');
+    public parse(rawText: string): void {
+        const blocks = rawText.slice(1).split(' ');
 
-        if (blocks.length < 1) return;
+        if (blocks.length === 0) return;
 
-        let command = blocks.shift();
+        const command = blocks.shift()!;
 
         this.handlePlayerCommands(command, blocks);
 
@@ -34,11 +31,11 @@ class Commands {
         if (this.player.rights > 1) this.handleAdminCommands(command, blocks);
     }
 
-    handlePlayerCommands(command: string, blocks: Array<string>) {
+    private handlePlayerCommands(command: string, blocks: string[]): void {
         switch (command) {
-            case 'players':
-                let population = this.world.getPopulation();
-                let singular = population === 1;
+            case 'players': {
+                const population = this.world.getPopulation(),
+                    singular = population === 1;
 
                 if (this.player.rights > 1)
                     this,
@@ -53,6 +50,7 @@ class Commands {
                 );
 
                 return;
+            }
 
             case 'tutstage':
                 log.info(this.player.getTutorial().stage);
@@ -62,14 +60,14 @@ class Commands {
             case 'coords':
                 this.player.send(
                     new Messages.Notification(Packets.NotificationOpcode.Text, {
-                        message: 'x: ' + this.player.x + ' y: ' + this.player.y
+                        message: `x: ${this.player.x} y: ${this.player.y}`
                     })
                 );
 
                 return;
 
-            case 'progress':
-                let tutorialQuest = this.player.getTutorial();
+            case 'progress': {
+                const tutorialQuest = this.player.getTutorial();
 
                 this.player.send(
                     new Messages.Quest(Packets.QuestOpcode.Progress, {
@@ -79,6 +77,7 @@ class Commands {
                 );
 
                 return;
+            }
 
             case 'global':
                 this.world.globalMessage(
@@ -96,11 +95,11 @@ class Commands {
                 return;
 
             case 'getintroduction':
-                log.info(this.player.quests.getQuest(0).getStage());
+                log.info(this.player.quests.getQuest(0)!.getStage());
                 return;
 
-            case 'resetintro':
-                let introduction = this.player.quests.getQuest(0);
+            case 'resetintro': {
+                const introduction = this.player.quests.getQuest(0)!;
 
                 introduction.setStage(0);
                 introduction.clearPointers();
@@ -111,37 +110,39 @@ class Commands {
                 this.player.save();
 
                 return;
+            }
 
             case 'pm':
-            case 'msg':
-                let otherPlayer = blocks.shift();
-                let message = blocks.join(' ');
+            case 'msg': {
+                const otherPlayer = blocks.shift()!,
+                    message = blocks.join(' ');
 
                 this.player.sendMessage(otherPlayer, message);
 
                 return;
+            }
 
             case 'ping':
-                this.player.pingTime = new Date().getTime();
+                this.player.pingTime = Date.now();
                 this.player.send(new Messages.Network(Packets.NetworkOpcode.Ping));
 
                 break;
         }
     }
 
-    handleModeratorCommands(command: string, blocks: Array<any>) {
+    private handleModeratorCommands(command: string, blocks: string[]): void {
         switch (command) {
             case 'mute':
-            case 'ban':
-                let duration = blocks.shift();
-                let targetName = blocks.join(' ');
-                let user: Player = this.world.getPlayerByName(targetName);
+            case 'ban': {
+                let duration = parseInt(blocks.shift()!);
+                const targetName = blocks.join(' '),
+                    user: Player = this.world.getPlayerByName(targetName);
 
                 if (!user) return;
 
                 if (!duration) duration = 24;
 
-                let timeFrame = new Date().getTime() + duration * 60 * 60;
+                const timeFrame = Date.now() + duration * 60 * 60;
 
                 if (command === 'mute') user.mute = timeFrame;
                 else if (command === 'ban') {
@@ -155,53 +156,58 @@ class Commands {
                 user.save();
 
                 return;
+            }
 
-            case 'unmute':
-                let uTargetName = blocks.join(' ');
-                let uUser = this.world.getPlayerByName(uTargetName);
+            case 'unmute': {
+                const uTargetName = blocks.join(' '),
+                    uUser = this.world.getPlayerByName(uTargetName);
 
                 if (!uTargetName) return;
 
-                uUser.mute = new Date().getTime() - 3600;
+                uUser.mute = Date.now() - 3600;
 
                 uUser.save();
 
                 return;
+            }
         }
     }
 
-    handleAdminCommands(command: string, blocks: Array<string>) {
+    private handleAdminCommands(command: string, blocks: string[]): void {
         let username: string, player: Player;
 
         switch (command) {
-            case 'spawn':
-                let spawnId = parseInt(blocks.shift());
-                let count = parseInt(blocks.shift());
-                let ability = parseInt(blocks.shift());
-                let abilityLevel = parseInt(blocks.shift());
+            case 'spawn': {
+                const spawnId = parseInt(blocks.shift()!),
+                    count = parseInt(blocks.shift()!),
+                    ability = parseInt(blocks.shift()!),
+                    abilityLevel = parseInt(blocks.shift()!);
 
                 if (!spawnId || !count) return;
 
                 this.player.inventory.add({
                     id: spawnId,
-                    count: count,
-                    ability: ability ? ability : -1,
-                    abilityLevel: abilityLevel ? abilityLevel : -1
+                    count,
+                    ability: ability || -1,
+                    abilityLevel: abilityLevel || -1
                 });
 
                 return;
+            }
 
             case 'maxhealth':
-                this.player.notify('Max health is ' + this.player.hitPoints.getMaxHitPoints());
+                this.player.notify(
+                    `Max health is ${this.player.playerHitPoints.getMaxHitPoints()}`
+                );
 
                 return;
 
             case 'ipban':
                 return;
 
-            case 'drop':
-                let id = parseInt(blocks.shift());
-                let dCount = parseInt(blocks.shift());
+            case 'drop': {
+                const id = parseInt(blocks.shift()!);
+                let dCount = parseInt(blocks.shift()!);
 
                 if (!id) return;
 
@@ -210,6 +216,7 @@ class Commands {
                 this.entities.dropItem(id, dCount, this.player.x, this.player.y);
 
                 return;
+            }
 
             case 'ghost':
                 this.player.equip('ghost', 1, -1, -1);
@@ -221,20 +228,21 @@ class Commands {
 
                 return;
 
-            case 'teleport':
-                let x = parseInt(blocks.shift());
-                let y = parseInt(blocks.shift());
-                let withAnimation = parseInt(blocks.shift());
+            case 'teleport': {
+                const x = parseInt(blocks.shift()!),
+                    y = parseInt(blocks.shift()!),
+                    withAnimation = parseInt(blocks.shift()!);
 
                 if (x && y) this.player.teleport(x, y, false, !!withAnimation);
 
                 return;
+            }
 
             case 'teletome':
                 username = blocks.join(' ');
                 player = this.world.getPlayerByName(username);
 
-                if (player) player.teleport(this.player.x, this.player.y);
+                player?.teleport(this.player.x, this.player.y);
 
                 return;
 
@@ -253,17 +261,18 @@ class Commands {
 
                 return;
 
-            case 'mob':
-                let npcId = parseInt(blocks.shift());
+            case 'mob': {
+                const npcId = parseInt(blocks.shift()!);
 
                 this.entities.spawnMob(npcId, this.player.x, this.player.y);
 
                 return;
+            }
 
             case 'pointer':
                 if (blocks.length > 1) {
-                    let posX = parseInt(blocks.shift()),
-                        posY = parseInt(blocks.shift());
+                    const posX = parseInt(blocks.shift()!),
+                        posY = parseInt(blocks.shift()!);
 
                     if (!posX || !posY) return;
 
@@ -275,7 +284,7 @@ class Commands {
                         })
                     );
                 } else {
-                    let instance = blocks.shift();
+                    const instance = blocks.shift()!;
 
                     if (!instance) return;
 
@@ -295,34 +304,36 @@ class Commands {
 
                 return;
 
-            case 'attackaoe':
-                let radius = parseInt(blocks.shift());
+            case 'attackaoe': {
+                let radius = parseInt(blocks.shift()!);
 
                 if (!radius) radius = 1;
 
                 this.player.combat.dealAoE(radius);
 
                 return;
+            }
 
-            case 'addexp':
-                let exp = parseInt(blocks.shift());
+            case 'addexp': {
+                const exp = parseInt(blocks.shift()!);
 
                 if (!exp) return;
 
                 this.player.addExperience(exp);
 
                 return;
+            }
 
-            case 'region':
-                let tileX = parseInt(blocks.shift());
-                let tileY = parseInt(blocks.shift());
-                let tileInfo = parseInt(blocks.shift());
+            case 'region': {
+                const tileX = parseInt(blocks.shift()!),
+                    tileY = parseInt(blocks.shift()!),
+                    tileInfo = parseInt(blocks.shift()!);
 
                 if (!tileX || !tileY) return;
 
-                let tileIndex = this.world.region.gridPositionToIndex(tileX - 1, tileY);
+                const tileIndex = this.world.region.gridPositionToIndex(tileX - 1, tileY);
 
-                log.info('Sending Tile: ' + tileIndex);
+                log.info(`Sending Tile: ${tileIndex}`);
 
                 this.world.push(Packets.PushOpcode.Player, {
                     player: this.player,
@@ -333,13 +344,14 @@ class Commands {
                 });
 
                 return;
+            }
 
             case 'instance':
                 this.world.region.createInstance(this.player, this.player.region);
                 return;
 
             case 'checkregion':
-                this.player.notify('Current Region: ' + this.player.region);
+                this.player.notify(`Current Region: ${this.player.region}`);
                 return;
 
             case 'deinstance':
@@ -355,7 +367,7 @@ class Commands {
                 return;
 
             case 'addexperience':
-                this.player.addExperience(parseInt(blocks.shift()));
+                this.player.addExperience(parseInt(blocks.shift()!));
                 return;
 
             case 'attackrange':
@@ -371,12 +383,12 @@ class Commands {
                 return;
 
             case 'finishQuest':
-                this.player.quests.getQuest(1).finish();
+                this.player.quests.getQuest(1)!.finish();
 
                 break;
 
             case 'finishAchievement':
-                this.player.quests.getAchievement(0).finish();
+                this.player.quests.getAchievement(0)!.finish();
 
                 break;
 
@@ -387,18 +399,19 @@ class Commands {
 
                 break;
 
-            case 'resetAchievement':
-                let achievementId = parseInt(blocks.shift());
+            case 'resetAchievement': {
+                const achievementId = parseInt(blocks.shift()!);
 
                 if (!achievementId) {
                     this.player.notify('Invalid command format. /resetAchievement <achievementId>');
                     return;
                 }
 
-                this.player.quests.getAchievement(achievementId).setProgress(0);
+                this.player.quests.getAchievement(achievementId)!.setProgress(0);
                 this.player.updateRegion();
 
                 break;
+            }
 
             case 'resetAchievements':
                 this.player.quests.forEachAchievement((achievement: Achievement) => {
@@ -411,7 +424,7 @@ class Commands {
 
             case 'clear':
                 this.player.inventory.forEachSlot((slot) => {
-                    if (slot !== -1) this.player.inventory.remove(slot.id, slot.count);
+                    if (slot.id !== -1) this.player.inventory.remove(slot.id, slot.count);
                 });
 
                 break;
@@ -433,8 +446,8 @@ class Commands {
 
                 break;
 
-            case 'ms':
-                let movementSpeed = parseInt(blocks.shift());
+            case 'ms': {
+                let movementSpeed = parseInt(blocks.shift()!);
 
                 if (!movementSpeed) {
                     this.player.notify('No movement speed specified.');
@@ -450,6 +463,7 @@ class Commands {
                 this.player.sync();
 
                 break;
+            }
 
             case 'toggleheal':
                 this.player.send(
@@ -472,5 +486,3 @@ class Commands {
         }
     }
 }
-
-export default Commands;

@@ -2,10 +2,6 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "module": "commonjs",
-        "target": "esnext",
-        "rootDir": "./",
-        "baseUrl": "./",
-        "outDir": "./dist"
-    },
-    "files": ["./src/main.ts"]
+        "types": ["@types/node", "@kaetram/common"]
+    }
 }

@@ -1,33 +1,35 @@
-/* global module */
-
-import Equipment from './equipment';
 import Items from '../../../../../util/items';
-import Modules from '../../../../../util/modules';
+import * as Modules from '@kaetram/common/src/modules';
+import Equipment from './equipment';
 
-class Armour extends Equipment {
-    public defense: number;
+export default class Armour extends Equipment {
+    public defense;
 
-    constructor(name: string, id: number, count: number, ability: number, abilityLevel: number) {
+    public constructor(
+        name: string,
+        id: number,
+        count: number,
+        ability: number,
+        abilityLevel: number
+    ) {
         super(name, id, count, ability, abilityLevel);
 
         this.defense = Items.getArmourLevel(name);
     }
 
-    hasAntiStun() {
+    private hasAntiStun(): boolean {
         return this.ability === 6;
     }
 
-    setDefense(defense: number) {
+    private setDefense(defense: number): void {
         this.defense = defense;
     }
 
-    getDefense() {
+    public getDefense(): number {
         return this.defense;
     }
 
-    getType() {
+    protected getType(): Modules.Equipment {
         return Modules.Equipment.Armour;
     }
 }
-
-export default Armour;

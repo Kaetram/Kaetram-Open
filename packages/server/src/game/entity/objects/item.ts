@@ -1,30 +1,36 @@
-/* global module */
-
 import Entity from '../entity';
 
-class Item extends Entity {
-    static: boolean;
-    dropped: boolean;
-    shard: boolean;
+import type { EntityState } from '../entity';
 
+interface ItemState extends EntityState {
     count: number;
-    ability: number;
-    abilityLevel: number;
-    tier: number;
+    ability?: number;
+    abilityLevel?: number;
+}
 
-    respawnTime: number;
-    despawnDuration: number;
-    blinkDelay: number;
-    despawnDelay: number;
+export default class Item extends Entity {
+    public static = false;
+    public dropped = false;
+    // shard = false;
 
-    blinkTimeout: any;
-    despawnTimeout: any;
+    public count = 1;
+    public ability;
+    public abilityLevel;
+    // tier = 1;
 
-    blinkCallback: Function;
-    respawnCallback: Function;
-    despawnCallback: Function;
+    private respawnTime = 30000;
+    private despawnDuration = 4000;
+    private blinkDelay = 20000;
+    // private despawnDelay = 1000;
 
-    constructor(
+    private blinkTimeout: NodeJS.Timeout | null = null;
+    private despawnTimeout: NodeJS.Timeout | null = null;
+
+    private blinkCallback?(): void;
+    private respawnCallback?(): void;
+    private despawnCallback?(): void;
+
+    public constructor(
         id: number,
         instance: string,
         x: number,
@@ -34,29 +40,15 @@ class Item extends Entity {
     ) {
         super(id, 'item', instance, x, y);
 
-        this.static = false;
-        this.dropped = false;
-        this.shard = false;
-
-        this.count = 1;
         this.ability = ability;
         this.abilityLevel = abilityLevel;
-        this.tier = 1;
 
-        if (isNaN(ability)) this.ability = -1;
+        if (isNaN(ability!)) this.ability = -1;
 
-        if (isNaN(abilityLevel)) this.abilityLevel = -1;
-
-        this.respawnTime = 30000;
-        this.despawnDuration = 4000;
-        this.blinkDelay = 20000;
-        this.despawnDelay = 1000;
-
-        this.blinkTimeout = null;
-        this.despawnTimeout = null;
+        if (isNaN(abilityLevel!)) this.abilityLevel = -1;
     }
 
-    destroy() {
+    public destroy(): void {
         if (this.blinkTimeout) clearTimeout(this.blinkTimeout);
 
         if (this.despawnTimeout) clearTimeout(this.despawnTimeout);
@@ -64,28 +56,28 @@ class Item extends Entity {
         if (this.static) this.respawn();
     }
 
-    despawn() {
+    public despawn(): void {
         this.blinkTimeout = setTimeout(() => {
-            if (this.blinkCallback) this.blinkCallback();
+            this.blinkCallback?.();
 
             this.despawnTimeout = setTimeout(() => {
-                if (this.despawnCallback) this.despawnCallback();
+                this.despawnCallback?.();
             }, this.despawnDuration);
         }, this.blinkDelay);
     }
 
-    respawn() {
+    public respawn(): void {
         setTimeout(() => {
-            if (this.respawnCallback) this.respawnCallback();
+            this.respawnCallback?.();
         }, this.respawnTime);
     }
 
-    getData() {
+    private getData(): [id: number, count: number, ability?: number, abilityLevel?: number] {
         return [this.id, this.count, this.ability, this.abilityLevel];
     }
 
-    getState() {
-        let state = super.getState();
+    public override getState(): ItemState {
+        let state = super.getState() as ItemState;
 
         state.count = this.count;
         state.ability = this.ability;
@@ -94,29 +86,27 @@ class Item extends Entity {
         return state;
     }
 
-    setCount(count: number) {
+    private setCount(count: number): void {
         this.count = count;
     }
 
-    setAbility(ability: number) {
+    private setAbility(ability: number): void {
         this.ability = ability;
     }
 
-    setAbilityLevel(abilityLevel: number) {
+    private setAbilityLevel(abilityLevel: number): void {
         this.abilityLevel = abilityLevel;
     }
 
-    onRespawn(callback: Function) {
+    public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 
-    onBlink(callback: Function) {
+    public onBlink(callback: () => void): void {
         this.blinkCallback = callback;
     }
 
-    onDespawn(callback: Function) {
+    public onDespawn(callback: () => void): void {
         this.despawnCallback = callback;
     }
 }
-
-export default Item;

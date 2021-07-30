@@ -1,14 +1,14 @@
 /**
- * This package is used for creating functions used all throughout the
- * game server.
+ * Useful utility functions that are used all throughout.
  */
 
-import _ from 'lodash';
 import crypto from 'crypto';
-
-import Packets from '../network/packets';
-import log from '../util/log';
+import _ from 'lodash';
 import zlib from 'zlib';
+
+import Packets from '@kaetram/common/src/packets';
+
+import log from '../util/log';
 
 export default {
     random(range: number): number {
@@ -30,7 +30,7 @@ export default {
         return x > y ? x : y;
     },
 
-    positionOffset(radius: number): any {
+    positionOffset(radius: number): Pos {
         return {
             x: this.randomInt(0, radius),
             y: this.randomInt(0, radius)
@@ -72,7 +72,7 @@ export default {
         for (let i = 0; i < keys.length; i++)
             if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
 
-        return packet > -1 && packet < Packets[filtered[filtered.length - 1]] + 1;
+        return packet > -1 && packet < Packets[filtered[filtered.length - 1] as never] + 1;
     },
 
     getCurrentEpoch(): number {
@@ -80,9 +80,10 @@ export default {
     },
 
     formatUsername(username: string): string {
-        return username.replace(/\w\S*/g, (string) => {
-            return string.charAt(0).toUpperCase() + string.substr(1).toLowerCase();
-        });
+        return username.replace(
+            /\w\S*/g,
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+        );
     },
 
     /**
@@ -111,7 +112,7 @@ export default {
             for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
 
             return messageBlocks.join('');
-        } catch (e) {
+        } catch {
             return '';
         }
     },
@@ -121,7 +122,6 @@ export default {
      * of maps in order to determine if an update is necessary.
      * @param data Any form of data, string, numbers, etc.
      */
-
     getChecksum(data: string): string {
         return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
     },
@@ -134,7 +134,6 @@ export default {
      * time has passed.
      * @param threshold The threshold for how much time has passed in order to return true.
      */
-
     timePassed(lastEvent: number, threshold: number): boolean {
         return Date.now() - lastEvent < threshold;
     },
@@ -144,13 +143,12 @@ export default {
      * @param data Any string, generally a JSON string.
      * @param compression Compression format, can be gzip or zlib
      */
+    compressData(data: string, compression = 'gzip'): string | undefined {
+        if (!data) return;
 
-    compressData(data: string, compression = 'gzip'): string {
-        if (!data) return null;
-    
-        return compression === 'gzip' ? 
-            zlib.gzipSync(data).toString('base64') : 
-            zlib.deflateSync(data).toString('base64');
+        return compression === 'gzip'
+            ? zlib.gzipSync(data).toString('base64')
+            : zlib.deflateSync(data).toString('base64');
     },
 
     /**
@@ -158,8 +156,7 @@ export default {
      * client as a buffer size variable to decompress the data.
      * @param data The data to calculate the size of, will be stringified.
      */
-    
-    getBufferSize(data: any) {
+    getBufferSize(data: unknown): number {
         return encodeURI(JSON.stringify(data)).split(/%..|./).length - 1;
     }
 };

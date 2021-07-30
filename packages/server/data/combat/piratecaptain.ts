@@ -1,18 +1,18 @@
 import Combat from '../../src/game/entity/character/combat/combat';
 import Character from '../../src/game/entity/character/character';
-import Mob from '../../src/game/entity/character/mob/mob';
 import Utils from '../../src/util/utils';
 import Messages from '../../src/network/messages';
-import Packets from '../../src/network/packets';
+import Packets from '@kaetram/common/src/packets';
+import type { HitData } from '../../src/game/entity/character/combat/hit';
 
-class PirateCaptain extends Combat {
-    teleportLocations: Array<any>;
+export default class PirateCaptain extends Combat {
+    teleportLocations: Pos[];
     lastTeleportIndex: number;
     lastTeleport: number;
-    location: any;
-    declare character: Mob;
+    location: Pos;
+    // declare character: Character;
 
-    constructor(character: Mob) {
+    public constructor(character: Character) {
         character.spawnDistance = 20;
         super(character);
 
@@ -31,21 +31,21 @@ class PirateCaptain extends Combat {
         this.load();
     }
 
-    load() {
+    load(): void {
         const south = { x: 251, y: 574 },
-             west = { x: 243, y: 569 },
-             east = { x: 258, y: 568 },
-             north = { x: 251, y: 563 };
+            west = { x: 243, y: 569 },
+            east = { x: 258, y: 568 },
+            north = { x: 251, y: 563 };
 
         this.teleportLocations.push(north, south, west, east);
     }
 
-    hit(character: Character, target: Character, hitInfo: any) {
+    override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.canTeleport()) this.teleport();
         else super.hit(character, target, hitInfo);
     }
 
-    teleport() {
+    teleport(): void {
         const position = this.getRandomPosition();
 
         if (!position) return;
@@ -72,12 +72,12 @@ class PirateCaptain extends Combat {
             attacker.removeTarget();
         });
 
-        if (this.character.hasTarget()) this.begin(this.character.target);
+        if (this.character.target) this.begin(this.character.target);
     }
 
-    getRandomPosition() {
+    getRandomPosition(): { x: number; y: number; index: number } | null {
         const random = Utils.randomInt(0, this.teleportLocations.length - 1),
-             position = this.teleportLocations[random];
+            position = this.teleportLocations[random];
 
         if (!position || random === this.lastTeleportIndex) return null;
 
@@ -88,15 +88,13 @@ class PirateCaptain extends Combat {
         };
     }
 
-    canTeleport() {
-        //Just randomize the teleportation for shits and giggles.
+    canTeleport(): boolean {
+        // Just randomize the teleportation for shits and giggles.
         return Date.now() - this.lastTeleport > 10000 && Utils.randomInt(0, 4) === 2;
     }
 
-    getHealthPercentage() {
-        //Floor it to avoid random floats
+    getHealthPercentage(): number {
+        // Floor it to avoid random floats
         return Math.floor((this.character.hitPoints / this.character.maxHitPoints) * 100);
     }
 }
-
-export default PirateCaptain;
