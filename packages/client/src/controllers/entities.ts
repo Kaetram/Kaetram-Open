@@ -45,14 +45,14 @@ export default class EntitiesController {
         this.renderer = game.renderer;
     }
 
-    public async load(): Promise<void> {
+    public load(): Promise<void> {
         const { game, sprites } = this;
 
         game.app.sendStatus('Loading sprites');
 
         if (!sprites) {
             const sprites = new SpritesController();
-            await sprites.load();
+            sprites.load();
 
             this.sprites = sprites;
 

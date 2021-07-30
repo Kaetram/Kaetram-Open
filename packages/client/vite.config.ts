@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
 
-import { VitePWA } from 'vite-plugin-pwa';
+import { VitePWA as pwa } from 'vite-plugin-pwa';
 import legacy from '@vitejs/plugin-legacy';
 import { minifyHtml } from 'vite-plugin-html';
 import compress from 'vite-plugin-compress';
@@ -23,8 +23,9 @@ export default defineConfig(({ command }) => {
                 : { 'socket.io-client': 'socket.io-client/dist/socket.io.js' }
         },
         plugins: [
-            VitePWA({
+            pwa({
                 registerType: 'autoUpdate',
+                includeAssets: '**/*',
                 workbox: { cacheId: name },
                 manifest: {
                     name: 'Kaetram',
@@ -33,11 +34,11 @@ export default defineConfig(({ command }) => {
                     display: 'fullscreen',
                     background_color: '#000000',
                     theme_color: '#000000',
-                    icons: [36, 48, 72, 96, 144, 192, 256, 384, 512].map((size) => {
+                    icons: [192, 512].map((size) => {
                         const sizes = `${size}x${size}`;
 
                         return {
-                            src: `/icons/android-chrome-${sizes}.png`,
+                            src: `/img/icons/android-chrome-${sizes}.png`,
                             sizes,
                             type: 'image/png',
                             purpose: 'any maskable'
@@ -58,17 +59,11 @@ export default defineConfig(({ command }) => {
             compress({ brotli })
         ],
         build: {
-            sourcemap: true,
-            brotliSize: brotli
+            sourcemap: false,
+            brotliSize: brotli,
+            chunkSizeWarningLimit: 4e3
         },
         server: { port: 9000 },
-        define: { 'process.env': env },
-        css: {
-            postcss: {
-                plugins: ['autoprefixer', 'postcss-preset-env', 'postcss-custom-media'].map(
-                    (plugin) => require(plugin)
-                )
-            }
-        }
+        define: { 'process.env': env }
     };
 });

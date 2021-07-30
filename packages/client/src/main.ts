@@ -1,3 +1,5 @@
+import '../scss/main.scss';
+
 import App from './app';
 import Game from './game';
 

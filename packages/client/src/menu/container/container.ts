@@ -28,8 +28,8 @@ export default class Container {
     //     return -1;
     // }
 
-    public async getImageFormat(name: string | null): Promise<string> {
-        const { default: image } = await import(`../../../img/sprites/item-${name}.png`);
+    public getImageFormat(name: string | null): string {
+        const image = `/img/sprites/item-${name}.png`;
 
         return `url("${image}")`;
     }
