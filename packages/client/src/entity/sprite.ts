@@ -54,13 +54,13 @@ export default class Sprite {
     public load(): void {
         this.image = new Image();
 
-        const { image, filepath } = this;
+        let { image, filepath } = this;
 
         image.crossOrigin = 'Anonymous';
         image.src = filepath;
 
         image.addEventListener('load', () => {
-            const { loadHurt } = this;
+            let { loadHurt } = this;
 
             this.loaded = true;
 
@@ -71,7 +71,7 @@ export default class Sprite {
     }
 
     public loadSprite(): void {
-        const { sprite, id } = this,
+        let { sprite, id } = this,
             path = `/img/sprites/${id}.png`;
 
         this.filepath = path;
@@ -94,17 +94,17 @@ export default class Sprite {
     }
 
     public createAnimations(): Animations {
-        const { animationData, width, height } = this,
+        let { animationData, width, height } = this,
             animations: Animations = {};
 
-        for (const name in animationData) {
+        for (let name in animationData) {
             if (!Object.prototype.hasOwnProperty.call(animationData, name)) continue;
 
             if (name === 'death')
                 // Check if sprite has a death animation
                 this.hasDeathAnimation = true;
 
-            const { length, row } = animationData[name];
+            let { length, row } = animationData[name];
 
             animations[name] = new Animation(name, length, row, width, height);
         }
@@ -120,9 +120,9 @@ export default class Sprite {
 
         if (this.hurtSprite.loaded) return;
 
-        const canvas = document.createElement('canvas'),
-            context = canvas.getContext('2d')!;
-        let spriteData: ImageData;
+        let canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d')!,
+            spriteData: ImageData;
 
         canvas.width = this.image.width;
         canvas.height = this.image.height;

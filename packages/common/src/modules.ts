@@ -135,7 +135,7 @@ enum Rewards {
     Experience,
     Skill
 }
-export const Achievements = {
+export let Achievements = {
     Type,
     Rewards
 };
@@ -192,7 +192,7 @@ export enum Enchantment {
     Splash
 }
 
-export const EnchantmentNames = [
+export let EnchantmentNames = [
     'Bloodsucking',
     'Critical',
     'Evasion',
@@ -208,7 +208,7 @@ export interface Colours {
     stroke: string;
 }
 
-export const DamageColours = {
+export let DamageColours = {
     received: {
         fill: 'rgb(255, 50, 50)',
         stroke: 'rgb(255, 180, 180)'

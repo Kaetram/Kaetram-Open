@@ -79,7 +79,7 @@ export default class InputController {
     }
 
     public loadCursors(): void {
-        const { cursors, game } = this;
+        let { cursors, game } = this;
 
         cursors.hand = game.getSprite('hand');
         cursors.sword = game.getSprite('sword');
@@ -98,7 +98,7 @@ export default class InputController {
     }
 
     public handle(inputType: Modules.InputType, data: Modules.Keys | JQuery.Event): void {
-        const { chatHandler, game } = this,
+        let { chatHandler, game } = this,
             { menu, socket } = game,
             player = this.getPlayer();
 
@@ -202,7 +202,7 @@ export default class InputController {
     }
 
     public keyUp(key: Modules.Keys): void {
-        const player = this.getPlayer();
+        let player = this.getPlayer();
 
         switch (key) {
             case Modules.Keys.W:
@@ -245,7 +245,7 @@ export default class InputController {
     }
 
     public keyMove(position: Pos): void {
-        const player = this.getPlayer();
+        let player = this.getPlayer();
 
         if (!player.hasPath()) {
             this.keyMovement = true;
@@ -260,7 +260,7 @@ export default class InputController {
     }
 
     private leftClick(position: Pos | undefined, keyMovement?: boolean): void {
-        const { renderer, chatHandler, map, game } = this,
+        let { renderer, chatHandler, map, game } = this,
             player = this.getPlayer();
 
         if (player.stunned || !position) return;
@@ -295,7 +295,7 @@ export default class InputController {
                 position.x === player.gridX && position.y === player.gridY
             );
 
-        const { entity } = this;
+        let { entity } = this;
 
         if (entity) {
             player.disableAction = true;
@@ -326,15 +326,15 @@ export default class InputController {
     private rightClick(position: Pos | undefined): void {
         if (!position) return;
 
-        const { renderer, game, mouse, hovering } = this;
+        let { renderer, game, mouse, hovering } = this;
 
         if (renderer.mobile)
             this.entity = game.getEntityAt(position.x, position.y, this.isSamePosition(position));
 
-        const { entity } = this;
+        let { entity } = this;
 
         if (entity) {
-            const actions = this.getActions();
+            let actions = this.getActions();
 
             actions.loadDefaults(entity.type, {
                 mouseX: mouse.x,
@@ -349,7 +349,7 @@ export default class InputController {
     }
 
     public updateCursor(): void {
-        const { cursorVisible, newCursor, cursor, newTargetColour, targetColour } = this;
+        let { cursorVisible, newCursor, cursor, newTargetColour, targetColour } = this;
 
         if (!cursorVisible) return;
 
@@ -359,11 +359,11 @@ export default class InputController {
     }
 
     public moveCursor(): void {
-        const { renderer, game, overlay, entity, map, cursors } = this;
+        let { renderer, game, overlay, entity, map, cursors } = this;
 
         if (!renderer || renderer.mobile || !renderer.camera) return;
 
-        const position = this.getCoords(),
+        let position = this.getCoords(),
             player = this.getPlayer();
 
         if (!position) return;
@@ -375,7 +375,7 @@ export default class InputController {
 
         if (!entity || entity.id === player.id)
             if (map.isObject(position.x, position.y)) {
-                const cursor = map.getTileCursor(position.x, position.y);
+                let cursor = map.getTileCursor(position.x, position.y);
 
                 this.setCursor(cursors[cursor || 'talk']);
                 this.hovering = Modules.Hovering.Object;
@@ -417,7 +417,7 @@ export default class InputController {
     }
 
     public setCoords(event: JQuery.MouseMoveEvent<Document>): void {
-        const { app, renderer, mouse } = this,
+        let { app, renderer, mouse } = this,
             offset = app.canvas.offset()!,
             { width, height } = renderer.background;
 
@@ -451,11 +451,11 @@ export default class InputController {
     }
 
     public getCoords(): Pos | undefined {
-        const { renderer, mouse, game } = this;
+        let { renderer, mouse, game } = this;
 
         if (!renderer.camera) return;
 
-        const tileScale = renderer.tileSize * renderer.getSuperScaling(),
+        let tileScale = renderer.tileSize * renderer.getSuperScaling(),
             offsetX = mouse.x % tileScale,
             offsetY = mouse.y % tileScale,
             camera = game.getCamera(),
@@ -466,12 +466,12 @@ export default class InputController {
     }
 
     public getTargetData(): TargetData | undefined {
-        const { targetAnimation, renderer, game, selectedX, selectedY } = this,
+        let { targetAnimation, renderer, game, selectedX, selectedY } = this,
             sprite = game.getSprite('target');
 
         if (!sprite) return;
 
-        const frame = targetAnimation.currentFrame,
+        let frame = targetAnimation.currentFrame,
             superScale = renderer.getSuperScaling();
 
         if (!sprite.loaded) sprite.load();
@@ -502,7 +502,7 @@ export default class InputController {
     }
 
     private isSamePosition(position: Pos): boolean {
-        const player = this.getPlayer();
+        let player = this.getPlayer();
 
         return position.x === player.gridX && position.y === player.gridY;
     }

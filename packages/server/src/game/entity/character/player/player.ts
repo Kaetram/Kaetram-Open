@@ -273,7 +273,7 @@ export default class Player extends Character {
 
         this.userAgent = data.userAgent;
 
-        const { x, y, armour, weapon, pendant, ring, boots } = data;
+        let { x, y, armour, weapon, pendant, ring, boots } = data;
 
         this.setPosition(x, y);
         this.setArmour(...armour);
@@ -458,7 +458,7 @@ export default class Player extends Character {
 
         this.verifyRights();
 
-        const info = {
+        let info = {
             instance: this.instance,
             username: Utils.formatUsername(this.username),
             x: this.x,
@@ -499,7 +499,7 @@ export default class Player extends Character {
     public addExperience(exp: number): void {
         this.experience += exp;
 
-        const oldLevel = this.level;
+        let oldLevel = this.level;
 
         this.level = Formulas.expToLevel(this.experience);
         this.nextExperience = Formulas.nextExp(this.experience);
@@ -514,7 +514,7 @@ export default class Player extends Character {
             this.popup('Level Up!', `Congratulations, you are now level ${this.level}!`, '#ff6600');
         }
 
-        const data = {
+        let data = {
             id: this.instance,
             level: this.level
         } as PlayerExperience;
@@ -553,7 +553,7 @@ export default class Player extends Character {
     }
 
     public healHitPoints(amount: number): void {
-        const type = 'health';
+        let type = 'health';
 
         this.playerHitPoints.heal(amount);
 
@@ -570,7 +570,7 @@ export default class Player extends Character {
     }
 
     public healManaPoints(amount: number): void {
-        const type = 'mana';
+        let type = 'mana';
 
         this.mana.heal(amount);
 
@@ -587,7 +587,7 @@ export default class Player extends Character {
     }
 
     public eat(id: number): void {
-        const Item = Items.getPlugin(id);
+        let Item = Items.getPlugin(id);
 
         if (!Item) return;
 
@@ -595,8 +595,10 @@ export default class Player extends Character {
     }
 
     public equip(string: string, count: number, ability: number, abilityLevel: number): void {
-        const data = Items.getData(string);
-        let type!: Modules.Equipment, id, power;
+        let data = Items.getData(string),
+            type!: Modules.Equipment,
+            id,
+            power;
 
         if (!data || data === 'null') return;
 
@@ -662,7 +664,7 @@ export default class Player extends Character {
     }
 
     public isInvisible(instance: string): boolean {
-        const entity = this.entities.get(instance);
+        let entity = this.entities.get(instance);
 
         if (!entity) return false;
 
@@ -716,17 +718,17 @@ export default class Player extends Character {
      * in order to organize data more neatly.
      */
     public handleObject(id: string): void {
-        const info = this.globalObjects.getInfo(id);
+        let info = this.globalObjects.getInfo(id);
 
         if (!info) return;
 
         switch (info.type) {
             case 'sign': {
-                const data = this.globalObjects.getSignData(id);
+                let data = this.globalObjects.getSignData(id);
 
                 if (!data) return;
 
-                const message = this.globalObjects.talk(data.object, this);
+                let message = this.globalObjects.talk(data.object, this);
 
                 this.world.push(Packets.PushOpcode.Player, {
                     player: this,
@@ -743,7 +745,7 @@ export default class Player extends Character {
             }
 
             case 'lumberjacking': {
-                const lumberjacking = this.professions.getProfession<Lumberjacking>(
+                let lumberjacking = this.professions.getProfession<Lumberjacking>(
                     Modules.Professions.Lumberjacking
                 );
 
@@ -902,7 +904,7 @@ export default class Player extends Character {
 
     // We get dynamic trees surrounding the player
     public getSurroundingTrees(): SurroundingTrees {
-        const tiles: SurroundingTrees = {
+        let tiles: SurroundingTrees = {
             indexes: [],
             data: [],
             collisions: [],
@@ -910,12 +912,12 @@ export default class Player extends Character {
         };
 
         _.each(this.map.treeIndexes, (index: number) => {
-            const position = this.map.indexToGridPosition(index + 1),
+            let position = this.map.indexToGridPosition(index + 1),
                 treeRegion = this.regions.regionIdFromPosition(position.x, position.y);
 
             if (!this.regions.isSurrounding(this.region, treeRegion)) return;
 
-            const objectId = this.map.getPositionObject(position.x, position.y),
+            let objectId = this.map.getPositionObject(position.x, position.y),
                 cursor = this.map.getCursor(index, objectId);
 
             tiles.indexes.push(index);
@@ -933,7 +935,7 @@ export default class Player extends Character {
     }
 
     private getMovementSpeed(): number {
-        const itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
+        let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
             movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
 
         /*
@@ -1116,7 +1118,7 @@ export default class Player extends Character {
     }
 
     public getHit(target: Character): Hit | undefined {
-        const defaultDamage = Formulas.getDamage(this, target),
+        let defaultDamage = Formulas.getDamage(this, target),
             isSpecial = Utils.randomInt(0, 100) < 30 + this.weapon.abilityLevel * 3;
 
         if (!isSpecial || !this.hasSpecialAttack())
@@ -1173,7 +1175,7 @@ export default class Player extends Character {
     }
 
     public isMuted(): boolean {
-        const time = Date.now();
+        let time = Date.now();
 
         return this.mute - time > 0;
     }
@@ -1217,7 +1219,7 @@ export default class Player extends Character {
     }
 
     public sendEquipment(): void {
-        const info = {
+        let info = {
             armour: this.armour.getData(),
             weapon: this.weapon.getData(),
             pendant: this.pendant.getData(),
@@ -1239,7 +1241,7 @@ export default class Player extends Character {
     }
 
     public sendToSpawn(): void {
-        const position = this.getSpawn();
+        let position = this.getSpawn();
 
         this.x = position.x;
         this.y = position.y;
@@ -1256,7 +1258,7 @@ export default class Player extends Character {
             return;
         }
 
-        const otherPlayer = this.world.getPlayerByName(playerName),
+        let otherPlayer = this.world.getPlayerByName(playerName),
             oFormattedName = Utils.formatUsername(playerName), // Formated username of the other player.
             formattedName = Utils.formatUsername(this.username); // Formatted username of current instance.
 
@@ -1271,7 +1273,7 @@ export default class Player extends Character {
     public sync(): void {
         if (!this.playerHitPoints || !this.mana) return;
 
-        const info = {
+        let info = {
             id: this.instance,
             attackRange: this.attackRange,
             playerHitPoints: this.getHitPoints(),
@@ -1371,7 +1373,7 @@ export default class Player extends Character {
     public finishedAchievement(id: number): boolean {
         if (!this.quests) return false;
 
-        const achievement = this.quests.getAchievement(id);
+        let achievement = this.quests.getAchievement(id);
 
         if (!achievement) return true;
 
@@ -1381,7 +1383,7 @@ export default class Player extends Character {
     public finishAchievement(id: number): void {
         if (!this.quests) return;
 
-        const achievement = this.quests.getAchievement(id);
+        let achievement = this.quests.getAchievement(id);
 
         if (!achievement || achievement.isFinished()) return;
 
@@ -1391,7 +1393,7 @@ export default class Player extends Character {
     public checkRegions(): void {
         if (!this.regionPosition) return;
 
-        const diffX = Math.abs(this.regionPosition[0] - this.x),
+        let diffX = Math.abs(this.regionPosition[0] - this.x),
             diffY = Math.abs(this.regionPosition[1] - this.y);
 
         if (diffX >= 10 || diffY >= 10) {

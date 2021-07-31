@@ -8,7 +8,7 @@ import log from '@kaetram/server/src/util/log';
 import { MapData } from './mapdata';
 import ProcessMap from './processmap';
 
-const resolve = (dir: string): string => path.resolve(__dirname, dir),
+let resolve = (dir: string): string => path.resolve(__dirname, dir),
     relative = (dir: string): string => path.relative('../../', dir),
     serverDestination = '../../server/data/map/world.json',
     clientDestination = '../../client/data/maps/map.json';
@@ -27,7 +27,7 @@ export default class ExportMap {
     }
 
     private parse(): void {
-        const data = fs.readFileSync(this.#map, {
+        let data = fs.readFileSync(this.#map, {
             encoding: 'utf8',
             flag: 'r'
         });
@@ -41,7 +41,7 @@ export default class ExportMap {
     }
 
     private handle(data: MapData): void {
-        const processMap = new ProcessMap(data);
+        let processMap = new ProcessMap(data);
 
         processMap.parse();
 

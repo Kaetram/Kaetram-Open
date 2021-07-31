@@ -5,7 +5,7 @@ import Game from './game';
 
 import log from './lib/log';
 
-const app = new App();
+let app = new App();
 
 app.sendStatus('Loading game');
 

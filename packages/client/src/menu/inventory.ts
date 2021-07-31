@@ -30,12 +30,12 @@ export default class Inventory {
     }
 
     private load(data: Equipment[]): void {
-        const list = $('#inventory').find('ul');
+        let list = $('#inventory').find('ul');
 
-        for (const [i, item] of data.entries()) {
+        for (let [i, item] of data.entries()) {
             this.container.setSlot(i, item);
 
-            const itemSlot = $(`<div id="slot${i}" class="itemSlot"></div>`);
+            let itemSlot = $(`<div id="slot${i}" class="itemSlot"></div>`);
 
             if (item.string !== 'null')
                 itemSlot.css('background-image', this.container.getImageFormat(item.string));
@@ -46,9 +46,9 @@ export default class Inventory {
 
             itemSlot.on('click', (event) => this.click(event));
 
-            const itemSlotList = $('<li></li>'),
-                { count, ability } = item;
-            let itemCount = count.toString();
+            let itemSlotList = $('<li></li>'),
+                { count, ability } = item,
+                itemCount = count.toString();
 
             if (count > 999999)
                 itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
@@ -61,7 +61,7 @@ export default class Inventory {
             );
 
             if (ability > -1) {
-                const eList = Object.keys(Modules.Enchantment), // enchantment list
+                let eList = Object.keys(Modules.Enchantment), // enchantment list
                     enchantment = eList[ability];
 
                 if (enchantment) itemSlotList.find(`#itemCount${i}`).text(enchantment);
@@ -83,7 +83,7 @@ export default class Inventory {
     }
 
     private click(event: JQuery.ClickEvent): void {
-        const index = event.currentTarget.id.slice(4),
+        let index = event.currentTarget.id.slice(4),
             slot = this.container.slots[index],
             item = $(this.getList()[index]);
 
@@ -101,7 +101,7 @@ export default class Inventory {
 
         if (!this.actions.isVisible()) this.actions.show();
 
-        const sSlot = item.find(`#slot${index}`);
+        let sSlot = item.find(`#slot${index}`);
 
         sSlot.addClass('select');
 
@@ -112,12 +112,12 @@ export default class Inventory {
     }
 
     private clickDouble(event: JQuery.DoubleClickEvent): void {
-        const index = event.currentTarget.id.slice(4),
+        let index = event.currentTarget.id.slice(4),
             slot = this.container.slots[index];
 
         if (!slot.edible && !slot.equippable) return;
 
-        const item = $(this.getList()[index]),
+        let item = $(this.getList()[index]),
             sSlot = item.find(`#slot${index}`);
 
         this.clearSelection();
@@ -131,7 +131,7 @@ export default class Inventory {
     }
 
     public clickAction(event: string | JQuery.ClickEvent): void {
-        const action = (event as JQuery.ClickEvent).currentTarget?.id || event;
+        let action = (event as JQuery.ClickEvent).currentTarget?.id || event;
 
         if (!this.selectedSlot || !this.selectedItem) return;
 
@@ -147,7 +147,7 @@ export default class Inventory {
                 break;
 
             case 'drop': {
-                const item = this.selectedItem;
+                let item = this.selectedItem;
 
                 if (item.count > 1) {
                     if (Detect.isMobile()) this.hide(true);
@@ -165,7 +165,7 @@ export default class Inventory {
             }
 
             case 'dropAccept': {
-                const count = parseInt($('#dropCount').val() as string);
+                let count = parseInt($('#dropCount').val() as string);
 
                 if (isNaN(count) || count < 1) return;
 
@@ -200,7 +200,7 @@ export default class Inventory {
     }
 
     public add(info: Slot): void {
-        const item = $(this.getList()[info.index]),
+        let item = $(this.getList()[info.index]),
             slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
@@ -215,14 +215,14 @@ export default class Inventory {
             info.equippable
         );
 
-        const cssSlot = item.find(`#slot${info.index}`);
+        let cssSlot = item.find(`#slot${info.index}`);
 
         cssSlot.css('background-image', this.container.getImageFormat(slot.string));
 
         cssSlot.css('background-size', '600%');
 
-        const { count, ability } = slot;
-        let itemCount = count.toString();
+        let { count, ability } = slot,
+            itemCount = count.toString();
 
         if (count > 999999) itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
         else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
@@ -231,7 +231,7 @@ export default class Inventory {
         item.find(`#itemCount${info.index}`).text(itemCount);
 
         if (ability! > -1) {
-            const eList = Object.keys(Modules.Enchantment), // enchantment list
+            let eList = Object.keys(Modules.Enchantment), // enchantment list
                 enchantment = eList[ability!];
 
             if (enchantment) item.find(`#itemCount${info.index}`).text(enchantment);
@@ -239,7 +239,7 @@ export default class Inventory {
     }
 
     public remove(info: Slot): void {
-        const item = $(this.getList()[info.index]),
+        let item = $(this.getList()[info.index]),
             slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
@@ -259,10 +259,10 @@ export default class Inventory {
     }
 
     public resize(): void {
-        const list = this.getList();
+        let list = this.getList();
 
-        for (const [i, element] of [...list].entries()) {
-            const item = $(element).find(`#slot${i}`),
+        for (let [i, element] of [...list].entries()) {
+            let item = $(element).find(`#slot${i}`),
                 slot = this.container.slots[i];
 
             if (!slot) continue;
