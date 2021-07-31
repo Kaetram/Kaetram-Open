@@ -12,14 +12,14 @@ export default class EntityHandler {
     public constructor(private entity: Character) {}
 
     public load(): void {
-        const { entity, game, entities } = this;
+        let { entity, game, entities } = this;
 
         if ((!entity || !game) && !(entity instanceof Character)) return;
 
         entity.onRequestPath((x, y) => {
             if (entity.gridX === x && entity.gridY === y) return [];
 
-            const ignores = [entity];
+            let ignores = [entity];
 
             return game.findPath(entity, x, y, ignores);
         });

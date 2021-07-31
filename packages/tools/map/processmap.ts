@@ -12,7 +12,7 @@ export default class ProcessMap {
     public constructor(private data: MapData) {}
 
     public parse(): void {
-        const { width, height, tilewidth: tileSize } = this.data;
+        let { width, height, tilewidth: tileSize } = this.data;
 
         this.#map = {
             width,
@@ -51,11 +51,11 @@ export default class ProcessMap {
     }
 
     private parseTilesets(): void {
-        const { tilesets } = this.data;
+        let { tilesets } = this.data;
 
         if (Array.isArray(tilesets))
             _.each(tilesets, (tileset) => {
-                const name = tileset.name.toLowerCase();
+                let name = tileset.name.toLowerCase();
 
                 switch (name) {
                     case 'mobs':
@@ -88,7 +88,7 @@ export default class ProcessMap {
 
     private parseEntities(tileset: Tileset): void {
         _.each(tileset.tiles, (tile) => {
-            const tileId = this.getTileId(tileset, tile);
+            let tileId = this.getTileId(tileset, tile);
 
             this.#map.entities[tileId] = {} as Entity;
 
@@ -99,7 +99,7 @@ export default class ProcessMap {
     }
 
     private parseTileset(tileset: Tileset): void {
-        const { name, firstgid: firstGID, tilecount, image, tiles } = tileset;
+        let { name, firstgid: firstGID, tilecount, image, tiles } = tileset;
 
         this.#map.tilesets.push({
             name,
@@ -110,7 +110,7 @@ export default class ProcessMap {
         });
 
         _.each(tiles, (tile) => {
-            const tileId = this.getTileId(tileset, tile);
+            let tileId = this.getTileId(tileset, tile);
 
             _.each(tile.properties, (property) => {
                 this.parseProperties(tileId, property);
@@ -119,7 +119,7 @@ export default class ProcessMap {
     }
 
     private parseProperties(tileId: number, property: Property): void {
-        const { name } = property,
+        let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
             { polygons, high, objects, trees, rocks, cursors, tileCollisions } = this.#map;
 
@@ -149,7 +149,7 @@ export default class ProcessMap {
     }
 
     private parseTileLayer(layer: Layer): void {
-        const name = layer.name.toLowerCase();
+        let name = layer.name.toLowerCase();
 
         layer.data = this.getLayerData(layer.data, layer.compression)!;
 
@@ -174,7 +174,7 @@ export default class ProcessMap {
     }
 
     private parseTileLayerData(mapData: number[]): void {
-        const { data, collisions, trees, treeIndexes, rocks, rockIndexes, tileCollisions } =
+        let { data, collisions, trees, treeIndexes, rocks, rockIndexes, tileCollisions } =
             this.#map;
 
         _.each(mapData, (value, index) => {
@@ -199,7 +199,7 @@ export default class ProcessMap {
     }
 
     private parseStaticEntities(layer: Layer): void {
-        const { entities, staticEntities } = this.#map;
+        let { entities, staticEntities } = this.#map;
 
         _.each(layer.data, (value, index) => {
             if (value < 1) return;
@@ -209,7 +209,7 @@ export default class ProcessMap {
     }
 
     private parsePlateau(layer: Layer): void {
-        const level = parseInt(layer.name.split('plateau')[1]),
+        let level = parseInt(layer.name.split('plateau')[1]),
             { collisions, plateau } = this.#map;
 
         _.each(layer.data, (value, index) => {
@@ -229,7 +229,7 @@ export default class ProcessMap {
      * @param layer An object layer from Tiled map.
      */
     private parseObjectLayer(layer: Layer) {
-        const { name, objects } = layer,
+        let { name, objects } = layer,
             { areas } = this.#map;
 
         if (!objects) return;
@@ -246,7 +246,7 @@ export default class ProcessMap {
      * @param info The raw data received from Tiled.
      */
     private parseObject(objectName: string, info: LayerObject) {
-        const { id, name, x, y, width, height, properties } = info,
+        let { id, name, x, y, width, height, properties } = info,
             { tileSize, areas } = this.#map,
             object: ProcessedArea = {
                 id,
@@ -296,7 +296,7 @@ export default class ProcessMap {
     private extractPolygon(info: LayerObject) {
         if (!info.polygon) return;
 
-        const polygon: Pos[] = [],
+        let polygon: Pos[] = [],
             { tileSize } = this.#map;
         // console.log(info);
 
@@ -338,7 +338,7 @@ export default class ProcessMap {
      * to the server.
      */
     private formatData(): void {
-        const { data } = this.#map;
+        let { data } = this.#map;
 
         _.each(data, (value, index) => {
             if (!value) data[index] = 0;
@@ -360,8 +360,8 @@ export default class ProcessMap {
     private getLayerData(data: number[], type: string): number[] | void {
         if (_.isArray(data)) return data;
 
-        const dataBuffer = Buffer.from(data, 'base64');
-        let inflatedData: Buffer;
+        let dataBuffer = Buffer.from(data, 'base64'),
+            inflatedData: Buffer;
 
         switch (type) {
             case 'zlib':
@@ -379,7 +379,7 @@ export default class ProcessMap {
 
         if (!inflatedData) return;
 
-        const size = this.#map.width * this.#map.height * 4,
+        let size = this.#map.width * this.#map.height * 4,
             layerData: number[] = [];
 
         if (inflatedData.length !== size) {
@@ -415,7 +415,7 @@ export default class ProcessMap {
      * We are only sending essential information to the client.
      */
     public getClientMap(): string {
-        const { width, height, depth, version, high, tilesets, animations, tileSize } = this.#map;
+        let { width, height, depth, version, high, tilesets, animations, tileSize } = this.#map;
 
         return JSON.stringify({
             width,

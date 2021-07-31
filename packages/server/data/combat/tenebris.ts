@@ -41,7 +41,7 @@ export default class Tenebris extends Combat {
         this.firstIllusionKilled = false;
 
         setTimeout(() => {
-            const offset = Utils.positionOffset(4);
+            let offset = Utils.positionOffset(4);
 
             this.entities.spawnMob(105, 48 + offset.x, 338 + offset.y);
         }, this.respawnDelay);
@@ -91,7 +91,7 @@ export default class Tenebris extends Combat {
     removeIllusions(): void {
         this.lastIllusion = 0;
 
-        const listCopy = [...this.illusions];
+        let listCopy = [...this.illusions];
 
         for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
     }
@@ -100,7 +100,7 @@ export default class Tenebris extends Combat {
         if (!this.hasIllusions()) return;
 
         _.each(this.illusions, (illusion: Mob) => {
-            const target = this.getRandomTarget();
+            let target = this.getRandomTarget();
 
             if (!illusion.target && target) illusion.combat.begin(target);
         });
@@ -108,7 +108,7 @@ export default class Tenebris extends Combat {
 
     getRandomTarget(): Character | null {
         if (this.isAttacked()) {
-            const keys = Object.keys(this.attackers),
+            let keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;

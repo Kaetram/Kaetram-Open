@@ -23,23 +23,22 @@ export default class InfoController {
         x: number,
         y: number
     ): void {
-        const { time } = this.game;
+        let { time } = this.game;
 
         switch (type) {
             case Modules.Hits.Damage:
             case Modules.Hits.Stun:
             case Modules.Hits.Critical: {
-                const [damage, isTarget] = data!,
-                    dId = this.generateId(time, damage, x, y);
-
-                let text = damage.toString();
+                let [damage, isTarget] = data!,
+                    dId = this.generateId(time, damage, x, y),
+                    text = damage.toString();
 
                 if (damage < 1 || !isInt(damage)) text = 'MISS';
 
-                const hitSplat = new Splat(dId, type, text, x, y, false);
-                let dColour = isTarget
-                    ? Modules.DamageColours.received
-                    : Modules.DamageColours.inflicted;
+                let hitSplat = new Splat(dId, type, text, x, y, false),
+                    dColour = isTarget
+                        ? Modules.DamageColours.received
+                        : Modules.DamageColours.inflicted;
 
                 if (type === Modules.Hits.Critical)
                     dColour = isTarget
@@ -58,10 +57,9 @@ export default class InfoController {
             case Modules.Hits.Experience:
             case Modules.Hits.Profession:
             case Modules.Hits.Poison: {
-                const [amount] = data!,
-                    id: string = this.generateId(time, amount, x, y);
-
-                let prefix = '+',
+                let [amount] = data!,
+                    id: string = this.generateId(time, amount, x, y),
+                    prefix = '+',
                     suffix = '',
                     colour: Modules.Colours | null = null;
 
@@ -73,7 +71,7 @@ export default class InfoController {
 
                 if (type === Modules.Hits.Poison) prefix = '--';
 
-                const splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
+                let splat = new Splat(id, type, prefix + amount + suffix, x, y, false);
 
                 switch (type) {
                     case Modules.Hits.Heal:
@@ -101,7 +99,7 @@ export default class InfoController {
             }
 
             case Modules.Hits.LevelUp: {
-                const lId = this.generateId(time, -1, x, y),
+                let lId = this.generateId(time, -1, x, y),
                     levelSplat = new Splat(lId, type, 'Level Up!', x, y, false),
                     lColour = Modules.DamageColours.exp;
 
@@ -119,7 +117,7 @@ export default class InfoController {
 
                 if (this.countdownExists()) return;
 
-                const [time] = data!,
+                let [time] = data!,
                     countdown = new Countdown('countdown', time);
 
                 this.addInfo(countdown);

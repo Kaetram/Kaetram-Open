@@ -23,7 +23,7 @@ export default class Snek extends Combat {
     }
 
     canPoison(): boolean {
-        const chance = Utils.randomInt(0, this.character.level);
+        let chance = Utils.randomInt(0, this.character.level);
 
         return chance === 7;
     }
