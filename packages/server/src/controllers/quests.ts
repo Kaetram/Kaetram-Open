@@ -40,7 +40,7 @@ export default class Quests {
         let questCount = 0;
 
         _.each(questData, (quest) => {
-            const data = quest as QuestData;
+            let data = quest as QuestData;
 
             if (questCount === 0) this.quests[quest.id] = new Introduction(this.player, data);
             else if (questCount === 1)

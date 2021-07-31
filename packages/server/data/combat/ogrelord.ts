@@ -60,7 +60,7 @@ export default class OgreLord extends Combat {
         if (this.isAttacked()) this.beginMinionAttack();
 
         if (!character.isNonDiagonal(target)) {
-            const distance = character.getDistance(target);
+            let distance = character.getDistance(target);
 
             if (distance < 7) {
                 hitInfo.isRanged = true;
@@ -118,7 +118,7 @@ export default class OgreLord extends Combat {
         if (!this.hasMinions()) return;
 
         _.each(this.minions, (minion: Mob) => {
-            const randomTarget = this.getRandomTarget();
+            let randomTarget = this.getRandomTarget();
 
             if (!minion.target && randomTarget) minion.combat.begin(randomTarget);
         });
@@ -127,7 +127,7 @@ export default class OgreLord extends Combat {
     reset(): void {
         this.lastSpawn = 0;
 
-        const listCopy = [...this.minions];
+        let listCopy = [...this.minions];
 
         for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
 
@@ -142,7 +142,7 @@ export default class OgreLord extends Combat {
 
     getRandomTarget(): Character | null {
         if (this.isAttacked()) {
-            const keys = Object.keys(this.attackers),
+            let keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
 
             if (randomAttacker) return randomAttacker;

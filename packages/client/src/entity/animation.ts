@@ -27,16 +27,15 @@ export default class Animation {
     }
 
     private tick(): void {
-        const { currentFrame, length, count, width, height, row } = this;
-
-        let i = currentFrame.index;
+        let { currentFrame, length, count, width, height, row } = this,
+            i = currentFrame.index;
 
         i = i < length - 1 ? i + 1 : 0;
 
         if (count > 0 && i === 0) {
             this.count -= 1;
 
-            const { count } = this;
+            let { count } = this;
 
             if (count === 0) {
                 currentFrame.index = 0;
@@ -52,7 +51,7 @@ export default class Animation {
     }
 
     public update(time: number): boolean {
-        const { lastTime, name } = this;
+        let { lastTime, name } = this;
 
         if (lastTime === 0 && name.slice(0, 3) === 'atk') this.lastTime = time;
 

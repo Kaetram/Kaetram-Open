@@ -140,7 +140,7 @@ export default class Incoming {
     }
 
     private handleIntro(message: [number, string, string, string]): void {
-        const [loginType, username, password] = message,
+        let [loginType, username, password] = message,
             isRegistering = loginType === Packets.IntroOpcode.Register,
             isGuest = loginType === Packets.IntroOpcode.Guest,
             email = isRegistering ? message[3] : '',
@@ -199,7 +199,7 @@ export default class Incoming {
     }
 
     private handleReady(message: [string, string, string]): void {
-        const [isReady, preloadedData, userAgent] = message;
+        let [isReady, preloadedData, userAgent] = message;
 
         if (!isReady) return;
 
@@ -246,7 +246,7 @@ export default class Incoming {
 
     private handleWho(message: string[]): void {
         _.each(message, (id: string) => {
-            const entity = this.entities.get<Mob & NPC>(id);
+            let entity = this.entities.get<Mob & NPC>(id);
 
             if (!entity || entity.dead) return;
 
@@ -274,7 +274,7 @@ export default class Incoming {
     }
 
     private handleEquipment(message: [number, string]): void {
-        const [opcode, type] = message;
+        let [opcode, type] = message;
 
         switch (opcode) {
             case Packets.EquipmentOpcode.Unequip: {
@@ -337,14 +337,14 @@ export default class Incoming {
     }
 
     private handleMovement(message: [number, ...unknown[]]): void {
-        const [opcode] = message;
-        let orientation: number;
+        let [opcode] = message,
+            orientation: number;
 
         if (!this.player || this.player.dead) return;
 
         switch (opcode) {
             case Packets.MovementOpcode.Request: {
-                const requestX = message[1] as number,
+                let requestX = message[1] as number,
                     requestY = message[2] as number;
 
                 this.preventNoClip(requestX, requestY);
@@ -355,7 +355,7 @@ export default class Incoming {
             }
 
             case Packets.MovementOpcode.Started: {
-                const selectedX = message[1] as number,
+                let selectedX = message[1] as number,
                     selectedY = message[2] as number,
                     pX = message[3] as number,
                     pY = message[4] as number,
@@ -384,7 +384,7 @@ export default class Incoming {
             }
 
             case Packets.MovementOpcode.Step: {
-                const x = message[1] as number,
+                let x = message[1] as number,
                     y = message[2] as number;
 
                 if (this.player.stunned || !this.preventNoClip(x, y)) return;
@@ -395,7 +395,7 @@ export default class Incoming {
             }
 
             case Packets.MovementOpcode.Stop: {
-                const posX = message[1] as number,
+                let posX = message[1] as number,
                     posY = message[2] as number,
                     id = message[3] as string,
                     hasTarget = message[4] as number,
@@ -412,11 +412,11 @@ export default class Incoming {
                 if (entity && entity.type === 'item') this.player.inventory.add(entity as Item);
 
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
-                    const door = this.player.doors.getDoor(posX, posY);
+                    let door = this.player.doors.getDoor(posX, posY);
 
                     if (door && this.player.doors.isClosed(door)) return;
 
-                    const destination = this.world.map.getDoorByPosition(posX, posY);
+                    let destination = this.world.map.getDoorByPosition(posX, posY);
 
                     this.player.teleport(destination.x, destination.y, true);
                 } else {
@@ -427,7 +427,7 @@ export default class Incoming {
                 this.player.moving = false;
                 this.player.lastMovement = Date.now();
 
-                const diff = this.player.lastMovement - this.player.movementStart;
+                let diff = this.player.lastMovement - this.player.movementStart;
 
                 if (diff < this.player.movementSpeed) this.player.incrementCheatScore(1);
 
@@ -435,7 +435,7 @@ export default class Incoming {
             }
 
             case Packets.MovementOpcode.Entity: {
-                const instance = message[1] as string,
+                let instance = message[1] as string,
                     entityX = message[2] as number,
                     entityY = message[3] as number,
                     oEntity = this.entities.get<Character>(instance);
@@ -473,7 +473,7 @@ export default class Incoming {
                 break;
 
             case Packets.MovementOpcode.Zone: {
-                const direction = message[1] as number;
+                let direction = message[1] as number;
 
                 log.debug(`Zoning detected, direction: ${direction}.`);
 
@@ -504,7 +504,7 @@ export default class Incoming {
                 this.player.cheatScore = 0;
 
                 if (entity.type === 'chest') {
-                    const chest = entity as Chest;
+                    let chest = entity as Chest;
                     chest.openChest(this.player);
                     return;
                 }
@@ -517,7 +517,7 @@ export default class Incoming {
             }
 
             case Packets.TargetOpcode.Attack: {
-                const target = this.entities.get<Character>(instance);
+                let target = this.entities.get<Character>(instance);
 
                 if (!target || target.dead || !this.canAttack(this.player, target)) return;
 
@@ -540,7 +540,7 @@ export default class Incoming {
                 break;
 
             case Packets.TargetOpcode.Object: {
-                const target = this.entities.get<Character>(instance);
+                let target = this.entities.get<Character>(instance);
 
                 this.player.setTarget(target);
                 this.player.handleObject(instance);
@@ -551,11 +551,11 @@ export default class Incoming {
     }
 
     private handleCombat(message: [number, string, string]): void {
-        const [opcode] = message;
+        let [opcode] = message;
 
         switch (opcode) {
             case Packets.CombatOpcode.Initiate: {
-                const attacker = this.entities.get<Character>(message[1]),
+                let attacker = this.entities.get<Character>(message[1]),
                     target = this.entities.get<Character>(message[2]);
 
                 if (
@@ -584,11 +584,11 @@ export default class Incoming {
     }
 
     private handleProjectile(message: [number, string, string]): void {
-        const [type] = message;
+        let [type] = message;
 
         switch (type) {
             case Packets.ProjectileOpcode.Impact: {
-                const projectile = this.entities.get<Projectile>(message[1]),
+                let projectile = this.entities.get<Projectile>(message[1]),
                     target = this.entities.get<Mob>(message[2]);
 
                 if (!target || target.dead || !projectile) return;
@@ -606,11 +606,11 @@ export default class Incoming {
     }
 
     private handleNetwork(message: [number]): void {
-        const [opcode] = message;
+        let [opcode] = message;
 
         switch (opcode) {
             case Packets.NetworkOpcode.Pong: {
-                const time = Date.now();
+                let time = Date.now();
 
                 this.player.notify(`Latency of ${time - this.player.pingTime}ms`, 'red');
 
@@ -620,7 +620,7 @@ export default class Incoming {
     }
 
     private handleChat(message: [string]): void {
-        const text = sanitizer.escape(sanitizer.sanitize(message[0]));
+        let text = sanitizer.escape(sanitizer.sanitize(message[0]));
 
         if (!text || text.length === 0 || !/\S/.test(text)) return;
 
@@ -666,7 +666,7 @@ export default class Incoming {
     }
 
     private handleCommand(message: [number, Pos]): void {
-        const [opcode, position] = message;
+        let [opcode, position] = message;
 
         if (this.player.rights < 2) return;
 
@@ -680,13 +680,15 @@ export default class Incoming {
     }
 
     private handleInventory(message: [number, ...unknown[]]): void {
-        const [opcode] = message;
-        let id!: number, ability!: number, abilityLevel!: number;
+        let [opcode] = message,
+            id!: number,
+            ability!: number,
+            abilityLevel!: number;
 
         switch (opcode) {
             case Packets.InventoryOpcode.Remove: {
-                const item = message[1] as Slot;
-                let count!: number;
+                let item = message[1] as Slot,
+                    count!: number;
 
                 if (!item) return;
 
@@ -694,7 +696,7 @@ export default class Incoming {
 
                 id = Items.stringToId(item.string)!;
 
-                const iSlot = this.player.inventory.slots[item.index];
+                let iSlot = this.player.inventory.slots[item.index];
 
                 if (iSlot.id < 1) return;
 
@@ -716,7 +718,7 @@ export default class Incoming {
             }
 
             case Packets.InventoryOpcode.Select: {
-                const index = message[1] as number,
+                let index = message[1] as number,
                     slot = this.player.inventory.slots[index],
                     { string, count, equippable, edible } = slot;
 
@@ -742,26 +744,26 @@ export default class Incoming {
     }
 
     private handleBank(message: [number, string, number]): void {
-        const [opcode, type, index] = message;
+        let [opcode, type, index] = message;
 
         switch (opcode) {
             case Packets.BankOpcode.Select: {
-                const isBank = type === 'bank';
+                let isBank = type === 'bank';
 
                 if (isBank) {
-                    const bankSlot = this.player.bank.getInfo(index);
+                    let bankSlot = this.player.bank.getInfo(index);
 
                     if (bankSlot.id < 1) return;
 
                     // Infinite stacks move all at once, otherwise move one by one.
-                    const moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
+                    let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
 
                     bankSlot.count = moveAmount;
 
                     if (this.player.inventory.add(bankSlot))
                         this.player.bank.remove(bankSlot.id, moveAmount, index);
                 } else {
-                    const inventorySlot = this.player.inventory.slots[index];
+                    let inventorySlot = this.player.inventory.slots[index];
 
                     if (inventorySlot.id < 1) return;
 
@@ -782,11 +784,11 @@ export default class Incoming {
     }
 
     private handleRespawn(message: [string]): void {
-        const [instance] = message;
+        let [instance] = message;
 
         if (this.player.instance !== instance) return;
 
-        const spawn = this.player.getSpawn();
+        let spawn = this.player.getSpawn();
 
         this.player.dead = false;
         this.player.setPosition(spawn.x, spawn.y);
@@ -805,7 +807,7 @@ export default class Incoming {
     }
 
     private handleTrade(message: [number, string]): void {
-        const [opcode] = message,
+        let [opcode] = message,
             oPlayer = this.entities.get(message[1]);
 
         if (!oPlayer || !opcode) return;
@@ -823,13 +825,13 @@ export default class Incoming {
     }
 
     private handleEnchant(message: [number, unknown]): void {
-        const [opcode] = message;
+        let [opcode] = message;
 
         switch (opcode) {
             case Packets.EnchantOpcode.Select: {
-                const index = message[1] as number,
-                    item = this.player.inventory.slots[index];
-                let type: EnchantType = 'item';
+                let index = message[1] as number,
+                    item = this.player.inventory.slots[index],
+                    type: EnchantType = 'item';
 
                 if (item.id < 1) return;
 
@@ -853,7 +855,7 @@ export default class Incoming {
     }
 
     private handleClick(message: [string, boolean]): void {
-        const [type, state] = message;
+        let [type, state] = message;
 
         switch (type) {
             case 'profile':
@@ -874,17 +876,17 @@ export default class Incoming {
     }
 
     private handleWarp(message: [string]): void {
-        const id = parseInt(message[0]) - 1;
+        let id = parseInt(message[0]) - 1;
 
         this.player.warp?.warp(id);
     }
 
     private handleShop(message: [number, number, ...unknown[]]): void {
-        const [opcode, npcId] = message;
+        let [opcode, npcId] = message;
 
         switch (opcode) {
             case Packets.ShopOpcode.Buy: {
-                const buyId = message[2] as number,
+                let buyId = message[2] as number,
                     amount = message[3] as number;
 
                 if (!buyId || !amount) {
@@ -910,14 +912,14 @@ export default class Incoming {
                 break;
 
             case Packets.ShopOpcode.Select: {
-                const id = message[2] as string;
+                let id = message[2] as string;
 
                 if (!id) {
                     this.player.notify('Incorrect purchase packets.');
                     return;
                 }
 
-                const slotId = parseInt(id),
+                let slotId = parseInt(id),
                     /**
                      * Though all this could be done client-sided
                      * it's just safer to send it to the server to sanitize data.
@@ -931,7 +933,7 @@ export default class Incoming {
 
                 if (this.player.selectedShopItem) this.world.shops.remove(this.player);
 
-                const currency = this.world.shops.getCurrency(npcId);
+                let currency = this.world.shops.getCurrency(npcId);
 
                 if (!currency) return;
 
@@ -975,7 +977,7 @@ export default class Incoming {
      * for more functionality when needed.
      */
     private handleClient(message: [number, number]): void {
-        const [canvasWidth, canvasHeight] = message;
+        let [canvasWidth, canvasHeight] = message;
 
         if (!canvasWidth || !canvasHeight) return;
 
@@ -1000,7 +1002,7 @@ export default class Incoming {
     }
 
     private preventNoClip(x: number, y: number): boolean {
-        const isMapColliding = this.world.map.isColliding(x, y),
+        let isMapColliding = this.world.map.isColliding(x, y),
             isInstanceColliding = this.player.doors.hasCollision(x, y);
 
         if (this.world.map.getPositionObject(x, y)) return true;
@@ -1023,7 +1025,7 @@ export default class Incoming {
         y = this.player.previousY < 0 ? this.player.y : this.player.previousY;
 
         if (this.world.map.isColliding(x, y)) {
-            const spawn = this.player.getSpawn();
+            let spawn = this.player.getSpawn();
 
             ({ x, y } = spawn);
         }

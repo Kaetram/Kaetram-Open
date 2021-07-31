@@ -41,7 +41,7 @@ export default class MobHandler {
             if (!this.mob.miniboss || !this.combat) return;
 
             this.combat.forEachAttacker((attacker) => {
-                const player = attacker as Player;
+                let player = attacker as Player;
 
                 player?.finishAchievement(this.mob.achievementId);
             });

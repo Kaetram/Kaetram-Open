@@ -90,7 +90,7 @@ export default class Profile {
     }
 
     public setPage(index: number): void {
-        const page = this.pages[index];
+        let page = this.pages[index];
 
         this.clear();
 

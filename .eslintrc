@@ -6,6 +6,7 @@
         "plugin:unicorn/recommended",
         "plugin:prettier/recommended"
     ],
+    "plugins": ["prefer-let"],
     "rules": {
         "@typescript-eslint/no-non-null-assertion": "off",
 
@@ -16,18 +17,39 @@
         "unicorn/prefer-number-properties": "off",
         "unicorn/prevent-abbreviations": "off",
         "unicorn/consistent-function-scoping": "off",
+        "unicorn/require-post-message-target-origin": "off",
+        "unicorn/custom-error-definition": "error",
+        "unicorn/no-unsafe-regex": "error",
+        // "unicorn/prefer-at": "error",
+        // "unicorn/prefer-object-has-own": "error",
+        "unicorn/prefer-string-replace-all": "error",
 
         "prettier/prettier": "warn",
+
+        "prefer-let/prefer-let": "error",
+
+        "prefer-const": "off",
+        "no-fallthrough": "off",
 
         "curly": ["warn", "multi"],
         "one-var": ["warn", "consecutive"],
         "yoda": "warn",
+        "no-else-return": "warn",
+        "object-shorthand": "warn",
+        "operator-assignment": "warn",
+        "prefer-destructuring": [
+            "warn",
+            {
+                "object": true,
+                "array": true
+            }
+        ],
+
         "array-callback-return": "error",
         "default-case-last": "error",
         "dot-notation": "error",
         "eqeqeq": "error",
         "max-classes-per-file": "error",
-
         "no-useless-backreference": "error",
         "no-unsafe-optional-chaining": "error",
         "no-unreachable-loop": "error",
@@ -42,21 +64,7 @@
         "no-extend-native": "error",
         "no-implied-eval": "error",
         "no-iterator": "error",
-        "no-labels": "error",
-        "no-else-return": "warn",
-        "object-shorthand": "warn",
-        "operator-assignment": "warn",
-
-        "prefer-const": "off",
-        "no-fallthrough": "off",
-
-        "prefer-destructuring": [
-            "warn",
-            {
-                "object": true,
-                "array": true
-            }
-        ]
+        "no-labels": "error"
     },
     "ignorePatterns": ["node_modules", "dist"]
 }

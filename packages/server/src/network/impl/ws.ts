@@ -17,7 +17,7 @@ export default class WS extends WebSocket {
     public constructor(socketHandler: SocketHandler) {
         super(config.host, config.websocketPort, 'WebSocket', socketHandler);
 
-        const server = new ws.Server({ port: this.port });
+        let server = new ws.Server({ port: this.port });
 
         server.on('connection', (socket, request) => {
             let mappedAddress = request.socket.remoteAddress!,
@@ -29,7 +29,7 @@ export default class WS extends WebSocket {
 
             // TODO - Handle client version....
 
-            const connection = new Connection(
+            let connection = new Connection(
                 Utils.getConnectionId(),
                 this.type,
                 socket as AnySocket,
