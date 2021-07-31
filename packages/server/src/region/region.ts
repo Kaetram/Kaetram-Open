@@ -161,7 +161,7 @@ export default class Region {
         this.push(player);
 
         this.mapRegions.forEachSurroundingRegion(player.region, (regionId: string) => {
-            const instancedRegion = Region.regionIdToInstance(player, regionId);
+            let instancedRegion = Region.regionIdToInstance(player, regionId);
 
             if (instancedRegion in this.regions) delete this.regions[instancedRegion];
         });
@@ -190,10 +190,10 @@ export default class Region {
     public updateRegions(regionId?: string): void {
         if (regionId)
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
-                const region = this.regions[id];
+                let region = this.regions[id];
 
                 _.each(region.players, (instance: string) => {
-                    const player = this.entities.players[instance];
+                    let player = this.entities.players[instance];
 
                     if (player) this.sendRegion(player, player.region);
                 });
@@ -275,13 +275,13 @@ export default class Region {
     }
 
     private add(entity: Entity, regionId: string | null): string[] {
-        const newRegions: string[] = [];
+        let newRegions: string[] = [];
 
         if (entity && regionId && regionId in this.regions) {
             this.mapRegions.forEachSurroundingRegion(regionId, (id: string) => {
                 if (entity.instanced) id = Region.regionIdToInstance(entity, id);
 
-                const region = this.regions[id];
+                let region = this.regions[id];
 
                 if (region && region.entities) {
                     region.entities[entity.instance] = entity;
@@ -300,10 +300,10 @@ export default class Region {
     }
 
     public remove(entity: Entity): string[] {
-        const oldRegions: string[] = [];
+        let oldRegions: string[] = [];
 
         if (entity && entity.region) {
-            const region = this.regions[entity.region];
+            let region = this.regions[entity.region];
 
             if (entity instanceof Player)
                 region.players = _.reject(region.players, (id) => {
@@ -328,7 +328,7 @@ export default class Region {
     private incoming(entity: Entity, regionId: string): void {
         if (!entity || !regionId) return;
 
-        const region = this.regions[regionId];
+        let region = this.regions[regionId];
 
         if (region && !(entity.instance in region.entities)) region.incoming.push(entity);
 
@@ -349,7 +349,7 @@ export default class Region {
 
             this.incoming(entity, regionId);
 
-            const oldRegions = this.remove(entity),
+            let oldRegions = this.remove(entity),
                 newRegions = this.add(entity, regionId);
 
             if (_.size(oldRegions) > 0) entity.recentRegions = _.difference(oldRegions, newRegions);
@@ -377,13 +377,13 @@ export default class Region {
     }
 
     private changeTileAt(player: Player, newTile: Tile, x: number, y: number): void {
-        const index = this.gridPositionToIndex(x, y);
+        let index = this.gridPositionToIndex(x, y);
 
         player.send(Region.getModify(index, newTile));
     }
 
     private changeGlobalTile(newTile: Tile, x: number, y: number): void {
-        const index = this.gridPositionToIndex(x, y);
+        let index = this.gridPositionToIndex(x, y);
 
         this.map.data[index] = newTile;
 
@@ -408,7 +408,7 @@ export default class Region {
 
             player.loadRegion(regionId);
 
-            const bounds = this.getRegionBounds(regionId);
+            let bounds = this.getRegionBounds(regionId);
 
             this.forEachTile(bounds, player.webSocketClient, dynamicTiles, (tile) => {
                 data.push(tile);
@@ -456,7 +456,7 @@ export default class Region {
                 if (isCollision) info.isCollision = isCollision;
                 if (objectId) {
                     info.isObject = !!objectId;
-                    const cursor = this.map.getCursor(info.index!, objectId);
+                    let cursor = this.map.getCursor(info.index!, objectId);
                     if (cursor) info.cursor = cursor;
                 }
             }
@@ -477,7 +477,7 @@ export default class Region {
     }
 
     public getRegionBounds(regionId: string): Bounds {
-        const regionCoordinates = this.mapRegions.regionIdToCoordinates(regionId);
+        let regionCoordinates = this.mapRegions.regionIdToCoordinates(regionId);
 
         return {
             startX: regionCoordinates.x,
@@ -495,7 +495,7 @@ export default class Region {
     }
 
     private static instanceToRegionId(instancedRegionId: string): string {
-        const region = instancedRegionId.split('-');
+        let region = instancedRegionId.split('-');
 
         return region[0] + '-' + region[1];
     }

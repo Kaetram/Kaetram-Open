@@ -50,7 +50,7 @@ export default class Combat {
 
         character.onDamage((target, hitInfo) => {
             if (this.isPlayer()) {
-                const player = character as Player;
+                let player = character as Player;
 
                 if (player.hasBreakableWeapon() && Formulas.getWeaponBreak(player, target))
                     player.breakWeapon();
@@ -175,7 +175,7 @@ export default class Combat {
         let hit: Hit | undefined;
 
         if (this.isPlayer()) {
-            const player = this.character as Player;
+            let player = this.character as Player;
 
             hit = player.getHit(target);
         } else hit = new Hit(Modules.Hits.Damage, Formulas.getDamage(this.character, target));
@@ -251,7 +251,7 @@ export default class Combat {
     private sendToSpawn(): void {
         if (!this.isMob()) return;
 
-        const mob = this.character as Mob;
+        let mob = this.character as Mob;
 
         mob.return();
 

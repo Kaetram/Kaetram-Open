@@ -55,11 +55,11 @@ interface Config {
     allowConnectionsToggle: boolean;
 }
 
-const envConfig = dotenvParseVariables(dotenv.load()),
+let envConfig = dotenvParseVariables(dotenv.load()),
     appConfig = {} as Config;
 
-for (const key of Object.keys(envConfig)) {
-    const camelCaseKey = camelCase(key) as keyof Config;
+for (let key of Object.keys(envConfig)) {
+    let camelCaseKey = camelCase(key) as keyof Config;
 
     appConfig[camelCaseKey] = envConfig[key] as never;
 }

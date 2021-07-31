@@ -43,7 +43,7 @@ export default class Camera {
     }
 
     public update(): void {
-        const { renderer, app, tileSize, map } = this,
+        let { renderer, app, tileSize, map } = this,
             scale = renderer.getScale(),
             borderWidth = app.border.width()!,
             borderHeight = app.border.height()!,
@@ -53,7 +53,7 @@ export default class Camera {
         this.gridWidth = factorWidth;
         this.gridHeight = factorHeight;
 
-        const { gridWidth, gridHeight } = this;
+        let { gridWidth, gridHeight } = this;
 
         this.borderX = map.width * tileSize - gridWidth * tileSize;
         this.borderY = map.height * tileSize - gridHeight * tileSize;
@@ -110,7 +110,7 @@ export default class Camera {
     }
 
     // handlePanning(direction: Modules.Keys): void {
-    //     const { panning, x, y } = this;
+    //     let { panning, x, y } = this;
 
     //     if (!panning) return;
 
@@ -136,7 +136,7 @@ export default class Camera {
     public centreOn(player: Player | null): void {
         if (!player) return;
 
-        const { gridWidth, gridHeight, tileSize, borderX, borderY, lockX, lockY } = this,
+        let { gridWidth, gridHeight, tileSize, borderX, borderY, lockX, lockY } = this,
             width = Math.floor(gridWidth / 2),
             height = Math.floor(gridHeight / 2),
             nextX = player.x - width * tileSize,
@@ -156,7 +156,7 @@ export default class Camera {
     public forceCentre(entity: Entity): void {
         if (!entity) return;
 
-        const { gridWidth, gridHeight, tileSize } = this,
+        let { gridWidth, gridHeight, tileSize } = this,
             width = Math.floor(gridWidth / 2),
             height = Math.floor(gridHeight / 2);
 
@@ -178,7 +178,7 @@ export default class Camera {
     }
 
     private offsetY(nextY: number): void {
-        const { borderY } = this;
+        let { borderY } = this;
 
         if (nextY <= 16) {
             this.y = 0;
@@ -220,7 +220,7 @@ export default class Camera {
      * we zone somewhere out of the limitations.
      */
     private zoneClip(): void {
-        const { width, height } = this.map;
+        let { width, height } = this.map;
 
         if (this.gridX < 0) this.setGridPosition(0, this.gridY);
 
@@ -232,7 +232,7 @@ export default class Camera {
     }
 
     public forEachVisiblePosition(callback: (x: number, y: number) => void, offset?: number): void {
-        const { gridX, gridY, gridWidth, gridHeight } = this;
+        let { gridX, gridY, gridWidth, gridHeight } = this;
 
         offset ||= 1;
 
@@ -242,7 +242,7 @@ export default class Camera {
     }
 
     public isVisible(x: number, y: number, offset: number, offset2: number): boolean {
-        const { gridX, gridY, gridWidth, gridHeight } = this;
+        let { gridX, gridY, gridWidth, gridHeight } = this;
 
         return (
             x > gridX - offset &&

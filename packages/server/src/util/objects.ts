@@ -17,7 +17,7 @@ export default {
     },
 
     getPosition(id: string): Pos {
-        const info = id.split('-');
+        let info = id.split('-');
 
         return {
             x: parseInt(info[0]),

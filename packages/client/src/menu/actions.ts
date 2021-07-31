@@ -27,7 +27,7 @@ export default class Actions {
     }
 
     private load(): void {
-        const dropAccept = $('#dropAccept'),
+        let dropAccept = $('#dropAccept'),
             dropCancel = $('#dropCancel');
 
         dropAccept.on('click', (event) => {
@@ -56,7 +56,7 @@ export default class Actions {
                     left: '10%'
                 });
 
-                const dropButton = $('<div id="drop" class="actionButton">Drop</div>');
+                let dropButton = $('<div id="drop" class="actionButton">Drop</div>');
 
                 this.add(dropButton);
 
@@ -109,7 +109,7 @@ export default class Actions {
     }
 
     private reset(): void {
-        const buttons = this.getButtons();
+        let buttons = this.getButtons();
 
         for (let i = 0; i < buttons.length; i++) $(buttons[i]).remove();
     }
