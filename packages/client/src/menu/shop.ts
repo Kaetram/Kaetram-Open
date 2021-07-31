@@ -58,7 +58,7 @@ export default class Shop {
     }
 
     private buy(event: JQuery.ClickEvent): void {
-        const id = event.currentTarget.id.slice(11);
+        let id = event.currentTarget.id.slice(11);
 
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, this.openShop, id, 1]);
     }
@@ -69,7 +69,7 @@ export default class Shop {
     }
 
     private select(event: JQuery.ClickEvent): void {
-        const id = event.currentTarget.id.slice(17);
+        let id = event.currentTarget.id.slice(17);
 
         this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, this.openShop, id]);
     }
@@ -79,7 +79,7 @@ export default class Shop {
     }
 
     public move(info: ShopMoveInfo): void {
-        const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
+        let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
             slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`),
             slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
 
@@ -93,7 +93,7 @@ export default class Shop {
             backgroundSize: this.sellSlot.css('background-size')
         });
 
-        const quantity: number = Number(slotText.text()) || 1;
+        let quantity: number = Number(slotText.text()) || 1;
 
         this.sellSlotText.text(slotText.text());
 
@@ -104,7 +104,7 @@ export default class Shop {
     }
 
     public moveBack(index: number): void {
-        const inventorySlot = this.getInventoryList().find(`#shopInventorySlot${index}`);
+        let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${index}`);
 
         inventorySlot
             .find(`#inventoryImage${index}`)
@@ -144,7 +144,7 @@ export default class Shop {
 
     private load(): void {
         for (let i = 0; i < this.container.size; i++) {
-            const shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`),
+            let shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`),
                 string = this.data.strings[i],
                 name = this.data.names[i],
                 count = this.data.counts[i],
@@ -152,7 +152,7 @@ export default class Shop {
 
             if (!string || !name || !count) continue;
 
-            const itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`),
+            let itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`),
                 itemCount = $(`<div id="shopItemCount${i}" class="shopItemCount"></div>`),
                 itemPrice = $(`<div id="shopItemPrice${i}" class="shopItemPrice"></div>`),
                 itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`),
@@ -172,7 +172,7 @@ export default class Shop {
             // Bind the itemBuy to the local buy function.
             itemBuy.on('click', (event) => this.buy(event));
 
-            const listItem = $('<li></li>');
+            let listItem = $('<li></li>');
 
             shopItem.append(itemImage, itemCount, itemPrice, itemName, itemBuy);
 
@@ -181,11 +181,11 @@ export default class Shop {
             this.getShopList().append(listItem);
         }
 
-        const inventoryItems = this.menu.bank.getInventoryList(),
+        let inventoryItems = this.menu.bank.getInventoryList(),
             inventorySize = this.menu.inventory.getSize();
 
         for (let j = 0; j < inventorySize; j++) {
-            const item = $(inventoryItems[j]).clone(),
+            let item = $(inventoryItems[j]).clone(),
                 slot = item.find(`#bankInventorySlot${j}`);
 
             slot.attr('id', `shopInventorySlot${j}`);

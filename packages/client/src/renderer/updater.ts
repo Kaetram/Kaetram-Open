@@ -39,7 +39,7 @@ export default class Updater {
             if (entity.spriteLoaded) {
                 this.updateFading(entity);
 
-                const animation = entity.currentAnimation;
+                let animation = entity.currentAnimation;
 
                 animation?.update(this.game.time);
 
@@ -50,7 +50,7 @@ export default class Updater {
                         switch (entity.orientation) {
                             case Modules.Orientation.Left:
                             case Modules.Orientation.Right: {
-                                const isLeft = entity.orientation === Modules.Orientation.Left;
+                                let isLeft = entity.orientation === Modules.Orientation.Left;
 
                                 entity.movement.start(
                                     this.game.time,
@@ -73,7 +73,7 @@ export default class Updater {
 
                             case Modules.Orientation.Up:
                             case Modules.Orientation.Down: {
-                                const isUp = entity.orientation === Modules.Orientation.Up;
+                                let isUp = entity.orientation === Modules.Orientation.Up;
 
                                 entity.movement.start(
                                     this.game.time,
@@ -95,13 +95,12 @@ export default class Updater {
                             }
                         }
                 } else if (entity instanceof Projectile) {
-                    const projectile = entity,
+                    let projectile = entity,
                         mDistance = projectile.speed * this.timeDifferential,
                         dx = projectile.target.x - entity.x,
                         dy = projectile.target.y - entity.y,
-                        tDistance = Math.sqrt(dx * dx + dy * dy);
-
-                    let amount = mDistance / tDistance;
+                        tDistance = Math.sqrt(dx * dx + dy * dy),
+                        amount = mDistance / tDistance;
 
                     projectile.updateAngle();
 
@@ -119,7 +118,7 @@ export default class Updater {
     private updateFading(entity: Entity): void {
         if (!entity || !entity.fading) return;
 
-        const { time } = this.game,
+        let { time } = this.game,
             dt = time - entity.fadingTime;
 
         if (dt > entity.fadingDuration) {
@@ -129,7 +128,7 @@ export default class Updater {
     }
 
     private updateKeyboard(): void {
-        const { player } = this.game,
+        let { player } = this.game,
             position = {
                 x: player.gridX,
                 y: player.gridY
@@ -146,13 +145,13 @@ export default class Updater {
     }
 
     private updateAnimations(): void {
-        const target = this.input.targetAnimation;
+        let target = this.input.targetAnimation;
 
         if (target && this.input.selectedCellVisible) target.update(this.game.time);
 
         if (!this.sprites) return;
 
-        const sparks = this.sprites.sparksAnimation;
+        let sparks = this.sprites.sparksAnimation;
 
         sparks?.update(this.game.time);
     }

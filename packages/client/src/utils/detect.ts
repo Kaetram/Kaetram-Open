@@ -1,8 +1,8 @@
-export const userAgentContains = (string: string): boolean => navigator.userAgent.includes(string);
+export let userAgentContains = (string: string): boolean => navigator.userAgent.includes(string);
 
-export const isIpad = (): boolean => /ipad/i.test(navigator.userAgent.toLowerCase());
+export let isIpad = (): boolean => /ipad/i.test(navigator.userAgent.toLowerCase());
 
-export const isSafari = (): boolean => userAgentContains('Safari') && !userAgentContains('Chrome');
+export let isSafari = (): boolean => userAgentContains('Safari') && !userAgentContains('Chrome');
 
 declare global {
     interface Document {
@@ -11,21 +11,21 @@ declare global {
     }
 }
 
-export const isInternetExplorer = (): boolean => !!document.documentMode;
+export let isInternetExplorer = (): boolean => !!document.documentMode;
 
-export const isEdge = (): boolean => !isInternetExplorer() && !!window.StyleMedia;
+export let isEdge = (): boolean => !isInternetExplorer() && !!window.StyleMedia;
 
-export const getUserAgent = (): string => navigator.userAgent.toString();
+export let getUserAgent = (): string => navigator.userAgent.toString();
 
 export function isTablet(): boolean {
-    const userAgent = navigator.userAgent.toLowerCase(),
+    let userAgent = navigator.userAgent.toLowerCase(),
         isAppleTablet = /ipad/i.test(userAgent),
         isAndroidTablet = /android/i.test(userAgent);
 
     return (isAppleTablet || isAndroidTablet) && window.innerWidth >= 640;
 }
 
-export const isMobile = (): boolean => window.innerWidth < 1000;
+export let isMobile = (): boolean => window.innerWidth < 1000;
 
 export function iOSVersion(): number | undefined {
     if (window.MSStream)
@@ -33,10 +33,10 @@ export function iOSVersion(): number | undefined {
         // https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
         return;
 
-    const match = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);
+    let match = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+?)/);
 
     if (match !== undefined && match !== null) {
-        const version = [
+        let version = [
             parseInt(match[1], 10),
             parseInt(match[2], 10),
             parseInt(match[3] || '0', 10)
@@ -45,19 +45,19 @@ export function iOSVersion(): number | undefined {
     }
 }
 
-export const androidVersion = (): number | undefined => {
-    const userAgent = navigator.userAgent.split('Android');
+export let androidVersion = (): number | undefined => {
+    let userAgent = navigator.userAgent.split('Android');
 
     if (userAgent.length > 1) return parseFloat(userAgent[1].split(';')[0]);
 };
 
-export const supportsWebGL = (): boolean =>
-    // const canvas = document.createElement('canvas'),
+export let supportsWebGL = (): boolean =>
+    // let canvas = document.createElement('canvas'),
     //     gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     false;
 
 export function isAppleDevice(): boolean {
-    const devices = [
+    let devices = [
         'iPad Simulator',
         'iPhone Simulator',
         'iPod Simulator',
@@ -73,16 +73,16 @@ export function isAppleDevice(): boolean {
 }
 
 // Older mobile devices will default to non-centred camera mode
-export const isOldAndroid = (): boolean => {
-    const version = androidVersion();
+export let isOldAndroid = (): boolean => {
+    let version = androidVersion();
 
     return !!version && version < 6;
 };
 
-export const isOldApple = (): boolean => {
-    const version = iOSVersion();
+export let isOldApple = (): boolean => {
+    let version = iOSVersion();
 
     return !!version && version < 9;
 };
 
-export const useCenteredCamera = (): boolean => isOldAndroid() || isOldApple() || isIpad();
+export let useCenteredCamera = (): boolean => isOldAndroid() || isOldApple() || isIpad();

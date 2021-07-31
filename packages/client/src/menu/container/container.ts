@@ -29,7 +29,7 @@ export default class Container {
     // }
 
     public getImageFormat(name: string | null): string {
-        const image = `/img/sprites/item-${name}.png`;
+        let image = `/img/sprites/item-${name}.png`;
 
         return `url("${image}")`;
     }

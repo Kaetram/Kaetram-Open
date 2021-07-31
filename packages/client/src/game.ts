@@ -127,7 +127,7 @@ export default class Game {
     }
 
     private loadRenderer(): void {
-        const background = document.querySelector<HTMLCanvasElement>('#background')!,
+        let background = document.querySelector<HTMLCanvasElement>('#background')!,
             foreground = document.querySelector<HTMLCanvasElement>('#foreground')!,
             overlay = document.querySelector<HTMLCanvasElement>('#overlay')!,
             textCanvas = document.querySelector<HTMLCanvasElement>('#textCanvas')!,
@@ -142,7 +142,7 @@ export default class Game {
     }
 
     private loadControllers(): void {
-        const { app } = this;
+        let { app } = this;
 
         app.sendStatus('Loading local storage');
 
@@ -153,7 +153,7 @@ export default class Game {
         app.sendStatus('Initializing network socket');
 
         this.setSocket(new Socket(this));
-        const { socket } = this;
+        let { socket } = this;
         this.setMessages(socket.messages);
         this.setInput(new InputController(this));
 
@@ -178,10 +178,10 @@ export default class Game {
         this.map = new Map(this);
         this.overlays = new Overlay();
 
-        const { map } = this;
+        let { map } = this;
 
         map.onReady(() => {
-            const { map, app, renderer, entities } = this;
+            let { map, app, renderer, entities } = this;
 
             if (!map) return;
 
@@ -209,7 +209,7 @@ export default class Game {
     }
 
     public connect(): void {
-        const { app, socket } = this;
+        let { app, socket } = this;
 
         app.cleanErrors();
 
@@ -224,7 +224,7 @@ export default class Game {
      * by the server and the client received the connection.
      */
     public postLoad(): void {
-        const { renderer, player, entities, updater, storage, socket, map } = this;
+        let { renderer, player, entities, updater, storage, socket, map } = this;
         if (!(renderer && player && entities && updater)) return;
 
         renderer.loadStaticSprites();
@@ -233,7 +233,7 @@ export default class Game {
 
         entities.addEntity(player);
 
-        const defaultSprite = this.getSprite(player.getSpriteName());
+        let defaultSprite = this.getSprite(player.getSpriteName());
 
         player.setSprite(defaultSprite);
         if (storage) player.setOrientation(storage.data.player.orientation);
@@ -259,7 +259,7 @@ export default class Game {
     }
 
     private loadStorage(): void {
-        const loginName = $('#loginNameInput'),
+        let loginName = $('#loginNameInput'),
             loginPassword = $('#loginPasswordInput');
 
         loginName.prop('readonly', false);
@@ -281,9 +281,9 @@ export default class Game {
         ignores: Character[],
         isObject?: boolean
     ): number[][] {
-        const { entities, map, pathfinder } = this,
-            grid = entities.grids.pathingGrid;
-        let path: number[][] = [];
+        let { entities, map, pathfinder } = this,
+            grid = entities.grids.pathingGrid,
+            path: number[][] = [];
 
         if (map.isColliding(x, y) && !map.isObject(x, y)) return path;
 
@@ -310,7 +310,7 @@ export default class Game {
      * menu-based errors.
      */
     public handleDisconnection(noError?: boolean): void {
-        const { started, renderer, menu, app } = this;
+        let { started, renderer, menu, app } = this;
 
         if (!started) return;
 
@@ -335,7 +335,7 @@ export default class Game {
     }
 
     public respawn(): void {
-        const { audio, app, socket, player } = this;
+        let { audio, app, socket, player } = this;
 
         audio.play(Modules.AudioTypes.SFX, 'revive');
         app.body.removeClass('death');
@@ -356,7 +356,7 @@ export default class Game {
     }
 
     public sendClientData(): void {
-        const { canvasWidth, canvasHeight } = this.renderer;
+        let { canvasWidth, canvasHeight } = this.renderer;
 
         if (!canvasWidth || !canvasHeight) return;
 
@@ -386,11 +386,11 @@ export default class Game {
     public getEntityAt(x: number, y: number, ignoreSelf: boolean): Entity | undefined {
         if (!this.entities) return;
 
-        const entities = this.entities.grids.renderingGrid[y][x];
+        let entities = this.entities.grids.renderingGrid[y][x];
 
         if (_.size(entities) > 0) return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
 
-        const items = this.entities.grids.itemGrid[y][x];
+        let items = this.entities.grids.itemGrid[y][x];
 
         if (_.size(items) > 0) return items[_.keys(items)[0]];
     }

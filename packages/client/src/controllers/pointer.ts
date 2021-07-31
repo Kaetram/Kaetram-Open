@@ -23,7 +23,7 @@ export default class PointerController {
     }
 
     public create(id: string, type: Modules.Pointers, name?: string): void {
-        const { pointers, container } = this;
+        let { pointers, container } = this;
 
         if (id in pointers) return;
 
@@ -34,7 +34,7 @@ export default class PointerController {
                 break;
 
             default: {
-                const element = $(`<div id="${id}" class="pointer"></div>`);
+                let element = $(`<div id="${id}" class="pointer"></div>`);
 
                 this.setSize(element);
 
@@ -51,7 +51,7 @@ export default class PointerController {
         _.each(this.pointers, ({ type, x, y, element }) => {
             switch (type) {
                 case Modules.Pointers.Relative: {
-                    const scale = this.getScale(),
+                    let scale = this.getScale(),
                         offsetX = 0,
                         offsetY = 0;
 
@@ -67,7 +67,7 @@ export default class PointerController {
     }
 
     private setSize(element: JQuery): void {
-        const pointer = '/img/sprites/pointer.png';
+        let pointer = '/img/sprites/pointer.png';
 
         element.css({
             top: '30px',
@@ -93,11 +93,11 @@ export default class PointerController {
     private set(pointer: Pointer, posX: number, posY: number): void {
         this.updateCamera();
 
-        const { camera, game, scale } = this;
+        let { camera, game, scale } = this;
 
         if (!camera) return;
 
-        const { element } = pointer,
+        let { element } = pointer,
             { canvasWidth, canvasHeight } = game.renderer,
             tileSize = 48, // 16 * scale
             x = (posX - camera.x) * scale,
@@ -154,7 +154,7 @@ export default class PointerController {
     }
 
     public setToEntity(entity: Entity): void {
-        const pointer = this.get(entity.id);
+        let pointer = this.get(entity.id);
 
         if (!pointer) return;
 
@@ -162,7 +162,7 @@ export default class PointerController {
     }
 
     public setToPosition(id: string, x: number, y: number): void {
-        const pointer = this.get(id);
+        let pointer = this.get(id);
 
         if (!pointer) return;
 
@@ -172,11 +172,11 @@ export default class PointerController {
     }
 
     public setRelative(id: string, x: number, y: number): void {
-        const pointer = this.get(id);
+        let pointer = this.get(id);
 
         if (!pointer) return;
 
-        const scale = this.getScale(),
+        let scale = this.getScale(),
             offsetX = 0,
             offsetY = 0;
 
@@ -192,7 +192,7 @@ export default class PointerController {
         _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
                 case Modules.Pointers.Entity: {
-                    const entity = this.game.entities.get(pointer.id);
+                    let entity = this.game.entities.get(pointer.id);
 
                     if (entity) this.setToEntity(entity);
                     else this.destroy(pointer);
@@ -210,7 +210,7 @@ export default class PointerController {
     }
 
     private get(id: string): Pointer | null {
-        const { pointers } = this;
+        let { pointers } = this;
 
         if (id in pointers) return pointers[id];
 

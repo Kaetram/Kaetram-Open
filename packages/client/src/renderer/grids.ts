@@ -14,7 +14,7 @@ export default class Grids {
     }
 
     private load(): void {
-        const { map, renderingGrid, pathingGrid, itemGrid } = this,
+        let { map, renderingGrid, pathingGrid, itemGrid } = this,
             { height, width, grid } = map;
 
         for (let i = 0; i < height; i++) {
@@ -35,7 +35,7 @@ export default class Grids {
     public resetPathingGrid(): void {
         this.pathingGrid = [];
 
-        const { pathingGrid, map } = this;
+        let { pathingGrid, map } = this;
 
         for (let i = 0; i < map.height; i++) {
             pathingGrid[i] = [];
@@ -45,7 +45,7 @@ export default class Grids {
     }
 
     public addToRenderingGrid(entity: Entity): void {
-        const { id, gridX: x, gridY: y } = entity;
+        let { id, gridX: x, gridY: y } = entity;
 
         if (!this.map.isOutOfBounds(x, y)) this.renderingGrid[y][x][id] = entity;
     }
@@ -55,7 +55,7 @@ export default class Grids {
     }
 
     public addToItemGrid(item: Item): void {
-        const { id, gridX: x, gridY: y } = item;
+        let { id, gridX: x, gridY: y } = item;
 
         if (item && this.itemGrid[y][x]) this.itemGrid[y][x][id] = item;
     }
@@ -78,7 +78,7 @@ export default class Grids {
 
     public removeEntity(entity: Entity): void {
         if (entity) {
-            const { gridX, gridY, nextGridX, nextGridY } = entity;
+            let { gridX, gridY, nextGridX, nextGridY } = entity;
 
             this.removeFromPathingGrid(gridX, gridY);
             this.removeFromRenderingGrid(entity);

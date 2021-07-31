@@ -25,12 +25,12 @@ class Main {
              * the websocket.
              */
 
-            const onWorldLoad = () => {
+            let onWorldLoad = () => {
                 log.notice('World has successfully been created.');
 
                 if (!config.allowConnectionsToggle) this.world.allowConnections = true;
 
-                const host = config.host === '0.0.0.0' ? 'localhost' : config.host;
+                let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
                 log.notice('Connect locally via http://' + host + ':' + config.socketioPort);
             };
@@ -58,15 +58,15 @@ class Main {
     }
 
     private loadConsole(): void {
-        const stdin = process.openStdin();
+        let stdin = process.openStdin();
 
         stdin.addListener('data', (data: Buffer) => {
-            const message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
                 type = message.charAt(0);
 
             if (type !== '/') return;
 
-            const blocks = message.slice(1).split(' '),
+            let blocks = message.slice(1).split(' '),
                 command = blocks.shift()!;
 
             if (!command) return;

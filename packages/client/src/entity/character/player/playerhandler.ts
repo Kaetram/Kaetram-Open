@@ -14,7 +14,7 @@ export default class PlayerHandler {
     private renderer;
 
     public constructor(private game: Game, private player: Player) {
-        const { map, input, entities, socket, renderer } = game;
+        let { map, input, entities, socket, renderer } = game;
 
         this.map = map;
         this.camera = game.getCamera();
@@ -27,7 +27,7 @@ export default class PlayerHandler {
     }
 
     private load(): void {
-        const { player, game, map, camera, input, entities, socket, renderer } = this;
+        let { player, game, map, camera, input, entities, socket, renderer } = this;
 
         player.onRequestPath((x, y) => {
             if (player.dead || player.frozen) return null;
@@ -38,11 +38,11 @@ export default class PlayerHandler {
              * a colliding tile and will interfere with combat.
              */
 
-            const isObject = map.isObject(x, y);
+            let isObject = map.isObject(x, y);
 
             if (player.gridX === x && player.gridY === y) return [];
 
-            const ignores = [player];
+            let ignores = [player];
 
             if (!map.isColliding(x, y) && !isObject)
                 socket.send(Packets.Movement, [
@@ -68,7 +68,7 @@ export default class PlayerHandler {
         player.onStartPathing((path) => {
             if (!input) return;
 
-            const i = path.length - 1;
+            let i = path.length - 1;
 
             player.moving = true;
 
@@ -98,8 +98,8 @@ export default class PlayerHandler {
 
             camera.clip();
 
-            let id = null;
-            const entity = game.getEntityAt(x, y, true);
+            let id = null,
+                entity = game.getEntityAt(x, y, true);
 
             if (entity) ({ id } = entity);
 
@@ -174,17 +174,17 @@ export default class PlayerHandler {
     }
 
     isAttackable(): boolean {
-        const { target } = this.player;
+        let { target } = this.player;
 
         return target ? target.type === 'mob' || (target.type === 'player' && target.pvp) : false;
     }
 
     checkBounds(): void {
-        const { player, camera, game, socket, renderer } = this,
+        let { player, camera, game, socket, renderer } = this,
             { zoning } = game;
         if (!zoning) return;
 
-        const x = player.gridX - camera.gridX,
+        let x = player.gridX - camera.gridX,
             y = player.gridY - camera.gridY;
 
         if (x === 0) zoning.setLeft();
@@ -193,7 +193,7 @@ export default class PlayerHandler {
         else if (y === camera.gridHeight - 2) zoning.setDown();
 
         if (zoning.direction !== null) {
-            const direction = zoning.getDirection();
+            let direction = zoning.getDirection();
 
             camera.zone(direction);
 
@@ -206,13 +206,13 @@ export default class PlayerHandler {
     }
 
     private getTargetId(): string | null {
-        const { target } = this.player;
+        let { target } = this.player;
 
         return target ? target.id : null;
     }
 
     private getTargetType(): number {
-        const { target } = this.player;
+        let { target } = this.player;
 
         if (!target) return Packets.TargetOpcode.None;
 

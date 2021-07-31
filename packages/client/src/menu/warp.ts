@@ -21,7 +21,7 @@ export default class Wrap {
         this.close.on('click', () => this.hide());
 
         for (let i = 1; i < 7; i++) {
-            const warp = this.mapFrame.find(`#warp${i}`);
+            let warp = this.mapFrame.find(`#warp${i}`);
 
             if (warp)
                 warp.on('click', (event) => {
