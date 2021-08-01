@@ -28,7 +28,7 @@
         "@types/dotenv-parse-variables": "^2.0.1",
         "@types/express": "^4.17.13",
         "@types/lodash": "^4.14.171",
-        "@types/node": "^16.4.7",
+        "@types/node": "^16.4.10",
         "@types/sanitizer": "^0.0.28",
         "@types/ws": "^7.4.7",
         "esbuild": "^0.12.17",

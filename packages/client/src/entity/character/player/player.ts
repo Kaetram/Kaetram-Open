@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import Character from '../character';
 import Armour from './equipment/armour';

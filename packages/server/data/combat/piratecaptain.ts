@@ -1,15 +1,17 @@
+import { Opcodes } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
+
 import Combat from '../../src/game/entity/character/combat/combat';
-import Character from '../../src/game/entity/character/character';
-import Utils from '../../src/util/utils';
 import Messages from '../../src/network/messages';
-import Packets from '@kaetram/common/src/packets';
+
+import type Character from '../../src/game/entity/character/character';
 import type { HitData } from '../../src/game/entity/character/combat/hit';
 
 export default class PirateCaptain extends Combat {
-    teleportLocations: Pos[];
-    lastTeleportIndex: number;
-    lastTeleport: number;
-    location: Pos;
+    private teleportLocations: Pos[];
+    private lastTeleportIndex: number;
+    private lastTeleport: number;
+    private location: Pos;
     // declare character: Character;
 
     public constructor(character: Character) {
@@ -31,7 +33,7 @@ export default class PirateCaptain extends Combat {
         this.load();
     }
 
-    load(): void {
+    private load(): void {
         let south = { x: 251, y: 574 },
             west = { x: 243, y: 569 },
             east = { x: 258, y: 568 },
@@ -40,12 +42,12 @@ export default class PirateCaptain extends Combat {
         this.teleportLocations.push(north, south, west, east);
     }
 
-    override hit(character: Character, target: Character, hitInfo: HitData): void {
+    public override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.canTeleport()) this.teleport();
         else super.hit(character, target, hitInfo);
     }
 
-    teleport(): void {
+    private teleport(): void {
         let position = this.getRandomPosition();
 
         if (!position) return;
@@ -58,7 +60,7 @@ export default class PirateCaptain extends Combat {
         this.character.setPosition(position.x, position.y);
 
         if (this.world)
-            this.world.push(Packets.PushOpcode.Regions, {
+            this.world.push(Opcodes.Push.Regions, {
                 regionId: this.character.region,
                 message: new Messages.Teleport({
                     id: this.character.instance,
@@ -75,7 +77,7 @@ export default class PirateCaptain extends Combat {
         if (this.character.target) this.begin(this.character.target);
     }
 
-    getRandomPosition(): { x: number; y: number; index: number } | null {
+    private getRandomPosition(): { x: number; y: number; index: number } | null {
         let random = Utils.randomInt(0, this.teleportLocations.length - 1),
             position = this.teleportLocations[random];
 
@@ -88,12 +90,12 @@ export default class PirateCaptain extends Combat {
         };
     }
 
-    canTeleport(): boolean {
+    private canTeleport(): boolean {
         // Just randomize the teleportation for shits and giggles.
         return Date.now() - this.lastTeleport > 10000 && Utils.randomInt(0, 4) === 2;
     }
 
-    getHealthPercentage(): number {
+    private getHealthPercentage(): number {
         // Floor it to avoid random floats
         return Math.floor((this.character.hitPoints / this.character.maxHitPoints) * 100);
     }

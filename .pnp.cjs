@@ -2328,7 +2328,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/html-minifier-terser", "npm:5.1.2"],
             ["@types/jquery", "npm:3.5.6"],
             ["@types/lodash", "npm:4.14.171"],
-            ["@types/node", "npm:16.4.7"],
+            ["@types/node", "npm:16.4.10"],
             ["@types/pako", "npm:1.0.2"],
             ["@types/workbox-build", "npm:5.0.1"],
             ["@vitejs/plugin-legacy", "virtual:938eb76cb1439630a6b52a8b1d1ae7dafe67ff5ba7f6b53da410865a470c8d59feaca5be415efda2b1c9bef7b78449df38e8241ab3c1efcc178a84f7bf6a9391#npm:1.5.0"],
@@ -2365,7 +2365,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:packages/common", {
           "packageLocation": "./packages/common/",
           "packageDependencies": [
-            ["@kaetram/common", "workspace:packages/common"]
+            ["@kaetram/common", "workspace:packages/common"],
+            ["@types/dotenv-parse-variables", "npm:2.0.1"],
+            ["@types/lodash", "npm:4.14.171"],
+            ["@types/node", "npm:16.4.10"],
+            ["dotenv-extended", "npm:2.9.0"],
+            ["dotenv-parse-variables", "npm:2.0.0"],
+            ["lodash", "npm:4.17.21"]
           ],
           "linkType": "SOFT",
         }]
@@ -2382,7 +2388,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/dotenv-parse-variables", "npm:2.0.1"],
             ["@types/express", "npm:4.17.13"],
             ["@types/lodash", "npm:4.14.171"],
-            ["@types/node", "npm:16.4.7"],
+            ["@types/node", "npm:16.4.10"],
             ["@types/sanitizer", "npm:0.0.28"],
             ["@types/ws", "npm:7.4.7"],
             ["axios", "npm:0.21.1"],
@@ -2415,7 +2421,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@kaetram/common", "workspace:packages/common"],
             ["@kaetram/server", "workspace:packages/server"],
             ["@types/lodash", "npm:4.14.171"],
-            ["@types/node", "npm:16.4.7"],
+            ["@types/node", "npm:16.4.10"],
             ["lodash", "npm:4.17.21"],
             ["socket.io-client", "npm:4.1.3"],
             ["ts-node", "virtual:24baeff050e66bbcfced0d8ef961daec091eac03f9f543d4538ff012a490ddb9d9e4b4a91538acb7f146f6a16fe424d0b0cd4297b810227793a29531e854feb8#npm:10.1.0"],
@@ -2967,10 +2973,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:16.4.7", {
-          "packageLocation": "./.yarn/cache/@types-node-npm-16.4.7-f463f5eb13-a1e80deea9.zip/node_modules/@types/node/",
+        ["npm:16.4.10", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-16.4.10-7fcafea653-b2b550c233.zip/node_modules/@types/node/",
           "packageDependencies": [
-            ["@types/node", "npm:16.4.7"]
+            ["@types/node", "npm:16.4.10"]
           ],
           "linkType": "HARD",
         }]
@@ -12688,7 +12694,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node12", "npm:1.0.9"],
             ["@tsconfig/node14", "npm:1.0.1"],
             ["@tsconfig/node16", "npm:1.0.1"],
-            ["@types/node", "npm:16.4.7"],
+            ["@types/node", "npm:16.4.10"],
             ["@types/swc__core", null],
             ["@types/swc__wasm", null],
             ["@types/typescript", null],

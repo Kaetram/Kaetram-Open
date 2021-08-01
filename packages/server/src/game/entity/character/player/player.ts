@@ -1,17 +1,16 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import config from '@kaetram/common/config';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
-import config from '../../../../../config';
 import Incoming from '../../../../controllers/incoming';
 import Quests from '../../../../controllers/quests';
 import Messages, { Packet } from '../../../../network/messages';
 import Constants from '../../../../util/constants';
 import Formulas from '../../../../util/formulas';
 import Items from '../../../../util/items';
-import log from '../../../../util/log';
-import Utils from '../../../../util/utils';
 import Character, { CharacterState } from '../character';
 import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
@@ -311,7 +310,7 @@ export default class Player extends Character {
 
             this.save();
 
-            if (config.debug) log.info(`Updated map version for ${this.username}`);
+            log.debug(`Updated map version for ${this.username}`);
 
             return;
         }
@@ -419,10 +418,7 @@ export default class Player extends Character {
 
         this.quests.onAchievementsReady(() => {
             this.send(
-                new Messages.Quest(
-                    Packets.QuestOpcode.AchievementBatch,
-                    this.quests.getAchievementData()
-                )
+                new Messages.Quest(Opcodes.Quest.AchievementBatch, this.quests.getAchievementData())
             );
 
             /* Update region here because we receive quest info */
@@ -432,9 +428,7 @@ export default class Player extends Character {
         });
 
         this.quests.onQuestsReady(() => {
-            this.send(
-                new Messages.Quest(Packets.QuestOpcode.QuestBatch, this.quests.getQuestData())
-            );
+            this.send(new Messages.Quest(Opcodes.Quest.QuestBatch, this.quests.getQuestData()));
 
             /* Update region here because we receive quest info */
             if (this.achievementsLoaded) this.updateRegion();
@@ -446,7 +440,7 @@ export default class Player extends Character {
     public intro(): void {
         if (this.ban > Date.now()) {
             this.connection.sendUTF8('ban');
-            this.connection.close('Player: ' + this.username + ' is banned.');
+            this.connection.close(`Player: ${this.username} is banned.`);
         }
 
         if (this.x <= 0 || this.y <= 0) this.sendToSpawn();
@@ -526,7 +520,7 @@ export default class Player extends Character {
 
         this.sendToAdjacentRegions(
             this.region,
-            new Messages.Experience(Packets.ExperienceOpcode.Combat, data),
+            new Messages.Experience(Opcodes.Experience.Combat, data),
             this.instance
         );
 
@@ -535,7 +529,7 @@ export default class Player extends Character {
         data.nextExperience = this.nextExperience;
         data.prevExperience = this.prevExperience;
 
-        this.send(new Messages.Experience(Packets.ExperienceOpcode.Combat, data));
+        this.send(new Messages.Experience(Opcodes.Experience.Combat, data));
 
         this.sync();
     }
@@ -647,7 +641,7 @@ export default class Player extends Character {
         }
 
         this.send(
-            new Messages.Equipment(Packets.EquipmentOpcode.Equip, {
+            new Messages.Equipment(Opcodes.Equipment.Equip, {
                 type,
                 name: Items.idToName(id),
                 string,
@@ -681,7 +675,7 @@ export default class Player extends Character {
         if (requirement > Constants.MAX_LEVEL) requirement = Constants.MAX_LEVEL;
 
         if (requirement > this.level) {
-            this.notify('You must be at least level ' + requirement + ' to equip this.');
+            this.notify(`You must be at least level ${requirement} to equip this.`);
             return false;
         }
 
@@ -730,7 +724,7 @@ export default class Player extends Character {
 
                 let message = this.globalObjects.talk(data.object, this);
 
-                this.world.push(Packets.PushOpcode.Player, {
+                this.world.push(Opcodes.Push.Player, {
                     player: this,
                     message: new Messages.Bubble({
                         id,
@@ -791,12 +785,12 @@ export default class Player extends Character {
             this.lightsLoaded = [];
 
             this.send(
-                new Messages.Overlay(Packets.OverlayOpcode.Set, {
+                new Messages.Overlay(Opcodes.Overlay.Set, {
                     image: overlay.fog || 'empty',
-                    colour: 'rgba(0,0,0,' + overlay.darkness + ')'
+                    colour: `rgba(0,0,0,${overlay.darkness})`
                 })
             );
-        } else this.send(new Messages.Overlay(Packets.OverlayOpcode.Remove));
+        } else this.send(new Messages.Overlay(Opcodes.Overlay.Remove));
     }
 
     public updateCamera(camera: Area | undefined): void {
@@ -807,18 +801,18 @@ export default class Player extends Character {
         if (camera)
             switch (camera.type) {
                 case 'lockX':
-                    this.send(new Messages.Camera(Packets.CameraOpcode.LockX));
+                    this.send(new Messages.Camera(Opcodes.Camera.LockX));
                     break;
 
                 case 'lockY':
-                    this.send(new Messages.Camera(Packets.CameraOpcode.LockY));
+                    this.send(new Messages.Camera(Opcodes.Camera.LockY));
                     break;
 
                 case 'player':
-                    this.send(new Messages.Camera(Packets.CameraOpcode.Player));
+                    this.send(new Messages.Camera(Opcodes.Camera.Player));
                     break;
             }
-        else this.send(new Messages.Camera(Packets.CameraOpcode.FreeFlow));
+        else this.send(new Messages.Camera(Opcodes.Camera.FreeFlow));
     }
 
     public updateMusic(info?: Area): void {
@@ -1004,7 +998,7 @@ export default class Player extends Character {
 
         this.sendToAdjacentRegions(
             this.region,
-            new Messages.Movement(Packets.MovementOpcode.Move, {
+            new Messages.Movement(Opcodes.Movement.Move, {
                 id: this.instance,
                 x,
                 y,
@@ -1193,14 +1187,14 @@ export default class Player extends Character {
      */
 
     public send(message: Packet): void {
-        this.world.push(Packets.PushOpcode.Player, {
+        this.world.push(Opcodes.Push.Player, {
             player: this,
             message
         });
     }
 
     public sendToRegion(message: Packet): void {
-        this.world.push(Packets.PushOpcode.Region, {
+        this.world.push(Opcodes.Push.Region, {
             regionId: this.region,
             message
         });
@@ -1211,7 +1205,7 @@ export default class Player extends Character {
         message: Packet,
         ignoreId?: string
     ): void {
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId,
             message,
             ignoreId
@@ -1227,14 +1221,14 @@ export default class Player extends Character {
             boots: this.boots.getData()
         };
 
-        this.send(new Messages.Equipment(Packets.EquipmentOpcode.Batch, info));
+        this.send(new Messages.Equipment(Opcodes.Equipment.Batch, info));
     }
 
     public sendProfessions(): void {
         if (!this.professions) return;
 
         this.send(
-            new Messages.Profession(Packets.ProfessionOpcode.Batch, {
+            new Messages.Profession(Opcodes.Profession.Batch, {
                 data: this.professions.getInfo()
             })
         );
@@ -1299,7 +1293,7 @@ export default class Player extends Character {
         message = Utils.parseMessage(message);
 
         this.send(
-            new Messages.Notification(Packets.NotificationOpcode.Popup, {
+            new Messages.Notification(Opcodes.Notification.Popup, {
                 title,
                 message,
                 colour
@@ -1316,7 +1310,7 @@ export default class Player extends Character {
         message = Utils.parseMessage(message);
 
         this.send(
-            new Messages.Notification(Packets.NotificationOpcode.Text, {
+            new Messages.Notification(Opcodes.Notification.Text, {
                 message,
                 colour
             })
@@ -1357,7 +1351,7 @@ export default class Player extends Character {
      */
     public stopMovement(force?: boolean): void {
         this.send(
-            new Messages.Movement(Packets.MovementOpcode.Stop, {
+            new Messages.Movement(Opcodes.Movement.Stop, {
                 instance: this.instance,
                 force
             })
@@ -1411,7 +1405,7 @@ export default class Player extends Character {
      * If they are not within the bounds, apply the according punishment.
      */
     private movePlayer(): void {
-        this.send(new Messages.Movement(Packets.MovementOpcode.Started));
+        this.send(new Messages.Movement(Opcodes.Movement.Started));
     }
 
     private walkRandomly(): void {

@@ -1,14 +1,13 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import config from '@kaetram/common/config';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
-import config from '../../../../../config';
 import Messages from '../../../../network/messages';
-import log from '../../../../util/log';
 import NPCs from '../../../../util/npcs';
 import Shops from '../../../../util/shops';
-import Utils from '../../../../util/utils';
 import Hit from '../combat/hit';
 
 import type Areas from '../../../../map/areas/areas';
@@ -138,11 +137,11 @@ export default class Handler {
 
             switch (NPCs.getType(npc.id)) {
                 case 'banker':
-                    this.player.send(new Messages.NPC(Packets.NPCOpcode.Bank, {}));
+                    this.player.send(new Messages.NPC(Opcodes.NPC.Bank, {}));
                     return;
 
                 case 'enchanter':
-                    this.player.send(new Messages.NPC(Packets.NPCOpcode.Enchant, {}));
+                    this.player.send(new Messages.NPC(Opcodes.NPC.Enchant, {}));
                     break;
             }
 
@@ -151,7 +150,7 @@ export default class Handler {
             if (!text) return;
 
             this.player.send(
-                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                new Messages.NPC(Opcodes.NPC.Talk, {
                     id: npc.instance,
                     text: npc.talk(text, this.player)
                 })
@@ -182,7 +181,7 @@ export default class Handler {
 
             if (this.player.cheatScore > 10) this.player.timeout();
 
-            log.debug('Cheat score - ' + this.player.cheatScore);
+            log.debug(`Cheat score - ${this.player.cheatScore}`);
         });
     }
 
@@ -246,7 +245,7 @@ export default class Handler {
                 // Add a half a tile offset so the light is centered on the tile.
 
                 this.player.lightsLoaded.push(id);
-                this.player.send(new Messages.Overlay(Packets.OverlayOpcode.Lamp, light));
+                this.player.send(new Messages.Overlay(Opcodes.Overlay.Lamp, light));
             }
         });
     }

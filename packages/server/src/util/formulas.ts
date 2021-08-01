@@ -1,8 +1,9 @@
+import type { Tree } from '@kaetram/common/types/map';
+import Utils from '@kaetram/common/util/utils';
+
 import Trees from '../../data/professions/trees';
 import Constants from './constants';
-import Utils from './utils';
 
-import type { Tree } from '@kaetram/common/types/map';
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
 

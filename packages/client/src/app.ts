@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import install from './lib/pwa';
 import { isMobile, isTablet } from './utils/detect';
@@ -9,6 +9,7 @@ import { isMobile, isTablet } from './utils/detect';
 import type Game from './game';
 
 export interface Config {
+    name: string;
     /** Server host */
     ip: string;
     /** Server port */
@@ -19,18 +20,20 @@ export interface Config {
     ssl: boolean;
     debug: boolean;
     worldSwitch: boolean;
+    hubEnabled: boolean;
 }
 
 export default class App {
-    // Do not refactor env variables assignment
-    // `process.env.VARIABLE` is replaced by webpack during build process
+    // `window.config` is replaced by vite during build process
     public config: Config = {
-        ip: process.env.IP!,
-        port: parseInt(process.env.PORT!),
-        version: process.env.VERSION!,
-        ssl: !!process.env.SSL,
         debug: import.meta.env.DEV,
-        worldSwitch: !!process.env.WORLD_SWITCH
+        name: window.config.name,
+        ip: window.config.host,
+        port: window.config.socketioPort,
+        version: window.config.gver,
+        ssl: window.config.ssl,
+        worldSwitch: window.config.worldSwitch,
+        hubEnabled: window.config.hubEnabled
     };
 
     public body = $('body');
