@@ -1,4 +1,4 @@
-import log from '../util/log';
+import log from '@kaetram/common/util/log';
 
 import type SocketHandler from './sockethandler';
 import type { SocketType, AnySocket } from './websocket';

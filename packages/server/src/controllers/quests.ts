@@ -97,8 +97,8 @@ export default class Quests {
         for (let id = 0; id < this.getQuestSize(); id++) {
             let quest = this.quests[id];
 
-            ids += id + ' ';
-            stages += quest.stage + ' ';
+            ids += `${id} `;
+            stages += `${quest.stage} `;
         }
 
         return {
@@ -113,8 +113,8 @@ export default class Quests {
             progress = '';
 
         for (let id = 0; id < this.getAchievementSize(); id++) {
-            ids += id + ' ';
-            progress += this.achievements[id].progress + ' ';
+            ids += `${id} `;
+            progress += `${this.achievements[id].progress} `;
         }
 
         return {

@@ -3,15 +3,14 @@
 import { each, isArray } from 'lodash';
 import { io } from 'socket.io-client';
 
-import Packets from '@kaetram/common/src/packets';
-import log from '@kaetram/server/src/util/log';
-import Utils from '@kaetram/server/src/util/utils';
+import config from '@kaetram/common/config';
+import { Packets } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
 import Entity from './entity';
 
 import type { Socket } from 'socket.io-client';
-
-let gVer = 1;
 
 interface PacketInfo {
     instance: string;
@@ -53,7 +52,7 @@ export default class Bot {
             log.info('Connection established...');
 
             connection.emit('client', {
-                gVer,
+                gVer: config.gver,
                 cType: 'HTML5',
                 bot: true
             });
@@ -89,7 +88,7 @@ export default class Bot {
 
         switch (opcode) {
             case Packets.Handshake:
-                this.send(connection, 1, [2, 'n' + this.#bots.length, 'n', 'n']);
+                this.send(connection, 1, [2, `n${this.#bots.length}`, 'n', 'n']);
 
                 break;
 

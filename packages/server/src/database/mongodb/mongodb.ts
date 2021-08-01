@@ -2,8 +2,9 @@ import bcryptjs from 'bcryptjs';
 import _ from 'lodash';
 import { Db, MongoClient } from 'mongodb';
 
-import config from '../../../config';
-import log from '../../util/log';
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+
 import Creator, { FullPlayerData } from './creator';
 import Loader from './loader';
 
@@ -115,7 +116,7 @@ export default class MongoDB {
 
             cursor.toArray().then((info) => {
                 if (info.length === 0) {
-                    log.notice('No player data found for ' + player.username + '. Creating user.');
+                    log.notice(`No player data found for ${player.username}. Creating user.`);
 
                     player.new = true;
 
@@ -135,7 +136,7 @@ export default class MongoDB {
                 emailCursor = playerData.find({ email: player.email }),
                 usernameCursor = playerData.find({ username: player.username });
 
-            log.debug('Looking for - ' + player.email + ' or ' + player.username);
+            log.debug(`Looking for - ${player.email} or ${player.username}`);
 
             emailCursor.toArray().then((emailArray) => {
                 if (emailArray.length === 0)
@@ -170,7 +171,7 @@ export default class MongoDB {
                     (error, result) => {
                         if (error) throw error;
 
-                        if (result) log.notice('Player ' + player.username + ' has been deleted.');
+                        if (result) log.notice(`Player ${player.username} has been deleted.`);
                     }
                 );
             });

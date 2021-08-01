@@ -1,11 +1,9 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Packets } from '@kaetram/common/network';
 
 import App from './app';
-
 import AudioController from './controllers/audio';
 import BubbleController from './controllers/bubble';
 import EntitiesController from './controllers/entities';
@@ -14,26 +12,20 @@ import InputController from './controllers/input';
 import MenuController from './controllers/menu';
 import Pointer from './controllers/pointer';
 import Zoning from './controllers/zoning';
-
 import Character from './entity/character/character';
 import Player from './entity/character/player/player';
 import PlayerHandler from './entity/character/player/playerhandler';
 import Entity from './entity/entity';
 import Sprite from './entity/sprite';
-
 import Map from './map/map';
-
 import Inventory from './menu/inventory';
-
 import Connection from './network/connection';
 import Messages from './network/messages';
 import Socket from './network/socket';
-
 import Camera from './renderer/camera';
 import Overlay from './renderer/overlay';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
-
 import { getUserAgent, supportsWebGL } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
@@ -72,7 +64,6 @@ export default class Game {
     public bubble!: BubbleController;
     public camera!: Camera;
     public inventory!: Inventory;
-    public development!: boolean;
 
     public constructor(public app: App) {
         this.loadRenderer();
@@ -346,7 +337,7 @@ export default class Game {
     // tradeWith(player: Player): void {
     //     if (!player || player.id === this.player.id) return;
 
-    //     this.socket.send(Packets.Trade, [Packets.TradeOpcode.Request, player.id]);
+    //     this.socket.send(Packets.Trade, [Opcodes.Trade.Request, player.id]);
     // }
 
     public resize(): void {

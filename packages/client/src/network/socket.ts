@@ -29,6 +29,8 @@ export default class Socket {
     private async getServer(
         callback: (data: { host: string; port: number } | 'error') => void
     ): Promise<void> {
+        if (!this.config.hubEnabled) return callback('error');
+
         let url = `http://${this.config.ip}:${this.config.port}/server`;
 
         if (this.config.ssl) url = `https://${this.config.ip}/server`;

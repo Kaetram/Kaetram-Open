@@ -1,14 +1,14 @@
 import _ from 'lodash';
 import sanitizer from 'sanitizer';
 
-import Packets from '@kaetram/common/src/packets';
+import config from '@kaetram/common/config';
+import { Opcodes, Packets } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
-import config from '../../config';
 import Creator from '../database/mongodb/creator';
 import Messages from '../network/messages';
 import Items from '../util/items';
-import log from '../util/log';
-import Utils from '../util/utils';
 import Commands from './commands';
 
 import type Character from '../game/entity/character/character';
@@ -141,8 +141,8 @@ export default class Incoming {
 
     private handleIntro(message: [number, string, string, string]): void {
         let [loginType, username, password] = message,
-            isRegistering = loginType === Packets.IntroOpcode.Register,
-            isGuest = loginType === Packets.IntroOpcode.Guest,
+            isRegistering = loginType === Opcodes.Intro.Register,
+            isGuest = loginType === Opcodes.Intro.Guest,
             email = isRegistering ? message[3] : '',
             formattedUsername = username
                 ? username.charAt(0).toUpperCase() + username.toLowerCase().slice(1)
@@ -277,10 +277,10 @@ export default class Incoming {
         let [opcode, type] = message;
 
         switch (opcode) {
-            case Packets.EquipmentOpcode.Unequip: {
+            case Opcodes.Equipment.Unequip: {
                 if (!this.player.inventory.hasSpace()) {
                     this.player.send(
-                        new Messages.Notification(Packets.NotificationOpcode.Text, {
+                        new Messages.Notification(Opcodes.Notification.Text, {
                             message: 'You do not have enough space in your inventory.'
                         })
                     );
@@ -329,7 +329,7 @@ export default class Incoming {
                         break;
                 }
 
-                this.player.send(new Messages.Equipment(Packets.EquipmentOpcode.Unequip, [type]));
+                this.player.send(new Messages.Equipment(Opcodes.Equipment.Unequip, [type]));
 
                 break;
             }
@@ -343,7 +343,7 @@ export default class Incoming {
         if (!this.player || this.player.dead) return;
 
         switch (opcode) {
-            case Packets.MovementOpcode.Request: {
+            case Opcodes.Movement.Request: {
                 let requestX = message[1] as number,
                     requestY = message[2] as number;
 
@@ -354,7 +354,7 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.MovementOpcode.Started: {
+            case Opcodes.Movement.Started: {
                 let selectedX = message[1] as number,
                     selectedY = message[2] as number,
                     pX = message[3] as number,
@@ -383,7 +383,7 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.MovementOpcode.Step: {
+            case Opcodes.Movement.Step: {
                 let x = message[1] as number,
                     y = message[2] as number;
 
@@ -394,7 +394,7 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.MovementOpcode.Stop: {
+            case Opcodes.Movement.Stop: {
                 let posX = message[1] as number,
                     posY = message[2] as number,
                     id = message[3] as string,
@@ -434,7 +434,7 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.MovementOpcode.Entity: {
+            case Opcodes.Movement.Entity: {
                 let instance = message[1] as string,
                     entityX = message[2] as number,
                     entityY = message[3] as number,
@@ -449,12 +449,12 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.MovementOpcode.Orientate:
+            case Opcodes.Movement.Orientate:
                 orientation = message[1] as number;
 
-                this.world.push(Packets.PushOpcode.Regions, {
+                this.world.push(Opcodes.Push.Regions, {
                     regionId: this.player.region,
-                    message: new Messages.Movement(Packets.MovementOpcode.Orientate, [
+                    message: new Messages.Movement(Opcodes.Movement.Orientate, [
                         this.player.instance,
                         orientation
                     ])
@@ -462,7 +462,7 @@ export default class Incoming {
 
                 break;
 
-            case Packets.MovementOpcode.Freeze:
+            case Opcodes.Movement.Freeze:
                 /**
                  * Just used to prevent player from following entities in combat.
                  * This is primarily for the 'hold-position' functionality.
@@ -472,7 +472,7 @@ export default class Incoming {
 
                 break;
 
-            case Packets.MovementOpcode.Zone: {
+            case Opcodes.Movement.Zone: {
                 let direction = message[1] as number;
 
                 log.debug(`Zoning detected, direction: ${direction}.`);
@@ -496,7 +496,7 @@ export default class Incoming {
         log.debug(`Target [opcode]: ${instance} [${opcode}]`);
 
         switch (opcode) {
-            case Packets.TargetOpcode.Talk: {
+            case Opcodes.Target.Talk: {
                 let entity = this.entities.get(instance);
 
                 if (!entity || !this.player.isAdjacent(entity)) return;
@@ -516,16 +516,16 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.TargetOpcode.Attack: {
+            case Opcodes.Target.Attack: {
                 let target = this.entities.get<Character>(instance);
 
                 if (!target || target.dead || !this.canAttack(this.player, target)) return;
 
                 this.player.cheatScore = 0;
 
-                this.world.push(Packets.PushOpcode.Regions, {
+                this.world.push(Opcodes.Push.Regions, {
                     regionId: target.region,
-                    message: new Messages.Combat(Packets.CombatOpcode.Initiate, {
+                    message: new Messages.Combat(Opcodes.Combat.Initiate, {
                         attackerId: this.player.instance,
                         targetId: target.instance
                     })
@@ -534,12 +534,12 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.TargetOpcode.None:
+            case Opcodes.Target.None:
                 // Nothing do to here.
 
                 break;
 
-            case Packets.TargetOpcode.Object: {
+            case Opcodes.Target.Object: {
                 let target = this.entities.get<Character>(instance);
 
                 this.player.setTarget(target);
@@ -554,7 +554,7 @@ export default class Incoming {
         let [opcode] = message;
 
         switch (opcode) {
-            case Packets.CombatOpcode.Initiate: {
+            case Opcodes.Combat.Initiate: {
                 let attacker = this.entities.get<Character>(message[1]),
                     target = this.entities.get<Character>(message[2]);
 
@@ -587,7 +587,7 @@ export default class Incoming {
         let [type] = message;
 
         switch (type) {
-            case Packets.ProjectileOpcode.Impact: {
+            case Opcodes.Projectile.Impact: {
                 let projectile = this.entities.get<Projectile>(message[1]),
                     target = this.entities.get<Mob>(message[2]);
 
@@ -609,7 +609,7 @@ export default class Incoming {
         let [opcode] = message;
 
         switch (opcode) {
-            case Packets.NetworkOpcode.Pong: {
+            case Opcodes.Network.Pong: {
                 let time = Date.now();
 
                 this.player.notify(`Latency of ${time - this.player.pingTime}ms`, 'red');
@@ -628,7 +628,7 @@ export default class Incoming {
         else {
             if (this.player.isMuted()) {
                 this.player.send(
-                    new Messages.Notification(Packets.NotificationOpcode.Text, {
+                    new Messages.Notification(Opcodes.Notification.Text, {
                         message: 'You are currently muted.'
                     })
                 );
@@ -637,7 +637,7 @@ export default class Incoming {
 
             if (!this.player.canTalk) {
                 this.player.send(
-                    new Messages.Notification(Packets.NotificationOpcode.Text, {
+                    new Messages.Notification(Opcodes.Notification.Text, {
                         message: 'You are not allowed to talk for the duration of this event.'
                     })
                 );
@@ -652,7 +652,7 @@ export default class Incoming {
             if (config.hubEnabled)
                 this.world.api.sendChat(Utils.formatUsername(this.player.username), text, true);
 
-            this.world.push(Packets.PushOpcode.Regions, {
+            this.world.push(Opcodes.Push.Regions, {
                 regionId: this.player.region,
                 message: new Messages.Chat({
                     id: this.player.instance,
@@ -671,7 +671,7 @@ export default class Incoming {
         if (this.player.rights < 2) return;
 
         switch (opcode) {
-            case Packets.CommandOpcode.CtrlClick: {
+            case Opcodes.Command.CtrlClick: {
                 this.player.teleport(position.x, position.y, false, true);
 
                 break;
@@ -686,7 +686,7 @@ export default class Incoming {
             abilityLevel!: number;
 
         switch (opcode) {
-            case Packets.InventoryOpcode.Remove: {
+            case Opcodes.Inventory.Remove: {
                 let item = message[1] as Slot,
                     count!: number;
 
@@ -717,7 +717,7 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.InventoryOpcode.Select: {
+            case Opcodes.Inventory.Select: {
                 let index = message[1] as number,
                     slot = this.player.inventory.slots[index],
                     { string, count, equippable, edible } = slot;
@@ -747,7 +747,7 @@ export default class Incoming {
         let [opcode, type, index] = message;
 
         switch (opcode) {
-            case Packets.BankOpcode.Select: {
+            case Opcodes.Bank.Select: {
                 let isBank = type === 'bank';
 
                 if (isBank) {
@@ -793,7 +793,7 @@ export default class Incoming {
         this.player.dead = false;
         this.player.setPosition(spawn.x, spawn.y);
 
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: this.player.region,
             message: new Messages.Spawn(this.player),
             ignoreId: this.player.instance
@@ -813,13 +813,13 @@ export default class Incoming {
         if (!oPlayer || !opcode) return;
 
         switch (opcode) {
-            case Packets.TradeOpcode.Request:
+            case Opcodes.Trade.Request:
                 break;
 
-            case Packets.TradeOpcode.Accept:
+            case Opcodes.Trade.Accept:
                 break;
 
-            case Packets.TradeOpcode.Decline:
+            case Opcodes.Trade.Decline:
                 break;
         }
     }
@@ -828,7 +828,7 @@ export default class Incoming {
         let [opcode] = message;
 
         switch (opcode) {
-            case Packets.EnchantOpcode.Select: {
+            case Opcodes.Enchant.Select: {
                 let index = message[1] as number,
                     item = this.player.inventory.slots[index],
                     type: EnchantType = 'item';
@@ -842,12 +842,12 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.EnchantOpcode.Remove:
+            case Opcodes.Enchant.Remove:
                 this.player.enchant.remove(message[1] as EnchantType);
 
                 break;
 
-            case Packets.EnchantOpcode.Enchant:
+            case Opcodes.Enchant.Enchant:
                 this.player.enchant.enchant();
 
                 break;
@@ -885,7 +885,7 @@ export default class Incoming {
         let [opcode, npcId] = message;
 
         switch (opcode) {
-            case Packets.ShopOpcode.Buy: {
+            case Opcodes.Shop.Buy: {
                 let buyId = message[2] as number,
                     amount = message[3] as number;
 
@@ -901,7 +901,7 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.ShopOpcode.Sell:
+            case Opcodes.Shop.Sell:
                 if (!this.player.selectedShopItem) {
                     this.player.notify('No item has been selected.');
                     return;
@@ -911,7 +911,7 @@ export default class Incoming {
 
                 break;
 
-            case Packets.ShopOpcode.Select: {
+            case Opcodes.Shop.Select: {
                 let id = message[2] as string;
 
                 if (!id) {
@@ -938,7 +938,7 @@ export default class Incoming {
                 if (!currency) return;
 
                 this.player.send(
-                    new Messages.Shop(Packets.ShopOpcode.Select, {
+                    new Messages.Shop(Opcodes.Shop.Select, {
                         id: npcId,
                         slotId,
                         currency: Items.idToString(currency),
@@ -956,7 +956,7 @@ export default class Incoming {
                 break;
             }
 
-            case Packets.ShopOpcode.Remove:
+            case Opcodes.Shop.Remove:
                 this.world.shops.remove(this.player);
 
                 break;
