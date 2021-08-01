@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import config from '../../config';
+import config from '../config';
 
 /**
  * Simple logging file that serves to be used globally
@@ -12,7 +12,7 @@ class Log {
     private logLevel = config.debugLevel || 'all';
     private stream = config.fsDebugging ? fs.createWriteStream('runtime.log') : null; // Write to a different stream
 
-    private debugging = config.debug;
+    private debugging = config.debugging;
 
     public info(message: unknown) {
         if (this.isLoggable('info')) return;
@@ -49,7 +49,7 @@ class Log {
     }
 
     private send(colour: string | null, message: unknown, trace?: boolean) {
-        this.stream?.write(message + '\n');
+        this.stream?.write(`${message}\n`);
 
         if (!colour) console.log(message);
         else if (trace) console.trace(colour, message);
