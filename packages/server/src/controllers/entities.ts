@@ -1,7 +1,8 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
@@ -12,10 +13,8 @@ import Projectile from '../game/entity/objects/projectile';
 import Messages from '../network/messages';
 import Formulas from '../util/formulas';
 import Items from '../util/items';
-import log from '../util/log';
 import Mobs from '../util/mobs';
 import NPCs from '../util/npcs';
-import Utils from '../util/utils';
 
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
@@ -107,9 +106,9 @@ export default class Entities {
                     });
 
                     mob.onForceTalk((message: string) => {
-                        this.world.push(Packets.PushOpcode.Regions, {
+                        this.world.push(Opcodes.Push.Regions, {
                             regionId: mob.region,
-                            message: new Messages.NPC(Packets.NPCOpcode.Talk, {
+                            message: new Messages.NPC(Opcodes.NPC.Talk, {
                                 id: mob.instance,
                                 text: message,
                                 nonNPC: true
@@ -164,14 +163,13 @@ export default class Entities {
 
                         if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
 
-                        // if (config.debug)
-                        //    this.forceTalk('Yes hello, I am moving.');
+                        // if (config.debugging) this.forceTalk('Yes hello, I am moving.');
 
                         mob.setPosition(newX, newY);
 
-                        this.world.push(Packets.PushOpcode.Regions, {
+                        this.world.push(Opcodes.Push.Regions, {
                             regionId: mob.region,
-                            message: new Messages.Movement(Packets.MovementOpcode.Move, {
+                            message: new Messages.Movement(Opcodes.Movement.Move, {
                                 id: mob.instance,
                                 x: newX,
                                 y: newY
@@ -294,15 +292,15 @@ export default class Entities {
 
             entity.return();
 
-            this.world.push(Packets.PushOpcode.Broadcast, [
+            this.world.push(Opcodes.Push.Broadcast, [
                 {
-                    message: new Messages.Combat(Packets.CombatOpcode.Finish, {
+                    message: new Messages.Combat(Opcodes.Combat.Finish, {
                         attackerId: null,
                         targetId: entity.instance
                     })
                 },
                 {
-                    message: new Messages.Movement(Packets.MovementOpcode.Move, {
+                    message: new Messages.Movement(Opcodes.Movement.Move, {
                         id: entity.instance,
                         x: entity.x,
                         y: entity.y,
@@ -317,9 +315,9 @@ export default class Entities {
             entity.combat.setWorld(this.world);
 
             entity.onStunned((stun: boolean) => {
-                this.world.push(Packets.PushOpcode.Regions, {
+                this.world.push(Opcodes.Push.Regions, {
                     regionId: entity.region,
-                    message: new Messages.Movement(Packets.MovementOpcode.Stunned, {
+                    message: new Messages.Movement(Opcodes.Movement.Stunned, {
                         id: entity.instance,
                         state: stun
                     })
@@ -394,7 +392,7 @@ export default class Entities {
     public removeItem(item: Item): void {
         this.remove(item);
 
-        this.world.push(Packets.PushOpcode.Broadcast, {
+        this.world.push(Opcodes.Push.Broadcast, {
             message: new Messages.Despawn(item.instance)
         });
 
@@ -404,7 +402,7 @@ export default class Entities {
     public removePlayer(player: Player): void {
         this.remove(player);
 
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: player.region,
             message: new Messages.Despawn(player.instance)
         });
@@ -424,7 +422,7 @@ export default class Entities {
     public removeChest(chest: Chest): void {
         this.remove(chest);
 
-        this.world.push(Packets.PushOpcode.Broadcast, {
+        this.world.push(Opcodes.Push.Broadcast, {
             message: new Messages.Despawn(chest.instance)
         });
 
@@ -497,7 +495,7 @@ export default class Entities {
         item.despawn();
 
         item.onBlink(() => {
-            this.world.push(Packets.PushOpcode.Broadcast, {
+            this.world.push(Opcodes.Push.Broadcast, {
                 message: new Messages.Blink(item.instance)
             });
         });

@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import zlib from 'zlib';
 
-import log from '../../server/src/util/log';
+import log from '@kaetram/common/util/log';
 
+import type { ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
 import type { Entity, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
-import type { ProcessedMap, ProcessedArea } from '@kaetram/common/types/map';
 
 export default class ProcessMap {
     #map!: ProcessedMap;
@@ -263,7 +263,7 @@ export default class ProcessMap {
                 { value } = prop;
 
             if (
-                [
+                new Set([
                     'id',
                     'x',
                     'y',
@@ -272,7 +272,7 @@ export default class ProcessMap {
                     'diffuse',
                     'level',
                     'achievement'
-                ].includes(name)
+                ]).has(name)
             ) {
                 let number = parseFloat(value);
                 if (isNaN(number)) number = -1;

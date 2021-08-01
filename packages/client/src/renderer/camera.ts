@@ -1,4 +1,4 @@
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import Player from '../entity/character/player/player';
 import Entity from '../entity/entity';

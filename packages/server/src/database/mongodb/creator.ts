@@ -1,8 +1,8 @@
 import bcryptjs from 'bcryptjs';
 
-import * as Modules from '../../../../common/src/modules';
-import config from '../../../config';
-import log from '../../util/log';
+import config from '@kaetram/common/config';
+import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
 import type { Collection } from 'mongodb';
 import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';

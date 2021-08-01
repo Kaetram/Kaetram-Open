@@ -1,4 +1,4 @@
-import type * as Modules from '@kaetram/common/src/modules';
+import type { Modules } from '@kaetram/common/network';
 
 export interface HitData {
     type: Modules.Hits;

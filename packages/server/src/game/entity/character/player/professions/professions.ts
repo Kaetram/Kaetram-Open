@@ -1,8 +1,8 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
-import log from '../../../../../util/log';
 import professions from './impl';
 
 import type Player from '../player';

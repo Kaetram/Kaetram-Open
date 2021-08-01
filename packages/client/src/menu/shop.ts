@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import Packets from '@kaetram/common/src/packets';
+import { Packets, Opcodes } from '@kaetram/common/network';
 
 import Container from './container/container';
 
@@ -60,22 +60,22 @@ export default class Shop {
     private buy(event: JQuery.ClickEvent): void {
         let id = event.currentTarget.id.slice(11);
 
-        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, this.openShop, id, 1]);
+        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Buy, this.openShop, id, 1]);
     }
 
     private sell(): void {
         // The server will handle the selected item and verifications.
-        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Sell, this.openShop]);
+        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Sell, this.openShop]);
     }
 
     private select(event: JQuery.ClickEvent): void {
         let id = event.currentTarget.id.slice(17);
 
-        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, this.openShop, id]);
+        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Select, this.openShop, id]);
     }
 
     private remove(): void {
-        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
+        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Remove]);
     }
 
     public move(info: ShopMoveInfo): void {
