@@ -1,4 +1,4 @@
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import Mobs from '../../../util/mobs';
 import Entity, { EntityState } from '../entity';

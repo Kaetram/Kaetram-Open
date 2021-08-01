@@ -1,8 +1,9 @@
 import _ from 'lodash';
 
+import log from '@kaetram/common/util/log';
+
 import Constants from '../../../../../util/constants';
 import Items from '../../../../../util/items';
-import log from '../../../../../util/log';
 import Slot from './slot';
 
 import type Player from '../player';
@@ -32,7 +33,7 @@ export default abstract class Container {
         abilityLevels: number[]
     ): void {
         if (ids.length !== this.slots.length)
-            log.error('[' + this.type + '] Mismatch in container size.');
+            log.error(`[${this.type}] Mismatch in container size.`);
 
         for (let i = 0; i < this.slots.length; i++)
             this.slots[i].load(ids[i], counts[i], abilities[i], abilityLevels[i]);
@@ -202,10 +203,10 @@ export default abstract class Container {
             abilityLevels = '';
 
         for (let i = 0; i < this.slots.length; i++) {
-            ids += this.slots[i].id + ' ';
-            counts += this.slots[i].count + ' ';
-            abilities += this.slots[i].ability + ' ';
-            abilityLevels += this.slots[i].abilityLevel + ' ';
+            ids += `${this.slots[i].id} `;
+            counts += `${this.slots[i].count} `;
+            abilities += `${this.slots[i].ability} `;
+            abilityLevels += `${this.slots[i].abilityLevel} `;
         }
 
         return {

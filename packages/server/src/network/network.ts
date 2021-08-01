@@ -1,8 +1,9 @@
 import _ from 'lodash';
 
-import config from '../../config';
+import config from '@kaetram/common/config';
+import Utils from '@kaetram/common/util/utils';
+
 import Player from '../game/entity/character/player/player';
-import Utils from '../util/utils';
 import Messages, { Packet } from './messages';
 
 import type World from '../game/world';
@@ -61,7 +62,7 @@ export default class Network {
             player = new Player(this.world, this.database, connection, clientId),
             timeDifference = Date.now() - this.getSocketTime(connection);
 
-        if (!config.debug && timeDifference < this.differenceThreshold) {
+        if (!config.debugging && timeDifference < this.differenceThreshold) {
             connection.sendUTF8('toofast');
             connection.close('Logging in too fast.');
 
@@ -73,8 +74,7 @@ export default class Network {
         this.pushToPlayer(
             player,
             new Messages.Handshake({
-                id: clientId,
-                development: config.devClient
+                id: clientId
             })
         );
     }

@@ -2,10 +2,11 @@ import axios from 'axios';
 import { json, urlencoded } from 'body-parser';
 import express from 'express';
 
-import config from '../../config';
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+
 import APIConstants from '../util/apiconstants';
-import log from '../util/log';
-import Utils from '../util/utils';
 
 import type Player from '../game/entity/character/player/player';
 import type Mana from '../game/entity/character/player/points/mana';
@@ -142,73 +143,69 @@ export default class API {
     public async pingHub(): Promise<void> {
         let url = this.getUrl('ping'),
             data = {
-                form: {
-                    serverId: config.serverId,
-                    accessToken: config.accessToken,
-                    port: config.apiPort,
-                    remoteServerHost: config.remoteServerHost
-                }
+                serverId: config.serverId,
+                accessToken: config.accessToken,
+                port: config.apiPort,
+                remoteServerHost: config.remoteServerHost
             },
-            res = await axios.post(url, data);
+            response = await axios.post(url, data).catch(() => {
+                log.error(`Could not connect to ${config.name} Hub.`);
 
-        try {
-            let data = JSON.parse(res.data);
+                this.hubConnected = false;
+            });
+
+        if (response) {
+            let { data } = response;
 
             if (data.status === 'success' && !this.hubConnected) {
-                log.notice('Connected to Kaetram Hub successfully!');
+                log.notice(`Connected to ${config.name} Hub successfully!`);
+
                 this.hubConnected = true;
             }
-        } catch {
-            log.error('Could not connect to Kaetram Hub.');
-            this.hubConnected = false;
         }
     }
 
     public async sendChat(source: string, text: string, withArrow?: boolean): Promise<void> {
         let url = this.getUrl('chat'),
             data = {
-                form: {
-                    hubAccessToken: config.hubAccessToken,
-                    serverId: config.serverId,
-                    source,
-                    text,
-                    withArrow
-                }
+                hubAccessToken: config.hubAccessToken,
+                serverId: config.serverId,
+                source,
+                text,
+                withArrow
             },
-            res = await axios.post(url, data);
+            response = await axios
+                .post(url, data)
+                .catch(() => log.error('Could not send message to hub.'));
 
-        try {
-            let data = JSON.parse(res.data);
+        if (response) {
+            let { data } = response;
 
             if (data.status === 'error') console.log(data);
 
             // TODO - Do something with this?
-        } catch {
-            log.error('Could not send message to hub.');
         }
     }
 
     public async sendPrivateMessage(source: Player, target: string, text: string): Promise<void> {
         let url = this.getUrl('privateMessage'),
             data = {
-                form: {
-                    hubAccessToken: config.hubAccessToken,
-                    source: Utils.formatUsername(source.username),
-                    target: Utils.formatUsername(target),
-                    text
-                }
+                hubAccessToken: config.hubAccessToken,
+                source: Utils.formatUsername(source.username),
+                target: Utils.formatUsername(target),
+                text
             },
-            res = await axios.post(url, data);
+            response = await axios
+                .post(url, data)
+                .catch(() => log.error('Could not send privateMessage to hub.'));
 
-        try {
-            let data = JSON.parse(res.data);
+        if (response) {
+            let { data } = response;
 
             if (data.error) {
                 source.notify(`Player @aquamarine@${target}@white@ is not online.`);
                 return;
             }
-        } catch {
-            log.error('Could not send privateMessage to hub.');
         }
     }
 

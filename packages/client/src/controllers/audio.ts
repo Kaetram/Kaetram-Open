@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import log from '../lib/log';
 import { isSafari } from '../utils/detect';

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Packets from '@kaetram/common/src/packets';
+import { Packets } from '@kaetram/common/network';
 
 import Guild from './pages/guild';
 import Professions from './pages/professions';

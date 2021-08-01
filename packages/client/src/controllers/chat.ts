@@ -1,7 +1,6 @@
 import $ from 'jquery';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
 

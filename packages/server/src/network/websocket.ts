@@ -1,9 +1,9 @@
 import http from 'http';
 
-import config from '../../config';
-import log from '../util/log';
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
 
-import type { Socket, Server } from 'socket.io';
+import type { Server, Socket } from 'socket.io';
 import type ws from 'ws';
 import type Connection from './connection';
 import type SocketHandler from './sockethandler';

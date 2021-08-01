@@ -1,9 +1,9 @@
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
 import Trees from '../../../../../../../data/professions/trees';
 import Messages from '../../../../../../network/messages';
 import Formulas from '../../../../../../util/formulas';
-import Utils from '../../../../../../util/utils';
 import Profession from './profession';
 
 import type { Tree } from '@kaetram/common/types/map';

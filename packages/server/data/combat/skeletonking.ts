@@ -1,9 +1,12 @@
 import _ from 'lodash';
+
+import Utils from '@kaetram/common/util/utils';
+
 import Combat from '../../src/game/entity/character/combat/combat';
-import Character from '../../src/game/entity/character/character';
-import Mob from '../../src/game/entity/character/mob/mob';
-import Utils from '../../src/util/utils';
-import { HitData } from '@kaetram/server/src/game/entity/character/combat/hit';
+
+import type Character from '../../src/game/entity/character/character';
+import type { HitData } from '../../src/game/entity/character/combat/hit';
+import type Mob from '../../src/game/entity/character/mob/mob';
 
 /**
  * First of its kind, the Skeleton King will spawn 4 minions.
@@ -12,8 +15,8 @@ import { HitData } from '@kaetram/server/src/game/entity/character/combat/hit';
  * And two death knights on (x + 1, y - 1) & (x - 1, y - 1)
  */
 export default class SkeletonKing extends Combat {
-    lastSpawn: number;
-    minions: Mob[];
+    private lastSpawn: number;
+    private minions: Mob[];
 
     public constructor(character: Character) {
         character.spawnDistance = 10;
@@ -28,7 +31,7 @@ export default class SkeletonKing extends Combat {
         });
     }
 
-    reset(): void {
+    private reset(): void {
         this.lastSpawn = 0;
 
         let listCopy = [...this.minions];
@@ -36,7 +39,7 @@ export default class SkeletonKing extends Combat {
         for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
     }
 
-    override hit(character: Character, target: Character, hitInfo: HitData): void {
+    public override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.isAttacked()) this.beginMinionAttack();
 
         if (this.canSpawn()) this.spawnMinions();
@@ -44,7 +47,7 @@ export default class SkeletonKing extends Combat {
         super.hit(character, target, hitInfo);
     }
 
-    spawnMinions(): void {
+    private spawnMinions(): void {
         let { x } = this.character,
             { y } = this.character;
 
@@ -73,7 +76,7 @@ export default class SkeletonKing extends Combat {
         });
     }
 
-    beginMinionAttack(): void {
+    private beginMinionAttack(): void {
         if (!this.hasMinions()) return;
 
         _.each(this.minions, (minion: Mob) => {
@@ -83,7 +86,7 @@ export default class SkeletonKing extends Combat {
         });
     }
 
-    getRandomTarget(): Character | null {
+    private getRandomTarget(): Character | null {
         if (this.isAttacked()) {
             let keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
@@ -96,15 +99,15 @@ export default class SkeletonKing extends Combat {
         return null;
     }
 
-    hasMinions(): boolean {
+    private hasMinions(): boolean {
         return this.minions.length > 0;
     }
 
-    isLast(): boolean {
+    private isLast(): boolean {
         return this.minions.length === 1;
     }
 
-    canSpawn(): boolean {
+    private canSpawn(): boolean {
         return Date.now() - this.lastSpawn > 25000 && !this.hasMinions() && this.isAttacked();
     }
 }
