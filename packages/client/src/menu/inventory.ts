@@ -1,7 +1,6 @@
 import $ from 'jquery';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import * as Detect from '../utils/detect';
 import Container from './container/container';
@@ -139,7 +138,7 @@ export default class Inventory {
             case 'eat':
             case 'wield':
                 this.game.socket.send(Packets.Inventory, [
-                    Packets.InventoryOpcode.Select,
+                    Opcodes.Inventory.Select,
                     this.selectedItem.index
                 ]);
                 this.clearSelection();
@@ -154,10 +153,7 @@ export default class Inventory {
 
                     this.actions.displayDrop('inventory');
                 } else {
-                    this.game.socket.send(Packets.Inventory, [
-                        Packets.InventoryOpcode.Remove,
-                        item
-                    ]);
+                    this.game.socket.send(Packets.Inventory, [Opcodes.Inventory.Remove, item]);
                     this.clearSelection();
                 }
 
@@ -170,7 +166,7 @@ export default class Inventory {
                 if (isNaN(count) || count < 1) return;
 
                 this.game.socket.send(Packets.Inventory, [
-                    Packets.InventoryOpcode.Remove,
+                    Opcodes.Inventory.Remove,
                     this.selectedItem,
                     count
                 ]);

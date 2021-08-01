@@ -2,8 +2,7 @@
 
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import log from '../lib/log';
 import * as Detect from '../utils/detect';
@@ -83,7 +82,6 @@ export default class Connection {
     private load(): void {
         this.messages.onHandshake((data: Game) => {
             this.game.id = data.id;
-            this.game.development = data.development;
 
             this.game.ready = true;
 
@@ -100,19 +98,19 @@ export default class Connection {
                     email = registerInfo[3].val();
 
                 this.socket.send(Packets.Intro, [
-                    Packets.IntroOpcode.Register,
+                    Opcodes.Intro.Register,
                     username,
                     password,
                     email
                 ]);
             } else if (this.app.isGuest())
-                this.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
+                this.socket.send(Packets.Intro, [Opcodes.Intro.Guest, 'n', 'n', 'n']);
             else {
                 let loginInfo = this.app.loginFields,
                     name = loginInfo[0].val() as string,
                     pass = loginInfo[1].val() as string;
 
-                this.socket.send(Packets.Intro, [Packets.IntroOpcode.Login, name, pass]);
+                this.socket.send(Packets.Intro, [Opcodes.Intro.Login, name, pass]);
 
                 if (this.game.hasRemember()) {
                     this.storage.data.player.username = name;
@@ -137,7 +135,7 @@ export default class Connection {
 
         this.messages.onEquipment((opcode, info: Equipment | Equipment[] | string[]) => {
             switch (opcode) {
-                case Packets.EquipmentOpcode.Batch:
+                case Opcodes.Equipment.Batch:
                     _.each(info as Equipment[], (data) => {
                         this.game.player.setEquipment(
                             data.type,
@@ -154,7 +152,7 @@ export default class Connection {
 
                     break;
 
-                case Packets.EquipmentOpcode.Equip: {
+                case Opcodes.Equipment.Equip: {
                     let { type, name, string, count, ability, abilityLevel, power } =
                         info as Equipment;
 
@@ -173,7 +171,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.EquipmentOpcode.Unequip: {
+                case Opcodes.Equipment.Unequip: {
                     let type = (info as string[]).shift()!;
 
                     this.game.player.unequip(type);
@@ -253,7 +251,7 @@ export default class Connection {
 
         this.messages.onMovement((opcode, info: any) => {
             switch (opcode) {
-                case Packets.MovementOpcode.Move: {
+                case Opcodes.Movement.Move: {
                     let entity = this.entities.get<Character>(info.id);
 
                     if (!entity) return;
@@ -265,7 +263,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.MovementOpcode.Follow: {
+                case Opcodes.Movement.Follow: {
                     let follower = this.entities.get<Character>(info.attackerId),
                         followee = this.entities.get<Character>(info.targetId);
 
@@ -276,7 +274,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.MovementOpcode.Stop: {
+                case Opcodes.Movement.Stop: {
                     let sEntity = this.entities.get<Character>(info.id),
                         { force } = info;
 
@@ -286,21 +284,21 @@ export default class Connection {
 
                     break;
                 }
-                case Packets.MovementOpcode.Freeze:
-                case Packets.MovementOpcode.Stunned: {
+                case Opcodes.Movement.Freeze:
+                case Opcodes.Movement.Stunned: {
                     let pEntity = this.entities.get<Character>(info.id);
 
                     if (!pEntity) return;
 
                     if (info.state) pEntity.stop(false);
 
-                    if (opcode === Packets.MovementOpcode.Stunned) pEntity.stunned = info.state;
-                    else if (opcode === Packets.MovementOpcode.Freeze) pEntity.frozen = info.state;
+                    if (opcode === Opcodes.Movement.Stunned) pEntity.stunned = info.state;
+                    else if (opcode === Opcodes.Movement.Freeze) pEntity.frozen = info.state;
 
                     break;
                 }
 
-                case Packets.MovementOpcode.Orientate: {
+                case Opcodes.Movement.Orientate: {
                     let player = info.shift(),
                         orientation = info.shift(),
                         entity = this.entities.get<Character>(player);
@@ -436,21 +434,21 @@ export default class Connection {
             if (!target || !attacker) return;
 
             switch (opcode) {
-                case Packets.CombatOpcode.Initiate:
+                case Opcodes.Combat.Initiate:
                     attacker.setTarget(target);
 
                     target.addAttacker(attacker);
 
                     if (target.id === this.game.player.id || attacker.id === this.game.player.id)
                         this.socket.send(Packets.Combat, [
-                            Packets.CombatOpcode.Initiate,
+                            Opcodes.Combat.Initiate,
                             attacker.id,
                             target.id
                         ]);
 
                     break;
 
-                case Packets.CombatOpcode.Hit: {
+                case Opcodes.Combat.Hit: {
                     let hit = info.hitInfo,
                         isPlayer = target.id === this.game.player.id;
 
@@ -492,7 +490,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.CombatOpcode.Finish:
+                case Opcodes.Combat.Finish:
                     if (target) {
                         target.removeTarget();
                         target.forget();
@@ -502,7 +500,7 @@ export default class Connection {
 
                     break;
 
-                case Packets.CombatOpcode.Sync:
+                case Opcodes.Combat.Sync:
                     if (target.x !== info.x || target.y !== info.y) target.go(info.x, info.y);
 
                     break;
@@ -519,7 +517,7 @@ export default class Connection {
 
         this.messages.onProjectile((opcode, info: any) => {
             switch (opcode) {
-                case Packets.ProjectileOpcode.Create:
+                case Opcodes.Projectile.Create:
                     this.entities.create(info);
 
                     break;
@@ -549,9 +547,7 @@ export default class Connection {
             if (data.mana) entity.setMana(data.mana);
         });
 
-        this.messages.onNetwork(() =>
-            this.socket.send(Packets.Network, [Packets.NetworkOpcode.Pong])
-        );
+        this.messages.onNetwork(() => this.socket.send(Packets.Network, [Opcodes.Network.Pong]));
 
         this.messages.onChat((info: any) => {
             log.debug(info);
@@ -597,7 +593,7 @@ export default class Connection {
 
         this.messages.onInventory((opcode, info: any) => {
             switch (opcode) {
-                case Packets.InventoryOpcode.Batch: {
+                case Opcodes.Inventory.Batch: {
                     let inventorySize = info.shift() as number,
                         data = info.shift() as Equipment[];
 
@@ -606,7 +602,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.InventoryOpcode.Add: {
+                case Opcodes.Inventory.Add: {
                     let slot = info as Slot;
 
                     if (this.menu.bank) this.menu.addInventory(slot);
@@ -616,7 +612,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.InventoryOpcode.Remove: {
+                case Opcodes.Inventory.Remove: {
                     let slot = info as Slot;
 
                     if (this.menu.bank) this.menu.removeInventory(slot);
@@ -630,7 +626,7 @@ export default class Connection {
 
         this.messages.onBank((opcode, info: any) => {
             switch (opcode) {
-                case Packets.BankOpcode.Batch: {
+                case Opcodes.Bank.Batch: {
                     let bankSize = info.shift() as number,
                         data = info.shift() as Slot[];
 
@@ -639,7 +635,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.BankOpcode.Add: {
+                case Opcodes.Bank.Add: {
                     // let slot = info as Slot;
 
                     if (!this.menu.bank) return;
@@ -649,7 +645,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.BankOpcode.Remove: {
+                case Opcodes.Bank.Remove: {
                     // let slot = info as Slot;
 
                     this.menu.bank.remove(info);
@@ -663,22 +659,22 @@ export default class Connection {
 
         this.messages.onQuest((opcode, info: any) => {
             switch (opcode) {
-                case Packets.QuestOpcode.AchievementBatch:
+                case Opcodes.Quest.AchievementBatch:
                     this.menu.getQuestPage().loadAchievements(info.achievements);
 
                     break;
 
-                case Packets.QuestOpcode.QuestBatch:
+                case Opcodes.Quest.QuestBatch:
                     this.menu.getQuestPage().loadQuests(info.quests);
 
                     break;
 
-                case Packets.QuestOpcode.Progress:
+                case Opcodes.Quest.Progress:
                     this.menu.getQuestPage().progress(info);
 
                     break;
 
-                case Packets.QuestOpcode.Finish:
+                case Opcodes.Quest.Finish:
                     this.menu.getQuestPage().finish(info);
 
                     break;
@@ -687,22 +683,22 @@ export default class Connection {
 
         this.messages.onNotification((opcode, info: any) => {
             switch (opcode) {
-                case Packets.NotificationOpcode.Ok:
+                case Opcodes.Notification.Ok:
                     this.menu.displayNotify(info.message);
 
                     break;
 
-                case Packets.NotificationOpcode.YesNo:
+                case Opcodes.Notification.YesNo:
                     this.menu.displayConfirm(info.message);
 
                     break;
 
-                case Packets.NotificationOpcode.Text:
+                case Opcodes.Notification.Text:
                     this.input.chatHandler.add('WORLD', info.message, info.colour);
 
                     break;
 
-                case Packets.NotificationOpcode.Popup:
+                case Opcodes.Notification.Popup:
                     this.menu.showNotification(info.title, info.message, info.colour);
 
                     break;
@@ -747,7 +743,7 @@ export default class Connection {
             let entity = this.entities.get(info.id);
 
             switch (opcode) {
-                case Packets.ExperienceOpcode.Combat:
+                case Opcodes.Experience.Combat:
                     if (!entity || entity.type !== 'player') return;
 
                     /**
@@ -783,7 +779,7 @@ export default class Connection {
 
                     break;
 
-                case Packets.ExperienceOpcode.Profession:
+                case Opcodes.Experience.Profession:
                     if (!entity || entity.type !== 'player') return;
 
                     if (entity.id === this.game.player.id)
@@ -824,7 +820,7 @@ export default class Connection {
 
         this.messages.onNPC((opcode, info: any) => {
             switch (opcode) {
-                case Packets.NPCOpcode.Talk: {
+                case Opcodes.NPC.Talk: {
                     let entity = this.entities.get(info.id),
                         message = info.text,
                         isNPC = !info.nonNPC;
@@ -859,15 +855,15 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.NPCOpcode.Bank:
+                case Opcodes.NPC.Bank:
                     this.menu.bank.display();
                     break;
 
-                case Packets.NPCOpcode.Enchant:
+                case Opcodes.NPC.Enchant:
                     this.menu.enchant.display();
                     break;
 
-                case Packets.NPCOpcode.Countdown: {
+                case Opcodes.NPC.Countdown: {
                     let cEntity = this.entities.get(info.id),
                         { countdown } = info;
 
@@ -902,12 +898,12 @@ export default class Connection {
                 { index } = info;
 
             switch (opcode) {
-                case Packets.EnchantOpcode.Select:
+                case Opcodes.Enchant.Select:
                     this.menu.enchant.add(type, index);
 
                     break;
 
-                case Packets.EnchantOpcode.Remove:
+                case Opcodes.Enchant.Remove:
                     this.menu.enchant.moveBack(type, index);
 
                     break;
@@ -916,17 +912,17 @@ export default class Connection {
 
         this.messages.onGuild((opcode) => {
             switch (opcode) {
-                case Packets.GuildOpcode.Create:
+                case Opcodes.Guild.Create:
                     break;
 
-                case Packets.GuildOpcode.Join:
+                case Opcodes.Guild.Join:
                     break;
             }
         });
 
         this.messages.onPointer((opcode, info: any) => {
             switch (opcode) {
-                case Packets.PointerOpcode.NPC: {
+                case Opcodes.Pointer.NPC: {
                     let entity = this.entities.get(info.id);
 
                     if (!entity) return;
@@ -937,24 +933,24 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.PointerOpcode.Location:
+                case Opcodes.Pointer.Location:
                     this.pointer.create(info.id, Modules.Pointers.Position);
                     this.pointer.setToPosition(info.id, info.x * 16, info.y * 16);
 
                     break;
 
-                case Packets.PointerOpcode.Relative:
+                case Opcodes.Pointer.Relative:
                     this.pointer.create(info.id, Modules.Pointers.Relative);
                     this.pointer.setRelative(info.id, info.x, info.y);
 
                     break;
 
-                case Packets.PointerOpcode.Remove:
+                case Opcodes.Pointer.Remove:
                     this.pointer.clean();
 
                     break;
 
-                case Packets.PointerOpcode.Button:
+                case Opcodes.Pointer.Button:
                     this.pointer.create(info.id, Modules.Pointers.Button, info.button);
 
                     break;
@@ -975,29 +971,29 @@ export default class Connection {
                 { shopData, id, index } = info;
 
             switch (opcode) {
-                case Packets.ShopOpcode.Open:
+                case Opcodes.Shop.Open:
                     shop.open(shopData.id);
                     shop.update(shopData);
 
                     break;
 
-                case Packets.ShopOpcode.Buy:
+                case Opcodes.Shop.Buy:
                     break;
 
-                case Packets.ShopOpcode.Sell:
+                case Opcodes.Shop.Sell:
                     break;
 
-                case Packets.ShopOpcode.Select:
+                case Opcodes.Shop.Select:
                     if (shop.isShopOpen(id)) shop.move(info);
 
                     break;
 
-                case Packets.ShopOpcode.Remove:
+                case Opcodes.Shop.Remove:
                     if (shop.isShopOpen(id)) shop.moveBack(index);
 
                     break;
 
-                case Packets.ShopOpcode.Refresh:
+                case Opcodes.Shop.Refresh:
                     if (shop.isShopOpen(id)) shop.update(info);
 
                     break;
@@ -1006,7 +1002,7 @@ export default class Connection {
 
         this.messages.onMinigame((opcode, info: any) => {
             switch (opcode) {
-                case Packets.MinigameOpcode.TeamWar:
+                case Opcodes.Minigame.TeamWar:
                     this.teamWar.handle(info);
 
                     break;
@@ -1015,17 +1011,17 @@ export default class Connection {
 
         this.messages.onRegion((opcode: number, bufferSize: number, info: any) => {
             switch (opcode) {
-                case Packets.RegionOpcode.Render:
+                case Opcodes.Region.Render:
                     this.map.synchronize(info);
 
                     break;
 
-                case Packets.RegionOpcode.Modify:
+                case Opcodes.Region.Modify:
                     this.map.data[info.index] = info.data;
 
                     break;
 
-                case Packets.RegionOpcode.Update: {
+                case Opcodes.Region.Update: {
                     let entity = this.entities.get(info.id);
 
                     if (!entity || entity.id === this.game.player.id) return;
@@ -1045,7 +1041,7 @@ export default class Connection {
 
         this.messages.onOverlay((opcode, info: any) => {
             switch (opcode) {
-                case Packets.OverlayOpcode.Set:
+                case Opcodes.Overlay.Set:
                     this.overlays.updateOverlay(info.image);
 
                     if (!this.renderer.transitioning) this.renderer.updateDarkMask(info.colour);
@@ -1053,13 +1049,13 @@ export default class Connection {
 
                     break;
 
-                case Packets.OverlayOpcode.Remove:
+                case Opcodes.Overlay.Remove:
                     this.renderer.removeAllLights();
                     this.overlays.currentOverlay = null;
 
                     break;
 
-                case Packets.OverlayOpcode.Lamp:
+                case Opcodes.Overlay.Lamp:
                     this.renderer.addLight(
                         info.x,
                         info.y,
@@ -1072,12 +1068,12 @@ export default class Connection {
 
                     break;
 
-                case Packets.OverlayOpcode.RemoveLamps:
+                case Opcodes.Overlay.RemoveLamps:
                     this.renderer.removeAllLights();
 
                     break;
 
-                case Packets.OverlayOpcode.Darkness:
+                case Opcodes.Overlay.Darkness:
                     this.renderer.updateDarkMask(info.colour);
 
                     break;
@@ -1096,22 +1092,22 @@ export default class Connection {
             this.renderer.forceRendering = true;
 
             switch (opcode) {
-                case Packets.CameraOpcode.LockX:
+                case Opcodes.Camera.LockX:
                     this.renderer.camera.lockX = true;
                     break;
 
-                case Packets.CameraOpcode.LockY:
+                case Opcodes.Camera.LockY:
                     this.renderer.camera.lockY = true;
                     break;
 
-                case Packets.CameraOpcode.FreeFlow:
+                case Opcodes.Camera.FreeFlow:
                     this.renderer.removeNonRelativeLights();
 
                     this.renderer.camera.lockX = false;
                     this.renderer.camera.lockY = false;
                     break;
 
-                case Packets.CameraOpcode.Player: {
+                case Opcodes.Camera.Player: {
                     let middle = this.renderer.getMiddle();
 
                     this.renderer.removeAllLights();
@@ -1135,12 +1131,12 @@ export default class Connection {
 
         this.messages.onProfession((opcode, info: any) => {
             switch (opcode) {
-                case Packets.ProfessionOpcode.Batch:
+                case Opcodes.Profession.Batch:
                     this.menu.getProfessionPage().load(info.data);
 
                     break;
 
-                case Packets.ProfessionOpcode.Update:
+                case Opcodes.Profession.Update:
                     this.menu.getProfessionPage().sync(info);
 
                     break;

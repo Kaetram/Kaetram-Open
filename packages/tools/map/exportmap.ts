@@ -3,9 +3,9 @@
 import fs from 'fs';
 import path from 'path';
 
-import log from '@kaetram/server/src/util/log';
+import log from '@kaetram/common/util/log';
 
-import { MapData } from './mapdata';
+import type { MapData } from './mapdata';
 import ProcessMap from './processmap';
 
 let resolve = (dir: string): string => path.resolve(__dirname, dir),

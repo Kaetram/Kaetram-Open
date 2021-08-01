@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes, Packets } from '@kaetram/common/network';
 
 import Container from './container/container';
 
@@ -163,7 +163,7 @@ export default class Bank {
         let isBank = type === 'bank',
             index = event.currentTarget.id.slice(Math.max(0, isBank ? 8 : 17));
 
-        this.game.socket.send(Packets.Bank, [Packets.BankOpcode.Select, type, index]);
+        this.game.socket.send(Packets.Bank, [Opcodes.Bank.Select, type, index]);
     }
 
     public add(info: Slot): void {

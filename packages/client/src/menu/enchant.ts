@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import Packets from '@kaetram/common/src/packets';
+import { Packets, Opcodes } from '@kaetram/common/network';
 
 import log from '../lib/log';
 import * as Detect from '../utils/detect';
@@ -111,18 +111,18 @@ export default class Enchant {
     }
 
     private enchant(): void {
-        this.game.socket.send(Packets.Enchant, [Packets.EnchantOpcode.Enchant]);
+        this.game.socket.send(Packets.Enchant, [Opcodes.Enchant.Enchant]);
     }
 
     private select(event: JQuery.ClickEvent): void {
         this.game.socket.send(Packets.Enchant, [
-            Packets.EnchantOpcode.Select,
+            Opcodes.Enchant.Select,
             event.currentTarget.id.slice(17)
         ]);
     }
 
     private remove(type: string): void {
-        this.game.socket.send(Packets.Enchant, [Packets.EnchantOpcode.Remove, type]);
+        this.game.socket.send(Packets.Enchant, [Opcodes.Enchant.Remove, type]);
     }
 
     private getInventorySize(): number {

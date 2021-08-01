@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { inflate } from 'pako';
 
-import Packets from '@kaetram/common/src/packets';
+import { Packets } from '@kaetram/common/network';
 
 import type App from '../app';
 
@@ -137,7 +137,7 @@ export default class Messages {
                 break;
 
             case 'maintenance':
-                this.app.sendError(null, 'Kaetram is currently under maintenance.');
+                this.app.sendError(null, `${this.app.config.name} is currently under maintenance.`);
                 break;
 
             case 'userexists':

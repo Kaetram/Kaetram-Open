@@ -1,4 +1,4 @@
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes } from '@kaetram/common/network';
 
 import Messages from '../../../../../../network/messages';
 import Container from '../container';
@@ -21,15 +21,13 @@ export default class Inventory extends Container {
     ): void {
         super.load(ids, counts, abilities, abilityLevels);
 
-        this.owner.send(
-            new Messages.Inventory(Packets.InventoryOpcode.Batch, [this.size, this.slots])
-        );
+        this.owner.send(new Messages.Inventory(Opcodes.Inventory.Batch, [this.size, this.slots]));
     }
 
     public add(item: ItemData): boolean {
         if (!this.canHold(item.id!, item.count!)) {
             this.owner.send(
-                new Messages.Notification(Packets.NotificationOpcode.Text, {
+                new Messages.Notification(Opcodes.Notification.Text, {
                     message: Constants.InventoryFull
                 })
             );
@@ -40,7 +38,7 @@ export default class Inventory extends Container {
 
         if (!slot) return false;
 
-        this.owner.send(new Messages.Inventory(Packets.InventoryOpcode.Add, slot));
+        this.owner.send(new Messages.Inventory(Opcodes.Inventory.Add, slot));
 
         this.owner.save();
 
@@ -61,7 +59,7 @@ export default class Inventory extends Container {
         if (!super.remove(index, id, count)) return false;
 
         this.owner.send(
-            new Messages.Inventory(Packets.InventoryOpcode.Remove, {
+            new Messages.Inventory(Opcodes.Inventory.Remove, {
                 index,
                 count
             })

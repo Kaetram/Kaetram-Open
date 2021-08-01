@@ -1,5 +1,6 @@
+import log from '@kaetram/common/util/log';
+
 import Items from '../../../../../util/items';
-import log from '../../../../../util/log';
 
 interface SlotData {
     index: number;
@@ -54,7 +55,7 @@ export default class Slot {
         this.count -= amount;
 
         if (this.count < 1)
-            log.error('[Slot] Item ' + this.id + ' has a count below 1 -> count: ' + this.count);
+            log.error(`[Slot] Item ${this.id} has a count below 1 -> count: ${this.count}`);
 
         this.verify();
     }
