@@ -2,11 +2,12 @@ import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
 import { camelCase } from 'lodash';
 
-import type { DatabaseType } from './src/database/database';
+import type { DatabaseTypes } from './types/database';
 
-interface Config {
+export interface Config {
     name: string;
     host: string;
+    ssl: boolean;
 
     socketioPort: number;
     websocketPort: number;
@@ -23,7 +24,10 @@ interface Config {
     hubAccessToken: string;
     remoteServerHost: string;
 
-    database: DatabaseType;
+    cleanupThreshold: number;
+    cleanupTime: number;
+
+    database: DatabaseTypes;
     offlineMode: boolean;
 
     mongodbHost: string;
@@ -33,11 +37,13 @@ interface Config {
     mongodbDatabase: string;
     mongodbAuth: boolean;
 
+    worldSwitch: boolean;
     tutorialEnabled: boolean;
     overrideAuth: boolean;
     maxPlayers: number;
     updateTime: number;
     gver: string;
+    guildsEnabled: boolean;
     treeTick: number;
     administrators: string[];
     moderators: string[];
@@ -48,14 +54,19 @@ interface Config {
     discordWebhookId: string;
     discordWebhookToken: string;
 
-    debug: boolean;
+    debugging: boolean;
     debugLevel: 'all';
     fsDebugging: boolean;
-    devClient: boolean;
     allowConnectionsToggle: boolean;
 }
 
-let envConfig = dotenvParseVariables(dotenv.load()),
+let envConfig = dotenvParseVariables(
+        dotenv.load({
+            path: '../../.env',
+            defaults: '../../.env.defaults',
+            includeProcessEnv: true
+        })
+    ),
     appConfig = {} as Config;
 
 for (let key of Object.keys(envConfig)) {
