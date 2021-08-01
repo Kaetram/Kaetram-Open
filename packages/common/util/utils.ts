@@ -6,9 +6,8 @@ import crypto from 'crypto';
 import _ from 'lodash';
 import zlib from 'zlib';
 
-import Packets from '@kaetram/common/src/packets';
-
-import log from '../util/log';
+import { Packets } from '../network';
+import log from './log';
 
 export default {
     random(range: number): number {
@@ -40,7 +39,7 @@ export default {
     connectionCounter: 0,
 
     getConnectionId(): string {
-        return '1' + this.random(1000) + this.connectionCounter++;
+        return `1${this.random(1000)}${this.connectionCounter++}`;
     },
 
     /**
@@ -54,15 +53,15 @@ export default {
     socketSeed: 0,
 
     generateRandomId(): string {
-        return ++this.idSeed + '' + this.randomInt(0, 25000);
+        return `${++this.idSeed}${this.randomInt(0, 25000)}`;
     },
 
     generateClientId(): string {
-        return ++this.clientSeed + '' + this.randomInt(0, 25000);
+        return `${++this.clientSeed}${this.randomInt(0, 25000)}`;
     },
 
     generateInstance(): string {
-        return ++this.instanceSeed + '' + this.randomInt(0, 25000);
+        return `${++this.instanceSeed}${this.randomInt(0, 25000)}`;
     },
 
     validPacket(packet: number): boolean {
@@ -72,7 +71,10 @@ export default {
         for (let i = 0; i < keys.length; i++)
             if (!keys[i].endsWith('Opcode')) filtered.push(keys[i]);
 
-        return packet > -1 && packet < Packets[filtered[filtered.length - 1] as never] + 1;
+        return (
+            packet > -1 &&
+            packet < Packets[filtered[filtered.length - 1] as keyof typeof Packets] + 1
+        );
     },
 
     getCurrentEpoch(): number {
