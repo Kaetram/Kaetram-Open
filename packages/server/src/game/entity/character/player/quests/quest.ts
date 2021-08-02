@@ -3,18 +3,11 @@ import Utils from '@kaetram/common/util/utils';
 
 import Messages from '../../../../../network/messages';
 
+import type { QuestInfo } from '@kaetram/common/types/info';
 import type NPC from '../../../npc/npc';
 import type Mob from '../../mob/mob';
 import type { Door } from '../doors';
 import type Player from '../player';
-
-export interface QuestInfo {
-    id: number;
-    name: string;
-    description: string;
-    stage: number;
-    finished: boolean;
-}
 
 type Task = 'click' | 'door' | 'kill' | 'talk' | 'item';
 

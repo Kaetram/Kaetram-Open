@@ -3,18 +3,9 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import Data from '../../../../../data/achievements.json';
 import Messages from '../../../../network/messages';
 
+import type { AchievementData } from '@kaetram/common/types/info';
 import type NPC from '../../npc/npc';
 import type Player from './player';
-
-export interface AchievementData {
-    id: number;
-    name: string;
-    type?: number;
-    description: string;
-    count: number;
-    progress: number;
-    finished: boolean;
-}
 
 export default class Achievement {
     public progress = 0;

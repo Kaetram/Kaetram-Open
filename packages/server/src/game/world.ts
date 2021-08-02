@@ -437,7 +437,7 @@ export default class World {
         return false;
     }
 
-    public push(type: number, info: WorldPacket | WorldPacket[]): void {
+    public push(type: Opcodes.Push, info: WorldPacket | WorldPacket[]): void {
         if (_.isArray(info)) {
             _.each(info, (i) => {
                 this.push(type, i);

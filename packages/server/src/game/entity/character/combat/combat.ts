@@ -7,8 +7,9 @@ import Utils from '@kaetram/common/util/utils';
 import Messages from '../../../../network/messages';
 import Formulas from '../../../../util/formulas';
 import CombatQueue from './combatqueue';
-import Hit, { HitData } from './hit';
+import Hit from './hit';
 
+import type { HitData } from '@kaetram/common/types/info';
 import type Entities from '../../../../controllers/entities';
 import type World from '../../../world';
 import type Character from '../character';

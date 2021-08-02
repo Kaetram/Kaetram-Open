@@ -11,6 +11,7 @@ import Messages from '../network/messages';
 import Items from '../util/items';
 import Commands from './commands';
 
+import type { EquipmentType } from '@kaetram/common/types/info';
 import type Character from '../game/entity/character/character';
 import type Mob from '../game/entity/character/mob/mob';
 import type Slot from '../game/entity/character/player/containers/slot';
@@ -139,7 +140,7 @@ export default class Incoming {
         });
     }
 
-    private handleIntro(message: [number, string, string, string]): void {
+    private handleIntro(message: [Opcodes.Intro, string, string, string]): void {
         let [loginType, username, password] = message,
             isRegistering = loginType === Opcodes.Intro.Register,
             isGuest = loginType === Opcodes.Intro.Guest,
@@ -273,7 +274,7 @@ export default class Incoming {
         });
     }
 
-    private handleEquipment(message: [number, string]): void {
+    private handleEquipment(message: [Opcodes.Equipment, EquipmentType]): void {
         let [opcode, type] = message;
 
         switch (opcode) {
@@ -329,14 +330,14 @@ export default class Incoming {
                         break;
                 }
 
-                this.player.send(new Messages.Equipment(Opcodes.Equipment.Unequip, [type]));
+                this.player.send(new Messages.Equipment(Opcodes.Equipment.Unequip, type));
 
                 break;
             }
         }
     }
 
-    private handleMovement(message: [number, ...unknown[]]): void {
+    private handleMovement(message: [Opcodes.Movement, ...unknown[]]): void {
         let [opcode] = message,
             orientation: number;
 
@@ -490,7 +491,7 @@ export default class Incoming {
         this.world.region.push(this.player);
     }
 
-    private handleTarget(message: [number, string]): void {
+    private handleTarget(message: [Opcodes.Target, string]): void {
         let [opcode, instance] = message;
 
         log.debug(`Target [opcode]: ${instance} [${opcode}]`);
@@ -550,7 +551,7 @@ export default class Incoming {
         }
     }
 
-    private handleCombat(message: [number, string, string]): void {
+    private handleCombat(message: [Opcodes.Combat, string, string]): void {
         let [opcode] = message;
 
         switch (opcode) {
@@ -583,7 +584,7 @@ export default class Incoming {
         }
     }
 
-    private handleProjectile(message: [number, string, string]): void {
+    private handleProjectile(message: [Opcodes.Projectile, string, string]): void {
         let [type] = message;
 
         switch (type) {
@@ -605,7 +606,7 @@ export default class Incoming {
         }
     }
 
-    private handleNetwork(message: [number]): void {
+    private handleNetwork(message: [Opcodes.Network]): void {
         let [opcode] = message;
 
         switch (opcode) {
@@ -665,7 +666,7 @@ export default class Incoming {
         }
     }
 
-    private handleCommand(message: [number, Pos]): void {
+    private handleCommand(message: [Opcodes.Command, Pos]): void {
         let [opcode, position] = message;
 
         if (this.player.rights < 2) return;
@@ -679,7 +680,7 @@ export default class Incoming {
         }
     }
 
-    private handleInventory(message: [number, ...unknown[]]): void {
+    private handleInventory(message: [Opcodes.Inventory, ...unknown[]]): void {
         let [opcode] = message,
             id!: number,
             ability!: number,
@@ -743,7 +744,7 @@ export default class Incoming {
         }
     }
 
-    private handleBank(message: [number, string, number]): void {
+    private handleBank(message: [Opcodes.Bank, string, number]): void {
         let [opcode, type, index] = message;
 
         switch (opcode) {
@@ -799,18 +800,16 @@ export default class Incoming {
             ignoreId: this.player.instance
         });
 
-        this.player.send(
-            new Messages.Respawn(this.player.instance, { x: this.player.x, y: this.player.y })
-        );
+        this.player.send(new Messages.Respawn(this.player.instance, this.player.x, this.player.y));
 
         this.player.revertPoints();
     }
 
-    private handleTrade(message: [number, string]): void {
+    private handleTrade(message: [Opcodes.Trade, string]): void {
         let [opcode] = message,
             oPlayer = this.entities.get(message[1]);
 
-        if (!oPlayer || !opcode) return;
+        if (!oPlayer) return;
 
         switch (opcode) {
             case Opcodes.Trade.Request:
@@ -824,7 +823,7 @@ export default class Incoming {
         }
     }
 
-    private handleEnchant(message: [number, unknown]): void {
+    private handleEnchant(message: [Opcodes.Enchant, unknown]): void {
         let [opcode] = message;
 
         switch (opcode) {
@@ -881,7 +880,7 @@ export default class Incoming {
         this.player.warp?.warp(id);
     }
 
-    private handleShop(message: [number, number, ...unknown[]]): void {
+    private handleShop(message: [Opcodes.Shop, number, ...unknown[]]): void {
         let [opcode, npcId] = message;
 
         switch (opcode) {

@@ -4,8 +4,8 @@ import Utils from '@kaetram/common/util/utils';
 
 import Combat from '../../src/game/entity/character/combat/combat';
 
+import type { HitData } from '@kaetram/common/types/info';
 import type Character from '../../src/game/entity/character/character';
-import type { HitData } from '../../src/game/entity/character/combat/hit';
 import type Mob from '../../src/game/entity/character/mob/mob';
 
 /**

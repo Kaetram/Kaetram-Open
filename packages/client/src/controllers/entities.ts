@@ -11,6 +11,7 @@ import Projectile from '../entity/objects/projectile';
 import Grids from '../renderer/grids';
 import SpritesController from './sprites';
 
+import type { ProjectileData } from '@kaetram/common/types/messages';
 import type Character from '../entity/character/character';
 import type Equipment from '../entity/character/player/equipment/equipment';
 import type Weapon from '../entity/character/player/equipment/weapon';
@@ -29,7 +30,10 @@ export interface Movable {
     attackerId: string;
     hitType: number;
 }
-export type AnyEntity = Entity & Player & Mob & Projectile & Weapon & Equipment & Movable;
+/**
+ * TODO: Refactor once on TypeScript 4.4
+ */
+export type AnyEntity = Entity & Player & Mob & ProjectileData & Weapon & Equipment & Movable;
 
 export default class EntitiesController {
     private renderer;
