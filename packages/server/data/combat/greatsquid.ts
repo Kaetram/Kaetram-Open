@@ -3,7 +3,7 @@ import { Modules } from '@kaetram/common/network';
 import Character from '../../src/game/entity/character/character';
 import Combat from '../../src/game/entity/character/combat/combat';
 
-import type { HitData } from '../../src/game/entity/character/combat/hit';
+import type { HitData } from '@kaetram/common/types/info';
 
 export default class GreatSquid extends Combat {
     private lastTerror: number;

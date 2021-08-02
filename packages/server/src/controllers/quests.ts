@@ -6,11 +6,12 @@ import Achievement from '../game/entity/character/player/achievement';
 import BulkySituation from '../game/entity/character/player/quests/impl/bulkysituation';
 import Introduction from '../game/entity/character/player/quests/impl/introduction';
 
+import type { AchievementData, QuestInfo } from '@kaetram/common/types/info';
+import type { QuestAchievementBatchData, QuestBatchData } from '@kaetram/common/types/messages';
 import type Mob from '../game/entity/character/mob/mob';
-import type { AchievementData } from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
 import type Quest from '../game/entity/character/player/quests/quest';
-import type { QuestData, QuestInfo } from '../game/entity/character/player/quests/quest';
+import type { QuestData } from '../game/entity/character/player/quests/quest';
 import type NPC from '../game/entity/npc/npc';
 
 export interface PlayerQuests {
@@ -124,7 +125,7 @@ export default class Quests {
         };
     }
 
-    public getAchievementData(): { achievements: AchievementData[] } {
+    public getAchievementData(): QuestAchievementBatchData {
         let achievements: AchievementData[] = [];
 
         this.forEachAchievement((achievement: Achievement) => {
@@ -136,7 +137,7 @@ export default class Quests {
         };
     }
 
-    public getQuestData(): { quests: QuestInfo[] } {
+    public getQuestData(): QuestBatchData {
         let quests: QuestInfo[] = [];
 
         this.forEachQuest((quest: Quest) => {

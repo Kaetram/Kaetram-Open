@@ -5,15 +5,9 @@ import log from '@kaetram/common/util/log';
 
 import professions from './impl';
 
+import type { ProfessionsInfo } from '@kaetram/common/types/info';
 import type Player from '../player';
 import type Profession from './impl/profession';
-
-export interface ProfessionsInfo {
-    id: number;
-    name: string;
-    level: number;
-    percentage: string;
-}
 
 export interface ProfessionsData {
     [id: number]: {
