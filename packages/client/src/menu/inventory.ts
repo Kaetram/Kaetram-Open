@@ -21,14 +21,14 @@ export default class Inventory {
     private selectedSlot: JQuery | null = null;
     private selectedItem: Slot | null = null;
 
-    public constructor(private game: Game, size: number, data: Equipment[]) {
+    public constructor(private game: Game, size: number, data: Slot[]) {
         this.actions = game.menu.actions;
         this.container = new Container(size);
 
         this.load(data);
     }
 
-    private load(data: Equipment[]): void {
+    private load(data: Slot[]): void {
         let list = $('#inventory').find('ul');
 
         for (let [i, item] of data.entries()) {
@@ -59,9 +59,9 @@ export default class Inventory {
                 `<div id="itemCount${i}" class="inventoryItemCount">${itemCount}</div>`
             );
 
-            if (ability > -1) {
+            if (ability! > -1) {
                 let eList = Object.keys(Modules.Enchantment), // enchantment list
-                    enchantment = eList[ability];
+                    enchantment = eList[ability!];
 
                 if (enchantment) itemSlotList.find(`#itemCount${i}`).text(enchantment);
             }

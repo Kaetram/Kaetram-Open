@@ -41,17 +41,17 @@ type Sounds =
     | 'revive'
     | 'teleport';
 
-type Audio = Music | Sounds;
+export type AudioName = Music | Sounds;
 
 interface AudioElement extends HTMLAudioElement {
-    name: Audio;
+    name: AudioName;
     fadingIn: number | null;
     fadingOut: number | null;
 
     cloneNode(deep?: boolean): AudioElement;
 }
 
-type Audibles = { [name in Audio]?: AudioElement[] | null };
+type Audibles = { [name in AudioName]?: AudioElement[] | null };
 
 export default class AudioController {
     private audibles: Audibles = {};
@@ -62,11 +62,11 @@ export default class AudioController {
     private music: { [name in Music]?: boolean } = {};
     private sounds: { [name in Sounds]?: boolean } = {};
 
-    public newSong!: AudioElement;
+    public newSong!: AudioName;
 
     public constructor(private game: Game) {}
 
-    public parse(path: 'music' | 'sounds', name: Audio, channels: number): void {
+    public parse(path: 'music' | 'sounds', name: AudioName, channels: number): void {
         let { format, audibles, music, sounds } = this,
             fullPath = `/audio/${path}/${name}.${format}`,
             sound = document.createElement('audio') as AudioElement,
@@ -99,7 +99,7 @@ export default class AudioController {
         else if (name in sounds) sounds[name as Sounds] = true;
     }
 
-    public play(type: Modules.AudioTypes, name: Audio): void {
+    public play(type: Modules.AudioTypes, name: AudioName): void {
         let { game, sounds } = this;
 
         if (!this.isEnabled() || game.player.dead) return;
@@ -146,7 +146,7 @@ export default class AudioController {
 
         let { newSong, game, music, audibles } = this;
 
-        if (!newSong || newSong === this.song) return;
+        if (!newSong || newSong === this.song?.name) return;
 
         let song = this.getMusic(newSong);
 
@@ -242,7 +242,7 @@ export default class AudioController {
         });
     }
 
-    private get(name: Audio): AudioElement | undefined {
+    private get(name: AudioName): AudioElement | undefined {
         let { audibles } = this;
 
         if (!audibles[name]) return;
@@ -255,7 +255,7 @@ export default class AudioController {
         return audible;
     }
 
-    private getMusic({ name }: AudioElement): { name: Audio; sound: AudioElement | undefined } {
+    private getMusic(name: AudioName): { name: AudioName; sound: AudioElement | undefined } {
         return {
             name,
             sound: this.get(name)

@@ -31,7 +31,7 @@ import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
 
 export default class Game {
-    public id = -1;
+    public id!: string;
 
     public socket!: Socket;
     public messages!: Messages;

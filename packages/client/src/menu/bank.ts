@@ -4,6 +4,7 @@ import { Opcodes, Packets } from '@kaetram/common/network';
 
 import Container from './container/container';
 
+import type { ContainerAddData, ContainerRemoveData } from '@kaetram/common/types/messages';
 import type Game from '../game';
 import type Slot from './container/slot';
 
@@ -166,7 +167,7 @@ export default class Bank {
         this.game.socket.send(Packets.Bank, [Opcodes.Bank.Select, type, index]);
     }
 
-    public add(info: Slot): void {
+    public add(info: ContainerAddData): void {
         let item = $(this.getBankList()[info.index]),
             slot = this.container.slots[info.index];
 
@@ -187,7 +188,7 @@ export default class Bank {
         if (slot.count > 1) count.text(slot.count);
     }
 
-    public remove(info: Slot): void {
+    public remove(info: ContainerRemoveData): void {
         let item = $(this.getBankList()[info.index]),
             slot = this.container.slots[info.index];
 

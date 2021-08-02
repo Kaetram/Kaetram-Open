@@ -1,6 +1,7 @@
 import Items from '../../../../../util/items';
 
 import type { Modules } from '@kaetram/common/network';
+import type { EquipmentData } from '@kaetram/common/types/info';
 
 export interface ItemData {
     count?: number;
@@ -10,16 +11,6 @@ export interface ItemData {
     string?: string;
     ability?: number;
     abilityLevel?: number;
-}
-
-export interface EquipmentData {
-    type: Modules.Equipment;
-    name: string;
-    string: string;
-    count: number;
-    ability: number;
-    abilityLevel: number;
-    power: number;
 }
 
 export default abstract class Equipment {

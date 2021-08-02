@@ -77,7 +77,7 @@ export default class Bot {
         // connection.on('disconnect', () => {});
     }
 
-    private handlePackets(connection: Socket, message: [number, PacketInfo], type?: string): void {
+    private handlePackets(connection: Socket, message: [Packets, PacketInfo], type?: string): void {
         if (type === 'utf8' || !isArray(message)) {
             log.info(`Received UTF8 message ${message}.`);
 
