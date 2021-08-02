@@ -3,29 +3,8 @@ import _ from 'lodash';
 
 import Page from '../page';
 
-/**
- * @todo
- * Replace this with a `common` interface linking to the server's `Achievement` class.
- */
-interface AchievementsInfo {
-    id: number;
-    name: string;
-    progress: number;
-    count: number;
-    finished: boolean;
-    isQuest: boolean;
-}
-/**
- * @todo
- * Replace this with a `common` interface linking to the server's `Quest` class.
- */
-interface QuestInfo {
-    id: number;
-    name: string;
-    description: string;
-    stage: number;
-    finished: boolean;
-}
+import type { AchievementData, QuestInfo } from '@kaetram/common/types/info';
+import type { QuestFinishData, QuestProgressData } from '@kaetram/common/types/messages';
 
 export default class Quest extends Page {
     private quests = $('#questList');
@@ -44,7 +23,7 @@ export default class Quest extends Page {
         super('#questPage');
     }
 
-    public loadAchievements(achievements: AchievementsInfo[]): void {
+    public loadAchievements(achievements: AchievementData[]): void {
         this.achievementsLength = achievements.length;
 
         _.each(achievements, (achievement) => {
@@ -112,7 +91,7 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    public progress(info: AchievementsInfo): void {
+    public progress(info: QuestProgressData): void {
         let item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
 
         if (!item) return;
@@ -121,16 +100,16 @@ export default class Quest extends Page {
 
         if (!name) return;
 
-        if (!info.isQuest && info.count > 2)
-            name.text(`${info.name} ${info.progress - 1}/${info.count - 1}`);
-        else name.text(info.name);
+        if (!info.isQuest && info.count! > 2)
+            name.text(`${info.name} ${info.progress! - 1}/${info.count! - 1}`);
+        else name.text(info.name!);
 
         name.css('background', 'rgba(255, 255, 10, 0.4)');
 
         this.updateCount();
     }
 
-    public finish(info: AchievementsInfo): void {
+    public finish(info: QuestFinishData): void {
         let item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
 
         if (!item) return;
@@ -140,7 +119,7 @@ export default class Quest extends Page {
         if (!name) return;
 
         if (!info.isQuest) {
-            name.text(info.name);
+            name.text(info.name!);
             this.finishedAchievements++;
         }
 

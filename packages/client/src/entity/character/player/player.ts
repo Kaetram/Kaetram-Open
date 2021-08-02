@@ -9,12 +9,8 @@ import Pendant from './equipment/pendant';
 import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 
+import type { WelcomeData } from '@kaetram/common/types/messages';
 import type Game from '../../../game';
-
-export type PlayerData = Player & {
-    hitPoints: number[];
-    mana: number[];
-};
 
 export default class Player extends Character {
     public username = '';
@@ -83,12 +79,12 @@ export default class Player extends Character {
         pvpDeaths,
         orientation,
         movementSpeed
-    }: PlayerData): void {
+    }: WelcomeData): void {
         this.setId(instance);
         this.setName(username);
         this.setGridPosition(x, y);
         this.setPointsData(hitPoints, mana);
-        this.setExperience(experience, nextExperience, prevExperience);
+        this.setExperience(experience, nextExperience!, prevExperience);
 
         this.level = level;
 
@@ -180,7 +176,7 @@ export default class Player extends Character {
     }
 
     public setEquipment(
-        type: number,
+        type: Modules.Equipment,
         name: string,
         string: string,
         count: number,

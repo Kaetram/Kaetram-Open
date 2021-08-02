@@ -6,8 +6,10 @@ import log from '@kaetram/common/util/log';
 import Player from '../game/entity/character/player/player';
 import Messages, { Packet } from '../network/messages';
 
+import type { RegionTileData, TilesetData } from '@kaetram/common/types/info';
 import type Entity from '../game/entity/entity';
 import type World from '../game/world';
+
 interface Bounds {
     startX: number;
     startY: number;
@@ -17,26 +19,10 @@ interface Bounds {
 
 export type Tile = number | number[];
 
-export interface TilesetData {
-    [i: number]: {
-        c?: boolean;
-        h?: number;
-    };
-}
-
 interface RegionData {
     entities: { [instance: string]: Entity };
     players: string[];
     incoming: Entity[];
-}
-
-export interface RegionTileData {
-    index: number;
-    position: Pos;
-    data: number[];
-    isCollision: boolean;
-    isObject: boolean;
-    cursor: string;
 }
 
 interface DynamicTiles {

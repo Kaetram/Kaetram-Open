@@ -31,6 +31,8 @@ import Professions from './professions/professions';
 import Trade from './trade';
 import Warp from './warp';
 
+import type { EquipmentData } from '@kaetram/common/types/info';
+import type { ExperienceCombatData } from '@kaetram/common/types/messages';
 import type MongoDB from '../../../../database/mongodb/mongodb';
 import type Area from '../../../../map/areas/area';
 import type { MinigameState } from '../../../../minigames/minigame';
@@ -38,7 +40,6 @@ import type Connection from '../../../../network/connection';
 import type World from '../../../world';
 import type NPC from '../../npc/npc';
 import type { FullPlayerData } from './../../../../database/mongodb/creator';
-import type { EquipmentData } from './equipment/equipment';
 import type Lumberjacking from './professions/impl/lumberjacking';
 import type Introduction from './quests/impl/introduction';
 
@@ -63,15 +64,6 @@ export interface PlayerRegions {
     gameVersion: string;
 }
 
-export interface PlayerExperience {
-    id: string;
-    level: number;
-    amount: number;
-    experience: number;
-    nextExperience?: number;
-    prevExperience: number;
-}
-
 interface PlayerState extends CharacterState {
     rights: number;
     level: number;
@@ -80,7 +72,7 @@ interface PlayerState extends CharacterState {
     pvpDeaths: number;
     attackRange: number;
     orientation: number;
-    playerHitPoints: number[];
+    hitPoints: number[];
     mana: number[];
     armour: EquipmentData;
     weapon: EquipmentData;
@@ -511,7 +503,7 @@ export default class Player extends Character {
         let data = {
             id: this.instance,
             level: this.level
-        } as PlayerExperience;
+        } as ExperienceCombatData;
 
         /**
          * Sending two sets of data as other users do not need to
@@ -547,7 +539,7 @@ export default class Player extends Character {
     }
 
     public healHitPoints(amount: number): void {
-        let type = 'health';
+        let type = 'health' as const;
 
         this.playerHitPoints.heal(amount);
 
@@ -564,7 +556,7 @@ export default class Player extends Character {
     }
 
     public healManaPoints(amount: number): void {
-        let type = 'mana';
+        let type = 'mana' as const;
 
         this.mana.heal(amount);
 
@@ -1086,7 +1078,7 @@ export default class Player extends Character {
             pvpDeaths: this.pvpDeaths,
             attackRange: this.attackRange,
             orientation: this.orientation,
-            playerHitPoints: this.playerHitPoints.getData(),
+            hitPoints: this.playerHitPoints.getData(),
             movementSpeed: this.getMovementSpeed(),
             mana: this.mana.getData(),
             armour: this.armour.getData(),
@@ -1270,10 +1262,11 @@ export default class Player extends Character {
         let info = {
             id: this.instance,
             attackRange: this.attackRange,
-            playerHitPoints: this.getHitPoints(),
+            hitPoints: this.getHitPoints(),
             maxHitPoints: this.getMaxHitPoints(),
             mana: this.mana.getMana(),
             maxMana: this.mana.getMaxMana(),
+            experience: this.experience,
             level: this.level,
             armour: this.armour.getString(),
             weapon: this.weapon.getData(),

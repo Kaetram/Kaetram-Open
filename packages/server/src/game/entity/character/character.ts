@@ -4,7 +4,7 @@ import Mobs from '../../../util/mobs';
 import Entity, { EntityState } from '../entity';
 import Combat from './combat/combat';
 
-import type { HitData } from './combat/hit';
+import type { HitData } from '@kaetram/common/types/info';
 import type Boots from './player/equipment/boots';
 import type Pendant from './player/equipment/pendant';
 import type Ring from './player/equipment/ring';

@@ -1,9 +1,10 @@
 import log from '@kaetram/common/util/log';
 
+import type { Packets } from '@kaetram/common/network';
 import type SocketHandler from './sockethandler';
-import type { SocketType, AnySocket } from './websocket';
+import type { AnySocket, SocketType } from './websocket';
 
-type ListenCallback = (message: [number, never]) => void;
+type ListenCallback = (message: [Packets, never]) => void;
 
 export default class Connection {
     private listenCallback?: ListenCallback;

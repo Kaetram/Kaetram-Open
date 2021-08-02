@@ -207,7 +207,7 @@ export default class PlayerHandler {
         return target ? target.id : null;
     }
 
-    private getTargetType(): number {
+    private getTargetType(): Opcodes.Target {
         let { target } = this.player;
 
         if (!target) return Opcodes.Target.None;

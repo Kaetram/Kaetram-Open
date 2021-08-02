@@ -1,5 +1,5 @@
+import type { HitData } from '@kaetram/common/types/info';
 import type Hit from './hit';
-import type { HitData } from './hit';
 
 export default class CombatQueue {
     private hitQueue: Hit[] = [];
