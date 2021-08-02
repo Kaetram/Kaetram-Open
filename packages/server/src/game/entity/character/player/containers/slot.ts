@@ -2,13 +2,7 @@ import log from '@kaetram/common/util/log';
 
 import Items from '../../../../../util/items';
 
-interface SlotData {
-    index: number;
-    string: string;
-    count: number;
-    ability: number;
-    abilityLevel: number;
-}
+import type { SlotData } from '@kaetram/common/types/info';
 
 export default class Slot {
     public id = -1;

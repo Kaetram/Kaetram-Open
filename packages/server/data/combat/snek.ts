@@ -3,8 +3,8 @@ import Utils from '@kaetram/common/util/utils';
 
 import Combat from '../../src/game/entity/character/combat/combat';
 
+import type { HitData } from '@kaetram/common/types/info';
 import type Character from '../../src/game/entity/character/character';
-import type { HitData } from '../../src/game/entity/character/combat/hit';
 
 export default class Snek extends Combat {
     public constructor(character: Character) {

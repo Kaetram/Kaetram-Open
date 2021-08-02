@@ -47,7 +47,7 @@ export default class InputController {
     private cursors: { [cursor in Cursors]?: Sprite } = {};
     public lastMousePosition: Pos = { x: 0, y: 0 };
 
-    private hovering!: number | null;
+    private hovering!: Modules.Hovering | null;
     public hoveringEntity!: Entity; // for debugging
 
     public mouse: Pos = { x: 0, y: 0 };

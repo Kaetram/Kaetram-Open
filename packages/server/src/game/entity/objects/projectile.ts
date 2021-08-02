@@ -2,18 +2,8 @@ import { Modules } from '@kaetram/common/network';
 
 import Entity from '../entity';
 
+import type { ProjectileData } from '@kaetram/common/types/messages';
 import type Character from '../character/character';
-
-export interface ProjectileData {
-    id: string;
-    name: string;
-    characterId: string;
-    targetId: string;
-    damage: number;
-    special: never;
-    hitType: Modules.Hits | null;
-    type: string;
-}
 
 export default class Projectile extends Entity {
     // startX = -1;

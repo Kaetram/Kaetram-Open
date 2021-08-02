@@ -105,7 +105,7 @@ export default class Socket {
             let data = JSON.parse(message);
 
             if (data.length > 1) this.messages.handleBulkData(data);
-            else this.messages.handleData(JSON.parse(message).shift());
+            else this.messages.handleData(data.shift());
         } else this.messages.handleUTF8(message);
     }
 

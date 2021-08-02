@@ -7,16 +7,9 @@ import Messages from '../network/messages';
 import Items from '../util/items';
 import Shop from '../util/shops';
 
+import type { ShopData } from '@kaetram/common/types/info';
 import type Player from '../game/entity/character/player/player';
 import type World from '../game/world';
-
-export interface ShopData {
-    id: number;
-    strings: string[];
-    names: string[];
-    counts: number[];
-    prices: number[];
-}
 
 export default class Shops {
     private interval = 60000;
@@ -41,7 +34,7 @@ export default class Shops {
             new Messages.Shop(Opcodes.Shop.Open, {
                 instance: player.instance,
                 npcId,
-                shopData: this.getShopData(npcId)
+                shopData: this.getShopData(npcId)!
             })
         );
     }

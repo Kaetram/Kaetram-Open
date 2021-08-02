@@ -72,7 +72,7 @@ export default class Character extends Entity {
     private maxHitPointsCallback?(maxHitPoints: number): void;
 
     public instance!: string;
-    private forced!: boolean;
+    public forced!: boolean;
 
     public handler = new EntityHandler(this);
 

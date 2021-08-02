@@ -188,7 +188,7 @@ export default class App {
         $(document).on('keydown', ({ which }) => which !== Modules.Keys.Enter);
 
         $(document).on('keydown', ({ which, keyCode }) => {
-            let key = which || keyCode || 0,
+            let key: Modules.Keys = which || keyCode || 0,
                 { game } = this;
 
             if (!game) return;
