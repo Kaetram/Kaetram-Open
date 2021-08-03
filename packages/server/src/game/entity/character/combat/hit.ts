@@ -1,13 +1,5 @@
-import type * as Modules from '@kaetram/common/src/modules';
-
-export interface HitData {
-    type: Modules.Hits;
-    damage: number;
-    isRanged: boolean;
-    isAoE: boolean;
-    hasTerror: boolean;
-    isPoison: boolean;
-}
+import type { Modules } from '@kaetram/common/network';
+import type { HitData } from '@kaetram/common/types/info';
 
 export default class Hit {
     private ranged = false;

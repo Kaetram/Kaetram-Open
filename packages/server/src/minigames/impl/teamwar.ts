@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
 import Messages from '../../network/messages';
-import Utils from '../../util/utils';
 import Minigame, { MinigameState } from '../minigame';
 
 import type Player from '../../game/entity/character/player/player';
@@ -96,10 +96,10 @@ export default class TeamWar extends Minigame {
      * we create one, otherwise we synchronize it with the packets we receive.
      */
     private sendCountdown(player: Player): void {
-        this.world.push(Packets.PushOpcode.Player, {
+        this.world.push(Opcodes.Push.Player, {
             player,
-            message: new Messages.Minigame(Packets.MinigameOpcode.TeamWar, {
-                opcode: Packets.MinigameOpcode.TeamWarOpcode.Countdown,
+            message: new Messages.Minigame(Opcodes.Minigame.TeamWar, {
+                opcode: Opcodes.TeamWar.Countdown,
                 countdown: this.countdown
             })
         });

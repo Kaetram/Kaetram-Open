@@ -1,8 +1,10 @@
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+
 import Combat from '../../src/game/entity/character/combat/combat';
-import Character from '../../src/game/entity/character/character';
-import Utils from '../../src/util/utils';
-import log from '../../src/util/log';
-import { HitData } from '@kaetram/server/src/game/entity/character/combat/hit';
+
+import type { HitData } from '@kaetram/common/types/info';
+import type Character from '../../src/game/entity/character/character';
 
 export default class Snek extends Combat {
     public constructor(character: Character) {
@@ -22,13 +24,13 @@ export default class Snek extends Combat {
         });
     }
 
-    canPoison(): boolean {
+    private canPoison(): boolean {
         let chance = Utils.randomInt(0, this.character.level);
 
         return chance === 7;
     }
 
-    getPoisonData(): string {
-        return Date.now().toString() + ':30000:1';
+    private getPoisonData(): string {
+        return `${Date.now().toString()}:30000:1`;
     }
 }

@@ -1,7 +1,7 @@
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
 import Messages from '../network/messages';
-import log from '../util/log';
 
 import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
@@ -59,7 +59,7 @@ export default class Commands {
 
             case 'coords':
                 this.player.send(
-                    new Messages.Notification(Packets.NotificationOpcode.Text, {
+                    new Messages.Notification(Opcodes.Notification.Text, {
                         message: `x: ${this.player.x} y: ${this.player.y}`
                     })
                 );
@@ -70,7 +70,7 @@ export default class Commands {
                 let tutorialQuest = this.player.getTutorial();
 
                 this.player.send(
-                    new Messages.Quest(Packets.QuestOpcode.Progress, {
+                    new Messages.Quest(Opcodes.Quest.Progress, {
                         id: tutorialQuest.id,
                         stage: tutorialQuest.stage
                     })
@@ -124,7 +124,7 @@ export default class Commands {
 
             case 'ping':
                 this.player.pingTime = Date.now();
-                this.player.send(new Messages.Network(Packets.NetworkOpcode.Ping));
+                this.player.send(new Messages.Network(Opcodes.Network.Ping));
 
                 break;
         }
@@ -277,7 +277,7 @@ export default class Commands {
                     if (!posX || !posY) return;
 
                     this.player.send(
-                        new Messages.Pointer(Packets.PointerOpcode.Location, {
+                        new Messages.Pointer(Opcodes.Pointer.Location, {
                             id: this.player.instance,
                             x: posX,
                             y: posY
@@ -289,7 +289,7 @@ export default class Commands {
                     if (!instance) return;
 
                     this.player.send(
-                        new Messages.Pointer(Packets.PointerOpcode.NPC, {
+                        new Messages.Pointer(Opcodes.Pointer.NPC, {
                             id: instance
                         })
                     );
@@ -335,9 +335,9 @@ export default class Commands {
 
                 log.info(`Sending Tile: ${tileIndex}`);
 
-                this.world.push(Packets.PushOpcode.Player, {
+                this.world.push(Opcodes.Push.Player, {
                     player: this.player,
-                    message: new Messages.Region(Packets.RegionOpcode.Modify, {
+                    message: new Messages.Region(Opcodes.Region.Modify, {
                         index: tileIndex,
                         data: tileInfo
                     })
@@ -475,7 +475,7 @@ export default class Commands {
 
             case 'popup':
                 this.player.send(
-                    new Messages.Notification(Packets.NotificationOpcode.Popup, {
+                    new Messages.Notification(Opcodes.Notification.Popup, {
                         title: 'New Quest Found!',
                         message: 'New quest has been discovered!',
                         colour: '#00000'

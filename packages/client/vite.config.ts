@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 
-import dotenv from 'dotenv-extended';
-import dotenvParseVariables from 'dotenv-parse-variables';
+import config, { Config } from '../common/config';
 
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 import legacy from '@vitejs/plugin-legacy';
@@ -10,10 +9,31 @@ import compress from 'vite-plugin-compress';
 
 import { name, description } from 'kaetram/package.json';
 
+declare global {
+    interface Window {
+        config: Config;
+    }
+}
+
+type ConfigKeys = keyof Config;
+
 export default defineConfig(({ command }) => {
     let isProduction = command === 'build',
         brotli = false,
-        env = dotenvParseVariables(dotenv.load());
+        expose: ConfigKeys[] = [
+            'name',
+            'host',
+            'socketioPort',
+            'gver',
+            'ssl',
+            'worldSwitch',
+            'hubEnabled',
+            'hubPort',
+            'serverId'
+        ],
+        env = {} as Config;
+
+    for (let key of expose) env[key] = config[key] as never;
 
     return {
         cacheDir: '.cache',
@@ -28,8 +48,8 @@ export default defineConfig(({ command }) => {
                 includeAssets: '**/*',
                 workbox: { cacheId: name },
                 manifest: {
-                    name: 'Kaetram',
-                    short_name: 'Kaetram',
+                    name: config.name,
+                    short_name: config.name,
                     description,
                     display: 'fullscreen',
                     background_color: '#000000',
@@ -64,6 +84,6 @@ export default defineConfig(({ command }) => {
             chunkSizeWarningLimit: 4e3
         },
         server: { port: 9000 },
-        define: { 'process.env': env }
+        define: { 'window.config': env }
     };
 });

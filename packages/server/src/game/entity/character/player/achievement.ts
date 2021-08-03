@@ -1,21 +1,11 @@
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Data from '../../../../../data/achievements.json';
 import Messages from '../../../../network/messages';
 
+import type { AchievementData } from '@kaetram/common/types/info';
 import type NPC from '../../npc/npc';
 import type Player from './player';
-
-export interface AchievementData {
-    id: number;
-    name: string;
-    type?: number;
-    description: string;
-    count: number;
-    progress: number;
-    finished: boolean;
-}
 
 export default class Achievement {
     public progress = 0;
@@ -57,7 +47,7 @@ export default class Achievement {
         this.update();
 
         this.player.send(
-            new Messages.Quest(Packets.QuestOpcode.Progress, {
+            new Messages.Quest(Opcodes.Quest.Progress, {
                 id: this.id,
                 name: this.name,
                 progress: this.progress,
@@ -71,7 +61,7 @@ export default class Achievement {
         if (this.isThreshold() || this.hasItem()) this.finish(npc);
         else {
             this.player.send(
-                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                new Messages.NPC(Opcodes.NPC.Talk, {
                     id: npc.instance,
                     text: npc.talk(this.data.text!, this.player)
                 })
@@ -117,7 +107,7 @@ export default class Achievement {
         this.update();
 
         this.player.send(
-            new Messages.Quest(Packets.QuestOpcode.Finish, {
+            new Messages.Quest(Opcodes.Quest.Finish, {
                 id: this.id,
                 name: this.name,
                 isQuest: false

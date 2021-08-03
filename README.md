@@ -55,7 +55,7 @@ the server.
 
 #### NOTE: Node.js
 
-> You need to use a Node.js version greater than or equal to `v12.x`, following the
+> You need to use a Node.js version greater than or equal to `v12.20.0`, following the
 > [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases/), to have the most stable
 > experience when developing/experimenting with Kaetram. Older versions would not work with our
 > current package manager and dependencies.
@@ -64,9 +64,9 @@ the server.
 
 > MongoDB is not a requirement for Kaetram to run, but you can store and save user data if you
 > install it and run an online environment with all the features enabled. To do this, see
-> [Configuration](#configuration), and set `OFFLINE_MODE=false` in the
-> [server configuration](packages/server/.env). _If you do choose to install MongoDB, a user is not
-> necessary, but you can enable authentication with the `MONGODB_AUTH` setting._
+> [Configuration](#configuration), and set `OFFLINE_MODE=false`.
+> _If you do choose to install MongoDB, a user is not necessary, but you can enable authentication
+> with the `MONGODB_AUTH` setting._
 
 ### Installing
 
@@ -84,7 +84,7 @@ yarn
 
 ### Running
 
-To run live development builds, run
+To run live development builds, use
 
 ```console
 yarn dev
@@ -104,12 +104,11 @@ yarn start
 
 ### Configuration
 
-_Optionally_, if you would want some additional configuration, in the [server](packages/server/) and
-[client](packages/client/) packages, A file called `.env.defaults` will be used unless overridden by
-a new `.env` file.
+_Optionally_, if you would want some additional configuration, There will see a file named
+[`.env.defaults`](.env.defaults), and it's values will be used unless overridden by a new `.env`
+file, or by setting environmental variables.
 
-Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs. Make sure the
-network settings in the client match those in the server.
+Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs.
 
 ## Features
 
@@ -153,6 +152,13 @@ There is also support for a hub server. This can help connect servers across one
 players to interact with their friends across them in a variety of ways (private messaging and
 guilds). Furthermore, the hub serves as a gateway for determining what server to place players in.
 If a server is full, it simply returns another server that has room for the player.
+
+To enable using the hub server, see [Configuration](#configuration), and set these values to `true`.
+
+```sh
+API_ENABLED=true
+HUB_ENABLED=true
+```
 
 ## Roadmap
 
