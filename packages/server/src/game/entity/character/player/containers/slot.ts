@@ -1,13 +1,8 @@
-import Items from '../../../../../util/items';
-import log from '../../../../../util/log';
+import log from '@kaetram/common/util/log';
 
-interface SlotData {
-    index: number;
-    string: string;
-    count: number;
-    ability: number;
-    abilityLevel: number;
-}
+import Items from '../../../../../util/items';
+
+import type { SlotData } from '@kaetram/common/types/info';
 
 export default class Slot {
     public id = -1;
@@ -54,7 +49,7 @@ export default class Slot {
         this.count -= amount;
 
         if (this.count < 1)
-            log.error('[Slot] Item ' + this.id + ' has a count below 1 -> count: ' + this.count);
+            log.error(`[Slot] Item ${this.id} has a count below 1 -> count: ${this.count}`);
 
         this.verify();
     }

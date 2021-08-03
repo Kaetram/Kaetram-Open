@@ -1,8 +1,9 @@
-import config from '../config';
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+
 import Database from './database/database';
 import World from './game/world';
 import SocketHandler from './network/sockethandler';
-import log from './util/log';
 import Parser from './util/parser';
 
 import type Player from './game/entity/character/player/player';
@@ -15,7 +16,7 @@ class Main {
     private world!: World;
 
     public constructor() {
-        log.info('Initializing ' + config.name + ' game engine...');
+        log.info(`Initializing ${config.name} game engine...`);
 
         new Parser();
 
@@ -32,7 +33,7 @@ class Main {
 
                 let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
-                log.notice('Connect locally via http://' + host + ':' + config.socketioPort);
+                log.notice(`Connect locally via http://${host}:${config.socketioPort}`);
             };
 
             this.world = new World(this.socketHandler, this.database);

@@ -1,23 +1,23 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
-import Character from '../../src/game/entity/character/character';
 import Combat from '../../src/game/entity/character/combat/combat';
-import Mob from '../../src/game/entity/character/mob/mob';
 import Messages from '../../src/network/messages';
-import Utils from '../../src/util/utils';
-import type { HitData } from '../../src/game/entity/character/combat/hit';
+
+import type { HitData } from '@kaetram/common/types/info';
+import type Character from '../../src/game/entity/character/character';
+import type Mob from '../../src/game/entity/character/mob/mob';
 
 export default class OgreLord extends Combat {
-    dialogues: string[];
-    minions: Mob[];
-    lastSpawn: number;
-    loaded: boolean;
+    private dialogues: string[];
+    private minions: Mob[];
+    private lastSpawn: number;
+    private loaded: boolean;
 
-    talkingInterval!: NodeJS.Timeout | null;
-    updateInterval!: NodeJS.Timeout | null;
+    private talkingInterval!: NodeJS.Timeout | null;
+    private updateInterval!: NodeJS.Timeout | null;
 
     public constructor(character: Character) {
         super(character);
@@ -44,7 +44,7 @@ export default class OgreLord extends Combat {
         });
     }
 
-    load(): void {
+    private load(): void {
         this.talkingInterval = setInterval(() => {
             if (this.character.target) this.forceTalk(this.getMessage());
         }, 9000);
@@ -56,7 +56,7 @@ export default class OgreLord extends Combat {
         this.loaded = true;
     }
 
-    override hit(character: Character, target: Character, hitInfo: HitData): void {
+    public override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.isAttacked()) this.beginMinionAttack();
 
         if (!character.isNonDiagonal(target)) {
@@ -73,12 +73,12 @@ export default class OgreLord extends Combat {
         super.hit(character, target, hitInfo);
     }
 
-    forceTalk(message: string): void {
+    private forceTalk(message: string): void {
         if (!this.world) return;
 
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: this.character.region,
-            message: new Messages.NPC(Packets.NPCOpcode.Talk, {
+            message: new Messages.NPC(Opcodes.NPC.Talk, {
                 id: this.character.instance,
                 text: message,
                 nonNPC: true
@@ -86,11 +86,11 @@ export default class OgreLord extends Combat {
         });
     }
 
-    getMessage(): string {
+    private getMessage(): string {
         return this.dialogues[Utils.randomInt(0, this.dialogues.length - 1)];
     }
 
-    spawnMinions(): void {
+    private spawnMinions(): void {
         let xs = [414, 430, 415, 420, 429],
             ys = [172, 173, 183, 185, 180];
 
@@ -114,7 +114,7 @@ export default class OgreLord extends Combat {
         if (!this.loaded) this.load();
     }
 
-    beginMinionAttack(): void {
+    private beginMinionAttack(): void {
         if (!this.hasMinions()) return;
 
         _.each(this.minions, (minion: Mob) => {
@@ -124,7 +124,7 @@ export default class OgreLord extends Combat {
         });
     }
 
-    reset(): void {
+    private reset(): void {
         this.lastSpawn = 0;
 
         let listCopy = [...this.minions];
@@ -140,7 +140,7 @@ export default class OgreLord extends Combat {
         this.loaded = false;
     }
 
-    getRandomTarget(): Character | null {
+    private getRandomTarget(): Character | null {
         if (this.isAttacked()) {
             let keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
@@ -153,15 +153,15 @@ export default class OgreLord extends Combat {
         return null;
     }
 
-    hasMinions(): boolean {
+    private hasMinions(): boolean {
         return this.minions.length > 0;
     }
 
-    isLast(): boolean {
+    private isLast(): boolean {
         return this.minions.length === 1;
     }
 
-    canSpawn(): boolean {
+    private canSpawn(): boolean {
         return Date.now() - this.lastSpawn > 50000 && !this.hasMinions() && this.isAttacked();
     }
 }

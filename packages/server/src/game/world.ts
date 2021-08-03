@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import config from '@kaetram/common/config';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
-import config from '../../config';
 import Rocks from '../../data/professions/rocks';
 import Trees from '../../data/professions/trees';
 import Entities from '../controllers/entities';
@@ -17,7 +17,6 @@ import Discord from '../network/discord';
 import Messages, { Packet } from '../network/messages';
 import Network from '../network/network';
 import Region from '../region/region';
-import log from '../util/log';
 import Mobs from '../util/mobs';
 import Character from './entity/character/character';
 
@@ -140,10 +139,8 @@ export default class World {
 
     private async tick(): Promise<void> {
         let update = 1000 / this.updateTime,
-            setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (
-                fn: () => Promise<void>,
-                ms: number
-            ) => fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
+            setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (fn, ms) =>
+                fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
 
         setIntervalAsync(async () => {
             this.network.parsePackets();
@@ -156,7 +153,9 @@ export default class World {
 
         if (!config.hubEnabled) return;
 
-        if (!config.apiEnabled) log.warning('Server is in hub-mode but API is not enabled!');
+        await import('@kaetram/hub');
+
+        if (!config.apiEnabled) log.error('Server is in hub-mode but API is not enabled!');
 
         setIntervalAsync(async () => {
             this.api.pingHub();
@@ -170,7 +169,7 @@ export default class World {
     public kill(character: Character): void {
         character.applyDamage(character.hitPoints);
 
-        this.push(Packets.PushOpcode.Regions, [
+        this.push(Opcodes.Push.Regions, [
             {
                 regionId: character.region,
                 message: new Messages.Points({
@@ -202,7 +201,7 @@ export default class World {
         target.hit(attacker);
         target.applyDamage(damage, attacker);
 
-        this.push(Packets.PushOpcode.Regions, {
+        this.push(Opcodes.Push.Regions, {
             regionId: target.region,
             message: new Messages.Points({
                 id: target.instance,
@@ -223,10 +222,10 @@ export default class World {
                 attacker.removeTarget();
             });
 
-            this.push(Packets.PushOpcode.Regions, [
+            this.push(Opcodes.Push.Regions, [
                 {
                     regionId: target.region,
-                    message: new Messages.Combat(Packets.CombatOpcode.Finish, {
+                    message: new Messages.Combat(Opcodes.Combat.Finish, {
                         attackerId: attacker.instance,
                         targetId: target.instance
                     })
@@ -417,7 +416,7 @@ export default class World {
 
         if (!objectTile) return false;
 
-        let id = x + '-' + y,
+        let id = `${x}-${y}`,
             what = data[refId as keyof typeof data];
 
         if (id in what) return false;
@@ -438,7 +437,7 @@ export default class World {
         return false;
     }
 
-    public push(type: number, info: WorldPacket | WorldPacket[]): void {
+    public push(type: Opcodes.Push, info: WorldPacket | WorldPacket[]): void {
         if (_.isArray(info)) {
             _.each(info, (i) => {
                 this.push(type, i);
@@ -454,27 +453,27 @@ export default class World {
         }
 
         switch (type) {
-            case Packets.PushOpcode.Broadcast:
+            case Opcodes.Push.Broadcast:
                 this.network.pushBroadcast(info.message);
 
                 break;
 
-            case Packets.PushOpcode.Selectively:
+            case Opcodes.Push.Selectively:
                 this.network.pushSelectively(info.message, info.ignores as string[]);
 
                 break;
 
-            case Packets.PushOpcode.Player:
+            case Opcodes.Push.Player:
                 this.network.pushToPlayer(info.player as Player, info.message);
 
                 break;
 
-            case Packets.PushOpcode.Players:
+            case Opcodes.Push.Players:
                 this.network.pushToPlayers(info.players as string[], info.message);
 
                 break;
 
-            case Packets.PushOpcode.Region:
+            case Opcodes.Push.Region:
                 this.network.pushToRegion(
                     info.regionId as string,
                     info.message,
@@ -483,7 +482,7 @@ export default class World {
 
                 break;
 
-            case Packets.PushOpcode.Regions:
+            case Opcodes.Push.Regions:
                 this.network.pushToAdjacentRegions(
                     info.regionId as string,
                     info.message,
@@ -492,12 +491,12 @@ export default class World {
 
                 break;
 
-            case Packets.PushOpcode.NameArray:
+            case Opcodes.Push.NameArray:
                 this.network.pushToNameArray(info.names as string[], info.message);
 
                 break;
 
-            case Packets.PushOpcode.OldRegions:
+            case Opcodes.Push.OldRegions:
                 this.network.pushToOldRegions(info.player as Player, info.message);
 
                 break;
@@ -511,7 +510,7 @@ export default class World {
         isGlobal?: boolean,
         withBubble?: boolean
     ): void {
-        this.push(Packets.PushOpcode.Broadcast, {
+        this.push(Opcodes.Push.Broadcast, {
             message: new Messages.Chat({
                 name: source,
                 text: message,

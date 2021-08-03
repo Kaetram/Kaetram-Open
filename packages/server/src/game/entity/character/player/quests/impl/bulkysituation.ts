@@ -1,4 +1,4 @@
-import Packets from '@kaetram/common/src/packets';
+import { Packets, Opcodes } from '@kaetram/common/network';
 
 import Messages from '../../../../../../network/messages';
 import Quest from '../quest';
@@ -28,7 +28,7 @@ export default class BulkySituation extends Quest {
             this.lastNPC = npc;
 
             this.player.send(
-                new Messages.NPC(Packets.NPCOpcode.Talk, {
+                new Messages.NPC(Opcodes.NPC.Talk, {
                     id: npc.instance,
                     text: npc.talk(conversation, this.player)
                 })
@@ -60,7 +60,7 @@ export default class BulkySituation extends Quest {
         this.stage++;
 
         this.player.send(
-            new Messages.Quest(Packets.QuestOpcode.Progress, {
+            new Messages.Quest(Opcodes.Quest.Progress, {
                 id: this.id,
                 stage: this.stage,
                 isQuest: true

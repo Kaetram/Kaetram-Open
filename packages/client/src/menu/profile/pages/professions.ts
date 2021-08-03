@@ -3,16 +3,8 @@ import _ from 'lodash';
 
 import Page from '../page';
 
-/**
- * @todo
- * Replace this with a `common` interface linking to the server's `Profession` class.
- */
-interface ProfessionsInfo {
-    id: string;
-    name: string;
-    level: number;
-    percentage: number;
-}
+import type { ProfessionsInfo } from '@kaetram/common/types/info';
+import type { ProfessionUpdateData } from '@kaetram/common/types/messages';
 
 export default class Professions extends Page {
     private professions = $('#professionsList');
@@ -43,17 +35,17 @@ export default class Professions extends Page {
         });
     }
 
-    public sync(info: ProfessionsInfo): void {
+    public sync(info: ProfessionUpdateData): void {
         if (!info) return;
 
         $(`#professionName${info.id}`).find('p').text(`Level ${info.level} | ${info.percentage}%`);
     }
 
-    private getItem(id: string): JQuery {
+    private getItem(id: number): JQuery {
         return $(`<div id="professionItem${id}" class="professionItem"></div>`);
     }
 
-    private getName(id: string): JQuery {
+    private getName(id: number): JQuery {
         return $(`<div id="professionName${id}" class="professionName"></div>`);
     }
 }

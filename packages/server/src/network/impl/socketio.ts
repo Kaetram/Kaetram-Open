@@ -1,8 +1,9 @@
 import { Server } from 'socket.io';
 
-import config from '../../../config';
-import log from '../../util/log';
-import Utils from '../../util/utils';
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+
 import Connection from '../connection';
 import WebSocket, { AnySocket } from '../websocket';
 

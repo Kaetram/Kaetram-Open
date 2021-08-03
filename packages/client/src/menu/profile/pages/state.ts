@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes, Packets } from '@kaetram/common/network';
 
 import Page from '../page';
 
@@ -57,23 +57,23 @@ export default class State extends Page {
         this.loaded = true;
 
         this.weaponSlot.on('click', () =>
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'weapon'])
+            this.game.socket.send(Packets.Equipment, [Opcodes.Equipment.Unequip, 'weapon'])
         );
 
         this.armourSlot.on('click', () =>
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'armour'])
+            this.game.socket.send(Packets.Equipment, [Opcodes.Equipment.Unequip, 'armour'])
         );
 
         this.pendantSlot.on('click', () =>
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'pendant'])
+            this.game.socket.send(Packets.Equipment, [Opcodes.Equipment.Unequip, 'pendant'])
         );
 
         this.ringSlot.on('click', () =>
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'ring'])
+            this.game.socket.send(Packets.Equipment, [Opcodes.Equipment.Unequip, 'ring'])
         );
 
         this.bootsSlot.on('click', () =>
-            this.game.socket.send(Packets.Equipment, [Packets.EquipmentOpcode.Unequip, 'boots'])
+            this.game.socket.send(Packets.Equipment, [Opcodes.Equipment.Unequip, 'boots'])
         );
     }
 
