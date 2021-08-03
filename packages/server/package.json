@@ -7,6 +7,7 @@
     },
     "dependencies": {
         "@kaetram/common": "workspace:packages/common",
+        "@kaetram/hub": "workspace:packages/hub",
         "axios": "^0.21.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",

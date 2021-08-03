@@ -139,10 +139,8 @@ export default class World {
 
     private async tick(): Promise<void> {
         let update = 1000 / this.updateTime,
-            setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (
-                fn: () => Promise<void>,
-                ms: number
-            ) => fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
+            setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (fn, ms) =>
+                fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
 
         setIntervalAsync(async () => {
             this.network.parsePackets();
@@ -155,7 +153,9 @@ export default class World {
 
         if (!config.hubEnabled) return;
 
-        if (!config.apiEnabled) log.warning('Server is in hub-mode but API is not enabled!');
+        await import('@kaetram/hub');
+
+        if (!config.apiEnabled) log.error('Server is in hub-mode but API is not enabled!');
 
         setIntervalAsync(async () => {
             this.api.pingHub();
