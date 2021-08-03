@@ -33,6 +33,7 @@ interface RegionMapData {
 
 interface StorageData {
     new: boolean;
+    world: string;
     clientVersion: number;
     player: PlayerData;
     settings: Settings;
@@ -61,6 +62,7 @@ export default class Storage {
     private create(): StorageData {
         return {
             new: true,
+            world: window.config.serverId,
             clientVersion: parseFloat(this.app.config.version),
 
             player: {
