@@ -20,8 +20,12 @@ export default abstract class Page {
         return this.body.css('display') === 'block';
     }
 
+    public load(): void {
+        // Not implemented
+    }
+
     public resize(): void {
-        // not implemented
+        // Not implemented
     }
 
     public getImageFormat(name: string): string {

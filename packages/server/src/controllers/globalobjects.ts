@@ -1,5 +1,5 @@
 import Objects, { ObjectsData } from '../util/objects';
-import Utils from '../util/utils';
+import Utils from '@kaetram/common/util/utils';
 
 import type { Tree } from '@kaetram/common/types/map';
 import type Player from '../game/entity/character/player/player';

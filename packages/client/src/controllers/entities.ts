@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
@@ -12,6 +11,7 @@ import Projectile from '../entity/objects/projectile';
 import Grids from '../renderer/grids';
 import SpritesController from './sprites';
 
+import type { ProjectileData } from '@kaetram/common/types/messages';
 import type Character from '../entity/character/character';
 import type Equipment from '../entity/character/player/equipment/equipment';
 import type Weapon from '../entity/character/player/equipment/weapon';
@@ -30,7 +30,10 @@ export interface Movable {
     attackerId: string;
     hitType: number;
 }
-export type AnyEntity = Entity & Player & Mob & Projectile & Weapon & Equipment & Movable;
+/**
+ * TODO: Refactor once on TypeScript 4.4
+ */
+export type AnyEntity = Entity & Player & Mob & ProjectileData & Weapon & Equipment & Movable;
 
 export default class EntitiesController {
     private renderer;
@@ -45,7 +48,7 @@ export default class EntitiesController {
         this.renderer = game.renderer;
     }
 
-    public load(): Promise<void> {
+    public load(): void {
         let { game, sprites } = this;
 
         game.app.sendStatus('Loading sprites');
@@ -164,7 +167,7 @@ export default class EntitiesController {
 
                     if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
                         game.socket.send(Packets.Projectile, [
-                            Packets.ProjectileOpcode.Impact,
+                            Opcodes.Projectile.Impact,
                             info.id,
                             target.id
                         ]);

@@ -1,4 +1,4 @@
-import log from '../../../../util/log';
+import log from '@kaetram/common/util/log';
 
 import type Player from './player';
 

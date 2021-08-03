@@ -6,12 +6,12 @@ build({
     entryPoints: ['src/main.ts'],
     outfile: 'dist/index.js',
     bundle: true,
-    minify: false,
+    minify: true,
     platform: 'node',
     sourcemap: true,
     plugins: [
         nodeExternalsPlugin({
-            allowList: ['@kaetram/common']
+            allowList: ['@kaetram/common', '@kaetram/hub']
         })
     ]
 });

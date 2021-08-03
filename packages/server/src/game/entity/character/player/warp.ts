@@ -12,7 +12,7 @@ export default class Warp {
 
     public warp(id: number): void {
         if (!this.isCooldown()) {
-            this.player.notify('You must wait another ' + this.getDuration() + ' to warp.');
+            this.player.notify(`You must wait another ${this.getDuration()} to warp.`);
             return;
         }
 
@@ -58,8 +58,8 @@ export default class Warp {
         if (!difference) return '5 minutes';
 
         return difference > 60000
-            ? Math.ceil(difference / 60000) + ' minutes'
-            : Math.floor(difference / 1000) + ' seconds';
+            ? `${Math.ceil(difference / 60000)} minutes`
+            : `${Math.floor(difference / 1000)} seconds`;
     }
 
     private getDifference(): number {

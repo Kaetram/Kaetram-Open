@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import Blob from '../renderer/bubbles/blob';
 
-import type Entity from '../entity/entity';
+import type { BubbleInfo } from '@kaetram/common/types/info';
 import type Game from '../game';
 
 export default class BubbleController {
@@ -26,7 +26,7 @@ export default class BubbleController {
         message: string,
         duration = 5000,
         isObject?: boolean,
-        info?: Entity
+        info?: BubbleInfo
     ): void {
         let { bubbles, game, container } = this,
             bubble = bubbles[id];
@@ -48,7 +48,7 @@ export default class BubbleController {
         }
     }
 
-    public setTo(info: Entity | undefined): void {
+    public setTo(info: BubbleInfo | undefined): void {
         if (!info) return;
 
         let bubble = this.get(info.id),

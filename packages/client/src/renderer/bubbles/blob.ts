@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 import Timer from '../../utils/timer';
 
-import type Entity from '../../entity/entity';
+import type { BubbleInfo } from '@kaetram/common/types/info';
 
 export default class Blob {
     private timer;
@@ -13,7 +13,7 @@ export default class Blob {
         public element: JQuery,
         duration = 5000,
         isObject?: boolean,
-        public info?: Entity
+        public info?: BubbleInfo
     ) {
         this.timer = new Timer(Date.now(), duration);
 
