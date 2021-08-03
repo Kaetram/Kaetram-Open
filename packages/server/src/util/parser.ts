@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import log from '@kaetram/common/util/log';
+
 import abilityData from '../../data/abilities.json';
 import combatPlugins from '../../data/combat';
 import itemPlugins from '../../data/items';
@@ -8,7 +10,6 @@ import mobData from '../../data/mobs.json';
 import npcData from '../../data/npcs.json';
 import objectData from '../../data/objects.json';
 import shopsData from '../../data/shops.json';
-import log from '../util/log';
 import Abilities from './abilities';
 import Constants from './constants';
 import Formulas from './formulas';
@@ -101,7 +102,7 @@ export default class Parser {
             mobCounter++;
         });
 
-        log.info('Finished loading ' + mobCounter + ' mobs.');
+        log.info(`Finished loading ${mobCounter} mobs.`);
     }
 
     private loadNPCData(): void {
@@ -125,7 +126,7 @@ export default class Parser {
             npcCounter++;
         });
 
-        log.info('Finished loading ' + npcCounter + ' NPCs.');
+        log.info(`Finished loading ${npcCounter} NPCs.`);
     }
 
     private loadItemData(): void {
@@ -190,7 +191,7 @@ export default class Parser {
             itemCounter++;
         });
 
-        log.info('Finished loading ' + itemCounter + ' items.');
+        log.info(`Finished loading ${itemCounter} items.`);
     }
 
     private loadAbilityData(): void {
@@ -212,7 +213,7 @@ export default class Parser {
             skillCounter++;
         });
 
-        log.info('Finished loading ' + skillCounter + ' skills.');
+        log.info(`Finished loading ${skillCounter} skills.`);
     }
 
     private loadShops(): void {
@@ -237,7 +238,7 @@ export default class Parser {
             shopCounter++;
         });
 
-        log.info('Finished loading ' + shopCounter + ' shops.');
+        log.info(`Finished loading ${shopCounter} shops.`);
     }
 
     /**
@@ -291,7 +292,7 @@ export default class Parser {
             objectCounter++;
         });
 
-        log.info('Finished loading ' + objectCounter + ' global objects.');
+        log.info(`Finished loading ${objectCounter} global objects.`);
 
         this.readyCallback?.();
     }

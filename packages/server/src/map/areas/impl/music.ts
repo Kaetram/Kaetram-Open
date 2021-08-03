@@ -1,7 +1,8 @@
-import { ProcessedArea } from '@kaetram/common/types/map';
 import World from '../../../game/world';
 import Area from '../area';
 import Areas from '../areas';
+
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Music extends Areas {
     public constructor(data: ProcessedArea[], world: World) {
