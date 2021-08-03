@@ -11,7 +11,7 @@ import type Game from './game';
 export interface Config {
     name: string;
     /** Server host */
-    ip: string;
+    host: string;
     /** Server port */
     port: number;
     /** Game version on the server */
@@ -28,11 +28,11 @@ export default class App {
     public config: Config = {
         debug: import.meta.env.DEV,
         name: window.config.name,
-        ip: window.config.host,
+        host: window.config.host,
         port: window.config.socketioPort,
         version: window.config.gver,
         ssl: window.config.ssl,
-        worldSwitch: window.config.worldSwitch,
+        worldSwitch: window.config.hubEnabled && window.config.worldSwitch,
         hub:
             window.config.hubEnabled &&
             (window.config.ssl
@@ -101,7 +101,6 @@ export default class App {
             git,
             rememberMe,
             respawn,
-            config,
             body,
             canvas
         } = this;
@@ -154,47 +153,6 @@ export default class App {
         window.scrollTo(0, 1);
 
         this.window.on('resize', () => this.game.resize());
-
-        // Default Server ID
-        if (!window.localStorage.getItem('world'))
-            window.localStorage.setItem('world', 'kaetram_server01');
-
-        if (config.worldSwitch && config.hub)
-            $.get(`${config.hub}/all`, (servers) => {
-                let serverIndex = 0;
-                for (let [i, server] of servers.entries()) {
-                    let row = $(document.createElement('tr'));
-
-                    row.addClass('server-list');
-                    row.append($(document.createElement('td')).text(server.serverId));
-                    row.append(
-                        $(document.createElement('td')).text(
-                            `${server.playerCount}/${server.maxPlayers}`
-                        )
-                    );
-
-                    $('#worlds-list').append(row);
-
-                    row.on('click', () => {
-                        console.log(server);
-                    });
-
-                    if (server.serverId === window.localStorage.getItem('world')) {
-                        serverIndex = i;
-
-                        row.addClass('active');
-                    }
-                }
-                let currentWorld = servers[serverIndex];
-
-                $('#current-world-index').text(serverIndex);
-                $('#current-world-id').text(currentWorld.serverId);
-                $('#current-world-count').text(
-                    `${currentWorld.playerCount}/${currentWorld.maxPlayers}`
-                );
-
-                $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
-            });
 
         $(document).on('keydown', ({ which }) => which !== Modules.Keys.Enter);
 

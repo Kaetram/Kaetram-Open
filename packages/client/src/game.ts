@@ -30,6 +30,8 @@ import { getUserAgent, supportsWebGL } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
 
+import type { APIData } from '@kaetram/common/types/api';
+
 export default class Game {
     public id!: string;
 
@@ -64,6 +66,8 @@ export default class Game {
     public bubble!: BubbleController;
     public camera!: Camera;
     public inventory!: Inventory;
+
+    public world!: APIData;
 
     public constructor(public app: App) {
         this.loadRenderer();
@@ -133,7 +137,16 @@ export default class Game {
     }
 
     private loadControllers(): void {
-        let { app } = this;
+        let { app } = this,
+            { config } = app;
+
+        if (config.worldSwitch) {
+            // Default Server ID
+            if (!window.localStorage.getItem('world'))
+                window.localStorage.setItem('world', window.config.serverId);
+
+            $.get(`${config.hub}/all`, (servers) => this.loadWorlds(servers));
+        }
 
         app.sendStatus('Loading local storage');
 
@@ -163,6 +176,40 @@ export default class Game {
         this.setMenu(new MenuController(this));
 
         this.loadStorage();
+    }
+
+    private loadWorlds(servers: APIData[]): void {
+        for (let [i, server] of servers.entries()) {
+            let row = $(document.createElement('tr'));
+
+            row.addClass('server-list');
+            row.append($(document.createElement('td')).text(server.serverId));
+            row.append(
+                $(document.createElement('td')).text(`${server.playerCount}/${server.maxPlayers}`)
+            );
+
+            $('#worlds-list').append(row);
+
+            let setServer = () => {
+                this.world = server;
+
+                window.localStorage.setItem('world', server.serverId);
+
+                $('.server-list').removeClass('active');
+                row.addClass('active');
+
+                $('#current-world-index').text(i);
+
+                $('#current-world-id').text(server.serverId);
+                $('#current-world-count').text(`${server.playerCount}/${server.maxPlayers}`);
+
+                $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
+            };
+
+            row.on('click', setServer);
+
+            if (server.serverId === window.localStorage.getItem('world')) setServer();
+        }
     }
 
     public loadMap(): void {
