@@ -8,6 +8,7 @@ import type { Entity, Layer, LayerObject, MapData, Property, Tile, Tileset } fro
 
 export default class ProcessMap {
     #map!: ProcessedMap;
+    #collisionTiles: { [tileId: number]: boolean } = {};
 
     public constructor(private data: MapData) {}
 
@@ -23,7 +24,6 @@ export default class ProcessMap {
             data: [],
 
             collisions: [],
-            tileCollisions: [],
             polygons: {},
             entities: {},
             staticEntities: {},
@@ -121,9 +121,9 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { polygons, high, objects, trees, rocks, cursors, tileCollisions } = this.#map;
+            { polygons, high, objects, trees, rocks, cursors } = this.#map;
 
-        if (this.isColliding(name) && !(tileId in polygons)) tileCollisions.push(tileId);
+        if (this.isColliding(name) && !(tileId in polygons)) this.#collisionTiles[tileId] = true;
 
         switch (name) {
             case 'v':
@@ -174,8 +174,7 @@ export default class ProcessMap {
     }
 
     private parseTileLayerData(mapData: number[]): void {
-        let { data, collisions, trees, treeIndexes, rocks, rockIndexes, tileCollisions } =
-            this.#map;
+        let { data, collisions, trees, treeIndexes, rocks, rockIndexes } = this.#map;
 
         _.each(mapData, (value, index) => {
             if (value < 1) return;
@@ -184,7 +183,7 @@ export default class ProcessMap {
             else if (_.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
 
-            if (tileCollisions.includes(value)) collisions.push(index);
+            if (value in this.#collisionTiles) collisions.push(index);
             if (value in trees) treeIndexes.push(index);
             if (value in rocks) rockIndexes.push(index);
         });
