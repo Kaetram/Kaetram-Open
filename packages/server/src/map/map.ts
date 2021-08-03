@@ -49,7 +49,6 @@ export default class Map {
     public height!: number;
 
     public collisions!: number[];
-    public tileCollisions!: number[];
     public high!: number[];
     public chests!: ProcessedArea[];
     public tilesets!: ProcessedTileset[];
@@ -103,7 +102,6 @@ export default class Map {
         this.width = map.width;
         this.height = map.height;
         this.collisions = map.collisions;
-        this.tileCollisions = map.tileCollisions;
         this.high = map.high;
         this.chests = map.areas.chest;
 
