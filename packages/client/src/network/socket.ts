@@ -29,14 +29,10 @@ export default class Socket {
     private async getServer(
         callback: (data: { host: string; port: number } | 'error') => void
     ): Promise<void> {
-        if (!this.config.hubEnabled) return callback('error');
-
-        let url = `http://${this.config.ip}:${this.config.port}/server`;
-
-        if (this.config.ssl) url = `https://${this.config.ip}/server`;
+        if (!this.config.hub) return callback('error');
 
         try {
-            let response = await $.get(url);
+            let response = await $.get(`${this.config.hub}/server`);
 
             callback(typeof response === 'string' ? 'error' : response);
         } catch {
@@ -46,14 +42,14 @@ export default class Socket {
 
     public connect(): void {
         this.getServer((result) => {
-            let url;
-
-            if (result === 'error')
-                url = this.config.ssl
-                    ? `wss://${this.config.ip}`
-                    : `ws://${this.config.ip}:${this.config.port}`;
-            else if (this.config.ssl) url = `wss://${result.host}`;
-            else url = `ws://${result.host}:${result.port}`;
+            let url =
+                result === 'error'
+                    ? this.config.ssl
+                        ? `wss://${this.config.ip}`
+                        : `ws://${this.config.ip}:${this.config.port}`
+                    : this.config.ssl
+                    ? `wss://${result.host}`
+                    : `ws://${result.host}:${result.port}`;
 
             this.connection = io(url, {
                 forceNew: true,

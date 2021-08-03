@@ -20,7 +20,7 @@ export interface Config {
     ssl: boolean;
     debug: boolean;
     worldSwitch: boolean;
-    hubEnabled: boolean;
+    hub: string | false;
 }
 
 export default class App {
@@ -33,7 +33,11 @@ export default class App {
         version: window.config.gver,
         ssl: window.config.ssl,
         worldSwitch: window.config.worldSwitch,
-        hubEnabled: window.config.hubEnabled
+        hub:
+            window.config.hubEnabled &&
+            (window.config.ssl
+                ? `https://${window.config.hubHost}`
+                : `http://${window.config.hubHost}:${window.config.hubPort}`)
     };
 
     public body = $('body');
@@ -155,24 +159,31 @@ export default class App {
         if (!window.localStorage.getItem('world'))
             window.localStorage.setItem('world', 'kaetram_server01');
 
-        if (config.worldSwitch)
-            $.get('https://hub.kaetram.com/all', (servers) => {
+        if (config.worldSwitch && config.hub)
+            $.get(`${config.hub}/all`, (servers) => {
                 let serverIndex = 0;
                 for (let [i, server] of servers.entries()) {
                     let row = $(document.createElement('tr'));
+
+                    row.addClass('server-list');
                     row.append($(document.createElement('td')).text(server.serverId));
                     row.append(
                         $(document.createElement('td')).text(
                             `${server.playerCount}/${server.maxPlayers}`
                         )
                     );
+
                     $('#worlds-list').append(row);
+
                     row.on('click', () => {
-                        // TODO: This is when a server is clicked with the local `server` having the world data.
-                        // log.info(server);
+                        console.log(server);
                     });
 
-                    if (server.serverId === window.localStorage.getItem('world')) serverIndex = i;
+                    if (server.serverId === window.localStorage.getItem('world')) {
+                        serverIndex = i;
+
+                        row.addClass('active');
+                    }
                 }
                 let currentWorld = servers[serverIndex];
 
@@ -237,7 +248,7 @@ export default class App {
             this.updateRange($(input))
         );
 
-        if (!this.config.debug && location.hostname !== 'localhost')
+        if (location.hostname === 'kaetram.com')
             $.ajax({
                 url: 'https://c6.patreon.com/becomePatronButton.bundle.js',
                 dataType: 'script',
