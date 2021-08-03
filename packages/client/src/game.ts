@@ -140,17 +140,11 @@ export default class Game {
         let { app } = this,
             { config } = app;
 
-        if (config.worldSwitch) {
-            // Default Server ID
-            if (!window.localStorage.getItem('world'))
-                window.localStorage.setItem('world', window.config.serverId);
-
-            $.get(`${config.hub}/all`, (servers) => this.loadWorlds(servers));
-        }
-
         app.sendStatus('Loading local storage');
 
         this.setStorage(new Storage(app));
+
+        if (config.worldSwitch) $.get(`${config.hub}/all`, (servers) => this.loadWorlds(servers));
 
         this.loadMap();
 
@@ -179,6 +173,8 @@ export default class Game {
     }
 
     private loadWorlds(servers: APIData[]): void {
+        let { storage } = this;
+
         for (let [i, server] of servers.entries()) {
             let row = $(document.createElement('tr'));
 
@@ -193,7 +189,8 @@ export default class Game {
             let setServer = () => {
                 this.world = server;
 
-                window.localStorage.setItem('world', server.serverId);
+                storage.data.world = server.serverId;
+                storage.save();
 
                 $('.server-list').removeClass('active');
                 row.addClass('active');
@@ -208,7 +205,7 @@ export default class Game {
 
             row.on('click', setServer);
 
-            if (server.serverId === window.localStorage.getItem('world')) setServer();
+            if (server.serverId === storage.data.world) setServer();
         }
     }
 
