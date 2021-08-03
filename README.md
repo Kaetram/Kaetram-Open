@@ -104,9 +104,9 @@ yarn start
 
 ### Configuration
 
-_Optionally_, if you would want some additional configuration, You will see a file called
-`.env.defaults`, and it's values will be used unless overridden by a new `.env` file, or by setting
-environmental variables.
+_Optionally_, if you would want some additional configuration, There will see a file named
+[`.env.defaults`](`.env.defaults`), and it's values will be used unless overridden by a new `.env`
+file, or by setting environmental variables.
 
 Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs.
 
@@ -152,6 +152,13 @@ There is also support for a hub server. This can help connect servers across one
 players to interact with their friends across them in a variety of ways (private messaging and
 guilds). Furthermore, the hub serves as a gateway for determining what server to place players in.
 If a server is full, it simply returns another server that has room for the player.
+
+To enable using the hub server, see [Configuration](#configuration), and set these values to `true`.
+
+```sh
+API_ENABLED=true
+HUB_ENABLED=true
+```
 
 ## Roadmap
 
