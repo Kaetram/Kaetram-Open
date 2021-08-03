@@ -119,7 +119,7 @@ export default class Regions {
 
     public forEachRegion(callback: (region: string) => void): void {
         for (let x = 0; x < this.regionWidth; x++)
-            for (let y = 0; y < this.regionHeight; y++) callback(x + '-' + y);
+            for (let y = 0; y < this.regionHeight; y++) callback(`${x}-${y}`);
     }
 
     public forEachSurroundingRegion(
@@ -130,7 +130,7 @@ export default class Regions {
         if (!regionId) return;
 
         _.each(this.getSurroundingRegions(regionId, offset), (region) => {
-            callback(region.x + '-' + region.y);
+            callback(`${region.x}-${region.y}`);
         });
     }
 
@@ -142,12 +142,12 @@ export default class Regions {
         if (!regionId) return;
 
         _.each(this.getAdjacentRegions(regionId, offset), (region) => {
-            callback(region.x + '-' + region.y);
+            callback(`${region.x}-${region.y}`);
         });
     }
 
     public regionIdFromPosition(x: number, y: number): string {
-        return Math.floor(x / this.regionWidth) + '-' + Math.floor(y / this.regionHeight);
+        return `${Math.floor(x / this.regionWidth)}-${Math.floor(y / this.regionHeight)}`;
     }
 
     private regionIdToPosition(id: string): Pos {
@@ -175,7 +175,7 @@ export default class Regions {
         let stringList: string[] = [];
 
         _.each(regions, (region) => {
-            stringList.push(region.x + '-' + region.y);
+            stringList.push(`${region.x}-${region.y}`);
         });
 
         return stringList;

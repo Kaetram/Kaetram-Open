@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import install from './lib/pwa';
 import { isMobile, isTablet } from './utils/detect';
@@ -9,8 +9,9 @@ import { isMobile, isTablet } from './utils/detect';
 import type Game from './game';
 
 export interface Config {
+    name: string;
     /** Server host */
-    ip: string;
+    host: string;
     /** Server port */
     port: number;
     /** Game version on the server */
@@ -19,18 +20,24 @@ export interface Config {
     ssl: boolean;
     debug: boolean;
     worldSwitch: boolean;
+    hub: string | false;
 }
 
 export default class App {
-    // Do not refactor env variables assignment
-    // `process.env.VARIABLE` is replaced by webpack during build process
+    // `window.config` is replaced by vite during build process
     public config: Config = {
-        ip: process.env.IP!,
-        port: parseInt(process.env.PORT!),
-        version: process.env.VERSION!,
-        ssl: !!process.env.SSL,
         debug: import.meta.env.DEV,
-        worldSwitch: !!process.env.WORLD_SWITCH
+        name: window.config.name,
+        host: window.config.host,
+        port: window.config.socketioPort,
+        version: window.config.gver,
+        ssl: window.config.ssl,
+        worldSwitch: window.config.hubEnabled && window.config.worldSwitch,
+        hub:
+            window.config.hubEnabled &&
+            (window.config.ssl
+                ? `https://${window.config.host}`
+                : `http://${window.config.host}:${window.config.hubPort}`)
     };
 
     public body = $('body');
@@ -94,7 +101,6 @@ export default class App {
             git,
             rememberMe,
             respawn,
-            config,
             body,
             canvas
         } = this;
@@ -148,44 +154,10 @@ export default class App {
 
         this.window.on('resize', () => this.game.resize());
 
-        // Default Server ID
-        if (!window.localStorage.getItem('world'))
-            window.localStorage.setItem('world', 'kaetram_server01');
-
-        if (config.worldSwitch)
-            $.get('https://hub.kaetram.com/all', (servers) => {
-                let serverIndex = 0;
-                for (let [i, server] of servers.entries()) {
-                    let row = $(document.createElement('tr'));
-                    row.append($(document.createElement('td')).text(server.serverId));
-                    row.append(
-                        $(document.createElement('td')).text(
-                            `${server.playerCount}/${server.maxPlayers}`
-                        )
-                    );
-                    $('#worlds-list').append(row);
-                    row.on('click', () => {
-                        // TODO: This is when a server is clicked with the local `server` having the world data.
-                        // log.info(server);
-                    });
-
-                    if (server.serverId === window.localStorage.getItem('world')) serverIndex = i;
-                }
-                let currentWorld = servers[serverIndex];
-
-                $('#current-world-index').text(serverIndex);
-                $('#current-world-id').text(currentWorld.serverId);
-                $('#current-world-count').text(
-                    `${currentWorld.playerCount}/${currentWorld.maxPlayers}`
-                );
-
-                $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
-            });
-
         $(document).on('keydown', ({ which }) => which !== Modules.Keys.Enter);
 
         $(document).on('keydown', ({ which, keyCode }) => {
-            let key = which || keyCode || 0,
+            let key: Modules.Keys = which || keyCode || 0,
                 { game } = this;
 
             if (!game) return;
@@ -234,7 +206,7 @@ export default class App {
             this.updateRange($(input))
         );
 
-        if (!this.config.debug && location.hostname !== 'localhost')
+        if (location.hostname === 'kaetram.com')
             $.ajax({
                 url: 'https://c6.patreon.com/becomePatronButton.bundle.js',
                 dataType: 'script',

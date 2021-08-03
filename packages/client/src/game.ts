@@ -1,11 +1,9 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Packets } from '@kaetram/common/network';
 
 import App from './app';
-
 import AudioController from './controllers/audio';
 import BubbleController from './controllers/bubble';
 import EntitiesController from './controllers/entities';
@@ -14,32 +12,28 @@ import InputController from './controllers/input';
 import MenuController from './controllers/menu';
 import Pointer from './controllers/pointer';
 import Zoning from './controllers/zoning';
-
 import Character from './entity/character/character';
 import Player from './entity/character/player/player';
 import PlayerHandler from './entity/character/player/playerhandler';
 import Entity from './entity/entity';
 import Sprite from './entity/sprite';
-
 import Map from './map/map';
-
 import Inventory from './menu/inventory';
-
 import Connection from './network/connection';
 import Messages from './network/messages';
 import Socket from './network/socket';
-
 import Camera from './renderer/camera';
 import Overlay from './renderer/overlay';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
-
 import { getUserAgent, supportsWebGL } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
 
+import type { APIData } from '@kaetram/common/types/api';
+
 export default class Game {
-    public id = -1;
+    public id!: string;
 
     public socket!: Socket;
     public messages!: Messages;
@@ -72,7 +66,8 @@ export default class Game {
     public bubble!: BubbleController;
     public camera!: Camera;
     public inventory!: Inventory;
-    public development!: boolean;
+
+    public world!: APIData;
 
     public constructor(public app: App) {
         this.loadRenderer();
@@ -142,11 +137,14 @@ export default class Game {
     }
 
     private loadControllers(): void {
-        let { app } = this;
+        let { app } = this,
+            { config } = app;
 
         app.sendStatus('Loading local storage');
 
         this.setStorage(new Storage(app));
+
+        if (config.worldSwitch) $.get(`${config.hub}/all`, (servers) => this.loadWorlds(servers));
 
         this.loadMap();
 
@@ -172,6 +170,43 @@ export default class Game {
         this.setMenu(new MenuController(this));
 
         this.loadStorage();
+    }
+
+    private loadWorlds(servers: APIData[]): void {
+        let { storage } = this;
+
+        for (let [i, server] of servers.entries()) {
+            let row = $(document.createElement('tr'));
+
+            row.addClass('server-list');
+            row.append($(document.createElement('td')).text(server.serverId));
+            row.append(
+                $(document.createElement('td')).text(`${server.playerCount}/${server.maxPlayers}`)
+            );
+
+            $('#worlds-list').append(row);
+
+            let setServer = () => {
+                this.world = server;
+
+                storage.data.world = server.serverId;
+                storage.save();
+
+                $('.server-list').removeClass('active');
+                row.addClass('active');
+
+                $('#current-world-index').text(i);
+
+                $('#current-world-id').text(server.serverId);
+                $('#current-world-count').text(`${server.playerCount}/${server.maxPlayers}`);
+
+                $('#worlds-switch').on('click', () => $('#worlds-popup').toggle());
+            };
+
+            row.on('click', setServer);
+
+            if (server.serverId === storage.data.world) setServer();
+        }
     }
 
     public loadMap(): void {
@@ -346,7 +381,7 @@ export default class Game {
     // tradeWith(player: Player): void {
     //     if (!player || player.id === this.player.id) return;
 
-    //     this.socket.send(Packets.Trade, [Packets.TradeOpcode.Request, player.id]);
+    //     this.socket.send(Packets.Trade, [Opcodes.Trade.Request, player.id]);
     // }
 
     public resize(): void {

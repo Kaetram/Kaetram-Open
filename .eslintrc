@@ -28,9 +28,10 @@
 
         "prefer-let/prefer-let": "error",
 
-        "prefer-const": "off",
         "no-fallthrough": "off",
+        "prefer-const": "off",
 
+        "prefer-template": "warn",
         "curly": ["warn", "multi"],
         "one-var": ["warn", "consecutive"],
         "yoda": "warn",
