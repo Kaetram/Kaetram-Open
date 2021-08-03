@@ -232,7 +232,7 @@ export default class API {
     }
 
     private getUrl(path: string): string {
-        return `http://${config.hubHost}:${config.hubPort}/${path}`;
+        return `http://${config.host}:${config.hubPort}/${path}`;
     }
 
     private returnError(response: express.Response, error: APIConstants, message: string): void {

@@ -36,8 +36,8 @@ export default class App {
         hub:
             window.config.hubEnabled &&
             (window.config.ssl
-                ? `https://${window.config.hubHost}`
-                : `http://${window.config.hubHost}:${window.config.hubPort}`)
+                ? `https://${window.config.host}`
+                : `http://${window.config.host}:${window.config.hubPort}`)
     };
 
     public body = $('body');
