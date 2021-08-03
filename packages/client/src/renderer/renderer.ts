@@ -2,7 +2,7 @@ import { DarkMask, Lamp, Lighting, RectangleObject, Vec2 } from 'illuminated';
 import $ from 'jquery';
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import Character from '../entity/character/character';
 import Item from '../entity/objects/item';

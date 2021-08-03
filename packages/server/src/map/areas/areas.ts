@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
-import log from '../../util/log';
+import log from '@kaetram/common/util/log';
+
 import Area from './area';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';

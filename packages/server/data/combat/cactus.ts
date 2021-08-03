@@ -1,8 +1,8 @@
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
 import Combat from '../../src/game/entity/character/combat/combat';
 import Hit from '../../src/game/entity/character/combat/hit';
-import log from '../../src/util/log';
 
 import type Character from '../../src/game/entity/character/character';
 import type Player from '../../src/game/entity/character/player/player';
@@ -35,7 +35,7 @@ export default class Cactus extends Combat {
         });
     }
 
-    damageAttacker(damage: number, attacker: Player): void {
+    private damageAttacker(damage: number, attacker: Player): void {
         if (!attacker || !attacker.armour || attacker.isRanged()) return;
 
         let defense = attacker.armour.getDefense(),

@@ -1,4 +1,4 @@
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import type App from '../app';
 import type { CursorsTiles } from '../map/map';
@@ -33,6 +33,7 @@ interface RegionMapData {
 
 interface StorageData {
     new: boolean;
+    world: string;
     clientVersion: number;
     player: PlayerData;
     settings: Settings;
@@ -61,6 +62,7 @@ export default class Storage {
     private create(): StorageData {
         return {
             new: true,
+            world: window.config.serverId,
             clientVersion: parseFloat(this.app.config.version),
 
             player: {

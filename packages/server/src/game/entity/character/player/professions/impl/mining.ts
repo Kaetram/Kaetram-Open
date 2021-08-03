@@ -1,5 +1,6 @@
+import Utils from '@kaetram/common/util/utils';
+
 import Rocks from '../../../../../../../data/professions/rocks';
-import Utils from '../../../../../../util/utils';
 import Profession from './profession';
 
 import type { Rock } from '@kaetram/common/types/map';
