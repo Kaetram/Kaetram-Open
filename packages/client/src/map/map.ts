@@ -46,7 +46,7 @@ export interface CursorsTiles {
 interface TileData {
     data: number;
     isObject: boolean;
-    isCollision: boolean;
+    c: boolean; // collision
     index: number;
     cursor: Cursors;
 }
@@ -132,11 +132,11 @@ export default class Map {
 
             this.data[tile.index] = tile.data;
 
-            if (tile.isCollision && collisionIndex < 0)
+            if (tile.c && collisionIndex < 0)
                 // Adding new collision tileIndex
                 this.collisions.push(tile.index);
 
-            if (!tile.isCollision && collisionIndex > -1) {
+            if (!tile.c && collisionIndex > -1) {
                 // Removing existing collision tileIndex
                 let position = this.indexToGridPosition(tile.index + 1);
 
