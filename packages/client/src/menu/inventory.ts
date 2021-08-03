@@ -1,7 +1,6 @@
 import $ from 'jquery';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import * as Detect from '../utils/detect';
 import Container from './container/container';
@@ -22,14 +21,14 @@ export default class Inventory {
     private selectedSlot: JQuery | null = null;
     private selectedItem: Slot | null = null;
 
-    public constructor(private game: Game, size: number, data: Equipment[]) {
+    public constructor(private game: Game, size: number, data: Slot[]) {
         this.actions = game.menu.actions;
         this.container = new Container(size);
 
         this.load(data);
     }
 
-    private load(data: Equipment[]): void {
+    private load(data: Slot[]): void {
         let list = $('#inventory').find('ul');
 
         for (let [i, item] of data.entries()) {
@@ -60,9 +59,9 @@ export default class Inventory {
                 `<div id="itemCount${i}" class="inventoryItemCount">${itemCount}</div>`
             );
 
-            if (ability > -1) {
+            if (ability! > -1) {
                 let eList = Object.keys(Modules.Enchantment), // enchantment list
-                    enchantment = eList[ability];
+                    enchantment = eList[ability!];
 
                 if (enchantment) itemSlotList.find(`#itemCount${i}`).text(enchantment);
             }
@@ -139,7 +138,7 @@ export default class Inventory {
             case 'eat':
             case 'wield':
                 this.game.socket.send(Packets.Inventory, [
-                    Packets.InventoryOpcode.Select,
+                    Opcodes.Inventory.Select,
                     this.selectedItem.index
                 ]);
                 this.clearSelection();
@@ -154,10 +153,7 @@ export default class Inventory {
 
                     this.actions.displayDrop('inventory');
                 } else {
-                    this.game.socket.send(Packets.Inventory, [
-                        Packets.InventoryOpcode.Remove,
-                        item
-                    ]);
+                    this.game.socket.send(Packets.Inventory, [Opcodes.Inventory.Remove, item]);
                     this.clearSelection();
                 }
 
@@ -170,7 +166,7 @@ export default class Inventory {
                 if (isNaN(count) || count < 1) return;
 
                 this.game.socket.send(Packets.Inventory, [
-                    Packets.InventoryOpcode.Remove,
+                    Opcodes.Inventory.Remove,
                     this.selectedItem,
                     count
                 ]);

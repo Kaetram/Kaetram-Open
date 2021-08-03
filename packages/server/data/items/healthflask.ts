@@ -4,9 +4,9 @@ import type Player from '../../src/game/entity/character/player/player';
 import type { Item } from '.';
 
 export default class HealthFlask implements Item {
-    id: number;
-    healAmount: number;
-    manaAmount: number;
+    private id: number;
+    private healAmount: number;
+    private manaAmount: number;
 
     public constructor(id: number) {
         this.id = id;
@@ -17,7 +17,7 @@ export default class HealthFlask implements Item {
         this.manaAmount = customData?.manaAmount || 0;
     }
 
-    onUse(player: Player): void {
+    public onUse(player: Player): void {
         if (this.healAmount) player.healHitPoints(this.healAmount);
 
         if (this.manaAmount) player.healManaPoints(this.manaAmount);

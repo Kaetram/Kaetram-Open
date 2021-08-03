@@ -1,8 +1,8 @@
 import { Client, Message, WebhookClient } from 'discord.js';
 
-import config from '../../config';
-import log from '../util/log';
-import Utils from '../util/utils';
+import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
 import type World from '../game/world';
 
@@ -37,7 +37,7 @@ export default class Discord {
             if (message.channel.id !== config.discordServerId) return;
 
             let source = `[Discord | ${message.author.username}]`,
-                text = Utils.parseMessage('@goldenrod@' + message.content);
+                text = Utils.parseMessage(`@goldenrod@${message.content}`);
 
             this.world.globalMessage(source, text, 'tomato');
         });
@@ -53,6 +53,8 @@ export default class Discord {
 
         let formattedSource = Utils.formatUsername(source);
 
-        this.webhook.send(`**[Kaetram]** ${formattedSource}${withArrow ? ' »' : ''} ${message}`);
+        this.webhook.send(
+            `**[${config.name}]** ${formattedSource}${withArrow ? ' »' : ''} ${message}`
+        );
     }
 }

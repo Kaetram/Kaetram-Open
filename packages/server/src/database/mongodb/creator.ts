@@ -1,8 +1,8 @@
 import bcryptjs from 'bcryptjs';
 
-import * as Modules from '../../../../common/src/modules';
-import config from '../../../config';
-import log from '../../util/log';
+import config from '@kaetram/common/config';
+import { Modules } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
 import type { Collection } from 'mongodb';
 import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';
@@ -373,8 +373,8 @@ export default class Creator {
             x: position.x,
             y: position.y,
             rights: player.rights || 0,
-            hitPoints: player.playerHitPoints?.getHitPoints() || 100,
-            mana: player.mana?.getMana() || 20,
+            hitPoints: player.playerHitPoints?.getHitPoints() || 130,
+            mana: player.mana?.getMana() || 18,
             poison: player.poison || null,
             experience: player.experience || 0,
             ban: player.ban || 0,

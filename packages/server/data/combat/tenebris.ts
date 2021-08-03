@@ -1,17 +1,20 @@
 import _ from 'lodash';
+
+import { Opcodes } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
+
 import Combat from '../../src/game/entity/character/combat/combat';
-import Character from '../../src/game/entity/character/character';
-import Mob from '../../src/game/entity/character/mob/mob';
 import Messages from '../../src/network/messages';
-import Packets from '@kaetram/common/src/packets';
-import Utils from '../../src/util/utils';
-import { HitData } from '../../src/game/entity/character/combat/hit';
+
+import type { HitData } from '@kaetram/common/types/info';
+import type Character from '../../src/game/entity/character/character';
+import type Mob from '../../src/game/entity/character/mob/mob';
 
 export default class Tenebris extends Combat {
-    illusions: Mob[];
-    firstIllusionKilled: boolean;
-    lastIllusion: number;
-    respawnDelay: number;
+    private illusions: Mob[];
+    private firstIllusionKilled: boolean;
+    private lastIllusion: number;
+    private respawnDelay: number;
 
     public constructor(character: Character) {
         character.spawnDistance = 24;
@@ -36,7 +39,7 @@ export default class Tenebris extends Combat {
         if (!this.isIllusion()) this.forceTalk(null, 'Who dares summon Tenebris!');
     }
 
-    reset(): void {
+    private reset(): void {
         this.illusions = [];
         this.firstIllusionKilled = false;
 
@@ -47,7 +50,7 @@ export default class Tenebris extends Combat {
         }, this.respawnDelay);
     }
 
-    override hit(attacker: Character, target: Character, hitInfo: HitData): void {
+    public override hit(attacker: Character, target: Character, hitInfo: HitData): void {
         if (this.isAttacked()) this.beginIllusionAttack();
 
         if (this.canSpawn()) this.spawnIllusions();
@@ -55,11 +58,11 @@ export default class Tenebris extends Combat {
         super.hit(attacker, target, hitInfo);
     }
 
-    spawnTenbris(): void {
+    private spawnTenbris(): void {
         this.entities.spawnMob(104, this.character.x, this.character.y);
     }
 
-    spawnIllusions(): void {
+    private spawnIllusions(): void {
         this.illusions.push(
             this.entities.spawnMob(105, this.character.x + 1, this.character.y + 1),
             this.entities.spawnMob(105, this.character.x - 1, this.character.y + 1)
@@ -77,7 +80,7 @@ export default class Tenebris extends Combat {
 
         this.character.setPosition(62, 343);
 
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: this.character.region,
             message: new Messages.Teleport({
                 id: this.character.instance,
@@ -88,7 +91,7 @@ export default class Tenebris extends Combat {
         });
     }
 
-    removeIllusions(): void {
+    private removeIllusions(): void {
         this.lastIllusion = 0;
 
         let listCopy = [...this.illusions];
@@ -96,7 +99,7 @@ export default class Tenebris extends Combat {
         for (let i = 0; i < listCopy.length; i++) this.world.kill(listCopy[i]);
     }
 
-    beginIllusionAttack(): void {
+    private beginIllusionAttack(): void {
         if (!this.hasIllusions()) return;
 
         _.each(this.illusions, (illusion: Mob) => {
@@ -106,7 +109,7 @@ export default class Tenebris extends Combat {
         });
     }
 
-    getRandomTarget(): Character | null {
+    private getRandomTarget(): Character | null {
         if (this.isAttacked()) {
             let keys = Object.keys(this.attackers),
                 randomAttacker = this.attackers[keys[Utils.randomInt(0, keys.length)]];
@@ -119,12 +122,12 @@ export default class Tenebris extends Combat {
         return null;
     }
 
-    forceTalk(instance: string | null, message: string): void {
+    private forceTalk(instance: string | null, message: string): void {
         if (!this.world) return;
 
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: this.character.region,
-            message: new Messages.NPC(Packets.NPCOpcode.Talk, {
+            message: new Messages.NPC(Opcodes.NPC.Talk, {
                 id: instance,
                 text: message,
                 nonNPC: true
@@ -132,11 +135,11 @@ export default class Tenebris extends Combat {
         });
     }
 
-    isLast(): boolean {
+    private isLast(): boolean {
         return this.illusions.length === 1;
     }
 
-    canSpawn(): boolean {
+    private canSpawn(): boolean {
         return (
             !this.isIllusion() &&
             !this.hasIllusions &&
@@ -145,11 +148,11 @@ export default class Tenebris extends Combat {
         );
     }
 
-    isIllusion(): boolean {
+    private isIllusion(): boolean {
         return this.character.id === 105;
     }
 
-    hasIllusions(): boolean {
+    private hasIllusions(): boolean {
         return this.illusions.length > 0;
     }
 }

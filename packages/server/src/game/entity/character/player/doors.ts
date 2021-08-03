@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
-import config from '../../../../../config';
+import config from '@kaetram/common/config';
+
 import doorData from '../../../../../data/doors.json';
 
 import type Player from './player';
