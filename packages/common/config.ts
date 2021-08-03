@@ -18,7 +18,6 @@ export interface Config {
     apiPort: number;
 
     hubEnabled: boolean;
-    hubHost: string;
     hubPort: number;
     hubPing: number;
     hubAccessToken: string;
