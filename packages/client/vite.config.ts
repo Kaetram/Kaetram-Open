@@ -28,7 +28,8 @@ export default defineConfig(({ command }) => {
             'ssl',
             'worldSwitch',
             'hubEnabled',
-            'hubPort'
+            'hubPort',
+            'serverId'
         ],
         env = {} as Config;
 
