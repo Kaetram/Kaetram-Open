@@ -58,7 +58,7 @@ export interface RegionTileData {
     index: number;
     position: Pos;
     data: number[];
-    isCollision: boolean;
+    c: boolean; // Collision
     isObject: boolean;
     cursor: string;
 }
