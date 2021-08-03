@@ -1,5 +1,4 @@
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Messages from '../../../../../../network/messages';
 import Constants from '../../../../../../util/constants';
@@ -58,14 +57,14 @@ export default abstract class Profession {
             );
 
         this.player.send(
-            new Messages.Experience(Packets.ExperienceOpcode.Profession, {
+            new Messages.Experience(Opcodes.Experience.Profession, {
                 id: this.player.instance,
                 amount: experience
             })
         );
 
         this.player.send(
-            new Messages.Profession(Packets.ProfessionOpcode.Update, {
+            new Messages.Profession(Opcodes.Profession.Update, {
                 id: this.id,
                 level: this.level,
                 percentage: this.getPercentage()

@@ -5,6 +5,7 @@ import log from '../lib/log';
 import Messages from './messages';
 
 import type { Socket as IOSocket } from 'socket.io-client';
+import type { APIData } from '@kaetram/common/types/api';
 import type Game from '../game';
 
 export default class Socket {
@@ -26,32 +27,28 @@ export default class Socket {
      * The connection assumes it is a hub, if it's not,
      * we default to normal server connection.
      */
-    private async getServer(
-        callback: (data: { host: string; port: number } | 'error') => void
-    ): Promise<void> {
-        let url = `http://${this.config.ip}:${this.config.port}/server`;
+    private async getServer(callback: (data: APIData | null) => void): Promise<void> {
+        if (!this.config.hub) return callback(null);
 
-        if (this.config.ssl) url = `https://${this.config.ip}/server`;
+        if (this.config.worldSwitch) {
+            callback(this.game.world);
+
+            return;
+        }
 
         try {
-            let response = await $.get(url);
+            let response = await $.get(`${this.config.hub}/server`);
 
-            callback(typeof response === 'string' ? 'error' : response);
+            callback(typeof response === 'string' ? null : response);
         } catch {
-            callback('error');
+            callback(null);
         }
     }
 
     public connect(): void {
         this.getServer((result) => {
-            let url;
-
-            if (result === 'error')
-                url = this.config.ssl
-                    ? `wss://${this.config.ip}`
-                    : `ws://${this.config.ip}:${this.config.port}`;
-            else if (this.config.ssl) url = `wss://${result.host}`;
-            else url = `ws://${result.host}:${result.port}`;
+            let { host, port } = result || this.config,
+                url = this.config.ssl ? `wss://${host}` : `ws://${host}:${port}`;
 
             this.connection = io(url, {
                 forceNew: true,
@@ -59,7 +56,7 @@ export default class Socket {
             });
 
             this.connection.on('connect_error', () => {
-                log.info(`Failed to connect to: ${this.config.ip}`);
+                log.info(`Failed to connect to: ${this.config.host}`);
 
                 this.listening = false;
 
@@ -68,7 +65,7 @@ export default class Socket {
                 this.game.app.sendError(
                     null,
                     this.game.isDebug()
-                        ? `Couldn't connect to ${this.config.ip}:${this.config.port}`
+                        ? `Couldn't connect to ${this.config.host}:${this.config.port}`
                         : 'Could not connect to the game server.'
                 );
             });
@@ -103,7 +100,7 @@ export default class Socket {
             let data = JSON.parse(message);
 
             if (data.length > 1) this.messages.handleBulkData(data);
-            else this.messages.handleData(JSON.parse(message).shift());
+            else this.messages.handleData(data.shift());
         } else this.messages.handleUTF8(message);
     }
 

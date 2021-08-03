@@ -1,4 +1,4 @@
-import log from '../../util/log';
+import log from '@kaetram/common/util/log';
 
 import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';
 import type { ContainerArray } from '../../game/entity/character/player/containers/container';
@@ -36,8 +36,7 @@ export default class Loader {
                 if (info) {
                     if (info.username !== player.username)
                         log.notice(
-                            '[Loader] Mismatch in usernames whilst retrieving inventory data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving inventory data for: ${player.username}`
                         );
 
                     callback(
@@ -70,8 +69,7 @@ export default class Loader {
                 if (info) {
                     if (info.username !== player.username)
                         log.notice(
-                            '[Loader] Mismatch in usernames whilst retrieving bank data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving bank data for: ${player.username}`
                         );
 
                     callback(
@@ -99,8 +97,7 @@ export default class Loader {
                 if (info) {
                     if (info.username !== player.username)
                         log.notice(
-                            '[Loader] Mismatch in usernames whilst retrieving quest data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving quest data for: ${player.username}`
                         );
 
                     callback(info.ids.split(' '), info.stages.split(' '));
@@ -123,8 +120,7 @@ export default class Loader {
                 if (info) {
                     if (info.username !== player.username)
                         log.notice(
-                            '[Loader] Mismatch in usernames whilst retrieving achievement data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving achievement data for: ${player.username}`
                         );
 
                     callback(info.ids.split(' '), info.progress.split(' '));
@@ -144,8 +140,7 @@ export default class Loader {
                 if (info && info.data) {
                     if (info.username !== player.username)
                         log.notice(
-                            '[Loader] Mismatch in usernames whilst retrieving profession data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving profession data for: ${player.username}`
                         );
 
                     callback(info.data);
@@ -165,8 +160,7 @@ export default class Loader {
                 if (info && info.friends) {
                     if (info.username !== player.username)
                         log.notice(
-                            '[Loader] Mismatch in usernames whilst retrieving friends data for: ' +
-                                player.username
+                            `[Loader] Mismatch in usernames whilst retrieving friends data for: ${player.username}`
                         );
 
                     callback(info.friends);

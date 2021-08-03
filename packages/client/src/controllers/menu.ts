@@ -10,7 +10,6 @@ import Profile from '../menu/profile/profile';
 import Shop from '../menu/shop';
 import Warp from '../menu/warp';
 
-import type Equipment from '../entity/character/player/equipment/equipment';
 import type Game from '../game';
 import type Slot from '../menu/container/slot';
 import type Professions from '../menu/profile/pages/professions';
@@ -71,7 +70,7 @@ export default class MenuController {
      * This can be called multiple times and can be used
      * to completely refresh the inventory.
      */
-    public loadInventory(size: number, data: Equipment[]): void {
+    public loadInventory(size: number, data: Slot[]): void {
         this.inventory = new Inventory(this.game, size, data);
     }
 

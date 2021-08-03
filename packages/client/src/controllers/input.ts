@@ -1,5 +1,4 @@
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import Animation from '../entity/animation';
 import log from '../lib/log';
@@ -48,7 +47,7 @@ export default class InputController {
     private cursors: { [cursor in Cursors]?: Sprite } = {};
     public lastMousePosition: Pos = { x: 0, y: 0 };
 
-    private hovering!: number | null;
+    private hovering!: Modules.Hovering | null;
     public hoveringEntity!: Entity; // for debugging
 
     public mouse: Pos = { x: 0, y: 0 };
@@ -183,10 +182,7 @@ export default class InputController {
                 if ((window.event as MouseEvent).ctrlKey) {
                     log.info('Control key is pressed lmao');
 
-                    socket.send(Packets.Command, [
-                        Packets.CommandOpcode.CtrlClick,
-                        this.getCoords()
-                    ]);
+                    socket.send(Packets.Command, [Opcodes.Command.CtrlClick, this.getCoords()]);
                     return;
                 }
 
@@ -305,13 +301,13 @@ export default class InputController {
             if (this.isTargetable(entity)) player.setTarget(entity);
 
             if (player.getDistance(entity) < 7 && player.isRanged() && this.isAttackable(entity)) {
-                game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
+                game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.id]);
                 player.lookAt(entity);
                 return;
             }
 
             if (entity.gridX === player.gridX && entity.gridY === player.gridY)
-                game.socket.send(Packets.Target, [Packets.TargetOpcode.Attack, entity.id]);
+                game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.id]);
 
             if (this.isTargetable(entity)) {
                 player.follow(entity);
@@ -490,7 +486,7 @@ export default class InputController {
     }
 
     private updateFrozen(state: boolean): void {
-        this.game.socket.send(Packets.Movement, [Packets.MovementOpcode.Freeze, state]);
+        this.game.socket.send(Packets.Movement, [Opcodes.Movement.Freeze, state]);
     }
 
     private isTargetable(entity: Entity): boolean {

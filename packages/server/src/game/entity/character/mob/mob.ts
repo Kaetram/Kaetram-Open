@@ -1,7 +1,8 @@
+import Utils from '@kaetram/common/util/utils';
+
 import Constants from '../../../../util/constants';
 import Items from '../../../../util/items';
 import Mobs, { MobData, MobDrops } from '../../../../util/mobs';
-import Utils from '../../../../util/utils';
 import Character, { CharacterState } from '../character';
 import MobHandler from './mobhandler';
 

@@ -1,12 +1,12 @@
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import Character from '../../src/game/entity/character/character';
 import Combat from '../../src/game/entity/character/combat/combat';
 
-import type { HitData } from '../../src/game/entity/character/combat/hit';
+import type { HitData } from '@kaetram/common/types/info';
 
 export default class GreatSquid extends Combat {
-    lastTerror: number;
+    private lastTerror: number;
 
     public constructor(character: Character) {
         character.spawnDistance = 15;
@@ -17,7 +17,7 @@ export default class GreatSquid extends Combat {
         this.lastTerror = Date.now();
     }
 
-    override hit(character: Character, target: Character, hitInfo: HitData): void {
+    public override hit(character: Character, target: Character, hitInfo: HitData): void {
         if (this.canUseTerror()) {
             hitInfo.type = Modules.Hits.Stun;
 
@@ -27,7 +27,7 @@ export default class GreatSquid extends Combat {
         super.hit(character, target, hitInfo);
     }
 
-    canUseTerror(): boolean {
+    private canUseTerror(): boolean {
         return Date.now() - this.lastTerror > 15000;
     }
 }

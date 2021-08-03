@@ -1,4 +1,4 @@
-import Packets from '@kaetram/common/src/packets';
+import { Packets, Opcodes } from '@kaetram/common/network';
 
 import log from '../../../lib/log';
 
@@ -46,7 +46,7 @@ export default class PlayerHandler {
 
             if (!map.isColliding(x, y) && !isObject)
                 socket.send(Packets.Movement, [
-                    Packets.MovementOpcode.Request,
+                    Opcodes.Movement.Request,
                     x,
                     y,
                     player.gridX,
@@ -78,7 +78,7 @@ export default class PlayerHandler {
             log.debug(`Movement speed: ${player.movementSpeed}`);
 
             socket.send(Packets.Movement, [
-                Packets.MovementOpcode.Started,
+                Opcodes.Movement.Started,
                 input.selectedX,
                 input.selectedY,
                 player.gridX,
@@ -106,7 +106,7 @@ export default class PlayerHandler {
             log.debug('Stopping pathing.');
 
             socket.send(Packets.Movement, [
-                Packets.MovementOpcode.Stop,
+                Opcodes.Movement.Stop,
                 x,
                 y,
                 id,
@@ -136,11 +136,7 @@ export default class PlayerHandler {
 
             if (!camera.centered || camera.lockX || camera.lockY) this.checkBounds();
 
-            socket.send(Packets.Movement, [
-                Packets.MovementOpcode.Step,
-                player.gridX,
-                player.gridY
-            ]);
+            socket.send(Packets.Movement, [Opcodes.Movement.Step, player.gridX, player.gridY]);
 
             if (!this.isAttackable()) return;
 
@@ -197,7 +193,7 @@ export default class PlayerHandler {
 
             camera.zone(direction);
 
-            socket.send(Packets.Movement, [Packets.MovementOpcode.Zone, direction]);
+            socket.send(Packets.Movement, [Opcodes.Movement.Zone, direction]);
 
             renderer.updateAnimatedTiles();
 
@@ -211,17 +207,17 @@ export default class PlayerHandler {
         return target ? target.id : null;
     }
 
-    private getTargetType(): number {
+    private getTargetType(): Opcodes.Target {
         let { target } = this.player;
 
-        if (!target) return Packets.TargetOpcode.None;
+        if (!target) return Opcodes.Target.None;
 
-        if (this.isAttackable()) return Packets.TargetOpcode.Attack;
+        if (this.isAttackable()) return Opcodes.Target.Attack;
 
-        if (target.type === 'npc' || target.type === 'chest') return Packets.TargetOpcode.Talk;
+        if (target.type === 'npc' || target.type === 'chest') return Opcodes.Target.Talk;
 
-        if (target.type === 'object') return Packets.TargetOpcode.Object;
+        if (target.type === 'object') return Opcodes.Target.Object;
 
-        return Packets.TargetOpcode.None;
+        return Opcodes.Target.None;
     }
 }

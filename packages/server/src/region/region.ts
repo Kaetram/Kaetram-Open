@@ -1,12 +1,12 @@
 import _ from 'lodash';
 
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
-import config from '../../config';
 import Player from '../game/entity/character/player/player';
 import Messages, { Packet } from '../network/messages';
-import log from '../util/log';
 
+import type { RegionTileData, TilesetData } from '@kaetram/common/types/info';
 import type Entity from '../game/entity/entity';
 import type World from '../game/world';
 
@@ -19,26 +19,10 @@ interface Bounds {
 
 export type Tile = number | number[];
 
-export interface TilesetData {
-    [i: number]: {
-        c?: boolean;
-        h?: number;
-    };
-}
-
 interface RegionData {
     entities: { [instance: string]: Entity };
     players: string[];
     incoming: Entity[];
-}
-
-export interface RegionTileData {
-    index: number;
-    position: Pos;
-    data: number[];
-    c: boolean; //collision
-    isObject: boolean;
-    cursor: string;
 }
 
 interface DynamicTiles {
@@ -79,8 +63,7 @@ export default class Region {
         this.onAdd((entity, regionId) => {
             if (!entity || !entity.username) return;
 
-            if (config.debug)
-                log.info('Entity - ' + entity.username + ' has entered region - ' + regionId);
+            log.debug(`Entity - ${entity.username} has entered region - ${regionId}`);
 
             if (entity instanceof Player) {
                 if (!entity.questsLoaded) return;
@@ -98,8 +81,7 @@ export default class Region {
         this.onIncoming((entity: Entity, regionId: string) => {
             if (!entity || !entity.username) return;
 
-            if (config.debug)
-                log.info('Entity - ' + entity.username + ' is incoming into region - ' + regionId);
+            log.debug(`Entity - ${entity.username} is incoming into region - ${regionId}`);
         });
 
         this.load();
@@ -145,9 +127,9 @@ export default class Region {
         this.handle(player, regionId);
         this.push(player);
 
-        this.world.push(Packets.PushOpcode.OldRegions, {
+        this.world.push(Opcodes.Push.OldRegions, {
             player,
-            message: new Messages.Region(Packets.RegionOpcode.Update, {
+            message: new Messages.Region(Opcodes.Region.Update, {
                 id: player.instance,
                 type: 'remove'
             })
@@ -211,8 +193,7 @@ export default class Region {
         let tileData = this.getRegionData(region, player, force);
 
         // No need to send empty data...
-        if (tileData.length > 0)
-            player.send(new Messages.Region(Packets.RegionOpcode.Render, tileData));
+        if (tileData.length > 0) player.send(new Messages.Region(Opcodes.Region.Render, tileData));
     }
 
     // TODO - Format dynamic tiles to follow same structure as `getRegionData()`
@@ -254,7 +235,7 @@ export default class Region {
             if (i in tilesetData) tilesetData[i].h = this.map.high[i];
             else tilesetData[i] = { h: this.map.high[i] };
 
-        player.send(new Messages.Region(Packets.RegionOpcode.Tileset, tilesetData));
+        player.send(new Messages.Region(Opcodes.Region.Tileset, tilesetData));
     }
 
     private sendSpawns(regionId: string): void {
@@ -263,7 +244,7 @@ export default class Region {
         _.each(this.regions[regionId].incoming, (entity: Entity) => {
             if (!entity || !entity.instance || entity.instanced) return;
 
-            this.world.push(Packets.PushOpcode.Regions, {
+            this.world.push(Opcodes.Push.Regions, {
                 regionId,
                 message: new Messages.Spawn(entity),
                 ignoreId: entity.isPlayer() ? entity.instance : null
@@ -384,7 +365,7 @@ export default class Region {
 
         this.map.data[index] = newTile;
 
-        this.world.push(Packets.PushOpcode.Broadcast, {
+        this.world.push(Opcodes.Push.Broadcast, {
             message: Region.getModify(index, newTile)
         });
     }
@@ -485,7 +466,7 @@ export default class Region {
     }
 
     private static getModify(index: number, newTile: Tile): Packet {
-        return new Messages.Region(Packets.RegionOpcode.Modify, {
+        return new Messages.Region(Opcodes.Region.Modify, {
             index,
             newTile
         });
@@ -494,11 +475,11 @@ export default class Region {
     private static instanceToRegionId(instancedRegionId: string): string {
         let region = instancedRegionId.split('-');
 
-        return region[0] + '-' + region[1];
+        return `${region[0]}-${region[1]}`;
     }
 
     private static regionIdToInstance(entity: Entity, regionId: string): string {
-        return regionId + '-' + entity.instance;
+        return `${regionId}-${entity.instance}`;
     }
 
     public gridPositionToIndex(x: number, y: number): number {
