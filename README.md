@@ -105,7 +105,7 @@ yarn start
 ### Configuration
 
 _Optionally_, if you would want some additional configuration, There will see a file named
-[`.env.defaults`](`.env.defaults`), and it's values will be used unless overridden by a new `.env`
+[`.env.defaults`](.env.defaults), and it's values will be used unless overridden by a new `.env`
 file, or by setting environmental variables.
 
 Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs.
