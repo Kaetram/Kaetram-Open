@@ -400,12 +400,12 @@ export default class Entities {
     }
 
     public removePlayer(player: Player): void {
-        this.remove(player);
-
         this.world.push(Opcodes.Push.Regions, {
             regionId: player.region,
             message: new Messages.Despawn(player.instance)
         });
+
+        this.remove(player);
 
         if (player.ready) player.save();
 
