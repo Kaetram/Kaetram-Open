@@ -7,18 +7,10 @@ import log from '@kaetram/common/util/log';
 
 import { formatServerName } from '../util/utils';
 
+import type { APIData } from '@kaetram/common/types/api';
 import type Servers from '../controllers/servers';
 import type { Server } from '../controllers/servers';
 import type Discord from './discord';
-
-interface APIData {
-    host: string;
-    serverId: string;
-    port: number;
-    gameVersion: string;
-    maxPlayers: number;
-    playerCount: number;
-}
 
 /**
  * We use the API format from `@kaetram/server`.
