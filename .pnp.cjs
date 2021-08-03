@@ -31,6 +31,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/common"
       },
       {
+        "name": "@kaetram/hub",
+        "reference": "workspace:packages/hub"
+      },
+      {
         "name": "@kaetram/server",
         "reference": "workspace:packages/server"
       },
@@ -44,6 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "fallbackExclusionList": [
       ["@kaetram/client", ["workspace:packages/client"]],
       ["@kaetram/common", ["workspace:packages/common"]],
+      ["@kaetram/hub", ["workspace:packages/hub"]],
       ["@kaetram/server", ["workspace:packages/server"]],
       ["@kaetram/tools", ["workspace:packages/tools"]],
       ["kaetram", ["workspace:."]]
@@ -2376,12 +2381,35 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@kaetram/hub", [
+        ["workspace:packages/hub", {
+          "packageLocation": "./packages/hub/",
+          "packageDependencies": [
+            ["@kaetram/hub", "workspace:packages/hub"],
+            ["@kaetram/common", "workspace:packages/common"],
+            ["@types/body-parser", "npm:1.19.1"],
+            ["@types/express", "npm:4.17.13"],
+            ["@types/lodash", "npm:4.14.171"],
+            ["@types/node", "npm:16.4.10"],
+            ["axios", "npm:0.21.1"],
+            ["body-parser", "npm:1.19.0"],
+            ["discord.js", "npm:12.5.3"],
+            ["express", "npm:4.17.1"],
+            ["lodash", "npm:4.17.21"],
+            ["mongodb", "npm:4.0.1"],
+            ["ts-node", "virtual:75c7b87202e91c9d1ce7648271dd34b71552f9dd912180d65674b685cbe4077d441a027d050147d0cc73eb4bf8cfaf275ed143a0ddd3848afaefc0dcf0629301#npm:10.1.0"],
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@kaetram/server", [
         ["workspace:packages/server", {
           "packageLocation": "./packages/server/",
           "packageDependencies": [
             ["@kaetram/server", "workspace:packages/server"],
             ["@kaetram/common", "workspace:packages/common"],
+            ["@kaetram/hub", "workspace:packages/hub"],
             ["@kaetram/tools", "workspace:packages/tools"],
             ["@types/bcryptjs", "npm:2.4.2"],
             ["@types/body-parser", "npm:1.19.1"],
@@ -2404,7 +2432,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mongodb", "npm:4.0.1"],
             ["sanitizer", "npm:0.1.3"],
             ["socket.io", "npm:4.1.3"],
-            ["ts-node", "virtual:24baeff050e66bbcfced0d8ef961daec091eac03f9f543d4538ff012a490ddb9d9e4b4a91538acb7f146f6a16fe424d0b0cd4297b810227793a29531e854feb8#npm:10.1.0"],
+            ["ts-node", "virtual:75c7b87202e91c9d1ce7648271dd34b71552f9dd912180d65674b685cbe4077d441a027d050147d0cc73eb4bf8cfaf275ed143a0ddd3848afaefc0dcf0629301#npm:10.1.0"],
             ["ts-node-dev", "virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:1.1.8"],
             ["tslib", "npm:2.3.0"],
             ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"],
@@ -2424,7 +2452,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:16.4.10"],
             ["lodash", "npm:4.17.21"],
             ["socket.io-client", "npm:4.1.3"],
-            ["ts-node", "virtual:24baeff050e66bbcfced0d8ef961daec091eac03f9f543d4538ff012a490ddb9d9e4b4a91538acb7f146f6a16fe424d0b0cd4297b810227793a29531e854feb8#npm:10.1.0"],
+            ["ts-node", "virtual:75c7b87202e91c9d1ce7648271dd34b71552f9dd912180d65674b685cbe4077d441a027d050147d0cc73eb4bf8cfaf275ed143a0ddd3848afaefc0dcf0629301#npm:10.1.0"],
             ["tslib", "npm:2.3.0"],
             ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"]
           ],
@@ -12684,10 +12712,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:24baeff050e66bbcfced0d8ef961daec091eac03f9f543d4538ff012a490ddb9d9e4b4a91538acb7f146f6a16fe424d0b0cd4297b810227793a29531e854feb8#npm:10.1.0", {
-          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-21c728deca/0/cache/ts-node-npm-10.1.0-a47fc35807-96979e9a81.zip/node_modules/ts-node/",
+        ["virtual:4558cba8861593035848a70bff95f0178f39a01780db5d5cb1f8994e2da20646a90104c155ca6c9c4e212ab744dd0b0234a290b855f58a81a3d40218069f29db#npm:9.1.1", {
+          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-92c7748c33/0/cache/ts-node-npm-9.1.1-4ad31da228-356e2647b8.zip/node_modules/ts-node/",
           "packageDependencies": [
-            ["ts-node", "virtual:24baeff050e66bbcfced0d8ef961daec091eac03f9f543d4538ff012a490ddb9d9e4b4a91538acb7f146f6a16fe424d0b0cd4297b810227793a29531e854feb8#npm:10.1.0"],
+            ["ts-node", "virtual:4558cba8861593035848a70bff95f0178f39a01780db5d5cb1f8994e2da20646a90104c155ca6c9c4e212ab744dd0b0234a290b855f58a81a3d40218069f29db#npm:9.1.1"],
+            ["@types/typescript", null],
+            ["arg", "npm:4.1.3"],
+            ["create-require", "npm:1.1.1"],
+            ["diff", "npm:4.0.2"],
+            ["make-error", "npm:1.3.6"],
+            ["source-map-support", "npm:0.5.19"],
+            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"],
+            ["yn", "npm:3.1.1"]
+          ],
+          "packagePeers": [
+            "@types/typescript",
+            "typescript"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:75c7b87202e91c9d1ce7648271dd34b71552f9dd912180d65674b685cbe4077d441a027d050147d0cc73eb4bf8cfaf275ed143a0ddd3848afaefc0dcf0629301#npm:10.1.0", {
+          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-2ff9042857/0/cache/ts-node-npm-10.1.0-a47fc35807-96979e9a81.zip/node_modules/ts-node/",
+          "packageDependencies": [
+            ["ts-node", "virtual:75c7b87202e91c9d1ce7648271dd34b71552f9dd912180d65674b685cbe4077d441a027d050147d0cc73eb4bf8cfaf275ed143a0ddd3848afaefc0dcf0629301#npm:10.1.0"],
             ["@swc/core", null],
             ["@swc/wasm", null],
             ["@tsconfig/node10", "npm:1.0.8"],
@@ -12712,25 +12759,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/node",
             "@types/swc__core",
             "@types/swc__wasm",
-            "@types/typescript",
-            "typescript"
-          ],
-          "linkType": "HARD",
-        }],
-        ["virtual:4558cba8861593035848a70bff95f0178f39a01780db5d5cb1f8994e2da20646a90104c155ca6c9c4e212ab744dd0b0234a290b855f58a81a3d40218069f29db#npm:9.1.1", {
-          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-92c7748c33/0/cache/ts-node-npm-9.1.1-4ad31da228-356e2647b8.zip/node_modules/ts-node/",
-          "packageDependencies": [
-            ["ts-node", "virtual:4558cba8861593035848a70bff95f0178f39a01780db5d5cb1f8994e2da20646a90104c155ca6c9c4e212ab744dd0b0234a290b855f58a81a3d40218069f29db#npm:9.1.1"],
-            ["@types/typescript", null],
-            ["arg", "npm:4.1.3"],
-            ["create-require", "npm:1.1.1"],
-            ["diff", "npm:4.0.2"],
-            ["make-error", "npm:1.3.6"],
-            ["source-map-support", "npm:0.5.19"],
-            ["typescript", "patch:typescript@npm%3A4.3.5#~builtin<compat/typescript>::version=4.3.5&hash=d8b4e7"],
-            ["yn", "npm:3.1.1"]
-          ],
-          "packagePeers": [
             "@types/typescript",
             "typescript"
           ],
