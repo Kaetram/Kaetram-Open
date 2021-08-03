@@ -15,8 +15,6 @@ class Log {
     private debugging = config.debugging;
 
     public info(...message: unknown[]): void {
-        if (this.isLoggable('info')) return;
-
         this.send('info', message);
     }
 
@@ -27,20 +25,14 @@ class Log {
     }
 
     public warning(...message: unknown[]): void {
-        if (this.isLoggable('warning')) return;
-
         this.send('warn', message, 33, 'warning');
     }
 
     public error(...message: unknown[]): void {
-        if (this.isLoggable('error')) return;
-
         this.send('error', message, 41);
     }
 
     public notice(...message: unknown[]): void {
-        if (this.isLoggable('notice')) return;
-
         this.send('log', message, 32, 'notice');
     }
 
@@ -49,18 +41,23 @@ class Log {
     }
 
     private send(type: keyof Console, data: unknown[], color = 1, title: string = type): void {
-        this.write(data);
+        let date = new Date(),
+            formattedTitle = `[${title.toUpperCase()}]`,
+            space = ' '.repeat(Math.max(9 - formattedTitle.length, 0));
 
-        let space = ' '.repeat(Math.max(7 - title.length, 0)),
-            coloredTitle = `\u001B[1m\u001B[37m\u001B[${color}m[${title.toUpperCase()}]\u001B[0m`;
+        this.write(date, formattedTitle + space, data);
 
-        console[type](new Date(), coloredTitle + space, ...data);
+        if (this.isLoggable(title)) return;
+
+        let coloredTitle = `\u001B[1m\u001B[37m\u001B[${color}m${formattedTitle}\u001B[0m`;
+
+        console[type](date, coloredTitle + space, ...data);
     }
 
-    private write(data: unknown[]) {
+    private write(date: Date, title: string, data: unknown[]) {
         let parsed = data.map((data) => (typeof data === 'object' ? JSON.stringify(data) : data));
 
-        this.stream?.write(`${parsed.join(' ')}\n`);
+        this.stream?.write(`${date} ${title} ${parsed.join(' ')}\n`);
     }
 
     private isLoggable(type: string) {
