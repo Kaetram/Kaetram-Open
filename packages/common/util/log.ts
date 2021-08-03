@@ -14,46 +14,53 @@ class Log {
 
     private debugging = config.debugging;
 
-    public info(message: unknown) {
+    public info(...message: unknown[]): void {
         if (this.isLoggable('info')) return;
 
-        this.send(null, `[${new Date()}] INFO ${message}`);
+        this.send('info', message);
     }
 
-    public debug(message: unknown) {
+    public debug(...message: unknown[]): void {
         if (!this.debugging) return;
 
-        this.send('\u001B[36m%s\u001B[0m', `[${new Date()}] DEBUG ${message}`);
+        this.send('debug', message, 36);
     }
 
-    public warning(message: unknown) {
+    public warning(...message: unknown[]): void {
         if (this.isLoggable('warning')) return;
 
-        this.send('\u001B[33m%s\u001B[0m', `[${new Date()}] WARNING ${message}`);
+        this.send('warn', message, 33, 'warning');
     }
 
-    public error(message: unknown) {
+    public error(...message: unknown[]): void {
         if (this.isLoggable('error')) return;
 
-        this.send('\u001B[31m%s\u001B[0m', `[${new Date()}] ERROR ${message}`);
+        this.send('error', message, 41);
     }
 
-    public notice(message: unknown) {
+    public notice(...message: unknown[]): void {
         if (this.isLoggable('notice')) return;
 
-        this.send('\u001B[32m%s\u001B[0m', `[${new Date()}] NOTICE ${message}`);
+        this.send('log', message, 32, 'notice');
     }
 
-    public trace(message: unknown) {
-        this.send('\u001B[35m%s\u001B[0m', `[${new Date()}] TRACE ${message}`, true);
+    public trace(...message: unknown[]): void {
+        this.send('trace', message, 35);
     }
 
-    private send(colour: string | null, message: unknown, trace?: boolean) {
-        this.stream?.write(`${message}\n`);
+    private send(type: keyof Console, data: unknown[], color = 1, title: string = type): void {
+        this.write(data);
 
-        if (!colour) console.log(message);
-        else if (trace) console.trace(colour, message);
-        else console.log(colour, message);
+        let space = ' '.repeat(Math.max(7 - title.length, 0)),
+            coloredTitle = `\u001B[1m\u001B[37m\u001B[${color}m[${title.toUpperCase()}]\u001B[0m`;
+
+        console[type](new Date(), coloredTitle + space, ...data);
+    }
+
+    private write(data: unknown[]) {
+        let parsed = data.map((data) => (typeof data === 'object' ? JSON.stringify(data) : data));
+
+        this.stream?.write(`${parsed.join(' ')}\n`);
     }
 
     private isLoggable(type: string) {
@@ -68,7 +75,7 @@ class Log {
      * Blink = "\x1b[5m"
      * Reverse = "\x1b[7m"
      * Hidden = "\x1b[8m"
-
+     *
      * FgBlack = "\x1b[30m"
      * FgRed = "\x1b[31m"
      * FgGreen = "\x1b[32m"
@@ -77,7 +84,7 @@ class Log {
      * FgMagenta = "\x1b[35m"
      * FgCyan = "\x1b[36m"
      * FgWhite = "\x1b[37m"
-
+     *
      * BgBlack = "\x1b[40m"
      * BgRed = "\x1b[41m"
      * BgGreen = "\x1b[42m"
