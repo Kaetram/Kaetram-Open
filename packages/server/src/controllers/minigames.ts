@@ -1,5 +1,6 @@
+import log from '@kaetram/common/util/log';
+
 import TeamWar from '../minigames/impl/teamwar';
-import log from '../util/log';
 
 import type World from '../game/world';
 import type Minigame from '../minigames/minigame';

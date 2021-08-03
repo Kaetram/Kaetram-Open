@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 import Transition from '../../utils/transition';
 import Animation from '../animation';
@@ -72,7 +72,7 @@ export default class Character extends Entity {
     private maxHitPointsCallback?(maxHitPoints: number): void;
 
     public instance!: string;
-    private forced!: boolean;
+    public forced!: boolean;
 
     public handler = new EntityHandler(this);
 

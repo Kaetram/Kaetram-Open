@@ -1,4 +1,4 @@
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 
 export default class ZoningController {
     public direction!: Modules.Orientation | null;
