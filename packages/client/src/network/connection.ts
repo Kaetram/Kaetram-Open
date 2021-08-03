@@ -1,24 +1,54 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import _ from 'lodash';
+import { inflate } from 'pako';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import log from '../lib/log';
 import * as Detect from '../utils/detect';
 import TeamWar from './impl/teamwar';
 
+import type {
+    CombatHitData,
+    CombatSyncData,
+    ContainerAddData,
+    ContainerBatchData,
+    ContainerRemoveData,
+    EquipmentBatchData,
+    EquipmentEquipData,
+    EquipmentUnequipData,
+    ExperienceCombatData,
+    MovementFollowData,
+    MovementMoveData,
+    MovementOrientateData,
+    MovementStateData,
+    MovementStopData,
+    NPCCountdownData,
+    NPCTalkData,
+    OverlayDarknessData,
+    OverlayLampData,
+    OverlaySetData,
+    PointerButtonData,
+    PointerLocationData,
+    PointerRelativeData,
+    ProfessionBatchData,
+    ProfessionUpdateData,
+    QuestAchievementBatchData,
+    QuestBatchData,
+    QuestFinishData,
+    QuestProgressData,
+    ShopOpenData,
+    ShopRefreshData,
+    ShopRemoveData,
+    ShopSelectData
+} from '@kaetram/common/types/messages';
 import type { AnyEntity } from '../controllers/entities';
 import type Character from '../entity/character/character';
-import type Equipment from '../entity/character/player/equipment/equipment';
 import type Player from '../entity/character/player/player';
-import type { PlayerData } from '../entity/character/player/player';
 import type Game from '../game';
 import type Slot from '../menu/container/slot';
 
 /**
- * TODO: Types to be done when common server and client types are made.
+ * TODO: Refactor once on TypeScript 4.4
  */
 
 export default class Connection {
@@ -40,8 +70,8 @@ export default class Connection {
 
     private teamWar = new TeamWar();
 
-    // private population!: number;
-    // private queueColour!: string[];
+    private population!: number;
+    private queueColour!: string;
     private time!: number;
 
     public constructor(private game: Game) {
@@ -81,9 +111,8 @@ export default class Connection {
     }
 
     private load(): void {
-        this.messages.onHandshake((data: Game) => {
+        this.messages.onHandshake((data) => {
             this.game.id = data.id;
-            this.game.development = data.development;
 
             this.game.ready = true;
 
@@ -100,19 +129,19 @@ export default class Connection {
                     email = registerInfo[3].val();
 
                 this.socket.send(Packets.Intro, [
-                    Packets.IntroOpcode.Register,
+                    Opcodes.Intro.Register,
                     username,
                     password,
                     email
                 ]);
             } else if (this.app.isGuest())
-                this.socket.send(Packets.Intro, [Packets.IntroOpcode.Guest, 'n', 'n', 'n']);
+                this.socket.send(Packets.Intro, [Opcodes.Intro.Guest, 'n', 'n', 'n']);
             else {
                 let loginInfo = this.app.loginFields,
                     name = loginInfo[0].val() as string,
                     pass = loginInfo[1].val() as string;
 
-                this.socket.send(Packets.Intro, [Packets.IntroOpcode.Login, name, pass]);
+                this.socket.send(Packets.Intro, [Opcodes.Intro.Login, name, pass]);
 
                 if (this.game.hasRemember()) {
                     this.storage.data.player.username = name;
@@ -126,7 +155,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onWelcome((data: PlayerData) => {
+        this.messages.onWelcome((data) => {
             this.menu.loadHeader();
 
             this.game.player.load(data);
@@ -135,10 +164,10 @@ export default class Connection {
             this.game.postLoad();
         });
 
-        this.messages.onEquipment((opcode, info: Equipment | Equipment[] | string[]) => {
+        this.messages.onEquipment((opcode, info) => {
             switch (opcode) {
-                case Packets.EquipmentOpcode.Batch:
-                    _.each(info as Equipment[], (data) => {
+                case Opcodes.Equipment.Batch: {
+                    _.each(info as EquipmentBatchData, (data) => {
                         this.game.player.setEquipment(
                             data.type,
                             data.name,
@@ -153,10 +182,11 @@ export default class Connection {
                     this.menu.loadProfile();
 
                     break;
+                }
 
-                case Packets.EquipmentOpcode.Equip: {
+                case Opcodes.Equipment.Equip: {
                     let { type, name, string, count, ability, abilityLevel, power } =
-                        info as Equipment;
+                        info as EquipmentEquipData;
 
                     this.game.player.setEquipment(
                         type,
@@ -173,8 +203,8 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.EquipmentOpcode.Unequip: {
-                    let type = (info as string[]).shift()!;
+                case Opcodes.Equipment.Unequip: {
+                    let type = info as EquipmentUnequipData;
 
                     this.game.player.unequip(type);
 
@@ -190,9 +220,9 @@ export default class Connection {
             }
         });
 
-        this.messages.onSpawn((data: AnyEntity[]) => this.entities.create(data.shift()!));
+        this.messages.onSpawn((data) => this.entities.create(data as AnyEntity));
 
-        this.messages.onEntityList((data: string[]) => {
+        this.messages.onEntityList((data) => {
             let ids = _.map(this.entities.getAll(), 'id'),
                 known = _.intersection(ids, data),
                 newIds = _.difference(data, known);
@@ -207,27 +237,27 @@ export default class Connection {
             this.socket.send(Packets.Who, newIds);
         });
 
-        this.messages.onSync((data: Player) => {
+        this.messages.onSync((data) => {
             let entity = this.entities.get<Player>(data.id);
 
             if (!entity || entity.type !== 'player') return;
 
             if (data.hitPoints) {
                 entity.setHitPoints(data.hitPoints);
-                entity.setMaxHitPoints(data.maxHitPoints);
+                entity.setMaxHitPoints(data.maxHitPoints!);
             }
 
             if (data.mana) {
                 entity.mana = data.mana;
-                entity.maxMana = data.maxMana;
+                entity.maxMana = data.maxMana!;
             }
 
-            if (data.experience) {
-                entity.experience = data.experience;
-                entity.level = data.level;
+            if (data.experience!) {
+                entity.experience = data.experience!;
+                entity.level = data.level!;
             }
 
-            if (data.armour) entity.setSprite(this.game.getSprite(data.armour.name));
+            if (data.armour) entity.setSprite(this.game.getSprite(data.armour));
 
             if (data.weapon)
                 entity.setEquipment(
@@ -251,23 +281,25 @@ export default class Connection {
             this.menu.profile.update();
         });
 
-        this.messages.onMovement((opcode, info: any) => {
+        this.messages.onMovement((opcode, info) => {
             switch (opcode) {
-                case Packets.MovementOpcode.Move: {
-                    let entity = this.entities.get<Character>(info.id);
+                case Opcodes.Movement.Move: {
+                    let data = info as MovementMoveData,
+                        entity = this.entities.get<Character>(data.id);
 
                     if (!entity) return;
 
-                    if (info.forced) entity.stop(true);
+                    if (data.forced) entity.stop(true);
 
-                    entity.go(info.x, info.y);
+                    entity.go(data.x, data.y);
 
                     break;
                 }
 
-                case Packets.MovementOpcode.Follow: {
-                    let follower = this.entities.get<Character>(info.attackerId),
-                        followee = this.entities.get<Character>(info.targetId);
+                case Opcodes.Movement.Follow: {
+                    let data = info as MovementFollowData,
+                        follower = this.entities.get<Character>(data.attackerId),
+                        followee = this.entities.get<Character>(data.targetId);
 
                     if (!followee || !follower) return;
 
@@ -276,9 +308,10 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.MovementOpcode.Stop: {
-                    let sEntity = this.entities.get<Character>(info.id),
-                        { force } = info;
+                case Opcodes.Movement.Stop: {
+                    let data = info as MovementStopData,
+                        sEntity = this.entities.get<Character>(data.instance),
+                        { force } = data;
 
                     if (!sEntity) return;
 
@@ -286,23 +319,23 @@ export default class Connection {
 
                     break;
                 }
-                case Packets.MovementOpcode.Freeze:
-                case Packets.MovementOpcode.Stunned: {
-                    let pEntity = this.entities.get<Character>(info.id);
+                case Opcodes.Movement.Freeze:
+                case Opcodes.Movement.Stunned: {
+                    let data = info as MovementStateData,
+                        pEntity = this.entities.get<Character>(data.id);
 
                     if (!pEntity) return;
 
-                    if (info.state) pEntity.stop(false);
+                    if (data.state) pEntity.stop(false);
 
-                    if (opcode === Packets.MovementOpcode.Stunned) pEntity.stunned = info.state;
-                    else if (opcode === Packets.MovementOpcode.Freeze) pEntity.frozen = info.state;
+                    if (opcode === Opcodes.Movement.Stunned) pEntity.stunned = data.state;
+                    else if (opcode === Opcodes.Movement.Freeze) pEntity.frozen = data.state;
 
                     break;
                 }
 
-                case Packets.MovementOpcode.Orientate: {
-                    let player = info.shift(),
-                        orientation = info.shift(),
+                case Opcodes.Movement.Orientate: {
+                    let [player, orientation] = info as MovementOrientateData,
                         entity = this.entities.get<Character>(player);
 
                     // entity.stop();
@@ -313,7 +346,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onTeleport((info: any) => {
+        this.messages.onTeleport((info) => {
             let entity = this.entities.get<Player>(info.id),
                 isPlayer = info.id === this.game.player.id;
 
@@ -380,7 +413,7 @@ export default class Connection {
                     });*/
         });
 
-        this.messages.onDespawn((id: string) => {
+        this.messages.onDespawn((id) => {
             let entity = this.entities.get<Character>(id);
 
             if (!entity) return;
@@ -429,29 +462,30 @@ export default class Connection {
             });
         });
 
-        this.messages.onCombat((opcode, info: any) => {
-            let attacker = this.entities.get<Character>(info.attackerId),
-                target = this.entities.get<Character>(info.targetId);
+        this.messages.onCombat((opcode, info) => {
+            let attacker = this.entities.get<Character>(info.attackerId!),
+                target = this.entities.get<Character>(info.targetId!);
 
             if (!target || !attacker) return;
 
             switch (opcode) {
-                case Packets.CombatOpcode.Initiate:
+                case Opcodes.Combat.Initiate:
                     attacker.setTarget(target);
 
                     target.addAttacker(attacker);
 
                     if (target.id === this.game.player.id || attacker.id === this.game.player.id)
                         this.socket.send(Packets.Combat, [
-                            Packets.CombatOpcode.Initiate,
+                            Opcodes.Combat.Initiate,
                             attacker.id,
                             target.id
                         ]);
 
                     break;
 
-                case Packets.CombatOpcode.Hit: {
-                    let hit = info.hitInfo,
+                case Opcodes.Combat.Hit: {
+                    let data = info as CombatHitData,
+                        hit = data.hitInfo!,
                         isPlayer = target.id === this.game.player.id;
 
                     if (!hit.isAoE && !hit.isPoison) {
@@ -492,7 +526,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.CombatOpcode.Finish:
+                case Opcodes.Combat.Finish:
                     if (target) {
                         target.removeTarget();
                         target.forget();
@@ -502,14 +536,16 @@ export default class Connection {
 
                     break;
 
-                case Packets.CombatOpcode.Sync:
-                    if (target.x !== info.x || target.y !== info.y) target.go(info.x, info.y);
+                case Opcodes.Combat.Sync: {
+                    let data = info as CombatSyncData;
+                    if (target.x !== data.x || target.y !== data.y) target.go(data.x, data.y);
 
                     break;
+                }
             }
         });
 
-        this.messages.onAnimation((id: string, info: any) => {
+        this.messages.onAnimation((id, info) => {
             let character = this.entities.get<Character>(id);
 
             if (!character) return;
@@ -517,20 +553,20 @@ export default class Connection {
             character.performAction(character.orientation, info.action);
         });
 
-        this.messages.onProjectile((opcode, info: any) => {
+        this.messages.onProjectile((opcode, info) => {
             switch (opcode) {
-                case Packets.ProjectileOpcode.Create:
-                    this.entities.create(info);
+                case Opcodes.Projectile.Create:
+                    this.entities.create(info as AnyEntity);
 
                     break;
             }
         });
 
-        // this.messages.onPopulation((population) => {
-        //     this.population = population;
-        // });
+        this.messages.onPopulation((population) => {
+            this.population = population;
+        });
 
-        this.messages.onPoints((data: any) => {
+        this.messages.onPoints((data) => {
             let entity = this.entities.get<Player>(data.id);
 
             if (!entity) return;
@@ -549,20 +585,18 @@ export default class Connection {
             if (data.mana) entity.setMana(data.mana);
         });
 
-        this.messages.onNetwork(() =>
-            this.socket.send(Packets.Network, [Packets.NetworkOpcode.Pong])
-        );
+        this.messages.onNetwork(() => this.socket.send(Packets.Network, [Opcodes.Network.Pong]));
 
-        this.messages.onChat((info: any) => {
+        this.messages.onChat((info) => {
             log.debug(info);
 
             if (info.withBubble) {
-                let entity = this.entities.get(info.id);
+                let entity = this.entities.get(info.id!);
 
                 if (entity) {
                     info.name = info.name.charAt(0).toUpperCase() + info.name.slice(1);
 
-                    this.bubble.create(info.id, info.text, info.duration);
+                    this.bubble.create(info.id!, info.text, info.duration);
                     this.bubble.setTo(entity);
 
                     this.audio.play(Modules.AudioTypes.SFX, 'npctalk');
@@ -574,7 +608,7 @@ export default class Connection {
             this.input.chatHandler.add(info.name, info.text, info.colour);
         });
 
-        this.messages.onCommand((info: any) => {
+        this.messages.onCommand((info) => {
             /**
              * This is for random miscellaneous commands that require
              * a specific action done by the client as opposed to
@@ -595,18 +629,17 @@ export default class Connection {
             }
         });
 
-        this.messages.onInventory((opcode, info: any) => {
+        this.messages.onInventory((opcode, info) => {
             switch (opcode) {
-                case Packets.InventoryOpcode.Batch: {
-                    let inventorySize = info.shift() as number,
-                        data = info.shift() as Equipment[];
+                case Opcodes.Inventory.Batch: {
+                    let [inventorySize, data] = info as ContainerBatchData;
 
                     this.menu.loadInventory(inventorySize, data);
 
                     break;
                 }
 
-                case Packets.InventoryOpcode.Add: {
+                case Opcodes.Inventory.Add: {
                     let slot = info as Slot;
 
                     if (this.menu.bank) this.menu.addInventory(slot);
@@ -616,7 +649,7 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.InventoryOpcode.Remove: {
+                case Opcodes.Inventory.Remove: {
                     let slot = info as Slot;
 
                     if (this.menu.bank) this.menu.removeInventory(slot);
@@ -628,82 +661,83 @@ export default class Connection {
             }
         });
 
-        this.messages.onBank((opcode, info: any) => {
+        this.messages.onBank((opcode, info) => {
             switch (opcode) {
-                case Packets.BankOpcode.Batch: {
-                    let bankSize = info.shift() as number,
-                        data = info.shift() as Slot[];
+                case Opcodes.Bank.Batch: {
+                    let [bankSize, data] = info as ContainerBatchData;
 
                     this.menu.loadBank(bankSize, data);
 
                     break;
                 }
 
-                case Packets.BankOpcode.Add: {
-                    // let slot = info as Slot;
-
+                case Opcodes.Bank.Add: {
                     if (!this.menu.bank) return;
 
-                    this.menu.bank.add(info);
+                    this.menu.bank.add(info as ContainerAddData);
 
                     break;
                 }
 
-                case Packets.BankOpcode.Remove: {
-                    // let slot = info as Slot;
-
-                    this.menu.bank.remove(info);
+                case Opcodes.Bank.Remove: {
+                    this.menu.bank.remove(info as ContainerRemoveData);
 
                     break;
                 }
             }
         });
 
-        // this.messages.onAbility((opcode, info: any) => {});
+        // this.messages.onAbility((opcode, info) => {});
 
-        this.messages.onQuest((opcode, info: any) => {
+        this.messages.onQuest((opcode, info) => {
             switch (opcode) {
-                case Packets.QuestOpcode.AchievementBatch:
-                    this.menu.getQuestPage().loadAchievements(info.achievements);
+                case Opcodes.Quest.AchievementBatch: {
+                    let data = info as QuestAchievementBatchData;
+
+                    this.menu.getQuestPage().loadAchievements(data.achievements);
+
+                    break;
+                }
+
+                case Opcodes.Quest.QuestBatch: {
+                    let data = info as QuestBatchData;
+
+                    this.menu.getQuestPage().loadQuests(data.quests);
+
+                    break;
+                }
+
+                case Opcodes.Quest.Progress:
+                    this.menu.getQuestPage().progress(info as QuestProgressData);
 
                     break;
 
-                case Packets.QuestOpcode.QuestBatch:
-                    this.menu.getQuestPage().loadQuests(info.quests);
-
-                    break;
-
-                case Packets.QuestOpcode.Progress:
-                    this.menu.getQuestPage().progress(info);
-
-                    break;
-
-                case Packets.QuestOpcode.Finish:
-                    this.menu.getQuestPage().finish(info);
+                case Opcodes.Quest.Finish:
+                    this.menu.getQuestPage().finish(info as QuestFinishData);
 
                     break;
             }
         });
 
-        this.messages.onNotification((opcode, info: any) => {
+        this.messages.onNotification((opcode, info) => {
             switch (opcode) {
-                case Packets.NotificationOpcode.Ok:
+                case Opcodes.Notification.Ok:
                     this.menu.displayNotify(info.message);
 
                     break;
 
-                case Packets.NotificationOpcode.YesNo:
+                case Opcodes.Notification.YesNo:
                     this.menu.displayConfirm(info.message);
 
                     break;
 
-                case Packets.NotificationOpcode.Text:
+                case Opcodes.Notification.Text:
                     this.input.chatHandler.add('WORLD', info.message, info.colour);
 
                     break;
 
-                case Packets.NotificationOpcode.Popup:
-                    this.menu.showNotification(info.title, info.message, info.colour);
+                case Opcodes.Notification.Popup:
+                    this.menu.showNotification(info.title!, info.message, info.colour!);
 
                     break;
             }
@@ -717,7 +751,7 @@ export default class Connection {
             item.blink(150);
         });
 
-        this.messages.onHeal((info: any) => {
+        this.messages.onHeal((info) => {
             let entity = this.entities.get<Character>(info.id);
 
             if (!entity) return;
@@ -743,18 +777,20 @@ export default class Connection {
             entity.triggerHealthBar();
         });
 
-        this.messages.onExperience((opcode, info: any) => {
+        this.messages.onExperience((opcode, info) => {
             let entity = this.entities.get(info.id);
 
             switch (opcode) {
-                case Packets.ExperienceOpcode.Combat:
+                case Opcodes.Experience.Combat: {
                     if (!entity || entity.type !== 'player') return;
+
+                    let data = info as ExperienceCombatData;
 
                     /**
                      * We only receive level information about other entities.
                      */
-                    if (entity.level !== info.level) {
-                        entity.level = info.level;
+                    if (entity.level !== data.level) {
+                        entity.level = data.level;
                         this.info.create(Modules.Hits.LevelUp, null, entity.x, entity.y);
                     }
 
@@ -766,9 +802,9 @@ export default class Connection {
                     if (entity.id === this.game.player.id) {
                         if (info.id === this.game.player.id)
                             this.game.player.setExperience(
-                                info.experience,
-                                info.nextExperience,
-                                info.prevExperience
+                                data.experience,
+                                data.nextExperience!,
+                                data.prevExperience
                             );
 
                         this.info.create(
@@ -782,8 +818,9 @@ export default class Connection {
                     this.menu.profile.update();
 
                     break;
+                }
 
-                case Packets.ExperienceOpcode.Profession:
+                case Opcodes.Experience.Profession:
                     if (!entity || entity.type !== 'player') return;
 
                     if (entity.id === this.game.player.id)
@@ -822,12 +859,13 @@ export default class Connection {
             this.audio.update();
         });
 
-        this.messages.onNPC((opcode, info: any) => {
+        this.messages.onNPC((opcode, info) => {
             switch (opcode) {
-                case Packets.NPCOpcode.Talk: {
-                    let entity = this.entities.get(info.id),
-                        message = info.text,
-                        isNPC = !info.nonNPC;
+                case Opcodes.NPC.Talk: {
+                    let data = info as NPCTalkData,
+                        entity = this.entities.get(data.id!),
+                        message = data.text,
+                        isNPC = !data.nonNPC;
 
                     if (!entity) return;
 
@@ -836,11 +874,11 @@ export default class Connection {
                     if (isNPC)
                         if (!message) {
                             sound = 'npc-end';
-                            this.bubble.destroy(info.id);
+                            this.bubble.destroy(data.id!);
                         } else {
                             sound = 'npc';
 
-                            this.bubble.create(info.id, message);
+                            this.bubble.create(data.id!, message);
 
                             this.bubble.setTo(entity);
 
@@ -848,7 +886,7 @@ export default class Connection {
                                 this.renderer.camera.centreOn(this.game.player);
                         }
                     else {
-                        this.bubble.create(info.id, message, this.time);
+                        this.bubble.create(data.id!, message!, this.time);
                         this.bubble.setTo(entity);
                     }
 
@@ -859,17 +897,18 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.NPCOpcode.Bank:
+                case Opcodes.NPC.Bank:
                     this.menu.bank.display();
                     break;
 
-                case Packets.NPCOpcode.Enchant:
+                case Opcodes.NPC.Enchant:
                     this.menu.enchant.display();
                     break;
 
-                case Packets.NPCOpcode.Countdown: {
-                    let cEntity = this.entities.get(info.id),
-                        { countdown } = info;
+                case Opcodes.NPC.Countdown: {
+                    let data = info as NPCCountdownData,
+                        cEntity = this.entities.get(data.id),
+                        { countdown } = data;
 
                     cEntity?.setCountdown(countdown);
 
@@ -897,17 +936,16 @@ export default class Connection {
             this.game.player.dead = false;
         });
 
-        this.messages.onEnchant((opcode, info: any) => {
-            let { type } = info,
-                { index } = info;
+        this.messages.onEnchant((opcode, info) => {
+            let { type, index } = info;
 
             switch (opcode) {
-                case Packets.EnchantOpcode.Select:
+                case Opcodes.Enchant.Select:
                     this.menu.enchant.add(type, index);
 
                     break;
 
-                case Packets.EnchantOpcode.Remove:
+                case Opcodes.Enchant.Remove:
                     this.menu.enchant.moveBack(type, index);
 
                     break;
@@ -916,18 +954,18 @@ export default class Connection {
 
         this.messages.onGuild((opcode) => {
             switch (opcode) {
-                case Packets.GuildOpcode.Create:
+                case Opcodes.Guild.Create:
                     break;
 
-                case Packets.GuildOpcode.Join:
+                case Opcodes.Guild.Join:
                     break;
             }
         });
 
-        this.messages.onPointer((opcode, info: any) => {
+        this.messages.onPointer((opcode, info) => {
             switch (opcode) {
-                case Packets.PointerOpcode.NPC: {
-                    let entity = this.entities.get(info.id);
+                case Opcodes.Pointer.NPC: {
+                    let entity = this.entities.get(info.id!);
 
                     if (!entity) return;
 
@@ -937,27 +975,36 @@ export default class Connection {
                     break;
                 }
 
-                case Packets.PointerOpcode.Location:
-                    this.pointer.create(info.id, Modules.Pointers.Position);
-                    this.pointer.setToPosition(info.id, info.x * 16, info.y * 16);
+                case Opcodes.Pointer.Location: {
+                    let data = info as PointerLocationData;
+
+                    this.pointer.create(data.id, Modules.Pointers.Position);
+                    this.pointer.setToPosition(data.id, data.x * 16, data.y * 16);
 
                     break;
+                }
 
-                case Packets.PointerOpcode.Relative:
-                    this.pointer.create(info.id, Modules.Pointers.Relative);
-                    this.pointer.setRelative(info.id, info.x, info.y);
+                case Opcodes.Pointer.Relative: {
+                    let data = info as PointerRelativeData;
+
+                    this.pointer.create(data.id, Modules.Pointers.Relative);
+                    this.pointer.setRelative(data.id, data.x, data.y);
 
                     break;
+                }
 
-                case Packets.PointerOpcode.Remove:
+                case Opcodes.Pointer.Remove:
                     this.pointer.clean();
 
                     break;
 
-                case Packets.PointerOpcode.Button:
-                    this.pointer.create(info.id, Modules.Pointers.Button, info.button);
+                case Opcodes.Pointer.Button: {
+                    let data = info as PointerButtonData;
+
+                    this.pointer.create(data.id, Modules.Pointers.Button, data.button);
 
                     break;
+                }
             }
         });
 
@@ -970,63 +1017,81 @@ export default class Connection {
             }
         });
 
-        this.messages.onShop((opcode, info: any) => {
-            let { shop } = this.menu,
-                { shopData, id, index } = info;
+        this.messages.onShop((opcode, info) => {
+            let { shop } = this.menu;
 
             switch (opcode) {
-                case Packets.ShopOpcode.Open:
+                case Opcodes.Shop.Open: {
+                    let { shopData } = info as ShopOpenData;
+
                     shop.open(shopData.id);
                     shop.update(shopData);
 
                     break;
+                }
 
-                case Packets.ShopOpcode.Buy:
+                case Opcodes.Shop.Buy:
                     break;
 
-                case Packets.ShopOpcode.Sell:
+                case Opcodes.Shop.Sell:
                     break;
 
-                case Packets.ShopOpcode.Select:
-                    if (shop.isShopOpen(id)) shop.move(info);
+                case Opcodes.Shop.Select: {
+                    let data = info as ShopSelectData;
+
+                    if (shop.isShopOpen(data.id)) shop.move(data);
 
                     break;
+                }
 
-                case Packets.ShopOpcode.Remove:
+                case Opcodes.Shop.Remove: {
+                    let { id, index } = info as ShopRemoveData;
+
                     if (shop.isShopOpen(id)) shop.moveBack(index);
 
                     break;
+                }
 
-                case Packets.ShopOpcode.Refresh:
-                    if (shop.isShopOpen(id)) shop.update(info);
+                case Opcodes.Shop.Refresh: {
+                    let data = info as ShopRefreshData;
+
+                    if (shop.isShopOpen(data.id)) shop.update(data);
 
                     break;
+                }
             }
         });
 
-        this.messages.onMinigame((opcode, info: any) => {
+        this.messages.onMinigame((opcode, info) => {
             switch (opcode) {
-                case Packets.MinigameOpcode.TeamWar:
+                case Opcodes.Minigame.TeamWar:
                     this.teamWar.handle(info);
 
                     break;
             }
         });
 
-        this.messages.onRegion((opcode: number, bufferSize: number, info: any) => {
+        this.messages.onRegion((opcode, bufferSize, info) => {
+            let bufferData = window
+                    .atob(info)
+                    .split('')
+                    .map((char) => char.charCodeAt(0)),
+                inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' }),
+                reigon = JSON.parse(inflatedString);
+
             switch (opcode) {
-                case Packets.RegionOpcode.Render:
-                    this.map.synchronize(info);
+                case Opcodes.Region.Render:
+                    this.map.synchronize(reigon);
 
                     break;
 
-                case Packets.RegionOpcode.Modify:
-                    this.map.data[info.index] = info.data;
+                case Opcodes.Region.Modify:
+                    this.map.data[reigon.index] = reigon.data;
 
                     break;
 
-                case Packets.RegionOpcode.Update: {
-                    let entity = this.entities.get(info.id);
+                case Opcodes.Region.Update: {
+                    let entity = this.entities.get(reigon.id);
 
                     if (!entity || entity.id === this.game.player.id) return;
 
@@ -1043,44 +1108,53 @@ export default class Connection {
             this.renderer.updateAnimatedTiles();
         });
 
-        this.messages.onOverlay((opcode, info: any) => {
+        this.messages.onOverlay((opcode, info) => {
             switch (opcode) {
-                case Packets.OverlayOpcode.Set:
-                    this.overlays.updateOverlay(info.image);
+                case Opcodes.Overlay.Set: {
+                    let { image, colour } = info as OverlaySetData;
 
-                    if (!this.renderer.transitioning) this.renderer.updateDarkMask(info.colour);
-                    // else this.queueColour = info.colour;
+                    this.overlays.updateOverlay(image);
+
+                    if (!this.renderer.transitioning) this.renderer.updateDarkMask(colour);
+                    else this.queueColour = colour;
 
                     break;
+                }
 
-                case Packets.OverlayOpcode.Remove:
+                case Opcodes.Overlay.Remove:
                     this.renderer.removeAllLights();
                     this.overlays.currentOverlay = null;
 
                     break;
 
-                case Packets.OverlayOpcode.Lamp:
+                case Opcodes.Overlay.Lamp: {
+                    let { x, y, distance, diffuse, objects } = info as OverlayLampData;
+
                     this.renderer.addLight(
-                        info.x,
-                        info.y,
-                        info.distance,
-                        info.diffuse,
+                        x,
+                        y,
+                        distance!,
+                        diffuse!,
                         'rgba(0,0,0,0.4)',
                         true,
-                        info.objects
+                        objects!
                     );
 
                     break;
+                }
 
-                case Packets.OverlayOpcode.RemoveLamps:
+                case Opcodes.Overlay.RemoveLamps:
                     this.renderer.removeAllLights();
 
                     break;
 
-                case Packets.OverlayOpcode.Darkness:
-                    this.renderer.updateDarkMask(info.colour);
+                case Opcodes.Overlay.Darkness: {
+                    let { colour } = info as OverlayDarknessData;
+
+                    this.renderer.updateDarkMask(colour);
 
                     break;
+                }
             }
         });
 
@@ -1096,22 +1170,22 @@ export default class Connection {
             this.renderer.forceRendering = true;
 
             switch (opcode) {
-                case Packets.CameraOpcode.LockX:
+                case Opcodes.Camera.LockX:
                     this.renderer.camera.lockX = true;
                     break;
 
-                case Packets.CameraOpcode.LockY:
+                case Opcodes.Camera.LockY:
                     this.renderer.camera.lockY = true;
                     break;
 
-                case Packets.CameraOpcode.FreeFlow:
+                case Opcodes.Camera.FreeFlow:
                     this.renderer.removeNonRelativeLights();
 
                     this.renderer.camera.lockX = false;
                     this.renderer.camera.lockY = false;
                     break;
 
-                case Packets.CameraOpcode.Player: {
+                case Opcodes.Camera.Player: {
                     let middle = this.renderer.getMiddle();
 
                     this.renderer.removeAllLights();
@@ -1122,7 +1196,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onBubble((info: any) => {
+        this.messages.onBubble((info) => {
             if (!info.text) {
                 this.bubble.destroy(info.id);
                 return;
@@ -1133,17 +1207,23 @@ export default class Connection {
             this.bubble.setTo(info.info);
         });
 
-        this.messages.onProfession((opcode, info: any) => {
+        this.messages.onProfession((opcode, info) => {
             switch (opcode) {
-                case Packets.ProfessionOpcode.Batch:
-                    this.menu.getProfessionPage().load(info.data);
+                case Opcodes.Profession.Batch: {
+                    let { data } = info as ProfessionBatchData;
+
+                    this.menu.getProfessionPage().load(data);
 
                     break;
+                }
 
-                case Packets.ProfessionOpcode.Update:
-                    this.menu.getProfessionPage().sync(info);
+                case Opcodes.Profession.Update: {
+                    let data = info as ProfessionUpdateData;
+
+                    this.menu.getProfessionPage().sync(data);
 
                     break;
+                }
             }
         });
     }

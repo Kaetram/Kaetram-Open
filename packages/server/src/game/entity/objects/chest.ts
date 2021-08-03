@@ -1,4 +1,4 @@
-import Utils from '../../../util/utils';
+import Utils from '@kaetram/common/util/utils';
 import Entity from '../entity';
 
 import type Player from '../character/player/player';

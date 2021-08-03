@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
 import mapData from '../../data/map/world.json';
 import Spawns from '../../data/spawns.json';
@@ -8,7 +9,6 @@ import Items from '../util/items';
 import Mobs from '../util/mobs';
 import NPCs from '../util/npcs';
 import Objects from '../util/objects';
-import Utils from '../util/utils';
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
@@ -328,7 +328,7 @@ export default class Map {
     private getObjectId(tileIndex: number): string {
         let position = this.indexToGridPosition(tileIndex + 1);
 
-        return position.x + '-' + position.y;
+        return `${position.x}-${position.y}`;
     }
 
     private getObject(

@@ -1,4 +1,4 @@
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes, Packets } from '@kaetram/common/network';
 
 import Character from './character/character';
 
@@ -51,7 +51,7 @@ export default class EntityHandler {
 
             if (entity.type === 'mob')
                 game.socket.send(Packets.Movement, [
-                    Packets.MovementOpcode.Entity,
+                    Opcodes.Movement.Entity,
                     entity.id,
                     entity.gridX,
                     entity.gridY

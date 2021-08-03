@@ -624,12 +624,14 @@
 #worlds-switch {
     bottom: 5px;
     left: 5px;
+    z-index: 2;
     display: none;
     position: fixed;
     padding: 0.5em 1em;
     color: white;
     cursor: pointer;
-    font-size: 0.75em;
+    font-size: 1em;
+    font-family: 'AdvoCut', sans-serif;
     border: 1px solid #555;
     border-radius: 5px;
     background-color: #d83a39;
@@ -647,9 +649,9 @@
 
 #worlds-popup {
     display: none;
-    z-index: 1;
+    cursor: default;
     bottom: 125%;
-    left: 62.5%;
+    left: 50%;
     background-color: #555;
     color: #fff;
     text-align: justify;
@@ -677,13 +679,18 @@
         padding: 12px 24px 10px 16px;
         border-left: 2px solid #fff;
     }
+}
 
-    & > table tr:hover {
+.server-list {
+    cursor: pointer;
+
+    &:hover {
         background-color: #333a;
+    }
 
-        &::after {
-            content: 'Join';
-        }
+    &.active {
+        color: #fcda5c;
+        background-color: #333;
     }
 }
 

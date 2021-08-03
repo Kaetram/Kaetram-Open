@@ -1,26 +1,13 @@
 import $ from 'jquery';
 
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes, Packets } from '@kaetram/common/network';
 
 import Container from './container/container';
 
+import type { ShopData } from '@kaetram/common/types/info';
+import type { ShopSelectData } from '@kaetram/common/types/messages';
 import type MenuController from '../controllers/menu';
 import type Game from '../game';
-
-interface ShopMoveInfo {
-    id: string;
-    slotId: string;
-    currency: string;
-    price: number;
-}
-
-interface ShopData {
-    id: number;
-    strings: string[];
-    names: string[];
-    counts: number[];
-    prices: number[];
-}
 
 export default class Shop {
     private body = $('#shop');
@@ -60,25 +47,25 @@ export default class Shop {
     private buy(event: JQuery.ClickEvent): void {
         let id = event.currentTarget.id.slice(11);
 
-        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Buy, this.openShop, id, 1]);
+        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Buy, this.openShop, id, 1]);
     }
 
     private sell(): void {
         // The server will handle the selected item and verifications.
-        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Sell, this.openShop]);
+        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Sell, this.openShop]);
     }
 
     private select(event: JQuery.ClickEvent): void {
         let id = event.currentTarget.id.slice(17);
 
-        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Select, this.openShop, id]);
+        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Select, this.openShop, id]);
     }
 
     private remove(): void {
-        this.game.socket.send(Packets.Shop, [Packets.ShopOpcode.Remove]);
+        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Remove]);
     }
 
-    public move(info: ShopMoveInfo): void {
+    public move(info: ShopSelectData): void {
         let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
             slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`),
             slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);

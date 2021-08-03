@@ -1,5 +1,5 @@
 import Items from '../../../../../util/items';
-import * as Modules from '@kaetram/common/src/modules';
+import { Modules } from '@kaetram/common/network';
 import Equipment from './equipment';
 
 export default class Armour extends Equipment {

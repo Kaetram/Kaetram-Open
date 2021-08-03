@@ -15,6 +15,8 @@ export interface ProcessedArea {
 
     // Light
     distance?: number;
+    diffuse?: number;
+    objects?: Pos[];
 
     // Chest
     entities?: number;

@@ -1,12 +1,11 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
 import Messages from '../../../../network/messages';
 import Items from '../../../../util/items';
-import log from '../../../../util/log';
-import Utils from '../../../../util/utils';
 
 import type Slot from './containers/slot';
 import type Player from './player';
@@ -41,7 +40,7 @@ export default class Enchant {
         }
 
         this.player.send(
-            new Messages.Enchant(Packets.EnchantOpcode.Select, {
+            new Messages.Enchant(Opcodes.Enchant.Select, {
                 type,
                 index: item.index
             })
@@ -64,7 +63,7 @@ export default class Enchant {
         if (index < 0) return;
 
         this.player.send(
-            new Messages.Enchant(Packets.EnchantOpcode.Remove, {
+            new Messages.Enchant(Opcodes.Enchant.Remove, {
                 type,
                 index
             })

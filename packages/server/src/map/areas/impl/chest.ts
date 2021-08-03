@@ -1,5 +1,6 @@
+import Utils from '@kaetram/common/util/utils';
+
 import World from '../../../game/world';
-import Utils from '../../../util/utils';
 import Area from '../area';
 import Areas from '../areas';
 

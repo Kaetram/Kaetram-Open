@@ -1,4 +1,4 @@
-import log from '../util/log';
+import log from '@kaetram/common/util/log';
 
 import type { Item } from '../../data/items';
 
@@ -68,7 +68,7 @@ export default {
 
     stringToId(name: string): number | null {
         if (name in this.Data) return this.Data[name].id;
-        log.error('Item: ' + name + ' not found in the database.');
+        log.error(`Item: ${name} not found in the database.`);
 
         return null;
     },

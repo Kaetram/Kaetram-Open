@@ -1,4 +1,12 @@
 {
     "name": "@kaetram/common",
-    "types": "types/index.d.ts"
+    "types": "types/index.d.ts",
+    "devDependencies": {
+        "@types/dotenv-parse-variables": "^2.0.1",
+        "@types/lodash": "^4.14.171",
+        "@types/node": "^16.4.10",
+        "dotenv-extended": "^2.9.0",
+        "dotenv-parse-variables": "^2.0.0",
+        "lodash": "^4.17.21"
+    }
 }

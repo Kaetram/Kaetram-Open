@@ -1,20 +1,13 @@
-import Packets from '@kaetram/common/src/packets';
+import { Opcodes } from '@kaetram/common/network';
+import Utils from '@kaetram/common/util/utils';
 
 import Messages from '../../../../../network/messages';
-import Utils from '../../../../../util/utils';
 
+import type { QuestInfo } from '@kaetram/common/types/info';
 import type NPC from '../../../npc/npc';
 import type Mob from '../../mob/mob';
 import type { Door } from '../doors';
 import type Player from '../player';
-
-export interface QuestInfo {
-    id: number;
-    name: string;
-    description: string;
-    stage: number;
-    finished: boolean;
-}
 
 type Task = 'click' | 'door' | 'kill' | 'talk' | 'item';
 
@@ -83,7 +76,7 @@ export default abstract class Quest {
         this.setStage(9999);
 
         this.player.send(
-            new Messages.Quest(Packets.QuestOpcode.Finish, {
+            new Messages.Quest(Opcodes.Quest.Finish, {
                 id: this.id,
                 isQuest: true
             })
@@ -120,7 +113,7 @@ export default abstract class Quest {
 
         if (!pointer) return;
 
-        let [opcode] = pointer;
+        let [opcode] = pointer as [number];
 
         if (opcode === 4)
             this.player.send(
@@ -145,7 +138,7 @@ export default abstract class Quest {
         this.player.talkIndex = 0;
 
         this.player.send(
-            new Messages.NPC(Packets.NPCOpcode.Talk, {
+            new Messages.NPC(Opcodes.NPC.Talk, {
                 id: npc.instance,
                 text: message
             })
@@ -160,7 +153,7 @@ export default abstract class Quest {
     }
 
     public clearPointers(): void {
-        this.player.send(new Messages.Pointer(Packets.PointerOpcode.Remove, {}));
+        this.player.send(new Messages.Pointer(Opcodes.Pointer.Remove, {}));
     }
 
     protected onNPCTalk(callback: NPCTalkCallback): void {

@@ -1,15 +1,15 @@
 import _ from 'lodash';
 
-import * as Modules from '@kaetram/common/src/modules';
-import Packets from '@kaetram/common/src/packets';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
 import Messages from '../../../../network/messages';
 import Formulas from '../../../../util/formulas';
-import log from '../../../../util/log';
-import Utils from '../../../../util/utils';
 import CombatQueue from './combatqueue';
-import Hit, { HitData } from './hit';
+import Hit from './hit';
 
+import type { HitData } from '@kaetram/common/types/info';
 import type Entities from '../../../../controllers/entities';
 import type World from '../../../world';
 import type Character from '../character';
@@ -198,9 +198,9 @@ export default class Combat {
     private sync(): void {
         if (this.character.type !== 'mob') return;
 
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: this.character.region,
-            message: new Messages.Combat(Packets.CombatOpcode.Sync, {
+            message: new Messages.Combat(Opcodes.Combat.Sync, {
                 attackerId: this.character.instance, // irrelevant
                 targetId: this.character.instance, // can be the same since we're acting on an entity.
                 x: this.character.x,
@@ -255,9 +255,9 @@ export default class Combat {
 
         mob.return();
 
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: this.character.region,
-            message: new Messages.Movement(Packets.MovementOpcode.Move, {
+            message: new Messages.Movement(Opcodes.Movement.Move, {
                 id: this.character.instance,
                 x: this.character.x,
                 y: this.character.y,
@@ -385,17 +385,14 @@ export default class Combat {
         if (character.isRanged() || hitInfo.isRanged) {
             let projectile = this.world.entities.spawnProjectile([character, target])!;
 
-            this.world.push(Packets.PushOpcode.Regions, {
+            this.world.push(Opcodes.Push.Regions, {
                 regionId: character.region,
-                message: new Messages.Projectile(
-                    Packets.ProjectileOpcode.Create,
-                    projectile.getData()
-                )
+                message: new Messages.Projectile(Opcodes.Projectile.Create, projectile.getData())
             });
         } else {
-            this.world.push(Packets.PushOpcode.Regions, {
+            this.world.push(Opcodes.Push.Regions, {
                 regionId: character.region,
-                message: new Messages.Combat(Packets.CombatOpcode.Hit, {
+                message: new Messages.Combat(Opcodes.Combat.Hit, {
                     attackerId: character.instance,
                     targetId: target.instance,
                     hitInfo
@@ -411,9 +408,9 @@ export default class Combat {
     }
 
     private follow(character: Character, target: Character): void {
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: character.region,
-            message: new Messages.Movement(Packets.MovementOpcode.Follow, {
+            message: new Messages.Movement(Opcodes.Movement.Follow, {
                 attackerId: character.instance,
                 targetId: target.instance,
                 isRanged: character.isRanged(),
@@ -423,9 +420,9 @@ export default class Combat {
     }
 
     public end(): void {
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: this.character.region,
-            message: new Messages.Combat(Packets.CombatOpcode.Finish, {
+            message: new Messages.Combat(Opcodes.Combat.Finish, {
                 attackerId: this.character.instance,
                 targetId: null
             })
@@ -437,9 +434,9 @@ export default class Combat {
 
         // let ignores = [this.character.instance, this.character.target.instance];
 
-        this.world.push(Packets.PushOpcode.Regions, {
+        this.world.push(Opcodes.Push.Regions, {
             regionId: this.character.region,
-            message: new Messages.Movement(Packets.MovementOpcode.Follow, {
+            message: new Messages.Movement(Opcodes.Movement.Follow, {
                 attackerId: this.character.instance,
                 targetId: this.character.target.instance
             })
