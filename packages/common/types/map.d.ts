@@ -64,7 +64,6 @@ export interface ProcessedMap {
     data: (number | number[])[];
 
     collisions: number[];
-    tileCollisions: number[];
     polygons: { [tileId: number]: Pos[] };
     entities: Entities;
     staticEntities: Entities;

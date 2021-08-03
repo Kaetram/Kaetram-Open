@@ -210,7 +210,7 @@ export default class Region {
         for (let i in doors.indexes) {
             let tile: Partial<RegionTileData> = {
                     data: doors.data[i],
-                    isCollision: doors.collisions[i]
+                    c: doors.collisions[i]
                 },
                 index = doors.indexes[i];
 
@@ -230,9 +230,6 @@ export default class Region {
 
     private sendTilesetInfo(player: Player): void {
         let tilesetData: TilesetData = {};
-
-        for (let i in this.map.tileCollisions)
-            tilesetData[this.map.tileCollisions[i]] = { c: true };
 
         for (let i in this.map.high)
             if (i in tilesetData) tilesetData[i].h = this.map.high[i];
@@ -428,13 +425,13 @@ export default class Region {
                 let dynamicTile = dynamicTiles[info.index!];
 
                 info.data = dynamicTile.data;
-                info.isCollision = dynamicTile.isCollision;
+                info.c = dynamicTile.c;
 
                 if (dynamicTile.isObject) info.isObject = dynamicTile.isObject;
                 if (dynamicTile.cursor) info.cursor = dynamicTile.cursor;
             } else {
                 if (tileData) info.data = tileData as number[];
-                if (isCollision) info.isCollision = isCollision;
+                if (isCollision) info.c = isCollision;
                 if (objectId) {
                     info.isObject = !!objectId;
                     let cursor = this.map.getCursor(info.index!, objectId);
