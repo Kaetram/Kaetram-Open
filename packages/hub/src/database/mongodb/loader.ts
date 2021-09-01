@@ -7,7 +7,7 @@ export default class Loader {
     public constructor(private database: MongoDB) {}
 
     public async getGuilds(): Promise<GuildData[]> {
-        let database = await this.database.getDatabase(),
+        let database = await this.database.getConnection(),
             guilds = database.collection<GuildData>('guild_data'),
             cursor = guilds.find();
 
@@ -15,7 +15,7 @@ export default class Loader {
     }
 
     public async getGuild(name: string): Promise<GuildData | null> {
-        let database = await this.database.getDatabase(),
+        let database = await this.database.getConnection(),
             guilds = database.collection('guild_data'),
             cursor = guilds.find({ name: name.toLowerCase() }),
             guildsArray = await cursor.toArray(),
@@ -34,7 +34,7 @@ export default class Loader {
     }
 
     public async guildExists(name: string): Promise<boolean> {
-        let database = await this.database.getDatabase(),
+        let database = await this.database.getConnection(),
             guilds = database.collection('guild_data'),
             cursor = guilds.find({ name: name.toLowerCase() }),
             data = await cursor.toArray();
