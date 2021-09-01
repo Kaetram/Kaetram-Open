@@ -26,7 +26,7 @@ import Camera from './renderer/camera';
 import Overlay from './renderer/overlay';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
-import { getUserAgent, supportsWebGL } from './utils/detect';
+import { agent, supportsWebGL } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
 
@@ -274,7 +274,7 @@ export default class Game {
         if (storage) player.setOrientation(storage.data.player.orientation);
         player.idle();
 
-        if (map) socket.send(Packets.Ready, [true, map.preloadedData, getUserAgent()]);
+        if (map) socket.send(Packets.Ready, [true, map.preloadedData, agent]);
         this.sendClientData();
 
         new PlayerHandler(this, player);
@@ -314,7 +314,7 @@ export default class Game {
         x: number,
         y: number,
         ignores: Character[],
-        isObject?: boolean
+        isObject = false
     ): number[][] {
         let { entities, map, pathfinder } = this,
             grid = entities.grids.pathingGrid,
@@ -344,7 +344,7 @@ export default class Game {
      * disconnects of a player whilst in the game, not
      * menu-based errors.
      */
-    public handleDisconnection(noError?: boolean): void {
+    public handleDisconnection(noError = false): void {
         let { started, renderer, menu, app } = this;
 
         if (!started) return;
