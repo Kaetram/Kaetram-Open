@@ -162,6 +162,6 @@ export default class OgreLord extends Combat {
     }
 
     private canSpawn(): boolean {
-        return Date.now() - this.lastSpawn > 50000 && !this.hasMinions() && this.isAttacked();
+        return Date.now() - this.lastSpawn > 50_000 && !this.hasMinions() && this.isAttacked();
     }
 }
