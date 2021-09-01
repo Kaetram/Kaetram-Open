@@ -15,143 +15,124 @@ export default class MongoDB {
     public loader = new Loader(this);
     public creator = new Creator(this);
 
+    private url: string;
     private connection!: Db;
 
     public constructor(
-        private host: string,
-        private port: number,
-        private user: string,
-        private password: string,
+        host: string,
+        port: number,
+        user: string,
+        password: string,
         private database: string
-    ) {}
+    ) {
+        let { mongodbAuth, mongodbSrv } = config;
 
-    public getConnection(callback: (connection: Db) => void): void {
-        let url = config.mongodbAuth
-                ? `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`
-                : `mongodb://${this.host}:${this.port}/${this.database}`,
-            client = new MongoClient(url, {
-                wtimeoutMS: 5
-            });
+        this.url = mongodbSrv
+            ? mongodbAuth
+                ? `mongodb+srv://${user}:${password}@${host}/${database}`
+                : `mongodb+srv://${host}/${database}`
+            : mongodbAuth
+            ? `mongodb://${user}:${password}@${host}:${port}/${database}`
+            : `mongodb://${host}:${port}/${database}`;
+    }
 
-        if (this.connection) {
-            callback(this.connection);
-            return;
-        }
+    public async getConnection(): Promise<Db> {
+        if (this.connection) return this.connection;
 
-        client.connect((error, newClient) => {
-            if (error) {
+        let client = new MongoClient(this.url, { wtimeoutMS: 5 }),
+            newClient = await client.connect().catch((error) => {
                 log.error('Could not connect to MongoDB database.');
-                log.error(`Error Info: ${error}`);
-                return;
-            }
+                log.error(`Error Info:`, error);
+            });
 
-            this.connection = newClient!.db(this.database);
+        this.connection = newClient!.db(this.database);
 
-            callback(this.connection);
-        });
+        return this.connection;
     }
 
-    public login(player: Player): void {
-        this.getConnection((database) => {
-            let dataCursor = database
-                    .collection<FullPlayerData>('player_data')
-                    .find({ username: player.username }),
-                equipmentCursor = database
-                    .collection<PlayerEquipment>('player_equipment')
-                    .find({ username: player.username }),
-                regionsCursor = database
-                    .collection<PlayerRegions>('player_regions')
-                    .find({ username: player.username });
+    public async login(player: Player): Promise<void> {
+        let database = await this.getConnection(),
+            dataCursor = database
+                .collection<FullPlayerData>('player_data')
+                .find({ username: player.username }),
+            equipmentCursor = database
+                .collection<PlayerEquipment>('player_equipment')
+                .find({ username: player.username }),
+            regionsCursor = database
+                .collection<PlayerRegions>('player_regions')
+                .find({ username: player.username }),
+            [playerInfo] = await dataCursor.toArray();
 
-            dataCursor.toArray().then((playerData) => {
-                equipmentCursor.toArray().then((equipmentData) => {
-                    regionsCursor.toArray().then((regionData) => {
-                        if (playerData.length === 0) this.register(player);
-                        else {
-                            let [playerInfo] = playerData,
-                                [equipmentInfo] = equipmentData,
-                                [regions] = regionData;
+        if (playerInfo) {
+            let [equipmentInfo] = await equipmentCursor.toArray(),
+                [regions] = await regionsCursor.toArray();
 
-                            playerInfo.armour = equipmentInfo.armour;
-                            playerInfo.weapon = equipmentInfo.weapon;
-                            playerInfo.pendant = equipmentInfo.pendant;
-                            playerInfo.ring = equipmentInfo.ring;
-                            playerInfo.boots = equipmentInfo.boots;
+            playerInfo.armour = equipmentInfo.armour;
+            playerInfo.weapon = equipmentInfo.weapon;
+            playerInfo.pendant = equipmentInfo.pendant;
+            playerInfo.ring = equipmentInfo.ring;
+            playerInfo.boots = equipmentInfo.boots;
 
-                            player.load(playerInfo);
-                            player.loadRegions(regions);
+            player.load(playerInfo);
+            player.loadRegions(regions);
 
-                            player.intro();
-                        }
-                    });
+            player.intro();
+        } else this.register(player);
+    }
+
+    public async verify(player: Player): Promise<void> {
+        let database = await this.getConnection(),
+            dataCursor = database.collection('player_data').find({ username: player.username }),
+            [info] = await dataCursor.toArray();
+
+        return new Promise((resolve, reject) => {
+            if (info)
+                bcryptjs.compare(player.password, info.password, (error, result) => {
+                    if (error) throw error;
+
+                    if (result) resolve();
+                    else reject();
                 });
-            });
+            else reject();
         });
     }
 
-    public verify(player: Player, callback: (data: { status: 'success' | 'error' }) => void): void {
-        this.getConnection((database) => {
-            let dataCursor = database.collection('player_data').find({ username: player.username });
+    public async register(player: Player): Promise<void> {
+        let database = await this.getConnection(),
+            playerData = database.collection('player_data'),
+            cursor = playerData.find({ username: player.username }),
+            [info] = await cursor.toArray();
 
-            dataCursor.toArray().then((data) => {
-                if (data.length === 0) callback({ status: 'error' });
-                else {
-                    let [info] = data;
+        if (!info) {
+            log.notice(`No player data found for ${player.username}. Creating user.`);
 
-                    bcryptjs.compare(player.password, info.password, (error, result) => {
-                        if (error) throw error;
+            player.new = true;
 
-                        if (result) callback({ status: 'success' });
-                        else callback({ status: 'error' });
-                    });
-                }
-            });
-        });
+            player.load(Creator.getFullData(player));
+            player.intro();
+        }
     }
 
-    public register(player: Player): void {
-        this.getConnection((database) => {
-            let playerData = database.collection('player_data'),
-                cursor = playerData.find({ username: player.username });
+    public async exists(player: Player): Promise<{ exists: boolean; type?: string }> {
+        let database = await this.getConnection(),
+            playerData = database.collection('player_data'),
+            emailCursor = playerData.find({ email: player.email }),
+            usernameCursor = playerData.find({ username: player.username });
 
-            cursor.toArray().then((info) => {
-                if (info.length === 0) {
-                    log.notice(`No player data found for ${player.username}. Creating user.`);
+        log.debug(`Looking for - ${player.email} or ${player.username}`);
 
-                    player.new = true;
+        let [email] = await emailCursor.toArray();
+        if (email) return { exists: true, type: 'email' };
 
-                    player.load(Creator.getFullData(player));
-                    player.intro();
-                }
-            });
-        });
+        let [username] = await usernameCursor.toArray();
+        if (username) return { exists: true, type: 'user' };
+
+        return { exists: false };
     }
 
-    public exists(
-        player: Player,
-        callback: (data: { exists: boolean; type?: string }) => void
-    ): void {
-        this.getConnection((database) => {
-            let playerData = database.collection('player_data'),
-                emailCursor = playerData.find({ email: player.email }),
-                usernameCursor = playerData.find({ username: player.username });
-
-            log.debug(`Looking for - ${player.email} or ${player.username}`);
-
-            emailCursor.toArray().then((emailArray) => {
-                if (emailArray.length === 0)
-                    usernameCursor.toArray().then((usernameArray) => {
-                        if (usernameArray.length === 0) callback({ exists: false });
-                        else callback({ exists: true, type: 'user' });
-                    });
-                else callback({ exists: true, type: 'email' });
-            });
-        });
-    }
-
-    public delete(player: Player): void {
-        this.getConnection((database) => {
-            let collections = [
+    public async delete(player: Player): Promise<void> {
+        let database = await this.getConnection(),
+            collections = [
                 'player_data',
                 'player_equipment',
                 'player_inventory',
@@ -161,61 +142,51 @@ export default class MongoDB {
                 'player_achievements'
             ];
 
-            _.each(collections, (col) => {
-                let collection = database.collection(col);
+        _.each(collections, (col) => {
+            let collection = database.collection(col);
 
-                collection.deleteOne(
-                    {
-                        username: player.username
-                    },
-                    (error, result) => {
-                        if (error) throw error;
+            collection.deleteOne({ username: player.username }, (error, result) => {
+                if (error) throw error;
 
-                        if (result) log.notice(`Player ${player.username} has been deleted.`);
-                    }
-                );
+                if (result) log.notice(`Player ${player.username} has been deleted.`);
             });
         });
     }
 
-    public registeredCount(callback: (count: number) => void): void {
-        this.getConnection((database) => {
-            let collection = database.collection('player_data');
+    public async registeredCount(callback: (count: number) => void): Promise<void> {
+        let database = await this.getConnection(),
+            collection = database.collection('player_data'),
+            count = await collection.countDocuments();
 
-            collection.countDocuments().then((count) => {
-                callback(count);
-            });
-        });
+        callback(count);
     }
 
-    public resetPositions(newX: number, newY: number, callback: (status: string) => void): void {
-        this.getConnection((database) => {
-            let collection = database.collection('player_data'),
-                cursor = collection.find();
+    public async resetPositions(
+        newX: number,
+        newY: number,
+        callback: (status: string) => void
+    ): Promise<void> {
+        let database = await this.getConnection(),
+            collection = database.collection('player_data'),
+            cursor = collection.find(),
+            playerList = await cursor.toArray();
 
-            cursor.toArray().then((playerList) => {
-                _.each(playerList, (playerInfo) => {
-                    delete playerInfo._id;
+        _.each(playerList, (playerInfo) => {
+            delete playerInfo._id;
 
-                    playerInfo.x = newX;
-                    playerInfo.y = newY;
+            playerInfo.x = newX;
+            playerInfo.y = newY;
 
-                    collection.updateOne(
-                        {
-                            username: playerInfo.username
-                        },
-                        { $set: playerInfo },
-                        {
-                            upsert: true
-                        },
-                        (error, result) => {
-                            if (error) throw error;
+            collection.updateOne(
+                { username: playerInfo.username },
+                { $set: playerInfo },
+                { upsert: true },
+                (error, result) => {
+                    if (error) throw error;
 
-                            if (result) callback('Successfully updated positions.');
-                        }
-                    );
-                });
-            });
+                    if (result) callback('Successfully updated positions.');
+                }
+            );
         });
     }
 }
