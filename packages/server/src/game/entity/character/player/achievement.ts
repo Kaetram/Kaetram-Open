@@ -140,7 +140,7 @@ export default class Achievement {
         return false;
     }
 
-    public setProgress(progress: number, skipRegion?: boolean): void {
+    public setProgress(progress: number, skipRegion = false): void {
         this.progress = progress;
 
         if (this.data.isDoorReward && !skipRegion) this.player.updateRegion();
