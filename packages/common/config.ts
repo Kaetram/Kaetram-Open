@@ -18,6 +18,7 @@ export interface Config {
     apiPort: number;
 
     hubEnabled: boolean;
+    hubHost: string;
     hubPort: number;
     hubPing: number;
     hubAccessToken: string;
@@ -67,12 +68,14 @@ let envConfig = dotenvParseVariables(
             includeProcessEnv: true
         })
     ),
-    appConfig = {} as Config;
+    config = {} as Config;
 
 for (let key of Object.keys(envConfig)) {
     let camelCaseKey = camelCase(key) as keyof Config;
 
-    appConfig[camelCaseKey] = envConfig[key] as never;
+    config[camelCaseKey] = envConfig[key] as never;
 }
 
-export default appConfig;
+config.hubHost = config.hubHost || config.host;
+
+export default config;

@@ -30,9 +30,7 @@ export interface Movable {
     attackerId: string;
     hitType: number;
 }
-/**
- * TODO: Refactor once on TypeScript 4.4
- */
+
 export type AnyEntity = Entity & Player & Mob & ProjectileData & Weapon & Equipment & Movable;
 
 export default class EntitiesController {

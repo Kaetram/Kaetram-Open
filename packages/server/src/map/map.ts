@@ -30,7 +30,7 @@ let map = mapData as ProcessedMap;
 interface Door {
     x: number;
     y: number;
-    orientation?: number;
+    orientation: number | undefined;
 }
 
 type EntityType = 'mob' | 'npc' | 'item' | null;
@@ -76,9 +76,9 @@ export default class Map {
         tileIndex: number;
         string: string;
         roaming: boolean;
-        achievementId?: number;
-        boss?: boolean;
-        miniboss?: boolean;
+        achievementId?: number | undefined;
+        boss?: boolean | undefined;
+        miniboss?: boolean | undefined;
         type: EntityType;
     }[];
 
