@@ -4,7 +4,7 @@ import type Player from './player';
 
 type Status = 'offline';
 
-export interface FriendsList {
+interface FriendsList {
     [username: string]: Status;
 }
 
@@ -18,7 +18,7 @@ export default class Friends {
 
     public constructor(private player: Player) {}
 
-    public update(info: FriendsList): void {
+    public update(info: unknown): void {
         log.info(info);
     }
 

@@ -140,7 +140,7 @@ export default class Incoming {
         });
     }
 
-    private async handleIntro(message: [Opcodes.Intro, string, string, string]): Promise<void> {
+    private handleIntro(message: [Opcodes.Intro, string, string, string]): void {
         let [loginType, username, password] = message,
             isRegistering = loginType === Opcodes.Intro.Register,
             isGuest = loginType === Opcodes.Intro.Guest,
@@ -175,14 +175,14 @@ export default class Incoming {
 
         this.introduced = true;
 
-        if (isRegistering) {
-            let { exists, type } = await this.database.exists(this.player);
-
-            if (exists) {
-                this.connection.sendUTF8(`${type}exists`);
-                this.connection.close(`${type} is not available.`);
-            } else this.database.register(this.player);
-        } else if (isGuest) {
+        if (isRegistering)
+            this.database.exists(this.player, (result) => {
+                if (result.exists) {
+                    this.connection.sendUTF8(`${result.type}exists`);
+                    this.connection.close(`${result.type} is not available.`);
+                } else this.database.register(this.player);
+            });
+        else if (isGuest) {
             this.player.username = `Guest${Utils.randomInt(0, 2000000)}`;
             this.player.password = null!;
             this.player.email = null!;
@@ -190,14 +190,13 @@ export default class Incoming {
 
             this.database.login(this.player);
         } else
-            try {
-                await this.database.verify(this.player);
-
-                this.database.login(this.player);
-            } catch {
-                this.connection.sendUTF8('invalidlogin');
-                this.connection.close(`Wrong password entered for: ${this.player.username}`);
-            }
+            this.database.verify(this.player, (result) => {
+                if (result.status === 'success') this.database.login(this.player);
+                else {
+                    this.connection.sendUTF8('invalidlogin');
+                    this.connection.close(`Wrong password entered for: ${this.player.username}`);
+                }
+            });
     }
 
     private handleReady(message: [string, string, string]): void {
