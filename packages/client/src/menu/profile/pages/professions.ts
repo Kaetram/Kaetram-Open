@@ -14,7 +14,7 @@ export default class Professions extends Page {
         super('#professionsPage');
     }
 
-    public load(professions: ProfessionsInfo[]): void {
+    public loadProfessions(professions: ProfessionsInfo[]): void {
         _.each(professions, (profession) => {
             let item = this.getItem(profession.id),
                 name = this.getName(profession.id),
