@@ -120,7 +120,9 @@ export default class API {
             return;
         }
 
-        let { source, text, withArrow } = request.body,
+        let { source } = request.body,
+            { text } = request.body,
+            { withArrow } = request.body,
             serverName = formatServerName(serverId);
 
         this.discord.sendWebhook(source, text, serverName, withArrow);
