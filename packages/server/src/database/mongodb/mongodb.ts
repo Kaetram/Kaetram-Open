@@ -15,28 +15,31 @@ export default class MongoDB {
     public loader = new Loader(this);
     public creator = new Creator(this);
 
+    private url: string;
     private connection!: Db;
 
     public constructor(
-        private host: string,
-        private port: number,
-        private user: string,
-        private password: string,
+        host: string,
+        port: number,
+        user: string,
+        password: string,
         private database: string
-    ) {}
+    ) {
+        let { mongodbAuth, mongodbSrv } = config;
+
+        this.url = mongodbSrv
+            ? mongodbAuth
+                ? `mongodb+srv://${user}:${password}@${host}/${database}`
+                : `mongodb+srv://${host}/${database}`
+            : mongodbAuth
+            ? `mongodb://${user}:${password}@${host}:${port}/${database}`
+            : `mongodb://${host}:${port}/${database}`;
+    }
 
     public getConnection(callback: (connection: Db) => void): void {
-        let url = config.mongodbAuth
-                ? `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`
-                : `mongodb://${this.host}:${this.port}/${this.database}`,
-            client = new MongoClient(url, {
-                wtimeoutMS: 5
-            });
+        if (this.connection) return callback(this.connection);
 
-        if (this.connection) {
-            callback(this.connection);
-            return;
-        }
+        let client = new MongoClient(this.url, { wtimeoutMS: 5 });
 
         client.connect((error, newClient) => {
             if (error) {
