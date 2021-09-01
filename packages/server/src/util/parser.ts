@@ -92,7 +92,7 @@ export default class Parser {
                 attackRate: attackRate || 1000,
                 movementSpeed: movementSpeed || 200,
                 projectileName,
-                spawnDelay: spawnDelay || 60000,
+                spawnDelay: spawnDelay || 60_000,
                 combatPlugin,
                 hiddenName: hiddenName || false
             };

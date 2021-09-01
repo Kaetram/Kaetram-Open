@@ -26,7 +26,9 @@ class Main {
              * the websocket.
              */
 
-            let onWorldLoad = () => {
+            this.world = new World(this.socketHandler, this.database);
+
+            this.world.load(() => {
                 log.notice('World has successfully been created.');
 
                 if (!config.allowConnectionsToggle) this.world.allowConnections = true;
@@ -34,11 +36,7 @@ class Main {
                 let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
 
                 log.notice(`Connect locally via http://${host}:${config.socketioPort}`);
-            };
-
-            this.world = new World(this.socketHandler, this.database);
-
-            this.world.load(onWorldLoad);
+            });
         });
 
         this.socketHandler.onConnection((connection: Connection) => {
