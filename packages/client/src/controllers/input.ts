@@ -44,7 +44,7 @@ export default class InputController {
     public keyMovement = true;
     public cursorMoved = false;
 
-    private cursors: { [cursor in Cursors]?: Sprite } = {};
+    private cursors: { [cursor in Cursors]?: Sprite | undefined } = {};
     public lastMousePosition: Pos = { x: 0, y: 0 };
 
     private hovering!: Modules.Hovering | null;
@@ -59,7 +59,7 @@ export default class InputController {
     public targetAnimation!: Animation;
     public chatHandler!: Chat;
     public overlay!: Overlay;
-    private entity?: Entity;
+    private entity: Entity | undefined;
 
     public constructor(private game: Game) {
         this.app = game.app;
@@ -255,7 +255,7 @@ export default class InputController {
         }
     }
 
-    private leftClick(position: Pos | undefined, keyMovement?: boolean): void {
+    private leftClick(position: Pos | undefined, keyMovement = false): void {
         let { renderer, chatHandler, map, game } = this,
             player = this.getPlayer();
 

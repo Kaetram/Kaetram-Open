@@ -43,7 +43,7 @@ import type { FullPlayerData } from './../../../../database/mongodb/creator';
 import type Lumberjacking from './professions/impl/lumberjacking';
 import type Introduction from './quests/impl/introduction';
 
-type TeleportCallback = (x: number, y: number, isDoor?: boolean) => void;
+type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -84,7 +84,7 @@ interface PlayerState extends CharacterState {
 export interface ObjectData {
     [index: number]: {
         isObject: boolean;
-        cursor?: string;
+        cursor: string | undefined;
     };
 }
 
@@ -110,7 +110,7 @@ export default class Player extends Character {
     private newRegion = false;
 
     public team?: string; // TODO
-    public userAgent?: string;
+    public userAgent!: string;
     public minigame?: MinigameState; // TODO
 
     private disconnectTimeout: NodeJS.Timeout | null = null;
@@ -164,7 +164,7 @@ export default class Player extends Character {
     public orientation!: number;
     public mapVersion!: number;
 
-    private nextExperience?: number;
+    private nextExperience: number | undefined;
     private prevExperience!: number;
     public playerHitPoints!: HitPoints;
     public mana!: Mana;
@@ -175,10 +175,10 @@ export default class Player extends Character {
     // public ring: Ring;
     // public boots: Boots;
 
-    public cameraArea?: Area | null;
-    private overlayArea?: Area;
+    public cameraArea: Area | undefined;
+    private overlayArea: Area | undefined;
 
-    private permanentPVP?: boolean;
+    private permanentPVP = false;
     public movementStart!: number;
 
     public pingTime!: number;
@@ -645,7 +645,7 @@ export default class Player extends Character {
         );
     }
 
-    public updateRegion(force?: boolean): void {
+    public updateRegion(force = false): void {
         this.world.region.sendRegion(this, this.region, force);
     }
 
@@ -682,7 +682,7 @@ export default class Player extends Character {
         this.send(new Messages.Death(this.instance));
     }
 
-    public teleport(x: number, y: number, isDoor?: boolean, animate?: boolean): void {
+    public teleport(x: number, y: number, isDoor = false, animate = false): void {
         this.teleportCallback?.(x, y, isDoor);
 
         this.sendToAdjacentRegions(
@@ -750,7 +750,7 @@ export default class Player extends Character {
         this.cheatScoreCallback?.();
     }
 
-    public updatePVP(pvp: boolean, permanent?: boolean): void {
+    public updatePVP(pvp: boolean, permanent = false): void {
         /**
          * No need to update if the state is the same
          */
@@ -1321,8 +1321,8 @@ export default class Player extends Character {
         source: string,
         text: string,
         colour?: string,
-        isGlobal?: boolean,
-        withBubble?: boolean
+        isGlobal = false,
+        withBubble = false
     ): void {
         if (!source || !text) return;
 
@@ -1342,7 +1342,7 @@ export default class Player extends Character {
      * them in between tiles. Should only be used if they are
      * being transported elsewhere.
      */
-    public stopMovement(force?: boolean): void {
+    public stopMovement(force = false): void {
         this.send(
             new Messages.Movement(Opcodes.Movement.Stop, {
                 instance: this.instance,
