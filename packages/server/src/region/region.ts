@@ -26,7 +26,7 @@ interface RegionData {
 }
 
 interface DynamicTiles {
-    [index: number]: Partial<RegionTileData>;
+    [index: number]: RegionTileData;
 }
 
 type AddCallback = (entity: Entity, regionId: string | null) => void;
@@ -189,7 +189,7 @@ export default class Region {
             });
     }
 
-    public sendRegion(player: Player, region: string | null, force?: boolean): void {
+    public sendRegion(player: Player, region: string | null, force = false): void {
         let tileData = this.getRegionData(region, player, force);
 
         // No need to send empty data...
@@ -208,10 +208,10 @@ export default class Region {
         if (trees.objectData) doors.objectData = trees.objectData;
 
         for (let i in doors.indexes) {
-            let tile: Partial<RegionTileData> = {
+            let tile = {
                     data: doors.data[i],
                     c: doors.collisions[i]
-                },
+                } as RegionTileData,
                 index = doors.indexes[i];
 
             if (!doors.objectData) break;
@@ -370,11 +370,7 @@ export default class Region {
         });
     }
 
-    private getRegionData(
-        region: string | null,
-        player: Player,
-        force?: boolean
-    ): RegionTileData[] {
+    private getRegionData(region: string | null, player: Player, force = false): RegionTileData[] {
         let data: RegionTileData[] = [];
 
         if (!player) return data;

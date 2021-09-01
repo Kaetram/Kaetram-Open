@@ -54,7 +54,7 @@ export default class Grids {
     public getSurroundingEntities(
         entity: Entity,
         radius: number,
-        include?: boolean
+        include = false
     ): Entity[] | void {
         let entities: Entity[] = [];
 
