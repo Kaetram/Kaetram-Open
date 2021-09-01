@@ -27,7 +27,7 @@ export default class TeamWar extends Minigame {
     private countdown = 120;
     private updateTick = 1000;
     private lastSync = Date.now();
-    private syncThreshold = 10000;
+    private syncThreshold = 10_000;
 
     public constructor(private world: World) {
         super(0, 'TeamWar');

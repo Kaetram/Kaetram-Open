@@ -18,9 +18,9 @@ export default class Item extends Entity {
     public abilityLevel;
     // tier = 1;
 
-    private respawnTime = 30000;
+    private respawnTime = 30_000;
     private despawnDuration = 4000;
-    private blinkDelay = 20000;
+    private blinkDelay = 20_000;
     // private despawnDelay = 1000;
 
     private blinkTimeout: NodeJS.Timeout | null = null;
