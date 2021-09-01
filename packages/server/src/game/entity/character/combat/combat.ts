@@ -374,12 +374,7 @@ export default class Combat {
         character.setPosition(x, y);
     }
 
-    public hit(
-        character: Character,
-        target: Character,
-        hitInfo: HitData,
-        override?: boolean
-    ): void {
+    public hit(character: Character, target: Character, hitInfo: HitData, override = false): void {
         if (!this.canHit() && !override) return;
 
         if (character.isRanged() || hitInfo.isRanged) {

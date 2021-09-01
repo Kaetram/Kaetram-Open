@@ -4,8 +4,8 @@ import type { EntityState } from '../entity';
 
 interface ItemState extends EntityState {
     count: number;
-    ability?: number;
-    abilityLevel?: number;
+    ability: number | undefined;
+    abilityLevel: number | undefined;
 }
 
 export default class Item extends Entity {
@@ -72,7 +72,12 @@ export default class Item extends Entity {
         }, this.respawnTime);
     }
 
-    private getData(): [id: number, count: number, ability?: number, abilityLevel?: number] {
+    private getData(): [
+        id: number,
+        count: number,
+        ability: number | undefined,
+        abilityLevel: number | undefined
+    ] {
         return [this.id, this.count, this.ability, this.abilityLevel];
     }
 

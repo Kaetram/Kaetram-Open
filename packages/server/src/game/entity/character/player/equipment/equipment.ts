@@ -4,8 +4,8 @@ import type { Modules } from '@kaetram/common/network';
 import type { EquipmentData } from '@kaetram/common/types/info';
 
 export interface ItemData {
-    count?: number;
-    id?: number;
+    count?: number | undefined;
+    id: number | undefined;
     instance?: string;
     name?: string;
     string?: string;

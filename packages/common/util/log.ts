@@ -2,6 +2,8 @@ import fs from 'fs';
 
 import config from '../config';
 
+type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
+
 /**
  * Simple logging file that serves to be used globally
  * and to neatly display logs, errors, warnings, and notices.
@@ -40,7 +42,7 @@ class Log {
         this.send('trace', data, 35);
     }
 
-    private send(type: keyof Console, data: unknown[], color = 1, title: string = type): void {
+    private send(type: ConsoleLogType, data: unknown[], color = 1, title: string = type): void {
         let date = new Date(),
             formattedTitle = `[${title.toUpperCase()}]`,
             space = ' '.repeat(Math.max(9 - formattedTitle.length, 0));

@@ -89,9 +89,9 @@ interface CombatCallback {
     (opcode: Opcodes.Combat.Sync, data: CombatSyncData): void;
 }
 type AnimationCallback = (id: string, data: AnimationData) => void;
-type ProjectileCallback = {
+interface ProjectileCallback {
     (opcode: Opcodes.Projectile, data: ProjectileData): void;
-};
+}
 type PopulationCallback = (population: number) => void;
 type PointsCallback = (data: PointsData) => void;
 type NetworkCallback = () => void;
@@ -141,14 +141,14 @@ interface PointerCallback {
     (opcode: Opcodes.Pointer.Button, data: PointerButtonData): void;
 }
 type PVPCallback = (id: string, pvp: boolean) => void;
-type ShopCallback = {
+interface ShopCallback {
     (opcode: Opcodes.Shop.Open, data: ShopOpenData): void;
     (opcode: Opcodes.Shop.Buy, data: ShopBuyData): void;
     (opcode: Opcodes.Shop.Sell, data: ShopSellData): void;
     (opcode: Opcodes.Shop.Refresh, data: ShopRefreshData): void;
     (opcode: Opcodes.Shop.Select, data: ShopSelectData): void;
     (opcode: Opcodes.Shop.Remove, data: ShopRemoveData): void;
-};
+}
 type MinigameCallback = (opcode: Opcodes.Minigame, data: MinigameData) => void;
 type RegionCallback = (opcode: Opcodes.Region, bufferSize: number, data: string) => void;
 interface OverlayCallback {
