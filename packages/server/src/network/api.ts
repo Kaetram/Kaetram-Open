@@ -165,7 +165,7 @@ export default class API {
         }
     }
 
-    public async sendChat(source: string, text: string, withArrow?: boolean): Promise<void> {
+    public async sendChat(source: string, text: string, withArrow = false): Promise<void> {
         let url = this.getUrl('chat'),
             data = {
                 hubAccessToken: config.hubAccessToken,
@@ -232,7 +232,9 @@ export default class API {
     }
 
     private getUrl(path: string): string {
-        return `http://${config.host}:${config.hubPort}/${path}`;
+        return config.ssl
+            ? `https://${config.hubHost}/${path}`
+            : `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
     private returnError(response: express.Response, error: APIConstants, message: string): void {

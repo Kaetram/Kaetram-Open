@@ -22,14 +22,14 @@ export default {
         return probability;
     },
 
-    getDamage(attacker: Character, target: Character, special?: boolean): number {
+    getDamage(attacker: Character, target: Character, special = false): number {
         let maxDamage = this.getMaxDamage(attacker, target, special)!,
             accuracy = Utils.randomInt(0, attacker.level);
 
         return Utils.randomInt(accuracy, maxDamage);
     },
 
-    getMaxDamage(attacker: Character, target: Character, special?: boolean): number | undefined {
+    getMaxDamage(attacker: Character, target: Character, special = false): number | undefined {
         if (!attacker || !target) return;
 
         let damageDealt = 0,

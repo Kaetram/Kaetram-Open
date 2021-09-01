@@ -257,7 +257,7 @@ export default class API {
     public async searchForPlayer(
         username: string,
         callback: (server: Server, key: string) => void,
-        returnServer?: boolean
+        returnServer = false
     ): Promise<void> {
         let serverList = this.serversController.servers;
 

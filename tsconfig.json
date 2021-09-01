@@ -13,6 +13,7 @@
         "noImplicitAny": true,
         "noImplicitOverride": true,
         "strictNullChecks": true,
+        "exactOptionalPropertyTypes": true,
 
         "rootDir": ".",
         "baseUrl": "./packages",
