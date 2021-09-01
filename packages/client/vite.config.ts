@@ -9,38 +9,38 @@ import compress from 'vite-plugin-compress';
 
 import { name, description } from 'kaetram/package.json';
 
+let expose = [
+    'name',
+    'host',
+    'socketioPort',
+    'gver',
+    'ssl',
+    'hubEnabled',
+    'hubHost',
+    'hubPort',
+    'worldSwitch',
+    'serverId'
+] as const;
+
+type ExposedConfig = Pick<Config, typeof expose[number]>;
+
 declare global {
     interface Window {
-        config: Config;
+        config: ExposedConfig;
     }
 }
-
-type ConfigKeys = keyof Config;
 
 export default defineConfig(({ command }) => {
     let isProduction = command === 'build',
         brotli = false,
-        expose: ConfigKeys[] = [
-            'name',
-            'host',
-            'socketioPort',
-            'gver',
-            'ssl',
-            'worldSwitch',
-            'hubEnabled',
-            'hubPort',
-            'serverId'
-        ],
-        env = {} as Config;
+        env = {} as ExposedConfig;
 
     for (let key of expose) env[key] = config[key] as never;
 
     return {
         cacheDir: '.cache',
         resolve: {
-            alias: isProduction
-                ? undefined
-                : { 'socket.io-client': 'socket.io-client/dist/socket.io.js' }
+            alias: { 'socket.io-client': 'socket.io-client/dist/socket.io.js' }
         },
         plugins: [
             pwa({
