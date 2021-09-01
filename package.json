@@ -23,8 +23,8 @@
         "*.scss": "stylelint --fix"
     },
     "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^4.28.5",
-        "@typescript-eslint/parser": "^4.28.5",
+        "@typescript-eslint/eslint-plugin": "^4.30.0",
+        "@typescript-eslint/parser": "^4.30.0",
         "@yarnpkg/sdks": "^2.4.2-rc.2",
         "eslint": "^7.32.0",
         "eslint-config-prettier": "^8.3.0",
@@ -37,7 +37,7 @@
         "postcss-value-parser": "^4.1.0",
         "prettier": "^2.3.2",
         "stylelint": "^13.13.1",
-        "typescript": "^4.3.5"
+        "typescript": "^4.4.2"
     },
     "workspaces": [
         "packages/*"
