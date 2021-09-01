@@ -10,47 +10,38 @@ export default class MongoDB {
     public loader = new Loader(this);
     public creator = new Creator(this);
 
+    private url: string;
     private connection!: Db;
 
     public constructor(
-        public host: string,
-        public port: number,
-        public user: string,
-        public password: string,
-        public database: string
+        host: string,
+        port: number,
+        user: string,
+        password: string,
+        private database: string
     ) {
-        log.info('Successfully initialized MongoDB.');
+        let { mongodbAuth, mongodbSrv } = config;
+
+        this.url = mongodbSrv
+            ? mongodbAuth
+                ? `mongodb+srv://${user}:${password}@${host}/${database}`
+                : `mongodb+srv://${host}/${database}`
+            : mongodbAuth
+            ? `mongodb://${user}:${password}@${host}:${port}/${database}`
+            : `mongodb://${host}:${port}/${database}`;
     }
 
-    public async getDatabase(): Promise<Db> {
-        let url = `mongodb://${this.host}:${this.port}/${this.database}`;
+    public async getConnection(): Promise<Db> {
+        if (this.connection) return this.connection;
 
-        if (config.mongodbAuth)
-            url = `mongodb://${this.user}:${this.password}@${this.host}:${this.port}/${this.database}`;
-
-        let client = new MongoClient(url, {
-            wtimeoutMS: 5
-        });
-
-        return new Promise((resolve, reject) => {
-            if (this.connection) {
-                resolve(this.connection);
-
-                return;
-            }
-
-            client.connect((error, newClient) => {
-                if (error) {
-                    log.error('Could not connect to MongoDB database.');
-                    log.error(`Error Info: ${error}`);
-
-                    return reject(error);
-                }
-
-                this.connection = newClient!.db(this.database);
-
-                resolve(this.connection);
+        let client = new MongoClient(this.url, { wtimeoutMS: 5 }),
+            newClient = await client.connect().catch((error) => {
+                log.error('Could not connect to MongoDB database.');
+                log.error(`Error Info:`, error);
             });
-        });
+
+        this.connection = newClient!.db(this.database);
+
+        return this.connection;
     }
 }
