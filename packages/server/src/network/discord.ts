@@ -48,7 +48,7 @@ export default class Discord {
     /**
      * Sends a message to the Discord server using the webhook.
      */
-    public sendWebhook(source: string, message: string, withArrow?: boolean): void {
+    public sendWebhook(source: string, message: string, withArrow = false): void {
         if (!config.discordEnabled) return;
 
         let formattedSource = Utils.formatUsername(source);

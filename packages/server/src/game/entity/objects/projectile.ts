@@ -20,7 +20,7 @@ export default class Projectile extends Entity {
     public owner?: Character; // TODO
 
     private static = false;
-    private special: never;
+    private special!: never;
 
     public constructor(id: Modules.Projectiles, instance: string) {
         super(id, 'projectile', instance);

@@ -45,7 +45,7 @@ export default class State extends Page {
         this.loadSlots();
     }
 
-    public load(): void {
+    public override load(): void {
         if (!this.game.player.armour) return;
 
         this.name.text(this.player.username);

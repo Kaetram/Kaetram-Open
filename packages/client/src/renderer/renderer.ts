@@ -1231,7 +1231,7 @@ export default class Renderer {
         this.forceRendering = false;
     }
 
-    private transition(duration: number, forward: boolean, callback: () => void): void {
+    public transition(duration: number, forward: boolean, callback: () => void): void {
         let textCanvas = $('#textCanvas'),
             hasThreshold = () => (forward ? this.brightness > 99 : this.brightness < 1);
         this.transitioning = true;

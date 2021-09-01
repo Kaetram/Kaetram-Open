@@ -11,7 +11,7 @@ import type {
     SlotData,
     TilesetData
 } from './info';
-import { ProcessedArea } from './map';
+import type { ProcessedArea } from './map';
 
 export interface HandshakeData {
     id: string;
@@ -26,7 +26,7 @@ export interface WelcomeData {
     hitPoints: number[];
     mana: number[];
     experience: number;
-    nextExperience?: number;
+    nextExperience: number | undefined;
     prevExperience: number;
     level: number;
     lastLogin: number;
@@ -88,7 +88,7 @@ export interface MovementFollowData {
 }
 export interface MovementStopData {
     instance: string;
-    force?: boolean;
+    force: boolean;
 }
 export interface MovementStateData {
     id: string;
@@ -100,7 +100,7 @@ export interface TeleportData {
     id: string;
     x: number;
     y: number;
-    withAnimation?: boolean;
+    withAnimation: boolean | undefined;
 }
 
 export interface CombatData {
@@ -137,14 +137,13 @@ export interface PointsData {
 }
 
 export interface ChatData {
-    name: string;
-    withBubble?: boolean;
-    text: string;
     id?: string;
-    text?: string;
+    name: string;
+    text: string;
+    colour?: string | undefined;
     duration?: number;
-    colour?: string;
     isGlobal?: boolean;
+    withBubble: boolean;
 }
 
 export interface CommandData {
@@ -178,7 +177,7 @@ export interface QuestFinishData {
 export interface NotificationData {
     title?: string;
     message: string;
-    colour?: string;
+    colour?: string | undefined;
 }
 
 export interface HealData {
@@ -192,7 +191,7 @@ export interface ExperienceCombatData {
     level: number;
     amount: number;
     experience: number;
-    nextExperience?: number;
+    nextExperience: number | undefined;
     prevExperience: number;
 }
 export interface ExperienceProfessionData {
@@ -202,7 +201,7 @@ export interface ExperienceProfessionData {
 
 export interface NPCTalkData {
     id: string | null;
-    text?: string;
+    text: string | undefined;
     nonNPC?: boolean;
 }
 export type NPCStoreData = Record<string, never>;

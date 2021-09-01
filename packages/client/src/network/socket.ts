@@ -1,10 +1,9 @@
 import $ from 'jquery';
-import { io } from 'socket.io-client';
+import { io, Socket as SocketIO } from 'socket.io-client';
 
 import log from '../lib/log';
 import Messages from './messages';
 
-import type { Socket as IOSocket } from 'socket.io-client';
 import type { APIData } from '@kaetram/common/types/api';
 import type Game from '../game';
 
@@ -12,7 +11,7 @@ export default class Socket {
     private config;
     public messages;
 
-    private connection!: IOSocket;
+    private connection!: SocketIO;
 
     private listening = false;
     // disconnected = false;
@@ -56,7 +55,7 @@ export default class Socket {
             });
 
             this.connection.on('connect_error', () => {
-                log.info(`Failed to connect to: ${this.config.host}`);
+                log.info(`Failed to connect to: ${host}`);
 
                 this.listening = false;
 
@@ -65,7 +64,7 @@ export default class Socket {
                 this.game.app.sendError(
                     null,
                     this.game.isDebug()
-                        ? `Couldn't connect to ${this.config.host}:${this.config.port}`
+                        ? `Couldn't connect to ${host}:${port}`
                         : 'Could not connect to the game server.'
                 );
             });

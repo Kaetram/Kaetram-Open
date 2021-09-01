@@ -25,7 +25,7 @@ export default class BubbleController {
         id: string,
         message: string,
         duration = 5000,
-        isObject?: boolean,
+        isObject = false,
         info?: BubbleInfo
     ): void {
         let { bubbles, game, container } = this,
