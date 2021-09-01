@@ -2,8 +2,8 @@ export default class Slot {
     public string: string | null = null;
     public count = -1;
 
-    public ability? = -1;
-    public abilityLevel? = -1;
+    public ability: number | undefined = -1;
+    public abilityLevel: number | undefined = -1;
     public edible? = false;
     public equippable? = false;
 
@@ -14,8 +14,8 @@ export default class Slot {
         count: number,
         ability?: number,
         abilityLevel?: number,
-        edible?: boolean,
-        equippable?: boolean
+        edible = false,
+        equippable = false
     ): void {
         this.string = string;
         this.count = count;

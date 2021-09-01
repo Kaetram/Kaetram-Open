@@ -24,7 +24,7 @@ export interface MobData {
     isPoisonous?: boolean;
     attackRate: number;
     movementSpeed: number;
-    projectileName?: string;
+    projectileName: string | undefined;
 }
 
 type CombatPlugin = new (character: Character) => Combat;

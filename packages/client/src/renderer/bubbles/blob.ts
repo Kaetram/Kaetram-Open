@@ -12,7 +12,7 @@ export default class Blob {
         public id: string,
         public element: JQuery,
         duration = 5000,
-        isObject?: boolean,
+        isObject = false,
         public info?: BubbleInfo
     ) {
         this.timer = new Timer(Date.now(), duration);

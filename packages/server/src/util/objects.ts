@@ -1,10 +1,10 @@
 export interface ObjectsData {
     id?: string;
-    x?: number;
-    y?: number;
+    x: number;
+    y: number;
     type: string;
     messages: string[];
-    cursor?: string;
+    cursor: string;
 }
 
 export default {

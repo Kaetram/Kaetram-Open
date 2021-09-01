@@ -157,7 +157,7 @@ export default class Handler {
             );
         });
 
-        this.player.onTeleport((x: number, y: number, isDoor?: boolean) => {
+        this.player.onTeleport((x: number, y: number, isDoor = false) => {
             if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
                 this.player.doorCallback(x, y);
                 return;
