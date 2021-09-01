@@ -20,7 +20,7 @@ export default abstract class Profession {
 
     public level!: number;
 
-    public nextExperience?: number;
+    public nextExperience: number | undefined;
     public prevExperience!: number;
 
     protected constructor(public id: number, public player: Player, public name: string) {

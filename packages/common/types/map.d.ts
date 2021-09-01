@@ -7,7 +7,7 @@ export interface ProcessedArea {
     // Area
     width: number;
     height: number;
-    polygon?: Pos[];
+    polygon?: Pos[] | undefined;
 
     // Door
     destination?: number;

@@ -11,16 +11,15 @@ type DoorStatus = 'open' | 'closed' | undefined;
 
 export interface Door {
     id: number;
+    x?: number | undefined;
+    y?: number | undefined;
+    status?: DoorStatus;
     requirement: string;
-    achievementId?: number;
-    questId?: number;
+    level?: number | undefined;
+    questId?: number | undefined;
+    achievementId?: number | undefined;
     closedIds: { [key: string]: IDs };
     openIds: { [key: string]: IDs };
-    x?: number;
-    y?: number;
-
-    status?: DoorStatus;
-    level?: number;
 }
 
 interface IDs {

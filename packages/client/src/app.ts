@@ -19,26 +19,12 @@ export interface Config {
     /** Use HTTPS */
     ssl: boolean;
     debug: boolean;
-    worldSwitch: boolean;
     hub: string | false;
+    worldSwitch: boolean;
 }
 
 export default class App {
-    // `window.config` is replaced by vite during build process
-    public config: Config = {
-        debug: import.meta.env.DEV,
-        name: window.config.name,
-        host: window.config.host,
-        port: window.config.socketioPort,
-        version: window.config.gver,
-        ssl: window.config.ssl,
-        worldSwitch: window.config.hubEnabled && window.config.worldSwitch,
-        hub:
-            window.config.hubEnabled &&
-            (window.config.ssl
-                ? `https://${window.config.host}`
-                : `http://${window.config.host}:${window.config.hubPort}`)
-    };
+    public config: Config;
 
     public body = $('body');
 
@@ -85,7 +71,28 @@ export default class App {
     public constructor() {
         this.sendStatus('Initializing the main app');
 
+        // `window.config` is replaced by vite during build process
+
+        // eslint-disable-next-line prefer-destructuring
+        let hubEnabled = window.config.hubEnabled,
+            secure = window.config.ssl,
+            hub = secure
+                ? `https://${window.config.hubHost}`
+                : `http://${window.config.hubHost}:${window.config.hubPort}`;
+
+        this.config = {
+            debug: import.meta.env.DEV,
+            name: window.config.name,
+            host: window.config.host,
+            port: window.config.socketioPort,
+            version: window.config.gver,
+            ssl: secure,
+            worldSwitch: hubEnabled && window.config.worldSwitch,
+            hub: hubEnabled && hub
+        };
+
         // this.updateOrientation();
+
         this.load();
     }
 

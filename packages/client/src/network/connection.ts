@@ -47,10 +47,6 @@ import type Player from '../entity/character/player/player';
 import type Game from '../game';
 import type Slot from '../menu/container/slot';
 
-/**
- * TODO: Refactor once on TypeScript 4.4
- */
-
 export default class Connection {
     private app;
     private audio;
@@ -71,7 +67,7 @@ export default class Connection {
     private teamWar = new TeamWar();
 
     private population!: number;
-    private queueColour!: string;
+    private queueColour!: string | null;
     private time!: number;
 
     public constructor(private game: Game) {
@@ -405,12 +401,13 @@ export default class Connection {
                     entity.teleporting = false;
                 });
             } else doTeleport();
-            /*this.renderer.transition(15, false, () => {
-                        if (this.queueColour) {
-                            this.renderer.updateDarkMask(this.queueColour);
-                            this.queueColour = null;
-                        }
-                    });*/
+
+            // this.renderer.transition(15, false, () => {
+            //     if (this.queueColour) {
+            //         this.renderer.updateDarkMask(this.queueColour);
+            //         this.queueColour = null;
+            //     }
+            // });
         });
 
         this.messages.onDespawn((id) => {
@@ -1212,7 +1209,7 @@ export default class Connection {
                 case Opcodes.Profession.Batch: {
                     let { data } = info as ProfessionBatchData;
 
-                    this.menu.getProfessionPage().load(data);
+                    this.menu.getProfessionPage().loadProfessions(data);
 
                     break;
                 }
