@@ -108,6 +108,6 @@ export default class SkeletonKing extends Combat {
     }
 
     private canSpawn(): boolean {
-        return Date.now() - this.lastSpawn > 25000 && !this.hasMinions() && this.isAttacked();
+        return Date.now() - this.lastSpawn > 25_000 && !this.hasMinions() && this.isAttacked();
     }
 }

@@ -6,7 +6,7 @@ import type Player from '../character/player/player';
 type OpenCallback = (player?: Player) => void;
 
 export default class Chest extends Entity {
-    private respawnDuration = 25000;
+    private respawnDuration = 25_000;
     public static = false;
 
     private items: string[] = [];
