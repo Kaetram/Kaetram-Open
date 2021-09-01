@@ -20,7 +20,7 @@ interface PlayerData {
     email: string;
     x: number;
     y: number;
-    userAgent?: string;
+    userAgent: string;
     invisibleIds?: string;
     experience: number;
     rights: number;

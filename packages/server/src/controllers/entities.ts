@@ -207,7 +207,7 @@ export default class Entities {
         items: string[],
         gridX: number,
         gridY: number,
-        isStatic?: boolean,
+        isStatic = false,
         achievement?: number
     ): Chest {
         let chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);

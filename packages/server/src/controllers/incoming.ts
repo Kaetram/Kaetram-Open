@@ -16,10 +16,10 @@ import type Character from '../game/entity/character/character';
 import type Mob from '../game/entity/character/mob/mob';
 import type Slot from '../game/entity/character/player/containers/slot';
 import type { EnchantType } from '../game/entity/character/player/enchant';
+import type { ItemData } from '../game/entity/character/player/equipment/equipment';
 import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
-import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
 
 export default class Incoming {
@@ -410,7 +410,7 @@ export default class Incoming {
 
                 orientation = message[5] as number;
 
-                if (entity && entity.type === 'item') this.player.inventory.add(entity as Item);
+                if (entity && entity.type === 'item') this.player.inventory.add(entity as ItemData);
 
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     let door = this.player.doors.getDoor(posX, posY);
@@ -966,7 +966,7 @@ export default class Incoming {
         log.info(`${this.player.x} ${this.player.y}`);
         console.log(message);
 
-        this.player.cameraArea = null;
+        this.player.cameraArea = undefined;
         // TODO - Make this a server-side thing.
         // this.player.handler.detectCamera(this.player.x, this.player.y);
     }
