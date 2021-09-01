@@ -93,7 +93,7 @@ export default class Actions {
         }
     }
 
-    public add(button: JQuery, misc?: boolean): void {
+    public add(button: JQuery, misc = false): void {
         this.body.find('ul').prepend($('<li></li>').append(button));
 
         button.on('click', (event) => {
