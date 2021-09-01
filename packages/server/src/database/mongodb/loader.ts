@@ -2,7 +2,7 @@ import log from '@kaetram/common/util/log';
 
 import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';
 import type { ContainerArray } from '../../game/entity/character/player/containers/container';
-import type { FriendsArray } from '../../game/entity/character/player/friends';
+import type { FriendsArray, FriendsList } from '../../game/entity/character/player/friends';
 import type Player from '../../game/entity/character/player/player';
 import type {
     ProfessionsArray,
@@ -17,155 +17,122 @@ export default class Loader {
         return value.split(' ').map((string) => parseInt(string));
     }
 
-    public getInventory(
-        player: Player,
-        callback: (
-            ids: number[] | null,
-            counts: number[] | null,
-            abilities: number[] | null,
-            abilityLevels: number[] | null
-        ) => void
-    ): void {
-        this.database.getConnection((database) => {
-            let inventory = database.collection<ContainerArray>('player_inventory'),
-                cursor = inventory.find({ username: player.username });
+    public async getInventory(player: Player): Promise<{
+        ids: number[];
+        counts: number[];
+        abilities: number[];
+        abilityLevels: number[];
+    }> {
+        let database = await this.database.getConnection(),
+            inventory = database.collection<ContainerArray>('player_inventory'),
+            cursor = inventory.find({ username: player.username }),
+            [info] = await cursor.toArray();
 
-            cursor.toArray().then((inventoryArray) => {
-                let [info] = inventoryArray;
+        if (info) {
+            if (info.username !== player.username)
+                log.notice(
+                    `[Loader] Mismatch in usernames whilst retrieving inventory data for: ${player.username}`
+                );
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving inventory data for: ${player.username}`
-                        );
-
-                    callback(
-                        this.parseArray(info.ids),
-                        this.parseArray(info.counts),
-                        this.parseArray(info.abilities),
-                        this.parseArray(info.abilityLevels)
-                    );
-                } else callback(null, null, null, null);
-            });
-        });
+            return {
+                ids: this.parseArray(info.ids),
+                counts: this.parseArray(info.counts),
+                abilities: this.parseArray(info.abilities),
+                abilityLevels: this.parseArray(info.abilityLevels)
+            };
+        }
+        throw 'Could not get inventory';
     }
 
-    public getBank(
-        player: Player,
-        callback: (
-            ids: number[],
-            counts: number[],
-            abilities: number[],
-            abilityLevels: number[]
-        ) => void
-    ): void {
-        this.database.getConnection((database) => {
-            let bank = database.collection<ContainerArray>('player_bank'),
-                cursor = bank.find({ username: player.username });
+    public async getBank(
+        player: Player
+    ): Promise<{ ids: number[]; counts: number[]; abilities: number[]; abilityLevels: number[] }> {
+        let database = await this.database.getConnection(),
+            bank = database.collection<ContainerArray>('player_bank'),
+            cursor = bank.find({ username: player.username }),
+            [info] = await cursor.toArray();
 
-            cursor.toArray().then((bankArray) => {
-                let [info] = bankArray;
+        if (info) {
+            if (info.username !== player.username)
+                log.notice(
+                    `[Loader] Mismatch in usernames whilst retrieving bank data for: ${player.username}`
+                );
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving bank data for: ${player.username}`
-                        );
-
-                    callback(
-                        this.parseArray(info.ids),
-                        this.parseArray(info.counts),
-                        this.parseArray(info.abilities),
-                        this.parseArray(info.abilityLevels)
-                    );
-                }
-            });
-        });
+            return {
+                ids: this.parseArray(info.ids),
+                counts: this.parseArray(info.counts),
+                abilities: this.parseArray(info.abilities),
+                abilityLevels: this.parseArray(info.abilityLevels)
+            };
+        }
+        throw 'Could not get bank';
     }
 
-    public getQuests(
-        player: Player,
-        callback: (ids: string[] | null, stage: string[] | null) => void
-    ): void {
-        this.database.getConnection((database) => {
-            let quests = database.collection<PlayerQuests>('player_quests'),
-                cursor = quests.find({ username: player.username });
+    public async getQuests(player: Player): Promise<{ ids: string[]; stages: string[] }> {
+        let database = await this.database.getConnection(),
+            quests = database.collection<PlayerQuests>('player_quests'),
+            cursor = quests.find({ username: player.username }),
+            [info] = await cursor.toArray();
 
-            cursor.toArray().then((questArray) => {
-                let [info] = questArray;
+        if (info) {
+            if (info.username !== player.username)
+                log.notice(
+                    `[Loader] Mismatch in usernames whilst retrieving quest data for: ${player.username}`
+                );
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving quest data for: ${player.username}`
-                        );
-
-                    callback(info.ids.split(' '), info.stages.split(' '));
-                } else callback(null, null);
-            });
-        });
+            return { ids: info.ids.split(' '), stages: info.stages.split(' ') };
+        }
+        throw 'Could not get quests';
     }
 
-    public getAchievements(
-        player: Player,
-        callback: (ids: string[], progress: string[]) => void
-    ): void {
-        this.database.getConnection((database) => {
-            let achievements = database.collection<PlayerAchievements>('player_achievements'),
-                cursor = achievements.find({ username: player.username });
+    public async getAchievements(player: Player): Promise<{ ids: string[]; progress: string[] }> {
+        let database = await this.database.getConnection(),
+            achievements = database.collection<PlayerAchievements>('player_achievements'),
+            cursor = achievements.find({ username: player.username }),
+            [info] = await cursor.toArray();
 
-            cursor.toArray().then((achievementsArray) => {
-                let [info] = achievementsArray;
+        if (info) {
+            if (info.username !== player.username)
+                log.notice(
+                    `[Loader] Mismatch in usernames whilst retrieving achievement data for: ${player.username}`
+                );
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving achievement data for: ${player.username}`
-                        );
-
-                    callback(info.ids.split(' '), info.progress.split(' '));
-                }
-            });
-        });
+            return { ids: info.ids.split(' '), progress: info.progress.split(' ') };
+        }
+        throw 'Could not get achievements';
     }
 
-    public getProfessions(player: Player, callback: (data: ProfessionsData) => void): void {
-        this.database.getConnection((database) => {
-            let professions = database.collection<ProfessionsArray>('player_professions'),
-                cursor = professions.find({ username: player.username });
+    public async getProfessions(player: Player): Promise<ProfessionsData> {
+        let database = await this.database.getConnection(),
+            professions = database.collection<ProfessionsArray>('player_professions'),
+            cursor = professions.find({ username: player.username }),
+            [info] = await cursor.toArray();
 
-            cursor.toArray().then((professionsArray) => {
-                let [info] = professionsArray;
+        if (info && info.data) {
+            if (info.username !== player.username)
+                log.notice(
+                    `[Loader] Mismatch in usernames whilst retrieving profession data for: ${player.username}`
+                );
 
-                if (info && info.data) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving profession data for: ${player.username}`
-                        );
-
-                    callback(info.data);
-                }
-            });
-        });
+            return info.data;
+        }
+        throw 'Could not get professions';
     }
 
-    public getFriends(player: Player, callback: (friends: unknown) => void): void {
-        this.database.getConnection((database) => {
-            let friends = database.collection<FriendsArray>('player_friends'),
-                cursor = friends.find({ username: player.username });
+    public async getFriends(player: Player): Promise<FriendsList> {
+        let database = await this.database.getConnection(),
+            friends = database.collection<FriendsArray>('player_friends'),
+            cursor = friends.find({ username: player.username }),
+            [info] = await cursor.toArray();
 
-            cursor.toArray().then((friendsArray) => {
-                let [info] = friendsArray;
+        if (info && info.friends) {
+            if (info.username !== player.username)
+                log.notice(
+                    `[Loader] Mismatch in usernames whilst retrieving friends data for: ${player.username}`
+                );
 
-                if (info && info.friends) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving friends data for: ${player.username}`
-                        );
-
-                    callback(info.friends);
-                }
-            });
-        });
+            return info.friends;
+        }
+        throw 'Could not get friends'; // :(
     }
 }
