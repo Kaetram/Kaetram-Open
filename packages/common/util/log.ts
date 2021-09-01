@@ -16,30 +16,30 @@ class Log {
 
     private debugging = config.debugging;
 
-    public info(...data: unknown[]): void {
-        this.send('info', data);
+    public info(...message: unknown[]): void {
+        this.send('info', message);
     }
 
-    public debug(...data: unknown[]): void {
+    public debug(...message: unknown[]): void {
         if (!this.debugging) return;
 
-        this.send('debug', data, 36);
+        this.send('debug', message, 36);
     }
 
-    public warning(...data: unknown[]): void {
-        this.send('warn', data, 33, 'warning');
+    public warning(...message: unknown[]): void {
+        this.send('warn', message, 33, 'warning');
     }
 
-    public error(...data: unknown[]): void {
-        this.send('error', data, 41);
+    public error(...message: unknown[]): void {
+        this.send('error', message, 41);
     }
 
-    public notice(...data: unknown[]): void {
-        this.send('log', data, 32, 'notice');
+    public notice(...message: unknown[]): void {
+        this.send('log', message, 32, 'notice');
     }
 
-    public trace(...data: unknown[]): void {
-        this.send('trace', data, 35);
+    public trace(...message: unknown[]): void {
+        this.send('trace', message, 35);
     }
 
     private send(type: ConsoleLogType, data: unknown[], color = 1, title: string = type): void {
