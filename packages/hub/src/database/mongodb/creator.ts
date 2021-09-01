@@ -15,13 +15,17 @@ export default class Creator {
 
         if (!data.name || !data.owner || !data.players) return;
 
-        let database = await this.database.getConnection(),
+        let database = await this.database.getDatabase(),
             guilds = database.collection<GuildData>('guild_data');
 
         guilds.updateOne(
-            { name: guild.name.toLowerCase() },
+            {
+                name: guild.name.toLowerCase()
+            },
             { $set: data },
-            { upsert: true },
+            {
+                upsert: true
+            },
             (error, result) => {
                 if (error) throw error;
 
