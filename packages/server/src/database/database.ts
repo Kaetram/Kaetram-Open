@@ -5,10 +5,10 @@ import MongoDB from './mongodb/mongodb';
 
 import type { DatabaseTypes } from '@kaetram/common/types/database';
 
-export type DatabaseType = MongoDB;
+export type DatabaseType = MongoDB | null;
 
 export default class Database {
-    private database!: DatabaseType;
+    private database: DatabaseType = null;
 
     public constructor(databaseType: DatabaseTypes) {
         switch (databaseType) {

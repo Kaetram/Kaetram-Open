@@ -42,37 +42,38 @@ export type FullPlayerData = PlayerData & PlayerEquipment;
 export default class Creator {
     public constructor(private database: MongoDB) {}
 
-    public async save(player: Player): Promise<void> {
-        /* Handle the player databases */
+    public save(player: Player): void {
+        this.database.getConnection((database) => {
+            /* Handle the player databases */
 
-        let database = await this.database.getConnection(),
-            data = database.collection<PlayerData>('player_data'),
-            equipment = database.collection<PlayerEquipment>('player_equipment'),
-            quests = database.collection<PlayerQuests>('player_quests'),
-            achievements = database.collection<PlayerAchievements>('player_achievements'),
-            bank = database.collection<ContainerArray>('player_bank'),
-            regions = database.collection<PlayerRegions>('player_regions'),
-            abilities = database.collection<AbilitiesArray>('player_abilities'),
-            professions = database.collection<ProfessionsArray>('player_professions'),
-            // friends = database.collection<FriendsArray>('player_friends'),
-            inventory = database.collection<ContainerArray>('player_inventory');
+            let playerData = database.collection<PlayerData>('player_data'),
+                playerEquipment = database.collection<PlayerEquipment>('player_equipment'),
+                playerQuests = database.collection<PlayerQuests>('player_quests'),
+                playerAchievements = database.collection<PlayerAchievements>('player_achievements'),
+                playerBank = database.collection<ContainerArray>('player_bank'),
+                playerRegions = database.collection<PlayerRegions>('player_regions'),
+                playerAbilities = database.collection<AbilitiesArray>('player_abilities'),
+                playerProfessions = database.collection<ProfessionsArray>('player_professions'),
+                // playerFriends = database.collection<FriendsArray>('player_friends'),
+                playerInventory = database.collection<ContainerArray>('player_inventory');
 
-        try {
-            this.saveData(data, player);
-            this.saveEquipment(equipment, player);
-            this.saveQuests(quests, player);
-            this.saveAchievements(achievements, player);
-            this.saveBank(bank, player);
-            this.saveRegions(regions, player);
-            this.saveAbilities(abilities, player);
-            this.saveProfessions(professions, player);
-            // this.saveFriends(friends, player);
-            this.saveInventory(inventory, player, () => {
-                log.debug(`Successfully saved all data for player ${player.username}.`);
-            });
-        } catch {
-            log.error(`Error while saving data for ${player.username}`);
-        }
+            try {
+                this.saveData(playerData, player);
+                this.saveEquipment(playerEquipment, player);
+                this.saveQuests(playerQuests, player);
+                this.saveAchievements(playerAchievements, player);
+                this.saveBank(playerBank, player);
+                this.saveRegions(playerRegions, player);
+                this.saveAbilities(playerAbilities, player);
+                this.saveProfessions(playerProfessions, player);
+                // this.saveFriends(playerFriends, player);
+                this.saveInventory(playerInventory, player, () => {
+                    log.debug(`Successfully saved all data for player ${player.username}.`);
+                });
+            } catch {
+                log.error(`Error while saving data for ${player.username}`);
+            }
+        });
     }
 
     private saveData(collection: Collection<PlayerData>, player: Player): void {

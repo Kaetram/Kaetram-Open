@@ -310,108 +310,103 @@ export default class Player extends Character {
         if (regions.gameVersion === config.gver) this.regionsLoaded = regions.regions.split(',');
     }
 
-    public async loadProfessions(): Promise<void> {
+    public loadProfessions(): void {
         if (config.offlineMode) return;
 
-        let info = await this.database.loader.getProfessions(this).catch(() => null);
+        this.database.loader.getProfessions(this, (info) => {
+            if (!info)
+                // If this somehow happens.
+                return;
 
-        if (!info) return;
+            this.professions.update(info);
 
-        this.professions.update(info);
-
-        this.sendProfessions();
+            this.sendProfessions();
+        });
     }
 
-    public async loadFriends(): Promise<void> {
+    public loadFriends(): void {
         if (config.offlineMode) return;
 
-        let info = await this.database.loader.getFriends(this).catch(() => null);
+        this.database.loader.getFriends(this, (info) => {
+            if (!info) return;
 
-        if (!info) return;
-
-        this.friends.update(info);
+            this.friends.update(info);
+        });
     }
 
-    public async loadInventory(): Promise<void> {
+    public loadInventory(): void {
         if (config.offlineMode) {
             this.inventory.loadEmpty();
-
             return;
         }
 
-        let inventory = await this.database.loader.getInventory(this).catch(() => null);
+        this.database.loader.getInventory(this, (ids, counts, skills, skillLevels) => {
+            if (ids === null || counts === null) {
+                this.inventory.loadEmpty();
+                return;
+            }
 
-        if (!inventory) return this.inventory.loadEmpty();
+            if (ids.length !== this.inventory.size) this.save();
 
-        let { ids, counts, abilities, abilityLevels } = inventory;
-
-        if (ids.length !== this.inventory.size) this.save();
-
-        this.inventory.load(ids, counts, abilities, abilityLevels);
-        this.inventory.check();
+            this.inventory.load(ids, counts, skills!, skillLevels!);
+            this.inventory.check();
+        });
     }
 
-    public async loadBank(): Promise<void> {
+    public loadBank(): void {
         if (config.offlineMode) {
             this.bank.loadEmpty();
-
             return;
         }
 
-        let bank = await this.database.loader.getBank(this).catch(() => null);
+        this.database.loader.getBank(this, (ids, counts, skills, skillLevels) => {
+            if (ids === null || counts === null) {
+                this.bank.loadEmpty();
+                return;
+            }
 
-        if (!bank) return this.bank.loadEmpty();
+            if (ids.length !== this.bank.size) this.save();
 
-        let { ids, counts, abilities, abilityLevels } = bank;
-
-        this.bank.load(ids, counts, abilities, abilityLevels);
-        this.bank.check();
+            this.bank.load(ids, counts, skills, skillLevels);
+            this.bank.check();
+        });
     }
 
-    private async loadAchievements(): Promise<void> {
-        let achievements = await this.database.loader.getAchievements(this).catch(() => null);
-
-        if (!achievements) return;
-
-        let { ids, progress } = achievements;
-
-        ids.pop();
-        progress.pop();
-
-        if (this.quests.getAchievementSize() !== ids.length) {
-            log.info('Mismatch in achievements data.');
-
-            this.save();
-        }
-
-        this.quests.updateAchievements(ids, progress);
-    }
-
-    public async loadQuests(): Promise<void> {
+    public loadQuests(): void {
         if (config.offlineMode) return;
 
-        await this.loadAchievements();
+        this.database.loader.getAchievements(this, (ids, progress) => {
+            ids.pop();
+            progress.pop();
 
-        let quests = await this.database.loader.getQuests(this).catch(() => null);
+            if (this.quests.getAchievementSize() !== ids.length) {
+                log.info('Mismatch in achievements data.');
 
-        if (!quests) return;
+                this.save();
+            }
 
-        let { ids, stages } = quests;
+            this.quests.updateAchievements(ids, progress);
+        });
 
-        if (!ids || !stages) return this.quests.updateQuests(ids, stages);
+        this.database.loader.getQuests(this, (ids, stages) => {
+            if (!ids || !stages) {
+                this.quests.updateQuests(ids, stages);
+                return;
+            }
 
-        /* Removes the empty space created by the loader */
+            /* Removes the empty space created by the loader */
 
-        ids.pop();
-        stages.pop();
+            ids.pop();
+            stages.pop();
 
-        if (this.quests.getQuestSize() !== ids.length) {
-            log.info('Mismatch in quest data.');
+            if (this.quests.getQuestSize() !== ids.length) {
+                log.info('Mismatch in quest data.');
 
-            this.save();
-        }
+                this.save();
+            }
 
-        this.quests.updateQuests(ids, stages);
+            this.quests.updateQuests(ids, stages);
+        });
 
         this.quests.onAchievementsReady(() => {
             this.send(
