@@ -2,8 +2,8 @@
  * Useful utility functions that are used all throughout.
  */
 
-import crypto from 'crypto';
 import _ from 'lodash';
+import crypto from 'crypto';
 import zlib from 'zlib';
 
 import { Packets } from '../network';
@@ -53,15 +53,15 @@ export default {
     socketSeed: 0,
 
     generateRandomId(): string {
-        return `${++this.idSeed}${this.randomInt(0, 25000)}`;
+        return `${++this.idSeed}${this.randomInt(0, 25_000)}`;
     },
 
     generateClientId(): string {
-        return `${++this.clientSeed}${this.randomInt(0, 25000)}`;
+        return `${++this.clientSeed}${this.randomInt(0, 25_000)}`;
     },
 
     generateInstance(): string {
-        return `${++this.instanceSeed}${this.randomInt(0, 25000)}`;
+        return `${++this.instanceSeed}${this.randomInt(0, 25_000)}`;
     },
 
     validPacket(packet: number): boolean {

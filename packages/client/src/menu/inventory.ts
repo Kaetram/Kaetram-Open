@@ -48,7 +48,7 @@ export default class Inventory {
                 { count, ability } = item,
                 itemCount = count.toString();
 
-            if (count > 999999)
+            if (count > 999_999)
                 itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
             else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
             else if (count === 1) itemCount = '';
@@ -94,7 +94,7 @@ export default class Inventory {
         if (slot.edible) this.actions.add($('<div id="eat" class="actionButton">Eat</div>'));
         else if (slot.equippable)
             this.actions.add($('<div id="wield" class="actionButton">Wield</div>'));
-        else if (slot.count > 999999)
+        else if (slot.count > 999_999)
             this.actions.add($('<div id="itemInfo" class="actionButton">Info</div>'));
 
         if (!this.actions.isVisible()) this.actions.show();
@@ -219,7 +219,8 @@ export default class Inventory {
         let { count, ability } = slot,
             itemCount = count.toString();
 
-        if (count > 999999) itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
+        if (count > 999_999)
+            itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
         else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
         else if (count === 1) itemCount = '';
 

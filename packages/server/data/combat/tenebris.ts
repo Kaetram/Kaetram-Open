@@ -24,7 +24,7 @@ export default class Tenebris extends Combat {
         this.firstIllusionKilled = false;
 
         this.lastIllusion = Date.now();
-        this.respawnDelay = 95000;
+        this.respawnDelay = 95_000;
 
         character.onDeath(() => {
             if (this.isIllusion())
@@ -143,7 +143,7 @@ export default class Tenebris extends Combat {
         return (
             !this.isIllusion() &&
             !this.hasIllusions &&
-            Date.now() - this.lastIllusion === 45000 &&
+            Date.now() - this.lastIllusion === 45_000 &&
             Utils.randomInt(0, 4) === 2
         );
     }
