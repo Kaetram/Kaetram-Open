@@ -39,7 +39,7 @@ export interface QuestInfo {
 export interface AchievementData {
     id: number;
     name: string;
-    type?: number;
+    type: number | undefined;
     description: string;
     count: number;
     progress: number;
@@ -60,7 +60,7 @@ export interface RegionTileData {
     data: number[];
     c: boolean; // Collision
     isObject: boolean;
-    cursor: string;
+    cursor: string | undefined;
 }
 export interface TilesetData {
     [i: number]: {

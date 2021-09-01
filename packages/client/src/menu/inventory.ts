@@ -5,7 +5,6 @@ import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import * as Detect from '../utils/detect';
 import Container from './container/container';
 
-import type Equipment from '../entity/character/player/equipment/equipment';
 import type Game from '../game';
 import type Slot from './container/slot';
 
@@ -281,7 +280,7 @@ export default class Inventory {
         this.button.addClass('active');
     }
 
-    public hide(keepSelection?: boolean): void {
+    public hide(keepSelection = false): void {
         this.button.removeClass('active');
 
         this.body.fadeOut('slow');
