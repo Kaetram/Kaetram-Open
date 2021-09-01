@@ -64,7 +64,7 @@ export default class Character extends Entity {
     private secondStepCallback?(): void;
     private beforeStepCallback?(): void;
     private stepCallback?(): void;
-    private stopPathingCallback?(gridX: number, gridY: number, forced?: boolean): void;
+    private stopPathingCallback?(gridX: number, gridY: number, forced: boolean): void;
     private startPathingCallback?(path: number[][]): void;
     private moveCallback?(): void;
     private requestPathCallback?(x: number, y: number): number[][] | null;
@@ -262,7 +262,7 @@ export default class Character extends Entity {
         this.idle();
     }
 
-    public go(x: number, y: number, forced?: boolean): void {
+    public go(x: number, y: number, forced = false): void {
         if (this.frozen) return;
 
         if (this.following) {
@@ -377,7 +377,7 @@ export default class Character extends Entity {
         this.nextStep();
     }
 
-    private move(x: number, y: number, forced?: boolean): void {
+    private move(x: number, y: number, forced = false): void {
         // this.destination = {
         //     gridX: x,
         //     gridY: y
@@ -389,7 +389,7 @@ export default class Character extends Entity {
         else this.followPath(this.requestPathfinding(x, y));
     }
 
-    public stop(force?: boolean): void {
+    public stop(force = false): void {
         if (!force) this.interrupted = true;
         else if (this.hasPath()) {
             this.path = null;

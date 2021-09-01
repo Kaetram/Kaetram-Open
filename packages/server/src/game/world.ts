@@ -240,11 +240,7 @@ export default class World {
         }
     }
 
-    public handleDeath(
-        character: Character,
-        ignoreDrops?: boolean,
-        lastAttacker?: Character
-    ): void {
+    public handleDeath(character: Character, ignoreDrops = false, lastAttacker?: Character): void {
         if (!character) return;
 
         if (character.type === 'mob') {
@@ -507,8 +503,8 @@ export default class World {
         source: string,
         message: string,
         colour?: string,
-        isGlobal?: boolean,
-        withBubble?: boolean
+        isGlobal = false,
+        withBubble = false
     ): void {
         this.push(Opcodes.Push.Broadcast, {
             message: new Messages.Chat({
