@@ -35,8 +35,8 @@ export interface Config {
     mongodbUser: string;
     mongodbPassword: string;
     mongodbDatabase: string;
-    mongodbAuth: boolean;
     mongodbSrv: boolean;
+    mongodbAuth: boolean;
 
     worldSwitch: boolean;
     tutorialEnabled: boolean;

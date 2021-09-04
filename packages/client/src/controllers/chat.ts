@@ -37,7 +37,7 @@ export default class ChatController {
 
         element.css('color', colour || 'white');
 
-        this.log.append(element).scrollTop(99999);
+        this.log.append(element).scrollTop(99_999);
     }
 
     public key(data: Modules.Keys): void {
