@@ -28,11 +28,15 @@ export default abstract class WebSocket {
     ) {}
 
     public loadServer(): void {
-        this.httpServer = http.createServer(this.httpResponse).listen(this.port, this.host, () => {
-            log.info(`[${this.type}] Server is now listening on port: ${this.port}.`);
+        this.httpServer = http
+            .createServer(this.httpResponse)
+            .listen(this.port, this.host, this.ready.bind(this));
+    }
 
-            this.initializedCallback?.();
-        });
+    private ready(): void {
+        log.info(`[${this.type}] Server is now listening on port: ${this.port}.`);
+
+        this.initializedCallback?.();
     }
 
     /**
