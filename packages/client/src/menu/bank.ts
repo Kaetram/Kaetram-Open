@@ -58,7 +58,7 @@ export default class Bank {
             let { count } = item,
                 itemCount: string = count.toString();
 
-            if (count > 999999)
+            if (count > 999_999)
                 itemCount = `${count
                     .toString()
                     .slice(0, Math.max(0, count.toString().length - 6))}M`;
@@ -100,7 +100,7 @@ export default class Bank {
             let { count } = iItem,
                 itemCount = count.toString();
 
-            if (count > 999999)
+            if (count > 999_999)
                 itemCount = `${count
                     .toString()
                     .slice(0, Math.max(0, count.toString().length - 6))}M`;
