@@ -36,10 +36,10 @@ export default {
     },
 
     Regrowth: {
-        Oak: 15000,
-        Palm: 30000,
-        IceOak: 60000,
-        IcePalm: 72000
+        Oak: 15_000,
+        Palm: 30_000,
+        IceOak: 60_000,
+        IcePalm: 72_000
     },
 
     // TODO - Move this to the tilemap instead?

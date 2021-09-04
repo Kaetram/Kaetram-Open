@@ -4,7 +4,7 @@ export default class Warp {
     private map;
 
     public lastWarp = 0;
-    private warpTimeout = 30000;
+    private warpTimeout = 30_000;
 
     public constructor(private player: Player) {
         this.map = player.map;
@@ -57,8 +57,8 @@ export default class Warp {
 
         if (!difference) return '5 minutes';
 
-        return difference > 60000
-            ? `${Math.ceil(difference / 60000)} minutes`
+        return difference > 60_000
+            ? `${Math.ceil(difference / 60_000)} minutes`
             : `${Math.floor(difference / 1000)} seconds`;
     }
 
