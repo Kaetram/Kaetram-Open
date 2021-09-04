@@ -13,14 +13,14 @@
         "dev": "yarn packages dev",
         "start": "yarn packages start",
         "build": "yarn packages build",
-        "lint": "eslint packages/**/*.ts && stylelint packages/**/*.scss",
+        "lint": "eslint --cache packages/**/*.ts && stylelint --cache packages/**/*.scss",
         "test": "yarn packages test",
         "helper": "yarn packages helper",
         "map": "yarn packages map"
     },
     "lint-staged": {
         "*.ts": "eslint --cache --fix",
-        "*.scss": "stylelint --fix"
+        "*.scss": "stylelint --cache --fix"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.30.0",
@@ -29,10 +29,10 @@
         "eslint": "^7.32.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prefer-let": "^1.1.0",
-        "eslint-plugin-prettier": "^3.4.0",
-        "eslint-plugin-unicorn": "^34.0.1",
-        "husky": "^7.0.1",
-        "lint-staged": "^11.1.1",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-unicorn": "^35.0.0",
+        "husky": "^7.0.2",
+        "lint-staged": "^11.1.2",
         "postcss": "^8.3.6",
         "postcss-value-parser": "^4.1.0",
         "prettier": "^2.3.2",

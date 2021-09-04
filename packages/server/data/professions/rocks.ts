@@ -20,7 +20,7 @@ export default {
 
     // Time (in milliseconds) for the rock to be mineable again.
     Respawn: {
-        BlueSteel: 15000
+        BlueSteel: 15_000
     },
 
     EmptyRock: {}

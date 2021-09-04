@@ -92,7 +92,7 @@ export default class PirateCaptain extends Combat {
 
     private canTeleport(): boolean {
         // Just randomize the teleportation for shits and giggles.
-        return Date.now() - this.lastTeleport > 10000 && Utils.randomInt(0, 4) === 2;
+        return Date.now() - this.lastTeleport > 10_000 && Utils.randomInt(0, 4) === 2;
     }
 
     private getHealthPercentage(): number {
