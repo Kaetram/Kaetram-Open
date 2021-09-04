@@ -30,7 +30,7 @@ export default class QueenAnt extends Combat {
 
         this.character = character;
 
-        this.lastActionThreshold = 10000; // AoE Attack Threshold.
+        this.lastActionThreshold = 10_000; // AoE Attack Threshold.
 
         this.aoeTimeout = null;
 
@@ -187,10 +187,10 @@ export default class QueenAnt extends Combat {
     }
 
     private canCastAoE(): boolean {
-        return Date.now() - this.lastAoE > 30000;
+        return Date.now() - this.lastAoE > 30_000;
     }
 
     private canSpawn(): boolean {
-        return Date.now() - this.lastSpawn > 45000 && !this.hasMinions() && this.isAttacked();
+        return Date.now() - this.lastSpawn > 45_000 && !this.hasMinions() && this.isAttacked();
     }
 }
