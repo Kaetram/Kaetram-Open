@@ -10,16 +10,11 @@
     "rules": {
         "@typescript-eslint/no-non-null-assertion": "off",
 
-        "unicorn/numeric-separators-style": "off",
         "unicorn/prefer-node-protocol": "off",
         "unicorn/prefer-module": "off",
         "unicorn/no-null": "off",
         "unicorn/prefer-number-properties": "off",
         "unicorn/prevent-abbreviations": "off",
-        "unicorn/consistent-function-scoping": "off",
-        "unicorn/require-post-message-target-origin": "off",
-        "unicorn/custom-error-definition": "error",
-        "unicorn/no-unsafe-regex": "error",
         // "unicorn/prefer-at": "error",
         // "unicorn/prefer-object-has-own": "error",
         "unicorn/prefer-string-replace-all": "error",
