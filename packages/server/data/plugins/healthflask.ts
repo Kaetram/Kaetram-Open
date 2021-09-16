@@ -1,9 +1,9 @@
 import Items from '../../src/util/items';
 
 import type Player from '../../src/game/entity/character/player/player';
-import type { Item } from '.';
+import type { Plugin } from '.';
 
-export default class HealthFlask implements Item {
+export default class HealthFlask implements Plugin {
     private id: number;
     private healAmount: number;
     private manaAmount: number;
