@@ -8,6 +8,7 @@ build({
     bundle: true,
     minify: true,
     platform: 'node',
+    target: 'node12',
     sourcemap: true,
     plugins: [
         nodeExternalsPlugin({
