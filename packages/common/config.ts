@@ -24,6 +24,9 @@ export interface Config {
     hubAccessToken: string;
     remoteServerHost: string;
 
+    clientRemoteHost: string;
+    clientRemotePort: number;
+
     cleanupThreshold: number;
     cleanupTime: number;
 
