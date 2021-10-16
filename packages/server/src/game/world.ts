@@ -152,9 +152,6 @@ export default class World {
         }, config.treeTick || 1000);
 
         if (!config.hubEnabled) return;
-
-        await import('@kaetram/hub');
-
         if (!config.apiEnabled) log.error('Server is in hub-mode but API is not enabled!');
 
         setIntervalAsync(async () => {
