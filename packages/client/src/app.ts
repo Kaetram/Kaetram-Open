@@ -8,23 +8,9 @@ import { isMobile, isTablet } from './utils/detect';
 
 import type Game from './game';
 
-export interface Config {
-    name: string;
-    /** Server host */
-    host: string;
-    /** Server port */
-    port: number;
-    /** Game version on the server */
-    version: string;
-    /** Use HTTPS */
-    ssl: boolean;
-    debug: boolean;
-    hub: string | false;
-    worldSwitch: boolean;
-}
-
 export default class App {
-    public config: Config;
+    // `window.config` is replaced by vite during build process
+    public config = window.config;
 
     public body = $('body');
 
@@ -70,26 +56,6 @@ export default class App {
 
     public constructor() {
         this.sendStatus('Initializing the main app');
-
-        // `window.config` is replaced by vite during build process
-
-        // eslint-disable-next-line prefer-destructuring
-        let hubEnabled = window.config.hubEnabled,
-            secure = window.config.ssl,
-            hub = secure
-                ? `https://${window.config.hubHost}`
-                : `http://${window.config.hubHost}:${window.config.hubPort}`;
-
-        this.config = {
-            debug: import.meta.env.DEV,
-            name: window.config.name,
-            host: window.config.host,
-            port: window.config.socketioPort,
-            version: window.config.gver,
-            ssl: secure,
-            worldSwitch: hubEnabled && window.config.worldSwitch,
-            hub: hubEnabled && hub
-        };
 
         // this.updateOrientation();
 

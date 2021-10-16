@@ -9,20 +9,14 @@ import compress from 'vite-plugin-compress';
 
 import { name, description } from 'kaetram/package.json';
 
-let expose = [
-    'name',
-    'host',
-    'socketioPort',
-    'gver',
-    'ssl',
-    'hubEnabled',
-    'hubHost',
-    'hubPort',
-    'worldSwitch',
-    'serverId'
-] as const;
+let expose = ['name', 'host', 'ssl', 'worldSwitch', 'serverId'] as const;
 
-type ExposedConfig = Pick<Config, typeof expose[number]>;
+interface ExposedConfig extends Pick<Config, typeof expose[number]> {
+    debug: boolean;
+    version: string;
+    port: number;
+    hub: string | false;
+}
 
 declare global {
     interface Window {
@@ -30,12 +24,41 @@ declare global {
     }
 }
 
+function loadEnv(isProduction: boolean): ExposedConfig {
+    let env = {} as ExposedConfig,
+        {
+            gver,
+            clientRemoteHost,
+            clientRemotePort,
+            hubEnabled,
+            hubHost,
+            hubPort,
+            host,
+            socketioPort,
+            ssl,
+            worldSwitch
+        } = config;
+
+    for (let key of expose) env[key] = config[key] as never;
+
+    let clientHost = clientRemoteHost || (hubEnabled ? hubHost : host),
+        clientPort = clientRemotePort || (hubEnabled ? hubPort : socketioPort),
+        hub = ssl ? `https://${clientHost}` : `http://${clientHost}:${clientPort}`;
+
+    return Object.assign(env, {
+        debug: !isProduction,
+        version: gver,
+        host: clientHost,
+        port: clientPort,
+        hub: hubEnabled && hub,
+        worldSwitch: hubEnabled && worldSwitch
+    });
+}
+
 export default defineConfig(({ command }) => {
     let isProduction = command === 'build',
         brotli = false,
-        env = {} as ExposedConfig;
-
-    for (let key of expose) env[key] = config[key] as never;
+        env = loadEnv(isProduction);
 
     return {
         cacheDir: '.cache',
