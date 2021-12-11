@@ -28,13 +28,13 @@ function loadCollisionGrid() {
     }
 
     for (let index of collisions) {
-        let { x, y } = indexToGridPosition(index);
+        let { x, y } = indexToCoord(index);
 
         grid[y][x] = 1;
     }
 
     // for (let tileIndex of blocking) {
-    //     let { x, y } = indexToGridPosition(tileIndex);
+    //     let { x, y } = indexToCoord(tileIndex);
 
     //     data.grid[y][x] = 1;
     // }
@@ -42,7 +42,7 @@ function loadCollisionGrid() {
     data.grid = grid;
 }
 
-function indexToGridPosition(index: number) {
+function indexToCoord(index: number) {
     let x = index % width,
         y = Math.floor(index / width);
 

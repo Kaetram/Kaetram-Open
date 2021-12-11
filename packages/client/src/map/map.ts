@@ -138,7 +138,7 @@ export default class Map {
 
             if (!tile.c && collisionIndex > -1) {
                 // Removing existing collision tileIndex
-                let position = this.indexToGridPosition(tile.index + 1);
+                let position = this.indexToCoord(tile.index + 1);
 
                 this.collisions.splice(collisionIndex, 1);
 
@@ -355,7 +355,7 @@ export default class Map {
 
     public updateCollisions(): void {
         _.each(this.collisions, (index) => {
-            let position = this.indexToGridPosition(index + 1);
+            let position = this.indexToCoord(index + 1);
 
             if (position.x > this.width - 1) position.x = this.width - 1;
 
@@ -365,7 +365,7 @@ export default class Map {
         });
     }
 
-    public indexToGridPosition(index: number): Pos {
+    public indexToCoord(index: number): Pos {
         index -= 1;
 
         let x = this.getX(index + 1, this.width),
@@ -377,7 +377,7 @@ export default class Map {
         };
     }
 
-    public gridPositionToIndex(x: number, y: number): number {
+    public coordToIndex(x: number, y: number): number {
         return y * this.width + x + 1;
     }
 
@@ -388,13 +388,13 @@ export default class Map {
     }
 
     public isObject(x: number, y: number): boolean {
-        let index = this.gridPositionToIndex(x, y) - 1;
+        let index = this.coordToIndex(x, y) - 1;
 
         return this.objects.includes(index);
     }
 
     public getTileCursor(x: number, y: number): Cursors | null {
-        let index = this.gridPositionToIndex(x, y) - 1;
+        let index = this.coordToIndex(x, y) - 1;
 
         if (!(index in this.cursorTiles)) return null;
 

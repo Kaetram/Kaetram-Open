@@ -403,7 +403,7 @@ export default class World {
         if (id in what) return false;
 
         what[id as keyof typeof what] = {
-            index: this.map.gridPositionToIndex(x, y) - 1,
+            index: this.map.coordToIndex(x, y) - 1,
             objectTile
         };
 

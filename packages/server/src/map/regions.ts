@@ -317,6 +317,10 @@ export default class Regions {
             };
 
             // region.forEachTile((x: number, y: number) => {
+
+            // });
+
+            // region.forEachTile((x: number, y: number) => {
             //     let index = this.map.coordToIndex(x, y),
             //         tileData = this.map.getTileData(index),
             //         tile: TileInfo = {
