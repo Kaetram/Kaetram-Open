@@ -1,4 +1,4 @@
-import World from '../../../game/world';
+import World from '../../../world';
 import Areas from '../areas';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';

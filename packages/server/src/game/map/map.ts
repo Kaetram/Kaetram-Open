@@ -3,12 +3,12 @@ import _ from 'lodash';
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
-import mapData from '../../data/map/world.json';
-import Spawns from '../../data/spawns.json';
-import Items from '../util/items';
-import Mobs from '../util/mobs';
-import NPCs from '../util/npcs';
-import Objects from '../util/objects';
+import mapData from '../../../data/map/world.json';
+import Spawns from '../../../data/spawns.json';
+import Items from '../../util/items';
+import Mobs from '../../util/mobs';
+import NPCs from '../../util/npcs';
+import Objects from '../../util/objects';
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
@@ -20,8 +20,8 @@ import type {
     Rock,
     Tree
 } from '@kaetram/common/types/map';
-import type Entity from '../game/entity/entity';
-import type World from '../game/world';
+import type Entity from '../entity/entity';
+import type World from '../world';
 import type Area from './areas/area';
 import type Areas from './areas/areas';
 
