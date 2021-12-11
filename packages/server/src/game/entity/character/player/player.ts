@@ -887,7 +887,7 @@ export default class Player extends Character {
         //TODO - Redo
 
         // _.each(this.map.treeIndexes, (index: number) => {
-        //     let position = this.map.indexToGridPosition(index + 1),
+        //     let position = this.map.indexToCoord(index + 1),
         //         treeRegion = this.regions.getRegion(position.x, position.y);
 
         //     if (!this.regions.isSurrounding(this.region, treeRegion)) return;

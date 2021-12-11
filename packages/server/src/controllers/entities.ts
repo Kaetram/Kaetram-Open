@@ -52,7 +52,7 @@ export default class Entities {
         _.each(this.map.staticEntities, (entityInfo) => {
             let key = entityInfo.string,
                 instance = Utils.generateInstance(),
-                position = this.map.indexToGridPosition(entityInfo.tileIndex, 1);
+                position = this.map.indexToCoord(entityInfo.tileIndex);
 
             switch (entityInfo.type) {
                 case 'item': {

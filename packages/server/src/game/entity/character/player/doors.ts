@@ -136,7 +136,7 @@ export default class Doors {
 
     public hasCollision(x: number, y: number): boolean {
         let tiles = this.getAllTiles(),
-            tileIndex = this.world.map.gridPositionToIndex(x, y),
+            tileIndex = this.world.map.coordToIndex(x, y),
             index = tiles.indexes.indexOf(tileIndex);
 
         /**

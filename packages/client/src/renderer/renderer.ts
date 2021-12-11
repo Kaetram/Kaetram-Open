@@ -830,7 +830,7 @@ export default class Renderer {
         let { player } = this.game;
 
         this.drawText(
-            `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.gridPositionToIndex(
+            `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.coordToIndex(
                 player.gridX,
                 player.gridY
             )}`,
@@ -1076,7 +1076,7 @@ export default class Renderer {
 
             if (!(index in this.animatedTiles)) {
                 let tile = new Tile(id, index, this.map),
-                    position = this.map.indexToGridPosition(tile.index);
+                    position = this.map.indexToCoord(tile.index);
 
                 tile.setPosition(position);
 
@@ -1140,7 +1140,7 @@ export default class Renderer {
 
     private forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
         this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y)) callback(this.map.gridPositionToIndex(x, y) - 1);
+            if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y) - 1);
         }, offset);
     }
 
