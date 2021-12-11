@@ -127,7 +127,6 @@ export default class Renderer {
     private lightTileSize!: number;
     public canvasHeight!: number;
     public canvasWidth!: number;
-    private webGL!: boolean;
     public map!: Map;
     private mEdge!: boolean;
     private tablet!: boolean;
@@ -150,13 +149,7 @@ export default class Renderer {
         public game: Game
     ) {
         this.context = entitiesCanvas.getContext('2d')!; // Entities;
-
-        this.backContext = (
-            !Detect.supportsWebGL()
-                ? background.getContext('2d')
-                : background.getContext('webgl') || background.getContext('experimental-webgl')
-        )!;
-
+        this.backContext = background.getContext('2d');
         this.foreContext = foreground.getContext('2d')!; // Foreground
         this.overlayContext = overlay.getContext('2d')!; // Lighting
         this.textContext = textCanvas.getContext('2d')!; // Texts
@@ -231,8 +224,6 @@ export default class Renderer {
             canvas.width = this.canvasWidth;
             canvas.height = this.canvasHeight;
         });
-
-        if (this.webGL) this.map.loadWebGL(this.backContext as WebGL2RenderingContext);
     }
 
     public loadCamera(): void {
@@ -334,12 +325,6 @@ export default class Renderer {
      */
 
     private draw(): void {
-        if (this.webGL) {
-            // Do the WebGL Rendering here
-            this.drawWebGL();
-            return;
-        }
-
         // Canvas rendering.
         if (this.hasRenderedFrame()) return;
 
@@ -368,35 +353,8 @@ export default class Renderer {
         this.saveFrame();
     }
 
-    private drawWebGL(): void {
-        if (!this.map.webGLMap) return;
-
-        let dt = this.game.time - this.game.lastTime;
-
-        this.game.lastTime = this.game.time;
-
-        this.map.webGLMap.tileScale = 3;
-
-        this.map.webGLMap.update(dt);
-        this.map.webGLMap.draw(this.camera.x, this.camera.y);
-
-        // This is a janky and temporary solution to drawing high tiles
-        // on the WebGL context.
-
-        this.foreContext.clearRect(0, 0, this.foreground.width, this.foreground.height);
-        this.foreContext.save();
-
-        this.setCameraView(this.foreContext);
-
-        this.forEachVisibleTile((id, index) => {
-            if (this.map.isHighTile(id)) this.drawTile(this.foreContext, id, index);
-        });
-
-        this.foreContext.restore();
-    }
-
     private drawAnimatedTiles(): void {
-        if (!this.animateTiles || this.webGL) return;
+        if (!this.animateTiles) return;
 
         this.context.save();
         this.setCameraView(this.context);
@@ -1059,7 +1017,7 @@ export default class Renderer {
     }
 
     public updateAnimatedTiles(): void {
-        if (!this.animateTiles || this.webGL) return;
+        if (!this.animateTiles) return;
 
         this.forEachVisibleTile((id, index) => {
             /**
@@ -1340,9 +1298,6 @@ export default class Renderer {
         this.mobile = Detect.isMobile();
         this.tablet = Detect.isTablet();
         this.mEdge = Detect.isEdge();
-        this.webGL = Detect.supportsWebGL();
-
-        // this.animateTiles = !this.mEdge;
     }
 
     public verifyCentration(): void {

@@ -8,6 +8,8 @@ import Region from './region';
 import Map, { AnimatedTile, ParsedTile } from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
+import Messages from '../../network/messages';
+import { Opcodes } from '@kaetram/common/network';
 
 /**
  * Class responsible for chunking up the map.
@@ -67,8 +69,8 @@ export default class Regions {
             return;
         }
 
-        for (let x = 0; x < this.map.width; x += this.divisions)
-            for (let y = 0; y < this.map.height; y += this.divisions)
+        for (let y = 0; y < this.map.height; y += this.divisions)
+            for (let x = 0; x < this.map.width; x += this.divisions)
                 this.regions.push(new Region(x, y, this.divisions, this.divisions));
 
         // Number of regions per side.
@@ -253,7 +255,7 @@ export default class Regions {
      */
 
     public sendRegion(player: Player): void {
-        //player.send(new MapPacket(Opcodes.Map.Region as never, this.getRegionData(player)));
+        player.send(new Messages.Region(Opcodes.Region.Render, this.getRegionData(player)));
     }
 
     /**
