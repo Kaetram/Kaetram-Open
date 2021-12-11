@@ -3,11 +3,11 @@ import _ from 'lodash';
 import log from '@kaetram/common/util/log';
 
 import Area from './areas/area';
-import World from '../game/world';
+import World from '../world';
 import Region from './region';
 import Map, { AnimatedTile, ParsedTile } from './map';
-import Entity from '../game/entity/entity';
-import Player from '../game/entity/character/player/player';
+import Entity from '../entity/entity';
+import Player from '../entity/character/player/player';
 
 /**
  * Class responsible for chunking up the map.

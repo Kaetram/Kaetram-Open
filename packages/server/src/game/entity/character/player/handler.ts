@@ -10,7 +10,7 @@ import NPCs from '../../../../util/npcs';
 import Shops from '../../../../util/shops';
 import Hit from '../combat/hit';
 
-import type Areas from '../../../../map/areas/areas';
+import type Areas from '../../../map/areas/areas';
 import type Entity from '../../entity';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';

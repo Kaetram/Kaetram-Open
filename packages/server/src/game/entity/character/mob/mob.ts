@@ -6,8 +6,8 @@ import Mobs, { MobData, MobDrops } from '../../../../util/mobs';
 import Character, { CharacterState } from '../character';
 import MobHandler from './mobhandler';
 
-import type Area from '../../../../map/areas/area';
-import type Areas from '../../../../map/areas/areas';
+import type Area from '../../../map/areas/area';
+import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
 
 interface MobState extends CharacterState {
