@@ -1059,16 +1059,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onMinigame((opcode, info) => {
-            switch (opcode) {
-                case Opcodes.Minigame.TeamWar:
-                    this.teamWar.handle(info);
-
-                    break;
-            }
-        });
-
-        this.messages.onRegion((opcode, bufferSize, info) => {
+        this.messages.onRegion((opcode, _bufferSize, info) => {
             let bufferData = window
                     .atob(info)
                     .split('')

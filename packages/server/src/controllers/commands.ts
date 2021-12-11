@@ -346,16 +346,8 @@ export default class Commands {
                 return;
             }
 
-            case 'instance':
-                //this.world.region.createInstance(this.player, this.player.region);
-                return;
-
-            case 'checkregion':
+            case 'getregion':
                 this.player.notify(`Current Region: ${this.player.region}`);
-                return;
-
-            case 'deinstance':
-                //this.world.region.deleteInstance(this.player);
                 return;
 
             case 'debug':

@@ -1,14 +1,11 @@
 import _ from 'lodash';
 
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import Rocks from '../../data/professions/rocks';
-import Trees from '../../data/professions/trees';
 import Entities from '../controllers/entities';
 import GlobalObjects from '../controllers/globalobjects';
-import Minigames from '../controllers/minigames';
 import Shops from '../controllers/shops';
 import Grids from '../map/grids';
 import Map from '../map/map';
@@ -19,7 +16,6 @@ import Network from '../network/network';
 import Mobs from '../util/mobs';
 import Character from './entity/character/character';
 
-import type { Rock, Tree } from '@kaetram/common/types/map';
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
@@ -61,14 +57,6 @@ export default class World {
     // private debug = false;
     public allowConnections = false;
 
-    // Lumberjacking Variables
-    private trees: DynamicObject = {};
-    private cutTrees: DynamicData<{ treeId: number }> = {};
-
-    // Mining Variables
-    private rocks: DynamicObject = {};
-    private depletedRocks: DynamicData<{ rockId: number }> = {};
-
     // private loadedRegions = false;
     public ready = false;
 
@@ -78,7 +66,6 @@ export default class World {
     public entities!: Entities;
     public network!: Network;
     public discord!: Discord;
-    public minigames!: Minigames;
     public globalObjects!: GlobalObjects;
 
     public playerConnectCallback?: PlayerConnectCallback;
@@ -118,8 +105,6 @@ export default class World {
          * in a batch here in order to keep it organized and neat.
          */
 
-        this.minigames = new Minigames(this);
-
         this.api = new API(this);
         this.shops = new Shops(this);
         this.discord = new Discord(this);
@@ -143,10 +128,6 @@ export default class World {
             this.network.parsePackets();
             //this.map.regions.parseRegions();
         }, update);
-
-        setIntervalAsync(async () => {
-            this.parseTrees();
-        }, config.treeTick || 1000);
 
         if (!config.hubEnabled) return;
 
@@ -267,155 +248,6 @@ export default class World {
 
             player.die();
         }
-    }
-
-    private parseTrees(): void {
-        // let time = Date.now(),
-        //     treeTypes = Object.keys(Modules.Trees);
-        // _.each(this.cutTrees, (tree, key) => {
-        //     let type = treeTypes[tree.treeId];
-        //     if (time - tree.time < Trees.Regrowth[type as Tree]) return;
-        //     _.each(tree.data, (tile) => {
-        //         this.map.data[tile.index] = tile.oldTiles;
-        //     });
-        //     let position = this.map.idToPosition(key),
-        //         regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
-        //     this.region.updateRegions(regionId);
-        //     delete this.cutTrees[key];
-        // });
-    }
-
-    private parseRocks(): void {
-        // let time = Date.now(),
-        //     rockTypes = Object.keys(Modules.Rocks);
-        // _.each(this.depletedRocks, (rock, key) => {
-        //     let type = rockTypes[rock.rockId];
-        //     if (time - rock.time < Rocks.Respawn[type as Rock]) return;
-        //     _.each(rock.data, (tile) => {
-        //         this.map.data[tile.index] = tile.oldTiles;
-        //     });
-        //     let position = this.map.idToPosition(key),
-        //         regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
-        //     this.region.updateRegions(regionId);
-        //     delete this.depletedRocks[key];
-        // });
-    }
-
-    public isTreeCut(id: string): boolean {
-        if (id in this.cutTrees) return true;
-
-        for (let i in this.cutTrees) if (id in this.cutTrees[i]) return true;
-
-        return false;
-    }
-
-    public isRockDepleted(id: string): boolean {
-        if (id in this.depletedRocks) return true;
-
-        for (let i in this.depletedRocks) if (id in this.depletedRocks[i]) return true;
-
-        return false;
-    }
-
-    /**
-     * We save trees we are about to destroy
-     * to the `this.trees` and once they are destroyed
-     * we pluck them into the `this.destroyedTrees`.
-     * We run a tick that re-spawns them after a while
-     * using the data from `this.trees`.
-     */
-    public destroyTree(id: string, treeId: number): void {
-        let position = this.map.idToPosition(id);
-
-        if (!(id in this.trees)) this.trees[id] = {} as never;
-
-        this.search(position.x + 1, position.y, id, this.trees, 'tree');
-
-        this.cutTrees[id] = {
-            data: {} as never,
-            time: Date.now(),
-            treeId
-        };
-
-        _.each(this.trees[id], (tile, key) => {
-            let tiles = this.map.data[tile.index];
-
-            // Store the original tiles for respawning.
-            this.cutTrees[id].data[key] = {
-                oldTiles: [tiles].flat(), // concat to create a new array
-                index: tile.index
-            };
-
-            // We do not remove tiles that do not have another tile behind them.
-            if (Array.isArray(tiles)) {
-                let objectTile = tile.objectTile as keyof typeof Trees.Stumps,
-                    index = tiles.indexOf(objectTile);
-
-                // We map the uncut trunk to the cut trunk tile.
-                if (objectTile in Trees.Stumps) tiles[index] = Trees.Stumps[objectTile];
-                else tiles.splice(index, 1);
-            }
-        });
-
-        // let regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
-
-        // this.region.updateRegions(regionId);
-
-        this.trees[id] = {};
-    }
-
-    /**
-     * The following functions recursively iterate through tiles of
-     * a certain type. For example, we can look for all the tree tiles,
-     * given a starting tile, and we stop when all tiles are detected.
-     * Because this method is not exactly perfect, trees have to be
-     * placed one tile apart such that the algorithm does not 'leak'
-     * and cut both trees.
-     * `refId` - The initial object we click on.
-     * `data` - The array we are working with.
-     * `type` - The type of tile we are looking for.
-     */
-
-    private getSearchTile(type: string, x: number, y: number): number | number[] | undefined {
-        switch (type) {
-            case 'tree':
-                return this.map.getTree(x, y);
-
-            case 'rock':
-                return this.map.getRock(x, y);
-        }
-    }
-
-    private search(
-        x: number,
-        y: number,
-        refId: string,
-        data: DynamicObject,
-        type: string
-    ): boolean {
-        let objectTile = this.getSearchTile(type, x, y);
-
-        if (!objectTile) return false;
-
-        let id = `${x}-${y}`,
-            what = data[refId as keyof typeof data];
-
-        if (id in what) return false;
-
-        what[id as keyof typeof what] = {
-            index: this.map.coordToIndex(x, y) - 1,
-            objectTile
-        };
-
-        if (this.search(x + 1, y, refId, data, type)) return true;
-
-        if (this.search(x - 1, y, refId, data, type)) return true;
-
-        if (this.search(x, y + 1, refId, data, type)) return true;
-
-        if (this.search(x, y - 1, refId, data, type)) return true;
-
-        return false;
     }
 
     public push(type: Opcodes.Push, info: WorldPacket | WorldPacket[]): void {

@@ -22,7 +22,6 @@ import type {
     ExperienceProfessionData,
     HandshakeData,
     HealData,
-    MinigameData,
     MovementFollowData,
     MovementMoveData,
     MovementOrientateData,
@@ -289,10 +288,6 @@ export default {
         Opcodes.Shop
     > {
         public packet = Packets.Shop;
-    },
-
-    Minigame: class extends Packet<MinigameData, Opcodes.Minigame> {
-        public packet = Packets.Minigame;
     },
 
     Region: class extends Packet<string, Opcodes.Region> {
