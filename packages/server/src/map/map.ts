@@ -109,13 +109,6 @@ export default class Map {
         this.cursors = map.cursors;
         this.warps = map.areas.warps;
 
-        /**
-         * These are temporarily hardcoded,
-         * but we will use a dynamic approach.
-         */
-        this.regionWidth = 35;
-        this.regionHeight = 25;
-
         this.checksum = Utils.getChecksum(JSON.stringify(map));
 
         this.areas = {};
@@ -148,26 +141,6 @@ export default class Map {
 
         _.each(map.areas.doors, (door) => {
             if (!door.destination) return;
-
-            // let orientation: Modules.Orientation;
-
-            // switch (door.orientation) {
-            //     case 'u':
-            //         orientation = Modules.Orientation.Up;
-            //         break;
-
-            //     case 'd':
-            //         orientation = Modules.Orientation.Down;
-            //         break;
-
-            //     case 'l':
-            //         orientation = Modules.Orientation.Left;
-            //         break;
-
-            //     case 'r':
-            //         orientation = Modules.Orientation.Right;
-            //         break;
-            // }
 
             let index = this.coordToIndex(door.x, door.y),
                 destination = this.getDoorDestination(door);
@@ -243,23 +216,14 @@ export default class Map {
         };
     }
 
-    private getX(index: number, width: number): number {
-        if (index === 0) return 0;
+    /**
+     * Checks whether a tileId is flipped or not by comparing
+     * the value against the lowest flipped bitflag.
+     * @param tileId The tileId we are checking.
+     */
 
-        return index % width === 0 ? width - 1 : (index % width) - 1;
-    }
-
-    private getRandomPosition(area: Area): Pos {
-        let pos = {} as Pos,
-            valid = false;
-
-        while (!valid) {
-            pos.x = area.x + Utils.randomInt(0, area.width + 1);
-            pos.y = area.y + Utils.randomInt(0, area.height + 1);
-            valid = this.isValidPosition(pos.x, pos.y);
-        }
-
-        return pos;
+    public isFlipped(tileId: number): boolean {
+        return tileId > Modules.Constants.DIAGONAL_FLAG;
     }
 
     private inArea(
@@ -283,18 +247,51 @@ export default class Map {
         );
     }
 
-    public nearLight(light: ProcessedArea, x: number, y: number): boolean {
-        let diff = Math.round(light.distance! / 16),
-            startX = light.x - this.regionWidth - diff,
-            startY = light.y - this.regionHeight - diff,
-            endX = light.x + this.regionWidth + diff,
-            endY = light.y + this.regionHeight + diff;
-
-        return x > startX && y > startY && x < endX && y < endY;
-    }
-
     public isObject(object: number): boolean {
         return this.objects.includes(object);
+    }
+
+    /**
+     * Uses the index (see `coordToIndex`) to obtain tile inforamtion in the tilemap.
+     * @param index Gets tile information at an index in the map.
+     * @returns Returns tile information (a number or number array)
+     */
+
+    public getTileData(index: number): ParsedTile {
+        let data = this.data[index];
+
+        if (!data) return [];
+
+        let isArray = Array.isArray(data),
+            parsedData: ParsedTile = isArray ? [] : 0;
+
+        this.forEachTile(data, (tileId: number) => {
+            let tile: ParsedTile = tileId;
+
+            if (this.isFlipped(tileId)) {
+                let h = !!(tileId & Modules.Constants.HORIZONTAL_FLAG),
+                    v = !!(tileId & Modules.Constants.VERTICAL_FLAG),
+                    d = !!(tileId & Modules.Constants.DIAGONAL_FLAG);
+
+                tileId &= ~(
+                    Modules.Constants.DIAGONAL_FLAG |
+                    Modules.Constants.VERTICAL_FLAG |
+                    Modules.Constants.HORIZONTAL_FLAG
+                );
+
+                tile = {
+                    tileId,
+                    h,
+                    v,
+                    d
+                };
+            }
+
+            if (isArray) (parsedData as ParsedTile[]).push(tile);
+            else parsedData = tile;
+        });
+
+        return parsedData;
     }
 
     public getPositionObject(x: number, y: number): number {
@@ -325,19 +322,6 @@ export default class Map {
         return `${position.x}-${position.y}`;
     }
 
-    private getObject(
-        x: number,
-        y: number,
-        data: { [id: number]: string }
-    ): number | number[] | undefined {
-        let index = this.coordToIndex(x, y),
-            tiles = this.data[index];
-
-        if (Array.isArray(tiles)) for (let i in tiles) if (tiles[i] in data) return tiles[i];
-
-        if ((tiles as number) in data) return tiles;
-    }
-
     // Transforms an object's `instance` or `id` into position
     public idToPosition(id: string): Pos {
         let split = id.split('-');
@@ -358,15 +342,6 @@ export default class Map {
             if (map.areas.doors[i].id === door.destination) return map.areas.doors[i];
 
         return null;
-    }
-
-    private isValidPosition(x: number, y: number): boolean {
-        return (
-            Number.isInteger(x) &&
-            Number.isInteger(y) &&
-            !this.isOutOfBounds(x, y) &&
-            !this.isColliding(x, y)
-        );
     }
 
     public isOutOfBounds(x: number, y: number): boolean {
@@ -400,26 +375,6 @@ export default class Map {
         if (!this.isPlateau(index)) return 0;
 
         return this.plateau[index];
-    }
-
-    private getActualTileIndex(tileIndex: number): number | undefined {
-        let tileset = this.getTileset(tileIndex);
-
-        if (!tileset) return;
-
-        return tileIndex - tileset.firstGID - 1;
-    }
-
-    private getTileset(tileIndex: number): ProcessedTileset | null {
-        for (let id in this.tilesets)
-            if (
-                Object.prototype.hasOwnProperty.call(this.tilesets, id) &&
-                tileIndex > this.tilesets[id].firstGID - 1 &&
-                tileIndex < this.tilesets[id].lastGID + 1
-            )
-                return this.tilesets[id];
-
-        return null;
     }
 
     public getWarpById(id: number): ProcessedArea | undefined {
@@ -457,5 +412,16 @@ export default class Map {
         _.each(this.areas, (a: Areas, name: string) => {
             callback(a, name);
         });
+    }
+
+    /**
+     * Tile data consists of arrays and single numerical values.
+     * This callback function is used to cleanly iterate through
+     * those Tile[] arrays. i.e. [1, 2, [1, 2, 3], 4, [5, 6]]
+     */
+
+    public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
+        if (_.isArray(data)) _.each(data, callback);
+        else callback(data as number);
     }
 }

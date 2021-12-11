@@ -53,7 +53,6 @@ export default class Handler {
             this.player.checkRegions();
 
             this.detectAreas(x, y);
-            this.detectLights(x, y);
 
             this.detectClipping(x, y);
         });
@@ -231,19 +230,6 @@ export default class Handler {
 
                 case 'door':
                     break;
-            }
-        });
-    }
-
-    private detectLights(x: number, y: number): void {
-        _.each(this.map.lights, (light) => {
-            let { id } = light;
-
-            if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(id)) {
-                // Add a half a tile offset so the light is centered on the tile.
-
-                this.player.lightsLoaded.push(id);
-                this.player.send(new Messages.Overlay(Opcodes.Overlay.Lamp, light));
             }
         });
     }
