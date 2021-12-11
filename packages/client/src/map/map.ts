@@ -125,38 +125,42 @@ export default class Map {
     }
 
     public synchronize(tileData: TileData[]): void {
-        // Use traditional for-loop instead of _
-        for (let tile of tileData) {
-            let collisionIndex = this.collisions.indexOf(tile.index),
-                objectIndex = this.objects.indexOf(tile.index);
+        console.log(tileData);
 
-            this.data[tile.index] = tile.data;
+        log.debug('test?');
 
-            if (tile.c && collisionIndex < 0)
-                // Adding new collision tileIndex
-                this.collisions.push(tile.index);
+        // // Use traditional for-loop instead of _
+        // for (let tile of tileData) {
+        //     let collisionIndex = this.collisions.indexOf(tile.index),
+        //         objectIndex = this.objects.indexOf(tile.index);
 
-            if (!tile.c && collisionIndex > -1) {
-                // Removing existing collision tileIndex
-                let position = this.indexToCoord(tile.index + 1);
+        //     this.data[tile.index] = tile.data;
 
-                this.collisions.splice(collisionIndex, 1);
+        //     if (tile.c && collisionIndex < 0)
+        //         // Adding new collision tileIndex
+        //         this.collisions.push(tile.index);
 
-                this.grid[position.y][position.x] = 0;
-            }
+        //     if (!tile.c && collisionIndex > -1) {
+        //         // Removing existing collision tileIndex
+        //         let position = this.indexToCoord(tile.index + 1);
 
-            if (tile.isObject && objectIndex < 0) this.objects.push(tile.index);
+        //         this.collisions.splice(collisionIndex, 1);
 
-            if (!tile.isObject && objectIndex > -1) this.objects.splice(objectIndex, 1);
+        //         this.grid[position.y][position.x] = 0;
+        //     }
 
-            if (tile.cursor) this.cursorTiles[tile.index] = tile.cursor;
+        //     if (tile.isObject && objectIndex < 0) this.objects.push(tile.index);
 
-            if (!tile.cursor && tile.index in this.cursorTiles) this.cursorTiles[tile.index] = null;
-        }
+        //     if (!tile.isObject && objectIndex > -1) this.objects.splice(objectIndex, 1);
 
-        if (this.webGLMap) this.synchronizeWebGL();
+        //     if (tile.cursor) this.cursorTiles[tile.index] = tile.cursor;
 
-        this.saveRegionData();
+        //     if (!tile.cursor && tile.index in this.cursorTiles) this.cursorTiles[tile.index] = null;
+        // }
+
+        // if (this.webGLMap) this.synchronizeWebGL();
+
+        // this.saveRegionData();
 
         // this.lastSyncData = tileData;
     }
