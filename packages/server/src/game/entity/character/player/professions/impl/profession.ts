@@ -12,7 +12,7 @@ export default abstract class Profession {
     public world;
 
     public map;
-    public region;
+    //public region;
 
     public experience = 0;
 
@@ -27,7 +27,7 @@ export default abstract class Profession {
         this.world = player.world;
 
         this.map = this.world.map;
-        this.region = this.world.region;
+        //this.region = this.world.region;
     }
 
     load(data: { experience: number }): void {
