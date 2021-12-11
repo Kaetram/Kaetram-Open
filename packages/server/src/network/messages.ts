@@ -295,10 +295,7 @@ export default {
 
         private bufferSize: number;
 
-        public constructor(
-            opcode: Opcodes.Region,
-            info: RegionRenderData | RegionModifyData | RegionUpdateData | RegionTilesetData
-        ) {
+        public constructor(opcode: Opcodes.Region, info: any) {
             super(opcode, Utils.compressData(JSON.stringify(info)));
 
             this.bufferSize = Utils.getBufferSize(info);
