@@ -4,10 +4,6 @@ import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests'
 import type { ContainerArray } from '../../game/entity/character/player/containers/container';
 import type { FriendsArray } from '../../game/entity/character/player/friends';
 import type Player from '../../game/entity/character/player/player';
-import type {
-    ProfessionsArray,
-    ProfessionsData
-} from '../../game/entity/character/player/professions/professions';
 import type MongoDB from './mongodb';
 
 export default class Loader {
@@ -124,26 +120,6 @@ export default class Loader {
                         );
 
                     callback(info.ids.split(' '), info.progress.split(' '));
-                }
-            });
-        });
-    }
-
-    public getProfessions(player: Player, callback: (data: ProfessionsData) => void): void {
-        this.database.getConnection((database) => {
-            let professions = database.collection<ProfessionsArray>('player_professions'),
-                cursor = professions.find({ username: player.username });
-
-            cursor.toArray().then((professionsArray) => {
-                let [info] = professionsArray;
-
-                if (info && info.data) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving profession data for: ${player.username}`
-                        );
-
-                    callback(info.data);
                 }
             });
         });

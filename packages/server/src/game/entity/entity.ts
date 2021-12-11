@@ -31,10 +31,6 @@ abstract class Entity {
 
     public dead = false;
     public recentRegions: string[] = [];
-    /** Entity Instances */
-    private invisibles: { [instance: string]: Entity } = {};
-    /** Entity IDs */
-    protected invisiblesIds: number[] = [];
 
     public username!: string;
     public instanced = false;
@@ -139,36 +135,6 @@ abstract class Entity {
 
     public onSetPosition(callback: () => void): void {
         this.setPositionCallback = callback;
-    }
-
-    private addInvisible(entity: Entity): void {
-        this.invisibles[entity.instance] = entity;
-    }
-
-    private addInvisibleId(entityId: number): void {
-        this.invisiblesIds.push(entityId);
-    }
-
-    private removeInvisible(entity: Entity): void {
-        delete this.invisibles[entity.instance];
-    }
-
-    private removeInvisibleId(entityId: number): void {
-        let index = this.invisiblesIds.indexOf(entityId);
-
-        if (index > -1) this.invisiblesIds.splice(index, 1);
-    }
-
-    public hasInvisible(entity: Entity): boolean {
-        return entity.instance in this.invisibles;
-    }
-
-    public hasInvisibleId(entityId: number): boolean {
-        return this.invisiblesIds.includes(entityId);
-    }
-
-    private hasInvisibleInstance(instance: string): boolean {
-        return instance in this.invisibles;
     }
 
     public getState(): EntityState {
