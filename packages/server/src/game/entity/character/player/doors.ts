@@ -119,15 +119,16 @@ export default class Doors {
 
         _.each(this.doors, (door) => {
             /* There's no need to send dynamic data if the player is not nearby. */
-            let doorRegion = this.regions.regionIdFromPosition(door.x!, door.y!);
+            let doorRegion = this.regions.getRegion(door.x!, door.y!);
 
-            if (!this.regions.isSurrounding(this.player.region, doorRegion)) return;
+            //TODO - Redo
+            // if (!this.regions.isSurrounding(this.player.region, doorRegion)) return;
 
-            let tiles = this.getTiles(door);
+            // let tiles = this.getTiles(door);
 
-            allTiles.indexes.push(...tiles.indexes);
-            allTiles.data.push(...tiles.data);
-            allTiles.collisions.push(...tiles.collisions);
+            // allTiles.indexes.push(...tiles.indexes);
+            // allTiles.data.push(...tiles.data);
+            // allTiles.collisions.push(...tiles.collisions);
         });
 
         return allTiles;

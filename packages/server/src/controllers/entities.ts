@@ -4,6 +4,8 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
+import Regions from '../map/regions';
+import Map from '../map/map';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import NPC from '../game/entity/npc/npc';
@@ -21,8 +23,8 @@ import type Entity from '../game/entity/entity';
 import type World from '../game/world';
 
 export default class Entities {
-    private region;
-    private map;
+    private map: Map;
+    private regions: Regions;
     private grids;
 
     public players: { [instance: string]: Player } = {};
@@ -34,8 +36,8 @@ export default class Entities {
     private projectiles: { [instance: string]: Projectile } = {};
 
     public constructor(private world: World) {
-        this.region = world.region;
         this.map = world.map;
+        this.regions = world.map.regions;
         this.grids = world.map.grids;
 
         this.spawn();
@@ -268,16 +270,17 @@ export default class Entities {
     /**
      * Add Entities
      */
-    private add(entity: Entity, region: string | null): void {
+    private add(entity: Entity): void {
         if (entity.instance in this.entities)
             log.warning(`Entity ${entity.instance} already exists.`);
 
         this.entities[entity.instance] = entity;
 
-        this.region.handle(entity, region);
+        this.regions.handle(entity);
 
         this.grids.addToEntityGrid(entity, entity.x, entity.y);
 
+        // Todo move this into a separate handler.
         entity.onSetPosition(() => {
             this.grids.updateEntityPosition(entity);
 
@@ -327,7 +330,7 @@ export default class Entities {
     }
 
     private addNPC(npc: NPC): void {
-        this.add(npc, npc.region);
+        this.add(npc);
 
         this.npcs[npc.instance] = npc;
     }
@@ -335,13 +338,13 @@ export default class Entities {
     private addItem(item: Item): void {
         if (item.static) item.onRespawn(() => this.addItem(item));
 
-        this.add(item, item.region);
+        this.add(item);
 
         this.items[item.instance] = item;
     }
 
     private addMob(mob: Mob): void {
-        this.add(mob, mob.region);
+        this.add(mob);
 
         this.mobs[mob.instance] = mob;
 
@@ -355,7 +358,7 @@ export default class Entities {
     }
 
     public addPlayer(player: Player): void {
-        this.add(player, player.region);
+        this.add(player);
 
         this.players[player.instance] = player;
 
@@ -363,13 +366,13 @@ export default class Entities {
     }
 
     private addChest(chest: Chest): void {
-        this.add(chest, chest.region);
+        this.add(chest);
 
         this.chests[chest.instance] = chest;
     }
 
     private addProjectile(projectile: Projectile): void {
-        this.add(projectile, projectile.owner!.region);
+        this.add(projectile);
 
         this.projectiles[projectile.instance] = projectile;
     }
@@ -380,7 +383,7 @@ export default class Entities {
     public remove(entity: Entity): void {
         this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
 
-        this.region.remove(entity);
+        this.regions.remove(entity);
 
         delete this.entities[entity.instance];
         delete this.mobs[entity.instance];
