@@ -331,7 +331,7 @@ export default class Commands {
 
                 if (!tileX || !tileY) return;
 
-                let tileIndex = this.world.map.gridPositionToIndex(tileX - 1, tileY);
+                let tileIndex = this.world.map.coordToIndex(tileX - 1, tileY);
 
                 log.info(`Sending Tile: ${tileIndex}`);
 

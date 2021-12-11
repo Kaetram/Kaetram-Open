@@ -37,6 +37,7 @@ type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }; //hor
 export type AnimatedTile = { tileId: string; name: string };
 export type ParsedTile = Tile | RotatedTile | RotatedTile[];
 export type Tile = number | number[];
+export type Position = { x: number; y: number };
 
 type EntityType = 'mob' | 'npc' | 'item' | null;
 
@@ -184,7 +185,7 @@ export default class Map {
             //         break;
             // }
 
-            let index = this.gridPositionToIndex(door.x, door.y, 1),
+            let index = this.coordToIndex(door.x, door.y),
                 destination = this.getDoorDestination(door);
 
             if (!destination) return;
@@ -213,7 +214,7 @@ export default class Map {
         });
 
         _.each(Spawns, (data) => {
-            let tileIndex = this.gridPositionToIndex(data.x, data.y);
+            let tileIndex = this.coordToIndex(data.x, data.y);
 
             this.staticEntities.push({
                 tileIndex,
@@ -235,20 +236,27 @@ export default class Map {
         return null;
     }
 
-    public indexToGridPosition(tileIndex: number, offset = 0): Pos {
-        tileIndex -= 1;
+    /**
+     * Converts a coordinate (x and y) into an array index.
+     * @returns Index position relative to a 1 dimensional array.
+     */
 
-        let x = this.getX(tileIndex + 1, this.width),
-            y = Math.floor(tileIndex / this.width);
-
-        return {
-            x: x + offset,
-            y
-        };
+    public coordToIndex(x: number, y: number): number {
+        return y * this.width + x;
     }
 
-    public gridPositionToIndex(x: number, y: number, offset = 0): number {
-        return y * this.width + x + offset;
+    /**
+     * Works in reverse to `coordToIndex`. Takes an index
+     * within a one dimensional array and returns the
+     * coordinate variant of that index.
+     * @param index The index of the coordinate
+     */
+
+    public indexToCoord(index: number, absolute = false): Position {
+        return {
+            x: (index % this.width) * (!absolute ? 1 : this.tileSize),
+            y: Math.floor(index / this.width) * (!absolute ? 1 : this.tileSize)
+        };
     }
 
     private getX(index: number, width: number): number {
@@ -306,7 +314,7 @@ export default class Map {
     }
 
     public getPositionObject(x: number, y: number): number {
-        let index = this.gridPositionToIndex(x, y),
+        let index = this.coordToIndex(x, y),
             tiles = this.data[index],
             objectId!: number;
 
@@ -328,7 +336,7 @@ export default class Map {
     }
 
     private getObjectId(tileIndex: number): string {
-        let position = this.indexToGridPosition(tileIndex + 1);
+        let position = this.indexToCoord(tileIndex + 1);
 
         return `${position.x}-${position.y}`;
     }
@@ -338,7 +346,7 @@ export default class Map {
         y: number,
         data: { [id: number]: string }
     ): number | number[] | undefined {
-        let index = this.gridPositionToIndex(x, y, -1),
+        let index = this.coordToIndex(x, y),
             tiles = this.data[index];
 
         if (Array.isArray(tiles)) for (let i in tiles) if (tiles[i] in data) return tiles[i];
@@ -362,11 +370,11 @@ export default class Map {
     }
 
     public isDoor(x: number, y: number): boolean {
-        return !!this.doors[this.gridPositionToIndex(x, y, 1)];
+        return !!this.doors[this.coordToIndex(x, y)];
     }
 
     public getDoorByPosition(x: number, y: number): Door {
-        return this.doors[this.gridPositionToIndex(x, y, 1)];
+        return this.doors[this.coordToIndex(x, y)];
     }
 
     private getDoorDestination(door: ProcessedArea): ProcessedArea | null {
@@ -396,7 +404,7 @@ export default class Map {
     public isColliding(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return false;
 
-        let tileIndex = this.gridPositionToIndex(x, y);
+        let tileIndex = this.coordToIndex(x, y);
 
         return this.collisions.includes(tileIndex);
     }
@@ -405,13 +413,13 @@ export default class Map {
     public isEmpty(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return true;
 
-        let tileIndex = this.gridPositionToIndex(x, y);
+        let tileIndex = this.coordToIndex(x, y);
 
         return this.data[tileIndex] === 0;
     }
 
     public getPlateauLevel(x: number, y: number): number {
-        let index = this.gridPositionToIndex(x, y);
+        let index = this.coordToIndex(x, y);
 
         if (!this.isPlateau(index)) return 0;
 
