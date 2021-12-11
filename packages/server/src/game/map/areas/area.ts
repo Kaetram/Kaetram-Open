@@ -1,6 +1,6 @@
-import type Mob from '../../game/entity/character/mob/mob';
-import type Player from '../../game/entity/character/player/player';
-import type Chest from '../../game/entity/objects/chest';
+import type Mob from '../../entity/character/mob/mob';
+import type Player from '../../entity/character/player/player';
+import type Chest from '../../entity/objects/chest';
 
 export default class Area {
     public polygon!: Pos[];

@@ -33,7 +33,7 @@ import Warp from './warp';
 import type { EquipmentData } from '@kaetram/common/types/info';
 import type { ExperienceCombatData } from '@kaetram/common/types/messages';
 import type MongoDB from '../../../../database/mongodb/mongodb';
-import type Area from '../../../../map/areas/area';
+import type Area from '../../../map/areas/area';
 import type Connection from '../../../../network/connection';
 import type World from '../../../world';
 import type NPC from '../../npc/npc';

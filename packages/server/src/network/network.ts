@@ -10,8 +10,8 @@ import type World from '../game/world';
 import type Connection from './connection';
 import Entities from '../controllers/entities';
 import SocketHandler from './sockethandler';
-import Map from '../map/map';
-import Regions from '../map/regions';
+import Map from '../game/map/map';
+import Regions from '../game/map/regions';
 import MongoDB from '../database/mongodb/mongodb';
 
 type PacketsList = unknown[] & { id?: string };

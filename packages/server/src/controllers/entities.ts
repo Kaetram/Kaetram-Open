@@ -4,8 +4,8 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import Regions from '../map/regions';
-import Map from '../map/map';
+import Regions from '../game/map/regions';
+import Map from '../game/map/map';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import NPC from '../game/entity/npc/npc';
