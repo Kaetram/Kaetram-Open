@@ -315,22 +315,18 @@ export default class Regions {
                 data: []
             };
 
-            // region.forEachTile((x: number, y: number) => {
+            region.forEachTile((x: number, y: number) => {
+                let index = this.map.coordToIndex(x, y),
+                    tileData = this.map.getTileData(index),
+                    tile: TileInfo = {
+                        x,
+                        y,
+                        data: tileData
+                        //animation: this.map.getAnimation(index)
+                    };
 
-            // });
-
-            // region.forEachTile((x: number, y: number) => {
-            //     let index = this.map.coordToIndex(x, y),
-            //         tileData = this.map.getTileData(index),
-            //         tile: TileInfo = {
-            //             x,
-            //             y,
-            //             data: tileData,
-            //             animation: this.map.getAnimation(index)
-            //         };
-
-            //     data[surroundingRegion].data.push(tile);
-            // });
+                data[surroundingRegion].data.push(tile);
+            });
 
             player.loadRegion(surroundingRegion);
         });

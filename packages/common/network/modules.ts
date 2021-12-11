@@ -259,3 +259,15 @@ export let DamageColours = {
         stroke: 'rgb(112, 17, 112)'
     }
 };
+
+export enum Constants {
+    MAX_STACK = 2_147_483_647,
+    MAX_LEVEL = 100,
+    INVENTORY_SIZE = 35,
+    BANK_SIZE = 52,
+    HITPOINTS_START = 100,
+    STAMINA_START = 50,
+    DIAGONAL_FLAG = 0x20000000,
+    VERTICAL_FLAG = 0x40000000,
+    HORIZONTAL_FLAG = 0x80000000
+}
