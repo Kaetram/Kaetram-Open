@@ -92,8 +92,9 @@ export default class Handler {
         this.player.onRegion(() => {
             this.player.lastRegionChange = Date.now();
 
-            this.world.region.handle(this.player);
-            this.world.region.push(this.player);
+            //TODO - Redo
+            // this.world.region.handle(this.player);
+            // this.world.region.push(this.player);
         });
 
         this.player.connection.onClose(() => {
@@ -191,18 +192,16 @@ export default class Handler {
     }
 
     private detectAggro(): void {
-        let region = this.world.region.regions[this.player.region!];
-
-        if (!region) return;
-
-        _.each(region.entities, (character) => {
-            if (character && character.type === 'mob' && this.canEntitySee(character)) {
-                let mob = character as Mob,
-                    aggro = mob.canAggro(this.player);
-
-                if (aggro) mob.combat.begin(this.player);
-            }
-        });
+        // TODO - Redo
+        // let region = this.world.region.regions[this.player.region!];
+        // if (!region) return;
+        // _.each(region.entities, (character) => {
+        //     if (character && character.type === 'mob' && this.canEntitySee(character)) {
+        //         let mob = character as Mob,
+        //             aggro = mob.canAggro(this.player);
+        //         if (aggro) mob.combat.begin(this.player);
+        //     }
+        // });
     }
 
     private detectAreas(x: number, y: number): void {

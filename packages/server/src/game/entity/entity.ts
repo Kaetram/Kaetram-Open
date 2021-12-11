@@ -20,6 +20,7 @@ export interface EntityState {
 }
 
 abstract class Entity {
+    //TODO - Complete cleanup
     public x;
     public y;
 
@@ -37,7 +38,9 @@ abstract class Entity {
 
     public username!: string;
     public instanced = false;
-    public region!: string | null;
+    public region = -1;
+
+    public oldRegions: number[] = [];
 
     private setPositionCallback?(): void;
 
@@ -78,6 +81,15 @@ abstract class Entity {
         this.y = y;
 
         this.setPositionCallback?.();
+    }
+
+    /**
+     * Update the entity's position.
+     * @param region The new region we are setting.
+     */
+
+    public setRegion(region: number): void {
+        this.region = region;
     }
 
     public updatePosition(): void {

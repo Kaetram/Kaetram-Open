@@ -331,7 +331,7 @@ export default class Commands {
 
                 if (!tileX || !tileY) return;
 
-                let tileIndex = this.world.region.gridPositionToIndex(tileX - 1, tileY);
+                let tileIndex = this.world.map.gridPositionToIndex(tileX - 1, tileY);
 
                 log.info(`Sending Tile: ${tileIndex}`);
 
@@ -347,7 +347,7 @@ export default class Commands {
             }
 
             case 'instance':
-                this.world.region.createInstance(this.player, this.player.region);
+                //this.world.region.createInstance(this.player, this.player.region);
                 return;
 
             case 'checkregion':
@@ -355,7 +355,7 @@ export default class Commands {
                 return;
 
             case 'deinstance':
-                this.world.region.deleteInstance(this.player);
+                //this.world.region.deleteInstance(this.player);
                 return;
 
             case 'debug':
