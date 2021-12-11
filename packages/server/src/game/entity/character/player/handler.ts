@@ -50,7 +50,7 @@ export default class Handler {
         }, 400);
 
         this.player.onMovement((x: number, y: number) => {
-            this.player.checkRegions();
+            this.map.regions.handle(this.player);
 
             this.detectAreas(x, y);
 
