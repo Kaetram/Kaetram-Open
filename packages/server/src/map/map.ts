@@ -66,14 +66,6 @@ export default class Map {
     public doors!: { [index: number]: Door };
     public warps!: ProcessedArea[];
 
-    public trees!: {
-        [tileId: number]: Tree;
-    };
-    public treeIndexes!: number[];
-
-    public rocks!: { [tileId: number]: Rock };
-    public rockIndexes!: number[];
-
     public regionWidth!: number;
     public regionHeight!: number;
 
@@ -116,14 +108,6 @@ export default class Map {
         this.objects = map.objects;
         this.cursors = map.cursors;
         this.warps = map.areas.warps;
-
-        // Lumberjacking
-        this.trees = map.trees;
-        this.treeIndexes = map.treeIndexes;
-
-        // Mining
-        this.rocks = map.rocks;
-        this.rockIndexes = map.rockIndexes;
 
         /**
          * These are temporarily hardcoded,
@@ -352,14 +336,6 @@ export default class Map {
         if (Array.isArray(tiles)) for (let i in tiles) if (tiles[i] in data) return tiles[i];
 
         if ((tiles as number) in data) return tiles;
-    }
-
-    public getTree(x: number, y: number): number | number[] | undefined {
-        return this.getObject(x, y, this.trees);
-    }
-
-    public getRock(x: number, y: number): number | number[] | undefined {
-        return this.getObject(x, y, this.rocks);
     }
 
     // Transforms an object's `instance` or `id` into position
