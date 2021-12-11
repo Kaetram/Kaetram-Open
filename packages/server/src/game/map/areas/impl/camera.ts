@@ -1,17 +1,17 @@
-import World from '../../../game/world';
+import World from '../../../world';
 import Area from '../area';
 import Areas from '../areas';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';
 
-export default class Music extends Areas {
+export default class Camera extends Areas {
     public constructor(data: ProcessedArea[], world: World) {
         super(data, world);
 
-        super.load(this.data, (musicArea: Area, rawData) => {
-            musicArea.song = rawData.songName!;
+        super.load(this.data, (area: Area, rawData) => {
+            area.cameraType = rawData.type!;
         });
 
-        super.message('music');
+        super.message('camera');
     }
 }

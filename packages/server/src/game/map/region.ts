@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-import Entity from '../game/entity/entity';
-import Player from '../game/entity/character/player/player';
+import Entity from '../entity/entity';
+import Player from '../entity/character/player/player';
 
 export default class Region {
     private entities: { [instance: string]: Entity } = {};
