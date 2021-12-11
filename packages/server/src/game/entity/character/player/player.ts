@@ -105,10 +105,6 @@ export default class Player extends Character {
 
     public ready = false;
 
-    private regionPosition: number[] | null = null;
-
-    private newRegion = false;
-
     public team?: string; // TODO
     public userAgent!: string;
     public minigame?: MinigameState; // TODO
@@ -145,7 +141,7 @@ export default class Player extends Character {
     public cheatScore = 0;
     public defaultMovementSpeed = 250; // For fallback.
 
-    public regionsLoaded: string[] = [];
+    public regionsLoaded: number[] = [];
     public lightsLoaded: number[] = [];
 
     public npcTalk: number | string | null = null;
@@ -182,9 +178,6 @@ export default class Player extends Character {
     public movementStart!: number;
 
     public pingTime!: number;
-
-    public regionWidth!: number;
-    public regionHeight!: number;
 
     public questsLoaded = false;
     public achievementsLoaded = false;
@@ -295,19 +288,15 @@ export default class Player extends Character {
     }
 
     public loadRegions(regions: PlayerRegions): void {
-        if (!regions) return;
-
-        if (this.mapVersion !== this.map.version) {
-            this.mapVersion = this.map.version;
-
-            this.save();
-
-            log.debug(`Updated map version for ${this.username}`);
-
-            return;
-        }
-
-        if (regions.gameVersion === config.gver) this.regionsLoaded = regions.regions.split(',');
+        //TODO REFACTOR
+        // if (!regions) return;
+        // if (this.mapVersion !== this.map.version) {
+        //     this.mapVersion = this.map.version;
+        //     this.save();
+        //     log.debug(`Updated map version for ${this.username}`);
+        //     return;
+        // }
+        // if (regions.gameVersion === config.gver) this.regionsLoaded = regions.regions.split(',');
     }
 
     public loadProfessions(): void {
@@ -463,8 +452,6 @@ export default class Player extends Character {
             orientation: this.orientation,
             movementSpeed: this.getMovementSpeed()
         };
-
-        this.regionPosition = [this.x, this.y];
 
         /**
          * Send player data to client here
@@ -646,7 +633,7 @@ export default class Player extends Character {
     }
 
     public updateRegion(force = false): void {
-        this.world.region.sendRegion(this, this.region, force);
+        this.regions.sendRegion(this);
     }
 
     public isInvisible(instance: string): boolean {
@@ -897,25 +884,27 @@ export default class Player extends Character {
             objectData: {}
         };
 
-        _.each(this.map.treeIndexes, (index: number) => {
-            let position = this.map.indexToGridPosition(index + 1),
-                treeRegion = this.regions.regionIdFromPosition(position.x, position.y);
+        //TODO - Redo
 
-            if (!this.regions.isSurrounding(this.region, treeRegion)) return;
+        // _.each(this.map.treeIndexes, (index: number) => {
+        //     let position = this.map.indexToGridPosition(index + 1),
+        //         treeRegion = this.regions.getRegion(position.x, position.y);
 
-            let objectId = this.map.getPositionObject(position.x, position.y),
-                cursor = this.map.getCursor(index, objectId);
+        //     if (!this.regions.isSurrounding(this.region, treeRegion)) return;
 
-            tiles.indexes.push(index);
-            tiles.data.push(this.map.data[index] as number[]);
-            tiles.collisions.push(this.map.collisions.includes(index));
+        //     let objectId = this.map.getPositionObject(position.x, position.y),
+        //         cursor = this.map.getCursor(index, objectId);
 
-            if (objectId)
-                tiles.objectData[index] = {
-                    isObject: !!objectId,
-                    cursor
-                };
-        });
+        //     tiles.indexes.push(index);
+        //     tiles.data.push(this.map.data[index] as number[]);
+        //     tiles.collisions.push(this.map.collisions.includes(index));
+
+        //     if (objectId)
+        //         tiles.objectData[index] = {
+        //             isObject: !!objectId,
+        //             cursor
+        //         };
+        // });
 
         return tiles;
     }
@@ -1133,11 +1122,11 @@ export default class Player extends Character {
         }
     }
 
-    public loadRegion(regionId: string): void {
-        this.regionsLoaded.push(regionId);
+    public loadRegion(region: number): void {
+        this.regionsLoaded.push(region);
     }
 
-    public hasLoadedRegion(region: string): boolean {
+    public hasLoadedRegion(region: number): boolean {
         return this.regionsLoaded.includes(region);
     }
 
@@ -1192,11 +1181,7 @@ export default class Player extends Character {
         });
     }
 
-    public sendToAdjacentRegions(
-        regionId: string | null,
-        message: Packet,
-        ignoreId?: string
-    ): void {
+    public sendToAdjacentRegions(regionId: number, message: Packet, ignoreId?: string): void {
         this.world.push(Opcodes.Push.Regions, {
             regionId,
             message,
@@ -1378,16 +1363,14 @@ export default class Player extends Character {
     }
 
     public checkRegions(): void {
-        if (!this.regionPosition) return;
-
-        let diffX = Math.abs(this.regionPosition[0] - this.x),
-            diffY = Math.abs(this.regionPosition[1] - this.y);
-
-        if (diffX >= 10 || diffY >= 10) {
-            this.regionPosition = [this.x, this.y];
-
-            this.regionCallback?.();
-        }
+        // Unnecessary wtf was I thinking
+        // if (!this.regionPosition) return;
+        // let diffX = Math.abs(this.regionPosition[0] - this.x),
+        //     diffY = Math.abs(this.regionPosition[1] - this.y);
+        // if (diffX >= 10 || diffY >= 10) {
+        //     this.regionPosition = [this.x, this.y];
+        //     this.regionCallback?.();
+        // }
     }
 
     /**

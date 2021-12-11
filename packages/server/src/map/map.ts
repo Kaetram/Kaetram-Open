@@ -33,6 +33,11 @@ interface Door {
     orientation: number | undefined;
 }
 
+type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }; //horizontal, vertical, diagonal
+export type AnimatedTile = { tileId: string; name: string };
+export type ParsedTile = Tile | RotatedTile | RotatedTile[];
+export type Tile = number | number[];
+
 type EntityType = 'mob' | 'npc' | 'item' | null;
 
 export default class Map {
@@ -41,13 +46,14 @@ export default class Map {
     public regions;
     public grids;
 
-    public version!: number;
+    // Map versioning and information
+    public version = map.version;
+    public width = map.width;
+    public height = map.height;
+    public tileSize = map.tileSize;
 
-    public data!: (number | number[])[];
-
-    public width!: number;
-    public height!: number;
-
+    // Map data and collisions
+    public data: (number | number[])[] = map.data;
     public collisions!: number[];
     public high!: number[];
     public chests!: ProcessedArea[];
@@ -87,7 +93,7 @@ export default class Map {
     private readyInterval!: NodeJS.Timeout | null;
     private readyCallback?(): void;
 
-    public constructor(private world: World) {
+    public constructor(public world: World) {
         this.load();
 
         this.regions = new Regions(this);
@@ -97,10 +103,6 @@ export default class Map {
     load(): void {
         this.version = map.version || 0;
 
-        this.data = map.data;
-
-        this.width = map.width;
-        this.height = map.height;
         this.collisions = map.collisions;
         this.high = map.high;
         this.chests = map.areas.chest;

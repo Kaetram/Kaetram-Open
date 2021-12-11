@@ -208,7 +208,7 @@ export default class Incoming {
 
         this.player.ready = true;
 
-        this.world.region.syncRegions(this.player);
+        //this.world.regions.syncRegions(this.player);
 
         this.player.sendEquipment();
 
@@ -488,7 +488,7 @@ export default class Incoming {
 
         if (id !== this.player.instance) return;
 
-        this.world.region.push(this.player);
+        //this.world.region.push(this.player);
     }
 
     private handleTarget(message: [Opcodes.Target, string]): void {
@@ -986,8 +986,8 @@ export default class Incoming {
          * a desireable region size.
          */
 
-        this.player.regionWidth = Math.ceil(canvasWidth / 48);
-        this.player.regionHeight = Math.ceil(canvasHeight / 48);
+        // this.player.regionWidth = Math.ceil(canvasWidth / 48);
+        // this.player.regionHeight = Math.ceil(canvasHeight / 48);
     }
 
     /**

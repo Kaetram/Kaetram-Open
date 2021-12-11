@@ -16,7 +16,6 @@ import API from '../network/api';
 import Discord from '../network/discord';
 import Messages, { Packet } from '../network/messages';
 import Network from '../network/network';
-import Region from '../region/region';
 import Mobs from '../util/mobs';
 import Character from './entity/character/character';
 
@@ -76,7 +75,6 @@ export default class World {
     public map!: Map;
     public api!: API;
     public shops!: Shops;
-    public region!: Region;
     public entities!: Entities;
     public network!: Network;
     public discord!: Discord;
@@ -124,7 +122,6 @@ export default class World {
 
         this.api = new API(this);
         this.shops = new Shops(this);
-        this.region = new Region(this);
         this.discord = new Discord(this);
         this.entities = new Entities(this);
         this.network = new Network(this);
@@ -144,7 +141,7 @@ export default class World {
 
         setIntervalAsync(async () => {
             this.network.parsePackets();
-            this.region.parseRegions();
+            //this.map.regions.parseRegions();
         }, update);
 
         setIntervalAsync(async () => {
@@ -273,47 +270,35 @@ export default class World {
     }
 
     private parseTrees(): void {
-        let time = Date.now(),
-            treeTypes = Object.keys(Modules.Trees);
-
-        _.each(this.cutTrees, (tree, key) => {
-            let type = treeTypes[tree.treeId];
-
-            if (time - tree.time < Trees.Regrowth[type as Tree]) return;
-
-            _.each(tree.data, (tile) => {
-                this.map.data[tile.index] = tile.oldTiles;
-            });
-
-            let position = this.map.idToPosition(key),
-                regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
-
-            this.region.updateRegions(regionId);
-
-            delete this.cutTrees[key];
-        });
+        // let time = Date.now(),
+        //     treeTypes = Object.keys(Modules.Trees);
+        // _.each(this.cutTrees, (tree, key) => {
+        //     let type = treeTypes[tree.treeId];
+        //     if (time - tree.time < Trees.Regrowth[type as Tree]) return;
+        //     _.each(tree.data, (tile) => {
+        //         this.map.data[tile.index] = tile.oldTiles;
+        //     });
+        //     let position = this.map.idToPosition(key),
+        //         regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
+        //     this.region.updateRegions(regionId);
+        //     delete this.cutTrees[key];
+        // });
     }
 
     private parseRocks(): void {
-        let time = Date.now(),
-            rockTypes = Object.keys(Modules.Rocks);
-
-        _.each(this.depletedRocks, (rock, key) => {
-            let type = rockTypes[rock.rockId];
-
-            if (time - rock.time < Rocks.Respawn[type as Rock]) return;
-
-            _.each(rock.data, (tile) => {
-                this.map.data[tile.index] = tile.oldTiles;
-            });
-
-            let position = this.map.idToPosition(key),
-                regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
-
-            this.region.updateRegions(regionId);
-
-            delete this.depletedRocks[key];
-        });
+        // let time = Date.now(),
+        //     rockTypes = Object.keys(Modules.Rocks);
+        // _.each(this.depletedRocks, (rock, key) => {
+        //     let type = rockTypes[rock.rockId];
+        //     if (time - rock.time < Rocks.Respawn[type as Rock]) return;
+        //     _.each(rock.data, (tile) => {
+        //         this.map.data[tile.index] = tile.oldTiles;
+        //     });
+        //     let position = this.map.idToPosition(key),
+        //         regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
+        //     this.region.updateRegions(regionId);
+        //     delete this.depletedRocks[key];
+        // });
     }
 
     public isTreeCut(id: string): boolean {
@@ -372,9 +357,9 @@ export default class World {
             }
         });
 
-        let regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
+        // let regionId = this.map.regions.regionIdFromPosition(position.x, position.y);
 
-        this.region.updateRegions(regionId);
+        // this.region.updateRegions(regionId);
 
         this.trees[id] = {};
     }
@@ -471,7 +456,7 @@ export default class World {
 
             case Opcodes.Push.Region:
                 this.network.pushToRegion(
-                    info.regionId as string,
+                    info.regionId as number,
                     info.message,
                     info.ignoreId as string
                 );
@@ -480,7 +465,7 @@ export default class World {
 
             case Opcodes.Push.Regions:
                 this.network.pushToAdjacentRegions(
-                    info.regionId as string,
+                    info.regionId as number,
                     info.message,
                     info.ignoreId as string
                 );
