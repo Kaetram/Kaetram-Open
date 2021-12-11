@@ -60,7 +60,6 @@ export default class Handler {
 
         this.player.onDeath(() => {
             this.player.combat.stop();
-            this.player.professions.stopAll();
         });
 
         this.player.onHit((attacker, damage) => {
@@ -276,9 +275,5 @@ export default class Handler {
         hit.poison = true;
 
         this.player.combat.hit(this.player, this.player, hit.getData());
-    }
-
-    private canEntitySee(entity: Entity): boolean {
-        return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
     }
 }

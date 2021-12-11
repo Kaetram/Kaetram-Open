@@ -27,7 +27,6 @@ import Friends from './friends';
 import Handler from './handler';
 import HitPoints from './points/hitpoints';
 import Mana from './points/mana';
-import Professions from './professions/professions';
 import Trade from './trade';
 import Warp from './warp';
 
@@ -35,12 +34,10 @@ import type { EquipmentData } from '@kaetram/common/types/info';
 import type { ExperienceCombatData } from '@kaetram/common/types/messages';
 import type MongoDB from '../../../../database/mongodb/mongodb';
 import type Area from '../../../../map/areas/area';
-import type { MinigameState } from '../../../../minigames/minigame';
 import type Connection from '../../../../network/connection';
 import type World from '../../../world';
 import type NPC from '../../npc/npc';
 import type { FullPlayerData } from './../../../../database/mongodb/creator';
-import type Lumberjacking from './professions/impl/lumberjacking';
 import type Introduction from './quests/impl/introduction';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
@@ -107,7 +104,6 @@ export default class Player extends Character {
 
     public team?: string; // TODO
     public userAgent!: string;
-    public minigame?: MinigameState; // TODO
 
     private disconnectTimeout: NodeJS.Timeout | null = null;
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
@@ -116,7 +112,6 @@ export default class Player extends Character {
     private handler;
 
     public inventory;
-    public professions;
     public abilities;
     public friends;
     public enchant;
@@ -220,7 +215,6 @@ export default class Player extends Character {
         this.handler = new Handler(this);
 
         this.inventory = new Inventory(this, 20);
-        this.professions = new Professions(this);
         this.abilities = new Abilities(this);
         this.friends = new Friends(this);
         this.enchant = new Enchant(this);
@@ -249,13 +243,11 @@ export default class Player extends Character {
         this.level = Formulas.expToLevel(this.experience);
         this.nextExperience = Formulas.nextExp(this.experience);
         this.prevExperience = Formulas.prevExp(this.experience);
-        this.playerHitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(this.level));
-        this.mana = new Mana(data.mana, Formulas.getMaxMana(this.level));
-
-        if (data.invisibleIds)
-            this.invisiblesIds = data.invisibleIds.split(' ').map((id) => parseInt(id));
 
         this.userAgent = data.userAgent;
+
+        this.playerHitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(this.level));
+        this.mana = new Mana(data.mana, Formulas.getMaxMana(this.level));
 
         let { x, y, armour, weapon, pendant, ring, boots } = data;
 
@@ -297,20 +289,6 @@ export default class Player extends Character {
         //     return;
         // }
         // if (regions.gameVersion === config.gver) this.regionsLoaded = regions.regions.split(',');
-    }
-
-    public loadProfessions(): void {
-        if (config.offlineMode) return;
-
-        this.database.loader.getProfessions(this, (info) => {
-            if (!info)
-                // If this somehow happens.
-                return;
-
-            this.professions.update(info);
-
-            this.sendProfessions();
-        });
     }
 
     public loadFriends(): void {
@@ -636,18 +614,6 @@ export default class Player extends Character {
         this.regions.sendRegion(this);
     }
 
-    public isInvisible(instance: string): boolean {
-        let entity = this.entities.get(instance);
-
-        if (!entity) return false;
-
-        return super.hasInvisibleId(entity.id) || super.hasInvisible(entity);
-    }
-
-    public formatInvisibles(): string {
-        return this.invisiblesIds.join(' ');
-    }
-
     public canEquip(string: string): boolean {
         let requirement = Items.getLevelRequirement(string);
 
@@ -713,16 +679,6 @@ export default class Player extends Character {
                         info: data.info
                     })
                 });
-
-                break;
-            }
-
-            case 'lumberjacking': {
-                let lumberjacking = this.professions.getProfession<Lumberjacking>(
-                    Modules.Professions.Lumberjacking
-                );
-
-                lumberjacking?.handle(id, info.tree!);
 
                 break;
             }
@@ -859,54 +815,10 @@ export default class Player extends Character {
         return this.armour.getDefense();
     }
 
-    public getLumberjackingLevel(): number {
-        return this.professions.getProfession(Modules.Professions.Lumberjacking)!.getLevel();
-    }
-
-    public getWeaponLumberjackingLevel(): number {
-        if (!this.hasLumberjackingWeapon()) return -1;
-
-        return this.weapon.lumberjacking;
-    }
-
     public getWeaponMiningLevel(): number {
         if (!this.hasMiningWeapon()) return -1;
 
         return this.weapon.mining;
-    }
-
-    // We get dynamic trees surrounding the player
-    public getSurroundingTrees(): SurroundingTrees {
-        let tiles: SurroundingTrees = {
-            indexes: [],
-            data: [],
-            collisions: [],
-            objectData: {}
-        };
-
-        //TODO - Redo
-
-        // _.each(this.map.treeIndexes, (index: number) => {
-        //     let position = this.map.indexToCoord(index + 1),
-        //         treeRegion = this.regions.getRegion(position.x, position.y);
-
-        //     if (!this.regions.isSurrounding(this.region, treeRegion)) return;
-
-        //     let objectId = this.map.getPositionObject(position.x, position.y),
-        //         cursor = this.map.getCursor(index, objectId);
-
-        //     tiles.indexes.push(index);
-        //     tiles.data.push(this.map.data[index] as number[]);
-        //     tiles.collisions.push(this.map.collisions.includes(index));
-
-        //     if (objectId)
-        //         tiles.objectData[index] = {
-        //             isObject: !!objectId,
-        //             cursor
-        //         };
-        // });
-
-        return tiles;
     }
 
     private getMovementSpeed(): number {
@@ -1199,16 +1111,6 @@ export default class Player extends Character {
         };
 
         this.send(new Messages.Equipment(Opcodes.Equipment.Batch, info));
-    }
-
-    public sendProfessions(): void {
-        if (!this.professions) return;
-
-        this.send(
-            new Messages.Profession(Opcodes.Profession.Batch, {
-                data: this.professions.getInfo()
-            })
-        );
     }
 
     public sendToSpawn(): void {
