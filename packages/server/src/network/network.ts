@@ -8,15 +8,21 @@ import Messages, { Packet } from './messages';
 
 import type World from '../game/world';
 import type Connection from './connection';
+import Entities from '../controllers/entities';
+import SocketHandler from './sockethandler';
+import Map from '../map/map';
+import Regions from '../map/regions';
+import MongoDB from '../database/mongodb/mongodb';
 
 type PacketsList = unknown[] & { id?: string };
 
 export default class Network {
-    private entities;
-    private database;
-    private socketHandler;
-    private region;
-    private map;
+    private entities: Entities;
+    private database: MongoDB;
+    private socketHandler: SocketHandler;
+
+    private map: Map;
+    private regions: Regions;
 
     public packets: { [id: string]: PacketsList } = {};
     private differenceThreshold = 4000;
@@ -25,8 +31,9 @@ export default class Network {
         this.entities = world.entities;
         this.database = world.database;
         this.socketHandler = world.socketHandler;
-        this.region = world.region;
+
         this.map = world.map;
+        this.regions = world.map.regions;
 
         this.load();
     }
@@ -131,14 +138,13 @@ export default class Network {
     /**
      * Send a message to the region the player is currently in.
      */
-    public pushToRegion(regionId: string, message: Packet, ignoreId?: string): void {
-        let region = this.region.regions[regionId];
+    public pushToRegion(regionId: number, message: Packet, ignoreId?: string): void {
+        let region = this.regions.get(regionId);
 
         if (!region) return;
 
-        _.each(region.players, (instance: string) => {
-            if (instance !== ignoreId)
-                this.pushToPlayer(this.entities.get(instance) as Player, message);
+        region.forEachPlayer((player: Player) => {
+            if (player.instance !== ignoreId) this.pushToPlayer(player, message);
         });
     }
 
@@ -148,9 +154,9 @@ export default class Network {
      * G  P  G
      * G  G  G
      */
-    public pushToAdjacentRegions(regionId: string, message: Packet, ignoreId?: string): void {
-        this.map.regions.forEachSurroundingRegion(regionId, (id: string) => {
-            this.pushToRegion(id, message, ignoreId);
+    public pushToAdjacentRegions(regionId: number, message: Packet, ignoreId?: string): void {
+        this.regions.forEachSurroundingRegion(regionId, (surroundingRegion: number) => {
+            this.pushToRegion(surroundingRegion, message, ignoreId);
         });
     }
 
@@ -169,11 +175,11 @@ export default class Network {
      * Sends a message to the region the player just left from
      */
     public pushToOldRegions(player: Player, message: Packet): void {
-        _.each(player.recentRegions, (id: string) => {
-            this.pushToRegion(id, message);
-        });
-
-        player.recentRegions = [];
+        //TODO
+        // _.each(player.recentRegions, (id: string) => {
+        //     this.pushToRegion(id, message);
+        // });
+        // player.recentRegions = [];
     }
 
     private getSocketTime(connection: Connection): number {
