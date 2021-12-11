@@ -18,7 +18,6 @@ import Player from '../game/entity/character/player/player';
  */
 
 type TileInfo = { x: number; y: number; data: ParsedTile; animation?: AnimatedTile };
-type DoorInfo = { id: number; x: number; y: number; width: number; height: number };
 type RegionInfo = { data: TileInfo[] };
 type RegionData = { [region: number]: RegionInfo };
 type RegionCallback = (region: number) => void;

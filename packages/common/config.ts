@@ -45,7 +45,6 @@ export interface Config {
     updateTime: number;
     gver: string;
     guildsEnabled: boolean;
-    treeTick: number;
     administrators: string[];
     moderators: string[];
 

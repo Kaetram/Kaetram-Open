@@ -212,7 +212,6 @@ export default class Incoming {
 
         this.player.sendEquipment();
 
-        this.player.loadProfessions();
         this.player.loadInventory();
         this.player.loadQuests();
         this.player.loadBank();
