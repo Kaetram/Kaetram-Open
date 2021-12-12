@@ -42,10 +42,8 @@ export type Position = { x: number; y: number };
 type EntityType = 'mob' | 'npc' | 'item' | null;
 
 export default class Map {
-    private ready = false;
-
-    public regions;
-    public grids;
+    public regions: Regions;
+    public grids: Grids;
 
     // Map versioning and information
     public version = map.version;
@@ -55,19 +53,15 @@ export default class Map {
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
-    public collisions!: number[];
-    public high!: number[];
-    public chests!: ProcessedArea[];
-    public tilesets!: ProcessedTileset[];
+    public collisions: number[] = map.collisions || [];
+    public high: number[] = map.high || [];
+    public tilesets: ProcessedTileset[] = map.tilesets || [];
     public lights!: ProcessedArea[];
     public plateau!: { [index: number]: number };
     public objects!: number[];
     public cursors!: { [tileId: number]: string };
     public doors!: { [index: number]: Door };
     public warps!: ProcessedArea[];
-
-    public regionWidth!: number;
-    public regionHeight!: number;
 
     private areas!: { [name: string]: Areas };
 
@@ -84,7 +78,7 @@ export default class Map {
     private checksum!: string;
 
     private readyInterval!: NodeJS.Timeout | null;
-    private readyCallback?(): void;
+    private readyCallback?: () => void;
 
     public constructor(public world: World) {
         this.load();
@@ -94,12 +88,6 @@ export default class Map {
     }
 
     load(): void {
-        this.version = map.version || 0;
-
-        this.collisions = map.collisions;
-        this.high = map.high;
-        this.chests = map.areas.chest;
-
         this.loadStaticEntities();
 
         this.tilesets = map.tilesets;
@@ -116,16 +104,7 @@ export default class Map {
         this.loadAreas();
         this.loadDoors();
 
-        this.ready = true;
-
-        if (this.world.ready) return;
-
-        this.readyInterval = setInterval(() => {
-            this.readyCallback?.();
-
-            if (this.readyInterval) clearInterval(this.readyInterval);
-            this.readyInterval = null;
-        }, 75);
+        this.readyCallback?.();
     }
 
     private loadAreas(): void {
@@ -404,7 +383,7 @@ export default class Map {
         return this.areas.chests;
     }
 
-    public isReady(callback: () => void): void {
+    public onReady(callback: () => void): void {
         this.readyCallback = callback;
     }
 
