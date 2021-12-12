@@ -208,22 +208,17 @@ export default class Regions {
 
         let entities: string[] = this.regions[player.region].getEntities(player as Entity);
 
-        // TODO - Redo packets after Lemuel implements new networking.
-        // player.send(
-        //     new EntityPacket(Opcodes.Entity.List, {
-        //         entities
-        //     })
-        // );
+        player.send(new Messages.List(entities));
     }
 
     public sendJoining(region: number): void {
-        // this.regions[region].forEachJoining((entity: Entity) => {
-        //     this.world.push(PacketType.Regions, {
-        //         region,
-        //         ignore: entity.isPlayer() ? entity.instance : undefined,
-        //         packet: new EntityPacket(Opcodes.Entity.Spawn, entity)
-        //     });
-        // });
+        this.regions[region].forEachJoining((entity: Entity) => {
+            this.world.push(Opcodes.Push.Regions, {
+                region,
+                message: new Messages.Spawn(entity),
+                ignoreId: entity.isPlayer() ? entity.instance : null
+            });
+        });
     }
 
     /**

@@ -51,7 +51,7 @@ export default class Network {
     /**
      * This parses through the packet pool and sends them
      */
-    public parsePackets(): void {
+    public parse(): void {
         for (let id in this.packets)
             if (this.packets[id].length > 0) {
                 let conn = this.socketHandler.get(id);
