@@ -190,9 +190,10 @@ export default class Entities {
 
         // Spawns the static chests throughout the world.
 
-        _.each(this.map.chests, (info) => {
-            this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
-        });
+        //TODO - Redo chests
+        // _.each(this.map.chests, (info) => {
+        //     this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
+        // });
 
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
     }
