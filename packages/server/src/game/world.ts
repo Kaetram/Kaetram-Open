@@ -125,8 +125,8 @@ export default class World {
                 fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
 
         setIntervalAsync(async () => {
-            this.network.parsePackets();
-            //this.map.regions.parseRegions();
+            this.network.parse();
+            this.map.regions.parse();
         }, update);
 
         if (!config.hubEnabled) return;
