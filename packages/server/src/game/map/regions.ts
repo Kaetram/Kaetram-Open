@@ -19,7 +19,7 @@ import { Opcodes } from '@kaetram/common/network';
  * they are only broadcast to the region itself (animation events).
  */
 
-type TileInfo = { x: number; y: number; data: ParsedTile; animation?: AnimatedTile };
+type TileInfo = { x: number; y: number; data: ParsedTile; animation?: AnimatedTile; c?: boolean };
 type RegionInfo = { data: TileInfo[] };
 type RegionData = { [region: number]: RegionInfo };
 type RegionCallback = (region: number) => void;
@@ -315,12 +315,15 @@ export default class Regions {
             region.forEachTile((x: number, y: number) => {
                 let index = this.map.coordToIndex(x, y),
                     tileData = this.map.getTileData(index),
+                    isCollision = this.map.collisions.includes(index) || !tileData,
                     tile: TileInfo = {
                         x,
                         y,
                         data: tileData
                         //animation: this.map.getAnimation(index)
                     };
+
+                if (isCollision) tile.c = isCollision;
 
                 data[surroundingRegion].data.push(tile);
             });

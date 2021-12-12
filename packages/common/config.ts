@@ -42,7 +42,7 @@ export interface Config {
     tutorialEnabled: boolean;
     overrideAuth: boolean;
     maxPlayers: number;
-    updateTime: number;
+    tickPeriod: number;
     gver: string;
     guildsEnabled: boolean;
     administrators: string[];
