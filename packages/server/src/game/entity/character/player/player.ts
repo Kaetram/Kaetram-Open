@@ -191,7 +191,6 @@ export default class Player extends Character {
     private inventoryToggleCallback?: InterfaceCallback;
     private warpToggleCallback?: InterfaceCallback;
     private orientationCallback?(): void;
-    private regionCallback?(): void;
     private killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
     public doorCallback?: DoorCallback;
@@ -911,6 +910,16 @@ export default class Player extends Character {
     }
 
     /**
+     * Override the `setRegion` in Entity by adding a callback.
+     * @param region The new region we are setting.
+     */
+
+    public override setRegion(region: number): void {
+        super.setRegion(region);
+        if (region !== -1) this.regionCallback?.(region);
+    }
+
+    /**
      * Getters
      */
 
@@ -1264,17 +1273,6 @@ export default class Player extends Character {
         achievement.finish();
     }
 
-    public checkRegions(): void {
-        // Unnecessary wtf was I thinking
-        // if (!this.regionPosition) return;
-        // let diffX = Math.abs(this.regionPosition[0] - this.x),
-        //     diffY = Math.abs(this.regionPosition[1] - this.y);
-        // if (diffX >= 10 || diffY >= 10) {
-        //     this.regionPosition = [this.x, this.y];
-        //     this.regionCallback?.();
-        // }
-    }
-
     /**
      * Server-sided callbacks towards movement should
      * not be able to be overwritten. In the case that
@@ -1314,10 +1312,6 @@ export default class Player extends Character {
 
     public onOrientation(callback: () => void): void {
         this.orientationCallback = callback;
-    }
-
-    public onRegion(callback: () => void): void {
-        this.regionCallback = callback;
     }
 
     public onKill(callback: KillCallback): void {
