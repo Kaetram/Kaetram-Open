@@ -188,10 +188,10 @@ export default class Map {
      * @param index The index of the coordinate
      */
 
-    public indexToCoord(index: number, absolute = false): Position {
+    public indexToCoord(index: number): Position {
         return {
-            x: (index % this.width) * (!absolute ? 1 : this.tileSize),
-            y: Math.floor(index / this.width) * (!absolute ? 1 : this.tileSize)
+            x: index % this.width,
+            y: Math.floor(index / this.width)
         };
     }
 
