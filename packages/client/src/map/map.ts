@@ -20,6 +20,7 @@ interface TilesetImageElement extends HTMLImageElement {
 }
 
 type RawMapData = typeof rawMapData;
+type Position = { x: number; y: number };
 
 export type MapHigh = RawMapData['high'];
 export type MapTileset = RawMapData['tilesets'][0];
