@@ -44,7 +44,7 @@ abstract class Entity {
     public customScale!: number;
     public roaming = false;
 
-    private movementCallback?: MovementCallback;
+    public movementCallback?: MovementCallback;
     public regionCallback?: RegionCallback;
 
     protected constructor(

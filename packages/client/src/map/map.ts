@@ -222,7 +222,7 @@ export default class Map {
 
     public updateCollisions(): void {
         _.each(this.collisions, (index) => {
-            let position = this.indexToCoord(index + 1);
+            let position = this.indexToCoord(index);
 
             if (position.x > this.width - 1) position.x = this.width - 1;
 
@@ -232,20 +232,27 @@ export default class Map {
         });
     }
 
-    public indexToCoord(index: number): Pos {
-        index -= 1;
-
-        let x = this.getX(index + 1, this.width),
-            y = Math.floor(index / this.width);
-
-        return {
-            x,
-            y
-        };
-    }
+    /**
+     * Converts a coordinate (x and y) into an array index.
+     * @returns Index position relative to a 1 dimensional array.
+     */
 
     public coordToIndex(x: number, y: number): number {
-        return y * this.width + x + 1;
+        return y * this.width + x;
+    }
+
+    /**
+     * Works in reverse to `coordToIndex`. Takes an index
+     * within a one dimensional array and returns the
+     * coordinate variant of that index.
+     * @param index The index of the coordinate
+     */
+
+    public indexToCoord(index: number, absolute = false): Position {
+        return {
+            x: (index % this.width) * (!absolute ? 1 : this.tileSize),
+            y: Math.floor(index / this.width) * (!absolute ? 1 : this.tileSize)
+        };
     }
 
     public isColliding(x: number, y: number): boolean {
