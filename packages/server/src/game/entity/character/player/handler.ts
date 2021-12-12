@@ -27,8 +27,23 @@ export default class Handler {
         this.world = player.world;
         this.map = player.world.map;
 
+        this.player.onRegion(this.handleRegion.bind(this));
+
         this.load();
     }
+
+    /**
+     * Callback for when a region has changed.
+     * @param region The new region.
+     */
+
+    private handleRegion(region: number): void {
+        console.log(`Player ${this.player.username} entered region: ${region}.`);
+
+        this.map.regions.sendEntities(this.player);
+    }
+
+    // TODO - Refactor all of this.
 
     private load(): void {
         this.updateInterval = setInterval(() => {
@@ -87,13 +102,15 @@ export default class Handler {
             }
         });
 
-        this.player.onRegion(() => {
-            this.player.lastRegionChange = Date.now();
+        // this.player.onRegion(() => {
+        //     this.player.lastRegionChange = Date.now();
 
-            //TODO - Redo
-            // this.world.region.handle(this.player);
-            // this.world.region.push(this.player);
-        });
+        //     this.map.regions.sendEntities(this.player);
+
+        //     //TODO - Redo
+        //     // this.world.region.handle(this.player);
+        //     // this.world.region.push(this.player);
+        // });
 
         this.player.connection.onClose(() => {
             this.player.stopHealing();

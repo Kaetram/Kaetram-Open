@@ -281,7 +281,7 @@ export default class Entities {
         this.grids.addToEntityGrid(entity, entity.x, entity.y);
 
         // Todo move this into a separate handler.
-        entity.onSetPosition(() => {
+        entity.onMovement(() => {
             this.grids.updateEntityPosition(entity);
 
             if (!entity.isMob()) return;
