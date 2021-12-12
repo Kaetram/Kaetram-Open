@@ -23,37 +23,16 @@ import type Mob from './entity/character/mob/mob';
 import type Player from './entity/character/player/player';
 import type Entity from './entity/entity';
 
-type PlayerConnectCallback = (connection: Connection) => void;
+type ConnectionCallback = (connection: Connection) => void;
 
 interface WorldPacket {
     [key: string]: unknown;
     message: Packet;
 }
 
-interface DynamicObject {
-    [key: string]: {
-        [id: string]: {
-            index: number;
-            objectTile: number | number[];
-        };
-    };
-}
-
-interface DynamicData<T> {
-    [id: string]: T & {
-        data: {
-            [key: string]: {
-                index: number;
-                oldTiles: number | number[];
-            };
-        };
-        time: number;
-    };
-}
-
 export default class World {
-    private maxPlayers;
-    private updateTime;
+    private maxPlayers = config.maxPlayers;
+    private updateTime = config.updateTime;
     // private debug = false;
     public allowConnections = false;
 
@@ -68,43 +47,11 @@ export default class World {
     public discord!: Discord;
     public globalObjects!: GlobalObjects;
 
-    public playerConnectCallback?: PlayerConnectCallback;
+    public connectionCallback?: ConnectionCallback;
     public populationCallback?(): void;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
-        this.socketHandler = socketHandler;
-        this.database = database;
-
-        this.maxPlayers = config.maxPlayers;
-        this.updateTime = config.updateTime;
-    }
-
-    public load(onWorldLoad: () => void): void {
-        log.info('************ World Information ***********');
-
-        /**
-         * The reason maps are loaded per each world is because
-         * we can have slight modifications for each world if we want in the
-         * future. Using region loading, we can just send the client
-         * whatever new map we have created server sided. Cleaner and nicer.
-         */
-
         this.map = new Map(this);
-        this.map.isReady(() => {
-            log.info('The map has been successfully loaded!');
-
-            this.loaded();
-
-            setTimeout(onWorldLoad, 100);
-        });
-    }
-
-    private loaded(): void {
-        /**
-         * The following are all globally based 'plugins'. We load them
-         * in a batch here in order to keep it organized and neat.
-         */
-
         this.api = new API(this);
         this.shops = new Shops(this);
         this.discord = new Discord(this);
@@ -363,8 +310,8 @@ export default class World {
         return _.size(this.entities.players);
     }
 
-    public onPlayerConnection(callback: PlayerConnectCallback): void {
-        this.playerConnectCallback = callback;
+    public onConnection(callback: ConnectionCallback): void {
+        this.connectionCallback = callback;
     }
 
     public onPopulationChange(callback: () => void): void {
