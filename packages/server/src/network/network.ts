@@ -21,7 +21,6 @@ export default class Network {
     private database: MongoDB;
     private socketHandler: SocketHandler;
 
-    private map: Map;
     private regions: Regions;
 
     public packets: { [id: string]: PacketsList } = {};
@@ -39,7 +38,7 @@ export default class Network {
     }
 
     private load(): void {
-        this.world.onPlayerConnection((connection: Connection) => {
+        this.world.onConnection((connection: Connection) => {
             this.handlePlayerConnection(connection);
         });
 
