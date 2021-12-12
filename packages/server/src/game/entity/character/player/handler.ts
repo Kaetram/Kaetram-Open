@@ -65,6 +65,7 @@ export default class Handler {
         }, 400);
 
         this.player.onMovement((x: number, y: number) => {
+            console.log(`[$${this.player.username}] Movement x: ${x} - y: ${y}.`);
             this.map.regions.handle(this.player);
 
             this.detectAreas(x, y);

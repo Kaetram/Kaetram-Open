@@ -1000,12 +1000,11 @@ export default class Incoming {
     }
 
     private preventNoClip(x: number, y: number): boolean {
-        let isMapColliding = this.world.map.isColliding(x, y),
-            isInstanceColliding = this.player.doors.hasCollision(x, y);
+        let isMapColliding = this.world.map.isColliding(x, y);
 
-        if (this.world.map.getPositionObject(x, y)) return true;
+        //if (this.world.map.getPositionObject(x, y)) return true;
 
-        if (isMapColliding || isInstanceColliding) {
+        if (isMapColliding) {
             this.handleNoClip(x, y);
             return false;
         }
