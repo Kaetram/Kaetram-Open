@@ -281,39 +281,39 @@ export default class Entities {
 
         this.grids.addToEntityGrid(entity, entity.x, entity.y);
 
-        // Todo move this into a separate handler.
-        entity.onMovement(() => {
-            this.grids.updateEntityPosition(entity);
+        // // Todo move this into a separate handler.
+        // entity.onMovement(() => {
+        //     this.grids.updateEntityPosition(entity);
 
-            if (!entity.isMob()) return;
+        //     if (!entity.isMob()) return;
 
-            if (!entity.isOutsideSpawn()) return;
+        //     if (!entity.isOutsideSpawn()) return;
 
-            entity.removeTarget();
+        //     entity.removeTarget();
 
-            entity.combat.forget();
-            entity.combat.stop();
+        //     entity.combat.forget();
+        //     entity.combat.stop();
 
-            entity.return();
+        //     entity.return();
 
-            this.world.push(Opcodes.Push.Broadcast, [
-                {
-                    message: new Messages.Combat(Opcodes.Combat.Finish, {
-                        attackerId: null,
-                        targetId: entity.instance
-                    })
-                },
-                {
-                    message: new Messages.Movement(Opcodes.Movement.Move, {
-                        id: entity.instance,
-                        x: entity.x,
-                        y: entity.y,
-                        forced: false,
-                        teleport: false
-                    })
-                }
-            ]);
-        });
+        //     this.world.push(Opcodes.Push.Broadcast, [
+        //         {
+        //             message: new Messages.Combat(Opcodes.Combat.Finish, {
+        //                 attackerId: null,
+        //                 targetId: entity.instance
+        //             })
+        //         },
+        //         {
+        //             message: new Messages.Movement(Opcodes.Movement.Move, {
+        //                 id: entity.instance,
+        //                 x: entity.x,
+        //                 y: entity.y,
+        //                 forced: false,
+        //                 teleport: false
+        //             })
+        //         }
+        //     ]);
+        // });
 
         if (entity instanceof Character) {
             entity.combat.setWorld(this.world);
