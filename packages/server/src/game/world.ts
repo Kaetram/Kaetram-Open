@@ -31,14 +31,6 @@ interface WorldPacket {
 }
 
 export default class World {
-    private maxPlayers = config.maxPlayers;
-    private updateTime = config.updateTime;
-    // private debug = false;
-    public allowConnections = false;
-
-    // private loadedRegions = false;
-    public ready = false;
-
     public map!: Map;
     public api!: API;
     public shops!: Shops;
@@ -46,6 +38,10 @@ export default class World {
     public network!: Network;
     public discord!: Discord;
     public globalObjects!: GlobalObjects;
+
+    private maxPlayers = config.maxPlayers;
+
+    public allowConnections = false;
 
     public connectionCallback?: ConnectionCallback;
     public populationCallback?(): void;
@@ -59,22 +55,24 @@ export default class World {
         this.network = new Network(this);
         this.globalObjects = new GlobalObjects(this);
 
-        this.ready = true;
+        log.info('******************************************');
 
         this.tick();
-
-        log.info('******************************************');
     }
 
+    /**
+     * A `tick` is a call that occurs every `config.tickPeriod` milliseconds.
+     * This function underlines how fast (or how slow) we parse through packets.
+     */
+
     private async tick(): Promise<void> {
-        let update = 1000 / this.updateTime,
-            setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (fn, ms) =>
-                fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
+        let setIntervalAsync: (fn: () => Promise<void>, ms: number) => void = (fn, ms) =>
+            fn().then(() => setTimeout(() => setIntervalAsync(fn, ms), ms));
 
         setIntervalAsync(async () => {
             this.network.parse();
             this.map.regions.parse();
-        }, update);
+        }, 1_000 / config.tickPeriod);
 
         if (!config.hubEnabled) return;
 
@@ -298,6 +296,7 @@ export default class World {
         return this.entities.getPlayer(username) as Player;
     }
 
+    // Check to see if the world is full.
     public isFull(): boolean {
         return this.getPopulation() >= this.maxPlayers;
     }

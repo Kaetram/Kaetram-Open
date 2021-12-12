@@ -31,7 +31,6 @@ export default class Network {
         this.database = world.database;
         this.socketHandler = world.socketHandler;
 
-        this.map = world.map;
         this.regions = world.map.regions;
 
         this.load();

@@ -135,18 +135,18 @@ export default class Map {
 
             this.data[index] = tile.data;
 
-            // if (tile.c && collisionIndex < 0)
-            //     // Adding new collision tileIndex
-            //     this.collisions.push(index);
+            if (tile.c && collisionIndex < 0)
+                // Adding new collision tileIndex
+                this.collisions.push(index);
 
-            // if (!tile.c && collisionIndex > -1) {
-            //     // Removing existing collision tileIndex
-            //     let position = this.indexToCoord(index + 1);
+            if (!tile.c && collisionIndex > -1) {
+                // Removing existing collision tileIndex
+                let position = this.indexToCoord(index + 1);
 
-            //     this.collisions.splice(collisionIndex, 1);
+                this.collisions.splice(collisionIndex, 1);
 
-            //     this.grid[position.y][position.x] = 0;
-            // }
+                this.grid[position.y][position.x] = 0;
+            }
 
             // if (tile.isObject && objectIndex < 0) this.objects.push(index);
 
