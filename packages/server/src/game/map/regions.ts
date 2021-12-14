@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { toPlainObject } from 'lodash';
 
 import log from '@kaetram/common/util/log';
 
@@ -20,8 +20,7 @@ import { Opcodes } from '@kaetram/common/network';
  */
 
 type TileInfo = { x: number; y: number; data: ParsedTile; animation?: AnimatedTile; c?: boolean };
-type RegionInfo = { data: TileInfo[] };
-type RegionData = { [region: number]: RegionInfo };
+type RegionData = { [region: number]: TileInfo[] };
 type RegionCallback = (region: number) => void;
 type PRegionCallback = (entity: Entity, region: number) => void;
 
@@ -61,6 +60,8 @@ export default class Regions {
     private buildRegions(): void {
         /**
          * We use the tileSize of the map to split the entire map into even chunks.
+         * In the event that we do not have even chunks, an error is thrown. Continuing
+         * with this error present WILL cause the game to crash sooner or later.
          */
 
         if (this.map.width % this.divisions !== 0) {
@@ -78,7 +79,10 @@ export default class Regions {
     }
 
     /**
-     * Iterates through all the regiosn and parses them (to be expanded)
+     * Iterates through all the regions in the world and sends the
+     * joining entities to the players present in the regions. This
+     * is essentially a queue, whenever an entity joins, the packet
+     * gets sent then the queue is emptied.
      */
 
     public parse(): void {
@@ -92,9 +96,10 @@ export default class Regions {
     }
 
     /**
-     * The handler function for when an entity (usually a player)
-     * makes a movement in the grid system. We determine if they are
-     * still in the current region or not.
+     * The handler for when an entity spawns and moves (generally applies to `Player` type).
+     * We check to see if the movement is still within the same region, or we need to shift
+     * the regions and notify surrounding regions of the changes.
+     * @param entity The entity we are attempting to check regions.
      * @returns Whether the entity is in a new region.
      */
 
@@ -116,7 +121,15 @@ export default class Regions {
         return isNewRegion;
     }
 
-    private handleEnter(entity: Entity, region: number) {
+    /**
+     * This is the callback function for when an entity enters a region. We generally
+     * don't care if a mob/item/npc enters since they are controlled by the server.
+     * When a player enters however, we send it the region data.
+     * @param entity The entity that is entering.
+     * @param region The region that the entity is entering in.
+     */
+
+    private handleEnter(entity: Entity, region: number): void {
         if (!entity.isPlayer()) return;
 
         log.debug(`Entity: ${entity.instance} entering region: ${region}.`);
@@ -127,6 +140,13 @@ export default class Regions {
         this.sendRegion(entity as Player);
     }
 
+    /**
+     * Handles the joining callback function. Nothing happens here except for logging,
+     * it may be used in the future or will be deprecated.
+     * @param entity The entity that is joining the region.
+     * @param region The region that the entity is joining in.
+     */
+
     private handleJoining(entity: Entity, region: number): void {
         if (!entity.isPlayer()) return;
 
@@ -134,7 +154,11 @@ export default class Regions {
     }
 
     /**
-     * Indicates that an entity is joining the region.
+     * Here we add the entity to the joining queue (in order to signal to the other
+     * players that the entity is coming into the region). We also create a callback
+     * for good measure.
+     * @param entity The entity that we are adding to our joining queue.
+     * @param region The region of which the joining queue occurs in.
      */
 
     private joining(entity: Entity, region: number): void {
@@ -150,6 +174,9 @@ export default class Regions {
      * When an entity enters a region, we notify all the surrounding regions
      * that the entity has entered. We store player type entities in a separate
      * list for easier access.
+     * @param entity The entity that is entering into the region.
+     * @param region The region that we are adding the entity into.
+     * @returns The new surrounding regions of the region the entity is entering into.
      */
 
     private enter(entity: Entity, region: number): number[] {
@@ -211,6 +238,12 @@ export default class Regions {
         player.send(new Messages.List(entities));
     }
 
+    /**
+     * Sends a spawn message to all the entities in the region
+     * when an entity is entering the region.
+     * @param region The region which we grab the players of and send the messsage to.
+     */
+
     public sendJoining(region: number): void {
         this.regions[region].forEachJoining((entity: Entity) => {
             this.world.push(Opcodes.Push.Regions, {
@@ -254,20 +287,14 @@ export default class Regions {
     }
 
     /**
-     * Public method for grabbing a region based on its id.
+     * Grabs a region from our list based on the region parameter.
+     * @param region The region id that we are attempting to grab.
+     * @returns Returns the region object with the respective id.
      */
 
     public get(region: number): Region {
         return this.regions[region];
     }
-
-    /**
-     * Iterates through the regions and determines which region in the array
-     * of regions the x and y coordinates are in.
-     * @param x An x coordinate within the map boundaries.
-     * @param y A y coordinate within the map boundaries.
-     * @returns The region id that the entity is currently in.
-     */
 
     /**
      * Iterates through the regions and determines which region index (in the array)
@@ -308,30 +335,43 @@ export default class Regions {
             let region = this.regions[surroundingRegion];
 
             // Initialize empty array with tile data for the region.
-            data[surroundingRegion] = {
-                data: []
-            };
+            data[surroundingRegion] = [];
 
             region.forEachTile((x: number, y: number) => {
-                let index = this.map.coordToIndex(x, y),
-                    tileData = this.map.getTileData(index),
-                    isCollision = this.map.collisions.includes(index) || !tileData,
-                    tile: TileInfo = {
-                        x,
-                        y,
-                        data: tileData
-                        //animation: this.map.getAnimation(index)
-                    };
-
-                if (isCollision) tile.c = isCollision;
-
-                data[surroundingRegion].data.push(tile);
+                data[surroundingRegion].push(this.buildTile(x, y));
             });
 
             player.loadRegion(surroundingRegion);
         });
 
         return data;
+    }
+
+    /**
+     * Takes the tile's position and builds a TileInfo object.
+     * This is where all the fancy stuff with dynamic objects
+     * will be happening.
+     * @param x The x position of the tile in the grid space.
+     * @param y The y position of the tile in the grid space.
+     * @returns Returns a `TileInfo` object based on the coordinates.
+     */
+
+    private buildTile(x: number, y: number): TileInfo {
+        let index = this.map.coordToIndex(x, y),
+            tile: TileInfo = {
+                x,
+                y,
+                data: this.map.getTileData(index)
+            };
+
+        /**
+         * A tile is colliding if it exists in our array of collisions (See
+         * `parseTileLayerData()` in `processmap.ts`). If there is no tile data
+         * (i.e. the tile is blank) it is automatically colliding.
+         */
+        if (this.map.collisions.includes(index) || !tile.data) tile.c = true;
+
+        return tile;
     }
 
     /**
@@ -343,6 +383,11 @@ export default class Regions {
     public forEachSurroundingRegion(region: number, callback: RegionCallback): void {
         _.each(this.getSurroundingRegions(region), callback);
     }
+
+    /**
+     * Callback for each region in the system.
+     * @param callback Returns a region and index.
+     */
 
     public forEachRegion(callback: (region: Region, index: number) => void): void {
         _.each(this.regions, callback);
@@ -432,6 +477,10 @@ export default class Regions {
     private onEnter(callback: PRegionCallback): void {
         this.enterCallback = callback;
     }
+
+    /**
+     * Callback for when an entity is joining the region.
+     */
 
     private onJoining(callback: PRegionCallback): void {
         this.joiningCallback = callback;
