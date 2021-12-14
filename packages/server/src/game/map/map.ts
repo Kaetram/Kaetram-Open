@@ -33,9 +33,9 @@ interface Door {
     orientation: number | undefined;
 }
 
-type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }; //horizontal, vertical, diagonal
+export type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }; //horizontal, vertical, diagonal
 export type AnimatedTile = { tileId: string; name: string };
-export type ParsedTile = Tile | RotatedTile | RotatedTile[];
+export type ParsedTile = RotatedTile | Tile | RotatedTile[];
 export type Tile = number | number[];
 export type Position = { x: number; y: number };
 
@@ -255,6 +255,17 @@ export default class Map {
 
         return parsedData;
     }
+
+    /**
+     * Grabs the rotated tile id from Tiled and performs bitwise operators
+     * on it in order to convert it to an actual tileId. The bitshifts
+     * indicate the type of rotation, and performing all the operations
+     * results in the original tileId.
+     * For more information refer to the following
+     * https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tmx-tile-flipping
+     * @param tileId The tileId of the flipped tile.
+     * @returns A parsed tile of type `RotatedTile`.
+     */
 
     public getFlippedTile(tileId: number): ParsedTile {
         let h = !!(tileId & Modules.Constants.HORIZONTAL_FLAG),

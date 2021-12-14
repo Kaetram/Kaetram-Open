@@ -42,8 +42,10 @@ export interface CursorsTiles {
     [key: number]: Cursors | null;
 }
 
+export type FlippedTile = { tileId: number; h: boolean; v: boolean; d: boolean };
+
 interface TileData {
-    data: number;
+    data: number | number[] | FlippedTile | FlippedTile[];
     isObject: boolean;
     c: boolean; // collision
     index: number;
@@ -131,8 +133,6 @@ export default class Map {
         // Use traditional for-loop instead of _
 
         for (let tile of data) {
-            if (tile.data.h) console.log(tile);
-
             let index = this.coordToIndex(tile.x, tile.y),
                 collisionIndex = this.collisions.indexOf(index),
                 objectIndex = this.objects.indexOf(index);
