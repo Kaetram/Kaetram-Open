@@ -18,6 +18,7 @@ import type Sprite from '../entity/sprite';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Splat from './infos/splat';
+import { FlippedTile } from '../map/map';
 
 interface RendererTile {
     relativeTileId: number;
@@ -26,7 +27,7 @@ interface RendererTile {
     y: number;
     width: number;
     height: number;
-    rotation: number;
+    rotation: number[];
 }
 interface RendererCell {
     dx: number;
@@ -344,8 +345,18 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
+            let rotation: number[] = [];
+
+            if (this.isFlipped(id)) {
+                if ((id as unknown as FlippedTile).h) rotation.push(ROT_NEG_90_DEG);
+                if ((id as unknown as FlippedTile).v) rotation.push(ROT_90_DEG);
+                if ((id as unknown as FlippedTile).d) rotation.push(ROT_180_DEG);
+
+                id = (id as unknown as FlippedTile).tileId - 1;
+            } else id -= 1;
+
             if (!this.map.isAnimatedTile(id) || !this.animateTiles)
-                this.drawTile(context as CanvasRenderingContext2D, id, index);
+                this.drawTile(context as CanvasRenderingContext2D, id, index, rotation);
         });
 
         this.restoreDrawing();
@@ -865,13 +876,22 @@ export default class Renderer {
         }
     }
 
+    private isFlipped(tileInfo: any): boolean {
+        return tileInfo.v || tileInfo.h || tileInfo.d;
+    }
+
     /**
      * Primitive drawing functions
      */
 
-    private drawTile(context: CanvasRenderingContext2D, tileId: number, cellId: number): void {
-        let originalTileId = tileId,
-            rotation!: number;
+    //TODO - Refactor types
+    private drawTile(
+        context: CanvasRenderingContext2D,
+        tileId: any,
+        cellId: number,
+        rotation: number[] = []
+    ): void {
+        let originalTileId = tileId;
 
         /**
          * `originalTileId` is the tileId prior to doing any
@@ -879,16 +899,6 @@ export default class Renderer {
          */
 
         if (tileId < 0) return;
-
-        if (tileId > DIAGONAL_FLIP_FLAG) {
-            if (!(tileId & HORIZONTAL_FLIP_FLAG)) rotation = ROT_NEG_90_DEG;
-
-            if (!(tileId & VERTICAL_FLIP_FLAG)) rotation = ROT_90_DEG;
-
-            if (!(tileId & DIAGONAL_FLIP_FLAG)) rotation = ROT_180_DEG;
-
-            tileId &= ~(HORIZONTAL_FLIP_FLAG | VERTICAL_FLIP_FLAG | DIAGONAL_FLIP_FLAG);
-        }
 
         let tileset = this.map.getTilesetFromId(tileId);
 
@@ -941,35 +951,38 @@ export default class Renderer {
 
         if (!context) return;
 
-        if (tile.rotation) {
-            context.save();
-            context.rotate(tile.rotation);
-
+        if (tile.rotation.length > 0) {
             ({ dx, dy } = cell);
 
-            let temporary = cell.dx;
+            context.save();
 
-            switch (tile.rotation) {
-                case ROT_180_DEG:
-                    context.translate(-cell.width, -cell.height);
+            for (let rotation of tile.rotation) {
+                context.rotate(rotation);
 
-                    (dx = -dx), (dy = -dy);
+                let temporary = cell.dx;
 
-                    break;
+                switch (rotation) {
+                    case ROT_180_DEG:
+                        context.translate(-cell.width, -cell.height);
 
-                case ROT_90_DEG:
-                    context.translate(0, -cell.height);
+                        (dx = -dx), (dy = -dy);
 
-                    (dx = dy), (dy = -temporary);
+                        break;
 
-                    break;
+                    case ROT_90_DEG:
+                        context.translate(0, -cell.height);
 
-                case ROT_NEG_90_DEG:
-                    context.translate(-cell.width, 0);
+                        (dx = dy), (dy = -temporary);
 
-                    (dx = -dy), (dy = temporary);
+                        break;
 
-                    break;
+                    case ROT_NEG_90_DEG:
+                        context.translate(-cell.width, 0);
+
+                        (dx = -dy), (dy = temporary);
+
+                        break;
+                }
             }
         }
 
@@ -979,13 +992,13 @@ export default class Renderer {
             tile.y, // Source Y
             tile.width, // Source Width
             tile.height, // Source Height
-            tile.rotation ? dx : cell.dx, // Destination X
-            tile.rotation ? dy : cell.dy, // Destination Y
+            dx || cell.dx, // Destination X
+            dy || cell.dy, // Destination Y
             cell.width, // Destination Width
             cell.height
         ); // Destination Height
 
-        if (tile.rotation) context.restore();
+        if (tile.rotation.length > 0) context.restore();
     }
 
     private drawText(
@@ -1025,6 +1038,8 @@ export default class Renderer {
              * and are within the visible camera proportions. This way we can parse
              * it every time the tile moves slightly.
              */
+
+            id -= 1;
 
             if (!this.map.isAnimatedTile(id)) return;
 
@@ -1098,7 +1113,7 @@ export default class Renderer {
 
     private forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
         this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y) - 1);
+            if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y));
         }, offset);
     }
 
@@ -1111,8 +1126,8 @@ export default class Renderer {
         this.forEachVisibleIndex((index) => {
             let indexData = this.map.data[index];
 
-            if (Array.isArray(indexData)) for (let data of indexData) callback(data - 1, index);
-            else if (!isNaN(this.map.data[index] - 1)) callback(this.map.data[index] - 1, index);
+            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
+            else if (this.map.data[index]) callback(this.map.data[index], index);
         }, offset);
     }
 
