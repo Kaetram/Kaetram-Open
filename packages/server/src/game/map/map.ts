@@ -247,30 +247,32 @@ export default class Map {
         this.forEachTile(data, (tileId: number) => {
             let tile: ParsedTile = tileId;
 
-            if (this.isFlipped(tileId)) {
-                let h = !!(tileId & Modules.Constants.HORIZONTAL_FLAG),
-                    v = !!(tileId & Modules.Constants.VERTICAL_FLAG),
-                    d = !!(tileId & Modules.Constants.DIAGONAL_FLAG);
-
-                tileId &= ~(
-                    Modules.Constants.DIAGONAL_FLAG |
-                    Modules.Constants.VERTICAL_FLAG |
-                    Modules.Constants.HORIZONTAL_FLAG
-                );
-
-                tile = {
-                    tileId,
-                    h,
-                    v,
-                    d
-                };
-            }
+            if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
 
             if (isArray) (parsedData as ParsedTile[]).push(tile);
             else parsedData = tile;
         });
 
         return parsedData;
+    }
+
+    public getFlippedTile(tileId: number): ParsedTile {
+        let h = !!(tileId & Modules.Constants.HORIZONTAL_FLAG),
+            v = !!(tileId & Modules.Constants.VERTICAL_FLAG),
+            d = !!(tileId & Modules.Constants.DIAGONAL_FLAG);
+
+        tileId &= ~(
+            Modules.Constants.DIAGONAL_FLAG |
+            Modules.Constants.VERTICAL_FLAG |
+            Modules.Constants.HORIZONTAL_FLAG
+        );
+
+        return {
+            tileId,
+            h,
+            v,
+            d
+        };
     }
 
     public getPositionObject(x: number, y: number): number {

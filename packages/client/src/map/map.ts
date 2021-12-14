@@ -122,14 +122,17 @@ export default class Map {
     // TODO - Specify type
     public synchronize(regionData: any): void {
         _.each(regionData, (region) => {
-            this.loadRegion(region.data);
+            this.loadRegion(region);
         });
     }
 
-    public loadRegion(data) {
+    // TODO - Specify type
+    public loadRegion(data: any): void {
         // Use traditional for-loop instead of _
 
         for (let tile of data) {
+            if (tile.data.h) console.log(tile);
+
             let index = this.coordToIndex(tile.x, tile.y),
                 collisionIndex = this.collisions.indexOf(index),
                 objectIndex = this.objects.indexOf(index);
