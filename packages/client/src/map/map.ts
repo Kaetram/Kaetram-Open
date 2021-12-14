@@ -280,7 +280,7 @@ export default class Map {
     }
 
     public isHighTile(id: number): boolean {
-        return this.high.includes(id + 1);
+        return this.high.includes(id);
     }
 
     public isLightTile(id: number): boolean {
