@@ -1,11 +1,10 @@
-import _, { toPlainObject } from 'lodash';
+import _ from 'lodash';
 
 import log from '@kaetram/common/util/log';
 
-import Area from './areas/area';
 import World from '../world';
 import Region from './region';
-import Map, { AnimatedTile, ParsedTile } from './map';
+import Map, { AnimatedTile, ParsedTile, RotatedTile } from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import Messages from '../../network/messages';
