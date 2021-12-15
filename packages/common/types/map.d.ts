@@ -64,11 +64,11 @@ export interface ProcessedMap {
     data: (number | number[])[];
 
     collisions: number[];
-    polygons: { [tileId: number]: Pos[] };
     entities: Entities;
     staticEntities: Entities;
 
-    tilesets: ProcessedTileset[];
+    // tilesetId: firstGid
+    tilesets: { [tilesetId: number]: number };
     animations?: unknown[];
     depth?: number;
 
