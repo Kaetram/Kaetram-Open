@@ -3,11 +3,12 @@ import zlib from 'zlib';
 
 import log from '@kaetram/common/util/log';
 
-import type { ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
+import type { Entities, ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
 import type { Entity, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
 export default class ProcessMap {
     private map: ProcessedMap;
+    private entities: Entities = {};
 
     #collisionTiles: { [tileId: number]: boolean } = {};
 
@@ -28,7 +29,6 @@ export default class ProcessMap {
             data: [],
 
             collisions: [],
-            entities: {},
             staticEntities: {},
 
             tilesets: {},
@@ -39,13 +39,8 @@ export default class ProcessMap {
 
             high: [],
             objects: [],
-            trees: {},
-            treeIndexes: [],
-            rocks: {},
-            rockIndexes: [],
             areas: {},
-            cursors: {},
-            layers: []
+            cursors: {}
         };
 
         this.parseTilesets();
@@ -76,7 +71,7 @@ export default class ProcessMap {
 
             let [, tilesetId] = tileset.image.split('-');
 
-            this.map.tilesets[parseInt(tilesetId) - 1] = tileset.firstgid - 1;
+            if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
 
             this.parseTileset(tileset);
         });
@@ -131,8 +126,8 @@ export default class ProcessMap {
 
             _.each(tile.properties, (property) => {
                 if (this.isEntityTileset(tileset)) {
-                    this.map.entities[tileId] = {} as Entity;
-                    this.map.entities[tileId][property.name] = property.value;
+                    this.entities[tileId] = {} as Entity;
+                    this.entities[tileId][property.name] = property.value;
                 } else this.parseProperties(tileId, property);
             });
         });
@@ -140,7 +135,7 @@ export default class ProcessMap {
 
     /**
      * Used for extracting information about the tile. Elements such as whether
-     * or not it's colliding, an object, a tree, a rock, or if it has a special cursor
+     * or not it's colliding, an object, or if it has a special cursor
      * property when we hover over it.
      * @param tileId The tileId of the property.
      * @param property The property information of the tile.
@@ -149,7 +144,7 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { high, objects, trees, rocks, cursors } = this.map;
+            { high, objects, cursors } = this.map;
 
         if (this.isCollisionProperty(name)) this.#collisionTiles[tileId] = true;
 
@@ -160,14 +155,6 @@ export default class ProcessMap {
 
             case 'o':
                 objects.push(tileId);
-                break;
-
-            case 'tree':
-                trees[tileId] = value;
-                break;
-
-            case 'rock':
-                rocks[tileId] = value;
                 break;
 
             case 'cursor':
@@ -191,7 +178,7 @@ export default class ProcessMap {
 
         if (name === 'blocking') return this.parseBlocking(layer);
         if (name === 'entities') return this.parseStaticEntities(layer);
-        if (name === 'plateau') return this.parsePlateau(layer);
+        if (name.startsWith('plateau')) return this.parsePlateau(layer);
 
         this.parseTileLayerData(layer.data);
 
@@ -205,13 +192,13 @@ export default class ProcessMap {
      * [3, 4, 0, [12, 14], [21, 42, 12]] Where the array represents
      * tiles layered on top of eachother.
      *
-     * Subsequently, any tile indexes that are colliding, are trees, or are rocks
-     * are added to their respective arrays. This will be refactored in the future.
+     * Subsequently, any tile indexes that are colliding are added to the collision
+     * array.
      * @param data The raw data for each tile layer.
      */
 
     private parseTileLayerData(mapData: number[]): void {
-        let { data, collisions, trees, treeIndexes, rocks, rockIndexes } = this.map;
+        let { data, collisions } = this.map;
 
         _.each(mapData, (value, index) => {
             if (value < 1) return;
@@ -221,8 +208,6 @@ export default class ProcessMap {
             else data[index] = [data[index] as number, value];
 
             if (value in this.#collisionTiles) collisions.push(index);
-            if (value in trees) treeIndexes.push(index);
-            if (value in rocks) rockIndexes.push(index);
         });
     }
 
@@ -252,12 +237,12 @@ export default class ProcessMap {
      */
 
     private parseStaticEntities(layer: Layer): void {
-        let { entities, staticEntities } = this.map;
+        let { staticEntities } = this.map;
 
         _.each(layer.data, (value, index) => {
             if (value < 1) return;
 
-            if (value in entities) staticEntities[index] = entities[value];
+            if (value in this.entities) staticEntities[index] = this.entities[value];
         });
     }
 
@@ -481,7 +466,35 @@ export default class ProcessMap {
      */
 
     public getMap(): string {
-        return JSON.stringify(this.map);
+        let {
+            version,
+            width,
+            height,
+            tileSize,
+            data,
+            collisions,
+            high,
+            areas,
+            plateau,
+            objects,
+            cursors,
+            staticEntities
+        } = this.map;
+
+        return JSON.stringify({
+            version,
+            width,
+            height,
+            tileSize,
+            data,
+            collisions,
+            high,
+            areas,
+            plateau,
+            objects,
+            cursors,
+            staticEntities
+        });
     }
 
     /**
@@ -500,9 +513,7 @@ export default class ProcessMap {
             high,
             tilesets,
             animations,
-            tileSize,
-            collisions: [],
-            lights: []
+            tileSize
         });
     }
 }
