@@ -27,13 +27,13 @@ interface RendererTile {
     y: number;
     width: number;
     height: number;
-    rotation: number[];
 }
 interface RendererCell {
     dx: number;
     dy: number;
     width: number;
     height: number;
+    rotation: number[];
 }
 
 interface Bounds {
@@ -352,11 +352,11 @@ export default class Renderer {
                 if ((id as unknown as FlippedTile).v) rotation.push(ROT_90_DEG);
                 if ((id as unknown as FlippedTile).d) rotation.push(ROT_180_DEG);
 
-                id = (id as unknown as FlippedTile).tileId - 1;
-            } else id -= 1;
+                id = (id as unknown as FlippedTile).tileId;
+            }
 
             if (!this.map.isAnimatedTile(id) || !this.animateTiles)
-                this.drawTile(context as CanvasRenderingContext2D, id, index, rotation);
+                this.drawTile(context as CanvasRenderingContext2D, id - 1, index, rotation);
         });
 
         this.restoreDrawing();
@@ -887,7 +887,7 @@ export default class Renderer {
     //TODO - Refactor types
     private drawTile(
         context: CanvasRenderingContext2D,
-        tileId: any,
+        tileId: number,
         cellId: number,
         rotation: number[] = []
     ): void {
@@ -913,7 +913,7 @@ export default class Renderer {
 
         if (!(originalTileId in this.tiles)) {
             let setWidth = tileset.width / this.tileSize,
-                relativeTileId = tileId - tileset.firstGID + 1;
+                relativeTileId = tileId - tileset.firstGID;
 
             this.tiles[originalTileId] = {
                 relativeTileId,
@@ -921,8 +921,7 @@ export default class Renderer {
                 x: this.getX(relativeTileId + 1, setWidth) * this.tileSize,
                 y: Math.floor(relativeTileId / setWidth) * this.tileSize,
                 width: this.tileSize,
-                height: this.tileSize,
-                rotation
+                height: this.tileSize
             };
         }
 
@@ -933,7 +932,8 @@ export default class Renderer {
                 dx: this.getX(cellId + 1, this.map.width) * this.tileSize * scale,
                 dy: Math.floor(cellId / this.map.width) * this.tileSize * scale,
                 width: this.tileSize * scale,
-                height: this.tileSize * scale
+                height: this.tileSize * scale,
+                rotation
             };
         }
 
@@ -951,24 +951,17 @@ export default class Renderer {
 
         if (!context) return;
 
-        if (tile.rotation.length > 0) {
+        if (cell.rotation.length > 0) {
             ({ dx, dy } = cell);
 
             context.save();
 
-            for (let rotation of tile.rotation) {
+            for (let rotation of cell.rotation) {
                 context.rotate(rotation);
 
                 let temporary = cell.dx;
 
                 switch (rotation) {
-                    case ROT_180_DEG:
-                        context.translate(-cell.width, -cell.height);
-
-                        (dx = -dx), (dy = -dy);
-
-                        break;
-
                     case ROT_90_DEG:
                         context.translate(0, -cell.height);
 
@@ -980,6 +973,13 @@ export default class Renderer {
                         context.translate(-cell.width, 0);
 
                         (dx = -dy), (dy = temporary);
+
+                        break;
+
+                    case ROT_180_DEG:
+                        context.translate(-cell.width, -cell.height);
+
+                        (dx = -dx), (dy = -dy);
 
                         break;
                 }
@@ -995,10 +995,10 @@ export default class Renderer {
             dx || cell.dx, // Destination X
             dy || cell.dy, // Destination Y
             cell.width, // Destination Width
-            cell.height
-        ); // Destination Height
+            cell.height // Destination Height
+        );
 
-        if (tile.rotation.length > 0) context.restore();
+        if (cell.rotation.length > 0) context.restore();
     }
 
     private drawText(
