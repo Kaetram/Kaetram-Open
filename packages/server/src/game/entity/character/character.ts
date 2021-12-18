@@ -27,7 +27,7 @@ export default abstract class Character extends Entity {
     public movementSpeed = 250;
     public attackRange = 1;
     public attackRate = 1000;
-    public healingRate = 10000;
+    public healingRate = 10_000;
 
     public spawnDistance = 7;
 

@@ -28,6 +28,6 @@ export default class GreatSquid extends Combat {
     }
 
     private canUseTerror(): boolean {
-        return Date.now() - this.lastTerror > 15000;
+        return Date.now() - this.lastTerror > 15_000;
     }
 }
