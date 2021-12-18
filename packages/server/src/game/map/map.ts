@@ -55,7 +55,6 @@ export default class Map {
     public data: (number | number[])[] = map.data;
     public collisions: number[] = map.collisions || [];
     public high: number[] = map.high || [];
-    public tilesets: ProcessedTileset[] = map.tilesets || [];
     public lights!: ProcessedArea[];
     public plateau!: { [index: number]: number };
     public objects!: number[];
@@ -90,7 +89,6 @@ export default class Map {
     load(): void {
         this.loadStaticEntities();
 
-        this.tilesets = map.tilesets;
         this.lights = map.areas.lights;
         this.plateau = map.plateau;
         this.objects = map.objects;
