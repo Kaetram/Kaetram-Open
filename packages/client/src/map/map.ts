@@ -8,15 +8,11 @@ import type rawMapData from '../../data/maps/map.json';
 import type Game from '../game';
 import type { MapData } from './mapworker';
 
-interface TilesetImageElement extends HTMLImageElement {
-    name: string;
+interface TilesetData extends HTMLImageElement {
     path: string;
-    raw: TilesetImageElement;
     firstGID: number;
     lastGID: number;
     loaded: boolean;
-    scale: number;
-    index: number;
 }
 
 type RawMapData = typeof rawMapData;
@@ -56,7 +52,7 @@ interface Resources {
     [name: string]: {
         name: string;
         url: string;
-        data: TilesetImageElement;
+        data: TilesetData;
         extension: string;
     };
 }
@@ -68,8 +64,8 @@ export default class Map {
     private objects: unknown[] = [];
     /** Global objects with custom cursors. */
     private cursorTiles: CursorsTiles = [];
-    private tilesets: TilesetImageElement[] = [];
-    private rawTilesets: MapTilesets = [];
+    private tilesets: { [key: string]: TilesetData } = {};
+    private rawTilesets: { [key: string]: number } = {};
 
     public grid!: number[][];
     private tilesetsLoaded = false;
@@ -165,36 +161,40 @@ export default class Map {
     }
 
     private loadTilesets(): void {
-        if (this.rawTilesets.length === 0) return;
+        let rawTilesetLength = Object.keys(this.rawTilesets).length;
 
-        _.each(this.rawTilesets, (rawTileset) => {
-            this.loadTileset(rawTileset, (tileset) => {
-                this.tilesets[tileset.index] = tileset;
+        if (rawTilesetLength === 0) return;
 
-                if (this.tilesets.length === this.rawTilesets.length) this.tilesetsLoaded = true;
+        _.each(this.rawTilesets, (firstGID: number, key: string) => {
+            this.loadTileset(firstGID, key, (tileset) => {
+                this.tilesets[key] = tileset;
+
+                if (Object.keys(this.tilesets).length === rawTilesetLength)
+                    this.tilesetsLoaded = true;
             });
         });
     }
 
     private loadTileset(
-        rawTileset: MapTileset,
-        callback: (tileset: TilesetImageElement) => void
+        firstGID: MapTileset,
+        tilesetId: string,
+        callback: (tileset: TilesetData) => void
     ): void {
-        let tileset = new Image() as TilesetImageElement;
-
-        tileset.index = this.rawTilesets.indexOf(rawTileset);
-        tileset.name = rawTileset.imageName;
-
-        let path = `/img/tilesets/${rawTileset.name}.png`;
+        let tileset = new Image() as TilesetData,
+            path = `/img/tilesets/tilesheet-${parseInt(tilesetId) + 1}.png`;
 
         tileset.crossOrigin = 'Anonymous';
         tileset.path = path;
         tileset.src = path;
-        tileset.raw = tileset;
-        tileset.firstGID = rawTileset.firstGID;
-        tileset.lastGID = rawTileset.lastGID;
+        tileset.firstGID = firstGID;
+        // Equivalent of firstGID + (tileset.width / this.tileSize) * (tileset.height / this.tileSize)
+        tileset.lastGID = firstGID + (tileset.width * tileset.height) / this.tileSize ** 2;
         tileset.loaded = true;
-        tileset.scale = rawTileset.scale;
+
+        console.log('---------------');
+        console.log(path);
+        console.log(`firstGID: ${firstGID}.`);
+        console.log(`tileCount: ${tileset.lastGID}`);
 
         tileset.addEventListener('load', () => {
             if (tileset.width % this.tileSize > 0)
@@ -214,9 +214,9 @@ export default class Map {
         this.height = map.height;
         this.tileSize = map.tileSize;
         this.blocking = map.blocking || [];
-        this.collisions = map.collisions;
+        this.collisions = [];
         this.high = map.high;
-        this.lights = map.lights;
+        this.lights = [];
         this.rawTilesets = map.tilesets;
         this.animatedTiles = map.animations;
         this.depth = map.depth;
@@ -305,10 +305,9 @@ export default class Map {
         return this.animatedTiles[id];
     }
 
-    public getTilesetFromId(id: number): TilesetImageElement | null {
-        for (let idx in this.tilesets)
-            if (id > this.tilesets[idx].firstGID - 1 && id < this.tilesets[idx].lastGID + 1)
-                return this.tilesets[idx];
+    public getTilesetFromId(id: number): TilesetData | null {
+        for (let index in this.tilesets)
+            if (id < this.tilesets[index].lastGID) return this.tilesets[index];
 
         return null;
     }
