@@ -150,7 +150,7 @@ export default class Renderer {
         public game: Game
     ) {
         this.context = entitiesCanvas.getContext('2d')!; // Entities;
-        this.backContext = background.getContext('2d');
+        this.backContext = background.getContext('2d')!; // Background
         this.foreContext = foreground.getContext('2d')!; // Foreground
         this.overlayContext = overlay.getContext('2d')!; // Lighting
         this.textContext = textCanvas.getContext('2d')!; // Texts
