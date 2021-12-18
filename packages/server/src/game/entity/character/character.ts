@@ -13,7 +13,6 @@ type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
 type HitCallback = (attacker: Character, damage?: number) => void;
 type DamagedCallback = (damage: number, attacker?: Character) => void;
-type MovementCallback = (x: number, y: number) => void;
 type TargetCallback = (target: Character | null) => void;
 type PoisonCallback = (poison: string) => void;
 type SubAoECallback = (radius: number, hasTerror: boolean) => void;
@@ -62,7 +61,6 @@ export default abstract class Character extends Entity {
     private stunCallback?: StunCallback;
     public hitCallback?: HitCallback;
     private damagedCallback?: DamagedCallback;
-    private movementCallback?: MovementCallback;
     private targetCallback?: TargetCallback;
     private hitPointsCallback?(): void;
     private poisonCallback?: PoisonCallback;
@@ -187,8 +185,6 @@ export default abstract class Character extends Entity {
         this.previousY = this.y;
 
         super.setPosition(x, y);
-
-        this.movementCallback?.(x, y);
     }
 
     public setTarget(target: Character | null): void {
@@ -261,10 +257,6 @@ export default abstract class Character extends Entity {
 
     public onRemoveTarget(callback: () => void): void {
         this.removeTargetCallback = callback;
-    }
-
-    public onMovement(callback: MovementCallback): void {
-        this.movementCallback = callback;
     }
 
     public onHit(callback: HitCallback): void {

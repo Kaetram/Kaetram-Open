@@ -3,12 +3,12 @@ import _ from 'lodash';
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
-import mapData from '../../data/map/world.json';
-import Spawns from '../../data/spawns.json';
-import Items from '../util/items';
-import Mobs from '../util/mobs';
-import NPCs from '../util/npcs';
-import Objects from '../util/objects';
+import mapData from '../../../data/map/world.json';
+import Spawns from '../../../data/spawns.json';
+import Items from '../../util/items';
+import Mobs from '../../util/mobs';
+import NPCs from '../../util/npcs';
+import Objects from '../../util/objects';
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
@@ -20,8 +20,8 @@ import type {
     Rock,
     Tree
 } from '@kaetram/common/types/map';
-import type Entity from '../game/entity/entity';
-import type World from '../game/world';
+import type Entity from '../entity/entity';
+import type World from '../world';
 import type Area from './areas/area';
 import type Areas from './areas/areas';
 
@@ -33,42 +33,34 @@ interface Door {
     orientation: number | undefined;
 }
 
+export type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }; //horizontal, vertical, diagonal
+export type AnimatedTile = { tileId: string; name: string };
+export type ParsedTile = RotatedTile | Tile | RotatedTile[];
+export type Tile = number | number[];
+export type Position = { x: number; y: number };
+
 type EntityType = 'mob' | 'npc' | 'item' | null;
 
 export default class Map {
-    private ready = false;
+    public regions: Regions;
+    public grids: Grids;
 
-    public regions;
-    public grids;
+    // Map versioning and information
+    public version = map.version;
+    public width = map.width;
+    public height = map.height;
+    public tileSize = map.tileSize;
 
-    public version!: number;
-
-    public data!: (number | number[])[];
-
-    public width!: number;
-    public height!: number;
-
-    public collisions!: number[];
-    public high!: number[];
-    public chests!: ProcessedArea[];
-    public tilesets!: ProcessedTileset[];
+    // Map data and collisions
+    public data: (number | number[])[] = map.data;
+    public collisions: number[] = map.collisions || [];
+    public high: number[] = map.high || [];
     public lights!: ProcessedArea[];
     public plateau!: { [index: number]: number };
     public objects!: number[];
     public cursors!: { [tileId: number]: string };
     public doors!: { [index: number]: Door };
     public warps!: ProcessedArea[];
-
-    public trees!: {
-        [tileId: number]: Tree;
-    };
-    public treeIndexes!: number[];
-
-    public rocks!: { [tileId: number]: Rock };
-    public rockIndexes!: number[];
-
-    public regionWidth!: number;
-    public regionHeight!: number;
 
     private areas!: { [name: string]: Areas };
 
@@ -85,9 +77,9 @@ export default class Map {
     private checksum!: string;
 
     private readyInterval!: NodeJS.Timeout | null;
-    private readyCallback?(): void;
+    private readyCallback?: () => void;
 
-    public constructor(private world: World) {
+    public constructor(public world: World) {
         this.load();
 
         this.regions = new Regions(this);
@@ -95,39 +87,13 @@ export default class Map {
     }
 
     load(): void {
-        this.version = map.version || 0;
-
-        this.data = map.data;
-
-        this.width = map.width;
-        this.height = map.height;
-        this.collisions = map.collisions;
-        this.high = map.high;
-        this.chests = map.areas.chest;
-
         this.loadStaticEntities();
 
-        this.tilesets = map.tilesets;
         this.lights = map.areas.lights;
         this.plateau = map.plateau;
         this.objects = map.objects;
         this.cursors = map.cursors;
         this.warps = map.areas.warps;
-
-        // Lumberjacking
-        this.trees = map.trees;
-        this.treeIndexes = map.treeIndexes;
-
-        // Mining
-        this.rocks = map.rocks;
-        this.rockIndexes = map.rockIndexes;
-
-        /**
-         * These are temporarily hardcoded,
-         * but we will use a dynamic approach.
-         */
-        this.regionWidth = 35;
-        this.regionHeight = 25;
 
         this.checksum = Utils.getChecksum(JSON.stringify(map));
 
@@ -136,16 +102,7 @@ export default class Map {
         this.loadAreas();
         this.loadDoors();
 
-        this.ready = true;
-
-        if (this.world.ready) return;
-
-        this.readyInterval = setInterval(() => {
-            this.readyCallback?.();
-
-            if (this.readyInterval) clearInterval(this.readyInterval);
-            this.readyInterval = null;
-        }, 75);
+        this.readyCallback?.();
     }
 
     private loadAreas(): void {
@@ -162,27 +119,7 @@ export default class Map {
         _.each(map.areas.doors, (door) => {
             if (!door.destination) return;
 
-            // let orientation: Modules.Orientation;
-
-            // switch (door.orientation) {
-            //     case 'u':
-            //         orientation = Modules.Orientation.Up;
-            //         break;
-
-            //     case 'd':
-            //         orientation = Modules.Orientation.Down;
-            //         break;
-
-            //     case 'l':
-            //         orientation = Modules.Orientation.Left;
-            //         break;
-
-            //     case 'r':
-            //         orientation = Modules.Orientation.Right;
-            //         break;
-            // }
-
-            let index = this.gridPositionToIndex(door.x, door.y, 1),
+            let index = this.coordToIndex(door.x, door.y),
                 destination = this.getDoorDestination(door);
 
             if (!destination) return;
@@ -211,7 +148,7 @@ export default class Map {
         });
 
         _.each(Spawns, (data) => {
-            let tileIndex = this.gridPositionToIndex(data.x, data.y);
+            let tileIndex = this.coordToIndex(data.x, data.y);
 
             this.staticEntities.push({
                 tileIndex,
@@ -233,39 +170,37 @@ export default class Map {
         return null;
     }
 
-    public indexToGridPosition(tileIndex: number, offset = 0): Pos {
-        tileIndex -= 1;
+    /**
+     * Converts a coordinate (x and y) into an array index.
+     * @returns Index position relative to a 1 dimensional array.
+     */
 
-        let x = this.getX(tileIndex + 1, this.width),
-            y = Math.floor(tileIndex / this.width);
+    public coordToIndex(x: number, y: number): number {
+        return y * this.width + x;
+    }
 
+    /**
+     * Works in reverse to `coordToIndex`. Takes an index
+     * within a one dimensional array and returns the
+     * coordinate variant of that index.
+     * @param index The index of the coordinate
+     */
+
+    public indexToCoord(index: number): Position {
         return {
-            x: x + offset,
-            y
+            x: index % this.width,
+            y: Math.floor(index / this.width)
         };
     }
 
-    public gridPositionToIndex(x: number, y: number, offset = 0): number {
-        return y * this.width + x + offset;
-    }
+    /**
+     * Checks whether a tileId is flipped or not by comparing
+     * the value against the lowest flipped bitflag.
+     * @param tileId The tileId we are checking.
+     */
 
-    private getX(index: number, width: number): number {
-        if (index === 0) return 0;
-
-        return index % width === 0 ? width - 1 : (index % width) - 1;
-    }
-
-    private getRandomPosition(area: Area): Pos {
-        let pos = {} as Pos,
-            valid = false;
-
-        while (!valid) {
-            pos.x = area.x + Utils.randomInt(0, area.width + 1);
-            pos.y = area.y + Utils.randomInt(0, area.height + 1);
-            valid = this.isValidPosition(pos.x, pos.y);
-        }
-
-        return pos;
+    public isFlipped(tileId: number): boolean {
+        return tileId > Modules.Constants.DIAGONAL_FLAG;
     }
 
     private inArea(
@@ -289,22 +224,68 @@ export default class Map {
         );
     }
 
-    public nearLight(light: ProcessedArea, x: number, y: number): boolean {
-        let diff = Math.round(light.distance! / 16),
-            startX = light.x - this.regionWidth - diff,
-            startY = light.y - this.regionHeight - diff,
-            endX = light.x + this.regionWidth + diff,
-            endY = light.y + this.regionHeight + diff;
-
-        return x > startX && y > startY && x < endX && y < endY;
-    }
-
     public isObject(object: number): boolean {
         return this.objects.includes(object);
     }
 
+    /**
+     * Uses the index (see `coordToIndex`) to obtain tile inforamtion in the tilemap.
+     * @param index Gets tile information at an index in the map.
+     * @returns Returns tile information (a number or number array)
+     */
+
+    public getTileData(index: number): ParsedTile {
+        let data = this.data[index];
+
+        if (!data) return [];
+
+        let isArray = Array.isArray(data),
+            parsedData: ParsedTile = isArray ? [] : 0;
+
+        this.forEachTile(data, (tileId: number) => {
+            let tile: ParsedTile = tileId;
+
+            if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
+
+            if (isArray) (parsedData as ParsedTile[]).push(tile);
+            else parsedData = tile;
+        });
+
+        return parsedData;
+    }
+
+    /**
+     * Grabs the rotated tile id from Tiled and performs bitwise operators
+     * on it in order to convert it to an actual tileId. The bitshifts
+     * indicate the type of rotation, and performing all the operations
+     * results in the original tileId.
+     * For more information refer to the following
+     * https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tmx-tile-flipping
+     * @param tileId The tileId of the flipped tile.
+     * @returns A parsed tile of type `RotatedTile`.
+     */
+
+    public getFlippedTile(tileId: number): ParsedTile {
+        let h = !!(tileId & Modules.Constants.HORIZONTAL_FLAG),
+            v = !!(tileId & Modules.Constants.VERTICAL_FLAG),
+            d = !!(tileId & Modules.Constants.DIAGONAL_FLAG);
+
+        tileId &= ~(
+            Modules.Constants.DIAGONAL_FLAG |
+            Modules.Constants.VERTICAL_FLAG |
+            Modules.Constants.HORIZONTAL_FLAG
+        );
+
+        return {
+            tileId,
+            h,
+            v,
+            d
+        };
+    }
+
     public getPositionObject(x: number, y: number): number {
-        let index = this.gridPositionToIndex(x, y),
+        let index = this.coordToIndex(x, y),
             tiles = this.data[index],
             objectId!: number;
 
@@ -326,30 +307,9 @@ export default class Map {
     }
 
     private getObjectId(tileIndex: number): string {
-        let position = this.indexToGridPosition(tileIndex + 1);
+        let position = this.indexToCoord(tileIndex + 1);
 
         return `${position.x}-${position.y}`;
-    }
-
-    private getObject(
-        x: number,
-        y: number,
-        data: { [id: number]: string }
-    ): number | number[] | undefined {
-        let index = this.gridPositionToIndex(x, y, -1),
-            tiles = this.data[index];
-
-        if (Array.isArray(tiles)) for (let i in tiles) if (tiles[i] in data) return tiles[i];
-
-        if ((tiles as number) in data) return tiles;
-    }
-
-    public getTree(x: number, y: number): number | number[] | undefined {
-        return this.getObject(x, y, this.trees);
-    }
-
-    public getRock(x: number, y: number): number | number[] | undefined {
-        return this.getObject(x, y, this.rocks);
     }
 
     // Transforms an object's `instance` or `id` into position
@@ -360,11 +320,11 @@ export default class Map {
     }
 
     public isDoor(x: number, y: number): boolean {
-        return !!this.doors[this.gridPositionToIndex(x, y, 1)];
+        return !!this.doors[this.coordToIndex(x, y)];
     }
 
     public getDoorByPosition(x: number, y: number): Door {
-        return this.doors[this.gridPositionToIndex(x, y, 1)];
+        return this.doors[this.coordToIndex(x, y)];
     }
 
     private getDoorDestination(door: ProcessedArea): ProcessedArea | null {
@@ -372,15 +332,6 @@ export default class Map {
             if (map.areas.doors[i].id === door.destination) return map.areas.doors[i];
 
         return null;
-    }
-
-    private isValidPosition(x: number, y: number): boolean {
-        return (
-            Number.isInteger(x) &&
-            Number.isInteger(y) &&
-            !this.isOutOfBounds(x, y) &&
-            !this.isColliding(x, y)
-        );
     }
 
     public isOutOfBounds(x: number, y: number): boolean {
@@ -394,7 +345,7 @@ export default class Map {
     public isColliding(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return false;
 
-        let tileIndex = this.gridPositionToIndex(x, y);
+        let tileIndex = this.coordToIndex(x, y);
 
         return this.collisions.includes(tileIndex);
     }
@@ -403,37 +354,17 @@ export default class Map {
     public isEmpty(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return true;
 
-        let tileIndex = this.gridPositionToIndex(x, y);
+        let tileIndex = this.coordToIndex(x, y);
 
         return this.data[tileIndex] === 0;
     }
 
     public getPlateauLevel(x: number, y: number): number {
-        let index = this.gridPositionToIndex(x, y);
+        let index = this.coordToIndex(x, y);
 
         if (!this.isPlateau(index)) return 0;
 
         return this.plateau[index];
-    }
-
-    private getActualTileIndex(tileIndex: number): number | undefined {
-        let tileset = this.getTileset(tileIndex);
-
-        if (!tileset) return;
-
-        return tileIndex - tileset.firstGID - 1;
-    }
-
-    private getTileset(tileIndex: number): ProcessedTileset | null {
-        for (let id in this.tilesets)
-            if (
-                Object.prototype.hasOwnProperty.call(this.tilesets, id) &&
-                tileIndex > this.tilesets[id].firstGID - 1 &&
-                tileIndex < this.tilesets[id].lastGID + 1
-            )
-                return this.tilesets[id];
-
-        return null;
     }
 
     public getWarpById(id: number): ProcessedArea | undefined {
@@ -463,7 +394,7 @@ export default class Map {
         return this.areas.chests;
     }
 
-    public isReady(callback: () => void): void {
+    public onReady(callback: () => void): void {
         this.readyCallback = callback;
     }
 
@@ -471,5 +402,16 @@ export default class Map {
         _.each(this.areas, (a: Areas, name: string) => {
             callback(a, name);
         });
+    }
+
+    /**
+     * Tile data consists of arrays and single numerical values.
+     * This callback function is used to cleanly iterate through
+     * those Tile[] arrays. i.e. [1, 2, [1, 2, 3], 4, [5, 6]]
+     */
+
+    public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
+        if (_.isArray(data)) _.each(data, callback);
+        else callback(data as number);
     }
 }

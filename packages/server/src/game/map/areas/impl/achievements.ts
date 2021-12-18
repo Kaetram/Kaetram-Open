@@ -1,4 +1,4 @@
-import World from '../../../game/world';
+import World from '../../../world';
 import Area from '../area';
 import Areas from '../areas';
 

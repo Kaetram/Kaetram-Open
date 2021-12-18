@@ -22,7 +22,6 @@ import type {
     ExperienceProfessionData,
     HandshakeData,
     HealData,
-    MinigameData,
     MovementFollowData,
     MovementMoveData,
     MovementOrientateData,
@@ -291,19 +290,12 @@ export default {
         public packet = Packets.Shop;
     },
 
-    Minigame: class extends Packet<MinigameData, Opcodes.Minigame> {
-        public packet = Packets.Minigame;
-    },
-
     Region: class extends Packet<string, Opcodes.Region> {
         public packet = Packets.Region;
 
         private bufferSize: number;
 
-        public constructor(
-            opcode: Opcodes.Region,
-            info: RegionRenderData | RegionModifyData | RegionUpdateData | RegionTilesetData
-        ) {
+        public constructor(opcode: Opcodes.Region, info: any) {
             super(opcode, Utils.compressData(JSON.stringify(info)));
 
             this.bufferSize = Utils.getBufferSize(info);

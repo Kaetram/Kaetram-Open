@@ -41,7 +41,6 @@ enum Packets {
     Click,
     Warp,
     Shop,
-    Minigame,
     Region,
     Overlay,
     Camera,

@@ -15,8 +15,8 @@ class Helper {
 
             if (isNaN(value)) return;
 
-            let position = this.indexToGridPosition(value + 1),
-                adjustedIndex = this.gridPositionToIndex(position.x, position.y, 700);
+            let position = this.indexToCoord(value + 1),
+                adjustedIndex = this.coordToIndex(position.x, position.y, 700);
 
             console.log(position);
             console.log(adjustedIndex);
@@ -31,7 +31,7 @@ class Helper {
     // }
 
     // private getTileData(x: number, y: number): void {
-    //     let index = this.gridPositionToIndex(x, y);
+    //     let index = this.coordToIndex(x, y);
 
     //     console.log(
     //         `"${index}": { "data": [${
@@ -40,11 +40,11 @@ class Helper {
     //     );
     // }
 
-    private gridPositionToIndex(x: number, y: number, width?: number): number {
+    private coordToIndex(x: number, y: number, width?: number): number {
         return y * (width || this.#width) + x;
     }
 
-    private indexToGridPosition(tileIndex: number): { x: number; y: number } {
+    private indexToCoord(tileIndex: number): { x: number; y: number } {
         tileIndex -= 1;
 
         let x = this.getX(tileIndex + 1, this.#width),

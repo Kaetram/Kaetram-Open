@@ -18,6 +18,7 @@ import type Sprite from '../entity/sprite';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Splat from './infos/splat';
+import { FlippedTile } from '../map/map';
 
 interface RendererTile {
     relativeTileId: number;
@@ -26,13 +27,13 @@ interface RendererTile {
     y: number;
     width: number;
     height: number;
-    rotation: number;
 }
 interface RendererCell {
     dx: number;
     dy: number;
     width: number;
     height: number;
+    rotation: number[];
 }
 
 interface Bounds {
@@ -127,7 +128,6 @@ export default class Renderer {
     private lightTileSize!: number;
     public canvasHeight!: number;
     public canvasWidth!: number;
-    private webGL!: boolean;
     public map!: Map;
     private mEdge!: boolean;
     private tablet!: boolean;
@@ -150,13 +150,7 @@ export default class Renderer {
         public game: Game
     ) {
         this.context = entitiesCanvas.getContext('2d')!; // Entities;
-
-        this.backContext = (
-            !Detect.supportsWebGL()
-                ? background.getContext('2d')
-                : background.getContext('webgl') || background.getContext('experimental-webgl')
-        )!;
-
+        this.backContext = background.getContext('2d')!; // Background
         this.foreContext = foreground.getContext('2d')!; // Foreground
         this.overlayContext = overlay.getContext('2d')!; // Lighting
         this.textContext = textCanvas.getContext('2d')!; // Texts
@@ -231,8 +225,6 @@ export default class Renderer {
             canvas.width = this.canvasWidth;
             canvas.height = this.canvasHeight;
         });
-
-        if (this.webGL) this.map.loadWebGL(this.backContext as WebGL2RenderingContext);
     }
 
     public loadCamera(): void {
@@ -334,12 +326,6 @@ export default class Renderer {
      */
 
     private draw(): void {
-        if (this.webGL) {
-            // Do the WebGL Rendering here
-            this.drawWebGL();
-            return;
-        }
-
         // Canvas rendering.
         if (this.hasRenderedFrame()) return;
 
@@ -359,8 +345,18 @@ export default class Renderer {
                 context = isLightTile ? this.overlayContext : context;
             }
 
+            let rotation: number[] = [];
+
+            if (this.isFlipped(id)) {
+                if ((id as unknown as FlippedTile).h) rotation.push(ROT_NEG_90_DEG);
+                if ((id as unknown as FlippedTile).v) rotation.push(ROT_90_DEG);
+                if ((id as unknown as FlippedTile).d) rotation.push(ROT_180_DEG);
+
+                id = (id as unknown as FlippedTile).tileId;
+            }
+
             if (!this.map.isAnimatedTile(id) || !this.animateTiles)
-                this.drawTile(context as CanvasRenderingContext2D, id, index);
+                this.drawTile(context as CanvasRenderingContext2D, id - 1, index, rotation);
         });
 
         this.restoreDrawing();
@@ -368,35 +364,8 @@ export default class Renderer {
         this.saveFrame();
     }
 
-    private drawWebGL(): void {
-        if (!this.map.webGLMap) return;
-
-        let dt = this.game.time - this.game.lastTime;
-
-        this.game.lastTime = this.game.time;
-
-        this.map.webGLMap.tileScale = 3;
-
-        this.map.webGLMap.update(dt);
-        this.map.webGLMap.draw(this.camera.x, this.camera.y);
-
-        // This is a janky and temporary solution to drawing high tiles
-        // on the WebGL context.
-
-        this.foreContext.clearRect(0, 0, this.foreground.width, this.foreground.height);
-        this.foreContext.save();
-
-        this.setCameraView(this.foreContext);
-
-        this.forEachVisibleTile((id, index) => {
-            if (this.map.isHighTile(id)) this.drawTile(this.foreContext, id, index);
-        });
-
-        this.foreContext.restore();
-    }
-
     private drawAnimatedTiles(): void {
-        if (!this.animateTiles || this.webGL) return;
+        if (!this.animateTiles) return;
 
         this.context.save();
         this.setCameraView(this.context);
@@ -830,7 +799,7 @@ export default class Renderer {
         let { player } = this.game;
 
         this.drawText(
-            `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.gridPositionToIndex(
+            `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.coordToIndex(
                 player.gridX,
                 player.gridY
             )}`,
@@ -907,13 +876,22 @@ export default class Renderer {
         }
     }
 
+    private isFlipped(tileInfo: any): boolean {
+        return tileInfo.v || tileInfo.h || tileInfo.d;
+    }
+
     /**
      * Primitive drawing functions
      */
 
-    private drawTile(context: CanvasRenderingContext2D, tileId: number, cellId: number): void {
-        let originalTileId = tileId,
-            rotation!: number;
+    //TODO - Refactor types
+    private drawTile(
+        context: CanvasRenderingContext2D,
+        tileId: number,
+        cellId: number,
+        rotation: number[] = []
+    ): void {
+        let originalTileId = tileId;
 
         /**
          * `originalTileId` is the tileId prior to doing any
@@ -921,16 +899,6 @@ export default class Renderer {
          */
 
         if (tileId < 0) return;
-
-        if (tileId > DIAGONAL_FLIP_FLAG) {
-            if (!(tileId & HORIZONTAL_FLIP_FLAG)) rotation = ROT_NEG_90_DEG;
-
-            if (!(tileId & VERTICAL_FLIP_FLAG)) rotation = ROT_90_DEG;
-
-            if (!(tileId & DIAGONAL_FLIP_FLAG)) rotation = ROT_180_DEG;
-
-            tileId &= ~(HORIZONTAL_FLIP_FLAG | VERTICAL_FLIP_FLAG | DIAGONAL_FLIP_FLAG);
-        }
 
         let tileset = this.map.getTilesetFromId(tileId);
 
@@ -945,7 +913,7 @@ export default class Renderer {
 
         if (!(originalTileId in this.tiles)) {
             let setWidth = tileset.width / this.tileSize,
-                relativeTileId = tileId - tileset.firstGID + 1;
+                relativeTileId = tileId - tileset.firstGID;
 
             this.tiles[originalTileId] = {
                 relativeTileId,
@@ -953,8 +921,7 @@ export default class Renderer {
                 x: this.getX(relativeTileId + 1, setWidth) * this.tileSize,
                 y: Math.floor(relativeTileId / setWidth) * this.tileSize,
                 width: this.tileSize,
-                height: this.tileSize,
-                rotation
+                height: this.tileSize
             };
         }
 
@@ -965,7 +932,8 @@ export default class Renderer {
                 dx: this.getX(cellId + 1, this.map.width) * this.tileSize * scale,
                 dy: Math.floor(cellId / this.map.width) * this.tileSize * scale,
                 width: this.tileSize * scale,
-                height: this.tileSize * scale
+                height: this.tileSize * scale,
+                rotation
             };
         }
 
@@ -983,35 +951,38 @@ export default class Renderer {
 
         if (!context) return;
 
-        if (tile.rotation) {
-            context.save();
-            context.rotate(tile.rotation);
-
+        if (cell.rotation.length > 0) {
             ({ dx, dy } = cell);
 
-            let temporary = cell.dx;
+            context.save();
 
-            switch (tile.rotation) {
-                case ROT_180_DEG:
-                    context.translate(-cell.width, -cell.height);
+            for (let rotation of cell.rotation) {
+                context.rotate(rotation);
 
-                    (dx = -dx), (dy = -dy);
+                let temporary = cell.dx;
 
-                    break;
+                switch (rotation) {
+                    case ROT_90_DEG:
+                        context.translate(0, -cell.height);
 
-                case ROT_90_DEG:
-                    context.translate(0, -cell.height);
+                        (dx = dy), (dy = -temporary);
 
-                    (dx = dy), (dy = -temporary);
+                        break;
 
-                    break;
+                    case ROT_NEG_90_DEG:
+                        context.translate(-cell.width, 0);
 
-                case ROT_NEG_90_DEG:
-                    context.translate(-cell.width, 0);
+                        (dx = -dy), (dy = temporary);
 
-                    (dx = -dy), (dy = temporary);
+                        break;
 
-                    break;
+                    case ROT_180_DEG:
+                        context.translate(-cell.width, -cell.height);
+
+                        (dx = -dx), (dy = -dy);
+
+                        break;
+                }
             }
         }
 
@@ -1021,13 +992,13 @@ export default class Renderer {
             tile.y, // Source Y
             tile.width, // Source Width
             tile.height, // Source Height
-            tile.rotation ? dx : cell.dx, // Destination X
-            tile.rotation ? dy : cell.dy, // Destination Y
+            dx || cell.dx, // Destination X
+            dy || cell.dy, // Destination Y
             cell.width, // Destination Width
-            cell.height
-        ); // Destination Height
+            cell.height // Destination Height
+        );
 
-        if (tile.rotation) context.restore();
+        if (cell.rotation.length > 0) context.restore();
     }
 
     private drawText(
@@ -1059,7 +1030,7 @@ export default class Renderer {
     }
 
     public updateAnimatedTiles(): void {
-        if (!this.animateTiles || this.webGL) return;
+        if (!this.animateTiles) return;
 
         this.forEachVisibleTile((id, index) => {
             /**
@@ -1067,6 +1038,8 @@ export default class Renderer {
              * and are within the visible camera proportions. This way we can parse
              * it every time the tile moves slightly.
              */
+
+            id -= 1;
 
             if (!this.map.isAnimatedTile(id)) return;
 
@@ -1076,7 +1049,7 @@ export default class Renderer {
 
             if (!(index in this.animatedTiles)) {
                 let tile = new Tile(id, index, this.map),
-                    position = this.map.indexToGridPosition(tile.index);
+                    position = this.map.indexToCoord(tile.index);
 
                 tile.setPosition(position);
 
@@ -1140,7 +1113,7 @@ export default class Renderer {
 
     private forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
         this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y)) callback(this.map.gridPositionToIndex(x, y) - 1);
+            if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y));
         }, offset);
     }
 
@@ -1153,8 +1126,8 @@ export default class Renderer {
         this.forEachVisibleIndex((index) => {
             let indexData = this.map.data[index];
 
-            if (Array.isArray(indexData)) for (let data of indexData) callback(data - 1, index);
-            else if (!isNaN(this.map.data[index] - 1)) callback(this.map.data[index] - 1, index);
+            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
+            else if (this.map.data[index]) callback(this.map.data[index], index);
         }, offset);
     }
 
@@ -1340,9 +1313,6 @@ export default class Renderer {
         this.mobile = Detect.isMobile();
         this.tablet = Detect.isTablet();
         this.mEdge = Detect.isEdge();
-        this.webGL = Detect.supportsWebGL();
-
-        // this.animateTiles = !this.mEdge;
     }
 
     public verifyCentration(): void {

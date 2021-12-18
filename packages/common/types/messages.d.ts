@@ -246,11 +246,6 @@ export interface ShopRemoveData {
     index: number;
 }
 
-export interface MinigameData {
-    opcode: Opcodes.TeamWar;
-    countdown: number;
-}
-
 export type RegionRenderData = RegionTileData[];
 export interface RegionModifyData {
     index: number;
