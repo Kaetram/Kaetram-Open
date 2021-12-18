@@ -1,25 +1,20 @@
 /// <reference lib="webworker" />
 
-import mapData from '../../data/maps/map.json';
+import type { MapData } from './map';
 
-type MapDataType = typeof mapData;
+let data: MapData;
 
-export interface MapData extends MapDataType {
-    grid: number[][];
-    blocking: number[];
-}
+onmessage = (event) => {
+    ({ data } = event);
 
-let data = mapData as MapData,
-    { width, height } = data;
-
-onmessage = () => {
     loadCollisionGrid();
 
     postMessage(data);
 };
 
 function loadCollisionGrid() {
-    let grid: number[][] = [];
+    let { width, height } = data,
+        grid: number[][] = [];
 
     for (let y = 0; y < height; y++) {
         grid[y] = [];

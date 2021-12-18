@@ -1,7 +1,3 @@
-
-# Created by https://www.toptal.com/developers/gitignore/api/git,node,yarn,macos,linux,windows,webstorm,visualstudiocode,vim,emacs
-# Edit at https://www.toptal.com/developers/gitignore?templates=git,node,yarn,macos,linux,windows,webstorm,visualstudiocode,vim,emacs
-
 ### Emacs ###
 # -*- mode: gitignore; -*-
 *~
@@ -118,6 +114,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+.pnpm-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -151,8 +148,8 @@ build/Release
 node_modules/
 jspm_packages/
 
-# TypeScript v1 declaration files
-typings/
+# Snowpack dependency directory (https://snowpack.dev/)
+web_modules/
 
 # TypeScript cache
 *.tsbuildinfo
@@ -162,6 +159,9 @@ typings/
 
 # Optional eslint cache
 .eslintcache
+
+# Optional stylelint cache
+.stylelintcache
 
 # Microbundle cache
 .rpt2_cache/
@@ -182,6 +182,17 @@ typings/
 .env
 .env.test
 .env*.local
+.env.production
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
 
 # Generated output
 dist
@@ -220,6 +231,9 @@ tags
 !.vscode/extensions.json
 *.code-workspace
 
+# Local History for Visual Studio Code
+.history/
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
@@ -235,6 +249,9 @@ tags
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+
+# AWS User-specific
+.idea/**/aws.xml
 
 # Generated files
 .idea/**/contentModel.xml
@@ -353,8 +370,8 @@ $RECYCLE.BIN/
 
 .yarn/*
 !.yarn/patches
-!.yarn/releases
 !.yarn/plugins
+!.yarn/releases
 !.yarn/sdks
 !.yarn/versions
 
@@ -365,4 +382,4 @@ $RECYCLE.BIN/
 # and uncomment the following lines
 # .pnp.*
 
-# End of https://www.toptal.com/developers/gitignore/api/git,node,yarn,macos,linux,windows,webstorm,visualstudiocode,vim,emacs
+# https://www.toptal.com/developers/gitignore/api/git,node,yarn,linux,macos,windows,visualstudiocode,webstorm,vim,emacs
