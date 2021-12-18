@@ -72,12 +72,9 @@ export default class World {
         setIntervalAsync(async () => {
             this.network.parse();
             this.map.regions.parse();
-        }, 1_000 / config.tickPeriod);
+        }, 1000 / config.tickPeriod);
 
         if (!config.hubEnabled) return;
-
-        await import('@kaetram/hub');
-
         if (!config.apiEnabled) log.error('Server is in hub-mode but API is not enabled!');
 
         setIntervalAsync(async () => {
