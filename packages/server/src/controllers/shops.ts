@@ -12,7 +12,7 @@ import type Player from '../game/entity/character/player/player';
 import type World from '../game/world';
 
 export default class Shops {
-    private interval = 60000;
+    private interval = 60_000;
     private shopInterval: NodeJS.Timeout | null = null;
 
     public constructor(private world: World) {

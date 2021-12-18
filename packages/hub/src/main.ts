@@ -18,7 +18,7 @@ class Main {
     private guilds = new Guilds(this.api, this.database);
 
     public constructor() {
-        log.notice(`Initializing ${config.name} engine.`);
+        log.notice(`Initializing ${config.name} game engine...`);
 
         this.api.setDiscord(this.discord);
 

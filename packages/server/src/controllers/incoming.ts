@@ -183,7 +183,7 @@ export default class Incoming {
                 } else this.database.register(this.player);
             });
         else if (isGuest) {
-            this.player.username = `Guest${Utils.randomInt(0, 2000000)}`;
+            this.player.username = `Guest${Utils.randomInt(0, 2_000_000)}`;
             this.player.password = null!;
             this.player.email = null!;
             this.player.isGuest = true;

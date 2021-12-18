@@ -1,12 +1,16 @@
 import _ from 'lodash';
 
+import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
 import { isInt } from '../utils/util';
-import MapWorker from './mapworker?worker';
 
-import type rawMapData from '../../data/maps/map.json';
 import type Game from '../game';
-import type { MapData } from './mapworker';
+
+type MapDataType = typeof mapData;
+export interface MapData extends MapDataType {
+    grid: number[][];
+    blocking: number[];
+}
 
 interface TilesetData extends HTMLImageElement {
     path: string;
@@ -15,13 +19,12 @@ interface TilesetData extends HTMLImageElement {
     loaded: boolean;
 }
 
-type RawMapData = typeof rawMapData;
 type Position = { x: number; y: number };
 
-export type MapHigh = RawMapData['high'];
-export type MapTileset = RawMapData['tilesets'][0];
+export type MapHigh = MapData['high'];
+export type MapTileset = MapData['tilesets'][0];
 export type MapTilesets = MapTileset[];
-export type MapDepth = RawMapData['depth'];
+export type MapDepth = MapData['depth'];
 
 export type Cursors =
     | 'hand'
@@ -39,23 +42,6 @@ export interface CursorsTiles {
 }
 
 export type FlippedTile = { tileId: number; h: boolean; v: boolean; d: boolean };
-
-interface TileData {
-    data: number | number[] | FlippedTile | FlippedTile[];
-    isObject: boolean;
-    c: boolean; // collision
-    index: number;
-    cursor: Cursors;
-}
-
-interface Resources {
-    [name: string]: {
-        name: string;
-        url: string;
-        data: TilesetData;
-        extension: string;
-    };
-}
 
 export default class Map {
     private renderer;
@@ -101,12 +87,18 @@ export default class Map {
             }, 50);
     }
 
-    private load(): void {
+    private async load(): Promise<void> {
         log.debug('Parsing map with Web Workers...');
 
-        let worker = new MapWorker();
+        let worker: Worker;
 
-        worker.postMessage(1);
+        if (import.meta.env.PROD) {
+            let { default: MapWorker } = await import('./mapworker?worker');
+
+            worker = new MapWorker();
+        } else worker = new Worker(new URL('./mapworker.ts', import.meta.url));
+
+        worker.postMessage(mapData);
 
         worker.addEventListener('message', (event) => {
             let map: MapData = event.data;
@@ -130,8 +122,7 @@ export default class Map {
 
         for (let tile of data) {
             let index = this.coordToIndex(tile.x, tile.y),
-                collisionIndex = this.collisions.indexOf(index),
-                objectIndex = this.objects.indexOf(index);
+                collisionIndex = this.collisions.indexOf(index);
 
             this.data[index] = tile.data;
 

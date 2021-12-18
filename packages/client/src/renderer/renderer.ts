@@ -61,9 +61,9 @@ interface RendererLighting extends RendererLight, Lighting {
     light: RendererLamp;
 }
 
-const HORIZONTAL_FLIP_FLAG = 0x80000000,
-    VERTICAL_FLIP_FLAG = 0x40000000,
-    DIAGONAL_FLIP_FLAG = 0x20000000,
+const HORIZONTAL_FLIP_FLAG = 0x80_00_00_00,
+    VERTICAL_FLIP_FLAG = 0x40_00_00_00,
+    DIAGONAL_FLIP_FLAG = 0x20_00_00_00,
     ROT_90_DEG = Math.PI / 2,
     ROT_NEG_90_DEG = ROT_90_DEG * -1,
     ROT_180_DEG = Math.PI;

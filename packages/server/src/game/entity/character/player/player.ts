@@ -1307,7 +1307,7 @@ export default class Player extends Character {
     }
 
     public hasAggressionTimer(): boolean {
-        return Date.now() - this.lastRegionChange < 1200000; // 20 Minutes
+        return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
     }
 
     public onOrientation(callback: () => void): void {
