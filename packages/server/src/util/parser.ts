@@ -4,7 +4,7 @@ import log from '@kaetram/common/util/log';
 
 import abilityData from '../../data/abilities.json';
 import combatPlugins from '../../data/combat';
-import itemPlugins from '../../data/items';
+import itemPlugins from '../../data/plugins';
 import itemData from '../../data/items.json';
 import mobData from '../../data/mobs.json';
 import npcData from '../../data/npcs.json';
@@ -92,7 +92,7 @@ export default class Parser {
                 attackRate: attackRate || 1000,
                 movementSpeed: movementSpeed || 200,
                 projectileName,
-                spawnDelay: spawnDelay || 60000,
+                spawnDelay: spawnDelay || 60_000,
                 combatPlugin,
                 hiddenName: hiddenName || false
             };

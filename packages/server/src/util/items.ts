@@ -1,6 +1,6 @@
 import log from '@kaetram/common/util/log';
 
-import type { Item } from '../../data/items';
+import type { Plugin } from '../../data/plugins';
 
 export interface ItemsData {
     key: string;
@@ -30,7 +30,7 @@ export interface ItemsData {
     movementSpeed: number;
 }
 
-type ItemsPlugin = new (id: number) => Item;
+type ItemsPlugin = new (id: number) => Plugin;
 
 export default {
     Data: {} as { [name: string]: ItemsData },

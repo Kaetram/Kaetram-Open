@@ -24,6 +24,9 @@ export interface Config {
     hubAccessToken: string;
     remoteServerHost: string;
 
+    clientRemoteHost: string;
+    clientRemotePort: number;
+
     cleanupThreshold: number;
     cleanupTime: number;
 
@@ -35,8 +38,8 @@ export interface Config {
     mongodbUser: string;
     mongodbPassword: string;
     mongodbDatabase: string;
-    mongodbAuth: boolean;
     mongodbSrv: boolean;
+    mongodbAuth: boolean;
 
     worldSwitch: boolean;
     tutorialEnabled: boolean;
