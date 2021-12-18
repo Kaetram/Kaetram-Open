@@ -10,7 +10,7 @@ import NPCs from '../../../../util/npcs';
 import Shops from '../../../../util/shops';
 import Hit from '../combat/hit';
 
-import type Areas from '../../../../map/areas/areas';
+import type Areas from '../../../map/areas/areas';
 import type Entity from '../../entity';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
@@ -27,8 +27,23 @@ export default class Handler {
         this.world = player.world;
         this.map = player.world.map;
 
+        this.player.onRegion(this.handleRegion.bind(this));
+
         this.load();
     }
+
+    /**
+     * Callback for when a region has changed.
+     * @param region The new region.
+     */
+
+    private handleRegion(region: number): void {
+        console.log(`Player ${this.player.username} entered region: ${region}.`);
+
+        this.map.regions.sendEntities(this.player);
+    }
+
+    // TODO - Refactor all of this.
 
     private load(): void {
         this.updateInterval = setInterval(() => {
@@ -50,17 +65,15 @@ export default class Handler {
         }, 400);
 
         this.player.onMovement((x: number, y: number) => {
-            this.player.checkRegions();
+            this.map.regions.handle(this.player);
 
             this.detectAreas(x, y);
-            this.detectLights(x, y);
 
             this.detectClipping(x, y);
         });
 
         this.player.onDeath(() => {
             this.player.combat.stop();
-            this.player.professions.stopAll();
         });
 
         this.player.onHit((attacker, damage) => {
@@ -89,12 +102,15 @@ export default class Handler {
             }
         });
 
-        this.player.onRegion(() => {
-            this.player.lastRegionChange = Date.now();
+        // this.player.onRegion(() => {
+        //     this.player.lastRegionChange = Date.now();
 
-            this.world.region.handle(this.player);
-            this.world.region.push(this.player);
-        });
+        //     this.map.regions.sendEntities(this.player);
+
+        //     //TODO - Redo
+        //     // this.world.region.handle(this.player);
+        //     // this.world.region.push(this.player);
+        // });
 
         this.player.connection.onClose(() => {
             this.player.stopHealing();
@@ -191,18 +207,16 @@ export default class Handler {
     }
 
     private detectAggro(): void {
-        let region = this.world.region.regions[this.player.region!];
-
-        if (!region) return;
-
-        _.each(region.entities, (character) => {
-            if (character && character.type === 'mob' && this.canEntitySee(character)) {
-                let mob = character as Mob,
-                    aggro = mob.canAggro(this.player);
-
-                if (aggro) mob.combat.begin(this.player);
-            }
-        });
+        // TODO - Redo
+        // let region = this.world.region.regions[this.player.region!];
+        // if (!region) return;
+        // _.each(region.entities, (character) => {
+        //     if (character && character.type === 'mob' && this.canEntitySee(character)) {
+        //         let mob = character as Mob,
+        //             aggro = mob.canAggro(this.player);
+        //         if (aggro) mob.combat.begin(this.player);
+        //     }
+        // });
     }
 
     private detectAreas(x: number, y: number): void {
@@ -237,19 +251,6 @@ export default class Handler {
         });
     }
 
-    private detectLights(x: number, y: number): void {
-        _.each(this.map.lights, (light) => {
-            let { id } = light;
-
-            if (this.map.nearLight(light, x, y) && !this.player.hasLoadedLight(id)) {
-                // Add a half a tile offset so the light is centered on the tile.
-
-                this.player.lightsLoaded.push(id);
-                this.player.send(new Messages.Overlay(Opcodes.Overlay.Lamp, light));
-            }
-        });
-    }
-
     private detectClipping(x: number, y: number): void {
         let isColliding = this.map.isColliding(x, y);
 
@@ -277,9 +278,5 @@ export default class Handler {
         hit.poison = true;
 
         this.player.combat.hit(this.player, this.player, hit.getData());
-    }
-
-    private canEntitySee(entity: Entity): boolean {
-        return !this.player.hasInvisible(entity) && !this.player.hasInvisibleId(entity.id);
     }
 }

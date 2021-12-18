@@ -208,11 +208,10 @@ export default class Incoming {
 
         this.player.ready = true;
 
-        this.world.region.syncRegions(this.player);
+        //this.world.regions.syncRegions(this.player);
 
         this.player.sendEquipment();
 
-        this.player.loadProfessions();
         this.player.loadInventory();
         this.player.loadQuests();
         this.player.loadBank();
@@ -488,7 +487,7 @@ export default class Incoming {
 
         if (id !== this.player.instance) return;
 
-        this.world.region.push(this.player);
+        //this.world.region.push(this.player);
     }
 
     private handleTarget(message: [Opcodes.Target, string]): void {
@@ -986,8 +985,8 @@ export default class Incoming {
          * a desireable region size.
          */
 
-        this.player.regionWidth = Math.ceil(canvasWidth / 48);
-        this.player.regionHeight = Math.ceil(canvasHeight / 48);
+        // this.player.regionWidth = Math.ceil(canvasWidth / 48);
+        // this.player.regionHeight = Math.ceil(canvasHeight / 48);
     }
 
     /**
@@ -1001,12 +1000,11 @@ export default class Incoming {
     }
 
     private preventNoClip(x: number, y: number): boolean {
-        let isMapColliding = this.world.map.isColliding(x, y),
-            isInstanceColliding = this.player.doors.hasCollision(x, y);
+        let isMapColliding = this.world.map.isColliding(x, y);
 
-        if (this.world.map.getPositionObject(x, y)) return true;
+        //if (this.world.map.getPositionObject(x, y)) return true;
 
-        if (isMapColliding || isInstanceColliding) {
+        if (isMapColliding) {
             this.handleNoClip(x, y);
             return false;
         }

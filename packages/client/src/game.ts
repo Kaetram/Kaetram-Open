@@ -237,8 +237,6 @@ export default class Game {
 
             renderer.setEntities(entities);
 
-            if (supportsWebGL()) map.loadWebGL(renderer.backContext as WebGLRenderingContext);
-
             app.ready();
         });
     }
