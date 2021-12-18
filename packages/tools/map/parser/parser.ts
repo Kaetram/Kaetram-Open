@@ -3,19 +3,24 @@ import zlib from 'zlib';
 
 import log from '@kaetram/common/util/log';
 
-import type { ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
+import type { Entities, ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
 import type { Entity, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
 export default class ProcessMap {
-    #map!: ProcessedMap;
+    private map: ProcessedMap;
+    private entities: Entities = {};
+
     #collisionTiles: { [tileId: number]: boolean } = {};
 
-    public constructor(private data: MapData) {}
+    /**
+     * We create the skeleton file for the ExportedMap.
+     * @param data The raw data from the Tiled map JSON file.
+     */
 
-    public parse(): void {
+    public constructor(private data: MapData) {
         let { width, height, tilewidth: tileSize } = this.data;
 
-        this.#map = {
+        this.map = {
             width,
             height,
             tileSize,
@@ -24,11 +29,9 @@ export default class ProcessMap {
             data: [],
 
             collisions: [],
-            polygons: {},
-            entities: {},
             staticEntities: {},
 
-            tilesets: [],
+            tilesets: {},
             animations: [],
             depth: 1,
 
@@ -36,13 +39,8 @@ export default class ProcessMap {
 
             high: [],
             objects: [],
-            trees: {},
-            treeIndexes: [],
-            rocks: {},
-            rockIndexes: [],
             areas: {},
-            cursors: {},
-            layers: []
+            cursors: {}
         };
 
         this.parseTilesets();
@@ -50,27 +48,38 @@ export default class ProcessMap {
         this.parseDepth();
     }
 
+    /**
+     * We iterate through all the tilesets in the map
+     * and parse each one of them individually.
+     */
+
     private parseTilesets(): void {
         let { tilesets } = this.data;
 
-        if (Array.isArray(tilesets))
-            _.each(tilesets, (tileset) => {
-                let name = tileset.name.toLowerCase();
+        if (!_.isArray(tilesets)) {
+            log.error('Could not parse tilesets, corrupted format.');
+            return;
+        }
 
-                switch (name) {
-                    case 'mobs':
-                        this.parseEntities(tileset);
+        _.each(tilesets, (tileset: Tileset) => {
+            /**
+             * All the tilesets follow the format of `tilesheet_NUMBER`.
+             * We extrac the number in this process, which allows us to properly
+             * organize them. Alongside that, we also store the first tileId
+             * of each tileset (firstGID) as the key's value.
+             */
 
-                        break;
+            let [, tilesetId] = tileset.image.split('-');
 
-                    default:
-                        this.parseTileset(tileset);
+            if (tilesetId) this.map.tilesets![parseInt(tilesetId) - 1] = tileset.firstgid - 1;
 
-                        break;
-                }
-            });
-        else log.error('Invalid tileset format detected.');
+            this.parseTileset(tileset);
+        });
     }
+
+    /**
+     * Parses through each layer in the Tiled map.
+     */
 
     private parseLayers(): void {
         _.each(this.data.layers, (layer) => {
@@ -86,44 +95,58 @@ export default class ProcessMap {
         });
     }
 
-    private parseEntities(tileset: Tileset): void {
-        _.each(tileset.tiles, (tile) => {
-            let tileId = this.getTileId(tileset, tile);
+    /**
+     * Map depth represents the tileIndex with most
+     * amount of layers
+     */
 
-            this.#map.entities[tileId] = {} as Entity;
+    private parseDepth(): void {
+        let depth = 1;
 
-            _.each(tile.properties, (property) => {
-                this.#map.entities[tileId][property.name] = property.value;
-            });
+        _.each(this.map.data, (info) => {
+            if (!_.isArray(info)) return;
+
+            if (info.length > depth) depth = info.length;
         });
+
+        this.map.depth = depth;
     }
 
-    private parseTileset(tileset: Tileset): void {
-        let { name, firstgid: firstGID, tilecount, image, tiles } = tileset;
+    /**
+     * We parse the tileset and extract collisions
+     * and other individual tile properties.
+     * @param tileset A tileset from the tilemap.
+     */
 
-        this.#map.tilesets.push({
-            name,
-            firstGID,
-            lastGID: firstGID + tilecount - 1,
-            imageName: image.includes('/') ? image.split('/')[2] : image,
-            scale: name === 'tilesheet' ? 2 : 1
-        });
+    private parseTileset(tileset: Tileset): void {
+        let { tiles } = tileset;
 
         _.each(tiles, (tile) => {
             let tileId = this.getTileId(tileset, tile);
 
             _.each(tile.properties, (property) => {
-                this.parseProperties(tileId, property);
+                if (this.isEntityTileset(tileset)) {
+                    this.entities[tileId] = {} as Entity;
+                    this.entities[tileId][property.name] = property.value;
+                } else this.parseProperties(tileId, property);
             });
         });
     }
 
+    /**
+     * Used for extracting information about the tile. Elements such as whether
+     * or not it's colliding, an object, or if it has a special cursor
+     * property when we hover over it.
+     * @param tileId The tileId of the property.
+     * @param property The property information of the tile.
+     */
+
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { polygons, high, objects, trees, rocks, cursors } = this.#map;
+            { high, objects, cursors } = this.map;
 
-        if (this.isColliding(name) && !(tileId in polygons)) this.#collisionTiles[tileId] = true;
+        if (this.isCollisionProperty(name)) this.#collisionTiles[tileId] = true;
 
         switch (name) {
             case 'v':
@@ -134,47 +157,48 @@ export default class ProcessMap {
                 objects.push(tileId);
                 break;
 
-            case 'tree':
-                trees[tileId] = value;
-                break;
-
-            case 'rock':
-                rocks[tileId] = value;
-                break;
-
             case 'cursor':
                 cursors[tileId] = value;
                 break;
         }
     }
 
+    /**
+     * We decompress the layer data then handle it depending on its properties.
+     * Special layers such as `blocking`, `entities`, and `plateau` are parsed
+     * independently. The remaining layers are parsed and we layer them in a singular
+     * data array.
+     * @param layer The layer object all the data.
+     */
+
     private parseTileLayer(layer: Layer): void {
         let name = layer.name.toLowerCase();
 
         layer.data = this.getLayerData(layer.data, layer.compression)!;
 
-        if (name === 'blocking') {
-            this.parseBlocking(layer);
-            return;
-        }
-
-        if (name === 'entities') {
-            this.parseStaticEntities(layer);
-            return;
-        }
-
-        if (name.startsWith('plateau')) {
-            this.parsePlateau(layer);
-            return;
-        }
+        if (name === 'blocking') return this.parseBlocking(layer);
+        if (name === 'entities') return this.parseStaticEntities(layer);
+        if (name.startsWith('plateau')) return this.parsePlateau(layer);
 
         this.parseTileLayerData(layer.data);
 
-        this.formatData();
+        this.format();
     }
 
+    /**
+     * We iterate through each tile layer, and for each tile at the
+     * same position on the tilemap, we add (if exists) or set the tileId
+     * in our overall data file. The format ends up looking like this:
+     * [3, 4, 0, [12, 14], [21, 42, 12]] Where the array represents
+     * tiles layered on top of eachother.
+     *
+     * Subsequently, any tile indexes that are colliding are added to the collision
+     * array.
+     * @param data The raw data for each tile layer.
+     */
+
     private parseTileLayerData(mapData: number[]): void {
-        let { data, collisions, trees, treeIndexes, rocks, rockIndexes } = this.#map;
+        let { data, collisions } = this.map;
 
         _.each(mapData, (value, index) => {
             if (value < 1) return;
@@ -184,32 +208,54 @@ export default class ProcessMap {
             else data[index] = [data[index] as number, value];
 
             if (value in this.#collisionTiles) collisions.push(index);
-            if (value in trees) treeIndexes.push(index);
-            if (value in rocks) rockIndexes.push(index);
         });
     }
+
+    /**
+     * A blocking tile is a special type of collision that is
+     * added independently of tileIds. It is instead a collision
+     * that is part of the map tile index. In other words, we can
+     * add a collision to a tile in the map despite that tile
+     * not having a collision property.
+     * @param layer The tile layer containing the blocking data.
+     */
 
     private parseBlocking(layer: Layer): void {
         _.each(layer.data, (value, index) => {
             if (value < 1) return;
 
-            this.#map.collisions.push(index);
+            this.map.collisions.push(index);
         });
     }
 
+    /**
+     * Static entities are spawned using the entities tileset. Each tile contains
+     * a property about what entity to spawn. Whne we detect a tileId corresponding
+     * to our tiles from the entities tileset, we associate that tileIndex (position)
+     * with an entity that should spawn there.
+     * @param layer The `entities` layer containing the entity tiles.
+     */
+
     private parseStaticEntities(layer: Layer): void {
-        let { entities, staticEntities } = this.#map;
+        let { staticEntities } = this.map;
 
         _.each(layer.data, (value, index) => {
             if (value < 1) return;
 
-            if (value in entities) staticEntities[index] = entities[value];
+            if (value in this.entities) staticEntities[index] = this.entities[value];
         });
     }
 
+    /**
+     * We parse through the plateau (imaginary z-index parts of the map)
+     * and store the tileIndex alongside the `plateau level` in our
+     * `plateau` array within the map object.
+     * @param layer The tile layer containing the tile data.
+     */
+
     private parsePlateau(layer: Layer): void {
         let level = parseInt(layer.name.split('plateau')[1]),
-            { collisions, plateau } = this.#map;
+            { collisions, plateau } = this.map;
 
         _.each(layer.data, (value, index) => {
             if (value < 1) return;
@@ -227,9 +273,10 @@ export default class ProcessMap {
      *
      * @param layer An object layer from Tiled map.
      */
+
     private parseObjectLayer(layer: Layer) {
         let { name, objects } = layer,
-            { areas } = this.#map;
+            { areas } = this.map;
 
         if (!objects) return;
 
@@ -244,9 +291,10 @@ export default class ProcessMap {
      * @param objectName The object info in the map that we are storing the data in.
      * @param info The raw data received from Tiled.
      */
+
     private parseObject(objectName: string, info: LayerObject) {
         let { id, name, x, y, width, height, properties } = info,
-            { tileSize, areas } = this.#map,
+            { tileSize, areas } = this.map,
             object: ProcessedArea = {
                 id,
                 name,
@@ -292,11 +340,12 @@ export default class ProcessMap {
      * @param info The raw data from Tiled
      * @returns A modified array of polygons adjusted for `tileSize`.
      */
+
     private extractPolygon(info: LayerObject) {
         if (!info.polygon) return;
 
         let polygon: Pos[] = [],
-            { tileSize } = this.#map;
+            { tileSize } = this.map;
         // console.log(info);
 
         _.each(info.polygon, (point) => {
@@ -310,22 +359,6 @@ export default class ProcessMap {
     }
 
     /**
-     * Map depth represents the tileIndex with most
-     * amount of layers
-     */
-    private parseDepth(): void {
-        let depth = 1;
-
-        _.each(this.#map.data, (info) => {
-            if (!_.isArray(info)) return;
-
-            if (info.length > depth) depth = info.length;
-        });
-
-        this.#map.depth = depth;
-    }
-
-    /**
      * We are generating a map data array without defining preliminary
      * variables. In other words, we are accessing indexes of the array
      * ahead of time, so JavaScript engine just fills in values in the array
@@ -336,13 +369,10 @@ export default class ProcessMap {
      * set to null. We need to get rid of these values before sending data
      * to the server.
      */
-    private formatData(): void {
-        let { data } = this.#map;
 
-        _.each(data, (value, index) => {
-            if (!value) data[index] = 0;
-
-            // if (_.isArray(value)) data[index] = value.reverse();
+    private format(): void {
+        _.each(this.map.data, (value, index) => {
+            if (!value) this.map.data[index] = 0;
         });
     }
 
@@ -355,8 +385,10 @@ export default class ProcessMap {
      * @param data The we will be parsing, base64 string format
      * for compressed data, and string for uncompressed data.
      * @param type The type of compression 'zlib', 'gzip', '' are accepted inputs.
+     * @returns Return a number array containing the data of the layer.
      */
-    private getLayerData(data: number[], type: string): number[] | void {
+
+    private getLayerData(data: number[], type: string): number[] {
         if (_.isArray(data)) return data;
 
         let dataBuffer = Buffer.from(data, 'base64'),
@@ -373,22 +405,44 @@ export default class ProcessMap {
 
             default:
                 log.error('Invalid compression format detected.');
-                return;
+                return [];
         }
 
-        if (!inflatedData) return;
+        if (!inflatedData) return [];
 
-        let size = this.#map.width * this.#map.height * 4,
+        let size = this.map.width * this.map.height * 4,
             layerData: number[] = [];
 
         if (inflatedData.length !== size) {
             log.error('Invalid buffer detected while parsing layer.');
-            return;
+            return [];
         }
 
         for (let i = 0; i < size; i += 4) layerData.push(inflatedData.readUInt32LE(i));
 
         return layerData;
+    }
+
+    /**
+     * Checks the tileset for whether or not it is responsible for entity info.
+     * @param tileset The tileset we are checking
+     * @returns Whether or not the tileset is for entities.
+     */
+
+    private isEntityTileset(tileset: Tileset): boolean {
+        return tileset.name.toLowerCase() === 'entities';
+    }
+
+    /**
+     * A function to check if a property is colliding. We have
+     * a separate function as we will add more properties that
+     * are colliding.
+     * @param propertyName The property name we are iterating.
+     * @returns Whether or not the property is a collision or an object.
+     */
+
+    private isCollisionProperty(propertyName: string): boolean {
+        return propertyName === 'c' || propertyName === 'o';
     }
 
     /**
@@ -401,20 +455,55 @@ export default class ProcessMap {
      * @param tile The current tile that we are parsing through.
      * @param offset The offset of the tileIndex.
      */
+
     private getTileId(tileset: Tileset, tile: Tile, offset = 0): number {
         return tileset.firstgid + tile.id + offset;
     }
 
+    /**
+     * Takes the exported map and converts it into a string.
+     * @returns A stringified version of the map.
+     */
+
     public getMap(): string {
-        return JSON.stringify(this.#map);
+        let {
+            version,
+            width,
+            height,
+            tileSize,
+            data,
+            collisions,
+            high,
+            areas,
+            plateau,
+            objects,
+            cursors,
+            staticEntities
+        } = this.map;
+
+        return JSON.stringify({
+            version,
+            width,
+            height,
+            tileSize,
+            data,
+            collisions,
+            high,
+            areas,
+            plateau,
+            objects,
+            cursors,
+            staticEntities
+        });
     }
 
     /**
      * Client map consists of a stripped down version of the game map.
      * We are only sending essential information to the client.
      */
+
     public getClientMap(): string {
-        let { width, height, depth, version, high, tilesets, animations, tileSize } = this.#map;
+        let { width, height, depth, version, high, tilesets, animations, tileSize } = this.map;
 
         return JSON.stringify({
             width,
@@ -424,13 +513,7 @@ export default class ProcessMap {
             high,
             tilesets,
             animations,
-            tileSize,
-            collisions: [],
-            lights: []
+            tileSize
         });
-    }
-
-    private isColliding(property: string): boolean {
-        return property === 'c' || property === 'o';
     }
 }

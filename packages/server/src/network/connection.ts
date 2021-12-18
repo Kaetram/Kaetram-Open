@@ -34,6 +34,17 @@ export default class Connection {
         });
     }
 
+    /**
+     * Sends a UTF8 message to the client for closing the connection,
+     * then closes the connection (duh).
+     * @param reason UTF8 reason for why the connection was closed.
+     */
+
+    public reject(reason: string): void {
+        this.sendUTF8(reason);
+        this.close(reason);
+    }
+
     public listen(callback: ListenCallback): void {
         this.listenCallback = callback;
     }

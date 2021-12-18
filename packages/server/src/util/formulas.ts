@@ -1,7 +1,5 @@
-import type { Tree } from '@kaetram/common/types/map';
 import Utils from '@kaetram/common/util/utils';
 
-import Trees from '../../data/professions/trees';
 import Constants from './constants';
 
 import type Character from '../game/entity/character/character';
@@ -9,18 +7,6 @@ import type Player from '../game/entity/character/player/player';
 
 export default {
     LevelExp: [] as number[],
-
-    // Chances of getting logs from a tree.
-    getTreeChance(player: Player, treeId: Tree): number {
-        let lumberjackingLevel = player.getLumberjackingLevel(),
-            weaponLumberjackingLevel = player.getWeaponLumberjackingLevel(),
-            treeLevel = Trees.Levels[treeId as Tree],
-            probability = treeLevel * 10 - lumberjackingLevel * weaponLumberjackingLevel;
-
-        if (probability < 2) probability = 2;
-
-        return probability;
-    },
 
     getDamage(attacker: Character, target: Character, special = false): number {
         let maxDamage = this.getMaxDamage(attacker, target, special)!,

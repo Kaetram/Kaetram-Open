@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import type Entity from '../game/entity/entity';
+import type Entity from '../entity/entity';
 import type Map from './map';
 
 export default class Grids {
