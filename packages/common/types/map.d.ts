@@ -64,11 +64,10 @@ export interface ProcessedMap {
     data: (number | number[])[];
 
     collisions: number[];
-    polygons: { [tileId: number]: Pos[] };
-    entities: Entities;
     staticEntities: Entities;
 
-    tilesets: ProcessedTileset[];
+    // tilesetId: firstGid
+    tilesets?: { [tilesetId: number]: number };
     animations?: unknown[];
     depth?: number;
 
@@ -76,11 +75,6 @@ export interface ProcessedMap {
 
     high: number[];
     objects: number[];
-    trees: { [tileId: number]: Tree };
-    treeIndexes: number[];
-    rocks: { [tileId: number]: Rock };
-    rockIndexes: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
-    layers: unknown[];
 }

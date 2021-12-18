@@ -4,6 +4,8 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
+import Regions from '../game/map/regions';
+import Map from '../game/map/map';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import NPC from '../game/entity/npc/npc';
@@ -21,8 +23,8 @@ import type Entity from '../game/entity/entity';
 import type World from '../game/world';
 
 export default class Entities {
-    private region;
-    private map;
+    private map: Map;
+    private regions: Regions;
     private grids;
 
     public players: { [instance: string]: Player } = {};
@@ -34,8 +36,8 @@ export default class Entities {
     private projectiles: { [instance: string]: Projectile } = {};
 
     public constructor(private world: World) {
-        this.region = world.region;
         this.map = world.map;
+        this.regions = world.map.regions;
         this.grids = world.map.grids;
 
         this.spawn();
@@ -50,7 +52,7 @@ export default class Entities {
         _.each(this.map.staticEntities, (entityInfo) => {
             let key = entityInfo.string,
                 instance = Utils.generateInstance(),
-                position = this.map.indexToGridPosition(entityInfo.tileIndex, 1);
+                position = this.map.indexToCoord(entityInfo.tileIndex);
 
             switch (entityInfo.type) {
                 case 'item': {
@@ -188,9 +190,10 @@ export default class Entities {
 
         // Spawns the static chests throughout the world.
 
-        _.each(this.map.chests, (info) => {
-            this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
-        });
+        //TODO - Redo chests
+        // _.each(this.map.chests, (info) => {
+        //     this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
+        // });
 
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
     }
@@ -268,48 +271,49 @@ export default class Entities {
     /**
      * Add Entities
      */
-    private add(entity: Entity, region: string | null): void {
+    private add(entity: Entity): void {
         if (entity.instance in this.entities)
             log.warning(`Entity ${entity.instance} already exists.`);
 
         this.entities[entity.instance] = entity;
 
-        this.region.handle(entity, region);
+        this.regions.handle(entity);
 
         this.grids.addToEntityGrid(entity, entity.x, entity.y);
 
-        entity.onSetPosition(() => {
-            this.grids.updateEntityPosition(entity);
+        // // Todo move this into a separate handler.
+        // entity.onMovement(() => {
+        //     this.grids.updateEntityPosition(entity);
 
-            if (!entity.isMob()) return;
+        //     if (!entity.isMob()) return;
 
-            if (!entity.isOutsideSpawn()) return;
+        //     if (!entity.isOutsideSpawn()) return;
 
-            entity.removeTarget();
+        //     entity.removeTarget();
 
-            entity.combat.forget();
-            entity.combat.stop();
+        //     entity.combat.forget();
+        //     entity.combat.stop();
 
-            entity.return();
+        //     entity.return();
 
-            this.world.push(Opcodes.Push.Broadcast, [
-                {
-                    message: new Messages.Combat(Opcodes.Combat.Finish, {
-                        attackerId: null,
-                        targetId: entity.instance
-                    })
-                },
-                {
-                    message: new Messages.Movement(Opcodes.Movement.Move, {
-                        id: entity.instance,
-                        x: entity.x,
-                        y: entity.y,
-                        forced: false,
-                        teleport: false
-                    })
-                }
-            ]);
-        });
+        //     this.world.push(Opcodes.Push.Broadcast, [
+        //         {
+        //             message: new Messages.Combat(Opcodes.Combat.Finish, {
+        //                 attackerId: null,
+        //                 targetId: entity.instance
+        //             })
+        //         },
+        //         {
+        //             message: new Messages.Movement(Opcodes.Movement.Move, {
+        //                 id: entity.instance,
+        //                 x: entity.x,
+        //                 y: entity.y,
+        //                 forced: false,
+        //                 teleport: false
+        //             })
+        //         }
+        //     ]);
+        // });
 
         if (entity instanceof Character) {
             entity.combat.setWorld(this.world);
@@ -327,7 +331,7 @@ export default class Entities {
     }
 
     private addNPC(npc: NPC): void {
-        this.add(npc, npc.region);
+        this.add(npc);
 
         this.npcs[npc.instance] = npc;
     }
@@ -335,13 +339,13 @@ export default class Entities {
     private addItem(item: Item): void {
         if (item.static) item.onRespawn(() => this.addItem(item));
 
-        this.add(item, item.region);
+        this.add(item);
 
         this.items[item.instance] = item;
     }
 
     private addMob(mob: Mob): void {
-        this.add(mob, mob.region);
+        this.add(mob);
 
         this.mobs[mob.instance] = mob;
 
@@ -355,7 +359,7 @@ export default class Entities {
     }
 
     public addPlayer(player: Player): void {
-        this.add(player, player.region);
+        this.add(player);
 
         this.players[player.instance] = player;
 
@@ -363,13 +367,13 @@ export default class Entities {
     }
 
     private addChest(chest: Chest): void {
-        this.add(chest, chest.region);
+        this.add(chest);
 
         this.chests[chest.instance] = chest;
     }
 
     private addProjectile(projectile: Projectile): void {
-        this.add(projectile, projectile.owner!.region);
+        this.add(projectile);
 
         this.projectiles[projectile.instance] = projectile;
     }
@@ -380,7 +384,7 @@ export default class Entities {
     public remove(entity: Entity): void {
         this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
 
-        this.region.remove(entity);
+        this.regions.remove(entity);
 
         delete this.entities[entity.instance];
         delete this.mobs[entity.instance];

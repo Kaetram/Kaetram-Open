@@ -22,7 +22,6 @@ import type {
     ExperienceProfessionData,
     HandshakeData,
     HealData,
-    MinigameData,
     MovementFollowData,
     MovementMoveData,
     MovementOrientateData,
@@ -149,7 +148,6 @@ interface ShopCallback {
     (opcode: Opcodes.Shop.Select, data: ShopSelectData): void;
     (opcode: Opcodes.Shop.Remove, data: ShopRemoveData): void;
 }
-type MinigameCallback = (opcode: Opcodes.Minigame, data: MinigameData) => void;
 type RegionCallback = (opcode: Opcodes.Region, bufferSize: number, data: string) => void;
 interface OverlayCallback {
     (opcode: Opcodes.Overlay, data: undefined): void;
@@ -201,7 +199,6 @@ export default class Messages {
     private pointerCallback?: PointerCallback;
     private pvpCallback?: PVPCallback;
     private shopCallback?: ShopCallback;
-    private minigameCallback?: MinigameCallback;
     private regionCallback?: RegionCallback;
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
@@ -255,7 +252,6 @@ export default class Messages {
         messages[Packets.Pointer] = () => this.pointerCallback;
         messages[Packets.PVP] = () => this.pvpCallback;
         messages[Packets.Shop] = () => this.shopCallback;
-        messages[Packets.Minigame] = () => this.minigameCallback;
         messages[Packets.Region] = () => this.regionCallback;
         messages[Packets.Overlay] = () => this.overlayCallback;
         messages[Packets.Camera] = () => this.cameraCallback;
@@ -484,10 +480,6 @@ export default class Messages {
 
     public onShop(callback: ShopCallback): void {
         this.shopCallback = callback;
-    }
-
-    public onMinigame(callback: MinigameCallback): void {
-        this.minigameCallback = callback;
     }
 
     public onRegion(callback: RegionCallback): void {

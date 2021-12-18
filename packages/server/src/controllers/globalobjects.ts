@@ -22,15 +22,6 @@ export default class GlobalObjects {
     }
 
     public getInfo(id: string): { type: string; tree?: Tree } | null {
-        let position = Objects.getPosition(id),
-            objectId = this.map.getPositionObject(position.x, position.y);
-
-        if (objectId in this.map.trees)
-            return {
-                type: 'lumberjacking',
-                tree: this.map.trees[objectId]
-            };
-
         let object = Objects.getObject(id);
 
         if (!object) return null;
