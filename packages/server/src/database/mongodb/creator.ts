@@ -11,7 +11,6 @@ import type { ContainerArray } from '../../game/entity/character/player/containe
 import type { FriendsArray } from '../../game/entity/character/player/friends';
 import type Player from '../../game/entity/character/player/player';
 import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
-import type { ProfessionsArray } from '../../game/entity/character/player/professions/professions';
 import type MongoDB from './mongodb';
 
 interface PlayerData {
@@ -21,7 +20,6 @@ interface PlayerData {
     x: number;
     y: number;
     userAgent: string;
-    invisibleIds?: string;
     experience: number;
     rights: number;
     poison: string | null;
@@ -53,7 +51,6 @@ export default class Creator {
                 bank = database.collection<ContainerArray>('player_bank'),
                 regions = database.collection<PlayerRegions>('player_regions'),
                 abilities = database.collection<AbilitiesArray>('player_abilities'),
-                professions = database.collection<ProfessionsArray>('player_professions'),
                 // friends = database.collection<FriendsArray>('player_friends'),
                 inventory = database.collection<ContainerArray>('player_inventory');
 
@@ -65,7 +62,6 @@ export default class Creator {
                 this.saveBank(bank, player);
                 this.saveRegions(regions, player);
                 this.saveAbilities(abilities, player);
-                this.saveProfessions(professions, player);
                 // this.saveFriends(friends, player);
                 this.saveInventory(inventory, player, () => {
                     log.debug(`Successfully saved all data for player ${player.username}.`);
@@ -196,22 +192,6 @@ export default class Creator {
         );
     }
 
-    private saveProfessions(collection: Collection<ProfessionsArray>, player: Player): void {
-        collection.updateOne(
-            { username: player.username },
-            { $set: player.professions.getArray() },
-            { upsert: true },
-            (error, result) => {
-                if (error)
-                    log.error(
-                        `An error has occurred while saving player_professions for ${player.username}!`
-                    );
-
-                if (!result) log.error(`Could not save player_professions for ${player.username}!`);
-            }
-        );
-    }
-
     private saveFriends(collection: Collection<FriendsArray>, player: Player): void {
         collection.updateOne(
             { username: player.username },
@@ -279,7 +259,6 @@ export default class Creator {
                 lastLogin: player.lastLogin,
                 lastWarp: player.warp?.lastWarp,
                 // guildName: player.guildName,
-                invisibleIds: player.formatInvisibles(),
                 userAgent: player.userAgent,
                 mapVersion: player.mapVersion
             });

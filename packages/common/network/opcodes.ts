@@ -131,10 +131,6 @@ export enum Shop {
     Remove
 }
 
-export enum Minigame {
-    TeamWar
-}
-
 export enum TeamWar {
     Enter,
     Team,

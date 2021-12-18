@@ -5,7 +5,6 @@ import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import log from '../lib/log';
 import * as Detect from '../utils/detect';
-import TeamWar from './impl/teamwar';
 
 import type {
     CombatHitData,
@@ -63,8 +62,6 @@ export default class Connection {
     private info;
     private pointer;
     // private inventory = this.game.inventory;
-
-    private teamWar = new TeamWar();
 
     private population!: number;
     private queueColour!: string | null;
@@ -1059,16 +1056,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onMinigame((opcode, info) => {
-            switch (opcode) {
-                case Opcodes.Minigame.TeamWar:
-                    this.teamWar.handle(info);
-
-                    break;
-            }
-        });
-
-        this.messages.onRegion((opcode, bufferSize, info) => {
+        this.messages.onRegion((opcode, _bufferSize, info) => {
             let bufferData = window
                     .atob(info)
                     .split('')
