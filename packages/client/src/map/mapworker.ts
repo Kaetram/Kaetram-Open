@@ -10,7 +10,7 @@ export interface MapData extends MapDataType {
 }
 
 let data = mapData as MapData,
-    { width, height, collisions } = data;
+    { width, height } = data;
 
 onmessage = () => {
     loadCollisionGrid();
@@ -27,24 +27,5 @@ function loadCollisionGrid() {
         for (let x = 0; x < width; x++) grid[y][x] = 0;
     }
 
-    for (let index of collisions) {
-        let { x, y } = indexToCoord(index);
-
-        grid[y][x] = 1;
-    }
-
-    // for (let tileIndex of blocking) {
-    //     let { x, y } = indexToCoord(tileIndex);
-
-    //     data.grid[y][x] = 1;
-    // }
-
     data.grid = grid;
-}
-
-function indexToCoord(index: number) {
-    let x = index % width,
-        y = Math.floor(index / width);
-
-    return { x, y };
 }
