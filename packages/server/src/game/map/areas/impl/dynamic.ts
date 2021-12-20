@@ -7,8 +7,6 @@ import Areas from '../areas';
 import type { ProcessedArea } from '@kaetram/common/types/map';
 import log from '@kaetram/common/util/log';
 
-type Position = { x: number; y: number };
-
 export default class Dynamic extends Areas {
     public constructor(data: ProcessedArea[], world: World) {
         super(data, world);

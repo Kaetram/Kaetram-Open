@@ -53,6 +53,7 @@ export default class Area {
 
     public addEntity(mob: Mob): void {
         if (!this.entities.includes(mob)) return;
+
         this.entities.push(mob);
         mob.area = this;
 
@@ -79,6 +80,12 @@ export default class Area {
 
         player.finishAchievement(this.achievement);
     }
+
+    /**
+     * Checks if the player fullfills the requireemtns of the area.
+     * @param player The player we are checking requirements for
+     * @returns Checks if the requirement is fullfilled.
+     */
 
     public fullfillsRequirement(player: Player): boolean {
         if (!!this.achievement && !!this.quest)
@@ -125,13 +132,33 @@ export default class Area {
         return !!this.mappedArea;
     }
 
+    /**
+     * Checks whether or not the area shape is a polygon or rectangle and
+     * uses the respective function to check if the x and y are contained
+     * within the area.
+     */
+
     public contains(x: number, y: number): boolean {
         return this.polygon ? this.inPolygon(x, y) : this.inRectangularArea(x, y);
     }
 
+    /**
+     * Checks if the x and y position are within the bounding rectangle of the area.
+     * @param x The x position in the grid space.
+     * @param y The y position in the grid space.
+     * @returns If the x and y are contained within the area's rectangle.
+     */
+
     private inRectangularArea(x: number, y: number): boolean {
         return x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
     }
+
+    /**
+     * Checks if the specified grid point is contained with the area's polygon.
+     * @param x The x grid point we are checking.
+     * @param y The y grid point we are checking.
+     * @returns If the x and y are contained within the polygon dimensions.
+     */
 
     private inPolygon(x: number, y: number): boolean {
         for (let i = 0, j = this.polygon.length - 1; i < this.polygon.length; j = i++) {
