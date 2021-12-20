@@ -3,7 +3,7 @@ import zlib from 'zlib';
 
 import log from '@kaetram/common/util/log';
 
-import type { Entities, ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
+import type { Entities, ProcessedMap } from '@kaetram/common/types/map';
 import type { Entity, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
 export default class ProcessMap {
@@ -288,49 +288,29 @@ export default class ProcessMap {
     }
 
     /**
-     * @param objectName The object info in the map that we are storing the data in.
+     * @param areaName The name of the area we are storing objects in.
      * @param info The raw data received from Tiled.
      */
 
-    private parseObject(objectName: string, info: LayerObject) {
-        let { id, name, x, y, width, height, properties } = info,
-            { tileSize, areas } = this.map,
-            object: ProcessedArea = {
-                id,
-                name,
-                x: x / tileSize,
-                y: y / tileSize,
-                width: width / tileSize,
-                height: height / tileSize,
-                polygon: this.extractPolygon(info)
-            };
+    private parseObject(areaName: string, object: LayerObject) {
+        let { id, name, x, y, width, height, properties } = object;
 
-        _.each(properties, (prop) => {
-            let name = prop.name as keyof ProcessedArea,
-                { value } = prop;
-
-            if (
-                new Set([
-                    'id',
-                    'x',
-                    'y',
-                    'distance',
-                    'darkness',
-                    'diffuse',
-                    'level',
-                    'achievement'
-                ]).has(name)
-            ) {
-                let number = parseFloat(value);
-                if (isNaN(number)) number = -1;
-
-                value = number as never;
-            }
-
-            object[name] = value;
+        this.map.areas[areaName].push({
+            id,
+            name,
+            x: x / this.map.tileSize,
+            y: y / this.map.tileSize,
+            width: width / this.map.tileSize,
+            height: height / this.map.tileSize,
+            polygon: this.extractPolygon(object)
         });
 
-        areas[objectName].push(object);
+        _.each(properties, (property) => {
+            let index = this.map.areas[areaName].length - 1, // grab the last object (one we just added)
+                { name, value } = property;
+
+            this.map.areas[areaName][index][name as never] = value;
+        });
     }
 
     /**
