@@ -2,6 +2,8 @@ import type Mob from '../../entity/character/mob/mob';
 import type Player from '../../entity/character/player/player';
 import type Chest from '../../entity/objects/chest';
 
+type Position = { x: number; y: number };
+
 export default class Area {
     public polygon!: Pos[];
 
@@ -17,6 +19,7 @@ export default class Area {
     public fog!: string;
 
     // Properties it can hold
+    public quest!: number;
     public achievement!: number;
     public cameraType!: string;
     public song!: string;
@@ -28,6 +31,10 @@ export default class Area {
     // Chest coordinates
     public cx!: number;
     public cy!: number;
+
+    // Dynamic areas
+    public mappedArea!: Area | undefined;
+    public mapping!: number;
 
     public maxEntities = 0;
     public spawnDelay = 0;
@@ -71,6 +78,51 @@ export default class Area {
         if (!this.achievement) return;
 
         player.finishAchievement(this.achievement);
+    }
+
+    public fullfillsRequirement(player: Player): boolean {
+        if (!!this.achievement && !!this.quest)
+            return player.finishedAchievement(this.achievement) && player.finishedQuest(this.quest);
+
+        if (this.achievement) return player.finishedAchievement(this.achievement);
+        if (this.quest) return player.finishedQuest(this.quest);
+
+        return false;
+    }
+
+    /**
+     * Takes a tile for a dynamic area and maps it to its counterpart. A mapped
+     * tile is simply the other state of the dynamic tile. Take for example a door:
+     * a closed door's mapped tile is the open door version of it. This is done
+     * straight through Tiled editor.
+     *
+     * @param x The tile's x coordinate
+     * @param y The tile's y coordinate
+     * @returns Position (x and y) of the mapped tile.
+     */
+
+    public getMappedTile(x: number, y: number): Position | undefined {
+        if (!this.mappedArea) return;
+
+        // The x and y relative to the area rather than globally.
+        let relativeX = Math.abs(this.x - x),
+            relativeY = Math.abs(this.y - y);
+
+        return {
+            x: this.mappedArea.x + relativeX,
+            y: this.mappedArea.y + relativeY
+        };
+    }
+
+    /**
+     * Returns whether or not the area has a mapping counterpart.
+     * Since the dynamic tiles areas are split into a original and a
+     * mapped counterpart, only the original contains information about
+     * where to map.
+     */
+
+    public isMappingArea(): boolean {
+        return !!this.mappedArea;
     }
 
     public contains(x: number, y: number): boolean {
