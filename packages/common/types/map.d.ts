@@ -26,7 +26,7 @@ export interface ProcessedArea {
     achievement?: number;
 
     // Warp
-    name: string; //? also common
+    name?: string; //? also common
     level?: number;
 
     // Camera
