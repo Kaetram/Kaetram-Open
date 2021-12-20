@@ -410,7 +410,7 @@ export default class Regions {
 
     /**
      * Takes the area and the player as extra parameters to determine if the player fullfills
-     * the requirements for the area. If he does (say for example he finished the necessary) quest
+     * the requirements for the area. If he does (say for example he finished the necessary quest)
      * then we use the mapped dynamic tile to render to him instead.
      * @param player The player character to extract achievement/quest/etc status.
      * @param area The area containing the dynamic tiles - used for mapping.
