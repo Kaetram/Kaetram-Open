@@ -38,6 +38,10 @@ export interface ProcessedArea {
     // Overlay
     darkness?: number;
     fog?: string;
+
+    // Dynamic
+    quest?: number;
+    mapping?: number;
 }
 
 export interface Entities {
