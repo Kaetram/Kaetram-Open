@@ -45,35 +45,17 @@ export default class Entities {
 
     private load(): void {
         this.map.forEachEntity((position: Position, key: string) => {
-            let instance = Utils.generateInstance(),
-                type = this.getEntityType(key);
+            let type = this.getEntityType(key);
 
             switch (type) {
-                case Modules.EntityType.Item: {
-                    let item = this.createItem(
-                        Items.stringToId(key)!,
-                        instance,
-                        position.x,
-                        position.y
-                    );
+                case Modules.EntityType.Item:
+                    return this.addItem(new Item(key, position.x, position.y, -1, -1, true));
 
-                    item.static = true;
-
-                    this.addItem(item);
-
-                    break;
-                }
-
-                case Modules.EntityType.NPC: {
-                    let npc = new NPC(NPCs.stringToId(key)!, instance, position.x, position.y);
-
-                    this.addNPC(npc);
-
-                    break;
-                }
+                case Modules.EntityType.NPC:
+                    return this.addNPC(new NPC(key, position.x, position.y));
 
                 case Modules.EntityType.Mob: {
-                    let mob = new Mob(Mobs.stringToId(key)!, instance, position.x, position.y);
+                    let mob = new Mob(Mobs.stringToId(key)!, position.x, position.y);
 
                     mob.static = true;
                     // mob.roaming = entityInfo.roaming;
@@ -193,7 +175,7 @@ export default class Entities {
     }
 
     public spawnMob(id: number, gridX: number, gridY: number): Mob {
-        let mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
+        let mob = new Mob(id, gridX, gridY);
 
         this.addMob(mob);
 
@@ -207,7 +189,7 @@ export default class Entities {
         isStatic = false,
         achievement?: number
     ): Chest {
-        let chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);
+        let chest = new Chest(194, gridX, gridY, achievement);
 
         chest.addItems(items);
 
@@ -241,7 +223,7 @@ export default class Entities {
             startY = attacker.y, // gridY
             type = attacker.getProjectile(),
             hit = null,
-            projectile = new Projectile(type, Utils.generateInstance());
+            projectile = new Projectile(type);
 
         projectile.setStart(startX, startY);
         projectile.setTarget(target);
@@ -331,7 +313,7 @@ export default class Entities {
     }
 
     private addItem(item: Item): void {
-        if (item.static) item.onRespawn(() => this.addItem(item));
+        if (item.respawnable) item.onRespawn(() => this.addItem(item));
 
         this.add(item);
 
@@ -394,7 +376,7 @@ export default class Entities {
             message: new Messages.Despawn(item.instance)
         });
 
-        if (item.static) item.respawn();
+        if (item.respawnable) item.respawn();
     }
 
     public removePlayer(player: Player): void {
@@ -472,16 +454,6 @@ export default class Entities {
     /**
      * Miscellaneous Functions
      */
-    private createItem(
-        id: number,
-        instance: string,
-        gridX: number,
-        gridY: number,
-        ability?: number,
-        abilityLevel?: number
-    ): Item {
-        return new Item(id, instance, gridX, gridY, ability, abilityLevel);
-    }
 
     public dropItem(
         id: number,
@@ -491,14 +463,7 @@ export default class Entities {
         ability?: number,
         abilityLevel?: number
     ): void {
-        let item = this.createItem(
-            id,
-            Utils.generateInstance(),
-            gridX,
-            gridY,
-            ability,
-            abilityLevel
-        );
+        let item = new Item(Items.idToString(id), gridX, gridY, ability, abilityLevel);
 
         item.count = count;
         item.dropped = true;

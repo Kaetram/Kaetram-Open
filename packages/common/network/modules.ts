@@ -284,5 +284,7 @@ export enum EntityType {
     Player,
     NPC,
     Item,
-    Mob
+    Mob,
+    Chest,
+    Projectile
 }

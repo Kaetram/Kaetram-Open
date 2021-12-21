@@ -118,14 +118,14 @@ export default abstract class Quest {
         if (opcode === 4)
             this.player.send(
                 new Messages.Pointer(opcode, {
-                    id: Utils.generateRandomId(),
+                    id: Utils.createInstance(),
                     button: pointer[1] as string
                 })
             );
         else
             this.player.send(
                 new Messages.Pointer(opcode, {
-                    id: Utils.generateRandomId(),
+                    id: Utils.createInstance(),
                     x: pointer[1] as number,
                     y: pointer[2] as number
                 })

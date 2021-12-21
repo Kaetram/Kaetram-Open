@@ -1,6 +1,9 @@
 import Entity from '../entity';
 
 import type { EntityState } from '../entity';
+import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
+import Items from '@kaetram/server/src/info/items';
 
 interface ItemState extends EntityState {
     count: number;
@@ -9,7 +12,6 @@ interface ItemState extends EntityState {
 }
 
 export default class Item extends Entity {
-    public static = false;
     public dropped = false;
     // shard = false;
 
@@ -31,14 +33,14 @@ export default class Item extends Entity {
     private despawnCallback?(): void;
 
     public constructor(
-        id: number,
-        instance: string,
+        key: string,
         x: number,
         y: number,
         ability?: number,
-        abilityLevel?: number
+        abilityLevel?: number,
+        public respawnable = false
     ) {
-        super(id, 'item', instance, x, y);
+        super(Items.stringToId(key)!, 'item', Utils.createInstance(Modules.EntityType.Item), x, y);
 
         this.ability = ability;
         this.abilityLevel = abilityLevel;
@@ -53,7 +55,7 @@ export default class Item extends Entity {
 
         if (this.despawnTimeout) clearTimeout(this.despawnTimeout);
 
-        if (this.static) this.respawn();
+        if (this.respawnable) this.respawn();
     }
 
     public despawn(): void {

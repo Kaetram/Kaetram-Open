@@ -354,8 +354,6 @@ export default class Regions {
         this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
             if (player.hasLoadedRegion(surroundingRegion) && !force) return;
 
-            console.log(surroundingRegion);
-
             let region = this.regions[surroundingRegion];
 
             // Initialize empty array with tile data for the region.
