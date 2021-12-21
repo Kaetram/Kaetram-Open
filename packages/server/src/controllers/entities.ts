@@ -5,7 +5,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Regions from '../game/map/regions';
-import Map from '../game/map/map';
+import Map, { Position } from '../game/map/map';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import NPC from '../game/entity/npc/npc';
@@ -40,22 +40,16 @@ export default class Entities {
         this.regions = world.map.regions;
         this.grids = world.map.grids;
 
-        this.spawn();
+        this.load();
     }
 
-    /**
-     * Spawn Entities
-     */
-    private spawn() {
-        // Spawns the static entities such as mobs, items, and npcs
+    private load(): void {
+        this.map.forEachEntity((position: Position, key: string) => {
+            let instance = Utils.generateInstance(),
+                type = this.getEntityType(key);
 
-        _.each(this.map.staticEntities, (entityInfo) => {
-            let key = entityInfo.string,
-                instance = Utils.generateInstance(),
-                position = this.map.indexToCoord(entityInfo.tileIndex);
-
-            switch (entityInfo.type) {
-                case 'item': {
+            switch (type) {
+                case Modules.EntityType.Item: {
                     let item = this.createItem(
                         Items.stringToId(key)!,
                         instance,
@@ -70,7 +64,7 @@ export default class Entities {
                     break;
                 }
 
-                case 'npc': {
+                case Modules.EntityType.NPC: {
                     let npc = new NPC(NPCs.stringToId(key)!, instance, position.x, position.y);
 
                     this.addNPC(npc);
@@ -78,20 +72,20 @@ export default class Entities {
                     break;
                 }
 
-                case 'mob': {
+                case Modules.EntityType.Mob: {
                     let mob = new Mob(Mobs.stringToId(key)!, instance, position.x, position.y);
 
                     mob.static = true;
-                    mob.roaming = entityInfo.roaming;
+                    // mob.roaming = entityInfo.roaming;
 
-                    if (entityInfo.miniboss) {
-                        // TODO - Rename `achievementId` -> `achievement`
-                        if (entityInfo.achievementId) mob.achievementId = entityInfo.achievementId;
+                    // if (entityInfo.miniboss) {
+                    //     // TODO - Rename `achievementId` -> `achievement`
+                    //     if (entityInfo.achievementId) mob.achievementId = entityInfo.achievementId;
 
-                        mob.miniboss = entityInfo.miniboss;
-                    }
+                    //     mob.miniboss = entityInfo.miniboss;
+                    // }
 
-                    if (entityInfo.boss) mob.boss = entityInfo.boss;
+                    // if (entityInfo.boss) mob.boss = entityInfo.boss;
 
                     if (Mobs.isHidden(key)) mob.hiddenName = true;
 
@@ -451,6 +445,20 @@ export default class Entities {
         return _.find(this.players, (player: Player) => {
             return player.username.toLowerCase() === username.toLowerCase();
         });
+    }
+
+    /**
+     * Compares the string against npcs and mobs to find the entity type.
+     * @param entityString The string of the entity
+     * @returns Entity type id from Modules.
+     */
+
+    private getEntityType(entityString: string): number {
+        if (NPCs.stringToId(entityString)) return Modules.EntityType.NPC;
+        if (Mobs.stringToId(entityString)) return Modules.EntityType.Mob;
+        if (Items.stringToId(entityString)) return Modules.EntityType.Item;
+
+        return -1;
     }
 
     public forEachEntity(callback: (entity: Entity) => void): void {

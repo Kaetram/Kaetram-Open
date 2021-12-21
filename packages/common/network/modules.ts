@@ -279,3 +279,10 @@ export enum APIConstants {
     MALFORMED_PARAMETERS,
     PLAYER_NOT_ONLINE
 }
+
+export enum EntityType {
+    Player,
+    NPC,
+    Item,
+    Mob
+}

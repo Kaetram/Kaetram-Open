@@ -403,7 +403,7 @@ export default class Regions {
          * `parseTileLayerData()` in `processmap.ts`). If there is no tile data
          * (i.e. the tile is blank) it is automatically colliding.
          */
-        if (this.map.collisions.includes(index) || !tile.data) tile.c = true;
+        if (this.map.isCollisionIndex(index) || !tile.data) tile.c = true;
 
         return tile;
     }
