@@ -394,6 +394,10 @@ export default class Map {
         return this.areas.chests;
     }
 
+    public getDynamicAreas(): Areas {
+        return this.areas.dynamic;
+    }
+
     public onReady(callback: () => void): void {
         this.readyCallback = callback;
     }

@@ -4,11 +4,13 @@ import log from '@kaetram/common/util/log';
 
 import World from '../world';
 import Region from './region';
-import Map, { AnimatedTile, ParsedTile, RotatedTile } from './map';
+import Map, { AnimatedTile, ParsedTile } from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
 import Messages from '../../network/messages';
 import { Opcodes } from '@kaetram/common/network';
+import Dynamic from './areas/impl/dynamic';
+import Area from './areas/area';
 
 /**
  * Class responsible for chunking up the map.
@@ -30,6 +32,8 @@ export default class Regions {
     private divisions: number;
     private sideLength = -1;
 
+    private dynamicAreas: Dynamic;
+
     private enterCallback?: PRegionCallback;
     private joiningCallback?: PRegionCallback;
 
@@ -38,7 +42,10 @@ export default class Regions {
 
         this.divisions = map.tileSize;
 
+        this.dynamicAreas = map.getDynamicAreas() as Dynamic;
+
         this.buildRegions();
+        this.loadDynamicAreas();
 
         this.onEnter(this.handleEnter.bind(this));
         this.onJoining(this.handleJoining.bind(this));
@@ -75,6 +82,22 @@ export default class Regions {
 
         // Number of regions per side.
         this.sideLength = this.map.width / this.divisions;
+    }
+
+    /**
+     * Parses through our dynamic areas and adds them to the
+     * region they are located in.
+     */
+
+    private loadDynamicAreas(): void {
+        this.dynamicAreas.forEachArea((area: Area) => {
+            if (!area.isMappingArea()) return;
+
+            let region = this.getRegion(area.x, area.y);
+
+            if (region !== -1) this.regions[region].addDynamicArea(area);
+            else log.error(`[ID: ${area.id}] Dynamic area could not be processed.`);
+        });
     }
 
     /**
@@ -320,16 +343,16 @@ export default class Regions {
      *          tileData: (number | number)[]
      *      }
      * }
-     * @param player The player we are grabbing information from.
+     * @param player The player we are grabbing information for.
      * @returns Region data containing regions, doors, and tile information.
      */
 
-    public getRegionData(player: Player): RegionData {
+    public getRegionData(player: Player, force?: boolean): RegionData {
         let data: RegionData = {},
             region = this.getRegion(player.x, player.y);
 
         this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
-            if (player.hasLoadedRegion(surroundingRegion)) return;
+            if (player.hasLoadedRegion(surroundingRegion) && !force) return;
 
             let region = this.regions[surroundingRegion];
 
@@ -337,7 +360,13 @@ export default class Regions {
             data[surroundingRegion] = [];
 
             region.forEachTile((x: number, y: number) => {
-                data[surroundingRegion].push(this.buildTile(x, y));
+                let dynamicArea = region.getDynamicArea(x, y),
+                    tileInfo =
+                        region.hasDynamicAreas() && dynamicArea
+                            ? this.buildDynamicTile(player, dynamicArea, x, y)
+                            : this.buildTile(x, y);
+
+                data[surroundingRegion].push(tileInfo);
             });
 
             player.loadRegion(surroundingRegion);
@@ -355,13 +384,15 @@ export default class Regions {
      * @returns Returns a `TileInfo` object based on the coordinates.
      */
 
-    private buildTile(x: number, y: number): TileInfo {
-        let index = this.map.coordToIndex(x, y),
-            tile: TileInfo = {
-                x,
-                y,
-                data: this.map.getTileData(index)
-            };
+    private buildTile(x: number, y: number, index?: number): TileInfo {
+        // Calculate our index or use the one specified if not undefined.
+        index ||= this.map.coordToIndex(x, y);
+
+        let tile: TileInfo = {
+            x,
+            y,
+            data: this.map.getTileData(index)
+        };
 
         /**
          * A tile is colliding if it exists in our array of collisions (See
@@ -371,6 +402,35 @@ export default class Regions {
         if (this.map.collisions.includes(index) || !tile.data) tile.c = true;
 
         return tile;
+    }
+
+    /**
+     * Takes the area and the player as extra parameters to determine if the player fulfills
+     * the requirements for the area. If he does (say for example he finished the necessary quest)
+     * then we use the mapped dynamic tile to render to him instead.
+     * @param player The player character to extract achievement/quest/etc status.
+     * @param area The area containing the dynamic tiles - used for mapping.
+     * @param x The original tile x grid coordinate.
+     * @param y The original tile y grid coordinate.
+     * @returns The mapped tileInfo.
+     */
+
+    private buildDynamicTile(player: Player, area: Area, x: number, y: number): TileInfo {
+        let original = this.buildTile(x, y);
+
+        // Does not proceed any further if the player does not fulfill the requirements
+        if (!area.fulfillsRequirement(player)) return original;
+
+        let mappedTile = area.getMappedTile(x, y);
+
+        // Defaults to building the original tile if mapping cannot be achieved.
+        if (!mappedTile) return original;
+
+        // Gets the index of the mapped tile coordinates.
+        let index = this.map.coordToIndex(mappedTile.x, mappedTile.y);
+
+        // We build a tile using our mapped tile's index, hence why we specify the index as a parameter
+        return this.buildTile(x, y, index);
     }
 
     /**
