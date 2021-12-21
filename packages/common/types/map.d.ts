@@ -26,7 +26,7 @@ export interface ProcessedArea {
     achievement?: number;
 
     // Warp
-    name: string; //? also common
+    name?: string; //? also common
     level?: number;
 
     // Camera
@@ -38,6 +38,10 @@ export interface ProcessedArea {
     // Overlay
     darkness?: number;
     fog?: string;
+
+    // Dynamic
+    quest?: number;
+    mapping?: number;
 }
 
 export interface Entities {

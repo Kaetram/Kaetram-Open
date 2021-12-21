@@ -4,6 +4,7 @@ import chests from './impl/chest';
 import music from './impl/music';
 import overlay from './impl/overlay';
 import pvp from './impl/pvp';
+import dynamic from './impl/dynamic';
 
 export default {
     achievements,
@@ -11,5 +12,6 @@ export default {
     chests,
     music,
     overlay,
-    pvp
+    pvp,
+    dynamic
 };
