@@ -198,8 +198,7 @@ export default class Player extends Character {
     public constructor(
         public world: World,
         public database: MongoDB,
-        public connection: Connection,
-        public clientId: string
+        public connection: Connection
     ) {
         super(-1, 'player', connection.id, -1, -1);
 
