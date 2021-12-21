@@ -1253,6 +1253,12 @@ export default class Player extends Character {
         return this.quests.getQuest(0)!.isFinished();
     }
 
+    public finishedQuest(id: number): boolean {
+        let quest = this.quests?.getQuest(id);
+
+        return quest?.isFinished() || false;
+    }
+
     public finishedAchievement(id: number): boolean {
         if (!this.quests) return false;
 

@@ -2,11 +2,13 @@ import _ from 'lodash';
 
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
+import Area from './areas/area';
 
 export default class Region {
     private entities: { [instance: string]: Entity } = {};
     private players: string[] = []; // A list of instance ids for players.
-    private joining: Entity[] = []; // Used for sending spawn positions
+    private joining: Entity[] = []; // Used for sending spawn positions.
+    private dynamicAreas: Area[] = [];
 
     public constructor(
         public x: number,
@@ -72,6 +74,24 @@ export default class Region {
     }
 
     /**
+     * Adds a dynamic are to our region.
+     * @param area The dynamic area we are adding.
+     */
+
+    public addDynamicArea(area: Area): void {
+        this.dynamicAreas.push(area);
+    }
+
+    /**
+     * Checks if there are any dynamic areas in the current region.
+     * @returns Whether or not the length of dynamic area array is greater than 0.
+     */
+
+    public hasDynamicAreas(): boolean {
+        return this.dynamicAreas.length > 0;
+    }
+
+    /**
      * Grab a list of entity instances and remove the `reject` from the list.
      * @param reject Entity that we are ignoring (typically a player).
      * @returns A list of entity instances.
@@ -111,6 +131,21 @@ export default class Region {
 
     public inRegion(x: number, y: number): boolean {
         return x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+    }
+
+    /**
+     * Iterates through the dynamic areas to see if the tile is contained
+     * within it. This method is a lot faster than using the areas `inArea`
+     * function.
+     * @param x The x position of the tile in the grid space.
+     * @param y The y position of the tile in the grid space.
+     * @returns The area that contains the dynamic tile.
+     */
+
+    public getDynamicArea(x: number, y: number): Area | undefined {
+        for (let area of this.dynamicAreas) if (area.contains(x, y)) return area;
+
+        return undefined;
     }
 
     /**
