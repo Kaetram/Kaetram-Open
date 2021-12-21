@@ -7,6 +7,7 @@ import Utils from '@kaetram/common/util/utils';
 import Connection from '../connection';
 import SocketHandler from '../sockethandler';
 import WebSocket, { AnySocket } from '../websocket';
+import { Modules } from '@kaetram/common/network';
 
 declare module 'ws' {
     interface WebSocket {
@@ -31,7 +32,7 @@ export default class WS extends WebSocket {
             // TODO - Handle client version....
 
             let connection = new Connection(
-                Utils.getConnectionId(),
+                Utils.createInstance(Modules.EntityType.Player),
                 this.type,
                 socket as AnySocket,
                 this.socketHandler

@@ -105,7 +105,7 @@ export default {
          * The chance a weapon will break ....
          */
 
-        let breakChance = Utils.randomRange(1, 100);
+        let breakChance = Utils.randomFloat(1, 100);
 
         return breakChance > 75;
     },
