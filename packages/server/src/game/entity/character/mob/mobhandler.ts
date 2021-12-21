@@ -1,4 +1,4 @@
-import Mobs from '../../../../util/mobs';
+import Mobs from '../../../../info/mobs';
 
 import type Player from '../player/player';
 import type Mob from './mob';

@@ -2,33 +2,41 @@ import _ from 'lodash';
 
 import log from '@kaetram/common/util/log';
 
-import abilityData from '../../data/abilities.json';
-import combatPlugins from '../../data/combat';
-import itemPlugins from '../../data/plugins';
-import itemData from '../../data/items.json';
-import mobData from '../../data/mobs.json';
-import npcData from '../../data/npcs.json';
-import objectData from '../../data/objects.json';
-import shopsData from '../../data/shops.json';
-import Abilities from './abilities';
-import Constants from './constants';
-import Formulas from './formulas';
-import Items from './items';
-import Mobs from './mobs';
-import NPCs from './npcs';
-import Objects from './objects';
-import Shops from './shops';
+import abilityData from '../data/abilities.json';
+import combatPlugins from '../data/combat';
+import itemPlugins from '../data/plugins';
+import itemData from '../data/items.json';
+import mobData from '../data/mobs.json';
+import npcData from '../data/npcs.json';
+import objectData from '../data/objects.json';
+import shopsData from '../data/shops.json';
 
-import type { ItemsData } from './items';
-import type { MobData } from './mobs';
-import type { NPCData } from './npcs';
-import type { ObjectsData } from './objects';
+import Abilities from './info/abilities';
+import Formulas from './info/formulas';
+import Items from './info/items';
+import Mobs from './info/mobs';
+import NPCs from './info/npcs';
+import Objects from './info/objects';
+import Shops from './info/shops';
 
-export default class Parser {
+import type { ItemsData } from './info/items';
+import type { MobData } from './info/mobs';
+import type { NPCData } from './info/npcs';
+import type { ObjectsData } from './info/objects';
+import { Modules } from '@kaetram/common/network';
+
+export default class Loader {
     private readyCallback?(): void;
 
+    /**
+     * This class is responsible for pasing through all of our JSONs and extracting
+     * information about each respective file. Take for example the mobs.json file.
+     * We extract each indiviudal mob and store it into a dictionary based on its ID.
+     * We manipulate and access the mob using its ID.
+     */
+
     public constructor() {
-        this.load();
+        this.onReady(this.handleReady.bind(this));
 
         this.loadMobData();
         this.loadNPCData();
@@ -39,13 +47,11 @@ export default class Parser {
         this.loadObjects();
     }
 
-    private load(): void {
-        this.onReady(() => {
-            Mobs.Plugins = combatPlugins;
+    private handleReady(): void {
+        Mobs.Plugins = combatPlugins;
 
-            log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
-            log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
-        });
+        log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
+        log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
     }
 
     private loadMobData(): void {
@@ -269,7 +275,7 @@ export default class Parser {
     private loadLevels(): void {
         Formulas.LevelExp[0] = 0;
 
-        for (let i = 1; i < Constants.MAX_LEVEL; i++) {
+        for (let i = 1; i < Modules.Constants.MAX_LEVEL; i++) {
             let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
             Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
         }

@@ -5,7 +5,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Messages from '../../../../network/messages';
-import Items from '../../../../util/items';
+import Items from '../../../../info/items';
 
 import type Slot from './containers/slot';
 import type Player from './player';
