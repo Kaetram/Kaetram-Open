@@ -354,21 +354,17 @@ export default class Regions {
         this.forEachSurroundingRegion(region, (surroundingRegion: number) => {
             if (player.hasLoadedRegion(surroundingRegion) && !force) return;
 
-            console.log(surroundingRegion);
-
             let region = this.regions[surroundingRegion];
 
             // Initialize empty array with tile data for the region.
             data[surroundingRegion] = [];
 
             region.forEachTile((x: number, y: number) => {
-                let tileInfo: TileInfo,
-                    dynamicArea = region.getDynamicArea(x, y);
-
-                tileInfo =
-                    region.hasDynamicAreas() && dynamicArea
-                        ? this.buildDynamicTile(player, dynamicArea, x, y)
-                        : this.buildTile(x, y);
+                let dynamicArea = region.getDynamicArea(x, y),
+                    tileInfo =
+                        region.hasDynamicAreas() && dynamicArea
+                            ? this.buildDynamicTile(player, dynamicArea, x, y)
+                            : this.buildTile(x, y);
 
                 data[surroundingRegion].push(tileInfo);
             });
@@ -390,7 +386,7 @@ export default class Regions {
 
     private buildTile(x: number, y: number, index?: number): TileInfo {
         // Calculate our index or use the one specified if not undefined.
-        index = index || this.map.coordToIndex(x, y);
+        index ||= this.map.coordToIndex(x, y);
 
         let tile: TileInfo = {
             x,
@@ -409,7 +405,7 @@ export default class Regions {
     }
 
     /**
-     * Takes the area and the player as extra parameters to determine if the player fullfills
+     * Takes the area and the player as extra parameters to determine if the player fulfills
      * the requirements for the area. If he does (say for example he finished the necessary quest)
      * then we use the mapped dynamic tile to render to him instead.
      * @param player The player character to extract achievement/quest/etc status.
@@ -420,13 +416,15 @@ export default class Regions {
      */
 
     private buildDynamicTile(player: Player, area: Area, x: number, y: number): TileInfo {
-        // Does not proceed any further if the player does not fullfill the requirements
-        if (!area.fullfillsRequirement(player)) return this.buildTile(x, y);
+        let original = this.buildTile(x, y);
+
+        // Does not proceed any further if the player does not fulfill the requirements
+        if (!area.fulfillsRequirement(player)) return original;
 
         let mappedTile = area.getMappedTile(x, y);
 
         // Defaults to building the original tile if mapping cannot be achieved.
-        if (!mappedTile) return this.buildTile(x, y);
+        if (!mappedTile) return original;
 
         // Gets the index of the mapped tile coordinates.
         let index = this.map.coordToIndex(mappedTile.x, mappedTile.y);
