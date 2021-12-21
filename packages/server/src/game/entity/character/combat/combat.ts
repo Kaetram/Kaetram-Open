@@ -5,7 +5,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Messages from '../../../../network/messages';
-import Formulas from '../../../../util/formulas';
+import Formulas from '../../../../info/formulas';
 import CombatQueue from './combatqueue';
 import Hit from './hit';
 

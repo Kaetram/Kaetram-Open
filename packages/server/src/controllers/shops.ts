@@ -4,8 +4,8 @@ import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
 import Messages from '../network/messages';
-import Items from '../util/items';
-import Shop from '../util/shops';
+import Items from '../info/items';
+import Shop from '../info/shops';
 
 import type { ShopData } from '@kaetram/common/types/info';
 import type Player from '../game/entity/character/player/player';

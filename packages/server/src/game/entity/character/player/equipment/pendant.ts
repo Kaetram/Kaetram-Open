@@ -1,6 +1,6 @@
 import { Modules } from '@kaetram/common/network';
 
-import Items from '../../../../../util/items';
+import Items from '../../../../../info/items';
 import Equipment from './equipment';
 
 export default class Pendant extends Equipment {

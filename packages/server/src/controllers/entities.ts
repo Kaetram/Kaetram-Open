@@ -13,10 +13,10 @@ import Chest from '../game/entity/objects/chest';
 import Item from '../game/entity/objects/item';
 import Projectile from '../game/entity/objects/projectile';
 import Messages from '../network/messages';
-import Formulas from '../util/formulas';
-import Items from '../util/items';
-import Mobs from '../util/mobs';
-import NPCs from '../util/npcs';
+import Formulas from '../info/formulas';
+import Items from '../info/items';
+import Mobs from '../info/mobs';
+import NPCs from '../info/npcs';
 
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';

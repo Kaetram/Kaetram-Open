@@ -1,6 +1,6 @@
 import { Modules } from '@kaetram/common/network';
 
-import Mobs from '../../../util/mobs';
+import Mobs from '../../../info/mobs';
 import Entity, { EntityState } from '../entity';
 import Combat from './combat/combat';
 

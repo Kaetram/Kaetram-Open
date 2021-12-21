@@ -4,7 +4,7 @@ import log from '@kaetram/common/util/log';
 import Database from './database/database';
 import World from './game/world';
 import SocketHandler from './network/sockethandler';
-import Parser from './util/parser';
+import Loader from './loader';
 
 import type Connection from './network/connection';
 
@@ -54,7 +54,7 @@ class Main {
         //     }
         // });
 
-        new Parser();
+        new Loader();
     }
 
     /**

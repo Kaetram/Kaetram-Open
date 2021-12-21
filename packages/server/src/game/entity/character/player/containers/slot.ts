@@ -1,6 +1,6 @@
 import log from '@kaetram/common/util/log';
 
-import Items from '../../../../../util/items';
+import Items from '../../../../../info/items';
 
 import type { SlotData } from '@kaetram/common/types/info';
 

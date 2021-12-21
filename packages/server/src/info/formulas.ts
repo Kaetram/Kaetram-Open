@@ -1,6 +1,5 @@
+import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
-
-import Constants from './constants';
 
 import type Character from '../game/entity/character/character';
 import type Player from '../game/entity/character/player/player';
@@ -130,7 +129,7 @@ export default {
     prevExp(experience: number): number {
         if (experience < 0) return -1;
 
-        for (let i = Constants.MAX_LEVEL; i > 0; i--)
+        for (let i = Modules.Constants.MAX_LEVEL; i > 0; i--)
             if (experience >= this.LevelExp[i]) return this.LevelExp[i];
 
         return 0;
@@ -141,7 +140,7 @@ export default {
 
         for (let i = 1; i < this.LevelExp.length; i++) if (experience < this.LevelExp[i]) return i;
 
-        return Constants.MAX_LEVEL;
+        return Modules.Constants.MAX_LEVEL;
     },
 
     getMaxHitPoints(level: number): number {
