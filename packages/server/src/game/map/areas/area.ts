@@ -82,13 +82,13 @@ export default class Area {
     }
 
     /**
-     * Checks if the player fullfills the requireemtns of the area.
+     * Checks if the player fulfills the requirements of the area.
      * @param player The player we are checking requirements for
-     * @returns Checks if the requirement is fullfilled.
+     * @returns Checks if the requirement is fulfilled.
      */
 
-    public fullfillsRequirement(player: Player): boolean {
-        if (!!this.achievement && !!this.quest)
+    public fulfillsRequirement(player: Player): boolean {
+        if (this.achievement && this.quest)
             return player.finishedAchievement(this.achievement) && player.finishedQuest(this.quest);
 
         if (this.achievement) return player.finishedAchievement(this.achievement);
@@ -102,7 +102,6 @@ export default class Area {
      * tile is simply the other state of the dynamic tile. Take for example a door:
      * a closed door's mapped tile is the open door version of it. This is done
      * straight through Tiled editor.
-     *
      * @param x The tile's x coordinate
      * @param y The tile's y coordinate
      * @returns Position (x and y) of the mapped tile.
