@@ -1,14 +1,14 @@
 import Utils from '@kaetram/common/util/utils';
 
-import Constants from '../../../../util/constants';
-import Items from '../../../../util/items';
-import Mobs, { MobData, MobDrops } from '../../../../util/mobs';
+import Items from '../../../../info/items';
+import Mobs, { MobData, MobDrops } from '../../../../info/mobs';
 import Character, { CharacterState } from '../character';
 import MobHandler from './mobhandler';
 
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
+import { Modules } from '@kaetram/common/network';
 
 interface MobState extends CharacterState {
     hitPoints: number;
@@ -90,7 +90,7 @@ export default class Mob extends Character {
     public getDrop(): { id: number; count: number } | null {
         if (!this.drops) return null;
 
-        let random = Utils.randomInt(0, Constants.DROP_PROBABILITY),
+        let random = Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY),
             dropObjects = Object.keys(this.drops),
             item = dropObjects[Utils.randomInt(0, dropObjects.length - 1)];
 

@@ -8,9 +8,8 @@ import Utils from '@kaetram/common/util/utils';
 import Incoming from '../../../../controllers/incoming';
 import Quests from '../../../../controllers/quests';
 import Messages, { Packet } from '../../../../network/messages';
-import Constants from '../../../../util/constants';
-import Formulas from '../../../../util/formulas';
-import Items from '../../../../util/items';
+import Formulas from '../../../../info/formulas';
+import Items from '../../../../info/items';
 import Character, { CharacterState } from '../character';
 import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
@@ -616,7 +615,7 @@ export default class Player extends Character {
     public canEquip(string: string): boolean {
         let requirement = Items.getLevelRequirement(string);
 
-        if (requirement > Constants.MAX_LEVEL) requirement = Constants.MAX_LEVEL;
+        if (requirement > Modules.Constants.MAX_LEVEL) requirement = Modules.Constants.MAX_LEVEL;
 
         if (requirement > this.level) {
             this.notify(`You must be at least level ${requirement} to equip this.`);
