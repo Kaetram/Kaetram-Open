@@ -5,10 +5,10 @@ import Utils from '@kaetram/common/util/utils';
 
 import mapData from '../../../data/map/world.json';
 import Spawns from '../../../data/spawns.json';
-import Items from '../../util/items';
-import Mobs from '../../util/mobs';
-import NPCs from '../../util/npcs';
-import Objects from '../../util/objects';
+import Items from '../../info/items';
+import Mobs from '../../info/mobs';
+import NPCs from '../../info/npcs';
+import Objects from '../../info/objects';
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';

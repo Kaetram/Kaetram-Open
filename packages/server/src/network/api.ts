@@ -6,11 +6,10 @@ import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import APIConstants from '../util/apiconstants';
-
 import type Player from '../game/entity/character/player/player';
 import type Mana from '../game/entity/character/player/points/mana';
 import type World from '../game/world';
+import { Modules } from '@kaetram/common/network';
 
 interface PlayerData {
     serverId: string;
@@ -85,7 +84,7 @@ export default class API {
         if (!this.verifyToken(request.body.accessToken)) {
             this.returnError(
                 response,
-                APIConstants.MALFORMED_PARAMETERS,
+                Modules.APIConstants.MALFORMED_PARAMETERS,
                 'Invalid `accessToken` specified for /player POST request.'
             );
             return;
@@ -96,7 +95,7 @@ export default class API {
         if (!this.verifyToken(request.body.accessToken)) {
             this.returnError(
                 response,
-                APIConstants.MALFORMED_PARAMETERS,
+                Modules.APIConstants.MALFORMED_PARAMETERS,
                 'Invalid `accessToken` specified for /chat POST request.'
             );
             return;
@@ -125,7 +124,7 @@ export default class API {
         if (!this.verifyToken(request.query.accessToken as string)) {
             this.returnError(
                 response,
-                APIConstants.MALFORMED_PARAMETERS,
+                Modules.APIConstants.MALFORMED_PARAMETERS,
                 'Invalid `accessToken` specified for /players GET request.'
             );
             return;
@@ -237,7 +236,11 @@ export default class API {
             : `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
-    private returnError(response: express.Response, error: APIConstants, message: string): void {
+    private returnError(
+        response: express.Response,
+        error: Modules.APIConstants,
+        message: string
+    ): void {
         response.json({
             error,
             message

@@ -1,6 +1,6 @@
-import Items from '../../util/items';
-import Mobs from '../../util/mobs';
-import NPCs from '../../util/npcs';
+import Items from '../../info/items';
+import Mobs from '../../info/mobs';
+import NPCs from '../../info/npcs';
 
 import type Combat from './character/combat/combat';
 import type Mob from './character/mob/mob';

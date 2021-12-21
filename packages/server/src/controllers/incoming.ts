@@ -8,7 +8,7 @@ import Utils from '@kaetram/common/util/utils';
 
 import Creator from '../database/mongodb/creator';
 import Messages from '../network/messages';
-import Items from '../util/items';
+import Items from '../info/items';
 import Commands from './commands';
 
 import type { EquipmentType } from '@kaetram/common/types/info';
