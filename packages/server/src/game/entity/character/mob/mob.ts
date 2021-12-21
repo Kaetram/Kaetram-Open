@@ -44,8 +44,8 @@ export default class Mob extends Character {
     public forceTalkCallback?: (message: string) => void;
     public roamingCallback?(): void;
 
-    public constructor(id: number, instance: string, x: number, y: number) {
-        super(id, 'mob', instance, x, y);
+    public constructor(id: number, x: number, y: number) {
+        super(id, 'mob', Utils.createInstance(Modules.EntityType.Mob), x, y);
 
         if (!Mobs.exists(id)) return;
 

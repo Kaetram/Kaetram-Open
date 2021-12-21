@@ -63,8 +63,7 @@ export default class Network {
     }
 
     private handlePlayerConnection(connection: Connection): void {
-        let clientId = Utils.generateClientId(),
-            player = new Player(this.world, this.database, connection, clientId),
+        let player = new Player(this.world, this.database, connection),
             timeDifference = Date.now() - this.getSocketTime(connection);
 
         if (!config.debugging && timeDifference < this.differenceThreshold) {
@@ -79,7 +78,7 @@ export default class Network {
         this.pushToPlayer(
             player,
             new Messages.Handshake({
-                id: clientId
+                id: player.instance
             })
         );
     }
