@@ -4,6 +4,7 @@ import Entity from '../entity';
 
 import type { ProjectileData } from '@kaetram/common/types/messages';
 import type Character from '../character/character';
+import Utils from '@kaetram/common/util/utils';
 
 export default class Projectile extends Entity {
     // startX = -1;
@@ -22,8 +23,8 @@ export default class Projectile extends Entity {
     private static = false;
     private special!: never;
 
-    public constructor(id: Modules.Projectiles, instance: string) {
-        super(id, 'projectile', instance);
+    public constructor(id: Modules.Projectiles) {
+        super(id, 'projectile', Utils.createInstance(Modules.EntityType.Projectile));
     }
 
     setStart(x: number, y: number): void {

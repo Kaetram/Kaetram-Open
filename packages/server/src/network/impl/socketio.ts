@@ -8,6 +8,7 @@ import Connection from '../connection';
 import WebSocket, { AnySocket } from '../websocket';
 
 import type SocketHandler from '../sockethandler';
+import { Modules } from '@kaetram/common/network';
 
 export default class SocketIO extends WebSocket {
     public constructor(socketHandler: SocketHandler) {
@@ -27,7 +28,7 @@ export default class SocketIO extends WebSocket {
             log.info(`Received connection from: ${socket.conn.remoteAddress}.`);
 
             let connection = new Connection(
-                Utils.getConnectionId(),
+                Utils.createInstance(Modules.EntityType.Player),
                 this.type,
                 socket as AnySocket,
                 this.socketHandler
