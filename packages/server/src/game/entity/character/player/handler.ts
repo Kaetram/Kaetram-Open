@@ -6,8 +6,8 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Messages from '../../../../network/messages';
-import NPCs from '../../../../util/npcs';
-import Shops from '../../../../util/shops';
+import NPCs from '../../../../info/npcs';
+import Shops from '../../../../info/shops';
 import Hit from '../combat/hit';
 
 import type Areas from '../../../map/areas/areas';

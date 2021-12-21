@@ -262,12 +262,20 @@ export let DamageColours = {
 
 export enum Constants {
     MAX_STACK = 2_147_483_647,
-    MAX_LEVEL = 100,
-    INVENTORY_SIZE = 35,
-    BANK_SIZE = 52,
-    HITPOINTS_START = 100,
-    STAMINA_START = 50,
-    DIAGONAL_FLAG = 0x20000000,
-    VERTICAL_FLAG = 0x40000000,
-    HORIZONTAL_FLAG = 0x80000000
+    MAX_LEVEL = 135,
+    INVENTORY_SIZE = 20, // Maximum inventory size
+    BANK_SIZE = 52, // Maximum bank size
+    HITPOINTS_START = 100, // Default hitpoints start value
+    DROP_PROBABILITY = 1000, // 1 in 1000
+    MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
+    DIAGONAL_FLAG = 0x20_00_00_00,
+    VERTICAL_FLAG = 0x40_00_00_00,
+    HORIZONTAL_FLAG = 0x80_00_00_00
+}
+
+export enum APIConstants {
+    UNHANDLED_HTTP_METHOD,
+    NOT_FOUND_ERROR,
+    MALFORMED_PARAMETERS,
+    PLAYER_NOT_ONLINE
 }
