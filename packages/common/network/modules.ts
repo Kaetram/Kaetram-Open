@@ -274,6 +274,7 @@ export enum Constants {
     HITPOINTS_START = 100, // Default hitpoints start value
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
+    HEAL_RATE = 10_000, // healing every 10 seconds
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
     HORIZONTAL_FLAG = 0x80_00_00_00
@@ -284,8 +285,7 @@ export enum Defaults {
     MANA = 50,
     HITPOINTS = 69, // nice.
     MOVEMENT_SPEED = 250, // 250 pixels per frame?
-    ATTACK_RATE = 1000, // every 1 second
-    HEAL_RATE = 10_000 // healing every 10 seconds
+    ATTACK_RATE = 1000 // every 1 second
 }
 
 // Defaults that apply specifically to mobs
