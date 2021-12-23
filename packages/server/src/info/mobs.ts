@@ -9,7 +9,7 @@ export interface MobData {
     id: number;
     key: string;
     name: string;
-    xp: number;
+    experience: number;
     combatPlugin: string;
     hitPoints: number;
     drops: MobDrops;
@@ -53,7 +53,7 @@ export default {
     },
 
     getXp(id: number): number {
-        if (id in this.Ids) return this.Ids[id].xp;
+        if (id in this.Ids) return this.Ids[id].experience;
 
         return -1;
     },

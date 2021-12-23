@@ -1019,8 +1019,8 @@ export default class Incoming {
             'We have detected no-clipping in your client. Please submit a bug report.'
         );
 
-        x = this.player.previousX < 0 ? this.player.x : this.player.previousX;
-        y = this.player.previousY < 0 ? this.player.y : this.player.previousY;
+        x = this.player.oldX < 0 ? this.player.x : this.player.oldX;
+        y = this.player.oldY < 0 ? this.player.y : this.player.oldY;
 
         if (this.world.map.isColliding(x, y)) {
             let spawn = this.player.getSpawn();

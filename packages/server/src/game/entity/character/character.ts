@@ -17,25 +17,18 @@ type PoisonCallback = (poison: string) => void;
 type SubAoECallback = (radius: number, hasTerror: boolean) => void;
 
 export default abstract class Character extends Entity {
-    public level = -1;
+    public level = 1;
 
-    public movementSpeed = 250;
+    public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
     public attackRange = 1;
-    public attackRate = 1000;
-    public healingRate = 10_000;
-
-    public spawnDistance = 7;
-
-    public previousX = -1;
-    public previousY = -1;
+    public attackRate = Modules.Defaults.ATTACK_RATE;
+    public healingRate = Modules.Defaults.HEAL_RATE;
 
     public hitPoints = -1;
     public maxHitPoints = -1;
 
     /* States */
     public poison: string | null = null;
-    public aggressive = false;
-    public aggroRange = 2;
 
     public target: Character | null = null;
 
@@ -167,9 +160,6 @@ export default abstract class Character extends Entity {
     }
 
     public override setPosition(x: number, y: number): void {
-        this.previousX = this.x;
-        this.previousY = this.y;
-
         super.setPosition(x, y);
     }
 
@@ -200,11 +190,13 @@ export default abstract class Character extends Entity {
     }
 
     public getWeaponLevel(): number {
-        return this.weaponLevel;
+        return 1;
+        // return this.weaponLevel;
     }
 
     public getArmourLevel(): number {
-        return this.armourLevel;
+        return 1;
+        // return this.armourLevel;
     }
 
     public override serialize(): EntityData {
