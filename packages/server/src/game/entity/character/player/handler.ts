@@ -1,17 +1,12 @@
 import _ from 'lodash';
 
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-
-import Messages from '../../../../network/messages';
-import NPCs from '../../../../info/npcs';
-import Shops from '../../../../info/shops';
 import Hit from '../combat/hit';
 
 import type Areas from '../../../map/areas/areas';
-import type Entity from '../../entity';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
