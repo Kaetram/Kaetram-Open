@@ -81,8 +81,8 @@ export default abstract class Character extends Entity {
     public ring!: Ring;
     public boots!: Boots;
 
-    protected constructor(key: string, instance: string, x: number, y: number) {
-        super(instance, x, y);
+    protected constructor(instance: string, key: string, x: number, y: number) {
+        super(instance, key, x, y);
 
         this.loadCombat();
         this.startHealing();

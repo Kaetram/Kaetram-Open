@@ -182,11 +182,6 @@ export default class Map {
         tileset.lastGID = firstGID + (tileset.width * tileset.height) / this.tileSize ** 2;
         tileset.loaded = true;
 
-        console.log('---------------');
-        console.log(path);
-        console.log(`firstGID: ${firstGID}.`);
-        console.log(`tileCount: ${tileset.lastGID}`);
-
         tileset.addEventListener('load', () => {
             if (tileset.width % this.tileSize > 0)
                 // Prevent uneven tilemaps from loading.

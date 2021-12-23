@@ -8,8 +8,8 @@ import NPCs from '@kaetram/server/src/info/npcs';
 export default class NPC extends Entity {
     // talkIndex = 0;
 
-    public constructor(private key: string, x: number, y: number) {
-        super(Utils.createInstance(Modules.EntityType.NPC), x, y);
+    public constructor(key: string, x: number, y: number) {
+        super(Utils.createInstance(Modules.EntityType.NPC), key, x, y);
     }
 
     public talk(messages: string[], player?: Player): string | undefined {
