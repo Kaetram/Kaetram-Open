@@ -17,13 +17,11 @@ import type Item from './objects/item';
 export interface EntityData {
     // Entity data
     instance: string;
-    key: string;
     type: number;
+    key: string;
+    name?: string;
     x: number;
     y: number;
-
-    // Universal elements
-    name?: string; // Entity's name
 
     // Character data
     movementSpeed?: number;
@@ -45,9 +43,15 @@ export interface EntityData {
 type MovementCallback = (x: number, y: number) => void;
 type RegionCallback = (region: number) => void;
 
+/**
+ * An abstract class for every entity in the game. The `instance`
+ * represents a unique ID assigned to each entity. `key` represents
+ * the entity's data identification (and image file name).
+ */
+
 abstract class Entity {
     private type: number; // EntityType
-    public key = ''; // The entity's key (image file)
+    public name = '';
 
     public x = -1;
     public y = -1;
@@ -68,49 +72,14 @@ abstract class Entity {
 
     public specialState!: 'boss' | 'miniboss' | 'achievementNpc' | 'area' | 'questNpc' | 'questMob';
     public customScale!: number;
-    public roaming = false;
 
     public movementCallback?: MovementCallback;
     public regionCallback?: RegionCallback;
 
-    protected constructor(public instance: string, key: string, x: number, y: number) {
+    protected constructor(public instance: string, public key = '', x: number, y: number) {
         this.type = Utils.getEntityType(this.instance);
-        this.key = key;
 
-        this.x = x!;
-        this.y = y!;
-
-        this.oldX = x!;
-        this.oldY = y!;
-    }
-
-    public getDistance(entity: Entity): number {
-        let x = Math.abs(this.x - entity.x),
-            y = Math.abs(this.y - entity.y);
-
-        return x > y ? x : y;
-    }
-
-    private getNameColour(): string {
-        switch (this.specialState) {
-            case 'boss':
-                return '#F60404';
-
-            case 'miniboss':
-                return '#ffbf00';
-
-            case 'achievementNpc':
-                return '#33cc33';
-
-            case 'area':
-                return '#00aa00';
-
-            case 'questNpc':
-                return '#6699ff';
-
-            case 'questMob':
-                return '#0099cc';
-        }
+        this.setPosition(x, y);
     }
 
     /**
@@ -121,12 +90,14 @@ abstract class Entity {
      */
 
     public setPosition(x: number, y: number): void {
-        this.oldX = this.x;
-        this.oldY = this.y;
+        // On initialization just set oldX/Y to current position
+        this.oldX = this.x === -1 ? x : this.x;
+        this.oldY = this.y === -1 ? y : this.y;
 
         this.x = x;
         this.y = y;
 
+        // Make a callback
         this.movementCallback?.(x, y);
     }
 
@@ -137,6 +108,20 @@ abstract class Entity {
 
     public setRegion(region: number): void {
         this.region = region;
+    }
+
+    /**
+     * Finds the distance between the current entity object and the
+     * specified entity parameter.
+     * @param entity Entity we are finding distance of.
+     * @returns The approximate distance in tiles between entities.
+     */
+
+    public getDistance(entity: Entity): number {
+        let x = Math.abs(this.x - entity.x),
+            y = Math.abs(this.y - entity.y);
+
+        return x > y ? x : y;
     }
 
     /**
@@ -229,11 +214,12 @@ abstract class Entity {
      */
 
     public serialize(): EntityData {
-        let { instance, type, key, x, y } = this;
+        let { instance, type, key, name, x, y } = this;
 
         return {
             instance,
             type,
+            name,
             key,
             x,
             y
