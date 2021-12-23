@@ -6,7 +6,6 @@ import abilityData from '../data/abilities.json';
 import combatPlugins from '../data/combat';
 import itemPlugins from '../data/plugins';
 import itemData from '../data/items.json';
-import mobData from '../data/mobs.json';
 import npcData from '../data/npcs.json';
 import objectData from '../data/objects.json';
 import shopsData from '../data/shops.json';
@@ -14,13 +13,11 @@ import shopsData from '../data/shops.json';
 import Abilities from './info/abilities';
 import Formulas from './info/formulas';
 import Items from './info/items';
-import Mobs from './info/mobs';
 import NPCs from './info/npcs';
 import Objects from './info/objects';
 import Shops from './info/shops';
 
 import type { ItemsData } from './info/items';
-import type { MobData } from './info/mobs';
 import type { NPCData } from './info/npcs';
 import type { ObjectsData } from './info/objects';
 import { Modules } from '@kaetram/common/network';
@@ -38,7 +35,6 @@ export default class Loader {
     public constructor() {
         this.onReady(this.handleReady.bind(this));
 
-        this.loadMobData();
         this.loadNPCData();
         this.loadItemData();
         this.loadAbilityData();
@@ -48,67 +44,10 @@ export default class Loader {
     }
 
     private handleReady(): void {
-        Mobs.Plugins = combatPlugins;
+        //Mobs.Plugins = combatPlugins;
 
-        log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
+        //log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
         log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
-    }
-
-    private loadMobData(): void {
-        let mobCounter = 0;
-
-        _.each(mobData, (value, key) => {
-            key = key.toLowerCase();
-
-            let {
-                id,
-                name,
-                drops,
-                hitPoints,
-                armour,
-                weapon,
-                experience,
-                level,
-                aggroRange,
-                attackRange,
-                aggressive,
-                isPoisonous,
-                attackRate,
-                movementSpeed,
-                projectileName,
-                spawnDelay,
-                combatPlugin,
-                hiddenName
-            } = value as MobData;
-
-            Mobs.Properties[key] = {
-                key,
-                id,
-                name: name || key,
-                drops: drops || null,
-                hitPoints: hitPoints || 10,
-                armour: armour || 0,
-                weapon: weapon || 0,
-                experience: experience || 0,
-                level: level || 0,
-                aggroRange: aggroRange || 2,
-                attackRange: attackRange || 1,
-                aggressive: aggressive || false,
-                isPoisonous: isPoisonous || false,
-                attackRate: attackRate || 1000,
-                movementSpeed: movementSpeed || 200,
-                projectileName,
-                spawnDelay: spawnDelay || 60_000,
-                combatPlugin,
-                hiddenName: hiddenName || false
-            };
-
-            Mobs.Ids[value.id] = Mobs.Properties[key];
-
-            mobCounter++;
-        });
-
-        log.info(`Finished loading ${mobCounter} mobs.`);
     }
 
     private loadNPCData(): void {
