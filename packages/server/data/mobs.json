@@ -13,7 +13,7 @@
     "aggressive": false,
     "attackRate": 1400,
     "movementSpeed": 500,
-    "spawnDelay": 10000
+    "respawnDelay": 10000
   },
 
   "bat": {
@@ -30,7 +30,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 20000
+    "respawnDelay": 20000
   },
 
   "crab": {
@@ -47,7 +47,7 @@
     "aggressive": false,
     "attackRate": 1200,
     "movementSpeed": 300,
-    "spawnDelay": 20000
+    "respawnDelay": 20000
   },
 
   "wizard": {
@@ -65,7 +65,7 @@
     "attackRate": 1100,
     "movementSpeed": 350,
     "projectileName": "projectile-fireball",
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "goblin": {
@@ -82,7 +82,7 @@
     "aggressive": false,
     "attackRate": 1400,
     "movementSpeed": 300,
-    "spawnDelay": 55000
+    "respawnDelay": 55000
   },
 
   "skeleton": {
@@ -99,7 +99,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
   "ogre": {
@@ -116,7 +116,7 @@
     "aggressive": true,
     "attackRate": 1250,
     "movementSpeed": 300,
-    "spawnDelay": 45000
+    "respawnDelay": 45000
   },
 
   "skeleton2": {
@@ -133,7 +133,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 60000
+    "respawnDelay": 60000
   },
 
   "snek": {
@@ -150,7 +150,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "spectre": {
@@ -167,7 +167,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "eye": {
@@ -184,7 +184,7 @@
     "aggressive": false,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "deathknight": {
@@ -201,7 +201,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
   "adherer": {
@@ -219,7 +219,7 @@
     "attackRate": 2000,
     "movementSpeed": 750,
     "projectileName": "projectile-fireball",
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "ant": {
@@ -236,7 +236,7 @@
     "aggressive": true,
     "attackRate": 1000,
     "movementSpeed": 600,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "babyspider": {
@@ -253,7 +253,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
 
   },
 
@@ -271,7 +271,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "blackpirateskeleton": {
@@ -288,7 +288,7 @@
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
   "greenpirateskeleton": {
@@ -305,7 +305,7 @@
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
   "blackwizard": {
@@ -323,7 +323,7 @@
     "attackRate": 900,
     "movementSpeed": 400,
     "projectileName": "projectile-fireball",
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "blazespider": {
@@ -340,7 +340,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "bluecockroach": {
@@ -357,7 +357,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "bluePpeta": {
@@ -374,7 +374,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "cactus": {
@@ -391,7 +391,7 @@
     "aggressive": true,
     "attackRate": 1300,
     "movementSpeed": 400,
-    "spawnDelay": 35000,
+    "respawnDelay": 35000,
     "hiddenName": true
   },
 
@@ -409,7 +409,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "clam": {
@@ -426,7 +426,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "cobra": {
@@ -443,7 +443,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "crystalscolpion": {
@@ -460,7 +460,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "cursedhahoemask": {
@@ -477,7 +477,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "curseddjangseung": {
@@ -494,7 +494,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "darkogre": {
@@ -511,7 +511,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "darkscolpion": {
@@ -528,7 +528,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "darkskeleton": {
@@ -545,7 +545,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "desertscolpion": {
@@ -562,7 +562,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "devilkazya": {
@@ -579,7 +579,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "earthworm": {
@@ -596,7 +596,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "firespider": {
@@ -613,7 +613,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "flaredanceknight": {
@@ -630,7 +630,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "frog": {
@@ -647,7 +647,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "ghostrider": {
@@ -664,7 +664,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "goldgolem": {
@@ -681,7 +681,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "golem": {
@@ -698,7 +698,7 @@
     "aggressive": true,
     "attackRate": 750,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "greenfish": {
@@ -715,7 +715,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "hellspider": {
@@ -732,7 +732,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "hermitcrab": {
@@ -749,7 +749,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "hobgoblin": {
@@ -766,7 +766,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "hongcheol": {
@@ -783,7 +783,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "icegolem": {
@@ -800,7 +800,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "iceknight": {
@@ -817,7 +817,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "icevulture": {
@@ -834,7 +834,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "infectedguard": {
@@ -851,7 +851,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "ironogre": {
@@ -868,7 +868,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "livingarmor": {
@@ -885,7 +885,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "mantis": {
@@ -902,7 +902,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "mermaid": {
@@ -919,7 +919,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "mimic": {
@@ -936,7 +936,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000,
+    "respawnDelay": 35000,
     "hiddenName": true
   },
 
@@ -954,7 +954,7 @@
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "miniknight": {
@@ -971,7 +971,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "oldogre": {
@@ -988,7 +988,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "orc": {
@@ -1005,7 +1005,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "pain": {
@@ -1022,7 +1022,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "penguin": {
@@ -1039,7 +1039,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "pierrot": {
@@ -1056,7 +1056,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "pinkelf": {
@@ -1073,7 +1073,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "poisonspider": {
@@ -1091,7 +1091,7 @@
     "poisonous": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "preta": {
@@ -1108,7 +1108,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "purplepreta": {
@@ -1125,7 +1125,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "redcockroach": {
@@ -1142,7 +1142,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "redelf": {
@@ -1159,7 +1159,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "redfish": {
@@ -1176,7 +1176,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "redguard": {
@@ -1193,7 +1193,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "redmouse": {
@@ -1210,7 +1210,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "redpirateskeleton": {
@@ -1227,7 +1227,7 @@
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 400,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
   "rhaphidophoridae": {
@@ -1244,7 +1244,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "rudolf": {
@@ -1261,7 +1261,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "santaelf": {
@@ -1278,7 +1278,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "scorpion": {
@@ -1295,7 +1295,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "skyelf": {
@@ -1312,7 +1312,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "slime": {
@@ -1329,7 +1329,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "smalldevil": {
@@ -1346,7 +1346,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "snowelf": {
@@ -1363,7 +1363,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "snowman": {
@@ -1380,7 +1380,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "snowrabbit": {
@@ -1397,7 +1397,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "snowwolf": {
@@ -1414,7 +1414,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "icegoblin": {
@@ -1431,7 +1431,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "soldierant": {
@@ -1448,7 +1448,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "soybeanbug": {
@@ -1465,7 +1465,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "spider": {
@@ -1482,7 +1482,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "squirrel": {
@@ -1499,7 +1499,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "suicideghost": {
@@ -1516,7 +1516,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "vulture": {
@@ -1533,7 +1533,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "whitebear": {
@@ -1550,7 +1550,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "whitemouse": {
@@ -1567,7 +1567,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "whitetiger": {
@@ -1584,7 +1584,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "wolf": {
@@ -1601,7 +1601,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "yellowbat": {
@@ -1618,7 +1618,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "yellowfish": {
@@ -1635,7 +1635,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "yellowmouse": {
@@ -1652,7 +1652,7 @@
     "aggressive": false,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "yellowpreta": {
@@ -1669,7 +1669,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "zombie": {
@@ -1686,7 +1686,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "skeletonking": {
@@ -1703,7 +1703,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 50000
+    "respawnDelay": 50000
   },
 
   "ogrelord": {
@@ -1720,7 +1720,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 600,
-    "spawnDelay": 75000
+    "respawnDelay": 75000
   },
 
   "windguardian": {
@@ -1738,7 +1738,7 @@
     "aggressive": true,
     "attackRate": 1300,
     "movementSpeed": 500,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "lightningguardian": {
@@ -1755,7 +1755,7 @@
     "aggressive": true,
     "attackRate": 1750,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "darkregion": {
@@ -1772,7 +1772,7 @@
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "darkregionillusion": {
@@ -1788,7 +1788,7 @@
     "aggressive": true,
     "attackRate": 1300,
     "movementSpeed": 800,
-    "spawnDelay": -1
+    "respawnDelay": -1
   },
 
   "miniseadragon": {
@@ -1805,7 +1805,7 @@
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "forestdragon": {
@@ -1822,7 +1822,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 800,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "enel": {
@@ -1839,7 +1839,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 800,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "seadragon": {
@@ -1856,7 +1856,7 @@
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "minidragon": {
@@ -1873,7 +1873,7 @@
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "piratecaptain": {
@@ -1891,7 +1891,7 @@
     "projectileName": "projectile-iceball",
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 115000
+    "respawnDelay": 115000
   },
 
   "pirateskeleton": {
@@ -1908,7 +1908,7 @@
     "aggressive": true,
     "attackRate": 1200,
     "movementSpeed": 600,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "queenant": {
@@ -1926,7 +1926,7 @@
     "attackRate": 1500,
     "movementSpeed": 600,
     "projectileName": "projectile-terror",
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "skydinosaur": {
@@ -1943,7 +1943,7 @@
     "aggressive": true,
     "attackRate": 1800,
     "movementSpeed": 500,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "squid": {
@@ -1961,7 +1961,7 @@
     "projectileName": "projectile-terror",
     "attackRate": 1300,
     "movementSpeed": 1200,
-    "spawnDelay": 95000
+    "respawnDelay": 95000
   },
 
   "brownmouse": {
@@ -1978,7 +1978,7 @@
     "aggressive": false,
     "attackRate": 1100,
     "movementSpeed": 400,
-    "spawnDelay": 35000
+    "respawnDelay": 35000
   },
 
   "pickle": {
@@ -1995,7 +1995,7 @@
     "aggressive": false,
     "attackRate": 1300,
     "movementSpeed": 1000,
-    "spawnDelay": 65000
+    "respawnDelay": 65000
   },
 
   "icerat": {
@@ -2011,7 +2011,7 @@
     "aggressive": false,
     "attackRate": 1500,
     "movementSpeed": 500,
-    "spawnDelay": 10000
+    "respawnDelay": 10000
   },
 
   "icebat": {
@@ -2028,7 +2028,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 350,
-    "spawnDelay": 20000
+    "respawnDelay": 20000
   },
 
   "icecrab": {
@@ -2045,6 +2045,6 @@
     "aggressive": false,
     "attackRate": 1200,
     "movementSpeed": 300,
-    "spawnDelay": 20000
+    "respawnDelay": 20000
   }
 }

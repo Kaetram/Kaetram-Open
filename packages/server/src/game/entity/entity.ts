@@ -79,7 +79,7 @@ abstract class Entity {
     protected constructor(public instance: string, public key = '', x: number, y: number) {
         this.type = Utils.getEntityType(this.instance);
 
-        this.setPosition(x, y);
+        this.updatePosition(x, y);
     }
 
     /**
@@ -91,14 +91,30 @@ abstract class Entity {
 
     public setPosition(x: number, y: number): void {
         // On initialization just set oldX/Y to current position
-        this.oldX = this.x === -1 ? x : this.x;
-        this.oldY = this.y === -1 ? y : this.y;
+        this.oldX = this.x;
+        this.oldY = this.y;
 
         this.x = x;
         this.y = y;
 
         // Make a callback
         this.movementCallback?.(x, y);
+    }
+
+    /**
+     * This is an external set position function used when initializing an entity.
+     * This prevents any whacky subclass calls to `setPosition` when we first create
+     * the entity.
+     * @param x The new x grid position.
+     * @param y The new y grid position.
+     */
+
+    public updatePosition(x: number, y: number): void {
+        this.oldX = this.x === -1 ? x : this.x;
+        this.oldY = this.y === -1 ? y : this.y;
+
+        this.x = x;
+        this.y = y;
     }
 
     /**
