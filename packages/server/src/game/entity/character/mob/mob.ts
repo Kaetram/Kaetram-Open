@@ -49,7 +49,7 @@ export default class Mob extends Character {
     public roamingCallback?(): void;
 
     public constructor(key: string, x: number, y: number) {
-        super(key, Utils.createInstance(Modules.EntityType.Mob), x, y);
+        super(Utils.createInstance(Modules.EntityType.Mob), key, x, y);
 
         this.spawnX = x;
         this.spawnY = y;

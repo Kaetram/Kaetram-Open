@@ -24,7 +24,8 @@ export default class Projectile extends Entity {
     private special!: never;
 
     public constructor(key: Modules.Projectiles, x: number, y: number) {
-        super(Utils.createInstance(Modules.EntityType.Projectile), x, y);
+        //TODO - Refactor this whole class
+        super(Utils.createInstance(Modules.EntityType.Projectile), 'projectile', x, y);
     }
 
     setStart(x: number, y: number): void {
