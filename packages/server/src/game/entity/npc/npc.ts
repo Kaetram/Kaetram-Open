@@ -8,16 +8,16 @@ import NPCs from '@kaetram/server/src/info/npcs';
 export default class NPC extends Entity {
     // talkIndex = 0;
 
-    public constructor(key: string, x: number, y: number) {
-        super(NPCs.stringToId(key)!, 'npc', Utils.createInstance(Modules.EntityType.NPC), x, y);
+    public constructor(private key: string, x: number, y: number) {
+        super(Utils.createInstance(Modules.EntityType.NPC), x, y);
     }
 
     public talk(messages: string[], player?: Player): string | undefined {
         if (!player) return;
 
-        if (player.npcTalk !== this.id) {
+        if (player.npcTalk !== this.key) {
             player.talkIndex = 0;
-            player.npcTalk = this.id;
+            player.npcTalk = this.key;
         }
 
         let message = messages[player.talkIndex];

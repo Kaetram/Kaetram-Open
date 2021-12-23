@@ -1,26 +1,30 @@
 import Utils from '@kaetram/common/util/utils';
 
 import Items from '../../../../info/items';
-import Mobs, { MobData, MobDrops } from '../../../../info/mobs';
-import Character, { CharacterState } from '../character';
+import Character from '../character';
 import MobHandler from './mobhandler';
 
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
-import { Modules } from '@kaetram/common/network';
 
-interface MobState extends CharacterState {
-    hitPoints: number;
-    maxHitPoints: number;
-    attackRange: number;
-    level: number;
-    hiddenName: boolean;
-}
+import data from '../../../../../data/mobs.json';
+
+import { Modules } from '@kaetram/common/network';
+import { EntityData } from '../../entity';
 
 export default class Mob extends Character {
-    private data!: MobData;
-    private drops!: MobDrops;
+    private spawnX: number;
+    private spawnY: number;
+
+    public experience = Modules.MobDefaults.Experience; // Use default experience if not specified.
+    private drops?: { [itemKey: string]: number };
+    private spawnDelay = Modules.MobDefaults.SpawnDelay; // Use default spawn delay if not specified.
+
+    // Mob data
+
+    // private data!: MobData;
+    // private drops!: MobDrops;
 
     public respawnDelay!: number;
 
@@ -38,7 +42,6 @@ export default class Mob extends Character {
     public area!: Area;
 
     private loadCallback?(): void;
-    private refreshCallback?(): void;
     private respawnCallback?(): void;
 
     public forceTalkCallback?: (message: string) => void;
@@ -47,30 +50,31 @@ export default class Mob extends Character {
     public constructor(id: number, x: number, y: number) {
         super(id, 'mob', Utils.createInstance(Modules.EntityType.Mob), x, y);
 
-        if (!Mobs.exists(id)) return;
+        this.spawnX = x;
+        this.spawnY = y;
 
-        let data = Mobs.Ids[id];
+        // if (!Mobs.exists(id)) return;
 
-        this.data = data;
-        this.hitPoints = data.hitPoints;
-        this.maxHitPoints = data.hitPoints;
-        this.drops = data.drops;
+        // let data = Mobs.Ids[id];
 
-        this.respawnDelay = data.spawnDelay;
+        // this.data = data;
+        // this.hitPoints = data.hitPoints;
+        // this.maxHitPoints = data.hitPoints;
+        // this.drops = data.drops;
 
-        this.level = data.level;
+        // this.respawnDelay = data.spawnDelay;
 
-        this.armourLevel = data.armour;
-        this.weaponLevel = data.weapon;
-        this.attackRange = data.attackRange;
-        this.aggroRange = this.data.aggroRange;
-        this.aggressive = data.aggressive;
-        this.attackRate = data.attackRate;
-        this.movementSpeed = data.movementSpeed;
+        // this.level = data.level;
 
-        this.spawnLocation = [x, y];
+        // this.armourLevel = data.armour;
+        // this.weaponLevel = data.weapon;
+        // this.attackRange = data.attackRange;
+        // this.aggroRange = this.data.aggroRange;
+        // this.aggressive = data.aggressive;
+        // this.attackRate = data.attackRate;
+        // this.movementSpeed = data.movementSpeed;
 
-        this.projectileName = this.getProjectileName();
+        // this.projectileName = this.getProjectileName();
     }
 
     public load(): void {
@@ -78,13 +82,6 @@ export default class Mob extends Character {
         new MobHandler(this);
 
         this.loadCallback?.();
-    }
-
-    public refresh(): void {
-        this.hitPoints = this.data.hitPoints;
-        this.maxHitPoints = this.data.hitPoints;
-
-        this.refreshCallback?.();
     }
 
     public getDrop(): { id: number; count: number } | null {
@@ -102,10 +99,6 @@ export default class Mob extends Character {
             id: Items.stringToId(item)!,
             count
         };
-    }
-
-    public override getProjectileName(): string {
-        return this.data.projectileName || 'projectile-pinearrow';
     }
 
     public canAggro(player: Player): boolean {
@@ -140,11 +133,11 @@ export default class Mob extends Character {
     }
 
     private distanceToSpawn(): number {
-        return this.getCoordDistance(this.spawnLocation[0], this.spawnLocation[1]);
+        return Utils.getDistance(this.x, this.y, this.spawnX, this.spawnY);
     }
 
     public isAtSpawn(): boolean {
-        return this.x === this.spawnLocation[0] && this.y === this.spawnLocation[1];
+        return this.x === this.spawnX && this.y === this.spawnY;
     }
 
     public isOutsideSpawn(): boolean {
@@ -170,20 +163,20 @@ export default class Mob extends Character {
         }, this.respawnDelay);
     }
 
-    public override getState(): MobState {
-        let base = super.getState() as MobState;
+    public override serialize(): EntityData {
+        let data = super.serialize();
 
-        base.hitPoints = this.hitPoints;
-        base.maxHitPoints = this.maxHitPoints;
-        base.attackRange = this.attackRange;
-        base.level = this.level;
-        base.hiddenName = this.hiddenName; // TODO - Just don't send name when hiddenName present.
+        data.hitPoints = this.hitPoints;
+        data.maxHitPoints = this.maxHitPoints;
+        data.attackRange = this.attackRange;
+        data.level = this.level;
+        data.hiddenName = this.hiddenName; // TODO - Just don't send name when hiddenName present.
 
-        return base;
+        return data;
     }
 
     private resetPosition(): void {
-        this.setPosition(this.spawnLocation[0], this.spawnLocation[1]);
+        this.setPosition(this.spawnX, this.spawnY);
     }
 
     public onLoad(callback: () => void): void {
@@ -192,10 +185,6 @@ export default class Mob extends Character {
 
     public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
-    }
-
-    public onRefresh(callback: () => void): void {
-        this.refreshCallback = callback;
     }
 
     public onForceTalk(callback: (message: string) => void): void {

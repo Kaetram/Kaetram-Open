@@ -31,18 +31,15 @@ export default class Introduction extends Quest {
 
     private loadCallbacks(): void {
         this.onNPCTalk((npc: NPC) => {
-            let conversation = this.getConversation(npc.id);
-
-            this.lastNPC = npc;
-
-            this.player.send(
-                new Messages.NPC(Opcodes.NPC.Talk, {
-                    id: npc.instance,
-                    text: npc.talk(conversation, this.player)
-                })
-            );
-
-            if (this.player.talkIndex === 0) this.progress('talk');
+            // let conversation = this.getConversation(npc.id);
+            // this.lastNPC = npc;
+            // this.player.send(
+            //     new Messages.NPC(Opcodes.NPC.Talk, {
+            //         id: npc.instance,
+            //         text: npc.talk(conversation, this.player)
+            //     })
+            // );
+            // if (this.player.talkIndex === 0) this.progress('talk');
         });
 
         this.player.onReady(() => {
@@ -75,9 +72,9 @@ export default class Introduction extends Quest {
             if (isOpen && this.stage === 5) this.progress('click');
         });
 
-        this.player.onKill((character: Character) => {
-            if (this.data.kill![this.stage] === character.id) this.progress('kill');
-        });
+        // this.player.onKill((character: Character) => {
+        //     if (this.data.kill![this.stage] === character.id) this.progress('kill');
+        // });
     }
 
     private progress(type: string): void {

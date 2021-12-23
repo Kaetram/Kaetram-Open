@@ -149,7 +149,8 @@ export default class Tenebris extends Combat {
     }
 
     private isIllusion(): boolean {
-        return this.character.id === 105;
+        return false;
+        //return this.character.id === 105;
     }
 
     private hasIllusions(): boolean {

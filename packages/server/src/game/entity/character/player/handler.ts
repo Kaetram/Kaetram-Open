@@ -134,43 +134,34 @@ export default class Handler {
         });
 
         this.player.onTalkToNPC((npc: NPC) => {
-            if (this.player.quests.isQuestNPC(npc)) {
-                this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
-
-                return;
-            }
-
-            if (this.player.quests.isAchievementNPC(npc)) {
-                this.player.quests.getAchievementByNPC(npc)!.converse(npc);
-
-                return;
-            }
-
-            if (Shops.isShopNPC(npc.id)) {
-                this.world.shops.open(this.player, npc.id);
-                return;
-            }
-
-            switch (NPCs.getType(npc.id)) {
-                case 'banker':
-                    this.player.send(new Messages.NPC(Opcodes.NPC.Bank, {}));
-                    return;
-
-                case 'enchanter':
-                    this.player.send(new Messages.NPC(Opcodes.NPC.Enchant, {}));
-                    break;
-            }
-
-            let text = NPCs.getText(npc.id);
-
-            if (!text) return;
-
-            this.player.send(
-                new Messages.NPC(Opcodes.NPC.Talk, {
-                    id: npc.instance,
-                    text: npc.talk(text, this.player)
-                })
-            );
+            // if (this.player.quests.isQuestNPC(npc)) {
+            //     this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
+            //     return;
+            // }
+            // if (this.player.quests.isAchievementNPC(npc)) {
+            //     this.player.quests.getAchievementByNPC(npc)!.converse(npc);
+            //     return;
+            // }
+            // if (Shops.isShopNPC(npc.id)) {
+            //     this.world.shops.open(this.player, npc.id);
+            //     return;
+            // }
+            // switch (NPCs.getType(npc.id)) {
+            //     case 'banker':
+            //         this.player.send(new Messages.NPC(Opcodes.NPC.Bank, {}));
+            //         return;
+            //     case 'enchanter':
+            //         this.player.send(new Messages.NPC(Opcodes.NPC.Enchant, {}));
+            //         break;
+            // }
+            // let text = NPCs.getText(npc.id);
+            // if (!text) return;
+            // this.player.send(
+            //     new Messages.NPC(Opcodes.NPC.Talk, {
+            //         id: npc.instance,
+            //         text: npc.talk(text, this.player)
+            //     })
+            // );
         });
 
         this.player.onTeleport((x: number, y: number, isDoor = false) => {

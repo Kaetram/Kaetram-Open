@@ -163,7 +163,7 @@ export default abstract class Quest {
     public hasMob(mob: Mob): boolean | undefined {
         if (!this.data.mobs) return;
 
-        return this.data.mobs.includes(mob.id);
+        //return this.data.mobs.includes(mob.id);
     }
 
     public hasNPC(id: number): boolean {

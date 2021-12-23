@@ -18,23 +18,19 @@ export default class BulkySituation extends Quest {
 
     private loadCallbacks(): void {
         this.onNPCTalk((npc: NPC) => {
-            if (this.hasRequirement()) {
-                this.progress('item');
-                return;
-            }
-
-            let conversation = this.getConversation(npc.id);
-
-            this.lastNPC = npc;
-
-            this.player.send(
-                new Messages.NPC(Opcodes.NPC.Talk, {
-                    id: npc.instance,
-                    text: npc.talk(conversation, this.player)
-                })
-            );
-
-            if (this.player.talkIndex === 0) this.progress('talk');
+            // if (this.hasRequirement()) {
+            //     this.progress('item');
+            //     return;
+            // }
+            // let conversation = this.getConversation(npc.id);
+            // this.lastNPC = npc;
+            // this.player.send(
+            //     new Messages.NPC(Opcodes.NPC.Talk, {
+            //         id: npc.instance,
+            //         text: npc.talk(conversation, this.player)
+            //     })
+            // );
+            // if (this.player.talkIndex === 0) this.progress('talk');
         });
     }
 

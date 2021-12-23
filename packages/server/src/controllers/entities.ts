@@ -78,7 +78,7 @@ export default class Entities {
 
                         mob.lastAttacker = null;
 
-                        mob.refresh();
+                        //mob.refresh();
 
                         this.addMob(mob);
                     });
@@ -223,12 +223,12 @@ export default class Entities {
             startY = attacker.y, // gridY
             type = attacker.getProjectile(),
             hit = null,
-            projectile = new Projectile(type);
+            projectile = new Projectile(type, startX, startY);
 
         projectile.setStart(startX, startY);
         projectile.setTarget(target);
 
-        if (attacker.type === 'player') {
+        if (attacker.isPlayer()) {
             let player = attacker as Player;
 
             hit = player.getHit(target);
@@ -291,9 +291,7 @@ export default class Entities {
         //     ]);
         // });
 
-        if (entity instanceof Character) {
-            entity.combat.setWorld(this.world);
-
+        if (entity instanceof Character)
             entity.onStunned((stun: boolean) => {
                 this.world.push(Opcodes.Push.Regions, {
                     regionId: entity.region,
@@ -303,7 +301,6 @@ export default class Entities {
                     })
                 });
             });
-        }
     }
 
     private addNPC(npc: NPC): void {
