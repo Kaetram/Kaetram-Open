@@ -18,6 +18,10 @@ import Items from '../info/items';
 import Mobs from '../info/mobs';
 import NPCs from '../info/npcs';
 
+import mobData from '../../data/mobs.json';
+import itemData from '../../data/items.json';
+import npcData from '../../data/npcs.json';
+
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type World from '../game/world';
@@ -425,9 +429,9 @@ export default class Entities {
      */
 
     private getEntityType(entityString: string): number {
-        if (NPCs.stringToId(entityString)) return Modules.EntityType.NPC;
-        if (Mobs.stringToId(entityString)) return Modules.EntityType.Mob;
-        if (Items.stringToId(entityString)) return Modules.EntityType.Item;
+        if (entityString in itemData) return Modules.EntityType.Item;
+        if (entityString in npcData) return Modules.EntityType.NPC;
+        if (entityString in mobData) return Modules.EntityType.Mob;
 
         return -1;
     }

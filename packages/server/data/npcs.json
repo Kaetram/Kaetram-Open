@@ -1,95 +1,95 @@
 {
-  "King": {
+  "king": {
     "id": 45,
     "name": "King"
   },
 
-  "VillageGirl": {
+  "villagegirl": {
     "name": "Azaria",
     "id": 1,
     "text": ["Who are you?", "I feel as if we've met before, but I cannot remember."]
   },
 
-  "Villager": {
+  "villager": {
     "id": 2,
     "name": "Bulk Bogan",
     "text": ["Thank you kindly for the help, dear adventurer.", "I will ensure to contact you in the",
           "nearby future regarding further adventures."]
   },
 
-  "BeachNpc": {
+  "beachnpc": {
     "id": 3,
     "name": "Bubba",
     "text": ["Well, thanks for the help.", "Not really doing much but thanks regardless."]
   },
 
-  "Agent": {
+  "agent": {
     "id": 4,
     "name": "Secret Agent"
   },
 
-  "Nyan": {
+  "nyan": {
     "id": 5,
     "name": "Nyan Cat (Stale Meme)"
   },
 
-  "Rick": {
+  "rick": {
     "id": 6,
     "name": "Rick"
   },
 
-  "Priest": {
+  "priest": {
     "id": 7,
     "name": "Priest"
   },
 
-  "Guard": {
+  "guard": {
     "id": 8,
     "name": "Guard"
   },
 
-  "Scientist": {
+  "scientist": {
     "id": 9,
     "name": "Scientist"
   },
 
-  "DesertNpc": {
+  "desertnpc": {
     "id": 10,
     "name": "Billey"
   },
 
-  "LavaNpc": {
+  "lavanpc": {
     "id": 11,
     "name": "Dying Man"
   },
 
-  "Boxingman": {
+  "boxingman": {
     "id": 12,
     "name": "Mike Tyson",
     "text": "Woosh."
   },
 
-  "Vampire": {
+  "vampire": {
     "id": 13,
     "name": "Vampire"
   },
 
-  "Doctor": {
+  "doctor": {
     "id": 14,
     "name": "Doctor"
   },
 
-  "Oddeyecat": {
+  "oddeyecat": {
     "id": 15,
     "name": "Odd-Eyed Cat"
   },
 
-  "Sorcerer": {
+  "sorcerer": {
     "id": 16,
     "name": "Sorcerer"
   },
 
-  "Coder": {
+  "coder": {
     "id": 17,
     "name": "Programmer",
     "text": ["Oh.. This is awkward...", "You may be wondering why I'm here as well.", "Well just letting you know..",
@@ -97,12 +97,12 @@
             "Our Discord <a target=\"_blank\" href=\"https://discord.gg/MmbGAaw\">is available here!</a>"]
   },
 
-  "ForestNpc": {
+  "forestNpc": {
     "id": 18,
     "name": "Forester"
   },
 
-  "Octocat": {
+  "octocat": {
     "id": 19,
     "name": "Octocat",
     "text": ["Hey there!",
@@ -112,135 +112,135 @@
             "You can <a target=\"_blank\" href=\"https://github.com/Kaetram/Kaetram-Open\">check out the source on GitHub!</a>"]
   },
 
-  "Soldier": {
+  "soldier": {
     "id": 20,
     "name": "Soldier"
   },
 
-  "Fisherman": {
+  "fisherman": {
     "id": 21,
     "name": "Fisherman"
   },
 
-  "Octopus": {
+  "octopus": {
     "id": 22,
     "name": "Octopus"
   },
 
-  "Mermaidnpc": {
+  "mermaidnpc": {
     "id": 23,
     "name": "Mermaid"
   },
 
-  "Sponge": {
+  "sponge": {
     "id": 24,
     "name": "Picklebob"
   },
 
-  "Fairynpc": {
+  "fairynpc": {
     "id": 25,
     "name": "Fairy"
   },
 
-  "Shepherdboy": {
+  "shepherdboy": {
     "id": 26,
     "name": "Shepherd Boy"
   },
 
-  "Zombiegf": {
+  "zombiegf": {
     "id": 27,
     "name": "Zombie Girlfriend"
   },
 
-  "Pirategirlnpc": {
+  "pirategirlnpc": {
     "id": 28,
     "name": "Pirate Girl",
     "text": ["Hi"]
   },
 
-  "Bluebikinigirlnpc": {
+  "bluebikinigirlnpc": {
     "id": 29,
     "name": "Pretzel"
   },
 
-  "Redbikinigirlnpc": {
+  "redbikinigirlnpc": {
     "id": 30,
     "name": "Flaris"
   },
 
-  "Iamverycoldnpc": {
+  "iamverycoldnpc": {
     "id": 31,
     "name": "Babushka"
   },
 
-  "Iceelfnpc": {
+  "iceelfnpc": {
     "id": 32,
     "name": "Ice Elf"
   },
 
-  "Elfnpc": {
+  "elfnpc": {
     "id": 33,
     "name": "Elf"
   },
 
-  "Snowshepherdboy": {
+  "snowshepherdboy": {
     "id": 34,
     "name": "Some Boy"
   },
 
-  "Angelnpc": {
+  "angelnpc": {
     "id": 35,
     "name": "Angel"
   },
 
-  "Momangelnpc": {
+  "momangelnpc": {
     "id": 36,
     "name": "Archangel"
   },
 
-  "Superiorangelnpc": {
+  "superiorangelnpc": {
     "id": 37,
     "name": "Mentor"
   },
 
-  "Firstsonangelnpc": {
+  "firstsonangelnpc": {
     "id": 38,
     "name": "Angel"
   },
 
-  "Secondsonangelnpc": {
+  "secondsonangelnpc": {
     "id": 39,
     "name": "Superior Angel"
   },
 
-  "Mojojojonpc": {
+  "mojojojonpc": {
     "id": 40,
     "name": "Monky"
   },
 
-  "Ancientmanumentnpc": {
+  "ancientmanumentnpc": {
     "id": 41,
     "name": "Ancient Monument"
   },
 
-  "Vendingmachine": {
+  "vendingmachine": {
     "id": 42,
     "name": "Enchantment Table",
     "type": "enchanter"
   },
 
-  "Redstoremannpc": {
+  "redstoremannpc": {
     "id": 43,
     "name": "Banker",
     "type": "banker"
   },
 
-  "Bluestoremannpc": {
+  "bluestoremannpc": {
     "id": 44,
     "name": "Clerk"
   },
 
-  "RoyalGuard": {
+  "royalguard": {
     "id": 45,
     "name": "Royal Guard"
   }
