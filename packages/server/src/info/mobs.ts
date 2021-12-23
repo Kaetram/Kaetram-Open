@@ -7,7 +7,6 @@ export interface MobDrops {
 
 export interface MobData {
     id: number;
-    hiddenName?: boolean;
     key: string;
     name: string;
     xp: number;
@@ -21,9 +20,10 @@ export interface MobData {
     attackRange: number;
     aggroRange: number;
     aggressive: boolean;
-    isPoisonous?: boolean;
     attackRate: number;
     movementSpeed: number;
+    isPoisonous?: boolean;
+    hiddenName?: boolean;
     projectileName: string | undefined;
 }
 

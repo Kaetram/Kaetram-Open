@@ -10,7 +10,7 @@ import Quests from '../../../../controllers/quests';
 import Messages, { Packet } from '../../../../network/messages';
 import Formulas from '../../../../info/formulas';
 import Items from '../../../../info/items';
-import Character, { CharacterState } from '../character';
+import Character from '../character';
 import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
 import Bank from './containers/bank/bank';
@@ -38,6 +38,7 @@ import type World from '../../../world';
 import type NPC from '../../npc/npc';
 import type { FullPlayerData } from './../../../../database/mongodb/creator';
 import type Introduction from './quests/impl/introduction';
+import { EntityData } from '../../entity';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
@@ -58,23 +59,6 @@ export interface PlayerEquipment {
 export interface PlayerRegions {
     regions: string;
     gameVersion: string;
-}
-
-interface PlayerState extends CharacterState {
-    rights: number;
-    level: number;
-    pvp: boolean;
-    pvpKills: number;
-    pvpDeaths: number;
-    attackRange: number;
-    orientation: number;
-    hitPoints: number[];
-    mana: number[];
-    armour: EquipmentData;
-    weapon: EquipmentData;
-    pendant: EquipmentData;
-    ring: EquipmentData;
-    boots: EquipmentData;
 }
 
 export interface ObjectData {
@@ -972,9 +956,13 @@ export default class Player extends Character {
         return true;
     }
 
-    public override getState(): PlayerState {
+    /**
+     * TODO - Properly refactor this
+     */
+
+    public override serialize(): any {
         return {
-            type: this.type,
+            type: Modules.EntityType.Player,
             id: this.instance,
             name: Utils.formatUsername(this.username),
             x: this.x,

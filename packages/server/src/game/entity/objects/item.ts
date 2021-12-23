@@ -1,23 +1,16 @@
-import Entity from '../entity';
+import Entity, { EntityData } from '../entity';
 
-import type { EntityState } from '../entity';
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 import Items from '@kaetram/server/src/info/items';
-
-interface ItemState extends EntityState {
-    count: number;
-    ability: number | undefined;
-    abilityLevel: number | undefined;
-}
 
 export default class Item extends Entity {
     public dropped = false;
     // shard = false;
 
     public count = 1;
-    public ability;
-    public abilityLevel;
+    public ability = -1;
+    public abilityLevel = -1;
     // tier = 1;
 
     private respawnTime = 30_000;
@@ -36,11 +29,11 @@ export default class Item extends Entity {
         key: string,
         x: number,
         y: number,
-        ability?: number,
-        abilityLevel?: number,
+        ability = -1,
+        abilityLevel = -1,
         public respawnable = false
     ) {
-        super(Items.stringToId(key)!, 'item', Utils.createInstance(Modules.EntityType.Item), x, y);
+        super(Utils.createInstance(Modules.EntityType.Item), x, y);
 
         this.ability = ability;
         this.abilityLevel = abilityLevel;
@@ -74,23 +67,14 @@ export default class Item extends Entity {
         }, this.respawnTime);
     }
 
-    private getData(): [
-        id: number,
-        count: number,
-        ability: number | undefined,
-        abilityLevel: number | undefined
-    ] {
-        return [this.id, this.count, this.ability, this.abilityLevel];
-    }
+    public override serialize(): EntityData {
+        let data = super.serialize();
 
-    public override getState(): ItemState {
-        let state = super.getState() as ItemState;
+        data.count = this.count;
+        data.ability = this.ability;
+        data.abilityLevel = this.abilityLevel;
 
-        state.count = this.count;
-        state.ability = this.ability;
-        state.abilityLevel = this.abilityLevel;
-
-        return state;
+        return data;
     }
 
     private setCount(count: number): void {
