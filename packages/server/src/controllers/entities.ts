@@ -56,101 +56,8 @@ export default class Entities {
                 case Modules.EntityType.NPC:
                     return this.addNPC(new NPC(key, position.x, position.y));
 
-                case Modules.EntityType.Mob: {
-                    let mob = new Mob(key, position.x, position.y);
-
-                    mob.static = true;
-                    // mob.roaming = entityInfo.roaming;
-
-                    // if (entityInfo.miniboss) {
-                    //     // TODO - Rename `achievementId` -> `achievement`
-                    //     if (entityInfo.achievementId) mob.achievementId = entityInfo.achievementId;
-
-                    //     mob.miniboss = entityInfo.miniboss;
-                    // }
-
-                    // if (entityInfo.boss) mob.boss = entityInfo.boss;
-
-                    mob.load();
-
-                    mob.onRespawn(() => {
-                        mob.dead = false;
-
-                        mob.lastAttacker = null;
-
-                        //mob.refresh();
-
-                        this.addMob(mob);
-                    });
-
-                    mob.onForceTalk((message: string) => {
-                        this.world.push(Opcodes.Push.Regions, {
-                            regionId: mob.region,
-                            message: new Messages.NPC(Opcodes.NPC.Talk, {
-                                id: mob.instance,
-                                text: message,
-                                nonNPC: true
-                            })
-                        });
-                    });
-
-                    mob.onRoaming(() => {
-                        if (this.mobs.dead) return;
-
-                        let newX =
-                                mob.spawnX +
-                                Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
-                            newY =
-                                mob.spawnY +
-                                Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
-                            distance = Utils.getDistance(mob.spawnX, mob.spawnY, newX, newY);
-
-                        // Return if the tile is colliding.
-                        if (this.map.isColliding(newX, newY)) return;
-
-                        // Prevent movement if the area is empty.
-                        if (this.map.isEmpty(newX, newY)) return;
-
-                        // Don't have mobs block a door.
-                        if (this.map.isDoor(newX, newY)) return;
-
-                        // Prevent mobs from going outside of their roaming radius.
-                        if (distance < mob.maxRoamingDistance) return;
-
-                        // No need to move mobs to the same position as theirs.
-                        if (newX === mob.x && newY === mob.y) return;
-
-                        // We don't want mobs randomly roaming while in combat.
-                        if (mob.combat.started) return;
-
-                        /**
-                         * An expansion of the plateau level present in BrowserQuest.
-                         * Because the map is far more complex, we will require multiple
-                         * levels of plateau in order to properly roam entities without
-                         * them walking into other regions (or clipping).
-                         */
-                        let plateauLevel = this.map.getPlateauLevel(mob.spawnX, mob.spawnY);
-
-                        if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
-
-                        // if (config.debugging) this.forceTalk('Yes hello, I am moving.');
-
-                        mob.setPosition(newX, newY);
-
-                        this.world.push(Opcodes.Push.Regions, {
-                            regionId: mob.region,
-                            message: new Messages.Movement(Opcodes.Movement.Move, {
-                                id: mob.instance,
-                                x: newX,
-                                y: newY
-                            })
-                        });
-                    });
-
-                    this.addMob(mob);
-
-                    break;
-                }
+                case Modules.EntityType.Mob:
+                    return this.addMob(new Mob(this.world, key, position.x, position.y));
             }
         });
 
@@ -167,7 +74,7 @@ export default class Entities {
     }
 
     public spawnMob(key: string, gridX: number, gridY: number): Mob {
-        let mob = new Mob(key, gridX, gridY);
+        let mob = new Mob(this.world, key, gridX, gridY);
 
         this.addMob(mob);
 
@@ -309,7 +216,7 @@ export default class Entities {
         this.items[item.instance] = item;
     }
 
-    private addMob(mob: Mob): void {
+    public addMob(mob: Mob): void {
         this.add(mob);
 
         this.mobs[mob.instance] = mob;

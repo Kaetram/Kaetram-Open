@@ -2,18 +2,20 @@ import Utils from '@kaetram/common/util/utils';
 
 import Items from '../../../../info/items';
 import Character from '../character';
-import MobHandler from './mobhandler';
+import MobHandler from './handler';
 
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
 
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { EntityData } from '../../entity';
 import { MobData } from '@kaetram/common/types/mob';
 
 import rawData from '../../../../../data/mobs.json';
 import log from '@kaetram/common/util/log';
+import World from '../../../world';
+import Messages from '@kaetram/server/src/network/messages';
 
 type RawData = {
     [key: string]: MobData;
@@ -31,40 +33,32 @@ export default class Mob extends Character {
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     private defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
     private attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
-    private spawnDelay = Modules.MobDefaults.SPAWN_DELAY; // Use default spawn delay if not specified.
+    public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
     public aggressive = false;
     public roaming = false;
     private poisonous = false;
     private combatPlugin = '';
+
     // TODO - Specify this in the mob data
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
 
-    // private data!: MobData;
-    // private drops!: MobDrops;
-
-    public respawnDelay!: number;
-
     public boss = false;
-    public static = false;
+    public respawnable = false;
     public hiddenName = false;
     public miniboss = false;
 
     public achievementId!: number;
 
-    public maxRoamingDistance = 3;
-
     // private handler!: MobHandler;
 
     public area!: Area;
 
-    private loadCallback?(): void;
     private respawnCallback?(): void;
-
     public forceTalkCallback?: (message: string) => void;
     public roamingCallback?(): void;
 
-    public constructor(key: string, x: number, y: number) {
+    public constructor(public world: World, key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.Mob), key, x, y);
 
         this.spawnX = x;
@@ -91,21 +85,56 @@ export default class Mob extends Character {
         this.aggroRange = this.data.aggroRange || this.aggroRange;
         this.aggressive = this.data.aggressive!;
         this.attackRate = this.data.attackRate || this.attackRate;
-        this.spawnDelay = this.data.spawnDelay || this.spawnDelay;
+        this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
         this.poisonous = this.data.poisonous!;
         this.hiddenName = this.data.hiddenName!;
+
         // TODO - After refactoring projectile system
         this.projectileName = this.data.projectileName || this.projectileName;
         this.combatPlugin = this.data.combatPlugin!;
-    }
 
-    public load(): void {
-        // this.handler =
+        // Initialize a mob handler to `handle` our callbacks.
         new MobHandler(this);
 
-        this.loadCallback?.();
+        // The roaming interval
+        setInterval(this.roamingCallback!, Modules.Constants.ROAMING_FREQUENCY);
     }
+
+    public destroy(): void {
+        this.dead = true;
+        this.removeTarget();
+        //this.resetPosition();
+        this.respawn();
+
+        this.setPosition(this.spawnX, this.spawnY);
+
+        this.area?.removeEntity(this);
+    }
+
+    /**
+     * Moves the mob and broadcasts the action
+     * to all the adjacent regions.
+     * @param x The new x position of the mob.
+     * @param y The new y position of the mob.
+     */
+
+    public move(x: number, y: number): void {
+        this.setPosition(x, y);
+
+        this.world.push(Opcodes.Push.Regions, {
+            regionId: this.region,
+            message: new Messages.Movement(Opcodes.Movement.Move, {
+                id: this.instance,
+                x,
+                y
+            })
+        });
+    }
+
+    /**
+     * Primitive function for drop generation. Will be rewritten.
+     */
 
     public getDrop(): { id: number; count: number } | null {
         if (!this.drops) return null;
@@ -124,10 +153,19 @@ export default class Mob extends Character {
         };
     }
 
-    public canAggro(player: Player): boolean {
-        if (this.target) return false;
+    /**
+     * Checks if the mob can aggro the player depending on information
+     * about the mob and player. An always aggressive mob will aggro
+     * regardless of the player's level, otherwise, if the player's level
+     * is roughly 1.5x greater than the mob's, then the mob does not aggro.
+     * @param player Player entity to test aggro conditions against.
+     * @returns Whether or not the mob can aggro the player.
+     */
 
+    public canAggro(player: Player): boolean {
         if (!this.aggressive) return false;
+
+        if (this.target) return false;
 
         if (Math.floor(this.level * 1.5) < player.level && !this.alwaysAggressive) return false;
 
@@ -136,36 +174,10 @@ export default class Mob extends Character {
         return this.isNear(player, this.aggroRange);
     }
 
-    public destroy(): void {
-        this.dead = true;
-        this.removeTarget();
-        this.resetPosition();
-        this.respawn();
-
-        this.area?.removeEntity(this);
-    }
-
-    public return(): void {
-        this.removeTarget();
-        this.resetPosition();
-        this.setPosition(this.x, this.y);
-    }
-
-    public override isRanged(): boolean {
-        return this.attackRange > 1;
-    }
-
-    private distanceToSpawn(): number {
-        return Utils.getDistance(this.x, this.y, this.spawnX, this.spawnY);
-    }
-
-    public isAtSpawn(): boolean {
-        return this.x === this.spawnX && this.y === this.spawnY;
-    }
-
-    public isOutsideSpawn(): boolean {
-        return this.distanceToSpawn() > this.roamDistance;
-    }
+    /**
+     * Extracts the area the mob is currently in and adds it to it.
+     * @param chestAreas The areas for chests for us to extract the mob's area.
+     */
 
     public addToChestArea(chestAreas: Areas): void {
         let area = chestAreas.inArea(this.x, this.y);
@@ -174,17 +186,51 @@ export default class Mob extends Character {
     }
 
     /**
+     * Moves the mob back to the spawn point.
+     */
+
+    public sendToSpawn(): void {
+        this.combat.stop();
+
+        this.move(this.spawnX, this.spawnY);
+    }
+
+    /**
+     * Checks if the distance between the mob's current position and the spawn
+     * point is greater than the roam distance.
+     * @returns Whether or not the mob should return to the spawn.
+     */
+
+    public shouldReturnToSpawn(): boolean {
+        return Utils.getDistance(this.x, this.y, this.spawnX, this.spawnY) > this.roamDistance;
+    }
+
+    /**
+     * If the attack range is greater than 1, then the mob
+     * is a ranged entity.
+     * @returns If the mob is ranged or not.
+     */
+
+    public override isRanged(): boolean {
+        return this.attackRange > 1;
+    }
+
+    /**
      * Some entities are static (only spawned once during an event)
      * Meanwhile, other entities act as an illusion to another entity,
      * so the respawning script is handled elsewhere.
      */
     private respawn(): void {
-        if (!this.static || this.respawnDelay === -1) return;
+        if (!this.respawnable) return;
 
-        setTimeout(() => {
-            this.respawnCallback?.();
-        }, this.respawnDelay);
+        setTimeout(this.respawnCallback!, this.respawnDelay);
     }
+
+    /**
+     * Takes mob file and serializes it by adding extra
+     * variables into the EntityData interface.
+     * @returns Entity data with mob elements inserted.
+     */
 
     public override serialize(): EntityData {
         let data = super.serialize();
@@ -199,21 +245,26 @@ export default class Mob extends Character {
         return data;
     }
 
-    private resetPosition(): void {
-        this.setPosition(this.spawnX, this.spawnY);
-    }
-
-    public onLoad(callback: () => void): void {
-        this.loadCallback = callback;
-    }
+    /**
+     * Callback for when the mob respawns.
+     */
 
     public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 
+    /**
+     * A callback for when the mob is forced to display a speech bubble.
+     * @param callback The message in a string format of what the mob says.
+     */
+
     public onForceTalk(callback: (message: string) => void): void {
         this.forceTalkCallback = callback;
     }
+
+    /**
+     * Callback for when roaming occurs.
+     */
 
     public onRoaming(callback: () => void): void {
         this.roamingCallback = callback;

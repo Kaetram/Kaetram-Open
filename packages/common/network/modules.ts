@@ -275,6 +275,7 @@ export enum Constants {
     DROP_PROBABILITY = 1000, // 1 in 1000
     MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
     HEAL_RATE = 10_000, // healing every 10 seconds
+    ROAMING_FREQUENCY = 7000,
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
     HORIZONTAL_FLAG = 0x80_00_00_00
@@ -292,7 +293,7 @@ export enum Defaults {
 export enum MobDefaults {
     EXPERIENCE = 1, // Default 1 exp granted if not specified
     AGGRO_RANGE = 2, // Default aggro range of 2 tiles
-    SPAWN_DELAY = 60_000, // 60 seconds to respawn
+    RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
     DEFENSE_LEVEL = 1,
     ATTACK_LEVEL = 1
