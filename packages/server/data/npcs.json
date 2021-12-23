@@ -1,96 +1,78 @@
 {
   "king": {
-    "id": 45,
     "name": "King"
   },
 
   "villagegirl": {
     "name": "Azaria",
-    "id": 1,
     "text": ["Who are you?", "I feel as if we've met before, but I cannot remember."]
   },
 
   "villager": {
-    "id": 2,
     "name": "Bulk Bogan",
     "text": ["Thank you kindly for the help, dear adventurer.", "I will ensure to contact you in the",
           "nearby future regarding further adventures."]
   },
 
   "beachnpc": {
-    "id": 3,
     "name": "Bubba",
     "text": ["Well, thanks for the help.", "Not really doing much but thanks regardless."]
   },
 
   "agent": {
-    "id": 4,
     "name": "Secret Agent"
   },
 
   "nyan": {
-    "id": 5,
     "name": "Nyan Cat (Stale Meme)"
   },
 
   "rick": {
-    "id": 6,
     "name": "Rick"
   },
 
   "priest": {
-    "id": 7,
     "name": "Priest"
   },
 
   "guard": {
-    "id": 8,
     "name": "Guard"
   },
 
   "scientist": {
-    "id": 9,
     "name": "Scientist"
   },
 
   "desertnpc": {
-    "id": 10,
     "name": "Billey"
   },
 
   "lavanpc": {
-    "id": 11,
     "name": "Dying Man"
   },
 
   "boxingman": {
-    "id": 12,
     "name": "Mike Tyson",
-    "text": "Woosh."
+    "text": ["Woosh."]
   },
 
   "vampire": {
-    "id": 13,
     "name": "Vampire"
   },
 
   "doctor": {
-    "id": 14,
     "name": "Doctor"
   },
 
   "oddeyecat": {
-    "id": 15,
     "name": "Odd-Eyed Cat"
   },
 
   "sorcerer": {
-    "id": 16,
     "name": "Sorcerer"
   },
 
   "coder": {
-    "id": 17,
     "name": "Programmer",
     "text": ["Oh.. This is awkward...", "You may be wondering why I'm here as well.", "Well just letting you know..",
             "It's definitely not because we're running low on pixel art..", "Regardless.. If you want to join the community",
@@ -98,12 +80,10 @@
   },
 
   "forestNpc": {
-    "id": 18,
     "name": "Forester"
   },
 
   "octocat": {
-    "id": 19,
     "name": "Octocat",
     "text": ["Hey there!",
             "I am the Octocat, the programmer and I",
@@ -113,135 +93,109 @@
   },
 
   "soldier": {
-    "id": 20,
     "name": "Soldier"
   },
 
   "fisherman": {
-    "id": 21,
     "name": "Fisherman"
   },
 
   "octopus": {
-    "id": 22,
     "name": "Octopus"
   },
 
   "mermaidnpc": {
-    "id": 23,
     "name": "Mermaid"
   },
 
   "sponge": {
-    "id": 24,
     "name": "Picklebob"
   },
 
   "fairynpc": {
-    "id": 25,
     "name": "Fairy"
   },
 
   "shepherdboy": {
-    "id": 26,
     "name": "Shepherd Boy"
   },
 
   "zombiegf": {
-    "id": 27,
     "name": "Zombie Girlfriend"
   },
 
   "pirategirlnpc": {
-    "id": 28,
     "name": "Pirate Girl",
     "text": ["Hi"]
   },
 
   "bluebikinigirlnpc": {
-    "id": 29,
     "name": "Pretzel"
   },
 
   "redbikinigirlnpc": {
-    "id": 30,
     "name": "Flaris"
   },
 
   "iamverycoldnpc": {
-    "id": 31,
     "name": "Babushka"
   },
 
   "iceelfnpc": {
-    "id": 32,
     "name": "Ice Elf"
   },
 
   "elfnpc": {
-    "id": 33,
     "name": "Elf"
   },
 
   "snowshepherdboy": {
-    "id": 34,
     "name": "Some Boy"
   },
 
   "angelnpc": {
-    "id": 35,
     "name": "Angel"
   },
 
   "momangelnpc": {
-    "id": 36,
     "name": "Archangel"
   },
 
   "superiorangelnpc": {
-    "id": 37,
     "name": "Mentor"
   },
 
   "firstsonangelnpc": {
-    "id": 38,
     "name": "Angel"
   },
 
   "secondsonangelnpc": {
-    "id": 39,
     "name": "Superior Angel"
   },
 
   "mojojojonpc": {
-    "id": 40,
     "name": "Monky"
   },
 
   "ancientmanumentnpc": {
-    "id": 41,
     "name": "Ancient Monument"
   },
 
   "vendingmachine": {
-    "id": 42,
     "name": "Enchantment Table",
-    "type": "enchanter"
+    "role": "enchanter"
   },
 
   "redstoremannpc": {
-    "id": 43,
     "name": "Banker",
-    "type": "banker"
+    "role": "banker"
   },
 
   "bluestoremannpc": {
-    "id": 44,
     "name": "Clerk"
   },
 
   "royalguard": {
-    "id": 45,
     "name": "Royal Guard"
   }
 }

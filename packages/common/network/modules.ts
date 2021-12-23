@@ -260,6 +260,12 @@ export let DamageColours = {
     }
 };
 
+export enum NPCRole {
+    Banker,
+    Enchanter,
+    Clerk
+}
+
 export enum Constants {
     MAX_STACK = 2_147_483_647,
     MAX_LEVEL = 135,

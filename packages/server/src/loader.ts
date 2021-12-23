@@ -6,19 +6,16 @@ import abilityData from '../data/abilities.json';
 import combatPlugins from '../data/combat';
 import itemPlugins from '../data/plugins';
 import itemData from '../data/items.json';
-import npcData from '../data/npcs.json';
 import objectData from '../data/objects.json';
 import shopsData from '../data/shops.json';
 
 import Abilities from './info/abilities';
 import Formulas from './info/formulas';
 import Items from './info/items';
-import NPCs from './info/npcs';
 import Objects from './info/objects';
 import Shops from './info/shops';
 
 import type { ItemsData } from './info/items';
-import type { NPCData } from './info/npcs';
 import type { ObjectsData } from './info/objects';
 import { Modules } from '@kaetram/common/network';
 
@@ -35,7 +32,6 @@ export default class Loader {
     public constructor() {
         this.onReady(this.handleReady.bind(this));
 
-        this.loadNPCData();
         this.loadItemData();
         this.loadAbilityData();
         this.loadShops();
@@ -48,30 +44,6 @@ export default class Loader {
 
         //log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
         log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
-    }
-
-    private loadNPCData(): void {
-        let npcCounter = 0;
-
-        _.each(npcData, (value, key) => {
-            key = key.toLowerCase();
-
-            let { id, name, text, type } = value as NPCData;
-
-            NPCs.Properties[key] = {
-                key,
-                id,
-                name: name || key,
-                text: text || null,
-                type: type || null
-            };
-
-            NPCs.Ids[id] = NPCs.Properties[key];
-
-            npcCounter++;
-        });
-
-        log.info(`Finished loading ${npcCounter} NPCs.`);
     }
 
     private loadItemData(): void {

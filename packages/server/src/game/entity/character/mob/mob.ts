@@ -37,7 +37,7 @@ export default class Mob extends Character {
     private poisonous = false;
     private combatPlugin = '';
     // TODO - Specify this in the mob data
-    private roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
+    public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
 
     // private data!: MobData;
     // private drops!: MobDrops;
