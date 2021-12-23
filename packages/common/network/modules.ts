@@ -281,6 +281,7 @@ export enum Constants {
 
 // Defaults that apply to all types of entities
 export enum Defaults {
+    MANA = 50,
     HITPOINTS = 69, // nice.
     MOVEMENT_SPEED = 250, // 250 pixels per frame?
     ATTACK_RATE = 1000, // every 1 second

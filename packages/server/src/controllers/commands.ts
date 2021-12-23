@@ -196,9 +196,7 @@ export default class Commands {
             }
 
             case 'maxhealth':
-                this.player.notify(
-                    `Max health is ${this.player.playerHitPoints.getMaxHitPoints()}`
-                );
+                this.player.notify(`Max health is ${this.player.hitPoints.getMaxHitPoints()}`);
 
                 return;
 
