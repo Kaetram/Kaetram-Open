@@ -8,21 +8,36 @@ import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
 
-import data from '../../../../../data/mobs.json';
-
 import { Modules } from '@kaetram/common/network';
 import { EntityData } from '../../entity';
+import { MobData } from '@kaetram/common/types/mob';
+
+import rawData from '../../../../../data/mobs.json';
+import log from '@kaetram/common/util/log';
+
+type RawData = {
+    [key: string]: MobData;
+};
 
 export default class Mob extends Character {
     // TODO - Make private after moving callbacks into the mob file.
     public spawnX: number;
     public spawnY: number;
 
-    public experience = Modules.MobDefaults.Experience; // Use default experience if not specified.
-    private drops?: { [itemKey: string]: number };
-    private spawnDelay = Modules.MobDefaults.SpawnDelay; // Use default spawn delay if not specified.
-
     // Mob data
+    private data: MobData;
+
+    public experience = Modules.MobDefaults.EXPERIENCE; // Use default experience if not specified.
+    private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
+    private defenseLevel = Modules.MobDefaults.DEFENSE_LEVEL;
+    private attackLevel = Modules.MobDefaults.ATTACK_LEVEL;
+    private spawnDelay = Modules.MobDefaults.SPAWN_DELAY; // Use default spawn delay if not specified.
+    public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
+    public aggressive = false;
+    private poisonous = false;
+    private combatPlugin = '';
+    // TODO - Specify this in the mob data
+    private roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
 
     // private data!: MobData;
     // private drops!: MobDrops;
@@ -54,28 +69,34 @@ export default class Mob extends Character {
         this.spawnX = x;
         this.spawnY = y;
 
-        // if (!Mobs.exists(id)) return;
+        this.data = (rawData as RawData)[key];
 
-        // let data = Mobs.Ids[id];
+        if (!this.data) {
+            log.error(`Could not find data for ${key}.`);
+            return;
+        }
 
-        // this.data = data;
-        // this.hitPoints = data.hitPoints;
-        // this.maxHitPoints = data.hitPoints;
-        // this.drops = data.drops;
+        this.experience = this.data.experience || this.experience;
 
-        // this.respawnDelay = data.spawnDelay;
+        // TODO - Use points system for entities as well.
+        this.hitPoints = this.data.hitPoints || this.hitPoints;
+        this.maxHitPoints = this.hitPoints;
 
-        // this.level = data.level;
-
-        // this.armourLevel = data.armour;
-        // this.weaponLevel = data.weapon;
-        // this.attackRange = data.attackRange;
-        // this.aggroRange = this.data.aggroRange;
-        // this.aggressive = data.aggressive;
-        // this.attackRate = data.attackRate;
-        // this.movementSpeed = data.movementSpeed;
-
-        // this.projectileName = this.getProjectileName();
+        this.drops = this.data.drops || this.drops;
+        this.level = this.data.level || this.level;
+        this.attackLevel = this.data.attackLevel || this.attackLevel;
+        this.defenseLevel = this.data.defenseLevel || this.defenseLevel;
+        this.attackRange = this.data.attackRange || this.attackRange;
+        this.aggroRange = this.data.aggroRange || this.aggroRange;
+        this.aggressive = this.data.aggressive!;
+        this.attackRate = this.data.attackRate || this.attackRate;
+        this.spawnDelay = this.data.spawnDelay || this.spawnDelay;
+        this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
+        this.poisonous = this.data.poisonous!;
+        this.hiddenName = this.data.hiddenName!;
+        // TODO - After refactoring projectile system
+        this.projectileName = this.data.projectileName || this.projectileName;
+        this.combatPlugin = this.data.combatPlugin!;
     }
 
     public load(): void {
@@ -142,7 +163,7 @@ export default class Mob extends Character {
     }
 
     public isOutsideSpawn(): boolean {
-        return this.distanceToSpawn() > this.spawnDistance;
+        return this.distanceToSpawn() > this.roamDistance;
     }
 
     public addToChestArea(chestAreas: Areas): void {
