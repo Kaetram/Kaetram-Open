@@ -184,7 +184,7 @@ export default class Player extends Character {
         public database: MongoDB,
         public connection: Connection
     ) {
-        super('', connection.id, -1, -1);
+        super(connection.id, '', -1, -1);
 
         this.map = world.map;
         this.regions = world.map.regions;
