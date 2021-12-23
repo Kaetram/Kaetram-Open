@@ -13,7 +13,6 @@ import API from '../network/api';
 import Discord from '../network/discord';
 import Messages, { Packet } from '../network/messages';
 import Network from '../network/network';
-import Mobs from '../info/mobs';
 import Character from './entity/character/character';
 
 import type MongoDB from '../database/mongodb/mongodb';
