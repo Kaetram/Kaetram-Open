@@ -1,8 +1,5 @@
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
-import Items from '../../info/items';
-import Mobs from '../../info/mobs';
-import NPCs from '../../info/npcs';
 
 import type Combat from './character/combat/combat';
 import type Mob from './character/mob/mob';
