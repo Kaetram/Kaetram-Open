@@ -6,7 +6,6 @@ import type Mob from './mob';
 export default class MobHandler {
     private combat;
 
-    private spawnLocation;
     private maxRoamingDistance;
 
     private roamingInterval: NodeJS.Timeout | null = null;
@@ -14,7 +13,6 @@ export default class MobHandler {
     public constructor(private mob: Mob) {
         this.combat = mob.combat;
 
-        this.spawnLocation = mob.spawnLocation;
         this.maxRoamingDistance = mob.maxRoamingDistance;
 
         this.load();

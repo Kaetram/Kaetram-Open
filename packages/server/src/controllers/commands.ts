@@ -262,9 +262,9 @@ export default class Commands {
                 return;
 
             case 'mob': {
-                let npcId = parseInt(blocks.shift()!);
+                // let npcId = parseInt(blocks.shift()!);
 
-                this.entities.spawnMob(npcId, this.player.x, this.player.y);
+                // this.entities.spawnMob(npcId, this.player.x, this.player.y);
 
                 return;
             }
