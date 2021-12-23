@@ -23,15 +23,22 @@ export default {
             absorptionAmplifier = 1,
             weaponLevel = attacker.getWeaponLevel(),
             armourLevel = attacker.getArmourLevel(),
-            pendant = attacker.pendant || null,
-            ring = attacker.ring || null,
-            boots = attacker.boots || null,
             targetArmour = target.getArmourLevel(),
-            targetPendant = target.pendant || null,
-            targetRing = target.ring || null,
-            targetBoots = target.boots || null;
+            pendant,
+            ring,
+            boots,
+            targetPendant,
+            targetRing,
+            targetBoots;
 
-        if (attacker.isPlayer()) damageDealt += 10;
+        if (attacker.isPlayer()) {
+            damageDealt += 10;
+
+            ({ pendant, ring, boots } = attacker as Player);
+        }
+
+        if (target.isPlayer())
+            ({ pendant: targetPendant, ring: targetRing, boots: targetBoots } = target as Player);
 
         damageDealt +=
             attacker.level +

@@ -138,7 +138,7 @@ export default class Mob extends Character {
 
     public destroy(): void {
         this.dead = true;
-        this.clearTarget();
+        this.removeTarget();
         this.resetPosition();
         this.respawn();
 
@@ -146,7 +146,7 @@ export default class Mob extends Character {
     }
 
     public return(): void {
-        this.clearTarget();
+        this.removeTarget();
         this.resetPosition();
         this.setPosition(this.x, this.y);
     }
