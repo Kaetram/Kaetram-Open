@@ -115,6 +115,8 @@ export default class Combat {
         this.checkLoop = null!;
 
         this.started = false;
+
+        this.forget();
     }
 
     private parseAttack(): void {
@@ -253,18 +255,7 @@ export default class Combat {
 
         let mob = this.character as Mob;
 
-        mob.return();
-
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.character.region,
-            message: new Messages.Movement(Opcodes.Movement.Move, {
-                id: this.character.instance,
-                x: this.character.x,
-                y: this.character.y,
-                forced: false,
-                teleport: false
-            })
-        });
+        mob.sendToSpawn();
     }
 
     public hasAttacker(character: Character): boolean | void {
