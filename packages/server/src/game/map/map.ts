@@ -4,25 +4,14 @@ import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
 import mapData from '../../../data/map/world.json';
-import Spawns from '../../../data/spawns.json';
-import Items from '../../info/items';
-import Mobs from '../../info/mobs';
-import NPCs from '../../info/npcs';
 import Objects from '../../info/objects';
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
 
-import type {
-    ProcessedArea,
-    ProcessedMap,
-    ProcessedTileset,
-    Rock,
-    Tree
-} from '@kaetram/common/types/map';
+import type { ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
 import type Entity from '../entity/entity';
 import type World from '../world';
-import type Area from './areas/area';
 import type Areas from './areas/areas';
 
 let map = mapData as ProcessedMap;
@@ -38,8 +27,6 @@ export type AnimatedTile = { tileId: string; name: string };
 export type ParsedTile = RotatedTile | Tile | RotatedTile[];
 export type Tile = number | number[];
 export type Position = { x: number; y: number };
-
-type EntityType = 'mob' | 'npc' | 'item' | null;
 
 export default class Map {
     public regions: Regions;
@@ -120,44 +107,6 @@ export default class Map {
                 orientation: destination.orientation
             };
         });
-    }
-
-    // private loadStaticEntities(): void {
-    //     this.staticEntities = [];
-
-    //     // Legacy static entities (from Tiled);
-    //     _.each(map.staticEntities, (entity, tileIndex) => {
-    //         let e = {
-    //             tileIndex: parseInt(tileIndex),
-    //             string: entity.type,
-    //             roaming: entity.roaming,
-    //             type: this.getEntityType(entity.type)
-    //         };
-
-    //         this.staticEntities.push(e);
-    //     });
-
-    //     _.each(Spawns, (data) => {
-    //         let tileIndex = this.coordToIndex(data.x, data.y);
-
-    //         this.staticEntities.push({
-    //             tileIndex,
-    //             string: data.string,
-    //             roaming: data.roaming,
-    //             miniboss: data.miniboss,
-    //             achievementId: data.achievementId,
-    //             boss: data.boss,
-    //             type: this.getEntityType(data.string)
-    //         });
-    //     });
-    // }
-
-    private getEntityType(string: string): EntityType {
-        if (string in Mobs.Properties) return 'mob';
-        if (string in NPCs.Properties) return 'npc';
-        if (string in Items.Data) return 'item';
-
-        return null;
     }
 
     /**
