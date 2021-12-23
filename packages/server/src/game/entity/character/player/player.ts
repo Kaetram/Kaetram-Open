@@ -470,9 +470,8 @@ export default class Player extends Character {
      * Passed from the superclass...
      */
     public override heal(amount: number): void {
-        if (!this.hitPoints || !this.mana) return;
+        super.heal(amount);
 
-        this.hitPoints.increment(amount);
         this.mana.increment(amount);
 
         this.sync();
@@ -738,10 +737,6 @@ export default class Player extends Character {
         this.mana.setMana(this.mana.getMaxMana());
 
         this.sync();
-    }
-
-    public override applyDamage(damage: number): void {
-        this.hitPoints.decrement(damage);
     }
 
     public toggleProfile(state: boolean): void {
