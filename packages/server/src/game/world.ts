@@ -86,7 +86,7 @@ export default class World {
      ****************************/
 
     public kill(character: Character): void {
-        character.applyDamage(character.hitPoints.getHitPoints());
+        character.hitPoints.decrement(character.hitPoints.getHitPoints());
 
         this.push(Opcodes.Push.Regions, [
             {
@@ -106,19 +106,12 @@ export default class World {
         this.handleDeath(character, true);
     }
 
-    public handleDamage(
-        attacker: Character | undefined,
-        target: Character | undefined,
-        damage: number
-    ): void {
+    public handleDamage(attacker: Character, target: Character, damage: number): void {
         if (!attacker || !target || isNaN(damage) || target.invincible) return;
-
-        if (target.isPlayer()) target.hitCallback?.(attacker, damage);
 
         // Stop screwing with this - it's so the target retaliates.
 
-        target.hit(attacker);
-        target.applyDamage(damage, attacker);
+        target.hit(attacker, damage);
 
         this.push(Opcodes.Push.Regions, {
             regionId: target.region,
@@ -129,9 +122,10 @@ export default class World {
             })
         });
 
-        // If target has died...
+        // If target has dieded...
         if (target.getHitPoints() < 1) {
-            let player = attacker as Player;
+            // All of this has to get redone anyway lol
+            let player = attacker as unknown as Player;
 
             if (target.isMob()) player.addExperience((target as Mob).experience);
 
