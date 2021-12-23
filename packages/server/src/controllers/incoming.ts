@@ -50,92 +50,70 @@ export default class Incoming {
 
             switch (packet) {
                 case Packets.Intro:
-                    this.handleIntro(message);
-                    break;
+                    return this.handleIntro(message);
 
                 case Packets.Ready:
-                    this.handleReady(message);
-                    break;
+                    return this.handleReady(message);
 
                 case Packets.Who:
-                    this.handleWho(message);
-                    break;
+                    return this.handleWho(message);
 
                 case Packets.Equipment:
-                    this.handleEquipment(message);
-                    break;
+                    return this.handleEquipment(message);
 
                 case Packets.Movement:
-                    this.handleMovement(message);
-                    break;
+                    return this.handleMovement(message);
 
                 case Packets.Request:
-                    this.handleRequest(message);
-                    break;
+                    return this.handleRequest(message);
 
                 case Packets.Target:
-                    this.handleTarget(message);
-                    break;
+                    return this.handleTarget(message);
 
                 case Packets.Combat:
-                    this.handleCombat(message);
-                    break;
+                    return this.handleCombat(message);
 
                 case Packets.Projectile:
-                    this.handleProjectile(message);
-                    break;
+                    return this.handleProjectile(message);
 
                 case Packets.Network:
-                    this.handleNetwork(message);
-                    break;
+                    return this.handleNetwork(message);
 
                 case Packets.Chat:
-                    this.handleChat(message);
-                    break;
+                    return this.handleChat(message);
 
                 case Packets.Command:
-                    this.handleCommand(message);
-                    break;
+                    return this.handleCommand(message);
 
                 case Packets.Inventory:
-                    this.handleInventory(message);
-                    break;
+                    return this.handleInventory(message);
 
                 case Packets.Bank:
-                    this.handleBank(message);
-                    break;
+                    return this.handleBank(message);
 
                 case Packets.Respawn:
-                    this.handleRespawn(message);
-                    break;
+                    return this.handleRespawn(message);
 
                 case Packets.Trade:
-                    this.handleTrade(message);
-                    break;
+                    return this.handleTrade(message);
 
                 case Packets.Enchant:
-                    this.handleEnchant(message);
-                    break;
+                    return this.handleEnchant(message);
 
                 case Packets.Click:
-                    this.handleClick(message);
-                    break;
+                    return this.handleClick(message);
 
                 case Packets.Warp:
-                    this.handleWarp(message);
-                    break;
+                    return this.handleWarp(message);
 
                 case Packets.Shop:
-                    this.handleShop(message);
-                    break;
+                    return this.handleShop(message);
 
                 case Packets.Camera:
-                    this.handleCamera(message);
-                    break;
+                    return this.handleCamera(message);
 
                 case Packets.Client:
-                    this.handleClient(message);
-                    break;
+                    return this.handleClient(message);
             }
         });
     }
@@ -594,7 +572,7 @@ export default class Incoming {
 
                 if (!target || target.dead || !projectile) return;
 
-                this.world.handleDamage(projectile.owner, target, projectile.damage);
+                //this.world.handleDamage(projectile.owner, target, projectile.damage);
                 this.entities.remove(projectile);
 
                 if (target.combat.started || target.dead || target.isMob()) return;
