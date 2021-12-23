@@ -150,8 +150,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 350,
-    "spawnDelay": 35000,
-    "combatPlugin": "snek"
+    "spawnDelay": 35000
   },
 
   "Spectre": {
@@ -393,8 +392,7 @@
     "attackRate": 1300,
     "movementSpeed": 400,
     "spawnDelay": 35000,
-    "hiddenName": true,
-    "combatPlugin": "cactus"
+    "hiddenName": true
   },
 
   "Cat": {
@@ -1710,8 +1708,7 @@
     "aggressive": true,
     "attackRate": 900,
     "movementSpeed": 400,
-    "spawnDelay": 50000,
-    "combatPlugin":"skeletonking"
+    "spawnDelay": 50000
   },
 
   "OgreLord": {
@@ -1728,8 +1725,7 @@
     "aggressive": true,
     "attackRate": 1100,
     "movementSpeed": 600,
-    "spawnDelay": 75000,
-    "combatPlugin":"ogrelord"
+    "spawnDelay": 75000
   },
 
   "WindGuardian": {
@@ -1786,8 +1782,7 @@
     "aggressive": true,
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 95000,
-    "combatPlugin": "tenebris"
+    "spawnDelay": 95000
   },
 
   "DarkRegionIllusion": {
@@ -1804,8 +1799,7 @@
     "aggressive": true,
     "attackRate": 1300,
     "movementSpeed": 800,
-    "spawnDelay": -1,
-    "combatPlugin": "tenebris"
+    "spawnDelay": -1
   },
 
   "MiniSeaDragon": {
@@ -1953,8 +1947,7 @@
     "projectileName": "projectile-iceball",
     "attackRate": 1500,
     "movementSpeed": 600,
-    "spawnDelay": 115000,
-    "combatPlugin":"piratecaptain"
+    "spawnDelay": 115000
   },
 
   "PirateKing": {
@@ -1994,8 +1987,7 @@
     "attackRate": 1500,
     "movementSpeed": 600,
     "projectileName": "projectile-terror",
-    "spawnDelay": 95000,
-    "combatPlugin":"queenant"
+    "spawnDelay": 95000
   },
 
   "QueenSpider": {
@@ -2040,8 +2032,7 @@
     "projectileName": "projectile-terror",
     "attackRate": 1300,
     "movementSpeed": 1200,
-    "spawnDelay": 95000,
-    "combatPlugin": "greatsquid"
+    "spawnDelay": 95000
   },
 
   "BrownMouse": {
