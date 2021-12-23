@@ -33,7 +33,7 @@ export default class Item extends Entity {
         abilityLevel = -1,
         public respawnable = false
     ) {
-        super(Utils.createInstance(Modules.EntityType.Item), x, y);
+        super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
         this.ability = ability;
         this.abilityLevel = abilityLevel;

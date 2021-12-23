@@ -20,12 +20,12 @@ import type Item from './objects/item';
 export interface EntityData {
     // Entity data
     instance: string;
+    key: string;
     type: number;
     x: number;
     y: number;
 
     // Universal elements
-    key?: string; // The key is the entity's identification
     name?: string; // Entity's name
 
     // Character data
@@ -49,7 +49,8 @@ type MovementCallback = (x: number, y: number) => void;
 type RegionCallback = (region: number) => void;
 
 abstract class Entity {
-    private type: number;
+    private type: number; // EntityType
+    public key = ''; // The entity's key (image file)
 
     public x = -1;
     public y = -1;
@@ -75,8 +76,9 @@ abstract class Entity {
     public movementCallback?: MovementCallback;
     public regionCallback?: RegionCallback;
 
-    protected constructor(public instance: string, x: number, y: number) {
+    protected constructor(public instance: string, key: string, x: number, y: number) {
         this.type = Utils.getEntityType(this.instance);
+        this.key = key;
 
         this.x = x!;
         this.y = y!;
@@ -230,11 +232,12 @@ abstract class Entity {
      */
 
     public serialize(): EntityData {
-        let { instance, type, x, y } = this;
+        let { instance, type, key, x, y } = this;
 
         return {
             instance,
             type,
+            key,
             x,
             y
         };

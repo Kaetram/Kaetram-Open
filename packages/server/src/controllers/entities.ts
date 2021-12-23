@@ -181,7 +181,7 @@ export default class Entities {
         isStatic = false,
         achievement?: number
     ): Chest {
-        let chest = new Chest(194, gridX, gridY, achievement);
+        let chest = new Chest(gridX, gridY, achievement);
 
         chest.addItems(items);
 
