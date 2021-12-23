@@ -100,7 +100,7 @@ export default {
         public packet = Packets.Spawn;
 
         public constructor(entity: Entity) {
-            super(entity.getState());
+            super(entity.serialize());
         }
     },
 

@@ -114,7 +114,7 @@ export default class World {
     ): void {
         if (!attacker || !target || isNaN(damage) || target.invincible) return;
 
-        if (target.type === 'player' && target.hitCallback) target.hitCallback(attacker, damage);
+        if (target.isPlayer()) target.hitCallback?.(attacker, damage);
 
         // Stop screwing with this - it's so the target retaliates.
 
@@ -134,9 +134,9 @@ export default class World {
         if (target.getHitPoints() < 1) {
             let player = attacker as Player;
 
-            if (target.type === 'mob') player.addExperience(Mobs.getXp(target.id));
+            if (target.isMob()) player.addExperience((target as Mob).experience);
 
-            if (player.type === 'player') player.killCharacter(target);
+            if (player.isPlayer()) player.killCharacter(target);
 
             target.combat.forEachAttacker((attacker) => {
                 attacker.removeTarget();
@@ -163,7 +163,7 @@ export default class World {
     public handleDeath(character: Character, ignoreDrops = false, lastAttacker?: Character): void {
         if (!character) return;
 
-        if (character.type === 'mob') {
+        if (character.isMob()) {
             let mob = character as Mob,
                 deathX = mob.x,
                 deathY = mob.y;
@@ -185,7 +185,7 @@ export default class World {
 
                 if (drop) this.entities.dropItem(drop.id, drop.count, deathX, deathY);
             }
-        } else if (character.type === 'player') {
+        } else if (character.isPlayer()) {
             let player = character as Player;
 
             player.die();

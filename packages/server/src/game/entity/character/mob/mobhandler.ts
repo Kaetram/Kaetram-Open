@@ -31,22 +31,17 @@ export default class MobHandler {
 
     private loadCallbacks(): void {
         // Combat plugin has its own set of callbacks.
-        if (Mobs.hasCombatPlugin(this.mob.id)) return;
-
-        this.mob.onLoad(() => {
-            if (this.mob.miniboss) this.mob.setMinibossData();
-        });
-
-        this.mob.onDeath(() => {
-            if (!this.mob.miniboss || !this.combat) return;
-
-            this.combat.forEachAttacker((attacker) => {
-                let player = attacker as Player;
-
-                player?.finishAchievement(this.mob.achievementId);
-            });
-        });
-
+        // if (Mobs.hasCombatPlugin(this.mob.id)) return;
+        // this.mob.onLoad(() => {
+        //     if (this.mob.miniboss) this.mob.setMinibossData();
+        // });
+        // this.mob.onDeath(() => {
+        //     if (!this.mob.miniboss || !this.combat) return;
+        //     this.combat.forEachAttacker((attacker) => {
+        //         let player = attacker as Player;
+        //         player?.finishAchievement(this.mob.achievementId);
+        //     });
+        // });
         // TODO - Implement posion on Mobs
     }
 

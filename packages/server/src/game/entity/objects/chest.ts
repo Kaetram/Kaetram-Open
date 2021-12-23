@@ -16,7 +16,7 @@ export default class Chest extends Entity {
     private respawnCallback?(): void;
 
     public constructor(id: number, x: number, y: number, public achievement?: number) {
-        super(id, 'chest', Utils.createInstance(Modules.EntityType.Chest), x, y);
+        super(Utils.createInstance(Modules.EntityType.Chest), x, y);
     }
 
     public addItems(items: string[]): void {

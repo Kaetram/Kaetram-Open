@@ -70,6 +70,8 @@ export default class EntitiesController {
     }
 
     public create(info: AnyEntity): void {
+        console.log(info);
+
         let { entities, game } = this,
             entity: Entity = null!;
 

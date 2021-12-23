@@ -31,7 +31,7 @@ export default {
             targetRing = target.ring || null,
             targetBoots = target.boots || null;
 
-        if (attacker.type === 'player') damageDealt += 10;
+        if (attacker.isPlayer()) damageDealt += 10;
 
         damageDealt +=
             attacker.level +
