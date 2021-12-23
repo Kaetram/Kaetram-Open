@@ -1,7 +1,6 @@
 import { Modules } from '@kaetram/common/network';
 
-import Mobs from '../../../info/mobs';
-import Entity, { EntityState } from '../entity';
+import Entity, { EntityData } from '../entity';
 import Combat from './combat/combat';
 
 import type { HitData } from '@kaetram/common/types/info';
@@ -16,10 +15,6 @@ type DamagedCallback = (damage: number, attacker?: Character) => void;
 type TargetCallback = (target: Character | null) => void;
 type PoisonCallback = (poison: string) => void;
 type SubAoECallback = (radius: number, hasTerror: boolean) => void;
-
-export interface CharacterState extends EntityState {
-    movementSpeed: number;
-}
 
 export default abstract class Character extends Entity {
     public level = -1;
@@ -43,7 +38,6 @@ export default abstract class Character extends Entity {
     public aggroRange = 2;
 
     public target: Character | null = null;
-    public potentialTarget: unknown = null;
 
     public stunTimeout: NodeJS.Timeout | null = null;
 
@@ -90,21 +84,15 @@ export default abstract class Character extends Entity {
     public boots!: Boots;
 
     protected constructor(id: number, type: string, instance: string, x: number, y: number) {
-        super(id, type, instance, x, y);
+        super(instance, x, y);
 
         this.loadCombat();
         this.startHealing();
     }
 
     private loadCombat(): void {
-        /**
-         * Ternary could be used here, but readability
-         * would become nonexistent.
-         */
-
-        this.combat = Mobs.hasCombatPlugin(this.id)
-            ? new (Mobs.isNewCombatPlugin(this.id)!)(this)
-            : new Combat(this);
+        //TODO - Plugins
+        this.combat = new Combat(this);
     }
 
     public setMinibossData(): void {
@@ -193,10 +181,6 @@ export default abstract class Character extends Entity {
         this.targetCallback?.(target);
     }
 
-    private setPotentialTarget(potentialTarget: unknown): void {
-        this.potentialTarget = potentialTarget;
-    }
-
     public setHitPoints(hitPoints: number): void {
         this.hitPoints = hitPoints;
 
@@ -225,12 +209,12 @@ export default abstract class Character extends Entity {
         return this.armourLevel;
     }
 
-    public override getState(): CharacterState {
-        let state = super.getState() as CharacterState;
+    public override serialize(): EntityData {
+        let data = super.serialize();
 
-        state.movementSpeed = this.movementSpeed;
+        data.movementSpeed = this.movementSpeed;
 
-        return state;
+        return data;
     }
 
     protected hasMaxHitPoints(): boolean {
@@ -241,10 +225,6 @@ export default abstract class Character extends Entity {
         this.removeTargetCallback?.();
 
         this.clearTarget();
-    }
-
-    private hasPotentialTarget(potentialTarget: unknown): boolean {
-        return this.potentialTarget === potentialTarget;
     }
 
     public clearTarget(): void {
