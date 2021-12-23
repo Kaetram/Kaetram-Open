@@ -138,9 +138,9 @@ export default class Player extends Character {
 
     public armour!: Armour;
     public weapon!: Weapon;
-    // public pendant: Pendant;
-    // public ring: Ring;
-    // public boots: Boots;
+    public pendant!: Pendant;
+    public ring!: Ring;
+    public boots!: Boots;
 
     public profileDialogOpen?: boolean;
     public inventoryOpen?: boolean;
