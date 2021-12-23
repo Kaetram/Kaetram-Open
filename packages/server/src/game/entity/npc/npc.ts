@@ -31,6 +31,7 @@ export default class NPC extends Entity {
             return;
         }
 
+        this.name = this.data.name!;
         this.text = this.data.text || this.text;
         this.role = this.data.role!;
     }
