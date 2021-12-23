@@ -79,8 +79,7 @@ export default class Mob extends Character {
         this.experience = this.data.experience || this.experience;
 
         // TODO - Use points system for entities as well.
-        this.hitPoints = this.data.hitPoints || this.hitPoints;
-        this.maxHitPoints = this.hitPoints;
+        if (this.data.hitPoints) this.hitPoints.updateHitPoints([this.data.hitPoints]);
 
         this.drops = this.data.drops || this.drops;
         this.level = this.data.level || this.level;
@@ -188,8 +187,9 @@ export default class Mob extends Character {
     public override serialize(): EntityData {
         let data = super.serialize();
 
-        data.hitPoints = this.hitPoints;
-        data.maxHitPoints = this.maxHitPoints;
+        // TODO - Update this once we get around fixing up the client.
+        data.hitPoints = this.hitPoints.getHitPoints();
+        data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
         data.level = this.level;
         data.hiddenName = this.hiddenName; // TODO - Just don't send name when hiddenName present.

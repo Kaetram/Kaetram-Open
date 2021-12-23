@@ -7,6 +7,7 @@ import type { HitData } from '@kaetram/common/types/info';
 import type Boots from './player/equipment/boots';
 import type Pendant from './player/equipment/pendant';
 import type Ring from './player/equipment/ring';
+import HitPoints from './points/hitpoints';
 
 type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
@@ -24,8 +25,7 @@ export default abstract class Character extends Entity {
     public attackRate = Modules.Defaults.ATTACK_RATE;
     public healingRate = Modules.Defaults.HEAL_RATE;
 
-    public hitPoints = -1;
-    public maxHitPoints = -1;
+    public hitPoints = new HitPoints(Modules.Defaults.HITPOINTS);
 
     /* States */
     public poison: string | null = null;
@@ -39,8 +39,6 @@ export default abstract class Character extends Entity {
 
     private healingInterval: NodeJS.Timeout | null = null;
 
-    private updated = false;
-
     public weaponLevel!: number;
     public armourLevel!: number;
     public stunned = false;
@@ -49,7 +47,6 @@ export default abstract class Character extends Entity {
     public hitCallback?: HitCallback;
     private damagedCallback?: DamagedCallback;
     private targetCallback?: TargetCallback;
-    private hitPointsCallback?(): void;
     private poisonCallback?: PoisonCallback;
     private removeTargetCallback?(): void;
     private healthChangeCallback?(): void;
@@ -86,20 +83,6 @@ export default abstract class Character extends Entity {
         this.combat = new Combat(this);
     }
 
-    public setMinibossData(): void {
-        /* We only update the mob data once to prevent any issues. */
-
-        if (this.updated) return;
-
-        this.level += Math.floor(this.level / 2);
-        this.maxHitPoints += Math.floor(this.maxHitPoints / 2);
-        this.hitPoints = this.maxHitPoints;
-        this.weaponLevel += 4;
-        this.armourLevel += 3;
-
-        this.updated = true;
-    }
-
     private startHealing(): void {
         this.healingInterval = setInterval(() => {
             if (this.dead) return;
@@ -128,9 +111,7 @@ export default abstract class Character extends Entity {
     }
 
     public heal(amount: number): void {
-        this.setHitPoints(this.hitPoints + amount);
-
-        if (this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
+        this.hitPoints.increment(amount);
     }
 
     public isRanged(): boolean {
@@ -138,13 +119,13 @@ export default abstract class Character extends Entity {
     }
 
     public applyDamage(damage: number, attacker?: Character): void {
-        this.hitPoints -= damage;
+        this.hitPoints.decrement(damage);
 
         this.damagedCallback?.(damage, attacker);
     }
 
     public isDead(): boolean {
-        return this.hitPoints < 1 || this.dead;
+        return this.hitPoints.isEmpty() || this.dead;
     }
 
     public getCombat(): Combat {
@@ -152,11 +133,11 @@ export default abstract class Character extends Entity {
     }
 
     public getHitPoints(): number {
-        return this.hitPoints;
+        return this.hitPoints.getHitPoints();
     }
 
     public getMaxHitPoints(): number {
-        return this.maxHitPoints;
+        return this.hitPoints.getMaxHitPoints();
     }
 
     public override setPosition(x: number, y: number): void {
@@ -170,9 +151,7 @@ export default abstract class Character extends Entity {
     }
 
     public setHitPoints(hitPoints: number): void {
-        this.hitPoints = hitPoints;
-
-        this.hitPointsCallback?.();
+        this.hitPoints.setHitPoints(hitPoints);
     }
 
     public setPoison(poison: string): void {
@@ -199,18 +178,6 @@ export default abstract class Character extends Entity {
         // return this.armourLevel;
     }
 
-    public override serialize(): EntityData {
-        let data = super.serialize();
-
-        data.movementSpeed = this.movementSpeed;
-
-        return data;
-    }
-
-    protected hasMaxHitPoints(): boolean {
-        return this.hitPoints >= this.maxHitPoints;
-    }
-
     public removeTarget(): void {
         this.removeTargetCallback?.();
 
@@ -219,6 +186,14 @@ export default abstract class Character extends Entity {
 
     public clearTarget(): void {
         this.target = null;
+    }
+
+    public override serialize(): EntityData {
+        let data = super.serialize();
+
+        data.movementSpeed = this.movementSpeed;
+
+        return data;
     }
 
     /**
@@ -239,10 +214,6 @@ export default abstract class Character extends Entity {
 
     public onHit(callback: HitCallback): void {
         this.hitCallback = callback;
-    }
-
-    public onHealthChange(callback: () => void): void {
-        this.healthChangeCallback = callback;
     }
 
     public onDamage(callback: DamageCallback): void {
