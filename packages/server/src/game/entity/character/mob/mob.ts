@@ -34,6 +34,7 @@ export default class Mob extends Character {
     private spawnDelay = Modules.MobDefaults.SPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
     public aggressive = false;
+    public roaming = false;
     private poisonous = false;
     private combatPlugin = '';
     // TODO - Specify this in the mob data
@@ -81,6 +82,7 @@ export default class Mob extends Character {
         // TODO - Use points system for entities as well.
         if (this.data.hitPoints) this.hitPoints.updateHitPoints([this.data.hitPoints]);
 
+        this.name = this.data.name!;
         this.drops = this.data.drops || this.drops;
         this.level = this.data.level || this.level;
         this.attackLevel = this.data.attackLevel || this.attackLevel;

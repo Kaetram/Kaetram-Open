@@ -124,6 +124,8 @@ export default class EntitiesController {
                 mob.setHitPoints(info.hitPoints);
                 mob.setMaxHitPoints(info.maxHitPoints);
 
+                console.log(info);
+
                 mob.attackRange = info.attackRange;
                 mob.level = info.level;
                 mob.hiddenName = info.hiddenName;
