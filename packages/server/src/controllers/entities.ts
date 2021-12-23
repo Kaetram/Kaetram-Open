@@ -55,7 +55,7 @@ export default class Entities {
                     return this.addNPC(new NPC(key, position.x, position.y));
 
                 case Modules.EntityType.Mob: {
-                    let mob = new Mob(Mobs.stringToId(key)!, position.x, position.y);
+                    let mob = new Mob(key, position.x, position.y);
 
                     mob.static = true;
                     // mob.roaming = entityInfo.roaming;
@@ -98,17 +98,12 @@ export default class Entities {
                         if (this.mobs.dead) return;
 
                         let newX =
-                                mob.spawnLocation[0] +
+                                mob.spawnX +
                                 Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
                             newY =
-                                mob.spawnLocation[1] +
+                                mob.spawnY +
                                 Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
-                            distance = Utils.getDistance(
-                                mob.spawnLocation[0],
-                                mob.spawnLocation[1],
-                                newX,
-                                newY
-                            );
+                            distance = Utils.getDistance(mob.spawnX, mob.spawnY, newX, newY);
 
                         // Return if the tile is colliding.
                         if (this.map.isColliding(newX, newY)) return;
@@ -134,10 +129,7 @@ export default class Entities {
                          * levels of plateau in order to properly roam entities without
                          * them walking into other regions (or clipping).
                          */
-                        let plateauLevel = this.map.getPlateauLevel(
-                            mob.spawnLocation[0],
-                            mob.spawnLocation[1]
-                        );
+                        let plateauLevel = this.map.getPlateauLevel(mob.spawnX, mob.spawnY);
 
                         if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
 
@@ -174,8 +166,8 @@ export default class Entities {
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
     }
 
-    public spawnMob(id: number, gridX: number, gridY: number): Mob {
-        let mob = new Mob(id, gridX, gridY);
+    public spawnMob(key: string, gridX: number, gridY: number): Mob {
+        let mob = new Mob(key, gridX, gridY);
 
         this.addMob(mob);
 

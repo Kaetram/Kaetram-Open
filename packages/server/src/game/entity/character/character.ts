@@ -70,8 +70,6 @@ export default abstract class Character extends Entity {
 
     public pvp = false;
 
-    public spawnLocation!: [x: number, y: number];
-
     public frozen = false;
 
     public alwaysAggressive = false;
@@ -83,7 +81,7 @@ export default abstract class Character extends Entity {
     public ring!: Ring;
     public boots!: Boots;
 
-    protected constructor(id: number, type: string, instance: string, x: number, y: number) {
+    protected constructor(key: string, instance: string, x: number, y: number) {
         super(instance, x, y);
 
         this.loadCombat();
@@ -229,6 +227,14 @@ export default abstract class Character extends Entity {
 
     public clearTarget(): void {
         this.target = null;
+    }
+
+    /**
+     * Default value for an entity having special attack
+     */
+
+    protected hasSpecialAttack(): boolean {
+        return false;
     }
 
     public onTarget(callback: TargetCallback): void {

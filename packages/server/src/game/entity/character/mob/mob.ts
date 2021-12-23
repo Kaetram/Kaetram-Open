@@ -14,8 +14,9 @@ import { Modules } from '@kaetram/common/network';
 import { EntityData } from '../../entity';
 
 export default class Mob extends Character {
-    private spawnX: number;
-    private spawnY: number;
+    // TODO - Make private after moving callbacks into the mob file.
+    public spawnX: number;
+    public spawnY: number;
 
     public experience = Modules.MobDefaults.Experience; // Use default experience if not specified.
     private drops?: { [itemKey: string]: number };
@@ -47,8 +48,8 @@ export default class Mob extends Character {
     public forceTalkCallback?: (message: string) => void;
     public roamingCallback?(): void;
 
-    public constructor(id: number, x: number, y: number) {
-        super(id, 'mob', Utils.createInstance(Modules.EntityType.Mob), x, y);
+    public constructor(key: string, x: number, y: number) {
+        super(key, Utils.createInstance(Modules.EntityType.Mob), x, y);
 
         this.spawnX = x;
         this.spawnY = y;
