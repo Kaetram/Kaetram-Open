@@ -24,8 +24,8 @@ import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 import Friends from './friends';
 import Handler from './handler';
-import HitPoints from './points/hitpoints';
-import Mana from './points/mana';
+import HitPoints from '../points/hitpoints';
+import Mana from '../points/mana';
 import Trade from './trade';
 import Warp from './warp';
 
@@ -66,13 +66,6 @@ export interface ObjectData {
         isObject: boolean;
         cursor: string | undefined;
     };
-}
-
-interface SurroundingTrees {
-    indexes: number[];
-    data: number[][];
-    collisions: boolean[];
-    objectData: ObjectData;
 }
 
 export default class Player extends Character {
@@ -140,14 +133,18 @@ export default class Player extends Character {
 
     private nextExperience: number | undefined;
     private prevExperience!: number;
-    public playerHitPoints!: HitPoints;
-    public mana!: Mana;
+
+    public mana: Mana = new Mana(Modules.Defaults.MANA);
 
     public armour!: Armour;
     public weapon!: Weapon;
     // public pendant: Pendant;
     // public ring: Ring;
     // public boots: Boots;
+
+    public profileDialogOpen?: boolean;
+    public inventoryOpen?: boolean;
+    public warpOpen?: boolean;
 
     public cameraArea: Area | undefined;
     private overlayArea: Area | undefined;
@@ -162,9 +159,6 @@ export default class Player extends Character {
 
     public new = false;
     private lastNotify!: number;
-    private profileDialogOpen = false;
-    private inventoryOpen = false;
-    private warpOpen = false;
 
     public selectedShopItem!: { id: number; index: number } | null;
 
@@ -227,8 +221,9 @@ export default class Player extends Character {
 
         this.userAgent = data.userAgent;
 
-        this.playerHitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(this.level));
-        this.mana = new Mana(data.mana, Formulas.getMaxMana(this.level));
+        // TODO - Do not calculate max points on every login, just store it instead.
+        this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
+        this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
 
         let { x, y, armour, weapon, pendant, ring, boots } = data;
 
@@ -385,8 +380,7 @@ export default class Player extends Character {
 
         if (this.x <= 0 || this.y <= 0) this.sendToSpawn();
 
-        if (this.playerHitPoints.getHitPoints() < 0)
-            this.playerHitPoints.setHitPoints(this.getMaxHitPoints());
+        if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.getMaxHitPoints());
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
@@ -399,8 +393,8 @@ export default class Player extends Character {
             y: this.y,
             // kind: this.kind,
             rights: this.rights,
-            hitPoints: this.playerHitPoints.getData(),
-            mana: this.mana.getData(),
+            hitPoints: this.hitPoints.serialize(),
+            mana: this.mana.serialize(),
             experience: this.experience,
             nextExperience: this.nextExperience,
             prevExperience: this.prevExperience,
@@ -438,8 +432,8 @@ export default class Player extends Character {
         this.prevExperience = Formulas.prevExp(this.experience);
 
         if (oldLevel !== this.level) {
-            this.playerHitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
-            this.healHitPoints(this.playerHitPoints.maxPoints);
+            this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
+            this.healHitPoints(this.hitPoints.maxPoints);
 
             this.updateRegion();
 
@@ -476,10 +470,10 @@ export default class Player extends Character {
      * Passed from the superclass...
      */
     public override heal(amount: number): void {
-        if (!this.playerHitPoints || !this.mana) return;
+        if (!this.hitPoints || !this.mana) return;
 
-        this.playerHitPoints.heal(amount);
-        this.mana.heal(amount);
+        this.hitPoints.increment(amount);
+        this.mana.increment(amount);
 
         this.sync();
     }
@@ -487,7 +481,7 @@ export default class Player extends Character {
     public healHitPoints(amount: number): void {
         let type = 'health' as const;
 
-        this.playerHitPoints.heal(amount);
+        this.hitPoints.increment(amount);
 
         this.sync();
 
@@ -504,7 +498,7 @@ export default class Player extends Character {
     public healManaPoints(amount: number): void {
         let type = 'mana' as const;
 
-        this.mana.heal(amount);
+        this.mana.increment(amount);
 
         this.sync();
 
@@ -740,14 +734,14 @@ export default class Player extends Character {
     }
 
     public revertPoints(): void {
-        this.playerHitPoints.setHitPoints(this.playerHitPoints.getMaxHitPoints());
+        this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
         this.mana.setMana(this.mana.getMaxMana());
 
         this.sync();
     }
 
     public override applyDamage(damage: number): void {
-        this.playerHitPoints.decrement(damage);
+        this.hitPoints.decrement(damage);
     }
 
     public toggleProfile(state: boolean): void {
@@ -777,11 +771,11 @@ export default class Player extends Character {
     }
 
     public override getHitPoints(): number {
-        return this.playerHitPoints.getHitPoints();
+        return this.hitPoints.getHitPoints();
     }
 
     public override getMaxHitPoints(): number {
-        return this.playerHitPoints.getMaxHitPoints();
+        return this.hitPoints.getMaxHitPoints();
     }
 
     public getTutorial(): Introduction {
@@ -937,10 +931,6 @@ export default class Player extends Character {
         return this.boots && this.boots.name !== 'null' && this.boots.id !== -1;
     }
 
-    public override hasMaxHitPoints(): boolean {
-        return this.getHitPoints() >= this.playerHitPoints.getMaxHitPoints();
-    }
-
     public hasMaxMana(): boolean {
         return this.mana.getMana() >= this.mana.getMaxMana();
     }
@@ -974,9 +964,9 @@ export default class Player extends Character {
             pvpDeaths: this.pvpDeaths,
             attackRange: this.attackRange,
             orientation: this.orientation,
-            hitPoints: this.playerHitPoints.getData(),
+            hitPoints: this.hitPoints.serialize(),
             movementSpeed: this.getMovementSpeed(),
-            mana: this.mana.getData(),
+            mana: this.mana.serialize(),
             armour: this.armour.getData(),
             weapon: this.weapon.getData(),
             pendant: this.pendant.getData(),
@@ -1139,8 +1129,6 @@ export default class Player extends Character {
      * mana, exp, and other variables
      */
     public sync(): void {
-        if (!this.playerHitPoints || !this.mana) return;
-
         let info = {
             id: this.instance,
             attackRange: this.attackRange,
