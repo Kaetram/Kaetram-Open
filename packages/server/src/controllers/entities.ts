@@ -15,8 +15,6 @@ import Projectile from '../game/entity/objects/projectile';
 import Messages from '../network/messages';
 import Formulas from '../info/formulas';
 import Items from '../info/items';
-import Mobs from '../info/mobs';
-import NPCs from '../info/npcs';
 
 import mobData from '../../data/mobs.json';
 import itemData from '../../data/items.json';
@@ -72,8 +70,6 @@ export default class Entities {
                     // }
 
                     // if (entityInfo.boss) mob.boss = entityInfo.boss;
-
-                    if (Mobs.isHidden(key)) mob.hiddenName = true;
 
                     mob.load();
 
