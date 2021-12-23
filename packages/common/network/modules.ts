@@ -273,12 +273,22 @@ export enum Constants {
     HORIZONTAL_FLAG = 0x80_00_00_00
 }
 
+// Defaults that apply to all types of entities
+export enum Defaults {
+    HITPOINTS = 69, // nice.
+    MOVEMENT_SPEED = 250, // 250 pixels per frame?
+    ATTACK_RATE = 1000, // every 1 second
+    HEAL_RATE = 10_000 // healing every 10 seconds
+}
+
+// Defaults that apply specifically to mobs
 export enum MobDefaults {
-    Experience = 1,
-    AggroRange = 2,
-    AttackRate = 1000,
-    MovementSpeed = 200,
-    SpawnDelay = 60_000
+    EXPERIENCE = 1, // Default 1 exp granted if not specified
+    AGGRO_RANGE = 2, // Default aggro range of 2 tiles
+    SPAWN_DELAY = 60_000, // 60 seconds to respawn
+    ROAM_DISTANCE = 7, // 7 tiles away from spawn point
+    DEFENSE_LEVEL = 1,
+    ATTACK_LEVEL = 1
 }
 
 export enum APIConstants {
