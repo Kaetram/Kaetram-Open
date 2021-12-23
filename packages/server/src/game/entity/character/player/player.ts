@@ -39,6 +39,7 @@ import type NPC from '../../npc/npc';
 import type { FullPlayerData } from './../../../../database/mongodb/creator';
 import type Introduction from './quests/impl/introduction';
 import { EntityData } from '../../entity';
+import Map from '../../../map/map';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
@@ -69,7 +70,7 @@ export interface ObjectData {
 }
 
 export default class Player extends Character {
-    public map;
+    public map: Map;
     private regions;
     private entities;
     private globalObjects;
