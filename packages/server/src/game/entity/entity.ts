@@ -156,9 +156,21 @@ abstract class Entity {
         return dx <= distance && dy <= distance;
     }
 
+    /**
+     * Checks if an entity is next to the current entity object.
+     * @param entity Entity are checking distance of.
+     * @returns Whether the distance of the entity we are checking is at MOST 1 block away.
+     */
+
     public isAdjacent(entity: Entity): boolean {
         return this.getDistance(entity) < 2;
     }
+
+    /**
+     * Checks if the other entity is next to the current entity but not diganonally adjacent.
+     * @param entity Entity we ar checking.
+     * @returns That the entity is either up, right, left, or down of this entity object.
+     */
 
     public isNonDiagonal(entity: Entity): boolean {
         return this.isAdjacent(entity) && !(entity.x !== this.x && entity.y !== this.y);
@@ -207,10 +219,6 @@ abstract class Entity {
 
     public isPlayer(): this is Player {
         return this.type === Modules.EntityType.Player;
-    }
-
-    protected hasSpecialAttack(): boolean {
-        return false;
     }
 
     /**
