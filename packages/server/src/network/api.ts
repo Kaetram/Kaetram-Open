@@ -7,7 +7,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import type Player from '../game/entity/character/player/player';
-import type Mana from '../game/entity/character/player/points/mana';
 import type World from '../game/world';
 import { Modules } from '@kaetram/common/network';
 
@@ -17,8 +16,6 @@ interface PlayerData {
     y: number;
     experience: number;
     level: number;
-    hitPoints: number;
-    mana: Mana;
     pvpKills: number;
     orientation: number;
     lastLogin: number;
@@ -221,8 +218,6 @@ export default class API {
             y: player.y,
             experience: player.experience,
             level: player.level,
-            hitPoints: player.hitPoints,
-            mana: player.mana,
             pvpKills: player.pvpKills,
             orientation: player.orientation,
             lastLogin: player.lastLogin,

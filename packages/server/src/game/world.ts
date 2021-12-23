@@ -86,7 +86,7 @@ export default class World {
      ****************************/
 
     public kill(character: Character): void {
-        character.applyDamage(character.hitPoints);
+        character.applyDamage(character.hitPoints.getHitPoints());
 
         this.push(Opcodes.Push.Regions, [
             {
