@@ -451,9 +451,9 @@ export default class Combat {
     public targetOutOfBounds(): boolean | void {
         if (!this.character.target || !this.character.isMob()) return;
 
-        let { x, y, target, spawnDistance } = this.character as Mob;
+        let { x, y, target, roamDistance } = this.character as Mob;
 
-        return Utils.getDistance(x, y, target!.x, target!.y) > spawnDistance;
+        return Utils.getDistance(x, y, target!.x, target!.y) > roamDistance;
     }
 
     public getTime(): number {

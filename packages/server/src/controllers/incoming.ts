@@ -246,25 +246,25 @@ export default class Incoming {
 
     private handleWho(message: string[]): void {
         _.each(message, (id: string) => {
-            let entity = this.entities.get<Mob & NPC>(id);
+            let entity = this.entities.get(id);
 
             if (!entity || entity.dead) return;
 
             /* We handle player-specific entity statuses here. */
 
             // Entity is an area-based mob
-            if (entity.area) entity.specialState = 'area';
+            // if (entity.area) entity.specialState = 'area';
 
-            if (this.player.quests.isQuestNPC(entity)) entity.specialState = 'questNpc';
+            // if (this.player.quests.isQuestNPC(entity)) entity.specialState = 'questNpc';
 
-            if (this.player.quests.isQuestMob(entity)) entity.specialState = 'questMob';
+            // if (this.player.quests.isQuestMob(entity)) entity.specialState = 'questMob';
 
-            if (entity.miniboss) {
-                entity.specialState = 'miniboss';
-                entity.customScale = 1.25;
-            }
+            // if (entity.miniboss) {
+            //     entity.specialState = 'miniboss';
+            //     entity.customScale = 1.25;
+            // }
 
-            if (entity.boss) entity.specialState = 'boss';
+            // if (entity.boss) entity.specialState = 'boss';
 
             // if (this.player.quests.isAchievementNPC(entity))
             //    entity.specialState = 'achievementNpc';
