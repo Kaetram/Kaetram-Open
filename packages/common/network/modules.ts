@@ -273,6 +273,14 @@ export enum Constants {
     HORIZONTAL_FLAG = 0x80_00_00_00
 }
 
+export enum MobDefaults {
+    Experience = 1,
+    AggroRange = 2,
+    AttackRate = 1000,
+    MovementSpeed = 200,
+    SpawnDelay = 60_000
+}
+
 export enum APIConstants {
     UNHANDLED_HTTP_METHOD,
     NOT_FOUND_ERROR,

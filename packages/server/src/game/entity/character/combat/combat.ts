@@ -49,7 +49,7 @@ export default class Combat {
         });
 
         character.onDamage((target, hitInfo) => {
-            if (this.isPlayer()) {
+            if (this.character.isPlayer()) {
                 let player = character as Player;
 
                 if (player.hasBreakableWeapon() && Formulas.getWeaponBreak(player, target))
@@ -82,7 +82,7 @@ export default class Combat {
     public start(): void {
         if (this.started) return;
 
-        if (this.character.type === 'player') log.debug('Starting player attack.');
+        if (this.character.isPlayer()) log.debug('Starting player attack.');
 
         this.lastAction = Date.now();
 
@@ -104,7 +104,7 @@ export default class Combat {
     public stop(): void {
         if (!this.started) return;
 
-        if (this.character.type === 'player') log.debug('Stopping player attack.');
+        if (this.character.isPlayer()) log.debug('Stopping player attack.');
 
         if (this.attackLoop) clearInterval(this.attackLoop);
         if (this.followLoop) clearInterval(this.followLoop);
@@ -136,7 +136,7 @@ export default class Combat {
     private parseFollow(): void {
         if (this.character.frozen || this.character.stunned) return;
 
-        if (this.isMob()) {
+        if (this.character.isMob()) {
             if (!this.character.isRanged()) this.sendFollow();
 
             if (this.isAttacked() || this.character.target) this.lastAction = this.getTime();
@@ -154,10 +154,10 @@ export default class Combat {
             }
         }
 
-        if (this.isPlayer()) {
+        if (this.character.isPlayer()) {
             if (!this.character.target) return;
 
-            if (this.character.target.type !== 'player') return;
+            if (this.character.target.isPlayer()) return;
 
             if (!this.inProximity()) this.follow(this.character, this.character.target);
         }
@@ -174,7 +174,7 @@ export default class Combat {
     public attack(target: Character): void {
         let hit: Hit | undefined;
 
-        if (this.isPlayer()) {
+        if (this.character.isPlayer()) {
             let player = this.character as Player;
 
             hit = player.getHit(target);
@@ -196,7 +196,7 @@ export default class Combat {
     }
 
     private sync(): void {
-        if (this.character.type !== 'mob') return;
+        if (this.character.isMob()) return;
 
         this.world.push(Opcodes.Push.Regions, {
             regionId: this.character.region,
@@ -249,7 +249,7 @@ export default class Combat {
     }
 
     private sendToSpawn(): void {
-        if (!this.isMob()) return;
+        if (!this.character.isMob()) return;
 
         let mob = this.character as Mob;
 
@@ -274,7 +274,7 @@ export default class Combat {
     }
 
     private onSameTile(): boolean | void {
-        if (!this.character.target || this.character.type !== 'mob') return;
+        if (!this.character.target || this.character.isMob()) return;
 
         return (
             this.character.x === this.character.target.x &&
@@ -319,7 +319,7 @@ export default class Combat {
 
     public isRetaliating(): boolean {
         return (
-            this.isPlayer() &&
+            this.character.isPlayer() &&
             !this.character.target &&
             this.retaliate &&
             !this.character.moving &&
@@ -369,7 +369,7 @@ export default class Combat {
          * The server and mob types can parse the mob movement
          */
 
-        if (character.type !== 'mob') return;
+        if (character.isMob()) return;
 
         character.setPosition(x, y);
     }
@@ -449,7 +449,7 @@ export default class Combat {
     }
 
     public targetOutOfBounds(): boolean | void {
-        if (!this.character.target || !this.isMob()) return;
+        if (!this.character.target || !this.character.isMob()) return;
 
         let [x, y] = this.character.spawnLocation,
             { target, spawnDistance } = this.character;
@@ -465,24 +465,13 @@ export default class Combat {
         return this.world.map.isColliding(x, y);
     }
 
-    private isPlayer(): boolean {
-        return this.character.type === 'player';
-    }
-
-    private isMob(): boolean {
-        return this.character.type === 'mob';
-    }
-
-    private isTargetMob(): boolean {
-        return this.character.target?.type === 'mob';
-    }
-
     private canAttackAoE(target: Character): boolean {
-        return (
-            this.isMob() ||
-            target.type === 'mob' ||
-            (this.isPlayer() && target.type === 'player' && target.pvp && this.character.pvp)
-        );
+        return false;
+        // return (
+        //     this.isMob() ||
+        //     target.type === 'mob' ||
+        //     (this.isPlayer() && target.type === 'player' && target.pvp && this.character.pvp)
+        // );
     }
 
     public canHit(): boolean {

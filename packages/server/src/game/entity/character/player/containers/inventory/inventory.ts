@@ -42,7 +42,7 @@ export default class Inventory extends Container {
 
         this.owner.save();
 
-        if (item.instance) this.owner.world.entities.removeItem(item as Item);
+        if (item.instance) this.owner.world.entities.removeItem(item as unknown as Item);
 
         return true;
     }

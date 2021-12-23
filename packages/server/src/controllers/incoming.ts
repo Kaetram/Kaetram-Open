@@ -409,7 +409,8 @@ export default class Incoming {
 
                 orientation = message[5] as number;
 
-                if (entity && entity.type === 'item') this.player.inventory.add(entity as ItemData);
+                if (entity && entity.isItem())
+                    this.player.inventory.add(entity as unknown as ItemData);
 
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     let door = this.player.doors.getDoor(posX, posY);
@@ -503,8 +504,8 @@ export default class Incoming {
 
                 this.player.cheatScore = 0;
 
-                if (entity.type === 'chest') {
-                    let chest = entity as Chest;
+                if (entity.isChest()) {
+                    let chest = entity as unknown as Chest;
                     chest.openChest(this.player);
                     return;
                 }
@@ -596,7 +597,7 @@ export default class Incoming {
                 this.world.handleDamage(projectile.owner, target, projectile.damage);
                 this.entities.remove(projectile);
 
-                if (target.combat.started || target.dead || target.type !== 'mob') return;
+                if (target.combat.started || target.dead || target.isMob()) return;
 
                 target.combat.begin(projectile.owner!);
 
@@ -994,9 +995,9 @@ export default class Incoming {
      * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
      */
     private canAttack(attacker: Character, target: Character): boolean {
-        if (attacker.type === 'mob' || target.type === 'mob') return true;
+        if (attacker.isMob() || target.isMob()) return true;
 
-        return attacker.type === 'player' && target.type === 'player' && attacker.pvp && target.pvp;
+        return attacker.isPlayer() && target.isPlayer() && attacker.pvp && target.pvp;
     }
 
     private preventNoClip(x: number, y: number): boolean {

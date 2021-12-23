@@ -23,8 +23,8 @@ export default class Projectile extends Entity {
     private static = false;
     private special!: never;
 
-    public constructor(id: Modules.Projectiles) {
-        super(id, 'projectile', Utils.createInstance(Modules.EntityType.Projectile));
+    public constructor(key: Modules.Projectiles, x: number, y: number) {
+        super(Utils.createInstance(Modules.EntityType.Projectile), x, y);
     }
 
     setStart(x: number, y: number): void {
@@ -57,15 +57,15 @@ export default class Projectile extends Entity {
 
         if (!this.owner || !this.target) return;
 
-        return {
-            id: this.instance,
-            name: this.owner.projectileName,
-            characterId: this.owner.instance,
-            targetId: this.target.instance,
-            damage: this.damage,
-            special: this.special,
-            hitType: this.hitType,
-            type: this.type
-        };
+        // return {
+        //     id: this.instance,
+        //     key: this.key,
+        //     name: this.owner.projectileName,
+        //     characterId: this.owner.instance,
+        //     targetId: this.target.instance,
+        //     damage: this.damage,
+        //     special: this.special,
+        //     hitType: this.hitType
+        // };
     }
 }
