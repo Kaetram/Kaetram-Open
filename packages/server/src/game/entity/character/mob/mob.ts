@@ -58,8 +58,8 @@ export default class Mob extends Character {
     public forceTalkCallback?: (message: string) => void;
     public roamingCallback?(): void;
 
-    public constructor(public world: World, key: string, x: number, y: number) {
-        super(Utils.createInstance(Modules.EntityType.Mob), key, x, y);
+    public constructor(world: World, key: string, x: number, y: number) {
+        super(Utils.createInstance(Modules.EntityType.Mob), world, key, x, y);
 
         this.spawnX = x;
         this.spawnY = y;

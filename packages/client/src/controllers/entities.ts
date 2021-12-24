@@ -319,7 +319,7 @@ export default class EntitiesController {
         let { entities, grids } = this;
 
         _.each(entities, (entity) => {
-            if (entity.id !== exception.id && entity.type === 'player') this.removeEntity(entity);
+            if (entity.id !== exception.id && entity.isPlayer()) this.removeEntity(entity);
         });
 
         grids.resetPathingGrid();
@@ -352,9 +352,9 @@ export default class EntitiesController {
         if (!entity) return;
 
         // if (
-        //     entity.type === 'player' ||
-        //     entity.type === 'mob' ||
-        //     entity.type === 'npc' ||
+        //     entity.isPlayer() ||
+        //     entity.isMob() ||
+        //     entity.isNPC() ||
         //     entity.type === 'chest'
         // ) {
         //     if (entity.type !== 'player' || entity.nonPathable)

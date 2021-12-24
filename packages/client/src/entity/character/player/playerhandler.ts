@@ -172,7 +172,7 @@ export default class PlayerHandler {
     isAttackable(): boolean {
         let { target } = this.player;
 
-        return target ? target.type === 'mob' || (target.type === 'player' && target.pvp) : false;
+        return target ? target.isMob() || (target.isPlayer() && target.pvp) : false;
     }
 
     checkBounds(): void {
@@ -214,7 +214,7 @@ export default class PlayerHandler {
 
         if (this.isAttackable()) return Opcodes.Target.Attack;
 
-        if (target.type === 'npc' || target.type === 'chest') return Opcodes.Target.Talk;
+        if (target.isNPC() || target.type === 'chest') return Opcodes.Target.Talk;
 
         if (target.type === 'object') return Opcodes.Target.Object;
 
