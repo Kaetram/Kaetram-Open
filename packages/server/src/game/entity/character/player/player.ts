@@ -967,10 +967,6 @@ export default class Player extends Character {
         };
     }
 
-    public getRemoteAddress(): string {
-        return this.connection.socket.conn.remoteAddress;
-    }
-
     /**
      * Here we will implement functions from quests and
      * other special events and determine a spawn point.

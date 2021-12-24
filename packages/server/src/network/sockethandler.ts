@@ -10,24 +10,14 @@ export default class SocketHandler {
     public ips: { [id: string]: number } = {};
     public connections: { [id: string]: Connection } = {};
 
-    private readyCallback?(): void;
+    private readyCallback?: () => void;
     private connectionCallback?: (connection: Connection) => void;
 
     public constructor() {
-        this.load();
-    }
+        this.socketIO.onInitialize(() => this.readyCallback?.());
 
-    private load(): void {
-        this.socketIO.onInitialize(() => {
-            this.readyCallback?.();
-        });
-
-        this.socketIO.onAdd((connection: Connection) => {
-            this.add(connection);
-        });
-        this.ws.onAdd((connection: Connection) => {
-            this.add(connection);
-        });
+        this.socketIO.onAdd(this.add.bind(this));
+        this.ws.onAdd(this.add.bind(this));
     }
 
     /**
@@ -38,6 +28,7 @@ export default class SocketHandler {
      *
      * @param connection The connection we are adding.
      */
+
     private add(connection: Connection): void {
         this.connections[connection.id] = connection;
 
@@ -49,6 +40,7 @@ export default class SocketHandler {
      *
      * @param id The connection id we are removing.
      */
+
     public remove(id: string): void {
         delete this.connections[id];
     }
@@ -59,6 +51,7 @@ export default class SocketHandler {
      * @param id The id of the connection we are trying to get.
      * @returns The connection element or null.
      */
+
     public get(id: string): Connection {
         return this.connections[id];
     }
@@ -69,6 +62,7 @@ export default class SocketHandler {
      *
      * @param callback The void function callback
      */
+
     public onReady(callback: () => void): void {
         this.readyCallback = callback;
     }
@@ -78,6 +72,7 @@ export default class SocketHandler {
      *
      * @param callback The callback containing the Connection that occurs.
      */
+
     public onConnection(callback: (connection: Connection) => void): void {
         this.connectionCallback = callback;
     }
