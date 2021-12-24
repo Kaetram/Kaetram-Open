@@ -4,6 +4,7 @@ import Utils from '@kaetram/common/util/utils';
 import Map from '../../../map/map';
 import World from '../../../world';
 import Entities from '@kaetram/server/src/controllers/entities';
+import Character from '../character';
 
 /**
  * The handler class file for the Mob object. We use this to better
@@ -26,6 +27,7 @@ export default class Handler {
         this.plateauLevel = this.map.getPlateauLevel(this.mob.spawnX, this.mob.spawnY);
 
         this.mob.onMovement(this.handleMovement.bind(this));
+        this.mob.onHit(this.handleHit.bind(this));
         this.mob.onRespawn(this.handleRespawn.bind(this));
         this.mob.onRoaming(this.handleRoaming.bind(this));
         this.mob.onForceTalk(this.handleForceTalk.bind(this));
@@ -37,6 +39,17 @@ export default class Handler {
 
     private handleMovement(): void {
         if (this.mob.shouldReturnToSpawn()) this.mob.sendToSpawn();
+    }
+
+    /**
+     * Callback for whenever a mob gets hit.
+     */
+
+    private handleHit(attacker: Character): void {
+        if (this.mob.dead) return;
+        if (this.mob.combat.started) return;
+
+        this.mob.combat.begin(attacker);
     }
 
     /**

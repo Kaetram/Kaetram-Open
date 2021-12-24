@@ -1,4 +1,4 @@
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Entity, { EntityData } from '../entity';
 import Combat from './combat/combat';
@@ -6,6 +6,7 @@ import Combat from './combat/combat';
 import type { HitData } from '@kaetram/common/types/info';
 import HitPoints from './points/hitpoints';
 import World from '../../world';
+import Messages from '@kaetram/server/src/network/messages';
 
 type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
@@ -65,7 +66,24 @@ export default abstract class Character extends Entity {
 
         this.combat = new Combat(this);
 
+        this.onStunned(this.stun.bind(this));
         this.healingInterval = setInterval(this.heal.bind(this), Modules.Constants.HEAL_RATE);
+    }
+
+    /**
+     * Receives changes about the state of the entity when stunned and
+     * pushes that message to the nearby regions.
+     * @param state The current stun state for the character.
+     */
+
+    private stun(state: boolean): void {
+        this.world.push(Opcodes.Push.Regions, {
+            regionId: this.region,
+            message: new Messages.Movement(Opcodes.Movement.Stunned, {
+                id: this.instance,
+                state
+            })
+        });
     }
 
     /**
