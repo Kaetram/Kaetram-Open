@@ -232,8 +232,6 @@ export default class Entities {
         this.add(player);
 
         this.players[player.instance] = player;
-
-        this.world.populationCallback?.();
     }
 
     /**
@@ -291,8 +289,6 @@ export default class Entities {
         this.remove(player);
 
         if (player.ready) player.save();
-
-        this.world.populationCallback?.();
 
         delete this.players[player.instance];
         delete this.world.network.packets[player.instance];
