@@ -365,7 +365,7 @@ export default class Connection {
                     this.game.player.clearHealthBar();
                     this.renderer.camera.centreOn(entity);
                     this.renderer.updateAnimatedTiles();
-                } else if (entity.type === 'player') {
+                } else if (entity.isPlayer()) {
                     delete this.entities.entities[entity.id];
                     return;
                 }

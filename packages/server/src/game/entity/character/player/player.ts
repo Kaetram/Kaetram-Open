@@ -174,12 +174,8 @@ export default class Player extends Character {
     public doorCallback?: DoorCallback;
     public readyCallback?(): void;
 
-    public constructor(
-        public world: World,
-        public database: MongoDB,
-        public connection: Connection
-    ) {
-        super(connection.id, '', -1, -1);
+    public constructor(world: World, public database: MongoDB, public connection: Connection) {
+        super(connection.id, world, '', -1, -1);
 
         this.map = world.map;
         this.regions = world.map.regions;

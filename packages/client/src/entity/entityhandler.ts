@@ -49,7 +49,7 @@ export default class EntityHandler {
                 attacker.follow(entity);
             });
 
-            if (entity.type === 'mob')
+            if (entity.isMob())
                 game.socket.send(Packets.Movement, [
                     Opcodes.Movement.Entity,
                     entity.id,
