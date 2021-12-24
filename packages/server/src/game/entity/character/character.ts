@@ -5,6 +5,7 @@ import Combat from './combat/combat';
 
 import type { HitData } from '@kaetram/common/types/info';
 import HitPoints from './points/hitpoints';
+import World from '../../world';
 
 type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
@@ -53,7 +54,13 @@ export default abstract class Character extends Entity {
     public subAoECallback?: SubAoECallback;
     public deathCallback?(): void;
 
-    protected constructor(instance: string, key: string, x: number, y: number) {
+    protected constructor(
+        instance: string,
+        public world: World,
+        key: string,
+        x: number,
+        y: number
+    ) {
         super(instance, key, x, y);
 
         this.combat = new Combat(this);

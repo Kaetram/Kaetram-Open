@@ -44,6 +44,8 @@ export default class Combat {
     private forgetCallback?(): void;
 
     public constructor(public character: Character) {
+        this.world = character.world;
+
         character.onSubAoE((radius: number, hasTerror: boolean) => {
             this.dealAoE(radius, hasTerror);
         });
@@ -459,8 +461,8 @@ export default class Combat {
         return false;
         // return (
         //     this.isMob() ||
-        //     target.type === 'mob' ||
-        //     (this.isPlayer() && target.type === 'player' && target.pvp && this.character.pvp)
+        //     target.isMob() ||
+        //     (this.isPlayer() && target.isPlayer() && target.pvp && this.character.pvp)
         // );
     }
 

@@ -93,7 +93,7 @@ export default abstract class Entity {
     public nextGridY!: number;
     public fadingAlpha!: number;
 
-    protected constructor(public id: string, public type: string) {
+    protected constructor(public id: string, public type: number) {
         // this.loadDirty();
     }
 
@@ -267,6 +267,22 @@ export default abstract class Entity {
 
     public hasPath(): boolean {
         return false;
+    }
+
+    public isPlayer(): boolean {
+        return this.type === Modules.EntityType.Player;
+    }
+
+    public isMob(): boolean {
+        return this.type === Modules.EntityType.Mob;
+    }
+
+    public isNPC(): boolean {
+        return this.type === Modules.EntityType.NPC;
+    }
+
+    public isItem(): boolean {
+        return this.type === Modules.EntityType.Item;
     }
 
     // onReady(callback: () => void): void {
