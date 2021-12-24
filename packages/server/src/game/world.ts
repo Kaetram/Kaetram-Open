@@ -43,7 +43,6 @@ export default class World {
     public allowConnections = false;
 
     public connectionCallback?: ConnectionCallback;
-    public populationCallback?(): void;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
         this.map = new Map(this);
@@ -301,9 +300,5 @@ export default class World {
 
     public onConnection(callback: ConnectionCallback): void {
         this.connectionCallback = callback;
-    }
-
-    public onPopulationChange(callback: () => void): void {
-        this.populationCallback = callback;
     }
 }
