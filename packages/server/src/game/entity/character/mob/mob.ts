@@ -223,7 +223,7 @@ export default class Mob extends Character {
     private respawn(): void {
         if (!this.respawnable) return;
 
-        setTimeout(this.respawnCallback!, this.respawnDelay);
+        setTimeout(() => this.respawnCallback?.(), this.respawnDelay);
     }
 
     /**
