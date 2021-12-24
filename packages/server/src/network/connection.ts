@@ -13,7 +13,8 @@ export default class Connection {
     public constructor(
         public id: string,
         public type: SocketType,
-        public socket: AnySocket,
+        public address: string,
+        private socket: AnySocket,
         private socketHandler: SocketHandler
     ) {
         this.socket.on('message', this.handleMessage.bind(this));
@@ -39,10 +40,7 @@ export default class Connection {
      */
 
     public close(details?: string): void {
-        if (details)
-            log.info(
-                `Connection ${this.socket.conn.remoteAddress} has closed, reason: ${details}.`
-            );
+        if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
 
         this.type === 'WebSocket' ? this.socket.close() : this.socket.disconnect(true);
     }
@@ -67,7 +65,7 @@ export default class Connection {
      */
 
     private handleClose(): void {
-        log.info(`Closed socket: ${this.socket.conn.remoteAddress}.`);
+        log.info(`Closed socket: ${this.address}.`);
 
         this.closeCallback?.();
 
@@ -101,6 +99,15 @@ export default class Connection {
 
     public getCloseSignal(): 'close' | 'disconnect' {
         return this.type === 'WebSocket' ? 'close' : 'disconnect';
+    }
+
+    /**
+     * Callback for when a message is received.
+     * @param callback Sends over the packet data received.
+     */
+
+    public onMessage(callback: MessageCallback): void {
+        this.messageCallback = callback;
     }
 
     /**

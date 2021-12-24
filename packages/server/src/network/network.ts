@@ -172,6 +172,6 @@ export default class Network {
     }
 
     private getSocketTime(connection: Connection): number {
-        return this.socketHandler.ips[connection.socket.conn.remoteAddress];
+        return this.socketHandler.ips[connection.address];
     }
 }

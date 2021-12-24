@@ -38,7 +38,7 @@ export default class Incoming {
         this.database = player.database;
         this.commands = new Commands(player);
 
-        this.connection.listen(([packet, message]) => {
+        this.connection.onMessage(([packet, message]) => {
             if (!Utils.validPacket(packet)) {
                 log.error(`Non-existent packet received: ${packet} data: `);
                 log.error(message);
