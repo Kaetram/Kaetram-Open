@@ -40,10 +40,6 @@ export default class Network {
         this.world.onConnection((connection: Connection) => {
             this.handlePlayerConnection(connection);
         });
-
-        this.world.onPopulationChange(() => {
-            this.handlePopulationChange();
-        });
     }
 
     /**
@@ -81,10 +77,6 @@ export default class Network {
                 id: player.instance
             })
         );
-    }
-
-    private handlePopulationChange(): void {
-        this.pushBroadcast(new Messages.Population(this.world.getPopulation()));
     }
 
     private addToPackets(player: Player): void {
