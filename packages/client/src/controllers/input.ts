@@ -332,11 +332,11 @@ export default class InputController {
         if (entity) {
             let actions = this.getActions();
 
-            actions.loadDefaults(entity.type, {
-                mouseX: mouse.x,
-                mouseY: mouse.y,
-                pvp: entity.pvp
-            });
+            // actions.loadDefaults(entity.type, {
+            //     mouseX: mouse.x,
+            //     mouseY: mouse.y,
+            //     pvp: entity.pvp
+            // });
 
             actions.show();
         } else if (hovering === Modules.Hovering.Object) {
@@ -381,23 +381,23 @@ export default class InputController {
             }
         else
             switch (entity.type) {
-                case 'item':
-                case 'chest':
+                case Modules.EntityType.Item:
+                case Modules.EntityType.Chest:
                     this.setCursor(cursors.loot);
                     this.hovering = Modules.Hovering.Item;
                     break;
 
-                case 'mob':
+                case Modules.EntityType.Mob:
                     this.setCursor(this.getAttackCursor());
                     this.hovering = Modules.Hovering.Mob;
                     break;
 
-                case 'npc':
+                case Modules.EntityType.NPC:
                     this.setCursor(cursors.talk);
                     this.hovering = Modules.Hovering.NPC;
                     break;
 
-                case 'player':
+                case Modules.EntityType.Player:
                     if (entity.pvp && game.pvp) {
                         this.setCursor(this.getAttackCursor());
                         this.hovering = Modules.Hovering.Player;
@@ -490,11 +490,11 @@ export default class InputController {
     }
 
     private isTargetable(entity: Entity): boolean {
-        return this.isAttackable(entity) || entity.type === 'npc' || entity.type === 'chest';
+        return this.isAttackable(entity) || entity.isNPC() || entity.type === 'chest';
     }
 
     private isAttackable(entity: Entity): boolean {
-        return entity.type === 'mob' || (entity.type === 'player' && entity.pvp && this.game.pvp);
+        return entity.isMob() || (entity.isPlayer() && entity.pvp && this.game.pvp);
     }
 
     private isSamePosition(position: Pos): boolean {

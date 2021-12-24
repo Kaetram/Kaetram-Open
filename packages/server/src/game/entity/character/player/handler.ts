@@ -197,7 +197,7 @@ export default class Handler {
         // let region = this.world.region.regions[this.player.region!];
         // if (!region) return;
         // _.each(region.entities, (character) => {
-        //     if (character && character.type === 'mob' && this.canEntitySee(character)) {
+        //     if (character && character.isMob() && this.canEntitySee(character)) {
         //         let mob = character as Mob,
         //             aggro = mob.canAggro(this.player);
         //         if (aggro) mob.combat.begin(this.player);

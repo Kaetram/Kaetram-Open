@@ -696,7 +696,7 @@ export default class Renderer {
                     '#000'
                 );
 
-            if (this.drawLevels && (entity.type === 'mob' || entity.type === 'player'))
+            if (this.drawLevels && (entity.isMob() || entity.isPlayer()))
                 this.drawText(`Level ${entity.level}`, x, y, true, colour, '#000');
 
             if (entity.type === 'item') {

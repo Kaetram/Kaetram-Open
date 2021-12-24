@@ -7,6 +7,7 @@ import SocketHandler from './network/sockethandler';
 import Loader from './loader';
 
 import type Connection from './network/connection';
+import { reduce } from 'lodash';
 
 class Main {
     private world?: World;
