@@ -119,6 +119,7 @@ export default class Combat {
         this.started = false;
 
         this.forget();
+        this.end();
     }
 
     private parseAttack(): void {
