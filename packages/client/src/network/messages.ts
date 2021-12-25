@@ -148,7 +148,7 @@ interface ShopCallback {
     (opcode: Opcodes.Shop.Select, data: ShopSelectData): void;
     (opcode: Opcodes.Shop.Remove, data: ShopRemoveData): void;
 }
-type RegionCallback = (opcode: Opcodes.Region, bufferSize: number, data: string) => void;
+type MapCallback = (opcode: Opcodes.Map, data: string) => void;
 interface OverlayCallback {
     (opcode: Opcodes.Overlay, data: undefined): void;
     (opcode: Opcodes.Overlay.Set, data: OverlaySetData): void;
@@ -199,7 +199,7 @@ export default class Messages {
     private pointerCallback?: PointerCallback;
     private pvpCallback?: PVPCallback;
     private shopCallback?: ShopCallback;
-    private regionCallback?: RegionCallback;
+    private mapCallback?: MapCallback;
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
     private bubbleCallback?: BubbleCallback;
@@ -252,7 +252,7 @@ export default class Messages {
         messages[Packets.Pointer] = () => this.pointerCallback;
         messages[Packets.PVP] = () => this.pvpCallback;
         messages[Packets.Shop] = () => this.shopCallback;
-        messages[Packets.Region] = () => this.regionCallback;
+        messages[Packets.Map] = () => this.mapCallback;
         messages[Packets.Overlay] = () => this.overlayCallback;
         messages[Packets.Camera] = () => this.cameraCallback;
         messages[Packets.Bubble] = () => this.bubbleCallback;
@@ -482,8 +482,8 @@ export default class Messages {
         this.shopCallback = callback;
     }
 
-    public onRegion(callback: RegionCallback): void {
-        this.regionCallback = callback;
+    public onMap(callback: MapCallback): void {
+        this.mapCallback = callback;
     }
 
     public onOverlay(callback: OverlayCallback): void {

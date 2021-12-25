@@ -3,12 +3,12 @@ import zlib from 'zlib';
 
 import log from '@kaetram/common/util/log';
 
-import type { Entities, ProcessedMap } from '@kaetram/common/types/map';
-import type { Entity, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+import type { ProcessedMap } from '@kaetram/common/types/map';
+import type { Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
 export default class ProcessMap {
     private map: ProcessedMap;
-    private entities: Entities = {};
+    private tilesetEntities: { [tileId: number]: string } = {};
 
     #collisionTiles: { [tileId: number]: boolean } = {};
 
@@ -29,7 +29,7 @@ export default class ProcessMap {
             data: [],
 
             collisions: [],
-            staticEntities: {},
+            entities: {},
 
             tilesets: {},
             animations: [],
@@ -82,7 +82,7 @@ export default class ProcessMap {
      */
 
     private parseLayers(): void {
-        _.each(this.data.layers, (layer) => {
+        _.each(this.data.layers, (layer: Layer) => {
             switch (layer.type) {
                 case 'tilelayer':
                     this.parseTileLayer(layer);
@@ -121,14 +121,12 @@ export default class ProcessMap {
     private parseTileset(tileset: Tileset): void {
         let { tiles } = tileset;
 
-        _.each(tiles, (tile) => {
+        _.each(tiles, (tile: Tile) => {
             let tileId = this.getTileId(tileset, tile);
 
-            _.each(tile.properties, (property) => {
-                if (this.isEntityTileset(tileset)) {
-                    this.entities[tileId] = {} as Entity;
-                    this.entities[tileId][property.name] = property.value;
-                } else this.parseProperties(tileId, property);
+            _.each(tile.properties, (property: Property) => {
+                if (this.isEntityTileset(tileset)) this.tilesetEntities[tileId] = property.value;
+                else this.parseProperties(tileId, property);
             });
         });
     }
@@ -177,7 +175,7 @@ export default class ProcessMap {
         layer.data = this.getLayerData(layer.data, layer.compression)!;
 
         if (name === 'blocking') return this.parseBlocking(layer);
-        if (name === 'entities') return this.parseStaticEntities(layer);
+        if (name === 'entities') return this.parseEntities(layer);
         if (name.startsWith('plateau')) return this.parsePlateau(layer);
 
         this.parseTileLayerData(layer.data);
@@ -200,7 +198,7 @@ export default class ProcessMap {
     private parseTileLayerData(mapData: number[]): void {
         let { data, collisions } = this.map;
 
-        _.each(mapData, (value, index) => {
+        _.each(mapData, (value: number, index: number) => {
             if (value < 1) return;
 
             if (!data[index]) data[index] = value;
@@ -221,7 +219,7 @@ export default class ProcessMap {
      */
 
     private parseBlocking(layer: Layer): void {
-        _.each(layer.data, (value, index) => {
+        _.each(layer.data, (value: number, index: number) => {
             if (value < 1) return;
 
             this.map.collisions.push(index);
@@ -236,13 +234,13 @@ export default class ProcessMap {
      * @param layer The `entities` layer containing the entity tiles.
      */
 
-    private parseStaticEntities(layer: Layer): void {
-        let { staticEntities } = this.map;
+    private parseEntities(layer: Layer): void {
+        let { entities } = this.map;
 
-        _.each(layer.data, (value, index) => {
+        _.each(layer.data, (value: number, index: number) => {
             if (value < 1) return;
 
-            if (value in this.entities) staticEntities[index] = this.entities[value];
+            if (value in this.tilesetEntities) entities[index] = this.tilesetEntities[value];
         });
     }
 
@@ -257,7 +255,7 @@ export default class ProcessMap {
         let level = parseInt(layer.name.split('plateau')[1]),
             { collisions, plateau } = this.map;
 
-        _.each(layer.data, (value, index) => {
+        _.each(layer.data, (value: number, index: number) => {
             if (value < 1) return;
 
             // We skip collisions
@@ -452,12 +450,12 @@ export default class ProcessMap {
             tileSize,
             data,
             collisions,
-            high,
             areas,
             plateau,
+            high,
             objects,
             cursors,
-            staticEntities
+            entities
         } = this.map;
 
         return JSON.stringify({
@@ -467,12 +465,12 @@ export default class ProcessMap {
             tileSize,
             data,
             collisions,
-            high,
             areas,
             plateau,
+            high,
             objects,
             cursors,
-            staticEntities
+            entities
         });
     }
 

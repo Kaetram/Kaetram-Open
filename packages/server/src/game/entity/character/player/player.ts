@@ -7,11 +7,9 @@ import Utils from '@kaetram/common/util/utils';
 
 import Incoming from '../../../../controllers/incoming';
 import Quests from '../../../../controllers/quests';
-import Messages, { Packet } from '../../../../network/messages';
-import Constants from '../../../../util/constants';
-import Formulas from '../../../../util/formulas';
-import Items from '../../../../util/items';
-import Character, { CharacterState } from '../character';
+import Formulas from '../../../../info/formulas';
+import Items from '../../../../info/items';
+import Character from '../character';
 import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
 import Bank from './containers/bank/bank';
@@ -25,12 +23,10 @@ import Ring from './equipment/ring';
 import Weapon from './equipment/weapon';
 import Friends from './friends';
 import Handler from './handler';
-import HitPoints from './points/hitpoints';
-import Mana from './points/mana';
+import Mana from '../points/mana';
 import Trade from './trade';
 import Warp from './warp';
 
-import type { EquipmentData } from '@kaetram/common/types/info';
 import type { ExperienceCombatData } from '@kaetram/common/types/messages';
 import type MongoDB from '../../../../database/mongodb/mongodb';
 import type Area from '../../../map/areas/area';
@@ -39,6 +35,26 @@ import type World from '../../../world';
 import type NPC from '../../npc/npc';
 import type { FullPlayerData } from './../../../../database/mongodb/creator';
 import type Introduction from './quests/impl/introduction';
+import Map from '../../../map/map';
+import { PacketType } from '@kaetram/common/network/modules';
+import {
+    Audio,
+    Bubble,
+    Camera,
+    Chat,
+    Death,
+    Equipment as EquipmentPacket,
+    Experience,
+    Heal,
+    Movement,
+    Notification,
+    Overlay,
+    Quest,
+    Sync,
+    Teleport,
+    Welcome
+} from '@kaetram/server/src/network/packets';
+import Packet from '@kaetram/server/src/network/packet';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
@@ -61,23 +77,6 @@ export interface PlayerRegions {
     gameVersion: string;
 }
 
-interface PlayerState extends CharacterState {
-    rights: number;
-    level: number;
-    pvp: boolean;
-    pvpKills: number;
-    pvpDeaths: number;
-    attackRange: number;
-    orientation: number;
-    hitPoints: number[];
-    mana: number[];
-    armour: EquipmentData;
-    weapon: EquipmentData;
-    pendant: EquipmentData;
-    ring: EquipmentData;
-    boots: EquipmentData;
-}
-
 export interface ObjectData {
     [index: number]: {
         isObject: boolean;
@@ -85,15 +84,8 @@ export interface ObjectData {
     };
 }
 
-interface SurroundingTrees {
-    indexes: number[];
-    data: number[][];
-    collisions: boolean[];
-    objectData: ObjectData;
-}
-
 export default class Player extends Character {
-    public map;
+    public map: Map;
     private regions;
     private entities;
     private globalObjects;
@@ -157,14 +149,18 @@ export default class Player extends Character {
 
     private nextExperience: number | undefined;
     private prevExperience!: number;
-    public playerHitPoints!: HitPoints;
-    public mana!: Mana;
+
+    public mana: Mana = new Mana(Modules.Defaults.MANA);
 
     public armour!: Armour;
     public weapon!: Weapon;
-    // public pendant: Pendant;
-    // public ring: Ring;
-    // public boots: Boots;
+    public pendant!: Pendant;
+    public ring!: Ring;
+    public boots!: Boots;
+
+    public profileDialogOpen?: boolean;
+    public inventoryOpen?: boolean;
+    public warpOpen?: boolean;
 
     public cameraArea: Area | undefined;
     private overlayArea: Area | undefined;
@@ -179,9 +175,6 @@ export default class Player extends Character {
 
     public new = false;
     private lastNotify!: number;
-    private profileDialogOpen = false;
-    private inventoryOpen = false;
-    private warpOpen = false;
 
     public selectedShopItem!: { id: number; index: number } | null;
 
@@ -196,13 +189,8 @@ export default class Player extends Character {
     public doorCallback?: DoorCallback;
     public readyCallback?(): void;
 
-    public constructor(
-        public world: World,
-        public database: MongoDB,
-        public connection: Connection,
-        public clientId: string
-    ) {
-        super(-1, 'player', connection.id, -1, -1);
+    public constructor(world: World, public database: MongoDB, public connection: Connection) {
+        super(connection.id, world, '', -1, -1);
 
         this.map = world.map;
         this.regions = world.map.regions;
@@ -245,8 +233,9 @@ export default class Player extends Character {
 
         this.userAgent = data.userAgent;
 
-        this.playerHitPoints = new HitPoints(data.hitPoints, Formulas.getMaxHitPoints(this.level));
-        this.mana = new Mana(data.mana, Formulas.getMaxMana(this.level));
+        // TODO - Do not calculate max points on every login, just store it instead.
+        this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
+        this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
 
         let { x, y, armour, weapon, pendant, ring, boots } = data;
 
@@ -375,9 +364,7 @@ export default class Player extends Character {
         });
 
         this.quests.onAchievementsReady(() => {
-            this.send(
-                new Messages.Quest(Opcodes.Quest.AchievementBatch, this.quests.getAchievementData())
-            );
+            this.send(new Quest(Opcodes.Quest.AchievementBatch, this.quests.getAchievementData()));
 
             /* Update region here because we receive quest info */
             if (this.questsLoaded) this.updateRegion();
@@ -386,7 +373,7 @@ export default class Player extends Character {
         });
 
         this.quests.onQuestsReady(() => {
-            this.send(new Messages.Quest(Opcodes.Quest.QuestBatch, this.quests.getQuestData()));
+            this.send(new Quest(Opcodes.Quest.QuestBatch, this.quests.getQuestData()));
 
             /* Update region here because we receive quest info */
             if (this.achievementsLoaded) this.updateRegion();
@@ -403,8 +390,7 @@ export default class Player extends Character {
 
         if (this.x <= 0 || this.y <= 0) this.sendToSpawn();
 
-        if (this.playerHitPoints.getHitPoints() < 0)
-            this.playerHitPoints.setHitPoints(this.getMaxHitPoints());
+        if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.getMaxHitPoints());
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
@@ -417,8 +403,8 @@ export default class Player extends Character {
             y: this.y,
             // kind: this.kind,
             rights: this.rights,
-            hitPoints: this.playerHitPoints.getData(),
-            mana: this.mana.getData(),
+            hitPoints: this.hitPoints.serialize(),
+            mana: this.mana.serialize(),
             experience: this.experience,
             nextExperience: this.nextExperience,
             prevExperience: this.prevExperience,
@@ -436,7 +422,7 @@ export default class Player extends Character {
 
         this.entities.addPlayer(this);
 
-        this.send(new Messages.Welcome(info));
+        this.send(new Welcome(info));
     }
 
     private verifyRights(): void {
@@ -456,8 +442,8 @@ export default class Player extends Character {
         this.prevExperience = Formulas.prevExp(this.experience);
 
         if (oldLevel !== this.level) {
-            this.playerHitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
-            this.healHitPoints(this.playerHitPoints.maxPoints);
+            this.hitPoints.setMaxHitPoints(Formulas.getMaxHitPoints(this.level));
+            this.healHitPoints(this.hitPoints.maxPoints);
 
             this.updateRegion();
 
@@ -474,18 +460,14 @@ export default class Player extends Character {
          * know the experience of another player.. (yet).
          */
 
-        this.sendToAdjacentRegions(
-            this.region,
-            new Messages.Experience(Opcodes.Experience.Combat, data),
-            this.instance
-        );
+        this.sendToRegions(new Experience(Opcodes.Experience.Combat, data), true);
 
         data.amount = exp;
         data.experience = this.experience;
         data.nextExperience = this.nextExperience;
         data.prevExperience = this.prevExperience;
 
-        this.send(new Messages.Experience(Opcodes.Experience.Combat, data));
+        this.send(new Experience(Opcodes.Experience.Combat, data));
 
         this.sync();
     }
@@ -494,10 +476,9 @@ export default class Player extends Character {
      * Passed from the superclass...
      */
     public override heal(amount: number): void {
-        if (!this.playerHitPoints || !this.mana) return;
+        super.heal(amount);
 
-        this.playerHitPoints.heal(amount);
-        this.mana.heal(amount);
+        this.mana.increment(amount);
 
         this.sync();
     }
@@ -505,13 +486,12 @@ export default class Player extends Character {
     public healHitPoints(amount: number): void {
         let type = 'health' as const;
 
-        this.playerHitPoints.heal(amount);
+        this.hitPoints.increment(amount);
 
         this.sync();
 
-        this.sendToAdjacentRegions(
-            this.region,
-            new Messages.Heal({
+        this.sendToRegions(
+            new Heal({
                 id: this.instance,
                 type,
                 amount
@@ -522,13 +502,12 @@ export default class Player extends Character {
     public healManaPoints(amount: number): void {
         let type = 'mana' as const;
 
-        this.mana.heal(amount);
+        this.mana.increment(amount);
 
         this.sync();
 
-        this.sendToAdjacentRegions(
-            this.region,
-            new Messages.Heal({
+        this.sendToRegions(
+            new Heal({
                 id: this.instance,
                 type,
                 amount
@@ -597,7 +576,7 @@ export default class Player extends Character {
         }
 
         this.send(
-            new Messages.Equipment(Opcodes.Equipment.Equip, {
+            new EquipmentPacket(Opcodes.Equipment.Equip, {
                 type,
                 name: Items.idToName(id),
                 string,
@@ -616,7 +595,7 @@ export default class Player extends Character {
     public canEquip(string: string): boolean {
         let requirement = Items.getLevelRequirement(string);
 
-        if (requirement > Constants.MAX_LEVEL) requirement = Constants.MAX_LEVEL;
+        if (requirement > Modules.Constants.MAX_LEVEL) requirement = Modules.Constants.MAX_LEVEL;
 
         if (requirement > this.level) {
             this.notify(`You must be at least level ${requirement} to equip this.`);
@@ -631,19 +610,18 @@ export default class Player extends Character {
 
         this.deathCallback?.();
 
-        this.send(new Messages.Death(this.instance));
+        this.send(new Death(this.instance));
     }
 
-    public teleport(x: number, y: number, isDoor = false, animate = false): void {
+    public teleport(x: number, y: number, isDoor = false, withAnimation = false): void {
         this.teleportCallback?.(x, y, isDoor);
 
-        this.sendToAdjacentRegions(
-            this.region,
-            new Messages.Teleport({
+        this.sendToRegions(
+            new Teleport({
                 id: this.instance,
                 x,
                 y,
-                withAnimation: animate
+                withAnimation
             })
         );
 
@@ -666,18 +644,17 @@ export default class Player extends Character {
 
                 if (!data) return;
 
-                let message = this.globalObjects.talk(data.object, this);
+                let text = this.globalObjects.talk(data.object, this);
 
-                this.world.push(Opcodes.Push.Player, {
-                    player: this,
-                    message: new Messages.Bubble({
+                this.send(
+                    new Bubble({
                         id,
-                        text: message,
+                        text,
                         duration: 5000,
                         isObject: true,
                         info: data.info
                     })
-                });
+                );
 
                 break;
             }
@@ -707,7 +684,8 @@ export default class Player extends Character {
         this.pvp = pvp;
         this.permanentPVP = permanent;
 
-        this.sendToAdjacentRegions(this.region, new Messages.PVP(this.instance, this.pvp));
+        // TODO - Redo the packet
+        //this.sendToAdjacentRegions(this.region, new PVP(this.instance, this.pvp));
     }
 
     public updateOverlay(overlay: Area | undefined): void {
@@ -719,12 +697,12 @@ export default class Player extends Character {
             this.lightsLoaded = [];
 
             this.send(
-                new Messages.Overlay(Opcodes.Overlay.Set, {
+                new Overlay(Opcodes.Overlay.Set, {
                     image: overlay.fog || 'empty',
                     colour: `rgba(0,0,0,${overlay.darkness})`
                 })
             );
-        } else this.send(new Messages.Overlay(Opcodes.Overlay.Remove));
+        } else this.send(new Overlay(Opcodes.Overlay.Remove));
     }
 
     public updateCamera(camera: Area | undefined): void {
@@ -735,18 +713,18 @@ export default class Player extends Character {
         if (camera)
             switch (camera.type) {
                 case 'lockX':
-                    this.send(new Messages.Camera(Opcodes.Camera.LockX));
+                    this.send(new Camera(Opcodes.Camera.LockX));
                     break;
 
                 case 'lockY':
-                    this.send(new Messages.Camera(Opcodes.Camera.LockY));
+                    this.send(new Camera(Opcodes.Camera.LockY));
                     break;
 
                 case 'player':
-                    this.send(new Messages.Camera(Opcodes.Camera.Player));
+                    this.send(new Camera(Opcodes.Camera.Player));
                     break;
             }
-        else this.send(new Messages.Camera(Opcodes.Camera.FreeFlow));
+        else this.send(new Camera(Opcodes.Camera.FreeFlow));
     }
 
     public updateMusic(info?: Area): void {
@@ -754,18 +732,14 @@ export default class Player extends Character {
 
         this.currentSong = info.song;
 
-        this.send(new Messages.Audio(info.song));
+        this.send(new Audio(info.song));
     }
 
     public revertPoints(): void {
-        this.playerHitPoints.setHitPoints(this.playerHitPoints.getMaxHitPoints());
+        this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
         this.mana.setMana(this.mana.getMaxMana());
 
         this.sync();
-    }
-
-    public override applyDamage(damage: number): void {
-        this.playerHitPoints.decrement(damage);
     }
 
     public toggleProfile(state: boolean): void {
@@ -795,11 +769,11 @@ export default class Player extends Character {
     }
 
     public override getHitPoints(): number {
-        return this.playerHitPoints.getHitPoints();
+        return this.hitPoints.getHitPoints();
     }
 
     public override getMaxHitPoints(): number {
-        return this.playerHitPoints.getMaxHitPoints();
+        return this.hitPoints.getMaxHitPoints();
     }
 
     public getTutorial(): Introduction {
@@ -888,16 +862,15 @@ export default class Player extends Character {
 
         super.setPosition(x, y);
 
-        this.sendToAdjacentRegions(
-            this.region,
-            new Messages.Movement(Opcodes.Movement.Move, {
+        this.sendToRegions(
+            new Movement(Opcodes.Movement.Move, {
                 id: this.instance,
                 x,
                 y,
                 forced: false,
                 teleport: false
             }),
-            this.instance
+            true
         );
     }
 
@@ -955,10 +928,6 @@ export default class Player extends Character {
         return this.boots && this.boots.name !== 'null' && this.boots.id !== -1;
     }
 
-    public override hasMaxHitPoints(): boolean {
-        return this.getHitPoints() >= this.playerHitPoints.getMaxHitPoints();
-    }
-
     public hasMaxMana(): boolean {
         return this.mana.getMana() >= this.mana.getMaxMana();
     }
@@ -974,9 +943,13 @@ export default class Player extends Character {
         return true;
     }
 
-    public override getState(): PlayerState {
+    /**
+     * TODO - Properly refactor this
+     */
+
+    public override serialize(): any {
         return {
-            type: this.type,
+            type: Modules.EntityType.Player,
             id: this.instance,
             name: Utils.formatUsername(this.username),
             x: this.x,
@@ -988,19 +961,15 @@ export default class Player extends Character {
             pvpDeaths: this.pvpDeaths,
             attackRange: this.attackRange,
             orientation: this.orientation,
-            hitPoints: this.playerHitPoints.getData(),
+            hitPoints: this.hitPoints.serialize(),
             movementSpeed: this.getMovementSpeed(),
-            mana: this.mana.getData(),
+            mana: this.mana.serialize(),
             armour: this.armour.getData(),
             weapon: this.weapon.getData(),
             pendant: this.pendant.getData(),
             ring: this.ring.getData(),
             boots: this.boots.getData()
         };
-    }
-
-    public getRemoteAddress(): string {
-        return this.connection.socket.conn.remoteAddress;
     }
 
     /**
@@ -1088,25 +1057,30 @@ export default class Player extends Character {
      * Miscellaneous
      */
 
-    public send(message: Packet): void {
-        this.world.push(Opcodes.Push.Player, {
-            player: this,
-            message
+    /**
+     * We create this function to make it easier to send
+     * packets to players instead of always importing `world`
+     * in other classes.
+     * @param packet Packet we are sending to the player.
+     */
+
+    public send(packet: Packet): void {
+        this.world.push(PacketType.Player, {
+            packet,
+            player: this
         });
     }
 
-    public sendToRegion(message: Packet): void {
-        this.world.push(Opcodes.Push.Region, {
-            regionId: this.region,
-            message
-        });
-    }
+    /**
+     * Sends a packet to all regions surrounding the player.
+     * @param packet The packet we are sending to the regions.
+     */
 
-    public sendToAdjacentRegions(regionId: number, message: Packet, ignoreId?: string): void {
-        this.world.push(Opcodes.Push.Regions, {
-            regionId,
-            message,
-            ignoreId
+    public sendToRegions(packet: Packet, ignore?: boolean): void {
+        this.world.push(PacketType.Regions, {
+            region: this.region,
+            packet,
+            ignore: ignore ? this.instance : ''
         });
     }
 
@@ -1119,7 +1093,7 @@ export default class Player extends Character {
             boots: this.boots.getData()
         };
 
-        this.send(new Messages.Equipment(Opcodes.Equipment.Batch, info));
+        this.send(new EquipmentPacket(Opcodes.Equipment.Batch, info));
     }
 
     public sendToSpawn(): void {
@@ -1153,8 +1127,6 @@ export default class Player extends Character {
      * mana, exp, and other variables
      */
     public sync(): void {
-        if (!this.playerHitPoints || !this.mana) return;
-
         let info = {
             id: this.instance,
             attackRange: this.attackRange,
@@ -1170,7 +1142,7 @@ export default class Player extends Character {
             movementSpeed: this.getMovementSpeed()
         };
 
-        this.sendToAdjacentRegions(this.region, new Messages.Sync(info));
+        this.sendToRegions(new Sync(info));
 
         this.save();
     }
@@ -1182,7 +1154,7 @@ export default class Player extends Character {
         message = Utils.parseMessage(message);
 
         this.send(
-            new Messages.Notification(Opcodes.Notification.Popup, {
+            new Notification(Opcodes.Notification.Popup, {
                 title,
                 message,
                 colour
@@ -1199,7 +1171,7 @@ export default class Player extends Character {
         message = Utils.parseMessage(message);
 
         this.send(
-            new Messages.Notification(Opcodes.Notification.Text, {
+            new Notification(Opcodes.Notification.Text, {
                 message,
                 colour
             })
@@ -1223,7 +1195,7 @@ export default class Player extends Character {
         if (!source || !text) return;
 
         this.send(
-            new Messages.Chat({
+            new Chat({
                 name: source,
                 text,
                 colour,
@@ -1240,7 +1212,7 @@ export default class Player extends Character {
      */
     public stopMovement(force = false): void {
         this.send(
-            new Messages.Movement(Opcodes.Movement.Stop, {
+            new Movement(Opcodes.Movement.Stop, {
                 instance: this.instance,
                 force
             })
@@ -1287,7 +1259,7 @@ export default class Player extends Character {
      * If they are not within the bounds, apply the according punishment.
      */
     private movePlayer(): void {
-        this.send(new Messages.Movement(Opcodes.Movement.Started));
+        this.send(new Movement(Opcodes.Movement.Started));
     }
 
     private walkRandomly(): void {

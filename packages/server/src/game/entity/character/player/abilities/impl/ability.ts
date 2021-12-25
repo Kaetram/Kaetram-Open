@@ -1,4 +1,4 @@
-import Abilities from '../../../../../../util/abilities';
+import Abilities from '../../../../../../info/abilities';
 
 export default abstract class Ability {
     public level = -1;

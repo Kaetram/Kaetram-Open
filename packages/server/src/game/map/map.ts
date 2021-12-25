@@ -4,25 +4,14 @@ import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
 import mapData from '../../../data/map/world.json';
-import Spawns from '../../../data/spawns.json';
-import Items from '../../util/items';
-import Mobs from '../../util/mobs';
-import NPCs from '../../util/npcs';
-import Objects from '../../util/objects';
+import Objects from '../../info/objects';
 import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
 
-import type {
-    ProcessedArea,
-    ProcessedMap,
-    ProcessedTileset,
-    Rock,
-    Tree
-} from '@kaetram/common/types/map';
+import type { ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
 import type Entity from '../entity/entity';
 import type World from '../world';
-import type Area from './areas/area';
 import type Areas from './areas/areas';
 
 let map = mapData as ProcessedMap;
@@ -39,8 +28,6 @@ export type ParsedTile = RotatedTile | Tile | RotatedTile[];
 export type Tile = number | number[];
 export type Position = { x: number; y: number };
 
-type EntityType = 'mob' | 'npc' | 'item' | null;
-
 export default class Map {
     public regions: Regions;
     public grids: Grids;
@@ -52,8 +39,10 @@ export default class Map {
     public tileSize = map.tileSize;
 
     // Map data and collisions
-    public data: (number | number[])[] = map.data;
-    public collisions: number[] = map.collisions || [];
+    private data: (number | number[])[] = map.data;
+    private collisions: number[] = map.collisions || [];
+    private entities: { [tileId: number]: string } = map.entities;
+
     public high: number[] = map.high || [];
     public lights!: ProcessedArea[];
     public plateau!: { [index: number]: number };
@@ -63,16 +52,6 @@ export default class Map {
     public warps!: ProcessedArea[];
 
     private areas!: { [name: string]: Areas };
-
-    public staticEntities!: {
-        tileIndex: number;
-        string: string;
-        roaming: boolean;
-        achievementId?: number | undefined;
-        boss?: boolean | undefined;
-        miniboss?: boolean | undefined;
-        type: EntityType;
-    }[];
 
     private checksum!: string;
 
@@ -87,8 +66,6 @@ export default class Map {
     }
 
     load(): void {
-        this.loadStaticEntities();
-
         this.lights = map.areas.lights;
         this.plateau = map.plateau;
         this.objects = map.objects;
@@ -130,44 +107,6 @@ export default class Map {
                 orientation: destination.orientation
             };
         });
-    }
-
-    private loadStaticEntities(): void {
-        this.staticEntities = [];
-
-        // Legacy static entities (from Tiled);
-        _.each(map.staticEntities, (entity, tileIndex) => {
-            let e = {
-                tileIndex: parseInt(tileIndex),
-                string: entity.type,
-                roaming: entity.roaming,
-                type: this.getEntityType(entity.type)
-            };
-
-            this.staticEntities.push(e);
-        });
-
-        _.each(Spawns, (data) => {
-            let tileIndex = this.coordToIndex(data.x, data.y);
-
-            this.staticEntities.push({
-                tileIndex,
-                string: data.string,
-                roaming: data.roaming,
-                miniboss: data.miniboss,
-                achievementId: data.achievementId,
-                boss: data.boss,
-                type: this.getEntityType(data.string)
-            });
-        });
-    }
-
-    private getEntityType(string: string): EntityType {
-        if (string in Mobs.Properties) return 'mob';
-        if (string in NPCs.Properties) return 'npc';
-        if (string in Items.Data) return 'item';
-
-        return null;
     }
 
     /**
@@ -342,12 +281,14 @@ export default class Map {
         return index in this.plateau;
     }
 
+    public isCollisionIndex(index: number): boolean {
+        return this.collisions.includes(index);
+    }
+
     public isColliding(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return false;
 
-        let tileIndex = this.coordToIndex(x, y);
-
-        return this.collisions.includes(tileIndex);
+        return this.isCollisionIndex(this.coordToIndex(x, y));
     }
 
     /* For preventing NPCs from roaming in null areas. */
@@ -417,5 +358,18 @@ export default class Map {
     public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
         if (_.isArray(data)) _.each(data, callback);
         else callback(data as number);
+    }
+
+    /**
+     * Parses through the entities in the raw map data and converts data for the controller.
+     * @param callback The position of the entity and its string id.
+     */
+
+    public forEachEntity(callback: (position: Position, key: string) => void): void {
+        _.each(this.entities, (key: string, tileId: string) => {
+            let position = this.indexToCoord(parseInt(tileId));
+
+            callback(position, key);
+        });
     }
 }

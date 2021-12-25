@@ -1,7 +1,8 @@
+import { Modules } from '@kaetram/common/network';
 import Entity from '../entity';
 
 export default class Item extends Entity {
-    public override type = 'item';
+    public override type = Modules.EntityType.Item;
 
     public dropped = false;
 

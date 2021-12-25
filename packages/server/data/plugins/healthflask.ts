@@ -1,4 +1,4 @@
-import Items from '../../src/util/items';
+import Items from '../../src/info/items';
 
 import type Player from '../../src/game/entity/character/player/player';
 import type { Plugin } from '.';

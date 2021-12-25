@@ -140,7 +140,7 @@ export enum TeamWar {
     Countdown
 }
 
-export enum Region {
+export enum Map {
     Render,
     Modify,
     Collision,
@@ -162,17 +162,6 @@ export enum Camera {
     LockY,
     FreeFlow,
     Player
-}
-
-export enum Push {
-    Broadcast,
-    Selectively,
-    Player,
-    Players,
-    Region,
-    Regions,
-    NameArray,
-    OldRegions
 }
 
 export enum Command {

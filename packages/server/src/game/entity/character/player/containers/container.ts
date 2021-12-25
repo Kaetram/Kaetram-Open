@@ -2,11 +2,11 @@ import _ from 'lodash';
 
 import log from '@kaetram/common/util/log';
 
-import Constants from '../../../../../util/constants';
-import Items from '../../../../../util/items';
+import Items from '../../../../../info/items';
 import Slot from './slot';
 
 import type Player from '../player';
+import { Modules } from '@kaetram/common/network';
 
 export interface ContainerArray {
     username: string;
@@ -55,7 +55,7 @@ export default abstract class Container {
     ): Slot | undefined {
         // log.info('Trying to pickup ' + count + ' x ' + id);
         let maxStackSize =
-            Items.maxStackSize(id) === -1 ? Constants.MAX_STACK : Items.maxStackSize(id);
+            Items.maxStackSize(id) === -1 ? Modules.Constants.MAX_STACK : Items.maxStackSize(id);
 
         // log.info('Max stack size = ' + maxStackSize);
 
