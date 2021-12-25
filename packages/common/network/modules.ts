@@ -1,3 +1,10 @@
+export enum PacketType {
+    Broadcast,
+    Player,
+    Region,
+    Regions
+}
+
 export enum Orientation {
     Up,
     Down,
@@ -260,14 +267,58 @@ export let DamageColours = {
     }
 };
 
+export enum NPCRole {
+    Banker,
+    Enchanter,
+    Clerk
+}
+
 export enum Constants {
     MAX_STACK = 2_147_483_647,
-    MAX_LEVEL = 100,
-    INVENTORY_SIZE = 35,
-    BANK_SIZE = 52,
-    HITPOINTS_START = 100,
-    STAMINA_START = 50,
-    DIAGONAL_FLAG = 0x20000000,
-    VERTICAL_FLAG = 0x40000000,
-    HORIZONTAL_FLAG = 0x80000000
+    MAX_LEVEL = 135,
+    INVENTORY_SIZE = 20, // Maximum inventory size
+    BANK_SIZE = 52, // Maximum bank size
+    HITPOINTS_START = 100, // Default hitpoints start value
+    DROP_PROBABILITY = 1000, // 1 in 1000
+    MAX_PROFESSION_LEVEL = 99, // Totally not influenced by another game lol
+    HEAL_RATE = 10_000, // healing every 10 seconds
+    ROAMING_FREQUENCY = 7000,
+    DIAGONAL_FLAG = 0x20_00_00_00,
+    VERTICAL_FLAG = 0x40_00_00_00,
+    HORIZONTAL_FLAG = 0x80_00_00_00
+}
+
+// Defaults that apply to all types of entities
+export enum Defaults {
+    MANA = 50,
+    HITPOINTS = 69, // nice.
+    MOVEMENT_SPEED = 250, // 250 pixels per frame?
+    ATTACK_RATE = 1000 // every 1 second
+}
+
+// Defaults that apply specifically to mobs
+export enum MobDefaults {
+    EXPERIENCE = 1, // Default 1 exp granted if not specified
+    AGGRO_RANGE = 2, // Default aggro range of 2 tiles
+    RESPAWN_DELAY = 60_000, // 60 seconds to respawn
+    ROAM_DISTANCE = 7, // 7 tiles away from spawn point
+    DEFENSE_LEVEL = 1,
+    ATTACK_LEVEL = 1
+}
+
+export enum APIConstants {
+    UNHANDLED_HTTP_METHOD,
+    NOT_FOUND_ERROR,
+    MALFORMED_PARAMETERS,
+    PLAYER_NOT_ONLINE
+}
+
+export enum EntityType {
+    Player,
+    NPC,
+    Item,
+    Mob,
+    Chest,
+    Projectile,
+    Object
 }

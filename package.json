@@ -11,6 +11,7 @@
         "postinstall": "husky install",
         "packages": "yarn workspaces foreach --no-private -piv run",
         "dev": "yarn packages dev",
+        "hub": "yarn packages hub",
         "start": "yarn packages start",
         "build": "yarn packages build",
         "lint": "eslint --cache packages/**/*.ts && stylelint --cache packages/**/*.scss",

@@ -1,4 +1,4 @@
-import Items from '../../../../../util/items';
+import Items from '../../../../../info/items';
 import { Modules } from '@kaetram/common/network';
 import Equipment from './equipment';
 

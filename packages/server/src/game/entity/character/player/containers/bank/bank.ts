@@ -1,9 +1,10 @@
 import { Opcodes } from '@kaetram/common/network';
 
-import Messages from '../../../../../../network/messages';
 import Container from '../container';
 
 import type Player from '../../player';
+
+import { Notification, Bank as BankPacket } from '@kaetram/server/src/network/packets';
 
 interface BankInfo {
     id: number;
@@ -27,13 +28,13 @@ export default class Bank extends Container {
     ): void {
         super.load(ids, counts, abilities, abilityLevels);
 
-        this.owner.send(new Messages.Bank(Opcodes.Bank.Batch, [this.size, this.slots]));
+        this.owner.send(new BankPacket(Opcodes.Bank.Batch, [this.size, this.slots]));
     }
 
     public add(id: number, count: number, ability: number, abilityLevel: number): boolean {
         if (!this.canHold(id, count)) {
             this.owner.send(
-                new Messages.Notification(Opcodes.Notification.Text, {
+                new Notification(Opcodes.Notification.Text, {
                     message: 'You do not have enough space in your bank.'
                 })
             );
@@ -43,7 +44,7 @@ export default class Bank extends Container {
 
         let slot = this.addItem(id, count, ability, abilityLevel);
 
-        this.owner.send(new Messages.Bank(Opcodes.Bank.Add, slot));
+        this.owner.send(new BankPacket(Opcodes.Bank.Add, slot));
         this.owner.save();
 
         return true;
@@ -53,7 +54,7 @@ export default class Bank extends Container {
         if (!super.remove(index, id, count)) return false;
 
         this.owner.send(
-            new Messages.Bank(Opcodes.Bank.Remove, {
+            new BankPacket(Opcodes.Bank.Remove, {
                 index,
                 count
             })

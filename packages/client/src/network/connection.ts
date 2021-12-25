@@ -233,7 +233,7 @@ export default class Connection {
         this.messages.onSync((data) => {
             let entity = this.entities.get<Player>(data.id);
 
-            if (!entity || entity.type !== 'player') return;
+            if (!entity || !entity.isPlayer()) return;
 
             if (data.hitPoints) {
                 entity.setHitPoints(data.hitPoints);
@@ -365,7 +365,7 @@ export default class Connection {
                     this.game.player.clearHealthBar();
                     this.renderer.camera.centreOn(entity);
                     this.renderer.updateAnimatedTiles();
-                } else if (entity.type === 'player') {
+                } else if (entity.isPlayer()) {
                     delete this.entities.entities[entity.id];
                     return;
                 }
@@ -413,12 +413,12 @@ export default class Connection {
             if (!entity) return;
 
             switch (entity.type) {
-                case 'item':
+                case Modules.EntityType.Item:
                     this.entities.removeItem(entity);
 
                     return;
 
-                case 'chest':
+                case Modules.EntityType.Chest:
                     entity.setSprite(this.game.getSprite('death'));
 
                     entity.setAnimation('death', 120, 1, () => {
@@ -776,7 +776,7 @@ export default class Connection {
 
             switch (opcode) {
                 case Opcodes.Experience.Combat: {
-                    if (!entity || entity.type !== 'player') return;
+                    if (!entity || !entity.isPlayer()) return;
 
                     let data = info as ExperienceCombatData;
 
@@ -815,7 +815,7 @@ export default class Connection {
                 }
 
                 case Opcodes.Experience.Profession:
-                    if (!entity || entity.type !== 'player') return;
+                    if (!entity || !entity.isPlayer()) return;
 
                     if (entity.id === this.game.player.id)
                         this.info.create(
@@ -1056,7 +1056,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onRegion((opcode, _bufferSize, info) => {
+        this.messages.onMap((opcode: Opcodes.Map, info: string) => {
             let bufferData = window
                     .atob(info)
                     .split('')
@@ -1065,17 +1065,17 @@ export default class Connection {
                 reigon = JSON.parse(inflatedString);
 
             switch (opcode) {
-                case Opcodes.Region.Render:
+                case Opcodes.Map.Render:
                     this.map.synchronize(reigon);
 
                     break;
 
-                case Opcodes.Region.Modify:
+                case Opcodes.Map.Modify:
                     this.map.data[reigon.index] = reigon.data;
 
                     break;
 
-                case Opcodes.Region.Update: {
+                case Opcodes.Map.Update: {
                     let entity = this.entities.get(reigon.id);
 
                     if (!entity || entity.id === this.game.player.id) return;

@@ -96,7 +96,7 @@ export default class Player extends Character {
 
         this.movementSpeed = movementSpeed;
 
-        this.type = 'player';
+        this.type = Modules.EntityType.Player;
     }
 
     public loadHandler(game: Game): void {
