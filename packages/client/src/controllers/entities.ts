@@ -224,7 +224,7 @@ export default class EntitiesController {
                 player.setMana(manaData[0]);
                 player.setMaxMana(manaData[1]);
 
-                player.setSprite(this.getSprite(info.armour.key));
+                player.setSprite(this.getSprite(info.armour.string));
                 player.idle();
 
                 _.each(equipments, (equipment) => {

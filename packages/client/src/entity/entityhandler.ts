@@ -36,9 +36,9 @@ export default class EntityHandler {
                  * so the entity is always following the player.
                  */
 
-                if (entity.type !== 'player') return;
+                if (!entity.isPlayer()) return;
 
-                if (attacker.type !== 'player') return;
+                if (!attacker.isPlayer()) return;
 
                 if (!attacker.target) return;
 
