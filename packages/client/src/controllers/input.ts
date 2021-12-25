@@ -490,7 +490,7 @@ export default class InputController {
     }
 
     private isTargetable(entity: Entity): boolean {
-        return this.isAttackable(entity) || entity.isNPC() || entity.type === 'chest';
+        return this.isAttackable(entity) || entity.isNPC() || entity.isChest();
     }
 
     private isAttackable(entity: Entity): boolean {
