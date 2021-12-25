@@ -2,7 +2,6 @@ import _ from 'lodash';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
 
 import Regions from '../game/map/regions';
 import Map, { Position } from '../game/map/map';
@@ -12,7 +11,6 @@ import NPC from '../game/entity/npc/npc';
 import Chest from '../game/entity/objects/chest';
 import Item from '../game/entity/objects/item';
 import Projectile from '../game/entity/objects/projectile';
-import Messages from '../network/messages';
 import Formulas from '../info/formulas';
 import Items from '../info/items';
 
@@ -23,6 +21,7 @@ import npcData from '../../data/npcs.json';
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type World from '../game/world';
+import { Blink, Despawn } from '../network/packets';
 
 export default class Entities {
     private map: Map;
@@ -169,9 +168,9 @@ export default class Entities {
      */
 
     public remove(entity: Entity): void {
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: entity.region,
-            message: new Messages.Despawn(entity.instance)
+        this.world.push(Modules.PacketType.Regions, {
+            region: entity.region,
+            packet: new Despawn(entity.instance)
         });
 
         // Remove the entity from the entity grid
@@ -291,7 +290,8 @@ export default class Entities {
         if (player.ready) player.save();
 
         delete this.players[player.instance];
-        delete this.world.network.packets[player.instance];
+
+        this.world.network.deletePacketQueue(player);
 
         // Unsure about this since garbage collector should handle it.
         player.destroy();
@@ -373,8 +373,8 @@ export default class Entities {
         item.despawn();
 
         item.onBlink(() => {
-            this.world.push(Opcodes.Push.Broadcast, {
-                message: new Messages.Blink(item.instance)
+            this.world.push(Modules.PacketType.Broadcast, {
+                packet: new Blink(item.instance)
             });
         });
 

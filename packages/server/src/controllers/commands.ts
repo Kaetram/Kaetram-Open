@@ -1,10 +1,9 @@
 import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import Messages from '../network/messages';
-
 import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
+import { Command, Map, Pointer, Network, Notification, Quest } from '../network/packets';
 
 export default class Commands {
     private world;
@@ -59,20 +58,20 @@ export default class Commands {
 
             case 'coords':
                 this.player.send(
-                    new Messages.Notification(Opcodes.Notification.Text, {
+                    new Notification(Opcodes.Notification.Text, {
                         message: `x: ${this.player.x} y: ${this.player.y}`
                     })
                 );
-
                 return;
 
             case 'progress': {
-                let tutorialQuest = this.player.getTutorial();
+                let tutorialQuest = this.player.getTutorial(),
+                    { id, stage } = tutorialQuest;
 
                 this.player.send(
-                    new Messages.Quest(Opcodes.Quest.Progress, {
-                        id: tutorialQuest.id,
-                        stage: tutorialQuest.stage
+                    new Quest(Opcodes.Quest.Progress, {
+                        id,
+                        stage
                     })
                 );
 
@@ -124,8 +123,7 @@ export default class Commands {
 
             case 'ping':
                 this.player.pingTime = Date.now();
-                this.player.send(new Messages.Network(Opcodes.Network.Ping));
-
+                this.player.send(new Network(Opcodes.Network.Ping));
                 break;
         }
     }
@@ -275,7 +273,7 @@ export default class Commands {
                     if (!posX || !posY) return;
 
                     this.player.send(
-                        new Messages.Pointer(Opcodes.Pointer.Location, {
+                        new Pointer(Opcodes.Pointer.Location, {
                             id: this.player.instance,
                             x: posX,
                             y: posY
@@ -287,7 +285,7 @@ export default class Commands {
                     if (!instance) return;
 
                     this.player.send(
-                        new Messages.Pointer(Opcodes.Pointer.NPC, {
+                        new Pointer(Opcodes.Pointer.NPC, {
                             id: instance
                         })
                     );
@@ -329,17 +327,16 @@ export default class Commands {
 
                 if (!tileX || !tileY) return;
 
-                let tileIndex = this.world.map.coordToIndex(tileX - 1, tileY);
+                let index = this.world.map.coordToIndex(tileX - 1, tileY);
 
-                log.info(`Sending Tile: ${tileIndex}`);
+                log.info(`Sending Tile: ${index}`);
 
-                this.world.push(Opcodes.Push.Player, {
-                    player: this.player,
-                    message: new Messages.Region(Opcodes.Region.Modify, {
-                        index: tileIndex,
+                this.player.send(
+                    new Map(Opcodes.Map.Modify, {
+                        index,
                         data: tileInfo
                     })
-                });
+                );
 
                 return;
             }
@@ -349,11 +346,8 @@ export default class Commands {
                 return;
 
             case 'debug':
-                this.player.send(
-                    new Messages.Command({
-                        command: 'debug'
-                    })
-                );
+                this.player.send(new Command({ command: 'debug' }));
+
                 return;
 
             case 'addexperience':
@@ -456,16 +450,11 @@ export default class Commands {
             }
 
             case 'toggleheal':
-                this.player.send(
-                    new Messages.Command({
-                        command: 'toggleheal'
-                    })
-                );
-                break;
+                return this.player.send(new Command({ command: 'toggleheal' }));
 
             case 'popup':
                 this.player.send(
-                    new Messages.Notification(Opcodes.Notification.Popup, {
+                    new Notification(Opcodes.Notification.Popup, {
                         title: 'New Quest Found!',
                         message: 'New quest has been discovered!',
                         colour: '#00000'

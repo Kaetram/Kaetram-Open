@@ -4,7 +4,8 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import Messages from '../../../../network/messages';
+import { Enchant as EnchantPacket } from '../../../../network/packets';
+
 import Items from '../../../../info/items';
 
 import type Slot from './containers/slot';
@@ -40,7 +41,7 @@ export default class Enchant {
         }
 
         this.player.send(
-            new Messages.Enchant(Opcodes.Enchant.Select, {
+            new EnchantPacket(Opcodes.Enchant.Select, {
                 type,
                 index: item.index
             })
@@ -63,7 +64,7 @@ export default class Enchant {
         if (index < 0) return;
 
         this.player.send(
-            new Messages.Enchant(Opcodes.Enchant.Remove, {
+            new EnchantPacket(Opcodes.Enchant.Remove, {
                 type,
                 index
             })
