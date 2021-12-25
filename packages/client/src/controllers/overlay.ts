@@ -72,7 +72,7 @@ export default class OverlayController {
     }
 
     private validEntity(entity: Entity): boolean {
-        return entity && entity.id !== this.input.getPlayer().id && entity.type !== 'projectile';
+        return entity && entity.id !== this.input.getPlayer().id && entity.isProjectile();
     }
 
     private hasHealth(): boolean {

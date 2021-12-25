@@ -319,5 +319,6 @@ export enum EntityType {
     Item,
     Mob,
     Chest,
-    Projectile
+    Projectile,
+    Object
 }
