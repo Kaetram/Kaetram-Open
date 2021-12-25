@@ -143,16 +143,16 @@ export default class Handler {
             // }
             // switch (NPCs.getType(npc.id)) {
             //     case 'banker':
-            //         this.player.send(new Messages.NPC(Opcodes.NPC.Bank, {}));
+            //         this.player.send(new NPC(Opcodes.NPC.Bank, {}));
             //         return;
             //     case 'enchanter':
-            //         this.player.send(new Messages.NPC(Opcodes.NPC.Enchant, {}));
+            //         this.player.send(new NPC(Opcodes.NPC.Enchant, {}));
             //         break;
             // }
             // let text = NPCs.getText(npc.id);
             // if (!text) return;
             // this.player.send(
-            //     new Messages.NPC(Opcodes.NPC.Talk, {
+            //     new NPC(Opcodes.NPC.Talk, {
             //         id: npc.instance,
             //         text: npc.talk(text, this.player)
             //     })

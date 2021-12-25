@@ -1,5 +1,3 @@
-import Messages from '../../../../network/messages';
-
 import type Player from './player';
 
 export default class BuildUp {
@@ -9,7 +7,6 @@ export default class BuildUp {
 
     // process() {}
 
-    private send(opcode: number, info: never): void {
-        this.player.send(new Messages.BuildUp(opcode, info));
-    }
+    // private send(opcode: number, info: never): void {
+    // }
 }

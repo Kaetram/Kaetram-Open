@@ -174,7 +174,7 @@ export default {
      * @param compression Compression format, can be gzip or zlib
      */
 
-    compressData(data: string, compression = 'gzip'): string | undefined {
+    compress(data: string, compression = 'gzip'): string | undefined {
         if (!data) return;
 
         return compression === 'gzip'

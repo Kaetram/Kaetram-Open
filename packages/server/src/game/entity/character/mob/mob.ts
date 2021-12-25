@@ -15,7 +15,7 @@ import { MobData } from '@kaetram/common/types/mob';
 import rawData from '../../../../../data/mobs.json';
 import log from '@kaetram/common/util/log';
 import World from '../../../world';
-import Messages from '@kaetram/server/src/network/messages';
+import { Movement } from '@kaetram/server/src/network/packets';
 
 type RawData = {
     [key: string]: MobData;
@@ -122,9 +122,9 @@ export default class Mob extends Character {
     public move(x: number, y: number): void {
         this.setPosition(x, y);
 
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.region,
-            message: new Messages.Movement(Opcodes.Movement.Move, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.region,
+            packet: new Movement(Opcodes.Movement.Move, {
                 id: this.instance,
                 x,
                 y

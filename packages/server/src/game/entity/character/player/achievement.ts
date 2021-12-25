@@ -1,7 +1,8 @@
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Data from '../../../../../data/achievements.json';
-import Messages from '../../../../network/messages';
+
+import { NPC as NPCPacket, Quest } from '../../../../network/packets';
 
 import type { AchievementData } from '@kaetram/common/types/info';
 import type NPC from '../../npc/npc';
@@ -47,7 +48,7 @@ export default class Achievement {
         this.update();
 
         this.player.send(
-            new Messages.Quest(Opcodes.Quest.Progress, {
+            new Quest(Opcodes.Quest.Progress, {
                 id: this.id,
                 name: this.name,
                 progress: this.progress,
@@ -61,7 +62,7 @@ export default class Achievement {
         if (this.isThreshold() || this.hasItem()) this.finish(npc);
         else {
             this.player.send(
-                new Messages.NPC(Opcodes.NPC.Talk, {
+                new NPCPacket(Opcodes.NPC.Talk, {
                     id: npc.instance,
                     text: npc.talk(this.data.text!, this.player)
                 })
@@ -107,7 +108,7 @@ export default class Achievement {
         this.update();
 
         this.player.send(
-            new Messages.Quest(Opcodes.Quest.Finish, {
+            new Quest(Opcodes.Quest.Finish, {
                 id: this.id,
                 name: this.name,
                 isQuest: false

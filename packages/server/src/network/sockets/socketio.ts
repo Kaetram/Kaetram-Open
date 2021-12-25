@@ -34,8 +34,7 @@ export default class SocketIO extends WebSocket {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private handleConnection(socket: any): void {
-        let remoteAddress =
-            (socket.handshake.headers['cf-connecting-ip'] as string) || '69.69.69.69';
+        let remoteAddress = (socket.handshake.headers['cf-connecting-ip'] as string) || '127.0.0.1';
 
         log.info(`Received connection from: ${remoteAddress}.`);
 
