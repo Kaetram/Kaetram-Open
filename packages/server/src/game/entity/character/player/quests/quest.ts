@@ -1,7 +1,7 @@
 import { Opcodes } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
-import Messages from '../../../../../network/messages';
+import { NPC as NPCPacket, Quest as QuestPacket, Pointer } from '../../../../../network/packets';
 
 import type { QuestInfo } from '@kaetram/common/types/info';
 import type NPC from '../../../npc/npc';
@@ -76,7 +76,7 @@ export default abstract class Quest {
         this.setStage(9999);
 
         this.player.send(
-            new Messages.Quest(Opcodes.Quest.Finish, {
+            new QuestPacket(Opcodes.Quest.Finish, {
                 id: this.id,
                 isQuest: true
             })
@@ -117,15 +117,15 @@ export default abstract class Quest {
 
         if (opcode === 4)
             this.player.send(
-                new Messages.Pointer(opcode, {
-                    id: Utils.generateRandomId(),
+                new Pointer(opcode, {
+                    id: Utils.createInstance(),
                     button: pointer[1] as string
                 })
             );
         else
             this.player.send(
-                new Messages.Pointer(opcode, {
-                    id: Utils.generateRandomId(),
+                new Pointer(opcode, {
+                    id: Utils.createInstance(),
                     x: pointer[1] as number,
                     y: pointer[2] as number
                 })
@@ -138,7 +138,7 @@ export default abstract class Quest {
         this.player.talkIndex = 0;
 
         this.player.send(
-            new Messages.NPC(Opcodes.NPC.Talk, {
+            new NPCPacket(Opcodes.NPC.Talk, {
                 id: npc.instance,
                 text: message
             })
@@ -153,7 +153,7 @@ export default abstract class Quest {
     }
 
     public clearPointers(): void {
-        this.player.send(new Messages.Pointer(Opcodes.Pointer.Remove, {}));
+        this.player.send(new Pointer(Opcodes.Pointer.Remove, {}));
     }
 
     protected onNPCTalk(callback: NPCTalkCallback): void {
@@ -163,7 +163,7 @@ export default abstract class Quest {
     public hasMob(mob: Mob): boolean | undefined {
         if (!this.data.mobs) return;
 
-        return this.data.mobs.includes(mob.id);
+        //return this.data.mobs.includes(mob.id);
     }
 
     public hasNPC(id: number): boolean {

@@ -1,4 +1,4 @@
-import Objects, { ObjectsData } from '../util/objects';
+import Objects, { ObjectsData } from '../info/objects';
 import Utils from '@kaetram/common/util/utils';
 
 import type { Tree } from '@kaetram/common/types/map';

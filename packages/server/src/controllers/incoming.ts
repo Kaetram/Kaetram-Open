@@ -2,13 +2,12 @@ import _ from 'lodash';
 import sanitizer from 'sanitizer';
 
 import config from '@kaetram/common/config';
-import { Opcodes, Packets } from '@kaetram/common/network';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Creator from '../database/mongodb/creator';
-import Messages from '../network/messages';
-import Items from '../util/items';
+import Items from '../info/items';
 import Commands from './commands';
 
 import type { EquipmentType } from '@kaetram/common/types/info';
@@ -21,6 +20,8 @@ import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
 import type Projectile from '../game/entity/objects/projectile';
+import { Chat, Combat, Equipment, Movement, Notification, Shop, Spawn } from '../network/packets';
+import Respawn from '../network/packets/respawn';
 
 export default class Incoming {
     private connection;
@@ -38,7 +39,7 @@ export default class Incoming {
         this.database = player.database;
         this.commands = new Commands(player);
 
-        this.connection.listen(([packet, message]) => {
+        this.connection.onMessage(([packet, message]) => {
             if (!Utils.validPacket(packet)) {
                 log.error(`Non-existent packet received: ${packet} data: `);
                 log.error(message);
@@ -50,92 +51,70 @@ export default class Incoming {
 
             switch (packet) {
                 case Packets.Intro:
-                    this.handleIntro(message);
-                    break;
+                    return this.handleIntro(message);
 
                 case Packets.Ready:
-                    this.handleReady(message);
-                    break;
+                    return this.handleReady(message);
 
                 case Packets.Who:
-                    this.handleWho(message);
-                    break;
+                    return this.handleWho(message);
 
                 case Packets.Equipment:
-                    this.handleEquipment(message);
-                    break;
+                    return this.handleEquipment(message);
 
                 case Packets.Movement:
-                    this.handleMovement(message);
-                    break;
+                    return this.handleMovement(message);
 
                 case Packets.Request:
-                    this.handleRequest(message);
-                    break;
+                    return this.handleRequest(message);
 
                 case Packets.Target:
-                    this.handleTarget(message);
-                    break;
+                    return this.handleTarget(message);
 
                 case Packets.Combat:
-                    this.handleCombat(message);
-                    break;
+                    return this.handleCombat(message);
 
                 case Packets.Projectile:
-                    this.handleProjectile(message);
-                    break;
+                    return this.handleProjectile(message);
 
                 case Packets.Network:
-                    this.handleNetwork(message);
-                    break;
+                    return this.handleNetwork(message);
 
                 case Packets.Chat:
-                    this.handleChat(message);
-                    break;
+                    return this.handleChat(message);
 
                 case Packets.Command:
-                    this.handleCommand(message);
-                    break;
+                    return this.handleCommand(message);
 
                 case Packets.Inventory:
-                    this.handleInventory(message);
-                    break;
+                    return this.handleInventory(message);
 
                 case Packets.Bank:
-                    this.handleBank(message);
-                    break;
+                    return this.handleBank(message);
 
                 case Packets.Respawn:
-                    this.handleRespawn(message);
-                    break;
+                    return this.handleRespawn(message);
 
                 case Packets.Trade:
-                    this.handleTrade(message);
-                    break;
+                    return this.handleTrade(message);
 
                 case Packets.Enchant:
-                    this.handleEnchant(message);
-                    break;
+                    return this.handleEnchant(message);
 
                 case Packets.Click:
-                    this.handleClick(message);
-                    break;
+                    return this.handleClick(message);
 
                 case Packets.Warp:
-                    this.handleWarp(message);
-                    break;
+                    return this.handleWarp(message);
 
                 case Packets.Shop:
-                    this.handleShop(message);
-                    break;
+                    return this.handleShop(message);
 
                 case Packets.Camera:
-                    this.handleCamera(message);
-                    break;
+                    return this.handleCamera(message);
 
                 case Packets.Client:
-                    this.handleClient(message);
-                    break;
+                    return this.handleClient(message);
             }
         });
     }
@@ -246,30 +225,30 @@ export default class Incoming {
 
     private handleWho(message: string[]): void {
         _.each(message, (id: string) => {
-            let entity = this.entities.get<Mob & NPC>(id);
+            let entity = this.entities.get(id);
 
             if (!entity || entity.dead) return;
 
             /* We handle player-specific entity statuses here. */
 
             // Entity is an area-based mob
-            if (entity.area) entity.specialState = 'area';
+            // if (entity.area) entity.specialState = 'area';
 
-            if (this.player.quests.isQuestNPC(entity)) entity.specialState = 'questNpc';
+            // if (this.player.quests.isQuestNPC(entity)) entity.specialState = 'questNpc';
 
-            if (this.player.quests.isQuestMob(entity)) entity.specialState = 'questMob';
+            // if (this.player.quests.isQuestMob(entity)) entity.specialState = 'questMob';
 
-            if (entity.miniboss) {
-                entity.specialState = 'miniboss';
-                entity.customScale = 1.25;
-            }
+            // if (entity.miniboss) {
+            //     entity.specialState = 'miniboss';
+            //     entity.customScale = 1.25;
+            // }
 
-            if (entity.boss) entity.specialState = 'boss';
+            // if (entity.boss) entity.specialState = 'boss';
 
             // if (this.player.quests.isAchievementNPC(entity))
             //    entity.specialState = 'achievementNpc';
 
-            this.player.send(new Messages.Spawn(entity));
+            this.player.send(new Spawn(entity));
         });
     }
 
@@ -280,7 +259,7 @@ export default class Incoming {
             case Opcodes.Equipment.Unequip: {
                 if (!this.player.inventory.hasSpace()) {
                     this.player.send(
-                        new Messages.Notification(Opcodes.Notification.Text, {
+                        new Notification(Opcodes.Notification.Text, {
                             message: 'You do not have enough space in your inventory.'
                         })
                     );
@@ -329,7 +308,7 @@ export default class Incoming {
                         break;
                 }
 
-                this.player.send(new Messages.Equipment(Opcodes.Equipment.Unequip, type));
+                this.player.send(new Equipment(Opcodes.Equipment.Unequip, type));
 
                 break;
             }
@@ -409,7 +388,8 @@ export default class Incoming {
 
                 orientation = message[5] as number;
 
-                if (entity && entity.type === 'item') this.player.inventory.add(entity as ItemData);
+                if (entity && entity.isItem())
+                    this.player.inventory.add(entity as unknown as ItemData);
 
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     let door = this.player.doors.getDoor(posX, posY);
@@ -452,13 +432,9 @@ export default class Incoming {
             case Opcodes.Movement.Orientate:
                 orientation = message[1] as number;
 
-                this.world.push(Opcodes.Push.Regions, {
-                    regionId: this.player.region,
-                    message: new Messages.Movement(Opcodes.Movement.Orientate, [
-                        this.player.instance,
-                        orientation
-                    ])
-                });
+                this.player.sendToRegions(
+                    new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
+                );
 
                 break;
 
@@ -503,8 +479,8 @@ export default class Incoming {
 
                 this.player.cheatScore = 0;
 
-                if (entity.type === 'chest') {
-                    let chest = entity as Chest;
+                if (entity.isChest()) {
+                    let chest = entity as unknown as Chest;
                     chest.openChest(this.player);
                     return;
                 }
@@ -523,9 +499,9 @@ export default class Incoming {
 
                 this.player.cheatScore = 0;
 
-                this.world.push(Opcodes.Push.Regions, {
-                    regionId: target.region,
-                    message: new Messages.Combat(Opcodes.Combat.Initiate, {
+                this.world.push(Modules.PacketType.Regions, {
+                    region: target.region,
+                    packet: new Combat(Opcodes.Combat.Initiate, {
                         attackerId: this.player.instance,
                         targetId: target.instance
                     })
@@ -593,10 +569,10 @@ export default class Incoming {
 
                 if (!target || target.dead || !projectile) return;
 
-                this.world.handleDamage(projectile.owner, target, projectile.damage);
+                //this.world.handleDamage(projectile.owner, target, projectile.damage);
                 this.entities.remove(projectile);
 
-                if (target.combat.started || target.dead || target.type !== 'mob') return;
+                if (target.combat.started || target.dead || target.isMob()) return;
 
                 target.combat.begin(projectile.owner!);
 
@@ -628,7 +604,7 @@ export default class Incoming {
         else {
             if (this.player.isMuted()) {
                 this.player.send(
-                    new Messages.Notification(Opcodes.Notification.Text, {
+                    new Notification(Opcodes.Notification.Text, {
                         message: 'You are currently muted.'
                     })
                 );
@@ -637,7 +613,7 @@ export default class Incoming {
 
             if (!this.player.canTalk) {
                 this.player.send(
-                    new Messages.Notification(Opcodes.Notification.Text, {
+                    new Notification(Opcodes.Notification.Text, {
                         message: 'You are not allowed to talk for the duration of this event.'
                     })
                 );
@@ -652,16 +628,15 @@ export default class Incoming {
             if (config.hubEnabled)
                 this.world.api.sendChat(Utils.formatUsername(this.player.username), text, true);
 
-            this.world.push(Opcodes.Push.Regions, {
-                regionId: this.player.region,
-                message: new Messages.Chat({
+            this.player.sendToRegions(
+                new Chat({
                     id: this.player.instance,
                     name: this.player.username,
                     withBubble: true,
                     text,
                     duration: 7000
                 })
-            });
+            );
         }
     }
 
@@ -793,13 +768,9 @@ export default class Incoming {
         this.player.dead = false;
         this.player.setPosition(spawn.x, spawn.y);
 
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.player.region,
-            message: new Messages.Spawn(this.player),
-            ignoreId: this.player.instance
-        });
+        this.player.sendToRegions(new Spawn(this.player), true);
 
-        this.player.send(new Messages.Respawn(this.player.instance, this.player.x, this.player.y));
+        this.player.send(new Respawn(this.player));
 
         this.player.revertPoints();
     }
@@ -936,7 +907,7 @@ export default class Incoming {
                 if (!currency) return;
 
                 this.player.send(
-                    new Messages.Shop(Opcodes.Shop.Select, {
+                    new Shop(Opcodes.Shop.Select, {
                         id: npcId,
                         slotId,
                         currency: Items.idToString(currency),
@@ -994,9 +965,9 @@ export default class Incoming {
      * but if it was modified by a presumed hacker, it will simply cease when it arrives to this condition.
      */
     private canAttack(attacker: Character, target: Character): boolean {
-        if (attacker.type === 'mob' || target.type === 'mob') return true;
+        if (attacker.isMob() || target.isMob()) return true;
 
-        return attacker.type === 'player' && target.type === 'player' && attacker.pvp && target.pvp;
+        return attacker.isPlayer() && target.isPlayer() && attacker.pvp && target.pvp;
     }
 
     private preventNoClip(x: number, y: number): boolean {
@@ -1018,8 +989,8 @@ export default class Incoming {
             'We have detected no-clipping in your client. Please submit a bug report.'
         );
 
-        x = this.player.previousX < 0 ? this.player.x : this.player.previousX;
-        y = this.player.previousY < 0 ? this.player.y : this.player.previousY;
+        x = this.player.oldX < 0 ? this.player.x : this.player.oldX;
+        y = this.player.oldY < 0 ? this.player.y : this.player.oldY;
 
         if (this.world.map.isColliding(x, y)) {
             let spawn = this.player.getSpawn();

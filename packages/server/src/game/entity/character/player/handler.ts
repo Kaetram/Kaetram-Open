@@ -1,17 +1,12 @@
 import _ from 'lodash';
 
 import config from '@kaetram/common/config';
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-
-import Messages from '../../../../network/messages';
-import NPCs from '../../../../util/npcs';
-import Shops from '../../../../util/shops';
 import Hit from '../combat/hit';
 
 import type Areas from '../../../map/areas/areas';
-import type Entity from '../../entity';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
@@ -134,43 +129,34 @@ export default class Handler {
         });
 
         this.player.onTalkToNPC((npc: NPC) => {
-            if (this.player.quests.isQuestNPC(npc)) {
-                this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
-
-                return;
-            }
-
-            if (this.player.quests.isAchievementNPC(npc)) {
-                this.player.quests.getAchievementByNPC(npc)!.converse(npc);
-
-                return;
-            }
-
-            if (Shops.isShopNPC(npc.id)) {
-                this.world.shops.open(this.player, npc.id);
-                return;
-            }
-
-            switch (NPCs.getType(npc.id)) {
-                case 'banker':
-                    this.player.send(new Messages.NPC(Opcodes.NPC.Bank, {}));
-                    return;
-
-                case 'enchanter':
-                    this.player.send(new Messages.NPC(Opcodes.NPC.Enchant, {}));
-                    break;
-            }
-
-            let text = NPCs.getText(npc.id);
-
-            if (!text) return;
-
-            this.player.send(
-                new Messages.NPC(Opcodes.NPC.Talk, {
-                    id: npc.instance,
-                    text: npc.talk(text, this.player)
-                })
-            );
+            // if (this.player.quests.isQuestNPC(npc)) {
+            //     this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
+            //     return;
+            // }
+            // if (this.player.quests.isAchievementNPC(npc)) {
+            //     this.player.quests.getAchievementByNPC(npc)!.converse(npc);
+            //     return;
+            // }
+            // if (Shops.isShopNPC(npc.id)) {
+            //     this.world.shops.open(this.player, npc.id);
+            //     return;
+            // }
+            // switch (NPCs.getType(npc.id)) {
+            //     case 'banker':
+            //         this.player.send(new NPC(Opcodes.NPC.Bank, {}));
+            //         return;
+            //     case 'enchanter':
+            //         this.player.send(new NPC(Opcodes.NPC.Enchant, {}));
+            //         break;
+            // }
+            // let text = NPCs.getText(npc.id);
+            // if (!text) return;
+            // this.player.send(
+            //     new NPC(Opcodes.NPC.Talk, {
+            //         id: npc.instance,
+            //         text: npc.talk(text, this.player)
+            //     })
+            // );
         });
 
         this.player.onTeleport((x: number, y: number, isDoor = false) => {
@@ -211,7 +197,7 @@ export default class Handler {
         // let region = this.world.region.regions[this.player.region!];
         // if (!region) return;
         // _.each(region.entities, (character) => {
-        //     if (character && character.type === 'mob' && this.canEntitySee(character)) {
+        //     if (character && character.isMob() && this.canEntitySee(character)) {
         //         let mob = character as Mob,
         //             aggro = mob.canAggro(this.player);
         //         if (aggro) mob.combat.begin(this.player);

@@ -6,11 +6,9 @@ import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import APIConstants from '../util/apiconstants';
-
 import type Player from '../game/entity/character/player/player';
-import type Mana from '../game/entity/character/player/points/mana';
 import type World from '../game/world';
+import { Modules } from '@kaetram/common/network';
 
 interface PlayerData {
     serverId: string;
@@ -18,8 +16,6 @@ interface PlayerData {
     y: number;
     experience: number;
     level: number;
-    hitPoints: number;
-    mana: Mana;
     pvpKills: number;
     orientation: number;
     lastLogin: number;
@@ -35,6 +31,7 @@ interface PlayerData {
  * This is a rudimentary security method, but is enough considering
  * the simplicity of the current API.
  */
+
 export default class API {
     private hubConnected = false;
 
@@ -68,39 +65,17 @@ export default class API {
             });
         });
 
-        router.post('/player', (request, response) => {
-            this.handlePlayer(request, response);
-        });
-
-        router.post('/chat', (request, response) => {
-            this.handleChat(request, response);
-        });
-
-        router.get('/players', (request, response) => {
-            this.handlePlayers(request, response);
-        });
+        router.post('/player', this.handlePlayer.bind(this));
+        router.post('/chat', this.handleChat.bind(this));
+        router.post('/players', this.handlePlayers.bind(this));
     }
 
     private handlePlayer(request: express.Request, response: express.Response): void {
-        if (!this.verifyToken(request.body.accessToken)) {
-            this.returnError(
-                response,
-                APIConstants.MALFORMED_PARAMETERS,
-                'Invalid `accessToken` specified for /player POST request.'
-            );
-            return;
-        }
+        if (!this.verifyToken(response, request.body.accessToken)) return;
     }
 
     private handleChat(request: express.Request, response: express.Response): void {
-        if (!this.verifyToken(request.body.accessToken)) {
-            this.returnError(
-                response,
-                APIConstants.MALFORMED_PARAMETERS,
-                'Invalid `accessToken` specified for /chat POST request.'
-            );
-            return;
-        }
+        if (!this.verifyToken(response, request.body.accessToken)) return;
 
         let text = Utils.parseMessage(request.body.text),
             source = Utils.parseMessage(request.body.source),
@@ -122,14 +97,7 @@ export default class API {
     }
 
     private handlePlayers(request: express.Request, response: express.Response): void {
-        if (!this.verifyToken(request.query.accessToken as string)) {
-            this.returnError(
-                response,
-                APIConstants.MALFORMED_PARAMETERS,
-                'Invalid `accessToken` specified for /players GET request.'
-            );
-            return;
-        }
+        if (!this.verifyToken(response, request.body.accessToken)) return;
 
         let players: { [username: string]: Partial<PlayerData> } = {};
 
@@ -209,8 +177,17 @@ export default class API {
         }
     }
 
-    private verifyToken(token: string): boolean {
-        return token === config.accessToken;
+    private verifyToken(response: express.Response, token: string): boolean {
+        let status = token === config.accessToken;
+
+        if (!status)
+            this.returnError(
+                response,
+                Modules.APIConstants.MALFORMED_PARAMETERS,
+                'Invalid `accessToken` specified for /chat POST request.'
+            );
+
+        return status;
     }
 
     private getPlayerData(player: Player): Partial<PlayerData> {
@@ -222,8 +199,6 @@ export default class API {
             y: player.y,
             experience: player.experience,
             level: player.level,
-            hitPoints: player.hitPoints,
-            mana: player.mana,
             pvpKills: player.pvpKills,
             orientation: player.orientation,
             lastLogin: player.lastLogin,
@@ -237,7 +212,11 @@ export default class API {
             : `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
-    private returnError(response: express.Response, error: APIConstants, message: string): void {
+    private returnError(
+        response: express.Response,
+        error: Modules.APIConstants,
+        message: string
+    ): void {
         response.json({
             error,
             message

@@ -70,39 +70,41 @@ export default class EntitiesController {
     }
 
     public create(info: AnyEntity): void {
+        console.log(info);
+
         let { entities, game } = this,
             entity: Entity = null!;
 
-        if (this.isPlayer(info.id)) return;
+        if (this.isPlayer(info.instance)) return;
 
-        if (info.id in entities)
+        if (info.instance in entities)
             // Don't initialize things twice.
             return;
 
         switch (info.type) {
-            case 'chest': {
+            case Modules.EntityType.Chest: {
                 /**
                  * Here we will parse the different types of chests..
                  * We can go Dark Souls style and implement mimics
                  * the proper way -ahem- Kaetram V1.0
                  */
 
-                let chest = new Chest(info.id, info.string);
+                let chest = new Chest(info.instance, info.key);
 
                 entity = chest;
 
                 break;
             }
 
-            case 'npc': {
-                let npc = new NPC(info.id, info.string);
+            case Modules.EntityType.NPC: {
+                let npc = new NPC(info.instance, info.key);
 
                 entity = npc;
 
                 break;
             }
 
-            case 'item': {
+            case Modules.EntityType.Item: {
                 let item = new Item(
                     info.id,
                     info.string,
@@ -116,11 +118,13 @@ export default class EntitiesController {
                 break;
             }
 
-            case 'mob': {
-                let mob = new Mob(info.id, info.string);
+            case Modules.EntityType.Mob: {
+                let mob = new Mob(info.instance, info.key);
 
                 mob.setHitPoints(info.hitPoints);
                 mob.setMaxHitPoints(info.maxHitPoints);
+
+                console.log(info);
 
                 mob.attackRange = info.attackRange;
                 mob.level = info.level;
@@ -132,7 +136,7 @@ export default class EntitiesController {
                 break;
             }
 
-            case 'projectile': {
+            case Modules.EntityType.Projectile: {
                 let attacker = this.get<Character>(info.characterId),
                     target = this.get<Character>(info.targetId);
 
@@ -140,7 +144,7 @@ export default class EntitiesController {
 
                 attacker.lookAt(target);
 
-                let projectile = new Projectile(info.id, info.string, attacker); // ? info.projectileType
+                let projectile = new Projectile(info.instance, info.key, attacker); // ? info.projectileType
 
                 projectile.name = info.name;
 
@@ -193,10 +197,10 @@ export default class EntitiesController {
                 return;
             }
 
-            case 'player': {
+            case Modules.EntityType.Player: {
                 let player = new Player();
 
-                player.setId(info.id);
+                player.setId(info.instance);
                 player.setName(info.name);
                 player.setGridPosition(info.x, info.y);
 
@@ -244,7 +248,9 @@ export default class EntitiesController {
 
         if (!entity) return;
 
-        let sprite = this.getSprite(info.type === 'item' ? `item-${info.string}` : info.string)!;
+        let sprite = this.getSprite(
+            info.type === Modules.EntityType.Item ? `item-${info.key}` : info.key
+        )!;
 
         entity.setGridPosition(info.x, info.y);
         entity.setName(info.name);
@@ -264,7 +270,7 @@ export default class EntitiesController {
 
         let { handler } = entity as Character;
 
-        if (info.type !== 'item' && handler) {
+        if (info.type !== Modules.EntityType.Item && handler) {
             handler.setGame(game);
             handler.load();
         }
@@ -313,7 +319,7 @@ export default class EntitiesController {
         let { entities, grids } = this;
 
         _.each(entities, (entity) => {
-            if (entity.id !== exception.id && entity.type === 'player') this.removeEntity(entity);
+            if (entity.id !== exception.id && entity.isPlayer()) this.removeEntity(entity);
         });
 
         grids.resetPathingGrid();
@@ -346,9 +352,9 @@ export default class EntitiesController {
         if (!entity) return;
 
         // if (
-        //     entity.type === 'player' ||
-        //     entity.type === 'mob' ||
-        //     entity.type === 'npc' ||
+        //     entity.isPlayer() ||
+        //     entity.isMob() ||
+        //     entity.isNPC() ||
         //     entity.type === 'chest'
         // ) {
         //     if (entity.type !== 'player' || entity.nonPathable)

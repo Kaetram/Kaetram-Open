@@ -1,5 +1,5 @@
 {
-  "Sword2": {
+  "sword2": {
     "id": 1,
     "type": "weapon",
     "attack": 2,
@@ -7,7 +7,7 @@
     "requirement": 2
   },
 
-  "Axe": {
+  "axe": {
     "id": 2,
     "type": "weapon",
     "attack": 3,
@@ -15,294 +15,294 @@
     "lumberjacking": 1
   },
 
-  "MorningStar": {
+  "morningstar": {
     "id": 3,
     "type": "weapon",
     "attack": 4,
     "name": "Morning Star"
   },
 
-  "BlueSword": {
+  "bluesword": {
     "id": 4,
     "type": "weapon",
     "attack": 5,
     "name": "Water Sword"
   },
 
-  "RedSword": {
+  "redsword": {
     "id": 5,
     "type": "weapon",
     "attack": 6,
     "name": "Fire Sword"
   },
 
-  "GoldenSword": {
+  "goldensword": {
     "id": 6,
     "type": "weapon",
     "attack": 7,
     "name": "Golden Sword"
   },
 
-  "SideSword": {
+  "sidesword": {
     "id": 7,
     "type": "weapon",
     "attack": 8,
     "name": "Side Sword"
   },
 
-  "Spear": {
+  "spear": {
     "id": 8,
     "type": "weapon",
     "attack": 9,
     "name": "Silly Spear"
   },
 
-  "Scimitar": {
+  "scimitar": {
     "id": 9,
     "type": "weapon",
     "attack": 11,
     "name": "Pirate's Scimitar"
   },
 
-  "Trident": {
+  "trident": {
     "id": 10,
     "type": "weapon",
     "attack": 11,
     "name": "Trident Of The Seas"
   },
 
-  "Bluescimitar": {
+  "bluescimitar": {
     "id": 11,
     "type": "weapon",
     "attack": 12,
     "name": "Blue Scimitar"
   },
 
-  "Hammer": {
+  "hammer": {
     "id": 12,
     "type": "weapon",
     "attack": 13,
     "name": "Hammer"
   },
 
-  "Greenlightsaber": {
+  "greenlightsaber": {
     "id": 13,
     "type": "weapon",
     "attack": 14,
     "name": "Green Light Saber"
   },
 
-  "Skylightsaber": {
+  "skylightsaber": {
     "id": 14,
     "type": "weapon",
     "attack": 15,
     "name": "Sky Light Saber"
   },
 
-  "Redlightsaber": {
+  "redlightsaber": {
     "id": 15,
     "type": "weapon",
     "attack": 16,
     "name": "Red Light Saber"
   },
 
-  "Bastardsword": {
+  "bastardsword": {
     "id": 16,
     "type": "weapon",
     "attack": 17,
     "name": "Heavy Sword"
   },
 
-  "Redmetalsword": {
+  "redmetalsword": {
     "id": 17,
     "type": "weapon",
     "attack": 18,
     "name": "Red Metal Sword"
   },
 
-  "Justicehammer": {
+  "justicehammer": {
     "id": 18,
     "type": "weapon",
     "attack": 19,
     "name": "Justice Hammer"
   },
 
-  "Rose": {
+  "rose": {
     "id": 19,
     "type": "weapon",
     "attack": 20,
     "name": "Rose"
   },
 
-  "Icerose": {
+  "icerose": {
     "id": 20,
     "type": "weapon",
     "attack": 21,
     "name": "Ice Rose"
   },
 
-  "Halberd": {
+  "halberd": {
     "id": 21,
     "type": "weapon",
     "attack": 22,
     "name": "Halberd"
   },
 
-  "Whip": {
+  "whip": {
     "id": 22,
     "type": "weapon",
     "attack": 23,
     "name": "Whip"
   },
 
-  "Forestguardiansword": {
+  "forestguardiansword": {
     "id": 23,
     "type": "weapon",
     "attack": 24,
     "name": "Forest Guardian Sword"
   },
 
-  "Sickle": {
+  "sickle": {
     "id": 24,
     "type": "weapon",
     "attack": 25,
     "name": "Sickle"
   },
 
-  "Plunger": {
+  "plunger": {
     "id": 25,
     "type": "weapon",
     "attack": 26,
     "name": "Plunger"
   },
 
-  "Redsickle": {
+  "redsickle": {
     "id": 26,
     "type": "weapon",
     "attack": 27,
     "name": "Red Sickle"
   },
 
-  "Daywalker": {
+  "daywalker": {
     "id": 27,
     "type": "weapon",
     "attack": 20,
     "name": "Day Walker"
   },
 
-  "Purplecloudkallege": {
+  "purplecloudkallege": {
     "id": 28,
     "type": "weapon",
     "attack": 29,
     "name": "Purple Cloud Kallege"
   },
 
-  "Searage": {
+  "searage": {
     "id": 29,
     "type": "weapon",
     "attack": 30,
     "name": "Sea rage"
   },
 
-  "Breaker": {
+  "breaker": {
     "id": 30,
     "type": "weapon",
     "attack": 31,
     "name": "Breaker"
   },
 
-  "Eneltrident": {
+  "eneltrident": {
     "id": 31,
     "type": "weapon",
     "attack": 45,
     "name": "Enel Trident"
   },
 
-  "Rainbowsword": {
+  "rainbowsword": {
     "id": 32,
     "type": "weapon",
     "attack": 33,
     "name": "Rainbow Sword"
   },
 
-  "Typhoon": {
+  "typhoon": {
     "id": 33,
     "type": "weapon",
     "attack": 34,
     "name": "Typhoon"
   },
 
-  "Memme": {
+  "memme": {
     "id": 34,
     "type": "weapon",
     "attack": 35,
     "name": "Memme"
   },
 
-  "Candybar": {
+  "candybar": {
     "id": 35,
     "type": "weapon",
     "attack": 36,
     "name": "Candy Bar"
   },
 
-  "Butcherknife": {
+  "butcherknife": {
     "id": 36,
     "type": "weapon",
     "attack": 37,
     "name": "Butcher Knife"
   },
 
-  "Fireshot": {
+  "fireshot": {
     "id": 37,
     "type": "weapon",
     "attack": 38,
     "name": "Fire Shot"
   },
 
-  "Comb": {
+  "comb": {
     "id": 38,
     "type": "weapon",
     "attack": 39,
     "name": "Comb"
   },
 
-  "Squeakyhammer": {
+  "squeakyhammer": {
     "id": 39,
     "type": "weapon",
     "attack": 40,
     "name": "Squeaky Hammer"
   },
 
-  "Fireplay": {
+  "fireplay": {
     "id": 40,
     "type": "weapon",
     "attack": 41,
     "name": "Fire Play"
   },
 
-  "Weastaff": {
+  "weastaff": {
     "id": 41,
     "type": "weapon",
     "attack": 42,
     "name": "Wea Staff"
   },
 
-  "Pinksword": {
+  "pinksword": {
     "id": 42,
     "type": "weapon",
     "attack": 43,
     "name": "Pink Sword"
   },
 
-  "Conferencecall": {
+  "conferencecall": {
     "id": 43,
     "type": "weapon",
     "attack": 70,
     "name": "Stick"
   },
 
-  "Cactusaxe": {
+  "cactusaxe": {
     "id": 44,
     "type": "weapon",
     "attack": 9,
@@ -310,7 +310,7 @@
     "lumberjacking": 6
   },
 
-  "GoldAxe": {
+  "goldaxe": {
     "id": 44,
     "type": "weapon",
     "attack": 14,
@@ -318,105 +318,105 @@
     "lumberjacking": 7
   },
 
-  "Devilkazyasword": {
+  "devilkazyasword": {
     "id": 45,
     "type": "weapon",
     "attack": 46,
     "name": "Devil Kazya Sword"
   },
 
-  "Bamboospear": {
+  "bamboospear": {
     "id": 46,
     "type": "weapon",
     "attack": 47,
     "name": "Bamboo Spear"
   },
 
-  "Paewoldo": {
+  "paewoldo": {
     "id": 47,
     "type": "weapon",
     "attack": 30,
     "name": "Paewoldo"
   },
 
-  "Magicspear": {
+  "magicspear": {
     "id": 48,
     "type": "weapon",
     "attack": 49,
     "name": "Magic Spear"
   },
 
-  "Firesword": {
+  "firesword": {
     "id": 49,
     "type": "weapon",
     "attack": 50,
     "name": "Fire Sword"
   },
 
-  "Pendant1": {
+  "pendant1": {
     "id": 50,
     "type": "pendant",
     "pendantLevel": 5,
     "name": "Emerald Pendant"
   },
 
-  "GreenPendant": {
+  "preenpendant": {
     "id": 51,
     "type": "pendant",
     "pendantLevel": 10,
     "name": "Jade Pendant"
   },
 
-  "PearlPendant": {
+  "pearlpendant": {
     "id": 52,
     "type": "pendant",
     "pendantLevel": 15,
     "name": "Pearl Pendant"
   },
 
-  "MarblePendant": {
+  "marblependant": {
     "id": 53,
     "type": "pendant",
     "pendantLevel": 25,
     "name": "Diamond Pendant"
   },
 
-  "Ring1": {
+  "ring1": {
     "id": 54,
     "type": "ring",
     "ringLevel": 5,
     "name": "Emerald Ring"
   },
 
-  "SproutRing": {
+  "sproutring": {
     "id": 55,
     "type": "ring",
     "ringLevel": 10,
     "name": "Sprout Ring"
   },
 
-  "PearlRing": {
+  "pearlring": {
     "id": 56,
     "type": "ring",
     "ringLevel": 15,
     "name": "Pearl Ring"
   },
 
-  "TopazRing": {
+  "topazring": {
     "id": 57,
     "type": "ring",
     "ringLevel": 20,
     "name": "Topaz Ring"
   },
 
-  "SpiritRing": {
+  "spiritring": {
     "id": 58,
     "type": "ring",
     "ringLevel": 25,
     "name": "Spirit Ring"
   },
 
-  "EssentialRage": {
+  "essentialrage": {
     "id": 59,
     "type": "ring",
     "ringLevel": 35,
@@ -431,189 +431,189 @@
     "spriteName": "armorarcher"
   },
 
-  "LeatherarcherArmor": {
+  "leatherarcherarmor": {
     "id": 61,
     "defense": 2,
     "type": "armorarcher",
     "name": "Leather Archer Armour"
   },
 
-  "MailarcherArmor": {
+  "mailarcherarmor": {
     "id": 62,
     "defense": 3,
     "type": "armorarcher",
     "name": "Mail Archer Armour"
   },
 
-  "PlatearcherArmor": {
+  "platearcherarmor": {
     "id": 63,
     "defense": 4,
     "type": "armorarcher",
     "name": "Plate Archer Armour"
   },
 
-  "RedarcherArmor": {
+  "redarcherarmor": {
     "id": 64,
     "defense": 5,
     "type": "armorarcher",
     "name": "Red Archer Armour"
   },
 
-  "GoldenarcherArmor": {
+  "goldenarcherarmor": {
     "id": 65,
     "defense": 6,
     "type": "armorarcher",
     "name": "Golden Archer Armour"
   },
 
-  "GreenarcherArmor": {
+  "greenarcherarmor": {
     "id": 66,
     "defense": 7,
     "type": "armorarcher",
     "name": "Green Archer Armour"
   },
 
-  "GreenwingarcherArmor": {
+  "greenwingarcherarmor": {
     "id": 67,
     "defense": 8,
     "type": "armorarcher",
     "name": "Green Wing Archer Armour"
   },
 
-  "GuardarcherArmor": {
+  "guardarcherarmor": {
     "id": 68,
     "defense": 9,
     "type": "armorarcher",
     "name": "Guard Archer Armour"
   },
 
-  "RedguardarcherArmor": {
+  "redguardarcherarmor": {
     "id": 69,
     "defense": 10,
     "type": "armorarcher",
     "name": "Red Guard Archer Armour"
   },
 
-  "WhitearcherArmor": {
+  "whitearcherarmor": {
     "id": 70,
     "defense": 11,
     "type": "armorarcher",
     "name": "White Archer Armour"
   },
 
-  "RatarcherArmor": {
+  "ratarcherarmor": {
     "id": 71,
     "defense": 12,
     "type": "armorarcher",
     "name": "Rat Archer Armour"
   },
 
-  "PiratearcherArmor": {
+  "piratearcherarmor": {
     "id": 72,
     "defense": 13,
     "type": "armorarcher",
     "name": "Pirate Archer Armour"
   },
 
-  "CheoliarcherArmor": {
+  "cheoliarcherarmor": {
     "id": 73,
     "defense": 14,
     "type": "armorarcher",
     "name": "Cheolia Archer Armour"
   },
 
-  "DovakinarcherArmor": {
+  "dovakinarcherarmor": {
     "id": 74,
     "defense": 15,
     "type": "armorarcher",
     "name": "Dovakina Archer Armour"
   },
 
-  "GbwingarcherArmor": {
+  "gbwingarcherarmor": {
     "id": 75,
     "defense": 16,
     "type": "armorarcher",
     "name": "GbwingarcherArmour"
   },
 
-  "RedwingarcherArmor": {
+  "redwingarcherarmor": {
     "id": 76,
     "defense": 17,
     "type": "armorarcher",
     "name": "Red Wing Archer Armour"
   },
 
-  "SnowfoxarcherArmor": {
+  "snowfoxarcherarmor": {
     "id": 77,
     "defense": 18,
     "type": "armorarcher",
     "name": "Snow Fox Archer Armour"
   },
 
-  "WolfarcherArmor": {
+  "wolfarcherarmor": {
     "id": 78,
     "defense": 18,
     "type": "armorarcher",
     "name": "Wolf Archer Armour"
   },
 
-  "BluewingarcherArmor": {
+  "bluewingarcherarmor": {
     "id": 79,
     "defense": 20,
     "type": "armorarcher",
     "name": "Blue Wing Archer Armour"
   },
 
-  "FallenarcherArmor": {
+  "fallenarcherarmor": {
     "id": 80,
     "defense": 21,
     "type": "armorarcher",
     "name": "Fallen Archer Armour"
   },
 
-  "CrystalarcherArmor": {
+  "crystalarcherarmor": {
     "id": 81,
     "defense": 22,
     "type": "armorarcher",
     "name": "Crystal Archer Armour"
   },
 
-  "LegolasArmor": {
+  "legolasarmor": {
     "id": 82,
     "defense": 23,
     "type": "armorarcher",
     "name": "Legolas Armour"
   },
 
-  "AdhererarcherArmor": {
+  "adhererarcherarmor": {
     "id": 83,
     "defense": 24,
     "type": "armorarcher",
     "name": "Adherer Archer Armour"
   },
 
-  "ArcherschoolUniform": {
+  "archerschoolUniform": {
     "id": 84,
     "defense": 25,
     "type": "armorarcher",
     "name": "Archer School Uniform"
   },
 
-  "CombatUniform": {
+  "combatuniform": {
     "id": 85,
     "defense": 26,
     "type": "armorarcher",
     "name": "Combat Uniform"
   },
 
-  "GayarcherArmor": {
+  "gayarcherarmor": {
     "id": 86,
     "defense": 27,
     "type": "armorarcher",
     "name": "Sketchy Archer Armour"
   },
 
-  "WoodenBow": {
+  "woodenbow": {
     "id": 87,
     "type": "weaponarcher",
     "attack": 1,
@@ -621,428 +621,427 @@
     "requirement": 1
   },
 
-  "PlasticBow": {
+  "plasticbow": {
     "id": 88,
     "type": "weaponarcher",
     "attack": 2,
     "name": "Plastic Bow"
   },
 
-  "IronBow": {
+  "ironbow": {
     "id": 89,
     "type": "weaponarcher",
     "attack": 3,
     "name": "Iron Bow"
   },
 
-  "RedBow": {
+  "redbow": {
     "id": 90,
     "type": "weaponarcher",
     "attack": 4,
     "name": "Red Bow"
   },
 
-  "VioletBow": {
+  "violetbow": {
     "id": 91,
     "type": "weaponarcher",
     "attack": 5,
     "name": "Violet Bow"
   },
 
-  "DeathBow": {
+  "deathbow": {
     "id": 92,
     "type": "weaponarcher",
     "attack": 6,
     "name": "Death Bow"
   },
 
-  "GoldenBow": {
+  "goldenbow": {
     "id": 93,
     "type": "weaponarcher",
     "attack": 7,
     "name": "Golden Bow"
   },
 
-  "WatermelonBow": {
+  "watermelonbow": {
     "id": 94,
     "type": "weaponarcher",
     "attack": 8,
     "name": "Watermelon Bow"
   },
 
-  "GreenBow": {
+  "greenbow": {
     "id": 95,
     "type": "weaponarcher",
     "attack": 9,
     "name": "Greenbow"
   },
 
-  "RedenelBow": {
+  "redenelbow": {
     "id": 96,
     "type": "weaponarcher",
     "attack": 30,
     "name": "Redenel Bow"
   },
 
-  "MermaidBow": {
+  "mermaidbow": {
     "id": 97,
     "type": "weaponarcher",
     "attack": 11,
     "name": "Mermaid Bow"
   },
 
-  "SeahorseBow": {
+  "seahorsebow": {
     "id": 98,
     "type": "weaponarcher",
     "attack": 12,
     "name": "Seahorse Bow"
   },
 
-  "HunterBow": {
+  "hunterbow": {
     "id": 99,
     "type": "weaponarcher",
     "attack": 13,
     "name": "Hunter Bow"
   },
 
-  "GreenlightBow": {
+  "greenlightbow": {
     "id": 100,
     "type": "weaponarcher",
     "attack": 14,
     "name": "Green Light Bow"
   },
 
-  "SkylightBow": {
+  "skylightbow": {
     "id": 101,
     "type": "weaponarcher",
     "attack": 15,
     "name": "Sky Light Bow"
   },
 
-  "RedlightBow": {
+  "redlightbow": {
     "id": 102,
     "type": "weaponarcher",
     "attack": 16,
     "name": "Red Light Bow"
   },
 
-  "CaptainBow": {
+  "captainbow": {
     "id": 103,
     "type": "weaponarcher",
     "attack": 17,
     "name": "Captain Bow"
   },
 
-  "RedmetalBow": {
+  "redmetalbow": {
     "id": 104,
     "type": "weaponarcher",
     "attack": 18,
     "name": "Red Metal Bow"
   },
 
-  "JusticeBow": {
+  "justicebow": {
     "id": 105,
     "type": "weaponarcher",
     "attack": 19,
     "name": "Justice Bow"
   },
 
-  "RoseBow": {
+  "rosebow": {
     "id": 106,
     "type": "weaponarcher",
     "attack": 20,
     "name": "Rose Bow"
   },
 
-  "MarineBow": {
+  "marinebow": {
     "id": 107,
     "type": "weaponarcher",
     "attack": 21,
     "name": "Marine Bow"
   },
 
-  "CrystalBow": {
+  "crystalbow": {
     "id": 108,
     "type": "weaponarcher",
     "attack": 22,
     "name": "Crystal Bow"
   },
 
-  "GayBow": {
+  "gaybow": {
     "id": 109,
     "type": "weaponarcher",
     "attack": 23,
     "name": "Gay Bow"
   },
 
-  "ForestBow": {
+  "forestbow": {
     "id": 110,
     "type": "weaponarcher",
     "attack": 24,
     "name": "Forest Bow"
   },
 
-  "SickleBow": {
+  "sicklebow": {
     "id": 111,
     "type": "weaponarcher",
     "attack": 25,
     "name": "Sickle Bow"
   },
 
-  "BloodBow": {
+  "bloodbow": {
     "id": 112,
     "type": "weaponarcher",
     "attack": 26,
     "name": "Blood Bow"
   },
 
-  "RedsickleBow": {
+  "redsicklebow": {
     "id": 113,
     "type": "weaponarcher",
     "attack": 27,
     "name": "Red Sickle Bow"
   },
 
-
-  "ClothArmor": {
+  "clotharmor": {
     "id": 114,
     "defense": 1,
     "type": "armor",
     "name": "Cloth Armour"
   },
 
-  "LeatherArmor": {
+  "leatherarmor": {
     "id": 115,
     "defense": 2,
     "type": "armor",
     "name": "Leather Armour"
   },
 
-  "MailArmor": {
+  "mailarmor": {
     "id": 116,
     "defense": 3,
     "type": "armor",
     "name": "Chain Mail"
   },
 
-  "PlateArmor": {
+  "platearmor": {
     "id": 117,
     "defense": 4,
     "type": "armor",
     "name": "Steel Armour"
   },
 
-  "RedArmor": {
+  "redarmor": {
     "id": 118,
     "defense": 5,
     "type": "armor",
     "name": "Ruby Armour"
   },
 
-  "GoldenArmor": {
+  "goldenarmor": {
     "id": 119,
     "defense": 6,
     "type": "armor",
     "name": "Golden Armour"
   },
 
-  "GreenArmor": {
+  "greenarmor": {
     "id": 120,
     "defense": 7,
     "type": "armor",
     "name": "Green Armour"
   },
 
-  "GreenWingArmor": {
+  "greenwingarmor": {
     "id": 121,
     "defense": 8,
     "type": "armor",
     "name": "Green Wing Armour"
   },
 
-  "GuardArmor": {
+  "guardarmor": {
     "id": 122,
     "defense": 9,
     "type": "armor",
     "name": "Guard Armour"
   },
 
-  "RedGuardArmor": {
+  "redguardarmor": {
     "id": 123,
     "defense": 10,
     "type": "armor",
     "name": "Red Guard Armour"
   },
 
-  "WhiteArmor": {
+  "whitearmor": {
     "id": 124,
     "defense": 11,
     "type": "armor",
     "name": "White Armour"
   },
 
-  "RatArmor": {
+  "ratarmor": {
     "id": 125,
     "defense": 12,
     "type": "armor",
     "name": "Rat Armour"
   },
 
-  "BluepirateArmor": {
+  "bluepiratearmor": {
     "id": 126,
     "defense": 13,
     "type": "armor",
     "name": "Blue Pirate Armour"
   },
 
-  "CheoliArmor": {
+  "cheoliarmor": {
     "id": 127,
     "defense": 14,
     "type": "armor",
     "name": "Cheoli Armour"
   },
 
-  "DovakinArmor": {
+  "dovakinarmor": {
     "id": 128,
     "defense": 15,
     "type": "armor",
     "name": "Dovakin Armour"
   },
 
-  "GbwingArmor": {
+  "gbwingarmor": {
     "id": 129,
     "defense": 16,
     "type": "armor",
     "name": "GB Wing Armour"
   },
 
-  "RedwingArmor": {
+  "redwingarmor": {
     "id": 130,
     "defense": 17,
     "type": "armor",
     "name": "Red Wing Armour"
   },
 
-  "SnowfoxArmor": {
+  "snowfoxarmor": {
     "id": 131,
     "defense": 18,
     "type": "armor",
     "name": "Snow Fox Armour"
   },
 
-  "WolfArmor": {
+  "wolfarmor": {
     "id": 132,
     "defense": 20,
     "type": "armor",
     "name": "Wolf Armour"
   },
 
-  "BluewingArmor": {
+  "bluewingarmor": {
     "id": 133,
     "defense": 20,
     "type": "armor",
     "name": "Blue Wing Armour"
   },
 
-  "ThiefArmor": {
+  "thiefarmor": {
     "id": 134,
     "defense": 21,
     "type": "armor",
     "name": "Thief Armour"
   },
 
-  "NinjaArmor": {
+  "ninjaarmor": {
     "id": 135,
     "defense": 22,
     "type": "armor",
     "name": "Ninja Armour"
   },
 
-  "DragonArmor": {
+  "dragonarmor": {
     "id": 136,
     "defense": 48,
     "type": "armor",
     "name": "Dragon Armour"
   },
 
-  "FallenArmor": {
+  "fallenarmor": {
     "id": 137,
     "defense": 24,
     "type": "armor",
     "name": "Fallen Armour"
   },
 
-  "PaladinArmor": {
+  "paladinarmor": {
     "id": 138,
     "defense": 25,
     "type": "armor",
     "name": "Paladin Armour"
   },
 
-  "CrystalArmor": {
+  "crystalarmor": {
     "id": 139,
     "defense": 23,
     "type": "armor",
     "name": "Crystal Armour"
   },
 
-  "AdhererRobe": {
+  "adhererrobe": {
     "id": 140,
     "defense": 27,
     "type": "armor",
     "name": "Adherer Robe"
   },
 
-  "FrostArmor": {
+  "frostarmor": {
     "id": 141,
     "defense": 28,
     "type": "armor",
     "name": "Frost Armour"
   },
 
-  "GayArmor": {
+  "gayarmor": {
     "id": 142,
     "defense": 29,
     "type": "armor",
     "name": "Gay Armour"
   },
 
-  "SchoolUniform": {
+  "schooluniform": {
     "id": 143,
     "defense": 30,
     "type": "armor",
     "name": "School Uniform"
   },
 
-  "BeautifulLife": {
+  "beautifullife": {
     "id": 144,
     "defense": 31,
     "type": "armor",
     "name": "Beautiful Life"
   },
 
-  "RegionArmor": {
+  "regionarmor": {
     "id": 145,
     "defense": 37,
     "type": "armor",
     "name": "Region Armour"
   },
 
-  "GhostRider": {
+  "ghostrider": {
     "id": 146,
     "defense": 33,
     "type": "armor",
     "name": "Ghost Rider"
   },
 
-  "Taekwondo": {
+  "taekwondo": {
     "id": 147,
     "defense": 34,
     "type": "armor",
     "name": "Taekwondo"
   },
 
-  "RabbitArmor": {
+  "rabbitarmor": {
     "id": 148,
     "defense": 35,
     "type": "armor",
@@ -1050,287 +1049,287 @@
     "movementSpeed": 210
   },
 
-  "PortalArmor": {
+  "portalarmor": {
     "id": 149,
     "defense": 36,
     "type": "armor",
     "name": "Portal Armour"
   },
 
-  "PirateKing": {
+  "pirateKing": {
     "id": 150,
     "defense": 37,
     "type": "armor",
     "name": "Pirate King"
   },
 
-  "SeadragonArmor": {
+  "peadragonarmor": {
     "id": 151,
     "defense": 38,
     "type": "armor",
     "name": "Sea Dragon Armour"
   },
 
-  "ShadowregionArmor": {
+  "shadowregionarmor": {
     "id": 152,
     "defense": 39,
     "type": "armor",
     "name": "Shadow Region Armour"
   },
 
-  "EnelArmor": {
+  "enelarmor": {
     "id": 153,
     "defense": 50,
     "type": "armor",
     "name": "Enel Armour"
   },
 
-  "MiniseadragonArmor": {
+  "miniseadragonarmor": {
     "id": 154,
     "defense": 41,
     "type": "armor",
     "name": "Mini Sea Dragon Armour"
   },
 
-  "HuniArmor": {
+  "huniarmor": {
     "id": 155,
     "defense": 42,
     "type": "armor",
     "name": "Huni Armour"
   },
 
-  "DamboArmor": {
+  "damboarmor": {
     "id": 156,
     "defense": 43,
     "type": "armor",
     "name": "Dambo Armour"
   },
 
-  "SquidArmor": {
+  "squidarmor": {
     "id": 157,
     "defense": 44,
     "type": "armor",
     "name": "Squid Armour"
   },
 
-  "BeeArmor": {
+  "beearmor": {
     "id": 158,
     "defense": 45,
     "type": "armor",
     "name": "Bee Armour"
   },
 
-  "BluedamboArmor": {
+  "bluedamboarmor": {
     "id": 159,
     "defense": 46,
     "type": "armor",
     "name": "Blue Dambo Armour"
   },
 
-  "RudolfArmor": {
+  "rudolfarmor": {
     "id": 160,
     "defense": 47,
     "type": "armor",
     "name": "Rudolf Armour"
   },
 
-  "ChristmasArmor": {
+  "christmasarmor": {
     "id": 161,
     "defense": 48,
     "type": "armor",
     "name": "Christmas Armour"
   },
 
-  "RobocopArmor": {
+  "robocoparmor": {
     "id": 162,
     "defense": 49,
     "type": "armor",
     "name": "Robocop Armour"
   },
 
-  "PinkcockroachArmor": {
+  "pinkcockroacharmor": {
     "id": 163,
     "defense": 50,
     "type": "armor",
     "name": "Pink Cockroach Armour"
   },
 
-  "CockroachSuit": {
+  "cockroachSuit": {
     "id": 164,
     "defense": 27,
     "type": "armor",
     "name": "Cockroach Suit"
   },
 
-  "DinosaurArmor": {
+  "dinosaurarmor": {
     "id": 165,
     "defense": 52,
     "type": "armor",
     "name": "Dinosaur Armour"
   },
 
-  "CatArmor": {
+  "catarmor": {
     "id": 166,
     "defense": 18,
     "type": "armor",
     "name": "Cat Armour"
   },
 
-  "SnowmanArmor": {
+  "snowmanarmor": {
     "id": 167,
     "defense": 54,
     "type": "armor",
     "name": "Snowman Armour"
   },
 
-  "BeetleArmor": {
+  "beetlearmor": {
     "id": 168,
     "defense": 55,
     "type": "armor",
     "name": "Beetle Armour"
   },
 
-  "HongcheolArmor": {
+  "hongcheolarmor": {
     "id": 169,
     "defense": 56,
     "type": "armor",
     "name": "Hongcheol Armour"
   },
 
-  "TigerArmor": {
+  "tigerarmor": {
     "id": 170,
     "defense": 49,
     "type": "armor",
     "name": "Tiger Armour"
   },
 
-  "WizardRobe": {
+  "wizardrobe": {
     "id": 171,
     "defense": 14,
     "type": "armor",
     "name": "Wizard Robe"
   },
 
-  "IronknightArmor": {
+  "ironknightarmor": {
     "id": 172,
     "defense": 25,
     "type": "armor",
     "name": "Iron Knight Armour"
   },
 
-  "EvilArmor": {
+  "evilarmor": {
     "id": 173,
     "defense": 60,
     "type": "armor",
     "name": "Evil Armour"
   },
 
-  "GreendamboArmor": {
+  "greendamboarmor": {
     "id": 174,
     "defense": 61,
     "type": "armor",
     "name": "Green Dambo Armour"
   },
 
-  "ReddamboArmor": {
+  "reddamboarmor": {
     "id": 175,
     "defense": 62,
     "type": "armor",
     "name": "Red Dambo Armour"
   },
 
-  "DevilkazyaArmor": {
+  "devilkazyaarmor": {
     "id": 176,
     "defense": 63,
     "type": "armor",
     "name": "Devil Kazya Armour"
   },
 
-  "BridalMask": {
+  "bridalmask": {
     "id": 177,
     "defense": 26,
     "type": "armor",
     "name": "Bridal Mask"
   },
 
-  "BlackspiderArmor": {
+  "blackspiderarmor": {
     "id": 178,
     "defense": 65,
     "type": "armor",
     "name": "Black Spider Armour"
   },
 
-  "FrogArmor": {
+  "frogarmor": {
     "id": 179,
     "defense": 66,
     "type": "armor",
     "name": "Frog Armour"
   },
 
-  "BearseonbiArmor": {
+  "bearseonbiarmor": {
     "id": 180,
     "defense": 67,
     "type": "armor",
     "name": "Bearseonbi Armour"
   },
 
-  "RainbowApro": {
+  "rainbowapro": {
     "id": 181,
     "defense": 68,
     "type": "armor",
     "name": "Rainbow A Pro"
   },
 
-  "CokeArmor": {
+  "cokearmor": {
     "id": 182,
     "defense": 69,
     "type": "armor",
     "name": "Coke Armour"
   },
 
-  "FriedpotatoArmor": {
+  "friedpotatoarmor": {
     "id": 183,
     "defense": 70,
     "type": "armor",
     "name": "Fried Potato Armour"
   },
 
-  "BurgerArmor": {
+  "burgerarmor": {
     "id": 184,
     "defense": 71,
     "type": "armor",
     "name": "Burger Armour"
   },
 
-  "RadishArmor": {
+  "radisharmor": {
     "id": 185,
     "defense": 72,
     "type": "armor",
     "name": "Radish Armour"
   },
 
-  "HalloweenJKArmor": {
+  "halloweenjkarmor": {
     "id": 186,
     "defense": 73,
     "type": "armor",
     "name": "Halloween JK Armour"
   },
 
-  "FrankensteinArmor": {
+  "frankensteinarmor": {
     "id": 188,
     "defense": 74,
     "type": "armor",
     "name": "Frankenstein Armour"
   },
 
-  "AdminArmor": {
+  "adminarmor": {
     "id": 189,
     "defense": 75,
     "type": "armor",
     "name": "Admin Armour"
   },
 
-  "Flask": {
+  "flask": {
     "id": 190,
     "type": "object",
     "name": "Flask [+100 HP]",
@@ -1343,7 +1342,7 @@
     "customData": {"healAmount": 100}
   },
 
-  "ManaFlask": {
+  "manaflask": {
     "id": 191,
     "type": "object",
     "name": "Mana Flask [+35 MP]",
@@ -1357,7 +1356,7 @@
 
   },
 
-  "Burger": {
+  "burger": {
     "id": 192,
     "type": "object",
     "name": "Burger [+200 HP]",
@@ -1371,7 +1370,7 @@
 
   },
 
-  "BigFlask": {
+  "bigflask": {
     "id": 193,
     "type": "object",
     "name": "Big Flask [+350 HP]",
@@ -1384,327 +1383,327 @@
     "customData": {"healAmount": 500}
   },
 
-  "Chest": {
+  "chest": {
     "id": 194,
     "type": "object",
     "name": "Chest"
   },
 
-  "FirePotion": {
+  "firepotion": {
     "id": 195,
     "type": "object",
     "name": "Fire Potion",
     "stackable": true
   },
 
-  "Cake": {
+  "cake": {
     "id": 196,
     "type": "object",
     "name": "Cake [Quest]"
   },
 
-  "Book": {
+  "book": {
     "id": 197,
     "type": "object",
     "name": "Book [Quest]"
   },
 
-  "Cd": {
+  "cd": {
     "id": 198,
     "type": "object",
     "name": "CD [Quest]"
   },
 
-  "Snowpotion": {
+  "snowpotion": {
     "id": 199,
     "type": "object",
     "name": "Snow Potion",
     "stackable": true
   },
 
-  "Royalazalea": {
+  "royalazalea": {
     "id": 200,
     "type": "object",
     "name": "Royal Azalea"
   },
 
-  "Blackpotion": {
+  "blackpotion": {
     "id": 201,
     "type": "object",
     "name": "Black Potion"
   },
 
-  "Gold": {
+  "gold": {
     "id": 202,
     "type": "object",
     "name": "Gold",
     "stackable": true
   },
 
-  "MountSeaDragon": {
+  "mountseadragon": {
     "id": 203,
     "type": "object",
     "name": "Mount Sea Dragon"
   },
 
-  "MountForestDragon": {
+  "mountforestdragon": {
     "id": 204,
     "type": "object",
     "name": "Mount Forest Dragon"
   },
 
-  "MountWhiteTiger": {
+  "mountwhitetiger": {
     "id": 205,
     "type": "object",
     "name": "Mount White Tiger"
   },
 
-  "LeafCommon": {
+  "leafcommon": {
     "id": 206,
     "spriteName": "leaf",
     "type": "craft",
     "name": "Leaf Common"
   },
 
-  "LeafUncommon": {
+  "leafuncommon": {
     "id": 207,
     "spriteName": "leaf",
     "type": "craft",
     "name": "Leaf Uncommon"
   },
 
-  "LeafRare": {
+  "leafrare": {
     "id": 208,
     "spriteName": "leaf",
     "type": "craft",
     "name": "Leaf Rare"
   },
 
-  "BranchCommon": {
+  "branchcommon": {
     "id": 209,
     "spriteName": "branch",
     "type": "craft",
     "name": "Branch Common"
   },
 
-  "BranchUncommon": {
+  "branchuncommon": {
     "id": 210,
     "spriteName": "branch",
     "type": "craft",
     "name": "Branch Uncommon"
   },
 
-  "BranchRare": {
+  "branchrare": {
     "id": 211,
     "spriteName": "branch",
     "type": "craft",
     "name": "Branch Rare"
   },
 
-  "SeedCommon": {
+  "seedcommon": {
     "id": 212,
     "spriteName": "seed",
     "type": "craft",
     "name": "Seed Common"
   },
 
-  "SeedUncommon": {
+  "seeduncommon": {
     "id": 213,
     "spriteName": "seed",
     "type": "craft",
     "name": "Seed Uncommon"
   },
 
-  "SeedRare": {
+  "seedrare": {
     "id": 214,
     "spriteName": "seed",
     "type": "craft",
     "name": "Seed Rare"
   },
 
-  "ClothCommon": {
+  "clothcommon": {
     "id": 215,
     "spriteName": "cloth",
     "type": "craft",
     "name": "Cloth Common"
   },
 
-  "Clothuncommon": {
+  "clothuncommon": {
     "id": 216,
     "spriteName": "cloth",
     "type": "craft",
     "name": "Cloth Uncommon"
   },
 
-  "ClothRare": {
+  "clothcare": {
     "id": 217,
     "spriteName": "cloth",
     "type": "craft",
     "name": "Cloth Rare"
   },
 
-  "RockCommon": {
+  "rockcommon": {
     "id": 218,
     "spriteName": "rock",
     "type": "craft",
     "name": "Rock Common"
   },
 
-  "RockUncommon": {
+  "rockuncommon": {
     "id": 219,
     "spriteName": "rock",
     "type": "craft",
     "name": "Rock Uncommon"
   },
 
-  "RockRare": {
+  "rockrare": {
     "id": 220,
     "spriteName": "rock",
     "type": "craft",
     "name": "Rock Rare"
   },
 
-  "MineralCommon": {
+  "mineralcommon": {
     "id": 221,
     "spriteName": "mineral",
     "type": "craft",
     "name": "Mineral Common"
   },
 
-  "MineralUncommon": {
+  "mineraluncommon": {
     "id": 222,
     "spriteName": "mineral",
     "type": "craft",
     "name": "Mineral Uncommon"
   },
 
-  "MineralRare": {
+  "mineralrare": {
     "id": 223,
     "spriteName": "mineral",
     "type": "craft",
     "name": "Mineral Rare"
   },
 
-  "ElementCommon": {
+  "elementcommon": {
     "id": 224,
     "spriteName": "element",
     "type": "craft",
     "name": "Element Common"
   },
 
-  "ElementUncommon": {
+  "elementuncommon": {
     "id": 225,
     "spriteName": "element",
     "type": "craft",
     "name": "Element Uncommon"
   },
 
-  "ElementRare": {
+  "elementrare": {
     "id": 226,
     "spriteName": "element",
     "type": "craft",
     "name": "Element Rare"
   },
 
-  "WeaponHiltCommon": {
+  "weaponhiltcommon": {
     "id": 227,
     "spriteName": "weaponhilt",
     "type": "craft",
     "name": "Common Weapon Hilt"
   },
 
-  "WeaponHiltUncommon": {
+  "weaponhiltuncommon": {
     "id": 228,
     "spriteName": "weaponhilt",
     "type": "craft",
     "name": "Uncommon Weapon Hilt"
   },
 
-  "WeaponHiltRare": {
+  "weaponhiltrare": {
     "id": 229,
     "spriteName": "weaponhilt",
     "type": "craft",
     "name": "Rare Weapon Hilt"
   },
 
-  "WeaponBladeCommon": {
+  "weaponbladecommon": {
     "id": 230,
     "spriteName": "weaponblade",
     "type": "craft",
     "name": "Common Weapon Blade"
   },
 
-  "WeaponBladeUncommon": {
+  "beaponbladeuncommon": {
     "id": 231,
     "spriteName": "weaponblade",
     "type": "craft",
     "name": "Uncommon Weapon Blade"
   },
 
-  "WeaponBladeRare": {
+  "beaponbladerare": {
     "id": 232,
     "spriteName": "weaponblade",
     "type": "craft",
     "name": "Rare Weapon Blade"
   },
 
-  "ArmorPatchCommon": {
+  "armorpatchcommon": {
     "id": 233,
     "spriteName": "armorpatches",
     "type": "craft",
     "name": "Common Armor Patch"
   },
 
-  "ArmorPatchUncommon": {
+  "armorpatchuncommon": {
     "id": 234,
     "spriteName": "armorpatches",
     "type": "craft",
     "name": "Uncommon Armor Patch"
   },
 
-  "ArmorPatchRare": {
+  "armorpatchrare": {
     "id": 235,
     "spriteName": "armorpatches",
     "type": "craft",
     "name": "Rare Armor Patch"
   },
 
-  "ArmorBindingCommon": {
+  "armorbindingcommon": {
     "id": 236,
     "spriteName": "armorbinding",
     "type": "craft",
     "name": "Common Armor Binding"
   },
 
-  "ArmorBindingUncommon": {
+  "armorbindinguncommon": {
     "id": 237,
     "spriteName": "armorbinding",
     "type": "craft",
     "name": "Uncommon Armor Binding"
   },
 
-  "ArmorBindingRare": {
+  "armorbindingrare": {
     "id": 238,
     "spriteName": "armorbinding",
     "type": "craft",
     "name": "Rare Armor Binding"
   },
 
-  "WoodCommon": {
+  "woodcommon": {
     "id": 239,
     "spriteName": "wood",
     "type": "craft",
     "name": "Wood Common"
   },
 
-  "WoodUncommon": {
+  "wooduncommon": {
     "id": 240,
     "spriteName": "wood",
     "type": "craft",
     "name": "Wood Uncommon"
   },
 
-  "WoodRare": {
+  "woodrare": {
     "id": 241,
     "spriteName": "wood",
     "type": "craft",
@@ -1753,7 +1752,7 @@
     "name": "Bow String Rare"
   },
 
-  "Sword1": {
+  "sword1": {
     "id": 248,
     "type": "weapon",
     "attack": 1,
@@ -1761,108 +1760,108 @@
     "requirement": 1
   },
 
-  "Banana": {
+  "banana": {
     "id": 249,
     "type": "object",
     "name": "Banana"
   },
 
-  "Watermelon": {
+  "watermelon": {
     "id": 250,
     "type": "object",
     "name": "Watermelon"
   },
 
-  "Apple": {
+  "apple": {
     "id": 251,
     "type": "object",
     "name": "Apple"
   },
 
-  "Orange": {
+  "orange": {
     "id": 252,
     "type": "object",
     "name": "Orange"
   },
 
-  "Shardt1": {
+  "shardt1": {
     "id": 253,
     "type": "object",
     "name": "Shard - Tier 1",
     "stackable": true
   },
 
-  "Shardt2": {
+  "shardt2": {
     "id": 254,
     "type": "object",
     "name": "Shard - Tier 2",
     "stackable": true
   },
 
-  "Shardt3": {
+  "shardt3": {
     "id": 255,
     "type": "object",
     "name": "Shard - Tier 3",
     "stackable": true
   },
 
-  "Shardt4": {
+  "shardt4": {
     "id": 256,
     "type": "object",
     "name": "Shard - Tier 4",
     "stackable": true
   },
 
-  "Shardt5": {
+  "shardt5": {
     "id": 257,
     "type": "object",
     "name": "Shard - Tier 5",
     "stackable": true
   },
 
-  "Ghost": {
+  "ghost": {
     "id": 258,
     "type": "armor",
     "defense": 3,
     "name": "Ghost"
   },
 
-  "Pickle": {
+  "pickle": {
     "id": 259,
     "type": "armor",
     "defense": 20,
     "name": "Pickle Armour"
   },
 
-  "BlueArmor": {
+  "bluearmor": {
     "id": 260,
     "defense": 6,
     "type": "armor",
     "name": "Crystal Armour"
   },
 
-  "IceSword": {
+  "icesword": {
     "id": 261,
     "type": "weapon",
     "attack": 6,
     "name": "Ice Sword"
   },
 
-  "PlatinumSword": {
+  "platinumsword": {
     "id": 262,
     "type": "weapon",
     "attack": 8,
     "name": "Platinum Sword"
   },
 
-  "PlatinumArmor": {
+  "platinumarmor": {
     "id": 263,
     "defense": 7,
     "type": "armor",
     "name": "Platinum Armour"
   },
 
-  "Logs": {
+  "logs": {
     "id": 264,
     "type": "object",
     "name": "Logs",
@@ -1871,7 +1870,7 @@
     "price": 10
   },
 
-  "RustedAxe": {
+  "rustedaxe": {
     "id": 265,
     "type": "weapon",
     "attack": 4,
@@ -1879,7 +1878,7 @@
     "lumberjacking": 2
   },
 
-  "FireAxe": {
+  "fireaxe": {
     "id": 266,
     "type": "weapon",
     "attack": 5,
@@ -1887,7 +1886,7 @@
     "lumberjacking": 3
   },
 
-  "PoisonAxe": {
+  "poisonaxe": {
     "id": 267,
     "type": "weapon",
     "attack": 6,
@@ -1895,7 +1894,7 @@
     "lumberjacking": 4
   },
 
-  "CarnelianAxe": {
+  "carnelianaxe": {
     "id": 268,
     "type": "weapon",
     "attack": 9,
@@ -1903,7 +1902,7 @@
     "lumberjacking": 8
   },
 
-  "PalmLogs": {
+  "palmlogs": {
     "id": 269,
     "type": "object",
     "name": "Palm Logs",
@@ -1912,7 +1911,7 @@
     "price": 25
   },
 
-  "IceLogs": {
+  "icelogs": {
     "id": 270,
     "type": "object",
     "name": "Ice Logs",
@@ -1921,7 +1920,7 @@
     "price": 35
   },
 
-  "IcePalmLogs": {
+  "icepalmlogs": {
     "id": 271,
     "type": "object",
     "name": "Ice Palm Logs",

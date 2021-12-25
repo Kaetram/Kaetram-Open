@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import config from '@kaetram/common/config';
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
 import Entities from '../controllers/entities';
@@ -11,10 +11,12 @@ import Grids from './map/grids';
 import Map from './map/map';
 import API from '../network/api';
 import Discord from '../network/discord';
-import Messages, { Packet } from '../network/messages';
 import Network from '../network/network';
-import Mobs from '../util/mobs';
 import Character from './entity/character/character';
+
+import { PacketType } from '@kaetram/common/network/modules';
+import { Chat, Combat, Despawn, Points } from '../network/packets';
+import Packet from '../network/packet';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
@@ -23,12 +25,14 @@ import type Mob from './entity/character/mob/mob';
 import type Player from './entity/character/player/player';
 import type Entity from './entity/entity';
 
-type ConnectionCallback = (connection: Connection) => void;
-
-interface WorldPacket {
-    [key: string]: unknown;
-    message: Packet;
+export interface PacketData {
+    packet: Packet;
+    player?: Player;
+    ignore?: string;
+    region?: number;
 }
+
+type ConnectionCallback = (connection: Connection) => void;
 
 export default class World {
     public map!: Map;
@@ -44,7 +48,6 @@ export default class World {
     public allowConnections = false;
 
     public connectionCallback?: ConnectionCallback;
-    public populationCallback?(): void;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
         this.map = new Map(this);
@@ -54,6 +57,8 @@ export default class World {
         this.entities = new Entities(this);
         this.network = new Network(this);
         this.globalObjects = new GlobalObjects(this);
+
+        this.onConnection(this.network.handleConnection.bind(this.network));
 
         log.info('******************************************');
 
@@ -82,79 +87,98 @@ export default class World {
         }, config.hubPing);
     }
 
+    /**
+     * All packets are sent through this function. Here we organize who we send the packet to,
+     * and perform further data checking (in the future if necessary).
+     * @param packetType The method we are sending the packet.
+     * @param data The data containing information about who the packet is sent to.
+     */
+
+    public push(packetType: number, data: PacketData): void {
+        switch (packetType) {
+            case PacketType.Broadcast:
+                return this.network.broadcast(data.packet);
+
+            case PacketType.Player:
+                return this.network.send(data.player as Player, data.packet);
+
+            case PacketType.Region:
+                return this.network.sendToRegion(data.region as number, data.packet, data.ignore);
+
+            case PacketType.Regions:
+                return this.network.sendToSurroundingRegions(
+                    data.region as number,
+                    data.packet,
+                    data.ignore
+                );
+        }
+    }
+
     /****************************
      * Entity related functions *
      ****************************/
 
     public kill(character: Character): void {
-        character.applyDamage(character.hitPoints);
+        character.hitPoints.decrement(character.hitPoints.getHitPoints());
 
-        this.push(Opcodes.Push.Regions, [
-            {
-                regionId: character.region,
-                message: new Messages.Points({
-                    id: character.instance,
-                    hitPoints: character.getHitPoints(),
-                    mana: null
-                })
-            },
-            {
-                regionId: character.region,
-                message: new Messages.Despawn(character.instance)
-            }
-        ]);
+        this.push(Modules.PacketType.Regions, {
+            region: character.region,
+            packet: new Points({
+                id: character.instance,
+                hitPoints: character.getHitPoints(),
+                mana: null
+            })
+        });
+
+        this.push(Modules.PacketType.Regions, {
+            region: character.region,
+            packet: new Despawn(character.instance)
+        });
 
         this.handleDeath(character, true);
     }
 
-    public handleDamage(
-        attacker: Character | undefined,
-        target: Character | undefined,
-        damage: number
-    ): void {
+    public handleDamage(attacker: Character, target: Character, damage: number): void {
         if (!attacker || !target || isNaN(damage) || target.invincible) return;
-
-        if (target.type === 'player' && target.hitCallback) target.hitCallback(attacker, damage);
 
         // Stop screwing with this - it's so the target retaliates.
 
-        target.hit(attacker);
-        target.applyDamage(damage, attacker);
+        target.hit(attacker, damage);
 
-        this.push(Opcodes.Push.Regions, {
-            regionId: target.region,
-            message: new Messages.Points({
+        this.push(Modules.PacketType.Regions, {
+            region: target.region,
+            packet: new Points({
                 id: target.instance,
                 hitPoints: target.getHitPoints(),
                 mana: null
             })
         });
 
-        // If target has died...
+        // If target has dieded...
         if (target.getHitPoints() < 1) {
-            let player = attacker as Player;
+            // All of this has to get redone anyway lol
+            let player = attacker as unknown as Player;
 
-            if (target.type === 'mob') player.addExperience(Mobs.getXp(target.id));
+            if (target.isMob()) player.addExperience((target as Mob).experience);
 
-            if (player.type === 'player') player.killCharacter(target);
+            if (player.isPlayer()) player.killCharacter(target);
 
             target.combat.forEachAttacker((attacker) => {
                 attacker.removeTarget();
             });
 
-            this.push(Opcodes.Push.Regions, [
-                {
-                    regionId: target.region,
-                    message: new Messages.Combat(Opcodes.Combat.Finish, {
-                        attackerId: attacker.instance,
-                        targetId: target.instance
-                    })
-                },
-                {
-                    regionId: target.region,
-                    message: new Messages.Despawn(target.instance)
-                }
-            ]);
+            this.push(Modules.PacketType.Regions, {
+                region: target.region,
+                packet: new Combat(Opcodes.Combat.Finish, {
+                    attackerId: attacker.instance,
+                    targetId: target.instance
+                })
+            });
+
+            this.push(Modules.PacketType.Regions, {
+                region: target.region,
+                packet: new Despawn(target.instance)
+            });
 
             this.handleDeath(target, false, attacker);
         }
@@ -163,7 +187,7 @@ export default class World {
     public handleDeath(character: Character, ignoreDrops = false, lastAttacker?: Character): void {
         if (!character) return;
 
-        if (character.type === 'mob') {
+        if (character.isMob()) {
             let mob = character as Mob,
                 deathX = mob.x,
                 deathY = mob.y;
@@ -185,76 +209,10 @@ export default class World {
 
                 if (drop) this.entities.dropItem(drop.id, drop.count, deathX, deathY);
             }
-        } else if (character.type === 'player') {
+        } else if (character.isPlayer()) {
             let player = character as Player;
 
             player.die();
-        }
-    }
-
-    public push(type: Opcodes.Push, info: WorldPacket | WorldPacket[]): void {
-        if (_.isArray(info)) {
-            _.each(info, (i) => {
-                this.push(type, i);
-            });
-
-            return;
-        }
-
-        if (!info.message) {
-            log.info('No message found whilst attempting to push.');
-            log.info(info);
-            return;
-        }
-
-        switch (type) {
-            case Opcodes.Push.Broadcast:
-                this.network.pushBroadcast(info.message);
-
-                break;
-
-            case Opcodes.Push.Selectively:
-                this.network.pushSelectively(info.message, info.ignores as string[]);
-
-                break;
-
-            case Opcodes.Push.Player:
-                this.network.pushToPlayer(info.player as Player, info.message);
-
-                break;
-
-            case Opcodes.Push.Players:
-                this.network.pushToPlayers(info.players as string[], info.message);
-
-                break;
-
-            case Opcodes.Push.Region:
-                this.network.pushToRegion(
-                    info.regionId as number,
-                    info.message,
-                    info.ignoreId as string
-                );
-
-                break;
-
-            case Opcodes.Push.Regions:
-                this.network.pushToAdjacentRegions(
-                    info.regionId as number,
-                    info.message,
-                    info.ignoreId as string
-                );
-
-                break;
-
-            case Opcodes.Push.NameArray:
-                this.network.pushToNameArray(info.names as string[], info.message);
-
-                break;
-
-            case Opcodes.Push.OldRegions:
-                this.network.pushToOldRegions(info.player as Player, info.message);
-
-                break;
         }
     }
 
@@ -265,8 +223,8 @@ export default class World {
         isGlobal = false,
         withBubble = false
     ): void {
-        this.push(Opcodes.Push.Broadcast, {
-            message: new Messages.Chat({
+        this.push(Modules.PacketType.Broadcast, {
+            packet: new Chat({
                 name: source,
                 text: message,
                 colour,
@@ -308,9 +266,5 @@ export default class World {
 
     public onConnection(callback: ConnectionCallback): void {
         this.connectionCallback = callback;
-    }
-
-    public onPopulationChange(callback: () => void): void {
-        this.populationCallback = callback;
     }
 }

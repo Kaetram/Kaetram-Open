@@ -2,25 +2,26 @@ import _ from 'lodash';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
 
 import Regions from '../game/map/regions';
-import Map from '../game/map/map';
+import Map, { Position } from '../game/map/map';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import NPC from '../game/entity/npc/npc';
 import Chest from '../game/entity/objects/chest';
 import Item from '../game/entity/objects/item';
 import Projectile from '../game/entity/objects/projectile';
-import Messages from '../network/messages';
-import Formulas from '../util/formulas';
-import Items from '../util/items';
-import Mobs from '../util/mobs';
-import NPCs from '../util/npcs';
+import Formulas from '../info/formulas';
+import Items from '../info/items';
+
+import mobData from '../../data/mobs.json';
+import itemData from '../../data/items.json';
+import npcData from '../../data/npcs.json';
 
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type World from '../game/world';
+import { Blink, Despawn } from '../network/packets';
 
 export default class Entities {
     private map: Map;
@@ -40,149 +41,27 @@ export default class Entities {
         this.regions = world.map.regions;
         this.grids = world.map.grids;
 
-        this.spawn();
+        this.load();
     }
 
     /**
-     * Spawn Entities
+     * Parse through all the statically spawned entities in the map
+     * and create them based on their type.
      */
-    private spawn() {
-        // Spawns the static entities such as mobs, items, and npcs
 
-        _.each(this.map.staticEntities, (entityInfo) => {
-            let key = entityInfo.string,
-                instance = Utils.generateInstance(),
-                position = this.map.indexToCoord(entityInfo.tileIndex);
+    private load(): void {
+        this.map.forEachEntity((position: Position, key: string) => {
+            let type = this.getEntityType(key);
 
-            switch (entityInfo.type) {
-                case 'item': {
-                    let item = this.createItem(
-                        Items.stringToId(key)!,
-                        instance,
-                        position.x,
-                        position.y
-                    );
+            switch (type) {
+                case Modules.EntityType.Item:
+                    return this.addItem(new Item(key, position.x, position.y, -1, -1, true));
 
-                    item.static = true;
+                case Modules.EntityType.NPC:
+                    return this.addNPC(new NPC(key, position.x, position.y));
 
-                    this.addItem(item);
-
-                    break;
-                }
-
-                case 'npc': {
-                    let npc = new NPC(NPCs.stringToId(key)!, instance, position.x, position.y);
-
-                    this.addNPC(npc);
-
-                    break;
-                }
-
-                case 'mob': {
-                    let mob = new Mob(Mobs.stringToId(key)!, instance, position.x, position.y);
-
-                    mob.static = true;
-                    mob.roaming = entityInfo.roaming;
-
-                    if (entityInfo.miniboss) {
-                        // TODO - Rename `achievementId` -> `achievement`
-                        if (entityInfo.achievementId) mob.achievementId = entityInfo.achievementId;
-
-                        mob.miniboss = entityInfo.miniboss;
-                    }
-
-                    if (entityInfo.boss) mob.boss = entityInfo.boss;
-
-                    if (Mobs.isHidden(key)) mob.hiddenName = true;
-
-                    mob.load();
-
-                    mob.onRespawn(() => {
-                        mob.dead = false;
-
-                        mob.lastAttacker = null;
-
-                        mob.refresh();
-
-                        this.addMob(mob);
-                    });
-
-                    mob.onForceTalk((message: string) => {
-                        this.world.push(Opcodes.Push.Regions, {
-                            regionId: mob.region,
-                            message: new Messages.NPC(Opcodes.NPC.Talk, {
-                                id: mob.instance,
-                                text: message,
-                                nonNPC: true
-                            })
-                        });
-                    });
-
-                    mob.onRoaming(() => {
-                        if (this.mobs.dead) return;
-
-                        let newX =
-                                mob.spawnLocation[0] +
-                                Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
-                            newY =
-                                mob.spawnLocation[1] +
-                                Utils.randomInt(-mob.maxRoamingDistance, mob.maxRoamingDistance),
-                            distance = Utils.getDistance(
-                                mob.spawnLocation[0],
-                                mob.spawnLocation[1],
-                                newX,
-                                newY
-                            );
-
-                        // Return if the tile is colliding.
-                        if (this.map.isColliding(newX, newY)) return;
-
-                        // Prevent movement if the area is empty.
-                        if (this.map.isEmpty(newX, newY)) return;
-
-                        // Don't have mobs block a door.
-                        if (this.map.isDoor(newX, newY)) return;
-
-                        // Prevent mobs from going outside of their roaming radius.
-                        if (distance < mob.maxRoamingDistance) return;
-
-                        // No need to move mobs to the same position as theirs.
-                        if (newX === mob.x && newY === mob.y) return;
-
-                        // We don't want mobs randomly roaming while in combat.
-                        if (mob.combat.started) return;
-
-                        /**
-                         * An expansion of the plateau level present in BrowserQuest.
-                         * Because the map is far more complex, we will require multiple
-                         * levels of plateau in order to properly roam entities without
-                         * them walking into other regions (or clipping).
-                         */
-                        let plateauLevel = this.map.getPlateauLevel(
-                            mob.spawnLocation[0],
-                            mob.spawnLocation[1]
-                        );
-
-                        if (plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
-
-                        // if (config.debugging) this.forceTalk('Yes hello, I am moving.');
-
-                        mob.setPosition(newX, newY);
-
-                        this.world.push(Opcodes.Push.Regions, {
-                            regionId: mob.region,
-                            message: new Messages.Movement(Opcodes.Movement.Move, {
-                                id: mob.instance,
-                                x: newX,
-                                y: newY
-                            })
-                        });
-                    });
-
-                    this.addMob(mob);
-
-                    break;
-                }
+                case Modules.EntityType.Mob:
+                    return this.addMob(new Mob(this.world, key, position.x, position.y));
             }
         });
 
@@ -198,8 +77,8 @@ export default class Entities {
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
     }
 
-    public spawnMob(id: number, gridX: number, gridY: number): Mob {
-        let mob = new Mob(id, Utils.generateInstance(), gridX, gridY);
+    public spawnMob(key: string, gridX: number, gridY: number): Mob {
+        let mob = new Mob(this.world, key, gridX, gridY);
 
         this.addMob(mob);
 
@@ -213,7 +92,7 @@ export default class Entities {
         isStatic = false,
         achievement?: number
     ): Chest {
-        let chest = new Chest(194, Utils.generateInstance(), gridX, gridY, achievement);
+        let chest = new Chest(gridX, gridY, achievement);
 
         chest.addItems(items);
 
@@ -247,12 +126,12 @@ export default class Entities {
             startY = attacker.y, // gridY
             type = attacker.getProjectile(),
             hit = null,
-            projectile = new Projectile(type, Utils.generateInstance());
+            projectile = new Projectile(type, startX, startY);
 
         projectile.setStart(startX, startY);
         projectile.setTarget(target);
 
-        if (attacker.type === 'player') {
+        if (attacker.isPlayer()) {
             let player = attacker as Player;
 
             hit = player.getHit(target);
@@ -267,10 +146,11 @@ export default class Entities {
 
         return projectile;
     }
-
     /**
-     * Add Entities
+     * Adds an entity to the list of entities. Whether it be a mob, player
+     * npc, item, chest, etc. we keep track of them in the list of entities.
      */
+
     private add(entity: Entity): void {
         if (entity.instance in this.entities)
             log.warning(`Entity ${entity.instance} already exists.`);
@@ -280,55 +160,34 @@ export default class Entities {
         this.regions.handle(entity);
 
         this.grids.addToEntityGrid(entity, entity.x, entity.y);
-
-        // // Todo move this into a separate handler.
-        // entity.onMovement(() => {
-        //     this.grids.updateEntityPosition(entity);
-
-        //     if (!entity.isMob()) return;
-
-        //     if (!entity.isOutsideSpawn()) return;
-
-        //     entity.removeTarget();
-
-        //     entity.combat.forget();
-        //     entity.combat.stop();
-
-        //     entity.return();
-
-        //     this.world.push(Opcodes.Push.Broadcast, [
-        //         {
-        //             message: new Messages.Combat(Opcodes.Combat.Finish, {
-        //                 attackerId: null,
-        //                 targetId: entity.instance
-        //             })
-        //         },
-        //         {
-        //             message: new Messages.Movement(Opcodes.Movement.Move, {
-        //                 id: entity.instance,
-        //                 x: entity.x,
-        //                 y: entity.y,
-        //                 forced: false,
-        //                 teleport: false
-        //             })
-        //         }
-        //     ]);
-        // });
-
-        if (entity instanceof Character) {
-            entity.combat.setWorld(this.world);
-
-            entity.onStunned((stun: boolean) => {
-                this.world.push(Opcodes.Push.Regions, {
-                    regionId: entity.region,
-                    message: new Messages.Movement(Opcodes.Movement.Stunned, {
-                        id: entity.instance,
-                        state: stun
-                    })
-                });
-            });
-        }
     }
+
+    /**
+     * Removes the entity from the entity dictionary and sends a despawn
+     * callback to the nearby regions the entity is in.
+     */
+
+    public remove(entity: Entity): void {
+        this.world.push(Modules.PacketType.Regions, {
+            region: entity.region,
+            packet: new Despawn(entity.instance)
+        });
+
+        // Remove the entity from the entity grid
+        this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
+
+        // Remove the entity from the region it is in.
+        this.regions.remove(entity);
+
+        delete this.entities[entity.instance];
+
+        if (entity.isPlayer()) this.world.cleanCombat(entity as Character);
+    }
+
+    /**
+     * Adds the NPC to our dictionary of NPCs.
+     * @param npc NPC we are adding.
+     */
 
     private addNPC(npc: NPC): void {
         this.add(npc);
@@ -336,41 +195,59 @@ export default class Entities {
         this.npcs[npc.instance] = npc;
     }
 
+    /**
+     * Adds the item to our dictionary of items.
+     * @param item Item we are adding.
+     */
+
     private addItem(item: Item): void {
-        if (item.static) item.onRespawn(() => this.addItem(item));
+        if (item.respawnable) item.onRespawn(() => this.addItem(item));
 
         this.add(item);
 
         this.items[item.instance] = item;
     }
 
-    private addMob(mob: Mob): void {
+    /**
+     * Adds the mob instance to its dictionary and its
+     * chest area if existent.
+     * @param mob Mob instance we are adding.
+     */
+
+    public addMob(mob: Mob): void {
         this.add(mob);
 
         this.mobs[mob.instance] = mob;
 
         mob.addToChestArea(this.map.getChestAreas());
-
-        mob.onHit((attacker: Character) => {
-            if (mob.isDead() || mob.combat.started) return;
-
-            mob.combat.begin(attacker);
-        });
     }
+
+    /**
+     * Adds the newly created player instance to our list of players.
+     * @param player Player we are adding to our dictionary.
+     */
 
     public addPlayer(player: Player): void {
         this.add(player);
 
         this.players[player.instance] = player;
-
-        this.world.populationCallback?.();
     }
+
+    /**
+     * Creates a chest and adds it to its dictionary.
+     * @param chest Chest we are adding to our dictionary.
+     */
 
     private addChest(chest: Chest): void {
         this.add(chest);
 
         this.chests[chest.instance] = chest;
     }
+
+    /**
+     * Creates a projectile and adds it to its dictionary.
+     * @param projectile Projectile we are adding to our dictionary.
+     */
 
     private addProjectile(projectile: Projectile): void {
         this.add(projectile);
@@ -379,56 +256,55 @@ export default class Entities {
     }
 
     /**
-     * Remove Entities
+     * Removes an item from the items dictionary and only
+     * respawns it if it's a statically spawned item.
+     * @param item Item we are removing.
      */
-    public remove(entity: Entity): void {
-        this.grids.removeFromEntityGrid(entity, entity.x, entity.y);
-
-        this.regions.remove(entity);
-
-        delete this.entities[entity.instance];
-        delete this.mobs[entity.instance];
-        delete this.items[entity.instance];
-        delete this.players[entity.instance];
-        delete this.projectiles[entity.instance];
-    }
 
     public removeItem(item: Item): void {
         this.remove(item);
 
-        this.world.push(Opcodes.Push.Broadcast, {
-            message: new Messages.Despawn(item.instance)
-        });
-
-        if (item.static) item.respawn();
+        if (item.respawnable) item.respawn();
+        else delete this.items[item.instance];
     }
 
-    public removePlayer(player: Player): void {
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: player.region,
-            message: new Messages.Despawn(player.instance)
-        });
+    /**
+     * Removes the mob from our mob dictionary.
+     * @param mob Mob we are removing.
+     */
 
+    public removeMob(mob: Mob): void {
+        this.remove(mob);
+
+        delete this.mobs[mob.instance];
+    }
+
+    /**
+     * Removes the player and clears out its packets and instance.
+     * @param player Player we are removing.
+     */
+
+    public removePlayer(player: Player): void {
         this.remove(player);
 
         if (player.ready) player.save();
 
-        this.world.populationCallback?.();
+        delete this.players[player.instance];
 
-        this.world.cleanCombat(player);
-
-        delete this.world.network.packets[player.instance];
+        this.world.network.deletePacketQueue(player);
 
         // Unsure about this since garbage collector should handle it.
         player.destroy();
     }
 
+    /**
+     * Removes a chest or respawns it if it's a statically
+     * spawned chest.
+     * @param chest Chest we are removing.
+     */
+
     public removeChest(chest: Chest): void {
         this.remove(chest);
-
-        this.world.push(Opcodes.Push.Broadcast, {
-            message: new Messages.Despawn(chest.instance)
-        });
 
         if (chest.static) chest.respawn();
         else delete this.chests[chest.instance];
@@ -437,6 +313,7 @@ export default class Entities {
     /**
      * Getters
      */
+
     public isOnline(username: string): boolean {
         return !!this.getPlayer(username);
     }
@@ -453,6 +330,20 @@ export default class Entities {
         });
     }
 
+    /**
+     * Compares the string against npcs and mobs to find the entity type.
+     * @param entityString The string of the entity
+     * @returns Entity type id from Modules.
+     */
+
+    private getEntityType(entityString: string): number {
+        if (entityString in itemData) return Modules.EntityType.Item;
+        if (entityString in npcData) return Modules.EntityType.NPC;
+        if (entityString in mobData) return Modules.EntityType.Mob;
+
+        return -1;
+    }
+
     public forEachEntity(callback: (entity: Entity) => void): void {
         _.each(this.entities, callback);
     }
@@ -464,16 +355,6 @@ export default class Entities {
     /**
      * Miscellaneous Functions
      */
-    private createItem(
-        id: number,
-        instance: string,
-        gridX: number,
-        gridY: number,
-        ability?: number,
-        abilityLevel?: number
-    ): Item {
-        return new Item(id, instance, gridX, gridY, ability, abilityLevel);
-    }
 
     public dropItem(
         id: number,
@@ -483,14 +364,7 @@ export default class Entities {
         ability?: number,
         abilityLevel?: number
     ): void {
-        let item = this.createItem(
-            id,
-            Utils.generateInstance(),
-            gridX,
-            gridY,
-            ability,
-            abilityLevel
-        );
+        let item = new Item(Items.idToString(id), gridX, gridY, ability, abilityLevel);
 
         item.count = count;
         item.dropped = true;
@@ -499,8 +373,8 @@ export default class Entities {
         item.despawn();
 
         item.onBlink(() => {
-            this.world.push(Opcodes.Push.Broadcast, {
-                message: new Messages.Blink(item.instance)
+            this.world.push(Modules.PacketType.Broadcast, {
+                packet: new Blink(item.instance)
             });
         });
 
