@@ -4,6 +4,7 @@ import Entity from '../entity';
 
 import type { ProjectileData } from '@kaetram/common/types/messages';
 import type Character from '../character/character';
+import Utils from '@kaetram/common/util/utils';
 
 export default class Projectile extends Entity {
     // startX = -1;
@@ -22,8 +23,9 @@ export default class Projectile extends Entity {
     private static = false;
     private special!: never;
 
-    public constructor(id: Modules.Projectiles, instance: string) {
-        super(id, 'projectile', instance);
+    public constructor(key: Modules.Projectiles, x: number, y: number) {
+        //TODO - Refactor this whole class
+        super(Utils.createInstance(Modules.EntityType.Projectile), 'projectile', x, y);
     }
 
     setStart(x: number, y: number): void {
@@ -56,15 +58,15 @@ export default class Projectile extends Entity {
 
         if (!this.owner || !this.target) return;
 
-        return {
-            id: this.instance,
-            name: this.owner.projectileName,
-            characterId: this.owner.instance,
-            targetId: this.target.instance,
-            damage: this.damage,
-            special: this.special,
-            hitType: this.hitType,
-            type: this.type
-        };
+        // return {
+        //     id: this.instance,
+        //     key: this.key,
+        //     name: this.owner.projectileName,
+        //     characterId: this.owner.instance,
+        //     targetId: this.target.instance,
+        //     damage: this.damage,
+        //     special: this.special,
+        //     hitType: this.hitType
+        // };
     }
 }

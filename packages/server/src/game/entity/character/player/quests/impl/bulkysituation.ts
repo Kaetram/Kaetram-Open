@@ -1,7 +1,8 @@
 import { Opcodes } from '@kaetram/common/network';
 
-import Messages from '../../../../../../network/messages';
 import Quest from '../quest';
+
+import { Quest as QuestPacket } from '../../../../../../network/packets';
 
 import type NPC from '../../../../npc/npc';
 
@@ -18,23 +19,19 @@ export default class BulkySituation extends Quest {
 
     private loadCallbacks(): void {
         this.onNPCTalk((npc: NPC) => {
-            if (this.hasRequirement()) {
-                this.progress('item');
-                return;
-            }
-
-            let conversation = this.getConversation(npc.id);
-
-            this.lastNPC = npc;
-
-            this.player.send(
-                new Messages.NPC(Opcodes.NPC.Talk, {
-                    id: npc.instance,
-                    text: npc.talk(conversation, this.player)
-                })
-            );
-
-            if (this.player.talkIndex === 0) this.progress('talk');
+            // if (this.hasRequirement()) {
+            //     this.progress('item');
+            //     return;
+            // }
+            // let conversation = this.getConversation(npc.id);
+            // this.lastNPC = npc;
+            // this.player.send(
+            //     new NPCPacket(Opcodes.NPC.Talk, {
+            //         id: npc.instance,
+            //         text: npc.talk(conversation, this.player)
+            //     })
+            // );
+            // if (this.player.talkIndex === 0) this.progress('talk');
         });
     }
 
@@ -60,7 +57,7 @@ export default class BulkySituation extends Quest {
         this.stage++;
 
         this.player.send(
-            new Messages.Quest(Opcodes.Quest.Progress, {
+            new QuestPacket(Opcodes.Quest.Progress, {
                 id: this.id,
                 stage: this.stage,
                 isQuest: true

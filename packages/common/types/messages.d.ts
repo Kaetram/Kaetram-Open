@@ -37,14 +37,28 @@ export interface WelcomeData {
 }
 
 export interface SpawnData {
-    string?: string | null;
-    type: string;
-    id: string;
-    name: string | null;
+    // Entity data
+    instance: string;
+    type: number;
     x: number;
     y: number;
-    nameColour?: string;
-    customScale?: number;
+
+    // Universal elements
+    key?: string; // The key is the entity's identification
+    name?: string; // Entity's name
+
+    // Character data
+    movementSpeed?: number;
+    hitPoints?: number;
+    maxHitPoints?: number;
+    attackRange?: number;
+    level?: number;
+    hiddenName?: boolean;
+
+    // Item data
+    count?: number;
+    ability?: number;
+    abilityLevel?: number;
 }
 
 export interface SyncData {
@@ -120,7 +134,7 @@ export interface AnimationData {
 }
 
 export interface ProjectileData {
-    type: string; // 'projectile'
+    key: string; // 'projectile'
     id: string;
     name: string;
     characterId: string;

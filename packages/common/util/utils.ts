@@ -1,5 +1,5 @@
 /**
- * Useful utility functions that are used all throughout.
+ * Useful utility functions that are used all throughout the server and client.
  */
 
 import _ from 'lodash';
@@ -10,17 +10,57 @@ import { Packets } from '../network';
 import log from './log';
 
 export default {
-    random(range: number): number {
-        return Math.floor(Math.random() * range);
+    counter: -1, // A counter to prevent conflicts in ids.
+
+    /**
+     * Takes the type of entity and creates a UNIQUE instance id.
+     * @param identifier The type of entity.
+     * @returns A randomly generated string.
+     */
+
+    createInstance(identifier = 0): string {
+        return identifier.toString() + this.randomInt(1000, 100_000) + ++this.counter;
     },
 
-    randomRange(min: number, max: number): number {
-        return min + Math.random() * (max - min);
+    /**
+     * Extracts the type of entity by taking the last number of the instance.
+     */
+
+    getEntityType(instance: string): number {
+        return parseInt(instance.slice(0, 1));
     },
+
+    /**
+     * Pseudo-random float number generator using Math library.
+     * @param min Minimum value (inclusive)
+     * @param max Maximum value (inclusive)
+     * @param decimalPoint How many decimal points.
+     * @returns Random value
+     */
+
+    randomFloat(min: number, max: number, decimalPoint = 4): number {
+        return parseFloat((min + Math.random() * (max - min + 1)).toFixed(decimalPoint));
+    },
+
+    /**
+     * Generates a random integer number using Math library.
+     * @param min Minimum value (inclusive)
+     * @param max Maximum value (inclusive)
+     * @returns Random integer between min and max.
+     */
 
     randomInt(min: number, max: number): number {
         return min + Math.floor(Math.random() * (max - min + 1));
     },
+
+    /**
+     * Gets a distance between two points in the grid space.
+     * @param startX Starting point x grid space coordinate.
+     * @param startY Starting point y grid space coordinate.
+     * @param toX Ending point x grid space coordinate.
+     * @param toY Ending point y grid space coordinate.
+     * @returns An integer of the amount of tiles between the two points.
+     */
 
     getDistance(startX: number, startY: number, toX: number, toY: number): number {
         let x = Math.abs(startX - toX),
@@ -29,6 +69,12 @@ export default {
         return x > y ? x : y;
     },
 
+    /**
+     * Creates a random offset based on the radius.
+     * @param radius How far the offset should be.
+     * @returns Position object containing the offset.
+     */
+
     positionOffset(radius: number): Pos {
         return {
             x: this.randomInt(0, radius),
@@ -36,33 +82,9 @@ export default {
         };
     },
 
-    connectionCounter: 0,
-
-    getConnectionId(): string {
-        return `1${this.random(1000)}${this.connectionCounter++}`;
-    },
-
     /**
-     * We are just using some incremental seeds to prevent ids/instances
-     * from ending up with the same numbers/variables.
+     * Checks whether or not a packet exists in the enum.
      */
-
-    idSeed: 0,
-    clientSeed: 0,
-    instanceSeed: 0,
-    socketSeed: 0,
-
-    generateRandomId(): string {
-        return `${++this.idSeed}${this.randomInt(0, 25_000)}`;
-    },
-
-    generateClientId(): string {
-        return `${++this.clientSeed}${this.randomInt(0, 25_000)}`;
-    },
-
-    generateInstance(): string {
-        return `${++this.instanceSeed}${this.randomInt(0, 25_000)}`;
-    },
 
     validPacket(packet: number): boolean {
         let keys = Object.keys(Packets),
@@ -77,9 +99,12 @@ export default {
         );
     },
 
-    getCurrentEpoch(): number {
-        return Date.now();
-    },
+    /**
+     * We take usernames and capitalize every letter after a space.
+     * Example: 'tHiS Is a usErName' -> 'This Is A Username'
+     * @param username The raw username string
+     * @returns The formatted username string
+     */
 
     formatUsername(username: string): string {
         return username.replace(
@@ -93,6 +118,7 @@ export default {
      * characters (primarily used for colour codes). This function will be expanded
      * if necessary in the nearby future.
      */
+
     parseMessage(message: string): string {
         try {
             let messageBlocks = message.split('@');
@@ -103,7 +129,7 @@ export default {
                 return messageBlocks.join(' ');
             }
 
-            _.each(messageBlocks, (_block, index) => {
+            _.each(messageBlocks, (_block: string, index: number) => {
                 if (index % 2 !== 0)
                     // we hit a colour code.
                     messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
@@ -124,6 +150,7 @@ export default {
      * of maps in order to determine if an update is necessary.
      * @param data Any form of data, string, numbers, etc.
      */
+
     getChecksum(data: string): string {
         return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
     },
@@ -136,6 +163,7 @@ export default {
      * time has passed.
      * @param threshold The threshold for how much time has passed in order to return true.
      */
+
     timePassed(lastEvent: number, threshold: number): boolean {
         return Date.now() - lastEvent < threshold;
     },
@@ -145,7 +173,8 @@ export default {
      * @param data Any string, generally a JSON string.
      * @param compression Compression format, can be gzip or zlib
      */
-    compressData(data: string, compression = 'gzip'): string | undefined {
+
+    compress(data: string, compression = 'gzip'): string | undefined {
         if (!data) return;
 
         return compression === 'gzip'
@@ -158,6 +187,7 @@ export default {
      * client as a buffer size variable to decompress the data.
      * @param data The data to calculate the size of, will be stringified.
      */
+
     getBufferSize(data: unknown): number {
         return encodeURI(JSON.stringify(data)).split(/%..|./).length - 1;
     }

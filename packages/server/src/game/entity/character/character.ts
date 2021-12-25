@@ -1,141 +1,130 @@
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
-import Mobs from '../../../util/mobs';
-import Entity, { EntityState } from '../entity';
+import Entity, { EntityData } from '../entity';
 import Combat from './combat/combat';
 
 import type { HitData } from '@kaetram/common/types/info';
-import type Boots from './player/equipment/boots';
-import type Pendant from './player/equipment/pendant';
-import type Ring from './player/equipment/ring';
+import HitPoints from './points/hitpoints';
+import World from '../../world';
+import { Movement } from '@kaetram/server/src/network/packets';
 
 type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
 type HitCallback = (attacker: Character, damage?: number) => void;
-type DamagedCallback = (damage: number, attacker?: Character) => void;
-type TargetCallback = (target: Character | null) => void;
 type PoisonCallback = (poison: string) => void;
 type SubAoECallback = (radius: number, hasTerror: boolean) => void;
 
-export interface CharacterState extends EntityState {
-    movementSpeed: number;
-}
-
 export default abstract class Character extends Entity {
-    public level = -1;
+    public level = 1;
 
-    public movementSpeed = 250;
+    public movementSpeed = Modules.Defaults.MOVEMENT_SPEED;
     public attackRange = 1;
-    public attackRate = 1000;
-    public healingRate = 10_000;
+    public attackRate = Modules.Defaults.ATTACK_RATE;
+    public healingRate = Modules.Constants.HEAL_RATE;
 
-    public spawnDistance = 7;
-
-    public previousX = -1;
-    public previousY = -1;
-
-    public hitPoints = -1;
-    public maxHitPoints = -1;
+    public hitPoints = new HitPoints(Modules.Defaults.HITPOINTS);
 
     /* States */
     public poison: string | null = null;
-    public aggressive = false;
-    public aggroRange = 2;
 
     public target: Character | null = null;
-    public potentialTarget: unknown = null;
 
-    public stunTimeout: NodeJS.Timeout | null = null;
+    public weaponLevel!: number;
+    public armourLevel!: number;
+
+    public stunned = false;
+    public moving = false;
+    public pvp = false;
+    public frozen = false;
+    public alwaysAggressive = false;
+    public invincible = false;
 
     public projectile = Modules.Projectiles.Arrow;
     public projectileName = 'projectile-pinearrow';
 
-    private healingInterval: NodeJS.Timeout | null = null;
+    public lastMovement!: number;
+    public lastAttacker!: Character | null;
 
-    private updated = false;
-
-    public weaponLevel!: number;
-    public armourLevel!: number;
-    public stunned = false;
+    public stunTimeout?: NodeJS.Timeout;
+    private healingInterval?: NodeJS.Timeout;
 
     private stunCallback?: StunCallback;
     public hitCallback?: HitCallback;
-    private damagedCallback?: DamagedCallback;
-    private targetCallback?: TargetCallback;
-    private hitPointsCallback?(): void;
     private poisonCallback?: PoisonCallback;
-    private removeTargetCallback?(): void;
-    private healthChangeCallback?(): void;
     public damageCallback?: DamageCallback;
-    private subAoECallback?: SubAoECallback;
+    public subAoECallback?: SubAoECallback;
     public deathCallback?(): void;
-    private returnCallback?(): void;
 
-    public moving = false;
-    public lastMovement!: number;
+    protected constructor(
+        instance: string,
+        public world: World,
+        key: string,
+        x: number,
+        y: number
+    ) {
+        super(instance, key, x, y);
 
-    public pvp = false;
+        this.combat = new Combat(this);
 
-    public spawnLocation!: [x: number, y: number];
-
-    public frozen = false;
-
-    public alwaysAggressive = false;
-
-    public invincible = false;
-    public lastAttacker!: Character | null;
-
-    public pendant!: Pendant;
-    public ring!: Ring;
-    public boots!: Boots;
-
-    protected constructor(id: number, type: string, instance: string, x: number, y: number) {
-        super(id, type, instance, x, y);
-
-        this.loadCombat();
-        this.startHealing();
+        this.onStunned(this.stun.bind(this));
+        this.healingInterval = setInterval(this.heal.bind(this), Modules.Constants.HEAL_RATE);
     }
 
-    private loadCombat(): void {
-        /**
-         * Ternary could be used here, but readability
-         * would become nonexistent.
-         */
+    /**
+     * Receives changes about the state of the entity when stunned and
+     * pushes that message to the nearby regions.
+     * @param state The current stun state for the character.
+     */
 
-        this.combat = Mobs.hasCombatPlugin(this.id)
-            ? new (Mobs.isNewCombatPlugin(this.id)!)(this)
-            : new Combat(this);
+    private stun(state: boolean): void {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.region,
+            packet: new Movement(Opcodes.Movement.Stunned, {
+                id: this.instance,
+                state
+            })
+        });
     }
 
-    public setMinibossData(): void {
-        /* We only update the mob data once to prevent any issues. */
+    /**
+     * Increments the hitpoints by the amount specified or 1 by default.
+     * @param amount Healing amount, defaults to 1 if not specified.
+     */
 
-        if (this.updated) return;
+    public heal(amount = 1): void {
+        if (this.dead) return;
+        if (this.combat.started) return;
+        if (this.poison) return;
 
-        this.level += Math.floor(this.level / 2);
-        this.maxHitPoints += Math.floor(this.maxHitPoints / 2);
-        this.hitPoints = this.maxHitPoints;
-        this.weaponLevel += 4;
-        this.armourLevel += 3;
-
-        this.updated = true;
+        this.hitPoints.increment(amount);
     }
 
-    private startHealing(): void {
-        this.healingInterval = setInterval(() => {
-            if (this.dead) return;
-
-            if (this.combat.started) return;
-
-            if (this.poison) return;
-
-            this.heal(1);
-        }, this.healingRate);
-    }
+    /**
+     * Cleans the healing interval to clear the memory.
+     */
 
     public stopHealing(): void {
-        if (this.healingInterval) clearInterval(this.healingInterval);
-        this.healingInterval = null;
+        clearInterval(this.healingInterval!);
+    }
+
+    /**
+     * Sets the target to null (ending combat).
+     */
+
+    public removeTarget(): void {
+        this.target = null;
+    }
+
+    /**
+     * Takes damage from an attacker character and creates a callback.
+     * @param attacker The attacker dealing the damage.
+     * @param damage The amount of damage being dealt.
+     */
+
+    public hit(attacker: Character, damage: number): void {
+        this.hitPoints.decrement(damage);
+
+        this.hitCallback?.(attacker, damage);
     }
 
     public setStun(stun: boolean): void {
@@ -144,69 +133,26 @@ export default abstract class Character extends Entity {
         this.stunCallback?.(stun);
     }
 
-    public hit(attacker: Character): void {
-        this.hitCallback?.(attacker);
-    }
-
-    public heal(amount: number): void {
-        this.setHitPoints(this.hitPoints + amount);
-
-        if (this.hitPoints >= this.maxHitPoints) this.hitPoints = this.maxHitPoints;
-    }
-
-    public isRanged(): boolean {
-        return this.attackRange > 1;
-    }
-
-    public applyDamage(damage: number, attacker?: Character): void {
-        this.hitPoints -= damage;
-
-        this.damagedCallback?.(damage, attacker);
-    }
-
-    public isDead(): boolean {
-        return this.hitPoints < 1 || this.dead;
-    }
-
-    public getCombat(): Combat {
-        return this.combat;
-    }
-
-    public getHitPoints(): number {
-        return this.hitPoints;
-    }
-
-    public getMaxHitPoints(): number {
-        return this.maxHitPoints;
-    }
-
-    public override setPosition(x: number, y: number): void {
-        this.previousX = this.x;
-        this.previousY = this.y;
-
-        super.setPosition(x, y);
-    }
-
     public setTarget(target: Character | null): void {
         this.target = target;
-
-        this.targetCallback?.(target);
-    }
-
-    private setPotentialTarget(potentialTarget: unknown): void {
-        this.potentialTarget = potentialTarget;
     }
 
     public setHitPoints(hitPoints: number): void {
-        this.hitPoints = hitPoints;
-
-        this.hitPointsCallback?.();
+        this.hitPoints.setHitPoints(hitPoints);
     }
 
     public setPoison(poison: string): void {
         this.poison = poison;
 
         this.poisonCallback?.(poison);
+    }
+
+    public getHitPoints(): number {
+        return this.hitPoints.getHitPoints();
+    }
+
+    public getMaxHitPoints(): number {
+        return this.hitPoints.getMaxHitPoints();
     }
 
     public getProjectile(): Modules.Projectiles {
@@ -218,63 +164,55 @@ export default abstract class Character extends Entity {
     }
 
     public getWeaponLevel(): number {
-        return this.weaponLevel;
+        return 1;
+        // return this.weaponLevel;
     }
 
     public getArmourLevel(): number {
-        return this.armourLevel;
+        return 1;
+        // return this.armourLevel;
     }
 
-    public override getState(): CharacterState {
-        let state = super.getState() as CharacterState;
-
-        state.movementSpeed = this.movementSpeed;
-
-        return state;
+    public isRanged(): boolean {
+        return this.attackRange > 1;
     }
 
-    protected hasMaxHitPoints(): boolean {
-        return this.hitPoints >= this.maxHitPoints;
+    public isDead(): boolean {
+        return this.hitPoints.isEmpty() || this.dead;
     }
 
-    public removeTarget(): void {
-        this.removeTargetCallback?.();
+    /**
+     * Takes the superclass' entity data and adds `movementSpeed`.
+     * @returns EntityData but with movementSpeed added.
+     */
 
-        this.clearTarget();
+    public override serialize(): EntityData {
+        let data = super.serialize();
+
+        data.movementSpeed = this.movementSpeed;
+
+        return data;
     }
 
-    private hasPotentialTarget(potentialTarget: unknown): boolean {
-        return this.potentialTarget === potentialTarget;
+    /**
+     * Default value for an entity having special attack
+     */
+
+    protected hasSpecialAttack(): boolean {
+        return false;
     }
 
-    public clearTarget(): void {
-        this.target = null;
-    }
-
-    public onTarget(callback: TargetCallback): void {
-        this.targetCallback = callback;
-    }
-
-    public onRemoveTarget(callback: () => void): void {
-        this.removeTargetCallback = callback;
-    }
+    //???????????????????????????????????????????????????????
 
     public onHit(callback: HitCallback): void {
         this.hitCallback = callback;
-    }
-
-    public onHealthChange(callback: () => void): void {
-        this.healthChangeCallback = callback;
     }
 
     public onDamage(callback: DamageCallback): void {
         this.damageCallback = callback;
     }
 
-    /** When the entity gets hit. */
-    public onDamaged(callback: DamagedCallback): void {
-        this.damagedCallback = callback;
-    }
+    //???????????????????????????????????????????????????????
 
     public onStunned(callback: StunCallback): void {
         this.stunCallback = callback;
@@ -290,9 +228,5 @@ export default abstract class Character extends Entity {
 
     public onDeath(callback: () => void): void {
         this.deathCallback = callback;
-    }
-
-    public onReturn(callback: () => void): void {
-        this.returnCallback = callback;
     }
 }

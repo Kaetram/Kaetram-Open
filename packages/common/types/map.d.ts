@@ -44,10 +44,6 @@ export interface ProcessedArea {
     mapping?: number;
 }
 
-export interface Entities {
-    [tileId: number]: Entity;
-}
-
 export type Tree = 'Oak' | 'IceOak' | 'Palm' | 'IcePalm';
 export type Rock = 'BlueSteel';
 
@@ -68,7 +64,7 @@ export interface ProcessedMap {
     data: (number | number[])[];
 
     collisions: number[];
-    staticEntities: Entities;
+    entities: { [tileId: number]: string };
 
     // tilesetId: firstGid
     tilesets?: { [tilesetId: number]: number };

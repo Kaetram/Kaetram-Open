@@ -2,6 +2,7 @@ import Utils from '@kaetram/common/util/utils';
 import Entity from '../entity';
 
 import type Player from '../character/player/player';
+import { Modules } from '@kaetram/common/network';
 
 type OpenCallback = (player?: Player) => void;
 
@@ -14,14 +15,8 @@ export default class Chest extends Entity {
     private openCallback?: OpenCallback;
     private respawnCallback?(): void;
 
-    public constructor(
-        id: number,
-        instance: string,
-        x: number,
-        y: number,
-        public achievement?: number
-    ) {
-        super(id, 'chest', instance, x, y);
+    public constructor(x: number, y: number, public achievement?: number) {
+        super(Utils.createInstance(Modules.EntityType.Chest), 'chest', x, y);
     }
 
     public addItems(items: string[]): void {
