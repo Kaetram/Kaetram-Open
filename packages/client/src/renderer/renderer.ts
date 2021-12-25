@@ -454,7 +454,6 @@ export default class Renderer {
             currentAnimation: animation,
             renderingData: data,
             angled,
-            type,
             angle,
             shadowOffsetY,
             fading,
@@ -484,7 +483,7 @@ export default class Renderer {
             data.ox = sprite.offsetX * this.superScaling;
             data.oy = sprite.offsetY * this.superScaling;
 
-            if (angled && type !== 'projectile') data.angle = (angle * Math.PI) / 180;
+            if (angled && !entity.isProjectile()) data.angle = (angle * Math.PI) / 180;
 
             if (entity.hasShadow()) {
                 data.shadowWidth = this.shadowSprite.width * this.superScaling;
@@ -506,7 +505,7 @@ export default class Renderer {
 
         if (customScale) this.context.scale(customScale, customScale);
 
-        if (angled) this.context.rotate(type === 'projectile' ? entity.getAngle() : data.angle);
+        if (angled) this.context.rotate(entity.isProjectile() ? entity.getAngle() : data.angle);
 
         if (entity.hasShadow()) {
             this.context.globalCompositeOperation = 'source-over';
@@ -690,7 +689,7 @@ export default class Renderer {
                 this.drawText(
                     entity.name,
                     x,
-                    this.drawLevels && entity.type !== 'npc' ? y - 8 : y,
+                    this.drawLevels && !entity.isNPC() ? y - 8 : y,
                     true,
                     colour,
                     '#000'
@@ -699,7 +698,7 @@ export default class Renderer {
             if (this.drawLevels && (entity.isMob() || entity.isPlayer()))
                 this.drawText(`Level ${entity.level}`, x, y, true, colour, '#000');
 
-            if (entity.type === 'item') {
+            if (entity.isItem()) {
                 if (entity.count > 1) this.drawText(entity.count.toString(), x, y, true, colour);
 
                 if (entity.ability > -1)

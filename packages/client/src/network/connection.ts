@@ -233,7 +233,7 @@ export default class Connection {
         this.messages.onSync((data) => {
             let entity = this.entities.get<Player>(data.id);
 
-            if (!entity || entity.type !== 'player') return;
+            if (!entity || !entity.isPlayer()) return;
 
             if (data.hitPoints) {
                 entity.setHitPoints(data.hitPoints);
@@ -413,12 +413,12 @@ export default class Connection {
             if (!entity) return;
 
             switch (entity.type) {
-                case 'item':
+                case Modules.EntityType.Item:
                     this.entities.removeItem(entity);
 
                     return;
 
-                case 'chest':
+                case Modules.EntityType.Chest:
                     entity.setSprite(this.game.getSprite('death'));
 
                     entity.setAnimation('death', 120, 1, () => {
@@ -776,7 +776,7 @@ export default class Connection {
 
             switch (opcode) {
                 case Opcodes.Experience.Combat: {
-                    if (!entity || entity.type !== 'player') return;
+                    if (!entity || !entity.isPlayer()) return;
 
                     let data = info as ExperienceCombatData;
 
@@ -815,7 +815,7 @@ export default class Connection {
                 }
 
                 case Opcodes.Experience.Profession:
-                    if (!entity || entity.type !== 'player') return;
+                    if (!entity || !entity.isPlayer()) return;
 
                     if (entity.id === this.game.player.id)
                         this.info.create(
