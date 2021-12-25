@@ -1056,7 +1056,7 @@ export default class Connection {
             }
         });
 
-        this.messages.onRegion((opcode, _bufferSize, info) => {
+        this.messages.onMap((opcode: Opcodes.Map, info: string) => {
             let bufferData = window
                     .atob(info)
                     .split('')
@@ -1065,17 +1065,17 @@ export default class Connection {
                 reigon = JSON.parse(inflatedString);
 
             switch (opcode) {
-                case Opcodes.Region.Render:
+                case Opcodes.Map.Render:
                     this.map.synchronize(reigon);
 
                     break;
 
-                case Opcodes.Region.Modify:
+                case Opcodes.Map.Modify:
                     this.map.data[reigon.index] = reigon.data;
 
                     break;
 
-                case Opcodes.Region.Update: {
+                case Opcodes.Map.Update: {
                     let entity = this.entities.get(reigon.id);
 
                     if (!entity || entity.id === this.game.player.id) return;

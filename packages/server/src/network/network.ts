@@ -1,20 +1,18 @@
 import _ from 'lodash';
 
 import config from '@kaetram/common/config';
-import Utils from '@kaetram/common/util/utils';
 
 import Player from '../game/entity/character/player/player';
-import Messages, { Packet } from './messages';
-
-import type World from '../game/world';
-import type Connection from './connection';
 import Entities from '../controllers/entities';
 import SocketHandler from './sockethandler';
-import Map from '../game/map/map';
 import Regions from '../game/map/regions';
 import MongoDB from '../database/mongodb/mongodb';
 
-type PacketsList = unknown[] & { id?: string };
+import Packet from './packet';
+import { Handshake } from './packets';
+
+import type World from '../game/world';
+import type Connection from './connection';
 
 export default class Network {
     private entities: Entities;
@@ -23,8 +21,8 @@ export default class Network {
 
     private regions: Regions;
 
-    public packets: { [id: string]: PacketsList } = {};
-    private differenceThreshold = 4000;
+    private timeoutThreshold = 4000;
+    private packets: { [id: string]: unknown[] } = {};
 
     public constructor(private world: World) {
         this.entities = world.entities;
@@ -32,55 +30,67 @@ export default class Network {
         this.socketHandler = world.socketHandler;
 
         this.regions = world.map.regions;
-
-        this.load();
-    }
-
-    private load(): void {
-        this.world.onConnection((connection: Connection) => {
-            this.handlePlayerConnection(connection);
-        });
     }
 
     /**
-     * This parses through the packet pool and sends them
+     * This function parses all the packets currently in the queue.
+     * We take each player instance and for each one we parse its
+     * outstanding packets. Those are sent to each player's connection.
+     * When we're done, we remove the packet from the queue (duhhh).
      */
+
     public parse(): void {
         for (let id in this.packets)
             if (this.packets[id].length > 0) {
-                let conn = this.socketHandler.get(id);
+                let connection = this.socketHandler.get(id);
 
-                if (conn) {
-                    conn.send(this.packets[id]);
-                    this.packets[id] = [] as PacketsList;
-                    this.packets[id].id = id;
+                if (connection) {
+                    connection.send(this.packets[id]);
+
+                    this.packets[id] = [];
                 } else this.socketHandler.remove(id);
             }
     }
 
-    private handlePlayerConnection(connection: Connection): void {
+    /**
+     * We create a player instance when we receive a connection and begin a
+     * handshake with the client. After the handshake we request login information
+     * and check the validity with our database.
+     * @param connection The connection that we receive and parse the details of.
+     */
+
+    public handleConnection(connection: Connection): void {
         let player = new Player(this.world, this.database, connection),
-            timeDifference = Date.now() - this.getSocketTime(connection);
+            timeDifference = Date.now() - this.getLastConnection(connection);
 
-        if (!config.debugging && timeDifference < this.differenceThreshold) {
-            connection.sendUTF8('toofast');
-            connection.close('Logging in too fast.');
-
+        if (!config.debugging && timeDifference < this.timeoutThreshold) {
+            connection.reject('toofast');
             return;
         }
 
-        this.addToPackets(player);
+        this.createPacketQueue(player);
 
-        this.pushToPlayer(
-            player,
-            new Messages.Handshake({
-                id: player.instance
-            })
-        );
+        this.send(player, new Handshake(player.instance));
     }
 
-    private addToPackets(player: Player): void {
-        this.packets[player.instance] = [] as PacketsList;
+    /**
+     * We create a queue which contains packets to parse. Whenever we
+     * add packets to this queue, the `parse` function called asynchronously
+     * from the `World` will iterate through the queue.
+     * @param player The player instance that wec created in `handleConnection`
+     */
+
+    private createPacketQueue(player: Player): void {
+        this.packets[player.instance] = [];
+    }
+
+    /**
+     * Takes the player's packet queue and erases it from all the queues.
+     * @param player The player we are deleting packet queue of.
+     */
+
+    public deletePacketQueue(player: Player): void {
+        delete this.packets[player.instance];
     }
 
     /*****************************************
@@ -88,90 +98,65 @@ export default class Network {
      *****************************************/
 
     /**
-     * Broadcast a message to everyone in the world.
+     * Broadcasts a packet to the entire server.
+     * @param packet The packet to be broadcasted.
      */
-    public pushBroadcast(message: Packet): void {
-        _.each(this.packets, (packet) => {
-            packet.push(message.serialize());
+
+    public broadcast(packet: Packet): void {
+        _.each(this.packets, (queue: unknown[]) => {
+            queue.push(packet.serialize());
         });
     }
 
     /**
-     * Broadcast a message to everyone with exceptions.
+     * Send a packet to a player's connection.
+     * @param player A player instance
+     * @param packet Packet that we are sending.
      */
-    public pushSelectively(message: Packet, ignores: string[]): void {
-        _.each(this.packets, (packet) => {
-            if (ignores.includes(packet.id!)) return;
 
-            packet.push(message.serialize());
-        });
+    public send(player: Player, packet: Packet): void {
+        if (!player) return;
+        if (!(player.instance in this.packets)) return;
+
+        this.packets[player.instance].push(packet.serialize());
     }
 
     /**
-     * Push a message to a single player.
+     * Finds a region based on the `regionId` and sends a packet to each
+     * player in that region.
+     * @param regionId The region id we are grabbing the players from.
+     * @param packet The packet we are sending to each player.
      */
-    public pushToPlayer(player: Player, message: Packet): void {
-        if (player && player.instance in this.packets)
-            this.packets[player.instance].push(message.serialize());
-    }
 
-    /**
-     * Specify an array of player instances to send message to
-     */
-    public pushToPlayers(players: string[], message: Packet): void {
-        _.each(players, (instance) => {
-            this.pushToPlayer(this.entities.get(instance) as Player, message);
-        });
-    }
-
-    /**
-     * Send a message to the region the player is currently in.
-     */
-    public pushToRegion(regionId: number, message: Packet, ignoreId?: string): void {
+    public sendToRegion(regionId: number, packet: Packet, ignore?: string): void {
         let region = this.regions.get(regionId);
 
         if (!region) return;
 
         region.forEachPlayer((player: Player) => {
-            if (player.instance !== ignoreId) this.pushToPlayer(player, message);
+            if (player.instance !== ignore) this.send(player, packet);
         });
     }
 
     /**
-     * Sends a message to all the surrounding regions of the player.
-     * G  G  G
-     * G  P  G
-     * G  G  G
+     * An extension of the `sendToRegion.` For each surrounding area around
+     * `regionId` we send a packet to each player in each region.
+     * @param regionId The region to look for surrounding regions around.
+     * @param packet The packet we are sending to each player in each region.
      */
-    public pushToAdjacentRegions(regionId: number, message: Packet, ignoreId?: string): void {
+
+    public sendToSurroundingRegions(regionId: number, packet: Packet, ignore?: string): void {
         this.regions.forEachSurroundingRegion(regionId, (surroundingRegion: number) => {
-            this.pushToRegion(surroundingRegion, message, ignoreId);
+            this.sendToRegion(surroundingRegion, packet, ignore);
         });
     }
 
     /**
-     * Sends a message to an array of player names
+     * Gets the UNIX epoch time for the connection. We create this
+     * whenever a connection is made.
      */
-    public pushToNameArray(names: string[], message: Packet): void {
-        _.each(names, (name: string) => {
-            let player = this.world.getPlayerByName(name);
 
-            if (player) this.pushToPlayer(player, message);
-        });
-    }
-
-    /**
-     * Sends a message to the region the player just left from
-     */
-    public pushToOldRegions(player: Player, message: Packet): void {
-        //TODO
-        // _.each(player.recentRegions, (id: string) => {
-        //     this.pushToRegion(id, message);
-        // });
-        // player.recentRegions = [];
-    }
-
-    private getSocketTime(connection: Connection): number {
-        return this.socketHandler.ips[connection.address];
+    private getLastConnection(connection: Connection): number {
+        return this.socketHandler.addressTimes[connection.address];
     }
 }

@@ -2,12 +2,11 @@ import _ from 'lodash';
 import sanitizer from 'sanitizer';
 
 import config from '@kaetram/common/config';
-import { Opcodes, Packets } from '@kaetram/common/network';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Creator from '../database/mongodb/creator';
-import Messages from '../network/messages';
 import Items from '../info/items';
 import Commands from './commands';
 
@@ -21,6 +20,8 @@ import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
 import type Projectile from '../game/entity/objects/projectile';
+import { Chat, Combat, Equipment, Movement, Notification, Shop, Spawn } from '../network/packets';
+import Respawn from '../network/packets/respawn';
 
 export default class Incoming {
     private connection;
@@ -247,7 +248,7 @@ export default class Incoming {
             // if (this.player.quests.isAchievementNPC(entity))
             //    entity.specialState = 'achievementNpc';
 
-            this.player.send(new Messages.Spawn(entity));
+            this.player.send(new Spawn(entity));
         });
     }
 
@@ -258,7 +259,7 @@ export default class Incoming {
             case Opcodes.Equipment.Unequip: {
                 if (!this.player.inventory.hasSpace()) {
                     this.player.send(
-                        new Messages.Notification(Opcodes.Notification.Text, {
+                        new Notification(Opcodes.Notification.Text, {
                             message: 'You do not have enough space in your inventory.'
                         })
                     );
@@ -307,7 +308,7 @@ export default class Incoming {
                         break;
                 }
 
-                this.player.send(new Messages.Equipment(Opcodes.Equipment.Unequip, type));
+                this.player.send(new Equipment(Opcodes.Equipment.Unequip, type));
 
                 break;
             }
@@ -431,13 +432,9 @@ export default class Incoming {
             case Opcodes.Movement.Orientate:
                 orientation = message[1] as number;
 
-                this.world.push(Opcodes.Push.Regions, {
-                    regionId: this.player.region,
-                    message: new Messages.Movement(Opcodes.Movement.Orientate, [
-                        this.player.instance,
-                        orientation
-                    ])
-                });
+                this.player.sendToRegions(
+                    new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
+                );
 
                 break;
 
@@ -502,9 +499,9 @@ export default class Incoming {
 
                 this.player.cheatScore = 0;
 
-                this.world.push(Opcodes.Push.Regions, {
-                    regionId: target.region,
-                    message: new Messages.Combat(Opcodes.Combat.Initiate, {
+                this.world.push(Modules.PacketType.Regions, {
+                    region: target.region,
+                    packet: new Combat(Opcodes.Combat.Initiate, {
                         attackerId: this.player.instance,
                         targetId: target.instance
                     })
@@ -607,7 +604,7 @@ export default class Incoming {
         else {
             if (this.player.isMuted()) {
                 this.player.send(
-                    new Messages.Notification(Opcodes.Notification.Text, {
+                    new Notification(Opcodes.Notification.Text, {
                         message: 'You are currently muted.'
                     })
                 );
@@ -616,7 +613,7 @@ export default class Incoming {
 
             if (!this.player.canTalk) {
                 this.player.send(
-                    new Messages.Notification(Opcodes.Notification.Text, {
+                    new Notification(Opcodes.Notification.Text, {
                         message: 'You are not allowed to talk for the duration of this event.'
                     })
                 );
@@ -631,16 +628,15 @@ export default class Incoming {
             if (config.hubEnabled)
                 this.world.api.sendChat(Utils.formatUsername(this.player.username), text, true);
 
-            this.world.push(Opcodes.Push.Regions, {
-                regionId: this.player.region,
-                message: new Messages.Chat({
+            this.player.sendToRegions(
+                new Chat({
                     id: this.player.instance,
                     name: this.player.username,
                     withBubble: true,
                     text,
                     duration: 7000
                 })
-            });
+            );
         }
     }
 
@@ -772,13 +768,9 @@ export default class Incoming {
         this.player.dead = false;
         this.player.setPosition(spawn.x, spawn.y);
 
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.player.region,
-            message: new Messages.Spawn(this.player),
-            ignoreId: this.player.instance
-        });
+        this.player.sendToRegions(new Spawn(this.player), true);
 
-        this.player.send(new Messages.Respawn(this.player.instance, this.player.x, this.player.y));
+        this.player.send(new Respawn(this.player));
 
         this.player.revertPoints();
     }
@@ -915,7 +907,7 @@ export default class Incoming {
                 if (!currency) return;
 
                 this.player.send(
-                    new Messages.Shop(Opcodes.Shop.Select, {
+                    new Shop(Opcodes.Shop.Select, {
                         id: npcId,
                         slotId,
                         currency: Items.idToString(currency),
