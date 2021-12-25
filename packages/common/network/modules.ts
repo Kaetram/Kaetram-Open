@@ -1,3 +1,10 @@
+export enum PacketType {
+    Broadcast,
+    Player,
+    Region,
+    Regions
+}
+
 export enum Orientation {
     Up,
     Down,

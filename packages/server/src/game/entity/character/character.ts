@@ -6,7 +6,7 @@ import Combat from './combat/combat';
 import type { HitData } from '@kaetram/common/types/info';
 import HitPoints from './points/hitpoints';
 import World from '../../world';
-import Messages from '@kaetram/server/src/network/messages';
+import { Movement } from '@kaetram/server/src/network/packets';
 
 type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
@@ -77,9 +77,9 @@ export default abstract class Character extends Entity {
      */
 
     private stun(state: boolean): void {
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.region,
-            message: new Messages.Movement(Opcodes.Movement.Stunned, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.region,
+            packet: new Movement(Opcodes.Movement.Stunned, {
                 id: this.instance,
                 state
             })

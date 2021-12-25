@@ -7,10 +7,10 @@ import Region from './region';
 import Map, { AnimatedTile, ParsedTile } from './map';
 import Entity from '../entity/entity';
 import Player from '../entity/character/player/player';
-import Messages from '../../network/messages';
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import Dynamic from './areas/impl/dynamic';
 import Area from './areas/area';
+import { List, Spawn, Map as MapPacket } from '../../network/packets';
 
 /**
  * Class responsible for chunking up the map.
@@ -257,7 +257,7 @@ export default class Regions {
 
         let entities: string[] = this.regions[player.region].getEntities(player as Entity);
 
-        player.send(new Messages.List(entities));
+        player.send(new List(entities));
     }
 
     /**
@@ -268,10 +268,10 @@ export default class Regions {
 
     public sendJoining(region: number): void {
         this.regions[region].forEachJoining((entity: Entity) => {
-            this.world.push(Opcodes.Push.Regions, {
+            this.world.push(Modules.PacketType.Regions, {
                 region,
-                message: new Messages.Spawn(entity),
-                ignoreId: entity.isPlayer() ? entity.instance : null
+                ignore: entity.isPlayer() ? entity.instance : '',
+                packet: new Spawn(entity)
             });
         });
     }
@@ -305,7 +305,7 @@ export default class Regions {
      */
 
     public sendRegion(player: Player): void {
-        player.send(new Messages.Region(Opcodes.Region.Render, this.getRegionData(player)));
+        player.send(new MapPacket(Opcodes.Map.Render, this.getRegionData(player)));
     }
 
     /**

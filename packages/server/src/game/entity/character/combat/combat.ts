@@ -4,7 +4,6 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import Messages from '../../../../network/messages';
 import Formulas from '../../../../info/formulas';
 import CombatQueue from './combatqueue';
 import Hit from './hit';
@@ -15,6 +14,7 @@ import type World from '../../../world';
 import type Character from '../character';
 import type Mob from '../mob/mob';
 import type Player from '../player/player';
+import { Movement, Combat as CombatPacket, Projectile } from '@kaetram/server/src/network/packets';
 
 export default class Combat {
     public world!: World;
@@ -203,9 +203,9 @@ export default class Combat {
     private sync(): void {
         if (this.character.isMob()) return;
 
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.character.region,
-            message: new Messages.Combat(Opcodes.Combat.Sync, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.character.region,
+            packet: new CombatPacket(Opcodes.Combat.Sync, {
                 attackerId: this.character.instance, // irrelevant
                 targetId: this.character.instance, // can be the same since we're acting on an entity.
                 x: this.character.x,
@@ -374,14 +374,14 @@ export default class Combat {
         if (character.isRanged() || hitInfo.isRanged) {
             let projectile = this.world.entities.spawnProjectile([character, target])!;
 
-            this.world.push(Opcodes.Push.Regions, {
-                regionId: character.region,
-                message: new Messages.Projectile(Opcodes.Projectile.Create, projectile.getData())
+            this.world.push(Modules.PacketType.Regions, {
+                region: character.region,
+                packet: new Projectile(Opcodes.Projectile.Create, projectile.getData())
             });
         } else {
-            this.world.push(Opcodes.Push.Regions, {
-                regionId: character.region,
-                message: new Messages.Combat(Opcodes.Combat.Hit, {
+            this.world.push(Modules.PacketType.Regions, {
+                region: character.region,
+                packet: new CombatPacket(Opcodes.Combat.Hit, {
                     attackerId: character.instance,
                     targetId: target.instance,
                     hitInfo
@@ -397,9 +397,9 @@ export default class Combat {
     }
 
     private follow(character: Character, target: Character): void {
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: character.region,
-            message: new Messages.Movement(Opcodes.Movement.Follow, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: character.region,
+            packet: new Movement(Opcodes.Movement.Follow, {
                 attackerId: character.instance,
                 targetId: target.instance,
                 isRanged: character.isRanged(),
@@ -409,9 +409,9 @@ export default class Combat {
     }
 
     public end(): void {
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.character.region,
-            message: new Messages.Combat(Opcodes.Combat.Finish, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.character.region,
+            packet: new CombatPacket(Opcodes.Combat.Finish, {
                 attackerId: this.character.instance,
                 targetId: null
             })
@@ -423,9 +423,9 @@ export default class Combat {
 
         // let ignores = [this.character.instance, this.character.target.instance];
 
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.character.region,
-            message: new Messages.Movement(Opcodes.Movement.Follow, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.character.region,
+            packet: new Movement(Opcodes.Movement.Follow, {
                 attackerId: this.character.instance,
                 targetId: this.character.target.instance
             })

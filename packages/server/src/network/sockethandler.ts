@@ -1,5 +1,5 @@
-import SocketIO from './impl/socketio';
-import WS from './impl/ws';
+import SocketIO from './sockets/socketio';
+import WS from './sockets/ws';
 
 import type Connection from './connection';
 
@@ -7,7 +7,7 @@ export default class SocketHandler {
     private socketIO = new SocketIO(this);
     private ws = new WS(this);
 
-    public ips: { [id: string]: number } = {};
+    public addressTimes: { [address: string]: number } = {}; // Keeping track of address connection times.
     public connections: { [id: string]: Connection } = {};
 
     private readyCallback?: () => void;
