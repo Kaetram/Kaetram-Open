@@ -2,7 +2,8 @@
     "name": "@kaetram/hub",
     "scripts": {
         "start": "node --enable-source-maps dist",
-        "build": "tsc --noEmit && ts-node build"
+        "build": "tsc --noEmit && ts-node build",
+        "hub": "ts-node-dev ./src/main.ts"
     },
     "dependencies": {
         "@kaetram/common": "workspace:packages/common",
