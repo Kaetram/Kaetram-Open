@@ -28,6 +28,8 @@ export default abstract class Entity {
 
     public name = '';
 
+    public type = -1;
+
     public sprite!: Sprite;
 
     public spriteFlipX = false;
@@ -93,7 +95,7 @@ export default abstract class Entity {
     public nextGridY!: number;
     public fadingAlpha!: number;
 
-    protected constructor(public id: string, public type: number) {
+    protected constructor(public id: string, public kind: string) {
         // this.loadDirty();
     }
 
@@ -136,9 +138,7 @@ export default abstract class Entity {
     public setSprite(sprite: Sprite | undefined): void {
         if (!sprite || (this.sprite && this.sprite.name === sprite.name)) return;
 
-        let { type } = this;
-
-        if (type === 'player') sprite.loadHurt = true;
+        if (this.isPlayer()) sprite.loadHurt = true;
 
         if (!sprite.loaded) sprite.load();
 
@@ -283,6 +283,18 @@ export default abstract class Entity {
 
     public isItem(): boolean {
         return this.type === Modules.EntityType.Item;
+    }
+
+    public isChest(): boolean {
+        return this.type === Modules.EntityType.Chest;
+    }
+
+    public isProjectile(): boolean {
+        return this.type === Modules.EntityType.Projectile;
+    }
+
+    public isObject(): boolean {
+        return this.type === Modules.EntityType.Object;
     }
 
     // onReady(callback: () => void): void {

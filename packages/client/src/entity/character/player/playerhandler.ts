@@ -119,7 +119,7 @@ export default class PlayerHandler {
             if (player.target) {
                 player.lookAt(player.target);
 
-                if (player.target.type === 'object') player.removeTarget();
+                if (player.target.isObject()) player.removeTarget();
             }
 
             input.setPassiveTarget();
@@ -214,9 +214,9 @@ export default class PlayerHandler {
 
         if (this.isAttackable()) return Opcodes.Target.Attack;
 
-        if (target.isNPC() || target.type === 'chest') return Opcodes.Target.Talk;
+        if (target.isNPC() || target.isChest()) return Opcodes.Target.Talk;
 
-        if (target.type === 'object') return Opcodes.Target.Object;
+        if (target.isObject()) return Opcodes.Target.Object;
 
         return Opcodes.Target.None;
     }
