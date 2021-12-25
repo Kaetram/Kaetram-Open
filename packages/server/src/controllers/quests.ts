@@ -196,95 +196,95 @@ export default class Quests {
     }
 
     public getQuestByNPC(npc: NPC): Quest | null {
-        /**
-         * Iterate through the quest list in the order it has been
-         * added so that NPC's that are required by multiple quests
-         * follow the proper order.
-         */
+        // /**
+        //  * Iterate through the quest list in the order it has been
+        //  * added so that NPC's that are required by multiple quests
+        //  * follow the proper order.
+        //  */
 
-        for (let id in this.quests)
-            if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
-                let quest = this.quests[id];
+        // for (let id in this.quests)
+        //     if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
+        //         let quest = this.quests[id];
 
-                if (quest.hasNPC(npc.id)) return quest;
-            }
+        //         if (quest.hasNPC(npc.id)) return quest;
+        //     }
 
         return null;
     }
 
     public getAchievementByNPC(npc: NPC): Achievement | null {
-        for (let id in this.achievements)
-            if (
-                Object.prototype.hasOwnProperty.call(this.achievements, id) &&
-                this.achievements[id].data.npc === npc.id &&
-                !this.achievements[id].isFinished()
-            )
-                return this.achievements[id];
+        // for (let id in this.achievements)
+        //     if (
+        //         Object.prototype.hasOwnProperty.call(this.achievements, id) &&
+        //         this.achievements[id].data.npc === npc.id &&
+        //         !this.achievements[id].isFinished()
+        //     )
+        //         return this.achievements[id];
 
         return null;
     }
 
     public getAchievementByMob(mob: Mob): Achievement | null {
-        for (let id in this.achievements)
-            if (
-                Object.prototype.hasOwnProperty.call(this.achievements, id) &&
-                this.achievements[id].data.mob === mob.id
-            )
-                return this.achievements[id];
+        // for (let id in this.achievements)
+        //     if (
+        //         Object.prototype.hasOwnProperty.call(this.achievements, id) &&
+        //         this.achievements[id].data.mob === mob.id
+        //     )
+        //         return this.achievements[id];
 
         return null;
     }
 
     public isQuestMob(mob: Mob): boolean {
-        if (mob.type !== 'mob') return false;
+        // if (mob.type !== 'mob') return false;
 
-        for (let id in this.quests)
-            if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
-                let quest = this.quests[id];
+        // for (let id in this.quests)
+        //     if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
+        //         let quest = this.quests[id];
 
-                if (!quest.isFinished() && quest.hasMob(mob)) return true;
-            }
+        //         if (!quest.isFinished() && quest.hasMob(mob)) return true;
+        //     }
 
         return false;
     }
 
     public isAchievementMob(mob: Mob): boolean {
-        if (mob.type !== 'mob') return false;
+        // if (mob.type !== 'mob') return false;
 
-        for (let id in this.achievements)
-            if (
-                Object.prototype.hasOwnProperty.call(this.achievements, id) &&
-                this.achievements[id].data.mob === mob.id &&
-                !this.achievements[id].isFinished()
-            )
-                return true;
+        // for (let id in this.achievements)
+        //     if (
+        //         Object.prototype.hasOwnProperty.call(this.achievements, id) &&
+        //         this.achievements[id].data.mob === mob.id &&
+        //         !this.achievements[id].isFinished()
+        //     )
+        //         return true;
 
         return false;
     }
 
     public isQuestNPC(npc: NPC): boolean {
-        if (npc.type !== 'npc') return false;
+        // if (npc.type !== 'npc') return false;
 
-        for (let id in this.quests)
-            if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
-                let quest = this.quests[id];
+        // for (let id in this.quests)
+        //     if (Object.prototype.hasOwnProperty.call(this.quests, id)) {
+        //         let quest = this.quests[id];
 
-                if (!quest.isFinished() && quest.hasNPC(npc.id)) return true;
-            }
+        //         if (!quest.isFinished() && quest.hasNPC(npc.id)) return true;
+        //     }
 
         return false;
     }
 
     public isAchievementNPC(npc: NPC): boolean {
-        if (npc.type !== 'npc') return false;
+        // if (npc.type !== 'npc') return false;
 
-        for (let id in this.achievements)
-            if (
-                Object.prototype.hasOwnProperty.call(this.achievements, id) &&
-                this.achievements[id].data.npc === npc.id &&
-                !this.achievements[id].isFinished()
-            )
-                return true;
+        // for (let id in this.achievements)
+        //     if (
+        //         Object.prototype.hasOwnProperty.call(this.achievements, id) &&
+        //         this.achievements[id].data.npc === npc.id &&
+        //         !this.achievements[id].isFinished()
+        //     )
+        //         return true;
 
         return false;
     }

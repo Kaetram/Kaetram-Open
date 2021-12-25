@@ -4,9 +4,10 @@ import log from '@kaetram/common/util/log';
 import Database from './database/database';
 import World from './game/world';
 import SocketHandler from './network/sockethandler';
-import Parser from './util/parser';
+import Loader from './loader';
 
 import type Connection from './network/connection';
+import { reduce } from 'lodash';
 
 class Main {
     private world?: World;
@@ -19,42 +20,7 @@ class Main {
         this.socketHandler.onReady(this.loadWorld.bind(this));
         this.socketHandler.onConnection(this.handleConnection.bind(this));
 
-        // this.socketHandler.onReady(() => {
-        //     /**
-        //      * Initialize the world after we have finished loading
-        //      * the websocket.
-        //      */
-
-        //     let onWorldLoad = () => {
-        //         log.notice('World has successfully been created.');
-
-        //         if (!config.allowConnectionsToggle) this.world.allowConnections = true;
-
-        //         let host = config.host === '0.0.0.0' ? 'localhost' : config.host;
-
-        //         log.notice(`Connect locally via http://${host}:${config.socketioPort}`);
-        //     };
-
-        //     this.world = new World(this.socketHandler, this.database);
-
-        //     this.world.load(onWorldLoad);
-        // });
-
-        // this.socketHandler.onConnection((connection: Connection) => {
-        //     if (this.world.allowConnections)
-        //         if (this.world.isFull()) {
-        //             log.info('All the worlds are currently full. Please try again later.');
-
-        //             connection.sendUTF8('full');
-        //             connection.close();
-        //         } else this.world.playerConnectCallback?.(connection);
-        //     else {
-        //         connection.sendUTF8('disallowed');
-        //         connection.close();
-        //     }
-        // });
-
-        new Parser();
+        new Loader();
     }
 
     /**

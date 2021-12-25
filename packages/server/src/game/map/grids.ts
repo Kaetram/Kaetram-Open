@@ -22,8 +22,6 @@ export default class Grids {
 
         this.removeFromEntityGrid(entity, entity.oldX, entity.oldY);
         this.addToEntityGrid(entity, entity.x, entity.y);
-
-        entity.updatePosition();
     }
 
     public addToEntityGrid(entity: Entity, x: number, y: number): void {

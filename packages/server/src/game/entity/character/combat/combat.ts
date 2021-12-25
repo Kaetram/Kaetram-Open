@@ -4,8 +4,7 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import Messages from '../../../../network/messages';
-import Formulas from '../../../../util/formulas';
+import Formulas from '../../../../info/formulas';
 import CombatQueue from './combatqueue';
 import Hit from './hit';
 
@@ -15,6 +14,7 @@ import type World from '../../../world';
 import type Character from '../character';
 import type Mob from '../mob/mob';
 import type Player from '../player/player';
+import { Movement, Combat as CombatPacket, Projectile } from '@kaetram/server/src/network/packets';
 
 export default class Combat {
     public world!: World;
@@ -44,12 +44,14 @@ export default class Combat {
     private forgetCallback?(): void;
 
     public constructor(public character: Character) {
+        this.world = character.world;
+
         character.onSubAoE((radius: number, hasTerror: boolean) => {
             this.dealAoE(radius, hasTerror);
         });
 
         character.onDamage((target, hitInfo) => {
-            if (this.isPlayer()) {
+            if (this.character.isPlayer()) {
                 let player = character as Player;
 
                 if (player.hasBreakableWeapon() && Formulas.getWeaponBreak(player, target))
@@ -82,7 +84,7 @@ export default class Combat {
     public start(): void {
         if (this.started) return;
 
-        if (this.character.type === 'player') log.debug('Starting player attack.');
+        if (this.character.isPlayer()) log.debug('Starting player attack.');
 
         this.lastAction = Date.now();
 
@@ -104,7 +106,7 @@ export default class Combat {
     public stop(): void {
         if (!this.started) return;
 
-        if (this.character.type === 'player') log.debug('Stopping player attack.');
+        if (this.character.isPlayer()) log.debug('Stopping player attack.');
 
         if (this.attackLoop) clearInterval(this.attackLoop);
         if (this.followLoop) clearInterval(this.followLoop);
@@ -115,6 +117,9 @@ export default class Combat {
         this.checkLoop = null!;
 
         this.started = false;
+
+        this.forget();
+        this.end();
     }
 
     private parseAttack(): void {
@@ -136,7 +141,7 @@ export default class Combat {
     private parseFollow(): void {
         if (this.character.frozen || this.character.stunned) return;
 
-        if (this.isMob()) {
+        if (this.character.isMob()) {
             if (!this.character.isRanged()) this.sendFollow();
 
             if (this.isAttacked() || this.character.target) this.lastAction = this.getTime();
@@ -154,10 +159,10 @@ export default class Combat {
             }
         }
 
-        if (this.isPlayer()) {
+        if (this.character.isPlayer()) {
             if (!this.character.target) return;
 
-            if (this.character.target.type !== 'player') return;
+            if (this.character.target.isPlayer()) return;
 
             if (!this.inProximity()) this.follow(this.character, this.character.target);
         }
@@ -174,7 +179,7 @@ export default class Combat {
     public attack(target: Character): void {
         let hit: Hit | undefined;
 
-        if (this.isPlayer()) {
+        if (this.character.isPlayer()) {
             let player = this.character as Player;
 
             hit = player.getHit(target);
@@ -196,11 +201,11 @@ export default class Combat {
     }
 
     private sync(): void {
-        if (this.character.type !== 'mob') return;
+        if (this.character.isMob()) return;
 
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.character.region,
-            message: new Messages.Combat(Opcodes.Combat.Sync, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.character.region,
+            packet: new CombatPacket(Opcodes.Combat.Sync, {
                 attackerId: this.character.instance, // irrelevant
                 targetId: this.character.instance, // can be the same since we're acting on an entity.
                 x: this.character.x,
@@ -249,22 +254,11 @@ export default class Combat {
     }
 
     private sendToSpawn(): void {
-        if (!this.isMob()) return;
+        if (!this.character.isMob()) return;
 
         let mob = this.character as Mob;
 
-        mob.return();
-
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.character.region,
-            message: new Messages.Movement(Opcodes.Movement.Move, {
-                id: this.character.instance,
-                x: this.character.x,
-                y: this.character.y,
-                forced: false,
-                teleport: false
-            })
-        });
+        mob.sendToSpawn();
     }
 
     public hasAttacker(character: Character): boolean | void {
@@ -274,7 +268,7 @@ export default class Combat {
     }
 
     private onSameTile(): boolean | void {
-        if (!this.character.target || this.character.type !== 'mob') return;
+        if (!this.character.target || this.character.isMob()) return;
 
         return (
             this.character.x === this.character.target.x &&
@@ -319,7 +313,7 @@ export default class Combat {
 
     public isRetaliating(): boolean {
         return (
-            this.isPlayer() &&
+            this.character.isPlayer() &&
             !this.character.target &&
             this.retaliate &&
             !this.character.moving &&
@@ -369,7 +363,7 @@ export default class Combat {
          * The server and mob types can parse the mob movement
          */
 
-        if (character.type !== 'mob') return;
+        if (character.isMob()) return;
 
         character.setPosition(x, y);
     }
@@ -380,14 +374,14 @@ export default class Combat {
         if (character.isRanged() || hitInfo.isRanged) {
             let projectile = this.world.entities.spawnProjectile([character, target])!;
 
-            this.world.push(Opcodes.Push.Regions, {
-                regionId: character.region,
-                message: new Messages.Projectile(Opcodes.Projectile.Create, projectile.getData())
+            this.world.push(Modules.PacketType.Regions, {
+                region: character.region,
+                packet: new Projectile(Opcodes.Projectile.Create, projectile.getData())
             });
         } else {
-            this.world.push(Opcodes.Push.Regions, {
-                regionId: character.region,
-                message: new Messages.Combat(Opcodes.Combat.Hit, {
+            this.world.push(Modules.PacketType.Regions, {
+                region: character.region,
+                packet: new CombatPacket(Opcodes.Combat.Hit, {
                     attackerId: character.instance,
                     targetId: target.instance,
                     hitInfo
@@ -403,9 +397,9 @@ export default class Combat {
     }
 
     private follow(character: Character, target: Character): void {
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: character.region,
-            message: new Messages.Movement(Opcodes.Movement.Follow, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: character.region,
+            packet: new Movement(Opcodes.Movement.Follow, {
                 attackerId: character.instance,
                 targetId: target.instance,
                 isRanged: character.isRanged(),
@@ -415,9 +409,9 @@ export default class Combat {
     }
 
     public end(): void {
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.character.region,
-            message: new Messages.Combat(Opcodes.Combat.Finish, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.character.region,
+            packet: new CombatPacket(Opcodes.Combat.Finish, {
                 attackerId: this.character.instance,
                 targetId: null
             })
@@ -429,9 +423,9 @@ export default class Combat {
 
         // let ignores = [this.character.instance, this.character.target.instance];
 
-        this.world.push(Opcodes.Push.Regions, {
-            regionId: this.character.region,
-            message: new Messages.Movement(Opcodes.Movement.Follow, {
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.character.region,
+            packet: new Movement(Opcodes.Movement.Follow, {
                 attackerId: this.character.instance,
                 targetId: this.character.target.instance
             })
@@ -449,12 +443,11 @@ export default class Combat {
     }
 
     public targetOutOfBounds(): boolean | void {
-        if (!this.character.target || !this.isMob()) return;
+        if (!this.character.target || !this.character.isMob()) return;
 
-        let [x, y] = this.character.spawnLocation,
-            { target, spawnDistance } = this.character;
+        let { x, y, target, roamDistance } = this.character as Mob;
 
-        return Utils.getDistance(x, y, target.x, target.y) > spawnDistance;
+        return Utils.getDistance(x, y, target!.x, target!.y) > roamDistance;
     }
 
     public getTime(): number {
@@ -465,24 +458,13 @@ export default class Combat {
         return this.world.map.isColliding(x, y);
     }
 
-    private isPlayer(): boolean {
-        return this.character.type === 'player';
-    }
-
-    private isMob(): boolean {
-        return this.character.type === 'mob';
-    }
-
-    private isTargetMob(): boolean {
-        return this.character.target?.type === 'mob';
-    }
-
     private canAttackAoE(target: Character): boolean {
-        return (
-            this.isMob() ||
-            target.type === 'mob' ||
-            (this.isPlayer() && target.type === 'player' && target.pvp && this.character.pvp)
-        );
+        return false;
+        // return (
+        //     this.isMob() ||
+        //     target.isMob() ||
+        //     (this.isPlayer() && target.isPlayer() && target.pvp && this.character.pvp)
+        // );
     }
 
     public canHit(): boolean {

@@ -1,11 +1,12 @@
 import _ from 'lodash';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import Messages from '../network/messages';
-import Items from '../util/items';
-import Shop from '../util/shops';
+import Items from '../info/items';
+import Shop from '../info/shops';
+
+import { Shop as ShopPacket } from '../network/packets';
 
 import type { ShopData } from '@kaetram/common/types/info';
 import type Player from '../game/entity/character/player/player';
@@ -31,7 +32,7 @@ export default class Shops {
 
     public open(player: Player, npcId: number): void {
         player.send(
-            new Messages.Shop(Opcodes.Shop.Open, {
+            new ShopPacket(Opcodes.Shop.Open, {
                 instance: player.instance,
                 npcId,
                 shopData: this.getShopData(npcId)!
@@ -116,7 +117,7 @@ export default class Shops {
         if (!selectedItem) return;
 
         player.send(
-            new Messages.Shop(Opcodes.Shop.Remove, {
+            new ShopPacket(Opcodes.Shop.Remove, {
                 id: selectedItem.id,
                 index: selectedItem.index
             })
@@ -126,8 +127,8 @@ export default class Shops {
     }
 
     public refresh(shop: number): void {
-        this.world.push(Opcodes.Push.Broadcast, {
-            message: new Messages.Shop(Opcodes.Shop.Refresh, this.getShopData(shop))
+        this.world.push(Modules.PacketType.Broadcast, {
+            packet: new ShopPacket(Opcodes.Shop.Refresh, this.getShopData(shop))
         });
     }
 
