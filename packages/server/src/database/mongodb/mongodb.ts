@@ -2,223 +2,156 @@ import bcryptjs from 'bcryptjs';
 import _ from 'lodash';
 import { Db, MongoClient } from 'mongodb';
 
-import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 
-import Creator, { FullPlayerData } from './creator';
+import Creator, { FullPlayerData, PlayerData } from './creator';
 import Loader from './loader';
 
 import type Player from '../../game/entity/character/player/player';
 import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
+import config from '@kaetram/common/config';
 
 export default class MongoDB {
-    public loader = new Loader(this);
-    public creator = new Creator(this);
+    private connectionUrl: string;
 
-    private url: string;
-    private connection!: Db;
+    private database!: Db;
+
+    public loader?: Loader;
+    public creator?: Creator;
+
+    public readyCallback?: () => void;
+    public failCallback?: (error: Error) => void;
 
     public constructor(
         host: string,
         port: number,
-        user: string,
+        username: string,
         password: string,
-        private database: string
+        private databaseName: string
     ) {
-        let { mongodbAuth, mongodbSrv } = config;
+        let hasAuthentication = !!username && !!password;
 
-        this.url = mongodbSrv
-            ? mongodbAuth
-                ? `mongodb+srv://${user}:${password}@${host}/${database}`
-                : `mongodb+srv://${host}/${database}`
-            : mongodbAuth
-            ? `mongodb://${user}:${password}@${host}:${port}/${database}`
-            : `mongodb://${host}:${port}/${database}`;
+        this.connectionUrl = hasAuthentication
+            ? `mongodb://${username}:${password}@${host}:${port}/${databaseName}`
+            : `mongodb://${host}:${port}/${databaseName}`;
+
+        this.createConnection();
     }
 
-    public getConnection(callback: (connection: Db) => void): void {
-        if (this.connection) return callback(this.connection);
+    /**
+     * Attempts to connect to MongoDB. Times out after 10 seconds if
+     * no MongoDB server is present for the given host.
+     */
 
-        let client = new MongoClient(this.url, { wtimeoutMS: 5 });
+    private createConnection(): void {
+        let client = new MongoClient(this.connectionUrl, {
+            connectTimeoutMS: 5000,
+            serverSelectionTimeoutMS: 5000,
+            wtimeoutMS: 10
+        });
 
-        client.connect((error, newClient) => {
-            if (error) {
-                log.error('Could not connect to MongoDB database.');
-                log.error(`Error Info: ${error}`);
-                return;
-            }
+        client.connect((error: Error | undefined, _client: MongoClient | undefined) => {
+            if (error) return this.failCallback?.(error);
 
-            this.connection = newClient!.db(this.database);
+            this.database = _client!.db(this.databaseName);
 
-            callback(this.connection);
+            log.notice('Successfully connected to the MongoDB server.');
+
+            this.readyCallback?.();
+
+            this.loader = new Loader(this.database);
+            this.creator = new Creator(this.database);
         });
     }
+
+    /**
+     * Takes the player's username and extracts the data from the server. Checks
+     * the password and creates a callback if an error is present.
+     * @param player The player object to extract password and username from.
+     * @param callback The UTF8 string for the connection to be rejected with.
+     */
 
     public login(player: Player): void {
-        this.getConnection((database) => {
-            let dataCursor = database
-                    .collection<FullPlayerData>('player_data')
-                    .find({ username: player.username }),
-                equipmentCursor = database
-                    .collection<PlayerEquipment>('player_equipment')
-                    .find({ username: player.username }),
-                regionsCursor = database
-                    .collection<PlayerRegions>('player_regions')
-                    .find({ username: player.username });
+        if (!this.hasDatabase()) return;
 
-            dataCursor.toArray().then((playerData) => {
-                equipmentCursor.toArray().then((equipmentData) => {
-                    regionsCursor.toArray().then((regionData) => {
-                        if (playerData.length === 0) this.register(player);
-                        else {
-                            let [playerInfo] = playerData,
-                                [equipmentInfo] = equipmentData,
-                                [regions] = regionData;
+        let cursor = this.database
+            .collection<PlayerData>('player_data')
+            .find({ username: player.username });
 
-                            playerInfo.armour = equipmentInfo.armour;
-                            playerInfo.weapon = equipmentInfo.weapon;
-                            playerInfo.pendant = equipmentInfo.pendant;
-                            playerInfo.ring = equipmentInfo.ring;
-                            playerInfo.boots = equipmentInfo.boots;
+        cursor.toArray().then((playerData) => {
+            if (playerData.length === 0) player.connection.reject('invalidlogin');
+            else {
+                let [info] = playerData;
 
-                            player.load(playerInfo);
-                            player.loadRegions(regions);
+                bcryptjs.compare(player.password, info.password, (error: Error, result) => {
+                    if (error) throw error;
 
-                            player.intro();
-                        }
-                    });
+                    if (result) player.load(info);
+                    else player.connection.reject('invalidlogin');
                 });
-            });
-        });
-    }
-
-    public verify(player: Player, callback: (data: { status: 'success' | 'error' }) => void): void {
-        this.getConnection((database) => {
-            let dataCursor = database.collection('player_data').find({ username: player.username });
-
-            dataCursor.toArray().then((data) => {
-                if (data.length === 0) callback({ status: 'error' });
-                else {
-                    let [info] = data;
-
-                    bcryptjs.compare(player.password, info.password, (error, result) => {
-                        if (error) throw error;
-
-                        if (result) callback({ status: 'success' });
-                        else callback({ status: 'error' });
-                    });
-                }
-            });
+            }
         });
     }
 
     public register(player: Player): void {
-        this.getConnection((database) => {
-            let playerData = database.collection('player_data'),
-                cursor = playerData.find({ username: player.username });
+        if (!this.hasDatabase()) return;
 
-            cursor.toArray().then((info) => {
-                if (info.length === 0) {
-                    log.notice(`No player data found for ${player.username}. Creating user.`);
+        let collection = this.database.collection<PlayerData>('player_data'),
+            usernameCursor = collection.find({ username: player.username }),
+            emailCursor = collection.find({ email: player.email });
 
-                    player.new = true;
+        emailCursor.toArray().then((emailData) => {
+            if (emailData.length > 0) return player.connection.reject('emailexists');
 
-                    player.load(Creator.getFullData(player));
-                    player.intro();
-                }
+            usernameCursor.toArray().then((playerData) => {
+                if (playerData.length > 0) return player.connection.reject('userexists');
+
+                log.debug(`No player data found for ${player.username}, creating user.`);
+
+                player.load(Creator.getFullData(player));
             });
         });
     }
 
-    public exists(
-        player: Player,
-        callback: (data: { exists: boolean; type?: string }) => void
-    ): void {
-        this.getConnection((database) => {
-            let playerData = database.collection('player_data'),
-                emailCursor = playerData.find({ email: player.email }),
-                usernameCursor = playerData.find({ username: player.username });
-
-            log.debug(`Looking for - ${player.email} or ${player.username}`);
-
-            emailCursor.toArray().then((emailArray) => {
-                if (emailArray.length === 0)
-                    usernameCursor.toArray().then((usernameArray) => {
-                        if (usernameArray.length === 0) callback({ exists: false });
-                        else callback({ exists: true, type: 'user' });
-                    });
-                else callback({ exists: true, type: 'email' });
-            });
-        });
-    }
-
-    public delete(player: Player): void {
-        this.getConnection((database) => {
-            let collections = [
-                'player_data',
-                'player_equipment',
-                'player_inventory',
-                'player_abilities',
-                'player_bank',
-                'player_quests',
-                'player_achievements'
-            ];
-
-            _.each(collections, (col) => {
-                let collection = database.collection(col);
-
-                collection.deleteOne(
-                    {
-                        username: player.username
-                    },
-                    (error, result) => {
-                        if (error) throw error;
-
-                        if (result) log.notice(`Player ${player.username} has been deleted.`);
-                    }
-                );
-            });
-        });
-    }
+    /**
+     * Checks the amount of players registered and returns it in the form of a callback.
+     * @param callback Returns the number of players registered.
+     */
 
     public registeredCount(callback: (count: number) => void): void {
-        this.getConnection((database) => {
-            let collection = database.collection('player_data');
+        if (!this.hasDatabase()) return;
 
-            collection.countDocuments().then((count) => {
-                callback(count);
-            });
+        let collection = this.database.collection('player_data');
+
+        collection.countDocuments().then((count) => {
+            callback(count);
         });
     }
 
-    public resetPositions(newX: number, newY: number, callback: (status: string) => void): void {
-        this.getConnection((database) => {
-            let collection = database.collection('player_data'),
-                cursor = collection.find();
+    /**
+     * Checks whether or not a connection has been established.
+     * @returns If the database element is present.
+     */
 
-            cursor.toArray().then((playerList) => {
-                _.each(playerList, (playerInfo) => {
-                    delete playerInfo._id;
+    private hasDatabase(): boolean {
+        if (!this.database) log.error('No connection established for the database.');
 
-                    playerInfo.x = newX;
-                    playerInfo.y = newY;
+        return !!this.database;
+    }
 
-                    collection.updateOne(
-                        {
-                            username: playerInfo.username
-                        },
-                        { $set: playerInfo },
-                        {
-                            upsert: true
-                        },
-                        (error, result) => {
-                            if (error) throw error;
+    /**
+     * Callback signal if connection is successfully established.
+     */
 
-                            if (result) callback('Successfully updated positions.');
-                        }
-                    );
-                });
-            });
-        });
+    public onReady(callback: () => void): void {
+        this.readyCallback = callback;
+    }
+
+    /**
+     * Callback for connection failure.
+     */
+
+    public onFail(callback: (error: Error) => void): void {
+        this.failCallback = callback;
     }
 }

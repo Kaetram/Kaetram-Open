@@ -1,6 +1,6 @@
 enum Packets {
     Handshake,
-    Intro,
+    Login,
     Welcome,
     Map,
     Spawn,
