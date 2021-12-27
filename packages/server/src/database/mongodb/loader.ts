@@ -4,10 +4,10 @@ import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests'
 import type { ContainerArray } from '../../game/entity/character/player/containers/container';
 import type { FriendsArray } from '../../game/entity/character/player/friends';
 import type Player from '../../game/entity/character/player/player';
-import type MongoDB from './mongodb';
+import { Db } from 'mongodb';
 
 export default class Loader {
-    public constructor(private database: MongoDB) {}
+    public constructor(private database: Db) {}
 
     private parseArray(value: string): number[] {
         return value.split(' ').map((string) => parseInt(string));
@@ -22,27 +22,25 @@ export default class Loader {
             abilityLevels: number[] | null
         ) => void
     ): void {
-        this.database.getConnection((database) => {
-            let inventory = database.collection<ContainerArray>('player_inventory'),
-                cursor = inventory.find({ username: player.username });
+        let inventory = this.database.collection<ContainerArray>('player_inventory'),
+            cursor = inventory.find({ username: player.username });
 
-            cursor.toArray().then((inventoryArray) => {
-                let [info] = inventoryArray;
+        cursor.toArray().then((inventoryArray) => {
+            let [info] = inventoryArray;
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving inventory data for: ${player.username}`
-                        );
-
-                    callback(
-                        this.parseArray(info.ids),
-                        this.parseArray(info.counts),
-                        this.parseArray(info.abilities),
-                        this.parseArray(info.abilityLevels)
+            if (info) {
+                if (info.username !== player.username)
+                    log.notice(
+                        `[Loader] Mismatch in usernames whilst retrieving inventory data for: ${player.username}`
                     );
-                } else callback(null, null, null, null);
-            });
+
+                callback(
+                    this.parseArray(info.ids),
+                    this.parseArray(info.counts),
+                    this.parseArray(info.abilities),
+                    this.parseArray(info.abilityLevels)
+                );
+            } else callback(null, null, null, null);
         });
     }
 
@@ -55,27 +53,25 @@ export default class Loader {
             abilityLevels: number[]
         ) => void
     ): void {
-        this.database.getConnection((database) => {
-            let bank = database.collection<ContainerArray>('player_bank'),
-                cursor = bank.find({ username: player.username });
+        let bank = this.database.collection<ContainerArray>('player_bank'),
+            cursor = bank.find({ username: player.username });
 
-            cursor.toArray().then((bankArray) => {
-                let [info] = bankArray;
+        cursor.toArray().then((bankArray) => {
+            let [info] = bankArray;
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving bank data for: ${player.username}`
-                        );
-
-                    callback(
-                        this.parseArray(info.ids),
-                        this.parseArray(info.counts),
-                        this.parseArray(info.abilities),
-                        this.parseArray(info.abilityLevels)
+            if (info) {
+                if (info.username !== player.username)
+                    log.notice(
+                        `[Loader] Mismatch in usernames whilst retrieving bank data for: ${player.username}`
                     );
-                }
-            });
+
+                callback(
+                    this.parseArray(info.ids),
+                    this.parseArray(info.counts),
+                    this.parseArray(info.abilities),
+                    this.parseArray(info.abilityLevels)
+                );
+            }
         });
     }
 
@@ -83,22 +79,20 @@ export default class Loader {
         player: Player,
         callback: (ids: string[] | null, stage: string[] | null) => void
     ): void {
-        this.database.getConnection((database) => {
-            let quests = database.collection<PlayerQuests>('player_quests'),
-                cursor = quests.find({ username: player.username });
+        let quests = this.database.collection<PlayerQuests>('player_quests'),
+            cursor = quests.find({ username: player.username });
 
-            cursor.toArray().then((questArray) => {
-                let [info] = questArray;
+        cursor.toArray().then((questArray) => {
+            let [info] = questArray;
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving quest data for: ${player.username}`
-                        );
+            if (info) {
+                if (info.username !== player.username)
+                    log.notice(
+                        `[Loader] Mismatch in usernames whilst retrieving quest data for: ${player.username}`
+                    );
 
-                    callback(info.ids.split(' '), info.stages.split(' '));
-                } else callback(null, null);
-            });
+                callback(info.ids.split(' '), info.stages.split(' '));
+            } else callback(null, null);
         });
     }
 
@@ -106,42 +100,38 @@ export default class Loader {
         player: Player,
         callback: (ids: string[], progress: string[]) => void
     ): void {
-        this.database.getConnection((database) => {
-            let achievements = database.collection<PlayerAchievements>('player_achievements'),
-                cursor = achievements.find({ username: player.username });
+        let achievements = this.database.collection<PlayerAchievements>('player_achievements'),
+            cursor = achievements.find({ username: player.username });
 
-            cursor.toArray().then((achievementsArray) => {
-                let [info] = achievementsArray;
+        cursor.toArray().then((achievementsArray) => {
+            let [info] = achievementsArray;
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving achievement data for: ${player.username}`
-                        );
+            if (info) {
+                if (info.username !== player.username)
+                    log.notice(
+                        `[Loader] Mismatch in usernames whilst retrieving achievement data for: ${player.username}`
+                    );
 
-                    callback(info.ids.split(' '), info.progress.split(' '));
-                }
-            });
+                callback(info.ids.split(' '), info.progress.split(' '));
+            }
         });
     }
 
     public getFriends(player: Player, callback: (friends: unknown) => void): void {
-        this.database.getConnection((database) => {
-            let friends = database.collection<FriendsArray>('player_friends'),
-                cursor = friends.find({ username: player.username });
+        let friends = this.database.collection<FriendsArray>('player_friends'),
+            cursor = friends.find({ username: player.username });
 
-            cursor.toArray().then((friendsArray) => {
-                let [info] = friendsArray;
+        cursor.toArray().then((friendsArray) => {
+            let [info] = friendsArray;
 
-                if (info && info.friends) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving friends data for: ${player.username}`
-                        );
+            if (info && info.friends) {
+                if (info.username !== player.username)
+                    log.notice(
+                        `[Loader] Mismatch in usernames whilst retrieving friends data for: ${player.username}`
+                    );
 
-                    callback(info.friends);
-                }
-            });
+                callback(info.friends);
+            }
         });
     }
 }

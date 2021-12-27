@@ -23,6 +23,8 @@ import type Projectile from '../game/entity/objects/projectile';
 import { Chat, Combat, Equipment, Movement, Notification, Shop, Spawn } from '../network/packets';
 import Respawn from '../network/packets/respawn';
 
+type PacketData = ((string | string[]) | number | boolean)[];
+
 export default class Incoming {
     private connection;
     private world;
@@ -50,8 +52,8 @@ export default class Incoming {
             player.refreshTimeout();
 
             switch (packet) {
-                case Packets.Intro:
-                    return this.handleIntro(message);
+                case Packets.Login:
+                    return this.handleLogin(message);
 
                 case Packets.Ready:
                     return this.handleReady(message);
@@ -119,8 +121,42 @@ export default class Incoming {
         });
     }
 
-    private handleIntro(message: [Opcodes.Intro, string, string, string]): void {
-        let [loginType, username, password] = message,
+    /**
+     * Handles the login process for Kaetram.
+     * @param data The packet data for the login. Generally contains
+     * username, password, (email if registering). If it's a guest login,
+     * then we proceed with no username/password and no database saving.
+     */
+
+    private handleLogin(data: PacketData): void {
+        let opcode = data.shift(),
+            username = data.shift() as string,
+            password = data.shift() as string;
+
+        // Format username by making it all lower case, shorter than 32 characters, and no spaces.
+        this.player.username = username.toLowerCase().slice(0, 32).trim();
+        this.player.password = password.slice(0, 32);
+
+        // Reject connection if player is already logged in.
+        if (this.world.isOnline(this.player.username)) return this.connection.reject('loggedin');
+
+        // Proceed directly to login with default player data if skip database is present.
+        if (config.skipDatabase) return this.player.load(Creator.getFullData(this.player));
+
+        switch (opcode) {
+            case Opcodes.Login.Login:
+                return this.database.login(this.player);
+
+            case Opcodes.Login.Register:
+                this.player.email = data.shift() as string;
+
+                return this.database.register(this.player);
+
+            case Opcodes.Login.Guest:
+                break;
+        }
+
+        /*let [loginType, username, password] = message,
             isRegistering = loginType === Opcodes.Intro.Register,
             isGuest = loginType === Opcodes.Intro.Guest,
             email = isRegistering ? message[3] : '',
@@ -145,7 +181,7 @@ export default class Incoming {
             return;
         }
 
-        if (config.offlineMode) {
+        if (config.skipDatabase) {
             this.player.load(Creator.getFullData(this.player));
             this.player.intro();
 
@@ -175,7 +211,7 @@ export default class Incoming {
                     this.connection.sendUTF8('invalidlogin');
                     this.connection.close(`Wrong password entered for: ${this.player.username}`);
                 }
-            });
+            });*/
     }
 
     private handleReady(message: [string, string, string]): void {
@@ -205,7 +241,7 @@ export default class Incoming {
             this.player.updateRegion(true);
         }
 
-        if (this.player.new || config.offlineMode) {
+        if (this.player.new || config.skipDatabase) {
             this.player.questsLoaded = true;
             this.player.achievementsLoaded = true;
         }
@@ -221,6 +257,8 @@ export default class Incoming {
         this.player.readyCallback?.();
 
         this.player.sync();
+
+        this.player.save();
     }
 
     private handleWho(message: string[]): void {

@@ -33,7 +33,7 @@ import type Area from '../../../map/areas/area';
 import type Connection from '../../../../network/connection';
 import type World from '../../../world';
 import type NPC from '../../npc/npc';
-import type { FullPlayerData } from './../../../../database/mongodb/creator';
+import type { PlayerData } from './../../../../database/mongodb/creator';
 import type Introduction from './quests/impl/introduction';
 import Map from '../../../map/map';
 import { PacketType } from '@kaetram/common/network/modules';
@@ -214,7 +214,7 @@ export default class Player extends Character {
         this.webSocketClient = connection.type === 'WebSocket';
     }
 
-    public load(data: FullPlayerData): void {
+    public load(data: PlayerData): void {
         this.rights = data.rights;
         this.experience = data.experience;
         this.ban = data.ban;
@@ -224,6 +224,8 @@ export default class Player extends Character {
         this.pvpDeaths = data.pvpDeaths;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
+
+        this.setPosition(data.x, data.y);
 
         this.warp.setLastWarp(data.lastWarp);
 
@@ -237,14 +239,7 @@ export default class Player extends Character {
         this.hitPoints.updateHitPoints([data.hitPoints, Formulas.getMaxHitPoints(this.level)]);
         this.mana.updateMana([data.mana, Formulas.getMaxMana(this.level)]);
 
-        let { x, y, armour, weapon, pendant, ring, boots } = data;
-
-        this.setPosition(x, y);
-        this.setArmour(...armour);
-        this.setWeapon(...weapon);
-        this.setPendant(...pendant);
-        this.setRing(...ring);
-        this.setBoots(...boots);
+        this.intro();
     }
 
     public destroy(): void {
@@ -280,9 +275,9 @@ export default class Player extends Character {
     }
 
     public loadFriends(): void {
-        if (config.offlineMode) return;
+        if (config.skipDatabase) return;
 
-        this.database.loader.getFriends(this, (info) => {
+        this.database.loader?.getFriends(this, (info) => {
             if (!info) return;
 
             this.friends.update(info);
@@ -290,12 +285,12 @@ export default class Player extends Character {
     }
 
     public loadInventory(): void {
-        if (config.offlineMode) {
+        if (config.skipDatabase) {
             this.inventory.loadEmpty();
             return;
         }
 
-        this.database.loader.getInventory(this, (ids, counts, skills, skillLevels) => {
+        this.database.loader?.getInventory(this, (ids, counts, skills, skillLevels) => {
             if (ids === null || counts === null) {
                 this.inventory.loadEmpty();
                 return;
@@ -309,12 +304,12 @@ export default class Player extends Character {
     }
 
     public loadBank(): void {
-        if (config.offlineMode) {
+        if (config.skipDatabase) {
             this.bank.loadEmpty();
             return;
         }
 
-        this.database.loader.getBank(this, (ids, counts, skills, skillLevels) => {
+        this.database.loader?.getBank(this, (ids, counts, skills, skillLevels) => {
             if (ids === null || counts === null) {
                 this.bank.loadEmpty();
                 return;
@@ -328,9 +323,9 @@ export default class Player extends Character {
     }
 
     public loadQuests(): void {
-        if (config.offlineMode) return;
+        if (config.skipDatabase) return;
 
-        this.database.loader.getAchievements(this, (ids, progress) => {
+        this.database.loader?.getAchievements(this, (ids, progress) => {
             ids.pop();
             progress.pop();
 
@@ -343,7 +338,7 @@ export default class Player extends Character {
             this.quests.updateAchievements(ids, progress);
         });
 
-        this.database.loader.getQuests(this, (ids, stages) => {
+        this.database.loader?.getQuests(this, (ids, stages) => {
             if (!ids || !stages) {
                 this.quests.updateQuests(ids, stages);
                 return;
@@ -401,7 +396,6 @@ export default class Player extends Character {
             username: Utils.formatUsername(this.username),
             x: this.x,
             y: this.y,
-            // kind: this.kind,
             rights: this.rights,
             hitPoints: this.hitPoints.serialize(),
             mana: this.mana.serialize(),
@@ -428,7 +422,7 @@ export default class Player extends Character {
     private verifyRights(): void {
         if (config.moderators.includes(this.username.toLowerCase())) this.rights = 1;
 
-        if (config.administrators.includes(this.username.toLowerCase()) || config.offlineMode)
+        if (config.administrators.includes(this.username.toLowerCase()) || config.skipDatabase)
             this.rights = 2;
     }
 
@@ -795,17 +789,17 @@ export default class Player extends Character {
     }
 
     private getMovementSpeed(): number {
-        let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
-            movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
+        // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
+        //     movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
 
-        /*
-         * Here we can handle equipment/potions/abilities that alter
-         * the player's movement speed. We then just broadcast it.
-         */
+        // /*
+        //  * Here we can handle equipment/potions/abilities that alter
+        //  * the player's movement speed. We then just broadcast it.
+        //  */
 
-        this.movementSpeed = movementSpeed;
+        // this.movementSpeed = movementSpeed;
 
-        return this.movementSpeed;
+        return this.defaultMovementSpeed;
     }
 
     public breakWeapon(): void {
@@ -963,12 +957,7 @@ export default class Player extends Character {
             orientation: this.orientation,
             hitPoints: this.hitPoints.serialize(),
             movementSpeed: this.getMovementSpeed(),
-            mana: this.mana.serialize(),
-            armour: this.armour.getData(),
-            weapon: this.weapon.getData(),
-            pendant: this.pendant.getData(),
-            ring: this.ring.getData(),
-            boots: this.boots.getData()
+            mana: this.mana.serialize()
         };
     }
 
@@ -1085,15 +1074,14 @@ export default class Player extends Character {
     }
 
     public sendEquipment(): void {
-        let info = {
-            armour: this.armour.getData(),
-            weapon: this.weapon.getData(),
-            pendant: this.pendant.getData(),
-            ring: this.ring.getData(),
-            boots: this.boots.getData()
-        };
-
-        this.send(new EquipmentPacket(Opcodes.Equipment.Batch, info));
+        // let info = {
+        //     armour: this.armour.getData(),
+        //     weapon: this.weapon.getData(),
+        //     pendant: this.pendant.getData(),
+        //     ring: this.ring.getData(),
+        //     boots: this.boots.getData()
+        // };
+        // this.send(new EquipmentPacket(Opcodes.Equipment.Batch, info));
     }
 
     public sendToSpawn(): void {
@@ -1136,8 +1124,6 @@ export default class Player extends Character {
             maxMana: this.mana.getMaxMana(),
             experience: this.experience,
             level: this.level,
-            armour: this.armour.getString(),
-            weapon: this.weapon.getData(),
             poison: !!this.poison,
             movementSpeed: this.getMovementSpeed()
         };
@@ -1277,11 +1263,11 @@ export default class Player extends Character {
     }
 
     public save(): void {
-        if (config.offlineMode || this.isGuest) return;
+        if (config.skipDatabase || this.isGuest) return;
 
-        if ((!this.questsLoaded || !this.achievementsLoaded) && !this.new) return;
+        //if ((!this.questsLoaded || !this.achievementsLoaded) && !this.new) return;
 
-        this.database.creator.save(this);
+        this.database.creator?.save(this);
     }
 
     public inTutorial(): boolean {
