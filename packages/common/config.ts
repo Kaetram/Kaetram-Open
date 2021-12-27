@@ -31,15 +31,13 @@ export interface Config {
     cleanupTime: number;
 
     database: DatabaseTypes;
-    offlineMode: boolean;
+    skipDatabase: boolean;
 
     mongodbHost: string;
     mongodbPort: number;
     mongodbUser: string;
     mongodbPassword: string;
     mongodbDatabase: string;
-    mongodbSrv: boolean;
-    mongodbAuth: boolean;
 
     worldSwitch: boolean;
     tutorialEnabled: boolean;
@@ -60,7 +58,6 @@ export interface Config {
     debugging: boolean;
     debugLevel: 'all';
     fsDebugging: boolean;
-    allowConnectionsToggle: boolean;
 }
 
 let envConfig = dotenvParseVariables(

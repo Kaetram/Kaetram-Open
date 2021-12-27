@@ -69,7 +69,7 @@ export default class Doors {
     private getStatus(door: Door): DoorStatus {
         if (door.status) return door.status;
 
-        if (config.offlineMode) return 'open';
+        if (config.skipDatabase) return 'open';
 
         switch (door.requirement) {
             case 'quest': {
