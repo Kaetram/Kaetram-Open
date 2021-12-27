@@ -1,4 +1,4 @@
-export enum Intro {
+export enum Login {
     Login,
     Register,
     Guest

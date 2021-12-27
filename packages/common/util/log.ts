@@ -9,6 +9,7 @@ type ConsoleLogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'trace';
  * and to neatly display logs, errors, warnings, and notices.
  * Can be adapted and expanded, without using megabytes of npm repos.
  */
+
 class Log {
     private logLevel = config.debugLevel || 'all';
     // Stream can be used to keep a log of what happened.
@@ -32,6 +33,10 @@ class Log {
 
     public error(...data: unknown[]): void {
         this.send('error', data, 41);
+    }
+
+    public critical(...data: unknown[]): void {
+        this.send('error', data, 41, 'critical');
     }
 
     public notice(...data: unknown[]): void {
