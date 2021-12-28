@@ -63,6 +63,21 @@ export default class Equipments {
     }
 
     /**
+     * Finds the equipment type passed and attempts to unequip if there is
+     * enough space in the inventory.
+     * @param type The equipment we are attempting to unequip.
+     */
+
+    public unequip(type: Modules.Equipment): void {
+        if (!this.player.inventory.hasSpace())
+            return this.player.notify('You do not have enough space in your inventory.');
+
+        let equipment = this.getEquipment(type);
+
+        // TODO
+    }
+
+    /**
      * Each equipment is organized in the same order as the `Modules.Equipment`
      * enum. As such, we use the type to pick from the array. We must make sure
      * that any new equipments that are added have to follow the SAME order
