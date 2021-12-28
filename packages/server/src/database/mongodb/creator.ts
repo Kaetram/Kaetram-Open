@@ -1,17 +1,12 @@
 import bcryptjs from 'bcryptjs';
+import { Db } from 'mongodb';
 
-import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
+import type Player from '../../game/entity/character/player/player';
+
 import log from '@kaetram/common/util/log';
+import { Modules } from '@kaetram/common/network';
 
 import type { Collection } from 'mongodb';
-import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';
-import type { AbilitiesArray } from '../../game/entity/character/player/abilities/abilities';
-import type { ContainerArray } from '../../game/entity/character/player/containers/container';
-import type { FriendsArray } from '../../game/entity/character/player/friends';
-import type Player from '../../game/entity/character/player/player';
-import type { PlayerRegions } from '../../game/entity/character/player/player';
-import { Db } from 'mongodb';
 
 export interface PlayerInfo {
     username: string;
