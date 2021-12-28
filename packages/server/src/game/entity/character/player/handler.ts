@@ -24,6 +24,8 @@ export default class Handler {
 
         this.player.onRegion(this.handleRegion.bind(this));
 
+        this.player.equipment.onLoaded(this.handleEquipment.bind(this));
+
         this.load();
     }
 
@@ -36,6 +38,14 @@ export default class Handler {
         console.log(`Player ${this.player.username} entered region: ${region}.`);
 
         this.map.regions.sendEntities(this.player);
+    }
+
+    /**
+     * Callback once the equipments are loaded. Relay the mesasge to the client.
+     */
+
+    private handleEquipment(): void {
+        log.warning('[TODO] loaded equipment');
     }
 
     // TODO - Refactor all of this.
