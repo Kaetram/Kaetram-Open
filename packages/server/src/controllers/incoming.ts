@@ -287,7 +287,13 @@ export default class Incoming {
     }
 
     private handleEquipment(packet: PacketData): void {
-        log.warning('equipment packet not implemented.');
+        let opcode = packet.shift() as Opcodes.Equipment,
+            type = packet.shift() as Modules.Equipment;
+
+        switch (opcode) {
+            case Opcodes.Equipment.Unequip:
+                return this.player.equipment.unequip(type);
+        }
 
         // let [opcode, type] = message;
 
