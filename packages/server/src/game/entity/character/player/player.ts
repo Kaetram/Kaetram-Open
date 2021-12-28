@@ -52,6 +52,9 @@ import {
 import Packet from '@kaetram/server/src/network/packet';
 import Equipments from './equipment/equipments';
 import { SEquipment } from '@kaetram/common/types/equipment';
+import Regions from '../../../map/regions';
+import Entities from '@kaetram/server/src/controllers/entities';
+import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
@@ -73,24 +76,33 @@ export interface ObjectData {
 
 export default class Player extends Character {
     public map: Map;
-    private regions;
-    private entities;
-    private globalObjects;
+    private regions: Regions;
+    private entities: Entities;
+    private globalObjects: GlobalObjects;
 
-    public incoming;
+    public incoming: Incoming;
 
-    public ready = false;
-
-    public team?: string; // TODO
-    public userAgent!: string;
-
-    private disconnectTimeout: NodeJS.Timeout | null = null;
-    private timeoutDuration = 1000 * 60 * 10; // 10 minutes
-    public lastRegionChange = Date.now();
-
-    private handler;
+    private handler: Handler;
 
     public equipment: Equipments;
+
+    public ready = false; // indicates if login processed finished
+
+    public password = '';
+    public email = '';
+
+    public rights = 0;
+    public experience = 0;
+    public ban = 0; // epoch timestamp
+    public mute = 0;
+    public lastLogin = 0;
+    public pvpKills = 0;
+    public pvpDeaths = 0;
+    public orientation = Modules.Orientation.Down;
+    public mapVersion = -1;
+
+    // TODO - REFACTOR THESE ------------
+
     public inventory;
     public abilities;
     public friends;
@@ -100,6 +112,13 @@ export default class Player extends Character {
     public trade;
     public doors;
     public warp;
+
+    public team?: string; // TODO
+    public userAgent!: string;
+
+    private disconnectTimeout: NodeJS.Timeout | null = null;
+    private timeoutDuration = 1000 * 60 * 10; // 10 minutes
+    public lastRegionChange = Date.now();
 
     private currentSong: string | null = null;
     public isGuest = false;
@@ -114,21 +133,7 @@ export default class Player extends Character {
     public regionsLoaded: number[] = [];
     public lightsLoaded: number[] = [];
 
-    public npcTalk: number | string | null = null;
-
-    // public username: string;
-    public password!: string;
-    public email!: string;
-
-    public rights!: number;
-    public experience!: number;
-    public ban!: number;
-    public mute!: number;
-    public lastLogin!: number;
-    public pvpKills!: number;
-    public pvpDeaths!: number;
-    public orientation!: number;
-    public mapVersion!: number;
+    public npcTalk = -1;
 
     private nextExperience: number | undefined;
     private prevExperience!: number;
@@ -154,6 +159,8 @@ export default class Player extends Character {
     private lastNotify!: number;
 
     public selectedShopItem!: { id: number; index: number } | null;
+
+    //--------------------------------------
 
     private teleportCallback?: TeleportCallback;
     private cheatScoreCallback?(): void;
