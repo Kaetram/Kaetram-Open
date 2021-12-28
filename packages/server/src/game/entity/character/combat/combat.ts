@@ -54,8 +54,8 @@ export default class Combat {
             if (this.character.isPlayer()) {
                 let player = character as Player;
 
-                if (player.hasBreakableWeapon() && Formulas.getWeaponBreak(player, target))
-                    player.breakWeapon();
+                // if (player.hasBreakableWeapon() && Formulas.getWeaponBreak(player, target))
+                //     player.breakWeapon();
             }
 
             if (hitInfo.type === Modules.Hits.Stun) {

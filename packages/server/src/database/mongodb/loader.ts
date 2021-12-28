@@ -5,10 +5,28 @@ import type { ContainerArray } from '../../game/entity/character/player/containe
 import type { FriendsArray } from '../../game/entity/character/player/friends';
 import type Player from '../../game/entity/character/player/player';
 import { Db } from 'mongodb';
+import { SEquipment } from '@kaetram/common/types/equipment';
 
 export default class Loader {
     public constructor(private database: Db) {}
 
+    public loadEquipment(player: Player, callback: (equipmentInfo: SEquipment[]) => void): void {
+        let cursor = this.database
+            .collection('player_equipment')
+            .find({ username: player.username });
+
+        cursor.toArray().then((info) => {
+            if (info.length > 1)
+                log.warning(`[player_equipment] Duplicate entry for ${player.username}.`);
+
+            console.log(info);
+
+            // TODO -Hack lol obviously gonna fix this
+            callback((info as unknown as [1])[0] as unknown as SEquipment[]);
+        });
+    }
+
+    // ---------------- REFACTOR --------------------
     private parseArray(value: string): number[] {
         return value.split(' ').map((string) => parseInt(string));
     }
@@ -134,4 +152,5 @@ export default class Loader {
             }
         });
     }
+    // ---------------- REFACTOR END --------------------
 }
