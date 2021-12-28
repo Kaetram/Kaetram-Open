@@ -215,7 +215,7 @@ export default class Commands {
             }
 
             case 'ghost':
-                this.player.equip('ghost', 1, -1, -1);
+                //this.player.equip('ghost', 1, -1, -1);
 
                 return;
 

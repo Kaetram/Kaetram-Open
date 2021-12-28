@@ -31,14 +31,12 @@ export default {
             targetRing,
             targetBoots;
 
-        if (attacker.isPlayer()) {
-            damageDealt += 10;
+        if (attacker.isPlayer()) damageDealt += 10;
 
-            ({ pendant, ring, boots } = attacker as Player);
-        }
+        // ({ pendant, ring, boots } = attacker as Player);
 
-        if (target.isPlayer())
-            ({ pendant: targetPendant, ring: targetRing, boots: targetBoots } = target as Player);
+        // if (target.isPlayer())
+        //     ({ pendant: targetPendant, ring: targetRing, boots: targetBoots } = target as Player);
 
         damageDealt +=
             attacker.level +
@@ -57,11 +55,11 @@ export default {
          * Apply special amulets
          */
 
-        if (pendant && pendant.pendantLevel > 0) damageAmplifier *= pendant.getBaseAmplifier();
+        // if (pendant && pendant.pendantLevel > 0) damageAmplifier *= pendant.getBaseAmplifier();
 
-        if (ring && ring.ringLevel > 0) damageAmplifier *= ring.getBaseAmplifier();
+        // if (ring && ring.ringLevel > 0) damageAmplifier *= ring.getBaseAmplifier();
 
-        if (boots && boots.bootsLevel > 0) damageAmplifier *= boots.getBaseAmplifier();
+        // if (boots && boots.bootsLevel > 0) damageAmplifier *= boots.getBaseAmplifier();
 
         /**
          * Just so amplifiers don't get out of hand.
@@ -73,11 +71,11 @@ export default {
 
         damageAbsorbed = target.level + targetArmour / 2;
 
-        if (targetPendant) absorptionAmplifier *= targetPendant.getBaseAmplifier();
+        // if (targetPendant) absorptionAmplifier *= targetPendant.getBaseAmplifier();
 
-        if (targetRing) absorptionAmplifier *= targetRing.getBaseAmplifier();
+        // if (targetRing) absorptionAmplifier *= targetRing.getBaseAmplifier();
 
-        if (targetBoots) absorptionAmplifier *= targetBoots.getBaseAmplifier();
+        // if (targetBoots) absorptionAmplifier *= targetBoots.getBaseAmplifier();
 
         damageAbsorbed *= absorptionAmplifier;
 
@@ -97,8 +95,9 @@ export default {
          * The critical is the player's max hit plus *= critical multiplier of the weapon
          */
 
-        let damage = this.getDamage(attacker, target),
-            multiplier = attacker.weapon.abilityLevel / 10;
+        let weapon = attacker.equipment.getWeapon(),
+            damage = this.getDamage(attacker, target),
+            multiplier = weapon.abilityLevel / 10;
 
         return (damage *= multiplier);
     },

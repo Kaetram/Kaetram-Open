@@ -6,7 +6,6 @@ import Constants from './constants';
 import { Inventory as InventoryPacket, Notification } from '../../../../../../network/packets';
 
 import type Item from '../../../../objects/item';
-import type { ItemData } from '../../equipment/equipment';
 import type Player from '../../player';
 
 export default class Inventory extends Container {
@@ -25,7 +24,7 @@ export default class Inventory extends Container {
         this.owner.send(new InventoryPacket(Opcodes.Inventory.Batch, [this.size, this.slots]));
     }
 
-    public add(item: ItemData): boolean {
+    public add(item: any): boolean {
         if (!this.canHold(item.id!, item.count!)) {
             this.owner.send(
                 new Notification(Opcodes.Notification.Text, {
