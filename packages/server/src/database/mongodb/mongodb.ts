@@ -4,12 +4,10 @@ import { Db, MongoClient } from 'mongodb';
 
 import log from '@kaetram/common/util/log';
 
-import Creator, { FullPlayerData, PlayerData } from './creator';
+import Creator, { PlayerInfo } from './creator';
 import Loader from './loader';
 
 import type Player from '../../game/entity/character/player/player';
-import type { PlayerEquipment, PlayerRegions } from '../../game/entity/character/player/player';
-import config from '@kaetram/common/config';
 
 export default class MongoDB {
     private connectionUrl: string;
@@ -35,6 +33,7 @@ export default class MongoDB {
             ? `mongodb://${username}:${password}@${host}:${port}/${databaseName}`
             : `mongodb://${host}:${port}/${databaseName}`;
 
+        // Attempt to connect to MongoDB.
         this.createConnection();
     }
 
@@ -75,17 +74,19 @@ export default class MongoDB {
         if (!this.hasDatabase()) return;
 
         let cursor = this.database
-            .collection<PlayerData>('player_data')
+            .collection<PlayerInfo>('player_info')
             .find({ username: player.username });
 
-        cursor.toArray().then((playerData) => {
-            if (playerData.length === 0) player.connection.reject('invalidlogin');
+        cursor.toArray().then((playerInfo) => {
+            // Reject if we cannot find any data about the player.
+            if (playerInfo.length === 0) player.connection.reject('invalidlogin');
             else {
-                let [info] = playerData;
+                let [info] = playerInfo;
 
                 bcryptjs.compare(player.password, info.password, (error: Error, result) => {
                     if (error) throw error;
 
+                    // Reject if password hashes don't match.
                     if (result) player.load(info);
                     else player.connection.reject('invalidlogin');
                 });
@@ -96,19 +97,23 @@ export default class MongoDB {
     public register(player: Player): void {
         if (!this.hasDatabase()) return;
 
-        let collection = this.database.collection<PlayerData>('player_data'),
+        let collection = this.database.collection<PlayerInfo>('player_info'),
             usernameCursor = collection.find({ username: player.username }),
             emailCursor = collection.find({ email: player.email });
 
+        // Check if email exists.
         emailCursor.toArray().then((emailData) => {
+            // If email exists in the database we reject the registration.
             if (emailData.length > 0) return player.connection.reject('emailexists');
 
-            usernameCursor.toArray().then((playerData) => {
-                if (playerData.length > 0) return player.connection.reject('userexists');
+            // Check if username exists.
+            usernameCursor.toArray().then((playerInfo) => {
+                // User exists and so we reject instead of double registering.
+                if (playerInfo.length > 0) return player.connection.reject('userexists');
 
                 log.debug(`No player data found for ${player.username}, creating user.`);
 
-                player.load(Creator.getFullData(player));
+                player.load(Creator.serializePlayer(player));
             });
         });
     }
@@ -121,7 +126,7 @@ export default class MongoDB {
     public registeredCount(callback: (count: number) => void): void {
         if (!this.hasDatabase()) return;
 
-        let collection = this.database.collection('player_data');
+        let collection = this.database.collection('player_info');
 
         collection.countDocuments().then((count) => {
             callback(count);

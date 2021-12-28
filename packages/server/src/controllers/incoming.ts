@@ -10,12 +10,10 @@ import Creator from '../database/mongodb/creator';
 import Items from '../info/items';
 import Commands from './commands';
 
-import type { EquipmentType } from '@kaetram/common/types/info';
 import type Character from '../game/entity/character/character';
 import type Mob from '../game/entity/character/mob/mob';
 import type Slot from '../game/entity/character/player/containers/slot';
 import type { EnchantType } from '../game/entity/character/player/enchant';
-import type { ItemData } from '../game/entity/character/player/equipment/equipment';
 import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
@@ -141,7 +139,7 @@ export default class Incoming {
         if (this.world.isOnline(this.player.username)) return this.connection.reject('loggedin');
 
         // Proceed directly to login with default player data if skip database is present.
-        if (config.skipDatabase) return this.player.load(Creator.getFullData(this.player));
+        if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
 
         switch (opcode) {
             case Opcodes.Login.Login:
@@ -225,8 +223,6 @@ export default class Incoming {
 
         //this.world.regions.syncRegions(this.player);
 
-        this.player.sendEquipment();
-
         this.player.loadInventory();
         this.player.loadQuests();
         this.player.loadBank();
@@ -290,67 +286,69 @@ export default class Incoming {
         });
     }
 
-    private handleEquipment(message: [Opcodes.Equipment, EquipmentType]): void {
-        let [opcode, type] = message;
+    private handleEquipment(packet: PacketData): void {
+        log.warning('equipment packet not implemented.');
 
-        switch (opcode) {
-            case Opcodes.Equipment.Unequip: {
-                if (!this.player.inventory.hasSpace()) {
-                    this.player.send(
-                        new Notification(Opcodes.Notification.Text, {
-                            message: 'You do not have enough space in your inventory.'
-                        })
-                    );
-                    return;
-                }
+        // let [opcode, type] = message;
 
-                switch (type) {
-                    case 'weapon':
-                        if (!this.player.hasWeapon()) return;
+        // switch (opcode) {
+        //     case Opcodes.Equipment.Unequip: {
+        //         if (!this.player.inventory.hasSpace()) {
+        //             this.player.send(
+        //                 new Notification(Opcodes.Notification.Text, {
+        //                     message: 'You do not have enough space in your inventory.'
+        //                 })
+        //             );
+        //             return;
+        //         }
 
-                        this.player.inventory.add(this.player.weapon.getItem());
-                        this.player.setWeapon(-1, -1, -1, -1);
+        //         // switch (type) {
+        //         //     case 'weapon':
+        //         //         if (!this.player.hasWeapon()) return;
 
-                        break;
+        //         //         this.player.inventory.add(this.player.weapon.getItem());
+        //         //         this.player.setWeapon(-1, -1, -1, -1);
 
-                    case 'armour':
-                        if (this.player.hasArmour() && this.player.armour.id === 114) return;
+        //         //         break;
 
-                        this.player.inventory.add(this.player.armour.getItem());
-                        this.player.setArmour(114, 1, -1, -1);
+        //         //     case 'armour':
+        //         //         if (this.player.hasArmour() && this.player.armour.id === 114) return;
 
-                        break;
+        //         //         this.player.inventory.add(this.player.armour.getItem());
+        //         //         this.player.setArmour(114, 1, -1, -1);
 
-                    case 'pendant':
-                        if (!this.player.hasPendant()) return;
+        //         //         break;
 
-                        this.player.inventory.add(this.player.pendant.getItem());
-                        this.player.setPendant(-1, -1, -1, -1);
+        //         //     case 'pendant':
+        //         //         if (!this.player.hasPendant()) return;
 
-                        break;
+        //         //         this.player.inventory.add(this.player.pendant.getItem());
+        //         //         this.player.setPendant(-1, -1, -1, -1);
 
-                    case 'ring':
-                        if (!this.player.hasRing()) return;
+        //         //         break;
 
-                        this.player.inventory.add(this.player.ring.getItem());
-                        this.player.setRing(-1, -1, -1, -1);
+        //         //     case 'ring':
+        //         //         if (!this.player.hasRing()) return;
 
-                        break;
+        //         //         this.player.inventory.add(this.player.ring.getItem());
+        //         //         this.player.setRing(-1, -1, -1, -1);
 
-                    case 'boots':
-                        if (!this.player.hasBoots()) return;
+        //         //         break;
 
-                        this.player.inventory.add(this.player.boots.getItem());
-                        this.player.setBoots(-1, -1, -1, -1);
+        //         //     case 'boots':
+        //         //         if (!this.player.hasBoots()) return;
 
-                        break;
-                }
+        //         //         this.player.inventory.add(this.player.boots.getItem());
+        //         //         this.player.setBoots(-1, -1, -1, -1);
 
-                this.player.send(new Equipment(Opcodes.Equipment.Unequip, type));
+        //         //         break;
+        //         // }
 
-                break;
-            }
-        }
+        //         this.player.send(new Equipment(Opcodes.Equipment.Unequip, type));
+
+        //         break;
+        //     }
+        // }
     }
 
     private handleMovement(message: [Opcodes.Movement, ...unknown[]]): void {
@@ -426,8 +424,7 @@ export default class Incoming {
 
                 orientation = message[5] as number;
 
-                if (entity && entity.isItem())
-                    this.player.inventory.add(entity as unknown as ItemData);
+                if (entity && entity.isItem()) this.player.inventory.add(entity as unknown);
 
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     let door = this.player.doors.getDoor(posX, posY);
@@ -744,7 +741,7 @@ export default class Incoming {
 
                     this.player.inventory.remove(id, count, slot.index);
 
-                    this.player.equip(string, count, ability, abilityLevel);
+                    this.player.equipment.equip(id, count, ability, abilityLevel);
                 } else if (edible) {
                     this.player.inventory.remove(id, 1, slot.index);
 
