@@ -165,7 +165,7 @@ export interface CommandData {
 
 export type ContainerBatchData = {
     type: Modules.ContainerType;
-    data: SlotData[];
+    slots: SlotData[];
 };
 export type ContainerAddData = {
     type: Modules.ContainerType;
@@ -174,6 +174,7 @@ export type ContainerAddData = {
 export type ContainerRemoveData = {
     type: Modules.ContainerType;
     index: number;
+    count?: number;
 };
 
 export interface QuestBatchData {
