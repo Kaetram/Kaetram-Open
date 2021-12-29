@@ -19,25 +19,10 @@ class Main {
     public constructor() {
         log.info(`Initializing ${config.name} game engine...`);
 
-        this.socketHandler.onReady(this.loadWorld.bind(this));
         this.socketHandler.onConnection(this.handleConnection.bind(this));
 
-        this.database.onReady(() => (this.ready = true));
-
-        this.database.onFail((error: Error) => {
-            // Proceed with no database and allow connections.
-            if (config.skipDatabase) {
-                log.notice('Running without database - Server is now accepting connections.');
-                this.ready = true;
-                return;
-            }
-
-            log.critical('Could not connect to the MongoDB server.');
-            log.critical(`Error: ${error}`);
-
-            // Exit the process.
-            exit(1);
-        });
+        this.database.onReady(this.handleReady.bind(this));
+        this.database.onFail(this.handleFail.bind(this));
 
         new Loader();
     }
@@ -73,6 +58,36 @@ class Main {
         }
 
         this.world?.connectionCallback?.(connection);
+    }
+
+    /**
+     * The handle ready callback function for when the database finishes initializing.
+     * @param withoutDatabase Boolean if to display logs that we are running without database.
+     */
+
+    private handleReady(withoutDatabase = false): void {
+        this.ready = true;
+
+        this.loadWorld();
+
+        if (withoutDatabase)
+            log.notice('Running without database - Server is now accepting connections.');
+    }
+
+    /**
+     * The failure handler if the database does not establish connection.
+     * @param error Error message from the database.
+     */
+
+    private handleFail(error: Error): void {
+        // Proceed with no database and allow connections.
+        if (config.skipDatabase) return this.handleReady(true);
+
+        log.critical('Could not connect to the MongoDB server.');
+        log.critical(`Error: ${error}`);
+
+        // Exit the process.
+        exit(1);
     }
 }
 

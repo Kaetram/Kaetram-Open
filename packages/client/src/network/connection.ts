@@ -9,12 +9,6 @@ import * as Detect from '../utils/detect';
 import type {
     CombatHitData,
     CombatSyncData,
-    ContainerAddData,
-    ContainerBatchData,
-    ContainerRemoveData,
-    EquipmentBatchData,
-    EquipmentEquipData,
-    EquipmentUnequipData,
     ExperienceCombatData,
     MovementFollowData,
     MovementMoveData,
@@ -45,6 +39,7 @@ import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
 import type Slot from '../menu/container/slot';
+import { EquipmentData } from '@kaetram/common/types/equipment';
 
 export default class Connection {
     private app;
@@ -127,7 +122,8 @@ export default class Connection {
                     password,
                     email
                 ]);
-            } else if (this.app.isGuest()) this.socket.send(Packets.Login, [Opcodes.Login.Guest]);
+            } else if (this.app.isGuest())
+                this.socket.send(Packets.Login, [Opcodes.Login.Guest, '', '']);
             else {
                 let loginInfo = this.app.loginFields,
                     name = loginInfo[0].val() as string,
@@ -160,58 +156,74 @@ export default class Connection {
 
         this.messages.onEquipment((opcode, info) => {
             switch (opcode) {
-                case Opcodes.Equipment.Batch: {
-                    _.each(info as EquipmentBatchData, (data) => {
+                case Opcodes.Equipment.Batch:
+                    _.each(info as EquipmentData[], (data: EquipmentData) => {
                         this.game.player.setEquipment(
                             data.type,
+                            data.key,
                             data.name,
-                            data.string,
                             data.count,
                             data.ability,
-                            data.abilityLevel,
-                            data.power
+                            data.abilityLevel
                         );
                     });
 
-                    this.menu.loadProfile();
-
                     break;
-                }
-
-                case Opcodes.Equipment.Equip: {
-                    let { type, name, string, count, ability, abilityLevel, power } =
-                        info as EquipmentEquipData;
-
-                    this.game.player.setEquipment(
-                        type,
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
-
-                    this.menu.profile.update();
-
-                    break;
-                }
-
-                case Opcodes.Equipment.Unequip: {
-                    let type = info as EquipmentUnequipData;
-
-                    this.game.player.unequip(type);
-
-                    if (type === 'armour')
-                        this.game.player.setSprite(
-                            this.game.getSprite(this.game.player.getSpriteName())
-                        );
-
-                    this.menu.profile.update();
-
-                    break;
-                }
             }
+
+            // switch (opcode) {
+            //     case Opcodes.Equipment.Batch: {
+            //         _.each(info as EquipmentBatchData, (data) => {
+            //             this.game.player.setEquipment(
+            //                 data.type,
+            //                 data.name,
+            //                 data.string,
+            //                 data.count,
+            //                 data.ability,
+            //                 data.abilityLevel,
+            //                 data.power
+            //             );
+            //         });
+
+            //         this.menu.loadProfile();
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Equipment.Equip: {
+            //         let { type, name, string, count, ability, abilityLevel, power } =
+            //             info as EquipmentEquipData;
+
+            //         this.game.player.setEquipment(
+            //             type,
+            //             name,
+            //             string,
+            //             count,
+            //             ability,
+            //             abilityLevel,
+            //             power
+            //         );
+
+            //         this.menu.profile.update();
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Equipment.Unequip: {
+            //         let type = info as EquipmentUnequipData;
+
+            //         this.game.player.unequip(type);
+
+            //         if (type === 'armour')
+            //             this.game.player.setSprite(
+            //                 this.game.getSprite(this.game.player.getSpriteName())
+            //             );
+
+            //         this.menu.profile.update();
+
+            //         break;
+            //     }
+            // }
         });
 
         this.messages.onSpawn((data) => this.entities.create(data as AnyEntity));
@@ -624,62 +636,40 @@ export default class Connection {
             }
         });
 
-        this.messages.onInventory((opcode, info) => {
-            switch (opcode) {
-                case Opcodes.Inventory.Batch: {
-                    let [inventorySize, data] = info as ContainerBatchData;
+        this.messages.onContainer((opcode, info) => {
+            console.log('-----Received Container------');
+            console.log(opcode);
+            console.log(info);
 
-                    this.menu.loadInventory(inventorySize, data);
+            // switch (opcode) {
+            //     case Opcodes.Inventory.Batch: {
+            //         let [inventorySize, data] = info as ContainerBatchData;
 
-                    break;
-                }
+            //         this.menu.loadInventory(inventorySize, data);
 
-                case Opcodes.Inventory.Add: {
-                    let slot = info as Slot;
+            //         break;
+            //     }
 
-                    if (this.menu.bank) this.menu.addInventory(slot);
+            //     case Opcodes.Inventory.Add: {
+            //         let slot = info as Slot;
 
-                    this.menu.inventory?.add(slot);
+            //         if (this.menu.bank) this.menu.addInventory(slot);
 
-                    break;
-                }
+            //         this.menu.inventory?.add(slot);
 
-                case Opcodes.Inventory.Remove: {
-                    let slot = info as Slot;
+            //         break;
+            //     }
 
-                    if (this.menu.bank) this.menu.removeInventory(slot);
+            //     case Opcodes.Inventory.Remove: {
+            //         let slot = info as Slot;
 
-                    this.menu.inventory?.remove(slot);
+            //         if (this.menu.bank) this.menu.removeInventory(slot);
 
-                    break;
-                }
-            }
-        });
+            //         this.menu.inventory?.remove(slot);
 
-        this.messages.onBank((opcode, info) => {
-            switch (opcode) {
-                case Opcodes.Bank.Batch: {
-                    let [bankSize, data] = info as ContainerBatchData;
-
-                    this.menu.loadBank(bankSize, data);
-
-                    break;
-                }
-
-                case Opcodes.Bank.Add: {
-                    if (!this.menu.bank) return;
-
-                    this.menu.bank.add(info as ContainerAddData);
-
-                    break;
-                }
-
-                case Opcodes.Bank.Remove: {
-                    this.menu.bank.remove(info as ContainerRemoveData);
-
-                    break;
-                }
-            }
+            //         break;
+            //     }
+            // }
         });
 
         // this.messages.onAbility((opcode, info) => {});
