@@ -393,7 +393,7 @@ export default class Commands {
 
             case 'clear':
                 this.player.inventory.forEachSlot((slot) => {
-                    slot.clear();
+                    this.player.inventory.remove(slot.index, slot.count);
                 });
 
                 break;

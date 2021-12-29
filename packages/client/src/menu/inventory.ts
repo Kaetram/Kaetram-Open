@@ -42,7 +42,8 @@ export default class Inventory {
         for (let index = 0; index < this.size; index++) {
             // Create an empty item slot.
             let itemSlot = $(`<div id="slot${index}" class="itemSlot"></div>`),
-                slotElement = $('<li></li>').append(itemSlot);
+                itemSlotCount = $(`<div id="itemCount${index}" class="inventoryItemCount"></div>`),
+                slotElement = $('<li></li>').append(itemSlot).append(itemSlotCount);
 
             itemSlot.dblclick((event) => this.clickDouble(event));
 
@@ -86,7 +87,7 @@ export default class Inventory {
         if (count > 999_999)
             itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
         else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
-        else if (count === 1) itemCount = '';
+        else if (count < 2) itemCount = '';
 
         item.find(`#itemCount${info.index}`).text(itemCount);
 

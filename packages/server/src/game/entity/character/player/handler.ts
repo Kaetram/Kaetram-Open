@@ -6,7 +6,7 @@ import { SlotData } from '@kaetram/common/types/slot';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
-import { Container, Equipment } from '../../../../network/packets';
+import { Container, Equipment as EquipmentPacket } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
 import Hit from '../combat/hit';
@@ -16,6 +16,7 @@ import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
+import Equipment from './equipment/impl/equipment';
 
 export default class Handler {
     private world: World;
@@ -38,6 +39,9 @@ export default class Handler {
         this.player.inventory.onRemove(this.handleInventoryRemove.bind(this));
         this.player.inventory.onNotify(this.player.notify.bind(this.player));
 
+        this.player.equipment.onEquip(this.handleEquip.bind(this));
+        this.player.equipment.onUnequip(this.handleUnequip.bind(this));
+
         this.load();
     }
 
@@ -57,7 +61,27 @@ export default class Handler {
      */
 
     private handleEquipment(): void {
-        this.player.send(new Equipment(Opcodes.Equipment.Batch, this.player.equipment.serialize()));
+        this.player.send(
+            new EquipmentPacket(Opcodes.Equipment.Batch, this.player.equipment.serialize())
+        );
+    }
+
+    /**
+     * Callback for when an item is equipped.
+     * @param equipment The equipment slot and the data contained.
+     */
+
+    private handleEquip(equipment: Equipment): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Equip, equipment));
+    }
+
+    /**
+     * Callback for when the equipment is removed.
+     * @param type The equipment type we are removing.
+     */
+
+    private handleUnequip(type: Modules.Equipment): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, type));
     }
 
     /**
@@ -96,18 +120,19 @@ export default class Handler {
      * @param index The index of the item we removed.
      */
 
-    private handleInventoryRemove(slotData: SlotData): void {
+    private handleInventoryRemove(slotData: SlotData, drop?: boolean): void {
         let { index, key, count, ability, abilityLevel } = slotData;
 
-        this.world.entities.spawnItem(
-            key,
-            this.player.x,
-            this.player.y,
-            true,
-            count,
-            ability,
-            abilityLevel
-        );
+        if (drop)
+            this.world.entities.spawnItem(
+                key,
+                this.player.x,
+                this.player.y,
+                true,
+                count,
+                ability,
+                abilityLevel
+            );
 
         this.player.send(
             new Container(Opcodes.Container.Remove, {

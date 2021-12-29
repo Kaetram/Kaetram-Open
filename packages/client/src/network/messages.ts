@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { Packets } from '@kaetram/common/network';
+import { Modules, Packets } from '@kaetram/common/network';
 
 import type { Opcodes } from '@kaetram/common/network';
 import type {
@@ -62,15 +62,15 @@ import type {
 } from '@kaetram/common/types/messages';
 import type App from '../app';
 import type { AudioName } from '../controllers/audio';
-import { EquipmentData } from '@kaetram/common/types/equipment';
+import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 
 type HandshakeCallback = (data: HandshakeData) => void;
 type WelcomeCallback = (playerData: WelcomeData) => void;
 type SpawnCallback = (entities: SpawnData) => void;
 interface EquipmentCallback {
-    (opcode: Opcodes.Equipment.Batch, info: EquipmentData[]): void;
-    (opcode: Opcodes.Equipment.Equip, info: EquipmentEquipData): void;
-    (opcode: Opcodes.Equipment.Unequip, info: EquipmentUnequipData): void;
+    (opcode: Opcodes.Equipment.Batch, info: SerializedEquipment): void;
+    (opcode: Opcodes.Equipment.Equip, info: EquipmentData): void;
+    (opcode: Opcodes.Equipment.Unequip, info: Modules.Equipment): void;
 }
 type EntityListCallback = (ids: string[]) => void;
 type SyncCallback = (data: SyncData) => void;

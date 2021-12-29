@@ -11,6 +11,7 @@ import Weapon from './equipment/weapon';
 
 import type { WelcomeData } from '@kaetram/common/types/messages';
 import type Game from '../../../game';
+import { EquipmentData } from '@kaetram/common/types/equipment';
 
 export default class Player extends Character {
     public username = '';
@@ -167,54 +168,48 @@ export default class Player extends Character {
         this.setMana(mana);
     }
 
-    public setEquipment(
-        type: Modules.Equipment,
-        name: string,
-        string: string,
-        count: number,
-        ability: number,
-        abilityLevel: number,
-        power = 1
-    ): void {
+    public setEquipment(equipment: EquipmentData): void {
+        let { type, name, key, count, ability, abilityLevel, power } = equipment;
+
         switch (type) {
             case Modules.Equipment.Armour:
                 if (!this.armour)
-                    this.armour = new Armour(name, string, count, ability, abilityLevel, power);
-                else this.armour.update(name, string, count, ability, abilityLevel, power);
+                    this.armour = new Armour(name, key, count, ability, abilityLevel, power);
+                else this.armour.update(name, key, count, ability, abilityLevel, power);
 
-                this.updateArmourCallback?.(string, power);
+                this.updateArmourCallback?.(key, power);
 
                 break;
 
             case Modules.Equipment.Weapon:
                 if (!this.weapon)
-                    this.weapon = new Weapon(name, string, count, ability, abilityLevel, power);
-                else this.weapon.update(name, string, count, ability, abilityLevel, power);
+                    this.weapon = new Weapon(name, key, count, ability, abilityLevel, power);
+                else this.weapon.update(name, key, count, ability, abilityLevel, power);
 
-                this.weapon.ranged = string.includes('bow');
+                this.weapon.ranged = key.includes('bow');
 
-                this.updateWeaponCallback?.(string, power);
+                this.updateWeaponCallback?.(key, power);
 
                 break;
 
             case Modules.Equipment.Pendant:
                 if (!this.pendant)
-                    this.pendant = new Pendant(name, string, count, ability, abilityLevel, power);
-                else this.pendant.update(name, string, count, ability, abilityLevel, power);
+                    this.pendant = new Pendant(name, key, count, ability, abilityLevel, power);
+                else this.pendant.update(name, key, count, ability, abilityLevel, power);
 
                 break;
 
             case Modules.Equipment.Ring:
                 if (!this.ring)
-                    this.ring = new Ring(name, string, count, ability, abilityLevel, power);
-                else this.ring.update(name, string, count, ability, abilityLevel, power);
+                    this.ring = new Ring(name, key, count, ability, abilityLevel, power);
+                else this.ring.update(name, key, count, ability, abilityLevel, power);
 
                 break;
 
             case Modules.Equipment.Boots:
                 if (!this.boots)
-                    this.boots = new Boots(name, string, count, ability, abilityLevel, power);
-                else this.boots.update(name, string, count, ability, abilityLevel, power);
+                    this.boots = new Boots(name, key, count, ability, abilityLevel, power);
+                else this.boots.update(name, key, count, ability, abilityLevel, power);
 
                 break;
         }
@@ -222,26 +217,26 @@ export default class Player extends Character {
         this.updateEquipmentCallback?.(type, power);
     }
 
-    public unequip(type: string): void {
+    public unequip(type: Modules.Equipment): void {
         switch (type) {
-            case 'armour':
-                this.armour?.update('Cloth Armour', 'clotharmor', 1, -1, -1);
+            case Modules.Equipment.Armour:
+                this.armour.update('Cloth Armour', 'clotharmor', 1, -1, -1);
                 break;
 
-            case 'weapon':
-                this.weapon?.update('', '', -1, -1, -1);
+            case Modules.Equipment.Weapon:
+                this.weapon.update('', '', -1, -1, -1);
                 break;
 
-            case 'pendant':
-                this.pendant?.update('', '', -1, -1, -1);
+            case Modules.Equipment.Pendant:
+                this.pendant.update('', '', -1, -1, -1);
                 break;
 
-            case 'ring':
-                this.ring?.update('', '', -1, -1, -1);
+            case Modules.Equipment.Ring:
+                this.ring.update('', '', -1, -1, -1);
                 break;
 
-            case 'boots':
-                this.boots?.update('', '', -1, -1, -1);
+            case Modules.Equipment.Boots:
+                this.boots.update('', '', -1, -1, -1);
                 break;
         }
     }
