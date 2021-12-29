@@ -32,7 +32,7 @@ export default class Item extends Entity {
     public movementSpeed = -1;
 
     private respawnTime = 30_000;
-    private despawnDuration = 4000;
+    private despawnDuration = 7000;
     private blinkDelay = 20_000;
 
     private blinkTimeout: NodeJS.Timeout | null = null;
@@ -54,8 +54,6 @@ export default class Item extends Entity {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
         this.data = (rawData as RawData)[key];
-
-        if (this.dropped) this.despawn();
 
         if (!this.data) {
             log.error(`[Item] Could not find data for ${key}.`);

@@ -1,7 +1,6 @@
 import type { Modules } from '../network';
 
 export interface SerializedEquipment {
-    username?: string;
     equipments: EquipmentData[];
 }
 

@@ -9,6 +9,9 @@ import * as Detect from '../utils/detect';
 import type {
     CombatHitData,
     CombatSyncData,
+    ContainerBatchData,
+    ContainerAddData,
+    ContainerRemoveData,
     ExperienceCombatData,
     MovementFollowData,
     MovementMoveData,
@@ -40,6 +43,7 @@ import type Player from '../entity/character/player/player';
 import type Game from '../game';
 import type Slot from '../menu/container/slot';
 import { EquipmentData } from '@kaetram/common/types/equipment';
+import Item from '../entity/objects/item';
 
 export default class Connection {
     private app;
@@ -637,21 +641,30 @@ export default class Connection {
         });
 
         this.messages.onContainer((opcode, info) => {
-            let containerType: Modules.ContainerType = info.type;
-
-            console.log('-----Received Container------');
-            console.log(opcode);
-            console.log(info);
+            let containerType: Modules.ContainerType = info.type,
+                container =
+                    containerType === Modules.ContainerType.Inventory
+                        ? this.menu.inventory
+                        : this.menu.bank;
 
             switch (opcode) {
-                case Opcodes.Container.Batch:
+                case Opcodes.Container.Batch: {
+                    let { slots } = info as ContainerBatchData;
+                    container.load(slots);
                     break;
+                }
 
-                case Opcodes.Container.Add:
+                case Opcodes.Container.Add: {
+                    let { slot } = info as ContainerAddData;
+                    container.add(slot);
                     break;
+                }
 
-                case Opcodes.Container.Remove:
+                case Opcodes.Container.Remove: {
+                    let { index, count } = info as ContainerRemoveData;
+                    container.remove(index, count);
                     break;
+                }
             }
 
             // switch (opcode) {
@@ -742,7 +755,7 @@ export default class Connection {
         });
 
         this.messages.onBlink((instance) => {
-            let item = this.entities.get(instance);
+            let item = this.entities.get<Item>(instance);
 
             if (!item) return;
 
