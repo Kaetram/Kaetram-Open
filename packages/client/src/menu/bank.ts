@@ -159,7 +159,7 @@ export default class Bank {
         if (slot.count > 1) count.text(slot.count);
     }
 
-    public remove(index: number, count = 1): void {
+    public remove(slot: SlotData): void {
         // let item = $(this.getBankList()[info.index]),
         //     slot = this.container.slots[info.index];
         // if (!item || !slot) return;
