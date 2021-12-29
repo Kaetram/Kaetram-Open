@@ -514,12 +514,6 @@ export default class Character extends Entity {
             return;
         }
 
-        if (this.target) {
-            if (this.target.id === target.id) return;
-
-            this.removeTarget();
-        }
-
         this.target = target;
     }
 

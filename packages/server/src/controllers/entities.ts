@@ -227,6 +227,8 @@ export default class Entities {
 
     private addItem(item: Item): void {
         // Not the prettiest way of doing it honestly...
+        item.onDespawn(() => this.removeItem(item));
+
         if (item.dropped) {
             item.despawn();
             item.onBlink(() =>
@@ -234,7 +236,6 @@ export default class Entities {
                     packet: new Blink(item.instance)
                 })
             );
-            item.onDespawn(() => this.removeItem(item));
         } else item.onRespawn(() => this.addItem(item));
 
         this.add(item);
@@ -352,10 +353,14 @@ export default class Entities {
         return !!this.getPlayer(username);
     }
 
-    public get<E extends Entity>(instance: string): E | null {
-        if (instance in this.entities) return this.entities[instance] as E;
+    /**
+     * Grabs an entity from our dictionary of entities.
+     * @param instance The instance of the entity we want.
+     * @returns Returns an entity or undefined.
+     */
 
-        return null;
+    public get(instance: string): Entity {
+        return this.entities[instance];
     }
 
     public getPlayer(username: string): Player | undefined {
