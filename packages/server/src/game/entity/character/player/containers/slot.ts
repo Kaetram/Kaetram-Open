@@ -6,6 +6,7 @@ export default class Slot {
     public edible = false;
     public equippable = false;
 
+    // Max amount of an item we can put in a slot.
     private maxStackSize = 1;
 
     public constructor(

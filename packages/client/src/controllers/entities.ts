@@ -104,7 +104,7 @@ export default class EntitiesController {
 
             case Modules.EntityType.Item: {
                 let item = new Item(
-                    info.id,
+                    info.instance,
                     info.string,
                     info.count,
                     info.ability,
