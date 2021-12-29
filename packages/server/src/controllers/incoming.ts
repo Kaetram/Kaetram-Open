@@ -22,6 +22,7 @@ import Respawn from '../network/packets/respawn';
 import Item from '../game/entity/objects/item';
 import Entity from '../game/entity/entity';
 import { Door } from '../game/entity/character/player/doors';
+import { SlotData } from '@kaetram/common/types/slot';
 
 type PacketData = ((string | string[]) | number | boolean)[];
 
@@ -87,6 +88,9 @@ export default class Incoming {
 
                 case Packets.Command:
                     return this.handleCommand(message);
+
+                case Packets.Container:
+                    return this.handleContainer(message);
 
                 case Packets.Respawn:
                     return this.handleRespawn(message);
@@ -366,8 +370,6 @@ export default class Incoming {
 
                 orientation = packet.shift() as number;
 
-                console.log(targetInstance);
-
                 if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
                 if (this.world.map.isDoor(playerX, playerY) && !hasTarget) {
@@ -624,7 +626,28 @@ export default class Incoming {
         }
     }
 
-    private handleInventory(packets: PacketData): void {
+    private handleContainer(packet: PacketData): void {
+        let type = packet.shift() as Modules.ContainerType,
+            opcode = packet.shift() as Opcodes.Container,
+            container =
+                type === Modules.ContainerType.Inventory ? this.player.inventory : this.player.bank,
+            index: number,
+            count = 1;
+
+        log.debug(`Received container packet: ${opcode} - ${type}.`);
+
+        switch (opcode) {
+            case Opcodes.Container.Remove:
+                index = packet.shift() as number;
+                count = packet.shift() as number;
+
+                log.debug(`Removing slot index: ${index} - count: ${count}`);
+
+                container.remove(index, count);
+
+                break;
+        }
+
         // let [opcode] = message,
         //     id!: number,
         //     ability!: number,

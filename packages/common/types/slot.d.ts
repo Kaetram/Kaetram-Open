@@ -9,4 +9,7 @@ export interface SlotData {
     count: number;
     ability: number;
     abilityLevel: number;
+
+    edible?: boolean;
+    equippable?: boolean;
 }
