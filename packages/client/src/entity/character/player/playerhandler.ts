@@ -101,6 +101,8 @@ export default class PlayerHandler {
             let id = null,
                 entity = game.getEntityAt(x, y, true);
 
+            console.log(entity);
+
             if (entity) ({ id } = entity);
 
             log.debug('Stopping pathing.');

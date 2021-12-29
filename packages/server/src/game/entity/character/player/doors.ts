@@ -153,7 +153,7 @@ export default class Doors {
         return tiles.collisions[index];
     }
 
-    public getDoor(x: number, y: number): Door | null {
+    public getDoor(x: number, y: number): Door | undefined {
         for (let i in this.doors)
             if (
                 Object.prototype.hasOwnProperty.call(this.doors, i) &&
@@ -161,8 +161,6 @@ export default class Doors {
                 this.doors[i].y === y
             )
                 return this.doors[i];
-
-        return null;
     }
 
     public isDoor(x: number, y: number, callback: (door: boolean) => void): void {

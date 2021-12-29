@@ -20,6 +20,8 @@ import type Projectile from '../game/entity/objects/projectile';
 import { Chat, Combat, Equipment, Movement, Notification, Shop, Spawn } from '../network/packets';
 import Respawn from '../network/packets/respawn';
 import Item from '../game/entity/objects/item';
+import Entity from '../game/entity/entity';
+import { Door } from '../game/entity/character/player/doors';
 
 type PacketData = ((string | string[]) | number | boolean)[];
 
@@ -287,121 +289,126 @@ export default class Incoming {
         // }
     }
 
-    private handleMovement(message: [Opcodes.Movement, ...unknown[]]): void {
-        let [opcode] = message,
-            orientation: number;
+    private handleMovement(packet: PacketData): void {
+        let opcode = packet.shift() as Opcodes.Movement,
+            orientation: Modules.Orientation,
+            requestX: number,
+            requestY: number,
+            playerX: number,
+            playerY: number,
+            movementSpeed: number,
+            hasTarget: boolean,
+            targetInstance: string,
+            entity: Entity,
+            door: Door | undefined,
+            diff: number;
 
-        if (!this.player || this.player.dead) return;
+        if (this.player.dead) return;
 
         switch (opcode) {
-            case Opcodes.Movement.Request: {
-                let requestX = message[1] as number,
-                    requestY = message[2] as number;
+            case Opcodes.Movement.Request:
+                requestX = packet.shift() as number;
+                requestY = packet.shift() as number;
 
                 this.preventNoClip(requestX, requestY);
 
                 this.player.movementStart = Date.now();
 
                 break;
-            }
 
-            case Opcodes.Movement.Started: {
-                let selectedX = message[1] as number,
-                    selectedY = message[2] as number,
-                    pX = message[3] as number,
-                    pY = message[4] as number,
-                    movementSpeed = message[5] as number,
-                    targetId = message[6] as number;
+            case Opcodes.Movement.Started:
+                requestX = packet.shift() as number;
+                requestY = packet.shift() as number;
+                playerX = packet.shift() as number;
+                playerY = packet.shift() as number;
+                movementSpeed = packet.shift() as number;
+                targetInstance = packet.shift() as string;
 
-                if (!movementSpeed || movementSpeed !== this.player.movementSpeed)
-                    this.player.incrementCheatScore(1);
+                if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
 
                 if (
-                    pX !== this.player.x ||
-                    pY !== this.player.y ||
+                    playerX !== this.player.x ||
+                    playerY !== this.player.y ||
                     this.player.stunned ||
-                    !this.preventNoClip(selectedX, selectedY)
+                    !this.preventNoClip(requestX, requestY)
                 )
                     return;
 
-                if (!targetId) {
-                    this.player.removeTarget();
-                    this.player.combat.stop();
-                }
+                if (!targetInstance) this.player.combat.stop();
 
                 this.player.moving = true;
 
                 break;
-            }
 
-            case Opcodes.Movement.Step: {
-                let x = message[1] as number,
-                    y = message[2] as number;
+            case Opcodes.Movement.Step:
+                playerX = packet.shift() as number;
+                playerY = packet.shift() as number;
 
-                if (this.player.stunned || !this.preventNoClip(x, y)) return;
+                if (this.player.stunned || !this.preventNoClip(playerX, playerY)) return;
 
-                this.player.setPosition(x, y);
+                this.player.setPosition(playerX, playerY);
 
                 break;
-            }
 
-            case Opcodes.Movement.Stop: {
-                let posX = message[1] as number,
-                    posY = message[2] as number,
-                    id = message[3] as string,
-                    hasTarget = message[4] as number,
-                    entity = this.entities.get(id) as Item;
+            case Opcodes.Movement.Stop:
+                playerX = packet.shift() as number;
+                playerY = packet.shift() as number;
+                targetInstance = packet.shift() as string;
+                hasTarget = !!(packet.shift() as number);
+
+                entity = this.entities.get(targetInstance);
 
                 if (!this.player.moving) {
-                    log.debug(`Did not receive movement start packet for ${this.player.username}.`);
+                    log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
 
                     this.player.incrementCheatScore(1);
                 }
 
-                orientation = message[5] as number;
+                orientation = packet.shift() as number;
 
-                if (entity && entity.isItem()) this.player.inventory.add(entity);
+                console.log(targetInstance);
 
-                if (this.world.map.isDoor(posX, posY) && !hasTarget) {
-                    let door = this.player.doors.getDoor(posX, posY);
+                if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
-                    if (door && this.player.doors.isClosed(door)) return;
+                if (this.world.map.isDoor(playerX, playerY) && !hasTarget) {
+                    door = this.player.doors.getDoor(playerX, playerY);
 
-                    let destination = this.world.map.getDoorByPosition(posX, posY);
+                    if (this.player.doors.isClosed(door!)) return;
+
+                    let destination = this.world.map.getDoorByPosition(playerX, playerY);
 
                     this.player.teleport(destination.x, destination.y, true);
                 } else {
-                    this.player.setPosition(posX, posY);
+                    this.player.setPosition(playerX, playerY);
                     this.player.setOrientation(orientation);
                 }
 
                 this.player.moving = false;
                 this.player.lastMovement = Date.now();
 
-                let diff = this.player.lastMovement - this.player.movementStart;
+                diff = this.player.lastMovement - this.player.movementStart;
 
                 if (diff < this.player.movementSpeed) this.player.incrementCheatScore(1);
 
                 break;
-            }
 
-            case Opcodes.Movement.Entity: {
-                let instance = message[1] as string,
-                    entityX = message[2] as number,
-                    entityY = message[3] as number,
-                    oEntity = this.entities.get<Character>(instance);
+            case Opcodes.Movement.Entity:
+                targetInstance = packet.shift() as string;
+                requestX = packet.shift() as number;
+                requestY = packet.shift() as number;
 
-                if (!oEntity || (oEntity.x === entityX && oEntity.y === entityY)) return;
+                entity = this.entities.get(targetInstance) as Character;
 
-                oEntity.setPosition(entityX, entityY);
+                if (!entity || (entity.x === requestX && entity.y === requestY)) return;
 
-                if (oEntity.target) oEntity.combat.forceAttack();
+                entity.setPosition(requestX, requestY);
+
+                if ((entity as Character).hasTarget()) entity.combat.forceAttack();
 
                 break;
-            }
 
             case Opcodes.Movement.Orientate:
-                orientation = message[1] as number;
+                orientation = packet.shift() as number;
 
                 this.player.sendToRegions(
                     new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
@@ -410,22 +417,14 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Freeze:
-                /**
-                 * Just used to prevent player from following entities in combat.
-                 * This is primarily for the 'hold-position' functionality.
-                 */
-
-                this.player.frozen = message[1] as boolean;
-
+                this.player.frozen = packet.shift() as boolean;
                 break;
 
-            case Opcodes.Movement.Zone: {
-                let direction = message[1] as number;
+            case Opcodes.Movement.Zone:
+                orientation = packet.shift() as number;
 
-                log.debug(`Zoning detected, direction: ${direction}.`);
-
+                log.debug(`Zoning orientation: ${orientation}`);
                 break;
-            }
         }
     }
 
@@ -464,7 +463,7 @@ export default class Incoming {
             }
 
             case Opcodes.Target.Attack: {
-                let target = this.entities.get<Character>(instance);
+                let target = this.entities.get(instance) as Character;
 
                 if (!target || target.dead || !this.canAttack(this.player, target)) return;
 
@@ -487,7 +486,7 @@ export default class Incoming {
                 break;
 
             case Opcodes.Target.Object: {
-                let target = this.entities.get<Character>(instance);
+                let target = this.entities.get(instance) as Character;
 
                 this.player.setTarget(target);
                 this.player.handleObject(instance);
@@ -502,8 +501,8 @@ export default class Incoming {
 
         switch (opcode) {
             case Opcodes.Combat.Initiate: {
-                let attacker = this.entities.get<Character>(message[1]),
-                    target = this.entities.get<Character>(message[2]);
+                let attacker = this.entities.get(message[1]) as Character,
+                    target = this.entities.get(message[2]) as Character;
 
                 if (
                     !target ||
@@ -535,8 +534,8 @@ export default class Incoming {
 
         switch (type) {
             case Opcodes.Projectile.Impact: {
-                let projectile = this.entities.get<Projectile>(message[1]),
-                    target = this.entities.get<Mob>(message[2]);
+                let projectile = this.entities.get(message[1]) as Projectile,
+                    target = this.entities.get(message[2]) as Mob;
 
                 if (!target || target.dead || !projectile) return;
 
