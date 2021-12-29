@@ -125,9 +125,6 @@ export default class Handler {
     private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
         let { ability, abilityLevel } = slot;
 
-        console.log(key);
-        console.log(count);
-
         // Spawn the item in the world if drop is true.
         if (drop)
             this.world.entities.spawnItem(
