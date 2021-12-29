@@ -13,6 +13,7 @@ import Pendant from './impl/pendant';
 import Ring from './impl/ring';
 import Weapon from './impl/weapon';
 import Item from '../../../objects/item';
+import { SlotData } from '@kaetram/common/types/slot';
 
 export default class Equipments {
     private armour: Armour = new Armour();
@@ -32,6 +33,8 @@ export default class Equipments {
     ];
 
     private loadCallback?: () => void;
+    private equipCallback?: (equipment: Equipment) => void;
+    private unequipCallback?: (type: Modules.Equipment) => void;
 
     public constructor(private player: Player) {}
 
@@ -61,8 +64,30 @@ export default class Equipments {
      * out what equipment type it is, and updates that equipment's information.
      */
 
-    public equip(key: string, count: number, ability: number, abilityLevel: number): void {
-        log.warning('equip not implemented.');
+    public equip(item: Item): void {
+        if (!item) return log.warning('Tried to equip something mysterious.');
+
+        let type = item.getEquipmentType(),
+            equipment = this.getEquipment(type);
+
+        if (!equipment) return;
+
+        if (!equipment.isEmpty())
+            this.player.inventory.add(
+                new Item(
+                    equipment.key,
+                    -1,
+                    -1,
+                    true,
+                    equipment.count,
+                    equipment.ability,
+                    equipment.abilityLevel
+                )
+            );
+
+        equipment.update(item);
+
+        this.equipCallback?.(equipment);
     }
 
     /**
@@ -77,7 +102,21 @@ export default class Equipments {
 
         let equipment = this.getEquipment(type);
 
-        // TODO
+        this.player.inventory.add(
+            new Item(
+                equipment.key,
+                -1,
+                -1,
+                true,
+                equipment.count,
+                equipment.ability,
+                equipment.abilityLevel
+            )
+        );
+
+        equipment.empty();
+
+        this.unequipCallback?.(type);
     }
 
     /**
@@ -174,5 +213,23 @@ export default class Equipments {
 
     public onLoaded(callback: () => void): void {
         this.loadCallback = callback;
+    }
+
+    /**
+     * Callback signal for when an item is equipped.
+     * @param callback The equipment slot that we just updated.
+     */
+
+    public onEquip(callback: (equipment: Equipment) => void): void {
+        this.equipCallback = callback;
+    }
+
+    /**
+     * Callback for when an equipment is removed.
+     * @param callback The equipment type we are removing.
+     */
+
+    public onUnequip(callback: (type: Modules.Equipment) => void): void {
+        this.unequipCallback = callback;
     }
 }

@@ -18,7 +18,8 @@ export default class Equipment {
         public key = '',
         public count = 1,
         public ability = -1,
-        public abilityLevel = -1
+        public abilityLevel = -1,
+        public power = 1
     ) {}
 
     /**
@@ -40,13 +41,34 @@ export default class Equipment {
     }
 
     /**
+     * Clears the slot of the item contained.
+     */
+
+    public empty(): void {
+        this.key = '';
+        this.count = 1;
+        this.ability = -1;
+        this.abilityLevel = -1;
+        this.power = 0;
+    }
+
+    /**
+     * Checks if the equipment slot contains an item.
+     * @returns If the key is null or not.
+     */
+
+    public isEmpty(): boolean {
+        return !this.key;
+    }
+
+    /**
      * Serializes the information about the equipment and returns it in the format
      * of the SEquipemnt interface object.
      * @returns An SEquipment object containing the id, count, ability, and abilityLevel
      */
 
     public serialize(): EquipmentData {
-        let { type, key, name, count, ability, abilityLevel } = this;
+        let { type, key, name, count, ability, abilityLevel, power } = this;
 
         return {
             type,
@@ -54,7 +76,8 @@ export default class Equipment {
             name,
             count,
             ability,
-            abilityLevel
+            abilityLevel,
+            power
         };
     }
 
