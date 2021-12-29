@@ -419,13 +419,13 @@ export default class Game {
     public getEntityAt(x: number, y: number, ignoreSelf: boolean): Entity | undefined {
         if (!this.entities) return;
 
-        let entities = this.entities.grids.renderingGrid[y][x];
-
-        if (_.size(entities) > 0) return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
-
         let items = this.entities.grids.itemGrid[y][x];
 
         if (_.size(items) > 0) return items[_.keys(items)[0]];
+
+        let entities = this.entities.grids.renderingGrid[y][x];
+
+        if (_.size(entities) > 0) return entities[_.keys(entities)[ignoreSelf ? 1 : 0]];
     }
 
     private getStorageUsername(): string | undefined {
