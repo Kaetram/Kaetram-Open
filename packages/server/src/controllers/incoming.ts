@@ -658,6 +658,8 @@ export default class Incoming {
 
                 if (!slot) return;
 
+                console.log(slot);
+
                 item = new Item(
                     slot.key,
                     -1,
