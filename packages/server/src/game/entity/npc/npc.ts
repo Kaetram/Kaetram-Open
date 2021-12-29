@@ -27,7 +27,7 @@ export default class NPC extends Entity {
         this.data = (rawData as RawData)[key];
 
         if (!this.data) {
-            log.error(`Could not find data for ${key}.`);
+            log.error(`[NPC] Could not find data for ${key}.`);
             return;
         }
 
