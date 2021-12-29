@@ -7,7 +7,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Creator from '../database/mongodb/creator';
-import Items from '../info/items';
 import Commands from './commands';
 
 import type Character from '../game/entity/character/character';
@@ -710,8 +709,6 @@ export default class Incoming {
 
                 if (item.count > 1) count = message[2] as number;
 
-                id = Items.stringToId(item.string)!;
-
                 let iSlot = this.player.inventory.slots[item.index];
 
                 if (iSlot.id < 1) return;
@@ -721,11 +718,12 @@ export default class Incoming {
                 ({ ability, abilityLevel } = iSlot);
 
                 if (this.player.inventory.remove(id, count || item.count, item.index))
-                    this.entities.dropItem(
-                        id,
-                        count || 1,
+                    this.entities.spawnItem(
+                        item.string,
                         this.player.x,
                         this.player.y,
+                        true,
+                        count,
                         ability,
                         abilityLevel
                     );

@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import Items from '../info/items';
 import Shop from '../info/shops';
 
 import { Shop as ShopPacket } from '../network/packets';
@@ -152,25 +151,21 @@ export default class Shops {
         return Math.floor(Shop.getCost(npcId, buyId, count) / 2);
     }
 
-    private getShopData(npcId: number): ShopData | undefined {
-        let shop = Shop.Ids[npcId];
-
-        if (!shop || !_.isArray(shop.items)) return;
-
-        let strings = [],
-            names = [];
-
-        for (let i = 0; i < shop.items.length; i++) {
-            strings.push(Items.idToString(shop.items[i]));
-            names.push(Items.idToName(shop.items[i]));
-        }
-
-        return {
-            id: npcId,
-            strings,
-            names,
-            counts: shop.count,
-            prices: shop.prices
-        };
+    private getShopData(npcId: number): void {
+        // let shop = Shop.Ids[npcId];
+        // if (!shop || !_.isArray(shop.items)) return;
+        // let strings = [],
+        //     names = [];
+        // for (let i = 0; i < shop.items.length; i++) {
+        //     strings.push(Items.idToString(shop.items[i]));
+        //     names.push(Items.idToName(shop.items[i]));
+        // }
+        // return {
+        //     id: npcId,
+        //     strings,
+        //     names,
+        //     counts: shop.count,
+        //     prices: shop.prices
+        // };
     }
 }
