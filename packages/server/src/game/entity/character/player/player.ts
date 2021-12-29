@@ -8,7 +8,6 @@ import Utils from '@kaetram/common/util/utils';
 import Incoming from '../../../../controllers/incoming';
 import Quests from '../../../../controllers/quests';
 import Formulas from '../../../../info/formulas';
-import Items from '../../../../info/items';
 import Character from '../character';
 import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
@@ -133,7 +132,7 @@ export default class Player extends Character {
     public regionsLoaded: number[] = [];
     public lightsLoaded: number[] = [];
 
-    public npcTalk = -1;
+    public npcTalk = '';
 
     private nextExperience: number | undefined;
     private prevExperience!: number;

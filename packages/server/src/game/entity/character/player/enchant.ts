@@ -6,8 +6,6 @@ import Utils from '@kaetram/common/util/utils';
 
 import { Enchant as EnchantPacket } from '../../../../network/packets';
 
-import Items from '../../../../info/items';
-
 import type Slot from './containers/slot';
 import type Player from './player';
 

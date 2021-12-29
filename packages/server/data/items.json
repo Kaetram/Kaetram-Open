@@ -365,164 +365,164 @@
 
   "armorarcher1": {
     "defense": 1,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Archer Armor",
     "spriteName": "armorarcher"
   },
 
   "leatherarcherarmor": {
     "defense": 2,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Leather Archer Armour"
   },
 
   "mailarcherarmor": {
     "defense": 3,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Mail Archer Armour"
   },
 
   "platearcherarmor": {
     "defense": 4,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Plate Archer Armour"
   },
 
   "redarcherarmor": {
     "defense": 5,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Red Archer Armour"
   },
 
   "goldenarcherarmor": {
     "defense": 6,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Golden Archer Armour"
   },
 
   "greenarcherarmor": {
     "defense": 7,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Green Archer Armour"
   },
 
   "greenwingarcherarmor": {
     "defense": 8,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Green Wing Archer Armour"
   },
 
   "guardarcherarmor": {
     "defense": 9,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Guard Archer Armour"
   },
 
   "redguardarcherarmor": {
     "defense": 10,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Red Guard Archer Armour"
   },
 
   "whitearcherarmor": {
     "defense": 11,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "White Archer Armour"
   },
 
   "ratarcherarmor": {
     "defense": 12,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Rat Archer Armour"
   },
 
   "piratearcherarmor": {
     "defense": 13,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Pirate Archer Armour"
   },
 
   "cheoliarcherarmor": {
     "defense": 14,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Cheolia Archer Armour"
   },
 
   "dovakinarcherarmor": {
     "defense": 15,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Dovakina Archer Armour"
   },
 
   "gbwingarcherarmor": {
     "defense": 16,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "GbwingarcherArmour"
   },
 
   "redwingarcherarmor": {
     "defense": 17,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Red Wing Archer Armour"
   },
 
   "snowfoxarcherarmor": {
     "defense": 18,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Snow Fox Archer Armour"
   },
 
   "wolfarcherarmor": {
     "defense": 18,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Wolf Archer Armour"
   },
 
   "bluewingarcherarmor": {
     "defense": 20,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Blue Wing Archer Armour"
   },
 
   "fallenarcherarmor": {
     "defense": 21,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Fallen Archer Armour"
   },
 
   "crystalarcherarmor": {
     "defense": 22,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Crystal Archer Armour"
   },
 
   "legolasarmor": {
     "defense": 23,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Legolas Armour"
   },
 
   "adhererarcherarmor": {
     "defense": 24,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Adherer Archer Armour"
   },
 
   "archerschoolUniform": {
     "defense": 25,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Archer School Uniform"
   },
 
   "combatuniform": {
     "defense": 26,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Combat Uniform"
   },
 
   "gayarcherarmor": {
     "defense": 27,
-    "type": "armorarcher",
+    "type": "armourarcher",
     "name": "Sketchy Archer Armour"
   },
 
@@ -691,452 +691,452 @@
 
   "clotharmor": {
     "defense": 1,
-    "type": "armor",
+    "type": "armour",
     "name": "Cloth Armour"
   },
 
   "leatherarmor": {
     "defense": 2,
-    "type": "armor",
+    "type": "armour",
     "name": "Leather Armour"
   },
 
   "mailarmor": {
     "defense": 3,
-    "type": "armor",
+    "type": "armour",
     "name": "Chain Mail"
   },
 
   "platearmor": {
     "defense": 4,
-    "type": "armor",
+    "type": "armour",
     "name": "Steel Armour"
   },
 
   "redarmor": {
     "defense": 5,
-    "type": "armor",
+    "type": "armour",
     "name": "Ruby Armour"
   },
 
   "goldenarmor": {
     "defense": 6,
-    "type": "armor",
+    "type": "armour",
     "name": "Golden Armour"
   },
 
   "greenarmor": {
     "defense": 7,
-    "type": "armor",
+    "type": "armour",
     "name": "Green Armour"
   },
 
   "greenwingarmor": {
     "defense": 8,
-    "type": "armor",
+    "type": "armour",
     "name": "Green Wing Armour"
   },
 
   "guardarmor": {
     "defense": 9,
-    "type": "armor",
+    "type": "armour",
     "name": "Guard Armour"
   },
 
   "redguardarmor": {
     "defense": 10,
-    "type": "armor",
+    "type": "armour",
     "name": "Red Guard Armour"
   },
 
   "whitearmor": {
     "defense": 11,
-    "type": "armor",
+    "type": "armour",
     "name": "White Armour"
   },
 
   "ratarmor": {
     "defense": 12,
-    "type": "armor",
+    "type": "armour",
     "name": "Rat Armour"
   },
 
   "bluepiratearmor": {
     "defense": 13,
-    "type": "armor",
+    "type": "armour",
     "name": "Blue Pirate Armour"
   },
 
   "cheoliarmor": {
     "defense": 14,
-    "type": "armor",
+    "type": "armour",
     "name": "Cheoli Armour"
   },
 
   "dovakinarmor": {
     "defense": 15,
-    "type": "armor",
+    "type": "armour",
     "name": "Dovakin Armour"
   },
 
   "gbwingarmor": {
     "defense": 16,
-    "type": "armor",
+    "type": "armour",
     "name": "GB Wing Armour"
   },
 
   "redwingarmor": {
     "defense": 17,
-    "type": "armor",
+    "type": "armour",
     "name": "Red Wing Armour"
   },
 
   "snowfoxarmor": {
     "defense": 18,
-    "type": "armor",
+    "type": "armour",
     "name": "Snow Fox Armour"
   },
 
   "wolfarmor": {
     "defense": 20,
-    "type": "armor",
+    "type": "armour",
     "name": "Wolf Armour"
   },
 
   "bluewingarmor": {
     "defense": 20,
-    "type": "armor",
+    "type": "armour",
     "name": "Blue Wing Armour"
   },
 
   "thiefarmor": {
     "defense": 21,
-    "type": "armor",
+    "type": "armour",
     "name": "Thief Armour"
   },
 
   "ninjaarmor": {
     "defense": 22,
-    "type": "armor",
+    "type": "armour",
     "name": "Ninja Armour"
   },
 
   "dragonarmor": {
     "defense": 48,
-    "type": "armor",
+    "type": "armour",
     "name": "Dragon Armour"
   },
 
   "fallenarmor": {
     "defense": 24,
-    "type": "armor",
+    "type": "armour",
     "name": "Fallen Armour"
   },
 
   "paladinarmor": {
     "defense": 25,
-    "type": "armor",
+    "type": "armour",
     "name": "Paladin Armour"
   },
 
   "crystalarmor": {
     "defense": 23,
-    "type": "armor",
+    "type": "armour",
     "name": "Crystal Armour"
   },
 
   "adhererrobe": {
     "defense": 27,
-    "type": "armor",
+    "type": "armour",
     "name": "Adherer Robe"
   },
 
   "frostarmor": {
     "defense": 28,
-    "type": "armor",
+    "type": "armour",
     "name": "Frost Armour"
   },
 
   "gayarmor": {
     "defense": 29,
-    "type": "armor",
+    "type": "armour",
     "name": "Gay Armour"
   },
 
   "schooluniform": {
     "defense": 30,
-    "type": "armor",
+    "type": "armour",
     "name": "School Uniform"
   },
 
   "beautifullife": {
     "defense": 31,
-    "type": "armor",
+    "type": "armour",
     "name": "Beautiful Life"
   },
 
   "regionarmor": {
     "defense": 37,
-    "type": "armor",
+    "type": "armour",
     "name": "Region Armour"
   },
 
   "ghostrider": {
     "defense": 33,
-    "type": "armor",
+    "type": "armour",
     "name": "Ghost Rider"
   },
 
   "taekwondo": {
     "defense": 34,
-    "type": "armor",
+    "type": "armour",
     "name": "Taekwondo"
   },
 
   "rabbitarmor": {
     "defense": 35,
-    "type": "armor",
+    "type": "armour",
     "name": "Rabbit Armour",
     "movementSpeed": 210
   },
 
   "portalarmor": {
     "defense": 36,
-    "type": "armor",
+    "type": "armour",
     "name": "Portal Armour"
   },
 
   "pirateKing": {
     "defense": 37,
-    "type": "armor",
+    "type": "armour",
     "name": "Pirate King"
   },
 
   "peadragonarmor": {
     "defense": 38,
-    "type": "armor",
+    "type": "armour",
     "name": "Sea Dragon Armour"
   },
 
   "shadowregionarmor": {
     "defense": 39,
-    "type": "armor",
+    "type": "armour",
     "name": "Shadow Region Armour"
   },
 
   "enelarmor": {
     "defense": 50,
-    "type": "armor",
+    "type": "armour",
     "name": "Enel Armour"
   },
 
   "miniseadragonarmor": {
     "defense": 41,
-    "type": "armor",
+    "type": "armour",
     "name": "Mini Sea Dragon Armour"
   },
 
   "huniarmor": {
     "defense": 42,
-    "type": "armor",
+    "type": "armour",
     "name": "Huni Armour"
   },
 
   "damboarmor": {
     "defense": 43,
-    "type": "armor",
+    "type": "armour",
     "name": "Dambo Armour"
   },
 
   "squidarmor": {
     "defense": 44,
-    "type": "armor",
+    "type": "armour",
     "name": "Squid Armour"
   },
 
   "beearmor": {
     "defense": 45,
-    "type": "armor",
+    "type": "armour",
     "name": "Bee Armour"
   },
 
   "bluedamboarmor": {
     "defense": 46,
-    "type": "armor",
+    "type": "armour",
     "name": "Blue Dambo Armour"
   },
 
   "rudolfarmor": {
     "defense": 47,
-    "type": "armor",
+    "type": "armour",
     "name": "Rudolf Armour"
   },
 
   "christmasarmor": {
     "defense": 48,
-    "type": "armor",
+    "type": "armour",
     "name": "Christmas Armour"
   },
 
   "robocoparmor": {
     "defense": 49,
-    "type": "armor",
+    "type": "armour",
     "name": "Robocop Armour"
   },
 
   "pinkcockroacharmor": {
     "defense": 50,
-    "type": "armor",
+    "type": "armour",
     "name": "Pink Cockroach Armour"
   },
 
   "cockroachSuit": {
     "defense": 27,
-    "type": "armor",
+    "type": "armour",
     "name": "Cockroach Suit"
   },
 
   "dinosaurarmor": {
     "defense": 52,
-    "type": "armor",
+    "type": "armour",
     "name": "Dinosaur Armour"
   },
 
   "catarmor": {
     "defense": 18,
-    "type": "armor",
+    "type": "armour",
     "name": "Cat Armour"
   },
 
   "snowmanarmor": {
     "defense": 54,
-    "type": "armor",
+    "type": "armour",
     "name": "Snowman Armour"
   },
 
   "beetlearmor": {
     "defense": 55,
-    "type": "armor",
+    "type": "armour",
     "name": "Beetle Armour"
   },
 
   "hongcheolarmor": {
     "defense": 56,
-    "type": "armor",
+    "type": "armour",
     "name": "Hongcheol Armour"
   },
 
   "tigerarmor": {
     "defense": 49,
-    "type": "armor",
+    "type": "armour",
     "name": "Tiger Armour"
   },
 
   "wizardrobe": {
     "defense": 14,
-    "type": "armor",
+    "type": "armour",
     "name": "Wizard Robe"
   },
 
   "ironknightarmor": {
     "defense": 25,
-    "type": "armor",
+    "type": "armour",
     "name": "Iron Knight Armour"
   },
 
   "evilarmor": {
     "defense": 60,
-    "type": "armor",
+    "type": "armour",
     "name": "Evil Armour"
   },
 
   "greendamboarmor": {
     "defense": 61,
-    "type": "armor",
+    "type": "armour",
     "name": "Green Dambo Armour"
   },
 
   "reddamboarmor": {
     "defense": 62,
-    "type": "armor",
+    "type": "armour",
     "name": "Red Dambo Armour"
   },
 
   "devilkazyaarmor": {
     "defense": 63,
-    "type": "armor",
+    "type": "armour",
     "name": "Devil Kazya Armour"
   },
 
   "bridalmask": {
     "defense": 26,
-    "type": "armor",
+    "type": "armour",
     "name": "Bridal Mask"
   },
 
   "blackspiderarmor": {
     "defense": 65,
-    "type": "armor",
+    "type": "armour",
     "name": "Black Spider Armour"
   },
 
   "frogarmor": {
     "defense": 66,
-    "type": "armor",
+    "type": "armour",
     "name": "Frog Armour"
   },
 
   "bearseonbiarmor": {
     "defense": 67,
-    "type": "armor",
+    "type": "armour",
     "name": "Bearseonbi Armour"
   },
 
   "rainbowapro": {
     "defense": 68,
-    "type": "armor",
+    "type": "armour",
     "name": "Rainbow A Pro"
   },
 
   "cokearmor": {
     "defense": 69,
-    "type": "armor",
+    "type": "armour",
     "name": "Coke Armour"
   },
 
   "friedpotatoarmor": {
     "defense": 70,
-    "type": "armor",
+    "type": "armour",
     "name": "Fried Potato Armour"
   },
 
   "burgerarmor": {
     "defense": 71,
-    "type": "armor",
+    "type": "armour",
     "name": "Burger Armour"
   },
 
   "radisharmor": {
     "defense": 72,
-    "type": "armor",
+    "type": "armour",
     "name": "Radish Armour"
   },
 
   "halloweenjkarmor": {
     "defense": 73,
-    "type": "armor",
+    "type": "armour",
     "name": "Halloween JK Armour"
   },
 
   "frankensteinarmor": {
     "defense": 74,
-    "type": "armor",
+    "type": "armour",
     "name": "Frankenstein Armour"
   },
 
   "adminarmor": {
     "defense": 75,
-    "type": "armor",
+    "type": "armour",
     "name": "Admin Armour"
   },
 
@@ -1146,10 +1146,10 @@
     "storeCount": 10,
     "price": 150,
     "stackable": true,
-    "edible": 1,
+    "edible": true,
     "maxStackSize": 5,
     "plugin": "healthFlask",
-    "customData": {"healAmount": 100}
+    "healAmount": 100
   },
 
   "manaflask": {
@@ -1158,11 +1158,10 @@
     "storeCount": 10,
     "price": 200,
     "stackable": true,
-    "edible": 1,
+    "edible": true,
     "maxStackSize": 5,
     "plugin": "healthFlask",
-    "customData": {"manaAmount": 35}
-
+    "manaAmount": 35
   },
 
   "burger": {
@@ -1171,11 +1170,10 @@
     "storeCount": 10,
     "price": 350,
     "stackable": true,
-    "edible": 1,
+    "edible": true,
     "maxStackSize": 3,
     "plugin": "healthFlask",
-    "customData": {"healAmount": 200}
-
+    "healAmount": 200
   },
 
   "bigflask": {
@@ -1184,10 +1182,10 @@
     "storeCount": 10,
     "price": 600,
     "stackable": true,
-    "edible": 1,
+    "edible": true,
     "maxStackSize": 2,
     "plugin": "healthFlask",
-    "customData": {"healAmount": 500}
+    "healAmount": 500
   },
 
   "chest": {
@@ -1563,20 +1561,20 @@
   },
 
   "ghost": {
-    "type": "armor",
+    "type": "armour",
     "defense": 3,
     "name": "Ghost"
   },
 
   "pickle": {
-    "type": "armor",
+    "type": "armour",
     "defense": 20,
     "name": "Pickle Armour"
   },
 
   "bluearmor": {
     "defense": 6,
-    "type": "armor",
+    "type": "armour",
     "name": "Crystal Armour"
   },
 
@@ -1594,7 +1592,7 @@
 
   "platinumarmor": {
     "defense": 7,
-    "type": "armor",
+    "type": "armour",
     "name": "Platinum Armour"
   },
 

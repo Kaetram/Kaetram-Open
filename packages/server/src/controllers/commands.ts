@@ -201,19 +201,6 @@ export default class Commands {
             case 'ipban':
                 return;
 
-            case 'drop': {
-                let id = parseInt(blocks.shift()!),
-                    dCount = parseInt(blocks.shift()!);
-
-                if (!id) return;
-
-                if (!dCount) dCount = 1;
-
-                this.entities.dropItem(id, dCount, this.player.x, this.player.y);
-
-                return;
-            }
-
             case 'ghost':
                 //this.player.equip('ghost', 1, -1, -1);
 
