@@ -194,6 +194,10 @@ export default abstract class Character extends Entity {
         return data;
     }
 
+    public hasTarget(): boolean {
+        return !!this.target;
+    }
+
     /**
      * Default value for an entity having special attack
      */
