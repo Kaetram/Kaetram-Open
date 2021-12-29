@@ -19,6 +19,7 @@ import type Chest from '../game/entity/objects/chest';
 import type Projectile from '../game/entity/objects/projectile';
 import { Chat, Combat, Equipment, Movement, Notification, Shop, Spawn } from '../network/packets';
 import Respawn from '../network/packets/respawn';
+import Item from '../game/entity/objects/item';
 
 type PacketData = ((string | string[]) | number | boolean)[];
 
@@ -85,12 +86,6 @@ export default class Incoming {
                 case Packets.Command:
                     return this.handleCommand(message);
 
-                case Packets.Inventory:
-                    return this.handleInventory(message);
-
-                case Packets.Bank:
-                    return this.handleBank(message);
-
                 case Packets.Respawn:
                     return this.handleRespawn(message);
 
@@ -152,79 +147,22 @@ export default class Incoming {
             case Opcodes.Login.Guest:
                 break;
         }
-
-        /*let [loginType, username, password] = message,
-            isRegistering = loginType === Opcodes.Intro.Register,
-            isGuest = loginType === Opcodes.Intro.Guest,
-            email = isRegistering ? message[3] : '',
-            formattedUsername = username
-                ? username.charAt(0).toUpperCase() + username.toLowerCase().slice(1)
-                : '';
-
-        this.player.username = formattedUsername.slice(0, 32).trim().toLowerCase();
-        this.player.password = password.slice(0, 32);
-        this.player.email = email.slice(0, 128).toLowerCase();
-
-        if (this.introduced) return;
-
-        if (this.world.isOnline(this.player.username)) {
-            this.connection.sendUTF8('loggedin');
-            this.connection.close('Player already logged in..');
-            return;
-        }
-
-        if (config.overrideAuth) {
-            this.database.login(this.player);
-            return;
-        }
-
-        if (config.skipDatabase) {
-            this.player.load(Creator.getFullData(this.player));
-            this.player.intro();
-
-            return;
-        }
-
-        this.introduced = true;
-
-        if (isRegistering)
-            this.database.exists(this.player, (result) => {
-                if (result.exists) {
-                    this.connection.sendUTF8(`${result.type}exists`);
-                    this.connection.close(`${result.type} is not available.`);
-                } else this.database.register(this.player);
-            });
-        else if (isGuest) {
-            this.player.username = `Guest${Utils.randomInt(0, 2_000_000)}`;
-            this.player.password = null!;
-            this.player.email = null!;
-            this.player.isGuest = true;
-
-            this.database.login(this.player);
-        } else
-            this.database.verify(this.player, (result) => {
-                if (result.status === 'success') this.database.login(this.player);
-                else {
-                    this.connection.sendUTF8('invalidlogin');
-                    this.connection.close(`Wrong password entered for: ${this.player.username}`);
-                }
-            });*/
     }
 
     private handleReady(message: [string, string, string]): void {
-        let [isReady, preloadedData, userAgent] = message;
-
-        if (!isReady) return;
+        let [, preloadedData, userAgent] = message;
 
         if (this.player.regionsLoaded.length > 0 && !preloadedData) this.player.regionsLoaded = [];
 
         this.player.ready = true;
 
+        this.player.loadEquipment();
+        this.player.loadInventory();
+        this.player.loadBank();
+
         //this.world.regions.syncRegions(this.player);
 
-        this.player.loadInventory();
         this.player.loadQuests();
-        this.player.loadBank();
 
         if (this.world.map.isOutOfBounds(this.player.x, this.player.y))
             this.player.setPosition(50, 89);
@@ -234,11 +172,6 @@ export default class Incoming {
 
             this.player.regionsLoaded = [];
             this.player.updateRegion(true);
-        }
-
-        if (this.player.new || config.skipDatabase) {
-            this.player.questsLoaded = true;
-            this.player.achievementsLoaded = true;
         }
 
         this.player.save();
@@ -252,8 +185,6 @@ export default class Incoming {
         this.player.readyCallback?.();
 
         this.player.sync();
-
-        this.player.save();
     }
 
     private handleWho(message: string[]): void {
@@ -419,7 +350,7 @@ export default class Incoming {
                     posY = message[2] as number,
                     id = message[3] as string,
                     hasTarget = message[4] as number,
-                    entity = this.entities.get(id);
+                    entity = this.entities.get(id) as Item;
 
                 if (!this.player.moving) {
                     log.debug(`Did not receive movement start packet for ${this.player.username}.`);
@@ -429,7 +360,7 @@ export default class Incoming {
 
                 orientation = message[5] as number;
 
-                if (entity && entity.isItem()) this.player.inventory.add(entity as unknown);
+                if (entity && entity.isItem()) this.player.inventory.add(entity);
 
                 if (this.world.map.isDoor(posX, posY) && !hasTarget) {
                     let door = this.player.doors.getDoor(posX, posY);
@@ -694,107 +625,81 @@ export default class Incoming {
         }
     }
 
-    private handleInventory(message: [Opcodes.Inventory, ...unknown[]]): void {
-        let [opcode] = message,
-            id!: number,
-            ability!: number,
-            abilityLevel!: number;
-
-        switch (opcode) {
-            case Opcodes.Inventory.Remove: {
-                let item = message[1] as Slot,
-                    count!: number;
-
-                if (!item) return;
-
-                if (item.count > 1) count = message[2] as number;
-
-                let iSlot = this.player.inventory.slots[item.index];
-
-                if (iSlot.id < 1) return;
-
-                if (count > iSlot.count) ({ count } = iSlot);
-
-                ({ ability, abilityLevel } = iSlot);
-
-                if (this.player.inventory.remove(id, count || item.count, item.index))
-                    this.entities.spawnItem(
-                        item.string,
-                        this.player.x,
-                        this.player.y,
-                        true,
-                        count,
-                        ability,
-                        abilityLevel
-                    );
-
-                break;
-            }
-
-            case Opcodes.Inventory.Select: {
-                let index = message[1] as number,
-                    slot = this.player.inventory.slots[index],
-                    { string, count, equippable, edible } = slot;
-
-                if (!slot || slot.id < 1) return;
-
-                id = Items.stringToId(string)!;
-
-                if (equippable) {
-                    if (!this.player.canEquip(string)) return;
-
-                    this.player.inventory.remove(id, count, slot.index);
-
-                    this.player.equipment.equip(id, count, ability, abilityLevel);
-                } else if (edible) {
-                    this.player.inventory.remove(id, 1, slot.index);
-
-                    this.player.eat(id);
-                }
-
-                break;
-            }
-        }
+    private handleInventory(packets: PacketData): void {
+        // let [opcode] = message,
+        //     id!: number,
+        //     ability!: number,
+        //     abilityLevel!: number;
+        // switch (opcode) {
+        //     case Opcodes.Inventory.Remove: {
+        //         let item = message[1] as Slot,
+        //             count!: number;
+        //         if (!item) return;
+        //         if (item.count > 1) count = message[2] as number;
+        //         let iSlot = this.player.inventory.slots[item.index];
+        //         if (iSlot.id < 1) return;
+        //         if (count > iSlot.count) ({ count } = iSlot);
+        //         ({ ability, abilityLevel } = iSlot);
+        //         if (this.player.inventory.remove(id, count || item.count, item.index))
+        //             this.entities.spawnItem(
+        //                 item.string,
+        //                 this.player.x,
+        //                 this.player.y,
+        //                 true,
+        //                 count,
+        //                 ability,
+        //                 abilityLevel
+        //             );
+        //         break;
+        //     }
+        //     case Opcodes.Inventory.Select: {
+        //         let index = message[1] as number,
+        //             slot = this.player.inventory.slots[index],
+        //             { string, count, equippable, edible } = slot;
+        //         if (!slot || slot.id < 1) return;
+        //         id = Items.stringToId(string)!;
+        //         if (equippable) {
+        //             if (!this.player.canEquip(string)) return;
+        //             this.player.inventory.remove(id, count, slot.index);
+        //             this.player.equipment.equip(id, count, ability, abilityLevel);
+        //         } else if (edible) {
+        //             this.player.inventory.remove(id, 1, slot.index);
+        //             this.player.eat(id);
+        //         }
+        //         break;
+        //     }
+        // }
     }
 
-    private handleBank(message: [Opcodes.Bank, string, number]): void {
-        let [opcode, type, index] = message;
-
-        switch (opcode) {
-            case Opcodes.Bank.Select: {
-                let isBank = type === 'bank';
-
-                if (isBank) {
-                    let bankSlot = this.player.bank.getInfo(index);
-
-                    if (bankSlot.id < 1) return;
-
-                    // Infinite stacks move all at once, otherwise move one by one.
-                    let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
-
-                    bankSlot.count = moveAmount;
-
-                    if (this.player.inventory.add(bankSlot))
-                        this.player.bank.remove(bankSlot.id, moveAmount, index);
-                } else {
-                    let inventorySlot = this.player.inventory.slots[index];
-
-                    if (inventorySlot.id < 1) return;
-
-                    if (
-                        this.player.bank.add(
-                            inventorySlot.id,
-                            inventorySlot.count,
-                            inventorySlot.ability,
-                            inventorySlot.abilityLevel
-                        )
-                    )
-                        this.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
-                }
-
-                break;
-            }
-        }
+    private handleBank(packet: PacketData): void {
+        // let [opcode, type, index] = message;
+        // switch (opcode) {
+        //     case Opcodes.Bank.Select: {
+        //         let isBank = type === 'bank';
+        //         if (isBank) {
+        //             let bankSlot = this.player.bank.getInfo(index);
+        //             if (bankSlot.id < 1) return;
+        //             // Infinite stacks move all at once, otherwise move one by one.
+        //             let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
+        //             bankSlot.count = moveAmount;
+        //             if (this.player.inventory.add(bankSlot))
+        //                 this.player.bank.remove(bankSlot.id, moveAmount, index);
+        //         } else {
+        //             let inventorySlot = this.player.inventory.slots[index];
+        //             if (inventorySlot.id < 1) return;
+        //             if (
+        //                 this.player.bank.add(
+        //                     inventorySlot.id,
+        //                     inventorySlot.count,
+        //                     inventorySlot.ability,
+        //                     inventorySlot.abilityLevel
+        //                 )
+        //             )
+        //                 this.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
+        //         }
+        //         break;
+        //     }
+        // }
     }
 
     private handleRespawn(message: [string]): void {
@@ -833,33 +738,24 @@ export default class Incoming {
     }
 
     private handleEnchant(message: [Opcodes.Enchant, unknown]): void {
-        let [opcode] = message;
-
-        switch (opcode) {
-            case Opcodes.Enchant.Select: {
-                let index = message[1] as number,
-                    item = this.player.inventory.slots[index],
-                    type: EnchantType = 'item';
-
-                if (item.id < 1) return;
-
-                if (Items.isShard(item.id)) type = 'shards';
-
-                this.player.enchant.add(type, item);
-
-                break;
-            }
-
-            case Opcodes.Enchant.Remove:
-                this.player.enchant.remove(message[1] as EnchantType);
-
-                break;
-
-            case Opcodes.Enchant.Enchant:
-                this.player.enchant.enchant();
-
-                break;
-        }
+        // let [opcode] = message;
+        // switch (opcode) {
+        //     case Opcodes.Enchant.Select: {
+        //         let index = message[1] as number,
+        //             item = this.player.inventory.slots[index],
+        //             type: EnchantType = 'item';
+        //         if (item.id < 1) return;
+        //         if (Items.isShard(item.id)) type = 'shards';
+        //         this.player.enchant.add(type, item);
+        //         break;
+        //     }
+        //     case Opcodes.Enchant.Remove:
+        //         this.player.enchant.remove(message[1] as EnchantType);
+        //         break;
+        //     case Opcodes.Enchant.Enchant:
+        //         this.player.enchant.enchant();
+        //         break;
+        // }
     }
 
     private handleClick(message: [string, boolean]): void {
@@ -890,90 +786,68 @@ export default class Incoming {
     }
 
     private handleShop(message: [Opcodes.Shop, number, ...unknown[]]): void {
-        let [opcode, npcId] = message;
-
-        switch (opcode) {
-            case Opcodes.Shop.Buy: {
-                let buyId = message[2] as number,
-                    amount = message[3] as number;
-
-                if (!buyId || !amount) {
-                    this.player.notify('Incorrect purchase packets.');
-                    return;
-                }
-
-                log.debug(`Received Buy: ${npcId} ${buyId} ${amount}`);
-
-                this.world.shops.buy(this.player, npcId, buyId, amount);
-
-                break;
-            }
-
-            case Opcodes.Shop.Sell:
-                if (!this.player.selectedShopItem) {
-                    this.player.notify('No item has been selected.');
-                    return;
-                }
-
-                this.world.shops.sell(this.player, npcId, this.player.selectedShopItem.index);
-
-                break;
-
-            case Opcodes.Shop.Select: {
-                let id = message[2] as string;
-
-                if (!id) {
-                    this.player.notify('Incorrect purchase packets.');
-                    return;
-                }
-
-                let slotId = parseInt(id),
-                    /**
-                     * Though all this could be done client-sided
-                     * it's just safer to send it to the server to sanitize data.
-                     * It also allows us to add cheat checks in the future
-                     * or do some fancier stuff.
-                     */
-
-                    item = this.player.inventory.slots[slotId];
-
-                if (!item || item.id < 1) return;
-
-                if (this.player.selectedShopItem) this.world.shops.remove(this.player);
-
-                let currency = this.world.shops.getCurrency(npcId);
-
-                if (!currency) return;
-
-                this.player.send(
-                    new Shop(Opcodes.Shop.Select, {
-                        id: npcId,
-                        slotId,
-                        currency: Items.idToString(currency),
-                        price: this.world.shops.getSellPrice(npcId, item.id)
-                    })
-                );
-
-                this.player.selectedShopItem = {
-                    id: npcId,
-                    index: item.index
-                };
-
-                log.debug(`Received Select: ${npcId} ${slotId}`);
-
-                break;
-            }
-
-            case Opcodes.Shop.Remove:
-                this.world.shops.remove(this.player);
-
-                break;
-        }
+        // let [opcode, npcId] = message;
+        // switch (opcode) {
+        //     case Opcodes.Shop.Buy: {
+        //         let buyId = message[2] as number,
+        //             amount = message[3] as number;
+        //         if (!buyId || !amount) {
+        //             this.player.notify('Incorrect purchase packets.');
+        //             return;
+        //         }
+        //         log.debug(`Received Buy: ${npcId} ${buyId} ${amount}`);
+        //         this.world.shops.buy(this.player, npcId, buyId, amount);
+        //         break;
+        //     }
+        //     case Opcodes.Shop.Sell:
+        //         if (!this.player.selectedShopItem) {
+        //             this.player.notify('No item has been selected.');
+        //             return;
+        //         }
+        //         this.world.shops.sell(this.player, npcId, this.player.selectedShopItem.index);
+        //         break;
+        //     case Opcodes.Shop.Select: {
+        //         let id = message[2] as string;
+        //         if (!id) {
+        //             this.player.notify('Incorrect purchase packets.');
+        //             return;
+        //         }
+        //         let slotId = parseInt(id),
+        //             /**
+        //              * Though all this could be done client-sided
+        //              * it's just safer to send it to the server to sanitize data.
+        //              * It also allows us to add cheat checks in the future
+        //              * or do some fancier stuff.
+        //              */
+        //             item = this.player.inventory.slots[slotId];
+        //         if (!item || item.id < 1) return;
+        //         if (this.player.selectedShopItem) this.world.shops.remove(this.player);
+        //         let currency = this.world.shops.getCurrency(npcId);
+        //         if (!currency) return;
+        //         this.player.send(
+        //             new Shop(Opcodes.Shop.Select, {
+        //                 id: npcId,
+        //                 slotId,
+        //                 currency: Items.idToString(currency),
+        //                 price: this.world.shops.getSellPrice(npcId, item.id)
+        //             })
+        //         );
+        //         this.player.selectedShopItem = {
+        //             id: npcId,
+        //             index: item.index
+        //         };
+        //         log.debug(`Received Select: ${npcId} ${slotId}`);
+        //         break;
+        //     }
+        //     case Opcodes.Shop.Remove:
+        //         this.world.shops.remove(this.player);
+        //         break;
+        // }
     }
 
     private handleCamera(message: string[]): void {
         log.info(`${this.player.x} ${this.player.y}`);
-        console.log(message);
+        //console.log(message);
 
         this.player.cameraArea = undefined;
         // TODO - Make this a server-side thing.

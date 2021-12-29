@@ -70,8 +70,6 @@ export default class EntitiesController {
     }
 
     public create(info: AnyEntity): void {
-        console.log(info);
-
         let { entities, game } = this,
             entity: Entity = null!;
 
@@ -123,8 +121,6 @@ export default class EntitiesController {
 
                 mob.setHitPoints(info.hitPoints);
                 mob.setMaxHitPoints(info.maxHitPoints);
-
-                console.log(info);
 
                 mob.attackRange = info.attackRange;
                 mob.level = info.level;

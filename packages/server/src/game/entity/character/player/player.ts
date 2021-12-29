@@ -11,8 +11,8 @@ import Formulas from '../../../../info/formulas';
 import Character from '../character';
 import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
-import Bank from './containers/bank/bank';
-import Inventory from './containers/inventory/inventory';
+import Bank from './containers/impl/bank';
+import Inventory from './containers/impl/inventory';
 import Doors from './doors';
 import Enchant from './enchant';
 import Friends from './friends';
@@ -50,7 +50,6 @@ import {
 } from '@kaetram/server/src/network/packets';
 import Packet from '@kaetram/server/src/network/packet';
 import Equipments from './equipment/equipments';
-import { SEquipment } from '@kaetram/common/types/equipment';
 import Regions from '../../../map/regions';
 import Entities from '@kaetram/server/src/controllers/entities';
 import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';
@@ -84,6 +83,8 @@ export default class Player extends Character {
     private handler: Handler;
 
     public equipment: Equipments;
+    public inventory: Inventory;
+    public bank: Bank;
 
     public ready = false; // indicates if login processed finished
 
@@ -102,11 +103,9 @@ export default class Player extends Character {
 
     // TODO - REFACTOR THESE ------------
 
-    public inventory;
     public abilities;
     public friends;
     public enchant;
-    public bank;
     public quests;
     public trade;
     public doors;
@@ -184,14 +183,15 @@ export default class Player extends Character {
 
         this.equipment = new Equipments(this);
 
+        this.bank = new Bank(Modules.Constants.BANK_SIZE);
+        this.inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
+
         this.handler = new Handler(this);
 
         // TODO - Refactor
-        this.inventory = new Inventory(this, 20);
         this.abilities = new Abilities(this);
         this.friends = new Friends(this);
         this.enchant = new Enchant(this);
-        this.bank = new Bank(this, 56);
         this.quests = new Quests(this);
         this.trade = new Trade(this);
         this.doors = new Doors(this);
@@ -233,7 +233,23 @@ export default class Player extends Character {
      */
 
     public loadEquipment(): void {
-        this.database.loader?.loadEquipment(this, this.equipment.load.bind(this));
+        this.database.loader?.loadEquipment(this, this.equipment.load.bind(this.equipment));
+    }
+
+    /**
+     * Loads the inventory data from the database.
+     */
+
+    public loadInventory(): void {
+        this.database.loader?.loadInventory(this, this.inventory.load.bind(this.inventory));
+    }
+
+    /**
+     * Loads the bank data from the database.
+     */
+
+    public loadBank(): void {
+        this.database.loader?.loadBank(this, this.bank.load.bind(this.bank));
     }
 
     // ---------------- REFACTOR --------------------
@@ -251,106 +267,11 @@ export default class Player extends Character {
     }
 
     public loadFriends(): void {
-        if (config.skipDatabase) return;
-
-        this.database.loader?.getFriends(this, (info) => {
-            if (!info) return;
-
-            this.friends.update(info);
-        });
-    }
-
-    public loadInventory(): void {
-        if (config.skipDatabase) {
-            this.inventory.loadEmpty();
-            return;
-        }
-
-        this.database.loader?.getInventory(this, (ids, counts, skills, skillLevels) => {
-            if (ids === null || counts === null) {
-                this.inventory.loadEmpty();
-                return;
-            }
-
-            if (ids.length !== this.inventory.size) this.save();
-
-            this.inventory.load(ids, counts, skills!, skillLevels!);
-            this.inventory.check();
-        });
-    }
-
-    public loadBank(): void {
-        if (config.skipDatabase) {
-            this.bank.loadEmpty();
-            return;
-        }
-
-        this.database.loader?.getBank(this, (ids, counts, skills, skillLevels) => {
-            if (ids === null || counts === null) {
-                this.bank.loadEmpty();
-                return;
-            }
-
-            if (ids.length !== this.bank.size) this.save();
-
-            this.bank.load(ids, counts, skills, skillLevels);
-            this.bank.check();
-        });
+        //
     }
 
     public loadQuests(): void {
-        if (config.skipDatabase) return;
-
-        this.database.loader?.getAchievements(this, (ids, progress) => {
-            ids.pop();
-            progress.pop();
-
-            if (this.quests.getAchievementSize() !== ids.length) {
-                log.info('Mismatch in achievements data.');
-
-                this.save();
-            }
-
-            this.quests.updateAchievements(ids, progress);
-        });
-
-        this.database.loader?.getQuests(this, (ids, stages) => {
-            if (!ids || !stages) {
-                this.quests.updateQuests(ids, stages);
-                return;
-            }
-
-            /* Removes the empty space created by the loader */
-
-            ids.pop();
-            stages.pop();
-
-            if (this.quests.getQuestSize() !== ids.length) {
-                log.info('Mismatch in quest data.');
-
-                this.save();
-            }
-
-            this.quests.updateQuests(ids, stages);
-        });
-
-        this.quests.onAchievementsReady(() => {
-            this.send(new Quest(Opcodes.Quest.AchievementBatch, this.quests.getAchievementData()));
-
-            /* Update region here because we receive quest info */
-            if (this.questsLoaded) this.updateRegion();
-
-            this.achievementsLoaded = true;
-        });
-
-        this.quests.onQuestsReady(() => {
-            this.send(new Quest(Opcodes.Quest.QuestBatch, this.quests.getQuestData()));
-
-            /* Update region here because we receive quest info */
-            if (this.achievementsLoaded) this.updateRegion();
-
-            this.questsLoaded = true;
-        });
+        //
     }
 
     // ---------------- REFACTOR EMD --------------------
@@ -508,11 +429,7 @@ export default class Player extends Character {
     }
 
     public eat(id: number): void {
-        let Item = Items.getPlugin(id);
-
-        if (!Item) return;
-
-        new Item(id).onUse(this);
+        log.warning('player.eat() reimplement.');
     }
 
     public updateRegion(force = false): void {
@@ -520,16 +437,7 @@ export default class Player extends Character {
     }
 
     public canEquip(string: string): boolean {
-        let requirement = Items.getLevelRequirement(string);
-
-        if (requirement > Modules.Constants.MAX_LEVEL) requirement = Modules.Constants.MAX_LEVEL;
-
-        if (requirement > this.level) {
-            this.notify(`You must be at least level ${requirement} to equip this.`);
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     public die(): void {

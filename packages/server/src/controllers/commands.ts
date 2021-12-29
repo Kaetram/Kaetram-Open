@@ -3,6 +3,7 @@ import log from '@kaetram/common/util/log';
 
 import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
+import Item from '../game/entity/objects/item';
 import { Command, Map, Pointer, Network, Notification, Quest } from '../network/packets';
 
 export default class Commands {
@@ -176,19 +177,16 @@ export default class Commands {
 
         switch (command) {
             case 'spawn': {
-                let spawnId = parseInt(blocks.shift()!),
+                let key = blocks.shift(),
                     count = parseInt(blocks.shift()!),
                     ability = parseInt(blocks.shift()!),
                     abilityLevel = parseInt(blocks.shift()!);
 
-                if (!spawnId || !count) return;
+                if (!key || !count) return;
 
-                this.player.inventory.add({
-                    id: spawnId,
-                    count,
-                    ability: ability || -1,
-                    abilityLevel: abilityLevel || -1
-                });
+                this.player.inventory.add(
+                    new Item(key, -1, -1, true, count, ability, abilityLevel)
+                );
 
                 return;
             }
@@ -395,7 +393,7 @@ export default class Commands {
 
             case 'clear':
                 this.player.inventory.forEachSlot((slot) => {
-                    if (slot.id !== -1) this.player.inventory.remove(slot.id, slot.count);
+                    slot.clear();
                 });
 
                 break;

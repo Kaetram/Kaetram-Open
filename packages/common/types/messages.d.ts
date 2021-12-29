@@ -2,15 +2,14 @@ import type { Modules, Opcodes } from '../network';
 import type {
     AchievementData,
     BubbleInfo,
-    EquipmentData,
-    EquipmentType,
     HitData,
     ProfessionsInfo,
     QuestInfo,
     ShopData,
-    SlotData,
     TilesetData
 } from './info';
+import type { EquipmentData, EquipmentType } from './equipment';
+import type { SlotData } from './slot';
 import type { ProcessedArea } from './map';
 
 export interface HandshakeData {

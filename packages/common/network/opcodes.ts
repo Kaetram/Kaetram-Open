@@ -51,14 +51,7 @@ export enum Network {
     Pong
 }
 
-export enum Inventory {
-    Batch,
-    Add,
-    Remove,
-    Select
-}
-
-export enum Bank {
+export enum Container {
     Batch,
     Add,
     Remove,
