@@ -1,5 +1,5 @@
 export default class Slot {
-    public string: string | null = null;
+    public key: string | null = null;
     public count = -1;
 
     public ability: number | undefined = -1;
@@ -10,14 +10,14 @@ export default class Slot {
     public constructor(public index: number) {}
 
     public load(
-        string: string | null,
+        key: string | null,
         count: number,
         ability?: number,
         abilityLevel?: number,
         edible = false,
         equippable = false
     ): void {
-        this.string = string;
+        this.key = key;
         this.count = count;
         this.ability = ability;
         this.abilityLevel = abilityLevel;
@@ -27,7 +27,7 @@ export default class Slot {
     }
 
     public empty(): void {
-        this.string = null;
+        this.key = null;
         this.count = -1;
         this.ability = -1;
         this.abilityLevel = -1;
@@ -37,7 +37,7 @@ export default class Slot {
     }
 
     public isEmpty(): boolean {
-        return !this.string || this.count < 1;
+        return !this.key || this.count < 1;
     }
 
     public setCount(count: number): void {

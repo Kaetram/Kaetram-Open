@@ -52,6 +52,8 @@ export default class Creator {
 
             this.saveInfo(player);
             this.saveEquipment(player);
+            this.saveInventory(player);
+            this.saveBank(player);
         } catch (error: unknown) {
             log.error(`Could not save data for ${player.username}.`);
             console.log(error);
@@ -114,7 +116,7 @@ export default class Creator {
      * @param data The data that we are saving.
      */
 
-    private updateCollection(collection: Collection, username: string, data: unknown) {
+    private updateCollection<S>(collection: Collection, username: string, data: S) {
         collection.updateOne({ username }, { $set: data }, { upsert: true }, (error, result) => {
             if (error)
                 log.error(

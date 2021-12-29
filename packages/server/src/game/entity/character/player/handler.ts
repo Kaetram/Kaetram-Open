@@ -2,21 +2,24 @@ import _ from 'lodash';
 
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { SlotData } from '@kaetram/common/types/slot';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import { Container, Equipment } from '../../../../network/packets';
+import Map from '../../../map/map';
+import World from '../../../world';
 import Hit from '../combat/hit';
+import Slot from './containers/slot';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
-import Slot from './containers/slot';
 
 export default class Handler {
-    private world;
-    private map;
+    private world: World;
+    private map: Map;
 
     private updateTicks = 0;
     private updateInterval: NodeJS.Timeout | null = null;
@@ -62,10 +65,12 @@ export default class Handler {
      */
 
     private handleInventory(): void {
+        let { slots } = this.player.inventory.serialize();
+
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
-                data: this.player.inventory.serialize()
+                slots
             })
         );
     }
@@ -91,7 +96,19 @@ export default class Handler {
      * @param index The index of the item we removed.
      */
 
-    private handleInventoryRemove(index: number): void {
+    private handleInventoryRemove(slotData: SlotData): void {
+        let { index, key, count, ability, abilityLevel } = slotData;
+
+        this.world.entities.spawnItem(
+            key,
+            this.player.x,
+            this.player.y,
+            true,
+            count,
+            ability,
+            abilityLevel
+        );
+
         this.player.send(
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
@@ -105,10 +122,12 @@ export default class Handler {
      */
 
     private handleBank(): void {
+        let { slots } = this.player.bank.serialize();
+
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Bank,
-                data: this.player.bank.serialize()
+                slots
             })
         );
     }

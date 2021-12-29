@@ -110,14 +110,16 @@ export default class Slot {
      */
 
     public serialize(): SlotData {
-        let { index, key, count, ability, abilityLevel } = this;
+        let { index, key, count, ability, abilityLevel, edible, equippable } = this;
 
         return {
             index,
             key,
             count,
             ability,
-            abilityLevel
+            abilityLevel,
+            edible,
+            equippable
         };
     }
 }

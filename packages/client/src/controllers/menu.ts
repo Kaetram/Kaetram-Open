@@ -45,7 +45,9 @@ export default class MenuController {
         this.loadActions();
         this.loadWarp();
         this.loadShop();
+        this.loadEnchant();
 
+        this.loadBank(Modules.Constants.BANK_SIZE, []);
         this.loadInventory(Modules.Constants.INVENTORY_SIZE, []);
 
         this.done.on('click', () => this.hideNotify());
@@ -82,15 +84,7 @@ export default class MenuController {
      * has two containers. The bank and the inventory.
      */
     public loadBank(size: number, data: Slot[]): void {
-        let { inventory, game } = this;
-
-        if (!inventory) {
-            log.error('Inventory not initialized.');
-
-            return;
-        }
-
-        this.bank = new Bank(game, inventory.container, size, data);
+        this.bank = new Bank(this.game, size, data);
 
         this.loadEnchant();
     }
