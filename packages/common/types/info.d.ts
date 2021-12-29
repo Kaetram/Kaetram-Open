@@ -9,14 +9,6 @@ export interface HitData {
     isPoison: boolean;
 }
 
-export interface SlotData {
-    index: number;
-    key: string;
-    count: number;
-    ability: number;
-    abilityLevel: number;
-}
-
 export interface QuestInfo {
     id: number;
     name: string;

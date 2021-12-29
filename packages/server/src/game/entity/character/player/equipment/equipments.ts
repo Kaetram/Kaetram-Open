@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
-import { SEquipment } from '@kaetram/common/types/equipment';
+import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 
 import Player from '../player';
 
@@ -12,13 +12,14 @@ import Equipment from './impl/equipment';
 import Pendant from './impl/pendant';
 import Ring from './impl/ring';
 import Weapon from './impl/weapon';
+import Item from '../../../objects/item';
 
 export default class Equipments {
-    private armour: Armour = new Armour(-1);
-    private boots: Boots = new Boots(-1);
-    private pendant: Pendant = new Pendant(-1);
-    private ring: Ring = new Ring(-1);
-    private weapon: Weapon = new Weapon(-1);
+    private armour: Armour = new Armour();
+    private boots: Boots = new Boots();
+    private pendant: Pendant = new Pendant();
+    private ring: Ring = new Ring();
+    private weapon: Weapon = new Weapon();
 
     // Store all equipments for parsing.
     // Make sure these are in the order of the enum.
@@ -40,14 +41,16 @@ export default class Equipments {
      * @param equipmentInfo The information about equipments from the database.
      */
 
-    public load(equipmentInfo: SEquipment[]): void {
-        _.each(equipmentInfo, (info: SEquipment) => {
+    public load(equipmentInfo: EquipmentData[]): void {
+        _.each(equipmentInfo, (info: EquipmentData) => {
             let equipment = this.getEquipment(info.type);
 
             if (!equipment) return;
-            if (info.id === -1) return; // Skip if the item is already null
+            if (!info.key) return; // Skip if the item is already null
 
-            equipment.update(info.id, info.count, info.ability, info.abilityLevel);
+            equipment.update(
+                new Item(info.key, -1, -1, true, info.count, info.ability, info.abilityLevel)
+            );
         });
 
         this.loadCallback?.();
@@ -58,7 +61,7 @@ export default class Equipments {
      * out what equipment type it is, and updates that equipment's information.
      */
 
-    public equip(id: number, count: number, ability: number, abilityLevel: number): void {
+    public equip(key: string, count: number, ability: number, abilityLevel: number): void {
         log.warning('equip not implemented.');
     }
 
@@ -147,12 +150,13 @@ export default class Equipments {
      * @returns A serialized version of the equipment information.
      */
 
-    public serialize(): SEquipment[] {
-        let equipments: SEquipment[] = [];
+    public serialize(): SerializedEquipment {
+        let equipments: EquipmentData[] = [];
 
         this.forEachEquipment((equipment: Equipment) => equipments.push(equipment.serialize()));
 
-        return equipments;
+        // Store in an object so that it gets saved into Database faster.
+        return { equipments };
     }
 
     /**

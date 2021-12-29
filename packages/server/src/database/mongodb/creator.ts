@@ -84,6 +84,28 @@ export default class Creator {
     }
 
     /**
+     * Serializes the inventory information and
+     * stores it into the database.
+     */
+
+    public saveInventory(player: Player): void {
+        let collection = this.database.collection('player_inventory');
+
+        this.updateCollection(collection, player.username, player.inventory.serialize());
+    }
+
+    /**
+     * Serializes the bank information and
+     * stores it into the database.
+     */
+
+    public saveBank(player: Player): void {
+        let collection = this.database.collection('player_bank');
+
+        this.updateCollection(collection, player.username, player.bank.serialize());
+    }
+
+    /**
      * The brains of the operation for storing/updating data to MongoDB.
      * We provide the collection, username, data.
      * and we save all that information into the database.
@@ -93,24 +115,14 @@ export default class Creator {
      */
 
     private updateCollection(collection: Collection, username: string, data: unknown) {
-        collection.updateOne(
-            {
-                username
-            },
-            { $set: data },
-            {
-                upsert: true
-            },
-            (error, result) => {
-                if (error)
-                    log.error(
-                        `An error occurred while saving ${collection.collectionName} for ${username}.`
-                    );
+        collection.updateOne({ username }, { $set: data }, { upsert: true }, (error, result) => {
+            if (error)
+                log.error(
+                    `An error occurred while saving ${collection.collectionName} for ${username}.`
+                );
 
-                if (!result)
-                    log.error(`Unable to save ${collection.collectionName} for ${username}.`);
-            }
-        );
+            if (!result) log.error(`Unable to save ${collection.collectionName} for ${username}.`);
+        });
     }
 
     /**

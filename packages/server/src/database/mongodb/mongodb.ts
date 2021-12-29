@@ -1,5 +1,4 @@
 import bcryptjs from 'bcryptjs';
-import _ from 'lodash';
 import { Db, MongoClient } from 'mongodb';
 
 import log from '@kaetram/common/util/log';
@@ -14,8 +13,8 @@ export default class MongoDB {
 
     private database!: Db;
 
-    public loader?: Loader;
-    public creator?: Creator;
+    public loader!: Loader;
+    public creator!: Creator;
 
     public readyCallback?: () => void;
     public failCallback?: (error: Error) => void;
@@ -54,12 +53,12 @@ export default class MongoDB {
 
             this.database = _client!.db(this.databaseName);
 
-            log.notice('Successfully connected to the MongoDB server.');
+            this.loader = new Loader(this.database);
+            this.creator = new Creator(this.database);
 
             this.readyCallback?.();
 
-            this.loader = new Loader(this.database);
-            this.creator = new Creator(this.database);
+            log.notice('Successfully connected to the MongoDB server.');
         });
     }
 

@@ -5,15 +5,17 @@
  */
 
 import { Modules } from '@kaetram/common/network';
-import { SEquipment } from '@kaetram/common/types/equipment';
+import { EquipmentData } from '@kaetram/common/types/equipment';
+import Item from '../../../../objects/item';
 
 export default class Equipment {
-    private updateCallback?: (itemString: string) => void;
+    private updateCallback?: (equipment: Equipment) => void;
+    public name = '';
 
     // Basic initialization
     public constructor(
         public type: Modules.Equipment,
-        public id: number,
+        public key = '',
         public count = 1,
         public ability = -1,
         public abilityLevel = -1
@@ -21,19 +23,20 @@ export default class Equipment {
 
     /**
      * Updates the equipment with the given item information.
-     * @param id The item id.
+     * @param key The item's key.
      * @param count The count of items (if we are wearing arrows)
      * @param ability Ability type of the item.
      * @param abilityLevel Ability level of the item.
      */
 
-    public update(id: number, count = 1, ability = -1, abilityLevel = -1): void {
-        this.id = id;
-        this.count = count;
-        this.ability = ability;
-        this.abilityLevel = abilityLevel;
+    public update(item: Item): void {
+        this.key = item.key;
+        this.name = item.name;
+        this.count = item.count;
+        this.ability = item.ability;
+        this.abilityLevel = item.abilityLevel;
 
-        this.updateCallback?.(this.id === -1 ? 'null' : Items.idToString(this.id));
+        this.updateCallback?.(this);
     }
 
     /**
@@ -42,12 +45,13 @@ export default class Equipment {
      * @returns An SEquipment object containing the id, count, ability, and abilityLevel
      */
 
-    public serialize(): SEquipment {
-        let { type, id, count, ability, abilityLevel } = this;
+    public serialize(): EquipmentData {
+        let { type, key, name, count, ability, abilityLevel } = this;
 
         return {
             type,
-            id,
+            key,
+            name,
             count,
             ability,
             abilityLevel
@@ -55,7 +59,7 @@ export default class Equipment {
     }
 
     // Callback for when the currently equipped item is updated.
-    public onUpdate(callback: (itemString: string) => void): void {
+    public onUpdate(callback: (equipment: Equipment) => void): void {
         this.updateCallback = callback;
     }
 }
