@@ -1,5 +1,4 @@
-import { SlotData } from '@kaetram/common/types/info';
-import log from '@kaetram/common/util/log';
+import { SlotData } from '@kaetram/common/types/slot';
 
 import Item from '../../../objects/item';
 
