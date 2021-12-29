@@ -19,7 +19,12 @@ export default abstract class Container {
     private loadCallback?: () => void;
 
     protected addCallback?: (slot: Slot) => void;
-    protected removeCallback?: (slotData: SlotData, drop?: boolean) => void;
+    protected removeCallback?: (
+        slot: Slot,
+        key: string,
+        count: number,
+        drop?: boolean | undefined
+    ) => void;
     protected notifyCallback?: (message: string) => void;
 
     public constructor(private type: Modules.ContainerType, private size: number) {
@@ -96,26 +101,23 @@ export default abstract class Container {
     /**
      * Removes an item at a specified index and returns the serialized slot.
      * @param index Index of where to remove the item.
-     * @return Serialized slot data.
+     * @param count The amount of the item we are dropping.
+     * @param drop Conditional that determines if the item should spawn.
      */
 
-    public remove(index: number, count = 1, drop = false): SlotData | undefined {
+    public remove(index: number, count = 1, drop = false): Slot | undefined {
         let slot = this.slots[index];
 
         if (!slot || !slot.key) return;
 
-        if (count < slot.count) {
-            slot.remove(count);
-            return slot;
-        }
+        let { key } = slot;
 
-        let serializedSlot = slot.serialize();
+        if (count < slot.count) slot.remove(count);
+        else slot.clear();
 
-        slot.clear();
+        this.removeCallback?.(slot, key, count, drop);
 
-        this.removeCallback?.(serializedSlot, drop);
-
-        return serializedSlot;
+        return slot;
     }
 
     /**
@@ -199,7 +201,9 @@ export default abstract class Container {
      * Signal for when an item is removed.
      */
 
-    public onRemove(callback: (slotData: SlotData, drop?: boolean) => void): void {
+    public onRemove(
+        callback: (slot: Slot, key: string, count: number, drop?: boolean) => void
+    ): void {
         this.removeCallback = callback;
     }
 

@@ -225,13 +225,14 @@ export default class Inventory {
         this.actions.hide();
     }
 
-    public remove(index: number, count = 1): void {
-        let item = $(this.getList()[index]),
+    public remove(info: SlotData): void {
+        let { index, count } = info,
+            item = $(this.getList()[index]),
             slot = this.container.slots[index];
 
         if (!item || !slot) return;
 
-        slot.count -= count;
+        slot.count = count;
         let itemCount = slot.count.toString();
 
         if (slot.count === 1) itemCount = '';

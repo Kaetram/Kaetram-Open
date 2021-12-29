@@ -12,7 +12,7 @@ export default class Slot {
     public constructor(
         public index: number,
         public key = '',
-        public count = -1,
+        public count = 0,
         public ability = -1,
         public abilityLevel = -1
     ) {}
@@ -84,7 +84,7 @@ export default class Slot {
 
     public clear(): void {
         this.key = '';
-        this.count = -1;
+        this.count = 0;
         this.ability = -1;
         this.abilityLevel = -1;
 
