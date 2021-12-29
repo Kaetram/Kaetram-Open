@@ -12,7 +12,6 @@ import Chest from '../game/entity/objects/chest';
 import Item from '../game/entity/objects/item';
 import Projectile from '../game/entity/objects/projectile';
 import Formulas from '../info/formulas';
-import Items from '../info/items';
 
 import mobData from '../../data/mobs.json';
 import itemData from '../../data/items.json';
@@ -22,11 +21,12 @@ import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type World from '../game/world';
 import { Blink, Despawn } from '../network/packets';
+import Grids from '../game/map/grids';
 
 export default class Entities {
     private map: Map;
     private regions: Regions;
-    private grids;
+    private grids: Grids;
 
     public players: { [instance: string]: Player } = {};
     private entities: { [instance: string]: Entity } = {};
@@ -55,7 +55,7 @@ export default class Entities {
 
             switch (type) {
                 case Modules.EntityType.Item:
-                    return this.addItem(new Item(key, position.x, position.y, -1, -1, true));
+                    return this.spawnItem(key, position.x, position.y, false);
 
                 case Modules.EntityType.NPC:
                     return this.addNPC(new NPC(key, position.x, position.y));
@@ -77,22 +77,47 @@ export default class Entities {
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
     }
 
-    public spawnMob(key: string, gridX: number, gridY: number): Mob {
-        let mob = new Mob(this.world, key, gridX, gridY);
+    public spawnMob(key: string, x: number, y: number): Mob {
+        let mob = new Mob(this.world, key, x, y);
 
         this.addMob(mob);
 
         return mob;
     }
 
+    /**
+     * Spawning function for creating an item. Primary purpose of this is
+     * to lessen the amount of code necessary should we try to spawn
+     * an item from external means.
+     * @param key The item key
+     * @param x The x position in the grid to spawn the item.
+     * @param y The y position in the grid to spawn the item.
+     * @param dropped If the item is permanent or it will disappear.
+     * @param count The amount of the item dropped.
+     * @param ability The ability type of the item.
+     * @param abilityLevel The ability level of the item.
+     */
+
+    public spawnItem(
+        key: string,
+        x: number,
+        y: number,
+        dropped = false,
+        count = 1,
+        ability = -1,
+        abilityLevel = -1
+    ): void {
+        this.addItem(new Item(key, x, y, dropped, count, ability, abilityLevel));
+    }
+
     public spawnChest(
         items: string[],
-        gridX: number,
-        gridY: number,
+        x: number,
+        y: number,
         isStatic = false,
         achievement?: number
     ): Chest {
-        let chest = new Chest(gridX, gridY, achievement);
+        let chest = new Chest(x, y, achievement);
 
         chest.addItems(items);
 
@@ -109,7 +134,7 @@ export default class Entities {
 
             if (!item) return;
 
-            this.dropItem(Items.stringToId(item.string)!, item.count, chest.x, chest.y);
+            this.spawnItem(item.string, chest.x, chest.y, true, item.count);
 
             if (player && chest.achievement) player.finishAchievement(chest.achievement);
         });
@@ -122,8 +147,8 @@ export default class Entities {
     public spawnProjectile([attacker, target]: Character[]): Projectile | null {
         if (!attacker || !target) return null;
 
-        let startX = attacker.x, // gridX
-            startY = attacker.y, // gridY
+        let startX = attacker.x, // x
+            startY = attacker.y, // y
             type = attacker.getProjectile(),
             hit = null,
             projectile = new Projectile(type, startX, startY);
@@ -201,7 +226,16 @@ export default class Entities {
      */
 
     private addItem(item: Item): void {
-        if (item.respawnable) item.onRespawn(() => this.addItem(item));
+        // Not the prettiest way of doing it honestly...
+        if (item.dropped) {
+            item.despawn();
+            item.onBlink(() =>
+                this.world.push(Modules.PacketType.Broadcast, {
+                    packet: new Blink(item.instance)
+                })
+            );
+            item.onDespawn(() => this.removeItem(item));
+        } else item.onRespawn(() => this.addItem(item));
 
         this.add(item);
 
@@ -264,7 +298,7 @@ export default class Entities {
     public removeItem(item: Item): void {
         this.remove(item);
 
-        if (item.respawnable) item.respawn();
+        if (!item.dropped) item.respawn();
         else delete this.items[item.instance];
     }
 
@@ -350,36 +384,5 @@ export default class Entities {
 
     public forEachPlayer(callback: (player: Player) => void): void {
         _.each(this.players, callback);
-    }
-
-    /**
-     * Miscellaneous Functions
-     */
-
-    public dropItem(
-        id: number,
-        count: number,
-        gridX: number,
-        gridY: number,
-        ability?: number,
-        abilityLevel?: number
-    ): void {
-        let item = new Item(Items.idToString(id), gridX, gridY, ability, abilityLevel);
-
-        item.count = count;
-        item.dropped = true;
-
-        this.addItem(item);
-        item.despawn();
-
-        item.onBlink(() => {
-            this.world.push(Modules.PacketType.Broadcast, {
-                packet: new Blink(item.instance)
-            });
-        });
-
-        item.onDespawn(() => {
-            this.removeItem(item);
-        });
     }
 }

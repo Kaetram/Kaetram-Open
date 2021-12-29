@@ -205,7 +205,7 @@ export default class World {
             if (!ignoreDrops) {
                 let drop = mob.getDrop();
 
-                if (drop) this.entities.dropItem(drop.id, drop.count, deathX, deathY);
+                if (drop) this.entities.spawnItem(drop.key, deathX, deathY, true, drop.count);
             }
         } else if (character.isPlayer()) {
             let player = character as Player;
