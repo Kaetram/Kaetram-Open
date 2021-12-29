@@ -115,21 +115,27 @@ export default class Handler {
     }
 
     /**
-     * Send a packet to the client to clear the inventory
-     * slot index.
-     * @param index The index of the item we removed.
+     * Send a packet to the client to clear the inventory slot.
+     * @param slot The slot of the item we removed.
+     * @param key The key of the slot we removed.
+     * @param count The count represents the amount of item we are dropping, NOT IN THE SLOT.
+     * @param drop If the item should spawn in the world upon removal.
      */
 
-    private handleInventoryRemove(slotData: SlotData, drop?: boolean): void {
-        let { index, key, count, ability, abilityLevel } = slotData;
+    private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
+        let { ability, abilityLevel } = slot;
 
+        console.log(key);
+        console.log(count);
+
+        // Spawn the item in the world if drop is true.
         if (drop)
             this.world.entities.spawnItem(
-                key,
+                key, // Key of the item before an action is done on the slot.
                 this.player.x,
                 this.player.y,
                 true,
-                count,
+                count, // Note this is the amount we are dropping.
                 ability,
                 abilityLevel
             );
@@ -137,7 +143,7 @@ export default class Handler {
         this.player.send(
             new Container(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
-                index
+                slot: slot.serialize()
             })
         );
     }

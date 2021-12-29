@@ -173,8 +173,7 @@ export type ContainerAddData = {
 };
 export type ContainerRemoveData = {
     type: Modules.ContainerType;
-    index: number;
-    count?: number;
+    slot: SlotData;
 };
 
 export interface QuestBatchData {
