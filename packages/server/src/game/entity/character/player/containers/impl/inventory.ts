@@ -13,8 +13,7 @@ export default class Inventory extends Container {
         console.log(`item: ${item.key} - x: ${item.x} - y: ${item.y}`);
 
         if (!super.add(item)) this.notifyCallback?.('Could not add item to the inventory lol.');
-
-        item.despawn(true);
+        else item.despawn(true);
 
         return true;
     }

@@ -54,6 +54,16 @@ export default class Slot {
     }
 
     /**
+     * Checks if the given item can be held slot.
+     * @param item The item to check.
+     * @returns Whether or not the item can be held.
+     */
+
+    public canHold(item: Item): boolean {
+        return this.key === item.key && !this.isFull(this.count + item.count);
+    }
+
+    /**
      * Removes an amount from the count in the slot.
      * @param amount Amount we are removing from the slot.
      * @returns The amount of the item we removed.
@@ -89,8 +99,8 @@ export default class Slot {
      * @returns If the count in the slot are greater or equal to max stack.
      */
 
-    public isFull(count?: number): boolean {
-        return (count || this.count) >= this.maxStackSize;
+    public isFull(count = this.count): boolean {
+        return count > this.maxStackSize;
     }
 
     /**
@@ -100,8 +110,8 @@ export default class Slot {
      * @returns If the slot is empty.
      */
 
-    public isEmpty(count?: number): boolean {
-        return (count || this.count) <= 0;
+    public isEmpty(count = this.count): boolean {
+        return count <= 0;
     }
 
     /**
