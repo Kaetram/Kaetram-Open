@@ -11,7 +11,7 @@ export interface HitData {
 
 export interface SlotData {
     index: number;
-    string: string;
+    key: string;
     count: number;
     ability: number;
     abilityLevel: number;

@@ -2,7 +2,6 @@ import _ from 'lodash';
 
 import log from '@kaetram/common/util/log';
 
-import Items from '../../../../../info/items';
 import Slot from './slot';
 
 import type Player from '../player';

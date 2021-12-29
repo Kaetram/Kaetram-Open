@@ -3,19 +3,14 @@ import _ from 'lodash';
 import log from '@kaetram/common/util/log';
 
 import abilityData from '../data/abilities.json';
-import combatPlugins from '../data/combat';
-import itemPlugins from '../data/plugins';
-import itemData from '../data/items.json';
 import objectData from '../data/objects.json';
 import shopsData from '../data/shops.json';
 
 import Abilities from './info/abilities';
 import Formulas from './info/formulas';
-import Items from './info/items';
 import Objects from './info/objects';
 import Shops from './info/shops';
 
-import type { ItemsData } from './info/items';
 import type { ObjectsData } from './info/objects';
 import { Modules } from '@kaetram/common/network';
 
@@ -32,7 +27,6 @@ export default class Loader {
     public constructor() {
         this.onReady(this.handleReady.bind(this));
 
-        this.loadItemData();
         this.loadAbilityData();
         this.loadShops();
         this.loadLevels();
@@ -44,71 +38,6 @@ export default class Loader {
 
         //log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
         log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
-    }
-
-    private loadItemData(): void {
-        let itemCounter = 0;
-
-        _.each(itemData, (value, key) => {
-            key = key.toLowerCase();
-
-            let {
-                id,
-                type,
-                attack,
-                defense,
-                movementSpeed,
-                pendantLevel,
-                ringLevel,
-                bootsLevel,
-                name,
-                price,
-                storeCount,
-                stackable,
-                edible,
-                healsHealth,
-                healsMana,
-                maxStackSize,
-                plugin,
-                customData,
-                requirement,
-                lumberjacking,
-                mining
-            } = value as ItemsData;
-
-            Items.Data[key] = {
-                key,
-                id: id || -1,
-                type: type || 'object',
-                attack: attack || 0,
-                defense: defense || 0,
-                movementSpeed,
-                pendantLevel,
-                ringLevel,
-                bootsLevel,
-                name: name || key,
-                price: price || 1,
-                storeCount: storeCount || 1,
-                stackable: stackable || false,
-                edible: edible || false,
-                healsHealth: healsHealth || 0,
-                healsMana: healsMana || 0,
-                maxStackSize: maxStackSize || -1,
-                plugin,
-                customData: customData || null,
-                requirement,
-                lumberjacking: lumberjacking || 0,
-                mining: mining || 0
-            };
-
-            Items.Ids[id] = Items.Data[key];
-
-            if (plugin) Items.Plugins[id] = itemPlugins[plugin as keyof typeof itemPlugins];
-
-            itemCounter++;
-        });
-
-        log.info(`Finished loading ${itemCounter} items.`);
     }
 
     private loadAbilityData(): void {
