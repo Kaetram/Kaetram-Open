@@ -105,19 +105,21 @@ export default abstract class Container {
      * @param drop Conditional that determines if the item should spawn.
      */
 
-    public remove(index: number, count = 1, drop = false): Slot | undefined {
+    public remove(index: number, count = 1, drop = false): SlotData | undefined {
         let slot = this.slots[index];
 
         if (!slot || !slot.key) return;
 
-        let { key } = slot;
+        count = Math.min(count, slot.count);
+
+        let serializedSlot = slot.serialize();
 
         if (count < slot.count) slot.remove(count);
         else slot.clear();
 
-        this.removeCallback?.(slot, key, count, drop);
+        this.removeCallback?.(slot, serializedSlot.key, count, drop);
 
-        return slot;
+        return serializedSlot;
     }
 
     /**
