@@ -62,6 +62,7 @@ export default class Item extends Entity {
             return;
         }
 
+        // Set all the item data (set defaults if value doesn't exist).
         this.itemType = this.data.type;
         this.name = this.data.name;
         this.stackable = this.data.stackable || this.stackable;
@@ -79,6 +80,11 @@ export default class Item extends Entity {
         this.movementSpeed = this.data.movementSpeed || this.movementSpeed;
     }
 
+    /**
+     * Clears all the timeouts and attempts
+     * to respawn the item if it's static.
+     */
+
     public destroy(): void {
         clearTimeout(this.blinkTimeout!);
 
@@ -86,6 +92,14 @@ export default class Item extends Entity {
 
         if (!this.dropped) this.respawn();
     }
+
+    /**
+     * Despawns an item. If forcibly despawned it jumps straight
+     * to the despawn callback, otherwise it runs through the blink
+     * timeout then despawn timeout. The blink/despawn combo
+     * applies to items that are dropped.
+     * @param noTimeout Indicates if to foricbly despawn the item.
+     */
 
     public despawn(noTimeout = false): void {
         if (noTimeout) return this.despawnCallback?.();
@@ -97,8 +111,12 @@ export default class Item extends Entity {
         }, this.blinkDelay);
     }
 
+    /**
+     * Sends the respawn callback signal after `respawnTime` milliseconds pass.
+     */
+
     public respawn(): void {
-        setTimeout(() => this.respawnCallback?.());
+        setTimeout(() => this.respawnCallback?.(), this.respawnTime);
     }
 
     /**
@@ -120,6 +138,12 @@ export default class Item extends Entity {
         );
     }
 
+    /**
+     * Expands on the entity serialization and
+     * adds item specific variables (count, ability, abilityLevel).
+     * @returns EntityData containing item information.
+     */
+
     public override serialize(): EntityData {
         let data = super.serialize();
 
@@ -130,13 +154,27 @@ export default class Item extends Entity {
         return data;
     }
 
+    /**
+     * Callback signal for when the item respawns.
+     */
+
     public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;
     }
 
+    /**
+     * Callback signal for when the item starts
+     * blinking (signaling upcoming despawn).
+     */
+
     public onBlink(callback: () => void): void {
         this.blinkCallback = callback;
     }
+
+    /**
+     * Callback signal for when we should despawn
+     * the entity and remove it from the world.
+     */
 
     public onDespawn(callback: () => void): void {
         this.despawnCallback = callback;
