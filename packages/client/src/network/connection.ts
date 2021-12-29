@@ -41,7 +41,6 @@ import type { AnyEntity } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
-import type Slot from '../menu/container/slot';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import Item from '../entity/objects/item';
 
