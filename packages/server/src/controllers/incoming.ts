@@ -632,7 +632,9 @@ export default class Incoming {
             container =
                 type === Modules.ContainerType.Inventory ? this.player.inventory : this.player.bank,
             index: number,
-            count = 1;
+            count = 1,
+            slot: SlotData | undefined,
+            item: Item;
 
         log.debug(`Received container packet: ${opcode} - ${type}.`);
 
@@ -643,7 +645,30 @@ export default class Incoming {
 
                 log.debug(`Removing slot index: ${index} - count: ${count}`);
 
-                container.remove(index, count);
+                container.remove(index, count, true);
+
+                break;
+
+            case Opcodes.Container.Select:
+                index = packet.shift() as number;
+
+                log.debug(`Selected item index: ${index}`);
+
+                slot = container.remove(index);
+
+                if (!slot) return;
+
+                item = new Item(
+                    slot.key,
+                    -1,
+                    -1,
+                    true,
+                    slot.count,
+                    slot.ability,
+                    slot.abilityLevel
+                );
+
+                if (item.isEquippable()) this.player.equipment.equip(item);
 
                 break;
         }

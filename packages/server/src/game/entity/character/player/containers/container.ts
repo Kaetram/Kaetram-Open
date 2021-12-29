@@ -19,7 +19,7 @@ export default abstract class Container {
     private loadCallback?: () => void;
 
     protected addCallback?: (slot: Slot) => void;
-    protected removeCallback?: (slotData: SlotData) => void;
+    protected removeCallback?: (slotData: SlotData, drop?: boolean) => void;
     protected notifyCallback?: (message: string) => void;
 
     public constructor(private type: Modules.ContainerType, private size: number) {
@@ -57,22 +57,30 @@ export default abstract class Container {
      */
 
     public add(item: Item): boolean {
-        if (!this.hasSpace()) return false;
-
         // Return whether or not the adding was successful.
         let added = false,
             slot: Slot | undefined;
 
         // Item is stackable and we already have it.
-        if (item.stackable && this.contains(item.key)) {
-            slot = this.find(item.key)!;
+        if (item.stackable && this.canHold(item)) {
+            slot = this.find(item)!;
 
             added = !!slot?.add(item.count);
-        } else {
+
+            // If a new item was stacked, we don't lose an empty space.
+            if (added) this.emptySpaces++;
+        }
+
+        // All slots are taken.
+        if (!this.hasSpace()) return false;
+
+        // Update the next empty slot.
+        if (!added) {
             slot = this.getEmptySlot();
 
             if (slot) {
                 slot.update(item);
+
                 added = true;
             }
         }
@@ -91,7 +99,7 @@ export default abstract class Container {
      * @return Serialized slot data.
      */
 
-    public remove(index: number, count = 1): SlotData | undefined {
+    public remove(index: number, count = 1, drop = false): SlotData | undefined {
         let slot = this.slots[index];
 
         if (!slot || !slot.key) return;
@@ -105,29 +113,29 @@ export default abstract class Container {
 
         slot.clear();
 
-        this.removeCallback?.(serializedSlot);
+        this.removeCallback?.(serializedSlot, drop);
 
         return serializedSlot;
     }
 
     /**
      * Iterates through the slots and returns the slot that contains
-     * the `key` parameter.
-     * @param key The key we are trying to find.
+     * the `item` parameter.
+     * @param item The item we are trying to find.
      * @returns The slot containing the key we are trying to find.
      */
 
-    public find(key: string): Slot | undefined {
-        return this.slots.find((slot) => slot.key === key);
+    public find(item: Item): Slot | undefined {
+        return this.slots.find((slot) => slot.canHold(item));
     }
 
     /**
-     * Checks if an item's key exists in the container.
-     * @param key Item's key to check.
+     * Checks if an item can be held in the container.
+     * @param item Item to check.
      */
 
-    public contains(key: string): boolean {
-        return this.slots.some((slot) => slot.key === key);
+    public canHold(item: Item): boolean {
+        return this.slots.some((slot) => slot.canHold(item));
     }
 
     /**
@@ -191,7 +199,7 @@ export default abstract class Container {
      * Signal for when an item is removed.
      */
 
-    public onRemove(callback: (slotData: SlotData) => void): void {
+    public onRemove(callback: (slotData: SlotData, drop?: boolean) => void): void {
         this.removeCallback = callback;
     }
 
