@@ -72,10 +72,10 @@ export enum Abilities {
 
 export enum Equipment {
     Armour,
-    Weapon,
+    Boots,
     Pendant,
     Ring,
-    Boots
+    Weapon
 }
 
 export enum Hovering {

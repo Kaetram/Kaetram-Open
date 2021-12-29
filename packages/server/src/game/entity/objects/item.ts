@@ -118,6 +118,34 @@ export default class Item extends Entity {
     }
 
     /**
+     * Returns the type of equipment the item classifies as.
+     * @returns Equipment type from Modules.
+     */
+
+    public getEquipmentType(): Modules.Equipment {
+        switch (this.itemType) {
+            case 'armour':
+            case 'armourarcher':
+                return Modules.Equipment.Armour;
+
+            case 'weapon':
+            case 'weaponarcher':
+                return Modules.Equipment.Weapon;
+
+            case 'pendant':
+                return Modules.Equipment.Pendant;
+
+            case 'boots':
+                return Modules.Equipment.Boots;
+
+            case 'ring':
+                return Modules.Equipment.Ring;
+        }
+
+        return -1;
+    }
+
+    /**
      * Checks if the item is equippable by comparing the type
      * against all the equippable items. Will probably be
      * rewritten for compactness in the future.

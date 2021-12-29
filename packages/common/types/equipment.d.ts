@@ -11,6 +11,7 @@ export interface EquipmentData {
     count: number;
     ability: number;
     abilityLevel: number;
+    power: number;
 }
 
 export type EquipmentType = 'weapon' | 'armour' | 'pendant' | 'ring' | 'boots';

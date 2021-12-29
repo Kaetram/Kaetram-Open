@@ -42,7 +42,7 @@ import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
 import type Slot from '../menu/container/slot';
-import { EquipmentData } from '@kaetram/common/types/equipment';
+import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import Item from '../entity/objects/item';
 
 export default class Connection {
@@ -161,73 +161,22 @@ export default class Connection {
         this.messages.onEquipment((opcode, info) => {
             switch (opcode) {
                 case Opcodes.Equipment.Batch:
-                    _.each(info as EquipmentData[], (data: EquipmentData) => {
-                        this.game.player.setEquipment(
-                            data.type,
-                            data.key,
-                            data.name,
-                            data.count,
-                            data.ability,
-                            data.abilityLevel
-                        );
+                    _.each((info as SerializedEquipment).equipments, (info) => {
+                        this.game.player.setEquipment(info);
                     });
 
                     break;
+
+                case Opcodes.Equipment.Equip:
+                    this.game.player.setEquipment(info as EquipmentData);
+                    break;
+
+                case Opcodes.Equipment.Unequip:
+                    this.game.player.unequip(info as Modules.Equipment);
+                    break;
             }
 
-            // switch (opcode) {
-            //     case Opcodes.Equipment.Batch: {
-            //         _.each(info as EquipmentBatchData, (data) => {
-            //             this.game.player.setEquipment(
-            //                 data.type,
-            //                 data.name,
-            //                 data.string,
-            //                 data.count,
-            //                 data.ability,
-            //                 data.abilityLevel,
-            //                 data.power
-            //             );
-            //         });
-
-            //         this.menu.loadProfile();
-
-            //         break;
-            //     }
-
-            //     case Opcodes.Equipment.Equip: {
-            //         let { type, name, string, count, ability, abilityLevel, power } =
-            //             info as EquipmentEquipData;
-
-            //         this.game.player.setEquipment(
-            //             type,
-            //             name,
-            //             string,
-            //             count,
-            //             ability,
-            //             abilityLevel,
-            //             power
-            //         );
-
-            //         this.menu.profile.update();
-
-            //         break;
-            //     }
-
-            //     case Opcodes.Equipment.Unequip: {
-            //         let type = info as EquipmentUnequipData;
-
-            //         this.game.player.unequip(type);
-
-            //         if (type === 'armour')
-            //             this.game.player.setSprite(
-            //                 this.game.getSprite(this.game.player.getSpriteName())
-            //             );
-
-            //         this.menu.profile.update();
-
-            //         break;
-            //     }
-            // }
+            this.menu.profile.update();
         });
 
         this.messages.onSpawn((data) => this.entities.create(data as AnyEntity));
@@ -757,9 +706,7 @@ export default class Connection {
         this.messages.onBlink((instance) => {
             let item = this.entities.get<Item>(instance);
 
-            if (!item) return;
-
-            item.blink(150);
+            item?.blink(150);
         });
 
         this.messages.onHeal((info) => {
