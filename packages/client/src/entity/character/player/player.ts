@@ -43,11 +43,13 @@ export default class Player extends Character {
 
     private lastLogin!: number | null;
 
-    public armour!: Armour;
-    public pendant!: Pendant;
-    public ring!: Ring;
-    public boots!: Boots;
-    public poison!: boolean;
+    public armour: Armour = new Armour();
+    public pendant: Pendant = new Pendant();
+    public ring: Ring = new Ring();
+    public boots: Boots = new Boots();
+    public weapon: Weapon = new Weapon();
+
+    public poison = false;
 
     private experienceCallback?(): void;
     private updateArmourCallback?(string: string, power?: number): void;
@@ -59,8 +61,6 @@ export default class Player extends Character {
 
     public constructor() {
         super('-1', Modules.Types.Player.toString());
-
-        this.loadEquipment();
     }
 
     public load({
@@ -114,14 +114,6 @@ export default class Player extends Character {
 
     public setId(id: string): void {
         this.id = id;
-    }
-
-    private loadEquipment(): void {
-        this.armour = null!;
-        this.weapon = null!;
-        this.pendant = null!;
-        this.ring = null!;
-        this.boots = null!;
     }
 
     public isRanged(): boolean {
@@ -182,7 +174,7 @@ export default class Player extends Character {
         count: number,
         ability: number,
         abilityLevel: number,
-        power?: number
+        power = 1
     ): void {
         switch (type) {
             case Modules.Equipment.Armour:

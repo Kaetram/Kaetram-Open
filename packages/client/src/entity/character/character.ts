@@ -7,11 +7,7 @@ import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
 
-import type Weapon from './player/equipment/weapon';
-
 export default class Character extends Entity {
-    public weapon!: Weapon;
-
     public override nextGridX = -1;
     public override nextGridY = -1;
 

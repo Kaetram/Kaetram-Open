@@ -1,9 +1,11 @@
 import _ from 'lodash';
 
 import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+
+import { Container, Equipment } from '../../../../network/packets';
 import Hit from '../combat/hit';
 
 import type Areas from '../../../map/areas/areas';
@@ -25,6 +27,8 @@ export default class Handler {
         this.player.onRegion(this.handleRegion.bind(this));
 
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
+        this.player.inventory.onLoaded(this.handleInventory.bind(this));
+        this.player.bank.onLoaded(this.handleBank.bind(this));
 
         this.load();
     }
@@ -45,7 +49,33 @@ export default class Handler {
      */
 
     private handleEquipment(): void {
-        log.warning('[TODO] loaded equipment');
+        this.player.send(new Equipment(Opcodes.Equipment.Batch, this.player.equipment.serialize()));
+    }
+
+    /**
+     * Callback for when the inventory is loaded. Relay message to the client.
+     */
+
+    private handleInventory(): void {
+        this.player.send(
+            new Container(Opcodes.Container.Batch, {
+                type: Modules.ContainerType.Inventory,
+                data: this.player.inventory.serialize()
+            })
+        );
+    }
+
+    /**
+     * Callback for when the inventory is loaded. Relay message to the client.
+     */
+
+    private handleBank(): void {
+        this.player.send(
+            new Container(Opcodes.Container.Batch, {
+                type: Modules.ContainerType.Bank,
+                data: this.player.bank.serialize()
+            })
+        );
     }
 
     // TODO - Refactor all of this.

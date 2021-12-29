@@ -62,12 +62,13 @@ import type {
 } from '@kaetram/common/types/messages';
 import type App from '../app';
 import type { AudioName } from '../controllers/audio';
+import { EquipmentData } from '@kaetram/common/types/equipment';
 
 type HandshakeCallback = (data: HandshakeData) => void;
 type WelcomeCallback = (playerData: WelcomeData) => void;
 type SpawnCallback = (entities: SpawnData) => void;
 interface EquipmentCallback {
-    (opcode: Opcodes.Equipment.Batch, info: EquipmentBatchData): void;
+    (opcode: Opcodes.Equipment.Batch, info: EquipmentData[]): void;
     (opcode: Opcodes.Equipment.Equip, info: EquipmentEquipData): void;
     (opcode: Opcodes.Equipment.Unequip, info: EquipmentUnequipData): void;
 }
@@ -96,15 +97,10 @@ type PointsCallback = (data: PointsData) => void;
 type NetworkCallback = () => void;
 type ChatCallback = (data: ChatData) => void;
 type CommandCallback = (data: CommandData) => void;
-interface InventoryCallback {
-    (opcode: Opcodes.Inventory.Batch, info: ContainerBatchData): void;
-    (opcode: Opcodes.Inventory.Add, info: ContainerAddData): void;
-    (opcode: Opcodes.Inventory.Remove, info: ContainerRemoveData): void;
-}
-interface BankCallback {
-    (opcode: Opcodes.Bank.Batch, info: ContainerBatchData): void;
-    (opcode: Opcodes.Bank.Add, info: ContainerAddData): void;
-    (opcode: Opcodes.Bank.Remove, info: ContainerRemoveData): void;
+interface ContainerCallback {
+    (opcode: Opcodes.Container.Batch, info: ContainerBatchData): void;
+    (opcode: Opcodes.Container.Add, info: ContainerAddData): void;
+    (opcode: Opcodes.Container.Remove, info: ContainerRemoveData): void;
 }
 type AbilityCallback = (data: unknown) => void;
 interface QuestCallback {
@@ -182,8 +178,7 @@ export default class Messages {
     private networkCallback?: NetworkCallback;
     private chatCallback?: ChatCallback;
     private commandCallback?: CommandCallback;
-    private inventoryCallback?: InventoryCallback;
-    private bankCallback?: BankCallback;
+    private containerCallback?: ContainerCallback;
     private abilityCallback?: AbilityCallback;
     private questCallback?: QuestCallback;
     private notificationCallback?: NotificationCallback;
@@ -235,8 +230,7 @@ export default class Messages {
         messages[Packets.Network] = () => this.networkCallback;
         messages[Packets.Chat] = () => this.chatCallback;
         messages[Packets.Command] = () => this.commandCallback;
-        messages[Packets.Inventory] = () => this.inventoryCallback;
-        messages[Packets.Bank] = () => this.bankCallback;
+        messages[Packets.Container] = () => this.containerCallback;
         messages[Packets.Ability] = () => this.abilityCallback;
         messages[Packets.Quest] = () => this.questCallback;
         messages[Packets.Notification] = () => this.notificationCallback;
@@ -414,12 +408,8 @@ export default class Messages {
         this.commandCallback = callback;
     }
 
-    public onInventory(callback: InventoryCallback): void {
-        this.inventoryCallback = callback;
-    }
-
-    public onBank(callback: BankCallback): void {
-        this.bankCallback = callback;
+    public onContainer(callback: ContainerCallback): void {
+        this.containerCallback = callback;
     }
 
     public onAbility(callback: AbilityCallback): void {

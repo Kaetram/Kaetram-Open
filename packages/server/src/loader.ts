@@ -15,8 +15,6 @@ import type { ObjectsData } from './info/objects';
 import { Modules } from '@kaetram/common/network';
 
 export default class Loader {
-    private readyCallback?(): void;
-
     /**
      * This class is responsible for pasing through all of our JSONs and extracting
      * information about each respective file. Take for example the mobs.json file.
@@ -25,19 +23,10 @@ export default class Loader {
      */
 
     public constructor() {
-        this.onReady(this.handleReady.bind(this));
-
         this.loadAbilityData();
         this.loadShops();
         this.loadLevels();
         this.loadObjects();
-    }
-
-    private handleReady(): void {
-        //Mobs.Plugins = combatPlugins;
-
-        //log.info(`Loaded ${Object.keys(Mobs.Plugins).length} combat plugins.`);
-        log.info(`Loaded ${Object.keys(Items.Plugins).length} item plugins.`);
     }
 
     private loadAbilityData(): void {
@@ -139,11 +128,5 @@ export default class Loader {
         });
 
         log.info(`Finished loading ${objectCounter} global objects.`);
-
-        this.readyCallback?.();
-    }
-
-    private onReady(callback: () => void): void {
-        this.readyCallback = callback;
     }
 }
