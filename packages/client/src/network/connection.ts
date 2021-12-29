@@ -211,23 +211,14 @@ export default class Connection {
                 entity.maxMana = data.maxMana!;
             }
 
-            if (data.experience!) {
+            if (data.experience) {
                 entity.experience = data.experience!;
                 entity.level = data.level!;
             }
 
             if (data.armour) entity.setSprite(this.game.getSprite(data.armour));
 
-            if (data.weapon)
-                entity.setEquipment(
-                    data.weapon.type,
-                    data.weapon.name,
-                    data.weapon.string,
-                    data.weapon.count,
-                    data.weapon.ability,
-                    data.weapon.abilityLevel,
-                    data.weapon.power
-                );
+            if (data.weapon) entity.setEquipment(data.weapon);
 
             if (data.attackRange) entity.attackRange = data.attackRange;
 
@@ -610,8 +601,8 @@ export default class Connection {
                 }
 
                 case Opcodes.Container.Remove: {
-                    let { index, count } = info as ContainerRemoveData;
-                    container.remove(index, count);
+                    let { slot } = info as ContainerRemoveData;
+                    container.remove(slot);
                     break;
                 }
             }
