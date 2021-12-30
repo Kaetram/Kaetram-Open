@@ -14,6 +14,7 @@ import type Game from '../game';
 import type Slot from '../menu/container/slot';
 import type Professions from '../menu/profile/pages/professions';
 import type Quest from '../menu/profile/pages/quest';
+import { Modules } from '@kaetram/common/network';
 
 export default class MenuController {
     private notify = $('#notify');
@@ -45,6 +46,8 @@ export default class MenuController {
         this.loadWarp();
         this.loadShop();
 
+        this.loadInventory(Modules.Constants.INVENTORY_SIZE, []);
+
         this.done.on('click', () => this.hideNotify());
     }
 
@@ -71,7 +74,7 @@ export default class MenuController {
      * to completely refresh the inventory.
      */
     public loadInventory(size: number, data: Slot[]): void {
-        this.inventory = new Inventory(this.game, size, data);
+        this.inventory = new Inventory(this.game, this, size, data);
     }
 
     /**
