@@ -637,9 +637,22 @@ export default class Connection {
         });
 
         this.messages.onContainer((opcode, info) => {
+            let containerType: Modules.ContainerType = info.type;
+
             console.log('-----Received Container------');
             console.log(opcode);
             console.log(info);
+
+            switch (opcode) {
+                case Opcodes.Container.Batch:
+                    break;
+
+                case Opcodes.Container.Add:
+                    break;
+
+                case Opcodes.Container.Remove:
+                    break;
+            }
 
             // switch (opcode) {
             //     case Opcodes.Inventory.Batch: {
