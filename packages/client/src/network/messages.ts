@@ -63,6 +63,7 @@ import type {
 import type App from '../app';
 import type { AudioName } from '../controllers/audio';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import { EntityData } from '../controllers/entities';
 
 type HandshakeCallback = (data: HandshakeData) => void;
 type WelcomeCallback = (playerData: WelcomeData) => void;
@@ -73,7 +74,7 @@ interface EquipmentCallback {
     (opcode: Opcodes.Equipment.Unequip, info: Modules.Equipment): void;
 }
 type EntityListCallback = (ids: string[]) => void;
-type SyncCallback = (data: SyncData) => void;
+type SyncCallback = (data: EntityData) => void;
 interface MovementCallback {
     (opcode: Opcodes.Movement.Move, info: MovementMoveData): void;
     (opcode: Opcodes.Movement.Follow, info: MovementFollowData): void;

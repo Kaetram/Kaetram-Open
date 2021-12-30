@@ -11,10 +11,10 @@ export default class Container {
      * We receive information from the server here, so we mustn't do any calculations.
      * Instead, we just modify the container directly.
      */
-    public setSlot(index: number, info: Partial<Slot>): void {
+    public setSlot(index: number, info: Slot): void {
         this.slots[index].load(
-            info.string!,
-            info.count!,
+            info.key,
+            info.count,
             info.ability,
             info.abilityLevel,
             info.edible,

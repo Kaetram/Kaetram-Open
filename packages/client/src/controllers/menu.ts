@@ -15,6 +15,7 @@ import type Slot from '../menu/container/slot';
 import type Professions from '../menu/profile/pages/professions';
 import type Quest from '../menu/profile/pages/quest';
 import { Modules } from '@kaetram/common/network';
+import { SlotData } from '@kaetram/common/types/slot';
 
 export default class MenuController {
     private notify = $('#notify');
@@ -75,7 +76,7 @@ export default class MenuController {
      * This can be called multiple times and can be used
      * to completely refresh the inventory.
      */
-    public loadInventory(size: number, data: Slot[]): void {
+    public loadInventory(size: number, data: SlotData[]): void {
         this.inventory = new Inventory(this.game, this, size, data);
     }
 
@@ -83,7 +84,7 @@ export default class MenuController {
      * Similar structure as the inventory, just that it
      * has two containers. The bank and the inventory.
      */
-    public loadBank(size: number, data: Slot[]): void {
+    public loadBank(size: number, data: SlotData[]): void {
         this.bank = new Bank(this.game, size, data);
 
         this.loadEnchant();
