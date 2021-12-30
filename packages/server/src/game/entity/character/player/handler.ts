@@ -12,6 +12,7 @@ import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
+import Slot from './containers/slot';
 
 export default class Handler {
     private world;
@@ -29,6 +30,10 @@ export default class Handler {
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
         this.player.bank.onLoaded(this.handleBank.bind(this));
+
+        this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
+        this.player.inventory.onRemove(this.handleInventoryRemove.bind(this));
+        this.player.inventory.onNotify(this.player.notify.bind(this.player));
 
         this.load();
     }
@@ -61,6 +66,36 @@ export default class Handler {
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
                 data: this.player.inventory.serialize()
+            })
+        );
+    }
+
+    /**
+     * Sends a packet to the client whenever
+     * we add an item in our inventory.
+     * @param slot The slot we just added the item to.
+     */
+
+    private handleInventoryAdd(slot: Slot): void {
+        this.player.send(
+            new Container(Opcodes.Container.Add, {
+                type: Modules.ContainerType.Inventory,
+                slot
+            })
+        );
+    }
+
+    /**
+     * Send a packet to the client to clear the inventory
+     * slot index.
+     * @param index The index of the item we removed.
+     */
+
+    private handleInventoryRemove(index: number): void {
+        this.player.send(
+            new Container(Opcodes.Container.Remove, {
+                type: Modules.ContainerType.Inventory,
+                index
             })
         );
     }

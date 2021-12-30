@@ -14,6 +14,10 @@ export default abstract class Container {
 
     private loadCallback?: () => void;
 
+    protected addCallback?: (slot: Slot) => void;
+    protected removeCallback?: (index: number) => void;
+    protected notifyCallback?: (message: string) => void;
+
     public constructor(private type: Modules.ContainerType, private size: number) {
         // Create `size` amount of slots with empty data.
         for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
@@ -49,20 +53,29 @@ export default abstract class Container {
     public add(item: Item): boolean {
         if (!this.hasSpace()) return false;
 
+        // Return whether or not the adding was successful.
+        let added = false,
+            slot: Slot;
+
         // Item is stackable and we already have it.
         if (item.stackable && this.contains(item.key)) {
-            let slot = this.find(item.key);
+            slot = this.find(item.key)!;
 
-            return !!slot?.add(item.count);
+            added = !!slot?.add(item.count);
+        } else {
+            slot = this.getEmptySlot();
+
+            slot.update(item);
+
+            added = true;
         }
 
-        let emptySlot = this.getEmptySlot();
+        if (added) {
+            this.emptySpaces--;
+            this.addCallback?.(slot!);
+        }
 
-        emptySlot.update(item);
-
-        this.emptySpaces--;
-
-        return true;
+        return added;
     }
 
     /**
@@ -79,6 +92,8 @@ export default abstract class Container {
         let serializedSlot = slot.serialize();
 
         slot.clear();
+
+        this.removeCallback?.(index);
 
         return serializedSlot;
     }
@@ -150,5 +165,30 @@ export default abstract class Container {
 
     public onLoaded(callback: () => void): void {
         this.loadCallback = callback;
+    }
+
+    /**
+     * Signal for when an item is added.
+     */
+
+    public onAdd(callback: (slot: Slot) => void): void {
+        this.addCallback = callback;
+    }
+
+    /**
+     * Signal for when an item is removed.
+     */
+
+    public onRemove(callback: (index: number) => void): void {
+        this.removeCallback = callback;
+    }
+
+    /**
+     * A callback sent back to the player to send a notification.
+     * @param callback A callback containing the message to notify the player with.
+     */
+
+    public onNotify(callback: (message: string) => void): void {
+        this.notifyCallback = callback;
     }
 }
