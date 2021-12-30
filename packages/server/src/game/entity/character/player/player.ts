@@ -53,6 +53,8 @@ import Equipments from './equipment/equipments';
 import Regions from '../../../map/regions';
 import Entities from '@kaetram/server/src/controllers/entities';
 import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';
+import { EntityData } from '../../entity';
+import { EquipmentData } from '@kaetram/common/types/equipment';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
@@ -70,6 +72,14 @@ export interface ObjectData {
         isObject: boolean;
         cursor: string | undefined;
     };
+}
+
+interface PlayerData extends EntityData {
+    rights: number;
+    pvp: boolean;
+    orientation: number;
+
+    equipments: EquipmentData[];
 }
 
 export default class Player extends Character {
@@ -690,27 +700,28 @@ export default class Player extends Character {
     }
 
     /**
-     * TODO - Properly refactor this
+     * Serializes the player character to be sent to
+     * nearby regions. This contains all the data
+     * about the player that other players should
+     * be able to see.
+     * @returns PlayerData containing all of the player info.
      */
 
-    public override serialize(): any {
-        return {
-            type: Modules.EntityType.Player,
-            id: this.instance,
-            name: Utils.formatUsername(this.username),
-            x: this.x,
-            y: this.y,
-            rights: this.rights,
-            level: this.level,
-            pvp: this.pvp,
-            pvpKills: this.pvpKills,
-            pvpDeaths: this.pvpDeaths,
-            attackRange: this.attackRange,
-            orientation: this.orientation,
-            hitPoints: this.hitPoints.serialize(),
-            movementSpeed: this.getMovementSpeed(),
-            mana: this.mana.serialize()
-        };
+    public override serialize(withEquipment?: boolean): PlayerData {
+        let data = super.serialize() as PlayerData;
+
+        data.rights = this.rights;
+        data.level = this.level;
+        data.hitPoints = this.hitPoints.getHitPoints();
+        data.maxHitPoints = this.hitPoints.getMaxHitPoints();
+        data.attackRange = this.attackRange;
+        data.orientation = this.orientation;
+        data.movementSpeed = this.movementSpeed; // TODO - Update with .getMovementSpeed()
+
+        // Include equipment only when necessary.
+        if (withEquipment) data.equipments = this.equipment.serialize().equipments;
+
+        return data;
     }
 
     /**
@@ -853,20 +864,9 @@ export default class Player extends Character {
      * mana, exp, and other variables
      */
     public sync(): void {
-        let info = {
-            id: this.instance,
-            attackRange: this.attackRange,
-            hitPoints: this.getHitPoints(),
-            maxHitPoints: this.getMaxHitPoints(),
-            mana: this.mana.getMana(),
-            maxMana: this.mana.getMaxMana(),
-            experience: this.experience,
-            level: this.level,
-            poison: !!this.poison,
-            movementSpeed: this.getMovementSpeed()
-        };
+        let data = this.serialize(true);
 
-        this.sendToRegions(new Sync(info));
+        this.sendToRegions(new Sync(data));
 
         this.save();
     }

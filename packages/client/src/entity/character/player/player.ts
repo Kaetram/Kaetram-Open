@@ -76,8 +76,6 @@ export default class Player extends Character {
         prevExperience,
         level,
         lastLogin,
-        pvpKills,
-        pvpDeaths,
         orientation,
         movementSpeed
     }: WelcomeData): void {
@@ -90,8 +88,6 @@ export default class Player extends Character {
         this.level = level;
 
         this.lastLogin = lastLogin;
-        this.pvpKills = pvpKills;
-        this.pvpDeaths = pvpDeaths;
 
         this.orientation = orientation;
 
@@ -173,18 +169,14 @@ export default class Player extends Character {
 
         switch (type) {
             case Modules.Equipment.Armour:
-                if (!this.armour)
-                    this.armour = new Armour(name, key, count, ability, abilityLevel, power);
-                else this.armour.update(name, key, count, ability, abilityLevel, power);
+                this.armour.update(name, key, count, ability, abilityLevel, power);
 
                 this.updateArmourCallback?.(key, power);
 
                 break;
 
             case Modules.Equipment.Weapon:
-                if (!this.weapon)
-                    this.weapon = new Weapon(name, key, count, ability, abilityLevel, power);
-                else this.weapon.update(name, key, count, ability, abilityLevel, power);
+                this.weapon.update(name, key, count, ability, abilityLevel, power);
 
                 this.weapon.ranged = key.includes('bow');
 
@@ -193,25 +185,13 @@ export default class Player extends Character {
                 break;
 
             case Modules.Equipment.Pendant:
-                if (!this.pendant)
-                    this.pendant = new Pendant(name, key, count, ability, abilityLevel, power);
-                else this.pendant.update(name, key, count, ability, abilityLevel, power);
-
-                break;
+                return this.pendant.update(name, key, count, ability, abilityLevel, power);
 
             case Modules.Equipment.Ring:
-                if (!this.ring)
-                    this.ring = new Ring(name, key, count, ability, abilityLevel, power);
-                else this.ring.update(name, key, count, ability, abilityLevel, power);
-
-                break;
+                return this.ring.update(name, key, count, ability, abilityLevel, power);
 
             case Modules.Equipment.Boots:
-                if (!this.boots)
-                    this.boots = new Boots(name, key, count, ability, abilityLevel, power);
-                else this.boots.update(name, key, count, ability, abilityLevel, power);
-
-                break;
+                return this.boots.update(name, key, count, ability, abilityLevel, power);
         }
 
         this.updateEquipmentCallback?.(type, power);

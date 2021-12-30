@@ -37,7 +37,7 @@ import type {
     ShopRemoveData,
     ShopSelectData
 } from '@kaetram/common/types/messages';
-import type { AnyEntity } from '../controllers/entities';
+import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
@@ -178,7 +178,7 @@ export default class Connection {
             this.menu.profile.update();
         });
 
-        this.messages.onSpawn((data) => this.entities.create(data as AnyEntity));
+        this.messages.onSpawn((data) => this.entities.create(data as EntityData));
 
         this.messages.onEntityList((data) => {
             let ids = _.map(this.entities.getAll(), 'id'),
@@ -196,36 +196,24 @@ export default class Connection {
         });
 
         this.messages.onSync((data) => {
-            let entity = this.entities.get<Player>(data.id);
+            let entity = this.entities.get<Player>(data.instance);
 
             if (!entity || !entity.isPlayer()) return;
 
-            if (data.hitPoints) {
-                entity.setHitPoints(data.hitPoints);
-                entity.setMaxHitPoints(data.maxHitPoints!);
-            }
+            entity.setHitPoints(data.hitPoints);
+            entity.setMaxHitPoints(data.maxHitPoints!);
 
-            if (data.mana) {
-                entity.mana = data.mana;
-                entity.maxMana = data.maxMana!;
-            }
+            entity.level = data.level;
 
-            if (data.experience) {
-                entity.experience = data.experience!;
-                entity.level = data.level!;
-            }
+            entity.attackRange = data.attackRange;
 
-            if (data.armour) entity.setSprite(this.game.getSprite(data.armour));
+            //if (data.poison) entity.setPoison(data.poison);
 
-            if (data.weapon) entity.setEquipment(data.weapon);
+            entity.movementSpeed = data.movementSpeed;
 
-            if (data.attackRange) entity.attackRange = data.attackRange;
+            entity.orientation = data.orientation;
 
-            if (data.poison) entity.setPoison(data.poison);
-
-            if (data.movementSpeed) entity.movementSpeed = data.movementSpeed;
-
-            if (data.orientation !== undefined) entity.orientation = data.orientation;
+            _.each(data.equipments, entity.setEquipment.bind(entity));
 
             this.menu.profile.update();
         });
@@ -504,12 +492,11 @@ export default class Connection {
         });
 
         this.messages.onProjectile((opcode, info) => {
-            switch (opcode) {
-                case Opcodes.Projectile.Create:
-                    this.entities.create(info as AnyEntity);
-
-                    break;
-            }
+            // switch (opcode) {
+            //     case Opcodes.Projectile.Create:
+            //         this.entities.create(info as EntityData);
+            //         break;
+            // }
         });
 
         this.messages.onPopulation((population) => {
