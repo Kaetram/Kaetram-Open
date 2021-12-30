@@ -11,6 +11,8 @@ export default class Inventory extends Container {
     public override add(item: Item): boolean {
         console.log(`item: ${item.key} - x: ${item.x} - y: ${item.y}`);
 
+        if (!super.add(item)) this.notifyCallback?.('Could not add item to the inventory lol.');
+
         item.despawn(true);
 
         return true;

@@ -7,6 +7,7 @@ import Container from './container/container';
 
 import type Game from '../game';
 import type Slot from './container/slot';
+import MenuController from '../controllers/menu';
 
 export default class Inventory {
     private actions;
@@ -20,9 +21,14 @@ export default class Inventory {
     private selectedSlot: JQuery | null = null;
     private selectedItem: Slot | null = null;
 
-    public constructor(private game: Game, size: number, data: Slot[]) {
-        this.actions = game.menu.actions;
-        this.container = new Container(size);
+    public constructor(
+        private game: Game,
+        private menu: MenuController,
+        private size: number,
+        data: Slot[]
+    ) {
+        this.actions = this.menu.actions;
+        this.container = new Container(this.size);
 
         this.load(data);
     }
@@ -30,49 +36,63 @@ export default class Inventory {
     private load(data: Slot[]): void {
         let list = $('#inventory').find('ul');
 
-        for (let [i, item] of data.entries()) {
-            this.container.setSlot(i, item);
+        console.log(this.size);
 
-            let itemSlot = $(`<div id="slot${i}" class="itemSlot"></div>`);
+        for (let index = 0; index < this.size; index++) {
+            // Create an empty item slot.
+            let itemSlot = $(`<div id="slot${index}" class="itemSlot"></div>`),
+                slotElement = $('<li></li>').append(itemSlot);
 
-            if (item.string !== 'null')
-                itemSlot.css('background-image', this.container.getImageFormat(item.string));
-
-            itemSlot.css('background-size', '600%');
-
-            itemSlot.dblclick((event) => this.clickDouble(event));
-
-            itemSlot.on('click', (event) => this.click(event));
-
-            let itemSlotList = $('<li></li>'),
-                { count, ability } = item,
-                itemCount = count.toString();
-
-            if (count > 999_999)
-                itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
-            else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
-            else if (count === 1) itemCount = '';
-
-            itemSlotList.append(itemSlot);
-            itemSlotList.append(
-                `<div id="itemCount${i}" class="inventoryItemCount">${itemCount}</div>`
-            );
-
-            if (ability! > -1) {
-                let eList = Object.keys(Modules.Enchantment), // enchantment list
-                    enchantment = eList[ability!];
-
-                if (enchantment) itemSlotList.find(`#itemCount${i}`).text(enchantment);
-            }
-
-            list.append(itemSlotList);
+            list.append(slotElement);
         }
 
         this.button.on('click', () => this.open());
+
+        if (data.length === 0) return;
+
+        for (let slot of data) console.log(slot);
+
+        // for (let [i, item] of data.entries()) {
+        //     this.container.setSlot(i, item);
+
+        //     let itemSlot = $(`<div id="slot${i}" class="itemSlot"></div>`);
+
+        //     if (item.string !== 'null')
+        //         itemSlot.css('background-image', this.container.getImageFormat(item.string));
+
+        //     itemSlot.css('background-size', '600%');
+
+        //     itemSlot.dblclick((event) => this.clickDouble(event));
+
+        //     itemSlot.on('click', (event) => this.click(event));
+
+        //     let itemSlotList = $('<li></li>'),
+        //         { count, ability } = item,
+        //         itemCount = count.toString();
+
+        //     if (count > 999_999)
+        //         itemCount = `${itemCount.slice(0, Math.max(0, itemCount.length - 6))}M`;
+        //     else if (count > 9999) itemCount = `${itemCount.slice(0, 2)}K`;
+        //     else if (count === 1) itemCount = '';
+
+        //     itemSlotList.append(itemSlot);
+        //     itemSlotList.append(
+        //         `<div id="itemCount${i}" class="inventoryItemCount">${itemCount}</div>`
+        //     );
+
+        //     if (ability! > -1) {
+        //         let eList = Object.keys(Modules.Enchantment), // enchantment list
+        //             enchantment = eList[ability!];
+
+        //         if (enchantment) itemSlotList.find(`#itemCount${i}`).text(enchantment);
+        //     }
+
+        //     list.append(itemSlotList);
+        // }
     }
 
     public open(): void {
-        this.game.menu.hideAll();
+        this.menu.hideAll();
 
         if (this.isVisible()) this.hide();
         else this.display();

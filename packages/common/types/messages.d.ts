@@ -163,9 +163,18 @@ export interface CommandData {
     command: string;
 }
 
-export type ContainerBatchData = [size: number, slots: Slot[]];
-export type ContainerAddData = SlotData;
-export type ContainerRemoveData = Pick<SlotData, 'index' | 'count'>;
+export type ContainerBatchData = {
+    type: Modules.ContainerType;
+    data: SlotData[];
+};
+export type ContainerAddData = {
+    type: Modules.ContainerType;
+    slot: SlotData;
+};
+export type ContainerRemoveData = {
+    type: Modules.ContainerType;
+    index: number;
+};
 
 export interface QuestBatchData {
     quests: QuestInfo[];
