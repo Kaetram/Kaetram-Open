@@ -11,7 +11,7 @@ export default abstract class Equipment {
     ) {}
 
     public exists(): boolean {
-        return this.name !== null && this.name !== 'null';
+        return !!this.string;
     }
 
     // getName(): string {
