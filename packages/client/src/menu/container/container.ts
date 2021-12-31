@@ -1,3 +1,4 @@
+import { SlotData } from '@kaetram/common/types/slot';
 import Slot from './slot';
 
 export default class Container {
@@ -11,7 +12,8 @@ export default class Container {
      * We receive information from the server here, so we mustn't do any calculations.
      * Instead, we just modify the container directly.
      */
-    public setSlot(index: number, info: Slot): void {
+
+    public update(index: number, info: SlotData): void {
         this.slots[index].load(
             info.key,
             info.count,
@@ -21,12 +23,6 @@ export default class Container {
             info.equippable
         );
     }
-
-    // getEmptySlot(): number {
-    //     for (let i = 0; i < this.slots.length; i++) if (!this.slots[i].string) return i;
-
-    //     return -1;
-    // }
 
     public getImageFormat(name: string | null): string {
         let image = `/img/sprites/item-${name}.png`;

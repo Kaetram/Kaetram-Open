@@ -48,8 +48,8 @@ export default class MenuController {
         this.loadShop();
         this.loadEnchant();
 
-        this.loadBank(Modules.Constants.BANK_SIZE, []);
         this.loadInventory(Modules.Constants.INVENTORY_SIZE, []);
+        this.loadBank(Modules.Constants.BANK_SIZE, []);
 
         this.done.on('click', () => this.hideNotify());
     }
@@ -85,7 +85,10 @@ export default class MenuController {
      * has two containers. The bank and the inventory.
      */
     public loadBank(size: number, data: SlotData[]): void {
-        this.bank = new Bank(this.game, size, data);
+        let inventorySize = this.inventory ? this.inventory.size : Modules.Constants.INVENTORY_SIZE,
+            inventoryData = this.inventory ? this.inventory.container.slots : [];
+
+        this.bank = new Bank(this.game, size, inventorySize, data, inventoryData);
 
         this.loadEnchant();
     }
