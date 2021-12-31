@@ -180,8 +180,6 @@ export default class Incoming {
             this.player.updateRegion(true);
         }
 
-        this.player.save();
-
         if (config.discordEnabled)
             this.world.discord.sendWebhook(this.player.username, 'has logged in!');
 
@@ -658,8 +656,6 @@ export default class Incoming {
 
                 if (!slot) return;
 
-                console.log(slot);
-
                 item = new Item(
                     slot.key,
                     -1,
@@ -896,7 +892,6 @@ export default class Incoming {
 
     private handleCamera(message: string[]): void {
         log.info(`${this.player.x} ${this.player.y}`);
-        //console.log(message);
 
         this.player.cameraArea = undefined;
         // TODO - Make this a server-side thing.
