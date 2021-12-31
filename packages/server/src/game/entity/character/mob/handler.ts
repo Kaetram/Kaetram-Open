@@ -5,6 +5,7 @@ import Map from '../../../map/map';
 import World from '../../../world';
 import Entities from '@kaetram/server/src/controllers/entities';
 import Character from '../character';
+import log from '@kaetram/common/util/log';
 
 /**
  * The handler class file for the Mob object. We use this to better
@@ -119,6 +120,6 @@ export default class Handler {
      */
 
     private handleForceTalk(message: string): void {
-        console.log('this is a force talk action happening lolll');
+        log.debug('this is a force talk action happening lolll');
     }
 }
