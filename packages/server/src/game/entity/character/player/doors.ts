@@ -154,13 +154,9 @@ export default class Doors {
     }
 
     public getDoor(x: number, y: number): Door | undefined {
-        for (let i in this.doors)
-            if (
-                Object.prototype.hasOwnProperty.call(this.doors, i) &&
-                this.doors[i].x === x &&
-                this.doors[i].y === y
-            )
-                return this.doors[i];
+        return _.find(this.doors, (door) => {
+            return door.x === x && door.y === y;
+        });
     }
 
     public isDoor(x: number, y: number, callback: (door: boolean) => void): void {
