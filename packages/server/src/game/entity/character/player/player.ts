@@ -716,7 +716,7 @@ export default class Player extends Character {
         data.maxHitPoints = this.hitPoints.getMaxHitPoints();
         data.attackRange = this.attackRange;
         data.orientation = this.orientation;
-        data.movementSpeed = this.movementSpeed; // TODO - Update with .getMovementSpeed()
+        data.movementSpeed = this.getMovementSpeed();
 
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
