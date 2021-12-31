@@ -164,7 +164,6 @@ export default class Incoming {
 
         this.player.loadEquipment();
         this.player.loadInventory();
-        this.player.loadBank();
 
         //this.world.regions.syncRegions(this.player);
 
@@ -373,7 +372,7 @@ export default class Incoming {
                 if (this.world.map.isDoor(playerX, playerY) && !hasTarget) {
                     door = this.player.doors.getDoor(playerX, playerY);
 
-                    if (this.player.doors.isClosed(door!)) return;
+                    if (door && this.player.doors.isClosed(door)) return;
 
                     let destination = this.world.map.getDoorByPosition(playerX, playerY);
 
