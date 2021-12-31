@@ -93,11 +93,16 @@ export default class Map {
     private loadDoors(): void {
         this.doors = {};
 
+        let doorsClone = _.cloneDeep(map.areas.doors);
+
         _.each(map.areas.doors, (door) => {
+            // If a door somehow doesn't contain a destination.
             if (!door.destination) return;
 
             let index = this.coordToIndex(door.x, door.y),
-                destination = this.getDoorDestination(door);
+                destination = _.find(doorsClone, (cloneDoor) => {
+                    return door.id === cloneDoor.destination;
+                });
 
             if (!destination) return;
 
@@ -264,13 +269,6 @@ export default class Map {
 
     public getDoorByPosition(x: number, y: number): Door {
         return this.doors[this.coordToIndex(x, y)];
-    }
-
-    private getDoorDestination(door: ProcessedArea): ProcessedArea | null {
-        for (let i in map.areas.doors)
-            if (map.areas.doors[i].id === door.destination) return map.areas.doors[i];
-
-        return null;
     }
 
     public isOutOfBounds(x: number, y: number): boolean {
