@@ -51,7 +51,7 @@ export default class Handler {
      */
 
     private handleRegion(region: number): void {
-        console.log(`Player ${this.player.username} entered region: ${region}.`);
+        log.debug(`Player ${this.player.username} entered region: ${region}.`);
 
         this.map.regions.sendEntities(this.player);
     }

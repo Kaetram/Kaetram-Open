@@ -322,13 +322,9 @@ export default class Map {
         return warp;
     }
 
-    private getWarpByName(name: string): ProcessedArea | null {
-        console.log(this.warps);
-
+    private getWarpByName(name: string): ProcessedArea | undefined {
         for (let i in this.warps)
             if (this.warps[i].name === name) return _.cloneDeep(this.warps[i]);
-
-        return null;
     }
 
     public getChestAreas(): Areas {

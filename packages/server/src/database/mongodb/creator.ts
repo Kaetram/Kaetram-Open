@@ -56,7 +56,7 @@ export default class Creator {
             this.saveBank(player);
         } catch (error: unknown) {
             log.error(`Could not save data for ${player.username}.`);
-            console.log(error);
+            log.error(error);
         }
     }
 
