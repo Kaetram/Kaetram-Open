@@ -64,7 +64,7 @@ export default class Achievement {
             this.player.send(
                 new NPCPacket(Opcodes.NPC.Talk, {
                     id: npc.instance,
-                    text: npc.talk(this.data.text!, this.player)
+                    text: npc.talk(this.player)
                 })
             );
 

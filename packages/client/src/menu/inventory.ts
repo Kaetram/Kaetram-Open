@@ -25,7 +25,7 @@ export default class Inventory {
     public constructor(
         private game: Game,
         private menu: MenuController,
-        private size: number,
+        public size: number,
         data: SlotData[]
     ) {
         this.actions = this.menu.actions;
@@ -40,6 +40,7 @@ export default class Inventory {
         this.clear();
 
         for (let index = 0; index < this.size; index++) {
+            console.log(index);
             // Create an empty item slot.
             let itemSlot = $(`<div id="slot${index}" class="itemSlot"></div>`),
                 itemSlotCount = $(`<div id="itemCount${index}" class="inventoryItemCount"></div>`),
