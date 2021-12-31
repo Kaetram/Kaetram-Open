@@ -213,7 +213,7 @@ export default class Connection {
 
             entity.orientation = data.orientation;
 
-            _.each(data.equipments, entity.setEquipment.bind(entity));
+            if (data.equipments) _.each(data.equipments, entity.setEquipment.bind(entity));
 
             this.menu.profile.update();
         });
