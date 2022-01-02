@@ -7,6 +7,7 @@ import Container from './container/container';
 import type Game from '../game';
 import type Slot from './container/slot';
 import { SlotData } from '@kaetram/common/types/slot';
+import MenuController from '../controllers/menu';
 
 export default class Bank {
     // player = this.game.player;
@@ -22,20 +23,19 @@ export default class Bank {
 
     public constructor(
         private game: Game,
+        private menu: MenuController,
         private size: number,
-        private inventorySize: number,
-        data: SlotData[],
-        inventoryData: SlotData[]
+        data: SlotData[]
     ) {
         this.container = new Container(size);
 
         this.close.css('left', '97%');
         this.close.on('click', () => this.hide());
 
-        this.load(data, inventoryData);
+        this.load(data);
     }
 
-    public load(data: SlotData[], inventoryData: Slot[]): void {
+    public load(data: SlotData[]): void {
         let bankList = this.bankSlots.find('ul'),
             inventoryList = this.bankInventorySlots.find('ul');
 
@@ -44,7 +44,8 @@ export default class Bank {
         for (let i = 0; i < this.size; i++) {
             let bankSlot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`),
                 bankCount = $(`<div id="bankItemCount${i}" class="itemCount"></div>`),
-                slotElement = $('<li></li>').append(bankSlot).append(bankCount);
+                slotImage = $(`<div id="bankImage${i}" class="bankImage"></div>`),
+                slotElement = $('<li></li>').append(bankSlot.append(slotImage)).append(bankCount);
 
             bankSlot.on('click', (event) => this.click('bank', event));
 
@@ -56,10 +57,15 @@ export default class Bank {
             bankList.append(slotElement);
         }
 
-        for (let j = 0; j < this.inventorySize; j++) {
+        let inventorySize = this.menu.getInventorySize();
+
+        for (let j = 0; j < inventorySize; j++) {
             let inventorySlot = $(`<div id="bankInventorySlot${j}" class="bankSlot"></div>`),
                 inventoryCount = $(`<div id="inventoryItemCount${j}" class="itemCount"></div>`),
-                slotElement = $('<li></li>').append(inventorySlot).append(inventoryCount);
+                slotImage = $(`<div id="inventoryImage${j}" class="bankImage"></div>`),
+                slotElement = $('<li></li>')
+                    .append(inventorySlot.append(slotImage))
+                    .append(inventoryCount);
 
             inventorySlot.on('click', (event) => this.click('inventory', event));
 
@@ -72,7 +78,8 @@ export default class Bank {
         }
 
         for (let item of data) this.add(item);
-        for (let inventoryItem of inventoryData) this.addInventory(inventoryItem);
+
+        for (let inventoryItem of this.menu.getInventoryData()) this.addInventory(inventoryItem);
 
         // for (let [i, item] of data.entries()) {
         //     let slot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`);
