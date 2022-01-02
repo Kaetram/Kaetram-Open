@@ -85,10 +85,7 @@ export default class MenuController {
      * has two containers. The bank and the inventory.
      */
     public loadBank(size: number, data: SlotData[]): void {
-        let inventorySize = this.inventory ? this.inventory.size : Modules.Constants.INVENTORY_SIZE,
-            inventoryData = this.inventory ? this.inventory.container.slots : [];
-
-        this.bank = new Bank(this.game, size, inventorySize, data, inventoryData);
+        this.bank = new Bank(this.game, this, size, data);
 
         this.loadEnchant();
     }
@@ -269,6 +266,14 @@ export default class MenuController {
 
     public getProfessionPage(): Professions {
         return this.profile.professions;
+    }
+
+    public getInventorySize(): number {
+        return this.inventory ? this.inventory.size : Modules.Constants.INVENTORY_SIZE;
+    }
+
+    public getInventoryData(): Slot[] {
+        return this.inventory ? this.inventory.container.slots : [];
     }
 
     private isNotifyVisible(): boolean {
