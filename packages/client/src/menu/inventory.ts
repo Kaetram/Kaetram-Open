@@ -40,7 +40,6 @@ export default class Inventory {
         this.clear();
 
         for (let index = 0; index < this.size; index++) {
-            console.log(index);
             // Create an empty item slot.
             let itemSlot = $(`<div id="slot${index}" class="itemSlot"></div>`),
                 itemSlotCount = $(`<div id="itemCount${index}" class="inventoryItemCount"></div>`),
