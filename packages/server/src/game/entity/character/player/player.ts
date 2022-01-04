@@ -57,7 +57,7 @@ import { EntityData } from '../../entity';
 import { EquipmentData } from '@kaetram/common/types/equipment';
 import Container from './containers/container';
 import Item from '../../objects/item';
-import { SlotData } from '@kaetram/common/types/slot';
+import { SlotData, SlotType } from '@kaetram/common/types/slot';
 import Slot from './containers/slot';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
@@ -510,13 +510,17 @@ export default class Player extends Character {
         }
     }
 
+    public handleBankOpen(): void {
+        //
+    }
+
     /**
      * Handles the select event when clicking a container.
      * @param container The container we are handling.
      * @param index The index in the container we selected.
      */
 
-    public handleContainerSelect(container: Container, index: number, slotType?: string): void {
+    public handleContainerSelect(container: Container, index: number, slotType?: SlotType): void {
         let slot: SlotData | undefined, item: Item;
 
         log.debug(`Received container select: ${container.type} - ${index} - ${slotType}`);
@@ -539,17 +543,10 @@ export default class Player extends Character {
             case Modules.ContainerType.Bank:
                 if (!slotType) return;
 
-                if (container.get(index).isEmpty()) return;
-
-                console.log('cock');
-
-                if (slotType === 'inventory') {
-                    item = container.getItem(container.get(index));
-
-                    console.log(item);
-
-                    if (this.bank.add(item)) this.inventory.remove(index);
-                } else if (slotType === 'bank') this.bank.remove(index);
+                // Move item from the bank to the inventory.
+                if (slotType === 'inventory') container.move(this.inventory, index);
+                // Move item from the inventory to the bank.
+                else if (slotType === 'bank') this.inventory.move(container, index);
 
                 break;
         }

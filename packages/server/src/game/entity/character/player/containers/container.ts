@@ -115,9 +115,25 @@ export default abstract class Container {
         if (count < slot.count) slot.remove(count);
         else slot.clear();
 
+        this.emptySpaces++;
         this.removeCallback?.(slot, serializedSlot.key, count, drop);
 
         return serializedSlot;
+    }
+
+    /**
+     * Moves an item from the `container` parameter into the current
+     * container instance.
+     * @param container Container instance we are removing data from.
+     * @param index Index in the container we are grabbing data from.
+     */
+
+    public move(container: Container, index: number): void {
+        if (container.get(index).isEmpty()) return;
+
+        let item = container.getItem(container.get(index));
+
+        if (this.add(item)) container.remove(index, item.count);
     }
 
     /**
