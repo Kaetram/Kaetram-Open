@@ -1,3 +1,5 @@
+export type SlotType = 'inventory' | 'bank';
+
 export interface SerializedContainer {
     username?: string;
     slots: SlotData[];
