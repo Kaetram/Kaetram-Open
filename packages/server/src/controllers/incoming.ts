@@ -20,7 +20,7 @@ import Respawn from '../network/packets/respawn';
 import Item from '../game/entity/objects/item';
 import Entity from '../game/entity/entity';
 import { Door } from '../game/entity/character/player/doors';
-import { SlotData } from '@kaetram/common/types/slot';
+import { SlotData, SlotType } from '@kaetram/common/types/slot';
 
 type PacketData = ((string | string[]) | number | boolean)[];
 
@@ -160,6 +160,7 @@ export default class Incoming {
 
         this.player.loadEquipment();
         this.player.loadInventory();
+        this.player.loadBank();
 
         //this.world.regions.syncRegions(this.player);
 
@@ -636,7 +637,7 @@ export default class Incoming {
 
                 log.debug(`Removing slot index: ${index} - count: ${count}`);
 
-                Container.Drop(index, count, true);
+                container.remove(index, count, true);
 
                 break;
 
@@ -644,7 +645,7 @@ export default class Incoming {
                 return this.player.handleContainerSelect(
                     container,
                     packet.shift() as number, // index
-                    packet.shift() as string // slot type if clicked in bank.
+                    packet.shift() as SlotType // slot type if clicked in bank.
                 );
         }
 
