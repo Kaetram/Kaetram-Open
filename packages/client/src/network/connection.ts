@@ -2,7 +2,9 @@ import _ from 'lodash';
 import { inflate } from 'pako';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 
+import Item from '../entity/objects/item';
 import log from '../lib/log';
 import * as Detect from '../utils/detect';
 
@@ -25,6 +27,7 @@ import type {
     OverlaySetData,
     PointerButtonData,
     PointerLocationData,
+    NPCBankData,
     PointerRelativeData,
     ProfessionBatchData,
     ProfessionUpdateData,
@@ -41,9 +44,6 @@ import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
-import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import Item from '../entity/objects/item';
-
 export default class Connection {
     private app;
     private audio;
@@ -583,12 +583,16 @@ export default class Connection {
                 case Opcodes.Container.Add: {
                     let { slot } = info as ContainerAddData;
                     container.add(slot);
+
+                    this.menu.bank.add(slot, containerType);
                     break;
                 }
 
                 case Opcodes.Container.Drop: {
                     let { slot } = info as ContainerRemoveData;
-                    Container.Drop(slot);
+                    container.remove(slot, containerType);
+
+                    this.menu.bank.remove(slot, containerType);
                     break;
                 }
             }
@@ -832,9 +836,16 @@ export default class Connection {
                     break;
                 }
 
-                case Opcodes.NPC.Bank:
+                case Opcodes.NPC.Bank: {
+                    let { slots } = info as NPCBankData;
+
+                    console.log(info);
+
+                    this.menu.bank.load(slots);
+
                     this.menu.bank.display();
                     break;
+                }
 
                 case Opcodes.NPC.Enchant:
                     this.menu.enchant.display();

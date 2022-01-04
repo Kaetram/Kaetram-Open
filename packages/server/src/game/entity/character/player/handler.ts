@@ -39,7 +39,6 @@ export default class Handler {
         // Loading callbacks
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
-        this.player.bank.onLoaded(this.handleBank.bind(this));
 
         // Inventory callbacks
         this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
@@ -113,9 +112,6 @@ export default class Handler {
                 slots
             })
         );
-
-        // Load the bank after inventory is loaded.
-        this.player.loadBank();
     }
 
     /**
@@ -165,21 +161,6 @@ export default class Handler {
     }
 
     /**
-     * Callback for when the inventory is loaded. Relay message to the client.
-     */
-
-    private handleBank(): void {
-        let { slots } = this.player.bank.serialize();
-
-        this.player.send(
-            new Container(Opcodes.Container.Batch, {
-                type: Modules.ContainerType.Bank,
-                slots
-            })
-        );
-    }
-
-    /**
      * Sends a packet to the client whenever
      * we add an item in our bank.
      * @param slot The slot we just added the item to.
@@ -195,37 +176,17 @@ export default class Handler {
     }
 
     /**
-     * Handle the process of removing from the bank and placing
-     * the item in the inventory. The `drop` parameter is used
-     * ambiguously in this case. It refers to whether the item we
-     * are removing from the bank is added to the inventory. By default
-     * we will add the removed item to the inventory, but special cases
-     * such as quests/achievements (or something else) will require we
-     * remove items permanently from the bank.
-     * @param slot The slot of the item we removed.
-     * @param key The key of the slot we removed.
-     * @param count The count represents the amount of item we are dropping, NOT IN THE SLOT.
-     * @param drop If the item removed from the bank should be added to the inventory.
+     * Callback sent to the client for when a slot is removed from the bank.
+     * @param slot The slot of the bank we just removed data from.
      */
 
-    private handleBankRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
-        let removePacket = () => {
-            this.player.send(
-                new Container(Opcodes.Container.Drop, {
-                    type: Modules.ContainerType.Bank,
-                    slot: slot.serialize()
-                })
-            );
-        };
-
-        if (drop) return removePacket();
-
-        // The item and amount we are removing from the container.
-        let item = new Item(key, -1, -1, true, count, slot.ability, slot.abilityLevel);
-
-        // Attempt to add the item to the inventory.
-        if (this.player.inventory.add(item)) removePacket();
-        else this.player.bank.add(item); // Add item back to bank if we can't add to inventory.
+    private handleBankRemove(slot: Slot): void {
+        this.player.send(
+            new Container(Opcodes.Container.Drop, {
+                type: Modules.ContainerType.Bank,
+                slot: slot.serialize()
+            })
+        );
     }
 
     /**
@@ -251,7 +212,7 @@ export default class Handler {
 
         switch (npc.role) {
             case 'banker':
-                this.player.send(new NPCPacket(Opcodes.NPC.Bank, {}));
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 return;
             case 'enchanter':
                 this.player.send(new NPCPacket(Opcodes.NPC.Enchant, {}));
