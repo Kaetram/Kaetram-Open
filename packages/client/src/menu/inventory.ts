@@ -181,7 +181,7 @@ export default class Inventory {
                 } else {
                     this.game.socket.send(Packets.Container, [
                         Modules.ContainerType.Inventory,
-                        Opcodes.Container.Remove,
+                        Opcodes.Container.Drop,
                         this.selectedItem.index
                     ]);
                     this.clearSelection();
@@ -196,7 +196,7 @@ export default class Inventory {
 
                 this.game.socket.send(Packets.Container, [
                     Modules.ContainerType.Inventory,
-                    Opcodes.Container.Remove,
+                    Opcodes.Container.Drop,
                     this.selectedItem.index,
                     count
                 ]);
