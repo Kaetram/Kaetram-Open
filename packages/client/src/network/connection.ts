@@ -586,9 +586,9 @@ export default class Connection {
                     break;
                 }
 
-                case Opcodes.Container.Remove: {
+                case Opcodes.Container.Drop: {
                     let { slot } = info as ContainerRemoveData;
-                    container.remove(slot);
+                    Container.Drop(slot);
                     break;
                 }
             }
