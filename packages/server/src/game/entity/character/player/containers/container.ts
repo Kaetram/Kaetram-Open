@@ -27,7 +27,7 @@ export default abstract class Container {
     ) => void;
     protected notifyCallback?: (message: string) => void;
 
-    public constructor(private type: Modules.ContainerType, private size: number) {
+    public constructor(public type: Modules.ContainerType, private size: number) {
         // Create `size` amount of slots with empty data.
         for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
 
@@ -44,9 +44,7 @@ export default abstract class Container {
             // Create a new item instance so that the item's data is created.
             if (!item.key) return;
 
-            this.slots[item.index].update(
-                new Item(item.key, -1, -1, true, item.count, item.ability, item.abilityLevel)
-            );
+            this.slots[item.index].update(this.getItem(item));
 
             this.emptySpaces--;
         });
@@ -120,6 +118,25 @@ export default abstract class Container {
         this.removeCallback?.(slot, serializedSlot.key, count, drop);
 
         return serializedSlot;
+    }
+
+    /**
+     * Returns the slot at a given index paramater.
+     * @param index The index in the slots array.
+     * @returns The slot at the index specified.
+     */
+
+    public get(index: number): Slot {
+        return this.slots[index];
+    }
+
+    /**
+     * Takes a slot and converts the contents into a serialized item.
+     * @param slot The slot we are extracting the item from.
+     */
+
+    public getItem(slot: Slot | SlotData | ContainerItem): Item {
+        return new Item(slot.key, -1, -1, true, slot.count, slot.ability, slot.abilityLevel);
     }
 
     /**

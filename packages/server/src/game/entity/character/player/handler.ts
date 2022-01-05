@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { remove } from 'lodash';
 
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
@@ -157,7 +157,7 @@ export default class Handler {
             );
 
         this.player.send(
-            new Container(Opcodes.Container.Remove, {
+            new Container(Opcodes.Container.Drop, {
                 type: Modules.ContainerType.Inventory,
                 slot: slot.serialize()
             })
@@ -195,25 +195,36 @@ export default class Handler {
     }
 
     /**
-     * Send a packet to the client to clear the bank slot.
+     * Handle the process of removing from the bank and placing
+     * the item in the inventory. The `drop` parameter is used
+     * ambiguously in this case. It refers to whether the item we
+     * are removing from the bank is added to the inventory. By default
+     * we will add the removed item to the inventory, but special cases
+     * such as quests/achievements (or something else) will require we
+     * remove items permanently from the bank.
      * @param slot The slot of the item we removed.
      * @param key The key of the slot we removed.
      * @param count The count represents the amount of item we are dropping, NOT IN THE SLOT.
-     * @param drop If the item should spawn in the world upon removal.
+     * @param drop If the item removed from the bank should be added to the inventory.
      */
 
-    private handleBankRemove(slot: Slot, key: string, count: number): void {
-        // The item and amount we are removing from the container.
-        let item = new Item(key, -1, -1, true, count, slot.ability, slot.abilityLevel);
-
-        // Attempt to add the item to the inventory.
-        if (this.player.inventory.add(item))
+    private handleBankRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
+        let removePacket = () => {
             this.player.send(
-                new Container(Opcodes.Container.Remove, {
+                new Container(Opcodes.Container.Drop, {
                     type: Modules.ContainerType.Bank,
                     slot: slot.serialize()
                 })
             );
+        };
+
+        if (drop) return removePacket();
+
+        // The item and amount we are removing from the container.
+        let item = new Item(key, -1, -1, true, count, slot.ability, slot.abilityLevel);
+
+        // Attempt to add the item to the inventory.
+        if (this.player.inventory.add(item)) removePacket();
         else this.player.bank.add(item); // Add item back to bank if we can't add to inventory.
     }
 

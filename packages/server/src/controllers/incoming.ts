@@ -11,8 +11,6 @@ import Commands from './commands';
 
 import type Character from '../game/entity/character/character';
 import type Mob from '../game/entity/character/mob/mob';
-import type Slot from '../game/entity/character/player/containers/slot';
-import type { EnchantType } from '../game/entity/character/player/enchant';
 import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
@@ -32,8 +30,6 @@ export default class Incoming {
     private entities;
     private database;
     private commands;
-
-    private introduced = false;
 
     public constructor(private player: Player) {
         this.connection = player.connection;
@@ -629,45 +625,27 @@ export default class Incoming {
             container =
                 type === Modules.ContainerType.Inventory ? this.player.inventory : this.player.bank,
             index: number,
-            count = 1,
-            slot: SlotData | undefined,
-            item: Item;
+            count = 1;
 
         log.debug(`Received container packet: ${opcode} - ${type}.`);
 
         switch (opcode) {
-            case Opcodes.Container.Remove:
+            case Opcodes.Container.Drop:
                 index = packet.shift() as number;
                 count = packet.shift() as number;
 
                 log.debug(`Removing slot index: ${index} - count: ${count}`);
 
-                container.remove(index, count, true);
+                Container.Drop(index, count, true);
 
                 break;
 
             case Opcodes.Container.Select:
-                index = packet.shift() as number;
-
-                log.debug(`Selected item index: ${index}`);
-
-                slot = container.remove(index);
-
-                if (!slot) return;
-
-                item = new Item(
-                    slot.key,
-                    -1,
-                    -1,
-                    true,
-                    slot.count,
-                    slot.ability,
-                    slot.abilityLevel
+                return this.player.handleContainerSelect(
+                    container,
+                    packet.shift() as number, // index
+                    packet.shift() as string // slot type if clicked in bank.
                 );
-
-                if (item.isEquippable()) this.player.equipment.equip(item);
-
-                break;
         }
 
         // let [opcode] = message,
