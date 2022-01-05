@@ -101,7 +101,7 @@ type CommandCallback = (data: CommandData) => void;
 interface ContainerCallback {
     (opcode: Opcodes.Container.Batch, info: ContainerBatchData): void;
     (opcode: Opcodes.Container.Add, info: ContainerAddData): void;
-    (opcode: Opcodes.Container.Remove, info: ContainerRemoveData): void;
+    (opcode: Opcodes.Container.Drop, info: ContainerRemoveData): void;
 }
 type AbilityCallback = (data: unknown) => void;
 interface QuestCallback {

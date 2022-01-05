@@ -55,6 +55,10 @@ import Entities from '@kaetram/server/src/controllers/entities';
 import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';
 import { EntityData } from '../../entity';
 import { EquipmentData } from '@kaetram/common/types/equipment';
+import Container from './containers/container';
+import Item from '../../objects/item';
+import { SlotData } from '@kaetram/common/types/slot';
+import Slot from './containers/slot';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
@@ -503,6 +507,51 @@ export default class Player extends Character {
 
                 break;
             }
+        }
+    }
+
+    /**
+     * Handles the select event when clicking a container.
+     * @param container The container we are handling.
+     * @param index The index in the container we selected.
+     */
+
+    public handleContainerSelect(container: Container, index: number, slotType?: string): void {
+        let slot: SlotData | undefined, item: Item;
+
+        log.debug(`Received container select: ${container.type} - ${index} - ${slotType}`);
+
+        // TODO - Cleanup and document, this is a preliminary prototype.
+        switch (container.type) {
+            case Modules.ContainerType.Inventory:
+                log.debug(`Selected item index: ${index}`);
+
+                slot = container.remove(index);
+
+                if (!slot) return;
+
+                item = container.getItem(slot);
+
+                if (item.isEquippable()) this.equipment.equip(item);
+
+                break;
+
+            case Modules.ContainerType.Bank:
+                if (!slotType) return;
+
+                if (container.get(index).isEmpty()) return;
+
+                console.log('cock');
+
+                if (slotType === 'inventory') {
+                    item = container.getItem(container.get(index));
+
+                    console.log(item);
+
+                    if (this.bank.add(item)) this.inventory.remove(index);
+                } else if (slotType === 'bank') this.bank.remove(index);
+
+                break;
         }
     }
 
