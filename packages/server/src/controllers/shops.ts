@@ -1,6 +1,18 @@
 import _ from 'lodash';
 
+import World from '../game/world';
+
+/**
+ * Shops are globally controlled and updated
+ * by the world. When a player purchases an item,
+ * we relay that information to the rest of the players.
+ */
+
 export default class Shops {
+    private updateInterval?: NodeJS.Timeout;
+
+    public constructor(private world: World) {}
+
     // private interval = 60_000;
     // private shopInterval: NodeJS.Timeout | null = null;
     // public constructor(private world: World) {
