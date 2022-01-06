@@ -45,7 +45,7 @@ export default class Bank {
             let bankSlot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`),
                 bankCount = $(`<div id="bankItemCount${i}" class="itemCount"></div>`),
                 slotImage = $(`<div id="bankImage${i}" class="bankImage"></div>`),
-                slotElement = $('<li></li>').append(bankSlot.append(slotImage)).append(bankCount);
+                slotElement = $('<li></li>').append(bankSlot.append(slotImage).append(bankCount));
 
             bankSlot.on('click', (event) => this.click('bank', event));
 
@@ -63,9 +63,9 @@ export default class Bank {
             let inventorySlot = $(`<div id="bankInventorySlot${j}" class="bankSlot"></div>`),
                 inventoryCount = $(`<div id="inventoryItemCount${j}" class="itemCount"></div>`),
                 slotImage = $(`<div id="inventoryImage${j}" class="bankImage"></div>`),
-                slotElement = $('<li></li>')
-                    .append(inventorySlot.append(slotImage))
-                    .append(inventoryCount);
+                slotElement = $('<li></li>').append(
+                    inventorySlot.append(slotImage).append(inventoryCount)
+                );
 
             inventorySlot.on('click', (event) => this.click('inventory', event));
 
@@ -148,14 +148,15 @@ export default class Bank {
         slot.setCount(info.count);
 
         let bankSlot = item.find(`#bankSlot${info.index}`),
-            cssSlot = bankSlot.find(`#bankImage${info.index}`),
-            count = bankSlot.find(`#bankItemCount${info.index}`);
+            cssSlot = bankSlot.find(`#bankImage${info.index}`);
 
         cssSlot.css('background-image', this.container.getImageFormat(info.key));
 
         if (this.scale < 3) cssSlot.css('background-size', '600%');
 
-        if (slot.count > 1) count.text(slot.count);
+        if (slot.count > 1) console.log(bankSlot.find(`#bankItemCount${info.index}`));
+
+        if (slot.count > 1) bankSlot.find(`#bankItemCount${info.index}`).text(slot.count);
     }
 
     public addInventory(info: Slot | SlotData): void {
