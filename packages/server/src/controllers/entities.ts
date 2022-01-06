@@ -349,10 +349,6 @@ export default class Entities {
      * Getters
      */
 
-    public isOnline(username: string): boolean {
-        return !!this.getPlayer(username);
-    }
-
     /**
      * Grabs an entity from our dictionary of entities.
      * @param instance The instance of the entity we want.
