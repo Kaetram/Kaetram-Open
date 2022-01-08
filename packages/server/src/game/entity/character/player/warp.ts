@@ -20,10 +20,10 @@ export default class Warp {
 
         if (!data) return;
 
-        if (!this.player.finishedTutorial()) {
-            this.player.notify('You cannot warp while in the tutorial.');
-            return;
-        }
+        // if (!this.player.finishedTutorial()) {
+        //     this.player.notify('You cannot warp while in the tutorial.');
+        //     return;
+        // }
 
         if (!this.hasRequirement(data.level!)) {
             this.player.notify(`You must be at least level ${data.level} to warp here!`);
