@@ -35,8 +35,6 @@ export default class Guilds {
     private guilds: { [name: string]: GuildData } = {};
 
     public constructor(api: API, database: DatabaseType) {
-        if (!config.guildsEnabled) return;
-
         this.api = api;
         this.database = database;
 
