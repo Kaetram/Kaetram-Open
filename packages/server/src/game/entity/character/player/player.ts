@@ -996,13 +996,9 @@ export default class Player extends Character {
     }
 
     public finishedQuest(id: number): boolean {
-        if (!this.quests) return false;
+        let quest = this.quests?.getQuest(id);
 
-        let quest = this.quests.getQuest(id);
-
-        if (!quest) return false;
-
-        return quest.isFinished();
+        return quest?.isFinished() || false;
     }
 
     public finishedAchievement(id: number): boolean {
