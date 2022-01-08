@@ -1,19 +1,31 @@
-import _ from 'lodash';
+import _, { remove } from 'lodash';
 
 import config from '@kaetram/common/config';
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { SlotData } from '@kaetram/common/types/slot';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+
+import {
+    Container,
+    Equipment as EquipmentPacket,
+    NPC as NPCPacket
+} from '../../../../network/packets';
+import Map from '../../../map/map';
+import World from '../../../world';
 import Hit from '../combat/hit';
+import Slot from './containers/slot';
 
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
+import Equipment from './equipment/impl/equipment';
+import Item from '../../objects/item';
 
 export default class Handler {
-    private world;
-    private map;
+    private world: World;
+    private map: Map;
 
     private updateTicks = 0;
     private updateInterval: NodeJS.Timeout | null = null;
@@ -24,6 +36,27 @@ export default class Handler {
 
         this.player.onRegion(this.handleRegion.bind(this));
 
+        // Loading callbacks
+        this.player.equipment.onLoaded(this.handleEquipment.bind(this));
+        this.player.inventory.onLoaded(this.handleInventory.bind(this));
+
+        // Inventory callbacks
+        this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
+        this.player.inventory.onRemove(this.handleInventoryRemove.bind(this));
+        this.player.inventory.onNotify(this.player.notify.bind(this.player));
+
+        // Bank callbacks
+        this.player.bank.onAdd(this.handleBankAdd.bind(this));
+        this.player.bank.onRemove(this.handleBankRemove.bind(this));
+        this.player.bank.onNotify(this.player.notify.bind(this.player));
+
+        // Equipment callbacks
+        this.player.equipment.onEquip(this.handleEquip.bind(this));
+        this.player.equipment.onUnequip(this.handleUnequip.bind(this));
+
+        // NPC talking callback
+        this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
+
         this.load();
     }
 
@@ -33,9 +66,167 @@ export default class Handler {
      */
 
     private handleRegion(region: number): void {
-        console.log(`Player ${this.player.username} entered region: ${region}.`);
+        log.debug(`Player ${this.player.username} entered region: ${region}.`);
 
         this.map.regions.sendEntities(this.player);
+    }
+
+    /**
+     * Callback once the equipments are loaded. Relay the mesasge to the client.
+     */
+
+    private handleEquipment(): void {
+        this.player.send(
+            new EquipmentPacket(Opcodes.Equipment.Batch, this.player.equipment.serialize())
+        );
+    }
+
+    /**
+     * Callback for when an item is equipped.
+     * @param equipment The equipment slot and the data contained.
+     */
+
+    private handleEquip(equipment: Equipment): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Equip, equipment));
+    }
+
+    /**
+     * Callback for when the equipment is removed.
+     * @param type The equipment type we are removing.
+     */
+
+    private handleUnequip(type: Modules.Equipment): void {
+        this.player.send(new EquipmentPacket(Opcodes.Equipment.Unequip, type));
+    }
+
+    /**
+     * Callback for when the inventory is loaded. Relay message to the client.
+     */
+
+    private handleInventory(): void {
+        let { slots } = this.player.inventory.serialize();
+
+        this.player.send(
+            new Container(Opcodes.Container.Batch, {
+                type: Modules.ContainerType.Inventory,
+                slots
+            })
+        );
+    }
+
+    /**
+     * Sends a packet to the client whenever
+     * we add an item in our inventory.
+     * @param slot The slot we just added the item to.
+     */
+
+    private handleInventoryAdd(slot: Slot): void {
+        this.player.send(
+            new Container(Opcodes.Container.Add, {
+                type: Modules.ContainerType.Inventory,
+                slot
+            })
+        );
+    }
+
+    /**
+     * Send a packet to the client to clear the inventory slot.
+     * @param slot The slot of the item we removed.
+     * @param key The key of the slot we removed.
+     * @param count The count represents the amount of item we are dropping, NOT IN THE SLOT.
+     * @param drop If the item should spawn in the world upon removal.
+     */
+
+    private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
+        let { ability, abilityLevel } = slot;
+
+        // Spawn the item in the world if drop is true.
+        if (drop)
+            this.world.entities.spawnItem(
+                key, // Key of the item before an action is done on the slot.
+                this.player.x,
+                this.player.y,
+                true,
+                count, // Note this is the amount we are dropping.
+                ability,
+                abilityLevel
+            );
+
+        this.player.send(
+            new Container(Opcodes.Container.Drop, {
+                type: Modules.ContainerType.Inventory,
+                slot: slot.serialize()
+            })
+        );
+    }
+
+    /**
+     * Sends a packet to the client whenever
+     * we add an item in our bank.
+     * @param slot The slot we just added the item to.
+     */
+
+    private handleBankAdd(slot: Slot): void {
+        this.player.send(
+            new Container(Opcodes.Container.Add, {
+                type: Modules.ContainerType.Bank,
+                slot
+            })
+        );
+    }
+
+    /**
+     * Callback sent to the client for when a slot is removed from the bank.
+     * @param slot The slot of the bank we just removed data from.
+     */
+
+    private handleBankRemove(slot: Slot): void {
+        this.player.send(
+            new Container(Opcodes.Container.Drop, {
+                type: Modules.ContainerType.Bank,
+                slot: slot.serialize()
+            })
+        );
+    }
+
+    /**
+     * Callback for when a player interacts with an NPC.
+     * @param npc The NPC instance we are interacting with.
+     */
+
+    private handleTalkToNPC(npc: NPC): void {
+        if (this.player.quests.isQuestNPC(npc)) {
+            this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
+            return;
+        }
+
+        if (this.player.quests.isAchievementNPC(npc)) {
+            this.player.quests.getAchievementByNPC(npc)!.converse(npc);
+            return;
+        }
+
+        // if (Shops.isShopNPC(npc.id)) {
+        //     this.world.shops.open(this.player, npc.id);
+        //     return;
+        // }
+
+        switch (npc.role) {
+            case 'banker':
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
+                return;
+            case 'enchanter':
+                this.player.send(new NPCPacket(Opcodes.NPC.Enchant, {}));
+                break;
+        }
+
+        if (!npc.hasDialogue()) return;
+
+        this.player.send(
+            new NPCPacket(Opcodes.NPC.Talk, {
+                id: npc.instance,
+                text: npc.talk(this.player)
+            })
+        );
     }
 
     // TODO - Refactor all of this.
@@ -126,37 +317,6 @@ export default class Handler {
             }
 
             this.world.entities.removePlayer(this.player);
-        });
-
-        this.player.onTalkToNPC((npc: NPC) => {
-            // if (this.player.quests.isQuestNPC(npc)) {
-            //     this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
-            //     return;
-            // }
-            // if (this.player.quests.isAchievementNPC(npc)) {
-            //     this.player.quests.getAchievementByNPC(npc)!.converse(npc);
-            //     return;
-            // }
-            // if (Shops.isShopNPC(npc.id)) {
-            //     this.world.shops.open(this.player, npc.id);
-            //     return;
-            // }
-            // switch (NPCs.getType(npc.id)) {
-            //     case 'banker':
-            //         this.player.send(new NPC(Opcodes.NPC.Bank, {}));
-            //         return;
-            //     case 'enchanter':
-            //         this.player.send(new NPC(Opcodes.NPC.Enchant, {}));
-            //         break;
-            // }
-            // let text = NPCs.getText(npc.id);
-            // if (!text) return;
-            // this.player.send(
-            //     new NPC(Opcodes.NPC.Talk, {
-            //         id: npc.instance,
-            //         text: npc.talk(text, this.player)
-            //     })
-            // );
         });
 
         this.player.onTeleport((x: number, y: number, isDoor = false) => {

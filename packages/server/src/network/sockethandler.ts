@@ -10,12 +10,9 @@ export default class SocketHandler {
     public addressTimes: { [address: string]: number } = {}; // Keeping track of address connection times.
     public connections: { [id: string]: Connection } = {};
 
-    private readyCallback?: () => void;
     private connectionCallback?: (connection: Connection) => void;
 
     public constructor() {
-        this.socketIO.onInitialize(() => this.readyCallback?.());
-
         this.socketIO.onAdd(this.add.bind(this));
         this.ws.onAdd(this.add.bind(this));
     }
@@ -54,17 +51,6 @@ export default class SocketHandler {
 
     public get(id: string): Connection {
         return this.connections[id];
-    }
-
-    /**
-     * The callback that the main class uses to determine
-     * if the websocket is ready.
-     *
-     * @param callback The void function callback
-     */
-
-    public onReady(callback: () => void): void {
-        this.readyCallback = callback;
     }
 
     /**

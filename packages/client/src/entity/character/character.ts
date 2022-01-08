@@ -7,11 +7,7 @@ import Animation from '../animation';
 import Entity from '../entity';
 import EntityHandler from '../entityhandler';
 
-import type Weapon from './player/equipment/weapon';
-
 export default class Character extends Entity {
-    public weapon!: Weapon;
-
     public override nextGridX = -1;
     public override nextGridY = -1;
 
@@ -516,12 +512,6 @@ export default class Character extends Entity {
         if (!target) {
             this.removeTarget();
             return;
-        }
-
-        if (this.target) {
-            if (this.target.id === target.id) return;
-
-            this.removeTarget();
         }
 
         this.target = target;
