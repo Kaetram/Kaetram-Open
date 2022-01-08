@@ -72,17 +72,17 @@ export default class Doors {
         if (config.skipDatabase) return 'open';
 
         switch (door.requirement) {
-            case 'quest': {
-                let quest = this.player.quests.getQuest(door.questId!);
+            // case 'quest': {
+            //     let quest = this.player.quests.getQuest(door.questId!);
 
-                return quest && quest.hasDoorUnlocked(door) ? 'open' : 'closed';
-            }
+            //     return quest && quest.hasDoorUnlocked(door) ? 'open' : 'closed';
+            // }
 
-            case 'achievement': {
-                let achievement = this.player.quests.getAchievement(door.achievementId!);
+            // case 'achievement': {
+            //     let achievement = this.player.quests.getAchievement(door.achievementId!);
 
-                return achievement && achievement.isFinished() ? 'open' : 'closed';
-            }
+            //     return achievement && achievement.isFinished() ? 'open' : 'closed';
+            // }
 
             case 'level':
                 return this.player.level >= door.level! ? 'open' : 'closed';
