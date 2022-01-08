@@ -156,8 +156,6 @@ export default class Incoming {
 
         if (this.player.regionsLoaded.length > 0 && !preloadedData) this.player.regionsLoaded = [];
 
-        this.player.ready = true;
-
         this.player.loadEquipment();
         this.player.loadInventory();
         this.player.loadBank();
@@ -185,6 +183,8 @@ export default class Incoming {
         this.player.readyCallback?.();
 
         this.player.sync();
+
+        this.player.ready = true;
     }
 
     private handleWho(message: string[]): void {
