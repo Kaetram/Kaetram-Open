@@ -64,7 +64,7 @@ export default class Achievement {
             this.player.send(
                 new NPCPacket(Opcodes.NPC.Talk, {
                     id: npc.instance,
-                    text: npc.talk(this.data.text!, this.player)
+                    text: npc.talk(this.player)
                 })
             );
 
@@ -91,10 +91,10 @@ export default class Achievement {
                     return;
                 }
 
-                this.player.inventory.add({
-                    id: item,
-                    count: itemCount
-                });
+                // this.player.inventory.add({
+                //     id: item,
+                //     count: itemCount
+                // });
 
                 break;
 
@@ -129,14 +129,14 @@ export default class Achievement {
     }
 
     private hasItem(): boolean {
-        if (
-            this.data.type === Modules.Achievements.Type.Scavenge &&
-            this.player.inventory.contains(this.data.item!)
-        ) {
-            this.player.inventory.remove(this.data.item!, this.data.itemCount!);
+        // if (
+        //     this.data.type === Modules.Achievements.Type.Scavenge &&
+        //     this.player.inventory.contains(this.data.item!)
+        // ) {
+        //     this.player.inventory.remove(this.data.item!, this.data.itemCount!);
 
-            return true;
-        }
+        //     return true;
+        // }
 
         return false;
     }

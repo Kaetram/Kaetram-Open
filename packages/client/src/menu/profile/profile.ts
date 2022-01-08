@@ -80,7 +80,6 @@ export default class Profile {
 
     public update(): void {
         _.each(this.pages as State[], (page) => {
-            // if (!page.update) console.log(page);
             page.update?.();
         });
     }
