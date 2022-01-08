@@ -46,6 +46,7 @@ import {
 } from '@kaetram/server/src/network/packets';
 import Packet from '@kaetram/server/src/network/packet';
 import Equipments from './equipment/equipments';
+import Quests from './quest/quests';
 import Regions from '../../../map/regions';
 import Entities from '@kaetram/server/src/controllers/entities';
 import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';
@@ -92,8 +93,9 @@ export default class Player extends Character {
     private handler: Handler;
 
     public equipment: Equipments;
-    public inventory: Inventory;
     public bank: Bank;
+    public inventory: Inventory;
+    public quests: Quests;
 
     public ready = false; // indicates if login processed finished
 
@@ -193,6 +195,8 @@ export default class Player extends Character {
 
         this.bank = new Bank(Modules.Constants.BANK_SIZE);
         this.inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
+
+        this.quests = new Quests(this);
 
         this.handler = new Handler(this);
 
