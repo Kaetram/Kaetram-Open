@@ -1,147 +1,79 @@
 import log from '@kaetram/common/util/log';
 
-import type { PlayerAchievements, PlayerQuests } from '../../controllers/quests';
-import type { ContainerArray } from '../../game/entity/character/player/containers/container';
-import type { FriendsArray } from '../../game/entity/character/player/friends';
+import type { Db } from 'mongodb';
+import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
+import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
 import type Player from '../../game/entity/character/player/player';
-import type MongoDB from './mongodb';
 
 export default class Loader {
-    public constructor(private database: MongoDB) {}
+    public constructor(private database: Db) {}
 
-    private parseArray(value: string): number[] {
-        return value.split(' ').map((string) => parseInt(string));
-    }
+    /**
+     * Grabs the player equipment system from the database.
+     * @param player The player we are extracting username from to load.
+     * @param callback Callback of the equipment information.
+     */
 
-    public getInventory(
-        player: Player,
-        callback: (
-            ids: number[] | null,
-            counts: number[] | null,
-            abilities: number[] | null,
-            abilityLevels: number[] | null
-        ) => void
-    ): void {
-        this.database.getConnection((database) => {
-            let inventory = database.collection<ContainerArray>('player_inventory'),
-                cursor = inventory.find({ username: player.username });
+    public loadEquipment(player: Player, callback: (equipmentInfo: EquipmentData[]) => void): void {
+        let cursor = this.database
+            .collection<SerializedEquipment>('player_equipment')
+            .find({ username: player.username });
 
-            cursor.toArray().then((inventoryArray) => {
-                let [info] = inventoryArray;
+        cursor.toArray().then((info) => {
+            if (info.length > 1)
+                log.warning(`[player_equipment] Duplicate entry for ${player.username}.`);
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving inventory data for: ${player.username}`
-                        );
+            if (info.length === 0) return callback([]);
 
-                    callback(
-                        this.parseArray(info.ids),
-                        this.parseArray(info.counts),
-                        this.parseArray(info.abilities),
-                        this.parseArray(info.abilityLevels)
-                    );
-                } else callback(null, null, null, null);
-            });
+            let [{ equipments }] = info;
+
+            callback(equipments);
         });
     }
 
-    public getBank(
-        player: Player,
-        callback: (
-            ids: number[],
-            counts: number[],
-            abilities: number[],
-            abilityLevels: number[]
-        ) => void
-    ): void {
-        this.database.getConnection((database) => {
-            let bank = database.collection<ContainerArray>('player_bank'),
-                cursor = bank.find({ username: player.username });
+    /**
+     * Grabs the player inventory system from the database.
+     * @param player The player we are extracting username from to load.
+     * @param callback Callback of the inventory information.
+     */
 
-            cursor.toArray().then((bankArray) => {
-                let [info] = bankArray;
+    public loadInventory(player: Player, callback: (inventoryData: SlotData[]) => void): void {
+        let cursor = this.database
+            .collection<SerializedContainer>('player_inventory')
+            .find({ username: player.username });
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving bank data for: ${player.username}`
-                        );
+        cursor.toArray().then((info) => {
+            if (info.length > 1)
+                log.warning(`[player_inventory] Duplicate entry for ${player.username}.`);
 
-                    callback(
-                        this.parseArray(info.ids),
-                        this.parseArray(info.counts),
-                        this.parseArray(info.abilities),
-                        this.parseArray(info.abilityLevels)
-                    );
-                }
-            });
+            if (info.length === 0) return callback([]);
+
+            let [{ slots }] = info;
+
+            callback(slots);
         });
     }
 
-    public getQuests(
-        player: Player,
-        callback: (ids: string[] | null, stage: string[] | null) => void
-    ): void {
-        this.database.getConnection((database) => {
-            let quests = database.collection<PlayerQuests>('player_quests'),
-                cursor = quests.find({ username: player.username });
+    /**
+     * Grabs the player bank system from the database.
+     * @param player The player we are extracting username from to load.
+     * @param callback Callback of the bank information.
+     */
 
-            cursor.toArray().then((questArray) => {
-                let [info] = questArray;
+    public loadBank(player: Player, callback: (inventoryData: SlotData[]) => void): void {
+        let cursor = this.database
+            .collection<SerializedContainer>('player_bank')
+            .find({ username: player.username });
 
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving quest data for: ${player.username}`
-                        );
+        cursor.toArray().then((info) => {
+            if (info.length > 1)
+                log.warning(`[player_bank] Duplicate entry for ${player.username}.`);
 
-                    callback(info.ids.split(' '), info.stages.split(' '));
-                } else callback(null, null);
-            });
-        });
-    }
+            if (info.length === 0) return callback([]);
 
-    public getAchievements(
-        player: Player,
-        callback: (ids: string[], progress: string[]) => void
-    ): void {
-        this.database.getConnection((database) => {
-            let achievements = database.collection<PlayerAchievements>('player_achievements'),
-                cursor = achievements.find({ username: player.username });
+            let [{ slots }] = info;
 
-            cursor.toArray().then((achievementsArray) => {
-                let [info] = achievementsArray;
-
-                if (info) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving achievement data for: ${player.username}`
-                        );
-
-                    callback(info.ids.split(' '), info.progress.split(' '));
-                }
-            });
-        });
-    }
-
-    public getFriends(player: Player, callback: (friends: unknown) => void): void {
-        this.database.getConnection((database) => {
-            let friends = database.collection<FriendsArray>('player_friends'),
-                cursor = friends.find({ username: player.username });
-
-            cursor.toArray().then((friendsArray) => {
-                let [info] = friendsArray;
-
-                if (info && info.friends) {
-                    if (info.username !== player.username)
-                        log.notice(
-                            `[Loader] Mismatch in usernames whilst retrieving friends data for: ${player.username}`
-                        );
-
-                    callback(info.friends);
-                }
-            });
+            callback(slots);
         });
     }
 }

@@ -1,220 +1,253 @@
 import _ from 'lodash';
 
-import log from '@kaetram/common/util/log';
-
-import Items from '../../../../../info/items';
-import Slot from './slot';
-
-import type Player from '../player';
 import { Modules } from '@kaetram/common/network';
+import { ContainerItem } from '@kaetram/common/types/item';
+import { SlotData } from '@kaetram/common/types/slot';
 
-export interface ContainerArray {
-    username: string;
-    ids: string;
-    counts: string;
-    abilities: string;
-    abilityLevels: string;
+import Slot from './slot';
+import Item from '../../../objects/item';
+
+interface SerializedContainer {
+    slots: SlotData[];
 }
 
 export default abstract class Container {
-    public slots: Slot[] = [];
+    private slots: Slot[] = [];
 
-    protected constructor(private type: string, public owner: Player, public size: number) {
-        for (let i = 0; i < this.size; i++) this.slots.push(new Slot(i));
+    private emptySpaces = 0;
+
+    private loadCallback?: () => void;
+
+    protected addCallback?: (slot: Slot) => void;
+    protected removeCallback?: (
+        slot: Slot,
+        key: string,
+        count: number,
+        drop?: boolean | undefined
+    ) => void;
+    protected notifyCallback?: (message: string) => void;
+
+    public constructor(public type: Modules.ContainerType, private size: number) {
+        // Create `size` amount of slots with empty data.
+        for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
+
+        this.emptySpaces = size;
     }
 
     /**
-     * Fill each slot with manual data or the database
+     * Fill each slot with manual data from the database.
+     * @param items List of container items to load.
      */
-    public load(
-        ids: number[],
-        counts: number[],
-        abilities: number[],
-        abilityLevels: number[]
-    ): void {
-        if (ids.length !== this.slots.length)
-            log.error(`[${this.type}] Mismatch in container size.`);
 
-        for (let i = 0; i < this.slots.length; i++)
-            this.slots[i].load(ids[i], counts[i], abilities[i], abilityLevels[i]);
+    public load(items: ContainerItem[]): void {
+        _.each(items, (item: ContainerItem) => {
+            // Create a new item instance so that the item's data is created.
+            if (!item.key) return;
+
+            this.slots[item.index].update(this.getItem(item));
+
+            this.emptySpaces--;
+        });
+
+        this.loadCallback?.();
     }
 
-    public loadEmpty(): void {
-        let data = [];
+    /**
+     * Takes an item object and updates it into the slot if it exists,
+     * otherwise it adds it to an empty slot.
+     * @param item Item object in the world.
+     * @returns Whether or not adding was successful.
+     */
 
-        for (let i = 0; i < this.size; i++) data.push(-1);
+    public add(item: Item): boolean {
+        // Return whether or not the adding was successful.
+        let added = false,
+            slot: Slot | undefined;
 
-        this.load(data, data, data, data);
-    }
+        // Item is stackable and we already have it.
+        if (item.stackable && this.canHold(item)) {
+            slot = this.find(item)!;
 
-    protected addItem(
-        id: number,
-        count: number,
-        ability: number,
-        abilityLevel: number
-    ): Slot | undefined {
-        // log.info('Trying to pickup ' + count + ' x ' + id);
-        let maxStackSize =
-            Items.maxStackSize(id) === -1 ? Modules.Constants.MAX_STACK : Items.maxStackSize(id);
+            added = !!slot?.add(item.count);
 
-        // log.info('Max stack size = ' + maxStackSize);
+            // If a new item was stacked, we don't lose an empty space.
+            if (added) this.emptySpaces++;
+        }
 
-        if (!id || count < 0 || count > maxStackSize) return;
+        // All slots are taken.
+        if (!this.hasSpace()) return false;
 
-        if (!Items.isStackable(id)) {
-            if (this.hasSpace()) {
-                let nsSlot = this.slots[this.getEmptySlot()]; // non-stackable slot
+        // Update the next empty slot.
+        if (!added) {
+            slot = this.getEmptySlot();
 
-                nsSlot.load(id, count, ability, abilityLevel);
+            if (slot) {
+                slot.update(item);
 
-                return nsSlot;
-            }
-        } else if (maxStackSize === -1 || this.type === 'Bank') {
-            let sSlot = this.getSlot(id);
-
-            if (sSlot) {
-                sSlot.increment(count);
-                return sSlot;
-            }
-            if (this.hasSpace()) {
-                let slot = this.slots[this.getEmptySlot()];
-
-                slot.load(id, count, ability, abilityLevel);
-
-                return slot;
-            }
-        } else {
-            let remainingItems = count;
-
-            for (let i = 0; i < this.slots.length; i++)
-                if (this.slots[i].id === id) {
-                    let rSlot = this.slots[i],
-                        available = maxStackSize - rSlot.count;
-
-                    if (available >= remainingItems) {
-                        rSlot.increment(remainingItems);
-
-                        return rSlot;
-                    } else if (available > 0) {
-                        rSlot.increment(available);
-                        remainingItems -= available;
-                    }
-                }
-
-            if (remainingItems > 0 && this.hasSpace()) {
-                let rrSlot = this.slots[this.getEmptySlot()];
-
-                rrSlot.load(id, remainingItems, ability, abilityLevel);
-
-                return rrSlot;
+                added = true;
             }
         }
+
+        if (added) {
+            this.emptySpaces--;
+            this.addCallback?.(slot!);
+        }
+
+        return added;
     }
 
-    public canHold(id: number, count: number): boolean {
-        if (!Items.isStackable(id)) return this.hasSpace();
+    /**
+     * Removes an item at a specified index and returns the serialized slot.
+     * @param index Index of where to remove the item.
+     * @param count The amount of the item we are dropping.
+     * @param drop Conditional that determines if the item should spawn.
+     */
 
-        if (this.hasSpace()) return true;
-
-        let maxStackSize = Items.maxStackSize(id);
-
-        if ((this.type === 'Bank' || maxStackSize === -1) && this.contains(id)) return true;
-
-        if (maxStackSize !== -1 && count > maxStackSize) return false;
-
-        let remainingSpace = 0;
-
-        for (let i = 0; i < this.slots.length; i++)
-            if (this.slots[i].id === id) remainingSpace += maxStackSize - this.slots[i].count;
-
-        return remainingSpace >= count;
-    }
-
-    public remove(index: number, id: number, count: number): boolean | undefined {
-        /**
-         * Perform item validity prior to calling the method.
-         */
-
+    public remove(index: number, count = 1, drop = false): SlotData | undefined {
         let slot = this.slots[index];
 
-        if (!slot) return false;
+        if (!slot || !slot.key) return;
 
-        if (Items.isStackable(id))
-            if (count >= slot.count) slot.empty();
-            else slot.decrement(count);
-        else slot.empty();
+        count = Math.min(count, slot.count);
 
-        return true;
-    }
+        let serializedSlot = slot.serialize();
 
-    private getSlot(id: number): Slot | null {
-        for (let i = 0; i < this.slots.length; i++)
-            if (this.slots[i].id === id) return this.slots[i];
+        if (count < slot.count) slot.remove(count);
+        else slot.clear();
 
-        return null;
-    }
+        this.emptySpaces++;
+        this.removeCallback?.(slot, serializedSlot.key, count, drop);
 
-    public contains(id: number | undefined, count?: number): boolean {
-        if (!count) count = 1;
-
-        for (let index in this.slots) {
-            let slot = this.slots[index];
-
-            if (slot.id === id) return slot.count >= count;
-        }
-
-        return false;
-    }
-
-    public hasSpace(): boolean {
-        return this.getEmptySlot() > -1;
-    }
-
-    private getEmptySlot(): number {
-        for (let i = 0; i < this.slots.length; i++) if (this.slots[i].id === -1) return i;
-
-        return -1;
+        return serializedSlot;
     }
 
     /**
-     * Used when the index is not determined,
-     * returns the first item found based on the id.
+     * Moves an item from the `container` parameter into the current
+     * container instance.
+     * @param container Container instance we are removing data from.
+     * @param index Index in the container we are grabbing data from.
      */
-    public getIndex(id: number): number {
-        for (let i = 0; i < this.slots.length; i++) if (this.slots[i].id === id) return i;
 
-        return -1;
+    public move(container: Container, index: number): void {
+        if (container.get(index).isEmpty()) return;
+
+        let item = container.getItem(container.get(index));
+
+        if (this.add(item)) container.remove(index, item.count);
     }
 
-    public check(): void {
-        _.each(this.slots, (slot: Slot) => {
-            if (isNaN(slot.id)) slot.empty();
-        });
+    /**
+     * Returns the slot at a given index paramater.
+     * @param index The index in the slots array.
+     * @returns The slot at the index specified.
+     */
+
+    public get(index: number): Slot {
+        return this.slots[index];
     }
+
+    /**
+     * Takes a slot and converts the contents into a serialized item.
+     * @param slot The slot we are extracting the item from.
+     */
+
+    public getItem(slot: Slot | SlotData | ContainerItem): Item {
+        return new Item(slot.key, -1, -1, true, slot.count, slot.ability, slot.abilityLevel);
+    }
+
+    /**
+     * Iterates through the slots and returns the slot that contains
+     * the `item` parameter.
+     * @param item The item we are trying to find.
+     * @returns The slot containing the key we are trying to find.
+     */
+
+    public find(item: Item): Slot | undefined {
+        return this.slots.find((slot) => slot.canHold(item));
+    }
+
+    /**
+     * Checks if an item can be held in the container.
+     * @param item Item to check.
+     */
+
+    public canHold(item: Item): boolean {
+        return this.slots.some((slot) => slot.canHold(item));
+    }
+
+    /**
+     * Checks if there are empty spaces in the container.
+     * @returns Whether the amount of empty spaces is greater than 0.
+     */
+
+    public hasSpace(): boolean {
+        return this.emptySpaces > 0;
+    }
+
+    /**
+     * Since `emptySpaces` is always updated, the next available empty slot
+     * is the size of the container minus the empty spaces available.
+     * @returns An empty slot.
+     */
+
+    private getEmptySlot(): Slot | undefined {
+        return this.slots.find((slot) => !slot.key);
+    }
+
+    /**
+     * Iterates through the slots and returns each one.
+     * @param callback Slot currently being iterated.
+     */
 
     public forEachSlot(callback: (slot: Slot) => void): void {
-        for (let i = 0; i < this.slots.length; i++) callback(this.slots[i]);
+        _.each(this.slots, callback);
     }
 
-    public getArray(): ContainerArray {
-        let ids = '',
-            counts = '',
-            abilities = '',
-            abilityLevels = '';
+    /**
+     * Iterates through each slot and serializes it.
+     * @returns An array of serialized slot data.
+     */
 
-        for (let i = 0; i < this.slots.length; i++) {
-            ids += `${this.slots[i].id} `;
-            counts += `${this.slots[i].count} `;
-            abilities += `${this.slots[i].ability} `;
-            abilityLevels += `${this.slots[i].abilityLevel} `;
-        }
+    public serialize(): SerializedContainer {
+        let slots: SlotData[] = [];
 
-        return {
-            username: this.owner.username,
-            ids: ids.slice(0, -1),
-            counts: counts.slice(0, -1),
-            abilities: abilities.slice(0, -1),
-            abilityLevels: abilityLevels.slice(0, -1)
-        };
+        _.each(this.slots, (slot: Slot) => slots.push(slot.serialize()));
+
+        return { slots };
+    }
+
+    /**
+     * A signal when the container is loaded.
+     */
+
+    public onLoaded(callback: () => void): void {
+        this.loadCallback = callback;
+    }
+
+    /**
+     * Signal for when an item is added.
+     */
+
+    public onAdd(callback: (slot: Slot) => void): void {
+        this.addCallback = callback;
+    }
+
+    /**
+     * Signal for when an item is removed.
+     */
+
+    public onRemove(
+        callback: (slot: Slot, key: string, count: number, drop?: boolean) => void
+    ): void {
+        this.removeCallback = callback;
+    }
+
+    /**
+     * A callback sent back to the player to send a notification.
+     * @param callback A callback containing the message to notify the player with.
+     */
+
+    public onNotify(callback: (message: string) => void): void {
+        this.notifyCallback = callback;
     }
 }

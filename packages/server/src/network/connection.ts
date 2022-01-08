@@ -56,7 +56,7 @@ export default class Connection {
             this.messageCallback?.(JSON.parse(message));
         } catch (error: unknown) {
             log.error(`Message could not be parsed: ${message}.`);
-            console.log(error);
+            log.error(error);
         }
     }
 

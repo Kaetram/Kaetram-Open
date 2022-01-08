@@ -52,7 +52,6 @@
         "no-template-curly-in-string": "error",
         "no-promise-executor-return": "error",
         "no-prototype-builtins": "error",
-        "no-case-declarations": "error",
         "no-div-regex": "error",
         "no-regex-spaces": "error",
         "no-control-regex": "error",

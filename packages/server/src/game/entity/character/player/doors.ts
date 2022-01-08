@@ -69,7 +69,7 @@ export default class Doors {
     private getStatus(door: Door): DoorStatus {
         if (door.status) return door.status;
 
-        if (config.offlineMode) return 'open';
+        if (config.skipDatabase) return 'open';
 
         switch (door.requirement) {
             case 'quest': {
@@ -153,16 +153,10 @@ export default class Doors {
         return tiles.collisions[index];
     }
 
-    public getDoor(x: number, y: number): Door | null {
-        for (let i in this.doors)
-            if (
-                Object.prototype.hasOwnProperty.call(this.doors, i) &&
-                this.doors[i].x === x &&
-                this.doors[i].y === y
-            )
-                return this.doors[i];
-
-        return null;
+    public getDoor(x: number, y: number): Door | undefined {
+        return _.find(this.doors, (door) => {
+            return door.x === x && door.y === y;
+        });
     }
 
     public isDoor(x: number, y: number, callback: (door: boolean) => void): void {

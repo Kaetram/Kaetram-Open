@@ -19,7 +19,7 @@ export default class NPC extends Entity {
     private data: NPCData;
 
     private text: string[] = [];
-    private role?: string;
+    public role?: string;
 
     public constructor(key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.NPC), key, x, y);
@@ -27,7 +27,7 @@ export default class NPC extends Entity {
         this.data = (rawData as RawData)[key];
 
         if (!this.data) {
-            log.error(`Could not find data for ${key}.`);
+            log.error(`[NPC] Could not find data for ${key}.`);
             return;
         }
 
@@ -36,19 +36,28 @@ export default class NPC extends Entity {
         this.role = this.data.role!;
     }
 
-    public talk(messages: string[], player?: Player): string | undefined {
-        if (!player) return;
+    public talk(player?: Player): string {
+        if (!player) return '';
 
         if (player.npcTalk !== this.key) {
             player.talkIndex = 0;
             player.npcTalk = this.key;
         }
 
-        let message = messages[player.talkIndex];
+        let message = this.text[player.talkIndex];
 
-        if (player.talkIndex > messages.length - 1) player.talkIndex = 0;
+        if (player.talkIndex > this.text.length - 1) player.talkIndex = 0;
         else player.talkIndex++;
 
         return message;
+    }
+
+    /**
+     * Checks if the NPC has a dialogue array.
+     * @returns If the dialogue array length is greater than 0.
+     */
+
+    public hasDialogue(): boolean {
+        return this.text.length > 0;
     }
 }
