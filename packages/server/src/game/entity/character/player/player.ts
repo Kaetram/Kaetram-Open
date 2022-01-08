@@ -1047,9 +1047,7 @@ export default class Player extends Character {
     }
 
     public save(): void {
-        if (config.skipDatabase || this.isGuest) return;
-
-        //if ((!this.questsLoaded || !this.achievementsLoaded) && !this.new) return;
+        if (config.skipDatabase || this.isGuest || !this.ready) return;
 
         this.database.creator?.save(this);
     }
