@@ -179,14 +179,6 @@ export default class MenuController {
         if (shop?.isVisible()) shop.hide();
     }
 
-    public addInventory(info: Slot): void {
-        this.bank.addInventory(info);
-    }
-
-    public removeInventory(info: Slot): void {
-        this.bank.removeInventory(info);
-    }
-
     private resizeNotification(): void {
         let { notification } = this;
 
