@@ -323,7 +323,6 @@ export default class ProcessMap {
 
         let polygon: Pos[] = [],
             { tileSize } = this.map;
-        // console.log(info);
 
         _.each(info.polygon, (point) => {
             polygon.push({

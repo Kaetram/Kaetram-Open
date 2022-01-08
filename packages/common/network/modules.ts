@@ -5,6 +5,11 @@ export enum PacketType {
     Regions
 }
 
+export enum ContainerType {
+    Bank,
+    Inventory
+}
+
 export enum Orientation {
     Up,
     Down,
@@ -67,10 +72,10 @@ export enum Abilities {
 
 export enum Equipment {
     Armour,
-    Weapon,
+    Boots,
     Pendant,
     Ring,
-    Boots
+    Weapon
 }
 
 export enum Hovering {
@@ -273,7 +278,7 @@ export enum NPCRole {
     Clerk
 }
 
-export enum Constants {
+export const enum Constants {
     MAX_STACK = 2_147_483_647,
     MAX_LEVEL = 135,
     INVENTORY_SIZE = 20, // Maximum inventory size

@@ -2,15 +2,14 @@ import type { Modules, Opcodes } from '../network';
 import type {
     AchievementData,
     BubbleInfo,
-    EquipmentData,
-    EquipmentType,
     HitData,
     ProfessionsInfo,
     QuestInfo,
     ShopData,
-    SlotData,
     TilesetData
 } from './info';
+import type { EquipmentData, EquipmentType } from './equipment';
+import type { SlotData } from './slot';
 import type { ProcessedArea } from './map';
 
 export interface HandshakeData {
@@ -164,9 +163,18 @@ export interface CommandData {
     command: string;
 }
 
-export type ContainerBatchData = [size: number, slots: Slot[]];
-export type ContainerAddData = SlotData;
-export type ContainerRemoveData = Pick<SlotData, 'index' | 'count'>;
+export type ContainerBatchData = {
+    type: Modules.ContainerType;
+    slots: SlotData[];
+};
+export type ContainerAddData = {
+    type: Modules.ContainerType;
+    slot: SlotData;
+};
+export type ContainerRemoveData = {
+    type: Modules.ContainerType;
+    slot: SlotData;
+};
 
 export interface QuestBatchData {
     quests: QuestInfo[];
