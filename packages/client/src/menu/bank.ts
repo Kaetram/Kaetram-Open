@@ -54,6 +54,8 @@ export default class Bank {
                 marginBottom: `${4 * this.getScale()}px`
             });
 
+            bankCount.css('margin-top', 0);
+
             bankList.append(slotElement);
         }
 
@@ -74,6 +76,8 @@ export default class Bank {
                 marginBottom: `${6 * this.getScale()}px`
             });
 
+            inventoryCount.css('margin-top', '0');
+
             inventoryList.append(slotElement);
         }
 
@@ -84,33 +88,36 @@ export default class Bank {
     }
 
     public resize(): void {
-        // let bankList = this.getBankList(),
-        //     inventoryList = this.getInventoryList();
-        // for (let [i, element] of [...bankList].entries()) {
-        //     let bankSlot = $(element).find(`#bankSlot${i}`),
-        //         image = bankSlot.find(`#bankImage${i}`),
-        //         slot = this.container.slots[i];
-        //     bankSlot.css({
-        //         marginRight: `${2 * this.getScale()}px`,
-        //         marginBottom: `${4 * this.getScale()}px`
-        //     });
-        //     bankSlot.find(`#bankItemCount${i}`).css({
-        //         fontSize: `${4 * this.getScale()}px`,
-        //         marginTop: '0',
-        //         marginLeft: '0'
-        //     });
-        //     image.css('background-image', this.container.getImageFormat(slot.key));
-        // }
-        // for (let [j, element] of [...inventoryList].entries()) {
-        //     let inventorySlot = $(element).find(`#bankInventorySlot${j}`),
-        //         iImage = inventorySlot.find(`#inventoryImage${j}`),
-        //         iSlot = this.inventoryContainer.slots[j];
-        //     inventorySlot.css({
-        //         marginRight: `${3 * this.getScale()}px`,
-        //         marginBottom: `${6 * this.getScale()}px`
-        //     });
-        //     iImage.css('background-image', this.container.getImageFormat(iSlot.key));
-        // }
+        let bankList = this.getBankList(),
+            inventoryList = this.getInventoryList();
+
+        for (let [i, element] of [...bankList].entries()) {
+            let bankSlot = $(element).find(`#bankSlot${i}`),
+                image = bankSlot.find(`#bankImage${i}`),
+                slot = this.container.slots[i];
+
+            bankSlot.css({
+                marginRight: `${2 * this.getScale()}px`,
+                marginBottom: `${4 * this.getScale()}px`
+            });
+
+            bankSlot.find(`#bankItemCount${i}`).css({
+                fontSize: `${4 * this.getScale()}px`,
+                marginTop: '0',
+                marginLeft: '0'
+            });
+
+            image.css('background-image', this.container.getImageFormat(slot.key));
+        }
+
+        for (let [j, element] of [...inventoryList].entries()) {
+            let inventorySlot = $(element).find(`#bankInventorySlot${j}`);
+
+            inventorySlot.css({
+                marginRight: `${3 * this.getScale()}px`,
+                marginBottom: `${6 * this.getScale()}px`
+            });
+        }
     }
 
     private click(type: string, event: JQuery.ClickEvent): void {
