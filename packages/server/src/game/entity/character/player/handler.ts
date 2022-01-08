@@ -1,8 +1,7 @@
-import _, { remove } from 'lodash';
+import _ from 'lodash';
 
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { SlotData } from '@kaetram/common/types/slot';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
@@ -21,7 +20,6 @@ import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
 import Equipment from './equipment/impl/equipment';
-import Item from '../../objects/item';
 
 export default class Handler {
     private world: World;
@@ -195,15 +193,15 @@ export default class Handler {
      */
 
     private handleTalkToNPC(npc: NPC): void {
-        if (this.player.quests.isQuestNPC(npc)) {
-            this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
-            return;
-        }
+        // if (this.player.quests.isQuestNPC(npc)) {
+        //     this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
+        //     return;
+        // }
 
-        if (this.player.quests.isAchievementNPC(npc)) {
-            this.player.quests.getAchievementByNPC(npc)!.converse(npc);
-            return;
-        }
+        // if (this.player.quests.isAchievementNPC(npc)) {
+        //     this.player.quests.getAchievementByNPC(npc)!.converse(npc);
+        //     return;
+        // }
 
         // if (Shops.isShopNPC(npc.id)) {
         //     this.world.shops.open(this.player, npc.id);
@@ -274,18 +272,18 @@ export default class Handler {
         });
 
         this.player.onKill((character) => {
-            if (!this.player.quests) {
-                log.warning(`${this.player.username} does not have quests initialized.`);
-                return;
-            }
+            // if (!this.player.quests) {
+            //     log.warning(`${this.player.username} does not have quests initialized.`);
+            //     return;
+            // }
 
             let mob = character as Mob;
 
-            if (this.player.quests.isAchievementMob(mob)) {
-                let achievement = this.player.quests.getAchievementByMob(mob);
+            // if (this.player.quests.isAchievementMob(mob)) {
+            //     let achievement = this.player.quests.getAchievementByMob(mob);
 
-                if (achievement && achievement.isStarted()) achievement.step();
-            }
+            //     if (achievement && achievement.isStarted()) achievement.step();
+            // }
         });
 
         // this.player.onRegion(() => {
@@ -320,10 +318,10 @@ export default class Handler {
         });
 
         this.player.onTeleport((x: number, y: number, isDoor = false) => {
-            if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
-                this.player.doorCallback(x, y);
-                return;
-            }
+            // if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
+            //     this.player.doorCallback(x, y);
+            //     return;
+            // }
         });
 
         this.player.onPoison((info) => {

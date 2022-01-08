@@ -52,11 +52,6 @@ export default class Commands {
                 return;
             }
 
-            case 'tutstage':
-                log.info(this.player.getTutorial().stage);
-
-                return;
-
             case 'coords':
                 this.player.send(
                     new Notification(Opcodes.Notification.Text, {
@@ -64,20 +59,6 @@ export default class Commands {
                     })
                 );
                 return;
-
-            case 'progress': {
-                let tutorialQuest = this.player.getTutorial(),
-                    { id, stage } = tutorialQuest;
-
-                this.player.send(
-                    new Quest(Opcodes.Quest.Progress, {
-                        id,
-                        stage
-                    })
-                );
-
-                return;
-            }
 
             case 'global':
                 this.world.globalMessage(
@@ -93,24 +74,6 @@ export default class Commands {
             case 'region':
                 log.info(this.player.region);
                 return;
-
-            case 'getintroduction':
-                log.info(this.player.quests.getQuest(0)!.getStage());
-                return;
-
-            case 'resetintro': {
-                let introduction = this.player.quests.getQuest(0)!;
-
-                introduction.setStage(0);
-                introduction.clearPointers();
-                introduction.update();
-                introduction.updatePointers();
-
-                this.player.updateRegion();
-                this.player.save();
-
-                return;
-            }
 
             case 'pm':
             case 'msg': {
@@ -350,46 +313,6 @@ export default class Commands {
                 this.player.updateRegion();
 
                 return;
-
-            case 'finishQuest':
-                this.player.quests.getQuest(1)!.finish();
-
-                break;
-
-            case 'finishAchievement':
-                this.player.quests.getAchievement(0)!.finish();
-
-                break;
-
-            case 'finishAllAchievements':
-                this.player.quests.forEachAchievement((achievement: Achievement) => {
-                    this.player.finishAchievement(achievement.id);
-                });
-
-                break;
-
-            case 'resetAchievement': {
-                let achievementId = parseInt(blocks.shift()!);
-
-                if (!achievementId) {
-                    this.player.notify('Invalid command format. /resetAchievement <achievementId>');
-                    return;
-                }
-
-                this.player.quests.getAchievement(achievementId)!.setProgress(0);
-                this.player.updateRegion();
-
-                break;
-            }
-
-            case 'resetAchievements':
-                this.player.quests.forEachAchievement((achievement: Achievement) => {
-                    achievement.setProgress(0);
-                });
-
-                this.player.updateRegion();
-
-                break;
 
             case 'clear':
                 this.player.inventory.forEachSlot((slot) => {

@@ -162,7 +162,7 @@ export default class Incoming {
 
         //this.world.regions.syncRegions(this.player);
 
-        this.player.loadQuests();
+        // this.player.loadQuests();
 
         if (this.world.map.isOutOfBounds(this.player.x, this.player.y))
             this.player.setPosition(50, 89);
