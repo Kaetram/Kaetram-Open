@@ -13,7 +13,6 @@ import Pendant from './impl/pendant';
 import Ring from './impl/ring';
 import Weapon from './impl/weapon';
 import Item from '../../../objects/item';
-import { SlotData } from '@kaetram/common/types/slot';
 
 export default class Equipments {
     private armour: Armour = new Armour();
