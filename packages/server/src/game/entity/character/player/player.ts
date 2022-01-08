@@ -6,7 +6,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Incoming from '../../../../controllers/incoming';
-import Quests from '../../../../controllers/quests';
 import Formulas from '../../../../info/formulas';
 import Character from '../character';
 import Hit from '../combat/hit';
@@ -28,7 +27,6 @@ import type Connection from '../../../../network/connection';
 import type World from '../../../world';
 import type NPC from '../../npc/npc';
 import type { PlayerInfo } from './../../../../database/mongodb/creator';
-import type Introduction from './quests/impl/introduction';
 import Map from '../../../map/map';
 import { PacketType } from '@kaetram/common/network/modules';
 import {
@@ -37,13 +35,11 @@ import {
     Camera,
     Chat,
     Death,
-    Equipment as EquipmentPacket,
     Experience,
     Heal,
     Movement,
     Notification,
     Overlay,
-    Quest,
     Sync,
     Teleport,
     Welcome
@@ -58,7 +54,6 @@ import { EquipmentData } from '@kaetram/common/types/equipment';
 import Container from './containers/container';
 import Item from '../../objects/item';
 import { SlotData, SlotType } from '@kaetram/common/types/slot';
-import Slot from './containers/slot';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
@@ -120,7 +115,6 @@ export default class Player extends Character {
     public abilities;
     public friends;
     public enchant;
-    public quests;
     public trade;
     public doors;
     public warp;
@@ -206,7 +200,6 @@ export default class Player extends Character {
         this.abilities = new Abilities(this);
         this.friends = new Friends(this);
         this.enchant = new Enchant(this);
-        this.quests = new Quests(this);
         this.trade = new Trade(this);
         this.doors = new Doors(this);
         this.warp = new Warp(this);
@@ -266,6 +259,14 @@ export default class Player extends Character {
         this.database.loader?.loadBank(this, this.bank.load.bind(this.bank));
     }
 
+    /**
+     * Loads the quest data from the bank.
+     */
+
+    public loadQuests(): void {
+        //
+    }
+
     // ---------------- REFACTOR --------------------
 
     public loadRegions(regions: PlayerRegions): void {
@@ -284,10 +285,6 @@ export default class Player extends Character {
         //
     }
 
-    public loadQuests(): void {
-        //
-    }
-
     // ---------------- REFACTOR EMD --------------------
 
     public destroy(): void {
@@ -302,7 +299,6 @@ export default class Player extends Character {
         this.abilities = null!;
         this.enchant = null!;
         this.bank = null!;
-        this.quests = null!;
         this.trade = null!;
         this.doors = null!;
         this.warp = null!;
@@ -667,10 +663,6 @@ export default class Player extends Character {
         return this.hitPoints.getMaxHitPoints();
     }
 
-    public getTutorial(): Introduction {
-        return this.quests.getQuest<Introduction>(Modules.Quests.Introduction)!;
-    }
-
     private getMovementSpeed(): number {
         // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
         //     movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
@@ -775,8 +767,6 @@ export default class Player extends Character {
      * other special events and determine a spawn point.
      */
     public getSpawn(): Pos {
-        if (!this.finishedTutorial()) return this.getTutorial().getSpawn();
-
         return { x: 325, y: 87 };
     }
 
@@ -989,53 +979,29 @@ export default class Player extends Character {
         );
     }
 
-    public finishedTutorial(): boolean {
-        if (!this.quests || !config.tutorialEnabled) return true;
-
-        return this.quests.getQuest(0)!.isFinished();
-    }
-
     public finishedQuest(id: number): boolean {
-        let quest = this.quests?.getQuest(id);
+        return false;
+        // let quest = this.quests?.getQuest(id);
 
-        return quest?.isFinished() || false;
+        // return quest?.isFinished() || false;
     }
 
     public finishedAchievement(id: number): boolean {
-        if (!this.quests) return false;
+        return false;
+        // if (!this.quests) return false;
 
-        let achievement = this.quests.getAchievement(id);
+        // let achievement = this.quests.getAchievement(id);
 
-        if (!achievement) return true;
+        // if (!achievement) return true;
 
-        return achievement.isFinished();
+        // return achievement.isFinished();
     }
 
     public finishAchievement(id: number): void {
-        if (!this.quests) return;
-
-        let achievement = this.quests.getAchievement(id);
-
-        if (!achievement || achievement.isFinished()) return;
-
-        achievement.finish();
-    }
-
-    /**
-     * Server-sided callbacks towards movement should
-     * not be able to be overwritten. In the case that
-     * this is used (for Quests most likely) the server must
-     * check that no hacker removed the constraint in the client-side.
-     * If they are not within the bounds, apply the according punishment.
-     */
-    private movePlayer(): void {
-        this.send(new Movement(Opcodes.Movement.Started));
-    }
-
-    private walkRandomly(): void {
-        setInterval(() => {
-            this.setPosition(this.x + Utils.randomInt(-5, 5), this.y + Utils.randomInt(-5, 5));
-        }, 2000);
+        // if (!this.quests) return;
+        // let achievement = this.quests.getAchievement(id);
+        // if (!achievement || achievement.isFinished()) return;
+        // achievement.finish();
     }
 
     public killCharacter(character: Character): void {
