@@ -596,36 +596,6 @@ export default class Connection {
                     break;
                 }
             }
-
-            // switch (opcode) {
-            //     case Opcodes.Inventory.Batch: {
-            //         let [inventorySize, data] = info as ContainerBatchData;
-
-            //         this.menu.loadInventory(inventorySize, data);
-
-            //         break;
-            //     }
-
-            //     case Opcodes.Inventory.Add: {
-            //         let slot = info as Slot;
-
-            //         if (this.menu.bank) this.menu.addInventory(slot);
-
-            //         this.menu.inventory?.add(slot);
-
-            //         break;
-            //     }
-
-            //     case Opcodes.Inventory.Remove: {
-            //         let slot = info as Slot;
-
-            //         if (this.menu.bank) this.menu.removeInventory(slot);
-
-            //         this.menu.inventory?.remove(slot);
-
-            //         break;
-            //     }
-            // }
         });
 
         // this.messages.onAbility((opcode, info) => {});
