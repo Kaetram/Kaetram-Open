@@ -58,20 +58,20 @@ export default abstract class Quest {
     public finish(): void {
         let item = this.getItemReward();
 
-        if (item)
-            if (this.hasInventorySpace(item.id, item.count))
-                this.player.inventory.add({
-                    id: item.id,
-                    count: item.count,
-                    ability: -1,
-                    abilityLevel: -1
-                });
-            else {
-                this.player.notify('You do not have enough space in your inventory.');
-                this.player.notify('Please make room prior to finishing the quest.');
+        // if (item)
+        //     if (this.hasInventorySpace(item.id, item.count))
+        //         this.player.inventory.add({
+        //             id: item.id,
+        //             count: item.count,
+        //             ability: -1,
+        //             abilityLevel: -1
+        //         });
+        //     else {
+        //         this.player.notify('You do not have enough space in your inventory.');
+        //         this.player.notify('Please make room prior to finishing the quest.');
 
-                return;
-            }
+        //         return;
+        //     }
 
         this.setStage(9999);
 
@@ -175,7 +175,7 @@ export default abstract class Quest {
     }
 
     private hasInventorySpace(id: number, count: number): boolean {
-        return this.player.inventory.canHold(id, count);
+        return this.player.inventory.hasSpace();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
