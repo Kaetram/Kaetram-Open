@@ -128,10 +128,10 @@ export default class Quests {
      * @returns SerializedQuest object containing array of quest data.
      */
 
-    public serialize(): SerializedQuest {
+    public serialize(batch = false): SerializedQuest {
         let quests: QuestData[] = [];
 
-        _.each(this.quests, (quest: Quest) => quests.push(quest.serialize()));
+        _.each(this.quests, (quest: Quest) => quests.push(quest.serialize(batch)));
 
         return {
             quests

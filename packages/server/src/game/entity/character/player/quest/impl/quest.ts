@@ -1,6 +1,9 @@
-import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 import NPC from '../../../../npc/npc';
 import Mob from '../../../mob/mob';
+
+import log from '@kaetram/common/util/log';
+
+import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 
 export default abstract class Quest {
     /**
@@ -27,6 +30,10 @@ export default abstract class Quest {
         this.stageCount = Object.keys(rawData.stages).length;
 
         this.stages = rawData.stages;
+
+        // Callbacks
+        this.onTalk(this.handleTalk.bind(this));
+        this.onKill(this.handleKill.bind(this));
     }
 
     /**
@@ -39,6 +46,26 @@ export default abstract class Quest {
     public update(stage: number, subStage: number): void {
         this.stage = stage;
         this.subStage = subStage;
+    }
+
+    /**
+     * Callback handler for when talking to a quest
+     * NPC required for progression.
+     * @param npc The NPC we are talking to.
+     */
+
+    private handleTalk(npc: NPC): void {
+        log.debug(`[${this.name}] Talking to NPC: ${npc.key}.`);
+    }
+
+    /**
+     * Handler when killing a mob. Determines
+     * whether to progress or not.
+     * @param mob The mob we are killing.
+     */
+
+    private handleKill(mob: Mob): void {
+        log.debug(`[${this.name}] Killing mob: ${mob.key}.`);
     }
 
     /**
@@ -105,12 +132,20 @@ export default abstract class Quest {
      * the quest key and progress.
      */
 
-    public serialize(): QuestData {
-        return {
+    public serialize(batch = false): QuestData {
+        let data: QuestData = {
             key: this.key,
             stage: this.stage,
             subStage: this.subStage
         };
+
+        if (batch) {
+            data.name = this.name;
+            data.description = this.description;
+            data.started = this.isStarted();
+        }
+
+        return data;
     }
 
     /**
