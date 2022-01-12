@@ -23,6 +23,10 @@ export interface QuestData {
     key: string;
     stage: number;
     subStage: number;
+
+    name?: string;
+    description?: string;
+    started?: boolean;
 }
 
 export interface SerializedQuest {
