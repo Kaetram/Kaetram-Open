@@ -268,7 +268,7 @@ export default class Player extends Character {
      */
 
     public loadQuests(): void {
-        //
+        this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
     }
 
     // ---------------- REFACTOR --------------------
@@ -295,8 +295,6 @@ export default class Player extends Character {
         if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
 
         this.disconnectTimeout = null;
-
-        this.handler.destroy();
 
         this.handler = null!;
         this.inventory = null!;
