@@ -159,10 +159,9 @@ export default class Incoming {
         this.player.loadEquipment();
         this.player.loadInventory();
         this.player.loadBank();
+        this.player.loadQuests();
 
         //this.world.regions.syncRegions(this.player);
-
-        // this.player.loadQuests();
 
         if (this.world.map.isOutOfBounds(this.player.x, this.player.y))
             this.player.setPosition(50, 89);

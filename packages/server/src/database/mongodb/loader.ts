@@ -4,6 +4,7 @@ import type { Db } from 'mongodb';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
 import type Player from '../../game/entity/character/player/player';
+import { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 
 export default class Loader {
     public constructor(private database: Db) {}
@@ -74,6 +75,29 @@ export default class Loader {
             let [{ slots }] = info;
 
             callback(slots);
+        });
+    }
+
+    /**
+     * Loads teh quest data from the database and returns it into a QuestData array object.
+     * @param player The player we are extracting the quest data from.
+     * @param callback The quest data in an array format of type QuestData.
+     */
+
+    public loadQuests(player: Player, callback: (questData: QuestData[]) => void): void {
+        let cursor = this.database
+            .collection<SerializedQuest>('player_quests')
+            .find({ username: player.username });
+
+        cursor.toArray().then((info) => {
+            if (info.length > 1)
+                log.warning(`[player_quests] Duplicate entry for ${player.username}.`);
+
+            if (info.length === 0) return callback([]);
+
+            let [{ quests }] = info;
+
+            callback(quests);
         });
     }
 }
