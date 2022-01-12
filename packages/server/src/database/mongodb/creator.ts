@@ -54,6 +54,7 @@ export default class Creator {
             this.saveEquipment(player);
             this.saveInventory(player);
             this.saveBank(player);
+            this.saveQuests(player);
         } catch (error: unknown) {
             log.error(`Could not save data for ${player.username}.`);
             log.error(error);
@@ -65,7 +66,7 @@ export default class Creator {
      * See `PlayerInfo` for more information.
      */
 
-    public saveInfo(player: Player): void {
+    private saveInfo(player: Player): void {
         let collection = this.database.collection('player_info');
 
         this.getPlayerWithHash(player, (playerInfo: PlayerInfo) => {
@@ -78,7 +79,7 @@ export default class Creator {
      * stores it into the database.
      */
 
-    public saveEquipment(player: Player): void {
+    private saveEquipment(player: Player): void {
         let collection = this.database.collection('player_equipment');
 
         // Pass the serialized equipment as parameter.
@@ -90,7 +91,7 @@ export default class Creator {
      * stores it into the database.
      */
 
-    public saveInventory(player: Player): void {
+    private saveInventory(player: Player): void {
         let collection = this.database.collection('player_inventory');
 
         this.updateCollection(collection, player.username, player.inventory.serialize());
@@ -101,10 +102,20 @@ export default class Creator {
      * stores it into the database.
      */
 
-    public saveBank(player: Player): void {
+    private saveBank(player: Player): void {
         let collection = this.database.collection('player_bank');
 
         this.updateCollection(collection, player.username, player.bank.serialize());
+    }
+
+    /**
+     * Serializes the quest data and stores it in the database.
+     */
+
+    private saveQuests(player: Player): void {
+        let collection = this.database.collection('player_quests');
+
+        this.updateCollection(collection, player.username, player.quests.serialize());
     }
 
     /**
