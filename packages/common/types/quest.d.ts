@@ -12,6 +12,13 @@ export interface RawQuest {
     stages: { [id: number]: RawStage };
 }
 
+export interface StageData {
+    task: string;
+    npc?: string;
+    mob?: string | string[];
+    countRequirement: number;
+}
+
 export interface QuestData {
     key: string;
     stage: number;
