@@ -1,5 +1,5 @@
-import NPC from '../../../../npc/npc';
-import Mob from '../../../mob/mob';
+import NPC from '../../../npc/npc';
+import Mob from '../../mob/mob';
 
 import log from '@kaetram/common/util/log';
 

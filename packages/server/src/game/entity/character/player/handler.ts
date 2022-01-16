@@ -19,7 +19,7 @@ import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
-import Equipment from './equipment/impl/equipment';
+import Equipment from './equipment/equipment';
 import Character from '../character';
 
 export default class Handler {

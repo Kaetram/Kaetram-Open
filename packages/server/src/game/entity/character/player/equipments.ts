@@ -4,15 +4,15 @@ import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
 import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 
-import Player from '../player';
+import Player from './player';
 
-import Armour from './impl/armour';
-import Boots from './impl/boots';
-import Equipment from './impl/equipment';
-import Pendant from './impl/pendant';
-import Ring from './impl/ring';
-import Weapon from './impl/weapon';
-import Item from '../../../objects/item';
+import Armour from './equipment/impl/armour';
+import Boots from './equipment/impl/boots';
+import Equipment from './equipment/equipment';
+import Pendant from './equipment/impl/pendant';
+import Ring from './equipment/impl/ring';
+import Weapon from './equipment/impl/weapon';
+import Item from '../../objects/item';
 
 export default class Equipments {
     private armour: Armour = new Armour();
