@@ -45,8 +45,8 @@ import {
     Welcome
 } from '@kaetram/server/src/network/packets';
 import Packet from '@kaetram/server/src/network/packet';
-import Equipments from './equipment/equipments';
-import Quests from './quest/quests';
+import Equipments from './equipments';
+import Quests from './quests';
 import Regions from '../../../map/regions';
 import Entities from '@kaetram/server/src/controllers/entities';
 import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';

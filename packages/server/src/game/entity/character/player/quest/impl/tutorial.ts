@@ -1,4 +1,4 @@
-import Quest from './quest';
+import Quest from '../quest';
 
 import { RawQuest } from '@kaetram/common/types/quest';
 
