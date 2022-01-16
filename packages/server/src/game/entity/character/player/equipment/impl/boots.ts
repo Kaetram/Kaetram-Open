@@ -1,6 +1,6 @@
 import { Modules } from '@kaetram/common/network';
 import Item from '../../../../objects/item';
-import Equipment from './equipment';
+import Equipment from '../equipment';
 
 export default class Boots extends Equipment {
     public constructor(key = '', count = -1, ability = -1, abilityLevel = -1) {
