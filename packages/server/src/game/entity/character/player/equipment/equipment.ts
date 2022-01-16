@@ -6,7 +6,7 @@
 
 import { Modules } from '@kaetram/common/network';
 import { EquipmentData } from '@kaetram/common/types/equipment';
-import Item from '../../../../objects/item';
+import Item from '../../../objects/item';
 
 export default class Equipment {
     private updateCallback?: (equipment: Equipment) => void;
