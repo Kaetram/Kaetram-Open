@@ -5,6 +5,7 @@ export interface RawStage {
     mob?: string[];
     /** If to display a pointer at a location. */
     withPointer?: boolean;
+    itemRequirement?: string;
     /** How many of mobs to be killed. */
     countRequirement?: number;
     /** Text for the NPC. */
@@ -21,7 +22,8 @@ export interface StageData {
     task: string;
     npc?: string;
     mob?: string | string[];
-    countRequirement: number;
+    itemRequirement?: string;
+    countRequirement?: number; // how many mobs to kill or how many of an item to have
     text?: string[];
 }
 
