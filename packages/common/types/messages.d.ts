@@ -3,8 +3,8 @@ import type {
     AchievementData,
     BubbleInfo,
     HitData,
+    QuestData,
     ProfessionsInfo,
-    QuestInfo,
     ShopData,
     TilesetData
 } from './info';
@@ -176,9 +176,8 @@ export type ContainerRemoveData = {
     slot: SlotData;
 };
 
-export interface QuestBatchData {
-    quests: QuestInfo[];
-}
+export type QuestBatchData = QuestData[];
+
 export interface QuestAchievementBatchData {
     achievements: AchievementData[];
 }

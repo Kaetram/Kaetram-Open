@@ -1,11 +1,12 @@
 {
-  "introduction": {
+  "tutorial": {
     "name": "Welcome to Kaetram",
     "description": "Teaching you the very basics of Kaetram.",
     "stages": {
       "0": {
         "task": "talk",
-        "npc": "coder"
+        "npc": "coder",
+        "text": ["Hello", "this", "is", "coder", "example", "text"]
       }
     }
   }

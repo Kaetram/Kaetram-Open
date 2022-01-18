@@ -25,6 +25,7 @@ enum Packets {
     Container,
     Ability,
     Quest,
+    Achievement,
     Notification,
     Blink,
     Heal,

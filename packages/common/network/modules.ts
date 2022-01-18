@@ -290,7 +290,9 @@ export const enum Constants {
     ROAMING_FREQUENCY = 7000,
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
-    HORIZONTAL_FLAG = 0x80_00_00_00
+    HORIZONTAL_FLAG = 0x80_00_00_00,
+    TUTORIAL_QUEST_KEY = 'tutorial',
+    TUTORIAL_SPAWN_POINT = '375,40' // 'x,y' values
 }
 
 // Defaults that apply to all types of entities

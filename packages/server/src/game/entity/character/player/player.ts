@@ -314,8 +314,6 @@ export default class Player extends Character {
             this.connection.close(`Player: ${this.username} is banned.`);
         }
 
-        if (this.x <= 0 || this.y <= 0) this.sendToSpawn();
-
         if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.getMaxHitPoints());
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
@@ -686,12 +684,8 @@ export default class Player extends Character {
     public override setPosition(x: number, y: number): void {
         if (this.dead) return;
 
-        if (this.map.isOutOfBounds(x, y)) {
-            x = 50;
-            y = 89;
-        }
-
-        super.setPosition(x, y);
+        if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
+        else super.setPosition(x, y);
 
         this.sendToRegions(
             new Movement(Opcodes.Movement.Move, {
@@ -765,10 +759,20 @@ export default class Player extends Character {
     }
 
     /**
-     * Here we will implement functions from quests and
-     * other special events and determine a spawn point.
+     * Grabs the spawn point on the player depending on whether or not he
+     * has finished the tutorial quest.
+     * @returns The spawn point Pos object containing x and y grid positions.
      */
+
     public getSpawn(): Pos {
+        console.log(this.quests.isTutorialFinished());
+
+        if (!this.quests.isTutorialFinished()) {
+            let spawnPoint = Modules.Constants.TUTORIAL_SPAWN_POINT.split(',');
+
+            return { x: parseInt(spawnPoint[0]), y: parseInt(spawnPoint[1]) };
+        }
+
         return { x: 325, y: 87 };
     }
 
@@ -872,10 +876,13 @@ export default class Player extends Character {
     }
 
     public sendToSpawn(): void {
-        let position = this.getSpawn();
+        let spawnPoint = this.getSpawn();
 
-        this.x = position.x;
-        this.y = position.y;
+        console.log(spawnPoint);
+
+        console.log('lmao sending someone to spawn');
+
+        this.setPosition(spawnPoint.x, spawnPoint.y);
     }
 
     public sendMessage(playerName: string, message: string): void {
