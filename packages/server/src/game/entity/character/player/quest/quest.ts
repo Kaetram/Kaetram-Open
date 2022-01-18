@@ -57,16 +57,22 @@ export default abstract class Quest {
      */
 
     private handleTalk(npc: NPC, player: Player): void {
-        log.debug(`[${this.name}] Talking to NPC: ${npc.key}.`);
+        log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
 
         let stageData = this.getStageData();
 
-        if (stageData.task !== 'talk') return;
+        // Return default text specified if the stage is not one requiring talking to the npc.
+        if (stageData.task !== 'talk') return npc.talk(player, stageData.text);
 
+        // Conversation length with the NPC.
         let textLength = stageData.text?.length;
 
-        if (textLength === player.talkIndex) console.log('yo this is done');
+        // Handle end of a conversation.
+        if (textLength === player.talkIndex)
+            if (!this.hasItemRequirement()) this.progress();
+            else this.handleItemRequirement(player, stageData);
 
+        // Talk to the NPC to progress the conversation.
         npc.talk(player, stageData.text);
     }
 
@@ -89,8 +95,39 @@ export default abstract class Quest {
      */
 
     public progress(subStage?: boolean): void {
+        log.warning('Received progress yo');
+
         if (subStage) this.setStage(this.stage, ++this.subStage);
         else this.setStage(++this.stage);
+    }
+
+    /**
+     * Checks the player's inventory and progresses if
+     * he contains enough of the required item.
+     * @param player The player we are checking inventory of.
+     */
+
+    public handleItemRequirement(player: Player, stageData: StageData): void {
+        // Extract the item key and count requirement.
+        let { itemRequirement, countRequirement } = stageData,
+            index = player.inventory.getIndex(itemRequirement, countRequirement);
+
+        // Cannot find the item in the inventory (or with correct count).
+        if (index === -1) return;
+
+        // Remove `countRequirement` amount of an item at the index.
+        player.inventory.remove(index, countRequirement);
+
+        this.progress();
+    }
+
+    /**
+     * Checks if the current stage has an item requirement.
+     * @returns If the item requirement property exists in the current stage.
+     */
+
+    public hasItemRequirement(): boolean {
+        return !!this.getStageData().itemRequirement;
     }
 
     /**
@@ -137,10 +174,10 @@ export default abstract class Quest {
      */
 
     public setStage(stage: number, subStage = 0): void {
+        if (this.stage !== stage) this.progressCallback?.(this.key, stage, subStage);
+
         this.stage = stage;
         this.subStage = subStage;
-
-        this.progressCallback?.(this.key, this.stage, this.subStage);
     }
 
     /**
