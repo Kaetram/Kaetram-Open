@@ -44,6 +44,7 @@ import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
+import { QuestData } from '@kaetram/common/types/quest';
 export default class Connection {
     private app;
     private audio;
@@ -601,33 +602,44 @@ export default class Connection {
         // this.messages.onAbility((opcode, info) => {});
 
         this.messages.onQuest((opcode, info) => {
+            log.debug('Quest thing came through.');
+
             switch (opcode) {
-                case Opcodes.Quest.AchievementBatch: {
-                    let data = info as QuestAchievementBatchData;
-
-                    this.menu.getQuestPage().loadAchievements(data.achievements);
-
-                    break;
+                case Opcodes.Quest.Batch: {
+                    return this.menu.getQuestPage().loadQuests(info as QuestBatchData);
                 }
-
-                case Opcodes.Quest.QuestBatch: {
-                    let data = info as QuestBatchData;
-
-                    this.menu.getQuestPage().loadQuests(data.quests);
-
-                    break;
-                }
-
-                case Opcodes.Quest.Progress:
-                    this.menu.getQuestPage().progress(info as QuestProgressData);
-
-                    break;
-
-                case Opcodes.Quest.Finish:
-                    this.menu.getQuestPage().finish(info as QuestFinishData);
-
-                    break;
             }
+
+            console.log(opcode);
+            console.log(info);
+
+            // switch (opcode) {
+            //     case Opcodes.Quest.AchievementBatch: {
+            //         let data = info as QuestAchievementBatchData;
+
+            //         this.menu.getQuestPage().loadAchievements(data.achievements);
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Quest.QuestBatch: {
+            //         let data = info as QuestBatchData;
+
+            //         this.menu.getQuestPage().loadQuests(data.quests);
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Quest.Progress:
+            //         this.menu.getQuestPage().progress(info as QuestProgressData);
+
+            //         break;
+
+            //     case Opcodes.Quest.Finish:
+            //         this.menu.getQuestPage().finish(info as QuestFinishData);
+
+            //         break;
+            // }
         });
 
         this.messages.onNotification((opcode, info) => {

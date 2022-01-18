@@ -7,7 +7,7 @@ import QuestIndex from './quest/impl';
 
 import { Quest as QuestPacket } from '../../../../network/packets';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
 
 // Raw quest data
@@ -25,6 +25,8 @@ export default class Quests {
     // All the quests are contained here.
     private quests: { [key: string]: Quest } = {};
 
+    private loadCallback?: () => void;
+
     public constructor(private player: Player) {
         // Iterates through the raw quests in the JSON and creates an instance of them
         _.each(quests, (rawQuest: RawQuest, key: string) => {
@@ -40,14 +42,23 @@ export default class Quests {
         });
     }
 
+    /**
+     * Loads the quest data from the database into
+     * the player's instance.
+     * @param questInfo Array containing data for each quest.
+     */
+
     public load(questInfo: QuestData[]): void {
         _.each(questInfo, (info: QuestData) => {
             let quest = this.quests[info.key];
 
+            // Skip if no quest found with the given key.
             if (!quest) return;
 
             quest.update(info.stage, info.subStage);
         });
+
+        this.loadCallback?.();
     }
 
     /**
@@ -123,6 +134,22 @@ export default class Quests {
     }
 
     /**
+     * Checks if the player has finished the tutorial.
+     * @returns True if the tutorial cannot be found otherwise whether or not the quest is finished.
+     */
+
+    public isTutorialFinished(): boolean {
+        // Uses the default key from the constants.
+        let quest = this.quests[Modules.Constants.TUTORIAL_QUEST_KEY];
+
+        // Default to true if the quest is not found.
+        if (!quest) return true;
+
+        // If the quest exists we return its status.
+        return quest.isFinished();
+    }
+
+    /**
      * Iterates through all the quests and serializes them (saving the
      * key and progress of each one) and returns a SerializedQuest object.
      * @returns SerializedQuest object containing array of quest data.
@@ -145,5 +172,13 @@ export default class Quests {
 
     private forEachQuest(callback: (quest: Quest) => void): void {
         _.each(this.quests, callback);
+    }
+
+    /**
+     * Callback signal for when the quests are loaded.
+     */
+
+    public onLoaded(callback: () => void): void {
+        this.loadCallback = callback;
     }
 }

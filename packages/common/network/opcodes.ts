@@ -59,8 +59,13 @@ export enum Container {
 }
 
 export enum Quest {
-    QuestBatch,
-    AchievementBatch,
+    Batch,
+    Progress,
+    Finish
+}
+
+export enum Achievement {
+    Batch,
     Progress,
     Finish
 }
