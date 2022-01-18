@@ -605,13 +605,15 @@ export default class Connection {
             log.debug('Quest thing came through.');
 
             switch (opcode) {
-                case Opcodes.Quest.Batch: {
+                case Opcodes.Quest.Batch:
                     return this.menu.getQuestPage().loadQuests(info as QuestBatchData);
-                }
-            }
 
-            console.log(opcode);
-            console.log(info);
+                case Opcodes.Quest.Progress:
+                    console.log(`_________QUEST_PROGRESS_______`);
+                    console.log(opcode);
+                    console.log(info);
+                    return;
+            }
 
             // switch (opcode) {
             //     case Opcodes.Quest.AchievementBatch: {
