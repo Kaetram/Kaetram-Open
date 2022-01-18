@@ -2,9 +2,11 @@ import Entity from '../entity';
 
 import type Player from '../character/player/player';
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import { NPCData } from '@kaetram/common/types/npc';
+
+import { NPC as NPCPacket } from '../../../network/packets';
 
 import rawData from '../../../../data/npcs.json';
 import log from '@kaetram/common/util/log';
@@ -36,20 +38,33 @@ export default class NPC extends Entity {
         this.role = this.data.role!;
     }
 
-    public talk(player?: Player): string {
-        if (!player) return '';
+    /**
+     * Talks to an NPC and progresses the talking index of the player. It returns
+     * the message the NPC is currently saying.
+     * @param player The player to grab/compare talk index of.
+     * @param text Optional parameter that uses default text in `npcs.json` if not specified.
+     * @returns String of the current massage.
+     */
+
+    public talk(player?: Player, text = this.text): void {
+        if (!(player && this.hasDialogue())) return;
 
         if (player.npcTalk !== this.key) {
             player.talkIndex = 0;
             player.npcTalk = this.key;
         }
 
-        let message = this.text[player.talkIndex];
+        let message = text[player.talkIndex];
 
         if (player.talkIndex > this.text.length - 1) player.talkIndex = 0;
         else player.talkIndex++;
 
-        return message;
+        player.send(
+            new NPCPacket(Opcodes.NPC.Talk, {
+                id: this.instance,
+                text: message
+            })
+        );
     }
 
     /**

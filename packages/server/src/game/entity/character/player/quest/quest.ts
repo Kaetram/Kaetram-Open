@@ -4,6 +4,7 @@ import Mob from '../../mob/mob';
 import log from '@kaetram/common/util/log';
 
 import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
+import Player from '../player';
 
 export default abstract class Quest {
     /**
@@ -19,7 +20,7 @@ export default abstract class Quest {
 
     private stages: { [id: number]: RawStage } = {};
 
-    public talkCallback?: (npc: NPC) => void;
+    public talkCallback?: (npc: NPC, player: Player) => void;
     public killCallback?: (mob: Mob) => void;
 
     private progressCallback?: (key: string, stage: number, subStage: number) => void;
@@ -52,10 +53,21 @@ export default abstract class Quest {
      * Callback handler for when talking to a quest
      * NPC required for progression.
      * @param npc The NPC we are talking to.
+     * @param talkIndex Current progress in the conversation.
      */
 
-    private handleTalk(npc: NPC): void {
+    private handleTalk(npc: NPC, player: Player): void {
         log.debug(`[${this.name}] Talking to NPC: ${npc.key}.`);
+
+        let stageData = this.getStageData();
+
+        if (stageData.task !== 'talk') return;
+
+        let textLength = stageData.text?.length;
+
+        if (textLength === player.talkIndex) console.log('yo this is done');
+
+        npc.talk(player, stageData.text);
     }
 
     /**
@@ -66,6 +78,10 @@ export default abstract class Quest {
 
     private handleKill(mob: Mob): void {
         log.debug(`[${this.name}] Killing mob: ${mob.key}.`);
+
+        let stageData = this.getStageData();
+
+        if (stageData.task !== 'kill') return;
     }
 
     /**
@@ -109,7 +125,8 @@ export default abstract class Quest {
             task: stage.task,
             npc: stage.npc! || '',
             mob: stage.mob! || '',
-            countRequirement: stage.countRequirement! || 1
+            countRequirement: stage.countRequirement! || 1,
+            text: stage.text! || ['']
         };
     }
 
@@ -143,6 +160,7 @@ export default abstract class Quest {
             data.name = this.name;
             data.description = this.description;
             data.started = this.isStarted();
+            data.finished = this.isFinished();
         }
 
         return data;
@@ -162,7 +180,7 @@ export default abstract class Quest {
      * @param callback The NPC the interaction happens with.
      */
 
-    public onTalk(callback: (npc: NPC) => void): void {
+    public onTalk(callback: (npc: NPC, player: Player) => void): void {
         this.talkCallback = callback;
     }
 

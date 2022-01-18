@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
@@ -7,6 +5,7 @@ import Utils from '@kaetram/common/util/utils';
 
 import {
     Container,
+    Quest,
     Equipment as EquipmentPacket,
     NPC as NPCPacket
 } from '../../../../network/packets';
@@ -50,6 +49,7 @@ export default class Handler {
         // Loading callbacks
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
+        this.player.quests.onLoaded(this.handleQuests.bind(this));
 
         // Inventory callbacks
         this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
@@ -227,6 +227,16 @@ export default class Handler {
     }
 
     /**
+     * Send a packet to the client to load quests.
+     */
+
+    private handleQuests(): void {
+        let { quests } = this.player.quests.serialize(true);
+
+        this.player.send(new Quest(Opcodes.Quest.Batch, quests));
+    }
+
+    /**
      * Sends a packet to the client whenever
      * we add an item in our bank.
      * @param slot The slot we just added the item to.
@@ -264,7 +274,7 @@ export default class Handler {
         let quest = this.player.quests.getQuestFromNPC(npc);
 
         if (quest) {
-            quest.talkCallback?.(npc);
+            quest.talkCallback?.(npc, this.player);
             return;
         }
 
@@ -292,14 +302,7 @@ export default class Handler {
                 break;
         }
 
-        if (!npc.hasDialogue()) return;
-
-        this.player.send(
-            new NPCPacket(Opcodes.NPC.Talk, {
-                id: npc.instance,
-                text: npc.talk(this.player)
-            })
-        );
+        npc.talk(this.player);
     }
 
     /**
