@@ -105,8 +105,7 @@ interface ContainerCallback {
 }
 type AbilityCallback = (data: unknown) => void;
 interface QuestCallback {
-    (opcode: Opcodes.Quest.AchievementBatch, info: QuestAchievementBatchData): void;
-    (opcode: Opcodes.Quest.QuestBatch, info: QuestBatchData): void;
+    (opcode: Opcodes.Quest.Batch, info: QuestBatchData): void;
     (opcode: Opcodes.Quest.Progress, info: QuestProgressData): void;
     (opcode: Opcodes.Quest.Finish, info: QuestFinishData): void;
 }

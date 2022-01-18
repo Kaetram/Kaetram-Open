@@ -3,7 +3,9 @@ import _ from 'lodash';
 
 import Page from '../page';
 
-import type { AchievementData, QuestInfo } from '@kaetram/common/types/info';
+import { QuestData } from '@kaetram/common/types/quest';
+
+import type { AchievementData } from '@kaetram/common/types/info';
 import type { QuestFinishData, QuestProgressData } from '@kaetram/common/types/messages';
 
 export default class Quest extends Page {
@@ -26,58 +28,59 @@ export default class Quest extends Page {
     public loadAchievements(achievements: AchievementData[]): void {
         this.achievementsLength = achievements.length;
 
-        _.each(achievements, (achievement) => {
-            let item = this.getItem(false, achievement.id),
-                name = this.getName(false, achievement.id);
+        // _.each(achievements, (achievement) => {
+        //     let item = this.getItem(false, achievement.id),
+        //         name = this.getName(false, achievement.id);
 
-            name.text('????????');
+        //     name.text('????????');
 
-            name.css('background', 'rgba(255, 10, 10, 0.3)');
+        //     name.css('background', 'rgba(255, 10, 10, 0.3)');
 
-            if (achievement.progress > 0 && achievement.progress < 9999) {
-                name.css('background', 'rgba(255, 255, 10, 0.4)');
+        //     if (achievement.progress > 0 && achievement.progress < 9999) {
+        //         name.css('background', 'rgba(255, 255, 10, 0.4)');
 
-                name.text(
-                    achievement.name +
-                        (achievement.count > 2
-                            ? ` ${achievement.progress - 1}/${achievement.count - 1}`
-                            : '')
-                );
-            } else if (achievement.progress > 9998) {
-                name.text(achievement.name);
-                name.css('background', 'rgba(10, 255, 10, 0.3)');
-            }
+        //         name.text(
+        //             achievement.name +
+        //                 (achievement.count > 2
+        //                     ? ` ${achievement.progress - 1}/${achievement.count - 1}`
+        //                     : '')
+        //         );
+        //     } else if (achievement.progress > 9998) {
+        //         name.text(achievement.name);
+        //         name.css('background', 'rgba(10, 255, 10, 0.3)');
+        //     }
 
-            if (achievement.finished) this.finishedAchievements++;
+        //     if (achievement.finished) this.finishedAchievements++;
 
-            item.append(name);
+        //     item.append(name);
 
-            let listItem = $('<li></li>');
+        //     let listItem = $('<li></li>');
 
-            listItem.append(item);
+        //     listItem.append(item);
 
-            this.achievementsList.append(listItem);
-        });
+        //     this.achievementsList.append(listItem);
+        // });
 
         this.updateCount();
     }
 
-    public loadQuests(quests: QuestInfo[]): void {
+    public loadQuests(quests: QuestData[]): void {
+        console.log(quests);
+
         this.questsLength = quests.length;
 
         _.each(quests, (quest) => {
-            let item = this.getItem(true, quest.id),
-                name = this.getName(true, quest.id);
+            let item = this.getItem(true, quest.key),
+                name = this.getName(true, quest.key);
 
-            name.text(quest.name);
+            name.text(quest.name!);
 
             name.css('background', 'rgba(255, 10, 10, 0.3)');
 
-            if (quest.stage > 0 && quest.stage < 9999)
-                name.css('background', 'rgba(255, 255, 10, 0.4)');
-            else if (quest.stage > 9998) name.css('background', 'rgba(10, 255, 10, 0.3)');
-
-            if (quest.finished) this.finishedQuests++;
+            if (quest.finished) {
+                name.css('background', 'rgba(10, 255, 10, 0.3)');
+                this.finishedQuests++;
+            } else if (quest.started) name.css('background', 'rgba(255, 255, 10, 0.4)');
 
             item.append(name);
 
@@ -156,13 +159,13 @@ export default class Quest extends Page {
      * on their type of item and id (index).
      */
 
-    private getItem(isQuest: boolean, id: number): JQuery {
-        return $(`<div id="${isQuest ? 'quest' : 'achievement'}${id}" class="questItem"></div>`);
+    private getItem(isQuest: boolean, key: string): JQuery {
+        return $(`<div id="${isQuest ? 'quest' : 'achievement'}${key}" class="questItem"></div>`);
     }
 
-    private getName(isQuest: boolean, id: number): JQuery {
+    private getName(isQuest: boolean, key: string): JQuery {
         return $(
-            `<div id="${isQuest ? 'quest' : 'achievement'}${id}name" class="questName"></div>`
+            `<div id="${isQuest ? 'quest' : 'achievement'}${key}name" class="questName"></div>`
         );
     }
 }
