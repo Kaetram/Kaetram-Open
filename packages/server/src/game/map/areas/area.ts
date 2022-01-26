@@ -5,7 +5,7 @@ import type Chest from '../../entity/objects/chest';
 type Position = { x: number; y: number };
 
 export default class Area {
-    public polygon!: Pos[];
+    public polygon!: Position[];
 
     private entities: Mob[] = [];
     public chest: Chest | null = null;
