@@ -761,19 +761,16 @@ export default class Player extends Character {
     /**
      * Grabs the spawn point on the player depending on whether or not he
      * has finished the tutorial quest.
-     * @returns The spawn point Pos object containing x and y grid positions.
+     * @returns The spawn point Position object containing x and y grid positions.
      */
 
-    public getSpawn(): Pos {
+    public getSpawn(): Position {
         console.log(this.quests.isTutorialFinished());
 
-        if (!this.quests.isTutorialFinished()) {
-            let spawnPoint = Modules.Constants.TUTORIAL_SPAWN_POINT.split(',');
+        if (!this.quests.isTutorialFinished())
+            return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
-            return { x: parseInt(spawnPoint[0]), y: parseInt(spawnPoint[1]) };
-        }
-
-        return { x: 325, y: 87 };
+        return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
 
     public getHit(target: Character): Hit | undefined {

@@ -13,7 +13,7 @@ export default class Tile {
         this.animationInfo = map.getTileAnimation(id);
     }
 
-    public setPosition(position: Pos): void {
+    public setPosition(position: Position): void {
         this.x = position.x;
         this.y = position.y;
     }

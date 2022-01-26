@@ -291,6 +291,7 @@ export const enum Constants {
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
     HORIZONTAL_FLAG = 0x80_00_00_00,
+    SPAWN_POINT = '',
     TUTORIAL_QUEST_KEY = 'tutorial',
     TUTORIAL_SPAWN_POINT = '375,40' // 'x,y' values
 }
