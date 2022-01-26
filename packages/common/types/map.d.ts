@@ -7,7 +7,7 @@ export interface ProcessedArea {
     // Area
     width: number;
     height: number;
-    polygon?: Pos[] | undefined;
+    polygon?: Position[] | undefined;
 
     // Door
     destination?: number;
@@ -16,7 +16,7 @@ export interface ProcessedArea {
     // Light
     distance?: number;
     diffuse?: number;
-    objects?: Pos[];
+    objects?: Position[];
 
     // Chest
     entities?: number;

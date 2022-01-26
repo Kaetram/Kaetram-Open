@@ -15,12 +15,12 @@ import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
 import type Projectile from '../game/entity/objects/projectile';
-import { Chat, Combat, Equipment, Movement, Notification, Shop, Spawn } from '../network/packets';
+import { Chat, Combat, Movement, Notification, Spawn } from '../network/packets';
 import Respawn from '../network/packets/respawn';
 import Item from '../game/entity/objects/item';
 import Entity from '../game/entity/entity';
 import { Door } from '../game/entity/character/player/doors';
-import { SlotData, SlotType } from '@kaetram/common/types/slot';
+import { SlotType } from '@kaetram/common/types/slot';
 
 type PacketData = ((string | string[]) | number | boolean)[];
 
@@ -605,7 +605,7 @@ export default class Incoming {
         }
     }
 
-    private handleCommand(message: [Opcodes.Command, Pos]): void {
+    private handleCommand(message: [Opcodes.Command, Position]): void {
         let [opcode, position] = message;
 
         if (this.player.rights < 2) return;

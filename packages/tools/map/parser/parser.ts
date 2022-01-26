@@ -321,7 +321,7 @@ export default class ProcessMap {
     private extractPolygon(info: LayerObject) {
         if (!info.polygon) return;
 
-        let polygon: Pos[] = [],
+        let polygon: Position[] = [],
             { tileSize } = this.map;
 
         _.each(info.polygon, (point) => {

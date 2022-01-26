@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
 import Regions from '../game/map/regions';
-import Map, { Position } from '../game/map/map';
+import Map from '../game/map/map';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import NPC from '../game/entity/npc/npc';

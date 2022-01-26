@@ -1,7 +1,8 @@
 /**
  * A 2D position or vertex.
  */
-declare interface Pos {
+
+declare interface Position {
     x: number;
     y: number;
 }
