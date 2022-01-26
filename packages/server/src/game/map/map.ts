@@ -26,7 +26,6 @@ export type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }
 export type AnimatedTile = { tileId: string; name: string };
 export type ParsedTile = RotatedTile | Tile | RotatedTile[];
 export type Tile = number | number[];
-export type Position = { x: number; y: number };
 
 export default class Map {
     public regions: Regions;
@@ -257,7 +256,7 @@ export default class Map {
     }
 
     // Transforms an object's `instance` or `id` into position
-    public idToPosition(id: string): Pos {
+    public idToPosition(id: string): Position {
         let split = id.split('-');
 
         return { x: parseInt(split[0]), y: parseInt(split[1]) };

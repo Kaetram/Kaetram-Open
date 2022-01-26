@@ -75,7 +75,7 @@ export default {
      * @returns Position object containing the offset.
      */
 
-    positionOffset(radius: number): Pos {
+    positionOffset(radius: number): Position {
         return {
             x: this.randomInt(0, radius),
             y: this.randomInt(0, radius)
@@ -190,5 +190,21 @@ export default {
 
     getBufferSize(data: unknown): number {
         return encodeURI(JSON.stringify(data)).split(/%..|./).length - 1;
+    },
+
+    /**
+     * Takes a string position (from Constants) and converts it to
+     * a type Position object.
+     * @param position String position format of `231,41`.
+     * @returns Position object with x and y coordinates.
+     */
+
+    getPositionFromString(position: string): Position {
+        let splitPosition = position.split(',');
+
+        return {
+            x: parseInt(splitPosition[0]),
+            y: parseInt(splitPosition[1])
+        };
     }
 };

@@ -21,7 +21,7 @@ export interface Property {
 }
 export interface ObjectGroup {
     objects: {
-        polygon: Pos[];
+        polygon: Position[];
         x: number;
         y: number;
     }[];
@@ -51,7 +51,7 @@ interface LayerObject {
     y: number;
     width: number;
     height: number;
-    polygon: Pos[];
+    polygon: Position[];
 }
 
 export interface Layer {
