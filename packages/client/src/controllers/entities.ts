@@ -1,13 +1,12 @@
 import _ from 'lodash';
 
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 
 import Mob from '../entity/character/mob/mob';
 import NPC from '../entity/character/npc/npc';
 import Player from '../entity/character/player/player';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
-import Projectile from '../entity/objects/projectile';
 import Grids from '../renderer/grids';
 import SpritesController from './sprites';
 

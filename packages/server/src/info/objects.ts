@@ -16,7 +16,7 @@ export default {
         return null;
     },
 
-    getPosition(id: string): Pos {
+    getPosition(id: string): Position {
         let info = id.split('-');
 
         return {

@@ -280,7 +280,7 @@ export default class Combat {
         return this.attackers && Object.keys(this.attackers).length > 0;
     }
 
-    private getNewPosition(): Pos {
+    private getNewPosition(): Position {
         let position = {
                 x: this.character.x,
                 y: this.character.y
