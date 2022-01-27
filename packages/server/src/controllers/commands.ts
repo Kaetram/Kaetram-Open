@@ -1,4 +1,4 @@
-import { Opcodes } from '@kaetram/common/network';
+import { Opcodes, Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
 import type Achievement from '../game/entity/character/player/achievement';
@@ -233,7 +233,7 @@ export default class Commands {
                     if (!instance) return;
 
                     this.player.send(
-                        new Pointer(Opcodes.Pointer.NPC, {
+                        new Pointer(Opcodes.Pointer.Entity, {
                             id: instance
                         })
                     );
