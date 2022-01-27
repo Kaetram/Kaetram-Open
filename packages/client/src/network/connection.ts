@@ -894,12 +894,12 @@ export default class Connection {
 
         this.messages.onPointer((opcode, info) => {
             switch (opcode) {
-                case Opcodes.Pointer.NPC: {
+                case Opcodes.Pointer.Entity: {
                     let entity = this.entities.get(info.id!);
 
                     if (!entity) return;
 
-                    this.pointer.create(entity.id, Modules.Pointers.Entity);
+                    this.pointer.create(entity.id, opcode);
                     this.pointer.setToEntity(entity);
 
                     break;
@@ -908,7 +908,7 @@ export default class Connection {
                 case Opcodes.Pointer.Location: {
                     let data = info as PointerLocationData;
 
-                    this.pointer.create(data.id, Modules.Pointers.Position);
+                    this.pointer.create(data.id, opcode);
                     this.pointer.setToPosition(data.id, data.x * 16, data.y * 16);
 
                     break;
@@ -917,7 +917,7 @@ export default class Connection {
                 case Opcodes.Pointer.Relative: {
                     let data = info as PointerRelativeData;
 
-                    this.pointer.create(data.id, Modules.Pointers.Relative);
+                    this.pointer.create(data.id, opcode);
                     this.pointer.setRelative(data.id, data.x, data.y);
 
                     break;
@@ -931,7 +931,7 @@ export default class Connection {
                 case Opcodes.Pointer.Button: {
                     let data = info as PointerButtonData;
 
-                    this.pointer.create(data.id, Modules.Pointers.Button, data.button);
+                    this.pointer.create(data.id, opcode, data.button);
 
                     break;
                 }

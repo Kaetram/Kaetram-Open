@@ -124,13 +124,6 @@ export enum AudioTypes {
     SFX
 }
 
-export enum Pointers {
-    Entity,
-    Position,
-    Relative,
-    Button
-}
-
 export enum Trade {
     Request,
     Started,
