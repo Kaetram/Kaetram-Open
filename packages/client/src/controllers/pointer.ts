@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import Pointer from '../renderer/pointers/pointer';
 
@@ -22,13 +22,13 @@ export default class PointerController {
         this.scale = this.getScale();
     }
 
-    public create(id: string, type: Modules.Pointers, name?: string): void {
+    public create(id: string, type: Opcodes.Pointer, name?: string): void {
         let { pointers, container } = this;
 
         if (id in pointers) return;
 
         switch (type) {
-            case Modules.Pointers.Button:
+            case Opcodes.Pointer.Button:
                 pointers[id] = new Pointer(id, $(`#${name}`), type);
 
                 break;
@@ -50,7 +50,7 @@ export default class PointerController {
     public resize(): void {
         _.each(this.pointers, ({ type, x, y, element }) => {
             switch (type) {
-                case Modules.Pointers.Relative: {
+                case Opcodes.Pointer.Relative: {
                     let scale = this.getScale(),
                         offsetX = 0,
                         offsetY = 0;
@@ -191,7 +191,7 @@ export default class PointerController {
     public update(): void {
         _.each(this.pointers, (pointer) => {
             switch (pointer.type) {
-                case Modules.Pointers.Entity: {
+                case Opcodes.Pointer.Entity: {
                     let entity = this.game.entities.get(pointer.id);
 
                     if (entity) this.setToEntity(entity);
@@ -200,7 +200,7 @@ export default class PointerController {
                     break;
                 }
 
-                case Modules.Pointers.Position:
+                case Opcodes.Pointer.Position:
                     if (pointer.x !== -1 && pointer.y !== -1)
                         this.set(pointer, pointer.x, pointer.y);
 
