@@ -6,7 +6,10 @@
       "0": {
         "task": "talk",
         "npc": "coder",
-        "text": ["Hello", "this", "is", "coder", "example", "text"]
+        "text": ["Hello", "this", "is", "coder", "example", "text"],
+        "pointer": {
+          "type": "entity"
+        }
       }
     }
   }
