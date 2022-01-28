@@ -1,12 +1,13 @@
 import $ from 'jquery';
 
-import { Opcodes, Packets } from '@kaetram/common/network';
+import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import Container from './container/container';
 
-import type { ContainerAddData, ContainerRemoveData } from '@kaetram/common/types/messages';
 import type Game from '../game';
 import type Slot from './container/slot';
+import { SlotData } from '@kaetram/common/types/slot';
+import MenuController from '../controllers/menu';
 
 export default class Bank {
     // player = this.game.player;
@@ -22,9 +23,9 @@ export default class Bank {
 
     public constructor(
         private game: Game,
-        private inventoryContainer: Container,
-        size: number,
-        data: Slot[]
+        private menu: MenuController,
+        private size: number,
+        data: SlotData[]
     ) {
         this.container = new Container(size);
 
@@ -34,93 +35,56 @@ export default class Bank {
         this.load(data);
     }
 
-    private load(data: Slot[]): void {
+    public load(data: SlotData[]): void {
         let bankList = this.bankSlots.find('ul'),
             inventoryList = this.bankInventorySlots.find('ul');
 
-        for (let [i, item] of data.entries()) {
-            let slot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`);
+        this.clear();
 
-            this.container.setSlot(i, item);
+        for (let i = 0; i < this.size; i++) {
+            let bankSlot = $(`<div id="bankSlot${i}" class="bankSlot"></div>`),
+                bankCount = $(`<div id="bankItemCount${i}" class="itemCount"></div>`),
+                slotImage = $(`<div id="bankImage${i}" class="bankImage"></div>`),
+                slotElement = $('<li></li>').append(bankSlot.append(slotImage).append(bankCount));
 
-            slot.css({
+            bankSlot.on('click', (event) => this.click('bank', event));
+
+            bankSlot.css({
                 marginRight: `${2 * this.getScale()}px`,
                 marginBottom: `${4 * this.getScale()}px`
             });
 
-            let image = $(`<div id="bankImage${i}" class="bankImage"></div>`);
+            bankCount.css('margin-top', 0);
 
-            if (item.string)
-                image.css('background-image', this.container.getImageFormat(item.string));
-
-            slot.on('click', (event) => this.click('bank', event));
-
-            let { count } = item,
-                itemCount: string = count.toString();
-
-            if (count > 999_999)
-                itemCount = `${count
-                    .toString()
-                    .slice(0, Math.max(0, count.toString().length - 6))}M`;
-            else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
-            else if (count === 1) itemCount = '';
-
-            slot.append(image);
-            slot.append(`<div id="bankItemCount${i}" class="itemCount">${itemCount}</div>`);
-
-            slot.find(`#bankItemCount${i}`).css({
-                fontSize: `${4 * this.getScale()}px`,
-                marginTop: '0',
-                marginLeft: '0'
-            });
-
-            let bankListItem = $('<li></li>');
-
-            bankListItem.append(slot);
-
-            bankList.append(bankListItem);
+            bankList.append(slotElement);
         }
 
-        for (let j = 0; j < this.inventoryContainer.size; j++) {
-            let iItem = this.inventoryContainer.slots[j],
-                iSlot = $(`<div id="bankInventorySlot${j}" class="bankSlot"></div>`);
+        let inventorySize = this.menu.getInventorySize();
 
-            iSlot.css({
+        for (let j = 0; j < inventorySize; j++) {
+            let inventorySlot = $(`<div id="bankInventorySlot${j}" class="bankSlot"></div>`),
+                inventoryCount = $(`<div id="inventoryItemCount${j}" class="itemCount"></div>`),
+                slotImage = $(`<div id="inventoryImage${j}" class="bankImage"></div>`),
+                slotElement = $('<li></li>').append(
+                    inventorySlot.append(slotImage).append(inventoryCount)
+                );
+
+            inventorySlot.on('click', (event) => this.click('inventory', event));
+
+            inventorySlot.css({
                 marginRight: `${3 * this.getScale()}px`,
                 marginBottom: `${6 * this.getScale()}px`
             });
 
-            let slotImage = $(`<div id="inventoryImage${j}" class="bankImage"></div>`);
+            inventoryCount.css('margin-top', '0');
 
-            if (iItem.string)
-                slotImage.css('background-image', this.container.getImageFormat(iItem.string));
-
-            iSlot.on('click', (event) => this.click('inventory', event));
-
-            let { count } = iItem,
-                itemCount = count.toString();
-
-            if (count > 999_999)
-                itemCount = `${count
-                    .toString()
-                    .slice(0, Math.max(0, count.toString().length - 6))}M`;
-            else if (count > 9999) itemCount = `${count.toString().slice(0, 2)}K`;
-            else if (count === 1) itemCount = '';
-
-            iSlot.append(slotImage);
-            iSlot.append(`<div id="inventoryItemCount${j}" class="itemCount">${itemCount}</div>`);
-
-            iSlot.find(`#inventoryItemCount${j}`).css({
-                marginTop: '0',
-                marginLeft: '0'
-            });
-
-            let inventoryListItem = $('<li></li>');
-
-            inventoryListItem.append(iSlot);
-
-            inventoryList.append(inventoryListItem);
+            inventoryList.append(slotElement);
         }
+
+        for (let item of data) this.add(item, Modules.ContainerType.Bank);
+
+        for (let inventoryItem of this.menu.getInventoryData())
+            this.add(inventoryItem, Modules.ContainerType.Inventory);
     }
 
     public resize(): void {
@@ -143,52 +107,102 @@ export default class Bank {
                 marginLeft: '0'
             });
 
-            image.css('background-image', this.container.getImageFormat(slot.string));
+            image.css('background-image', this.container.getImageFormat(slot.key));
         }
 
         for (let [j, element] of [...inventoryList].entries()) {
-            let inventorySlot = $(element).find(`#bankInventorySlot${j}`),
-                iImage = inventorySlot.find(`#inventoryImage${j}`),
-                iSlot = this.inventoryContainer.slots[j];
+            let inventorySlot = $(element).find(`#bankInventorySlot${j}`);
 
             inventorySlot.css({
                 marginRight: `${3 * this.getScale()}px`,
                 marginBottom: `${6 * this.getScale()}px`
             });
-
-            iImage.css('background-image', this.container.getImageFormat(iSlot.string));
         }
     }
 
     private click(type: string, event: JQuery.ClickEvent): void {
-        let isBank = type === 'bank',
-            index = event.currentTarget.id.slice(Math.max(0, isBank ? 8 : 17));
+        let splitElement = type === 'bank' ? 'bankSlot' : 'bankInventorySlot',
+            index = parseInt(event.currentTarget.id.split(splitElement)[1]);
 
-        this.game.socket.send(Packets.Bank, [Opcodes.Bank.Select, type, index]);
+        this.game.socket.send(Packets.Container, [
+            Modules.ContainerType.Bank,
+            Opcodes.Container.Select,
+            index,
+            type
+        ]);
     }
 
-    public add(info: ContainerAddData): void {
+    public add(info: Slot | SlotData, containerType?: number): void {
+        if (containerType === undefined) return;
+
+        switch (containerType) {
+            case Modules.ContainerType.Bank:
+                return this.addBank(info);
+
+            case Modules.ContainerType.Inventory:
+                return this.addInventory(info);
+        }
+    }
+
+    public addBank(info: Slot | SlotData): void {
         let item = $(this.getBankList()[info.index]),
             slot = this.container.slots[info.index];
 
         if (!item || !slot) return;
 
-        if (slot.isEmpty()) slot.load(info.string, info.count, info.ability, info.abilityLevel);
+        if (slot.isEmpty()) slot.load(info.key, info.count, info.ability, info.abilityLevel);
 
         slot.setCount(info.count);
 
         let bankSlot = item.find(`#bankSlot${info.index}`),
-            cssSlot = bankSlot.find(`#bankImage${info.index}`),
-            count = bankSlot.find(`#bankItemCount${info.index}`);
+            cssSlot = bankSlot.find(`#bankImage${info.index}`);
 
-        cssSlot.css('background-image', this.container.getImageFormat(info.string));
+        cssSlot.css('background-image', this.container.getImageFormat(info.key));
 
         if (this.scale < 3) cssSlot.css('background-size', '600%');
 
-        if (slot.count > 1) count.text(slot.count);
+        if (slot.count > 1) console.log(bankSlot.find(`#bankItemCount${info.index}`));
+
+        if (slot.count > 1) bankSlot.find(`#bankItemCount${info.index}`).text(slot.count);
     }
 
-    public remove(info: ContainerRemoveData): void {
+    public addInventory(info: Slot | SlotData): void {
+        let item = $(this.getInventoryList()[info.index]);
+
+        if (!item) return;
+
+        let slot = item.find(`#bankInventorySlot${info.index}`),
+            image = slot.find(`#inventoryImage${info.index}`);
+
+        image.css('background-image', this.container.getImageFormat(info.key));
+
+        if (info.count > 1) slot.find(`#inventoryItemCount${info.index}`).text(info.count);
+    }
+
+    public remove(info: SlotData, containerType?: number): void {
+        if (containerType === undefined) return;
+
+        switch (containerType) {
+            case Modules.ContainerType.Bank:
+                return this.removeBank(info);
+
+            case Modules.ContainerType.Inventory:
+                return this.removeInventory(info);
+        }
+
+        // let item = $(this.getBankList()[info.index]),
+        //     slot = this.container.slots[info.index];
+        // if (!item || !slot) return;
+        // let divItem = item.find(`#bankSlot${info.index}`);
+        // slot.count -= info.count;
+        // if (slot.count < 1) {
+        //     divItem.find(`#bankImage${info.index}`).css('background-image', '');
+        //     divItem.find(`#bankItemCount${info.index}`).text('');
+        //     slot.empty();
+        // } else divItem.find(`#bankItemCount${info.index}`).text(slot.count);
+    }
+
+    public removeBank(info: SlotData): void {
         let item = $(this.getBankList()[info.index]),
             slot = this.container.slots[info.index];
 
@@ -198,47 +212,23 @@ export default class Bank {
 
         slot.count -= info.count;
 
-        if (slot.count < 1) {
-            divItem.find(`#bankImage${info.index}`).css('background-image', '');
-            divItem.find(`#bankItemCount${info.index}`).text('');
-
-            slot.empty();
-        } else divItem.find(`#bankItemCount${info.index}`).text(slot.count);
+        divItem.find(`#bankImage${info.index}`).css('background-image', '');
+        divItem.find(`#bankItemCount${info.index}`).text('');
+        slot.empty();
     }
 
-    public addInventory(info: Slot): void {
+    public removeInventory(info: SlotData): void {
         let item = $(this.getInventoryList()[info.index]);
-
         if (!item) return;
-
-        let slot = item.find(`#bankInventorySlot${info.index}`),
-            image = slot.find(`#inventoryImage${info.index}`);
-
-        image.css('background-image', this.container.getImageFormat(info.string));
-
-        if (info.count > 1) slot.find(`#inventoryItemCount${info.index}`).text(info.count);
-    }
-
-    public removeInventory(info: Slot): void {
-        let item = $(this.getInventoryList()[info.index]);
-
-        if (!item) return;
-
         /**
          * All we're doing here is subtracting and updating the count
          * of the items in the inventory first.
          */
 
-        let itemContainer = this.inventoryContainer.slots[info.index],
-            slot = item.find(`#bankInventorySlot${info.index}`),
-            diff = itemContainer.count - info.count;
+        let slot = item.find(`#bankInventorySlot${info.index}`);
 
-        if (diff > 1) slot.find(`#inventoryItemCount${info.index}`).text(diff);
-        else if (diff === 1) slot.find(`#inventoryItemCount${info.index}`).text('');
-        else {
-            slot.find(`#inventoryImage${info.index}`).css('background-image', '');
-            slot.find(`#inventoryItemCount${info.index}`).text('');
-        }
+        slot.find(`#inventoryImage${info.index}`).css('background-image', '');
+        slot.find(`#inventoryItemCount${info.index}`).text('');
     }
 
     public display(): void {

@@ -173,8 +173,6 @@ export default class API {
 
             return;
         }
-
-        console.log(request.body);
     }
 
     private sendChat(

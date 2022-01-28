@@ -559,7 +559,7 @@ export default class Renderer {
     private drawEntityFore(entity: Entity): void {
         if (entity instanceof Character) {
             if (entity.hasWeapon() && !entity.dead && !entity.teleporting) {
-                let weapon = this.entities.getSprite(entity.weapon.getString());
+                let weapon = this.entities.getSprite((entity as Player).weapon.getString());
 
                 if (weapon) {
                     if (!weapon.loaded) weapon.load();

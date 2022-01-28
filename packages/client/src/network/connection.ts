@@ -2,19 +2,18 @@ import _ from 'lodash';
 import { inflate } from 'pako';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 
+import Item from '../entity/objects/item';
 import log from '../lib/log';
 import * as Detect from '../utils/detect';
 
 import type {
     CombatHitData,
     CombatSyncData,
-    ContainerAddData,
     ContainerBatchData,
+    ContainerAddData,
     ContainerRemoveData,
-    EquipmentBatchData,
-    EquipmentEquipData,
-    EquipmentUnequipData,
     ExperienceCombatData,
     MovementFollowData,
     MovementMoveData,
@@ -28,6 +27,7 @@ import type {
     OverlaySetData,
     PointerButtonData,
     PointerLocationData,
+    NPCBankData,
     PointerRelativeData,
     ProfessionBatchData,
     ProfessionUpdateData,
@@ -40,12 +40,10 @@ import type {
     ShopRemoveData,
     ShopSelectData
 } from '@kaetram/common/types/messages';
-import type { AnyEntity } from '../controllers/entities';
+import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
-import type Slot from '../menu/container/slot';
-
 export default class Connection {
     private app;
     private audio;
@@ -121,20 +119,20 @@ export default class Connection {
                     password = registerInfo[1].val(),
                     email = registerInfo[3].val();
 
-                this.socket.send(Packets.Intro, [
-                    Opcodes.Intro.Register,
+                this.socket.send(Packets.Login, [
+                    Opcodes.Login.Register,
                     username,
                     password,
                     email
                 ]);
             } else if (this.app.isGuest())
-                this.socket.send(Packets.Intro, [Opcodes.Intro.Guest, 'n', 'n', 'n']);
+                this.socket.send(Packets.Login, [Opcodes.Login.Guest, '', '']);
             else {
                 let loginInfo = this.app.loginFields,
                     name = loginInfo[0].val() as string,
                     pass = loginInfo[1].val() as string;
 
-                this.socket.send(Packets.Intro, [Opcodes.Intro.Login, name, pass]);
+                this.socket.send(Packets.Login, [Opcodes.Login.Login, name, pass]);
 
                 if (this.game.hasRemember()) {
                     this.storage.data.player.username = name;
@@ -155,65 +153,32 @@ export default class Connection {
 
             this.game.start();
             this.game.postLoad();
+
+            this.menu.loadProfile();
         });
 
         this.messages.onEquipment((opcode, info) => {
             switch (opcode) {
-                case Opcodes.Equipment.Batch: {
-                    _.each(info as EquipmentBatchData, (data) => {
-                        this.game.player.setEquipment(
-                            data.type,
-                            data.name,
-                            data.string,
-                            data.count,
-                            data.ability,
-                            data.abilityLevel,
-                            data.power
-                        );
+                case Opcodes.Equipment.Batch:
+                    _.each((info as SerializedEquipment).equipments, (info) => {
+                        this.game.player.setEquipment(info);
                     });
 
-                    this.menu.loadProfile();
-
                     break;
-                }
 
-                case Opcodes.Equipment.Equip: {
-                    let { type, name, string, count, ability, abilityLevel, power } =
-                        info as EquipmentEquipData;
-
-                    this.game.player.setEquipment(
-                        type,
-                        name,
-                        string,
-                        count,
-                        ability,
-                        abilityLevel,
-                        power
-                    );
-
-                    this.menu.profile.update();
-
+                case Opcodes.Equipment.Equip:
+                    this.game.player.setEquipment(info as EquipmentData);
                     break;
-                }
 
-                case Opcodes.Equipment.Unequip: {
-                    let type = info as EquipmentUnequipData;
-
-                    this.game.player.unequip(type);
-
-                    if (type === 'armour')
-                        this.game.player.setSprite(
-                            this.game.getSprite(this.game.player.getSpriteName())
-                        );
-
-                    this.menu.profile.update();
-
+                case Opcodes.Equipment.Unequip:
+                    this.game.player.unequip(info as Modules.Equipment);
                     break;
-                }
             }
+
+            this.menu.profile.update();
         });
 
-        this.messages.onSpawn((data) => this.entities.create(data as AnyEntity));
+        this.messages.onSpawn((data) => this.entities.create(data as EntityData));
 
         this.messages.onEntityList((data) => {
             let ids = _.map(this.entities.getAll(), 'id'),
@@ -231,45 +196,24 @@ export default class Connection {
         });
 
         this.messages.onSync((data) => {
-            let entity = this.entities.get<Player>(data.id);
+            let entity = this.entities.get<Player>(data.instance);
 
             if (!entity || !entity.isPlayer()) return;
 
-            if (data.hitPoints) {
-                entity.setHitPoints(data.hitPoints);
-                entity.setMaxHitPoints(data.maxHitPoints!);
-            }
+            entity.setHitPoints(data.hitPoints);
+            entity.setMaxHitPoints(data.maxHitPoints!);
 
-            if (data.mana) {
-                entity.mana = data.mana;
-                entity.maxMana = data.maxMana!;
-            }
+            entity.level = data.level;
 
-            if (data.experience!) {
-                entity.experience = data.experience!;
-                entity.level = data.level!;
-            }
+            entity.attackRange = data.attackRange;
 
-            if (data.armour) entity.setSprite(this.game.getSprite(data.armour));
+            //if (data.poison) entity.setPoison(data.poison);
 
-            if (data.weapon)
-                entity.setEquipment(
-                    data.weapon.type,
-                    data.weapon.name,
-                    data.weapon.string,
-                    data.weapon.count,
-                    data.weapon.ability,
-                    data.weapon.abilityLevel,
-                    data.weapon.power
-                );
+            entity.movementSpeed = data.movementSpeed;
 
-            if (data.attackRange) entity.attackRange = data.attackRange;
+            entity.orientation = data.orientation;
 
-            if (data.poison) entity.setPoison(data.poison);
-
-            if (data.movementSpeed) entity.movementSpeed = data.movementSpeed;
-
-            if (data.orientation !== undefined) entity.orientation = data.orientation;
+            if (data.equipments) _.each(data.equipments, entity.setEquipment.bind(entity));
 
             this.menu.profile.update();
         });
@@ -548,12 +492,11 @@ export default class Connection {
         });
 
         this.messages.onProjectile((opcode, info) => {
-            switch (opcode) {
-                case Opcodes.Projectile.Create:
-                    this.entities.create(info as AnyEntity);
-
-                    break;
-            }
+            // switch (opcode) {
+            //     case Opcodes.Projectile.Create:
+            //         this.entities.create(info as EntityData);
+            //         break;
+            // }
         });
 
         this.messages.onPopulation((population) => {
@@ -623,59 +566,33 @@ export default class Connection {
             }
         });
 
-        this.messages.onInventory((opcode, info) => {
+        this.messages.onContainer((opcode, info) => {
+            let containerType: Modules.ContainerType = info.type,
+                container =
+                    containerType === Modules.ContainerType.Inventory
+                        ? this.menu.inventory
+                        : this.menu.bank;
+
             switch (opcode) {
-                case Opcodes.Inventory.Batch: {
-                    let [inventorySize, data] = info as ContainerBatchData;
-
-                    this.menu.loadInventory(inventorySize, data);
-
+                case Opcodes.Container.Batch: {
+                    let { slots } = info as ContainerBatchData;
+                    container.load(slots);
                     break;
                 }
 
-                case Opcodes.Inventory.Add: {
-                    let slot = info as Slot;
+                case Opcodes.Container.Add: {
+                    let { slot } = info as ContainerAddData;
+                    container.add(slot);
 
-                    if (this.menu.bank) this.menu.addInventory(slot);
-
-                    this.menu.inventory?.add(slot);
-
+                    this.menu.bank.add(slot, containerType);
                     break;
                 }
 
-                case Opcodes.Inventory.Remove: {
-                    let slot = info as Slot;
+                case Opcodes.Container.Drop: {
+                    let { slot } = info as ContainerRemoveData;
+                    container.remove(slot, containerType);
 
-                    if (this.menu.bank) this.menu.removeInventory(slot);
-
-                    this.menu.inventory?.remove(slot);
-
-                    break;
-                }
-            }
-        });
-
-        this.messages.onBank((opcode, info) => {
-            switch (opcode) {
-                case Opcodes.Bank.Batch: {
-                    let [bankSize, data] = info as ContainerBatchData;
-
-                    this.menu.loadBank(bankSize, data);
-
-                    break;
-                }
-
-                case Opcodes.Bank.Add: {
-                    if (!this.menu.bank) return;
-
-                    this.menu.bank.add(info as ContainerAddData);
-
-                    break;
-                }
-
-                case Opcodes.Bank.Remove: {
-                    this.menu.bank.remove(info as ContainerRemoveData);
-
+                    this.menu.bank.remove(slot, containerType);
                     break;
                 }
             }
@@ -738,11 +655,9 @@ export default class Connection {
         });
 
         this.messages.onBlink((instance) => {
-            let item = this.entities.get(instance);
+            let item = this.entities.get<Item>(instance);
 
-            if (!item) return;
-
-            item.blink(150);
+            item?.blink(150);
         });
 
         this.messages.onHeal((info) => {
@@ -891,9 +806,16 @@ export default class Connection {
                     break;
                 }
 
-                case Opcodes.NPC.Bank:
+                case Opcodes.NPC.Bank: {
+                    let { slots } = info as NPCBankData;
+
+                    console.log(info);
+
+                    this.menu.bank.load(slots);
+
                     this.menu.bank.display();
                     break;
+                }
 
                 case Opcodes.NPC.Enchant:
                     this.menu.enchant.display();

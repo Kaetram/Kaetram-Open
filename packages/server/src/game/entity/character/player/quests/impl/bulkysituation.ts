@@ -1,8 +1,7 @@
 import { Opcodes } from '@kaetram/common/network';
 
-import Quest from '../quest';
-
 import { Quest as QuestPacket } from '../../../../../../network/packets';
+import Quest from '../quest';
 
 import type NPC from '../../../../npc/npc';
 
@@ -42,15 +41,18 @@ export default class BulkySituation extends Quest {
 
         if (this.stage === this.data.stages) {
             this.finish();
+
             return;
         }
 
-        switch (type) {
-            case 'item':
-                this.player.inventory.remove(this.getItem(), 1);
+        //BRB LOLOLOL
 
-                break;
-        }
+        // switch (type) {
+        //     case 'item':
+        //         this.player.inventory.remove(this.getItem(), 1);
+
+        //         break;
+        // }
 
         this.resetTalkIndex();
 
@@ -72,6 +74,6 @@ export default class BulkySituation extends Quest {
     // }
 
     private hasRequirement(): boolean {
-        return this.getTask() === 'item' && this.player.inventory.contains(this.getItem());
+        return false;
     }
 }
