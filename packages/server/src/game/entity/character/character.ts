@@ -25,7 +25,7 @@ export default abstract class Character extends Entity {
     public hitPoints = new HitPoints(Modules.Defaults.HITPOINTS);
 
     /* States */
-    public poison: string | null = null;
+    public poison = '';
 
     public target: Character | null = null;
 
@@ -192,6 +192,10 @@ export default abstract class Character extends Entity {
         data.movementSpeed = this.movementSpeed;
 
         return data;
+    }
+
+    public hasTarget(): boolean {
+        return !!this.target;
     }
 
     /**

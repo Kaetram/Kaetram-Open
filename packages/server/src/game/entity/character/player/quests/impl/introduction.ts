@@ -87,25 +87,25 @@ export default class Introduction extends Quest {
             return;
         }
 
-        switch (type) {
-            case 'door':
-                if (this.stage === 7)
-                    this.player.inventory.add({
-                        id: 248,
-                        count: 1,
-                        ability: -1,
-                        abilityLevel: -1
-                    });
-                else if (this.stage === 15)
-                    this.player.inventory.add({
-                        id: 87,
-                        count: 1,
-                        ability: -1,
-                        abilityLevel: -1
-                    });
+        // switch (type) {
+        //     case 'door':
+        //         if (this.stage === 7)
+        //             this.player.inventory.add({
+        //                 id: 248,
+        //                 count: 1,
+        //                 ability: -1,
+        //                 abilityLevel: -1
+        //             });
+        //         else if (this.stage === 15)
+        //             this.player.inventory.add({
+        //                 id: 87,
+        //                 count: 1,
+        //                 ability: -1,
+        //                 abilityLevel: -1
+        //             });
 
-                break;
-        }
+        //         break;
+        // }
 
         this.stage++;
 

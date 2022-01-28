@@ -1,17 +1,17 @@
-export default class Equipment {
+export default abstract class Equipment {
     public type!: number;
 
     public constructor(
-        public name: string,
-        public string: string,
-        public count: number,
-        public ability: number,
-        public abilityLevel: number,
-        public power: number | undefined = 0
+        public name = '',
+        public string = '',
+        public count = 1,
+        public ability = -1,
+        public abilityLevel = -1,
+        public power = 1
     ) {}
 
     public exists(): boolean {
-        return this.name !== null && this.name !== 'null';
+        return !!this.string;
     }
 
     // getName(): string {
@@ -40,7 +40,7 @@ export default class Equipment {
         count: number,
         ability: number,
         abilityLevel: number,
-        power?: number
+        power = 1
     ): void {
         this.name = name;
         this.string = string;

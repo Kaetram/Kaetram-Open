@@ -45,14 +45,12 @@ export default class World {
 
     private maxPlayers = config.maxPlayers;
 
-    public allowConnections = false;
-
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
         this.map = new Map(this);
         this.api = new API(this);
-        this.shops = new Shops(this);
+        //this.shops = new Shops(this);
         this.discord = new Discord(this);
         this.entities = new Entities(this);
         this.network = new Network(this);
@@ -66,7 +64,7 @@ export default class World {
     }
 
     /**
-     * A `tick` is a call that occurs every `config.tickPeriod` milliseconds.
+     * A `tick` is a call that occurs every `config.updateTime` milliseconds.
      * This function underlines how fast (or how slow) we parse through packets.
      */
 
@@ -77,7 +75,7 @@ export default class World {
         setIntervalAsync(async () => {
             this.network.parse();
             this.map.regions.parse();
-        }, 1000 / config.tickPeriod);
+        }, 1000 / config.updateTime);
 
         if (!config.hubEnabled) return;
         if (!config.apiEnabled) log.error('Server is in hub-mode but API is not enabled!');
@@ -207,7 +205,7 @@ export default class World {
             if (!ignoreDrops) {
                 let drop = mob.getDrop();
 
-                if (drop) this.entities.dropItem(drop.id, drop.count, deathX, deathY);
+                if (drop) this.entities.spawnItem(drop.key, deathX, deathY, true, drop.count);
             }
         } else if (character.isPlayer()) {
             let player = character as Player;
@@ -215,6 +213,15 @@ export default class World {
             player.die();
         }
     }
+
+    /**
+     * Broadcasts a chat packet to all the players logged in.
+     * @param source Who is sending the message.
+     * @param message The contents of the broadcast.
+     * @param colour The message's colour.
+     * @param isGlobal Whether we display the chat as a global message.
+     * @param withBubble Whether to display a bubble above the player.
+     */
 
     public globalMessage(
         source: string,
@@ -234,18 +241,37 @@ export default class World {
         });
     }
 
+    /**
+     * Iterates through all the entities and removes the `character`
+     * parameter from their attackers list. We call this function
+     * when the `character` logs out or dies.
+     * @param character The character we are removing from other entity's character.
+     */
+
     public cleanCombat(character: Character): void {
         this.entities.forEachEntity((entity: Entity) => {
             if (entity.instance !== character.instance) return;
 
-            if (entity instanceof Character && entity.combat.hasAttacker(entity))
-                entity.combat.removeAttacker(entity);
+            if (entity instanceof Character && entity.combat.hasAttacker(character))
+                entity.combat.removeAttacker(character);
         });
     }
 
+    /**
+     * Checks if the user is logged in.
+     * @param username The username of the player we are checking.
+     * @returns Boolean of whether user is online.
+     */
+
     public isOnline(username: string): boolean {
-        return this.entities.isOnline(username);
+        return !!this.getPlayerByName(username);
     }
+
+    /**
+     * Grabs and returns a player instance based on its username.
+     * @param username The username of the player.
+     * @returns The player instance.
+     */
 
     public getPlayerByName(username: string): Player {
         return this.entities.getPlayer(username) as Player;

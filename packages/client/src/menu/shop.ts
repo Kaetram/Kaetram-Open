@@ -130,57 +130,43 @@ export default class Shop {
     }
 
     private load(): void {
-        for (let i = 0; i < this.container.size; i++) {
-            let shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`),
-                string = this.data.strings[i],
-                name = this.data.names[i],
-                count = this.data.counts[i],
-                price = this.data.prices[i];
-
-            if (!string || !name || !count) continue;
-
-            let itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`),
-                itemCount = $(`<div id="shopItemCount${i}" class="shopItemCount"></div>`),
-                itemPrice = $(`<div id="shopItemPrice${i}" class="shopItemPrice"></div>`),
-                itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`),
-                itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
-
-            itemImage.css('background-image', this.container.getImageFormat(string));
-            itemCount.html(count.toString());
-            itemPrice.html(`${price}g`);
-            itemName.html(name);
-            itemBuy.html('Buy');
-
-            this.container.setSlot(i, {
-                string,
-                count
-            });
-
-            // Bind the itemBuy to the local buy function.
-            itemBuy.on('click', (event) => this.buy(event));
-
-            let listItem = $('<li></li>');
-
-            shopItem.append(itemImage, itemCount, itemPrice, itemName, itemBuy);
-
-            listItem.append(shopItem);
-
-            this.getShopList().append(listItem);
-        }
-
-        let inventoryItems = this.menu.bank.getInventoryList(),
-            inventorySize = this.menu.inventory.getSize();
-
-        for (let j = 0; j < inventorySize; j++) {
-            let item = $(inventoryItems[j]).clone(),
-                slot = item.find(`#bankInventorySlot${j}`);
-
-            slot.attr('id', `shopInventorySlot${j}`);
-
-            slot.on('click', (event) => this.select(event));
-
-            this.getInventoryList().append(slot);
-        }
+        // for (let i = 0; i < this.container.size; i++) {
+        //     let shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`),
+        //         string = this.data.strings[i],
+        //         name = this.data.names[i],
+        //         count = this.data.counts[i],
+        //         price = this.data.prices[i];
+        //     if (!string || !name || !count) continue;
+        //     let itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`),
+        //         itemCount = $(`<div id="shopItemCount${i}" class="shopItemCount"></div>`),
+        //         itemPrice = $(`<div id="shopItemPrice${i}" class="shopItemPrice"></div>`),
+        //         itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`),
+        //         itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
+        //     itemImage.css('background-image', this.container.getImageFormat(string));
+        //     itemCount.html(count.toString());
+        //     itemPrice.html(`${price}g`);
+        //     itemName.html(name);
+        //     itemBuy.html('Buy');
+        //     this.container.setSlot(i, {
+        //         string,
+        //         count
+        //     });
+        //     // Bind the itemBuy to the local buy function.
+        //     itemBuy.on('click', (event) => this.buy(event));
+        //     let listItem = $('<li></li>');
+        //     shopItem.append(itemImage, itemCount, itemPrice, itemName, itemBuy);
+        //     listItem.append(shopItem);
+        //     this.getShopList().append(listItem);
+        // }
+        // let inventoryItems = this.menu.bank.getInventoryList(),
+        //     inventorySize = this.menu.inventory.getSize();
+        // for (let j = 0; j < inventorySize; j++) {
+        //     let item = $(inventoryItems[j]).clone(),
+        //         slot = item.find(`#bankInventorySlot${j}`);
+        //     slot.attr('id', `shopInventorySlot${j}`);
+        //     slot.on('click', (event) => this.select(event));
+        //     this.getInventoryList().append(slot);
+        // }
     }
 
     private reset(): void {

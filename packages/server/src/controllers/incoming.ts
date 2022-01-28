@@ -7,21 +7,22 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Creator from '../database/mongodb/creator';
-import Items from '../info/items';
 import Commands from './commands';
 
-import type { EquipmentType } from '@kaetram/common/types/info';
 import type Character from '../game/entity/character/character';
 import type Mob from '../game/entity/character/mob/mob';
-import type Slot from '../game/entity/character/player/containers/slot';
-import type { EnchantType } from '../game/entity/character/player/enchant';
-import type { ItemData } from '../game/entity/character/player/equipment/equipment';
 import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
 import type Projectile from '../game/entity/objects/projectile';
 import { Chat, Combat, Equipment, Movement, Notification, Shop, Spawn } from '../network/packets';
 import Respawn from '../network/packets/respawn';
+import Item from '../game/entity/objects/item';
+import Entity from '../game/entity/entity';
+import { Door } from '../game/entity/character/player/doors';
+import { SlotData, SlotType } from '@kaetram/common/types/slot';
+
+type PacketData = ((string | string[]) | number | boolean)[];
 
 export default class Incoming {
     private connection;
@@ -29,8 +30,6 @@ export default class Incoming {
     private entities;
     private database;
     private commands;
-
-    private introduced = false;
 
     public constructor(private player: Player) {
         this.connection = player.connection;
@@ -50,8 +49,8 @@ export default class Incoming {
             player.refreshTimeout();
 
             switch (packet) {
-                case Packets.Intro:
-                    return this.handleIntro(message);
+                case Packets.Login:
+                    return this.handleLogin(message);
 
                 case Packets.Ready:
                     return this.handleReady(message);
@@ -86,11 +85,8 @@ export default class Incoming {
                 case Packets.Command:
                     return this.handleCommand(message);
 
-                case Packets.Inventory:
-                    return this.handleInventory(message);
-
-                case Packets.Bank:
-                    return this.handleBank(message);
+                case Packets.Container:
+                    return this.handleContainer(message);
 
                 case Packets.Respawn:
                     return this.handleRespawn(message);
@@ -119,81 +115,54 @@ export default class Incoming {
         });
     }
 
-    private handleIntro(message: [Opcodes.Intro, string, string, string]): void {
-        let [loginType, username, password] = message,
-            isRegistering = loginType === Opcodes.Intro.Register,
-            isGuest = loginType === Opcodes.Intro.Guest,
-            email = isRegistering ? message[3] : '',
-            formattedUsername = username
-                ? username.charAt(0).toUpperCase() + username.toLowerCase().slice(1)
-                : '';
+    /**
+     * Handles the login process for Kaetram.
+     * @param data The packet data for the login. Generally contains
+     * username, password, (email if registering). If it's a guest login,
+     * then we proceed with no username/password and no database saving.
+     */
 
-        this.player.username = formattedUsername.slice(0, 32).trim().toLowerCase();
+    private handleLogin(data: PacketData): void {
+        let opcode = data.shift(),
+            username = data.shift() as string,
+            password = data.shift() as string;
+
+        // Format username by making it all lower case, shorter than 32 characters, and no spaces.
+        this.player.username = username.toLowerCase().slice(0, 32).trim();
         this.player.password = password.slice(0, 32);
-        this.player.email = email.slice(0, 128).toLowerCase();
 
-        if (this.introduced) return;
+        // Reject connection if player is already logged in.
+        if (this.world.isOnline(this.player.username)) return this.connection.reject('loggedin');
 
-        if (this.world.isOnline(this.player.username)) {
-            this.connection.sendUTF8('loggedin');
-            this.connection.close('Player already logged in..');
-            return;
+        // Proceed directly to login with default player data if skip database is present.
+        if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
+
+        switch (opcode) {
+            case Opcodes.Login.Login:
+                return this.database.login(this.player);
+
+            case Opcodes.Login.Register:
+                this.player.email = data.shift() as string;
+
+                return this.database.register(this.player);
+
+            case Opcodes.Login.Guest:
+                break;
         }
-
-        if (config.overrideAuth) {
-            this.database.login(this.player);
-            return;
-        }
-
-        if (config.offlineMode) {
-            this.player.load(Creator.getFullData(this.player));
-            this.player.intro();
-
-            return;
-        }
-
-        this.introduced = true;
-
-        if (isRegistering)
-            this.database.exists(this.player, (result) => {
-                if (result.exists) {
-                    this.connection.sendUTF8(`${result.type}exists`);
-                    this.connection.close(`${result.type} is not available.`);
-                } else this.database.register(this.player);
-            });
-        else if (isGuest) {
-            this.player.username = `Guest${Utils.randomInt(0, 2_000_000)}`;
-            this.player.password = null!;
-            this.player.email = null!;
-            this.player.isGuest = true;
-
-            this.database.login(this.player);
-        } else
-            this.database.verify(this.player, (result) => {
-                if (result.status === 'success') this.database.login(this.player);
-                else {
-                    this.connection.sendUTF8('invalidlogin');
-                    this.connection.close(`Wrong password entered for: ${this.player.username}`);
-                }
-            });
     }
 
     private handleReady(message: [string, string, string]): void {
-        let [isReady, preloadedData, userAgent] = message;
-
-        if (!isReady) return;
+        let [, preloadedData, userAgent] = message;
 
         if (this.player.regionsLoaded.length > 0 && !preloadedData) this.player.regionsLoaded = [];
 
-        this.player.ready = true;
+        this.player.loadEquipment();
+        this.player.loadInventory();
+        this.player.loadBank();
 
         //this.world.regions.syncRegions(this.player);
 
-        this.player.sendEquipment();
-
-        this.player.loadInventory();
         this.player.loadQuests();
-        this.player.loadBank();
 
         if (this.world.map.isOutOfBounds(this.player.x, this.player.y))
             this.player.setPosition(50, 89);
@@ -205,13 +174,6 @@ export default class Incoming {
             this.player.updateRegion(true);
         }
 
-        if (this.player.new || config.offlineMode) {
-            this.player.questsLoaded = true;
-            this.player.achievementsLoaded = true;
-        }
-
-        this.player.save();
-
         if (config.discordEnabled)
             this.world.discord.sendWebhook(this.player.username, 'has logged in!');
 
@@ -221,6 +183,8 @@ export default class Incoming {
         this.player.readyCallback?.();
 
         this.player.sync();
+
+        this.player.ready = true;
     }
 
     private handleWho(message: string[]): void {
@@ -252,185 +216,195 @@ export default class Incoming {
         });
     }
 
-    private handleEquipment(message: [Opcodes.Equipment, EquipmentType]): void {
-        let [opcode, type] = message;
+    private handleEquipment(packet: PacketData): void {
+        let opcode = packet.shift() as Opcodes.Equipment,
+            type = packet.shift() as Modules.Equipment;
 
         switch (opcode) {
-            case Opcodes.Equipment.Unequip: {
-                if (!this.player.inventory.hasSpace()) {
-                    this.player.send(
-                        new Notification(Opcodes.Notification.Text, {
-                            message: 'You do not have enough space in your inventory.'
-                        })
-                    );
-                    return;
-                }
-
-                switch (type) {
-                    case 'weapon':
-                        if (!this.player.hasWeapon()) return;
-
-                        this.player.inventory.add(this.player.weapon.getItem());
-                        this.player.setWeapon(-1, -1, -1, -1);
-
-                        break;
-
-                    case 'armour':
-                        if (this.player.hasArmour() && this.player.armour.id === 114) return;
-
-                        this.player.inventory.add(this.player.armour.getItem());
-                        this.player.setArmour(114, 1, -1, -1);
-
-                        break;
-
-                    case 'pendant':
-                        if (!this.player.hasPendant()) return;
-
-                        this.player.inventory.add(this.player.pendant.getItem());
-                        this.player.setPendant(-1, -1, -1, -1);
-
-                        break;
-
-                    case 'ring':
-                        if (!this.player.hasRing()) return;
-
-                        this.player.inventory.add(this.player.ring.getItem());
-                        this.player.setRing(-1, -1, -1, -1);
-
-                        break;
-
-                    case 'boots':
-                        if (!this.player.hasBoots()) return;
-
-                        this.player.inventory.add(this.player.boots.getItem());
-                        this.player.setBoots(-1, -1, -1, -1);
-
-                        break;
-                }
-
-                this.player.send(new Equipment(Opcodes.Equipment.Unequip, type));
-
-                break;
-            }
+            case Opcodes.Equipment.Unequip:
+                return this.player.equipment.unequip(type);
         }
+
+        // let [opcode, type] = message;
+
+        // switch (opcode) {
+        //     case Opcodes.Equipment.Unequip: {
+        //         if (!this.player.inventory.hasSpace()) {
+        //             this.player.send(
+        //                 new Notification(Opcodes.Notification.Text, {
+        //                     message: 'You do not have enough space in your inventory.'
+        //                 })
+        //             );
+        //             return;
+        //         }
+
+        //         // switch (type) {
+        //         //     case 'weapon':
+        //         //         if (!this.player.hasWeapon()) return;
+
+        //         //         this.player.inventory.add(this.player.weapon.getItem());
+        //         //         this.player.setWeapon(-1, -1, -1, -1);
+
+        //         //         break;
+
+        //         //     case 'armour':
+        //         //         if (this.player.hasArmour() && this.player.armour.id === 114) return;
+
+        //         //         this.player.inventory.add(this.player.armour.getItem());
+        //         //         this.player.setArmour(114, 1, -1, -1);
+
+        //         //         break;
+
+        //         //     case 'pendant':
+        //         //         if (!this.player.hasPendant()) return;
+
+        //         //         this.player.inventory.add(this.player.pendant.getItem());
+        //         //         this.player.setPendant(-1, -1, -1, -1);
+
+        //         //         break;
+
+        //         //     case 'ring':
+        //         //         if (!this.player.hasRing()) return;
+
+        //         //         this.player.inventory.add(this.player.ring.getItem());
+        //         //         this.player.setRing(-1, -1, -1, -1);
+
+        //         //         break;
+
+        //         //     case 'boots':
+        //         //         if (!this.player.hasBoots()) return;
+
+        //         //         this.player.inventory.add(this.player.boots.getItem());
+        //         //         this.player.setBoots(-1, -1, -1, -1);
+
+        //         //         break;
+        //         // }
+
+        //         this.player.send(new Equipment(Opcodes.Equipment.Unequip, type));
+
+        //         break;
+        //     }
+        // }
     }
 
-    private handleMovement(message: [Opcodes.Movement, ...unknown[]]): void {
-        let [opcode] = message,
-            orientation: number;
+    private handleMovement(packet: PacketData): void {
+        let opcode = packet.shift() as Opcodes.Movement,
+            orientation: Modules.Orientation,
+            requestX: number,
+            requestY: number,
+            playerX: number,
+            playerY: number,
+            movementSpeed: number,
+            hasTarget: boolean,
+            targetInstance: string,
+            entity: Entity,
+            door: Door | undefined,
+            diff: number;
 
-        if (!this.player || this.player.dead) return;
+        if (this.player.dead) return;
 
         switch (opcode) {
-            case Opcodes.Movement.Request: {
-                let requestX = message[1] as number,
-                    requestY = message[2] as number;
+            case Opcodes.Movement.Request:
+                requestX = packet.shift() as number;
+                requestY = packet.shift() as number;
 
                 this.preventNoClip(requestX, requestY);
 
                 this.player.movementStart = Date.now();
 
                 break;
-            }
 
-            case Opcodes.Movement.Started: {
-                let selectedX = message[1] as number,
-                    selectedY = message[2] as number,
-                    pX = message[3] as number,
-                    pY = message[4] as number,
-                    movementSpeed = message[5] as number,
-                    targetId = message[6] as number;
+            case Opcodes.Movement.Started:
+                requestX = packet.shift() as number;
+                requestY = packet.shift() as number;
+                playerX = packet.shift() as number;
+                playerY = packet.shift() as number;
+                movementSpeed = packet.shift() as number;
+                targetInstance = packet.shift() as string;
 
-                if (!movementSpeed || movementSpeed !== this.player.movementSpeed)
-                    this.player.incrementCheatScore(1);
+                if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
 
                 if (
-                    pX !== this.player.x ||
-                    pY !== this.player.y ||
+                    playerX !== this.player.x ||
+                    playerY !== this.player.y ||
                     this.player.stunned ||
-                    !this.preventNoClip(selectedX, selectedY)
+                    !this.preventNoClip(requestX, requestY)
                 )
                     return;
 
-                if (!targetId) {
-                    this.player.removeTarget();
-                    this.player.combat.stop();
-                }
+                if (!targetInstance) this.player.combat.stop();
 
                 this.player.moving = true;
 
                 break;
-            }
 
-            case Opcodes.Movement.Step: {
-                let x = message[1] as number,
-                    y = message[2] as number;
+            case Opcodes.Movement.Step:
+                playerX = packet.shift() as number;
+                playerY = packet.shift() as number;
 
-                if (this.player.stunned || !this.preventNoClip(x, y)) return;
+                if (this.player.stunned || !this.preventNoClip(playerX, playerY)) return;
 
-                this.player.setPosition(x, y);
+                this.player.setPosition(playerX, playerY);
 
                 break;
-            }
 
-            case Opcodes.Movement.Stop: {
-                let posX = message[1] as number,
-                    posY = message[2] as number,
-                    id = message[3] as string,
-                    hasTarget = message[4] as number,
-                    entity = this.entities.get(id);
+            case Opcodes.Movement.Stop:
+                playerX = packet.shift() as number;
+                playerY = packet.shift() as number;
+                targetInstance = packet.shift() as string;
+                hasTarget = !!(packet.shift() as number);
+
+                entity = this.entities.get(targetInstance);
 
                 if (!this.player.moving) {
-                    log.debug(`Did not receive movement start packet for ${this.player.username}.`);
+                    log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
 
                     this.player.incrementCheatScore(1);
                 }
 
-                orientation = message[5] as number;
+                orientation = packet.shift() as number;
 
-                if (entity && entity.isItem())
-                    this.player.inventory.add(entity as unknown as ItemData);
+                if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
-                if (this.world.map.isDoor(posX, posY) && !hasTarget) {
-                    let door = this.player.doors.getDoor(posX, posY);
+                if (this.world.map.isDoor(playerX, playerY) && !hasTarget) {
+                    door = this.player.doors.getDoor(playerX, playerY);
 
                     if (door && this.player.doors.isClosed(door)) return;
 
-                    let destination = this.world.map.getDoorByPosition(posX, posY);
+                    let destination = this.world.map.getDoorByPosition(playerX, playerY);
 
                     this.player.teleport(destination.x, destination.y, true);
                 } else {
-                    this.player.setPosition(posX, posY);
+                    this.player.setPosition(playerX, playerY);
                     this.player.setOrientation(orientation);
                 }
 
                 this.player.moving = false;
                 this.player.lastMovement = Date.now();
 
-                let diff = this.player.lastMovement - this.player.movementStart;
+                diff = this.player.lastMovement - this.player.movementStart;
 
                 if (diff < this.player.movementSpeed) this.player.incrementCheatScore(1);
 
                 break;
-            }
 
-            case Opcodes.Movement.Entity: {
-                let instance = message[1] as string,
-                    entityX = message[2] as number,
-                    entityY = message[3] as number,
-                    oEntity = this.entities.get<Character>(instance);
+            case Opcodes.Movement.Entity:
+                targetInstance = packet.shift() as string;
+                requestX = packet.shift() as number;
+                requestY = packet.shift() as number;
 
-                if (!oEntity || (oEntity.x === entityX && oEntity.y === entityY)) return;
+                entity = this.entities.get(targetInstance) as Character;
 
-                oEntity.setPosition(entityX, entityY);
+                if (!entity || (entity.x === requestX && entity.y === requestY)) return;
 
-                if (oEntity.target) oEntity.combat.forceAttack();
+                entity.setPosition(requestX, requestY);
+
+                if ((entity as Character).hasTarget()) entity.combat.forceAttack();
 
                 break;
-            }
 
             case Opcodes.Movement.Orientate:
-                orientation = message[1] as number;
+                orientation = packet.shift() as number;
 
                 this.player.sendToRegions(
                     new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
@@ -439,22 +413,14 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Freeze:
-                /**
-                 * Just used to prevent player from following entities in combat.
-                 * This is primarily for the 'hold-position' functionality.
-                 */
-
-                this.player.frozen = message[1] as boolean;
-
+                this.player.frozen = packet.shift() as boolean;
                 break;
 
-            case Opcodes.Movement.Zone: {
-                let direction = message[1] as number;
+            case Opcodes.Movement.Zone:
+                orientation = packet.shift() as number;
 
-                log.debug(`Zoning detected, direction: ${direction}.`);
-
+                log.debug(`Zoning orientation: ${orientation}`);
                 break;
-            }
         }
     }
 
@@ -493,7 +459,7 @@ export default class Incoming {
             }
 
             case Opcodes.Target.Attack: {
-                let target = this.entities.get<Character>(instance);
+                let target = this.entities.get(instance) as Character;
 
                 if (!target || target.dead || !this.canAttack(this.player, target)) return;
 
@@ -516,7 +482,7 @@ export default class Incoming {
                 break;
 
             case Opcodes.Target.Object: {
-                let target = this.entities.get<Character>(instance);
+                let target = this.entities.get(instance) as Character;
 
                 this.player.setTarget(target);
                 this.player.handleObject(instance);
@@ -531,8 +497,8 @@ export default class Incoming {
 
         switch (opcode) {
             case Opcodes.Combat.Initiate: {
-                let attacker = this.entities.get<Character>(message[1]),
-                    target = this.entities.get<Character>(message[2]);
+                let attacker = this.entities.get(message[1]) as Character,
+                    target = this.entities.get(message[2]) as Character;
 
                 if (
                     !target ||
@@ -564,8 +530,8 @@ export default class Incoming {
 
         switch (type) {
             case Opcodes.Projectile.Impact: {
-                let projectile = this.entities.get<Projectile>(message[1]),
-                    target = this.entities.get<Mob>(message[2]);
+                let projectile = this.entities.get(message[1]) as Projectile,
+                    target = this.entities.get(message[2]) as Mob;
 
                 if (!target || target.dead || !projectile) return;
 
@@ -654,108 +620,109 @@ export default class Incoming {
         }
     }
 
-    private handleInventory(message: [Opcodes.Inventory, ...unknown[]]): void {
-        let [opcode] = message,
-            id!: number,
-            ability!: number,
-            abilityLevel!: number;
+    private handleContainer(packet: PacketData): void {
+        let type = packet.shift() as Modules.ContainerType,
+            opcode = packet.shift() as Opcodes.Container,
+            container =
+                type === Modules.ContainerType.Inventory ? this.player.inventory : this.player.bank,
+            index: number,
+            count = 1;
+
+        log.debug(`Received container packet: ${opcode} - ${type}.`);
 
         switch (opcode) {
-            case Opcodes.Inventory.Remove: {
-                let item = message[1] as Slot,
-                    count!: number;
+            case Opcodes.Container.Drop:
+                index = packet.shift() as number;
+                count = packet.shift() as number;
 
-                if (!item) return;
+                log.debug(`Removing slot index: ${index} - count: ${count}`);
 
-                if (item.count > 1) count = message[2] as number;
-
-                id = Items.stringToId(item.string)!;
-
-                let iSlot = this.player.inventory.slots[item.index];
-
-                if (iSlot.id < 1) return;
-
-                if (count > iSlot.count) ({ count } = iSlot);
-
-                ({ ability, abilityLevel } = iSlot);
-
-                if (this.player.inventory.remove(id, count || item.count, item.index))
-                    this.entities.dropItem(
-                        id,
-                        count || 1,
-                        this.player.x,
-                        this.player.y,
-                        ability,
-                        abilityLevel
-                    );
+                container.remove(index, count, true);
 
                 break;
-            }
 
-            case Opcodes.Inventory.Select: {
-                let index = message[1] as number,
-                    slot = this.player.inventory.slots[index],
-                    { string, count, equippable, edible } = slot;
-
-                if (!slot || slot.id < 1) return;
-
-                id = Items.stringToId(string)!;
-
-                if (equippable) {
-                    if (!this.player.canEquip(string)) return;
-
-                    this.player.inventory.remove(id, count, slot.index);
-
-                    this.player.equip(string, count, ability, abilityLevel);
-                } else if (edible) {
-                    this.player.inventory.remove(id, 1, slot.index);
-
-                    this.player.eat(id);
-                }
-
-                break;
-            }
+            case Opcodes.Container.Select:
+                return this.player.handleContainerSelect(
+                    container,
+                    packet.shift() as number, // index
+                    packet.shift() as SlotType // slot type if clicked in bank.
+                );
         }
+
+        // let [opcode] = message,
+        //     id!: number,
+        //     ability!: number,
+        //     abilityLevel!: number;
+        // switch (opcode) {
+        //     case Opcodes.Inventory.Remove: {
+        //         let item = message[1] as Slot,
+        //             count!: number;
+        //         if (!item) return;
+        //         if (item.count > 1) count = message[2] as number;
+        //         let iSlot = this.player.inventory.slots[item.index];
+        //         if (iSlot.id < 1) return;
+        //         if (count > iSlot.count) ({ count } = iSlot);
+        //         ({ ability, abilityLevel } = iSlot);
+        //         if (this.player.inventory.remove(id, count || item.count, item.index))
+        //             this.entities.spawnItem(
+        //                 item.string,
+        //                 this.player.x,
+        //                 this.player.y,
+        //                 true,
+        //                 count,
+        //                 ability,
+        //                 abilityLevel
+        //             );
+        //         break;
+        //     }
+        //     case Opcodes.Inventory.Select: {
+        //         let index = message[1] as number,
+        //             slot = this.player.inventory.slots[index],
+        //             { string, count, equippable, edible } = slot;
+        //         if (!slot || slot.id < 1) return;
+        //         id = Items.stringToId(string)!;
+        //         if (equippable) {
+        //             if (!this.player.canEquip(string)) return;
+        //             this.player.inventory.remove(id, count, slot.index);
+        //             this.player.equipment.equip(id, count, ability, abilityLevel);
+        //         } else if (edible) {
+        //             this.player.inventory.remove(id, 1, slot.index);
+        //             this.player.eat(id);
+        //         }
+        //         break;
+        //     }
+        // }
     }
 
-    private handleBank(message: [Opcodes.Bank, string, number]): void {
-        let [opcode, type, index] = message;
-
-        switch (opcode) {
-            case Opcodes.Bank.Select: {
-                let isBank = type === 'bank';
-
-                if (isBank) {
-                    let bankSlot = this.player.bank.getInfo(index);
-
-                    if (bankSlot.id < 1) return;
-
-                    // Infinite stacks move all at once, otherwise move one by one.
-                    let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
-
-                    bankSlot.count = moveAmount;
-
-                    if (this.player.inventory.add(bankSlot))
-                        this.player.bank.remove(bankSlot.id, moveAmount, index);
-                } else {
-                    let inventorySlot = this.player.inventory.slots[index];
-
-                    if (inventorySlot.id < 1) return;
-
-                    if (
-                        this.player.bank.add(
-                            inventorySlot.id,
-                            inventorySlot.count,
-                            inventorySlot.ability,
-                            inventorySlot.abilityLevel
-                        )
-                    )
-                        this.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
-                }
-
-                break;
-            }
-        }
+    private handleBank(packet: PacketData): void {
+        // let [opcode, type, index] = message;
+        // switch (opcode) {
+        //     case Opcodes.Bank.Select: {
+        //         let isBank = type === 'bank';
+        //         if (isBank) {
+        //             let bankSlot = this.player.bank.getInfo(index);
+        //             if (bankSlot.id < 1) return;
+        //             // Infinite stacks move all at once, otherwise move one by one.
+        //             let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
+        //             bankSlot.count = moveAmount;
+        //             if (this.player.inventory.add(bankSlot))
+        //                 this.player.bank.remove(bankSlot.id, moveAmount, index);
+        //         } else {
+        //             let inventorySlot = this.player.inventory.slots[index];
+        //             if (inventorySlot.id < 1) return;
+        //             if (
+        //                 this.player.bank.add(
+        //                     inventorySlot.id,
+        //                     inventorySlot.count,
+        //                     inventorySlot.ability,
+        //                     inventorySlot.abilityLevel
+        //                 )
+        //             )
+        //                 this.player.inventory.remove(inventorySlot.id, inventorySlot.count, index);
+        //         }
+        //         break;
+        //     }
+        // }
     }
 
     private handleRespawn(message: [string]): void {
@@ -794,33 +761,24 @@ export default class Incoming {
     }
 
     private handleEnchant(message: [Opcodes.Enchant, unknown]): void {
-        let [opcode] = message;
-
-        switch (opcode) {
-            case Opcodes.Enchant.Select: {
-                let index = message[1] as number,
-                    item = this.player.inventory.slots[index],
-                    type: EnchantType = 'item';
-
-                if (item.id < 1) return;
-
-                if (Items.isShard(item.id)) type = 'shards';
-
-                this.player.enchant.add(type, item);
-
-                break;
-            }
-
-            case Opcodes.Enchant.Remove:
-                this.player.enchant.remove(message[1] as EnchantType);
-
-                break;
-
-            case Opcodes.Enchant.Enchant:
-                this.player.enchant.enchant();
-
-                break;
-        }
+        // let [opcode] = message;
+        // switch (opcode) {
+        //     case Opcodes.Enchant.Select: {
+        //         let index = message[1] as number,
+        //             item = this.player.inventory.slots[index],
+        //             type: EnchantType = 'item';
+        //         if (item.id < 1) return;
+        //         if (Items.isShard(item.id)) type = 'shards';
+        //         this.player.enchant.add(type, item);
+        //         break;
+        //     }
+        //     case Opcodes.Enchant.Remove:
+        //         this.player.enchant.remove(message[1] as EnchantType);
+        //         break;
+        //     case Opcodes.Enchant.Enchant:
+        //         this.player.enchant.enchant();
+        //         break;
+        // }
     }
 
     private handleClick(message: [string, boolean]): void {
@@ -851,90 +809,67 @@ export default class Incoming {
     }
 
     private handleShop(message: [Opcodes.Shop, number, ...unknown[]]): void {
-        let [opcode, npcId] = message;
-
-        switch (opcode) {
-            case Opcodes.Shop.Buy: {
-                let buyId = message[2] as number,
-                    amount = message[3] as number;
-
-                if (!buyId || !amount) {
-                    this.player.notify('Incorrect purchase packets.');
-                    return;
-                }
-
-                log.debug(`Received Buy: ${npcId} ${buyId} ${amount}`);
-
-                this.world.shops.buy(this.player, npcId, buyId, amount);
-
-                break;
-            }
-
-            case Opcodes.Shop.Sell:
-                if (!this.player.selectedShopItem) {
-                    this.player.notify('No item has been selected.');
-                    return;
-                }
-
-                this.world.shops.sell(this.player, npcId, this.player.selectedShopItem.index);
-
-                break;
-
-            case Opcodes.Shop.Select: {
-                let id = message[2] as string;
-
-                if (!id) {
-                    this.player.notify('Incorrect purchase packets.');
-                    return;
-                }
-
-                let slotId = parseInt(id),
-                    /**
-                     * Though all this could be done client-sided
-                     * it's just safer to send it to the server to sanitize data.
-                     * It also allows us to add cheat checks in the future
-                     * or do some fancier stuff.
-                     */
-
-                    item = this.player.inventory.slots[slotId];
-
-                if (!item || item.id < 1) return;
-
-                if (this.player.selectedShopItem) this.world.shops.remove(this.player);
-
-                let currency = this.world.shops.getCurrency(npcId);
-
-                if (!currency) return;
-
-                this.player.send(
-                    new Shop(Opcodes.Shop.Select, {
-                        id: npcId,
-                        slotId,
-                        currency: Items.idToString(currency),
-                        price: this.world.shops.getSellPrice(npcId, item.id)
-                    })
-                );
-
-                this.player.selectedShopItem = {
-                    id: npcId,
-                    index: item.index
-                };
-
-                log.debug(`Received Select: ${npcId} ${slotId}`);
-
-                break;
-            }
-
-            case Opcodes.Shop.Remove:
-                this.world.shops.remove(this.player);
-
-                break;
-        }
+        // let [opcode, npcId] = message;
+        // switch (opcode) {
+        //     case Opcodes.Shop.Buy: {
+        //         let buyId = message[2] as number,
+        //             amount = message[3] as number;
+        //         if (!buyId || !amount) {
+        //             this.player.notify('Incorrect purchase packets.');
+        //             return;
+        //         }
+        //         log.debug(`Received Buy: ${npcId} ${buyId} ${amount}`);
+        //         this.world.shops.buy(this.player, npcId, buyId, amount);
+        //         break;
+        //     }
+        //     case Opcodes.Shop.Sell:
+        //         if (!this.player.selectedShopItem) {
+        //             this.player.notify('No item has been selected.');
+        //             return;
+        //         }
+        //         this.world.shops.sell(this.player, npcId, this.player.selectedShopItem.index);
+        //         break;
+        //     case Opcodes.Shop.Select: {
+        //         let id = message[2] as string;
+        //         if (!id) {
+        //             this.player.notify('Incorrect purchase packets.');
+        //             return;
+        //         }
+        //         let slotId = parseInt(id),
+        //             /**
+        //              * Though all this could be done client-sided
+        //              * it's just safer to send it to the server to sanitize data.
+        //              * It also allows us to add cheat checks in the future
+        //              * or do some fancier stuff.
+        //              */
+        //             item = this.player.inventory.slots[slotId];
+        //         if (!item || item.id < 1) return;
+        //         if (this.player.selectedShopItem) this.world.shops.remove(this.player);
+        //         let currency = this.world.shops.getCurrency(npcId);
+        //         if (!currency) return;
+        //         this.player.send(
+        //             new Shop(Opcodes.Shop.Select, {
+        //                 id: npcId,
+        //                 slotId,
+        //                 currency: Items.idToString(currency),
+        //                 price: this.world.shops.getSellPrice(npcId, item.id)
+        //             })
+        //         );
+        //         this.player.selectedShopItem = {
+        //             id: npcId,
+        //             index: item.index
+        //         };
+        //         log.debug(`Received Select: ${npcId} ${slotId}`);
+        //         break;
+        //     }
+        //     case Opcodes.Shop.Remove:
+        //         this.world.shops.remove(this.player);
+        //         break;
+        // }
     }
 
     private handleCamera(message: string[]): void {
         log.info(`${this.player.x} ${this.player.y}`);
-        console.log(message);
 
         this.player.cameraArea = undefined;
         // TODO - Make this a server-side thing.
