@@ -93,11 +93,16 @@ export default class Map {
     private loadDoors(): void {
         this.doors = {};
 
+        let doorsClone = _.cloneDeep(map.areas.doors);
+
         _.each(map.areas.doors, (door) => {
+            // If a door somehow doesn't contain a destination.
             if (!door.destination) return;
 
             let index = this.coordToIndex(door.x, door.y),
-                destination = this.getDoorDestination(door);
+                destination = _.find(doorsClone, (cloneDoor) => {
+                    return door.id === cloneDoor.destination;
+                });
 
             if (!destination) return;
 
@@ -266,13 +271,6 @@ export default class Map {
         return this.doors[this.coordToIndex(x, y)];
     }
 
-    private getDoorDestination(door: ProcessedArea): ProcessedArea | null {
-        for (let i in map.areas.doors)
-            if (map.areas.doors[i].id === door.destination) return map.areas.doors[i];
-
-        return null;
-    }
-
     public isOutOfBounds(x: number, y: number): boolean {
         return x < 0 || x >= this.width || y < 0 || y >= this.height;
     }
@@ -322,13 +320,9 @@ export default class Map {
         return warp;
     }
 
-    private getWarpByName(name: string): ProcessedArea | null {
-        console.log(this.warps);
-
+    private getWarpByName(name: string): ProcessedArea | undefined {
         for (let i in this.warps)
             if (this.warps[i].name === name) return _.cloneDeep(this.warps[i]);
-
-        return null;
     }
 
     public getChestAreas(): Areas {

@@ -1,6 +1,6 @@
 enum Packets {
     Handshake,
-    Intro,
+    Login,
     Welcome,
     Map,
     Spawn,
@@ -22,8 +22,7 @@ enum Packets {
     Network,
     Chat,
     Command,
-    Inventory,
-    Bank,
+    Container,
     Ability,
     Quest,
     Notification,

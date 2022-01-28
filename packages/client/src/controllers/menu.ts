@@ -14,6 +14,8 @@ import type Game from '../game';
 import type Slot from '../menu/container/slot';
 import type Professions from '../menu/profile/pages/professions';
 import type Quest from '../menu/profile/pages/quest';
+import { Modules } from '@kaetram/common/network';
+import { SlotData } from '@kaetram/common/types/slot';
 
 export default class MenuController {
     private notify = $('#notify');
@@ -44,6 +46,10 @@ export default class MenuController {
         this.loadActions();
         this.loadWarp();
         this.loadShop();
+        this.loadEnchant();
+
+        this.loadInventory(Modules.Constants.INVENTORY_SIZE, []);
+        this.loadBank(Modules.Constants.BANK_SIZE, []);
 
         this.done.on('click', () => this.hideNotify());
     }
@@ -70,24 +76,16 @@ export default class MenuController {
      * This can be called multiple times and can be used
      * to completely refresh the inventory.
      */
-    public loadInventory(size: number, data: Slot[]): void {
-        this.inventory = new Inventory(this.game, size, data);
+    public loadInventory(size: number, data: SlotData[]): void {
+        this.inventory = new Inventory(this.game, this, size, data);
     }
 
     /**
      * Similar structure as the inventory, just that it
      * has two containers. The bank and the inventory.
      */
-    public loadBank(size: number, data: Slot[]): void {
-        let { inventory, game } = this;
-
-        if (!inventory) {
-            log.error('Inventory not initialized.');
-
-            return;
-        }
-
-        this.bank = new Bank(game, inventory.container, size, data);
+    public loadBank(size: number, data: SlotData[]): void {
+        this.bank = new Bank(this.game, this, size, data);
 
         this.loadEnchant();
     }
@@ -181,14 +179,6 @@ export default class MenuController {
         if (shop?.isVisible()) shop.hide();
     }
 
-    public addInventory(info: Slot): void {
-        this.bank.addInventory(info);
-    }
-
-    public removeInventory(info: Slot): void {
-        this.bank.removeInventory(info);
-    }
-
     private resizeNotification(): void {
         let { notification } = this;
 
@@ -268,6 +258,14 @@ export default class MenuController {
 
     public getProfessionPage(): Professions {
         return this.profile.professions;
+    }
+
+    public getInventorySize(): number {
+        return this.inventory ? this.inventory.size : Modules.Constants.INVENTORY_SIZE;
+    }
+
+    public getInventoryData(): Slot[] {
+        return this.inventory ? this.inventory.container.slots : [];
     }
 
     private isNotifyVisible(): boolean {

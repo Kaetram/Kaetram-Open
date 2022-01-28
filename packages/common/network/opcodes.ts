@@ -1,4 +1,4 @@
-export enum Intro {
+export enum Login {
     Login,
     Register,
     Guest
@@ -51,17 +51,10 @@ export enum Network {
     Pong
 }
 
-export enum Inventory {
+export enum Container {
     Batch,
     Add,
-    Remove,
-    Select
-}
-
-export enum Bank {
-    Batch,
-    Add,
-    Remove,
+    Drop,
     Select
 }
 
