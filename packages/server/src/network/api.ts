@@ -149,7 +149,7 @@ export default class API {
         if (response) {
             let { data } = response;
 
-            if (data.status === 'error') console.log(data);
+            if (data.status === 'error') log.error(data);
 
             // TODO - Do something with this?
         }

@@ -19,7 +19,7 @@ export interface EntityData {
     instance: string;
     type: number;
     key: string;
-    name?: string;
+    name: string;
     x: number;
     y: number;
 

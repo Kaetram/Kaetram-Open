@@ -18,6 +18,7 @@ import type Weapon from '../entity/character/player/equipment/weapon';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
+import { EquipmentData } from '@kaetram/common/types/equipment';
 
 interface EntitiesCollection {
     [id: string]: Entity;
@@ -29,6 +30,37 @@ export interface Movable {
     targetId: string;
     attackerId: string;
     hitType: number;
+}
+
+// Replace AnyEntity with this soon..
+export interface EntityData {
+    // Entity data
+    instance: string;
+    type: number;
+    key: string;
+    name: string;
+    x: number;
+    y: number;
+
+    // Character data
+    movementSpeed: number;
+    hitPoints: number;
+    maxHitPoints: number;
+    attackRange: number;
+    level: number;
+    hiddenName: boolean;
+
+    // Item data
+    count: number;
+    ability: number;
+    abilityLevel: number;
+
+    // Player Data
+    rights: number;
+    pvp: boolean;
+    orientation: number;
+
+    equipments: EquipmentData[];
 }
 
 export type AnyEntity = Entity & Player & Mob & ProjectileData & Weapon & Equipment & Movable;
@@ -69,9 +101,7 @@ export default class EntitiesController {
         this.sprites?.updateSprites();
     }
 
-    public create(info: AnyEntity): void {
-        console.log(info);
-
+    public create(info: EntityData): void {
         let { entities, game } = this,
             entity: Entity = null!;
 
@@ -106,8 +136,8 @@ export default class EntitiesController {
 
             case Modules.EntityType.Item: {
                 let item = new Item(
-                    info.id,
-                    info.string,
+                    info.instance,
+                    info.key,
                     info.count,
                     info.ability,
                     info.abilityLevel
@@ -124,8 +154,6 @@ export default class EntitiesController {
                 mob.setHitPoints(info.hitPoints);
                 mob.setMaxHitPoints(info.maxHitPoints);
 
-                console.log(info);
-
                 mob.attackRange = info.attackRange;
                 mob.level = info.level;
                 mob.hiddenName = info.hiddenName;
@@ -137,62 +165,62 @@ export default class EntitiesController {
             }
 
             case Modules.EntityType.Projectile: {
-                let attacker = this.get<Character>(info.characterId),
-                    target = this.get<Character>(info.targetId);
+                // let attacker = this.get<Character>(info.characterId),
+                //     target = this.get<Character>(info.targetId);
 
-                if (!attacker || !target) return;
+                // if (!attacker || !target) return;
 
-                attacker.lookAt(target);
+                // attacker.lookAt(target);
 
-                let projectile = new Projectile(info.instance, info.key, attacker); // ? info.projectileType
+                // let projectile = new Projectile(info.instance, info.key, attacker); // ? info.projectileType
 
-                projectile.name = info.name;
+                // projectile.name = info.name;
 
-                projectile.setStart(attacker.x, attacker.y);
-                projectile.setTarget(target);
+                // projectile.setStart(attacker.x, attacker.y);
+                // projectile.setTarget(target);
 
-                projectile.setSprite(this.getSprite(projectile.name));
-                projectile.setAnimation('travel', projectile.getSpeed());
+                // projectile.setSprite(this.getSprite(projectile.name));
+                // projectile.setAnimation('travel', projectile.getSpeed());
 
-                projectile.angled = true;
-                projectile.type = info.type;
+                // projectile.angled = true;
+                // projectile.type = info.type;
 
-                /**
-                 * Move this into the external overall function
-                 */
+                // /**
+                //  * Move this into the external overall function
+                //  */
 
-                projectile.onImpact(() => {
-                    /**
-                     * The data in the projectile is only for rendering purposes
-                     * there is nothing you can change for the actual damage output here.
-                     */
+                // projectile.onImpact(() => {
+                //     /**
+                //      * The data in the projectile is only for rendering purposes
+                //      * there is nothing you can change for the actual damage output here.
+                //      */
 
-                    if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
-                        game.socket.send(Packets.Projectile, [
-                            Opcodes.Projectile.Impact,
-                            info.id,
-                            target.id
-                        ]);
+                //     if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
+                //         game.socket.send(Packets.Projectile, [
+                //             Opcodes.Projectile.Impact,
+                //             info.id,
+                //             target.id
+                //         ]);
 
-                    if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
+                //     if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 
-                    game.info.create(
-                        Modules.Hits.Damage,
-                        [info.damage, this.isPlayer(target.id)],
-                        target.x,
-                        target.y
-                    );
+                //     game.info.create(
+                //         Modules.Hits.Damage,
+                //         [info.damage, this.isPlayer(target.id)],
+                //         target.x,
+                //         target.y
+                //     );
 
-                    target.triggerHealthBar();
+                //     target.triggerHealthBar();
 
-                    this.unregisterPosition(projectile);
-                    delete entities[projectile.getId()];
-                });
+                //     this.unregisterPosition(projectile);
+                //     delete entities[projectile.getId()];
+                // });
 
-                this.addEntity(projectile);
+                // this.addEntity(projectile);
 
-                attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-                attacker.triggerHealthBar();
+                // attacker.performAction(attacker.orientation, Modules.Actions.Attack);
+                // attacker.triggerHealthBar();
 
                 return;
             }
@@ -206,41 +234,41 @@ export default class EntitiesController {
 
                 player.rights = info.rights;
                 player.level = info.level;
-                player.pvp = info.pvp;
-                player.pvpKills = info.pvpKills;
-                player.pvpDeaths = info.pvpDeaths;
                 player.attackRange = info.attackRange;
-                player.orientation = info.orientation || 0;
+                player.orientation = info.orientation;
                 player.type = info.type;
                 player.movementSpeed = info.movementSpeed;
 
-                let hitPointsData = info.hitPoints as number[],
-                    manaData = info.mana as number[],
-                    equipments = [info.armour, info.weapon, info.pendant, info.ring, info.boots];
+                player.setHitPoints(info.hitPoints);
+                player.setMaxHitPoints(info.maxHitPoints);
 
-                player.setHitPoints(hitPointsData[0]);
-                player.setMaxHitPoints(hitPointsData[1]);
-
-                player.setMana(manaData[0]);
-                player.setMaxMana(manaData[1]);
-
-                player.setSprite(this.getSprite(info.armour.string));
+                player.setSprite(this.getSprite(player.armour.string));
                 player.idle();
-
-                _.each(equipments, (equipment) => {
-                    player.setEquipment(
-                        equipment.type,
-                        equipment.name,
-                        equipment.string,
-                        equipment.count,
-                        equipment.ability,
-                        equipment.abilityLevel
-                    );
-                });
 
                 player.loadHandler(game);
 
                 this.addEntity(player);
+
+                // player.setMana(manaData[0]);
+                // player.setMaxMana(manaData[1]);
+
+                // player.setSprite(this.getSprite(info.armour.string));
+                // player.idle();
+
+                // _.each(equipments, (equipment) => {
+                //     player.setEquipment(
+                //         equipment.type,
+                //         equipment.name,
+                //         equipment.string,
+                //         equipment.count,
+                //         equipment.ability,
+                //         equipment.abilityLevel
+                //     );
+                // });
+
+                // player.loadHandler(game);
+
+                // this.addEntity(player);
 
                 return;
             }
@@ -262,9 +290,9 @@ export default class EntitiesController {
         entity.idle();
         entity.type = info.type;
 
-        if (info.nameColour) entity.nameColour = info.nameColour;
+        // if (info.nameColour) entity.nameColour = info.nameColour;
 
-        if (info.customScale) entity.customScale = info.customScale;
+        // if (info.customScale) entity.customScale = info.customScale;
 
         this.addEntity(entity);
 
