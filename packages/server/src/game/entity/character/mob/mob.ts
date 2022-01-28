@@ -1,6 +1,5 @@
 import Utils from '@kaetram/common/util/utils';
 
-import Items from '../../../../info/items';
 import Character from '../character';
 import MobHandler from './handler';
 
@@ -67,7 +66,7 @@ export default class Mob extends Character {
         this.data = (rawData as RawData)[key];
 
         if (!this.data) {
-            log.error(`Could not find data for ${key}.`);
+            log.error(`[Mob] Could not find data for ${key}.`);
             return;
         }
 
@@ -136,7 +135,7 @@ export default class Mob extends Character {
      * Primitive function for drop generation. Will be rewritten.
      */
 
-    public getDrop(): { id: number; count: number } | null {
+    public getDrop(): { key: string; count: number } | null {
         if (!this.drops) return null;
 
         let random = Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY),
@@ -148,7 +147,7 @@ export default class Mob extends Character {
         let count = item === 'gold' ? Utils.randomInt(this.level, this.level * 5) : 1;
 
         return {
-            id: Items.stringToId(item)!,
+            key: item,
             count
         };
     }

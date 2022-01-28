@@ -3,6 +3,7 @@ import log from '@kaetram/common/util/log';
 
 import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
+import Item from '../game/entity/objects/item';
 import { Command, Map, Pointer, Network, Notification, Quest } from '../network/packets';
 
 export default class Commands {
@@ -176,19 +177,16 @@ export default class Commands {
 
         switch (command) {
             case 'spawn': {
-                let spawnId = parseInt(blocks.shift()!),
+                let key = blocks.shift(),
                     count = parseInt(blocks.shift()!),
                     ability = parseInt(blocks.shift()!),
                     abilityLevel = parseInt(blocks.shift()!);
 
-                if (!spawnId || !count) return;
+                if (!key || !count) return;
 
-                this.player.inventory.add({
-                    id: spawnId,
-                    count,
-                    ability: ability || -1,
-                    abilityLevel: abilityLevel || -1
-                });
+                this.player.inventory.add(
+                    new Item(key, -1, -1, true, count, ability, abilityLevel)
+                );
 
                 return;
             }
@@ -201,21 +199,8 @@ export default class Commands {
             case 'ipban':
                 return;
 
-            case 'drop': {
-                let id = parseInt(blocks.shift()!),
-                    dCount = parseInt(blocks.shift()!);
-
-                if (!id) return;
-
-                if (!dCount) dCount = 1;
-
-                this.entities.dropItem(id, dCount, this.player.x, this.player.y);
-
-                return;
-            }
-
             case 'ghost':
-                this.player.equip('ghost', 1, -1, -1);
+                //this.player.equip('ghost', 1, -1, -1);
 
                 return;
 
@@ -408,7 +393,7 @@ export default class Commands {
 
             case 'clear':
                 this.player.inventory.forEachSlot((slot) => {
-                    if (slot.id !== -1) this.player.inventory.remove(slot.id, slot.count);
+                    this.player.inventory.remove(slot.index, slot.count);
                 });
 
                 break;

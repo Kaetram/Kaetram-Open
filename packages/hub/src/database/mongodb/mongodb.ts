@@ -16,19 +16,15 @@ export default class MongoDB {
     public constructor(
         host: string,
         port: number,
-        user: string,
+        username: string,
         password: string,
-        private database: string
+        private databaseName: string
     ) {
-        let { mongodbAuth, mongodbSrv } = config;
+        let hasAuthentication = !!username && !!password;
 
-        this.url = mongodbSrv
-            ? mongodbAuth
-                ? `mongodb+srv://${user}:${password}@${host}/${database}`
-                : `mongodb+srv://${host}/${database}`
-            : mongodbAuth
-            ? `mongodb://${user}:${password}@${host}:${port}/${database}`
-            : `mongodb://${host}:${port}/${database}`;
+        this.url = hasAuthentication
+            ? `mongodb://${username}:${password}@${host}:${port}/${databaseName}`
+            : `mongodb://${host}:${port}/${databaseName}`;
     }
 
     public async getConnection(): Promise<Db> {
@@ -40,7 +36,7 @@ export default class MongoDB {
                 log.error(`Error Info:`, error);
             });
 
-        this.connection = newClient!.db(this.database);
+        this.connection = newClient!.db(this.databaseName);
 
         return this.connection;
     }

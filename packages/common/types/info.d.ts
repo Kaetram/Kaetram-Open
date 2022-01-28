@@ -1,16 +1,5 @@
 import type { Modules } from '../network';
 
-export interface EquipmentData {
-    type: Modules.Equipment;
-    name: string;
-    string: string;
-    count: number;
-    ability: number;
-    abilityLevel: number;
-    power: number;
-}
-export type EquipmentType = 'weapon' | 'armour' | 'pendant' | 'ring' | 'boots';
-
 export interface HitData {
     type: Modules.Hits;
     damage: number;
@@ -18,14 +7,6 @@ export interface HitData {
     isAoE: boolean;
     hasTerror: boolean;
     isPoison: boolean;
-}
-
-export interface SlotData {
-    index: number;
-    string: string;
-    count: number;
-    ability: number;
-    abilityLevel: number;
 }
 
 export interface QuestInfo {
