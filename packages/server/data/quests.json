@@ -8,7 +8,9 @@
         "npc": "coder",
         "text": ["Hello", "this", "is", "coder", "example", "text"],
         "pointer": {
-          "type": "entity"
+          "type": 0,
+          "x": 372,
+          "y": 38
         }
       }
     }
