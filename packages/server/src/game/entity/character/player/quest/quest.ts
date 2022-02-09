@@ -5,6 +5,7 @@ import log from '@kaetram/common/util/log';
 
 import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 import Player from '../player';
+import _ from 'lodash';
 
 export default abstract class Quest {
     /**
@@ -20,6 +21,9 @@ export default abstract class Quest {
 
     private stages: { [id: number]: RawStage } = {};
 
+    // Store all NPCs involved in the quest.
+    private npcs: string[] = [];
+
     public talkCallback?: (npc: NPC, player: Player) => void;
     public killCallback?: (mob: Mob) => void;
 
@@ -32,9 +36,25 @@ export default abstract class Quest {
 
         this.stages = rawData.stages;
 
+        // Load NPCs
+        this.loadNPCs();
+
         // Callbacks
         this.onTalk(this.handleTalk.bind(this));
         this.onKill(this.handleKill.bind(this));
+    }
+
+    /**
+     * Parses through all the stages and stores the NPCs that the player
+     * will engage with. This is necessary in order to prevent the default
+     * dialogue from occurring while the quest is in progress.
+     */
+
+    private loadNPCs(): void {
+        // Iterate through the stages and extract the NPCs
+        _.each(this.stages, (stage: RawStage) => {
+            if (stage.npc && !this.npcs.includes(stage.npc)) this.npcs.push(stage.npc);
+        });
     }
 
     /**
@@ -163,7 +183,8 @@ export default abstract class Quest {
             npc: stage.npc! || '',
             mob: stage.mob! || '',
             countRequirement: stage.countRequirement! || 1,
-            text: stage.text! || ['']
+            text: stage.text! || [''],
+            pointer: stage.pointer! || undefined
         };
     }
 
