@@ -1,3 +1,5 @@
+import { PointerData } from './pointer.d';
+
 export interface RawStage {
     task: string;
     npc?: string;
@@ -10,6 +12,7 @@ export interface RawStage {
     countRequirement?: number;
     /** Text for the NPC. */
     text?: string[];
+    pointer?: PointerData;
 }
 
 export interface RawQuest {
@@ -25,6 +28,7 @@ export interface StageData {
     itemRequirement?: string;
     countRequirement?: number; // how many mobs to kill or how many of an item to have
     text?: string[];
+    pointer?: PointerData;
 }
 
 export interface QuestData {
