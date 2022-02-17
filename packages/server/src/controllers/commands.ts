@@ -1,3 +1,4 @@
+import config from '@kaetram/common/config';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
@@ -88,6 +89,14 @@ export default class Commands {
             case 'ping':
                 this.player.pingTime = Date.now();
                 this.player.send(new Network(Opcodes.Network.Ping));
+                break;
+
+            case 'resettutorial':
+                if (!config.debugging) return;
+
+                this.player.quests.getQuest('tutorial')!.setStage(0);
+
+                this.player.notify('Tutorial has been reset.');
                 break;
         }
     }

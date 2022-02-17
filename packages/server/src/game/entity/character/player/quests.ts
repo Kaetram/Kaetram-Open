@@ -77,6 +77,17 @@ export default class Quests {
     }
 
     /**
+     * Grabs a quest with the key specified. Will return
+     * undefined if the key is invalid.
+     * @param key The quest key.
+     * @returns Quest pertaining to the `key` parameter.
+     */
+
+    public getQuest(key: string): Quest {
+        return this.quests[key];
+    }
+
+    /**
      * Checks all the quests at their current stage if the requirement
      * is to interact with the given NPC and return the quest.
      * @param npc The NPC we are checking the quest stage against.
@@ -88,13 +99,9 @@ export default class Quests {
 
         this.forEachQuest((q: Quest) => {
             if (q.isFinished()) return;
+            if (!q.hasNPC(npc.key)) return;
 
-            let stage = q.getStageData();
-
-            // Skip if the stage isn't to talk to an NPC.
-            if (stage.task !== 'talk') return;
-
-            if (stage.npc === npc.key) quest = q;
+            quest = q;
         });
 
         return quest;

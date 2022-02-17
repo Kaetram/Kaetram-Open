@@ -79,21 +79,17 @@ export default abstract class Quest {
     private handleTalk(npc: NPC, player: Player): void {
         log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
 
-        let stageData = this.getStageData();
+        // Extract the dialogue for the NPC.
+        let stageData = this.getStageData(),
+            dialogue = this.getNPCDialogue(npc);
 
-        // Return default text specified if the stage is not one requiring talking to the npc.
-        if (stageData.task !== 'talk') return npc.talk(player, stageData.text);
-
-        // Conversation length with the NPC.
-        let textLength = stageData.text?.length;
-
-        // Handle end of a conversation.
-        if (textLength === player.talkIndex)
+        // End of conversation handler.
+        if (stageData.npc! === npc.key && dialogue.length === player.talkIndex)
             if (!this.hasItemRequirement()) this.progress();
             else this.handleItemRequirement(player, stageData);
 
-        // Talk to the NPC to progress the conversation.
-        npc.talk(player, stageData.text);
+        // Talk to the NPC and progress the dialogue.
+        npc.talk(player, dialogue);
     }
 
     /**
@@ -142,6 +138,16 @@ export default abstract class Quest {
     }
 
     /**
+     * Checks if an NPC key is contained in the quest.
+     * @param key The NPC key we are checking.
+     * @returns If the key exists in the npcs array.
+     */
+
+    public hasNPC(key: string): boolean {
+        return this.npcs.includes(key);
+    }
+
+    /**
      * Checks if the current stage has an item requirement.
      * @returns If the item requirement property exists in the current stage.
      */
@@ -165,7 +171,7 @@ export default abstract class Quest {
      */
 
     public isFinished(): boolean {
-        return this.stage >= this.stageCount;
+        return this.stage > this.stageCount;
     }
 
     /**
@@ -186,6 +192,45 @@ export default abstract class Quest {
             text: stage.text! || [''],
             pointer: stage.pointer! || undefined
         };
+    }
+
+    /**
+     * Iterates backwards through our stages starting at the stage we're
+     * currently on. If we find a reference to the NPC passed as a parameter,
+     * we extract the dialogue for that stage. If the stage we are currently
+     * on is higher than the stage we find the NPC in, then we use `completedText`
+     * specified in the StageData object.
+     * Extra Info: `completedText` refers to text when a user interacts with an NPC
+     * that is no longer required for progression to the next stage.
+     * @param npc The npc we are trying to find within our stages.
+     * @returns An array of strings containing the dialogue.
+     */
+
+    public getNPCDialogue(npc: NPC): string[] {
+        // Iterate backwards, last reference of the NPC is the text we grab.
+        for (let i = this.stage; i > -1; i--) {
+            // We do not count iterations of stages above stage we are currently on.
+            if (this.stage < i) continue;
+
+            let stage = this.stages[i];
+
+            // Skip the stage if no npc info is found.
+            if (!stage.npc!) continue;
+
+            // If no key is found, continue iterating.
+            if (stage.npc! !== npc.key) continue;
+
+            /**
+             * If the stage we are currently on is not the same as the most
+             * recent stage containing the NPC, then we use the dialogue
+             * for after the stage is completed.
+             */
+            if (this.stage > i) return stage.completedText!;
+
+            return stage.text!;
+        }
+
+        return [''];
     }
 
     /**
