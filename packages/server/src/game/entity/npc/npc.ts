@@ -49,6 +49,7 @@ export default class NPC extends Entity {
     public talk(player?: Player, text = this.text): void {
         if (!(player && this.hasDialogue())) return;
 
+        // Reset the talking index if we talk to a new NPC.
         if (player.npcTalk !== this.key) {
             player.talkIndex = 0;
             player.npcTalk = this.key;
@@ -56,7 +57,7 @@ export default class NPC extends Entity {
 
         let message = text[player.talkIndex];
 
-        if (player.talkIndex > this.text.length - 1) player.talkIndex = 0;
+        if (player.talkIndex > text.length - 1) player.talkIndex = 0;
         else player.talkIndex++;
 
         player.send(
