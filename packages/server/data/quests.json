@@ -7,10 +7,20 @@
         "task": "talk",
         "npc": "coder",
         "text": ["Hello", "this", "is", "coder", "example", "text"],
+        "completedText": ["You should do what I said.", "test"],
         "pointer": {
           "type": 0,
           "x": 372,
           "y": 38
+        }
+      },
+
+      "1": {
+        "task": "door",
+        "pointer": {
+          "type": 0,
+          "x": 100,
+          "y": 100
         }
       }
     }
