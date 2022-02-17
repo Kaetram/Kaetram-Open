@@ -33,6 +33,7 @@ export default class NPC extends Entity {
             return;
         }
 
+        // Load default NPC data.
         this.name = this.data.name!;
         this.text = this.data.text || this.text;
         this.role = this.data.role!;
@@ -55,11 +56,18 @@ export default class NPC extends Entity {
             player.npcTalk = this.key;
         }
 
+        // Text to display at the current talking index.
         let message = text[player.talkIndex];
+
+        /**
+         * Reset the talking index when we reach the end or
+         * continue progression otherwise.
+         */
 
         if (player.talkIndex > text.length - 1) player.talkIndex = 0;
         else player.talkIndex++;
 
+        // Send the network packet of the current dialogue index.
         player.send(
             new NPCPacket(Opcodes.NPC.Talk, {
                 id: this.instance,
