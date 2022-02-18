@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import NPC from '../../../npc/npc';
 import Mob from '../../mob/mob';
 
@@ -5,7 +7,7 @@ import log from '@kaetram/common/util/log';
 
 import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 import Player from '../player';
-import _ from 'lodash';
+import { PointerData } from '@kaetram/common/types/pointer';
 
 export default abstract class Quest {
     /**
@@ -28,6 +30,7 @@ export default abstract class Quest {
     public killCallback?: (mob: Mob) => void;
 
     private progressCallback?: (key: string, stage: number, subStage: number) => void;
+    private pointerCallback?: (pointerData: PointerData) => void;
 
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
@@ -55,18 +58,6 @@ export default abstract class Quest {
         _.each(this.stages, (stage: RawStage) => {
             if (stage.npc && !this.npcs.includes(stage.npc)) this.npcs.push(stage.npc);
         });
-    }
-
-    /**
-     * Updates the current progress of the quest. We don't use `setStage`
-     * since we are going to send batch data to the client with quest data
-     * upon first loading (during the login process).
-     * @param stage The new stage we are setting the progress to.
-     */
-
-    public update(stage: number, subStage: number): void {
-        this.stage = stage;
-        this.subStage = subStage;
     }
 
     /**
@@ -113,6 +104,7 @@ export default abstract class Quest {
     public progress(subStage?: boolean): void {
         log.warning('Received progress yo');
 
+        // Progress substage only if the parameter is defined.
         if (subStage) this.setStage(this.stage, ++this.subStage);
         else this.setStage(++this.stage);
     }
@@ -239,8 +231,21 @@ export default abstract class Quest {
      * @param subStage Optionally set the stage to a subStage index.
      */
 
-    public setStage(stage: number, subStage = 0): void {
-        if (this.stage !== stage) this.progressCallback?.(this.key, stage, subStage);
+    public setStage(stage: number, subStage = 0, progressCallback = true): void {
+        // Progression to a new stage.
+        if (this.stage !== stage) {
+            // Current stage data after updating.
+            let stageData = this.getStageData();
+
+            // Check if the current stage has any pointer information.
+            if (stageData.pointer) this.pointerCallback?.(stageData.pointer);
+
+            /**
+             * Conditional to prevent a callback from being made in
+             * certain situations. (i.e. loading quest data from the database).
+             */
+            if (progressCallback) this.progressCallback?.(this.key, stage, subStage);
+        }
 
         this.stage = stage;
         this.subStage = subStage;
@@ -276,6 +281,15 @@ export default abstract class Quest {
 
     public onProgress(callback: (key: string, stage: number, subStage: number) => void): void {
         this.progressCallback = callback;
+    }
+
+    /**
+     * A callback for whenever a pointer is requested.
+     * @param callback Pointer data to be displayed.
+     */
+
+    public onPointer(callback: (pointerData: PointerData) => void): void {
+        this.pointerCallback = callback;
     }
 
     /**

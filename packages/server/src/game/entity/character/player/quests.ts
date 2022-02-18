@@ -14,6 +14,9 @@ import { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/ques
 import quests from '../../../../../data/quests.json';
 import NPC from '../../npc/npc';
 import Mob from '../mob/mob';
+import { PointerData } from '@kaetram/common/types/pointer';
+
+import log from '@kaetram/common/util/log';
 
 /**
  * Initialize all the quests on a player instance basis. The previous
@@ -39,6 +42,7 @@ export default class Quests {
             this.quests[key] = quest;
 
             quest.onProgress(this.handleQuestProgress.bind(this));
+            quest.onPointer(this.handleQuestPointer.bind(this));
         });
     }
 
@@ -55,7 +59,8 @@ export default class Quests {
             // Skip if no quest found with the given key.
             if (!quest) return;
 
-            quest.update(info.stage, info.subStage);
+            // Set quest stage data without making a progress callback.
+            quest.setStage(info.stage, info.subStage, false);
         });
 
         this.loadCallback?.();
@@ -74,6 +79,17 @@ export default class Quests {
                 stage
             })
         );
+    }
+
+    /**
+     * The callback handler for when a quest requests pointer information
+     * to be sent to the client. Generally happens upon loading the Tutorial
+     * quest.
+     * @param pointerData Pointer information from the current stage.
+     */
+
+    private handleQuestPointer(pointerData: PointerData): void {
+        log.error('received pointer request.');
     }
 
     /**
