@@ -64,7 +64,7 @@ export default class Quests {
         });
 
         // Trigger `loaded()` when we have no database information.
-        if (questInfo.length === 0) _.each(this.quests, (quest: Quest) => quest.loaded());
+        if (questInfo.length === 0) _.each(this.quests, (quest) => quest.loaded());
 
         this.loadCallback?.();
     }

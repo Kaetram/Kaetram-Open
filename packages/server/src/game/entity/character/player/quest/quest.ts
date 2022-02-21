@@ -63,7 +63,7 @@ export default abstract class Quest {
     private loadNPCs(): void {
         // Iterate through the stages and extract the NPCs
         _.each(this.stages, (stage: RawStage) => {
-            if (stage.npc && !this.npcs.includes(stage.npc)) this.npcs.push(stage.npc);
+            if (stage.npc && !this.hasNPC(stage.npc)) this.npcs.push(stage.npc);
         });
     }
 
