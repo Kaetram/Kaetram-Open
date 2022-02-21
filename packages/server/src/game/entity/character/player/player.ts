@@ -163,7 +163,6 @@ export default class Player extends Character {
     public questsLoaded = false;
     public achievementsLoaded = false;
 
-    public new = false;
     private lastNotify!: number;
 
     public selectedShopItem!: { id: number; index: number } | null;

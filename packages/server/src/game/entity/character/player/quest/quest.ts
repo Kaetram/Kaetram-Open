@@ -39,12 +39,19 @@ export default abstract class Quest {
 
         this.stages = rawData.stages;
 
-        // Load NPCs
         this.loadNPCs();
 
         // Callbacks
         this.onTalk(this.handleTalk.bind(this));
         this.onKill(this.handleKill.bind(this));
+    }
+
+    /**
+     * Blank function for use in subclasses. See `Tutorial.ts`.
+     */
+
+    public loaded(): void {
+        log.debug(`[${this.key}] Uninitialized loaded();`);
     }
 
     /**
@@ -229,26 +236,22 @@ export default abstract class Quest {
      * Sets the stage (and subStage if specified) and makes a callback.
      * @param stage The new stage we are setting the quest to.
      * @param subStage Optionally set the stage to a subStage index.
+     * @param progressCallback Conditional on whether we want to make a callback or not.
      */
 
     public setStage(stage: number, subStage = 0, progressCallback = true): void {
         // Progression to a new stage.
-        if (this.stage !== stage) {
-            // Current stage data after updating.
-            let stageData = this.getStageData();
-
-            // Check if the current stage has any pointer information.
-            if (stageData.pointer) this.pointerCallback?.(stageData.pointer);
-
-            /**
-             * Conditional to prevent a callback from being made in
-             * certain situations. (i.e. loading quest data from the database).
-             */
-            if (progressCallback) this.progressCallback?.(this.key, stage, subStage);
-        }
+        if (this.stage !== stage && progressCallback)
+            this.progressCallback?.(this.key, stage, subStage);
 
         this.stage = stage;
         this.subStage = subStage;
+
+        // Grab the latest stage after updating.
+        let stageData = this.getStageData();
+
+        // Check if the current stage has any pointer information.
+        if (stageData.pointer) this.pointerCallback?.(stageData.pointer);
     }
 
     /**
