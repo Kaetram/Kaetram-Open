@@ -63,6 +63,9 @@ export default class Quests {
             quest.setStage(info.stage, info.subStage, false);
         });
 
+        // Trigger `loaded()` when we have no database information.
+        if (questInfo.length === 0) _.each(this.quests, (quest: Quest) => quest.loaded());
+
         this.loadCallback?.();
     }
 
@@ -90,6 +93,7 @@ export default class Quests {
 
     private handleQuestPointer(pointerData: PointerData): void {
         log.error('received pointer request.');
+        console.log(pointerData);
     }
 
     /**
