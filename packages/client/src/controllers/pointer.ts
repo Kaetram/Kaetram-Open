@@ -200,7 +200,7 @@ export default class PointerController {
                     break;
                 }
 
-                case Opcodes.Pointer.Position:
+                case Opcodes.Pointer.Location:
                     if (pointer.x !== -1 && pointer.y !== -1)
                         this.set(pointer, pointer.x, pointer.y);
 
