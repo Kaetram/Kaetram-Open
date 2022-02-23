@@ -5,7 +5,7 @@ import Quest from './quest/quest';
 
 import QuestIndex from './quest/impl';
 
-import { Quest as QuestPacket } from '../../../../network/packets';
+import { Quest as QuestPacket, Pointer } from '../../../../network/packets';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
@@ -92,8 +92,10 @@ export default class Quests {
      */
 
     private handleQuestPointer(pointerData: PointerData): void {
-        log.error('received pointer request.');
-        console.log(pointerData);
+        // Invalid pointer data.
+        if (!(pointerData.type in Opcodes.Pointer)) return;
+
+        this.player.send(new Pointer(pointerData.type, pointerData));
     }
 
     /**
