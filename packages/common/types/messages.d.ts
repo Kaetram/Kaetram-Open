@@ -239,6 +239,8 @@ export interface EnchantData {
 }
 
 export interface PointerData {
+    x: number;
+    y: number;
     id: string;
 }
 export interface PointerLocationData extends PointerData, Pos {}
