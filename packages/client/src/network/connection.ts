@@ -895,7 +895,7 @@ export default class Connection {
         this.messages.onPointer((opcode, info) => {
             switch (opcode) {
                 case Opcodes.Pointer.Entity: {
-                    let entity = this.entities.get(info.id!);
+                    let entity = this.entities.get(info.instance!);
 
                     if (!entity) return;
 
@@ -908,8 +908,8 @@ export default class Connection {
                 case Opcodes.Pointer.Location: {
                     let data = info as PointerLocationData;
 
-                    this.pointer.create(data.id, opcode);
-                    this.pointer.setToPosition(data.id, data.x * 16, data.y * 16);
+                    this.pointer.create(data.instance, opcode);
+                    this.pointer.setToPosition(data.instance, data.x * 16, data.y * 16);
 
                     break;
                 }
@@ -917,21 +917,20 @@ export default class Connection {
                 case Opcodes.Pointer.Relative: {
                     let data = info as PointerRelativeData;
 
-                    this.pointer.create(data.id, opcode);
-                    this.pointer.setRelative(data.id, data.x, data.y);
+                    this.pointer.create(data.instance, opcode);
+                    this.pointer.setRelative(data.instance, data.x, data.y);
 
                     break;
                 }
 
                 case Opcodes.Pointer.Remove:
                     this.pointer.clean();
-
                     break;
 
                 case Opcodes.Pointer.Button: {
                     let data = info as PointerButtonData;
 
-                    this.pointer.create(data.id, opcode, data.button);
+                    this.pointer.create(data.instance, opcode, data.button);
 
                     break;
                 }
