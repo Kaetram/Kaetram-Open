@@ -92,10 +92,7 @@ export default class Quests {
      */
 
     private handleQuestPointer(pointerData: PointerData): void {
-        // Invalid pointer data.
-        if (!(pointerData.type in Opcodes.Pointer)) return;
-
-        this.player.send(new Pointer(pointerData.type, pointerData));
+        this.player.pointer(pointerData.type, pointerData);
     }
 
     /**

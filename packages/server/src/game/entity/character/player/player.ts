@@ -42,7 +42,8 @@ import {
     Overlay,
     Sync,
     Teleport,
-    Welcome
+    Welcome,
+    Pointer
 } from '@kaetram/server/src/network/packets';
 import Packet from '@kaetram/server/src/network/packet';
 import Equipments from './equipments';
@@ -55,6 +56,7 @@ import { EquipmentData } from '@kaetram/common/types/equipment';
 import Container from './containers/container';
 import Item from '../../objects/item';
 import { SlotData, SlotType } from '@kaetram/common/types/slot';
+import { PointerData } from '@kaetram/common/types/pointer';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
@@ -93,8 +95,8 @@ export default class Player extends Character {
     private handler: Handler;
 
     public equipment: Equipments;
-    public bank: Bank;
-    public inventory: Inventory;
+    public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
+    public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
     public quests: Quests;
 
     public ready = false; // indicates if login processed finished
@@ -189,14 +191,8 @@ export default class Player extends Character {
         this.globalObjects = world.globalObjects;
 
         this.incoming = new Incoming(this);
-
         this.equipment = new Equipments(this);
-
-        this.bank = new Bank(Modules.Constants.BANK_SIZE);
-        this.inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
-
         this.quests = new Quests(this);
-
         this.handler = new Handler(this);
 
         // TODO - Refactor
@@ -209,6 +205,11 @@ export default class Player extends Character {
 
         this.webSocketClient = connection.type === 'WebSocket';
     }
+
+    /**
+     * Inserts the `data` into the player object.
+     * @param data PlayerInfo object containing all data.
+     */
 
     public load(data: PlayerInfo): void {
         this.rights = data.rights;
@@ -270,42 +271,11 @@ export default class Player extends Character {
         this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
     }
 
-    // ---------------- REFACTOR --------------------
-
-    public loadRegions(regions: PlayerRegions): void {
-        //TODO REFACTOR
-        // if (!regions) return;
-        // if (this.mapVersion !== this.map.version) {
-        //     this.mapVersion = this.map.version;
-        //     this.save();
-        //     log.debug(`Updated map version for ${this.username}`);
-        //     return;
-        // }
-        // if (regions.gameVersion === config.gver) this.regionsLoaded = regions.regions.split(',');
-    }
-
-    public loadFriends(): void {
-        //
-    }
-
-    // ---------------- REFACTOR EMD --------------------
-
-    public destroy(): void {
-        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
-
-        this.disconnectTimeout = null;
-
-        this.handler = null!;
-        this.inventory = null!;
-        this.abilities = null!;
-        this.enchant = null!;
-        this.bank = null!;
-        this.trade = null!;
-        this.doors = null!;
-        this.warp = null!;
-
-        this.connection = null!;
-    }
+    /**
+     * Handle the actual player login. Check if the user is banned,
+     * update hitPoints and mana, and send the player information
+     * to the client.
+     */
 
     public intro(): void {
         if (this.ban > Date.now()) {
@@ -345,6 +315,23 @@ export default class Player extends Character {
         this.entities.addPlayer(this);
 
         this.send(new Welcome(info));
+    }
+
+    public destroy(): void {
+        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
+
+        this.disconnectTimeout = null;
+
+        this.handler = null!;
+        this.inventory = null!;
+        this.abilities = null!;
+        this.enchant = null!;
+        this.bank = null!;
+        this.trade = null!;
+        this.doors = null!;
+        this.warp = null!;
+
+        this.connection = null!;
     }
 
     private verifyRights(): void {
@@ -445,10 +432,6 @@ export default class Player extends Character {
         this.regions.sendRegion(this);
     }
 
-    public canEquip(string: string): boolean {
-        return false;
-    }
-
     public die(): void {
         this.dead = true;
 
@@ -471,6 +454,14 @@ export default class Player extends Character {
 
         this.setPosition(x, y);
         this.world.cleanCombat(this);
+    }
+
+    public incrementCheatScore(amount: number): void {
+        if (this.combat.started) return;
+
+        this.cheatScore += amount;
+
+        this.cheatScoreCallback?.();
     }
 
     /**
@@ -545,14 +536,6 @@ export default class Player extends Character {
 
                 break;
         }
-    }
-
-    public incrementCheatScore(amount: number): void {
-        if (this.combat.started) return;
-
-        this.cheatScore += amount;
-
-        this.cheatScoreCallback?.();
     }
 
     public updatePVP(pvp: boolean, permanent = false): void {
@@ -733,31 +716,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Serializes the player character to be sent to
-     * nearby regions. This contains all the data
-     * about the player that other players should
-     * be able to see.
-     * @returns PlayerData containing all of the player info.
-     */
-
-    public override serialize(withEquipment?: boolean): PlayerData {
-        let data = super.serialize() as PlayerData;
-
-        data.rights = this.rights;
-        data.level = this.level;
-        data.hitPoints = this.hitPoints.getHitPoints();
-        data.maxHitPoints = this.hitPoints.getMaxHitPoints();
-        data.attackRange = this.attackRange;
-        data.orientation = this.orientation;
-        data.movementSpeed = this.getMovementSpeed();
-
-        // Include equipment only when necessary.
-        if (withEquipment) data.equipments = this.equipment.serialize().equipments;
-
-        return data;
-    }
-
-    /**
      * Grabs the spawn point on the player depending on whether or not he
      * has finished the tutorial quest.
      * @returns The spawn point Position object containing x and y grid positions.
@@ -904,6 +862,7 @@ export default class Player extends Character {
      * Function to be used for syncing up health,
      * mana, exp, and other variables
      */
+
     public sync(): void {
         let data = this.serialize(true);
 
@@ -911,6 +870,14 @@ export default class Player extends Character {
 
         this.save();
     }
+
+    /**
+     * Sends a popup message to the player (generally used
+     * for quests or achievements);
+     * @param title The header text for the popup.
+     * @param message The text contents of the popup.
+     * @param colour The colour of the popup's text.
+     */
 
     public popup(title: string, message: string, colour: string): void {
         if (!title) return;
@@ -926,6 +893,12 @@ export default class Player extends Character {
             })
         );
     }
+
+    /**
+     * Sends a chatbox message to the player.
+     * @param message String text we want to display to the player.
+     * @param colour Optional parameter indicating text colour.
+     */
 
     public notify(message: string, colour?: string): void {
         if (!message) return;
@@ -943,6 +916,18 @@ export default class Player extends Character {
         );
 
         this.lastNotify = Date.now();
+    }
+
+    public pointer(type: Opcodes.Pointer, info: PointerData): void {
+        // Remove all existing pointers first.
+        this.send(new Pointer(Opcodes.Pointer.Remove));
+
+        // Invalid pointer data received.
+        if (!(type in Opcodes.Pointer)) return;
+
+        info.instance = this.instance;
+
+        this.send(new Pointer(type, info));
     }
 
     /**
@@ -984,6 +969,20 @@ export default class Player extends Character {
         );
     }
 
+    public save(): void {
+        if (config.skipDatabase || this.isGuest || !this.ready) return;
+
+        this.database.creator?.save(this);
+    }
+
+    public inTutorial(): boolean {
+        return this.world.map.inTutorialArea(this);
+    }
+
+    public hasAggressionTimer(): boolean {
+        return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
+    }
+
     public finishedQuest(id: number): boolean {
         return false;
         // let quest = this.quests?.getQuest(id);
@@ -1009,22 +1008,33 @@ export default class Player extends Character {
         // achievement.finish();
     }
 
+    /**
+     * Serializes the player character to be sent to
+     * nearby regions. This contains all the data
+     * about the player that other players should
+     * be able to see.
+     * @returns PlayerData containing all of the player info.
+     */
+
+    public override serialize(withEquipment?: boolean): PlayerData {
+        let data = super.serialize() as PlayerData;
+
+        data.rights = this.rights;
+        data.level = this.level;
+        data.hitPoints = this.hitPoints.getHitPoints();
+        data.maxHitPoints = this.hitPoints.getMaxHitPoints();
+        data.attackRange = this.attackRange;
+        data.orientation = this.orientation;
+        data.movementSpeed = this.getMovementSpeed();
+
+        // Include equipment only when necessary.
+        if (withEquipment) data.equipments = this.equipment.serialize().equipments;
+
+        return data;
+    }
+
     public killCharacter(character: Character): void {
         this.killCallback?.(character);
-    }
-
-    public save(): void {
-        if (config.skipDatabase || this.isGuest || !this.ready) return;
-
-        this.database.creator?.save(this);
-    }
-
-    public inTutorial(): boolean {
-        return this.world.map.inTutorialArea(this);
-    }
-
-    public hasAggressionTimer(): boolean {
-        return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
     }
 
     public onOrientation(callback: () => void): void {
