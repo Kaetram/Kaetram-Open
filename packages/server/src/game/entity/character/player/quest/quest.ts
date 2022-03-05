@@ -2,12 +2,13 @@ import _ from 'lodash';
 
 import NPC from '../../../npc/npc';
 import Mob from '../../mob/mob';
+import Player from '../player';
 
 import log from '@kaetram/common/util/log';
 
 import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
-import Player from '../player';
 import { PointerData } from '@kaetram/common/types/pointer';
+import { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default abstract class Quest {
     /**
@@ -27,6 +28,7 @@ export default abstract class Quest {
     private npcs: string[] = [];
 
     public talkCallback?: (npc: NPC, player: Player) => void;
+    public doorCallback?: (quest: ProcessedDoor) => void;
     public killCallback?: (mob: Mob) => void;
 
     private progressCallback?: (key: string, stage: number, subStage: number) => void;
@@ -43,6 +45,7 @@ export default abstract class Quest {
 
         // Callbacks
         this.onTalk(this.handleTalk.bind(this));
+        this.onDoor(this.handleDoor.bind(this));
         this.onKill(this.handleKill.bind(this));
     }
 
@@ -88,6 +91,18 @@ export default abstract class Quest {
 
         // Talk to the NPC and progress the dialogue.
         npc.talk(player, dialogue);
+    }
+
+    /**
+     * Callback handler for when the player attempts to pass through the door.
+     * @param x The door's x grid coordinate.
+     * @param y The door's y grid coordinate.
+     * @param destX The door's destination x coordinate.
+     * @param destY The door's destination y coordinate.
+     */
+
+    private handleDoor(quest: ProcessedDoor): void {
+        console.log(quest);
     }
 
     /**
@@ -302,6 +317,15 @@ export default abstract class Quest {
 
     public onTalk(callback: (npc: NPC, player: Player) => void): void {
         this.talkCallback = callback;
+    }
+
+    /**
+     * Callback for when attempting to go through a door.
+     * @param callback Callback containing starting location and destination of the door.
+     */
+
+    public onDoor(callback: (quest: ProcessedDoor) => void): void {
+        this.doorCallback = callback;
     }
 
     /**

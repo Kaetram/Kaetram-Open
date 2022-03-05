@@ -137,7 +137,7 @@ export default class Quests {
     public getQuestFromMob(mob: Mob): Quest | undefined {
         let quest;
 
-        this.forEachQuest((q: Quest) => {
+        this.forEachQuest((q) => {
             // Skip if the quest isn't started or if the quest is finished.
             if (q.isFinished() || !q.isStarted()) return;
 
