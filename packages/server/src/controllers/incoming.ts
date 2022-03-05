@@ -19,8 +19,8 @@ import { Chat, Combat, Movement, Notification, Spawn } from '../network/packets'
 import Respawn from '../network/packets/respawn';
 import Item from '../game/entity/objects/item';
 import Entity from '../game/entity/entity';
-import { Door } from '../game/entity/character/player/doors';
 import { SlotType } from '@kaetram/common/types/slot';
+import { ProcessedDoor } from '@kaetram/common/types/map';
 
 type PacketData = ((string | string[]) | number | boolean)[];
 
@@ -297,7 +297,7 @@ export default class Incoming {
             hasTarget: boolean,
             targetInstance: string,
             entity: Entity,
-            door: Door | undefined,
+            door: ProcessedDoor,
             diff: number;
 
         if (this.player.dead) return;
@@ -352,6 +352,7 @@ export default class Incoming {
                 playerY = packet.shift() as number;
                 targetInstance = packet.shift() as string;
                 hasTarget = !!(packet.shift() as number);
+                orientation = packet.shift() as number;
 
                 entity = this.entities.get(targetInstance);
 
@@ -361,18 +362,12 @@ export default class Incoming {
                     this.player.incrementCheatScore(1);
                 }
 
-                orientation = packet.shift() as number;
-
                 if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
                 if (this.world.map.isDoor(playerX, playerY) && !hasTarget) {
-                    door = this.player.doors.getDoor(playerX, playerY);
+                    door = this.world.map.getDoorByPosition(playerX, playerY);
 
-                    if (door && this.player.doors.isClosed(door)) return;
-
-                    let destination = this.world.map.getDoorByPosition(playerX, playerY);
-
-                    this.player.teleport(destination.x, destination.y, true);
+                    this.player.doorCallback?.(door);
                 } else {
                     this.player.setPosition(playerX, playerY);
                     this.player.setOrientation(orientation);
