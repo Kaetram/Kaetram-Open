@@ -9,18 +9,12 @@ import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
 
-import type { ProcessedArea, ProcessedMap } from '@kaetram/common/types/map';
+import type { ProcessedArea, ProcessedDoor, ProcessedMap } from '@kaetram/common/types/map';
 import type Entity from '../entity/entity';
 import type World from '../world';
 import type Areas from './areas/areas';
 
 let map = mapData as ProcessedMap;
-
-interface Door {
-    x: number;
-    y: number;
-    orientation: number | undefined;
-}
 
 export type RotatedTile = { tileId: number; h: boolean; v: boolean; d: boolean }; //horizontal, vertical, diagonal
 export type AnimatedTile = { tileId: string; name: string };
@@ -47,7 +41,7 @@ export default class Map {
     public plateau!: { [index: number]: number };
     public objects!: number[];
     public cursors!: { [tileId: number]: string };
-    public doors!: { [index: number]: Door };
+    public doors!: { [index: number]: ProcessedDoor };
     public warps!: ProcessedArea[];
 
     private areas!: { [name: string]: Areas };
@@ -100,7 +94,7 @@ export default class Map {
 
             let index = this.coordToIndex(door.x, door.y),
                 destination = _.find(doorsClone, (cloneDoor) => {
-                    return door.id === cloneDoor.destination;
+                    return door.destination === cloneDoor.id;
                 });
 
             if (!destination) return;
@@ -108,7 +102,9 @@ export default class Map {
             this.doors[index] = {
                 x: destination.x,
                 y: destination.y,
-                orientation: destination.orientation
+                orientation: destination.orientation || 'd',
+                quest: door.quest || '',
+                stage: door.stage || 0
             };
         });
     }
@@ -266,7 +262,7 @@ export default class Map {
         return !!this.doors[this.coordToIndex(x, y)];
     }
 
-    public getDoorByPosition(x: number, y: number): Door {
+    public getDoorByPosition(x: number, y: number): ProcessedDoor {
         return this.doors[this.coordToIndex(x, y)];
     }
 

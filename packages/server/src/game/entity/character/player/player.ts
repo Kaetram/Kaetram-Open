@@ -12,7 +12,6 @@ import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
 import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
-import Doors from './doors';
 import Enchant from './enchant';
 import Friends from './friends';
 import Handler from './handler';
@@ -57,12 +56,13 @@ import Container from './containers/container';
 import Item from '../../objects/item';
 import { SlotData, SlotType } from '@kaetram/common/types/slot';
 import { PointerData } from '@kaetram/common/types/pointer';
+import { ProcessedDoor } from '@kaetram/common/types/map';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
 type NPCTalkCallback = (npc: NPC) => void;
-type DoorCallback = (x: number, y: number) => void;
+type DoorCallback = (door: ProcessedDoor) => void;
 
 export interface PlayerRegions {
     regions: string;
@@ -120,7 +120,6 @@ export default class Player extends Character {
     public friends;
     public enchant;
     public trade;
-    public doors;
     public warp;
 
     public team?: string; // TODO
@@ -200,7 +199,6 @@ export default class Player extends Character {
         this.friends = new Friends(this);
         this.enchant = new Enchant(this);
         this.trade = new Trade(this);
-        this.doors = new Doors(this);
         this.warp = new Warp(this);
 
         this.webSocketClient = connection.type === 'WebSocket';
@@ -328,7 +326,6 @@ export default class Player extends Character {
         this.enchant = null!;
         this.bank = null!;
         this.trade = null!;
-        this.doors = null!;
         this.warp = null!;
 
         this.connection = null!;
@@ -1043,10 +1040,6 @@ export default class Player extends Character {
 
     public onKill(callback: KillCallback): void {
         this.killCallback = callback;
-    }
-
-    public override onDeath(callback: () => void): void {
-        this.deathCallback = callback;
     }
 
     public onTalkToNPC(callback: NPCTalkCallback): void {

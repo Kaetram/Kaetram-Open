@@ -20,6 +20,7 @@ import type Mob from '../mob/mob';
 import type Player from './player';
 import Equipment from './equipment/equipment';
 import Character from '../character';
+import { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default class Handler {
     private world: World;
@@ -40,7 +41,8 @@ export default class Handler {
         // Death callback
         this.player.onDeath(this.handleDeath.bind(this));
 
-        // Movement callback
+        // Movement-related callbacks
+        this.player.onDoor(this.handleDoor.bind(this));
         this.player.onMovement(this.handleMovement.bind(this));
 
         // Region callback
@@ -110,6 +112,21 @@ export default class Handler {
 
     private handleDeath(): void {
         this.player.combat.stop();
+    }
+
+    /**
+     * Receive a callback about the door destination coordinate
+     * and quest information (if existant).
+     */
+
+    private handleDoor(door: ProcessedDoor): void {
+        if (door.quest) {
+            let quest = this.player.quests.getQuest(door.quest);
+
+            //return quest.doorCallback?.(door);
+        }
+
+        log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
     }
 
     /**
