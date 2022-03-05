@@ -1384,6 +1384,22 @@
                  "height":16,
                  "id":49,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"destination",
+                         "type":"object",
+                         "value":210
+                        }, 
+                        {
+                         "name":"quest",
+                         "type":"string",
+                         "value":"tutorial"
+                        }, 
+                        {
+                         "name":"stage",
+                         "type":"int",
+                         "value":2
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -3024,10 +3040,21 @@
                  "width":16,
                  "x":6688,
                  "y":4432
+                }, 
+                {
+                 "height":16,
+                 "id":210,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":5312,
+                 "y":208
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -3852,10 +3879,10 @@
          "y":0
         }],
  "nextlayerid":55,
- "nextobjectid":210,
+ "nextobjectid":211,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.7.2",
+ "tiledversion":"1.7.0",
  "tileheight":16,
  "tilesets":[
         {
