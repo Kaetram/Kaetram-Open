@@ -27,20 +27,20 @@ export default abstract class Areas {
         _.each(mapAreas, (a) => {
             let area: Area = new Area(a.id, a.x, a.y, a.width, a.height);
 
-            // Add polyon if present.
+            // Add polygon if present.
             if (a.polygon) area.polygon = a.polygon;
 
             // Add to our list of areas.
             this.areas.push(area);
 
-            // Callback the last eleemnt in our list alongside the processed area info
+            // Callback the last element in our list alongside the processed area info
             callback?.(this.areas[this.areas.length - 1], a);
         });
     }
 
     /**
      * Logs a message indicating how many dynamic areas have been loaded.
-     * @param type The typo of area being loaded.
+     * @param type The type of area being loaded.
      */
 
     public message(type: string): void {
