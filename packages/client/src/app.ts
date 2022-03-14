@@ -24,7 +24,7 @@ export default class App {
 
     private loginButton = $('#login');
     // private createButton = $('#play');
-    private registerButton = $('#newCharacter');
+    private registerButton = $('#newAccount');
     private helpButton = $('#helpButton');
     private cancelButton = $('#cancelButton');
     private loading = $('.loader');
