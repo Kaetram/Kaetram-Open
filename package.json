@@ -14,7 +14,10 @@
         "hub": "yarn packages hub",
         "start": "yarn packages start",
         "build": "yarn packages build",
-        "lint": "eslint --cache packages/**/*.ts && stylelint --cache packages/**/*.scss",
+        "lint:js": "eslint packages/**/*.ts --ignore-path .gitignore",
+        "lint:style": "stylelint packages/**/*.scss --ignore-path .gitignore",
+        "lint:fix": "yarn lint:js --fix && yarn lint:style --fix",
+        "lint": "yarn lint:js && yarn lint:style",
         "test": "yarn packages test",
         "helper": "yarn packages helper",
         "map": "yarn packages map"
