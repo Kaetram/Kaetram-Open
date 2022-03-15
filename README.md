@@ -102,6 +102,8 @@ Then, to run each production build, use
 yarn start
 ```
 
+Add `--host` to the end to make the game visible on your network.
+
 ### Configuration
 
 _Optionally_, if you would want some additional configuration, There will see a file named
@@ -109,6 +111,8 @@ _Optionally_, if you would want some additional configuration, There will see a 
 file, or by setting environmental variables.
 
 Copy and rename `.env.defaults` to `.env`, and modify the contents to fit your needs.
+
+Keep in mind, you have to rebuild the client every time you change your configuration.
 
 ## Features
 
