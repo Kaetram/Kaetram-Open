@@ -90,13 +90,7 @@ export default class Map {
     private async load(): Promise<void> {
         log.debug('Parsing map with Web Workers...');
 
-        let worker: Worker;
-
-        if (import.meta.env.PROD) {
-            let { default: MapWorker } = await import('./mapworker?worker');
-
-            worker = new MapWorker();
-        } else worker = new Worker(new URL('./mapworker.ts', import.meta.url));
+        let worker = new Worker(new URL('mapworker.ts', import.meta.url), { type: 'classic' });
 
         worker.postMessage(mapData);
 
