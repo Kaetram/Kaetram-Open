@@ -9,7 +9,7 @@
     "license": "MPL-2.0",
     "scripts": {
         "postinstall": "husky install",
-        "packages": "yarn workspaces foreach --no-private -piv run",
+        "packages": "yarn workspaces foreach --no-private -j 3 -piv run",
         "dev": "yarn packages dev",
         "hub": "yarn packages hub",
         "start": "yarn packages start",
@@ -36,7 +36,7 @@
         "eslint-plugin-prettier": "^4.0.0",
         "eslint-plugin-unicorn": "^41.0.0",
         "husky": "^7.0.4",
-        "lint-staged": "^12.3.5",
+        "lint-staged": "^11.3.0-beta.2",
         "postcss": "^8.4.8",
         "postcss-value-parser": "^4.2.0",
         "prettier": "^2.5.1",
