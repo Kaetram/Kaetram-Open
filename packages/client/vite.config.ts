@@ -4,7 +4,7 @@ import config, { Config } from '../common/config';
 
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 import legacy from '@vitejs/plugin-legacy';
-import { createHtmlPlugin } from 'vite-plugin-html';
+import { minifyHtml } from 'vite-plugin-html';
 import compress from 'vite-plugin-compress';
 
 import { name, description } from 'kaetram/package.json';
@@ -98,9 +98,7 @@ export default defineConfig(({ command }) => {
                 }
             }),
             legacy(),
-            createHtmlPlugin({
-                minify: isProduction && { processScripts: ['application/ld+json'] }
-            }),
+            minifyHtml(isProduction && { processScripts: ['application/ld+json'] }),
             compress({ brotli })
         ],
         build: {
