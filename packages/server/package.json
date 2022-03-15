@@ -10,7 +10,7 @@
         "axios": "^0.26.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.2",
-        "discord.js": "^13.6.0",
+        "discord.js": "^12.5.3",
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
         "express": "^4.17.3",
