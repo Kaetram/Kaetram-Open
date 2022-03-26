@@ -1,16 +1,14 @@
-import '../scss/main.scss';
-
-import $ from 'jquery';
-
 import App from './app';
 import Game from './game';
-import log from './lib/log';
 
-let app = new App();
+import '../scss/main.scss';
 
-app.sendStatus('Loading game');
+/**
+ * The entry point for the game. Create an instance of the game
+ * and pass a new instance of the app onto it.
+ */
 
-log.debug('Loading the main application...');
-if (app.config.worldSwitch) $('#worlds-switch').show();
+new Game(new App());
 
-new Game(app);
+// Perhaps we may not even need this class? Instead we could just do this directly in the game?
+// Design choices for after the client is fully refactored.
