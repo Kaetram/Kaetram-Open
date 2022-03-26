@@ -1,4 +1,4 @@
-import { LoginPacket, ReadyPacket } from './../../../common/types/clientmessages.d';
+import { LoginPacket, MovementPacket, ReadyPacket } from './../../../common/types/clientmessages.d';
 import _ from 'lodash';
 import sanitizer from 'sanitizer';
 
@@ -49,66 +49,52 @@ export default class Incoming {
 
             player.refreshTimeout();
 
-            switch (packet) {
-                case Packets.Login:
-                    return this.handleLogin(message);
-
-                case Packets.Ready:
-                    return this.handleReady(message);
-
-                case Packets.Who:
-                    return this.handleWho(message);
-
-                case Packets.Equipment:
-                    return this.handleEquipment(message);
-
-                case Packets.Movement:
-                    return this.handleMovement(message);
-
-                case Packets.Request:
-                    return this.handleRequest(message);
-
-                case Packets.Target:
-                    return this.handleTarget(message);
-
-                case Packets.Combat:
-                    return this.handleCombat(message);
-
-                case Packets.Projectile:
-                    return this.handleProjectile(message);
-
-                case Packets.Network:
-                    return this.handleNetwork(message);
-
-                case Packets.Chat:
-                    return this.handleChat(message);
-
-                case Packets.Command:
-                    return this.handleCommand(message);
-
-                case Packets.Container:
-                    return this.handleContainer(message);
-
-                case Packets.Respawn:
-                    return this.handleRespawn(message);
-
-                case Packets.Trade:
-                    return this.handleTrade(message);
-
-                case Packets.Enchant:
-                    return this.handleEnchant(message);
-
-                case Packets.Click:
-                    return this.handleClick(message);
-
-                case Packets.Warp:
-                    return this.handleWarp(message);
-
-                case Packets.Shop:
-                    return this.handleShop(message);
-
-                case Packets.Camera:
-                    return this.handleCamera(message);
+            // Prevent server from crashing due to a packet malfunction.
+            try {
+                switch (packet) {
+                    case Packets.Login:
+                        return this.handleLogin(message);
+                    case Packets.Ready:
+                        return this.handleReady(message);
+                    case Packets.Who:
+                        return this.handleWho(message);
+                    case Packets.Equipment:
+                        return this.handleEquipment(message);
+                    case Packets.Movement:
+                        return this.handleMovement(message);
+                    case Packets.Request:
+                        return this.handleRequest(message);
+                    case Packets.Target:
+                        return this.handleTarget(message);
+                    case Packets.Combat:
+                        return this.handleCombat(message);
+                    case Packets.Projectile:
+                        return this.handleProjectile(message);
+                    case Packets.Network:
+                        return this.handleNetwork(message);
+                    case Packets.Chat:
+                        return this.handleChat(message);
+                    case Packets.Command:
+                        return this.handleCommand(message);
+                    case Packets.Container:
+                        return this.handleContainer(message);
+                    case Packets.Respawn:
+                        return this.handleRespawn(message);
+                    case Packets.Trade:
+                        return this.handleTrade(message);
+                    case Packets.Enchant:
+                        return this.handleEnchant(message);
+                    case Packets.Click:
+                        return this.handleClick(message);
+                    case Packets.Warp:
+                        return this.handleWarp(message);
+                    case Packets.Shop:
+                        return this.handleShop(message);
+                    case Packets.Camera:
+                        return this.handleCamera(message);
+                }
+            } catch (error) {
+                console.log(error);
             }
         });
     }
@@ -283,48 +269,41 @@ export default class Incoming {
         // }
     }
 
-    private handleMovement(packet: PacketData): void {
-        let opcode = packet.shift() as Opcodes.Movement,
-            orientation: Modules.Orientation,
-            requestX: number,
-            requestY: number,
-            playerX: number,
-            playerY: number,
-            movementSpeed: number,
-            hasTarget: boolean,
-            targetInstance: string,
+    private handleMovement(data: MovementPacket): void {
+        let {
+                opcode,
+                requestX,
+                requestY,
+                playerX,
+                playerY,
+                movementSpeed,
+                hasTarget,
+                targetInstance,
+                orientation,
+                frozen
+            } = data,
             entity: Entity,
             door: ProcessedDoor,
-            diff: number;
+            diff = 0;
 
         if (this.player.dead) return;
 
         switch (opcode) {
             case Opcodes.Movement.Request:
-                requestX = packet.shift() as number;
-                requestY = packet.shift() as number;
-
-                this.preventNoClip(requestX, requestY);
+                this.preventNoClip(requestX!, requestY!);
 
                 this.player.movementStart = Date.now();
 
                 break;
 
             case Opcodes.Movement.Started:
-                requestX = packet.shift() as number;
-                requestY = packet.shift() as number;
-                playerX = packet.shift() as number;
-                playerY = packet.shift() as number;
-                movementSpeed = packet.shift() as number;
-                targetInstance = packet.shift() as string;
-
                 if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
 
                 if (
                     playerX !== this.player.x ||
                     playerY !== this.player.y ||
                     this.player.stunned ||
-                    !this.preventNoClip(requestX, requestY)
+                    !this.preventNoClip(requestX!, requestY!)
                 )
                     return;
 
@@ -335,23 +314,14 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Step:
-                playerX = packet.shift() as number;
-                playerY = packet.shift() as number;
+                if (this.player.stunned || !this.preventNoClip(playerX!, playerY!)) return;
 
-                if (this.player.stunned || !this.preventNoClip(playerX, playerY)) return;
-
-                this.player.setPosition(playerX, playerY);
+                this.player.setPosition(playerX!, playerY!);
 
                 break;
 
             case Opcodes.Movement.Stop:
-                playerX = packet.shift() as number;
-                playerY = packet.shift() as number;
-                targetInstance = packet.shift() as string;
-                hasTarget = !!(packet.shift() as number);
-                orientation = packet.shift() as number;
-
-                entity = this.entities.get(targetInstance);
+                entity = this.entities.get(targetInstance!);
 
                 if (!this.player.moving) {
                     log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
@@ -361,13 +331,13 @@ export default class Incoming {
 
                 if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
-                if (this.world.map.isDoor(playerX, playerY) && !hasTarget) {
-                    door = this.world.map.getDoorByPosition(playerX, playerY);
+                if (this.world.map.isDoor(playerX!, playerY!) && !hasTarget) {
+                    door = this.world.map.getDoorByPosition(playerX!, playerY!);
 
                     this.player.doorCallback?.(door);
                 } else {
-                    this.player.setPosition(playerX, playerY);
-                    this.player.setOrientation(orientation);
+                    this.player.setPosition(playerX!, playerY!);
+                    this.player.setOrientation(orientation!);
                 }
 
                 this.player.moving = false;
@@ -380,23 +350,17 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Entity:
-                targetInstance = packet.shift() as string;
-                requestX = packet.shift() as number;
-                requestY = packet.shift() as number;
-
-                entity = this.entities.get(targetInstance) as Character;
+                entity = this.entities.get(targetInstance!) as Character;
 
                 if (!entity || (entity.x === requestX && entity.y === requestY)) return;
 
-                entity.setPosition(requestX, requestY);
+                entity.setPosition(requestX!, requestY!);
 
                 if ((entity as Character).hasTarget()) entity.combat.forceAttack();
 
                 break;
 
             case Opcodes.Movement.Orientate:
-                orientation = packet.shift() as number;
-
                 this.player.sendToRegions(
                     new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
                 );
@@ -404,12 +368,10 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Freeze:
-                this.player.frozen = packet.shift() as boolean;
+                this.player.frozen = !!frozen;
                 break;
 
             case Opcodes.Movement.Zone:
-                orientation = packet.shift() as number;
-
                 log.debug(`Zoning orientation: ${orientation}`);
                 break;
         }

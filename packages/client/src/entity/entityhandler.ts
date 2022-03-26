@@ -50,13 +50,12 @@ export default class EntityHandler {
             });
 
             if (entity.isMob())
-                game.socket.send(Packets.Movement, [
-                    Opcodes.Movement.Entity,
-                    entity.id,
-                    entity.gridX,
-                    entity.gridY
-                ]);
-
+                game.socket.send(Packets.Movement, {
+                    opcode: Opcodes.Movement.Entity,
+                    targetInstance: entity.id,
+                    requestX: entity.gridX,
+                    requestY: entity.gridY
+                });
             if (
                 entity.attackRange > 1 &&
                 entity.target &&
