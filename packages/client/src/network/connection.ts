@@ -120,24 +120,28 @@ export default class Connection {
                     password = registerInfo[1].val(),
                     email = registerInfo[3].val();
 
-                this.socket.send(Packets.Login, [
-                    Opcodes.Login.Register,
+                this.socket.send(Packets.Login, {
+                    opcode: Opcodes.Login.Register,
                     username,
                     password,
                     email
-                ]);
+                });
             } else if (this.app.isGuest())
-                this.socket.send(Packets.Login, [Opcodes.Login.Guest, '', '']);
+                this.socket.send(Packets.Login, { opcode: Opcodes.Login.Guest });
             else {
                 let loginInfo = this.app.loginFields,
-                    name = loginInfo[0].val() as string,
-                    pass = loginInfo[1].val() as string;
+                    username = loginInfo[0].val() as string,
+                    password = loginInfo[1].val() as string;
 
-                this.socket.send(Packets.Login, [Opcodes.Login.Login, name, pass]);
+                this.socket.send(Packets.Login, {
+                    opcode: Opcodes.Login.Login,
+                    username,
+                    password
+                });
 
                 if (this.game.hasRemember()) {
-                    this.storage.data.player.username = name;
-                    this.storage.data.player.password = pass;
+                    this.storage.data.player.username = username;
+                    this.storage.data.player.password = password;
                 } else {
                     this.storage.data.player.username = '';
                     this.storage.data.player.password = '';

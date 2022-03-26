@@ -94,7 +94,7 @@ export default class Socket {
      * @param data Packet data in an array format.
      */
 
-    public send(packet: number, data?: unknown[]): void {
+    public send(packet: number, data?: unknown): void {
         let json = JSON.stringify([packet, data]);
 
         if (this.connection?.connected) this.connection.send(json);

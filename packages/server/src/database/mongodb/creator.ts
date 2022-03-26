@@ -4,6 +4,8 @@ import { Db } from 'mongodb';
 import type Player from '../../game/entity/character/player/player';
 
 import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+
 import { Modules } from '@kaetram/common/network';
 
 import type { Collection } from 'mongodb';
@@ -173,6 +175,20 @@ export default class Creator {
 
             callback(hash);
         });
+    }
+
+    /**
+     * Verifies the user's username, password, and email server-sided
+     * to make sure the registration process does not encounter issues.
+     * @param player The player instance we are verifying.
+     */
+
+    public static verifyPlayer(player: Player): boolean {
+        if (!player.username || player.username.length === 0) return false;
+        if (!player.password || player.password.length < 3) return false;
+        if (!player.email || !Utils.isEmail(player.email)) return false;
+
+        return true;
     }
 
     /**

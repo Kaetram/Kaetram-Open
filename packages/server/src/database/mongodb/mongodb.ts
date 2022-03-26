@@ -96,6 +96,9 @@ export default class MongoDB {
     public register(player: Player): void {
         if (!this.hasDatabase()) return;
 
+        // Verify account credentials for input validity.
+        if (!Creator.verifyPlayer(player)) return player.connection.reject('invalidinput');
+
         let collection = this.database.collection<PlayerInfo>('player_info'),
             usernameCursor = collection.find({ username: player.username }),
             emailCursor = collection.find({ email: player.email });
