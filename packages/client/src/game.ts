@@ -269,10 +269,16 @@ export default class Game {
         let defaultSprite = this.getSprite(player.getSpriteName());
 
         player.setSprite(defaultSprite);
+
         if (storage) player.setOrientation(storage.data.player.orientation);
+
         player.idle();
 
-        if (map) socket.send(Packets.Ready, [true, map.preloadedData, agent]);
+        if (map)
+            socket.send(Packets.Ready, {
+                hasMapData: map.preloadedData,
+                userAgent: agent
+            });
 
         new PlayerHandler(this, player);
 
