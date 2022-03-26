@@ -273,7 +273,6 @@ export default class Game {
         player.idle();
 
         if (map) socket.send(Packets.Ready, [true, map.preloadedData, agent]);
-        this.sendClientData();
 
         new PlayerHandler(this, player);
 
@@ -386,14 +385,6 @@ export default class Game {
         this.renderer.resize();
 
         this.pointer.resize();
-    }
-
-    public sendClientData(): void {
-        let { canvasWidth, canvasHeight } = this.renderer;
-
-        if (!canvasWidth || !canvasHeight) return;
-
-        this.socket.send(Packets.Client, [canvasWidth, canvasHeight]);
     }
 
     public createPlayer(): void {
