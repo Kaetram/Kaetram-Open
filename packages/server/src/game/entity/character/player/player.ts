@@ -130,7 +130,6 @@ export default class Player extends Character {
     public lastRegionChange = Date.now();
 
     private currentSong: string | null = null;
-    public isGuest = false;
 
     public canTalk = true;
     public webSocketClient;
@@ -791,6 +790,15 @@ export default class Player extends Character {
         return this.mute - time > 0;
     }
 
+    /**
+     * Checks if the player is a guest or not.
+     * @returns Whether the player's username includes the `guest` string.
+     */
+
+    public isGuest(): boolean {
+        return this.username.includes('guest');
+    }
+
     public override isDead(): boolean {
         return this.getHitPoints() < 1 || this.dead;
     }
@@ -967,7 +975,7 @@ export default class Player extends Character {
     }
 
     public save(): void {
-        if (config.skipDatabase || this.isGuest || !this.ready) return;
+        if (config.skipDatabase || this.isGuest() || !this.ready) return;
 
         this.database.creator?.save(this);
     }
