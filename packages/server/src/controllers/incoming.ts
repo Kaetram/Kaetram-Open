@@ -1,4 +1,4 @@
-import { LoginPacket } from './../../../common/types/clientmessages.d';
+import { LoginPacket, ReadyPacket } from './../../../common/types/clientmessages.d';
 import _ from 'lodash';
 import sanitizer from 'sanitizer';
 
@@ -148,10 +148,10 @@ export default class Incoming {
         }
     }
 
-    private handleReady(message: [string, string, string]): void {
-        let [, preloadedData, userAgent] = message;
+    private handleReady(data: ReadyPacket): void {
+        let { hasMapData, userAgent } = data;
 
-        if (this.player.regionsLoaded.length > 0 && !preloadedData) this.player.regionsLoaded = [];
+        if (this.player.regionsLoaded.length > 0 && !hasMapData) this.player.regionsLoaded = [];
 
         this.player.loadEquipment();
         this.player.loadInventory();
