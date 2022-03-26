@@ -94,12 +94,19 @@ export default class Player extends Character {
 
     private handler: Handler;
 
+    public quests: Quests;
     public equipment: Equipments;
+    public mana: Mana = new Mana(Modules.Defaults.MANA);
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
-    public quests: Quests;
 
     public ready = false; // indicates if login processed finished
+    public isGuest = false;
+    public canTalk = true;
+    public questsLoaded = false;
+    public achievementsLoaded = false;
+
+    private permanentPVP = false;
 
     public password = '';
     public email = '';
@@ -114,7 +121,13 @@ export default class Player extends Character {
     public orientation = Modules.Orientation.Down;
     public mapVersion = -1;
 
+    public talkIndex = 0;
+    public cheatScore = 0;
+    public defaultMovementSpeed = 250; // For fallback.
+
     // TODO - REFACTOR THESE ------------
+
+    public webSocketClient;
 
     public abilities;
     public friends;
@@ -131,22 +144,18 @@ export default class Player extends Character {
 
     private currentSong: string | null = null;
 
-    public canTalk = true;
-    public webSocketClient;
-
-    public talkIndex = 0;
-    public cheatScore = 0;
-    public defaultMovementSpeed = 250; // For fallback.
-
     public regionsLoaded: number[] = [];
     public lightsLoaded: number[] = [];
 
     public npcTalk = '';
 
+    public movementStart!: number;
+    public pingTime!: number;
+
+    private lastNotify!: number;
+
     private nextExperience: number | undefined;
     private prevExperience!: number;
-
-    public mana: Mana = new Mana(Modules.Defaults.MANA);
 
     public profileDialogOpen?: boolean;
     public inventoryOpen?: boolean;
@@ -154,16 +163,6 @@ export default class Player extends Character {
 
     public cameraArea: Area | undefined;
     private overlayArea: Area | undefined;
-
-    private permanentPVP = false;
-    public movementStart!: number;
-
-    public pingTime!: number;
-
-    public questsLoaded = false;
-    public achievementsLoaded = false;
-
-    private lastNotify!: number;
 
     public selectedShopItem!: { id: number; index: number } | null;
 
@@ -790,15 +789,6 @@ export default class Player extends Character {
         return this.mute - time > 0;
     }
 
-    /**
-     * Checks if the player is a guest or not.
-     * @returns Whether the player's username includes the `guest` string.
-     */
-
-    public isGuest(): boolean {
-        return this.username.includes('guest');
-    }
-
     public override isDead(): boolean {
         return this.getHitPoints() < 1 || this.dead;
     }
@@ -975,7 +965,7 @@ export default class Player extends Character {
     }
 
     public save(): void {
-        if (config.skipDatabase || this.isGuest() || !this.ready) return;
+        if (config.skipDatabase || this.isGuest || !this.ready) return;
 
         this.database.creator?.save(this);
     }
