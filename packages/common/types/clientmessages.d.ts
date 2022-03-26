@@ -10,3 +10,8 @@ export interface LoginPacket {
     password?: string;
     email?: string;
 }
+
+export interface ReadyPacket {
+    hasMapData: string;
+    userAgent: string;
+}
