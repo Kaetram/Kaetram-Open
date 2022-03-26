@@ -189,6 +189,7 @@ export default class Handler {
     private handleInventory(): void {
         let { slots } = this.player.inventory.serialize();
 
+        // Send Batch packet to the client.
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
@@ -345,6 +346,7 @@ export default class Handler {
     private handlePoison(info: any): void {
         this.player.sync();
 
+        // Notify the player when the poison status changes.
         if (info) this.player.notify('You have been poisoned.');
         else this.player.notify('The poison has worn off.');
 
