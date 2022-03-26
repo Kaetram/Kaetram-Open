@@ -347,6 +347,7 @@ export default class Game {
         if (!started) return;
 
         this.stop();
+
         renderer.stop();
         menu.stop();
 
