@@ -143,7 +143,7 @@ export default class Incoming {
                 return this.database.register(this.player);
 
             case Opcodes.Login.Guest:
-                this.player.username = `Guest${Utils.counter}`;
+                this.player.username = `guest${Utils.counter}`; // Generate a random guest username.
                 return this.player.load(Creator.serializePlayer(this.player));
         }
     }
