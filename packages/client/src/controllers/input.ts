@@ -486,7 +486,10 @@ export default class InputController {
     }
 
     private updateFrozen(state: boolean): void {
-        this.game.socket.send(Packets.Movement, [Opcodes.Movement.Freeze, state]);
+        this.game.socket.send(Packets.Movement, {
+            opcode: Opcodes.Movement.Freeze,
+            frozen: state
+        });
     }
 
     private isTargetable(entity: Entity): boolean {
