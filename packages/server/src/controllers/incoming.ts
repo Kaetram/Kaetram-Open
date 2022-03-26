@@ -108,9 +108,6 @@ export default class Incoming {
 
                 case Packets.Camera:
                     return this.handleCamera(message);
-
-                case Packets.Client:
-                    return this.handleClient(message);
             }
         });
     }
@@ -868,25 +865,6 @@ export default class Incoming {
         this.player.cameraArea = undefined;
         // TODO - Make this a server-side thing.
         // this.player.handler.detectCamera(this.player.x, this.player.y);
-    }
-
-    /**
-     * Receive client information such as screen size, will be expanded
-     * for more functionality when needed.
-     */
-    private handleClient(message: [number, number]): void {
-        let [canvasWidth, canvasHeight] = message;
-
-        if (!canvasWidth || !canvasHeight) return;
-
-        /**
-         * The client is by default scaled to 3x the normal
-         * tileSize of 16x16. So we are using 48x48 to find
-         * a desireable region size.
-         */
-
-        // this.player.regionWidth = Math.ceil(canvasWidth / 48);
-        // this.player.regionHeight = Math.ceil(canvasHeight / 48);
     }
 
     /**

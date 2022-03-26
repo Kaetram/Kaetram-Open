@@ -45,7 +45,6 @@ enum Packets {
     Overlay,
     Camera,
     Bubble,
-    Client,
     Profession,
     BuildUp
 }

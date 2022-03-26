@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
+import log from './lib/log';
+
 import { Modules } from '@kaetram/common/network';
 
 import install from './lib/pwa';
@@ -55,7 +57,9 @@ export default class App {
     // orientation: string;
 
     public constructor() {
-        this.sendStatus('Initializing the main app');
+        log.debug('Loading the game app.');
+
+        this.sendStatus(`Initializing the game client...`);
 
         // this.updateOrientation();
 
@@ -185,6 +189,8 @@ export default class App {
                 dataType: 'script',
                 async: true
             });
+
+        if (this.config.worldSwitch) $('#world-switch').show();
     }
 
     public ready(): void {
