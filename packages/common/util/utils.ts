@@ -206,5 +206,16 @@ export default {
             x: parseInt(splitPosition[0]),
             y: parseInt(splitPosition[1])
         };
+    },
+
+    /**
+     * Verifies the email string against RegEx.
+     * @param email Email string to verify.
+     */
+
+    isEmail(email: string): boolean {
+        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
+            email
+        );
     }
 };

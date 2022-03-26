@@ -1,3 +1,4 @@
+import { LoginPacket } from './../../../common/types/clientmessages.d';
 import _ from 'lodash';
 import sanitizer from 'sanitizer';
 
@@ -119,14 +120,13 @@ export default class Incoming {
      * then we proceed with no username/password and no database saving.
      */
 
-    private handleLogin(data: PacketData): void {
-        let opcode = data.shift(),
-            username = data.shift() as string,
-            password = data.shift() as string;
+    private handleLogin(data: LoginPacket): void {
+        let { opcode, username, password, email } = data;
 
         // Format username by making it all lower case, shorter than 32 characters, and no spaces.
-        this.player.username = username.toLowerCase().slice(0, 32).trim();
-        this.player.password = password.slice(0, 32);
+        if (username) this.player.username = username.toLowerCase().slice(0, 32).trim();
+        if (password) this.player.password = password.slice(0, 32);
+        if (email) this.player.email = email;
 
         // Reject connection if player is already logged in.
         if (this.world.isOnline(this.player.username)) return this.connection.reject('loggedin');
@@ -134,17 +134,17 @@ export default class Incoming {
         // Proceed directly to login with default player data if skip database is present.
         if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
 
+        // Handle login for each particular case.
         switch (opcode) {
             case Opcodes.Login.Login:
                 return this.database.login(this.player);
 
             case Opcodes.Login.Register:
-                this.player.email = data.shift() as string;
-
                 return this.database.register(this.player);
 
             case Opcodes.Login.Guest:
-                break;
+                this.player.username = `Guest${Utils.counter}`;
+                return this.player.load(Creator.serializePlayer(this.player));
         }
     }
 

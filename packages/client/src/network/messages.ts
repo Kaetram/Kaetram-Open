@@ -298,6 +298,10 @@ export default class Messages {
                 this.app.sendError(null, 'The email you have chosen is not available.');
                 break;
 
+            case 'invalidinput':
+                this.app.sendError(null, 'The input you have provided is invalid.');
+                break;
+
             case 'loggedin':
                 this.app.sendError(null, 'The player is already logged in!');
                 break;
