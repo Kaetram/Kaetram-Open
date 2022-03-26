@@ -1,4 +1,3 @@
-import { LoginPacket, MovementPacket, ReadyPacket } from './../../../common/types/clientmessages.d';
 import _ from 'lodash';
 import sanitizer from 'sanitizer';
 
@@ -22,6 +21,7 @@ import Item from '../game/entity/objects/item';
 import Entity from '../game/entity/entity';
 import { SlotType } from '@kaetram/common/types/slot';
 import { ProcessedDoor } from '@kaetram/common/types/map';
+import { LoginPacket, MovementPacket, ReadyPacket } from '@kaetram/common/types/clientmessages.d';
 
 type PacketData = ((string | string[]) | number | boolean)[];
 
