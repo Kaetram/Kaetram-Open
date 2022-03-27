@@ -24,8 +24,8 @@ export default abstract class Quest {
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
     private stageCount = 0; // How long the quest is.
 
-    private stageData: StageData;
-    private stages: { [id: number]: RawStage } = {};
+    private stageData: StageData; // Current stage data, constantly updated when progression occurs.
+    private stages: { [id: number]: RawStage } = {}; // All the stages from the JSON data.
 
     // Store all NPCs involved in the quest.
     private npcs: string[] = [];
@@ -135,9 +135,15 @@ export default abstract class Quest {
      */
 
     private handleKill(mob: Mob): void {
-        log.debug(`[${this.name}] Killing mob: ${mob.key}.`);
+        log.debug(
+            `[${this.name}] Killing mob: ${mob.key}, stage: ${this.stage}, subStage: ${this.subStage}.`
+        );
 
-        if (this.stageData.task !== 'kill') return;
+        if (!this.stageData.mob)
+            return log.error(`[${this.name}] No mob data for stage: ${this.stage}.`);
+
+        if (this.stageData.mob.includes(mob.key)) this.progress(true);
+        if (this.subStage >= this.stageData.mobCountRequirement) this.progress();
     }
 
     /**
@@ -160,14 +166,14 @@ export default abstract class Quest {
 
     private handleItemRequirement(player: Player, stageData: StageData): void {
         // Extract the item key and count requirement.
-        let { itemRequirement, countRequirement } = stageData,
-            index = player.inventory.getIndex(itemRequirement, countRequirement);
+        let { itemRequirement, itemCountRequirement } = stageData,
+            index = player.inventory.getIndex(itemRequirement, itemCountRequirement);
 
         // Cannot find the item in the inventory (or with correct count).
         if (index === -1) return;
 
         // Remove `countRequirement` amount of an item at the index.
-        player.inventory.remove(index, countRequirement);
+        player.inventory.remove(index, itemCountRequirement);
 
         this.progress();
     }
@@ -245,7 +251,9 @@ export default abstract class Quest {
             task: stage.task,
             npc: stage.npc! || '',
             mob: stage.mob! || '',
-            countRequirement: stage.countRequirement! || 1,
+            mobCountRequirement: stage.mobCountRequirement! || 0,
+            itemRequirement: stage.itemRequirement! || '',
+            itemCountRequirement: stage.itemCountRequirement! || 0,
             text: stage.text! || [''],
             pointer: stage.pointer! || undefined,
             popup: stage.popup! || undefined,
