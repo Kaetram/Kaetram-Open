@@ -7,23 +7,27 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Creator from '../database/mongodb/creator';
+import { Chat, Combat, Movement, Notification, Spawn } from '../network/packets';
+import Respawn from '../network/packets/respawn';
 import Commands from './commands';
 
+import type {
+    LoginPacket,
+    MovementPacket,
+    ReadyPacket
+} from '@kaetram/common/types/clientmessages';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { SlotType } from '@kaetram/common/types/slot';
 import type Character from '../game/entity/character/character';
 import type Mob from '../game/entity/character/mob/mob';
 import type Player from '../game/entity/character/player/player';
+import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
+import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
-import { Chat, Combat, Movement, Notification, Spawn } from '../network/packets';
-import Respawn from '../network/packets/respawn';
-import Item from '../game/entity/objects/item';
-import Entity from '../game/entity/entity';
-import { SlotType } from '@kaetram/common/types/slot';
-import { ProcessedDoor } from '@kaetram/common/types/map';
-import { LoginPacket, MovementPacket, ReadyPacket } from '@kaetram/common/types/clientmessages.d';
 
-type PacketData = ((string | string[]) | number | boolean)[];
+type PacketData = (string | number | boolean | string[])[];
 
 export default class Incoming {
     private connection;

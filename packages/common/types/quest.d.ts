@@ -1,4 +1,4 @@
-import { PointerData } from './pointer.d';
+import type { PointerData } from './pointer';
 
 export interface RawStage {
     task: string;
