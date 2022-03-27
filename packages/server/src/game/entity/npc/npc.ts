@@ -48,7 +48,7 @@ export default class NPC extends Entity {
      */
 
     public talk(player?: Player, text = this.text): void {
-        if (!(player && this.hasDialogue())) return;
+        if (!(player && this.hasDialogue(text))) return;
 
         // Reset the talking index if we talk to a new NPC.
         if (player.npcTalk !== this.key) {
@@ -81,7 +81,7 @@ export default class NPC extends Entity {
      * @returns If the dialogue array length is greater than 0.
      */
 
-    public hasDialogue(): boolean {
-        return this.text.length > 0;
+    public hasDialogue(text: string[]): boolean {
+        return text.length > 0;
     }
 }
