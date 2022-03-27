@@ -26,9 +26,9 @@
 
       "2": {
         "task": "talk",
-        "npc": "coder",
+        "npc": "guard",
         "text": [
-          "I see, a new adventurer.",
+          "I see... a new adventurer.",
           "Let me tell you a bit about these lands.",
           "You'll be killing stuff...",
           "A lot of stuff actually...",
@@ -37,6 +37,12 @@
           "So for now, go kill 10 of them rats."
         ],
         "completedText": ["What are you waiting for?", "Kill some of them rats."],
+        "itemKey": "sword1",
+        "popup": {
+          "title": "Item acquired!",
+          "text": "You've just received a sword! Equip it using your inventory!",
+          "colour": "#33cc33"
+        },
         "pointer": {
           "type": 0,
           "x": 333,
@@ -47,7 +53,10 @@
       "3": {
         "task": "kill",
         "mob": ["rat"],
-        "countRequirement": 10
+        "countRequirement": 10,
+        "pointer": {
+          "type": 3
+        }
       }
     }
   }
