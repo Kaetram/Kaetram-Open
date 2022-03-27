@@ -26,15 +26,19 @@ import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
 import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
+import Connection from '../network/connection';
+import World from '../game/world';
+import Entities from './entities';
+import MongoDB from '../database/mongodb/mongodb';
 
 type PacketData = (string | number | boolean | string[])[];
 
 export default class Incoming {
-    private connection;
-    private world;
-    private entities;
-    private database;
-    private commands;
+    private world: World;
+    private connection: Connection;
+    private entities: Entities;
+    private database: MongoDB;
+    private commands: Commands;
 
     public constructor(private player: Player) {
         this.connection = player.connection;
