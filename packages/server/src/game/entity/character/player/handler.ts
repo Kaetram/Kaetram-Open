@@ -123,8 +123,10 @@ export default class Handler {
         if (door.quest) {
             let quest = this.player.quests.getQuest(door.quest);
 
-            //return quest.doorCallback?.(door);
+            return quest.doorCallback?.(door, this.player);
         }
+
+        this.player.teleport(door.x, door.y, true);
 
         log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
     }
