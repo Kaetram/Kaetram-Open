@@ -121,7 +121,9 @@ export default abstract class Quest {
      */
 
     private handleDoor(door: ProcessedDoor, player: Player): void {
-        if (door.stage! < this.stage) return player.notify('You cannot pass through this door.');
+        log.debug(`[${this.name}] Door: ${door.x}-${door.y} - stage: ${this.stage}.`);
+
+        if (this.stage < door.stage!) return player.notify('You cannot pass through this door.');
 
         player.teleport(door.x, door.y, true);
 
@@ -284,9 +286,6 @@ export default abstract class Quest {
             if (this.stage < i) continue;
 
             let stage = this.stages[i];
-
-            // Skip the stage if no npc info is found.
-            if (!stage.npc!) continue;
 
             // If no key is found, continue iterating.
             if (stage.npc! !== npc.key) continue;

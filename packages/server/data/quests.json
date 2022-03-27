@@ -6,8 +6,12 @@
       "0": {
         "task": "talk",
         "npc": "coder",
-        "text": ["Hello", "this", "is", "coder", "example", "text"],
-        "completedText": ["You should do what I said.", "bro"],
+        "text": [
+          "Hello there, I am the programmer of this world.",
+          "You'll first need to complete this tutorial",
+          "before you can proceed.", "Do not worry, I coded it to be pretty short.",
+          "Off you go!"],
+        "completedText": ["Why don't you just walk through that door over there eh?"],
         "pointer": {
           "type": 0,
           "x": 372,
@@ -66,8 +70,43 @@
           "x": 323,
           "y": 23
         }
+      },
+
+      "5": {
+        "task": "talk",
+        "npc": "sorcerer",
+        "text": ["Sup there young one!", "I am a spooky mage in this cave!", "Here, take this bow and kill 4 of those rats!"],
+        "completedText": ["Well then, hurry up and kill those rats.", "Then you can get out of here!"],
+        "itemKey": "woodenbow",
+        "popup": {
+          "title": "Item acquired!",
+          "text": "You've just received a bow! Equip it using your inventory!",
+          "colour": "#33cc33"
+        },
+        "pointer": {
+          "type": 0,
+          "x": 414,
+          "y": 21
+        }
+      },
+
+      "6": {
+        "task": "kill",
+        "mob": ["rat"],
+        "mobCountRequirement": 4,
+        "pointer": {
+          "type": 3
+        }
+      },
+
+      "7": {
+        "task": "door",
+        "pointer": {
+          "type": 0,
+          "x": 406,
+          "y": 19
+        }
       }
     }
   }
-
 }
