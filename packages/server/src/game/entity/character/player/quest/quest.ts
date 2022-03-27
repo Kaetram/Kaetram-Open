@@ -9,6 +9,8 @@ import log from '@kaetram/common/util/log';
 import { QuestData, RawQuest, RawStage, StageData } from '@kaetram/common/types/quest';
 import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
+import Item from '../../../objects/item';
+import { PopupData } from '@kaetram/common/types/popup';
 
 export default abstract class Quest {
     /**
@@ -22,6 +24,7 @@ export default abstract class Quest {
     private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
     private stageCount = 0; // How long the quest is.
 
+    private stageData: StageData;
     private stages: { [id: number]: RawStage } = {};
 
     // Store all NPCs involved in the quest.
@@ -33,6 +36,7 @@ export default abstract class Quest {
 
     private progressCallback?: (key: string, stage: number, subStage: number) => void;
     private pointerCallback?: (pointerData: PointerData) => void;
+    private popupCallback?: (popupData: PopupData) => void;
 
     public constructor(private key: string, rawData: RawQuest) {
         this.name = rawData.name;
@@ -40,6 +44,8 @@ export default abstract class Quest {
         this.stageCount = Object.keys(rawData.stages).length;
 
         this.stages = rawData.stages;
+
+        this.stageData = this.getStageData();
 
         this.loadNPCs();
 
@@ -81,13 +87,26 @@ export default abstract class Quest {
         log.debug(`[${this.name}] Talking to NPC: ${npc.key} - stage: ${this.stage}.`);
 
         // Extract the dialogue for the NPC.
-        let stageData = this.getStageData(),
-            dialogue = this.getNPCDialogue(npc);
+        let dialogue = this.getNPCDialogue(npc);
 
-        // End of conversation handler.
-        if (stageData.npc! === npc.key && dialogue.length === player.talkIndex)
-            if (!this.hasItemRequirement()) this.progress();
-            else this.handleItemRequirement(player, stageData);
+        /**
+         * Ends the conversation. If the player has the required item in the inventory
+         * it will check for that first. If the stage requires the player be given an item
+         * it must be given before the conversation ends and quest progresses.
+         */
+        if (this.stageData.npc! === npc.key && dialogue.length === player.talkIndex)
+            if (!this.hasItemRequirement())
+                if (this.hasItemToGive()) {
+                    if (
+                        this.givePlayerItem(
+                            player,
+                            this.stageData.itemKey!,
+                            this.stageData.itemCount!
+                        )
+                    )
+                        this.progress();
+                } else this.progress();
+            else this.handleItemRequirement(player, this.stageData);
 
         // Talk to the NPC and progress the dialogue.
         npc.talk(player, dialogue);
@@ -118,17 +137,15 @@ export default abstract class Quest {
     private handleKill(mob: Mob): void {
         log.debug(`[${this.name}] Killing mob: ${mob.key}.`);
 
-        let stageData = this.getStageData();
-
-        if (stageData.task !== 'kill') return;
+        if (this.stageData.task !== 'kill') return;
     }
 
     /**
      * Advances the quest to the next stage.
      */
 
-    public progress(subStage?: boolean): void {
-        log.warning('Received progress yo');
+    private progress(subStage?: boolean): void {
+        log.debug(`${this.name} Quest progression.`);
 
         // Progress substage only if the parameter is defined.
         if (subStage) this.setStage(this.stage, ++this.subStage);
@@ -141,7 +158,7 @@ export default abstract class Quest {
      * @param player The player we are checking inventory of.
      */
 
-    public handleItemRequirement(player: Player, stageData: StageData): void {
+    private handleItemRequirement(player: Player, stageData: StageData): void {
         // Extract the item key and count requirement.
         let { itemRequirement, countRequirement } = stageData,
             index = player.inventory.getIndex(itemRequirement, countRequirement);
@@ -153,6 +170,19 @@ export default abstract class Quest {
         player.inventory.remove(index, countRequirement);
 
         this.progress();
+    }
+
+    /**
+     * Attemps to add an item into the player's inventory and returns
+     * the conditional status of that action.
+     * @param player The player we are adding the item to.
+     * @param key The item key's identifier.
+     * @param count The amount of the item we're adding.
+     * @returns Whether or not adding the item was successful.
+     */
+
+    private givePlayerItem(player: Player, key: string, count = 1): boolean {
+        return player.inventory.add(new Item(key, -1, -1, false, count));
     }
 
     /**
@@ -170,8 +200,17 @@ export default abstract class Quest {
      * @returns If the item requirement property exists in the current stage.
      */
 
-    public hasItemRequirement(): boolean {
-        return !!this.getStageData().itemRequirement;
+    private hasItemRequirement(): boolean {
+        return !!this.stageData.itemRequirement;
+    }
+
+    /**
+     * Checks if the current stage has an item to give to the player.
+     * @returns If the `itemKey` proprety exists in the current stage.
+     */
+
+    private hasItemToGive(): boolean {
+        return !!this.stageData.itemKey;
     }
 
     /**
@@ -208,7 +247,10 @@ export default abstract class Quest {
             mob: stage.mob! || '',
             countRequirement: stage.countRequirement! || 1,
             text: stage.text! || [''],
-            pointer: stage.pointer! || undefined
+            pointer: stage.pointer! || undefined,
+            popup: stage.popup! || undefined,
+            itemKey: stage.itemKey! || '',
+            itemCount: stage.itemCount! || 0
         };
     }
 
@@ -224,7 +266,7 @@ export default abstract class Quest {
      * @returns An array of strings containing the dialogue.
      */
 
-    public getNPCDialogue(npc: NPC): string[] {
+    private getNPCDialogue(npc: NPC): string[] {
         // Iterate backwards, last reference of the NPC is the text we grab.
         for (let i = this.stage; i > -1; i--) {
             // We do not count iterations of stages above stage we are currently on.
@@ -259,6 +301,9 @@ export default abstract class Quest {
      */
 
     public setStage(stage: number, subStage = 0, progressCallback = true): void {
+        // Send popup before setting the new stage.
+        if (this.stageData.popup) this.popupCallback?.(this.stageData.popup);
+
         // Progression to a new stage.
         if (this.stage !== stage && progressCallback)
             this.progressCallback?.(this.key, stage, subStage);
@@ -266,11 +311,11 @@ export default abstract class Quest {
         this.stage = stage;
         this.subStage = subStage;
 
-        // Grab the latest stage after updating.
-        let stageData = this.getStageData();
+        // Update the latest stage data.
+        this.stageData = this.getStageData();
 
         // Check if the current stage has any pointer information.
-        if (stageData.pointer) this.pointerCallback?.(stageData.pointer);
+        if (this.stageData.pointer) this.pointerCallback?.(this.stageData.pointer);
     }
 
     /**
@@ -312,6 +357,15 @@ export default abstract class Quest {
 
     public onPointer(callback: (pointerData: PointerData) => void): void {
         this.pointerCallback = callback;
+    }
+
+    /**
+     * A callback for whenever a popup is requested.
+     * @param callback Popup data that will be displayed to the player.
+     */
+
+    public onPopup(callback: (popupData: PopupData) => void): void {
+        this.popupCallback = callback;
     }
 
     /**

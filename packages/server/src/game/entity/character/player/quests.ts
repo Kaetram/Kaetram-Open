@@ -5,7 +5,7 @@ import Quest from './quest/quest';
 
 import QuestIndex from './quest/impl';
 
-import { Quest as QuestPacket, Pointer } from '../../../../network/packets';
+import { Quest as QuestPacket } from '../../../../network/packets';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { QuestData, RawQuest, SerializedQuest } from '@kaetram/common/types/quest';
@@ -16,7 +16,7 @@ import NPC from '../../npc/npc';
 import Mob from '../mob/mob';
 import { PointerData } from '@kaetram/common/types/pointer';
 
-import log from '@kaetram/common/util/log';
+import { PopupData } from '@kaetram/common/types/popup';
 
 /**
  * Initialize all the quests on a player instance basis. The previous
@@ -43,6 +43,7 @@ export default class Quests {
 
             quest.onProgress(this.handleQuestProgress.bind(this));
             quest.onPointer(this.handleQuestPointer.bind(this));
+            quest.onPopup(this.handleQuestPopup.bind(this));
         });
     }
 
@@ -95,6 +96,14 @@ export default class Quests {
         this.player.pointer(pointerData.type, pointerData);
     }
 
+    /**
+     * Callback handler for when the quest requests to display a popup.
+     * @param popupData Popup information such as title, text, colour.
+     */
+
+    private handleQuestPopup(popupData: PopupData): void {
+        this.player.popup(popupData.title, popupData.text, popupData.colour);
+    }
     /**
      * Grabs a quest with the key specified. Will return
      * undefined if the key is invalid.

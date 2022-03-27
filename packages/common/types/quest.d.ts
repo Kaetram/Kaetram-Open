@@ -1,19 +1,32 @@
 import type { PointerData } from './pointer';
+import type { PopupData } from './popup';
 
 export interface RawStage {
     task: string;
     npc?: string;
+
     /** Array of mob keys to kill. */
     mob?: string[];
-    /** If to display a pointer at a location. */
-    withPointer?: boolean;
+
+    /** Item required in the inventory to progress to next stage. */
     itemRequirement?: string;
+
     /** How many of mobs to be killed. */
     countRequirement?: number;
+
     /** Text for the NPC. */
     text?: string[];
     completedText?: string[];
+
+    /** Pointer information */
     pointer?: PointerData;
+
+    /** Popup information */
+    popup?: PopupData;
+
+    /** If the stage grants the player an item. */
+    itemKey?: string;
+    itemCount?: number;
 }
 
 export interface RawQuest {
@@ -31,6 +44,9 @@ export interface StageData {
     text?: string[];
     completedText?: string[];
     pointer?: PointerData;
+    popup?: PopupData;
+    itemKey?: string;
+    itemCount?: number;
 }
 
 export interface QuestData {
