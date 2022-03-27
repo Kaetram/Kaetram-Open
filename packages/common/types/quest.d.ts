@@ -8,11 +8,14 @@ export interface RawStage {
     /** Array of mob keys to kill. */
     mob?: string[];
 
+    /** How many of mobs to be killed. */
+    mobCountRequirement?: number;
+
     /** Item required in the inventory to progress to next stage. */
     itemRequirement?: string;
 
-    /** How many of mobs to be killed. */
-    countRequirement?: number;
+    /** How many of a given item we need to progress. */
+    itemCountRequirement?: number;
 
     /** Text for the NPC. */
     text?: string[];
@@ -38,9 +41,10 @@ export interface RawQuest {
 export interface StageData {
     task: string;
     npc?: string;
-    mob?: string | string[];
+    mob?: string[];
+    mobCountRequirement: number; // how many mobs we need to kill to progress
     itemRequirement?: string;
-    countRequirement?: number; // how many mobs to kill or how many of an item to have
+    itemCountRequirement?: number; // how many of an item we need for progression
     text?: string[];
     completedText?: string[];
     pointer?: PointerData;
