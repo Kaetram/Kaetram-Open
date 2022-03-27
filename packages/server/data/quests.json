@@ -34,7 +34,7 @@
           "A lot of stuff actually...",
           "And when you're not killing stuff...",
           "You'll still be killing stuff!",
-          "So for now, go kill 10 of them rats."
+          "So for now, go kill 5 of them rats."
         ],
         "completedText": ["What are you waiting for?", "Kill some of them rats."],
         "itemKey": "sword1",
@@ -53,9 +53,18 @@
       "3": {
         "task": "kill",
         "mob": ["rat"],
-        "countRequirement": 10,
+        "mobCountRequirement": 5,
         "pointer": {
           "type": 3
+        }
+      },
+
+      "4": {
+        "task": "door",
+        "pointer": {
+          "type": 0,
+          "x": 323,
+          "y": 23
         }
       }
     }
