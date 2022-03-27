@@ -1411,6 +1411,22 @@
                  "height":16,
                  "id":50,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"destination",
+                         "type":"object",
+                         "value":52
+                        }, 
+                        {
+                         "name":"quest",
+                         "type":"string",
+                         "value":"tutorial"
+                        }, 
+                        {
+                         "name":"stage",
+                         "type":"int",
+                         "value":4
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1422,6 +1438,22 @@
                  "height":16,
                  "id":52,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"destination",
+                         "type":"object",
+                         "value":212
+                        }, 
+                        {
+                         "name":"quest",
+                         "type":"string",
+                         "value":"tutorial"
+                        }, 
+                        {
+                         "name":"stage",
+                         "type":"int",
+                         "value":7
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -3051,6 +3083,17 @@
                  "width":16,
                  "x":5312,
                  "y":208
+                }, 
+                {
+                 "height":16,
+                 "id":212,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":5200,
+                 "y":1376
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -3879,7 +3922,7 @@
          "y":0
         }],
  "nextlayerid":55,
- "nextobjectid":211,
+ "nextobjectid":213,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.0",
