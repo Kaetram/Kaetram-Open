@@ -7,7 +7,7 @@
         "task": "talk",
         "npc": "coder",
         "text": ["Hello", "this", "is", "coder", "example", "text"],
-        "completedText": ["You should do what I said.", "test"],
+        "completedText": ["You should do what I said.", "bro"],
         "pointer": {
           "type": 0,
           "x": 372,
@@ -19,9 +19,35 @@
         "task": "door",
         "pointer": {
           "type": 0,
-          "x": 100,
-          "y": 100
+          "x": 373,
+          "y": 45
         }
+      },
+
+      "2": {
+        "task": "talk",
+        "npc": "coder",
+        "text": [
+          "I see, a new adventurer.",
+          "Let me tell you a bit about these lands.",
+          "You'll be killing stuff...",
+          "A lot of stuff actually...",
+          "And when you're not killing stuff...",
+          "You'll still be killing stuff!",
+          "So for now, go kill 10 of them rats."
+        ],
+        "completedText": ["What are you waiting for?", "Kill some of them rats."],
+        "pointer": {
+          "type": 0,
+          "x": 333,
+          "y": 27
+        }
+      },
+
+      "3": {
+        "task": "kill",
+        "mob": ["rat"],
+        "countRequirement": 10
       }
     }
   }

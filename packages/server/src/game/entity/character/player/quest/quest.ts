@@ -28,7 +28,7 @@ export default abstract class Quest {
     private npcs: string[] = [];
 
     public talkCallback?: (npc: NPC, player: Player) => void;
-    public doorCallback?: (quest: ProcessedDoor) => void;
+    public doorCallback?: (quest: ProcessedDoor, player: Player) => void;
     public killCallback?: (mob: Mob) => void;
 
     private progressCallback?: (key: string, stage: number, subStage: number) => void;
@@ -101,8 +101,12 @@ export default abstract class Quest {
      * @param destY The door's destination y coordinate.
      */
 
-    private handleDoor(quest: ProcessedDoor): void {
-        console.log(quest);
+    private handleDoor(door: ProcessedDoor, player: Player): void {
+        if (door.stage! < this.stage) return player.notify('You cannot pass through this door.');
+
+        player.teleport(door.x, door.y, true);
+
+        this.progress();
     }
 
     /**
@@ -324,7 +328,7 @@ export default abstract class Quest {
      * @param callback Callback containing starting location and destination of the door.
      */
 
-    public onDoor(callback: (quest: ProcessedDoor) => void): void {
+    public onDoor(callback: (quest: ProcessedDoor, player: Player) => void): void {
         this.doorCallback = callback;
     }
 
