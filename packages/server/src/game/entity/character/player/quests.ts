@@ -155,14 +155,13 @@ export default class Quests {
             // Skip if the stage is not to kill a mob.
             if (stage.task !== 'kill') return;
 
-            let stageMob = stage.mob;
+            let stageMobs = stage.mob;
 
             // Skip if we don't have a mob for the given stage.
-            if (!stageMob) return;
+            if (!stageMobs || stageMobs.length === 0) return;
 
             // Check if the mob matches the mobs and check the array if it's an array for mob key.
-            if (stageMob === mob.key || (_.isArray(stageMob) && stageMob.includes(mob.key)))
-                quest = q;
+            if (stageMobs.includes(mob.key)) quest = q;
         });
 
         return quest;
