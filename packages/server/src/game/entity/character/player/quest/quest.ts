@@ -142,7 +142,10 @@ export default abstract class Quest {
         if (!this.stageData.mob)
             return log.error(`[${this.name}] No mob data for stage: ${this.stage}.`);
 
+        // Substage progression when the mob killed matches the quest's list of mobs.
         if (this.stageData.mob.includes(mob.key)) this.progress(true);
+
+        // Progress to the next stage after we reach the `mobCountRequirement`.
         if (this.subStage >= this.stageData.mobCountRequirement) this.progress();
     }
 
