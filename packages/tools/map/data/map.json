@@ -1398,7 +1398,7 @@
                         {
                          "name":"stage",
                          "type":"int",
-                         "value":2
+                         "value":1
                         }],
                  "rotation":0,
                  "type":"",
