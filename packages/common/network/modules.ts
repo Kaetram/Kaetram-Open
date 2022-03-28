@@ -1,3 +1,5 @@
+import { Pointer } from './opcodes';
+
 export enum PacketType {
     Broadcast,
     Player,
@@ -323,3 +325,10 @@ export enum EntityType {
     Projectile,
     Object
 }
+
+// Preset objects and values for various usages.
+export default {
+    EmptyPointer: {
+        type: Pointer.Remove
+    }
+};

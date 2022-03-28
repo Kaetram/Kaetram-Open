@@ -57,10 +57,7 @@
       "3": {
         "task": "kill",
         "mob": ["rat"],
-        "mobCountRequirement": 5,
-        "pointer": {
-          "type": 3
-        }
+        "mobCountRequirement": 5
       },
 
       "4": {
@@ -93,10 +90,7 @@
       "6": {
         "task": "kill",
         "mob": ["rat"],
-        "mobCountRequirement": 4,
-        "pointer": {
-          "type": 3
-        }
+        "mobCountRequirement": 4
       },
 
       "7": {
