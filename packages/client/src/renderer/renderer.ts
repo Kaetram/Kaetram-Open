@@ -269,8 +269,6 @@ export default class Renderer {
 
                 this.loadSizes();
 
-                this.game.sendClientData();
-
                 this.entities?.update();
 
                 this.camera.centreOn(this.game.player);

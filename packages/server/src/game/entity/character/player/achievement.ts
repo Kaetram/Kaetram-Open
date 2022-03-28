@@ -121,7 +121,7 @@ export default class Achievement {
     }
 
     private update(): void {
-        this.player.save();
+        //this.player.save();
     }
 
     private isThreshold(): boolean {
