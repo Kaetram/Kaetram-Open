@@ -57,11 +57,10 @@ export interface QuestData {
     key: string;
     stage: number;
     subStage: number;
+    stageCount: number;
 
     name?: string;
     description?: string;
-    started?: boolean;
-    finished?: boolean;
 }
 
 export interface SerializedQuest {
