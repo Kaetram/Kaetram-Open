@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
 import Regions from '../game/map/regions';
-import Map, { Position } from '../game/map/map';
+import Map from '../game/map/map';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import NPC from '../game/entity/npc/npc';
@@ -147,14 +147,9 @@ export default class Entities {
     public spawnProjectile([attacker, target]: Character[]): Projectile | null {
         if (!attacker || !target) return null;
 
-        let startX = attacker.x, // x
-            startY = attacker.y, // y
-            type = attacker.getProjectile(),
+        let type = attacker.getProjectile(),
             hit = null,
-            projectile = new Projectile(type, startX, startY);
-
-        projectile.setStart(startX, startY);
-        projectile.setTarget(target);
+            projectile = new Projectile(type, attacker, target);
 
         if (attacker.isPlayer()) {
             let player = attacker as Player;
@@ -165,12 +160,11 @@ export default class Entities {
         projectile.damage = hit ? hit.damage : Formulas.getDamage(attacker, target, true);
         projectile.hitType = hit ? hit.type : Modules.Hits.Damage;
 
-        projectile.owner = attacker;
-
         this.addProjectile(projectile);
 
         return projectile;
     }
+
     /**
      * Adds an entity to the list of entities. Whether it be a mob, player
      * npc, item, chest, etc. we keep track of them in the list of entities.
@@ -320,9 +314,9 @@ export default class Entities {
      */
 
     public removePlayer(player: Player): void {
-        this.remove(player);
-
         if (player.ready) player.save();
+
+        this.remove(player);
 
         delete this.players[player.instance];
 

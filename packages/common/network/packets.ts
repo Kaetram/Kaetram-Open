@@ -25,6 +25,7 @@ enum Packets {
     Container,
     Ability,
     Quest,
+    Achievement,
     Notification,
     Blink,
     Heal,
@@ -44,7 +45,6 @@ enum Packets {
     Overlay,
     Camera,
     Bubble,
-    Client,
     Profession,
     BuildUp
 }

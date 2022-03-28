@@ -7,16 +7,18 @@ export interface ProcessedArea {
     // Area
     width: number;
     height: number;
-    polygon?: Pos[] | undefined;
+    polygon?: Position[] | undefined;
 
     // Door
     destination?: number;
-    orientation?: number;
+    orientation?: string;
+    quest?: string;
+    stage?: number;
 
     // Light
     distance?: number;
     diffuse?: number;
-    objects?: Pos[];
+    objects?: Position[];
 
     // Chest
     entities?: number;
@@ -40,7 +42,7 @@ export interface ProcessedArea {
     fog?: string;
 
     // Dynamic
-    quest?: number;
+    quest?: string;
     mapping?: number;
 }
 
@@ -77,4 +79,12 @@ export interface ProcessedMap {
     objects: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
+}
+
+export interface ProcessedDoor {
+    x: number;
+    y: number;
+    orientation: string;
+    quest?: string;
+    stage?: number;
 }

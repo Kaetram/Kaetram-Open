@@ -6,14 +6,12 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Incoming from '../../../../controllers/incoming';
-import Quests from '../../../../controllers/quests';
 import Formulas from '../../../../info/formulas';
 import Character from '../character';
 import Hit from '../combat/hit';
 import Abilities from './abilities/abilities';
 import Bank from './containers/impl/bank';
 import Inventory from './containers/impl/inventory';
-import Doors from './doors';
 import Enchant from './enchant';
 import Friends from './friends';
 import Handler from './handler';
@@ -28,7 +26,6 @@ import type Connection from '../../../../network/connection';
 import type World from '../../../world';
 import type NPC from '../../npc/npc';
 import type { PlayerInfo } from './../../../../database/mongodb/creator';
-import type Introduction from './quests/impl/introduction';
 import Map from '../../../map/map';
 import { PacketType } from '@kaetram/common/network/modules';
 import {
@@ -37,19 +34,19 @@ import {
     Camera,
     Chat,
     Death,
-    Equipment as EquipmentPacket,
     Experience,
     Heal,
     Movement,
     Notification,
     Overlay,
-    Quest,
     Sync,
     Teleport,
-    Welcome
+    Welcome,
+    Pointer
 } from '@kaetram/server/src/network/packets';
 import Packet from '@kaetram/server/src/network/packet';
-import Equipments from './equipment/equipments';
+import Equipments from './equipments';
+import Quests from './quests';
 import Regions from '../../../map/regions';
 import Entities from '@kaetram/server/src/controllers/entities';
 import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';
@@ -58,13 +55,14 @@ import { EquipmentData } from '@kaetram/common/types/equipment';
 import Container from './containers/container';
 import Item from '../../objects/item';
 import { SlotData, SlotType } from '@kaetram/common/types/slot';
-import Slot from './containers/slot';
+import { PointerData } from '@kaetram/common/types/pointer';
+import { ProcessedDoor } from '@kaetram/common/types/map';
 
 type TeleportCallback = (x: number, y: number, isDoor: boolean) => void;
 type KillCallback = (character: Character) => void;
 type InterfaceCallback = (state: boolean) => void;
 type NPCTalkCallback = (npc: NPC) => void;
-type DoorCallback = (x: number, y: number) => void;
+type DoorCallback = (door: ProcessedDoor) => void;
 
 export interface PlayerRegions {
     regions: string;
@@ -96,11 +94,19 @@ export default class Player extends Character {
 
     private handler: Handler;
 
+    public quests: Quests;
     public equipment: Equipments;
-    public inventory: Inventory;
-    public bank: Bank;
+    public mana: Mana = new Mana(Modules.Defaults.MANA);
+    public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
+    public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
     public ready = false; // indicates if login processed finished
+    public isGuest = false;
+    public canTalk = true;
+    public questsLoaded = false;
+    public achievementsLoaded = false;
+
+    private permanentPVP = false;
 
     public password = '';
     public email = '';
@@ -115,14 +121,18 @@ export default class Player extends Character {
     public orientation = Modules.Orientation.Down;
     public mapVersion = -1;
 
+    public talkIndex = 0;
+    public cheatScore = 0;
+    public defaultMovementSpeed = 250; // For fallback.
+
     // TODO - REFACTOR THESE ------------
+
+    public webSocketClient;
 
     public abilities;
     public friends;
     public enchant;
-    public quests;
     public trade;
-    public doors;
     public warp;
 
     public team?: string; // TODO
@@ -133,24 +143,19 @@ export default class Player extends Character {
     public lastRegionChange = Date.now();
 
     private currentSong: string | null = null;
-    public isGuest = false;
-
-    public canTalk = true;
-    public webSocketClient;
-
-    public talkIndex = 0;
-    public cheatScore = 0;
-    public defaultMovementSpeed = 250; // For fallback.
 
     public regionsLoaded: number[] = [];
     public lightsLoaded: number[] = [];
 
     public npcTalk = '';
 
+    public movementStart!: number;
+    public pingTime!: number;
+
+    private lastNotify!: number;
+
     private nextExperience: number | undefined;
     private prevExperience!: number;
-
-    public mana: Mana = new Mana(Modules.Defaults.MANA);
 
     public profileDialogOpen?: boolean;
     public inventoryOpen?: boolean;
@@ -158,17 +163,6 @@ export default class Player extends Character {
 
     public cameraArea: Area | undefined;
     private overlayArea: Area | undefined;
-
-    private permanentPVP = false;
-    public movementStart!: number;
-
-    public pingTime!: number;
-
-    public questsLoaded = false;
-    public achievementsLoaded = false;
-
-    public new = false;
-    private lastNotify!: number;
 
     public selectedShopItem!: { id: number; index: number } | null;
 
@@ -194,25 +188,24 @@ export default class Player extends Character {
         this.globalObjects = world.globalObjects;
 
         this.incoming = new Incoming(this);
-
         this.equipment = new Equipments(this);
-
-        this.bank = new Bank(Modules.Constants.BANK_SIZE);
-        this.inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
-
+        this.quests = new Quests(this);
         this.handler = new Handler(this);
 
         // TODO - Refactor
         this.abilities = new Abilities(this);
         this.friends = new Friends(this);
         this.enchant = new Enchant(this);
-        this.quests = new Quests(this);
         this.trade = new Trade(this);
-        this.doors = new Doors(this);
         this.warp = new Warp(this);
 
         this.webSocketClient = connection.type === 'WebSocket';
     }
+
+    /**
+     * Inserts the `data` into the player object.
+     * @param data PlayerInfo object containing all data.
+     */
 
     public load(data: PlayerInfo): void {
         this.rights = data.rights;
@@ -266,57 +259,25 @@ export default class Player extends Character {
         this.database.loader?.loadBank(this, this.bank.load.bind(this.bank));
     }
 
-    // ---------------- REFACTOR --------------------
-
-    public loadRegions(regions: PlayerRegions): void {
-        //TODO REFACTOR
-        // if (!regions) return;
-        // if (this.mapVersion !== this.map.version) {
-        //     this.mapVersion = this.map.version;
-        //     this.save();
-        //     log.debug(`Updated map version for ${this.username}`);
-        //     return;
-        // }
-        // if (regions.gameVersion === config.gver) this.regionsLoaded = regions.regions.split(',');
-    }
-
-    public loadFriends(): void {
-        //
-    }
+    /**
+     * Loads the quest data from the bank.
+     */
 
     public loadQuests(): void {
-        //
+        this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
     }
 
-    // ---------------- REFACTOR EMD --------------------
-
-    public destroy(): void {
-        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
-
-        this.disconnectTimeout = null;
-
-        this.handler.destroy();
-
-        this.handler = null!;
-        this.inventory = null!;
-        this.abilities = null!;
-        this.enchant = null!;
-        this.bank = null!;
-        this.quests = null!;
-        this.trade = null!;
-        this.doors = null!;
-        this.warp = null!;
-
-        this.connection = null!;
-    }
+    /**
+     * Handle the actual player login. Check if the user is banned,
+     * update hitPoints and mana, and send the player information
+     * to the client.
+     */
 
     public intro(): void {
         if (this.ban > Date.now()) {
             this.connection.sendUTF8('ban');
             this.connection.close(`Player: ${this.username} is banned.`);
         }
-
-        if (this.x <= 0 || this.y <= 0) this.sendToSpawn();
 
         if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.getMaxHitPoints());
 
@@ -350,6 +311,22 @@ export default class Player extends Character {
         this.entities.addPlayer(this);
 
         this.send(new Welcome(info));
+    }
+
+    public destroy(): void {
+        if (this.disconnectTimeout) clearTimeout(this.disconnectTimeout);
+
+        this.disconnectTimeout = null;
+
+        this.handler = null!;
+        this.inventory = null!;
+        this.abilities = null!;
+        this.enchant = null!;
+        this.bank = null!;
+        this.trade = null!;
+        this.warp = null!;
+
+        this.connection = null!;
     }
 
     private verifyRights(): void {
@@ -450,10 +427,6 @@ export default class Player extends Character {
         this.regions.sendRegion(this);
     }
 
-    public canEquip(string: string): boolean {
-        return false;
-    }
-
     public die(): void {
         this.dead = true;
 
@@ -476,6 +449,14 @@ export default class Player extends Character {
 
         this.setPosition(x, y);
         this.world.cleanCombat(this);
+    }
+
+    public incrementCheatScore(amount: number): void {
+        if (this.combat.started) return;
+
+        this.cheatScore += amount;
+
+        this.cheatScoreCallback?.();
     }
 
     /**
@@ -550,14 +531,6 @@ export default class Player extends Character {
 
                 break;
         }
-    }
-
-    public incrementCheatScore(amount: number): void {
-        if (this.combat.started) return;
-
-        this.cheatScore += amount;
-
-        this.cheatScoreCallback?.();
     }
 
     public updatePVP(pvp: boolean, permanent = false): void {
@@ -667,10 +640,6 @@ export default class Player extends Character {
         return this.hitPoints.getMaxHitPoints();
     }
 
-    public getTutorial(): Introduction {
-        return this.quests.getQuest<Introduction>(Modules.Quests.Introduction)!;
-    }
-
     private getMovementSpeed(): number {
         // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
         //     movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
@@ -692,12 +661,8 @@ export default class Player extends Character {
     public override setPosition(x: number, y: number): void {
         if (this.dead) return;
 
-        if (this.map.isOutOfBounds(x, y)) {
-            x = 50;
-            y = 89;
-        }
-
-        super.setPosition(x, y);
+        if (this.map.isOutOfBounds(x, y)) this.sendToSpawn();
+        else super.setPosition(x, y);
 
         this.sendToRegions(
             new Movement(Opcodes.Movement.Move, {
@@ -746,38 +711,16 @@ export default class Player extends Character {
     }
 
     /**
-     * Serializes the player character to be sent to
-     * nearby regions. This contains all the data
-     * about the player that other players should
-     * be able to see.
-     * @returns PlayerData containing all of the player info.
+     * Grabs the spawn point on the player depending on whether or not he
+     * has finished the tutorial quest.
+     * @returns The spawn point Position object containing x and y grid positions.
      */
 
-    public override serialize(withEquipment?: boolean): PlayerData {
-        let data = super.serialize() as PlayerData;
+    public getSpawn(): Position {
+        if (!this.quests.isTutorialFinished())
+            return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
-        data.rights = this.rights;
-        data.level = this.level;
-        data.hitPoints = this.hitPoints.getHitPoints();
-        data.maxHitPoints = this.hitPoints.getMaxHitPoints();
-        data.attackRange = this.attackRange;
-        data.orientation = this.orientation;
-        data.movementSpeed = this.getMovementSpeed();
-
-        // Include equipment only when necessary.
-        if (withEquipment) data.equipments = this.equipment.serialize().equipments;
-
-        return data;
-    }
-
-    /**
-     * Here we will implement functions from quests and
-     * other special events and determine a spawn point.
-     */
-    public getSpawn(): Pos {
-        if (!this.finishedTutorial()) return this.getTutorial().getSpawn();
-
-        return { x: 325, y: 87 };
+        return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
 
     public getHit(target: Character): Hit | undefined {
@@ -844,8 +787,13 @@ export default class Player extends Character {
         return this.mute - time > 0;
     }
 
-    public override isDead(): boolean {
-        return this.getHitPoints() < 1 || this.dead;
+    /**
+     * Checks if the weapon the player is currently wielding is a ranged weapon.
+     * @returns If the weapon slot is a ranged weapon.
+     */
+
+    public override isRanged(): boolean {
+        return this.equipment.getWeapon().rangedWeapon;
     }
 
     /**
@@ -880,10 +828,9 @@ export default class Player extends Character {
     }
 
     public sendToSpawn(): void {
-        let position = this.getSpawn();
+        let spawnPoint = this.getSpawn();
 
-        this.x = position.x;
-        this.y = position.y;
+        this.setPosition(spawnPoint.x, spawnPoint.y);
     }
 
     public sendMessage(playerName: string, message: string): void {
@@ -909,13 +856,22 @@ export default class Player extends Character {
      * Function to be used for syncing up health,
      * mana, exp, and other variables
      */
+
     public sync(): void {
-        let data = this.serialize(true);
+        // Update attack range each-time we sync.
+        this.attackRange = this.isRanged() ? 7 : 1;
 
-        this.sendToRegions(new Sync(data));
-
-        this.save();
+        // Sync the player information to the surrounding regions.
+        this.sendToRegions(new Sync(this.serialize(true)));
     }
+
+    /**
+     * Sends a popup message to the player (generally used
+     * for quests or achievements);
+     * @param title The header text for the popup.
+     * @param message The text contents of the popup.
+     * @param colour The colour of the popup's text.
+     */
 
     public popup(title: string, message: string, colour: string): void {
         if (!title) return;
@@ -931,6 +887,12 @@ export default class Player extends Character {
             })
         );
     }
+
+    /**
+     * Sends a chatbox message to the player.
+     * @param message String text we want to display to the player.
+     * @param colour Optional parameter indicating text colour.
+     */
 
     public notify(message: string, colour?: string): void {
         if (!message) return;
@@ -948,6 +910,18 @@ export default class Player extends Character {
         );
 
         this.lastNotify = Date.now();
+    }
+
+    public pointer(type: Opcodes.Pointer, info: PointerData): void {
+        // Remove all existing pointers first.
+        this.send(new Pointer(Opcodes.Pointer.Remove));
+
+        // Invalid pointer data received.
+        if (!(type in Opcodes.Pointer)) return;
+
+        info.instance = this.instance;
+
+        this.send(new Pointer(type, info));
     }
 
     /**
@@ -989,59 +963,6 @@ export default class Player extends Character {
         );
     }
 
-    public finishedTutorial(): boolean {
-        if (!this.quests || !config.tutorialEnabled) return true;
-
-        return this.quests.getQuest(0)!.isFinished();
-    }
-
-    public finishedQuest(id: number): boolean {
-        let quest = this.quests?.getQuest(id);
-
-        return quest?.isFinished() || false;
-    }
-
-    public finishedAchievement(id: number): boolean {
-        if (!this.quests) return false;
-
-        let achievement = this.quests.getAchievement(id);
-
-        if (!achievement) return true;
-
-        return achievement.isFinished();
-    }
-
-    public finishAchievement(id: number): void {
-        if (!this.quests) return;
-
-        let achievement = this.quests.getAchievement(id);
-
-        if (!achievement || achievement.isFinished()) return;
-
-        achievement.finish();
-    }
-
-    /**
-     * Server-sided callbacks towards movement should
-     * not be able to be overwritten. In the case that
-     * this is used (for Quests most likely) the server must
-     * check that no hacker removed the constraint in the client-side.
-     * If they are not within the bounds, apply the according punishment.
-     */
-    private movePlayer(): void {
-        this.send(new Movement(Opcodes.Movement.Started));
-    }
-
-    private walkRandomly(): void {
-        setInterval(() => {
-            this.setPosition(this.x + Utils.randomInt(-5, 5), this.y + Utils.randomInt(-5, 5));
-        }, 2000);
-    }
-
-    public killCharacter(character: Character): void {
-        this.killCallback?.(character);
-    }
-
     public save(): void {
         if (config.skipDatabase || this.isGuest || !this.ready) return;
 
@@ -1056,16 +977,66 @@ export default class Player extends Character {
         return Date.now() - this.lastRegionChange < 60_000 * 20; // 20 Minutes
     }
 
+    public finishedQuest(id: number): boolean {
+        return false;
+        // let quest = this.quests?.getQuest(id);
+
+        // return quest?.isFinished() || false;
+    }
+
+    public finishedAchievement(id: number): boolean {
+        return false;
+        // if (!this.quests) return false;
+
+        // let achievement = this.quests.getAchievement(id);
+
+        // if (!achievement) return true;
+
+        // return achievement.isFinished();
+    }
+
+    public finishAchievement(id: number): void {
+        // if (!this.quests) return;
+        // let achievement = this.quests.getAchievement(id);
+        // if (!achievement || achievement.isFinished()) return;
+        // achievement.finish();
+    }
+
+    /**
+     * Serializes the player character to be sent to
+     * nearby regions. This contains all the data
+     * about the player that other players should
+     * be able to see.
+     * @returns PlayerData containing all of the player info.
+     */
+
+    public override serialize(withEquipment?: boolean): PlayerData {
+        let data = super.serialize() as PlayerData;
+
+        data.rights = this.rights;
+        data.level = this.level;
+        data.hitPoints = this.hitPoints.getHitPoints();
+        data.maxHitPoints = this.hitPoints.getMaxHitPoints();
+        data.attackRange = this.attackRange;
+        data.orientation = this.orientation;
+        data.movementSpeed = this.getMovementSpeed();
+
+        // Include equipment only when necessary.
+        if (withEquipment) data.equipments = this.equipment.serialize().equipments;
+
+        return data;
+    }
+
+    public killCharacter(character: Character): void {
+        this.killCallback?.(character);
+    }
+
     public onOrientation(callback: () => void): void {
         this.orientationCallback = callback;
     }
 
     public onKill(callback: KillCallback): void {
         this.killCallback = callback;
-    }
-
-    public override onDeath(callback: () => void): void {
-        this.deathCallback = callback;
     }
 
     public onTalkToNPC(callback: NPCTalkCallback): void {

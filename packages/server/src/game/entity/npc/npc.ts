@@ -2,9 +2,11 @@ import Entity from '../entity';
 
 import type Player from '../character/player/player';
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import { NPCData } from '@kaetram/common/types/npc';
+
+import { NPC as NPCPacket } from '../../../network/packets';
 
 import rawData from '../../../../data/npcs.json';
 import log from '@kaetram/common/util/log';
@@ -31,25 +33,47 @@ export default class NPC extends Entity {
             return;
         }
 
+        // Load default NPC data.
         this.name = this.data.name!;
         this.text = this.data.text || this.text;
         this.role = this.data.role!;
     }
 
-    public talk(player?: Player): string {
-        if (!player) return '';
+    /**
+     * Talks to an NPC and progresses the talking index of the player. It returns
+     * the message the NPC is currently saying.
+     * @param player The player to grab/compare talk index of.
+     * @param text Optional parameter that uses default text in `npcs.json` if not specified.
+     * @returns String of the current massage.
+     */
 
+    public talk(player?: Player, text = this.text): void {
+        if (!(player && this.hasDialogue(text))) return;
+
+        // Reset the talking index if we talk to a new NPC.
         if (player.npcTalk !== this.key) {
             player.talkIndex = 0;
             player.npcTalk = this.key;
         }
 
-        let message = this.text[player.talkIndex];
+        // Text to display at the current talking index.
+        let message = text[player.talkIndex];
 
-        if (player.talkIndex > this.text.length - 1) player.talkIndex = 0;
+        /**
+         * Reset the talking index when we reach the end or
+         * continue progression otherwise.
+         */
+
+        if (player.talkIndex > text.length - 1) player.talkIndex = 0;
         else player.talkIndex++;
 
-        return message;
+        // Send the network packet of the current dialogue index.
+        player.send(
+            new NPCPacket(Opcodes.NPC.Talk, {
+                id: this.instance,
+                text: message
+            })
+        );
     }
 
     /**
@@ -57,7 +81,7 @@ export default class NPC extends Entity {
      * @returns If the dialogue array length is greater than 0.
      */
 
-    public hasDialogue(): boolean {
-        return this.text.length > 0;
+    public hasDialogue(text: string[]): boolean {
+        return text.length > 0;
     }
 }
