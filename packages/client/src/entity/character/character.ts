@@ -53,7 +53,7 @@ export default class Character extends Entity {
     private explosionAnimation!: Animation;
     private healingAnimation!: Animation;
 
-    private newDestination!: Pos | null;
+    private newDestination!: Position | null;
     private step!: number;
     private healthBarTimeout!: number | null;
 

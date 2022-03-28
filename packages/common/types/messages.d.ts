@@ -3,8 +3,8 @@ import type {
     AchievementData,
     BubbleInfo,
     HitData,
+    QuestData,
     ProfessionsInfo,
-    QuestInfo,
     ShopData,
     TilesetData
 } from './info';
@@ -134,13 +134,12 @@ export interface AnimationData {
 
 export interface ProjectileData {
     key: string; // 'projectile'
-    id: string;
+    instance: string;
     name: string;
     characterId: string;
     targetId: string;
     damage: number;
-    special: never;
-    hitType: Modules.Hits | null;
+    hitType: Modules.Hits;
 }
 
 export interface PointsData {
@@ -176,19 +175,15 @@ export type ContainerRemoveData = {
     slot: SlotData;
 };
 
-export interface QuestBatchData {
-    quests: QuestInfo[];
-}
+export type QuestBatchData = QuestData[];
+
 export interface QuestAchievementBatchData {
     achievements: AchievementData[];
 }
 export interface QuestProgressData {
-    id: number;
-    isQuest?: boolean;
-    stage?: number;
-    name?: string;
-    progress?: number;
-    count?: number;
+    key: string;
+    stage: number;
+    stageCount: number;
 }
 export interface QuestFinishData {
     id: number;
@@ -240,7 +235,9 @@ export interface EnchantData {
 }
 
 export interface PointerData {
-    id: string;
+    x: number;
+    y: number;
+    instance: string;
 }
 export interface PointerLocationData extends PointerData, Pos {}
 export interface PointerRelativeData extends PointerData, Pos {}

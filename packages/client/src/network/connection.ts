@@ -44,6 +44,7 @@ import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
+import { QuestData } from '@kaetram/common/types/quest';
 export default class Connection {
     private app;
     private audio;
@@ -119,24 +120,28 @@ export default class Connection {
                     password = registerInfo[1].val(),
                     email = registerInfo[3].val();
 
-                this.socket.send(Packets.Login, [
-                    Opcodes.Login.Register,
+                this.socket.send(Packets.Login, {
+                    opcode: Opcodes.Login.Register,
                     username,
                     password,
                     email
-                ]);
+                });
             } else if (this.app.isGuest())
-                this.socket.send(Packets.Login, [Opcodes.Login.Guest, '', '']);
+                this.socket.send(Packets.Login, { opcode: Opcodes.Login.Guest });
             else {
                 let loginInfo = this.app.loginFields,
-                    name = loginInfo[0].val() as string,
-                    pass = loginInfo[1].val() as string;
+                    username = loginInfo[0].val() as string,
+                    password = loginInfo[1].val() as string;
 
-                this.socket.send(Packets.Login, [Opcodes.Login.Login, name, pass]);
+                this.socket.send(Packets.Login, {
+                    opcode: Opcodes.Login.Login,
+                    username,
+                    password
+                });
 
                 if (this.game.hasRemember()) {
-                    this.storage.data.player.username = name;
-                    this.storage.data.player.password = pass;
+                    this.storage.data.player.username = username;
+                    this.storage.data.player.password = password;
                 } else {
                     this.storage.data.player.username = '';
                     this.storage.data.player.password = '';
@@ -492,11 +497,11 @@ export default class Connection {
         });
 
         this.messages.onProjectile((opcode, info) => {
-            // switch (opcode) {
-            //     case Opcodes.Projectile.Create:
-            //         this.entities.create(info as EntityData);
-            //         break;
-            // }
+            switch (opcode) {
+                case Opcodes.Projectile.Create:
+                    this.entities.create(info as never);
+                    break;
+            }
         });
 
         this.messages.onPopulation((population) => {
@@ -602,31 +607,11 @@ export default class Connection {
 
         this.messages.onQuest((opcode, info) => {
             switch (opcode) {
-                case Opcodes.Quest.AchievementBatch: {
-                    let data = info as QuestAchievementBatchData;
-
-                    this.menu.getQuestPage().loadAchievements(data.achievements);
-
-                    break;
-                }
-
-                case Opcodes.Quest.QuestBatch: {
-                    let data = info as QuestBatchData;
-
-                    this.menu.getQuestPage().loadQuests(data.quests);
-
-                    break;
-                }
+                case Opcodes.Quest.Batch:
+                    return this.menu.getQuestPage().loadQuests(info as QuestBatchData);
 
                 case Opcodes.Quest.Progress:
-                    this.menu.getQuestPage().progress(info as QuestProgressData);
-
-                    break;
-
-                case Opcodes.Quest.Finish:
-                    this.menu.getQuestPage().finish(info as QuestFinishData);
-
-                    break;
+                    return this.menu.getQuestPage().progress(info as QuestProgressData);
             }
         });
 
@@ -880,12 +865,12 @@ export default class Connection {
 
         this.messages.onPointer((opcode, info) => {
             switch (opcode) {
-                case Opcodes.Pointer.NPC: {
-                    let entity = this.entities.get(info.id!);
+                case Opcodes.Pointer.Entity: {
+                    let entity = this.entities.get(info.instance!);
 
                     if (!entity) return;
 
-                    this.pointer.create(entity.id, Modules.Pointers.Entity);
+                    this.pointer.create(entity.id, opcode);
                     this.pointer.setToEntity(entity);
 
                     break;
@@ -894,8 +879,8 @@ export default class Connection {
                 case Opcodes.Pointer.Location: {
                     let data = info as PointerLocationData;
 
-                    this.pointer.create(data.id, Modules.Pointers.Position);
-                    this.pointer.setToPosition(data.id, data.x * 16, data.y * 16);
+                    this.pointer.create(data.instance, opcode);
+                    this.pointer.setToPosition(data.instance, data.x * 16, data.y * 16);
 
                     break;
                 }
@@ -903,21 +888,20 @@ export default class Connection {
                 case Opcodes.Pointer.Relative: {
                     let data = info as PointerRelativeData;
 
-                    this.pointer.create(data.id, Modules.Pointers.Relative);
-                    this.pointer.setRelative(data.id, data.x, data.y);
+                    this.pointer.create(data.instance, opcode);
+                    this.pointer.setRelative(data.instance, data.x, data.y);
 
                     break;
                 }
 
                 case Opcodes.Pointer.Remove:
                     this.pointer.clean();
-
                     break;
 
                 case Opcodes.Pointer.Button: {
                     let data = info as PointerButtonData;
 
-                    this.pointer.create(data.id, Modules.Pointers.Button, data.button);
+                    this.pointer.create(data.instance, opcode, data.button);
 
                     break;
                 }
