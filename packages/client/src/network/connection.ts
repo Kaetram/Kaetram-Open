@@ -497,11 +497,11 @@ export default class Connection {
         });
 
         this.messages.onProjectile((opcode, info) => {
-            // switch (opcode) {
-            //     case Opcodes.Projectile.Create:
-            //         this.entities.create(info as EntityData);
-            //         break;
-            // }
+            switch (opcode) {
+                case Opcodes.Projectile.Create:
+                    this.entities.create(info as never);
+                    break;
+            }
         });
 
         this.messages.onPopulation((population) => {
