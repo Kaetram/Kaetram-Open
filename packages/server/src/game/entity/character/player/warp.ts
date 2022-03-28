@@ -38,10 +38,7 @@ export default class Warp {
     }
 
     public setLastWarp(lastWarp: number): void {
-        if (isNaN(lastWarp)) {
-            this.lastWarp = 0;
-            this.player.save();
-        } else this.lastWarp = lastWarp;
+        this.lastWarp = isNaN(lastWarp) ? 0 : lastWarp;
     }
 
     private isCooldown(): boolean {

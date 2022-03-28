@@ -174,8 +174,6 @@ export default class Incoming {
 
         this.player.readyCallback?.();
 
-        this.player.sync();
-
         this.player.ready = true;
     }
 
