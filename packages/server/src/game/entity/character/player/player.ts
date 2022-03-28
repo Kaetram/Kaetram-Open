@@ -717,8 +717,6 @@ export default class Player extends Character {
      */
 
     public getSpawn(): Position {
-        console.log(this.quests.isTutorialFinished());
-
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
@@ -831,10 +829,6 @@ export default class Player extends Character {
 
     public sendToSpawn(): void {
         let spawnPoint = this.getSpawn();
-
-        console.log(spawnPoint);
-
-        console.log('lmao sending someone to spawn');
 
         this.setPosition(spawnPoint.x, spawnPoint.y);
     }
