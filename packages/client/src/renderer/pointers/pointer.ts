@@ -1,4 +1,4 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Opcodes } from '@kaetram/common/network';
 
 export default class Pointer {
     private blinkInterval!: number;
@@ -7,7 +7,7 @@ export default class Pointer {
     public x = -1;
     public y = -1;
 
-    public constructor(public id: string, public element: JQuery, public type: Modules.Pointers) {
+    public constructor(public id: string, public element: JQuery, public type: Opcodes.Pointer) {
         this.load();
     }
 
