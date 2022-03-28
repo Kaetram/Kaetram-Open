@@ -28,8 +28,8 @@ type Successor = (
 ) => Result[];
 
 type MathFunction = (
-    start: Pos,
-    end: Pos,
+    start: Position,
+    end: Position,
     f1: (...values: number[]) => number,
     f2: (...values: number[]) => number
 ) => number;

@@ -37,7 +37,7 @@ export interface ShopData {
 
 export interface RegionTileData {
     index: number;
-    position: Pos;
+    position: Position;
     data: number[];
     c: boolean; // Collision
     isObject: boolean;
