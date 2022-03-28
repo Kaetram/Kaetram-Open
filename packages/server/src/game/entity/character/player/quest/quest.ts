@@ -11,6 +11,7 @@ import { PointerData } from '@kaetram/common/types/pointer';
 import { ProcessedDoor } from '@kaetram/common/types/map';
 import Item from '../../../objects/item';
 import { PopupData } from '@kaetram/common/types/popup';
+import Modules from '@kaetram/common/network/modules';
 
 export default abstract class Quest {
     /**
@@ -313,6 +314,9 @@ export default abstract class Quest {
     public setStage(stage: number, subStage = 0, progressCallback = true): void {
         // Send popup before setting the new stage.
         if (this.stageData.popup) this.popupCallback?.(this.stageData.popup);
+
+        // Clear pointer preemptively if the current stage data contains it.
+        if (this.stageData.pointer) this.pointerCallback?.(Modules.EmptyPointer);
 
         // Progression to a new stage.
         if (this.stage !== stage && progressCallback)
