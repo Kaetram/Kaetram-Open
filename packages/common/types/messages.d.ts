@@ -139,8 +139,7 @@ export interface ProjectileData {
     characterId: string;
     targetId: string;
     damage: number;
-    special: never;
-    hitType: Modules.Hits | null;
+    hitType: Modules.Hits;
 }
 
 export interface PointsData {
