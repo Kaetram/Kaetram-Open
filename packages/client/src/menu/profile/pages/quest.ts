@@ -64,9 +64,13 @@ export default class Quest extends Page {
         this.updateCount();
     }
 
-    public loadQuests(quests: QuestData[]): void {
-        console.log(quests);
+    /**
+     * TODO - Update this in the future. The `loadQuests` function should
+     * be used with the `progress` function to alleviate code duplication.
+     * Expected to do this when client refactoring starts.
+     */
 
+    public loadQuests(quests: QuestData[]): void {
         this.questsLength = quests.length;
 
         _.each(quests, (quest) => {
@@ -77,10 +81,10 @@ export default class Quest extends Page {
 
             name.css('background', 'rgba(255, 10, 10, 0.3)');
 
-            if (quest.finished) {
+            if (quest.stage >= quest.stageCount) {
                 name.css('background', 'rgba(10, 255, 10, 0.3)');
                 this.finishedQuests++;
-            } else if (quest.started) name.css('background', 'rgba(255, 255, 10, 0.4)');
+            } else if (quest.stage > 0) name.css('background', 'rgba(255, 255, 10, 0.4)');
 
             item.append(name);
 
@@ -95,40 +99,16 @@ export default class Quest extends Page {
     }
 
     public progress(info: QuestProgressData): void {
-        let item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
+        // TODO - upgrade to not use hardcoded values.
+        let name = this.findQuestName(info.key);
 
-        if (!item) return;
+        name.css('background', 'rgba(255, 10, 10, 0.3)');
 
-        let name = item.find(`${info.isQuest ? '#quest' : '#achievement'}${info.id}name`);
-
-        if (!name) return;
-
-        if (!info.isQuest && info.count! > 2)
-            name.text(`${info.name} ${info.progress! - 1}/${info.count! - 1}`);
-        else name.text(info.name!);
-
-        name.css('background', 'rgba(255, 255, 10, 0.4)');
-
-        this.updateCount();
-    }
-
-    public finish(info: QuestFinishData): void {
-        let item = info.isQuest ? this.getQuest(info.id) : this.getAchievement(info.id);
-
-        if (!item) return;
-
-        let name = item.find(`${info.isQuest ? '#quest' : '#achievement'}${info.id}name`);
-
-        if (!name) return;
-
-        if (!info.isQuest) {
-            name.text(info.name!);
-            this.finishedAchievements++;
+        if (info.stage > 0) name.css('background', 'rgba(255, 255, 10, 0.4)');
+        if (info.stage >= info.stageCount) {
+            this.finishedQuests++;
+            name.css('background', 'rgba(10, 255, 10, 0.3)');
         }
-
-        name.css('background', 'rgba(10, 255, 10, 0.3)');
-
-        if (info.isQuest) this.finishedQuests++;
 
         this.updateCount();
     }
@@ -146,8 +126,8 @@ export default class Quest extends Page {
         this.questList.empty();
     }
 
-    private getQuest(id: number): JQuery {
-        return $(this.questList.find('li')[id]).find(`#quest${id}`);
+    private findQuestName(key: string): JQuery {
+        return this.questList.find(`#quest${key}name`);
     }
 
     private getAchievement(id: number): JQuery {

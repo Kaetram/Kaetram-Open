@@ -608,44 +608,15 @@ export default class Connection {
         this.messages.onQuest((opcode, info) => {
             log.debug('Quest thing came through.');
 
+            console.log(info);
+
             switch (opcode) {
                 case Opcodes.Quest.Batch:
                     return this.menu.getQuestPage().loadQuests(info as QuestBatchData);
 
                 case Opcodes.Quest.Progress:
-                    console.log(`_________QUEST_PROGRESS_______`);
-                    console.log(opcode);
-                    console.log(info);
-                    return;
+                    return this.menu.getQuestPage().progress(info as QuestProgressData);
             }
-
-            // switch (opcode) {
-            //     case Opcodes.Quest.AchievementBatch: {
-            //         let data = info as QuestAchievementBatchData;
-
-            //         this.menu.getQuestPage().loadAchievements(data.achievements);
-
-            //         break;
-            //     }
-
-            //     case Opcodes.Quest.QuestBatch: {
-            //         let data = info as QuestBatchData;
-
-            //         this.menu.getQuestPage().loadQuests(data.quests);
-
-            //         break;
-            //     }
-
-            //     case Opcodes.Quest.Progress:
-            //         this.menu.getQuestPage().progress(info as QuestProgressData);
-
-            //         break;
-
-            //     case Opcodes.Quest.Finish:
-            //         this.menu.getQuestPage().finish(info as QuestFinishData);
-
-            //         break;
-            // }
         });
 
         this.messages.onNotification((opcode, info) => {
