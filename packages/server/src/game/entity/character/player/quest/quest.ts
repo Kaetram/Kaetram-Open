@@ -34,7 +34,7 @@ export default abstract class Quest {
     public doorCallback?: (quest: ProcessedDoor, player: Player) => void;
     public killCallback?: (mob: Mob) => void;
 
-    private progressCallback?: (key: string, stage: number, subStage: number) => void;
+    private progressCallback?: (key: string, stage: number, stageCount: number) => void;
     private pointerCallback?: (pointerData: PointerData) => void;
     private popupCallback?: (popupData: PopupData) => void;
 
@@ -159,8 +159,8 @@ export default abstract class Quest {
         log.debug(`${this.name} Quest progression.`);
 
         // Progress substage only if the parameter is defined.
-        if (subStage) this.setStage(this.stage, ++this.subStage);
-        else this.setStage(++this.stage);
+        if (subStage) this.setStage(this.stage, this.subStage + 1);
+        else this.setStage(this.stage + 1);
     }
 
     /**
@@ -316,7 +316,7 @@ export default abstract class Quest {
 
         // Progression to a new stage.
         if (this.stage !== stage && progressCallback)
-            this.progressCallback?.(this.key, stage, subStage);
+            this.progressCallback?.(this.key, stage, this.stageCount);
 
         this.stage = stage;
         this.subStage = subStage;
@@ -340,14 +340,13 @@ export default abstract class Quest {
         let data: QuestData = {
             key: this.key,
             stage: this.stage,
-            subStage: this.subStage
+            subStage: this.subStage,
+            stageCount: this.stageCount
         };
 
         if (batch) {
             data.name = this.name;
             data.description = this.description;
-            data.started = this.isStarted();
-            data.finished = this.isFinished();
         }
 
         return data;

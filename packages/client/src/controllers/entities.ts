@@ -176,8 +176,6 @@ export default class EntitiesController {
 
                 if (!attacker || !target) return;
 
-                console.log(info);
-
                 attacker.lookAt(target);
 
                 let projectile = new Projectile(info.instance, info.key, attacker); // ? info.projectileType

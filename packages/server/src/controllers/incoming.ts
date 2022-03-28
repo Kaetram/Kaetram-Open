@@ -102,7 +102,7 @@ export default class Incoming {
                         return this.handleCamera(message);
                 }
             } catch (error) {
-                console.log(error);
+                log.error(error);
             }
         });
     }

@@ -181,12 +181,9 @@ export interface QuestAchievementBatchData {
     achievements: AchievementData[];
 }
 export interface QuestProgressData {
-    id: number;
-    isQuest?: boolean;
-    stage?: number;
-    name?: string;
-    progress?: number;
-    count?: number;
+    key: string;
+    stage: number;
+    stageCount: number;
 }
 export interface QuestFinishData {
     id: number;

@@ -76,11 +76,12 @@ export default class Quests {
      * @param stage The stage we are progressing to.
      */
 
-    private handleQuestProgress(key: string, stage: number): void {
+    private handleQuestProgress(key: string, stage: number, stageCount: number): void {
         this.player.send(
             new QuestPacket(Opcodes.Quest.Progress, {
                 key,
-                stage
+                stage,
+                stageCount
             })
         );
     }
