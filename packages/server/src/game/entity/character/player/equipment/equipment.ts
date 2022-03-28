@@ -19,7 +19,8 @@ export default class Equipment {
         public count = 1,
         public ability = -1,
         public abilityLevel = -1,
-        public power = 1
+        public power = 1,
+        public rangedWeapon = false
     ) {}
 
     /**
