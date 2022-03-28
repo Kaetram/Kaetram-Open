@@ -859,11 +859,7 @@ export default class Player extends Character {
      */
 
     public sync(): void {
-        let data = this.serialize(true);
-
-        this.sendToRegions(new Sync(data));
-
-        this.save();
+        this.sendToRegions(new Sync(this.serialize(true)));
     }
 
     /**

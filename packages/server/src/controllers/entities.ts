@@ -320,9 +320,9 @@ export default class Entities {
      */
 
     public removePlayer(player: Player): void {
-        this.remove(player);
-
         if (player.ready) player.save();
+
+        this.remove(player);
 
         delete this.players[player.instance];
 
