@@ -58,15 +58,15 @@ export default class Projectile extends Entity {
 
         if (!this.owner || !this.target) return;
 
-        // return {
-        //     id: this.instance,
-        //     key: this.key,
-        //     name: this.owner.projectileName,
-        //     characterId: this.owner.instance,
-        //     targetId: this.target.instance,
-        //     damage: this.damage,
-        //     special: this.special,
-        //     hitType: this.hitType
-        // };
+        return {
+            instance: this.instance,
+            key: this.key,
+            name: this.owner.projectileName,
+            characterId: this.owner.instance,
+            targetId: this.target.instance,
+            damage: this.damage,
+            special: this.special,
+            hitType: this.hitType
+        };
     }
 }
