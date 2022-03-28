@@ -134,7 +134,7 @@ export interface AnimationData {
 
 export interface ProjectileData {
     key: string; // 'projectile'
-    id: string;
+    instance: string;
     name: string;
     characterId: string;
     targetId: string;

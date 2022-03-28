@@ -789,8 +789,13 @@ export default class Player extends Character {
         return this.mute - time > 0;
     }
 
-    public override isDead(): boolean {
-        return this.getHitPoints() < 1 || this.dead;
+    /**
+     * Checks if the weapon the player is currently wielding is a ranged weapon.
+     * @returns If the weapon slot is a ranged weapon.
+     */
+
+    public override isRanged(): boolean {
+        return this.equipment.getWeapon().rangedWeapon;
     }
 
     /**
@@ -859,6 +864,10 @@ export default class Player extends Character {
      */
 
     public sync(): void {
+        // Update attack range each-time we sync.
+        this.attackRange = this.isRanged() ? 7 : 1;
+
+        // Sync the player information to the surrounding regions.
         this.sendToRegions(new Sync(this.serialize(true)));
     }
 
