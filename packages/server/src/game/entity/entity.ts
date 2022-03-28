@@ -36,6 +36,12 @@ export interface EntityData {
     ability?: number;
     abilityLevel?: number;
 
+    // Projectile data
+    ownerInstance?: string;
+    targetInstance?: string;
+    damage?: number;
+    hitType?: Modules.Hits;
+
     // Player data
     // TODO
 }
