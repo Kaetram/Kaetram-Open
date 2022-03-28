@@ -269,8 +269,6 @@ export default class Renderer {
 
                 this.loadSizes();
 
-                this.game.sendClientData();
-
                 this.entities?.update();
 
                 this.camera.centreOn(this.game.player);
@@ -1327,7 +1325,7 @@ export default class Renderer {
         this.darkMask.compute(this.overlay.width, this.overlay.height);
     }
 
-    private parseObjects(objects: Pos[]): RectangleObject[] {
+    private parseObjects(objects: Position[]): RectangleObject[] {
         let parsedObjects: RectangleObject[] = [];
 
         if (!objects) return parsedObjects;
@@ -1350,7 +1348,7 @@ export default class Renderer {
         diffuse: number,
         color: string,
         relative: boolean,
-        objects?: Pos[]
+        objects?: Position[]
     ): void {
         let light = new Lamp(this.getLightData(x, y, distance, diffuse, color)) as RendererLamp,
             lighting = new Lighting({
@@ -1442,7 +1440,7 @@ export default class Renderer {
         );
     }
 
-    public getMiddle(): Pos {
+    public getMiddle(): Position {
         return {
             x: this.overlay.width / 2,
             y: this.overlay.height / 2

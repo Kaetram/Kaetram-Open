@@ -1,72 +1,37 @@
 import { Modules } from '@kaetram/common/network';
 
-import Entity from '../entity';
+import Entity, { EntityData } from '../entity';
 
-import type { ProjectileData } from '@kaetram/common/types/messages';
 import type Character from '../character/character';
 import Utils from '@kaetram/common/util/utils';
 
 export default class Projectile extends Entity {
-    // startX = -1;
-    // startY = -1;
-
-    private destX = -1;
-    private destY = -1;
-
-    private target: Entity | null = null;
-
     public damage = -1;
 
-    public hitType: Modules.Hits | null = null; // TODO
-    public owner?: Character; // TODO
+    public hitType = Modules.Hits.Damage;
 
-    private static = false;
-    private special!: never;
-
-    public constructor(key: Modules.Projectiles, x: number, y: number) {
-        //TODO - Refactor this whole class
-        super(Utils.createInstance(Modules.EntityType.Projectile), 'projectile', x, y);
-    }
-
-    setStart(x: number, y: number): void {
-        this.x = x;
-        this.y = y;
+    public constructor(
+        key: Modules.Projectiles,
+        public owner: Character,
+        public target: Character
+    ) {
+        super(Utils.createInstance(Modules.EntityType.Projectile), 'projectile', owner.x, owner.y);
     }
 
     /**
-     * TODO - Merge setTarget() && setStaticTarget into one function.
+     * Adds the projectile information onto the entity data superclass.
+     * @returns Serialized `ProjectileData` in conjunction with `EntityData`.
      */
-    setTarget(target: Entity): void {
-        this.target = target;
 
-        this.destX = target.x;
-        this.destY = target.y;
-    }
+    public override serialize(): EntityData {
+        let data = super.serialize();
 
-    setStaticTarget(x: number, y: number): void {
-        this.static = true;
+        data.name = this.owner.projectileName;
+        data.ownerInstance = this.owner.instance;
+        data.targetInstance = this.target.instance;
+        data.damage = this.damage;
+        data.hitType = this.hitType;
 
-        this.destX = x;
-        this.destY = y;
-    }
-
-    getData(): ProjectileData | undefined {
-        /**
-         * Refrain from creating a projectile unless
-         * an owner and a target are available.
-         */
-
-        if (!this.owner || !this.target) return;
-
-        // return {
-        //     id: this.instance,
-        //     key: this.key,
-        //     name: this.owner.projectileName,
-        //     characterId: this.owner.instance,
-        //     targetId: this.target.instance,
-        //     damage: this.damage,
-        //     special: this.special,
-        //     hitType: this.hitType
-        // };
+        return data;
     }
 }

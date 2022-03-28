@@ -1,13 +1,11 @@
-import _, { remove } from 'lodash';
-
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { SlotData } from '@kaetram/common/types/slot';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import {
     Container,
+    Quest,
     Equipment as EquipmentPacket,
     NPC as NPCPacket
 } from '../../../../network/packets';
@@ -20,12 +18,15 @@ import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
-import Equipment from './equipment/impl/equipment';
-import Item from '../../objects/item';
+import Equipment from './equipment/equipment';
+import Character from '../character';
+import { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default class Handler {
     private world: World;
     private map: Map;
+
+    private updateTime = 600;
 
     private updateTicks = 0;
     private updateInterval: NodeJS.Timeout | null = null;
@@ -34,11 +35,23 @@ export default class Handler {
         this.world = player.world;
         this.map = player.world.map;
 
+        // Disconnect callback
+        this.player.connection.onClose(this.handleClose.bind(this));
+
+        // Death callback
+        this.player.onDeath(this.handleDeath.bind(this));
+
+        // Movement-related callbacks
+        this.player.onDoor(this.handleDoor.bind(this));
+        this.player.onMovement(this.handleMovement.bind(this));
+
+        // Region callback
         this.player.onRegion(this.handleRegion.bind(this));
 
         // Loading callbacks
         this.player.equipment.onLoaded(this.handleEquipment.bind(this));
         this.player.inventory.onLoaded(this.handleInventory.bind(this));
+        this.player.quests.onLoaded(this.handleQuests.bind(this));
 
         // Inventory callbacks
         this.player.inventory.onAdd(this.handleInventoryAdd.bind(this));
@@ -57,7 +70,79 @@ export default class Handler {
         // NPC talking callback
         this.player.onTalkToNPC(this.handleTalkToNPC.bind(this));
 
-        this.load();
+        // Killing a character callback
+        this.player.onKill(this.handleKill.bind(this));
+
+        // Poison callback
+        this.player.onPoison(this.handlePoison.bind(this));
+
+        // Cheat-score callback
+        this.player.onCheatScore(this.handleCheatScore.bind(this));
+
+        // Update interval callback
+        this.updateInterval = setInterval(this.handleUpdate.bind(this), this.updateTime);
+    }
+
+    /**
+     * Callback handler for when the player's connection is closed.
+     */
+
+    private handleClose(): void {
+        this.player.stopHealing();
+
+        this.clear();
+
+        if (this.player.ready) {
+            if (config.discordEnabled)
+                this.world.discord.sendWebhook(this.player.username, 'has logged out!');
+
+            if (config.hubEnabled)
+                this.world.api.sendChat(
+                    Utils.formatUsername(this.player.username),
+                    'has logged out!'
+                );
+        }
+
+        this.world.entities.removePlayer(this.player);
+    }
+
+    /**
+     * Callback for when the player dies.
+     */
+
+    private handleDeath(): void {
+        this.player.combat.stop();
+    }
+
+    /**
+     * Receive a callback about the door destination coordinate
+     * and quest information (if existant).
+     */
+
+    private handleDoor(door: ProcessedDoor): void {
+        if (door.quest) {
+            let quest = this.player.quests.getQuest(door.quest);
+
+            return quest.doorCallback?.(door, this.player);
+        }
+
+        this.player.teleport(door.x, door.y, true);
+
+        log.debug(`[Handler] Going through door: ${door.x} - ${door.y}`);
+    }
+
+    /**
+     * Handles the player's movement and passes new position as parameters.
+     * @param x The new x grid position.
+     * @param y The new y grid position.
+     */
+
+    private handleMovement(x: number, y: number): void {
+        this.map.regions.handle(this.player);
+
+        this.detectAreas(x, y);
+
+        this.detectClipping(x, y);
     }
 
     /**
@@ -106,6 +191,7 @@ export default class Handler {
     private handleInventory(): void {
         let { slots } = this.player.inventory.serialize();
 
+        // Send Batch packet to the client.
         this.player.send(
             new Container(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
@@ -161,6 +247,16 @@ export default class Handler {
     }
 
     /**
+     * Send a packet to the client to load quests.
+     */
+
+    private handleQuests(): void {
+        let { quests } = this.player.quests.serialize(true);
+
+        this.player.send(new Quest(Opcodes.Quest.Batch, quests));
+    }
+
+    /**
      * Sends a packet to the client whenever
      * we add an item in our bank.
      * @param slot The slot we just added the item to.
@@ -195,15 +291,22 @@ export default class Handler {
      */
 
     private handleTalkToNPC(npc: NPC): void {
-        if (this.player.quests.isQuestNPC(npc)) {
-            this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
+        let quest = this.player.quests.getQuestFromNPC(npc);
+
+        if (quest) {
+            quest.talkCallback?.(npc, this.player);
             return;
         }
 
-        if (this.player.quests.isAchievementNPC(npc)) {
-            this.player.quests.getAchievementByNPC(npc)!.converse(npc);
-            return;
-        }
+        // if (this.player.quests.isQuestNPC(npc)) {
+        //     this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
+        //     return;
+        // }
+
+        // if (this.player.quests.isAchievementNPC(npc)) {
+        //     this.player.quests.getAchievementByNPC(npc)!.converse(npc);
+        //     return;
+        // }
 
         // if (Shops.isShopNPC(npc.id)) {
         //     this.world.shops.open(this.player, npc.id);
@@ -219,151 +322,76 @@ export default class Handler {
                 break;
         }
 
-        if (!npc.hasDialogue()) return;
-
-        this.player.send(
-            new NPCPacket(Opcodes.NPC.Talk, {
-                id: npc.instance,
-                text: npc.talk(this.player)
-            })
-        );
+        npc.talk(this.player);
     }
 
-    // TODO - Refactor all of this.
+    /**
+     * Callback for when a character instance is killed.
+     * @param character A character instance, generally a player or a mob.
+     */
 
-    private load(): void {
-        this.updateInterval = setInterval(() => {
-            this.detectAggro();
+    private handleKill(character: Character): void {
+        log.debug(`Received kill callback for: ${character.instance}.`);
 
-            if (this.updateTicks % 4 === 0)
-                // Every 4 (1.6 seconds) update ticks.
-                this.handlePoison();
+        if (!character.isMob()) return;
 
-            if (this.updateTicks % 16 === 0)
-                // Every 16 (6.4 seconds) update ticks.
-                this.player.cheatScore = 0;
+        let quest = this.player.quests.getQuestFromMob(character as Mob);
 
-            if (this.updateTicks > 100)
-                // Reset them every now and then.
-                this.updateTicks = 0;
-
-            this.updateTicks++;
-        }, 400);
-
-        this.player.onMovement((x: number, y: number) => {
-            this.map.regions.handle(this.player);
-
-            this.detectAreas(x, y);
-
-            this.detectClipping(x, y);
-        });
-
-        this.player.onDeath(() => {
-            this.player.combat.stop();
-        });
-
-        this.player.onHit((attacker, damage) => {
-            /**
-             * Handles actions whenever the player
-             * instance is hit by 'damage' amount
-             */
-
-            if (this.player.combat.isRetaliating()) this.player.combat.begin(attacker);
-
-            log.debug(`Player has been hit - damage: ${damage}`);
-        });
-
-        this.player.onKill((character) => {
-            if (!this.player.quests) {
-                log.warning(`${this.player.username} does not have quests initialized.`);
-                return;
-            }
-
-            let mob = character as Mob;
-
-            if (this.player.quests.isAchievementMob(mob)) {
-                let achievement = this.player.quests.getAchievementByMob(mob);
-
-                if (achievement && achievement.isStarted()) achievement.step();
-            }
-        });
-
-        // this.player.onRegion(() => {
-        //     this.player.lastRegionChange = Date.now();
-
-        //     this.map.regions.sendEntities(this.player);
-
-        //     //TODO - Redo
-        //     // this.world.region.handle(this.player);
-        //     // this.world.region.push(this.player);
-        // });
-
-        this.player.connection.onClose(() => {
-            this.player.stopHealing();
-
-            /* Avoid a memory leak */
-            if (this.updateInterval) clearInterval(this.updateInterval);
-            this.updateInterval = null;
-
-            if (this.player.ready) {
-                if (config.discordEnabled)
-                    this.world.discord.sendWebhook(this.player.username, 'has logged out!');
-
-                if (config.hubEnabled)
-                    this.world.api.sendChat(
-                        Utils.formatUsername(this.player.username),
-                        'has logged out!'
-                    );
-            }
-
-            this.world.entities.removePlayer(this.player);
-        });
-
-        this.player.onTeleport((x: number, y: number, isDoor = false) => {
-            if (!this.player.finishedTutorial() && isDoor && this.player.doorCallback) {
-                this.player.doorCallback(x, y);
-                return;
-            }
-        });
-
-        this.player.onPoison((info) => {
-            this.player.sync();
-
-            if (info) this.player.notify('You have been poisoned.');
-            else this.player.notify('The poison has worn off.');
-
-            log.debug(`Player ${this.player.instance} updated poison status.`);
-        });
-
-        this.player.onCheatScore(() => {
-            /**
-             * This is a primitive anti-cheating system.
-             * It will not accomplish much, but it is enough for now.
-             */
-
-            if (this.player.cheatScore > 10) this.player.timeout();
-
-            log.debug(`Cheat score - ${this.player.cheatScore}`);
-        });
+        if (quest) quest.killCallback?.(character as Mob);
     }
 
-    public destroy(): void {
-        if (this.updateInterval) clearInterval(this.updateInterval);
-        this.updateInterval = null;
+    /**
+     * Callback for when the player's poison status updates.
+     */
+
+    // TODO - Set poison type.
+    private handlePoison(info: any): void {
+        this.player.sync();
+
+        // Notify the player when the poison status changes.
+        if (info) this.player.notify('You have been poisoned.');
+        else this.player.notify('The poison has worn off.');
+
+        log.debug(`Player ${this.player.instance} updated poison status.`);
     }
 
-    private detectAggro(): void {
-        // TODO - Redo
-        // let region = this.world.region.regions[this.player.region!];
-        // if (!region) return;
-        // _.each(region.entities, (character) => {
-        //     if (character && character.isMob() && this.canEntitySee(character)) {
-        //         let mob = character as Mob,
-        //             aggro = mob.canAggro(this.player);
-        //         if (aggro) mob.combat.begin(this.player);
-        //     }
-        // });
+    /**
+     * Callback for when the cheat score updates.
+     */
+
+    private handleCheatScore(): void {
+        /**
+         * This is a primitive anti-cheating system.
+         * It will not accomplish much, but it is enough for now.
+         */
+
+        if (this.player.cheatScore > 10) this.player.timeout();
+
+        log.debug(`Cheat score - ${this.player.cheatScore}`);
     }
+
+    /**
+     * Callback function for the update that gets called every `updateTime` seconds.
+     */
+
+    private handleUpdate(): void {
+        this.detectAggro();
+
+        if (this.isTickInterval(3)) this.parsePoison();
+
+        this.updateTicks++;
+    }
+
+    /**
+     * Checks for the area the player is currently in at the given
+     * `x` and `y` positions. Triggers an update in the player's area
+     * state if it differs from the player's current state. (e.g. if
+     * the player is not in a PVP area and enters a PVP area, the player's
+     * current state differs from the position's state, so the player's
+     * state is updated and relayed to the client).
+     * @param x The x grid coordinate we are checking the area at.
+     * @param y The y grid coordinate we are checking the area at.
+     */
 
     private detectAreas(x: number, y: number): void {
         this.map.forEachAreas((areas: Areas, name: string) => {
@@ -397,6 +425,44 @@ export default class Handler {
         });
     }
 
+    /**
+     * Takes a `interval` value and modulos it against the current updateTicks.
+     * This is to separate an event into a larger interval instead of starting
+     * multiple `setInterval` functions. For example, an `interval` of 4 means
+     * that the event is called every 4 ticks (or 2400 milliseconds if `updateTime`
+     * is set to 600 milliseconds).
+     * @param interval The modulo interval.
+     * @returns Whether or not the `interval` is reached.
+     */
+
+    private isTickInterval(interval: number): boolean {
+        return this.updateTicks % interval === 0;
+    }
+
+    /**
+     * Clears the timeouts and nullifies them (used for disconnection);
+     */
+
+    private clear(): void {
+        clearInterval(this.updateInterval!);
+        this.updateInterval = null;
+    }
+
+    // TODO - REFACTOR
+
+    private detectAggro(): void {
+        // TODO - Redo
+        // let region = this.world.region.regions[this.player.region!];
+        // if (!region) return;
+        // _.each(region.entities, (character) => {
+        //     if (character && character.isMob() && this.canEntitySee(character)) {
+        //         let mob = character as Mob,
+        //             aggro = mob.canAggro(this.player);
+        //         if (aggro) mob.combat.begin(this.player);
+        //     }
+        // });
+    }
+
     private detectClipping(x: number, y: number): void {
         let isColliding = this.map.isColliding(x, y);
 
@@ -405,7 +471,7 @@ export default class Handler {
         this.player.incoming.handleNoClip(x, y);
     }
 
-    private handlePoison(): void {
+    private parsePoison(): void {
         if (!this.player.poison) return;
 
         let info = this.player.poison.split(':'),

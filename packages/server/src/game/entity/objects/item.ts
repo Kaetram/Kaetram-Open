@@ -165,6 +165,15 @@ export default class Item extends Entity {
     }
 
     /**
+     * Checks if the item is a ranged weapon.
+     * @returns If the itemType is of type `weaponarcher`.
+     */
+
+    public isRangedWeapon(): boolean {
+        return this.itemType === 'weaponarcher';
+    }
+
+    /**
      * Expands on the entity serialization and
      * adds item specific variables (count, ability, abilityLevel).
      * @returns EntityData containing item information.

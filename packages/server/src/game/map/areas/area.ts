@@ -5,7 +5,7 @@ import type Chest from '../../entity/objects/chest';
 type Position = { x: number; y: number };
 
 export default class Area {
-    public polygon!: Pos[];
+    public polygon!: Position[];
 
     private entities: Mob[] = [];
     public chest: Chest | null = null;
@@ -19,7 +19,7 @@ export default class Area {
     public fog!: string;
 
     // Properties it can hold
-    public quest!: number;
+    public quest!: string;
     public achievement!: number;
     public cameraType!: string;
     public song!: string;
@@ -88,11 +88,13 @@ export default class Area {
      */
 
     public fulfillsRequirement(player: Player): boolean {
-        if (this.achievement && this.quest)
-            return player.finishedAchievement(this.achievement) && player.finishedQuest(this.quest);
+        if (this.quest) return player.quests!.getQuest(this.quest).isFinished();
 
-        if (this.achievement) return player.finishedAchievement(this.achievement);
-        if (this.quest) return player.finishedQuest(this.quest);
+        // if (this.achievement && this.quest)
+        //     return player.finishedAchievement(this.achievement) && player.finishedQuest(this.quest);
+
+        // if (this.achievement) return player.finishedAchievement(this.achievement);
+        // if (this.quest) return player.finishedQuest(this.quest);
 
         return false;
     }
