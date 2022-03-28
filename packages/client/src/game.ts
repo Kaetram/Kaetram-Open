@@ -269,11 +269,16 @@ export default class Game {
         let defaultSprite = this.getSprite(player.getSpriteName());
 
         player.setSprite(defaultSprite);
+
         if (storage) player.setOrientation(storage.data.player.orientation);
+
         player.idle();
 
-        if (map) socket.send(Packets.Ready, [true, map.preloadedData, agent]);
-        this.sendClientData();
+        if (map)
+            socket.send(Packets.Ready, {
+                hasMapData: map.preloadedData,
+                userAgent: agent
+            });
 
         new PlayerHandler(this, player);
 
@@ -348,6 +353,7 @@ export default class Game {
         if (!started) return;
 
         this.stop();
+
         renderer.stop();
         menu.stop();
 
@@ -386,14 +392,6 @@ export default class Game {
         this.renderer.resize();
 
         this.pointer.resize();
-    }
-
-    public sendClientData(): void {
-        let { canvasWidth, canvasHeight } = this.renderer;
-
-        if (!canvasWidth || !canvasHeight) return;
-
-        this.socket.send(Packets.Client, [canvasWidth, canvasHeight]);
     }
 
     public createPlayer(): void {

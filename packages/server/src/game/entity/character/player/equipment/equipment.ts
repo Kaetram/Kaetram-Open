@@ -6,7 +6,7 @@
 
 import { Modules } from '@kaetram/common/network';
 import { EquipmentData } from '@kaetram/common/types/equipment';
-import Item from '../../../../objects/item';
+import Item from '../../../objects/item';
 
 export default class Equipment {
     private updateCallback?: (equipment: Equipment) => void;
@@ -19,7 +19,8 @@ export default class Equipment {
         public count = 1,
         public ability = -1,
         public abilityLevel = -1,
-        public power = 1
+        public power = 1,
+        public rangedWeapon = false
     ) {}
 
     /**

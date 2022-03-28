@@ -7,29 +7,38 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import Creator from '../database/mongodb/creator';
+import { Chat, Combat, Movement, Notification, Spawn } from '../network/packets';
+import Respawn from '../network/packets/respawn';
 import Commands from './commands';
 
+import type {
+    LoginPacket,
+    MovementPacket,
+    ReadyPacket
+} from '@kaetram/common/types/clientmessages';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { SlotType } from '@kaetram/common/types/slot';
 import type Character from '../game/entity/character/character';
 import type Mob from '../game/entity/character/mob/mob';
 import type Player from '../game/entity/character/player/player';
+import type Entity from '../game/entity/entity';
 import type NPC from '../game/entity/npc/npc';
 import type Chest from '../game/entity/objects/chest';
+import type Item from '../game/entity/objects/item';
 import type Projectile from '../game/entity/objects/projectile';
-import { Chat, Combat, Equipment, Movement, Notification, Shop, Spawn } from '../network/packets';
-import Respawn from '../network/packets/respawn';
-import Item from '../game/entity/objects/item';
-import Entity from '../game/entity/entity';
-import { Door } from '../game/entity/character/player/doors';
-import { SlotData, SlotType } from '@kaetram/common/types/slot';
+import Connection from '../network/connection';
+import World from '../game/world';
+import Entities from './entities';
+import MongoDB from '../database/mongodb/mongodb';
 
-type PacketData = ((string | string[]) | number | boolean)[];
+type PacketData = (string | number | boolean | string[])[];
 
 export default class Incoming {
-    private connection;
-    private world;
-    private entities;
-    private database;
-    private commands;
+    private world: World;
+    private connection: Connection;
+    private entities: Entities;
+    private database: MongoDB;
+    private commands: Commands;
 
     public constructor(private player: Player) {
         this.connection = player.connection;
@@ -48,69 +57,52 @@ export default class Incoming {
 
             player.refreshTimeout();
 
-            switch (packet) {
-                case Packets.Login:
-                    return this.handleLogin(message);
-
-                case Packets.Ready:
-                    return this.handleReady(message);
-
-                case Packets.Who:
-                    return this.handleWho(message);
-
-                case Packets.Equipment:
-                    return this.handleEquipment(message);
-
-                case Packets.Movement:
-                    return this.handleMovement(message);
-
-                case Packets.Request:
-                    return this.handleRequest(message);
-
-                case Packets.Target:
-                    return this.handleTarget(message);
-
-                case Packets.Combat:
-                    return this.handleCombat(message);
-
-                case Packets.Projectile:
-                    return this.handleProjectile(message);
-
-                case Packets.Network:
-                    return this.handleNetwork(message);
-
-                case Packets.Chat:
-                    return this.handleChat(message);
-
-                case Packets.Command:
-                    return this.handleCommand(message);
-
-                case Packets.Container:
-                    return this.handleContainer(message);
-
-                case Packets.Respawn:
-                    return this.handleRespawn(message);
-
-                case Packets.Trade:
-                    return this.handleTrade(message);
-
-                case Packets.Enchant:
-                    return this.handleEnchant(message);
-
-                case Packets.Click:
-                    return this.handleClick(message);
-
-                case Packets.Warp:
-                    return this.handleWarp(message);
-
-                case Packets.Shop:
-                    return this.handleShop(message);
-
-                case Packets.Camera:
-                    return this.handleCamera(message);
-
-                case Packets.Client:
-                    return this.handleClient(message);
+            // Prevent server from crashing due to a packet malfunction.
+            try {
+                switch (packet) {
+                    case Packets.Login:
+                        return this.handleLogin(message);
+                    case Packets.Ready:
+                        return this.handleReady(message);
+                    case Packets.Who:
+                        return this.handleWho(message);
+                    case Packets.Equipment:
+                        return this.handleEquipment(message);
+                    case Packets.Movement:
+                        return this.handleMovement(message);
+                    case Packets.Request:
+                        return this.handleRequest(message);
+                    case Packets.Target:
+                        return this.handleTarget(message);
+                    case Packets.Combat:
+                        return this.handleCombat(message);
+                    case Packets.Projectile:
+                        return this.handleProjectile(message);
+                    case Packets.Network:
+                        return this.handleNetwork(message);
+                    case Packets.Chat:
+                        return this.handleChat(message);
+                    case Packets.Command:
+                        return this.handleCommand(message);
+                    case Packets.Container:
+                        return this.handleContainer(message);
+                    case Packets.Respawn:
+                        return this.handleRespawn(message);
+                    case Packets.Trade:
+                        return this.handleTrade(message);
+                    case Packets.Enchant:
+                        return this.handleEnchant(message);
+                    case Packets.Click:
+                        return this.handleClick(message);
+                    case Packets.Warp:
+                        return this.handleWarp(message);
+                    case Packets.Shop:
+                        return this.handleShop(message);
+                    case Packets.Camera:
+                        return this.handleCamera(message);
+                }
+            } catch (error) {
+                log.error(error);
             }
         });
     }
@@ -122,14 +114,13 @@ export default class Incoming {
      * then we proceed with no username/password and no database saving.
      */
 
-    private handleLogin(data: PacketData): void {
-        let opcode = data.shift(),
-            username = data.shift() as string,
-            password = data.shift() as string;
+    private handleLogin(data: LoginPacket): void {
+        let { opcode, username, password, email } = data;
 
         // Format username by making it all lower case, shorter than 32 characters, and no spaces.
-        this.player.username = username.toLowerCase().slice(0, 32).trim();
-        this.player.password = password.slice(0, 32);
+        if (username) this.player.username = username.toLowerCase().slice(0, 32).trim();
+        if (password) this.player.password = password.slice(0, 32);
+        if (email) this.player.email = email;
 
         // Reject connection if player is already logged in.
         if (this.world.isOnline(this.player.username)) return this.connection.reject('loggedin');
@@ -137,32 +128,33 @@ export default class Incoming {
         // Proceed directly to login with default player data if skip database is present.
         if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
 
+        // Handle login for each particular case.
         switch (opcode) {
             case Opcodes.Login.Login:
                 return this.database.login(this.player);
 
             case Opcodes.Login.Register:
-                this.player.email = data.shift() as string;
-
                 return this.database.register(this.player);
 
             case Opcodes.Login.Guest:
-                break;
+                this.player.isGuest = true; // Makes sure player doesn't get saved to database.
+                this.player.username = `guest${Utils.counter}`; // Generate a random guest username.
+
+                return this.player.load(Creator.serializePlayer(this.player));
         }
     }
 
-    private handleReady(message: [string, string, string]): void {
-        let [, preloadedData, userAgent] = message;
+    private handleReady(data: ReadyPacket): void {
+        let { hasMapData, userAgent } = data;
 
-        if (this.player.regionsLoaded.length > 0 && !preloadedData) this.player.regionsLoaded = [];
+        if (this.player.regionsLoaded.length > 0 && !hasMapData) this.player.regionsLoaded = [];
 
         this.player.loadEquipment();
         this.player.loadInventory();
         this.player.loadBank();
+        this.player.loadQuests();
 
         //this.world.regions.syncRegions(this.player);
-
-        this.player.loadQuests();
 
         if (this.world.map.isOutOfBounds(this.player.x, this.player.y))
             this.player.setPosition(50, 89);
@@ -181,8 +173,6 @@ export default class Incoming {
             this.world.api.sendChat(Utils.formatUsername(this.player.username), 'has logged in!');
 
         this.player.readyCallback?.();
-
-        this.player.sync();
 
         this.player.ready = true;
     }
@@ -287,48 +277,41 @@ export default class Incoming {
         // }
     }
 
-    private handleMovement(packet: PacketData): void {
-        let opcode = packet.shift() as Opcodes.Movement,
-            orientation: Modules.Orientation,
-            requestX: number,
-            requestY: number,
-            playerX: number,
-            playerY: number,
-            movementSpeed: number,
-            hasTarget: boolean,
-            targetInstance: string,
+    private handleMovement(data: MovementPacket): void {
+        let {
+                opcode,
+                requestX,
+                requestY,
+                playerX,
+                playerY,
+                movementSpeed,
+                hasTarget,
+                targetInstance,
+                orientation,
+                frozen
+            } = data,
             entity: Entity,
-            door: Door | undefined,
-            diff: number;
+            door: ProcessedDoor,
+            diff = 0;
 
         if (this.player.dead) return;
 
         switch (opcode) {
             case Opcodes.Movement.Request:
-                requestX = packet.shift() as number;
-                requestY = packet.shift() as number;
-
-                this.preventNoClip(requestX, requestY);
+                this.preventNoClip(requestX!, requestY!);
 
                 this.player.movementStart = Date.now();
 
                 break;
 
             case Opcodes.Movement.Started:
-                requestX = packet.shift() as number;
-                requestY = packet.shift() as number;
-                playerX = packet.shift() as number;
-                playerY = packet.shift() as number;
-                movementSpeed = packet.shift() as number;
-                targetInstance = packet.shift() as string;
-
                 if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
 
                 if (
                     playerX !== this.player.x ||
                     playerY !== this.player.y ||
                     this.player.stunned ||
-                    !this.preventNoClip(requestX, requestY)
+                    !this.preventNoClip(requestX!, requestY!)
                 )
                     return;
 
@@ -339,22 +322,14 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Step:
-                playerX = packet.shift() as number;
-                playerY = packet.shift() as number;
+                if (this.player.stunned || !this.preventNoClip(playerX!, playerY!)) return;
 
-                if (this.player.stunned || !this.preventNoClip(playerX, playerY)) return;
-
-                this.player.setPosition(playerX, playerY);
+                this.player.setPosition(playerX!, playerY!);
 
                 break;
 
             case Opcodes.Movement.Stop:
-                playerX = packet.shift() as number;
-                playerY = packet.shift() as number;
-                targetInstance = packet.shift() as string;
-                hasTarget = !!(packet.shift() as number);
-
-                entity = this.entities.get(targetInstance);
+                entity = this.entities.get(targetInstance!);
 
                 if (!this.player.moving) {
                     log.warning(`Didn't receive movement start packet: ${this.player.username}.`);
@@ -362,21 +337,15 @@ export default class Incoming {
                     this.player.incrementCheatScore(1);
                 }
 
-                orientation = packet.shift() as number;
-
                 if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
-                if (this.world.map.isDoor(playerX, playerY) && !hasTarget) {
-                    door = this.player.doors.getDoor(playerX, playerY);
+                if (this.world.map.isDoor(playerX!, playerY!) && !hasTarget) {
+                    door = this.world.map.getDoorByPosition(playerX!, playerY!);
 
-                    if (door && this.player.doors.isClosed(door)) return;
-
-                    let destination = this.world.map.getDoorByPosition(playerX, playerY);
-
-                    this.player.teleport(destination.x, destination.y, true);
+                    this.player.doorCallback?.(door);
                 } else {
-                    this.player.setPosition(playerX, playerY);
-                    this.player.setOrientation(orientation);
+                    this.player.setPosition(playerX!, playerY!);
+                    this.player.setOrientation(orientation!);
                 }
 
                 this.player.moving = false;
@@ -389,23 +358,17 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Entity:
-                targetInstance = packet.shift() as string;
-                requestX = packet.shift() as number;
-                requestY = packet.shift() as number;
-
-                entity = this.entities.get(targetInstance) as Character;
+                entity = this.entities.get(targetInstance!) as Character;
 
                 if (!entity || (entity.x === requestX && entity.y === requestY)) return;
 
-                entity.setPosition(requestX, requestY);
+                entity.setPosition(requestX!, requestY!);
 
                 if ((entity as Character).hasTarget()) entity.combat.forceAttack();
 
                 break;
 
             case Opcodes.Movement.Orientate:
-                orientation = packet.shift() as number;
-
                 this.player.sendToRegions(
                     new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
                 );
@@ -413,12 +376,10 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Freeze:
-                this.player.frozen = packet.shift() as boolean;
+                this.player.frozen = !!frozen;
                 break;
 
             case Opcodes.Movement.Zone:
-                orientation = packet.shift() as number;
-
                 log.debug(`Zoning orientation: ${orientation}`);
                 break;
         }
@@ -535,7 +496,7 @@ export default class Incoming {
 
                 if (!target || target.dead || !projectile) return;
 
-                //this.world.handleDamage(projectile.owner, target, projectile.damage);
+                this.world.handleDamage(projectile.owner, target, projectile.damage);
                 this.entities.remove(projectile);
 
                 if (target.combat.started || target.dead || target.isMob()) return;
@@ -606,7 +567,7 @@ export default class Incoming {
         }
     }
 
-    private handleCommand(message: [Opcodes.Command, Pos]): void {
+    private handleCommand(message: [Opcodes.Command, Position]): void {
         let [opcode, position] = message;
 
         if (this.player.rights < 2) return;
@@ -874,25 +835,6 @@ export default class Incoming {
         this.player.cameraArea = undefined;
         // TODO - Make this a server-side thing.
         // this.player.handler.detectCamera(this.player.x, this.player.y);
-    }
-
-    /**
-     * Receive client information such as screen size, will be expanded
-     * for more functionality when needed.
-     */
-    private handleClient(message: [number, number]): void {
-        let [canvasWidth, canvasHeight] = message;
-
-        if (!canvasWidth || !canvasHeight) return;
-
-        /**
-         * The client is by default scaled to 3x the normal
-         * tileSize of 16x16. So we are using 48x48 to find
-         * a desireable region size.
-         */
-
-        // this.player.regionWidth = Math.ceil(canvasWidth / 48);
-        // this.player.regionHeight = Math.ceil(canvasHeight / 48);
     }
 
     /**

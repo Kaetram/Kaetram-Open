@@ -280,7 +280,7 @@ export default class Combat {
         return this.attackers && Object.keys(this.attackers).length > 0;
     }
 
-    private getNewPosition(): Pos {
+    private getNewPosition(): Position {
         let position = {
                 x: this.character.x,
                 y: this.character.y
@@ -376,7 +376,7 @@ export default class Combat {
 
             this.world.push(Modules.PacketType.Regions, {
                 region: character.region,
-                packet: new Projectile(Opcodes.Projectile.Create, projectile.getData())
+                packet: new Projectile(Opcodes.Projectile.Create, projectile.serialize())
             });
         } else {
             this.world.push(Modules.PacketType.Regions, {

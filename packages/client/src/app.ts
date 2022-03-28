@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import _ from 'lodash';
 
+import log from './lib/log';
+
 import { Modules } from '@kaetram/common/network';
 
 import install from './lib/pwa';
@@ -55,7 +57,9 @@ export default class App {
     // orientation: string;
 
     public constructor() {
-        this.sendStatus('Initializing the main app');
+        log.debug('Loading the game app.');
+
+        this.sendStatus(`Initializing the game client...`);
 
         // this.updateOrientation();
 
@@ -185,6 +189,8 @@ export default class App {
                 dataType: 'script',
                 async: true
             });
+
+        if (this.config.worldSwitch) $('#world-switch').show();
     }
 
     public ready(): void {
@@ -331,8 +337,16 @@ export default class App {
                     return false;
                 }
 
-                if (!email.val() || !this.verifyEmail(email.val() as string)) {
-                    this.sendError(email, 'An email is required!');
+                if (registerPassword.val()!.toString().length < 3) {
+                    this.sendError(
+                        registerPassword,
+                        'Your password must be at least 3 characters long.'
+                    );
+                    return false;
+                }
+
+                if (!email.val() || !this.isEmail(email.val() as string)) {
+                    this.sendError(email, `The email you've entered is not valid.`);
                     return false;
                 }
 
@@ -343,7 +357,13 @@ export default class App {
         return true;
     }
 
-    private verifyEmail(email: string): boolean {
+    /**
+     * Checks the email string against regular expression.
+     * @param email Email string to verify.
+     * @returns Whether or not the email string follows the proper Regex pattern.
+     */
+
+    private isEmail(email: string): boolean {
         return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
             email
         );
