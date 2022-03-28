@@ -2,7 +2,7 @@
     "name": "@kaetram/server",
     "scripts": {
         "start": "node --enable-source-maps dist",
-        "dev": "ts-node-dev ./src/main.ts",
+        "dev": "ts-node-dev --rs ./src/main.ts",
         "build": "tsc --noEmit && ts-node build"
     },
     "dependencies": {

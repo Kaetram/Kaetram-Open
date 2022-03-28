@@ -45,12 +45,12 @@ export default class InputController {
     public cursorMoved = false;
 
     private cursors: { [cursor in Cursors]?: Sprite | undefined } = {};
-    public lastMousePosition: Pos = { x: 0, y: 0 };
+    public lastMousePosition: Position = { x: 0, y: 0 };
 
     private hovering!: Modules.Hovering | null;
     public hoveringEntity!: Entity; // for debugging
 
-    public mouse: Pos = { x: 0, y: 0 };
+    public mouse: Position = { x: 0, y: 0 };
 
     /**
      * This is the animation for the target
@@ -240,7 +240,7 @@ export default class InputController {
         player.disableAction = false;
     }
 
-    public keyMove(position: Pos): void {
+    public keyMove(position: Position): void {
         let player = this.getPlayer();
 
         if (!player.hasPath()) {
@@ -255,7 +255,7 @@ export default class InputController {
         }
     }
 
-    private leftClick(position: Pos | undefined, keyMovement = false): void {
+    private leftClick(position: Position | undefined, keyMovement = false): void {
         let { renderer, chatHandler, map, game } = this,
             player = this.getPlayer();
 
@@ -319,7 +319,7 @@ export default class InputController {
         player.go(position.x, position.y);
     }
 
-    private rightClick(position: Pos | undefined): void {
+    private rightClick(position: Position | undefined): void {
         if (!position) return;
 
         let { renderer, game, mouse, hovering } = this;
@@ -446,7 +446,7 @@ export default class InputController {
         return this.cursors[this.getPlayer().isRanged() ? 'bow' : 'sword'];
     }
 
-    public getCoords(): Pos | undefined {
+    public getCoords(): Position | undefined {
         let { renderer, mouse, game } = this;
 
         if (!renderer.camera) return;
@@ -486,7 +486,10 @@ export default class InputController {
     }
 
     private updateFrozen(state: boolean): void {
-        this.game.socket.send(Packets.Movement, [Opcodes.Movement.Freeze, state]);
+        this.game.socket.send(Packets.Movement, {
+            opcode: Opcodes.Movement.Freeze,
+            frozen: state
+        });
     }
 
     private isTargetable(entity: Entity): boolean {
@@ -497,7 +500,7 @@ export default class InputController {
         return entity.isMob() || (entity.isPlayer() && entity.pvp && this.game.pvp);
     }
 
-    private isSamePosition(position: Pos): boolean {
+    private isSamePosition(position: Position): boolean {
         let player = this.getPlayer();
 
         return position.x === player.gridX && position.y === player.gridY;

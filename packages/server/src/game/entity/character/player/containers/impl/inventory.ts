@@ -1,5 +1,4 @@
 import { Modules } from '@kaetram/common/network';
-import { SlotData } from '@kaetram/common/types/slot';
 import Item from '../../../../objects/item';
 
 import Container from '../container';

@@ -45,13 +45,13 @@ export default class PlayerHandler {
             let ignores = [player];
 
             if (!map.isColliding(x, y) && !isObject)
-                socket.send(Packets.Movement, [
-                    Opcodes.Movement.Request,
-                    x,
-                    y,
-                    player.gridX,
-                    player.gridY
-                ]);
+                socket.send(Packets.Movement, {
+                    opcode: Opcodes.Movement.Request,
+                    requestX: x,
+                    requestY: y,
+                    playerX: player.gridX,
+                    playerY: player.gridY
+                });
 
             if (isObject)
                 ignores.push({
@@ -77,15 +77,15 @@ export default class PlayerHandler {
 
             log.debug(`Movement speed: ${player.movementSpeed}`);
 
-            socket.send(Packets.Movement, [
-                Opcodes.Movement.Started,
-                input.selectedX,
-                input.selectedY,
-                player.gridX,
-                player.gridY,
-                player.movementSpeed,
-                this.getTargetId()
-            ]);
+            socket.send(Packets.Movement, {
+                opcode: Opcodes.Movement.Started,
+                requestX: input.selectedX,
+                requestY: input.selectedY,
+                playerX: player.gridX,
+                playerY: player.gridY,
+                movementSpeed: player.movementSpeed,
+                targetInstance: this.getTargetId()
+            });
         });
 
         player.onStopPathing((x, y) => {
@@ -105,14 +105,14 @@ export default class PlayerHandler {
 
             log.debug('Stopping pathing.');
 
-            socket.send(Packets.Movement, [
-                Opcodes.Movement.Stop,
-                x,
-                y,
-                id,
-                !!player.target,
-                player.orientation
-            ]);
+            socket.send(Packets.Movement, {
+                opcode: Opcodes.Movement.Stop,
+                playerX: x,
+                playerY: y,
+                targetInstance: id,
+                hasTarget: !!player.target,
+                orientation: player.orientation
+            });
 
             socket.send(Packets.Target, [this.getTargetType(), this.getTargetId()]);
 
@@ -193,7 +193,10 @@ export default class PlayerHandler {
 
             camera.zone(direction);
 
-            socket.send(Packets.Movement, [Opcodes.Movement.Zone, direction]);
+            socket.send(Packets.Movement, {
+                opcode: Opcodes.Movement.Zone,
+                direction
+            });
 
             renderer.updateAnimatedTiles();
 

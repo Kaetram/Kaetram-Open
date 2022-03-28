@@ -7,7 +7,6 @@ import NPC from '../entity/character/npc/npc';
 import Player from '../entity/character/player/player';
 import Chest from '../entity/objects/chest';
 import Item from '../entity/objects/item';
-import Projectile from '../entity/objects/projectile';
 import Grids from '../renderer/grids';
 import SpritesController from './sprites';
 
@@ -19,6 +18,7 @@ import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Game from '../game';
 import { EquipmentData } from '@kaetram/common/types/equipment';
+import Projectile from '../entity/objects/projectile';
 
 interface EntitiesCollection {
     [id: string]: Entity;
@@ -59,6 +59,12 @@ export interface EntityData {
     rights: number;
     pvp: boolean;
     orientation: number;
+
+    // Projectile info
+    ownerInstance: string;
+    targetInstance: string;
+    damage: number;
+    hitType: Modules.Hits;
 
     equipments: EquipmentData[];
 }
@@ -107,9 +113,8 @@ export default class EntitiesController {
 
         if (this.isPlayer(info.instance)) return;
 
-        if (info.instance in entities)
-            // Don't initialize things twice.
-            return;
+        // Don't initialize things twice.
+        if (info.instance in entities) return;
 
         switch (info.type) {
             case Modules.EntityType.Chest: {
@@ -164,63 +169,64 @@ export default class EntitiesController {
                 break;
             }
 
+            // TODO REFACTOR THIS
             case Modules.EntityType.Projectile: {
-                // let attacker = this.get<Character>(info.characterId),
-                //     target = this.get<Character>(info.targetId);
+                let attacker = this.get<Character>(info.ownerInstance),
+                    target = this.get<Character>(info.targetInstance);
 
-                // if (!attacker || !target) return;
+                if (!attacker || !target) return;
 
-                // attacker.lookAt(target);
+                attacker.lookAt(target);
 
-                // let projectile = new Projectile(info.instance, info.key, attacker); // ? info.projectileType
+                let projectile = new Projectile(info.instance, info.key, attacker); // ? info.projectileType
 
-                // projectile.name = info.name;
+                projectile.name = info.name;
 
-                // projectile.setStart(attacker.x, attacker.y);
-                // projectile.setTarget(target);
+                projectile.setStart(attacker.x, attacker.y);
+                projectile.setTarget(target);
 
-                // projectile.setSprite(this.getSprite(projectile.name));
-                // projectile.setAnimation('travel', projectile.getSpeed());
+                projectile.setSprite(this.getSprite(projectile.name));
+                projectile.setAnimation('travel', projectile.getSpeed());
 
-                // projectile.angled = true;
-                // projectile.type = info.type;
+                projectile.angled = true;
+                projectile.type = info.type;
 
-                // /**
-                //  * Move this into the external overall function
-                //  */
+                /**
+                 * Move this into the external overall function
+                 */
 
-                // projectile.onImpact(() => {
-                //     /**
-                //      * The data in the projectile is only for rendering purposes
-                //      * there is nothing you can change for the actual damage output here.
-                //      */
+                projectile.onImpact(() => {
+                    /**
+                     * The data in the projectile is only for rendering purposes
+                     * there is nothing you can change for the actual damage output here.
+                     */
 
-                //     if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
-                //         game.socket.send(Packets.Projectile, [
-                //             Opcodes.Projectile.Impact,
-                //             info.id,
-                //             target.id
-                //         ]);
+                    if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
+                        game.socket.send(Packets.Projectile, [
+                            Opcodes.Projectile.Impact,
+                            info.instance,
+                            target.id
+                        ]);
 
-                //     if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
+                    if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 
-                //     game.info.create(
-                //         Modules.Hits.Damage,
-                //         [info.damage, this.isPlayer(target.id)],
-                //         target.x,
-                //         target.y
-                //     );
+                    game.info.create(
+                        Modules.Hits.Damage,
+                        [info.damage, this.isPlayer(target.id)],
+                        target.x,
+                        target.y
+                    );
 
-                //     target.triggerHealthBar();
+                    target.triggerHealthBar();
 
-                //     this.unregisterPosition(projectile);
-                //     delete entities[projectile.getId()];
-                // });
+                    this.unregisterPosition(projectile);
+                    delete entities[projectile.getId()];
+                });
 
-                // this.addEntity(projectile);
+                this.addEntity(projectile);
 
-                // attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-                // attacker.triggerHealthBar();
+                attacker.performAction(attacker.orientation, Modules.Actions.Attack);
+                attacker.triggerHealthBar();
 
                 return;
             }

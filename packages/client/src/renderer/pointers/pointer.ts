@@ -1,4 +1,4 @@
-import { Modules } from '@kaetram/common/network';
+import { Opcodes } from '@kaetram/common/network';
 
 export default class Pointer {
     private blinkInterval!: number;
@@ -7,7 +7,7 @@ export default class Pointer {
     public x = -1;
     public y = -1;
 
-    public constructor(public id: string, public element: JQuery, public type: Modules.Pointers) {
+    public constructor(public id: string, public element: JQuery, public type: Opcodes.Pointer) {
         this.load();
     }
 
@@ -23,7 +23,7 @@ export default class Pointer {
     public destroy(): void {
         clearInterval(this.blinkInterval);
 
-        if (this.type === Modules.Pointers.Button) this.hide();
+        if (this.type === Opcodes.Pointer.Button) this.hide();
         else this.element.remove();
     }
 
@@ -33,12 +33,12 @@ export default class Pointer {
     }
 
     private show(): void {
-        if (this.type === Modules.Pointers.Button) this.element.addClass('active');
+        if (this.type === Opcodes.Pointer.Button) this.element.addClass('active');
         else this.element.show();
     }
 
     private hide(): void {
-        if (this.type === Modules.Pointers.Button) this.element.removeClass('active');
+        if (this.type === Opcodes.Pointer.Button) this.element.removeClass('active');
         else this.element.hide();
     }
 }
