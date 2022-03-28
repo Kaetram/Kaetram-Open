@@ -60,6 +60,12 @@ export interface EntityData {
     pvp: boolean;
     orientation: number;
 
+    // Projectile info
+    ownerInstance: string;
+    targetInstance: string;
+    damage: number;
+    hitType: Modules.Hits;
+
     equipments: EquipmentData[];
 }
 
@@ -165,12 +171,12 @@ export default class EntitiesController {
 
             // TODO REFACTOR THIS
             case Modules.EntityType.Projectile: {
-                let attacker = this.get<Character>((info as any).characterId),
-                    target = this.get<Character>((info as any).targetId);
-
-                console.log(info);
+                let attacker = this.get<Character>(info.ownerInstance),
+                    target = this.get<Character>(info.targetInstance);
 
                 if (!attacker || !target) return;
+
+                console.log(info);
 
                 attacker.lookAt(target);
 
@@ -200,15 +206,15 @@ export default class EntitiesController {
                     if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
                         game.socket.send(Packets.Projectile, [
                             Opcodes.Projectile.Impact,
-                            (info as any).id,
+                            info.instance,
                             target.id
                         ]);
 
-                    if ((info as any).hitType === Modules.Hits.Explosive) target.explosion = true;
+                    if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 
                     game.info.create(
                         Modules.Hits.Damage,
-                        [(info as any).damage, this.isPlayer(target.id)],
+                        [info.damage, this.isPlayer(target.id)],
                         target.x,
                         target.y
                     );
