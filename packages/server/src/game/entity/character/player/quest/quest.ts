@@ -239,7 +239,7 @@ export default abstract class Quest {
      */
 
     public isFinished(): boolean {
-        return this.stage > this.stageCount;
+        return this.stage >= this.stageCount;
     }
 
     /**
@@ -320,6 +320,8 @@ export default abstract class Quest {
 
         this.stage = stage;
         this.subStage = subStage;
+
+        if (this.isFinished()) return;
 
         // Update the latest stage data.
         this.stageData = this.getStageData();
