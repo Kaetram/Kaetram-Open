@@ -606,10 +606,6 @@ export default class Connection {
         // this.messages.onAbility((opcode, info) => {});
 
         this.messages.onQuest((opcode, info) => {
-            log.debug('Quest thing came through.');
-
-            console.log(info);
-
             switch (opcode) {
                 case Opcodes.Quest.Batch:
                     return this.menu.getQuestPage().loadQuests(info as QuestBatchData);
