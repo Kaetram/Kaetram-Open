@@ -29,7 +29,7 @@ export default class Regions {
     private world: World;
     private regions: Region[] = [];
 
-    private divisions: number;
+    private divisionSize: number;
     private sideLength = -1;
 
     private dynamicAreas: Dynamic;
@@ -40,7 +40,8 @@ export default class Regions {
     public constructor(private map: Map) {
         this.world = map.world;
 
-        this.divisions = map.tileSize;
+        // Division size must be evenly divisble by the map's width and height.
+        this.divisionSize = Modules.Constants.MAP_DIVISION_SIZE;
 
         this.dynamicAreas = map.getDynamicAreas() as Dynamic;
 
@@ -70,18 +71,20 @@ export default class Regions {
          * with this error present WILL cause the game to crash sooner or later.
          */
 
-        if (this.map.width % this.divisions !== 0) {
+        if (this.map.width % this.divisionSize !== 0) {
             log.error(`Corrupted map regions. Unable to evenly divide into sections.`);
-            log.error(`Map: ${this.map.width}x${this.map.height} - divisions: ${this.divisions}.`);
+            log.error(
+                `Map: ${this.map.width}x${this.map.height} - divisions: ${this.divisionSize}.`
+            );
             return;
         }
 
-        for (let y = 0; y < this.map.height; y += this.divisions)
-            for (let x = 0; x < this.map.width; x += this.divisions)
-                this.regions.push(new Region(x, y, this.divisions, this.divisions));
+        for (let y = 0; y < this.map.height; y += this.divisionSize)
+            for (let x = 0; x < this.map.width; x += this.divisionSize)
+                this.regions.push(new Region(x, y, this.divisionSize, this.divisionSize));
 
         // Number of regions per side.
-        this.sideLength = this.map.width / this.divisions;
+        this.sideLength = this.map.width / this.divisionSize;
     }
 
     /**
