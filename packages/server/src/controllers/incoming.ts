@@ -117,16 +117,20 @@ export default class Incoming {
     private handleLogin(data: LoginPacket): void {
         let { opcode, username, password, email } = data;
 
-        // Format username by making it all lower case, shorter than 32 characters, and no spaces.
-        if (username) this.player.username = username.toLowerCase().slice(0, 32).trim();
-        if (password) this.player.password = password.slice(0, 32);
-        if (email) this.player.email = email;
+        if (username) {
+            // Format username by making it all lower case, shorter than 32 characters, and no spaces.
+            this.player.username = username.toLowerCase().slice(0, 32).trim();
 
-        // Reject connection if player is already logged in.
-        if (this.world.isOnline(this.player.username)) return this.connection.reject('loggedin');
+            if (password) this.player.password = password.slice(0, 32);
+            if (email) this.player.email = email;
 
-        // Proceed directly to login with default player data if skip database is present.
-        if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
+            // Reject connection if player is already logged in.
+            if (this.world.isOnline(this.player.username))
+                return this.connection.reject('loggedin');
+
+            // Proceed directly to login with default player data if skip database is present.
+            if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
+        }
 
         // Handle login for each particular case.
         switch (opcode) {
