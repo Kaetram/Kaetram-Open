@@ -293,7 +293,7 @@ export const enum Constants {
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
     HORIZONTAL_FLAG = 0x80_00_00_00,
-    MAP_DIVISION_SIZE = 32, // The size of a region the map is split into.
+    MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
     SPAWN_POINT = '325,86', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial',
     TUTORIAL_SPAWN_POINT = '375,40' // 'x,y' values
