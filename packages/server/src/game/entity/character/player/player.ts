@@ -717,7 +717,7 @@ export default class Player extends Character {
      */
 
     public getSpawn(): Position {
-        if (!this.quests.isTutorialFinished())
+        if (config.tutorialEnabled && !this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
