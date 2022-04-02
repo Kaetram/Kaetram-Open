@@ -69,7 +69,7 @@ export default class Discord {
     public sendWebhook(source: string, message: string, withArrow = false): void {
         if (!config.discordEnabled) return;
 
-        let formattedSource = Utils.formatUsername(source);
+        let formattedSource = Utils.formatName(source);
 
         this.webhook.send(
             `**[${config.name}]** ${formattedSource}${withArrow ? ' »' : ''} ${message}`
