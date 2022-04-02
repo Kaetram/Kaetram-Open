@@ -50,7 +50,7 @@ export default class World {
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
         this.map = new Map(this);
         this.api = new API(this);
-        //this.shops = new Shops(this);
+        this.shops = new Shops(this);
         this.discord = new Discord(this);
         this.entities = new Entities(this);
         this.network = new Network(this);
