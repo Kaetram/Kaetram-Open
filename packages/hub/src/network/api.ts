@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { json, urlencoded } from 'body-parser';
-import express from 'express';
+import express, { Router, Request, Response } from 'express';
 
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
@@ -18,7 +18,7 @@ import type Discord from './discord';
 export default class API {
     private discord!: Discord;
 
-    public constructor(private serversController: Servers) {
+    public constructor(private servers: Servers) {
         let app = express();
 
         app.use(urlencoded({ extended: true }));
@@ -30,49 +30,50 @@ export default class API {
 
         app.use('/', router);
 
+        // Listen with the hub port.
         app.listen(config.hubPort, () => {
             log.info(`${config.name} Hub API is now listening on ${config.hubPort}.`);
         });
     }
 
-    private handle(router: express.Router): void {
-        router.get('/', (_request, response) => {
+    private handle(router: Router): void {
+        router.get('/', (_request: Request, response: Response) => {
             response.json({
                 status: `${config.name} Hub is functional.`
             });
         });
 
-        router.get('/server', (_request, response) => {
-            this.findEmptyServer((result) => {
-                this.setHeaders(response);
+        // router.get('/server', (_request, response) => {
+        //     this.findEmptyServer((result) => {
+        //         this.setHeaders(response);
 
-                response.json(result);
-            });
-        });
+        //         response.json(result);
+        //     });
+        // });
 
-        router.get('/all', (_request, response) => {
-            this.getServers((data) => {
-                this.setHeaders(response);
+        // router.get('/all', (_request, response) => {
+        //     this.getServers((data) => {
+        //         this.setHeaders(response);
 
-                response.json(data);
-            });
-        });
+        //         response.json(data);
+        //     });
+        // });
 
-        router.post('/ping', (request, response) => {
-            this.handlePing(request, response);
-        });
+        // router.post('/ping', (request, response) => {
+        //     this.handlePing(request, response);
+        // });
 
-        router.post('/chat', (request, response) => {
-            this.handleChat(request, response);
-        });
+        // router.post('/chat', (request, response) => {
+        //     this.handleChat(request, response);
+        // });
 
-        router.post('/privateMessage', (request, response) => {
-            this.handlePrivateMessage(request, response);
-        });
+        // router.post('/privateMessage', (request, response) => {
+        //     this.handlePrivateMessage(request, response);
+        // });
 
-        router.post('guild', (request, response) => {
-            this.handleGuild(request, response);
-        });
+        // router.post('guild', (request, response) => {
+        //     this.handleGuild(request, response);
+        // });
     }
 
     private handlePing(request: express.Request, response: express.Response): void {
@@ -247,7 +248,7 @@ export default class API {
     }
 
     public broadcastChat(source: string, text: string, colour: string): void {
-        this.serversController.forEachServer((server, key) => {
+        this.servers.forEachServer((server, key) => {
             this.sendChat(server, key, source, text, colour);
         });
     }
@@ -278,7 +279,7 @@ export default class API {
     }
 
     public async findEmptyServer(callback: (result: APIData | undefined) => void): Promise<void> {
-        let serverList = this.serversController.servers;
+        let serverList = this.servers.servers;
 
         for (let key in serverList) {
             let server = serverList[key];
@@ -298,7 +299,7 @@ export default class API {
     }
 
     private async getServers(callback: (serverData: APIData[]) => void): Promise<void> {
-        let serverList = this.serversController.servers,
+        let serverList = this.servers.servers,
             serverData: APIData[] = [];
 
         for (let key in serverList) {
@@ -327,10 +328,6 @@ export default class API {
         return config.ssl
             ? `https://${server.host}/${path}`
             : `http://${server.host}:${server.port}/${path}`;
-    }
-
-    public setDiscord(discord: Discord): void {
-        if (!this.discord) this.discord = discord;
     }
 
     private setHeaders(response: express.Response): void {
