@@ -93,6 +93,10 @@ export default class Regions {
      */
 
     private loadDynamicAreas(): void {
+        // If someone creates a new map without dynamic areas, skip.
+        if (!this.dynamicAreas) return;
+
+        // Parse through each areas in the dynamic areas group.
         this.dynamicAreas.forEachArea((area: Area) => {
             if (!area.isMappingArea()) return;
 
@@ -402,7 +406,7 @@ export default class Regions {
          * `parseTileLayerData()` in `processmap.ts`). If there is no tile data
          * (i.e. the tile is blank) it is automatically colliding.
          */
-        if (this.map.isCollisionIndex(index) || !tile.data) tile.c = true;
+        if (this.map.isCollisionIndex(index)) tile.c = true;
 
         return tile;
     }
