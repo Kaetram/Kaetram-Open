@@ -159,8 +159,8 @@ export default class API {
         let url = this.getUrl('privateMessage'),
             data = {
                 hubAccessToken: config.hubAccessToken,
-                source: Utils.formatUsername(source.username),
-                target: Utils.formatUsername(target),
+                source: Utils.formatName(source.username),
+                target: Utils.formatName(target),
                 text
             },
             response = await axios
