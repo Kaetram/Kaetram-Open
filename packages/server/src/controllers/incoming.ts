@@ -174,7 +174,7 @@ export default class Incoming {
             this.world.discord.sendWebhook(this.player.username, 'has logged in!');
 
         if (config.hubEnabled)
-            this.world.api.sendChat(Utils.formatUsername(this.player.username), 'has logged in!');
+            this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
 
         this.player.readyCallback?.();
 
@@ -344,7 +344,7 @@ export default class Incoming {
                 if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
                 if (this.world.map.isDoor(playerX!, playerY!) && !hasTarget) {
-                    door = this.world.map.getDoorByPosition(playerX!, playerY!);
+                    door = this.world.map.getDoor(playerX!, playerY!);
 
                     this.player.doorCallback?.(door);
                 } else {
@@ -557,7 +557,7 @@ export default class Incoming {
                 this.world.discord.sendWebhook(this.player.username, text, true);
 
             if (config.hubEnabled)
-                this.world.api.sendChat(Utils.formatUsername(this.player.username), text, true);
+                this.world.api.sendChat(Utils.formatName(this.player.username), text, true);
 
             this.player.sendToRegions(
                 new Chat({
