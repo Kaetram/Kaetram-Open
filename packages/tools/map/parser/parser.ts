@@ -298,10 +298,11 @@ export default class ProcessMap {
      */
 
     private parseObject(areaName: string, object: LayerObject) {
-        let { id, x, y, width, height, properties } = object;
+        let { id, x, y, name, width, height, properties } = object;
 
         this.map.areas[areaName].push({
             id,
+            name,
             x: x / this.map.tileSize,
             y: y / this.map.tileSize,
             width: width / this.map.tileSize,
