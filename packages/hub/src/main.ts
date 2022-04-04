@@ -1,20 +1,24 @@
-import config from '@kaetram/common/config';
+import API from './api';
+
 import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
+import Discord from '@kaetram/common/api/discord';
 
 import Guilds from './controllers/guilds';
 import Servers from './controllers/servers';
 import Database from './database/database';
-import API from './network/api';
-import Discord from './network/discord';
 import { formatServerName } from './util/utils';
 
 export default class Main {
+    private discord: Discord = new Discord();
     private servers: Servers = new Servers();
-    private api: API = new API(this.servers);
-    private discord: Discord = new Discord(this.api);
+
+    private api: API = new API(this.servers, this.discord);
 
     public constructor() {
         log.notice(`Initializing ${config.name} Hub v${config.gver}.`);
+
+        this.discord.onMessage(this.api.broadcastChat.bind(this.api));
     }
 }
 
