@@ -49,10 +49,8 @@ export interface Config {
     moderators: string[];
 
     discordEnabled: boolean;
-    discordServerId: string;
+    discordChannelId: string;
     discordBotToken: string;
-    discordWebhookId: string;
-    discordWebhookToken: string;
 
     debugging: boolean;
     debugLevel: 'all';
