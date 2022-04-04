@@ -2,29 +2,27 @@ import axios from 'axios';
 import { json, urlencoded } from 'body-parser';
 import express, { Router, Request, Response } from 'express';
 
-import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
-
-import { formatServerName } from '../util/utils';
-
+import config from '@kaetram/common/config';
+import Discord from '@kaetram/common/api/discord';
 import type { APIData } from '@kaetram/common/types/api';
-import type Servers from '../controllers/servers';
-import type { Server } from '../controllers/servers';
-import type Discord from './discord';
+
+import { formatServerName } from './util/utils';
+
+import type Servers from './controllers/servers';
+import type { Server } from './controllers/servers';
 
 /**
  * We use the API format from `@kaetram/server`.
  */
 export default class API {
-    private discord!: Discord;
-
-    public constructor(private servers: Servers) {
+    public constructor(private servers: Servers, private discord: Discord) {
         let app = express();
 
         app.use(urlencoded({ extended: true }));
         app.use(json());
 
-        let router = express.Router();
+        let router = Router();
 
         this.handle(router);
 
@@ -76,7 +74,7 @@ export default class API {
         // });
     }
 
-    private handlePing(request: express.Request, response: express.Response): void {
+    private handlePing(request: Request, response: Response): void {
         if (!request.body) {
             response.json({ status: 'error' });
             return;
@@ -88,14 +86,14 @@ export default class API {
         // This is the host we use to connect the hub to the server API.
         request.body.host = host;
 
-        this.serversController.addServer(request.body);
+        this.servers.addServer(request.body);
 
         response.json({
             status: 'success'
         });
     }
 
-    private handleChat(request: express.Request, response: express.Response): void {
+    private handleChat(request: Request, response: Response): void {
         if (!request.body) {
             response.json({ status: 'error' });
             return;
@@ -124,12 +122,12 @@ export default class API {
         let { source, text, withArrow } = request.body,
             serverName = formatServerName(serverId);
 
-        this.discord.sendWebhook(source, text, serverName, withArrow);
+        this.discord.sendMessage(source, text, serverName, withArrow);
 
         response.json({ status: 'success' });
     }
 
-    private handlePrivateMessage(request: express.Request, response: express.Response): void {
+    private handlePrivateMessage(request: Request, response: Response): void {
         if (!request.body) {
             response.json({ status: 'error' });
             return;
@@ -152,7 +150,7 @@ export default class API {
         let { source, target, text } = request.body;
 
         this.searchForPlayer(target, (result) => {
-            let server = this.serversController.servers[result.serverId];
+            let server = this.servers.servers[result.serverId];
 
             source = `[From ${source}]`;
 
@@ -160,7 +158,7 @@ export default class API {
         });
     }
 
-    private handleGuild(request: express.Request, response: express.Response): void {
+    private handleGuild(request: Request, response: Response): void {
         if (!request.body) {
             response.json({ status: 'error' });
             return;
@@ -258,7 +256,7 @@ export default class API {
         callback: (server: Server, key: string) => void,
         returnServer = false
     ): Promise<void> {
-        let serverList = this.serversController.servers;
+        let serverList = this.servers.servers;
 
         for (let key in serverList) {
             let server = serverList[key];
@@ -330,7 +328,7 @@ export default class API {
             : `http://${server.host}:${server.port}/${path}`;
     }
 
-    private setHeaders(response: express.Response): void {
+    private setHeaders(response: Response): void {
         response.header('Access-Control-Allow-Origin', '*');
         response.header(
             'Access-Control-Allow-Headers',

@@ -5,6 +5,7 @@
         "@types/dotenv-parse-variables": "^2.0.1",
         "@types/lodash": "^4.14.180",
         "@types/node": "^17.0.21",
+        "discord.js": "^11.3.2",
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
         "lodash": "^4.17.21"
