@@ -6,7 +6,7 @@
         "build": "tsc --noEmit && ts-node build"
     },
     "dependencies": {
-        "@kaetram/common": "workspace:packages/common",
+        "@kaetram/common": "workspace:*",
         "axios": "^0.26.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.2",
@@ -22,7 +22,7 @@
         "ws": "^8.5.0"
     },
     "devDependencies": {
-        "@kaetram/tools": "workspace:packages/tools",
+        "@kaetram/tools": "workspace:*",
         "@types/bcryptjs": "^2.4.2",
         "@types/body-parser": "^1.19.2",
         "@types/dotenv-parse-variables": "^2.0.1",
