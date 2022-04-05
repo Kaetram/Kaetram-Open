@@ -392,8 +392,8 @@ export default class Regions {
      */
 
     private buildTile(x: number, y: number, index?: number): TileInfo {
-        // Calculate our index or use the one specified if not undefined.
-        index ||= this.map.coordToIndex(x, y);
+        // Use the specified index if not undefined or calculate it.
+        index = index || this.map.coordToIndex(x, y);
 
         let tile: TileInfo = {
             x,
