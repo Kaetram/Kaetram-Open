@@ -6,7 +6,7 @@
         "start": "sirv dist -p 9000 --no-logs"
     },
     "dependencies": {
-        "@kaetram/common": "workspace:packages/common",
+        "@kaetram/common": "workspace:*",
         "gl-tiled": "^1.0.0",
         "illuminated": "^1.2.3",
         "jquery": "^3.6.0",
@@ -26,7 +26,7 @@
         "autoprefixer": "^10.4.2",
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
-        "kaetram": "workspace:.",
+        "kaetram": "workspace:*",
         "postcss": "^8.4.8",
         "postcss-custom-media": "^8.0.0",
         "postcss-preset-env": "^7.4.2",
