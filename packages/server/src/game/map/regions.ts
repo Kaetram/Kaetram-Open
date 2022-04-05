@@ -393,7 +393,7 @@ export default class Regions {
 
     private buildTile(x: number, y: number, index?: number): TileInfo {
         // Use the specified index if not undefined or calculate it.
-        index = index || this.map.coordToIndex(x, y);
+        index ||= this.map.coordToIndex(x, y);
 
         let tile: TileInfo = {
             x,
