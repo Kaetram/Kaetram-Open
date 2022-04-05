@@ -6,8 +6,8 @@
         "map": "yarn exportmap map/data/map.json"
     },
     "dependencies": {
-        "@kaetram/common": "workspace:packages/common",
-        "@kaetram/server": "workspace:packages/server",
+        "@kaetram/common": "workspace:*",
+        "@kaetram/server": "workspace:*",
         "lodash": "^4.17.21",
         "socket.io-client": "^4.4.1"
     },
