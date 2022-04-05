@@ -6,7 +6,7 @@
         "hub": "ts-node-dev ./src/main.ts"
     },
     "dependencies": {
-        "@kaetram/common": "workspace:packages/common",
+        "@kaetram/common": "workspace:*",
         "axios": "^0.26.1",
         "body-parser": "^1.19.2",
         "discord.js": "^12.5.3",
