@@ -1681,7 +1681,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@kaetram/client@workspace:packages/client"
   dependencies:
-    "@kaetram/common": "workspace:packages/common"
+    "@kaetram/common": "workspace:*"
     "@types/dotenv-parse-variables": ^2.0.1
     "@types/html-minifier-terser": ^6.1.0
     "@types/jquery": ^3.5.14
@@ -1696,7 +1696,7 @@ __metadata:
     gl-tiled: ^1.0.0
     illuminated: ^1.2.3
     jquery: ^3.6.0
-    kaetram: "workspace:."
+    kaetram: "workspace:*"
     lodash: ^4.17.21
     pako: ^2.0.4
     postcss: ^8.4.8
@@ -1718,7 +1718,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@kaetram/common@workspace:packages/common":
+"@kaetram/common@workspace:*, @kaetram/common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@kaetram/common@workspace:packages/common"
   dependencies:
@@ -1735,7 +1735,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@kaetram/hub@workspace:packages/hub"
   dependencies:
-    "@kaetram/common": "workspace:packages/common"
+    "@kaetram/common": "workspace:*"
     "@types/body-parser": ^1.19.2
     "@types/dotenv-parse-variables": ^2.0.1
     "@types/express": ^4.17.13
@@ -1757,12 +1757,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@kaetram/server@workspace:packages/server":
+"@kaetram/server@workspace:*, @kaetram/server@workspace:packages/server":
   version: 0.0.0-use.local
   resolution: "@kaetram/server@workspace:packages/server"
   dependencies:
-    "@kaetram/common": "workspace:packages/common"
-    "@kaetram/tools": "workspace:packages/tools"
+    "@kaetram/common": "workspace:*"
+    "@kaetram/tools": "workspace:*"
     "@types/bcryptjs": ^2.4.2
     "@types/body-parser": ^1.19.2
     "@types/dotenv-parse-variables": ^2.0.1
@@ -1792,12 +1792,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@kaetram/tools@workspace:packages/tools":
+"@kaetram/tools@workspace:*, @kaetram/tools@workspace:packages/tools":
   version: 0.0.0-use.local
   resolution: "@kaetram/tools@workspace:packages/tools"
   dependencies:
-    "@kaetram/common": "workspace:packages/common"
-    "@kaetram/server": "workspace:packages/server"
+    "@kaetram/common": "workspace:*"
+    "@kaetram/server": "workspace:*"
     "@types/lodash": ^4.14.180
     "@types/node": ^17.0.21
     lodash: ^4.17.21
@@ -7250,7 +7250,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"kaetram@workspace:.":
+"kaetram@workspace:*, kaetram@workspace:.":
   version: 0.0.0-use.local
   resolution: "kaetram@workspace:."
   dependencies:
