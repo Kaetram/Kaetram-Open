@@ -1,12 +1,10 @@
 import _ from 'lodash';
 
-import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 
 import type { DatabaseType } from '../database/database';
 import type Creator from '../database/mongodb/creator';
 import type Loader from '../database/mongodb/loader';
-import type API from '../network/api';
 
 interface PlayerData {
     rank: string;
