@@ -3,11 +3,10 @@ import { json, urlencoded } from 'body-parser';
 import express, { Router, Request, Response } from 'express';
 
 import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
 import type { APIData } from '@kaetram/common/types/api';
-
-import { formatServerName } from './util/utils';
 
 import type Servers from './controllers/servers';
 import type { Server } from './controllers/servers';
@@ -35,11 +34,13 @@ export default class API {
     }
 
     private handle(router: Router): void {
-        router.get('/', (_request: Request, response: Response) => {
-            response.json({
-                status: `${config.name} Hub is functional.`
-            });
-        });
+        // GET requests
+        router.get('/', this.handleRoot.bind(this));
+        router.get('/server', this.handleServer.bind(this));
+        router.get('/all', this.handleAll.bind(this));
+
+        // POST requests
+        router.post('/ping', this.handlePing.bind(this));
 
         // router.get('/server', (_request, response) => {
         //     this.findEmptyServer((result) => {
@@ -74,105 +75,102 @@ export default class API {
         // });
     }
 
+    /**
+     * Handles the root origin of the API. This just serves
+     * as a check to see if the Hub has initialized correctly.
+     * @param _request Contains no information and is unused for now.
+     * @param response Response with CORS headers attached returning a status.
+     */
+
+    private handleRoot(_request: Request, response: Response): void {
+        this.setHeaders(response);
+
+        response.json({ status: `${config.name} hub is online and functional.` });
+    }
+
+    /**
+     * Handles a GET API request to grab an empty server from our list.
+     * We iterate through the servers and find the first server that
+     * has space for a player to join.
+     * @param _request Unused, contains no data.
+     * @param response Server APIData object if found.
+     */
+
+    private handleServer(_request: Request, response: Response): void {
+        this.setHeaders(response);
+
+        if (!this.servers.hasEmpty()) {
+            response.json({ status: 'error' });
+            return;
+        }
+
+        this.servers.findEmpty((server: Server) => {
+            response.json(server);
+        });
+    }
+
+    /**
+     * Returns all the worlds currently online (without players).
+     * @param _request Unused, contains no data.
+     * @param response JSON data containing all the servers.
+     */
+
+    private handleAll(_request: Request, response: Response): void {
+        this.setHeaders(response);
+
+        response.json(this.servers.getAll());
+    }
+
+    /**
+     * Handles a ping from a server. Stores the data that we receive
+     * and/or updates currently existing data in our`servers` list.
+     * @param request Information about the server.
+     * @param response Response being sent back to the server.
+     */
+
     private handlePing(request: Request, response: Response): void {
         if (!request.body) {
             response.json({ status: 'error' });
             return;
         }
 
+        // Extract the IPv6 address from the socket.
         let mappedAddress = request.socket.remoteAddress!,
             [, host] = mappedAddress.split('::ffff:');
 
         // This is the host we use to connect the hub to the server API.
         request.body.host = host;
 
-        this.servers.addServer(request.body);
+        this.servers.add(request.body);
 
         response.json({
             status: 'success'
         });
     }
 
-    private handleChat(request: Request, response: Response): void {
-        if (!request.body) {
-            response.json({ status: 'error' });
-            return;
-        }
+    /**
+     * Broadcasts a piece of chat (usually from the Discord server)
+     * to all the servers currently connected.
+     * @param source Who is sending the message.
+     * @param text The contents of the message.
+     * @param colour The colour of the message.
+     */
 
-        if (!this.verifyToken(request.body.hubAccessToken)) {
-            response.json({
-                status: 'error',
-                reason: 'Invalid `hubAccessToken` specified.'
-            });
-
-            return;
-        }
-
-        let { serverId } = request.body;
-
-        if (!serverId) {
-            response.json({
-                status: 'error',
-                reason: 'No `serverId` has been specified.'
-            });
-
-            return;
-        }
-
-        let { source, text, withArrow } = request.body,
-            serverName = formatServerName(serverId);
-
-        this.discord.sendMessage(source, text, serverName, withArrow);
-
-        response.json({ status: 'success' });
-    }
-
-    private handlePrivateMessage(request: Request, response: Response): void {
-        if (!request.body) {
-            response.json({ status: 'error' });
-            return;
-        }
-
-        if (!this.verifyToken(request.body.hubAccessToken)) {
-            response.json({
-                status: 'error',
-                reason: 'Invalid `hubAccessToken` specified.'
-            });
-
-            return;
-        }
-
-        /**
-         * From who we are receiving the text
-         * Who we're sending the text to
-         * The text
-         */
-        let { source, target, text } = request.body;
-
-        this.searchForPlayer(target, (result) => {
-            let server = this.servers.servers[result.serverId];
-
-            source = `[From ${source}]`;
-
-            this.sendChat(server, result.serverId, source, text, 'aquamarine', target);
+    public broadcastChat(source: string, text: string, colour: string): void {
+        this.servers.forEachServer((server, key) => {
+            this.sendChat(server, key, source, text, colour);
         });
     }
 
-    private handleGuild(request: Request, response: Response): void {
-        if (!request.body) {
-            response.json({ status: 'error' });
-            return;
-        }
-
-        if (!this.verifyToken(request.body.hubAccessToken)) {
-            response.json({
-                status: 'error',
-                reason: 'Invalid `hubAccessToken` specified.'
-            });
-
-            return;
-        }
-    }
+    /**
+     * Sends a chat to a given server.
+     * @param server Server we are sending the chat to.
+     * @param key The server key (the server id).
+     * @param source Who is sending the message.
+     * @param text The contents of the message.
+     * @param colour The colour of the messsage.
+     * @param username Username of the player sending the message.
+     */
 
     private sendChat(
         server: Server,
@@ -182,7 +180,7 @@ export default class API {
         colour: string,
         username?: string
     ): void {
-        let url = this.getUrl(server, 'chat'),
+        let url = Utils.getUrl(server.host, server.port, 'chat'),
             data = {
                 accessToken: server.accessToken,
                 text,
@@ -191,142 +189,165 @@ export default class API {
                 username
             };
 
-        axios.post(url, data).catch(() => log.error(`Could not send chat to ${key}`));
+        axios
+            .post(url, data)
+            .catch(() => log.error(`Could not send chat to ${config.name} ${key}`));
     }
 
-    public sendChatToPlayer(player: string, text: string, colour: string): void {
-        this.searchForPlayer(
-            player,
-            (server, key) => {
-                if (!server) {
-                    log.error(`Could not find ${player}.`);
-                    return;
-                }
+    // private handleChat(request: Request, response: Response): void {
+    //     if (!request.body) {
+    //         response.json({ status: 'error' });
+    //         return;
+    //     }
 
-                this.sendChat(server, key, player, text, colour);
-            },
-            true
-        );
-    }
+    //     if (!this.verifyToken(request.body.hubAccessToken)) {
+    //         response.json({
+    //             status: 'error',
+    //             reason: 'Invalid `hubAccessToken` specified.'
+    //         });
 
-    private async getServer(server: Server): Promise<APIData | undefined> {
-        let url = this.getUrl(server, ''),
-            response = await axios.get<APIData>(url).catch(() => {
-                throw 'Could not connect to server.';
-            });
+    //         return;
+    //     }
 
-        if (response) {
-            let { data } = response;
+    //     let { serverId } = request.body;
 
-            data.host = server.remoteServerHost || server.host;
+    //     if (!serverId) {
+    //         response.json({
+    //             status: 'error',
+    //             reason: 'No `serverId` has been specified.'
+    //         });
 
-            if (data.playerCount < data.maxPlayers) return data;
+    //         return;
+    //     }
 
-            throw 'World is full';
-        }
-    }
+    //     let { source, text, withArrow } = request.body,
+    //         serverName = `${config.name} ${serverId}`;
 
-    private async getPlayer(username: string, server: Server): Promise<unknown> {
-        let url = this.getUrl(server, 'player'),
-            data = {
-                accessToken: server.accessToken,
-                username
-            },
-            response = await axios
-                .post(url, data)
-                .catch(() => log.error('An error has occurred while getting player.'));
+    //     this.discord.sendMessage(source, text, serverName, withArrow);
 
-        if (response) {
-            let { data } = response;
+    //     response.json({ status: 'success' });
+    // }
 
-            if (data.error) throw data;
+    // private handlePrivateMessage(request: Request, response: Response): void {
+    //     if (!request.body) {
+    //         response.json({ status: 'error' });
+    //         return;
+    //     }
 
-            return data;
-        }
-    }
+    //     if (!this.verifyToken(request.body.hubAccessToken)) {
+    //         response.json({
+    //             status: 'error',
+    //             reason: 'Invalid `hubAccessToken` specified.'
+    //         });
 
-    public broadcastChat(source: string, text: string, colour: string): void {
-        this.servers.forEachServer((server, key) => {
-            this.sendChat(server, key, source, text, colour);
-        });
-    }
+    //         return;
+    //     }
 
-    public async searchForPlayer(
-        username: string,
-        callback: (server: Server, key: string) => void,
-        returnServer = false
-    ): Promise<void> {
-        let serverList = this.servers.servers;
+    //     /**
+    //      * From who we are receiving the text
+    //      * Who we're sending the text to
+    //      * The text
+    //      */
+    //     let { source, target, text } = request.body;
 
-        for (let key in serverList) {
-            let server = serverList[key];
+    //     this.searchForPlayer(target, (result) => {
+    //         let server = this.servers.get(result.serverId);
 
-            try {
-                this.getPlayer(username, server);
+    //         source = `[From ${source}]`;
 
-                if (returnServer) callback(server, key);
-                // else callback(result);
+    //         this.sendChat(server, result.serverId, source, text, 'aquamarine', target);
+    //     });
+    // }
 
-                return;
-            } catch {
-                //
-            }
-        }
+    // private handleGuild(request: Request, response: Response): void {
+    //     if (!request.body) {
+    //         response.json({ status: 'error' });
+    //         return;
+    //     }
 
-        throw 'Could not find player in any of the worlds.';
-    }
+    //     if (!this.verifyToken(request.body.hubAccessToken)) {
+    //         response.json({
+    //             status: 'error',
+    //             reason: 'Invalid `hubAccessToken` specified.'
+    //         });
 
-    public async findEmptyServer(callback: (result: APIData | undefined) => void): Promise<void> {
-        let serverList = this.servers.servers;
+    //         return;
+    //     }
+    // }
 
-        for (let key in serverList) {
-            let server = serverList[key];
+    // public sendChatToPlayer(player: string, text: string, colour: string): void {
+    //     this.searchForPlayer(
+    //         player,
+    //         (server, key) => {
+    //             if (!server) {
+    //                 log.error(`Could not find ${player}.`);
+    //                 return;
+    //             }
 
-            try {
-                let result = await this.getServer(server);
+    //             this.sendChat(server, key, player, text, colour);
+    //         },
+    //         true
+    //     );
+    // }
 
-                callback(result);
+    // private async getPlayer(username: string, server: Server): Promise<unknown> {
+    //     let url = Utils.getUrl(server.host, server.port, 'player'),
+    //         data = {
+    //             accessToken: server.accessToken,
+    //             username
+    //         },
+    //         response = await axios
+    //             .post(url, data)
+    //             .catch(() => log.error('An error has occurred while getting player.'));
 
-                return;
-            } catch (error) {
-                log.error(error);
-            }
-        }
+    //     if (response) {
+    //         let { data } = response;
 
-        throw 'All servers are full.';
-    }
+    //         if (data.error) throw data;
 
-    private async getServers(callback: (serverData: APIData[]) => void): Promise<void> {
-        let serverList = this.servers.servers,
-            serverData: APIData[] = [];
+    //         return data;
+    //     }
+    // }
 
-        for (let key in serverList) {
-            let server = serverList[key],
-                result = await this.getServer(server).catch((error) => log.error(error));
+    // public broadcastChat(source: string, text: string, colour: string): void {
+    //     this.servers.forEachServer((server, key) => {
+    //         this.sendChat(server, key, source, text, colour);
+    //     });
+    // }
 
-            if (result)
-                serverData.push({
-                    serverId: key,
-                    host: result.host,
-                    port: result.port,
-                    gameVersion: result.gameVersion,
-                    playerCount: result.playerCount,
-                    maxPlayers: result.maxPlayers
-                });
-        }
+    // public async searchForPlayer(
+    //     username: string,
+    //     callback: (server: Server, key: string) => void,
+    //     returnServer = false
+    // ): Promise<void> {
+    //     let serverList = this.servers.servers;
 
-        callback(serverData);
-    }
+    //     for (let key in serverList) {
+    //         let server = serverList[key];
+
+    //         try {
+    //             this.getPlayer(username, server);
+
+    //             if (returnServer) callback(server, key);
+    //             // else callback(result);
+
+    //             return;
+    //         } catch {
+    //             //
+    //         }
+    //     }
+
+    //     throw 'Could not find player in any of the worlds.';
+    // }
 
     private verifyToken(hubAccessToken: string): boolean {
         return hubAccessToken === config.hubAccessToken;
     }
 
-    private getUrl(server: Server, path: string): string {
-        return config.ssl
-            ? `https://${server.host}/${path}`
-            : `http://${server.host}:${server.port}/${path}`;
-    }
+    /**
+     * Sets CORS headers on the response to prevent errors.
+     * @param response Response to set headers on.
+     */
 
     private setHeaders(response: Response): void {
         response.header('Access-Control-Allow-Origin', '*');

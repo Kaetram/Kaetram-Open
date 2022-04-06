@@ -170,11 +170,8 @@ export default class Incoming {
             this.player.updateRegion(true);
         }
 
-        if (config.discordEnabled)
-            this.world.discord.sendMessage(this.player.username, 'has logged in!');
-
-        if (config.hubEnabled)
-            this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
+        this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
+        this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
         this.player.readyCallback?.();
 

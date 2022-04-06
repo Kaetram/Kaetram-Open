@@ -36,7 +36,7 @@ export default class Socket {
 
         try {
             $.get(`${this.config.hub}/server`, (response) => {
-                callback(typeof response === 'string' ? undefined : response);
+                callback(response.status === 'error' ? undefined : response);
             });
         } catch {
             callback();
