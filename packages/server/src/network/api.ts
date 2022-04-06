@@ -11,7 +11,7 @@ import type World from '../game/world';
 import { Modules } from '@kaetram/common/network';
 
 interface PlayerData {
-    serverId: string;
+    serverId: number;
     x: number;
     y: number;
     experience: number;
@@ -36,7 +36,8 @@ export default class API {
     private hubConnected = false;
 
     public constructor(private world: World) {
-        if (!config.apiEnabled) return;
+        // API must be initialized if the hub is enabled.
+        if (!config.apiEnabled || !config.hubEnabled) return;
 
         let app = express();
 
@@ -109,12 +110,14 @@ export default class API {
     }
 
     public async pingHub(): Promise<void> {
-        let url = this.getUrl('ping'),
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'ping'),
             data = {
                 serverId: config.serverId,
                 accessToken: config.accessToken,
                 port: config.apiPort,
-                remoteServerHost: config.remoteServerHost
+                remoteServerHost: config.remoteServerHost,
+                maxPlayers: config.maxPlayers,
+                players: this.world.entities.getPlayerUsernames()
             },
             response = await axios.post(url, data).catch(() => {
                 log.error(`Could not connect to ${config.name} Hub.`);
@@ -134,7 +137,9 @@ export default class API {
     }
 
     public async sendChat(source: string, text: string, withArrow = false): Promise<void> {
-        let url = this.getUrl('chat'),
+        if (!config.hubEnabled) return;
+
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'chat'),
             data = {
                 hubAccessToken: config.hubAccessToken,
                 serverId: config.serverId,
@@ -156,7 +161,7 @@ export default class API {
     }
 
     public async sendPrivateMessage(source: Player, target: string, text: string): Promise<void> {
-        let url = this.getUrl('privateMessage'),
+        let url = Utils.getUrl(config.hubHost, config.hubPort, 'privateMessage'),
             data = {
                 hubAccessToken: config.hubAccessToken,
                 source: Utils.formatName(source.username),
@@ -204,12 +209,6 @@ export default class API {
             lastLogin: player.lastLogin,
             mapVersion: player.mapVersion
         };
-    }
-
-    private getUrl(path: string): string {
-        return config.ssl
-            ? `https://${config.hubHost}/${path}`
-            : `http://${config.hubHost}:${config.hubPort}/${path}`;
     }
 
     private returnError(
