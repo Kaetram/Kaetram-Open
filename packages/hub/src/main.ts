@@ -12,7 +12,6 @@ export default class Main {
     private servers: Servers = new Servers();
 
     private api: API = new API(this.servers, this.discord);
-    private console: Console = new Console(this.servers);
 
     public constructor() {
         log.notice(`Initializing ${config.name} Hub v${config.gver}.`);
@@ -21,6 +20,8 @@ export default class Main {
 
         this.servers.onAdd(this.handleAdd.bind(this));
         this.servers.onRemove(this.handleRemove.bind(this));
+
+        new Console(this.servers);
     }
 
     /**
