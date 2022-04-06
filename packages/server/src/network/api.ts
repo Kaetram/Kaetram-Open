@@ -114,7 +114,8 @@ export default class API {
             data = {
                 serverId: config.serverId,
                 accessToken: config.accessToken,
-                port: config.apiPort,
+                port: config.socketioPort,
+                apiPort: config.apiPort,
                 remoteServerHost: config.remoteServerHost,
                 maxPlayers: config.maxPlayers,
                 players: this.world.entities.getPlayerUsernames()

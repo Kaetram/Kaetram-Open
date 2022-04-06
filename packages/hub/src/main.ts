@@ -4,108 +4,50 @@ import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
 
-import Guilds from './controllers/guilds';
 import Servers from './controllers/servers';
-import Database from './database/database';
+import Console from './console';
 
 export default class Main {
     private discord: Discord = new Discord();
     private servers: Servers = new Servers();
 
     private api: API = new API(this.servers, this.discord);
+    private console: Console = new Console(this.servers);
 
     public constructor() {
         log.notice(`Initializing ${config.name} Hub v${config.gver}.`);
 
         this.discord.onMessage(this.api.broadcastChat.bind(this.api));
+
+        this.servers.onAdd(this.handleAdd.bind(this));
+        this.servers.onRemove(this.handleRemove.bind(this));
+    }
+
+    /**
+     * Callback handler for when a new server is added.
+     * @param serverId The id of the server we just added.
+     */
+
+    private handleAdd(serverId: number): void {
+        log.notice(`${config.name} ${serverId} has come online!`);
+
+        this.discord.sendRawMessage(
+            `:white_check_mark: **${config.name} ${serverId} is now online!**`
+        );
+    }
+
+    /**
+     * Callback handler for when a server times out.
+     * @param serverId The id of the server that timed out.
+     */
+
+    private handleRemove(serverId: string): void {
+        log.notice(`${config.name} ${serverId} has timed out.`);
+
+        this.discord.sendRawMessage(
+            `:octagonal_sign: **${config.name} ${serverId} has gone offline!**`
+        );
     }
 }
 
 new Main();
-
-// class Main {
-//     private serversController = new Servers();
-//     private api = new API(this.serversController);
-//     private database = new Database().getDatabase();
-
-//     private discord = new Discord(this.api);
-
-//     //private guilds = new Guilds(this.api, this.database);
-
-//     public constructor() {
-//         log.notice(`Initializing ${config.name} game engine...`);
-
-//         this.api.setDiscord(this.discord);
-
-//         this.load();
-//         this.loadConsole();
-//     }
-
-//     private load() {
-//         this.serversController.onAdd((serverId) => {
-//             let serverName = formatServerName(serverId);
-
-//             log.notice(`Server ${serverId} has been added to the hub.`);
-
-//             this.discord.sendRawWebhook(`:white_check_mark: **${serverName} is now online!**`);
-//         });
-
-//         this.serversController.onRemove((serverId) => {
-//             let serverName = formatServerName(serverId);
-
-//             log.error(`Server ${serverId} has been removed from hub for inactivity.`);
-
-//             this.discord.sendRawWebhook(`:octagonal_sign: **${serverName} has gone offline!**`);
-//         });
-//     }
-
-//     private loadConsole() {
-//         let stdin = process.openStdin();
-
-//         stdin.addListener('data', (data) => {
-//             let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
-//                 type = message.charAt(0);
-
-//             if (type !== '/') return;
-
-//             let blocks = message.slice(1).split(' '),
-//                 command = blocks.shift();
-
-//             if (!command) return;
-
-//             switch (command) {
-//                 case 'server':
-//                     this.api.findEmptyServer((response) => {
-//                         console.log(response);
-//                     });
-
-//                     break;
-
-//                 case 'player': {
-//                     let username = blocks.join(' ');
-
-//                     if (!username) {
-//                         log.warning('Malformed command - Format: /player [username]');
-//                         return;
-//                     }
-
-//                     this.api.searchForPlayer(username, (response) => {
-//                         console.log(response);
-//                     });
-
-//                     break;
-//                 }
-
-//                 case 'guilds': {
-//                     this.database.loader.getGuilds().then((guilds) => {
-//                         console.log(guilds);
-//                     });
-
-//                     break;
-//                 }
-//             }
-//         });
-//     }
-// }
-
-// export default new Main();

@@ -6,10 +6,9 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
-import type { APIData } from '@kaetram/common/types/api';
 
 import type Servers from './controllers/servers';
-import type { Server } from './controllers/servers';
+import Server from './model/server';
 
 /**
  * We use the API format from `@kaetram/server`.
@@ -41,38 +40,8 @@ export default class API {
 
         // POST requests
         router.post('/ping', this.handlePing.bind(this));
-
-        // router.get('/server', (_request, response) => {
-        //     this.findEmptyServer((result) => {
-        //         this.setHeaders(response);
-
-        //         response.json(result);
-        //     });
-        // });
-
-        // router.get('/all', (_request, response) => {
-        //     this.getServers((data) => {
-        //         this.setHeaders(response);
-
-        //         response.json(data);
-        //     });
-        // });
-
-        // router.post('/ping', (request, response) => {
-        //     this.handlePing(request, response);
-        // });
-
-        // router.post('/chat', (request, response) => {
-        //     this.handleChat(request, response);
-        // });
-
-        // router.post('/privateMessage', (request, response) => {
-        //     this.handlePrivateMessage(request, response);
-        // });
-
-        // router.post('guild', (request, response) => {
-        //     this.handleGuild(request, response);
-        // });
+        router.post('/chat', this.handleChat.bind(this));
+        router.post('/privateMessage', this.handlePrivateMessage.bind(this));
     }
 
     /**
@@ -105,7 +74,7 @@ export default class API {
         }
 
         this.servers.findEmpty((server: Server) => {
-            response.json(server);
+            response.json(server.serialize());
         });
     }
 
@@ -149,6 +118,70 @@ export default class API {
     }
 
     /**
+     * Handles a chat message received from a server.
+     * @param request Request containing server data.
+     * @param response Response indicating success or error.
+     */
+
+    private handleChat(request: Request, response: Response): void {
+        // TODO - Return proper error codes.
+        if (!this.verifyRequest(request)) {
+            response.json({ status: 'error' });
+            return;
+        }
+
+        let { serverId } = request.body;
+
+        if (!serverId) {
+            response.json({
+                status: 'error',
+                reason: 'No `serverId` has been specified.'
+            });
+
+            return;
+        }
+
+        let { source, text, withArrow } = request.body,
+            serverName = `${config.name} ${serverId}`;
+
+        this.discord.sendMessage(source, text, serverName, withArrow);
+
+        response.json({ status: 'success' });
+    }
+
+    /**
+     * Handles when a private message is received and if the target is online,
+     * @param request Request containing the sender, target, and message information.
+     * @param response Contains information about the success or failure of the request.
+     */
+
+    private handlePrivateMessage(request: Request, response: Response): void {
+        // TODO - Return proper error codes.
+        if (!this.verifyRequest(request)) {
+            response.json({ status: 'error' });
+            return;
+        }
+
+        /**
+         * From who we are receiving the text
+         * Who we're sending the text to
+         * The text
+         */
+        let { source, target, text } = request.body,
+            server = this.servers.findPlayer(target);
+
+        if (!server) {
+            response.json({ status: 'error' });
+            return;
+        }
+
+        source = `[From ${source}]`;
+
+        // TODO - Don't hardcode text-colour, have it in `Modules.`
+        this.sendChat(server, source, text, 'aquamarine', target);
+    }
+
+    /**
      * Broadcasts a piece of chat (usually from the Discord server)
      * to all the servers currently connected.
      * @param source Who is sending the message.
@@ -165,11 +198,10 @@ export default class API {
     /**
      * Sends a chat to a given server.
      * @param server Server we are sending the chat to.
-     * @param key The server key (the server id).
      * @param source Who is sending the message.
      * @param text The contents of the message.
      * @param colour The colour of the messsage.
-     * @param username Username of the player sending the message.
+     * @param username Username of the player the message is sent to.
      */
 
     private sendChat(
@@ -180,7 +212,7 @@ export default class API {
         colour: string,
         username?: string
     ): void {
-        let url = Utils.getUrl(server.host, server.port, 'chat'),
+        let url = Utils.getUrl(server.host, server.apiPort, 'chat'),
             data = {
                 accessToken: server.accessToken,
                 text,
@@ -194,153 +226,20 @@ export default class API {
             .catch(() => log.error(`Could not send chat to ${config.name} ${key}`));
     }
 
-    // private handleChat(request: Request, response: Response): void {
-    //     if (!request.body) {
-    //         response.json({ status: 'error' });
-    //         return;
-    //     }
+    /**
+     * Verifies the integrity of the request and if the tokens
+     * are valid.
+     * @param request Contains server information that we will verify.
+     * @returns False if the request is invalid, true if it is valid.
+     */
 
-    //     if (!this.verifyToken(request.body.hubAccessToken)) {
-    //         response.json({
-    //             status: 'error',
-    //             reason: 'Invalid `hubAccessToken` specified.'
-    //         });
+    private verifyRequest(request: Request): boolean {
+        if (!request.body) return false;
 
-    //         return;
-    //     }
+        let { hubAccessToken, serverId } = request.body;
 
-    //     let { serverId } = request.body;
+        if (!hubAccessToken || !serverId) return false;
 
-    //     if (!serverId) {
-    //         response.json({
-    //             status: 'error',
-    //             reason: 'No `serverId` has been specified.'
-    //         });
-
-    //         return;
-    //     }
-
-    //     let { source, text, withArrow } = request.body,
-    //         serverName = `${config.name} ${serverId}`;
-
-    //     this.discord.sendMessage(source, text, serverName, withArrow);
-
-    //     response.json({ status: 'success' });
-    // }
-
-    // private handlePrivateMessage(request: Request, response: Response): void {
-    //     if (!request.body) {
-    //         response.json({ status: 'error' });
-    //         return;
-    //     }
-
-    //     if (!this.verifyToken(request.body.hubAccessToken)) {
-    //         response.json({
-    //             status: 'error',
-    //             reason: 'Invalid `hubAccessToken` specified.'
-    //         });
-
-    //         return;
-    //     }
-
-    //     /**
-    //      * From who we are receiving the text
-    //      * Who we're sending the text to
-    //      * The text
-    //      */
-    //     let { source, target, text } = request.body;
-
-    //     this.searchForPlayer(target, (result) => {
-    //         let server = this.servers.get(result.serverId);
-
-    //         source = `[From ${source}]`;
-
-    //         this.sendChat(server, result.serverId, source, text, 'aquamarine', target);
-    //     });
-    // }
-
-    // private handleGuild(request: Request, response: Response): void {
-    //     if (!request.body) {
-    //         response.json({ status: 'error' });
-    //         return;
-    //     }
-
-    //     if (!this.verifyToken(request.body.hubAccessToken)) {
-    //         response.json({
-    //             status: 'error',
-    //             reason: 'Invalid `hubAccessToken` specified.'
-    //         });
-
-    //         return;
-    //     }
-    // }
-
-    // public sendChatToPlayer(player: string, text: string, colour: string): void {
-    //     this.searchForPlayer(
-    //         player,
-    //         (server, key) => {
-    //             if (!server) {
-    //                 log.error(`Could not find ${player}.`);
-    //                 return;
-    //             }
-
-    //             this.sendChat(server, key, player, text, colour);
-    //         },
-    //         true
-    //     );
-    // }
-
-    // private async getPlayer(username: string, server: Server): Promise<unknown> {
-    //     let url = Utils.getUrl(server.host, server.port, 'player'),
-    //         data = {
-    //             accessToken: server.accessToken,
-    //             username
-    //         },
-    //         response = await axios
-    //             .post(url, data)
-    //             .catch(() => log.error('An error has occurred while getting player.'));
-
-    //     if (response) {
-    //         let { data } = response;
-
-    //         if (data.error) throw data;
-
-    //         return data;
-    //     }
-    // }
-
-    // public broadcastChat(source: string, text: string, colour: string): void {
-    //     this.servers.forEachServer((server, key) => {
-    //         this.sendChat(server, key, source, text, colour);
-    //     });
-    // }
-
-    // public async searchForPlayer(
-    //     username: string,
-    //     callback: (server: Server, key: string) => void,
-    //     returnServer = false
-    // ): Promise<void> {
-    //     let serverList = this.servers.servers;
-
-    //     for (let key in serverList) {
-    //         let server = serverList[key];
-
-    //         try {
-    //             this.getPlayer(username, server);
-
-    //             if (returnServer) callback(server, key);
-    //             // else callback(result);
-
-    //             return;
-    //         } catch {
-    //             //
-    //         }
-    //     }
-
-    //     throw 'Could not find player in any of the worlds.';
-    // }
-
-    private verifyToken(hubAccessToken: string): boolean {
         return hubAccessToken === config.hubAccessToken;
     }
 
