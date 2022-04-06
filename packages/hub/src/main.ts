@@ -7,7 +7,6 @@ import Discord from '@kaetram/common/api/discord';
 import Guilds from './controllers/guilds';
 import Servers from './controllers/servers';
 import Database from './database/database';
-import { formatServerName } from './util/utils';
 
 export default class Main {
     private discord: Discord = new Discord();

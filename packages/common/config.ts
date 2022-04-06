@@ -12,7 +12,7 @@ export interface Config {
     socketioPort: number;
     websocketPort: number;
 
-    serverId: string;
+    serverId: number;
     accessToken: string;
     apiEnabled: boolean;
     apiPort: number;
