@@ -79,12 +79,7 @@ export default class World {
             this.map.regions.parse();
         }, 1000 / config.updateTime);
 
-        if (!config.hubEnabled) return;
-        if (!config.apiEnabled) log.error('Server is in hub-mode but API is not enabled!');
-
-        setIntervalAsync(async () => {
-            this.api.pingHub();
-        }, config.hubPing);
+        if (config.hubEnabled) setIntervalAsync(async () => this.api.pingHub(), config.hubPing);
     }
 
     /**

@@ -6,8 +6,10 @@ import _ from 'lodash';
 import crypto from 'crypto';
 import zlib from 'zlib';
 
-import { Packets } from '../network';
 import log from './log';
+import config from '../config';
+
+import { Packets } from '../network';
 
 export default {
     counter: -1, // A counter to prevent conflicts in ids.
@@ -218,5 +220,18 @@ export default {
         return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
             email
         );
+    },
+
+    /**
+     * Grabs the URL of a server depending on whether
+     * or not SSL is currently enabled.
+     * @param host The hostname of the server.
+     * @param port The port of the server.
+     * @param path The server API we want to send a request to.
+     * @returns A string containing the server's URL.
+     */
+
+    getUrl(host: string, port: number, path: string): string {
+        return config.ssl ? `https://${host}/${path}` : `http://${host}:${port}/${path}`;
     }
 };
