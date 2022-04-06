@@ -1,6 +1,6 @@
 export interface APIData {
     host: string;
-    serverId: string;
+    serverId: number;
     port: number;
     gameVersion: string;
     maxPlayers: number;
