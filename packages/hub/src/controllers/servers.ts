@@ -1,31 +1,24 @@
 import _ from 'lodash';
-import axios from 'axios';
-import { Response } from 'express';
+
+import Server, { SerializedServer } from '../model/server';
 
 import config from '@kaetram/common/config';
-import Utils from '@kaetram/common/util/utils';
-import { APIData } from '@kaetram/common/types/api';
 
-export interface Server {
+type AddCallback = (id: number) => void;
+type RemoveCallback = (key: string) => void;
+
+// Raw server data received from the server itself.
+export interface ServerData {
     lastPing: number;
     serverId: number;
     host: string;
     port: number;
+    apiPort: number;
     accessToken: string;
     remoteServerHost: string;
     maxPlayers: number; // Max players in the world.
     players: string[]; // String array of usernames
 }
-
-export interface SerializedServer {
-    serverId: number;
-    host: string;
-    port: number;
-    maxPlayers: number;
-}
-
-type AddCallback = (id: number, server: Server) => void;
-type RemoveCallback = (key: string, server: Server) => void;
 
 /**
  * We keep track of the servers that are connected to the hub.
@@ -54,7 +47,7 @@ export default class Servers {
         this.forEachServer((server, key) => {
             if (!this.isServerTimedOut(server)) return;
 
-            this.removeCallback?.(key, this.servers[key]);
+            this.removeCallback?.(key);
 
             delete this.servers[key];
         });
@@ -66,25 +59,20 @@ export default class Servers {
      * @param data Raw server data information obtained during server pinging.
      */
 
-    public add(data: Server): void {
-        if (data.serverId in this.servers) {
-            // Update last ping and players in the world.
-            this.servers[data.serverId].lastPing = Date.now();
-            this.servers[data.serverId].players = data.players;
-            return;
-        }
+    public add(data: ServerData): void {
+        if (data.serverId in this.servers) return this.servers[data.serverId].update(data);
 
-        this.servers[data.serverId] = {
-            host: data.host,
-            port: data.port,
-            accessToken: data.accessToken,
-            lastPing: Date.now(),
-            remoteServerHost: data.remoteServerHost,
-            maxPlayers: data.maxPlayers,
-            players: data.players
-        } as Server;
+        this.servers[data.serverId] = new Server(
+            data.host,
+            data.port,
+            data.apiPort,
+            data.accessToken,
+            data.remoteServerHost,
+            data.maxPlayers,
+            data.players
+        );
 
-        this.addCallback?.(data.serverId, this.servers[data.serverId]);
+        this.addCallback?.(data.serverId);
     }
 
     /**
@@ -104,7 +92,7 @@ export default class Servers {
 
     public getAll(): SerializedServer[] {
         return _.map(this.servers, (server: Server) => {
-            return this.serialize(server);
+            return server.serialize();
         });
     }
 
@@ -136,6 +124,19 @@ export default class Servers {
     }
 
     /**
+     * Searches through all the servers and finds whether or not
+     * the server contains the `username` specified.
+     * @param username The username we are looking for.
+     * @returns The server containing the user.
+     */
+
+    public findPlayer(username: string): Server | undefined {
+        return _.find(this.servers, (server: Server) => {
+            return _.includes(server.players, username);
+        });
+    }
+
+    /**
      * Checks if the last time we pinged a server is greater than the
      * threshold for cleaning up and removing the server.
      * @param server The server we are checking.
@@ -153,20 +154,6 @@ export default class Servers {
 
     public getServerCount(): number {
         return Object.keys(this.servers).length;
-    }
-
-    /**
-     * Returns minimal information about the server.
-     * @returns A SerializedServer object.
-     */
-
-    private serialize(server: Server): SerializedServer {
-        return {
-            serverId: server.serverId,
-            host: server.host,
-            port: server.port,
-            maxPlayers: server.maxPlayers
-        };
     }
 
     /**
