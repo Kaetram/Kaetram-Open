@@ -66,7 +66,7 @@ export default class GlobalObjects {
         let message = object.messages[player.talkIndex];
 
         if (message && message.includes('@player@')) {
-            message = message.replace('@player@', `@red@${Utils.formatUsername(player.username)}`);
+            message = message.replace('@player@', `@red@${Utils.formatName(player.username)}`);
             message = Utils.parseMessage(message);
         }
 

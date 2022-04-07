@@ -2,6 +2,14 @@ import _ from 'lodash';
 
 import World from '../game/world';
 
+import shopData from '../../data/shops.json';
+
+import log from '@kaetram/common/util/log';
+
+import type { Store, StoreInfo } from '@kaetram/common/types/shops';
+import Player from '../game/entity/character/player/player';
+import Item from '../game/entity/objects/item';
+
 /**
  * Shops are globally controlled and updated
  * by the world. When a player purchases an item,
@@ -9,9 +17,120 @@ import World from '../game/world';
  */
 
 export default class Shops {
-    private updateInterval?: NodeJS.Timeout;
+    private stores: Store = {}; // Key is the NPC that the store belongs to.
 
-    public constructor(private world: World) {}
+    private updateFrequency = 20_000; // Update every 20 seconds
+
+    public constructor(private world: World) {
+        // Load stores from the JSON.
+        _.each(shopData, this.loadStore.bind(this));
+
+        // Set up an interval for refreshing the store data.
+        setInterval(this.update.bind(this), this.updateFrequency);
+
+        log.info(
+            `Loaded ${Object.keys(this.stores).length} shop${
+                Object.keys(this.stores).length > 1 ? 's' : ''
+            }.`
+        );
+    }
+
+    /**
+     * Loads a store and saves it into the current shops instance.
+     * @param store The JSON store data we are loading.
+     * @param key The store's key that we are using to identify it.
+     */
+
+    private loadStore(store: StoreInfo, key: string): void {
+        let id = parseInt(key);
+
+        if (isNaN(id)) return;
+
+        this.stores[id] = store;
+    }
+
+    /**
+     * Update function called at a `this.`updateFrequency` interval.
+     */
+
+    private update(): void {
+        _.each(this.stores, (store) => {
+            if (!this.canRefresh(store)) return;
+
+            this.stockItems(store);
+
+            store.lastUpdate = Date.now();
+        });
+    }
+
+    /**
+     * Iterates through all the items in the store and increments
+     * them by one.
+     * @param store The store we are incrementing item counts of.
+     */
+
+    private stockItems(store: StoreInfo): void {
+        _.each(store.items, (item) => {
+            // If an alternate optional stock count is provided, increment by that amount.
+            item.count += item.stockCount ? item.stockCount : 1;
+        });
+    }
+
+    /**
+     * Handles the purchasing of an item from the store. If successful,
+     * decrements the item count in the store by the count specified, and
+     * sends the data to all the players accessing the store.
+     * @param player The player that is purchasing the item.
+     * @param id The store that the item is being purchased from.
+     * @param key The key of the item being purchased.
+     * @param count The amount of the item being purchased.
+     */
+
+    public purchase(player: Player, id: number, key: string, count: number): void {
+        let store = this.stores[id];
+
+        // Check if store exists.
+        if (!store)
+            return log.error(
+                `Player ${player.username} tried to purchase from a non-existent store with ID: ${id}.`
+            );
+
+        let item = _.find(store.items, { key });
+
+        // Check if item exists
+        if (!item)
+            return log.error(
+                `Player ${player.username} tried to purchase an item that doesn't exist in store ID: ${id}.`
+            );
+
+        let currency = player.inventory.getIndex(store.currency, item.price);
+
+        if (currency === -1)
+            return player.notify(`You don't have enough ${store.currency} to purchase this item.`);
+    }
+
+    /**
+     * Checks if the store can refresh the items or not. Essentially
+     * checks for whether or not the refresh time has passed since the
+     * last update commenced. If this is the first update, we default
+     * to 0.
+     * @param store The store we are checking.
+     * @returns If the difference in time between now and last update is greater than refresh time.
+     */
+
+    private canRefresh(store: StoreInfo): boolean {
+        return Date.now() - (store.lastUpdate || 0) > store.refresh;
+    }
+
+    /**
+     * Serializes data about a store.
+     * @param id The store we are serializing.
+     * @returns Data in the form of a `StoreInfo` object.
+     */
+
+    public serialize(id: number): StoreInfo {
+        return this.stores[id];
+    }
 
     // private interval = 60_000;
     // private shopInterval: NodeJS.Timeout | null = null;
