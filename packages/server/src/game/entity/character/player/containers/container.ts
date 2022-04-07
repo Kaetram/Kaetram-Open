@@ -156,9 +156,10 @@ export default abstract class Container {
     }
 
     /**
-     * Checks the inventory if it contains an item and a count
+     * Checks the inventory if it contains an item and a count.
      * @param key The key of the item we're trying to find.
      * @param count Default one but can be specified to check if `x` amount of an item is contained in the slot.
+     * @returns The slot index of the item we're trying to find otherwise -1.
      */
 
     public getIndex(key?: string, count = 1): number {
