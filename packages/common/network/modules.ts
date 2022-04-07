@@ -1,5 +1,12 @@
 import { Pointer } from './opcodes';
 
+// Preset objects and values for various usages.
+export default {
+    EmptyPointer: {
+        type: Pointer.Remove
+    }
+};
+
 export enum PacketType {
     Broadcast,
     Player,
@@ -286,7 +293,8 @@ export const enum Constants {
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
     HORIZONTAL_FLAG = 0x80_00_00_00,
-    SPAWN_POINT = '',
+    MAP_DIVISION_SIZE = 64, // The size of a region the map is split into.
+    SPAWN_POINT = '325,86', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY = 'tutorial',
     TUTORIAL_SPAWN_POINT = '375,40' // 'x,y' values
 }
@@ -325,10 +333,3 @@ export enum EntityType {
     Projectile,
     Object
 }
-
-// Preset objects and values for various usages.
-export default {
-    EmptyPointer: {
-        type: Pointer.Remove
-    }
-};

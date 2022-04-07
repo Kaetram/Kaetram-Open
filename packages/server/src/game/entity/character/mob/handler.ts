@@ -77,16 +77,13 @@ export default class Handler {
         // Ensure the mob isn't dead first.
         if (this.mob.dead) return;
 
-        let { x, y, key, spawnX, spawnY, roamDistance, combat } = this.mob,
+        let { x, y, spawnX, spawnY, roamDistance, combat } = this.mob,
             newX = spawnX + Utils.randomInt(-roamDistance, roamDistance),
             newY = spawnY + Utils.randomInt(-roamDistance, roamDistance),
             distance = Utils.getDistance(spawnX, spawnY, newX, newY);
 
         // Check if the new position is a collision.
         if (this.map.isColliding(newX, newY)) return;
-
-        // Prevent movement if the area is empty.
-        if (this.map.isEmpty(newX, newY)) return;
 
         // Don't have mobs block a door.
         if (this.map.isDoor(newX, newY)) return;
