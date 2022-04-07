@@ -179,6 +179,9 @@ export default class Mob extends Character {
      */
 
     public addToChestArea(chestAreas: Areas): void {
+        // In case chests area does not exist in the map.
+        if (!chestAreas) return;
+
         let area = chestAreas.inArea(this.x, this.y);
 
         area?.addEntity(this);

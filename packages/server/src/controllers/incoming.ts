@@ -117,16 +117,20 @@ export default class Incoming {
     private handleLogin(data: LoginPacket): void {
         let { opcode, username, password, email } = data;
 
-        // Format username by making it all lower case, shorter than 32 characters, and no spaces.
-        if (username) this.player.username = username.toLowerCase().slice(0, 32).trim();
-        if (password) this.player.password = password.slice(0, 32);
-        if (email) this.player.email = email;
+        if (username) {
+            // Format username by making it all lower case, shorter than 32 characters, and no spaces.
+            this.player.username = username.toLowerCase().slice(0, 32).trim();
 
-        // Reject connection if player is already logged in.
-        if (this.world.isOnline(this.player.username)) return this.connection.reject('loggedin');
+            if (password) this.player.password = password.slice(0, 32);
+            if (email) this.player.email = email;
 
-        // Proceed directly to login with default player data if skip database is present.
-        if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
+            // Reject connection if player is already logged in.
+            if (this.world.isOnline(this.player.username))
+                return this.connection.reject('loggedin');
+
+            // Proceed directly to login with default player data if skip database is present.
+            if (config.skipDatabase) return this.player.load(Creator.serializePlayer(this.player));
+        }
 
         // Handle login for each particular case.
         switch (opcode) {
@@ -166,11 +170,8 @@ export default class Incoming {
             this.player.updateRegion(true);
         }
 
-        if (config.discordEnabled)
-            this.world.discord.sendWebhook(this.player.username, 'has logged in!');
-
-        if (config.hubEnabled)
-            this.world.api.sendChat(Utils.formatUsername(this.player.username), 'has logged in!');
+        this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
+        this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
         this.player.readyCallback?.();
 
@@ -340,7 +341,7 @@ export default class Incoming {
                 if (entity?.isItem()) this.player.inventory.add(entity as Item);
 
                 if (this.world.map.isDoor(playerX!, playerY!) && !hasTarget) {
-                    door = this.world.map.getDoorByPosition(playerX!, playerY!);
+                    door = this.world.map.getDoor(playerX!, playerY!);
 
                     this.player.doorCallback?.(door);
                 } else {
@@ -550,10 +551,10 @@ export default class Incoming {
             log.debug(`${this.player.username} - ${text}`);
 
             if (config.discordEnabled)
-                this.world.discord.sendWebhook(this.player.username, text, true);
+                this.world.discord.sendMessage(this.player.username, text, undefined, true);
 
             if (config.hubEnabled)
-                this.world.api.sendChat(Utils.formatUsername(this.player.username), text, true);
+                this.world.api.sendChat(Utils.formatName(this.player.username), text, true);
 
             this.player.sendToRegions(
                 new Chat({

@@ -1725,6 +1725,7 @@ __metadata:
     "@types/dotenv-parse-variables": ^2.0.1
     "@types/lodash": ^4.14.180
     "@types/node": ^17.0.21
+    discord.js: ^11.3.2
     dotenv-extended: ^2.9.0
     dotenv-parse-variables: ^2.0.0
     lodash: ^4.17.21
@@ -3029,6 +3030,13 @@ __metadata:
   version: 2.0.0
   resolution: "astral-regex@npm:2.0.0"
   checksum: 876231688c66400473ba505731df37ea436e574dd524520294cc3bbc54ea40334865e01fa0d074d74d036ee874ee7e62f486ea38bc421ee8e6a871c06f011766
+  languageName: node
+  linkType: hard
+
+"async-limiter@npm:~1.0.0":
+  version: 1.0.1
+  resolution: "async-limiter@npm:1.0.1"
+  checksum: 2b849695b465d93ad44c116220dee29a5aeb63adac16c1088983c339b0de57d76e82533e8e364a93a9f997f28bbfc6a92948cefc120652bd07f3b59f8d75cf2b
   languageName: node
   linkType: hard
 
@@ -4418,6 +4426,45 @@ __metadata:
   dependencies:
     path-type: ^4.0.0
   checksum: fa05e18324510d7283f55862f3161c6759a3f2f8dbce491a2fc14c8324c498286c54282c1f0e933cb930da8419b30679389499b919122952a4f8592362ef4615
+  languageName: node
+  linkType: hard
+
+"discord.js@npm:^11.3.2":
+  version: 11.6.4
+  resolution: "discord.js@npm:11.6.4"
+  dependencies:
+    long: ^4.0.0
+    prism-media: ^0.0.4
+    snekfetch: ^3.6.4
+    tweetnacl: ^1.0.0
+    ws: ^6.0.0
+  peerDependencies:
+    "@discordjs/opus": ^0.1.0
+    "@discordjs/uws": ^10.149.0
+    bufferutil: ^4.0.0
+    erlpack: "*"
+    libsodium-wrappers: ^0.7.3
+    node-opus: ^0.2.7
+    opusscript: ^0.0.6
+    sodium: ^2.0.3
+  peerDependenciesMeta:
+    "@discordjs/opus":
+      optional: true
+    bufferutil:
+      optional: true
+    erlpack:
+      optional: true
+    libsodium-wrappers:
+      optional: true
+    node-opus:
+      optional: true
+    opusscript:
+      optional: true
+    sodium:
+      optional: true
+    uws:
+      optional: true
+  checksum: 0baddd15f3c7eba6de9a88dad244206c94999ba583f972dd0b8f8ef9ffbd97a1b90cfea8a2efe22f7e1474d9bbf8fb381a939cc3ea3cf8e52844d3a9bfe702a7
   languageName: node
   linkType: hard
 
@@ -7492,6 +7539,13 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"long@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "long@npm:4.0.0"
+  checksum: 16afbe8f749c7c849db1f4de4e2e6a31ac6e617cead3bdc4f9605cb703cd20e1e9fc1a7baba674ffcca57d660a6e5b53a9e236d7b25a295d3855cca79cc06744
+  languageName: node
+  linkType: hard
+
 "longest-streak@npm:^2.0.0":
   version: 2.0.4
   resolution: "longest-streak@npm:2.0.4"
@@ -9344,6 +9398,13 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"prism-media@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "prism-media@npm:0.0.4"
+  checksum: 9bed6145190a2542a11dfb2173dd35ee42016545fadab703b45be04509fc50db36e66cb92a3218d072321e2984667ab40f05d2ff5e6b4de7ed4c2deddc49bd59
+  languageName: node
+  linkType: hard
+
 "prism-media@npm:^1.2.9":
   version: 1.3.2
   resolution: "prism-media@npm:1.3.2"
@@ -10371,6 +10432,13 @@ fsevents@~2.3.2:
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
   checksum: b5167a7142c1da704c0e3af85c402002b597081dd9575031a90b4f229ca5678e9a36e8a374f1814c8156a725d17008ae3bde63b92f9cfd132526379e580bec8b
+  languageName: node
+  linkType: hard
+
+"snekfetch@npm:^3.6.4":
+  version: 3.6.4
+  resolution: "snekfetch@npm:3.6.4"
+  checksum: e64b383a19ced759f061ecd43bc9a75bcc9b996d1909f9b94e6aaf66b6579024340c904af05aeba6261a8dd4ad9f71763f47e134c8089707d4be10fcfc682ed9
   languageName: node
   linkType: hard
 
@@ -11568,7 +11636,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"tweetnacl@npm:^1.0.3":
+"tweetnacl@npm:^1.0.0, tweetnacl@npm:^1.0.3":
   version: 1.0.3
   resolution: "tweetnacl@npm:1.0.3"
   checksum: e4a57cac188f0c53f24c7a33279e223618a2bfb5fea426231991652a13247bea06b081fd745d71291fcae0f4428d29beba1b984b1f1ce6f66b06a6d1ab90645c
@@ -12361,6 +12429,15 @@ fsevents@~2.3.2:
     imurmurhash: ^0.1.4
     signal-exit: ^3.0.7
   checksum: 8f780232533ca6223c63c9b9c01c4386ca8c625ebe5017a9ed17d037aec19462ae17109e0aa155bff5966ee4ae7a27b67a99f55caf3f32ffd84155e9da3929fc
+  languageName: node
+  linkType: hard
+
+"ws@npm:^6.0.0":
+  version: 6.2.2
+  resolution: "ws@npm:6.2.2"
+  dependencies:
+    async-limiter: ~1.0.0
+  checksum: aec3154ec51477c094ac2cb5946a156e17561a581fa27005cbf22c53ac57f8d4e5f791dd4bbba6a488602cb28778c8ab7df06251d590507c3c550fd8ebeee949
   languageName: node
   linkType: hard
 

@@ -10,7 +10,6 @@ import Grids from './grids';
 import Regions from './regions';
 
 import type { ProcessedArea, ProcessedDoor, ProcessedMap } from '@kaetram/common/types/map';
-import type Entity from '../entity/entity';
 import type World from '../world';
 import type Areas from './areas/areas';
 
@@ -42,14 +41,11 @@ export default class Map {
     public objects!: number[];
     public cursors!: { [tileId: number]: string };
     public doors!: { [index: number]: ProcessedDoor };
-    public warps!: ProcessedArea[];
+    public warps: ProcessedArea[] = map.areas.warps || [];
 
     private areas!: { [name: string]: Areas };
 
     private checksum!: string;
-
-    private readyInterval!: NodeJS.Timeout | null;
-    private readyCallback?: () => void;
 
     public constructor(public world: World) {
         this.load();
@@ -63,7 +59,6 @@ export default class Map {
         this.plateau = map.plateau;
         this.objects = map.objects;
         this.cursors = map.cursors;
-        this.warps = map.areas.warps;
 
         this.checksum = Utils.getChecksum(JSON.stringify(map));
 
@@ -71,9 +66,13 @@ export default class Map {
 
         this.loadAreas();
         this.loadDoors();
-
-        this.readyCallback?.();
     }
+
+    /**
+     * Iterates through the static areas and incorporates
+     * them into the server by creating instances of them.
+     * This allows them to be manipulated and interacted with.
+     */
 
     private loadAreas(): void {
         _.each(map.areas, (area, key: string) => {
@@ -83,15 +82,29 @@ export default class Map {
         });
     }
 
+    /**
+     * Iterates through the doors saved in the static map
+     * and links them together. We create a clone of all the
+     * doors due to the pointer properties of JavaScript.
+     * We link each door with their respective destination,
+     * and return a list of all doors (ensuring it is not circular).
+     * Doors are a dictionary, where the index represents the tileIndex
+     * of the door the player goes through, and the value represents
+     * the destination information.
+     */
+
     private loadDoors(): void {
         this.doors = {};
 
+        // Duplicate doors using `_.cloneDeep`
         let doorsClone = _.cloneDeep(map.areas.doors);
 
+        // Iterate through the doors in the map.
         _.each(map.areas.doors, (door) => {
-            // If a door somehow doesn't contain a destination.
+            // Skip if the door does not have a destination.
             if (!door.destination) return;
 
+            // Find destination door in the clone list of doors.
             let index = this.coordToIndex(door.x, door.y),
                 destination = _.find(doorsClone, (cloneDoor) => {
                     return door.destination === cloneDoor.id;
@@ -99,6 +112,7 @@ export default class Map {
 
             if (!destination) return;
 
+            // Assign destination door information to the door we are parsing.
             this.doors[index] = {
                 x: destination.x,
                 y: destination.y,
@@ -142,29 +156,130 @@ export default class Map {
         return tileId > Modules.Constants.DIAGONAL_FLAG;
     }
 
-    private inArea(
-        posX: number,
-        posY: number,
-        x: number,
-        y: number,
-        width: number,
-        height: number
-    ): boolean {
-        return posX >= x && posY >= y && posX <= width + x && posY <= height + y;
+    /**
+     * Grabs the x and y cooridnates specified and checks
+     * the tileIndex against the array of doors in the world.
+     * @param x The grid x coordinate we are checking.
+     * @param y The grid y coordinate we are checking.
+     * @returns Boolean on whether or not the door exists.
+     */
+
+    public isDoor(x: number, y: number): boolean {
+        return !!this.doors[this.coordToIndex(x, y)];
     }
 
-    public inTutorialArea(entity: Entity): boolean {
-        if (entity.x === -1 || entity.y === -1) return true;
+    /**
+     * Checks if the specified `x` and `y` coordinates are outside
+     * the map bounds.
+     * @param x Grid x coordinate we are checking.
+     * @param y Grid y coordinate we are checking.
+     * @returns Whether or not the x and y grid coordinates are within the bounds.
+     */
 
-        return (
-            this.inArea(entity.x, entity.y, 370, 36, 10, 10) ||
-            this.inArea(entity.x, entity.y, 312, 11, 25, 22) ||
-            this.inArea(entity.x, entity.y, 399, 18, 20, 15)
-        );
+    public isOutOfBounds(x: number, y: number): boolean {
+        return x < 0 || x >= this.width || y < 0 || y >= this.height;
     }
 
-    public isObject(object: number): boolean {
-        return this.objects.includes(object);
+    /**
+     * Checks if the tileIndex exists in the map collisions.
+     * @param index Tile index to check.
+     * @returns If the array of collision indexes contains the tileIndex.
+     */
+
+    public isCollisionIndex(index: number): boolean {
+        return this.collisions.includes(index);
+    }
+
+    /**
+     * Checks if a position is a collision. Checks the tileIndex against
+     * the array of collision indexes and verifies that the tile is not null.
+     * @param x Grid x coordinate we are checking.
+     * @param y Grid y coordinate we are checking.
+     * @returns True if the position is a collision.
+     */
+
+    public isColliding(x: number, y: number): boolean {
+        if (this.isOutOfBounds(x, y)) return true;
+
+        let index = this.coordToIndex(x, y);
+
+        // If the tile is empty it's automatically a collision tile.
+        return !this.data[index] || this.isCollisionIndex(index);
+    }
+
+    /**
+     * Grabs the chest areas group parsed in the map.
+     * @returns The chests areas parsed upon loading.
+     */
+
+    public getChestAreas(): Areas {
+        return this.areas.chests;
+    }
+
+    /**
+     * Grabs the dynamic areas group parsed in the map.
+     * @returns The dynamic areas parsed upon loading.
+     */
+
+    public getDynamicAreas(): Areas {
+        return this.areas.dynamic;
+    }
+
+    /**
+     * Converts the coordinate x and y into a tileIndex
+     * and returns a door at the index. Defaults to undefined
+     * if no door is found.
+     * @param x The grid x coordinate we are checking.
+     * @param y The grid y coordinate we are checking.
+     * @returns ProcessedDoor object if it exists in the door array.
+     */
+
+    public getDoor(x: number, y: number): ProcessedDoor {
+        return this.doors[this.coordToIndex(x, y)];
+    }
+
+    /**
+     * Checks and returns the cursor type of a specific tile. For example,
+     * tiles of certain trees will have an 'axe' cursor whereas the default
+     * is a normal hand. We check in the global objects for a cursor.
+     * @param tileIndex The index of the tile we are checking.
+     * @param tileId The tileId we are checking.
+     * @returns A string of the cursor for the specified tileIndex or tileId.
+     */
+
+    public getCursor(tileIndex: number, tileId: number): string | undefined {
+        if (tileId in this.cursors) return this.cursors[tileId];
+
+        return Objects.getCursor(this.getObjectId(tileIndex));
+    }
+
+    /**
+     * Converts the tileIndex into a position object and returns
+     * a string formatted version of the coordinate.
+     * @param tileIndex The index we are converting to a position.
+     * @returns A string of the x and y coordinate.
+     */
+
+    private getObjectId(tileIndex: number): string {
+        let position = this.indexToCoord(tileIndex);
+
+        return `${position.x}-${position.y}`;
+    }
+
+    /**
+     * Returns the current plateau level of the specified coordinates.
+     * @param x Grid x coordinate we are checking.
+     * @param y Grid y coordinate we are checking.
+     * @returns The plateau level of the coordinate or 0 if none exists.
+     */
+
+    public getPlateauLevel(x: number, y: number): number {
+        let index = this.coordToIndex(x, y);
+
+        if (!(index in this.plateau)) return 0;
+
+        // Plateau at the coordinate index.
+        return this.plateau[index];
     }
 
     /**
@@ -223,114 +338,12 @@ export default class Map {
         };
     }
 
-    public getPositionObject(x: number, y: number): number {
-        let index = this.coordToIndex(x, y),
-            tiles = this.data[index],
-            objectId!: number;
-
-        if (Array.isArray(tiles)) {
-            for (let i in tiles) if (this.isObject(tiles[i])) objectId = tiles[i];
-        } else if (this.isObject(tiles)) objectId = tiles;
-
-        return objectId;
-    }
-
-    public getCursor(tileIndex: number, tileId: number): string | undefined {
-        if (tileId in this.cursors) return this.cursors[tileId];
-
-        let cursor = Objects.getCursor(this.getObjectId(tileIndex));
-
-        if (!cursor) return;
-
-        return cursor;
-    }
-
-    private getObjectId(tileIndex: number): string {
-        let position = this.indexToCoord(tileIndex + 1);
-
-        return `${position.x}-${position.y}`;
-    }
-
-    // Transforms an object's `instance` or `id` into position
-    public idToPosition(id: string): Position {
-        let split = id.split('-');
-
-        return { x: parseInt(split[0]), y: parseInt(split[1]) };
-    }
-
-    public isDoor(x: number, y: number): boolean {
-        return !!this.doors[this.coordToIndex(x, y)];
-    }
-
-    public getDoorByPosition(x: number, y: number): ProcessedDoor {
-        return this.doors[this.coordToIndex(x, y)];
-    }
-
-    public isOutOfBounds(x: number, y: number): boolean {
-        return x < 0 || x >= this.width || y < 0 || y >= this.height;
-    }
-
-    private isPlateau(index: number): boolean {
-        return index in this.plateau;
-    }
-
-    public isCollisionIndex(index: number): boolean {
-        return this.collisions.includes(index);
-    }
-
-    public isColliding(x: number, y: number): boolean {
-        if (this.isOutOfBounds(x, y)) return false;
-
-        return this.isCollisionIndex(this.coordToIndex(x, y));
-    }
-
-    /* For preventing NPCs from roaming in null areas. */
-    public isEmpty(x: number, y: number): boolean {
-        if (this.isOutOfBounds(x, y)) return true;
-
-        let tileIndex = this.coordToIndex(x, y);
-
-        return this.data[tileIndex] === 0;
-    }
-
-    public getPlateauLevel(x: number, y: number): number {
-        let index = this.coordToIndex(x, y);
-
-        if (!this.isPlateau(index)) return 0;
-
-        return this.plateau[index];
-    }
-
-    public getWarpById(id: number): ProcessedArea | undefined {
-        let warpName = Object.keys(Modules.Warps)[id];
-
-        if (!warpName) return;
-
-        let warp = this.getWarpByName(warpName.toLowerCase());
-
-        if (!warp) return;
-
-        warp.name = warpName;
-
-        return warp;
-    }
-
-    private getWarpByName(name: string): ProcessedArea | undefined {
-        for (let i in this.warps)
-            if (this.warps[i].name === name) return _.cloneDeep(this.warps[i]);
-    }
-
-    public getChestAreas(): Areas {
-        return this.areas.chests;
-    }
-
-    public getDynamicAreas(): Areas {
-        return this.areas.dynamic;
-    }
-
-    public onReady(callback: () => void): void {
-        this.readyCallback = callback;
-    }
+    /**
+     * A callback function used to iterate through all the areas in the map.
+     * Specifically used in the player's handler, it is used to check
+     * various activities within the areas.
+     * @param callback Returns an areas group (i.e. chest areas) and the key of the group.
+     */
 
     public forEachAreas(callback: (areas: Areas, key: string) => void): void {
         _.each(this.areas, (a: Areas, name: string) => {
