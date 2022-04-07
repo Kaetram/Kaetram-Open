@@ -33,7 +33,7 @@ interface RegionMapData {
 
 interface StorageData {
     new: boolean;
-    world: string;
+    world: number;
     clientVersion: number;
     player: PlayerData;
     settings: Settings;

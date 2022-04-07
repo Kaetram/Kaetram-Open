@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
@@ -287,7 +285,7 @@ export default class Player extends Character {
 
         let info = {
             instance: this.instance,
-            username: Utils.formatUsername(this.username),
+            username: Utils.formatName(this.username),
             x: this.x,
             y: this.y,
             rights: this.rights,
@@ -717,7 +715,7 @@ export default class Player extends Character {
      */
 
     public getSpawn(): Position {
-        if (!this.quests.isTutorialFinished())
+        if (config.tutorialEnabled && !this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
@@ -845,8 +843,8 @@ export default class Player extends Character {
         }
 
         let otherPlayer = this.world.getPlayerByName(playerName),
-            oFormattedName = Utils.formatUsername(playerName), // Formated username of the other player.
-            formattedName = Utils.formatUsername(this.username); // Formatted username of current instance.
+            oFormattedName = Utils.formatName(playerName), // Formated username of the other player.
+            formattedName = Utils.formatName(this.username); // Formatted username of current instance.
 
         otherPlayer.notify(`[From ${oFormattedName}]: ${message}`, 'aquamarine');
         this.notify(`[To ${formattedName}]: ${message}`, 'aquamarine');
@@ -967,10 +965,6 @@ export default class Player extends Character {
         if (config.skipDatabase || this.isGuest || !this.ready) return;
 
         this.database.creator?.save(this);
-    }
-
-    public inTutorial(): boolean {
-        return this.world.map.inTutorialArea(this);
     }
 
     public hasAggressionTimer(): boolean {

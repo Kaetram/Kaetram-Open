@@ -3,6 +3,7 @@ import zlib from 'zlib';
 
 import log from '@kaetram/common/util/log';
 
+import { Modules } from '@kaetram/common/network';
 import type { ProcessedMap } from '@kaetram/common/types/map';
 import type { Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
 
@@ -18,7 +19,13 @@ export default class ProcessMap {
      */
 
     public constructor(private data: MapData) {
-        let { width, height, tilewidth: tileSize } = this.data;
+        let { width, height, tilewidth: tileSize } = this.data,
+            divisionSize = Modules.Constants.MAP_DIVISION_SIZE;
+
+        if (width % divisionSize !== 0 || height % divisionSize !== 0)
+            log.warning(
+                'The map size specified cannot be evenly divided, server may not be able to load the map.'
+            );
 
         this.map = {
             width,
@@ -291,10 +298,11 @@ export default class ProcessMap {
      */
 
     private parseObject(areaName: string, object: LayerObject) {
-        let { id, x, y, width, height, properties } = object;
+        let { id, x, y, name, width, height, properties } = object;
 
         this.map.areas[areaName].push({
             id,
+            name,
             x: x / this.map.tileSize,
             y: y / this.map.tileSize,
             width: width / this.map.tileSize,

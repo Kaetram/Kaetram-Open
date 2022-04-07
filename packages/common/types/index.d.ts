@@ -1,2 +1,3 @@
-export * from './network';
 import './utils';
+
+export * from './network';

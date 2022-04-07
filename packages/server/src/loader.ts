@@ -4,12 +4,10 @@ import log from '@kaetram/common/util/log';
 
 import abilityData from '../data/abilities.json';
 import objectData from '../data/objects.json';
-import shopsData from '../data/shops.json';
 
 import Abilities from './info/abilities';
 import Formulas from './info/formulas';
 import Objects from './info/objects';
-import Shops from './info/shops';
 
 import type { ObjectsData } from './info/objects';
 import { Modules } from '@kaetram/common/network';
@@ -24,7 +22,6 @@ export default class Loader {
 
     public constructor() {
         this.loadAbilityData();
-        this.loadShops();
         this.loadLevels();
         this.loadObjects();
     }
@@ -49,31 +46,6 @@ export default class Loader {
         });
 
         log.info(`Finished loading ${skillCounter} skills.`);
-    }
-
-    private loadShops(): void {
-        let shopCounter = 0;
-
-        _.each(shopsData, (value, key) => {
-            key = key.toLowerCase();
-
-            Shops.Data[key] = {
-                key,
-                npcId: value.npcId,
-                items: value.items,
-                count: value.count,
-                originalCount: value.count,
-                prices: value.prices,
-                currency: value.currency,
-                stockDuration: value.stockDuration
-            };
-
-            Shops.Ids[value.npcId] = Shops.Data[key];
-
-            shopCounter++;
-        });
-
-        log.info(`Finished loading ${shopCounter} shops.`);
     }
 
     /**

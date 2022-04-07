@@ -1,12 +1,11 @@
 import _ from 'lodash';
 
-import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 
 import type { DatabaseType } from '../database/database';
 import type Creator from '../database/mongodb/creator';
 import type Loader from '../database/mongodb/loader';
-import type API from '../network/api';
+import API from '../api';
 
 interface PlayerData {
     rank: string;
@@ -59,41 +58,34 @@ export default class Guilds {
     }
 
     public create(name: string, owner: string): void {
-        if (this.exists(name)) {
-            this.api.sendChatToPlayer(owner, 'Could not create a guild with that name.', 'red');
-            return;
-        }
-
-        this.guilds[name] = {
-            owner,
-            players: {}
-        } as GuildData;
-
-        this.guilds[name].players[owner] = {
-            rank: 'owner'
-        };
-
-        this.save();
+        // if (this.exists(name)) {
+        //     this.api.sendChat(owner, 'Could not create a guild with that name.', 'red');
+        //     return;
+        // }
+        // this.guilds[name] = {
+        //     owner,
+        //     players: {}
+        // } as GuildData;
+        // this.guilds[name].players[owner] = {
+        //     rank: 'owner'
+        // };
+        // this.save();
     }
 
     public join(guild: GuildData, name: string, rank: string): void {
-        let playerGuild = this.findPlayer(name);
-
-        if (playerGuild) {
-            this.api.sendChatToPlayer(name, 'You are already in a guild.', 'red');
-            return;
-        }
-
-        if (name in guild.players) {
-            this.api.sendChatToPlayer(name, 'You have already joined this guild.', 'red');
-            return;
-        }
-
-        guild.players[name] = {
-            rank
-        };
-
-        this.save();
+        // let playerGuild = this.findPlayer(name);
+        // if (playerGuild) {
+        //     this.api.sendChatToPlayer(name, 'You are already in a guild.', 'red');
+        //     return;
+        // }
+        // if (name in guild.players) {
+        //     this.api.sendChatToPlayer(name, 'You have already joined this guild.', 'red');
+        //     return;
+        // }
+        // guild.players[name] = {
+        //     rank
+        // };
+        // this.save();
     }
 
     public updatePlayer(guild: GuildData, name: string, data: PlayerData): void {
