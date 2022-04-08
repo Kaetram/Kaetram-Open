@@ -1,16 +1,16 @@
-import { Modules, Opcodes } from '@kaetram/common/network';
-
 import Entity, { EntityData } from '../entity';
 import Combat from './combat/combat';
 
-import type { HitData } from '@kaetram/common/types/info';
 import HitPoints from './points/hitpoints';
 import World from '../../world';
-import { Movement } from '@kaetram/server/src/network/packets';
+
+import type { HitData } from '@kaetram/common/types/info';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { Movement, Points } from '../../../network/packets';
 
 type DamageCallback = (target: Character, hitInfo: HitData) => void;
 type StunCallback = (stun: boolean) => void;
-type HitCallback = (attacker: Character, damage?: number) => void;
+type HitCallback = (damage: number, attacker?: Character) => void;
 type PoisonCallback = (poison: string) => void;
 type SubAoECallback = (radius: number, hasTerror: boolean) => void;
 
@@ -53,7 +53,7 @@ export default abstract class Character extends Entity {
     private poisonCallback?: PoisonCallback;
     public damageCallback?: DamageCallback;
     public subAoECallback?: SubAoECallback;
-    public deathCallback?(): void;
+    public deathCallback?(attacker?: Character): void;
 
     protected constructor(
         instance: string,
@@ -92,9 +92,8 @@ export default abstract class Character extends Entity {
      */
 
     public heal(amount = 1): void {
-        if (this.dead) return;
+        if (this.dead || this.poison) return;
         if (this.combat.started) return;
-        if (this.poison) return;
 
         this.hitPoints.increment(amount);
     }
@@ -121,10 +120,22 @@ export default abstract class Character extends Entity {
      * @param damage The amount of damage being dealt.
      */
 
-    public hit(attacker: Character, damage: number): void {
+    public hit(damage: number, attacker?: Character): void {
         this.hitPoints.decrement(damage);
 
-        this.hitCallback?.(attacker, damage);
+        // Sync the change in hitpoints to nearby entities.
+        this.world.push(Modules.PacketType.Regions, {
+            region: this.region,
+            packet: new Points({
+                id: this.instance,
+                hitPoints: this.hitPoints.getHitPoints()
+            })
+        });
+
+        // Call the death callback if the character reaches 0 hitpoints.
+        if (this.isDead()) return this.deathCallback?.(attacker);
+
+        this.hitCallback?.(damage, attacker);
     }
 
     public setStun(stun: boolean): void {
@@ -145,10 +156,6 @@ export default abstract class Character extends Entity {
         this.poison = poison;
 
         this.poisonCallback?.(poison);
-    }
-
-    public getHitPoints(): number {
-        return this.hitPoints.getHitPoints();
     }
 
     public getMaxHitPoints(): number {
@@ -230,7 +237,7 @@ export default abstract class Character extends Entity {
         this.poisonCallback = callback;
     }
 
-    public onDeath(callback: () => void): void {
+    public onDeath(callback: (attacker?: Character) => void): void {
         this.deathCallback = callback;
     }
 }
