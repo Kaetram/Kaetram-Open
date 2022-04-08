@@ -61,10 +61,6 @@ export default defineConfig(({ command }) => {
         env = loadEnv(isProduction);
 
     return {
-        cacheDir: '.cache',
-        resolve: {
-            alias: { 'socket.io-client': 'socket.io-client/dist/socket.io.js' }
-        },
         plugins: [
             pwa({
                 registerType: 'autoUpdate',
