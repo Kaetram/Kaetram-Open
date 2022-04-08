@@ -425,14 +425,6 @@ export default class Player extends Character {
         this.regions.sendRegion(this);
     }
 
-    public die(): void {
-        this.dead = true;
-
-        this.deathCallback?.();
-
-        this.send(new Death(this.instance));
-    }
-
     public teleport(x: number, y: number, isDoor = false, withAnimation = false): void {
         this.teleportCallback?.(x, y, isDoor);
 
@@ -628,10 +620,6 @@ export default class Player extends Character {
 
     public getMaxMana(): number {
         return this.mana.getMaxMana();
-    }
-
-    public override getHitPoints(): number {
-        return this.hitPoints.getHitPoints();
     }
 
     public override getMaxHitPoints(): number {
@@ -1019,10 +1007,6 @@ export default class Player extends Character {
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;
 
         return data;
-    }
-
-    public killCharacter(character: Character): void {
-        this.killCallback?.(character);
     }
 
     public onOrientation(callback: () => void): void {

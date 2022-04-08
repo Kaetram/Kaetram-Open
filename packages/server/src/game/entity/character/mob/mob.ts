@@ -43,7 +43,7 @@ export default class Mob extends Character {
     public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
 
     public boss = false;
-    public respawnable = false;
+    public respawnable = true;
     public hiddenName = false;
     public miniboss = false;
 
@@ -100,6 +100,13 @@ export default class Mob extends Character {
         setInterval(this.roamingCallback!, Modules.Constants.ROAMING_FREQUENCY);
     }
 
+    /**
+     * Destroys the mob and removes all targets. Begins
+     * the respawning process if the mob is respawnable.
+     * Sets the mob's position back to the spawn point,
+     * and registers the mob's death with the area.
+     */
+
     public destroy(): void {
         this.dead = true;
         this.removeTarget();
@@ -109,6 +116,8 @@ export default class Mob extends Character {
         this.setPosition(this.spawnX, this.spawnY);
 
         this.area?.removeEntity(this);
+
+        this.combat.stop();
     }
 
     /**
