@@ -342,11 +342,6 @@ export default class Commands {
 
                 break;
 
-            case 'die':
-                this.world.handleDeath(this.player);
-
-                break;
-
             case 'ms': {
                 let movementSpeed = parseInt(blocks.shift()!);
 

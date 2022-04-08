@@ -7,7 +7,7 @@ export default class Hit {
     private terror = false;
     public poison = false;
 
-    public constructor(public type: Modules.Hits, public damage: number) {}
+    public constructor(public type: Modules.Hits, public damage = 0) {}
 
     private isRanged(): boolean {
         return this.ranged;

@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import config from '@kaetram/common/config';
 import Discord from '@kaetram/common/api/discord';
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
 import Entities from '../controllers/entities';
@@ -15,13 +15,12 @@ import Network from '../network/network';
 import Character from './entity/character/character';
 
 import { PacketType } from '@kaetram/common/network/modules';
-import { Chat, Combat, Despawn, Points } from '../network/packets';
+import { Chat } from '../network/packets';
 import Packet from '../network/packet';
 
 import type MongoDB from '../database/mongodb/mongodb';
 import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
-import type Mob from './entity/character/mob/mob';
 import type Player from './entity/character/player/player';
 import type Entity from './entity/entity';
 
@@ -109,108 +108,6 @@ export default class World {
         }
     }
 
-    /****************************
-     * Entity related functions *
-     ****************************/
-
-    public kill(character: Character): void {
-        character.hitPoints.decrement(character.hitPoints.getHitPoints());
-
-        this.push(Modules.PacketType.Regions, {
-            region: character.region,
-            packet: new Points({
-                id: character.instance,
-                hitPoints: character.getHitPoints(),
-                mana: null
-            })
-        });
-
-        this.push(Modules.PacketType.Regions, {
-            region: character.region,
-            packet: new Despawn(character.instance)
-        });
-
-        this.handleDeath(character, true);
-    }
-
-    public handleDamage(attacker: Character, target: Character, damage: number): void {
-        if (!attacker || !target || isNaN(damage) || target.invincible) return;
-
-        // Stop screwing with this - it's so the target retaliates.
-
-        target.hit(attacker, damage);
-
-        this.push(Modules.PacketType.Regions, {
-            region: target.region,
-            packet: new Points({
-                id: target.instance,
-                hitPoints: target.getHitPoints(),
-                mana: null
-            })
-        });
-
-        // If target has dieded...
-        if (target.getHitPoints() < 1) {
-            // All of this has to get redone anyway lol
-            let player = attacker as unknown as Player;
-
-            if (target.isMob()) player.addExperience((target as Mob).experience);
-
-            if (player.isPlayer()) player.killCharacter(target);
-
-            target.combat.forEachAttacker((attacker) => {
-                attacker.removeTarget();
-            });
-
-            this.push(Modules.PacketType.Regions, {
-                region: target.region,
-                packet: new Combat(Opcodes.Combat.Finish, {
-                    attackerId: attacker.instance,
-                    targetId: target.instance
-                })
-            });
-
-            this.push(Modules.PacketType.Regions, {
-                region: target.region,
-                packet: new Despawn(target.instance)
-            });
-
-            this.handleDeath(target, false, attacker);
-        }
-    }
-
-    public handleDeath(character: Character, ignoreDrops = false, lastAttacker?: Character): void {
-        if (!character) return;
-
-        if (character.isMob()) {
-            let mob = character as Mob,
-                deathX = mob.x,
-                deathY = mob.y;
-
-            if (lastAttacker) mob.lastAttacker = lastAttacker;
-
-            mob.deathCallback?.();
-
-            this.entities.remove(mob);
-
-            mob.dead = true;
-
-            mob.destroy();
-
-            mob.combat.stop();
-
-            if (!ignoreDrops) {
-                let drop = mob.getDrop();
-
-                if (drop) this.entities.spawnItem(drop.key, deathX, deathY, true, drop.count);
-            }
-        } else if (character.isPlayer()) {
-            let player = character as Player;
-
-            player.die();
-        }
-    }
-
     /**
      * Broadcasts a chat packet to all the players logged in.
      * @param source Who is sending the message.
@@ -265,6 +162,15 @@ export default class World {
     }
 
     /**
+     * Checks if the world is full.
+     * @returns True if the number of players is equal to the max players.
+     */
+
+    public isFull(): boolean {
+        return this.getPopulation() >= this.maxPlayers;
+    }
+
+    /**
      * Grabs and returns a player instance based on its username.
      * @param username The username of the player.
      * @returns The player instance.
@@ -274,18 +180,28 @@ export default class World {
         return this.entities.getPlayer(username) as Player;
     }
 
-    // Check to see if the world is full.
-    public isFull(): boolean {
-        return this.getPopulation() >= this.maxPlayers;
-    }
+    /**
+     * Getter shortcut for the Grids instance from the map.
+     * @returns The `Grid` instance.
+     */
 
     public getGrids(): Grids {
         return this.map.grids;
     }
 
+    /**
+     * Returns the number of players currently logged in.
+     * @returns Number of players logged in.
+     */
+
     public getPopulation(): number {
         return _.size(this.entities.players);
     }
+
+    /**
+     * Callback for when a connection is established.
+     * @param callback Contains the connection instance.
+     */
 
     public onConnection(callback: ConnectionCallback): void {
         this.connectionCallback = callback;

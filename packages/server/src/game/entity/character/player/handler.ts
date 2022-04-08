@@ -7,7 +7,8 @@ import {
     Container,
     Quest,
     Equipment as EquipmentPacket,
-    NPC as NPCPacket
+    NPC as NPCPacket,
+    Death
 } from '../../../../network/packets';
 import Map from '../../../map/map';
 import World from '../../../world';
@@ -108,7 +109,11 @@ export default class Handler {
      */
 
     private handleDeath(): void {
+        this.player.dead = true;
+
         this.player.combat.stop();
+
+        this.player.send(new Death(this.player.instance));
     }
 
     /**
