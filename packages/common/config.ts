@@ -12,7 +12,7 @@ export interface Config {
     socketioPort: number;
     websocketPort: number;
 
-    serverId: string;
+    serverId: number;
     accessToken: string;
     apiEnabled: boolean;
     apiPort: number;
@@ -49,10 +49,8 @@ export interface Config {
     moderators: string[];
 
     discordEnabled: boolean;
-    discordServerId: string;
+    discordChannelId: string;
     discordBotToken: string;
-    discordWebhookId: string;
-    discordWebhookToken: string;
 
     debugging: boolean;
     debugLevel: 'all';

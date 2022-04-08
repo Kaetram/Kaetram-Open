@@ -353,10 +353,26 @@ export default class Entities {
         return this.entities[instance];
     }
 
+    /**
+     * Finds a player based on their username.
+     * @param username The username of the player to find.
+     * @returns A playerobject if found, otherwise undefined.
+     */
+
     public getPlayer(username: string): Player | undefined {
         return _.find(this.players, (player: Player) => {
             return player.username.toLowerCase() === username.toLowerCase();
         });
+    }
+
+    /**
+     * Takes all the players in the world and returns their
+     * usernames in a string array.
+     * @returns A string array of all usernames.
+     */
+
+    public getPlayerUsernames(): string[] {
+        return _.map(this.players, (player: Player) => player.username);
     }
 
     /**
