@@ -170,11 +170,8 @@ export default class Incoming {
             this.player.updateRegion(true);
         }
 
-        if (config.discordEnabled)
-            this.world.discord.sendWebhook(this.player.username, 'has logged in!');
-
-        if (config.hubEnabled)
-            this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
+        this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged in!');
+        this.world.discord.sendMessage(this.player.username, 'has logged in!');
 
         this.player.readyCallback?.();
 
@@ -554,7 +551,7 @@ export default class Incoming {
             log.debug(`${this.player.username} - ${text}`);
 
             if (config.discordEnabled)
-                this.world.discord.sendWebhook(this.player.username, text, true);
+                this.world.discord.sendMessage(this.player.username, text, undefined, true);
 
             if (config.hubEnabled)
                 this.world.api.sendChat(Utils.formatName(this.player.username), text, true);

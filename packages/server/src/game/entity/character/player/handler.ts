@@ -94,7 +94,7 @@ export default class Handler {
 
         if (this.player.ready) {
             if (config.discordEnabled)
-                this.world.discord.sendWebhook(this.player.username, 'has logged out!');
+                this.world.discord.sendMessage(this.player.username, 'has logged out!');
 
             if (config.hubEnabled)
                 this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged out!');
