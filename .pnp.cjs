@@ -2778,6 +2778,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/dotenv-parse-variables", "npm:2.0.1"],\
             ["@types/lodash", "npm:4.14.180"],\
             ["@types/node", "npm:17.0.21"],\
+            ["discord.js", "virtual:c8e3ea1e5beaa30966af5bbbbf1ca52b02b82b254bb0cad77604ffadb77361d50c694658310fa9d39cc8579ac70ef1e83369fdaf4915da7c2fd6038cd7ddf586#npm:11.6.4"],\
             ["dotenv-extended", "npm:2.9.0"],\
             ["dotenv-parse-variables", "npm:2.0.0"],\
             ["lodash", "npm:4.17.21"]\
@@ -4425,6 +4426,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/async-npm-0.9.2-d8cafe6cc3-87dbf12929.zip/node_modules/async/",\
           "packageDependencies": [\
             ["async", "npm:0.9.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["async-limiter", [\
+        ["npm:1.0.1", {\
+          "packageLocation": "./.yarn/cache/async-limiter-npm-1.0.1-7e6819bcdb-2b849695b4.zip/node_modules/async-limiter/",\
+          "packageDependencies": [\
+            ["async-limiter", "npm:1.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6095,6 +6105,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["discord.js", [\
+        ["npm:11.6.4", {\
+          "packageLocation": "./.yarn/cache/discord.js-npm-11.6.4-4b35789005-0baddd15f3.zip/node_modules/discord.js/",\
+          "packageDependencies": [\
+            ["discord.js", "npm:11.6.4"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
         ["npm:12.5.3", {\
           "packageLocation": "./.yarn/cache/discord.js-npm-12.5.3-cf56da7683-66c95c2fe3.zip/node_modules/discord.js/",\
           "packageDependencies": [\
@@ -6107,6 +6124,56 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["setimmediate", "npm:1.0.5"],\
             ["tweetnacl", "npm:1.0.3"],\
             ["ws", "virtual:cf56da7683803aa9264f916bdb4d485008dca0988e9e122f3753d126f3aa20bc7f9e07a02e7a15b6e115d384905f8a0966a806be17cc75f4d753d1d69bf33907#npm:7.5.7"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:c8e3ea1e5beaa30966af5bbbbf1ca52b02b82b254bb0cad77604ffadb77361d50c694658310fa9d39cc8579ac70ef1e83369fdaf4915da7c2fd6038cd7ddf586#npm:11.6.4", {\
+          "packageLocation": "./.yarn/__virtual__/discord.js-virtual-b6b9421906/0/cache/discord.js-npm-11.6.4-4b35789005-0baddd15f3.zip/node_modules/discord.js/",\
+          "packageDependencies": [\
+            ["discord.js", "virtual:c8e3ea1e5beaa30966af5bbbbf1ca52b02b82b254bb0cad77604ffadb77361d50c694658310fa9d39cc8579ac70ef1e83369fdaf4915da7c2fd6038cd7ddf586#npm:11.6.4"],\
+            ["@discordjs/opus", null],\
+            ["@discordjs/uws", null],\
+            ["@types/bufferutil", null],\
+            ["@types/discordjs__opus", null],\
+            ["@types/discordjs__uws", null],\
+            ["@types/erlpack", null],\
+            ["@types/libsodium-wrappers", null],\
+            ["@types/node-opus", null],\
+            ["@types/opusscript", null],\
+            ["@types/sodium", null],\
+            ["@types/uws", null],\
+            ["bufferutil", null],\
+            ["erlpack", null],\
+            ["libsodium-wrappers", null],\
+            ["long", "npm:4.0.0"],\
+            ["node-opus", null],\
+            ["opusscript", null],\
+            ["prism-media", "npm:0.0.4"],\
+            ["snekfetch", "npm:3.6.4"],\
+            ["sodium", null],\
+            ["tweetnacl", "npm:1.0.3"],\
+            ["uws", null],\
+            ["ws", "virtual:b6b942190618a85661c42e67aafd4ac44f64ee2ee45fce449b701edf9bc98b540c7bd64c15555cfa44158ee9689a93e3206fc2ddd1325eb0fa76f4d8fa53b8fa#npm:6.2.2"]\
+          ],\
+          "packagePeers": [\
+            "@discordjs/opus",\
+            "@discordjs/uws",\
+            "@types/bufferutil",\
+            "@types/discordjs__opus",\
+            "@types/discordjs__uws",\
+            "@types/erlpack",\
+            "@types/libsodium-wrappers",\
+            "@types/node-opus",\
+            "@types/opusscript",\
+            "@types/sodium",\
+            "@types/uws",\
+            "bufferutil",\
+            "erlpack",\
+            "libsodium-wrappers",\
+            "node-opus",\
+            "opusscript",\
+            "sodium",\
+            "uws"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -9540,6 +9607,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["long", [\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/long-npm-4.0.0-ecd96a31ed-16afbe8f74.zip/node_modules/long/",\
+          "packageDependencies": [\
+            ["long", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["longest", [\
         ["npm:1.0.1", {\
           "packageLocation": "./.yarn/cache/longest-npm-1.0.1-78ef3a3705-21717f9567.zip/node_modules/longest/",\
@@ -11946,6 +12022,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["prism-media", [\
+        ["npm:0.0.4", {\
+          "packageLocation": "./.yarn/cache/prism-media-npm-0.0.4-fbced1d741-9bed614519.zip/node_modules/prism-media/",\
+          "packageDependencies": [\
+            ["prism-media", "npm:0.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:1.3.2", {\
           "packageLocation": "./.yarn/cache/prism-media-npm-1.3.2-f7427c15d8-a4ff111086.zip/node_modules/prism-media/",\
           "packageDependencies": [\
@@ -13065,6 +13148,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/smart-buffer-npm-4.2.0-5ac3f668bb-b5167a7142.zip/node_modules/smart-buffer/",\
           "packageDependencies": [\
             ["smart-buffer", "npm:4.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["snekfetch", [\
+        ["npm:3.6.4", {\
+          "packageLocation": "./.yarn/cache/snekfetch-npm-3.6.4-32cb44e1f0-e64b383a19.zip/node_modules/snekfetch/",\
+          "packageDependencies": [\
+            ["snekfetch", "npm:3.6.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -15334,6 +15426,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["ws", [\
+        ["npm:6.2.2", {\
+          "packageLocation": "./.yarn/cache/ws-npm-6.2.2-ca62a10fa0-aec3154ec5.zip/node_modules/ws/",\
+          "packageDependencies": [\
+            ["ws", "npm:6.2.2"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
         ["npm:7.5.7", {\
           "packageLocation": "./.yarn/cache/ws-npm-7.5.7-6cc440864a-5c1f669a16.zip/node_modules/ws/",\
           "packageDependencies": [\
@@ -15378,6 +15477,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ws", "virtual:ad17e83902b100fdb17d771176a579194cd969c8e8da98aff45af4d1c776270b6d78b184c6d52eb26884acc2020f17a701f385218a205496a8e200bf7de92582#npm:8.5.0"],\
             ["@types/bufferutil", null],\
             ["@types/utf-8-validate", null],\
+            ["bufferutil", null],\
+            ["utf-8-validate", null]\
+          ],\
+          "packagePeers": [\
+            "@types/bufferutil",\
+            "@types/utf-8-validate",\
+            "bufferutil",\
+            "utf-8-validate"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:b6b942190618a85661c42e67aafd4ac44f64ee2ee45fce449b701edf9bc98b540c7bd64c15555cfa44158ee9689a93e3206fc2ddd1325eb0fa76f4d8fa53b8fa#npm:6.2.2", {\
+          "packageLocation": "./.yarn/__virtual__/ws-virtual-7e1a6664b8/0/cache/ws-npm-6.2.2-ca62a10fa0-aec3154ec5.zip/node_modules/ws/",\
+          "packageDependencies": [\
+            ["ws", "virtual:b6b942190618a85661c42e67aafd4ac44f64ee2ee45fce449b701edf9bc98b540c7bd64c15555cfa44158ee9689a93e3206fc2ddd1325eb0fa76f4d8fa53b8fa#npm:6.2.2"],\
+            ["@types/bufferutil", null],\
+            ["@types/utf-8-validate", null],\
+            ["async-limiter", "npm:1.0.1"],\
             ["bufferutil", null],\
             ["utf-8-validate", null]\
           ],\
