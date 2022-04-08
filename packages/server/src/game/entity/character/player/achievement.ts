@@ -133,7 +133,7 @@ export default class Achievement {
         //     this.data.type === Modules.Achievements.Type.Scavenge &&
         //     this.player.inventory.contains(this.data.item!)
         // ) {
-        //     this.player.inventory.remove(this.data.item!, this.data.itemCount!);
+        //     this.player.inventory.remove(this.data.item!, this.data.item-count!);
 
         //     return true;
         // }

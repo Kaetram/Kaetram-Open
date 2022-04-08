@@ -11,13 +11,13 @@ import type Slot from './container/slot';
 
 export default class Enchant {
     private body = $('#enchant');
-    // private container = $('#enchantContainer');
-    private enchantSlots = $('#enchantInventorySlots');
+    // private container = $('#enchant-container');
+    private enchantSlots = $('#enchant-inventory-slots');
 
-    private selectedItem = $('#enchantSelectedItem');
-    private selectedShards = $('#enchantShards');
-    private confirm = $('#confirmEnchant');
-    private shardsCount = $('#shardsCount');
+    private selectedItem = $('#enchant-selected-item');
+    private selectedShards = $('#enchant-shards');
+    private confirm = $('#confirm-enchant');
+    private shardsCount = $('#shards-count');
 
     private closeEnchant = $('#closeEnchant');
 
@@ -77,12 +77,12 @@ export default class Enchant {
 
         image.css('background-image', '');
 
-        this.getSlot(index).find(`#inventoryItemCount${index}`).text('');
+        this.getSlot(index).find(`#inventory-item-count${index}`).text('');
     }
 
     public moveBack(type: string, index: number): void {
         let image = this.getSlot(index).find(`#inventoryImage${index}`),
-            itemCount = this.getSlot(index).find(`#inventoryItemCount${index}`),
+            itemCount = this.getSlot(index).find(`#inventory-item-count${index}`),
             { count } = this.getItemSlot(index);
 
         switch (type) {

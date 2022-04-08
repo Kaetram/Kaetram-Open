@@ -10,18 +10,18 @@ import type Game from '../../../game';
 export default class State extends Page {
     private player;
 
-    private name = $('#profileName');
-    private level = $('#profileLevel');
-    private experience = $('#profileExperience');
+    private name = $('#profile-name');
+    private level = $('#profile-level');
+    private experience = $('#profile-experience');
 
-    private weaponSlot = $('#weaponSlot');
-    private armourSlot = $('#armourSlot');
-    private pendantSlot = $('#pendantSlot');
-    private ringSlot = $('#ringSlot');
-    private bootsSlot = $('#bootsSlot');
+    private weaponSlot = $('#weapon-slot');
+    private armourSlot = $('#armour-slot');
+    private pendantSlot = $('#pendant-slot');
+    private ringSlot = $('#ring-slot');
+    private bootsSlot = $('#boots-slot');
 
-    private weaponSlotInfo = $('#weaponSlotInfo');
-    private armourSlotInfo = $('#armourSlotInfo');
+    private weaponSlotInfo = $('#weapon-slot-info');
+    private armourSlotInfo = $('#armour-slot-info');
 
     private slots = [
         this.weaponSlot,
@@ -34,7 +34,7 @@ export default class State extends Page {
     // public loaded = false;
 
     public constructor(private game: Game) {
-        super('#statePage');
+        super('#state-page');
 
         this.player = game.player;
 

@@ -1,11 +1,10 @@
-
 body.game {
     background: #000;
 }
 
 .game {
-    #loadCharacter,
-    #createCharacter,
+    #load-character,
+    #create-character,
     #error {
         display: none;
     }
@@ -23,6 +22,16 @@ body.game {
         opacity: 0;
         transition: 0s opacity linear 0s;
         z-index: 1000;
+    }
+
+    .parchment-left {
+        transition: 0.5s left ease-in-out;
+        left: 41%;
+    }
+
+    .parchment-right {
+        transition: 0.5s right ease-in-out;
+        right: 41%;
     }
 
     &.credits #credits,
@@ -43,35 +52,20 @@ body.game {
             transition: 0.5s opacity linear 0s;
             z-index: 1000;
         }
-    }
 
-    .parchment-left {
-        transition: 0.5s left ease-in-out;
-        left: 41%;
-    }
-
-    .parchment-right {
-        transition: 0.5s right ease-in-out;
-        right: 41%;
-    }
-
-    .parchment-middle {
-        transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out, 0.5s background-position ease-in-out;
-        width: 0;
-        margin-left: 0;
-    }
-
-    &.credits,
-    &.about,
-    &.death,
-    &.git {
-        .parchment-left{
+        .parchment-left {
             left: 0;
         }
 
         .parchment-right {
             right: 0;
         }
+    }
+
+    .parchment-middle {
+        transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out, 0.5s background-position ease-in-out;
+        width: 0;
+        margin-left: 0;
     }
 
     #container {
