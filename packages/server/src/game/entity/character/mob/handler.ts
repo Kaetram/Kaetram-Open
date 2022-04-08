@@ -3,7 +3,6 @@ import type Mob from './mob';
 import Utils from '@kaetram/common/util/utils';
 import Map from '../../../map/map';
 import World from '../../../world';
-import Entities from '@kaetram/server/src/controllers/entities';
 import Character from '../character';
 import log from '@kaetram/common/util/log';
 
@@ -14,14 +13,12 @@ import log from '@kaetram/common/util/log';
 
 export default class Handler {
     private world: World;
-    private entities: Entities;
     private map: Map;
 
     private plateauLevel: number;
 
     public constructor(private mob: Mob) {
         this.world = this.mob.world;
-        this.entities = this.world.entities;
         this.map = this.world.map;
 
         // Store the original plateau level.
@@ -29,6 +26,7 @@ export default class Handler {
 
         this.mob.onMovement(this.handleMovement.bind(this));
         this.mob.onHit(this.handleHit.bind(this));
+        this.mob.onDeath(this.handleDeath.bind(this));
         this.mob.onRespawn(this.handleRespawn.bind(this));
         this.mob.onRoaming(this.handleRoaming.bind(this));
         this.mob.onForceTalk(this.handleForceTalk.bind(this));
@@ -46,11 +44,27 @@ export default class Handler {
      * Callback for whenever a mob gets hit.
      */
 
-    private handleHit(attacker: Character): void {
-        if (this.mob.dead) return;
-        if (this.mob.combat.started) return;
+    private handleHit(damage: number, attacker?: Character): void {
+        if (this.mob.dead || this.mob.combat.started) return;
 
-        this.mob.combat.begin(attacker);
+        if (attacker) this.mob.combat.begin(attacker);
+    }
+
+    /**
+     * Callback for when a death occurs and who the last attacker was.
+     */
+
+    private handleDeath(attacker?: Character): void {
+        // Spawn item drops.
+        let drop = this.mob.getDrop();
+
+        if (drop) this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count);
+
+        this.world.entities.remove(this.mob);
+
+        this.mob.destroy();
+
+        if (attacker?.isPlayer()) attacker.addExperience(this.mob.experience);
     }
 
     /**
@@ -59,8 +73,9 @@ export default class Handler {
 
     private handleRespawn(): void {
         this.mob.dead = false;
+        this.mob.hitPoints.reset();
 
-        this.entities.addMob(this.mob);
+        this.world.entities.addMob(this.mob);
     }
 
     /**

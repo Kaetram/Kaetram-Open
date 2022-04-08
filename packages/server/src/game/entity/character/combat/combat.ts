@@ -88,17 +88,11 @@ export default class Combat {
 
         this.lastAction = Date.now();
 
-        this.attackLoop = setInterval(() => {
-            this.parseAttack();
-        }, this.character.attackRate);
+        this.attackLoop = setInterval(() => this.parseAttack(), this.character.attackRate);
 
-        this.followLoop = setInterval(() => {
-            this.parseFollow();
-        }, 400);
+        this.followLoop = setInterval(() => this.parseFollow(), 400);
 
-        this.checkLoop = setInterval(() => {
-            this.parseCheck();
-        }, 1000);
+        this.checkLoop = setInterval(() => this.parseCheck(), 1000);
 
         this.started = true;
     }
@@ -124,6 +118,8 @@ export default class Combat {
 
     private parseAttack(): void {
         if (!this.world || !this.queue || this.character.stunned) return;
+
+        if (this.character.target?.isDead()) return this.character.removeTarget();
 
         if (this.character.target && this.inProximity()) {
             if (this.character.target && !this.character.target.isDead())
@@ -388,7 +384,7 @@ export default class Combat {
                 })
             });
 
-            this.world.handleDamage(character, target, hitInfo.damage);
+            target.hit(hitInfo.damage, character);
         }
 
         character.damageCallback?.(target, hitInfo);
@@ -433,9 +429,7 @@ export default class Combat {
     }
 
     public forEachAttacker(callback: (attacker: Character) => void): void {
-        _.each(this.attackers, (attacker) => {
-            callback(attacker);
-        });
+        _.each(this.attackers, callback);
     }
 
     public onForget(callback: () => void): void {

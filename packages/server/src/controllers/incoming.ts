@@ -497,7 +497,8 @@ export default class Incoming {
 
                 if (!target || target.dead || !projectile) return;
 
-                this.world.handleDamage(projectile.owner, target, projectile.damage);
+                target.hit(projectile.damage);
+
                 this.entities.remove(projectile);
 
                 if (target.combat.started || target.dead || target.isMob()) return;
