@@ -26,14 +26,14 @@ export default class App {
 
     private loginButton = $('#login');
     // private createButton = $('#play');
-    private registerButton = $('#newAccount');
+    private registerButton = $('#new-account');
     private helpButton = $('#helpButton');
-    private cancelButton = $('#cancelButton');
+    private cancelButton = $('#cancel-button');
     private loading = $('.loader');
 
     private respawn = $('#respawn');
 
-    private rememberMe = $('#rememberMe input');
+    private rememberMe = $('#remember-me input');
     private guest = $('#guest input');
 
     private about = $('#toggle-about');
@@ -88,9 +88,9 @@ export default class App {
             this.login();
         });
 
-        registerButton.on('click', () => this.openScroll('loadCharacter', 'createCharacter'));
+        registerButton.on('click', () => this.openScroll('load-character', 'create-character'));
 
-        cancelButton.on('click', () => this.openScroll('createCharacter', 'loadCharacter'));
+        cancelButton.on('click', () => this.openScroll('create-character', 'load-character'));
 
         parchment.on('click', () => {
             if (
@@ -99,7 +99,7 @@ export default class App {
                 parchment.hasClass('git')
             ) {
                 parchment.removeClass('about credits git');
-                this.displayScroll('loadCharacter');
+                this.displayScroll('load-character');
             }
         });
 
@@ -157,7 +157,7 @@ export default class App {
         $(document).on('mousemove', (event: JQuery.MouseMoveEvent<Document>) => {
             let { game } = this;
 
-            if (!game || !game.input || !game.started || event.target.id !== 'textCanvas') return;
+            if (!game || !game.input || !game.started || event.target.id !== 'text-canvas') return;
 
             game.input.setCoords(event);
             game.input.moveCursor();
@@ -278,7 +278,7 @@ export default class App {
 
             if (content !== 'about') helpButton.removeClass('active');
         } else if (state !== 'animate')
-            this.openScroll(state, state === content ? 'loadCharacter' : content);
+            this.openScroll(state, state === content ? 'load-character' : content);
     }
 
     private verifyForm(): boolean {
@@ -287,7 +287,7 @@ export default class App {
         if (activeForm === 'null') return false;
 
         switch (activeForm) {
-            case 'loadCharacter': {
+            case 'load-character': {
                 let nameInput: JQuery<HTMLInputElement> = $('#loginNameInput'),
                     passwordInput: JQuery<HTMLInputElement> = $('#loginPasswordInput');
 
@@ -306,7 +306,7 @@ export default class App {
                 break;
             }
 
-            case 'createCharacter': {
+            case 'create-character': {
                 let characterName: JQuery<HTMLInputElement> = $('#registerNameInput'),
                     registerPassword: JQuery<HTMLInputElement> = $('#registerPasswordInput'),
                     registerPasswordConfirmation: JQuery<HTMLInputElement> = $(
@@ -382,7 +382,7 @@ export default class App {
         }).appendTo('.validation-summary');
 
         $('.status').append(
-            '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>'
+            '<span class="loader-dot">.</span><span class="loader-dot">.</span><span class="loader-dot">.</span>'
         );
     }
 
@@ -408,7 +408,7 @@ export default class App {
 
     public cleanErrors(): void {
         let activeForm = this.getActiveForm(),
-            fields = activeForm === 'loadCharacter' ? this.loginFields : this.registerFields;
+            fields = activeForm === 'load-character' ? this.loginFields : this.registerFields;
 
         for (let i = 0; i < fields.length; i++) fields[i].removeClass('field-error');
 
@@ -417,11 +417,11 @@ export default class App {
     }
 
     private getActiveForm() {
-        return this.parchment[0].className as 'null' | 'loadCharacter' | 'createCharacter';
+        return this.parchment[0].className as 'null' | 'load-character' | 'create-character';
     }
 
     public isRegistering(): boolean {
-        return this.getActiveForm() === 'createCharacter';
+        return this.getActiveForm() === 'create-character';
     }
 
     public isGuest(): boolean {
@@ -452,7 +452,7 @@ export default class App {
 
         if (message) {
             let dots =
-                '<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span>';
+                '<span class="loader-dot">.</span><span class="loader-dot">.</span><span class="loader-dot">.</span>';
 
             loading.html(message + dots);
         } else loading.html('');
