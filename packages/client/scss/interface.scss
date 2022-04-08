@@ -69,30 +69,30 @@
     }
 }
 
-.itemSlot {
+.item-slot {
     background-color: rgb(0 0 0 / 50%);
 }
 
-.itemCount,
-.inventoryItemCount {
-    font-family: 'AdvoCut', sans-serif;
+.item-count,
+.inventory-item-count {
+    font-family: AdvoCut, sans-serif;
     color: rgb(255 255 255 / 100%);
 }
 
-#actionContainer {
+#action-container {
     background-color: rgb(0 0 0 / 10%);
     position: absolute;
     display: none;
     cursor: hand;
 }
 
-.actionButton {
+.action-button {
     width: 128px;
     height: 32px;
     font-size: 20px;
     background-color: rgb(0 0 0 / 30%);
     border: 1px solid #707070;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     vertical-align: middle;
     line-height: normal;
     text-align: center;
@@ -112,8 +112,8 @@
     }
 }
 
-#dropDialog {
-    font-family: 'AdvoCut', sans-serif;
+#drop-dialog {
+    font-family: AdvoCut, sans-serif;
     font-size: 16px;
     color: #e3e3e3;
     position: absolute;
@@ -127,28 +127,25 @@
     display: none;
 }
 
-#dropCount {
-    font-family: 'AdvoCut', sans-serif;
+#drop-count {
+    font-family: AdvoCut, sans-serif;
 }
 
-#dropDialog.active {
+#drop-dialog.active {
     display: block;
 }
 
-#dropTitle {
+#drop-title {
     text-align: center;
     margin-bottom: 10px;
 }
 
-#dropAccept,
-#dropCancel {
+#drop-accept,
+#drop-cancel {
     background-color: rgb(120 120 120 / 30%);
     cursor: pointer;
     font-size: 18px;
-}
 
-#dropAccept,
-#dropCancel {
     &:hover {
         background-color: rgb(120 120 120 / 40%);
     }
@@ -159,9 +156,8 @@
     }
 }
 
-
-#profileDialog,
-#settingsPage {
+#profile-dialog,
+#settings-page {
     right: 0;
     bottom: 45px;
     display: none;
@@ -184,7 +180,7 @@
 }
 
 #texts {
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     position: absolute;
     float: left;
     left: 10%;
@@ -225,7 +221,7 @@
     text-align: center;
 }
 
-#checkMarks {
+#check-marks {
     position: absolute;
     float: right;
     right: 10%;
@@ -238,16 +234,16 @@
     position: absolute;
 }
 
-#soundCheck,
-#cameraCheck,
-#debugCheck,
-#centreCheck,
-#nameCheck,
-#levelCheck {
+#sound-check,
+#camera-check,
+#debug-check,
+#centre-check,
+#name-check,
+#level-check {
     left: 50%;
 }
 
-#attackInfo {
+#attack-info {
     display: none;
     position: absolute;
     left: 40%;
@@ -257,7 +253,7 @@
     .health {
         position: absolute;
         text-align: center;
-        font-family: 'AdvoCut', sans-serif;
+        font-family: AdvoCut, sans-serif;
         color: white;
     }
 
@@ -269,7 +265,7 @@
     .details {
         overflow: hidden;
         text-align: center;
-        font-family: 'AdvoCut', sans-serif;
+        font-family: AdvoCut, sans-serif;
         color: white;
         width: 100%;
     }
@@ -289,39 +285,39 @@
     cursor: default;
 }
 
-#bankContainer {
+#bank-container {
     float: right;
 }
 
-#bankInventoryContainer,
-#enchantContainer {
+#bank-inventory-container,
+#enchant-container {
     float: left;
 }
 
-#bankSlots {
+#bank-slot {
     position: absolute;
     top: 9%;
 }
 
-.inventorySlots {
+.inventory-slots {
     position: absolute;
     top: 13%;
     left: 6%;
 }
 
-#shopInventorySlots {
+#shop-inventory-slots {
     left: 14%;
 }
 
-#enchantInventorySlots {
+#enchant-inventory-slots {
     left: 13%;
 }
 
-.bankSlot {
+.bank-slot {
     float: left;
 }
 
-.bankImage {
+.bank-image {
     width: 100%;
     height: 100%;
     background-size: 600%;
@@ -342,33 +338,33 @@
     left: 20%;
 }
 
-#tradePlayerContainer,
-#tradeOPlayerContainer {
+#trade-player-container,
+#trade-o-player-container {
     position: relative;
     float: left;
     top: 24%;
 }
 
-#tradePlayerContainer {
+#trade-player-container {
     left: 5%;
 }
 
-#tradeOPlayerContainer {
+#trade-o-player-container {
     left: 12.5%;
 }
 
-#enchantSelectedItem,
-#enchantShards {
+#enchant-selected-item,
+#enchant-shards {
     position: absolute;
     top: 80%;
     background-size: 600%;
 }
 
-#enchantSelectedItem {
+#enchant-selected-item {
     left: 11%;
 }
 
-#enchantShards {
+#enchant-shards {
     left: 34%;
 }
 
@@ -384,7 +380,7 @@
 
 #message {
     position: absolute;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     left: 42%;
     top: 48%;
     pointer-events: none;
@@ -400,12 +396,12 @@
     left: 0;
 }
 
-.skillSlot {
+.skill-slots {
     position: relative;
     float: left;
 }
 
-#questList {
+#quest-list {
     position: absolute;
     top: 50%;
     left: 8%;
@@ -417,15 +413,15 @@
     background-color: transparent; // Make scrollbar transparent
 }
 
-#achievementList,
-#professionsList {
+#achievement-list,
+#professions-list {
     position: absolute;
     top: 6%;
     left: 8%;
     overflow: auto;
 }
 
-#abilityShortcut ul {
+#ability-shortcut ul {
     overflow: hidden;
     padding: 0;
     list-style-type: none;
@@ -439,15 +435,15 @@
     }
 }
 
-.questItem,
-.professionItem {
-    font-family: 'AdvoCut', sans-serif;
+.quest-item,
+.profession-item {
+    font-family: AdvoCut, sans-serif;
     width: 100%;
     height: 10%;
 }
 
-.questName,
-.professionName {
+.quest-name,
+.profession-name {
     width: 98%;
     text-align: center;
     float: left;
@@ -459,25 +455,25 @@
     font-size: 22px;
 }
 
-#achievementCount,
-#questCount {
+#achievement-count,
+#quest-count {
     float: right;
     right: 3%;
     position: absolute;
     color: white;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     text-align: center;
 }
 
-#achievementCount {
+#achievement-count {
     top: 1%;
 }
 
-#questCount {
+#quest-count {
     top: 45.5%;
 }
 
-#mapFrame {
+#map-frame {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -488,17 +484,17 @@
     z-index: 100;
 }
 
-.mapButton {
+.map-button {
     position: absolute;
     background-position-y: 0;
 }
 
-#closeMapFrame {
+#close-map-frame {
     top: 0;
     left: 95%;
 }
 
-.warpButton {
+.warp-button {
     position: absolute;
 }
 
@@ -510,16 +506,16 @@
     cursor: default;
 }
 
-#shopInventoryContainer {
+#shop-inventory-container {
     position: absolute;
     top: 0;
     right: 100%;
 }
 
-#shopContainer {
+#shop-container {
     overflow-y: scroll;
     position: absolute;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     top: 8%;
     width: 85%;
     height: 80%;
@@ -530,7 +526,7 @@
     }
 }
 
-.shopItem {
+.shop-item {
     display: inline-flex;
     width: 98%;
     height: 5%;
@@ -538,7 +534,7 @@
     border-radius: 10px;
 }
 
-.shopItemImage {
+.shop-item-image {
     width: 32px;
     height: 32px;
     border: 2px solid rgb(0 0 255 / 30%);
@@ -547,29 +543,29 @@
     background-size: 600%;
 }
 
-.shopItemName,
-.shopItemCount,
-.shopItemPrice,
-.shopItemBuy {
+.shop-item-name,
+.shop-item-count,
+.shop-item-price,
+.shop-item-buy {
     position: absolute;
     padding-top: 2%;
     font-size: 12px;
     float: left;
 }
 
-.shopItemName {
+.shop-item-name {
     left: 20%;
 }
 
-.shopItemCount {
+.shop-item-count {
     left: 55%;
 }
 
-.shopItemPrice {
+.shop-item-price {
     left: 65%;
 }
 
-.shopItemBuy {
+.shop-item-buy {
     position: relative;
     border: 2px solid rgb(0 255 0 / 30%);
     border-radius: 30%;
@@ -581,24 +577,24 @@
     }
 }
 
-#playerInfo {
+#player-info {
     position: absolute;
     top: 10px;
     left: 10px;
 }
 
-#healthBarText {
+#health-bar-text {
     vertical-align: middle;
     text-align: center;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
 }
 
-.profileInfo {
+.profile-info {
     position: absolute;
     width: 92px;
     height: 12px;
     line-height: 12px;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     font-size: 6px;
     font-weight: bold;
     text-shadow: 1px 1px #808080;
@@ -606,26 +602,26 @@
     left: 24px;
 }
 
-.profileItemInfo {
+.profile-item-info {
     position: absolute;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     font-size: 12px;
     font-weight: bold;
     pointer-events: none;
 }
 
-#armourSlotInfo {
+#armour-slot-info {
     text-align: right;
 }
 
-#shopSellSlotReturnText,
-#shopSellSlotText,
-#shardsCount {
+#shop-sell-slot-return-text,
+#shop-sell-slot-text,
+#shards-count {
     color: black;
 }
 
-#confirmEnchant,
-#confirmSell {
+#confirm-enchant,
+#confirm-sell {
     top: 80%;
     left: 70%;
 }
@@ -640,7 +636,7 @@
     color: white;
     cursor: pointer;
     font-size: 1em;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     border: 1px solid #555;
     border-radius: 5px;
     background-color: #d83a39;
@@ -714,20 +710,20 @@
     transition: 0.7s top ease;
 }
 
-#notificationTextTitle {
+#notification-text-title {
     position: relative;
     top: 25%;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     font-size: 20px;
     text-shadow: 2px 2px #0e0a00;
     text-align: center;
     color: #45ebfc;
 }
 
-#notificationTextDescription {
+#notification-text-description {
     position: relative;
     top: 25%;
-    font-family: 'AdvoCut', sans-serif;
+    font-family: AdvoCut, sans-serif;
     font-size: 14px;
     text-shadow: 2px 2px #0e0a00;
     text-align: center;
@@ -735,11 +731,11 @@
     margin-top: 10px;
 }
 
-#chatButton,
-#inventoryButton,
-#profileButton,
-#settingsButton,
-#warpButton {
+#chat-button,
+#inventory-button,
+#profile-button,
+#settings-button,
+#warp-button {
     position: relative;
     width: 42px;
     height: 45px;
@@ -747,7 +743,7 @@
     background-position-y: -942px;
 }
 
-#chatButton {
+#chat-button {
     background-position: -588px -987px;
 
     &:hover {
@@ -759,8 +755,7 @@
     }
 }
 
-
-#inventoryButton {
+#inventory-button {
     background-position-x: -588px;
 
     &:hover {
@@ -772,7 +767,7 @@
     }
 }
 
-#profileButton {
+#profile-button {
     background-position-x: -714px;
 
     &:hover {
@@ -784,7 +779,7 @@
     }
 }
 
-#settingsButton {
+#settings-button {
     background-position-x: -1218px;
 
     &:hover {
@@ -796,7 +791,7 @@
     }
 }
 
-#warpButton {
+#warp-button {
     background-position-x: -966px;
 
     &:hover {
@@ -809,7 +804,7 @@
 }
 
 @each $size, $i in media.$sizes {
-    @media($size) {
+    @media ($size) {
         #notification {
             width: 216px * $i;
             height: 34px * $i;
@@ -833,73 +828,73 @@
             background: url('/img/#{$i}/containers.png') -334px * $i -47px * $i;
         }
 
-        #abilityShortcut {
+        #ability-shortcut {
             width: 122px * $i;
             height: 20px * $i;
             top: 240px * $i;
             background-image: url('/img/#{$i}/skillslots.png');
         }
 
-        #actionContainer {
+        #action-container {
             width: 64px * $i;
             height: 32px * $i;
         }
 
-        .actionButton {
+        .action-button {
             border-radius: 3px * $i;
             border-width: 1px * $i;
         }
 
-        #statePage {
+        #state-page {
             background: url('/img/#{$i}/characterdialogsheet.png') 0 0;
             display: block;
         }
 
-        #skillPage {
+        #skill-page {
             background: url('/img/#{$i}/characterdialogsheet.png') -124px * $i 0;
             display: none;
         }
 
-        #settingsPage {
+        #settings-page {
             background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i 0;
             display: none;
         }
 
-        #questPage {
+        #quest-page {
             background: url('/img/#{$i}/characterdialogsheet.png') -372px * $i 0;
             display: none;
         }
 
-        #guildPage {
+        #guild-page {
             background: url('/img/#{$i}/characterdialogsheet.png') -496px * $i 0;
             display: none;
         }
 
-        #professionsPage {
+        #professions-page {
             background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
             display: none;
         }
 
-        #profileDialog,
+        #profile-dialog,
         .page {
             width: 124px * $i;
             height: 217px * $i;
             position: absolute;
         }
 
-        .profileSlot {
+        .profile-slot {
             background-position: 0 0;
             position: absolute;
             width: 16px * $i;
             height: 15px * $i;
         }
 
-        .profileInfo {
+        .profile-info {
             position: absolute;
             width: 92px * $i;
             height: 12px * $i;
             line-height: 12px * $i;
-            font-family: 'AdvoCut', sans-serif;
+            font-family: AdvoCut, sans-serif;
             font-size: 6px * $i;
             font-weight: bold;
             text-shadow: 1px 1px #808080;
@@ -907,51 +902,51 @@
             left: 24px * $i;
         }
 
-        #weaponSlotInfo {
+        #weapon-slot-info {
             top: 123px * $i;
             left: 22px;
         }
 
-        #armourSlotInfo {
+        #armour-slot-info {
             width: 102px * $i;
             top: 123px * $i;
             text-align: right;
         }
 
-        #weaponSlot {
+        #weapon-slot {
             left: 4px * $i;
             top: 120px * $i;
         }
 
-        #armourSlot {
+        #armour-slot {
             left: 104px * $i;
             top: 119px * $i;
         }
 
-        #pendantSlot {
+        #pendant-slot {
             left: 54px * $i;
             top: 78px * $i;
         }
 
-        #ringSlot {
+        #ring-slot {
             left: 27px * $i;
             top: 172px * $i;
         }
 
-        #bootsSlot {
+        #boots-slot {
             left: 82px * $i;
             top: 173px * $i;
         }
 
-        #profileName {
+        #profile-name {
             top: 8px * $i;
         }
 
-        #profileLevel {
+        #profile-level {
             top: 29px * $i;
         }
 
-        #profileExperience {
+        #profile-experience {
             top: 50px * $i;
         }
 
@@ -972,7 +967,7 @@
             top: 41px * $i;
         }
 
-        #checkMarks {
+        #check-marks {
             width: 40px * $i;
             height: 120px * $i;
         }
@@ -1048,31 +1043,31 @@
             }
         }
 
-        #soundCheck {
+        #sound-check {
             top: 3px * $i;
         }
 
-        #cameraCheck {
+        #camera-check {
             top: 23px * $i;
         }
 
-        #debugCheck {
+        #debug-check {
             top: 44px * $i;
         }
 
-        #centreCheck {
+        #centre-check {
             top: 62px * $i;
         }
 
-        #nameCheck {
+        #name-check {
             top: 82px * $i;
         }
 
-        #levelCheck {
+        #level-check {
             top: 102px * $i;
         }
 
-        #attackInfo {
+        #attack-info {
             width: 100px * $i;
             height: 25px * $i;
             top: 0;
@@ -1149,40 +1144,40 @@
             height: 167px * $i;
         }
 
-        #bankContainer,
-        #bankInventoryContainer {
+        #bank-container,
+        #bank-inventory-container {
             background-image: url('/img/#{$i}/bank.png');
         }
 
-        #enchantContainer {
+        #enchant-container {
             background-image: url('/img/#{$i}/containers.png');
         }
 
-        #bankContainer {
+        #bank-container {
             width: 171px * $i;
             height: 167px * $i;
             background-position: -132px * $i 0;
         }
 
-        #bankSlots {
+        #bank-slot {
             width: 144px * $i;
             height: 120px * $i;
             left: 143px * $i;
         }
 
-        #bankInventoryContainer,
-        #enchantContainer {
+        #bank-inventory-container,
+        #enchant-container {
             width: 129px * $i;
             height: 127px * $i;
             background-position: 0 0;
         }
 
-        .inventorySlots {
+        .inventory-slots {
             width: 96px * $i;
             height: 80px * $i;
         }
 
-        .bankSlot {
+        .bank-slot {
             width: 16px * $i;
             height: 15px * $i;
             background: url('/img/#{$i}/containers.png') -300px * $i -172px * $i;
@@ -1197,13 +1192,13 @@
             margin-top: -77px * $i;
         }
 
-        #enchantSelectedItem,
-        #enchantShards {
+        #enchant-selected-item,
+        #enchant-shards {
             width: 16px * $i;
             height: 15px * $i;
         }
 
-        #shardsCount {
+        #shards-count {
             width: 16px * $i;
         }
 
@@ -1212,19 +1207,19 @@
             height: 23px * $i;
         }
 
-        #professionsList {
+        #professions-list {
             width: 106px * $i;
             height: 179px * $i;
         }
 
-        #achievementCount,
-        #questCount {
+        #achievement-count,
+        #quest-count {
             font-size: 8px * $i;
             width: 30px * $i;
             height: 8px * $i;
         }
 
-        #mapFrame {
+        #map-frame {
             width: 270px * $i;
             height: 180px * $i;
             background-image: url('/img/#{$i}/mapframe.png');
@@ -1232,7 +1227,7 @@
             margin-top: -90px * $i;
         }
 
-        .mapButton {
+        .map-button {
             width: 15px * $i;
             height: 16px * $i;
         }
@@ -1243,31 +1238,31 @@
             background: url('/img/#{$i}/containers.png') -129px * $i -22px * $i;
         }
 
-        #shopInventoryContainer {
+        #shop-inventory-container {
             width: 129px * $i;
             height: 155px * $i;
             background: url('/img/#{$i}/containers.png') 0 0;
         }
 
-        #shopSellSlot,
-        #shopSellSlotReturn {
+        #shop-sell-slot,
+        #shop-sell-slot-return {
             position: absolute;
             width: 16px * $i;
             height: 16px * $i;
             top: 123px * $i;
         }
 
-        #shopSellSlot {
+        #shop-sell-slot {
             left: 14px * $i;
         }
 
-        #shopSellSlotReturn {
+        #shop-sell-slot-return {
             left: 44px * $i;
         }
 
-        #shopSellSlotReturnText,
-        #shopSellSlotText,
-        #shardsCount {
+        #shop-sell-slot-return-text,
+        #shop-sell-slot-text,
+        #shards-count {
             margin-top: 19px * $i;
         }
     }
@@ -1284,7 +1279,7 @@
         border: 3px solid #373737;
     }
 
-    .itemSlot {
+    .item-slot {
         width: 48px;
         height: 48px;
         margin-left: 3px;
@@ -1302,8 +1297,8 @@
         }
     }
 
-    .itemCount,
-    .inventoryItemCount {
+    .item-count,
+    .inventory-item-count {
         width: 48px;
         height: 21px;
         font-size: 18px;
@@ -1312,17 +1307,17 @@
         margin-top: -21px;
     }
 
-    .actionButton {
+    .action-button {
         width: 192px;
         height: 48px;
     }
 
-    #profileDialog {
+    #profile-dialog {
         bottom: 45px;
         right: 34px;
     }
 
-    .profileItemInfo {
+    .profile-item-info {
         font-size: 24px;
     }
 
@@ -1350,26 +1345,26 @@
         }
     }
 
-    #questList,
-    #achievementList {
+    #quest-list,
+    #achievement-list {
         width: 318px;
         height: 246px;
     }
 
-    .skillSlot {
+    .skill-slots {
         width: 48px;
         height: 48px;
     }
 
-    .questName,
-    .professionName {
+    .quest-name,
+    .profession-name {
         border-radius: 12px;
     }
 
-    .shopItemName,
-    .shopItemCount,
-    .shopItemPrice,
-    .shopItemBuy {
+    .shop-item-name,
+    .shop-item-count,
+    .shop-item-price,
+    .shop-item-buy {
         font-size: 16px;
     }
 
@@ -1385,7 +1380,7 @@
         text-align: center;
     }
 
-    #healthBar {
+    #health-bar {
         position: absolute;
         top: 0;
         left: 0;
@@ -1411,7 +1406,7 @@
         padding: 0;
     }
 
-    #expBar {
+    #exp-bar {
         position: absolute;
         width: 228px;
         height: 15px;
@@ -1422,18 +1417,18 @@
         left: 36px;
     }
 
-    #healthBarText {
+    #health-bar-text {
         margin: 10px 0 0 30px;
         font-size: 18px;
     }
 }
 
 @media (--md) {
-    #notificationTextTitle {
+    #notification-text-title {
         font-size: 18px;
     }
 
-    #notificationTextDescription {
+    #notification-text-description {
         font-size: 12px;
     }
 
@@ -1444,22 +1439,21 @@
         background: url('/img/2/containers.png') -601px 0;
     }
 
+    .ok {
+        width: 28px;
+        height: 28px;
+        background-position: -762px -122px;
+    }
+
     .ok,
     .done {
         width: 27px;
         height: 14px;
         background: url('/img/2/containers.png') -642px -108px;
 
-
         &:hover {
             background-position: -642px -108px;
         }
-    }
-
-    .ok {
-        width: 28px;
-        height: 28px;
-        background-position: -762px -122px;
     }
 
     #cancel {
@@ -1479,7 +1473,7 @@
         border: 2px solid #373737;
     }
 
-    .itemSlot {
+    .item-slot {
         width: 32px;
         height: 32px;
         margin-left: 2px;
@@ -1498,8 +1492,8 @@
         }
     }
 
-    .itemCount,
-    .inventoryItemCount {
+    .item-count,
+    .inventory-item-count {
         width: 32px;
         height: 14px;
         font-size: 12px;
@@ -1508,12 +1502,12 @@
         margin-top: -14px;
     }
 
-    #profileDialog {
+    #profile-dialog {
         bottom: 45px;
         right: 70px;
     }
 
-    .profileItemInfo {
+    .profile-item-info {
         font-size: 18px;
     }
 
@@ -1523,8 +1517,8 @@
         background: url('/img/2/trade.png') 0 0;
     }
 
-    #tradePlayerContainer,
-    #tradeOPlayerContainer {
+    #trade-player-container,
+    #trade-o-player-container {
         width: 206px;
         height: 186px;
     }
@@ -1552,20 +1546,20 @@
         height: 46px;
     }
 
-    #questList,
-    #achievementList {
+    #quest-list,
+    #achievement-list {
         width: 212px;
         height: 164px;
     }
 
-    .skillSlot {
+    .skill-slots {
         width: 32px;
         height: 32px;
         background-image: url('/img/2/skillicons.png');
     }
 
-    .questName,
-    .professionName {
+    .quest-name,
+    .profession-name {
         font-size: 20px;
         border-radius: 8px;
     }
@@ -1582,7 +1576,7 @@
         text-align: center;
     }
 
-    #healthBar {
+    #health-bar {
         position: absolute;
         top: 0;
         left: 0;
@@ -1597,7 +1591,7 @@
         background-position: 0 -556px;
     }
 
-    #healthBarText {
+    #health-bar-text {
         margin: 5px 0 0 20px;
     }
 
@@ -1612,7 +1606,7 @@
         padding: 0;
     }
 
-    #expBar {
+    #exp-bar {
         position: absolute;
         width: 152px;
         height: 9px;
@@ -1658,19 +1652,19 @@
         }
     }
 
-    #profileDialog {
+    #profile-dialog {
         transform: scale(1.5);
         bottom: 99px;
         right: 122px;
     }
 
-    #settingsPage {
+    #settings-page {
         transform: scale(1.5);
         right: 31px;
         bottom: 99px;
     }
 
-    .profileItemInfo {
+    .profile-item-info {
         font-size: 8px;
     }
 
@@ -1682,29 +1676,29 @@
         transform: scale(1.5);
     }
 
-    #questList,
-    #achievementList {
+    #quest-list,
+    #achievement-list {
         width: 104px;
         height: 82px;
     }
 
-    .skillSlot {
+    .skill-slots {
         width: 16px;
         height: 16px;
     }
 
-    .questName,
-    .professionName {
+    .quest-name,
+    .profession-name {
         border: 1px solid #373737;
         font-size: 10px;
         border-radius: 4px;
     }
 
-    #mapFrame {
+    #map-frame {
         transform: scale(1.6);
     }
 
-    #closeMapFrame {
+    #close-map-frame {
         top: -6px;
         left: 90%;
     }
@@ -1715,30 +1709,30 @@
         transform: scale(1.5);
     }
 
-    #shopContainer ul li {
+    #shop-container ul li {
         padding-top: 1px;
         padding-bottom: 1px;
     }
 
-    .shopItem {
+    .shop-item {
         width: 97%;
         border: 1.5px solid rgb(255 255 0 / 30%);
         border-radius: 7px;
     }
 
-    .shopItemImage {
+    .shop-item-image {
         width: 16px;
         height: 16px;
         border: 1px solid rgb(0 0 255 / 30%);
     }
 
-    .shopItemName,
-    .shopItemCount,
-    .shopItemPrice {
+    .shop-item-name,
+    .shop-item-count,
+    .shop-item-price {
         font-size: 7px;
     }
 
-    .shopItemBuy {
+    .shop-item-buy {
         position: relative;
         float: left;
         border: 1px solid rgb(0 255 0 / 30%);
@@ -1746,7 +1740,7 @@
         font-size: 6px;
     }
 
-    .itemCount {
+    .item-count {
         width: 16px;
         height: 7px;
         font-size: 7px;

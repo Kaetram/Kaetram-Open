@@ -6,11 +6,11 @@ export default class Header {
     private player;
 
     private health = $('#health');
-    private healthBar = $('#healthBar');
-    private healthBarText = $('#healthBarText');
+    private healthBar = $('#health-bar');
+    private healthBarText = $('#health-bar-text');
 
     private exp = $('#exp');
-    private expBar = $('#expBar');
+    private expBar = $('#exp-bar');
 
     public constructor(private game: Game) {
         this.player = game.player;
@@ -29,7 +29,7 @@ export default class Header {
     private calculateHealthBar(): void {
         let scale = this.getScale(),
             width = this.healthBar.width()!,
-            // 11 is due to the offset of the #health in the #healthBar
+            // 11 is due to the offset of the #health in the #health-bar
             diff = Math.floor(
                 width * (this.player.hitPoints / this.player.maxHitPoints) - 11 * scale
             ),
