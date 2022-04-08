@@ -6,9 +6,9 @@ import type Game from '../game';
 
 export default class ChatController {
     private chat = $('#chat');
-    private log = $('#chatLog');
-    public input = $('#chatInput');
-    private button = $('#chatButton');
+    private log = $('#chat-log');
+    public input = $('#chat-input');
+    private button = $('#chat-button');
 
     private visible = false;
 

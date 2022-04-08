@@ -12,9 +12,9 @@ import type InputController from './input';
 export default class OverlayController {
     private hovering!: Entity | null;
 
-    private attackInfo = $('#attackInfo');
+    private attackInfo = $('#attack-info');
 
-    // private image = this.attackInfo.find('.image div');
+    // private image = this.attack-info.find('.image div');
     private name = this.attackInfo.find('.name');
     private details = this.attackInfo.find('.details');
     private health = this.attackInfo.find('.health');

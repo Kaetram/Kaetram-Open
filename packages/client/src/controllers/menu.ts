@@ -26,9 +26,9 @@ export default class MenuController {
 
     private notification = $('#notification');
     /** Notification title */
-    private title = $('#notificationTextTitle');
+    private title = $('#notification-text-title');
     /** Notification description */
-    private description = $('#notificationTextDescription');
+    private description = $('#notification-text-description');
 
     private notificationTimeout!: number | null;
 

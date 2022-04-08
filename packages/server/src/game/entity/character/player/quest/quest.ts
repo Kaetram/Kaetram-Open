@@ -254,7 +254,7 @@ export default abstract class Quest {
         let stage = this.stages[this.stage];
 
         return {
-            task: stage.task,
+            task: stage.task!,
             npc: stage.npc! || '',
             mob: stage.mob! || '',
             mobCountRequirement: stage.mobCountRequirement! || 0,

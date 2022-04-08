@@ -26,7 +26,7 @@ export default class Console {
         //         newX: number,
         //         newY: number,
         //         itemId: number,
-        //         itemCount: number;
+        //         item-count: number;
 
         //     switch (command) {
         //         case 'players':
@@ -99,7 +99,7 @@ export default class Console {
 
         //         case 'give':
         //             itemId = parseInt(blocks.shift()!);
-        //             itemCount = parseInt(blocks.shift()!);
+        //             item-count = parseInt(blocks.shift()!);
 
         //             username = blocks.join(' ');
 
@@ -109,7 +109,7 @@ export default class Console {
 
         //             player.inventory.add({
         //                 id: itemId,
-        //                 count: itemCount,
+        //                 count: item-count,
         //                 ability: -1,
         //                 abilityLevel: -1
         //             });

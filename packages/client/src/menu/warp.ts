@@ -5,9 +5,9 @@ import { Packets } from '@kaetram/common/network';
 import type Game from '../game';
 
 export default class Wrap {
-    private mapFrame = $('#mapFrame');
-    private button = $('#warpButton');
-    private close = $('#closeMapFrame');
+    private mapFrame = $('#map-frame');
+    private button = $('#warp-button');
+    private close = $('#close-map-frame');
 
     private warpCount = 0;
 
