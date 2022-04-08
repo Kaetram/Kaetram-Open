@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import config from '@kaetram/common/config';
+import Discord from '@kaetram/common/api/discord';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
@@ -10,7 +11,6 @@ import Shops from '../controllers/shops';
 import Grids from './map/grids';
 import Map from './map/map';
 import API from '../network/api';
-import Discord from '../network/discord';
 import Network from '../network/network';
 import Character from './entity/character/character';
 
@@ -51,10 +51,12 @@ export default class World {
         this.map = new Map(this);
         this.api = new API(this);
         this.shops = new Shops(this);
-        this.discord = new Discord(this);
+        this.discord = new Discord();
         this.entities = new Entities(this);
         this.network = new Network(this);
         this.globalObjects = new GlobalObjects(this);
+
+        this.discord.onMessage(this.globalMessage.bind(this));
 
         this.onConnection(this.network.handleConnection.bind(this.network));
 
@@ -77,12 +79,7 @@ export default class World {
             this.map.regions.parse();
         }, 1000 / config.updateTime);
 
-        if (!config.hubEnabled) return;
-        if (!config.apiEnabled) log.error('Server is in hub-mode but API is not enabled!');
-
-        setIntervalAsync(async () => {
-            this.api.pingHub();
-        }, config.hubPing);
+        if (config.hubEnabled) setIntervalAsync(async () => this.api.pingHub(), config.hubPing);
     }
 
     /**
