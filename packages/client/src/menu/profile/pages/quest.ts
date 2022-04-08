@@ -9,15 +9,15 @@ import type { AchievementData } from '@kaetram/common/types/info';
 import type { QuestFinishData, QuestProgressData } from '@kaetram/common/types/messages';
 
 export default class Quest extends Page {
-    private quests = $('#questList');
+    private quests = $('#quest-list');
     private questList = this.quests.find('ul');
-    private questCount = $('#questCount');
+    private questCount = $('#quest-count');
     private finishedQuests = 0;
     private questsLength = 0;
 
-    private achievements = $('#achievementList');
+    private achievements = $('#achievement-list');
     private achievementsList = this.achievements.find('ul');
-    private achievementsCount = $('#achievementCount');
+    private achievementsCount = $('#achievement-count');
     private finishedAchievements = 0;
     private achievementsLength = 0;
 
@@ -140,12 +140,12 @@ export default class Quest extends Page {
      */
 
     private getItem(isQuest: boolean, key: string): JQuery {
-        return $(`<div id="${isQuest ? 'quest' : 'achievement'}${key}" class="questItem"></div>`);
+        return $(`<div id="${isQuest ? 'quest' : 'achievement'}${key}" class="quest-item"></div>`);
     }
 
     private getName(isQuest: boolean, key: string): JQuery {
         return $(
-            `<div id="${isQuest ? 'quest' : 'achievement'}${key}name" class="questName"></div>`
+            `<div id="${isQuest ? 'quest' : 'achievement'}${key}name" class="quest-name"></div>`
         );
     }
 }

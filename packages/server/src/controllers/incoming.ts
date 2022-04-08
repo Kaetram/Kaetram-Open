@@ -663,13 +663,13 @@ export default class Incoming {
         //     case Opcodes.Bank.Select: {
         //         let isBank = type === 'bank';
         //         if (isBank) {
-        //             let bankSlot = this.player.bank.getInfo(index);
-        //             if (bankSlot.id < 1) return;
+        //             let bank-slot = this.player.bank.getInfo(index);
+        //             if (bank-slot.id < 1) return;
         //             // Infinite stacks move all at once, otherwise move one by one.
-        //             let moveAmount = Items.maxStackSize(bankSlot.id) === -1 ? bankSlot.count : 1;
-        //             bankSlot.count = moveAmount;
-        //             if (this.player.inventory.add(bankSlot))
-        //                 this.player.bank.remove(bankSlot.id, moveAmount, index);
+        //             let moveAmount = Items.maxStackSize(bank-slot.id) === -1 ? bank-slot.count : 1;
+        //             bank-slot.count = moveAmount;
+        //             if (this.player.inventory.add(bank-slot))
+        //                 this.player.bank.remove(bank-slot.id, moveAmount, index);
         //         } else {
         //             let inventorySlot = this.player.inventory.slots[index];
         //             if (inventorySlot.id < 1) return;

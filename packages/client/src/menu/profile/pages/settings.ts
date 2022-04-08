@@ -7,8 +7,8 @@ export default class Settings {
     private storage;
     private renderer;
 
-    private body = $('#settingsPage');
-    private button = $('#settingsButton');
+    private body = $('#settings-page');
+    private button = $('#settings-button');
 
     private volume = $<HTMLInputElement>('#volume');
     private sfx = $<HTMLInputElement>('#sfx');
@@ -16,12 +16,12 @@ export default class Settings {
 
     // info = $('#info');
 
-    private soundCheck = $<HTMLInputElement>('#soundCheck input');
-    private cameraCheck = $<HTMLInputElement>('#cameraCheck input');
-    private debugCheck = $<HTMLInputElement>('#debugCheck input');
-    private centreCheck = $<HTMLInputElement>('#centreCheck input');
-    private nameCheck = $<HTMLInputElement>('#nameCheck input');
-    private levelCheck = $<HTMLInputElement>('#levelCheck input');
+    private soundCheck = $<HTMLInputElement>('#sound-check input');
+    private cameraCheck = $<HTMLInputElement>('#camera-check input');
+    private debugCheck = $<HTMLInputElement>('#debug-check input');
+    private centreCheck = $<HTMLInputElement>('#centre-check input');
+    private nameCheck = $<HTMLInputElement>('#name-check input');
+    private levelCheck = $<HTMLInputElement>('#level-check input');
 
     private loaded = false;
 
@@ -43,8 +43,8 @@ export default class Settings {
             game,
             renderer,
             button,
-            soundCheck,
             audio,
+            soundCheck,
             cameraCheck,
             debugCheck,
             centreCheck,

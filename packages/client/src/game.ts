@@ -125,7 +125,7 @@ export default class Game {
         let background = document.querySelector<HTMLCanvasElement>('#background')!,
             foreground = document.querySelector<HTMLCanvasElement>('#foreground')!,
             overlay = document.querySelector<HTMLCanvasElement>('#overlay')!,
-            textCanvas = document.querySelector<HTMLCanvasElement>('#textCanvas')!,
+            textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!,
             entities = document.querySelector<HTMLCanvasElement>('#entities')!,
             cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
 
@@ -309,7 +309,7 @@ export default class Game {
 
         if (this.getStoragePassword() !== '') loginPassword.val(this.getStoragePassword()!);
 
-        $('#rememberMe').prop('checked', true);
+        $('#remember-me').prop('checked', true);
     }
 
     public findPath(

@@ -11,8 +11,8 @@ import type Game from '../game';
 
 export default class Shop {
     private body = $('#shop');
-    private shop = $('#shopContainer');
-    private inventory = $('#shopInventorySlots');
+    private shop = $('#shop-container');
+    private inventory = $('#shop-inventory-slots');
 
     /**
      * Represents what the player currently has queued for sale
@@ -20,12 +20,12 @@ export default class Shop {
      * The reason for this is because shops are written such that
      * they can handle different currencies.
      */
-    private sellSlot = $('#shopSellSlot');
-    private sellSlotText = $('#shopSellSlotText');
-    private sellSlotReturn = $('#shopSellSlotReturn');
-    private sellSlotReturnText = $('#shopSellSlotReturnText');
+    private sellSlot = $('#shop-sell-slot');
+    private sellSlotText = $('#shop-sell-slot-text');
+    private sellSlotReturn = $('#shop-sell-slot-return');
+    private sellSlotReturnText = $('#shop-sell-slot-return-text');
 
-    private confirmSell = $('#confirmSell');
+    private confirmSell = $('#confirm-sell');
 
     private container!: Container;
     private data!: ShopData;
@@ -68,7 +68,7 @@ export default class Shop {
     public move(info: ShopSelectData): void {
         let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
             slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`),
-            slotText = inventorySlot.find(`#inventoryItemCount${info.slotId}`);
+            slotText = inventorySlot.find(`#inventory-item-count${info.slotId}`);
 
         this.sellSlot.css({
             backgroundImage: slotImage.css('background-image'),
@@ -97,7 +97,7 @@ export default class Shop {
             .find(`#inventoryImage${index}`)
             .css('background-image', this.sellSlot.css('background-image'));
 
-        inventorySlot.find(`#inventoryItemCount${index}`).text(this.sellSlotText.text());
+        inventorySlot.find(`#inventory-item-count${index}`).text(this.sellSlotText.text());
 
         this.sellSlot.css('background-image', '');
         this.sellSlotText.text('');
@@ -131,19 +131,19 @@ export default class Shop {
 
     private load(): void {
         // for (let i = 0; i < this.container.size; i++) {
-        //     let shopItem = $(`<div id="shopItem${i}" class="shopItem"></div>`),
+        //     let shop-item = $(`<div id="shop-item${i}" class="shop-item"></div>`),
         //         string = this.data.strings[i],
         //         name = this.data.names[i],
         //         count = this.data.counts[i],
         //         price = this.data.prices[i];
         //     if (!string || !name || !count) continue;
-        //     let itemImage = $(`<div id="shopItemImage${i}" class="shopItemImage"></div>`),
-        //         itemCount = $(`<div id="shopItemCount${i}" class="shopItemCount"></div>`),
-        //         itemPrice = $(`<div id="shopItemPrice${i}" class="shopItemPrice"></div>`),
-        //         itemName = $(`<div id="shopItemName${i}" class="shopItemName"></div>`),
-        //         itemBuy = $(`<div id="shopItemBuy${i}" class="shopItemBuy"></div>`);
+        //     let itemImage = $(`<div id="shop-item-image${i}" class="shop-item-image"></div>`),
+        //         item-count = $(`<div id="shop-item-count${i}" class="shop-item-count"></div>`),
+        //         itemPrice = $(`<div id="shop-item-price${i}" class="shop-item-price"></div>`),
+        //         itemName = $(`<div id="shop-item-name${i}" class="shop-item-name"></div>`),
+        //         itemBuy = $(`<div id="shop-item-buy${i}" class="shop-item-buy"></div>`);
         //     itemImage.css('background-image', this.container.getImageFormat(string));
-        //     itemCount.html(count.toString());
+        //     item-count.html(count.toString());
         //     itemPrice.html(`${price}g`);
         //     itemName.html(name);
         //     itemBuy.html('Buy');
@@ -154,8 +154,8 @@ export default class Shop {
         //     // Bind the itemBuy to the local buy function.
         //     itemBuy.on('click', (event) => this.buy(event));
         //     let listItem = $('<li></li>');
-        //     shopItem.append(itemImage, itemCount, itemPrice, itemName, itemBuy);
-        //     listItem.append(shopItem);
+        //     shop-item.append(itemImage, item-count, itemPrice, itemName, itemBuy);
+        //     listItem.append(shop-item);
         //     this.getShopList().append(listItem);
         // }
         // let inventoryItems = this.menu.bank.getInventoryList(),

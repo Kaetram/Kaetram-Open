@@ -1,134 +1,143 @@
 {
-  "0": {
-    "id": 0,
-    "name": "Rat Infestation",
-    "description": "Slay 25 rats.",
-    "type": 0,
-    "count": 26,
-    "npc": 2,
-    "mob": 128,
-    "rewardType": 1,
-    "reward": 115,
-    "text": [
-      "Hono dear adventurer!", "Yiss, plz help.",
-      "Rets r al 'round here.", "Plz kill, I hav gift en return."
-    ]
-  },
+    "0": {
+        "id": 0,
+        "name": "Rat Infestation",
+        "description": "Slay 25 rats.",
+        "type": 0,
+        "count": 26,
+        "npc": 2,
+        "mob": 128,
+        "rewardType": 1,
+        "reward": 115,
+        "text": [
+            "Hono dear adventurer!",
+            "Yiss, plz help.",
+            "Rets r al 'round here.",
+            "Plz kill, I hav gift en return."
+        ]
+    },
 
-  "1": {
-    "id": 1,
-    "name": "Lost Watermelon",
-    "description": "Find the lost watermelon for Bulk Bogan.",
-    "type": 1,
-    "count": 2,
-    "mob": -1,
-    "npc": 2,
-    "item": 250,
-    "itemCount": 1,
-    "rewardType": 2,
-    "reward": 400,
-    "text": [
-      "Hoho, hello agen.", "I ned favur, but this lst time.",
-      "I lst watrmln, could u plez find?", "I do'n't kno'w what do to."
-    ]
-  },
+    "1": {
+        "id": 1,
+        "name": "Lost Watermelon",
+        "description": "Find the lost watermelon for Bulk Bogan.",
+        "type": 1,
+        "count": 2,
+        "mob": -1,
+        "npc": 2,
+        "item": 250,
+        "item-count": 1,
+        "rewardType": 2,
+        "reward": 400,
+        "text": [
+            "Hoho, hello agen.",
+            "I ned favur, but this lst time.",
+            "I lst watrmln, could u plez find?",
+            "I do'n't kno'w what do to."
+        ]
+    },
 
-  "2": {
-    "id": 2,
-    "name": "A Crab's Pinch",
-    "description": "Hunt the crabs to extinction.",
-    "type": 0,
-    "count": 41,
-    "npc": 3,
-    "mob": 2,
-    "rewardType": 1,
-    "reward": 750,
-    "text": ["Ay!", "I need some help.", "I can't relax because of those darn crabs.",
-            "See, I know they respawn and stuff.", "But can you kill forty of them?"]
-  },
+    "2": {
+        "id": 2,
+        "name": "A Crab's Pinch",
+        "description": "Hunt the crabs to extinction.",
+        "type": 0,
+        "count": 41,
+        "npc": 3,
+        "mob": 2,
+        "rewardType": 1,
+        "reward": 750,
+        "text": [
+            "Ay!",
+            "I need some help.",
+            "I can't relax because of those darn crabs.",
+            "See, I know they respawn and stuff.",
+            "But can you kill forty of them?"
+        ]
+    },
 
-  "3": {
-    "id": 3,
-    "name": "Maze Crawler",
-    "description": "Find the hidden treasure in the maze.",
-    "rewardType": 1,
-    "reward": 200
-  },
+    "3": {
+        "id": 3,
+        "name": "Maze Crawler",
+        "description": "Find the hidden treasure in the maze.",
+        "rewardType": 1,
+        "reward": 200
+    },
 
-  "4": {
-    "id": 4,
-    "name": "Skeletal Pass",
-    "description": "",
-    "isDoorReward": true
-  },
+    "4": {
+        "id": 4,
+        "name": "Skeletal Pass",
+        "description": "",
+        "isDoorReward": true
+    },
 
-  "5": {
-    "id": 5,
-    "name": "Golem",
-    "description": "",
-    "isDoorReward": true
-  },
+    "5": {
+        "id": 5,
+        "name": "Golem",
+        "description": "",
+        "isDoorReward": true
+    },
 
-  "6": {
-    "id": 6,
-    "name": "Skeleton Boss",
-    "description": "Defeat the skeleton boss.",
-    "isDoorReward": true
-  },
+    "6": {
+        "id": 6,
+        "name": "Skeleton Boss",
+        "description": "Defeat the skeleton boss.",
+        "isDoorReward": true
+    },
 
-  "7": {
-    "id": 7,
-    "name": "Spectre Passage",
-    "description": "",
-    "isDoorReward": true
-  },
+    "7": {
+        "id": 7,
+        "name": "Spectre Passage",
+        "description": "",
+        "isDoorReward": true
+    },
 
-  "8": {
-    "id": 8,
-    "name": "Quite a Mimic",
-    "isDoorReward": true
-  },
+    "8": {
+        "id": 8,
+        "name": "Quite a Mimic",
+        "isDoorReward": true
+    },
 
-  "9": {
-    "id": 9,
-    "name": "Death Gate",
-    "isDoorReward": true
-  },
+    "9": {
+        "id": 9,
+        "name": "Death Gate",
+        "isDoorReward": true
+    },
 
-  "10": {
-    "id": 10,
-    "name": "Elven Path",
-    "isDoorReward": true
-  },
+    "10": {
+        "id": 10,
+        "name": "Elven Path",
+        "isDoorReward": true
+    },
 
-  "11": {
-    "id": 11,
-    "name": "Frozen Knighthood",
-    "isDoorReward": true
-  },
+    "11": {
+        "id": 11,
+        "name": "Frozen Knighthood",
+        "isDoorReward": true
+    },
 
-  "12": {
-    "id": 12,
-    "name": "Hermit Lifestyle",
-    "isDoorReward": true
-  },
+    "12": {
+        "id": 12,
+        "name": "Hermit Lifestyle",
+        "isDoorReward": true
+    },
 
-  "13": {
-    "id": 13,
-    "name": "Frozen Beach",
-    "isDoorReward": true
-  },
+    "13": {
+        "id": 13,
+        "name": "Frozen Beach",
+        "isDoorReward": true
+    },
 
-  "14": {
-    "id": 14,
-    "name": "Gates of Hell",
-    "isDoorReward": true,
-    "rewardType": 1,
-    "reward": 2000
-  },
+    "14": {
+        "id": 14,
+        "name": "Gates of Hell",
+        "isDoorReward": true,
+        "rewardType": 1,
+        "reward": 2000
+    },
 
-  "15": {
-    "id": 15,
-    "name": "Mudwich Path"
-  }
+    "15": {
+        "id": 15,
+        "name": "Mudwich Path"
+    }
 }
