@@ -27,7 +27,10 @@ export default abstract class Character extends Entity {
     /* States */
     public poison = '';
 
-    public target: Character | null = null;
+    // Character that is currently being targeted.
+    public target?: Character | undefined;
+    // List of entities attacking this character.
+    public attackers: Character[] = [];
 
     public weaponLevel!: number;
     public armourLevel!: number;
@@ -43,7 +46,7 @@ export default abstract class Character extends Entity {
     public projectileName = 'projectile-pinearrow';
 
     public lastMovement!: number;
-    public lastAttacker!: Character | null;
+    public lastAttacker?: Character | undefined;
 
     public stunTimeout?: NodeJS.Timeout;
     private healingInterval?: NodeJS.Timeout;
@@ -111,7 +114,7 @@ export default abstract class Character extends Entity {
      */
 
     public removeTarget(): void {
-        this.target = null;
+        this.target = undefined;
     }
 
     /**
@@ -144,7 +147,7 @@ export default abstract class Character extends Entity {
         this.stunCallback?.(stun);
     }
 
-    public setTarget(target: Character | null): void {
+    public setTarget(target: Character | undefined): void {
         this.target = target;
     }
 
