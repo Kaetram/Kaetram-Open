@@ -47,7 +47,7 @@ export default class Handler {
     private handleHit(damage: number, attacker?: Character): void {
         if (this.mob.dead || this.mob.combat.started) return;
 
-        if (attacker) this.mob.combat.begin(attacker);
+        //if (attacker) this.mob.combat.begin(attacker);
     }
 
     /**
