@@ -487,10 +487,10 @@ export default class Handler {
             return;
         }
 
-        let hit = new Hit(Modules.Hits.Poison, damage);
+        // let hit = new Hit(Modules.Hits.Poison, damage);
 
-        hit.poison = true;
+        // hit.poison = true;
 
-        this.player.combat.hit(this.player, this.player, hit.getData());
+        // this.player.combat.hit(this.player, this.player, hit.getData());
     }
 }
