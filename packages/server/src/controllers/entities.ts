@@ -145,24 +145,25 @@ export default class Entities {
     }
 
     public spawnProjectile([attacker, target]: Character[]): Projectile | null {
-        if (!attacker || !target) return null;
+        return null;
+        // if (!attacker || !target) return null;
 
-        let type = attacker.getProjectile(),
-            hit = null,
-            projectile = new Projectile(type, attacker, target);
+        // let type = attacker.getProjectile(),
+        //     hit = null,
+        //     projectile = new Projectile(type, attacker, target);
 
-        if (attacker.isPlayer()) {
-            let player = attacker as Player;
+        // if (attacker.isPlayer()) {
+        //     let player = attacker as Player;
 
-            hit = player.getHit(target);
-        }
+        //     hit = player.getHit(target);
+        // }
 
-        projectile.damage = hit ? hit.damage : Formulas.getDamage(attacker, target, true);
-        projectile.hitType = hit ? hit.type : Modules.Hits.Damage;
+        // projectile.damage = hit ? hit.damage : Formulas.getDamage(attacker, target, true);
+        // projectile.hitType = hit ? hit.type : Modules.Hits.Damage;
 
-        this.addProjectile(projectile);
+        // this.addProjectile(projectile);
 
-        return projectile;
+        // return projectile;
     }
 
     /**
