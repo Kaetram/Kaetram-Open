@@ -1,3 +1,4 @@
+import log from '@kaetram/common/util/log';
 import type Mob from '../../entity/character/mob/mob';
 import type Player from '../../entity/character/player/player';
 import type Chest from '../../entity/objects/chest';
@@ -51,6 +52,11 @@ export default class Area {
         public height: number
     ) {}
 
+    /**
+     * Adds a mob to the area.
+     * @param mob Mob we are adding to the area.
+     */
+
     public addEntity(mob: Mob): void {
         if (!this.entities.includes(mob)) return;
 
@@ -63,22 +69,18 @@ export default class Area {
         this.spawnCallback?.();
     }
 
+    /**
+     * Remove the mob from the list and creates a callback
+     * if the area has been emptied.
+     * @param mob The mob we are removoing.
+     */
+
     public removeEntity(mob: Mob): void {
         let index = this.entities.indexOf(mob);
 
         if (index > -1) this.entities.splice(index, 1);
 
-        if (this.entities.length === 0 && this.emptyCallback) {
-            if (mob.lastAttacker) this.handleAchievement(mob.lastAttacker as Player);
-
-            this.emptyCallback();
-        }
-    }
-
-    private handleAchievement(player: Player): void {
-        if (!this.achievement) return;
-
-        player.finishAchievement(this.achievement);
+        if (this.entities.length === 0) this.emptyCallback?.();
     }
 
     /**
@@ -173,10 +175,6 @@ export default class Area {
         }
 
         return false;
-    }
-
-    private setMaxEntities(maxEntities: number): void {
-        this.maxEntities = maxEntities;
     }
 
     public onEmpty(callback: () => void): void {

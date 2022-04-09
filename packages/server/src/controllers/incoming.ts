@@ -365,7 +365,7 @@ export default class Incoming {
 
                 entity.setPosition(requestX!, requestY!);
 
-                if ((entity as Character).hasTarget()) entity.combat.forceAttack();
+                //if ((entity as Character).hasTarget()) entity.combat.forceAttack();
 
                 break;
 
@@ -455,59 +455,45 @@ export default class Incoming {
     }
 
     private handleCombat(message: [Opcodes.Combat, string, string]): void {
-        let [opcode] = message;
-
-        switch (opcode) {
-            case Opcodes.Combat.Initiate: {
-                let attacker = this.entities.get(message[1]) as Character,
-                    target = this.entities.get(message[2]) as Character;
-
-                if (
-                    !target ||
-                    target.dead ||
-                    !attacker ||
-                    attacker.dead ||
-                    !this.canAttack(attacker, target)
-                )
-                    return;
-
-                attacker.setTarget(target);
-
-                if (!attacker.combat.started) attacker.combat.forceAttack();
-                else {
-                    attacker.combat.start();
-
-                    attacker.combat.attack(target);
-                }
-
-                target.combat?.addAttacker(attacker);
-
-                break;
-            }
-        }
+        // let [opcode] = message;
+        // switch (opcode) {
+        //     case Opcodes.Combat.Initiate: {
+        //         let attacker = this.entities.get(message[1]) as Character,
+        //             target = this.entities.get(message[2]) as Character;
+        //         if (
+        //             !target ||
+        //             target.dead ||
+        //             !attacker ||
+        //             attacker.dead ||
+        //             !this.canAttack(attacker, target)
+        //         )
+        //             return;
+        //         attacker.setTarget(target);
+        //         if (!attacker.combat.started) attacker.combat.forceAttack();
+        //         else {
+        //             attacker.combat.start();
+        //             attacker.combat.attack(target);
+        //         }
+        //         target.combat?.addAttacker(attacker);
+        //         break;
+        //     }
+        // }
     }
 
     private handleProjectile(message: [Opcodes.Projectile, string, string]): void {
-        let [type] = message;
-
-        switch (type) {
-            case Opcodes.Projectile.Impact: {
-                let projectile = this.entities.get(message[1]) as Projectile,
-                    target = this.entities.get(message[2]) as Mob;
-
-                if (!target || target.dead || !projectile) return;
-
-                target.hit(projectile.damage);
-
-                this.entities.remove(projectile);
-
-                if (target.combat.started || target.dead || target.isMob()) return;
-
-                target.combat.begin(projectile.owner!);
-
-                break;
-            }
-        }
+        // let [type] = message;
+        // switch (type) {
+        //     case Opcodes.Projectile.Impact: {
+        //         let projectile = this.entities.get(message[1]) as Projectile,
+        //             target = this.entities.get(message[2]) as Mob;
+        //         if (!target || target.dead || !projectile) return;
+        //         target.hit(projectile.damage);
+        //         this.entities.remove(projectile);
+        //         if (target.combat.started || target.dead || target.isMob()) return;
+        //         target.combat.begin(projectile.owner!);
+        //         break;
+        //     }
+        // }
     }
 
     private handleNetwork(message: [Opcodes.Network]): void {
