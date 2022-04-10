@@ -29,3 +29,9 @@ export interface MovementPacket {
     frozen?: boolean;
     direction?: Modules.Orientation;
 }
+
+export interface ProjectilePacket {
+    opcode: Opcodes.Projectile;
+    instance: string;
+    target: string;
+}
