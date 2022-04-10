@@ -1,6 +1,8 @@
 import config from '@kaetram/common/config';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import Character from '../game/entity/character/character';
+import Mob from '../game/entity/character/mob/mob';
 
 import type Achievement from '../game/entity/character/player/achievement';
 import type Player from '../game/entity/character/player/player';
@@ -145,7 +147,14 @@ export default class Commands {
     }
 
     private handleAdminCommands(command: string, blocks: string[]): void {
-        let username: string, player: Player;
+        let username: string,
+            player: Player,
+            x: number,
+            y: number,
+            instance: string,
+            target: string,
+            entity: Character,
+            targetEntity: Character;
 
         switch (command) {
             case 'spawn': {
@@ -362,6 +371,41 @@ export default class Commands {
                         colour: '#00000'
                     })
                 );
+
+                break;
+
+            case 'movenpc':
+                instance = blocks.shift()!;
+                x = parseInt(blocks.shift()!);
+                y = parseInt(blocks.shift()!);
+
+                if (!instance)
+                    return this.player.notify(`Malformed command, expected /movenpc instance x y`);
+
+                entity = this.entities.get(instance) as Character;
+
+                if (!entity) return this.player.notify(`Entity not found.`);
+
+                console.log(entity.isMob());
+
+                if (entity.isMob()) (entity as Mob).move(x, y);
+
+                break;
+
+            case 'nvn': // NPC vs NPC (specify two instances)
+                instance = blocks.shift()!;
+                target = blocks.shift()!;
+
+                if (!instance || !target)
+                    return this.player.notify(`Malformed command, expected /nvn instance target`);
+
+                entity = this.entities.get(instance) as Character;
+                targetEntity = this.entities.get(target) as Character;
+
+                if (!entity || !targetEntity)
+                    return this.player.notify(`Could not find entity instances specified.`);
+
+                entity.combat.attack(targetEntity);
 
                 break;
         }

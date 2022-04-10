@@ -806,23 +806,19 @@ export default class Renderer {
             'white'
         );
 
-        if (this.input.hoveringEntity) {
+        if (this.input.hovering === Modules.Hovering.Mob) {
             let { x, y } = this.input.getCoords()!;
 
+            if (!this.input.entity) return;
+
             this.drawText(
-                `x: ${x} y: ${y} instance: ${this.input.hoveringEntity.id}`,
+                `x: ${x} y: ${y} instance: ${this.input.entity.id}`,
                 10,
                 71,
                 false,
                 'white'
             );
-            this.drawText(
-                `attack range: ${this.input.hoveringEntity.attackRange}`,
-                10,
-                91,
-                false,
-                'white'
-            );
+            this.drawText(`att range: ${this.input.entity!.attackRange}`, 10, 91, false, 'white');
         }
     }
 

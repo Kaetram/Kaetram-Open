@@ -47,8 +47,7 @@ export default class InputController {
     private cursors: { [cursor in Cursors]?: Sprite | undefined } = {};
     public lastMousePosition: Position = { x: 0, y: 0 };
 
-    private hovering!: Modules.Hovering | null;
-    public hoveringEntity!: Entity; // for debugging
+    public hovering!: Modules.Hovering | null;
 
     public mouse: Position = { x: 0, y: 0 };
 
@@ -59,7 +58,7 @@ export default class InputController {
     public targetAnimation!: Animation;
     public chatHandler!: Chat;
     public overlay!: Overlay;
-    private entity: Entity | undefined;
+    public entity: Entity | undefined;
 
     public constructor(private game: Game) {
         this.app = game.app;
