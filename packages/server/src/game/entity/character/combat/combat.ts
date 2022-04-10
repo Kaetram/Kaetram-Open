@@ -13,7 +13,8 @@ export default class Combat {
 
     private lastAttack = Date.now();
 
-    private attackLoop?: NodeJS.Timeout | undefined;
+    // The combat loop
+    private loop?: NodeJS.Timeout | undefined;
 
     public constructor(private character: Character) {}
 
@@ -24,18 +25,23 @@ export default class Combat {
     public start(): void {
         this.started = true;
 
-        this.attackLoop = setInterval(this.handleAttackLoop.bind(this), this.character.attackRate);
+        /**
+         * Start the loop at half the attack rate with a 10 millisecond offset. This is
+         * so we can condense the entire combat loop into one interval.
+         */
+
+        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 2 - 10);
     }
 
     /**
-     * Stops the combat loops and clears the queue.
+     * Stops the combat loop and removes targets/attackers.
      */
 
     public stop(): void {
-        // Clear the loops.
-        if (this.attackLoop) clearInterval(this.attackLoop);
+        // Clean up the combat loop.
+        if (this.loop) clearInterval(this.loop);
 
-        this.attackLoop = undefined;
+        this.loop = undefined;
 
         // Clear target and attackers.
         this.character.clearTarget();
@@ -66,7 +72,7 @@ export default class Combat {
          * combat is perceived as 'too snappy.'
          */
 
-        if (this.canAttack()) setTimeout(() => this.handleAttackLoop(), 250);
+        if (this.canAttack()) setTimeout(() => this.handleLoop(), 250);
     }
 
     /**
@@ -76,15 +82,17 @@ export default class Combat {
      * and then checking if the character is in range of the target.
      */
 
-    private handleAttackLoop(): void {
+    private handleLoop(): void {
         if (!this.character.hasTarget()) return;
 
-        if (this.character.isNearTarget()) {
+        if (this.character.isNearTarget() && this.canAttack()) {
             let hit = this.createHit();
 
             this.character.target?.hit(hit.getDamage(), this.character);
 
             this.sendAttack(hit);
+
+            this.lastAttack = Date.now();
         } else this.sendFollow();
     }
 
@@ -110,7 +118,6 @@ export default class Combat {
      */
 
     private sendFollow(): void {
-        if (this.character.isMob()) console.log('Mob is following');
         this.character.sendToRegions(
             new Movement(Opcodes.Movement.Follow, {
                 instance: this.character.instance,
