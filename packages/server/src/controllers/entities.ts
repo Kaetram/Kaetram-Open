@@ -22,6 +22,7 @@ import type Entity from '../game/entity/entity';
 import type World from '../game/world';
 import { Blink, Despawn } from '../network/packets';
 import Grids from '../game/map/grids';
+import Hit from '../game/entity/character/combat/hit';
 
 export default class Entities {
     private map: Map;
@@ -144,26 +145,20 @@ export default class Entities {
         return chest;
     }
 
-    public spawnProjectile([attacker, target]: Character[]): Projectile | null {
-        return null;
-        // if (!attacker || !target) return null;
+    /**
+     * Creates a projectile and adds it to the world.
+     * @param owner The owner of the projectile, used to grab the projectile sprite.
+     * @param target The target the projectile goes after.
+     * @param hit Information about the hit type.
+     * @returns The projectile object that was created.
+     */
 
-        // let type = attacker.getProjectile(),
-        //     hit = null,
-        //     projectile = new Projectile(type, attacker, target);
+    public spawnProjectile(owner: Character, target: Character, hit: Hit): Projectile {
+        let projectile = new Projectile(owner, target, hit);
 
-        // if (attacker.isPlayer()) {
-        //     let player = attacker as Player;
+        this.addProjectile(projectile);
 
-        //     hit = player.getHit(target);
-        // }
-
-        // projectile.damage = hit ? hit.damage : Formulas.getDamage(attacker, target, true);
-        // projectile.hitType = hit ? hit.type : Modules.Hits.Damage;
-
-        // this.addProjectile(projectile);
-
-        // return projectile;
+        return projectile;
     }
 
     /**
