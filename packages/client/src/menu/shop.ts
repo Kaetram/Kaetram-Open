@@ -34,7 +34,7 @@ export default class Shop {
     private close: JQuery;
 
     public constructor(private game: Game, private menu: MenuController) {
-        this.close = $('#closeShop');
+        this.close = $('#close-shop');
 
         this.close.css('left', '97%');
         this.close.on('click', () => this.hide());
