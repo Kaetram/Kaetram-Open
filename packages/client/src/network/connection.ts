@@ -9,16 +9,10 @@ import log from '../lib/log';
 import * as Detect from '../utils/detect';
 
 import type {
-    CombatHitData,
-    CombatSyncData,
     ContainerBatchData,
     ContainerAddData,
     ContainerRemoveData,
     ExperienceCombatData,
-    MovementFollowData,
-    MovementMoveData,
-    MovementOrientateData,
-    MovementStateData,
     MovementStopData,
     NPCCountdownData,
     NPCTalkData,
@@ -31,9 +25,7 @@ import type {
     PointerRelativeData,
     ProfessionBatchData,
     ProfessionUpdateData,
-    QuestAchievementBatchData,
     QuestBatchData,
-    QuestFinishData,
     QuestProgressData,
     ShopOpenData,
     ShopRefreshData,
@@ -238,6 +230,8 @@ export default class Connection {
                 }
 
                 case Opcodes.Movement.Follow: {
+                    console.log(info);
+
                     let entity = this.entities.get<Character>(info.instance),
                         target = this.entities.get<Character>(info.target!);
 
@@ -402,26 +396,66 @@ export default class Connection {
         });
 
         this.messages.onCombat((opcode, info) => {
-            let attacker = this.entities.get<Character>(info.attackerId!),
+            let attacker = this.entities.get<Character>(info.instance),
+                target = this.entities.get<Character>(info.target!);
+
+            if (!attacker || !target) return;
+
+            switch (opcode) {
+                case Opcodes.Combat.Hit: {
+                    let isPlayer = target.id === this.game.id;
+
+                    console.log(info);
+
+                    if (!info.hit.aoe && !info.hit.poison) {
+                        attacker.lookAt(target);
+                        attacker.performAction(attacker.orientation, Modules.Actions.Attack);
+                    } else if (info.hit.terror) target.terror = true;
+
+                    switch (info.hit.type) {
+                        case Modules.Hits.Critical:
+                            target.critical = true;
+
+                            break;
+
+                        default:
+                            if (attacker.id === this.game.player.id && info.hit.damage > 0)
+                                this.audio.play(
+                                    Modules.AudioTypes.SFX,
+                                    `hit${Math.floor(Math.random() * 2 + 1)}` as 'hit1' | 'hit2'
+                                );
+
+                            break;
+                    }
+
+                    this.info.create(
+                        info.hit.type,
+                        [info.hit.damage, isPlayer],
+                        target.x,
+                        target.y
+                    );
+
+                    if (target.hurtSprite) {
+                        target.sprite = target.hurtSprite;
+                        window.setTimeout(() => {
+                            target.sprite = target.normalSprite;
+                        }, 75);
+                    }
+
+                    attacker.triggerHealthBar();
+                    target.triggerHealthBar();
+
+                    if (isPlayer && info.hit.damage > 0)
+                        this.audio.play(Modules.AudioTypes.SFX, 'hurt');
+                }
+            }
+
+            /*let attacker = this.entities.get<Character>(info.attackerId!),
                 target = this.entities.get<Character>(info.targetId!);
 
             if (!target || !attacker) return;
 
             switch (opcode) {
-                case Opcodes.Combat.Initiate:
-                    attacker.setTarget(target);
-
-                    target.addAttacker(attacker);
-
-                    if (target.id === this.game.player.id || attacker.id === this.game.player.id)
-                        this.socket.send(Packets.Combat, [
-                            Opcodes.Combat.Initiate,
-                            attacker.id,
-                            target.id
-                        ]);
-
-                    break;
-
                 case Opcodes.Combat.Hit: {
                     let data = info as CombatHitData,
                         hit = data.hitInfo!,
@@ -481,7 +515,7 @@ export default class Connection {
 
                     break;
                 }
-            }
+            }*/
         });
 
         this.messages.onAnimation((id, info) => {

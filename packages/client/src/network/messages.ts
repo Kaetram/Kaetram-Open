@@ -4,33 +4,22 @@ import { Modules, Packets } from '@kaetram/common/network';
 
 import type { Opcodes } from '@kaetram/common/network';
 
-import type { MovementCallback } from '@kaetram/common/types/messages/outgoing';
+import type { MovementCallback, CombatCallback } from '@kaetram/common/types/messages/outgoing';
 
 // TODO: Slowly remove all these.
 import type {
     AnimationData,
     BubbleData,
     ChatData,
-    CombatData,
-    CombatHitData,
-    CombatSyncData,
     CommandData,
     ContainerAddData,
     ContainerBatchData,
     ContainerRemoveData,
     EnchantData,
-    EquipmentBatchData,
-    EquipmentEquipData,
-    EquipmentUnequipData,
     ExperienceCombatData,
     ExperienceProfessionData,
     HandshakeData,
     HealData,
-    MovementFollowData,
-    MovementMoveData,
-    MovementOrientateData,
-    MovementStateData,
-    MovementStopData,
     NotificationData,
     NPCBankData,
     NPCCountdownData,
@@ -49,7 +38,6 @@ import type {
     ProfessionBatchData,
     ProfessionUpdateData,
     ProjectileData,
-    QuestAchievementBatchData,
     QuestBatchData,
     QuestFinishData,
     QuestProgressData,
@@ -60,7 +48,6 @@ import type {
     ShopSelectData,
     ShopSellData,
     SpawnData,
-    SyncData,
     TeleportData,
     WelcomeData
 } from '@kaetram/common/types/messages';
@@ -81,11 +68,6 @@ type EntityListCallback = (ids: string[]) => void;
 type SyncCallback = (data: EntityData) => void;
 type TeleportCallback = (data: TeleportData) => void;
 type DespawnCallback = (id: string) => void;
-interface CombatCallback {
-    (opcode: Opcodes.Combat, data: CombatData): void;
-    (opcode: Opcodes.Combat.Hit, data: CombatHitData): void;
-    (opcode: Opcodes.Combat.Sync, data: CombatSyncData): void;
-}
 type AnimationCallback = (id: string, data: AnimationData) => void;
 interface ProjectileCallback {
     (opcode: Opcodes.Projectile, data: ProjectileData): void;

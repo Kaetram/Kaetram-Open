@@ -428,13 +428,9 @@ export default class Incoming {
 
                 this.player.cheatScore = 0;
 
-                this.world.push(Modules.PacketType.Regions, {
-                    region: target.region,
-                    packet: new Combat(Opcodes.Combat.Initiate, {
-                        attackerId: this.player.instance,
-                        targetId: target.instance
-                    })
-                });
+                this.player.combat.attack(target);
+
+                console.log('attack target yo');
 
                 break;
             }
