@@ -110,15 +110,13 @@ export default class Mob extends Character {
     public destroy(): void {
         this.dead = true;
 
+        this.combat.stop();
+
         this.respawn();
-        this.clearTarget();
-        this.clearAttackers();
 
         this.setPosition(this.spawnX, this.spawnY);
 
         this.area?.removeEntity(this);
-
-        this.combat.stop();
     }
 
     /**
