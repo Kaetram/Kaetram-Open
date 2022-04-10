@@ -517,6 +517,10 @@ export default class Character extends Entity {
         this.target = target;
     }
 
+    public hasTarget(): boolean {
+        return !!this.target;
+    }
+
     public setObjectTarget(x: number, y: number): void {
         /**
          * All we are doing is mimicking the `setTarget` entity

@@ -136,7 +136,11 @@ export default class PlayerHandler {
 
             if (!camera.centered || camera.lockX || camera.lockY) this.checkBounds();
 
-            socket.send(Packets.Movement, [Opcodes.Movement.Step, player.gridX, player.gridY]);
+            socket.send(Packets.Movement, {
+                opcode: Opcodes.Movement.Step,
+                playerX: player.gridX,
+                playerY: player.gridY
+            });
 
             if (!this.isAttackable()) return;
 
