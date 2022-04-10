@@ -54,8 +54,6 @@ export default class Handler {
      */
 
     private handleHit(damage: number, attacker?: Character): void {
-        log.debug(`[${this.mob.instance}] Mob ${this.mob.name} has been hit for ${damage} damage.`);
-
         if (this.mob.dead || !attacker) return;
 
         if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
