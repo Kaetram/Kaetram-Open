@@ -649,7 +649,7 @@ export default class Player extends Character {
 
         this.sendToRegions(
             new Movement(Opcodes.Movement.Move, {
-                id: this.instance,
+                instance: this.instance,
                 x,
                 y,
                 forced: false,
