@@ -125,7 +125,7 @@ export default class Inventory {
         else if (slot.equippable)
             this.actions.add($('<div id="wield" class="action-button">Wield</div>'));
         else if (slot.count > 999_999)
-            this.actions.add($('<div id="itemInfo" class="action-button">Info</div>'));
+            this.actions.add($('<div id="item-info" class="action-button">Info</div>'));
 
         if (!this.actions.isVisible()) this.actions.show();
 

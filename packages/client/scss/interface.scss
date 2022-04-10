@@ -904,7 +904,7 @@
 
         #weapon-slot-info {
             top: 123px * $i;
-            left: 22px;
+            left: 22px * $i;
         }
 
         #armour-slot-info {
