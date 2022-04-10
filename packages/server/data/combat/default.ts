@@ -10,7 +10,5 @@ import type Character from '../../src/game/entity/character/character';
 export default class Default extends Combat {
     public constructor(character: Character) {
         super(character);
-
-        this.character = character;
     }
 }

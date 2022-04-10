@@ -15,7 +15,7 @@ import type {
     LoginPacket,
     MovementPacket,
     ReadyPacket
-} from '@kaetram/common/types/clientmessages';
+} from '@kaetram/common/types/messages/incoming';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { SlotType } from '@kaetram/common/types/slot';
 import type Character from '../game/entity/character/character';
@@ -370,9 +370,10 @@ export default class Incoming {
                 break;
 
             case Opcodes.Movement.Orientate:
-                this.player.sendToRegions(
-                    new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
-                );
+                log.debug(`Unhandled Movement.Orientate: ${this.player.username}.`);
+                // this.player.sendToRegions(
+                //     new Movement(Opcodes.Movement.Orientate, [this.player.instance, orientation])
+                // );
 
                 break;
 

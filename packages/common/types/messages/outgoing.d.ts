@@ -1,0 +1,17 @@
+import type { Modules, Opcodes } from '../../network';
+
+/**
+ * Packet interfaces of data being sent from the server to the client.ou
+ */
+
+export interface MovementPacket {
+    instance: string; // Main entity involved in the movement.
+    x?: number; // X coordinate of the movement.
+    y?: number; // Y coordinate of the movement.
+    forced?: boolean; // Whether or not the movement is forced.
+    target?: string; // Entity instance we are trying to follow if specified.
+    orientation?: Modules.Orientation;
+    state?: boolean; // State about stun/freeze.
+}
+
+export type MovementCallback = (opcode: Opcodes.Movement, info: MovementPacket) => void;
