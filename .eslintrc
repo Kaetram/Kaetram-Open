@@ -15,6 +15,7 @@
         "unicorn/no-null": "off",
         "unicorn/prefer-number-properties": "off",
         "unicorn/prevent-abbreviations": "off",
+        "unicorn/no-array-reduce": "off",
         // "unicorn/prefer-at": "error",
         // "unicorn/prefer-object-has-own": "error",
         "unicorn/prefer-string-replace-all": "error",
