@@ -30,7 +30,7 @@ export default class Combat {
          * so we can condense the entire combat loop into one interval.
          */
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 2 - 10);
+        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 2 + 10);
     }
 
     /**
