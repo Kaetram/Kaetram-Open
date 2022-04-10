@@ -1,28 +1,17 @@
 import _ from 'lodash';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
 
 import Formulas from '../../../../info/formulas';
-import Queue from './queue';
 import Hit from './hit';
 
-import type { HitData } from '@kaetram/common/types/info';
-import type Entities from '../../../../controllers/entities';
-import type World from '../../../world';
 import type Character from '../character';
-import type Mob from '../mob/mob';
-import type Player from '../player/player';
-import { Movement, Combat as CombatPacket, Projectile } from '@kaetram/server/src/network/packets';
+import { Movement, Combat as CombatPacket } from '@kaetram/server/src/network/packets';
 
 export default class Combat {
     public started = false;
 
     private lastAttack = Date.now();
-
-    // Create the combat queue.
-    private queue: Queue = new Queue();
 
     private attackLoop?: NodeJS.Timeout | undefined;
 
@@ -51,9 +40,6 @@ export default class Combat {
         // Clear target and attackers.
         this.character.clearTarget();
         this.character.clearAttackers();
-
-        // Clear the queue.
-        this.queue.clear();
 
         // Mark the combat as stopped.
         this.started = false;
