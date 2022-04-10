@@ -6,7 +6,7 @@ import Formulas from '../../../../info/formulas';
 import Hit from './hit';
 
 import type Character from '../character';
-import { Movement, Combat as CombatPacket } from '@kaetram/server/src/network/packets';
+import { Movement, Combat as CombatPacket, Projectile } from '../../../../network/packets';
 
 export default class Combat {
     public started = false;
@@ -90,8 +90,6 @@ export default class Combat {
 
             this.sendAttack(hit);
 
-            this.character.target?.hit(hit.getDamage(), this.character);
-
             this.lastAttack = Date.now();
         } else this.sendFollow();
     }
@@ -102,12 +100,30 @@ export default class Combat {
      */
 
     private sendAttack(hit: Hit): void {
+        // Ranged combat depends on when the projectile connects with the target.
+        if (this.character.isRanged()) return this.sendRangedAttack(hit);
+
         this.character.sendToRegions(
             new CombatPacket(Opcodes.Combat.Hit, {
                 instance: this.character.instance,
                 target: this.character.target?.instance,
                 hit: hit.serialize()
             })
+        );
+
+        // Handle combat damage here since melee is instant.
+        this.character.target?.hit(hit.getDamage(), this.character);
+    }
+
+    private sendRangedAttack(hit: Hit): void {
+        let projectile = this.character.world.entities.spawnProjectile(
+            this.character,
+            this.character.target!,
+            hit
+        );
+
+        this.character.sendToRegions(
+            new Projectile(Opcodes.Projectile.Create, projectile.serialize())
         );
     }
 
