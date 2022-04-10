@@ -8,7 +8,7 @@ import type Areas from '../../../map/areas/areas';
 import type Player from '../player/player';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { EntityData } from '../../entity';
+import Entity, { EntityData } from '../../entity';
 import { MobData } from '@kaetram/common/types/mob';
 
 import rawData from '../../../../../data/mobs.json';
@@ -210,11 +210,19 @@ export default class Mob extends Character {
     /**
      * Checks if the distance between the mob's current position and the spawn
      * point is greater than the roam distance.
+     * @param entity Optional parameter to check against the entity.
      * @returns Whether or not the mob should return to the spawn.
      */
 
-    public shouldReturnToSpawn(): boolean {
-        return Utils.getDistance(this.x, this.y, this.spawnX, this.spawnY) > this.roamDistance;
+    public outsideRoaming(entity?: Entity): boolean {
+        return (
+            Utils.getDistance(
+                (entity && entity.x) || this.x,
+                (entity && entity.y) || this.y,
+                this.spawnX,
+                this.spawnY
+            ) > this.roamDistance
+        );
     }
 
     /**
