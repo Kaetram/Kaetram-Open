@@ -14,10 +14,10 @@ export default class Bank {
 
     private body = $('#bank');
     private bankSlot = $('#bank-slot');
-    private bankInventorySlots = $('#bankInventorySlots');
+    private bankInventorySlots = $('#bank-inventory-slots');
 
     private container: Container;
-    private close = $('#closeBank');
+    private close = $('#close-bank');
 
     private scale!: number;
 

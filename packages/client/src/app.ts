@@ -27,7 +27,7 @@ export default class App {
     private loginButton = $('#login');
     // private createButton = $('#play');
     private registerButton = $('#new-account');
-    private helpButton = $('#helpButton');
+    private helpButton = $('#help-button');
     private cancelButton = $('#cancel-button');
     private loading = $('.loader');
 
@@ -288,8 +288,8 @@ export default class App {
 
         switch (activeForm) {
             case 'load-character': {
-                let nameInput: JQuery<HTMLInputElement> = $('#loginNameInput'),
-                    passwordInput: JQuery<HTMLInputElement> = $('#loginPasswordInput');
+                let nameInput: JQuery<HTMLInputElement> = $('#login-name-input'),
+                    passwordInput: JQuery<HTMLInputElement> = $('#login-password-input');
 
                 if (this.loginFields.length === 0) this.loginFields = [nameInput, passwordInput];
 
@@ -307,12 +307,12 @@ export default class App {
             }
 
             case 'create-character': {
-                let characterName: JQuery<HTMLInputElement> = $('#registerNameInput'),
-                    registerPassword: JQuery<HTMLInputElement> = $('#registerPasswordInput'),
+                let characterName: JQuery<HTMLInputElement> = $('#register-name-input'),
+                    registerPassword: JQuery<HTMLInputElement> = $('#register-password-input'),
                     registerPasswordConfirmation: JQuery<HTMLInputElement> = $(
-                        '#registerPasswordConfirmationInput'
+                        '#register-password-confirmation-input'
                     ),
-                    email: JQuery<HTMLInputElement> = $('#registerEmailInput');
+                    email: JQuery<HTMLInputElement> = $('#register-email-input');
 
                 if (this.registerFields.length === 0)
                     this.registerFields = [

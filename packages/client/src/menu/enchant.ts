@@ -19,7 +19,7 @@ export default class Enchant {
     private confirm = $('#confirm-enchant');
     private shardsCount = $('#shards-count');
 
-    private closeEnchant = $('#closeEnchant');
+    private closeEnchant = $('#close-enchant');
 
     public constructor(private game: Game, private menu: MenuController) {
         this.confirm.on('click', () => this.enchant());

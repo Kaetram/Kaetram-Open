@@ -22,7 +22,7 @@ export default class Quest extends Page {
     private achievementsLength = 0;
 
     public constructor() {
-        super('#questPage');
+        super('#quest-page');
     }
 
     public loadAchievements(achievements: AchievementData[]): void {

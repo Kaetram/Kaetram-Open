@@ -159,7 +159,7 @@ export default class Actions {
     // }
 
     private getTalkButton(): JQuery {
-        return $('<div id="talkButton" class="action-button">Talk</div>');
+        return $('<div id="talk-button" class="action-button">Talk</div>');
     }
 
     private getButtons(): JQuery {

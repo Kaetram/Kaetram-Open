@@ -297,8 +297,8 @@ export default class Game {
     }
 
     private loadStorage(): void {
-        let loginName = $('#loginNameInput'),
-            loginPassword = $('#loginPasswordInput');
+        let loginName = $('#login-name-input'),
+            loginPassword = $('#login-password-input');
 
         loginName.prop('readonly', false);
         loginPassword.prop('readonly', false);
