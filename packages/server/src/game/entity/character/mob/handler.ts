@@ -45,9 +45,13 @@ export default class Handler {
      */
 
     private handleHit(damage: number, attacker?: Character): void {
-        if (this.mob.dead || this.mob.combat.started) return;
+        log.debug(`[${this.mob.instance}] Mob ${this.mob.name} has been hit for ${damage} damage.`);
 
-        //if (attacker) this.mob.combat.begin(attacker);
+        if (this.mob.dead || this.mob.combat.started || !attacker) return;
+
+        if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
+
+        if (!this.mob.hasTarget()) this.mob.setTarget(this.mob.findNearestTarget());
     }
 
     /**

@@ -3,6 +3,10 @@ import _ from 'lodash';
 import { Modules, Packets } from '@kaetram/common/network';
 
 import type { Opcodes } from '@kaetram/common/network';
+
+import type { MovementCallback } from '@kaetram/common/types/messages/outgoing';
+
+// TODO: Slowly remove all these.
 import type {
     AnimationData,
     BubbleData,
@@ -75,13 +79,6 @@ interface EquipmentCallback {
 }
 type EntityListCallback = (ids: string[]) => void;
 type SyncCallback = (data: EntityData) => void;
-interface MovementCallback {
-    (opcode: Opcodes.Movement.Move, info: MovementMoveData): void;
-    (opcode: Opcodes.Movement.Follow, info: MovementFollowData): void;
-    (opcode: Opcodes.Movement.Stop, info: MovementStopData): void;
-    (opcode: Opcodes.Movement.Freeze | Opcodes.Movement.Stunned, info: MovementStateData): void;
-    (opcode: Opcodes.Movement.Orientate, info: MovementOrientateData): void;
-}
 type TeleportCallback = (data: TeleportData) => void;
 type DespawnCallback = (id: string) => void;
 interface CombatCallback {
