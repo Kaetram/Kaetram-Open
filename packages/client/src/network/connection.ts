@@ -405,8 +405,6 @@ export default class Connection {
                 case Opcodes.Combat.Hit: {
                     let isPlayer = target.id === this.game.id;
 
-                    console.log(info);
-
                     if (!info.hit.aoe && !info.hit.poison) {
                         attacker.lookAt(target);
                         attacker.performAction(attacker.orientation, Modules.Actions.Attack);

@@ -83,14 +83,14 @@ export default class Combat {
      */
 
     private handleLoop(): void {
-        if (!this.character.hasTarget()) return;
+        if (!this.character.hasTarget()) return this.stop();
 
         if (this.character.isNearTarget() && this.canAttack()) {
             let hit = this.createHit();
 
-            this.character.target?.hit(hit.getDamage(), this.character);
-
             this.sendAttack(hit);
+
+            this.character.target?.hit(hit.getDamage(), this.character);
 
             this.lastAttack = Date.now();
         } else this.sendFollow();
@@ -105,7 +105,7 @@ export default class Combat {
         this.character.sendToRegions(
             new CombatPacket(Opcodes.Combat.Hit, {
                 instance: this.character.instance,
-                target: this.character.target!.instance,
+                target: this.character.target?.instance,
                 hit: hit.serialize()
             })
         );

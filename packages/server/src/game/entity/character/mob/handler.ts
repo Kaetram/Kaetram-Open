@@ -37,7 +37,16 @@ export default class Handler {
      */
 
     private handleMovement(): void {
-        if (this.mob.shouldReturnToSpawn()) this.mob.sendToSpawn();
+        if (!this.mob.hasTarget() && this.mob.outsideRoaming()) return this.mob.sendToSpawn();
+
+        // /**
+        //  * We check if the user's target is outside the roaming area and
+        //  * pick a new one if that is the case.
+        //  */
+
+        if (this.mob.outsideRoaming(this.mob.target))
+            if (this.mob.getAttackerCount() > 1) this.mob.setTarget(this.mob.findNearestTarget());
+            else this.mob.sendToSpawn();
     }
 
     /**
@@ -47,11 +56,11 @@ export default class Handler {
     private handleHit(damage: number, attacker?: Character): void {
         log.debug(`[${this.mob.instance}] Mob ${this.mob.name} has been hit for ${damage} damage.`);
 
-        if (this.mob.dead || this.mob.combat.started || !attacker) return;
+        if (this.mob.dead || !attacker) return;
 
         if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
 
-        this.mob.combat.attack(this.mob.findNearestTarget());
+        if (!this.mob.combat.started) this.mob.combat.attack(this.mob.findNearestTarget());
     }
 
     /**
