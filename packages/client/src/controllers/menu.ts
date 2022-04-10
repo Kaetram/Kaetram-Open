@@ -21,8 +21,8 @@ export default class MenuController {
     private notify = $('#notify');
     private confirm = $('#confirm');
     private message = $('#message');
-    private fade = $('#notifyFade');
-    private done = $('#notifyDone');
+    private fade = $('#notify-fade');
+    private done = $('#notify-done');
 
     private notification = $('#notification');
     /** Notification title */
