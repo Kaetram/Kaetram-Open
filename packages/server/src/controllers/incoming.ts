@@ -485,8 +485,6 @@ export default class Incoming {
 
         target.hit(projectile.hit.getDamage(), projectile.owner);
 
-        if (!target.combat.started) target.combat.attack(projectile.owner);
-
         this.entities.remove(projectile);
     }
 
