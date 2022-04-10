@@ -1,3 +1,4 @@
+import { HitData } from '../info';
 import type { Modules, Opcodes } from '../../network';
 
 /**
@@ -15,3 +16,11 @@ export interface MovementPacket {
 }
 
 export type MovementCallback = (opcode: Opcodes.Movement, info: MovementPacket) => void;
+
+export interface CombatPacket {
+    instance: string; // The entity the combat packet revolves around.
+    target: string; // Instance of the targeted entity.
+    hit: HitData;
+}
+
+export type CombatCallback = (opcode: Opcodes.Combat, info: CombatPacket) => void;
