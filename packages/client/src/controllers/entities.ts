@@ -202,11 +202,11 @@ export default class EntitiesController {
                      */
 
                     if (this.isPlayer(projectile.owner.id) || this.isPlayer(target.id))
-                        game.socket.send(Packets.Projectile, [
-                            Opcodes.Projectile.Impact,
-                            info.instance,
-                            target.id
-                        ]);
+                        game.socket.send(Packets.Projectile, {
+                            opcode: Opcodes.Projectile.Impact,
+                            instance: info.instance,
+                            target: target.id
+                        });
 
                     if (info.hitType === Modules.Hits.Explosive) target.explosion = true;
 
