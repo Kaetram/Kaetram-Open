@@ -14,6 +14,7 @@ import Commands from './commands';
 import type {
     LoginPacket,
     MovementPacket,
+    ProjectilePacket,
     ReadyPacket
 } from '@kaetram/common/types/messages/incoming';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
@@ -475,20 +476,18 @@ export default class Incoming {
         // }
     }
 
-    private handleProjectile(message: [Opcodes.Projectile, string, string]): void {
-        // let [type] = message;
-        // switch (type) {
-        //     case Opcodes.Projectile.Impact: {
-        //         let projectile = this.entities.get(message[1]) as Projectile,
-        //             target = this.entities.get(message[2]) as Mob;
-        //         if (!target || target.dead || !projectile) return;
-        //         target.hit(projectile.damage);
-        //         this.entities.remove(projectile);
-        //         if (target.combat.started || target.dead || target.isMob()) return;
-        //         target.combat.begin(projectile.owner!);
-        //         break;
-        //     }
-        // }
+    private handleProjectile(message: ProjectilePacket): void {
+        let projectile = this.entities.get(message.instance) as Projectile,
+            target = this.entities.get(message.target) as Character;
+
+        if (!projectile) return log.warning(`[Incoming] Projectile not found: ${message.instance}`);
+        if (!target) return log.warning(`[Incoming] Target not found: ${message.target}`);
+
+        target.hit(projectile.hit.getDamage(), projectile.owner);
+
+        if (!target.combat.started) target.combat.attack(projectile.owner);
+
+        this.entities.remove(projectile);
     }
 
     private handleNetwork(message: [Opcodes.Network]): void {
