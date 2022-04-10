@@ -19,6 +19,8 @@ import { Movement, Combat as CombatPacket, Projectile } from '@kaetram/server/sr
 export default class Combat {
     public started = false;
 
+    private lastAttack = Date.now();
+
     // Create the combat queue.
     private queue: Queue = new Queue();
 
@@ -33,7 +35,7 @@ export default class Combat {
     public start(): void {
         this.started = true;
 
-        this.attackLoop = setInterval(this.handleAttack.bind(this), this.character.attackRate);
+        this.attackLoop = setInterval(this.handleAttackLoop.bind(this), this.character.attackRate);
     }
 
     /**
@@ -46,8 +48,14 @@ export default class Combat {
 
         this.attackLoop = undefined;
 
+        // Clear target and attackers.
+        this.character.clearTarget();
+        this.character.clearAttackers();
+
+        // Clear the queue.
         this.queue.clear();
 
+        // Mark the combat as stopped.
         this.started = false;
     }
 
@@ -58,16 +66,50 @@ export default class Combat {
      */
 
     public attack(target: Character): void {
-        console.log(target.instance);
+        // Already started, let the loop handle it.
+        if (this.started) return;
+
+        this.character.setTarget(target);
+
+        this.start();
+
+        if (!this.canAttack()) return this.handleAttackLoop();
     }
 
     /**
-     * Callback loop handler for when the character
-     * should attempt to perform an attack.
+     * Callback loop handler for when the character should attempt to perform an attack.
+     * The attack loop consists of checking viable targets
+     * by looking at the attackers (if it's a non-player character)
+     * and then checking if the character is in range of the target.
      */
 
-    private handleAttack(): void {
+    private handleAttackLoop(): void {
+        if (!this.character.hasTarget()) return;
+
+        if (this.character.isNearTarget()) {
+            //attack
+        } else this.sendFollow();
+
         console.log('handling');
+    }
+
+    private sendFollow(): void {
+        this.character.sendToRegions(
+            new Movement(Opcodes.Movement.Follow, {
+                instance: this.character.instance,
+                target: this.character.target!.instance
+            })
+        );
+    }
+
+    /**
+     * Checks if a character can attack. This is used more-so for
+     * players exiting and re-entering combat loops.
+     * @returns If the difference in time from now to the last attack is greater than the attack rate.
+     */
+
+    private canAttack(): boolean {
+        return Date.now() - this.lastAttack >= this.character.attackRate;
     }
 
     // public world!: World;

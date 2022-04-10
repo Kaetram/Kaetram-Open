@@ -277,7 +277,8 @@ export default class Player extends Character {
             this.connection.close(`Player: ${this.username} is banned.`);
         }
 
-        if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.getMaxHitPoints());
+        if (this.hitPoints.getHitPoints() < 0)
+            this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
@@ -622,10 +623,6 @@ export default class Player extends Character {
         return this.mana.getMaxMana();
     }
 
-    public override getMaxHitPoints(): number {
-        return this.hitPoints.getMaxHitPoints();
-    }
-
     private getMovementSpeed(): number {
         // let itemMovementSpeed = Items.getMovementSpeed(this.armour.name),
         //     movementSpeed = itemMovementSpeed || this.defaultMovementSpeed;
@@ -797,19 +794,6 @@ export default class Player extends Character {
         this.world.push(PacketType.Player, {
             packet,
             player: this
-        });
-    }
-
-    /**
-     * Sends a packet to all regions surrounding the player.
-     * @param packet The packet we are sending to the regions.
-     */
-
-    public sendToRegions(packet: Packet, ignore?: boolean): void {
-        this.world.push(PacketType.Regions, {
-            region: this.region,
-            packet,
-            ignore: ignore ? this.instance : ''
         });
     }
 

@@ -226,26 +226,24 @@ export default class Connection {
         this.messages.onMovement((opcode, info) => {
             switch (opcode) {
                 case Opcodes.Movement.Move: {
-                    let data = info as MovementMoveData,
-                        entity = this.entities.get<Character>(data.id);
+                    let entity = this.entities.get<Character>(info.instance);
 
-                    if (!entity) return;
+                    if (!entity || !info.x || !info.y) return;
 
-                    if (data.forced) entity.stop(true);
+                    if (info.forced) entity.stop(true);
 
-                    entity.go(data.x, data.y);
+                    entity.go(info.x, info.y);
 
                     break;
                 }
 
                 case Opcodes.Movement.Follow: {
-                    let data = info as MovementFollowData,
-                        follower = this.entities.get<Character>(data.attackerId),
-                        followee = this.entities.get<Character>(data.targetId);
+                    let entity = this.entities.get<Character>(info.instance),
+                        target = this.entities.get<Character>(info.target!);
 
-                    if (!followee || !follower) return;
+                    if (!entity || !target) return;
 
-                    follower.follow(followee);
+                    entity.follow(target);
 
                     break;
                 }
@@ -263,22 +261,20 @@ export default class Connection {
                 }
                 case Opcodes.Movement.Freeze:
                 case Opcodes.Movement.Stunned: {
-                    let data = info as MovementStateData,
-                        pEntity = this.entities.get<Character>(data.id);
+                    let entity = this.entities.get<Character>(info.instance);
 
-                    if (!pEntity) return;
+                    if (!entity) return;
 
-                    if (data.state) pEntity.stop(false);
+                    if (info.state) entity.stop(false);
 
-                    if (opcode === Opcodes.Movement.Stunned) pEntity.stunned = data.state;
-                    else if (opcode === Opcodes.Movement.Freeze) pEntity.frozen = data.state;
+                    if (opcode === Opcodes.Movement.Stunned) entity.stunned = !!info.state;
+                    else if (opcode === Opcodes.Movement.Freeze) entity.frozen = !!info.state;
 
                     break;
                 }
 
                 case Opcodes.Movement.Orientate: {
-                    let [player, orientation] = info as MovementOrientateData,
-                        entity = this.entities.get<Character>(player);
+                    let entity = this.entities.get<Character>(info.instance);
 
                     // entity.stop();
                     entity.performAction(orientation, Modules.Actions.Orientate);
@@ -431,10 +427,10 @@ export default class Connection {
                         hit = data.hitInfo!,
                         isPlayer = target.id === this.game.player.id;
 
-                    if (!hit.isAoE && !hit.isPoison) {
+                    if (!hit.aoe && !hit.poison) {
                         attacker.lookAt(target);
                         attacker.performAction(attacker.orientation, Modules.Actions.Attack);
-                    } else if (hit.hasTerror) target.terror = true;
+                    } else if (hit.terror) target.terror = true;
 
                     switch (hit.type) {
                         case Modules.Hits.Critical:
@@ -965,7 +961,9 @@ export default class Connection {
         this.messages.onMap((opcode: Opcodes.Map, info: string) => {
             let bufferData = window
                     .atob(info)
+                    // eslint-disable-next-line unicorn/prefer-spread
                     .split('')
+                    // eslint-disable-next-line unicorn/prefer-code-point
                     .map((char) => char.charCodeAt(0)),
                 inflatedString = inflate(new Uint8Array(bufferData), { to: 'string' }),
                 reigon = JSON.parse(inflatedString);

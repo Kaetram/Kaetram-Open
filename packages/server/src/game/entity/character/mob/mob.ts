@@ -109,9 +109,10 @@ export default class Mob extends Character {
 
     public destroy(): void {
         this.dead = true;
-        this.removeTarget();
-        //this.resetPosition();
+
         this.respawn();
+        this.clearTarget();
+        this.clearAttackers();
 
         this.setPosition(this.spawnX, this.spawnY);
 
@@ -133,7 +134,7 @@ export default class Mob extends Character {
         this.world.push(Modules.PacketType.Regions, {
             region: this.region,
             packet: new Movement(Opcodes.Movement.Move, {
-                id: this.instance,
+                instance: this.instance,
                 x,
                 y
             })
