@@ -51,7 +51,7 @@ export default class Handler {
 
         if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
 
-        if (!this.mob.hasTarget()) this.mob.setTarget(this.mob.findNearestTarget());
+        this.mob.combat.attack(this.mob.findNearestTarget());
     }
 
     /**

@@ -12,6 +12,14 @@ export default class Hit {
     ) {}
 
     /**
+     * @returns The damage integer of the hit.
+     */
+
+    public getDamage(): number {
+        return this.damage;
+    }
+
+    /**
      * Serializes the Hit object and converts
      * it into a JSON object.
      */

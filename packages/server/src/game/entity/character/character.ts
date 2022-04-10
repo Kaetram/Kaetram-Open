@@ -265,15 +265,14 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Checks if the character is within its own attack
-     * range next to its target.
+     * Checks if the character is within its own attack range next to its target.
      * @returns Boolean on whether the target character is in range or not.
      */
 
     public isNearTarget(): boolean {
-        if (!this.target) return false;
+        if (this.isRanged()) return this.getDistance(this.target!) <= this.attackRange;
 
-        return this.getDistance(this.target) <= this.attackRange;
+        return this.isNonDiagonal(this.target!);
     }
 
     // Packet sending functions
@@ -285,8 +284,6 @@ export default abstract class Character extends Entity {
      */
 
     public sendToRegion(packet: Packet, ignore?: boolean): void {
-        if (!this.isPlayer()) return;
-
         this.world.push(PacketType.Region, {
             region: this.region,
             packet,
@@ -301,8 +298,6 @@ export default abstract class Character extends Entity {
      */
 
     public sendToRegions(packet: Packet, ignore?: boolean): void {
-        if (!this.isPlayer()) return;
-
         this.world.push(PacketType.Regions, {
             region: this.region,
             packet,
