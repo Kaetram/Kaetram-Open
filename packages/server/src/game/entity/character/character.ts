@@ -111,11 +111,17 @@ export default abstract class Character extends Entity {
 
     /**
      * Takes damage from an attacker character and creates a callback.
+     * The `combat.stop()` occurs here since the character can be
+     * either a mob or a player, so it must stop whenever any target is
+     * dead.
      * @param attacker The attacker dealing the damage.
      * @param damage The amount of damage being dealt.
      */
 
     public hit(damage: number, attacker?: Character): void {
+        // Stop hitting if entity is dead.
+        if (this.isDead()) return;
+
         this.hitPoints.decrement(damage);
 
         // Sync the change in hitpoints to nearby entities.
@@ -128,7 +134,12 @@ export default abstract class Character extends Entity {
         });
 
         // Call the death callback if the character reaches 0 hitpoints.
-        if (this.isDead()) return this.deathCallback?.(attacker);
+        if (this.isDead()) {
+            // Stops the attacker's combat if the character is dead.
+            if (attacker) attacker.combat.stop();
+
+            return this.deathCallback?.(attacker);
+        }
 
         this.hitCallback?.(damage, attacker);
     }
@@ -226,6 +237,14 @@ export default abstract class Character extends Entity {
 
     public getProjectile(): Modules.Projectiles {
         return this.projectile;
+    }
+
+    /**
+     * @returns Returns the number of attackers currently targeting this character.
+     */
+
+    public getAttackerCount(): number {
+        return Object.keys(this.attackers).length;
     }
 
     /**
