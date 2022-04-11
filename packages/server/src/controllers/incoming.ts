@@ -299,14 +299,11 @@ export default class Incoming {
         if (this.player.dead) return;
 
         switch (opcode) {
-            case Opcodes.Movement.Request:
+            case Opcodes.Movement.Started:
                 this.preventNoClip(requestX!, requestY!);
 
                 this.player.movementStart = Date.now();
 
-                break;
-
-            case Opcodes.Movement.Started:
                 if (movementSpeed !== this.player.movementSpeed) this.player.incrementCheatScore(1);
 
                 if (
