@@ -2,13 +2,14 @@ import _ from 'lodash';
 
 import World from '../game/world';
 
-import shopData from '../../data/shops.json';
+import shopData from '../../data/stores.json';
 
 import log from '@kaetram/common/util/log';
 
-import type { Store, StoreInfo } from '@kaetram/common/types/shops';
+import type { Store, StoreInfo } from '@kaetram/common/types/stores';
 import Player from '../game/entity/character/player/player';
 import Item from '../game/entity/objects/item';
+import NPC from '../game/entity/npc/npc';
 
 /**
  * Shops are globally controlled and updated
@@ -16,14 +17,14 @@ import Item from '../game/entity/objects/item';
  * we relay that information to the rest of the players.
  */
 
-export default class Shops {
+export default class Stores {
     private stores: Store = {}; // Key is the NPC that the store belongs to.
 
     private updateFrequency = 20_000; // Update every 20 seconds
 
     public constructor(private world: World) {
         // Load stores from the JSON.
-        _.each(shopData, this.loadStore.bind(this));
+        _.each(shopData, (store: StoreInfo, key: string) => (this.stores[key] = store));
 
         // Set up an interval for refreshing the store data.
         setInterval(this.update.bind(this), this.updateFrequency);
@@ -33,20 +34,6 @@ export default class Shops {
                 Object.keys(this.stores).length > 1 ? 's' : ''
             }.`
         );
-    }
-
-    /**
-     * Loads a store and saves it into the current shops instance.
-     * @param store The JSON store data we are loading.
-     * @param key The store's key that we are using to identify it.
-     */
-
-    private loadStore(store: StoreInfo, key: string): void {
-        let id = parseInt(key);
-
-        if (isNaN(id)) return;
-
-        this.stores[id] = store;
     }
 
     /**
@@ -74,6 +61,10 @@ export default class Shops {
             // If an alternate optional stock count is provided, increment by that amount.
             item.count += item.stockCount ? item.stockCount : 1;
         });
+    }
+
+    public open(player: Player, store: StoreInfo): void {
+        player.notify('opening store yo');
     }
 
     /**
@@ -120,6 +111,18 @@ export default class Shops {
 
     private canRefresh(store: StoreInfo): boolean {
         return Date.now() - (store.lastUpdate || 0) > store.refresh;
+    }
+
+    /**
+     * Gets a store based on an NPC, otherwise returns undefined.
+     * @param npc The NPC we are trying to find the store of.
+     * @returns The store of the NPC, or undefined if it doesn't exist.
+     */
+
+    public getStore(npc: NPC): StoreInfo | undefined {
+        if (npc.store === '' || !(npc.store in this.stores)) return undefined;
+
+        return this.stores[npc.store];
     }
 
     /**

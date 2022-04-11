@@ -7,7 +7,7 @@ import log from '@kaetram/common/util/log';
 
 import Entities from '../controllers/entities';
 import GlobalObjects from '../controllers/globalobjects';
-import Shops from '../controllers/shops';
+import Stores from '../controllers/stores';
 import Grids from './map/grids';
 import Map from './map/map';
 import API from '../network/api';
@@ -36,7 +36,7 @@ type ConnectionCallback = (connection: Connection) => void;
 export default class World {
     public map!: Map;
     public api!: API;
-    public shops!: Shops;
+    public stores!: Stores;
     public entities!: Entities;
     public network!: Network;
     public discord!: Discord;
@@ -49,7 +49,7 @@ export default class World {
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
         this.map = new Map(this);
         this.api = new API(this);
-        this.shops = new Shops(this);
+        this.stores = new Stores(this);
         this.discord = new Discord();
         this.entities = new Entities(this);
         this.network = new Network(this);
