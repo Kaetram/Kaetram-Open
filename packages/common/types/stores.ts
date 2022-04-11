@@ -13,5 +13,5 @@ export interface StoreInfo {
 }
 
 export interface Store {
-    [id: number]: ShopDataRaw;
+    [key: string]: StoreInfo;
 }
