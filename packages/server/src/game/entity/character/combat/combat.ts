@@ -26,11 +26,11 @@ export default class Combat {
         this.started = true;
 
         /**
-         * Start the loop at half the attack rate with a 10 millisecond offset. This is
+         * Start the loop at a third the attack rate with a 15 millisecond offset. This is
          * so we can condense the entire combat loop into one interval.
          */
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 2 + 10);
+        this.loop = setInterval(this.handleLoop.bind(this), this.character.attackRate / 3 + 15);
     }
 
     /**
