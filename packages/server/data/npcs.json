@@ -192,7 +192,8 @@
   },
 
   "bluestoremannpc": {
-    "name": "Clerk"
+    "name": "Clerk",
+    "store": "startshop"
   },
 
   "royalguard": {
