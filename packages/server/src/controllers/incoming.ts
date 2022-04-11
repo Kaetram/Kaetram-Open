@@ -399,8 +399,6 @@ export default class Incoming {
     private handleTarget(message: [Opcodes.Target, string]): void {
         let [opcode, instance] = message;
 
-        log.debug(`Target [opcode]: ${instance} [${opcode}]`);
-
         switch (opcode) {
             case Opcodes.Target.Talk: {
                 let entity = this.entities.get(instance);
@@ -428,8 +426,6 @@ export default class Incoming {
                 if (!target || target.dead || !this.canAttack(this.player, target)) return;
 
                 this.player.cheatScore = 0;
-
-                console.log('Target packet');
 
                 this.player.combat.attack(target);
 
