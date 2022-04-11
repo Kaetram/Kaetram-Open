@@ -295,10 +295,11 @@ export default class Handler {
     private handleTalkToNPC(npc: NPC): void {
         let quest = this.player.quests.getQuestFromNPC(npc);
 
-        if (quest) {
-            quest.talkCallback?.(npc, this.player);
-            return;
-        }
+        if (quest) return quest.talkCallback?.(npc, this.player);
+
+        let store = this.world.stores.getStore(npc);
+
+        if (store) return this.world.stores.open(this.player, store);
 
         // if (this.player.quests.isQuestNPC(npc)) {
         //     this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
