@@ -176,8 +176,6 @@ export default abstract class Character extends Entity {
 
     public setTarget(target: Character): void {
         this.target = target;
-
-        if (this.isPlayer()) console.log(`Setting target: ${target.instance}`);
     }
 
     /**
