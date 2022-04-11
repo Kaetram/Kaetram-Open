@@ -176,6 +176,8 @@ export default abstract class Character extends Entity {
 
     public setTarget(target: Character): void {
         this.target = target;
+
+        if (this.isPlayer()) console.log(`Setting target: ${target.instance}`);
     }
 
     /**
@@ -291,7 +293,7 @@ export default abstract class Character extends Entity {
     public isNearTarget(): boolean {
         if (this.isRanged()) return this.getDistance(this.target!) <= this.attackRange;
 
-        return this.isNonDiagonal(this.target!);
+        return this.isAdjacent(this.target!);
     }
 
     // Packet sending functions
