@@ -59,9 +59,9 @@ export default class Combat {
 
     public attack(target: Character): void {
         // Already started, let the loop handle it.
-        if (this.started) return;
-
         this.character.setTarget(target);
+
+        if (this.started) return;
 
         this.start();
 
