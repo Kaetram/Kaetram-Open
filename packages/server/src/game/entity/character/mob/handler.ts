@@ -111,20 +111,14 @@ export default class Handler {
             newY = spawnY + Utils.randomInt(-roamDistance, roamDistance),
             distance = Utils.getDistance(spawnX, spawnY, newX, newY);
 
-        // Check if the new position is a collision.
-        if (this.map.isColliding(newX, newY)) return;
-
-        // Don't have mobs block a door.
-        if (this.map.isDoor(newX, newY)) return;
+        // Do not roam while in combat.
+        if (combat.started) return;
 
         // Prevent mobs from going outside of their roaming radius.
         if (distance < roamDistance) return;
 
         // No need to move if the new position is the same as the current.
         if (newX === x && newY === y) return;
-
-        // Do not roam while in combat.
-        if (combat.started) return;
 
         /**
          * A plateau defines an imaginary z-axis in a 2D space. A mob is essentially
@@ -136,6 +130,12 @@ export default class Handler {
          */
 
         if (this.plateauLevel !== this.map.getPlateauLevel(newX, newY)) return;
+
+        // Check if the new position is a collision.
+        if (this.map.isColliding(newX, newY)) return;
+
+        // Don't have mobs block a door.
+        if (this.map.isDoor(newX, newY)) return;
 
         this.mob.move(newX, newY);
     }
