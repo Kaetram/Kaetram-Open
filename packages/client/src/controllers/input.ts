@@ -305,8 +305,7 @@ export default class InputController {
                 return;
             }
 
-            if (entity.gridX === player.gridX && entity.gridY === player.gridY)
-                game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.id]);
+            game.socket.send(Packets.Target, [Opcodes.Target.Attack, entity.id]);
 
             if (this.isTargetable(entity)) {
                 player.follow(entity);
