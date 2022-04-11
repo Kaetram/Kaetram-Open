@@ -71,11 +71,14 @@ export default class Handler {
 
         if (drop) this.world.entities.spawnItem(drop.key, this.mob.x, this.mob.y, true, drop.count);
 
+        if (attacker?.isPlayer()) {
+            attacker.addExperience(this.mob.experience);
+            attacker.killCallback?.(this.mob);
+        }
+
         this.world.entities.remove(this.mob);
 
         this.mob.destroy();
-
-        if (attacker?.isPlayer()) attacker.addExperience(this.mob.experience);
     }
 
     /**
