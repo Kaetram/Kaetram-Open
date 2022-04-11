@@ -166,16 +166,17 @@ export default class Player extends Character {
 
     //--------------------------------------
 
+    public killCallback?: KillCallback;
+    public npcTalkCallback?: NPCTalkCallback;
+    public doorCallback?: DoorCallback;
+    public readyCallback?(): void;
+
     private teleportCallback?: TeleportCallback;
     private cheatScoreCallback?(): void;
     private profileToggleCallback?: InterfaceCallback;
     private inventoryToggleCallback?: InterfaceCallback;
     private warpToggleCallback?: InterfaceCallback;
     private orientationCallback?(): void;
-    private killCallback?: KillCallback;
-    public npcTalkCallback?: NPCTalkCallback;
-    public doorCallback?: DoorCallback;
-    public readyCallback?(): void;
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.id, world, '', -1, -1);
