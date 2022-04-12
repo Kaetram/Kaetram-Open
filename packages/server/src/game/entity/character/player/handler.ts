@@ -293,28 +293,17 @@ export default class Handler {
      */
 
     private handleTalkToNPC(npc: NPC): void {
+        // Primarily for the prevention of packet injection.
+        if (!this.player.isAdjacent(npc))
+            return log.warning(
+                `Player ${this.player.username} tried to talk to NPC ${npc.key} but is not adjacent.`
+            );
+
         let quest = this.player.quests.getQuestFromNPC(npc);
 
         if (quest) return quest.talkCallback?.(npc, this.player);
 
-        let store = this.world.stores.getStore(npc);
-
-        if (store) return this.world.stores.open(this.player, store);
-
-        // if (this.player.quests.isQuestNPC(npc)) {
-        //     this.player.quests.getQuestByNPC(npc)!.triggerTalk(npc);
-        //     return;
-        // }
-
-        // if (this.player.quests.isAchievementNPC(npc)) {
-        //     this.player.quests.getAchievementByNPC(npc)!.converse(npc);
-        //     return;
-        // }
-
-        // if (Shops.isShopNPC(npc.id)) {
-        //     this.world.shops.open(this.player, npc.id);
-        //     return;
-        // }
+        if (npc.store) return this.world.stores.open(this.player, npc);
 
         switch (npc.role) {
             case 'banker':
