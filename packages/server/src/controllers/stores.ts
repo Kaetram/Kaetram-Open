@@ -15,7 +15,8 @@ import { Store as StorePacket } from '../network/packets';
 import type {
     SerializedStoreInfo,
     SerializedStoreItem,
-    StoreData
+    StoreData,
+    StoreItem
 } from '@kaetram/common/types/stores';
 
 interface StoreInfo {
@@ -60,7 +61,7 @@ export default class Stores {
      */
 
     private update(): void {
-        _.each(this.stores, (store) => {
+        _.each(this.stores, (store: StoreInfo) => {
             if (!this.canRefresh(store)) return;
 
             this.stockItems(store);
@@ -69,11 +70,18 @@ export default class Stores {
         });
     }
 
+    /**
+     * Loads a store by converting the JSON data into a `StoreInfo` object.
+     * We create an instance of every object we are trying to load.
+     * @param store Raw store data pulled from the JSON.
+     * @param key The key of the store data.
+     */
+
     private load(store: StoreData, key: string): void {
         let { refresh, currency } = store,
             items: Item[] = [];
 
-        _.each(store.items, (item) => {
+        _.each(store.items, (item: StoreItem) => {
             let storeItem = new Item(item.key, -1, -1, false, item.count);
 
             // Assign price if provided, otherwise use default item price.
@@ -101,7 +109,7 @@ export default class Stores {
      */
 
     private stockItems(store: StoreInfo): void {
-        _.each(store.items, (item) => {
+        _.each(store.items, (item: Item) => {
             if (item.count >= item.maxCount) return;
 
             // If an alternate optional stock count is provided, increment by that amount.
@@ -188,7 +196,7 @@ export default class Stores {
             items: SerializedStoreItem[] = [];
 
         // Extract all the items from the store.
-        _.each(store.items, (item) => {
+        _.each(store.items, (item: Item) => {
             items.push({
                 key: item.key,
                 name: item.name,
