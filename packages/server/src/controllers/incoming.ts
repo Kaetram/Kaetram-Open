@@ -97,8 +97,8 @@ export default class Incoming {
                         return this.handleClick(message);
                     case Packets.Warp:
                         return this.handleWarp(message);
-                    case Packets.Shop:
-                        return this.handleShop(message);
+                    case Packets.Store:
+                        return this.handleStore(message);
                     case Packets.Camera:
                         return this.handleCamera(message);
                 }
@@ -744,7 +744,7 @@ export default class Incoming {
         this.player.warp?.warp(id);
     }
 
-    private handleShop(message: [Opcodes.Shop, number, ...unknown[]]): void {
+    private handleStore(message: [Opcodes.Store, number, ...unknown[]]): void {
         // let [opcode, npcId] = message;
         // switch (opcode) {
         //     case Opcodes.Shop.Buy: {

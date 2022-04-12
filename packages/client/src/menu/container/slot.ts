@@ -1,6 +1,7 @@
 export default class Slot {
     public key: string | null = null;
     public count = -1;
+    public name = '';
 
     public ability: number | undefined = -1;
     public abilityLevel: number | undefined = -1;
@@ -12,13 +13,15 @@ export default class Slot {
     public load(
         key: string | null,
         count: number,
-        ability?: number,
-        abilityLevel?: number,
+        ability = -1,
+        abilityLevel = -1,
         edible = false,
-        equippable = false
+        equippable = false,
+        name = ''
     ): void {
         this.key = key;
         this.count = count;
+        this.name = name;
         this.ability = ability;
         this.abilityLevel = abilityLevel;
 
@@ -29,6 +32,7 @@ export default class Slot {
     public empty(): void {
         this.key = null;
         this.count = -1;
+        this.name = '';
         this.ability = -1;
         this.abilityLevel = -1;
 
