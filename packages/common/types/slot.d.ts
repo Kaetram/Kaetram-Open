@@ -9,8 +9,9 @@ export interface SlotData {
     index: number;
     key: string;
     count: number;
-    ability: number;
-    abilityLevel: number;
+    name?: string;
+    ability?: number;
+    abilityLevel?: number;
 
     edible?: boolean;
     equippable?: boolean;

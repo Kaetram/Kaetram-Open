@@ -24,3 +24,11 @@ export interface CombatPacket {
 }
 
 export type CombatCallback = (opcode: Opcodes.Combat, info: CombatPacket) => void;
+
+export interface StorePacket {
+    opcode?: Opcodes.Store;
+    currency: string;
+    items: SerializedStoreItem[];
+}
+
+export type StoreCallback = (opcode: Opcodes.Store, info: StorePacket) => void;

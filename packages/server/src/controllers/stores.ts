@@ -2,14 +2,32 @@ import _ from 'lodash';
 
 import World from '../game/world';
 
-import shopData from '../../data/stores.json';
+import storeData from '../../data/stores.json';
 
 import log from '@kaetram/common/util/log';
 
-import type { Store, StoreInfo } from '@kaetram/common/types/stores';
-import Player from '../game/entity/character/player/player';
-import Item from '../game/entity/objects/item';
 import NPC from '../game/entity/npc/npc';
+import Item from '../game/entity/objects/item';
+import Player from '../game/entity/character/player/player';
+
+import { Opcodes } from '@kaetram/common/network';
+import { Store as StorePacket } from '../network/packets';
+import type {
+    SerializedStoreInfo,
+    SerializedStoreItem,
+    StoreData
+} from '@kaetram/common/types/stores';
+
+interface StoreInfo {
+    items: Item[];
+    refresh: number;
+    currency: string;
+    lastUpdate?: number;
+}
+
+interface Store {
+    [key: string]: StoreInfo;
+}
 
 /**
  * Shops are globally controlled and updated
@@ -18,13 +36,14 @@ import NPC from '../game/entity/npc/npc';
  */
 
 export default class Stores {
-    private stores: Store = {}; // Key is the NPC that the store belongs to.
+    private stores: Store = {}; // Key is a string representing the store's name in `stores.json`.
 
     private updateFrequency = 20_000; // Update every 20 seconds
 
     public constructor(private world: World) {
         // Load stores from the JSON.
-        _.each(shopData, (store: StoreInfo, key: string) => (this.stores[key] = store));
+        _.each(storeData, this.load.bind(this));
+        //_.each(shopData, (store: StoreInfo, key: string) => (this.stores[key] = store));
 
         // Set up an interval for refreshing the store data.
         setInterval(this.update.bind(this), this.updateFrequency);
@@ -50,6 +69,31 @@ export default class Stores {
         });
     }
 
+    private load(store: StoreData, key: string): void {
+        let { refresh, currency } = store,
+            items: Item[] = [];
+
+        _.each(store.items, (item) => {
+            let storeItem = new Item(item.key, -1, -1, false, item.count);
+
+            // Assign price if provided, otherwise use default item price.
+            if (item.price) storeItem.price = item.price;
+
+            // Stocking amount and max amount of the item in store.
+            storeItem.stockAmount = item.stockAmount || 1;
+            storeItem.maxCount = item.count;
+
+            items.push(storeItem);
+        });
+
+        this.stores[key] = {
+            items,
+            refresh,
+            currency,
+            lastUpdate: Date.now()
+        };
+    }
+
     /**
      * Iterates through all the items in the store and increments
      * them by one.
@@ -58,13 +102,19 @@ export default class Stores {
 
     private stockItems(store: StoreInfo): void {
         _.each(store.items, (item) => {
+            if (item.count >= item.maxCount) return;
+
             // If an alternate optional stock count is provided, increment by that amount.
-            item.count += item.stockCount ? item.stockCount : 1;
+            item.count += item.stockAmount;
         });
     }
 
-    public open(player: Player, store: StoreInfo): void {
-        player.notify('opening store yo');
+    public open(player: Player, npc: NPC): void {
+        let store = this.getStore(npc);
+
+        if (!store) return log.debug(`[${player.username}] Tried to open a non-existent store.`);
+
+        player.send(new StorePacket(Opcodes.Store.Open, this.serialize(npc.store)));
     }
 
     /**
@@ -120,141 +170,36 @@ export default class Stores {
      */
 
     public getStore(npc: NPC): StoreInfo | undefined {
-        if (npc.store === '' || !(npc.store in this.stores)) return undefined;
+        if (!(npc.store in this.stores)) return undefined;
 
         return this.stores[npc.store];
     }
 
     /**
-     * Serializes data about a store.
-     * @param id The store we are serializing.
-     * @returns Data in the form of a `StoreInfo` object.
+     * Takes the key of a store and produces a serialized version
+     * of the data contained in it. It extracts minimalized data containing
+     * absolutely necessary information for the client to display to the player.
+     * @param key The key of the store we are trying to serialize.
+     * @returns A serialized version of the store containing minimal data.
      */
 
-    public serialize(id: number): StoreInfo {
-        return this.stores[id];
-    }
+    public serialize(key: string): SerializedStoreInfo {
+        let store = this.stores[key],
+            items: SerializedStoreItem[] = [];
 
-    // private interval = 60_000;
-    // private shopInterval: NodeJS.Timeout | null = null;
-    // public constructor(private world: World) {
-    //     this.load();
-    // }
-    // private load(): void {
-    //     this.shopInterval = setInterval(() => {
-    //         _.each(Shop.Data, (info) => {
-    //             for (let i = 0; i < info.count.length; i++)
-    //                 if (info.count[i] < info.originalCount[i])
-    //                     Shop.increment(info.id!, info.items[i], 1);
-    //         });
-    //     }, this.interval);
-    // }
-    // public open(player: Player, npcId: number): void {
-    //     player.send(
-    //         new ShopPacket(Opcodes.Shop.Open, {
-    //             instance: player.instance,
-    //             npcId,
-    //             shopData: this.getShopData(npcId)!
-    //         })
-    //     );
-    // }
-    // public buy(player: Player, npcId: number, buyId: number, count: number): void {
-    //     let cost = Shop.getCost(npcId, buyId, count),
-    //         currency = this.getCurrency(npcId),
-    //         stock = Shop.getStock(npcId, buyId);
-    //     if (!cost || !currency || !stock) {
-    //         log.info('Invalid shop data.');
-    //         return;
-    //     }
-    //     // TODO: Make it so that when you have the exact coin count, it removes coins and replaces it with the item purchased.
-    //     if (stock === 0) {
-    //         player.notify('This item is currently out of stock.');
-    //         return;
-    //     }
-    //     if (!player.inventory.contains(currency, cost)) {
-    //         player.notify('You do not have enough money to purchase this.');
-    //         return;
-    //     }
-    //     if (!player.inventory.hasSpace()) {
-    //         player.notify('You do not have enough space in your inventory.');
-    //         return;
-    //     }
-    //     if (count > stock) count = stock;
-    //     player.inventory.remove(currency, cost);
-    //     player.inventory.add({
-    //         id: Shop.getItem(npcId, buyId),
-    //         count,
-    //         ability: -1,
-    //         abilityLevel: -1
-    //     });
-    //     Shop.decrement(npcId, buyId, count);
-    //     this.refresh(npcId);
-    // }
-    // public sell(player: Player, npcId: number, slotId: number): void {
-    //     let item = player.inventory.slots[slotId],
-    //         shop = Shop.Ids[npcId];
-    //     if (!shop || !item) {
-    //         log.info('Invalid shop data.');
-    //         return;
-    //     }
-    //     if (!shop.items.includes(item.id)) {
-    //         player.notify('That item cannot be sold in this store.');
-    //         return;
-    //     }
-    //     let currency = this.getCurrency(npcId)!,
-    //         price = this.getSellPrice(npcId, item.id, item.count);
-    //     Shop.increment(npcId, item.id, item.count);
-    //     player.inventory.remove(item.id, item.count, item.index);
-    //     player.inventory.add({
-    //         id: currency,
-    //         count: price
-    //     });
-    //     this.remove(player);
-    //     this.refresh(npcId);
-    // }
-    // public remove(player: Player): void {
-    //     let selectedItem = player.selectedShopItem;
-    //     if (!selectedItem) return;
-    //     player.send(
-    //         new ShopPacket(Opcodes.Shop.Remove, {
-    //             id: selectedItem.id,
-    //             index: selectedItem.index
-    //         })
-    //     );
-    //     player.selectedShopItem = null;
-    // }
-    // public refresh(shop: number): void {
-    //     this.world.push(Modules.PacketType.Broadcast, {
-    //         packet: new ShopPacket(Opcodes.Shop.Refresh, this.getShopData(shop))
-    //     });
-    // }
-    // public getCurrency(npcId: number): number | null {
-    //     let shop = Shop.Ids[npcId];
-    //     if (!shop) return null;
-    //     return shop.currency;
-    // }
-    // public getSellPrice(npcId: number, itemId: number, count = 1): number {
-    //     let shop = Shop.Ids[npcId];
-    //     if (!shop) return 1;
-    //     let buyId = shop.items.indexOf(itemId);
-    //     if (buyId < 0) return 1;
-    //     return Math.floor(Shop.getCost(npcId, buyId, count) / 2);
-    // }
-    // private getShopData(npcId: number): void {
-    //     // let shop = Shop.Ids[npcId];
-    //     // if (!shop || !_.isArray(shop.items)) return;
-    //     // let strings = [],
-    //     //     names = [];
-    //     // for (let i = 0; i < shop.items.length; i++) {
-    //     //     strings.push(Items.idToString(shop.items[i]));
-    //     //     names.push(Items.idToName(shop.items[i]));
-    //     // }
-    //     // return {
-    //     //     id: npcId,
-    //     //     strings,
-    //     //     names,
-    //     //     counts: shop.count,
-    //     //     prices: shop.prices
-    //     // };
-    // }
+        // Extract all the items from the store.
+        _.each(store.items, (item) => {
+            items.push({
+                key: item.key,
+                name: item.name,
+                count: item.count,
+                price: item.price
+            });
+        });
+
+        return {
+            items,
+            currency: store.currency
+        };
+    }
 }

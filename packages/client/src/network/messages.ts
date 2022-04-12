@@ -4,7 +4,11 @@ import { Modules, Packets } from '@kaetram/common/network';
 
 import type { Opcodes } from '@kaetram/common/network';
 
-import type { MovementCallback, CombatCallback } from '@kaetram/common/types/messages/outgoing';
+import type {
+    MovementCallback,
+    CombatCallback,
+    StoreCallback
+} from '@kaetram/common/types/messages/outgoing';
 
 // TODO: Slowly remove all these.
 import type {
@@ -41,12 +45,6 @@ import type {
     QuestBatchData,
     QuestFinishData,
     QuestProgressData,
-    ShopBuyData,
-    ShopOpenData,
-    ShopRefreshData,
-    ShopRemoveData,
-    ShopSelectData,
-    ShopSellData,
     SpawnData,
     TeleportData,
     WelcomeData
@@ -115,14 +113,6 @@ interface PointerCallback {
     (opcode: Opcodes.Pointer.Button, data: PointerButtonData): void;
 }
 type PVPCallback = (id: string, pvp: boolean) => void;
-interface ShopCallback {
-    (opcode: Opcodes.Shop.Open, data: ShopOpenData): void;
-    (opcode: Opcodes.Shop.Buy, data: ShopBuyData): void;
-    (opcode: Opcodes.Shop.Sell, data: ShopSellData): void;
-    (opcode: Opcodes.Shop.Refresh, data: ShopRefreshData): void;
-    (opcode: Opcodes.Shop.Select, data: ShopSelectData): void;
-    (opcode: Opcodes.Shop.Remove, data: ShopRemoveData): void;
-}
 type MapCallback = (opcode: Opcodes.Map, data: string) => void;
 interface OverlayCallback {
     (opcode: Opcodes.Overlay, data: undefined): void;
@@ -172,7 +162,7 @@ export default class Messages {
     private guildCallback?: GuildCallback;
     private pointerCallback?: PointerCallback;
     private pvpCallback?: PVPCallback;
-    private shopCallback?: ShopCallback;
+    private storeCallback?: StoreCallback;
     private mapCallback?: MapCallback;
     private overlayCallback?: OverlayCallback;
     private cameraCallback?: CameraCallback;
@@ -224,7 +214,7 @@ export default class Messages {
         messages[Packets.Guild] = () => this.guildCallback;
         messages[Packets.Pointer] = () => this.pointerCallback;
         messages[Packets.PVP] = () => this.pvpCallback;
-        messages[Packets.Shop] = () => this.shopCallback;
+        messages[Packets.Store] = () => this.storeCallback;
         messages[Packets.Map] = () => this.mapCallback;
         messages[Packets.Overlay] = () => this.overlayCallback;
         messages[Packets.Camera] = () => this.cameraCallback;
@@ -451,8 +441,8 @@ export default class Messages {
         this.pvpCallback = callback;
     }
 
-    public onShop(callback: ShopCallback): void {
-        this.shopCallback = callback;
+    public onStore(callback: StoreCallback): void {
+        this.storeCallback = callback;
     }
 
     public onMap(callback: MapCallback): void {
