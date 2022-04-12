@@ -41,7 +41,7 @@ enum Packets {
     PVP,
     Click,
     Warp,
-    Shop,
+    Store,
     Overlay,
     Camera,
     Bubble,

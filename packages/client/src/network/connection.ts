@@ -26,17 +26,12 @@ import type {
     ProfessionBatchData,
     ProfessionUpdateData,
     QuestBatchData,
-    QuestProgressData,
-    ShopOpenData,
-    ShopRefreshData,
-    ShopRemoveData,
-    ShopSelectData
+    QuestProgressData
 } from '@kaetram/common/types/messages';
 import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
-import { QuestData } from '@kaetram/common/types/quest';
 export default class Connection {
     private app;
     private audio;
@@ -945,49 +940,56 @@ export default class Connection {
             }
         });
 
-        this.messages.onShop((opcode, info) => {
+        this.messages.onStore((opcode, info) => {
             let { shop } = this.menu;
 
             switch (opcode) {
-                case Opcodes.Shop.Open: {
-                    let { shopData } = info as ShopOpenData;
-
-                    shop.open(shopData.id);
-                    shop.update(shopData);
-
-                    break;
-                }
-
-                case Opcodes.Shop.Buy:
-                    break;
-
-                case Opcodes.Shop.Sell:
-                    break;
-
-                case Opcodes.Shop.Select: {
-                    let data = info as ShopSelectData;
-
-                    if (shop.isShopOpen(data.id)) shop.move(data);
-
-                    break;
-                }
-
-                case Opcodes.Shop.Remove: {
-                    let { id, index } = info as ShopRemoveData;
-
-                    if (shop.isShopOpen(id)) shop.moveBack(index);
-
-                    break;
-                }
-
-                case Opcodes.Shop.Refresh: {
-                    let data = info as ShopRefreshData;
-
-                    if (shop.isShopOpen(data.id)) shop.update(data);
-
-                    break;
-                }
+                case Opcodes.Store.Open:
+                    return shop.open(info);
             }
+
+            // let { shop } = this.menu;
+
+            // switch (opcode) {
+            //     case Opcodes.Store.Open: {
+            //         let { shopData } = info as ShopOpenData;
+
+            //         shop.open(shopData.id);
+            //         shop.update(shopData);
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Store.Buy:
+            //         break;
+
+            //     case Opcodes.Store.Sell:
+            //         break;
+
+            //     case Opcodes.Store.Select: {
+            //         let data = info as ShopSelectData;
+
+            //         if (shop.isShopOpen(data.id)) shop.move(data);
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Store.Remove: {
+            //         let { id, index } = info as ShopRemoveData;
+
+            //         if (shop.isShopOpen(id)) shop.moveBack(index);
+
+            //         break;
+            //     }
+
+            //     case Opcodes.Store.Refresh: {
+            //         let data = info as ShopRefreshData;
+
+            //         if (shop.isShopOpen(data.id)) shop.update(data);
+
+            //         break;
+            //     }
+            // }
         });
 
         this.messages.onMap((opcode: Opcodes.Map, info: string) => {

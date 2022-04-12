@@ -1,3 +1,5 @@
+import { SerializedStoreItem } from '@kaetram/common/types/stores';
+import { SerializedStoreInfo } from './../../../common/types/stores.d';
 import $ from 'jquery';
 
 import { Opcodes, Packets } from '@kaetram/common/network';
@@ -8,6 +10,7 @@ import type { ShopData } from '@kaetram/common/types/info';
 import type { ShopSelectData } from '@kaetram/common/types/messages';
 import type MenuController from '../controllers/menu';
 import type Game from '../game';
+import _ from 'lodash';
 
 export default class Shop {
     private body = $('#shop');
@@ -27,8 +30,7 @@ export default class Shop {
 
     private confirmSell = $('#confirm-sell');
 
-    private container!: Container;
-    private data!: ShopData;
+    private container: Container = new Container();
     private openShop = -1;
 
     private close: JQuery;
@@ -47,22 +49,22 @@ export default class Shop {
     private buy(event: JQuery.ClickEvent): void {
         let id = event.currentTarget.id.slice(11);
 
-        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Buy, this.openShop, id, 1]);
+        this.game.socket.send(Packets.Store, [Opcodes.Store.Buy, this.openShop, id, 1]);
     }
 
     private sell(): void {
         // The server will handle the selected item and verifications.
-        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Sell, this.openShop]);
+        this.game.socket.send(Packets.Store, [Opcodes.Store.Sell, this.openShop]);
     }
 
     private select(event: JQuery.ClickEvent): void {
         let id = event.currentTarget.id.slice(17);
 
-        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Select, this.openShop, id]);
+        this.game.socket.send(Packets.Store, [Opcodes.Store.Select, this.openShop, id]);
     }
 
     private remove(): void {
-        this.game.socket.send(Packets.Shop, [Opcodes.Shop.Remove]);
+        this.game.socket.send(Packets.Store, [Opcodes.Store.Remove]);
     }
 
     public move(info: ShopSelectData): void {
@@ -115,73 +117,79 @@ export default class Shop {
         this.getInventoryList().empty();
         this.getShopList().empty();
 
-        this.update(this.data);
+        this.load();
+
+        //this.update(this.data);
     }
 
-    public update(data: ShopData): void {
+    public update(items: SerializedStoreItem[]): void {
         this.reset();
 
-        this.container = new Container(data.strings.length);
+        this.container = new Container(items.length);
 
-        // Update the global data to current revision
-        this.data = data;
+        for (let i = 0; i < items.length; i++)
+            this.container.update(i, {
+                index: i,
+                key: items[i].key,
+                count: items[i].count,
+                name: items[i].name
+            });
 
         this.load();
     }
 
     private load(): void {
-        // for (let i = 0; i < this.container.size; i++) {
-        //     let shop-item = $(`<div id="shop-item${i}" class="shop-item"></div>`),
-        //         string = this.data.strings[i],
-        //         name = this.data.names[i],
-        //         count = this.data.counts[i],
-        //         price = this.data.prices[i];
-        //     if (!string || !name || !count) continue;
-        //     let itemImage = $(`<div id="shop-item-image${i}" class="shop-item-image"></div>`),
-        //         item-count = $(`<div id="shop-item-count${i}" class="shop-item-count"></div>`),
-        //         itemPrice = $(`<div id="shop-item-price${i}" class="shop-item-price"></div>`),
-        //         itemName = $(`<div id="shop-item-name${i}" class="shop-item-name"></div>`),
-        //         itemBuy = $(`<div id="shop-item-buy${i}" class="shop-item-buy"></div>`);
-        //     itemImage.css('background-image', this.container.getImageFormat(string));
-        //     item-count.html(count.toString());
-        //     itemPrice.html(`${price}g`);
-        //     itemName.html(name);
-        //     itemBuy.html('Buy');
-        //     this.container.setSlot(i, {
-        //         string,
-        //         count
-        //     });
-        //     // Bind the itemBuy to the local buy function.
-        //     itemBuy.on('click', (event) => this.buy(event));
-        //     let listItem = $('<li></li>');
-        //     shop-item.append(itemImage, item-count, itemPrice, itemName, itemBuy);
-        //     listItem.append(shop-item);
-        //     this.getShopList().append(listItem);
-        // }
-        // let inventoryItems = this.menu.bank.getInventoryList(),
-        //     inventorySize = this.menu.inventory.getSize();
-        // for (let j = 0; j < inventorySize; j++) {
-        //     let item = $(inventoryItems[j]).clone(),
-        //         slot = item.find(`#bankInventorySlot${j}`);
-        //     slot.attr('id', `shopInventorySlot${j}`);
-        //     slot.on('click', (event) => this.select(event));
-        //     this.getInventoryList().append(slot);
-        // }
+        _.each(this.container.slots, (slot) => {
+            let storeItem = $(`<div id="shopItem${slot.index}" class="shop-item"></div>`),
+                image = $(`<div id="shopItemImage${slot.index}" class="shop-item-image"></div>`),
+                count = $(`<div id="shopItemCount${slot.index}" class="shop-item-count"></div>`),
+                price = $(`<div id="shopItemPrice${slot.index}" class="shop-item-price"></div>`),
+                name = $(`<div id="shopItemName${slot.index}" class="shop-item-name"></div>`),
+                buy = $(`<div id="shopItemBuy${slot.index}" class="shop-item-buy"></div>`);
+
+            image.css('background-image', this.container.getImageFormat(slot.key));
+            count.text(slot.count);
+            price.text('??????');
+            name.text(slot.name);
+            buy.html('Buy');
+
+            buy.on('click', (event) => this.buy(event));
+
+            let listItem = $('<li></li>');
+
+            storeItem.append(image, count, price, name, buy);
+
+            listItem.append(storeItem);
+
+            this.getShopList().append(listItem);
+        });
+
+        let inventoryItems = this.menu.bank.getInventoryList(),
+            inventorySize = this.menu.inventory.getSize();
+
+        for (let j = 0; j < inventorySize; j++) {
+            let item = $(inventoryItems[j]).clone(),
+                slot = item.find(`#bankInventorySlot${j}`);
+
+            slot.attr('id', `shopInventorySlot${j}`);
+
+            slot.on('click', (event) => this.select(event));
+
+            this.getInventoryList().append(slot);
+        }
     }
 
     private reset(): void {
-        this.container = null!;
+        this.container = new Container();
 
         this.getShopList().empty();
         this.getInventoryList().empty();
     }
 
-    public open(id: number): void {
-        if (!id) return;
-
-        this.openShop = id;
-
+    public open(store: SerializedStoreInfo): void {
         this.body.fadeIn('slow');
+
+        this.update(store.items);
     }
 
     public hide(): void {

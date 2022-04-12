@@ -120,7 +120,7 @@ export enum Pointer {
     Button // Pointer for a button
 }
 
-export enum Shop {
+export enum Store {
     Open,
     Buy,
     Sell,
