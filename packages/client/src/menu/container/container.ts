@@ -4,7 +4,7 @@ import Slot from './slot';
 export default class Container {
     public slots: Slot[] = [];
 
-    public constructor(public size: number) {
+    public constructor(public size = 0) {
         for (let i = 0; i < this.size; i++) this.slots.push(new Slot(i));
     }
 
@@ -20,7 +20,8 @@ export default class Container {
             info.ability,
             info.abilityLevel,
             info.edible,
-            info.equippable
+            info.equippable,
+            info.name!
         );
     }
 

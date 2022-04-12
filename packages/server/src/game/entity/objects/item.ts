@@ -30,6 +30,8 @@ export default class Item extends Entity {
     public ringLevel = 0;
     public bootsLevel = 0;
     public movementSpeed = -1;
+    public stockAmount = 1; // Used for stores to increase count by this amount.
+    public maxCount = 1; // Used for stores to know maximum limit.
 
     private respawnTime = 30_000;
     private despawnDuration = 7000;

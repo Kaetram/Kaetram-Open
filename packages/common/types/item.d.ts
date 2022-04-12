@@ -2,8 +2,8 @@ export interface ContainerItem {
     index: number;
     key: string;
     count: number;
-    ability: number;
-    abilityLevel: number;
+    ability?: number;
+    abilityLevel?: number;
 }
 
 export interface ItemData {
