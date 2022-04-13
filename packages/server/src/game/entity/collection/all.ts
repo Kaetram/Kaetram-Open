@@ -12,7 +12,7 @@ import _ from 'lodash';
 /**
  * A class for collections of entities of a certain type in the game.
  */
-export default class AllEntityCollection {
+export default class AllCollection {
     private map: Map;
     private regions: Regions;
     private grids: Grids;
