@@ -19,14 +19,14 @@ import type Entity from '../game/entity/entity';
 import type World from '../game/world';
 import Grids from '../game/map/grids';
 import Hit from '../game/entity/character/combat/hit';
-import EntityCollection from '@kaetram/server/src/game/entity/entitycollection/entitycollection';
-import PlayerEntityCollection from '@kaetram/server/src/game/entity/entitycollection/playerentitycollection';
-import ItemEntityCollection from '@kaetram/server/src/game/entity/entitycollection/itementitycollection';
-import MobEntityCollection from '@kaetram/server/src/game/entity/entitycollection/mobentitycollection';
-import ChestEntityCollection from '@kaetram/server/src/game/entity/entitycollection/chestentitycollection';
-import NpcEntityCollection from '@kaetram/server/src/game/entity/entitycollection/npcentitycollection';
-import ProjectileEntityCollection from '@kaetram/server/src/game/entity/entitycollection/projectileentitycollection';
-import AllEntityCollection from '@kaetram/server/src/game/entity/entitycollection/allentitycollection';
+import Collection from '@kaetram/server/src/game/entity/collection/collection';
+import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
+import ItemCollection from '@kaetram/server/src/game/entity/collection/items';
+import MobCollection from '@kaetram/server/src/game/entity/collection/mobs';
+import ChestCollection from '@kaetram/server/src/game/entity/collection/chests';
+import NpcCollection from '@kaetram/server/src/game/entity/collection/npcs';
+import ProjectileCollection from '@kaetram/server/src/game/entity/collection/projectiles';
+import AllCollection from '@kaetram/server/src/game/entity/collection/all';
 
 export default class Entities {
     public static readonly PLAYERS = 'PLAYERS';
@@ -40,11 +40,11 @@ export default class Entities {
     private regions: Regions;
     private grids: Grids;
 
-    private readonly allEntities: AllEntityCollection;
-    private entityCollections: { [entityType: string]: EntityCollection<any> } = {};
+    private readonly allEntities: AllCollection;
+    private entityCollections: { [entityType: string]: Collection<any> } = {};
 
     public constructor(private world: World) {
-        this.allEntities = new AllEntityCollection(this.world);
+        this.allEntities = new AllCollection(this.world);
         this.map = world.map;
         this.regions = world.map.regions;
         this.grids = world.map.grids;
@@ -56,28 +56,19 @@ export default class Entities {
      * Initializes the different data structures such as entity collections.
      */
     private init() {
-        this.entityCollections[Entities.PLAYERS] = new PlayerEntityCollection(
+        this.entityCollections[Entities.PLAYERS] = new PlayerCollection(
             this.world,
             this.allEntities
         );
-        this.entityCollections[Entities.ITEMS] = new ItemEntityCollection(
-            this.world,
-            this.allEntities
-        );
-        this.entityCollections[Entities.MOBS] = new MobEntityCollection(
-            this.world,
-            this.allEntities
-        );
-        this.entityCollections[Entities.CHESTS] = new ChestEntityCollection(
+        this.entityCollections[Entities.ITEMS] = new ItemCollection(this.world, this.allEntities);
+        this.entityCollections[Entities.MOBS] = new MobCollection(this.world, this.allEntities);
+        this.entityCollections[Entities.CHESTS] = new ChestCollection(
             this.world,
             this.allEntities,
-            <ItemEntityCollection>this.entityCollections[Entities.ITEMS]
+            <ItemCollection>this.entityCollections[Entities.ITEMS]
         );
-        this.entityCollections[Entities.NPCS] = new NpcEntityCollection(
-            this.world,
-            this.allEntities
-        );
-        this.entityCollections[Entities.PROJECTILES] = new ProjectileEntityCollection(
+        this.entityCollections[Entities.NPCS] = new NpcCollection(this.world, this.allEntities);
+        this.entityCollections[Entities.PROJECTILES] = new ProjectileCollection(
             this.world,
             this.allEntities
         );
@@ -93,7 +84,7 @@ export default class Entities {
 
             switch (type) {
                 case Modules.EntityType.Item:
-                    return this.getListOf<ItemEntityCollection>(Entities.ITEMS).spawn({
+                    return this.getListOf<ItemCollection>(Entities.ITEMS).spawn({
                         key,
                         x: position.x,
                         y: position.y,
@@ -250,9 +241,9 @@ export default class Entities {
 
     /**
      * Helper function to easily get the entity collection of a certain type
-     * @return EntityCollection the collection for the requested type of entities
+     * @return Collection the collection for the requested type of entities
      */
-    private getListOf<EntityType extends EntityCollection<any>>(collectionKey: string): EntityType {
+    private getListOf<EntityType extends Collection<any>>(collectionKey: string): EntityType {
         return <EntityType>this.entityCollections[collectionKey];
     }
 
