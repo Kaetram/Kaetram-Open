@@ -1,4 +1,4 @@
-import EntityCollection from '@kaetram/server/src/game/entity/entitycollection/entitycollection';
+import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import Item from '@kaetram/server/src/game/entity/objects/item';
 import { Blink } from '@kaetram/server/src/network/packets';
 import { Modules } from '@kaetram/common/network';
@@ -6,7 +6,7 @@ import { Modules } from '@kaetram/common/network';
 /**
  * A class for collections of entities of a certain type in the game.
  */
-export default class ItemEntityCollection extends EntityCollection<Item> {
+export default class ItemCollection extends Collection<Item> {
     onSpawn(params: {
         key: string;
         x: number;

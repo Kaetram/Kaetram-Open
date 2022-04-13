@@ -1,10 +1,10 @@
-import EntityCollection from '@kaetram/server/src/game/entity/entitycollection/entitycollection';
+import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import Player from '@kaetram/server/src/game/entity/character/player/player';
 
 /**
  * A class for collections of entities of a certain type in the game.
  */
-export default class PlayerEntityCollection extends EntityCollection<Player> {
+export default class PlayerCollection extends Collection<Player> {
     onSpawn(): Player | undefined {
         // We should not try to spawn a player this way, add() will not be called
         return undefined;
