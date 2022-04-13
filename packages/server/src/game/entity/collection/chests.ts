@@ -1,18 +1,18 @@
 import World from '@kaetram/server/src/game/world';
-import EntityCollection from '@kaetram/server/src/game/entity/entitycollection/entitycollection';
+import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import Chest from '@kaetram/server/src/game/entity/objects/chest';
-import ItemEntityCollection from '@kaetram/server/src/game/entity/entitycollection/itementitycollection';
+import ItemCollection from '@kaetram/server/src/game/entity/collection/items';
 import Player from '@kaetram/server/src/game/entity/character/player/player';
-import AllEntityCollection from '@kaetram/server/src/game/entity/entitycollection/allentitycollection';
+import AllCollection from '@kaetram/server/src/game/entity/collection/all';
 
 /**
  * A class for collections of entities of a certain type in the game.
  */
-export default class ChestEntityCollection extends EntityCollection<Chest> {
+export default class ChestCollection extends Collection<Chest> {
     public constructor(
         world: World,
-        allEntities: AllEntityCollection,
-        protected itemEntityCollection: ItemEntityCollection
+        allEntities: AllCollection,
+        protected itemEntityCollection: ItemCollection
     ) {
         super(world, allEntities);
     }
