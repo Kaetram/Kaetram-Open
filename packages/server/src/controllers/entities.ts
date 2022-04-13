@@ -48,11 +48,14 @@ export default class Entities {
         this.map = world.map;
         this.regions = world.map.regions;
         this.grids = world.map.grids;
-        this.initCollections();
+        this.init();
         this.load();
     }
 
-    private initCollections() {
+    /**
+     * Initializes the different data structures such as entity collections.
+     */
+    private init() {
         this.entityCollections[Entities.PLAYERS] = new PlayerEntityCollection(
             this.world,
             this.allEntities
@@ -78,19 +81,6 @@ export default class Entities {
             this.world,
             this.allEntities
         );
-    }
-
-    private getListOf<EntityType extends EntityCollection<any>>(collectionKey: string): EntityType {
-        return <EntityType>this.entityCollections[collectionKey];
-    }
-
-    /**
-     * Returns an copy of the list of Player entity objects.
-     * Changes to this list will not affect the list inside the collection
-     * @return players List of player entities
-     */
-    public get players(): { [instance: string]: Player } {
-        return this.getListOf(Entities.PLAYERS).getAll();
     }
 
     /**
@@ -257,6 +247,23 @@ export default class Entities {
     /**
      * Getters
      */
+
+    /**
+     * Helper function to easily get the entity collection of a certain type
+     * @return EntityCollection the collection for the requested type of entities
+     */
+    private getListOf<EntityType extends EntityCollection<any>>(collectionKey: string): EntityType {
+        return <EntityType>this.entityCollections[collectionKey];
+    }
+
+    /**
+     * Returns an copy of the list of Player entity objects.
+     * Changes to this list will not affect the list inside the collection
+     * @return players List of player entities
+     */
+    public get players(): { [instance: string]: Player } {
+        return this.getListOf(Entities.PLAYERS).getAll();
+    }
 
     /**
      * Grabs an entity from our dictionary of entities.
