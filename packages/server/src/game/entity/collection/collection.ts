@@ -4,19 +4,19 @@ import Regions from '@kaetram/server/src/game/map/regions';
 import Grids from '@kaetram/server/src/game/map/grids';
 import Entity from '../entity';
 import _ from 'lodash';
-import AllEntityCollection from '@kaetram/server/src/game/entity/entitycollection/allentitycollection';
+import AllCollection from '@kaetram/server/src/game/entity/collection/all';
 
 /**
  * A class for collections of entities of a certain type in the game.
  */
-export default abstract class EntityCollection<EntityType extends Entity> {
+export default abstract class Collection<EntityType extends Entity> {
     protected map: Map;
     protected regions: Regions;
     protected grids: Grids;
 
     protected entities: { [instance: string]: EntityType } = {};
 
-    public constructor(protected world: World, protected allEntities: AllEntityCollection) {
+    public constructor(protected world: World, protected allEntities: AllCollection) {
         this.map = world.map;
         this.regions = world.map.regions;
         this.grids = world.map.grids;
@@ -109,20 +109,34 @@ export default abstract class EntityCollection<EntityType extends Entity> {
         return this.keys().length;
     }
 
+    /**
+     * Gets an entity based on the username
+     * @return entity
+     */
     get(username: string) {
         return _.find(this.entities, (entity: EntityType) => {
             return entity.username.toLowerCase() === username.toLowerCase();
         });
     }
 
+    /**
+     * Gets a list of all user names in the collection
+     * @return list of usernames
+     */
     getUsernames(): string[] {
         return _.map(this.entities, (entity: EntityType) => entity.username);
     }
 
+    /**
+     * Perform a callback for each entity in the collection
+     */
     forEachEntity(callback: (entity: EntityType) => void) {
         _.each(this.entities, callback);
     }
 
+    /**
+     * Gets a copied list of all entities in the collection
+     */
     getAll(): { [instance: string]: EntityType } {
         return { ...this.entities };
     }
