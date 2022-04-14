@@ -1,25 +1,38 @@
-import World from '@kaetram/server/src/game/world';
 import Map from '@kaetram/server/src/game/map/map';
 import Regions from '@kaetram/server/src/game/map/regions';
 import Grids from '@kaetram/server/src/game/map/grids';
 import Entity from '../entity';
 import _ from 'lodash';
-import AllCollection from '@kaetram/server/src/game/entity/collection/all';
+import Collections from '@kaetram/server/src/game/entity/collection/collections';
+import World from '@kaetram/server/src/game/world';
 
 /**
  * A class for collections of entities of a certain type in the game.
  */
 export default abstract class Collection<EntityType extends Entity> {
+    protected world: World;
     protected map: Map;
     protected regions: Regions;
     protected grids: Grids;
 
     protected entities: { [instance: string]: EntityType } = {};
 
-    public constructor(protected world: World, protected allEntities: AllCollection) {
-        this.map = world.map;
-        this.regions = world.map.regions;
-        this.grids = world.map.grids;
+    public constructor(public readonly collections: Collections) {
+        this.world = collections.world;
+        this.map = this.world.map;
+        this.regions = this.world.map.regions;
+        this.grids = this.world.map.grids;
+    }
+
+    /**
+     * tryLoad is called when the entity is loaded. The collection will decide whether to do anything with it
+     * You should override this method whenever you want to perform additional logic on this event.
+     * @param position the position of the entity
+     * @param key the name/id of the entity
+     * @return entity Entity we are adding. or undefined when nothing happened
+     */
+    tryLoad(position: Position, key: string): EntityType | undefined {
+        return undefined;
     }
 
     /**
@@ -28,7 +41,7 @@ export default abstract class Collection<EntityType extends Entity> {
      * @return entity Entity instance we are creating.
      */
     spawn(params: Record<string, unknown> | undefined): EntityType | undefined {
-        let entity = this.onSpawn(params);
+        let entity = this.createEntity(params);
         if (entity) this.add(entity);
 
         return entity;
@@ -40,7 +53,7 @@ export default abstract class Collection<EntityType extends Entity> {
      * @return entity Entity instance we are adding.
      */
     add(entity: EntityType): void {
-        this.allEntities.add(entity);
+        this.collections.allEntities.add(entity);
 
         this.entities[entity.instance] = entity;
 
@@ -52,7 +65,7 @@ export default abstract class Collection<EntityType extends Entity> {
      * @param entity Entity we are removing.
      */
     remove(entity: EntityType): void {
-        this.allEntities.remove(entity);
+        this.collections.allEntities.remove(entity);
         if (this.shouldRemove(entity)) {
             this.onRemove(entity);
             delete this.entities[entity.instance];
@@ -65,10 +78,10 @@ export default abstract class Collection<EntityType extends Entity> {
      * @param params the params used to create a new object
      * @return entity Entity we are adding.
      */
-    abstract onSpawn(params: Record<string, unknown> | undefined): EntityType | undefined;
+    abstract createEntity(params: Record<string, unknown> | undefined): EntityType | undefined;
 
     /**
-     * onAdd is called when the entity is added to this collection.
+     * load is called when the entity needs to be loaded into the collection
      * You should override this method whenever you want to perform additional logic on this event.
      * @param entity Entity we are adding.
      */
