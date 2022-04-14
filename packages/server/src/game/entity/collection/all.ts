@@ -8,21 +8,24 @@ import log from '@kaetram/common/util/log';
 import { Despawn } from '@kaetram/server/src/network/packets';
 import Character from '@kaetram/server/src/game/entity/character/character';
 import _ from 'lodash';
+import Collections from '@kaetram/server/src/game/entity/collection/collections';
 
 /**
  * A class for collections of entities of a certain type in the game.
  */
 export default class AllCollection {
+    private world: World;
     private map: Map;
     private regions: Regions;
     private grids: Grids;
 
     private entities: { [instance: string]: Entity } = {};
 
-    public constructor(protected world: World) {
-        this.map = world.map;
-        this.regions = world.map.regions;
-        this.grids = world.map.grids;
+    public constructor(public readonly collections: Collections) {
+        this.world = collections.world;
+        this.map = this.world.map;
+        this.regions = this.world.map.regions;
+        this.grids = this.world.map.grids;
     }
 
     /**
