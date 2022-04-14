@@ -19,7 +19,6 @@ import type Entity from '../game/entity/entity';
 import type World from '../game/world';
 import Grids from '../game/map/grids';
 import Hit from '../game/entity/character/combat/hit';
-import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
 import ItemCollection from '@kaetram/server/src/game/entity/collection/items';
 import MobCollection from '@kaetram/server/src/game/entity/collection/mobs';
@@ -41,37 +40,30 @@ export default class Entities {
     private grids: Grids;
 
     private readonly allEntities: AllCollection;
-    private entityCollections: { [entityType: string]: Collection<any> } = {};
+    private readonly players: PlayerCollection;
+    private readonly items: ItemCollection;
+    private readonly mobs: MobCollection;
+    private readonly chests: ChestCollection;
+    private readonly npcs: NpcCollection;
+    private readonly projectiles: ProjectileCollection;
 
     public constructor(private world: World) {
         this.allEntities = new AllCollection(this.world);
         this.map = world.map;
         this.regions = world.map.regions;
         this.grids = world.map.grids;
-        this.init();
-        this.load();
-    }
 
-    /**
-     * Initializes the different data structures such as entity collections.
-     */
-    private init() {
-        this.entityCollections[Entities.PLAYERS] = new PlayerCollection(
-            this.world,
-            this.allEntities
-        );
-        this.entityCollections[Entities.ITEMS] = new ItemCollection(this.world, this.allEntities);
-        this.entityCollections[Entities.MOBS] = new MobCollection(this.world, this.allEntities);
-        this.entityCollections[Entities.CHESTS] = new ChestCollection(
-            this.world,
-            this.allEntities,
-            <ItemCollection>this.entityCollections[Entities.ITEMS]
-        );
-        this.entityCollections[Entities.NPCS] = new NpcCollection(this.world, this.allEntities);
-        this.entityCollections[Entities.PROJECTILES] = new ProjectileCollection(
-            this.world,
-            this.allEntities
-        );
+        /**
+         * Initializes the different data structures such as entity collections.
+         */
+        this.players = new PlayerCollection(this.world, this.allEntities);
+        this.items = new ItemCollection(this.world, this.allEntities);
+        this.mobs = new MobCollection(this.world, this.allEntities);
+        this.chests = new ChestCollection(this.world, this.allEntities, this.items);
+        this.npcs = new NpcCollection(this.world, this.allEntities);
+        this.projectiles = new ProjectileCollection(this.world, this.allEntities);
+
+        this.load();
     }
 
     /**
@@ -84,7 +76,7 @@ export default class Entities {
 
             switch (type) {
                 case Modules.EntityType.Item:
-                    return this.getListOf<ItemCollection>(Entities.ITEMS).spawn({
+                    return this.items.spawn({
                         key,
                         x: position.x,
                         y: position.y,
@@ -92,12 +84,10 @@ export default class Entities {
                     });
 
                 case Modules.EntityType.NPC:
-                    return this.getListOf(Entities.NPCS).add(new NPC(key, position.x, position.y));
+                    return this.npcs.add(new NPC(key, position.x, position.y));
 
                 case Modules.EntityType.Mob:
-                    return this.getListOf(Entities.MOBS).add(
-                        new Mob(this.world, key, position.x, position.y)
-                    );
+                    return this.mobs.add(new Mob(this.world, key, position.x, position.y));
             }
         });
 
@@ -110,11 +100,11 @@ export default class Entities {
         //     this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
         // });
 
-        log.info(`Spawned ${this.getListOf(Entities.CHESTS).length} static chests!`);
+        log.info(`Spawned ${this.chests.length} static chests!`);
     }
 
     public spawnMob(key: string, x: number, y: number): Mob {
-        return this.getListOf(Entities.MOBS).spawn({
+        return <Mob>this.mobs.spawn({
             world: this.world,
             key,
             x,
@@ -127,7 +117,7 @@ export default class Entities {
      * @param mob Mob we are removing.
      */
     public removeMob(mob: Mob): void {
-        this.getListOf(Entities.MOBS).remove(mob);
+        this.mobs.remove(mob);
     }
 
     /**
@@ -136,7 +126,7 @@ export default class Entities {
      * @param mob Mob instance we are adding.
      */
     public addMob(mob: Mob): void {
-        this.getListOf(Entities.MOBS).add(mob);
+        this.mobs.add(mob);
     }
 
     /**
@@ -159,8 +149,8 @@ export default class Entities {
         count = 1,
         ability = -1,
         abilityLevel = -1
-    ): void {
-        return this.getListOf(Entities.ITEMS).spawn({
+    ): Item {
+        return <Item>this.items.spawn({
             key,
             x,
             y,
@@ -177,7 +167,7 @@ export default class Entities {
      * @param item Item we are removing.
      */
     public removeItem(item: Item): void {
-        this.getListOf(Entities.ITEMS).remove(item);
+        this.items.remove(item);
     }
 
     public spawnChest(
@@ -187,7 +177,7 @@ export default class Entities {
         isStatic = false,
         achievement?: number
     ): Chest {
-        return this.getListOf(Entities.CHESTS).spawn({ items, x, y, isStatic, achievement });
+        return <Chest>this.chests.spawn({ items, x, y, isStatic, achievement });
     }
 
     /**
@@ -197,7 +187,7 @@ export default class Entities {
      */
 
     public removeChest(chest: Chest): void {
-        this.getListOf(Entities.CHESTS).remove(chest);
+        this.chests.remove(chest);
     }
 
     /**
@@ -208,7 +198,7 @@ export default class Entities {
      * @returns The projectile object that was created.
      */
     public spawnProjectile(owner: Character, target: Character, hit: Hit): Projectile {
-        return this.getListOf(Entities.PROJECTILES).spawn({ owner, target, hit });
+        return <Projectile>this.projectiles.spawn({ owner, target, hit });
     }
 
     /**
@@ -216,7 +206,7 @@ export default class Entities {
      * @param player Player we are adding to our dictionary.
      */
     public addPlayer(player: Player): void {
-        this.getListOf(Entities.PLAYERS).add(player);
+        this.players.add(player);
     }
 
     /**
@@ -224,7 +214,7 @@ export default class Entities {
      * @param player Player we are removing.
      */
     public removePlayer(player: Player): void {
-        this.getListOf(Entities.PLAYERS).remove(player);
+        this.players.remove(player);
     }
 
     /**
@@ -240,20 +230,12 @@ export default class Entities {
      */
 
     /**
-     * Helper function to easily get the entity collection of a certain type
-     * @return Collection the collection for the requested type of entities
-     */
-    private getListOf<EntityType extends Collection<any>>(collectionKey: string): EntityType {
-        return <EntityType>this.entityCollections[collectionKey];
-    }
-
-    /**
      * Returns an copy of the list of Player entity objects.
      * Changes to this list will not affect the list inside the collection
      * @return players List of player entities
      */
-    public get players(): { [instance: string]: Player } {
-        return this.getListOf(Entities.PLAYERS).getAll();
+    public get listOfPlayers(): { [instance: string]: Player } {
+        return this.players.getAll();
     }
 
     /**
@@ -272,7 +254,7 @@ export default class Entities {
      */
 
     public getPlayer(username: string): Player | undefined {
-        return this.getListOf(Entities.PLAYERS).get(username);
+        return this.players.get(username);
     }
 
     /**
@@ -282,7 +264,7 @@ export default class Entities {
      */
 
     public getPlayerUsernames(): string[] {
-        return this.getListOf(Entities.PLAYERS).getUsernames();
+        return this.players.getUsernames();
     }
 
     /**
@@ -304,6 +286,6 @@ export default class Entities {
     }
 
     public forEachPlayer(callback: (player: Player) => void): void {
-        this.getListOf(Entities.PLAYERS).forEachEntity(callback);
+        this.players.forEachEntity(callback);
     }
 }
