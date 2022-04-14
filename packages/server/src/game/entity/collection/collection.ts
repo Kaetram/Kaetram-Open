@@ -18,6 +18,7 @@ export default abstract class Collection<EntityType extends Entity> {
     protected entities: { [instance: string]: EntityType } = {};
 
     public constructor(public readonly collections: Collections) {
+        collections.register<Collection<EntityType>>(this);
         this.world = collections.world;
         this.map = this.world.map;
         this.regions = this.world.map.regions;

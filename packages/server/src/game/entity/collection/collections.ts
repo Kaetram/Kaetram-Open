@@ -25,18 +25,19 @@ export default class Collections {
 
     public constructor(public world: World) {
         this.allEntities = new AllCollection(this);
-        this.players = this.register<PlayerCollection>(new PlayerCollection(this));
-        this.items = this.register<ItemCollection>(new ItemCollection(this));
-        this.mobs = this.register<MobCollection>(new MobCollection(this));
-        this.chests = this.register<ChestCollection>(new ChestCollection(this));
-        this.npcs = this.register<NpcCollection>(new NpcCollection(this));
-        this.projectiles = this.register<ProjectileCollection>(new ProjectileCollection(this));
+        this.players = new PlayerCollection(this);
+        this.items = new ItemCollection(this);
+        this.mobs = new MobCollection(this);
+        this.chests = new ChestCollection(this);
+        this.npcs = new NpcCollection(this);
+        this.projectiles = new ProjectileCollection(this);
     }
 
     /**
      * Register a collection for easy iteration
      */
     public register<T extends Collection<any>>(collection: T): T {
+        log.debug(`Registering entity collection of type ${collection.constructor.name}`);
         if (!this.all.includes(collection)) {
             if (this !== collection.collections) {
                 log.warning(
