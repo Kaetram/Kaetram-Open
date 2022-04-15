@@ -7,7 +7,7 @@ import Hit from '@kaetram/server/src/game/entity/character/combat/hit';
  * A class for collections of entities of a certain type in the game.
  */
 export default class ProjectileCollection extends Collection<Projectile> {
-    onSpawn(params: { owner: Character; target: Character; hit: Hit }): Projectile {
+    createEntity(params: { owner: Character; target: Character; hit: Hit }): Projectile {
         return new Projectile(params.owner, params.target, params.hit);
     }
 }
