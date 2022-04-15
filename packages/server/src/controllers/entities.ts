@@ -35,6 +35,7 @@ export default class Entities {
      * Parse through all the statically spawned entities in the map
      * and create them based on their type.
      */
+
     private load(): void {
         this.map.forEachEntity((position: Position, key: string) => {
             this.collections.forEachCollection((collection) => {
@@ -67,6 +68,7 @@ export default class Entities {
      * Removes the mob from our mob dictionary.
      * @param mob Mob we are removing.
      */
+
     public removeMob(mob: Mob): void {
         this.collections.mobs.remove(mob);
     }
@@ -76,6 +78,7 @@ export default class Entities {
      * chest area if existent.
      * @param mob Mob instance we are adding.
      */
+
     public addMob(mob: Mob): void {
         this.collections.mobs.add(mob);
     }
@@ -92,6 +95,7 @@ export default class Entities {
      * @param ability The ability type of the item.
      * @param abilityLevel The ability level of the item.
      */
+
     public spawnItem(
         key: string,
         x: number,
@@ -117,6 +121,7 @@ export default class Entities {
      * respawns it if it's a statically spawned item.
      * @param item Item we are removing.
      */
+
     public removeItem(item: Item): void {
         this.collections.items.remove(item);
     }
@@ -148,6 +153,7 @@ export default class Entities {
      * @param hit Information about the hit type.
      * @returns The projectile object that was created.
      */
+
     public spawnProjectile(owner: Character, target: Character, hit: Hit): Projectile {
         return <Projectile>this.collections.projectiles.spawn({ owner, target, hit });
     }
@@ -156,6 +162,7 @@ export default class Entities {
      * Adds the newly created player instance to our list of players.
      * @param player Player we are adding to our dictionary.
      */
+
     public addPlayer(player: Player): void {
         this.collections.players.add(player);
     }
@@ -164,6 +171,7 @@ export default class Entities {
      * Removes the player and clears out its packets and instance.
      * @param player Player we are removing.
      */
+
     public removePlayer(player: Player): void {
         this.collections.players.remove(player);
     }
@@ -172,6 +180,7 @@ export default class Entities {
      * Removes the entity from the entity dictionary and sends a despawn
      * callback to the nearby regions the entity is in.
      */
+
     public remove(entity: Entity): void {
         this.collections.allEntities.remove(entity);
     }
@@ -185,6 +194,7 @@ export default class Entities {
      * Changes to this list will not affect the list inside the collection
      * @return players List of player entities
      */
+
     public get listOfPlayers(): { [instance: string]: Player } {
         return this.collections.players.getAll();
     }
@@ -194,6 +204,7 @@ export default class Entities {
      * @param instance The instance of the entity we want.
      * @returns Returns an entity or undefined.
      */
+
     public get(instance: string): Entity {
         return this.collections.allEntities.get(instance);
     }
@@ -203,8 +214,9 @@ export default class Entities {
      * @param username The username of the player to find.
      * @returns A playerobject if found, otherwise undefined.
      */
+
     public getPlayer(username: string): Player | undefined {
-        return this.collections.players.get(username);
+        return this.collections.players.get(username) as Player;
     }
 
     /**
@@ -212,13 +224,24 @@ export default class Entities {
      * usernames in a string array.
      * @returns A string array of all usernames.
      */
+
     public getPlayerUsernames(): string[] {
         return this.collections.players.getUsernames();
     }
 
+    /**
+     * Callback pointer for the entity iterator in the the `allEntities.`
+     * @param callback An entity that is being iterated.
+     */
+
     public forEachEntity(callback: (entity: Entity) => void): void {
         this.collections.allEntities.forEachEntity(callback);
     }
+
+    /**
+     * Iterates through each player in the players collection.
+     * @param callback A player instance.
+     */
 
     public forEachPlayer(callback: (player: Player) => void): void {
         this.collections.players.forEachEntity(callback);

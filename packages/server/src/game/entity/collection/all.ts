@@ -31,6 +31,7 @@ export default class AllCollection {
     /**
      * Adds an entity to the list of entities. Whether it be a mob, player
      * npc, item, chest, etc. we keep track of them in the list of entities.
+     * @param entity The entity we are adding into region/grid system.
      */
     public add(entity: Entity): void {
         if (entity.instance in this.entities)
@@ -46,7 +47,9 @@ export default class AllCollection {
     /**
      * Removes the entity from the entity dictionary and sends a despawn
      * callback to the nearby regions the entity is in.
+     * @param entity The entity we are removing.
      */
+
     public remove(entity: Entity): void {
         this.world.push(Modules.PacketType.Regions, {
             region: entity.region,
@@ -61,26 +64,34 @@ export default class AllCollection {
 
         delete this.entities[entity.instance];
 
+        // Clean combat when removing a player.
         if (entity.isPlayer()) this.world.cleanCombat(entity as Character);
     }
 
     /**
-     * Gets an entity by key
-     * @return Entity the entity
+     * Gets an entity by key.
+     * @return The instance of the entity we are finding.
      */
+
     public get(instance: string): Entity {
         return this.entities[instance];
     }
+
+    /**
+     * Iterates through all the entities and creates a callback for the entity.
+     * @param callback Contains a entity that is being iterated.
+     */
 
     public forEachEntity(callback: (entity: Entity) => void): void {
         _.each(this.entities, callback);
     }
 
     /**
-     * Gets the keys of all entities
+     * Gets the keys of all entities.
      * @return amount Number
      */
-    keys() {
+
+    public keys(): string[] {
         return Object.keys(this.entities);
     }
 
@@ -88,6 +99,7 @@ export default class AllCollection {
      * Gets the amount of entities
      * @return amount Number
      */
+
     public get length(): number {
         return this.keys().length;
     }
