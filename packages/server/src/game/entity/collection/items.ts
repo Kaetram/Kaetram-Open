@@ -2,12 +2,23 @@ import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import Item from '@kaetram/server/src/game/entity/objects/item';
 import { Blink } from '@kaetram/server/src/network/packets';
 import { Modules } from '@kaetram/common/network';
+import itemData from '@kaetram/server/data/items.json';
 
 /**
  * A class for collections of entities of a certain type in the game.
  */
 export default class ItemCollection extends Collection<Item> {
-    onSpawn(params: {
+    override tryLoad(position: Position, key: string): Item | undefined {
+        if (!(key in itemData)) return undefined;
+        return this.spawn({
+            key,
+            x: position.x,
+            y: position.y,
+            dropped: false
+        });
+    }
+
+    createEntity(params: {
         key: string;
         x: number;
         y: number;

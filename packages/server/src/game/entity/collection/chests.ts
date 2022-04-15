@@ -1,23 +1,12 @@
-import World from '@kaetram/server/src/game/world';
 import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import Chest from '@kaetram/server/src/game/entity/objects/chest';
-import ItemCollection from '@kaetram/server/src/game/entity/collection/items';
 import Player from '@kaetram/server/src/game/entity/character/player/player';
-import AllCollection from '@kaetram/server/src/game/entity/collection/all';
 
 /**
  * A class for collections of entities of a certain type in the game.
  */
 export default class ChestCollection extends Collection<Chest> {
-    public constructor(
-        world: World,
-        allEntities: AllCollection,
-        protected itemEntityCollection: ItemCollection
-    ) {
-        super(world, allEntities);
-    }
-
-    onSpawn(params: {
+    createEntity(params: {
         items: string[];
         x: number;
         y: number;
@@ -55,7 +44,7 @@ export default class ChestCollection extends Collection<Chest> {
 
             if (!item) return;
 
-            this.itemEntityCollection.spawn({
+            this.collections.items.spawn({
                 key: item.string,
                 x: chest.x,
                 y: chest.y,
