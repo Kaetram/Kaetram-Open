@@ -1,68 +1,33 @@
-import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
+import type World from '../game/world';
 import Regions from '../game/map/regions';
 import Map from '../game/map/map';
+import Grids from '../game/map/grids';
+import Collections from '@kaetram/server/src/game/entity/collection/collections';
+
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
-import NPC from '../game/entity/npc/npc';
 import Chest from '../game/entity/objects/chest';
 import Item from '../game/entity/objects/item';
 import Projectile from '../game/entity/objects/projectile';
 
-import mobData from '../../data/mobs.json';
-import itemData from '../../data/items.json';
-import npcData from '../../data/npcs.json';
-
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
-import type World from '../game/world';
-import Grids from '../game/map/grids';
 import Hit from '../game/entity/character/combat/hit';
-import PlayerCollection from '@kaetram/server/src/game/entity/collection/players';
-import ItemCollection from '@kaetram/server/src/game/entity/collection/items';
-import MobCollection from '@kaetram/server/src/game/entity/collection/mobs';
-import ChestCollection from '@kaetram/server/src/game/entity/collection/chests';
-import NpcCollection from '@kaetram/server/src/game/entity/collection/npcs';
-import ProjectileCollection from '@kaetram/server/src/game/entity/collection/projectiles';
-import AllCollection from '@kaetram/server/src/game/entity/collection/all';
 
 export default class Entities {
-    public static readonly PLAYERS = 'PLAYERS';
-    public static readonly ITEMS = 'ITEMS';
-    public static readonly MOBS = 'MOBS';
-    public static readonly CHESTS = 'CHESTS';
-    public static readonly NPCS = 'NPCS';
-    public static readonly PROJECTILES = 'PROJECTILES';
-
     private map: Map;
     private regions: Regions;
     private grids: Grids;
 
-    private readonly allEntities: AllCollection;
-    private readonly players: PlayerCollection;
-    private readonly items: ItemCollection;
-    private readonly mobs: MobCollection;
-    private readonly chests: ChestCollection;
-    private readonly npcs: NpcCollection;
-    private readonly projectiles: ProjectileCollection;
+    public readonly collections: Collections;
 
     public constructor(private world: World) {
-        this.allEntities = new AllCollection(this.world);
+        this.collections = new Collections(this.world);
         this.map = world.map;
         this.regions = world.map.regions;
         this.grids = world.map.grids;
-
-        /**
-         * Initializes the different data structures such as entity collections.
-         */
-        this.players = new PlayerCollection(this.world, this.allEntities);
-        this.items = new ItemCollection(this.world, this.allEntities);
-        this.mobs = new MobCollection(this.world, this.allEntities);
-        this.chests = new ChestCollection(this.world, this.allEntities, this.items);
-        this.npcs = new NpcCollection(this.world, this.allEntities);
-        this.projectiles = new ProjectileCollection(this.world, this.allEntities);
-
         this.load();
     }
 
@@ -72,26 +37,12 @@ export default class Entities {
      */
     private load(): void {
         this.map.forEachEntity((position: Position, key: string) => {
-            let type = this.getEntityType(key);
-
-            switch (type) {
-                case Modules.EntityType.Item:
-                    return this.items.spawn({
-                        key,
-                        x: position.x,
-                        y: position.y,
-                        dropped: false
-                    });
-
-                case Modules.EntityType.NPC:
-                    return this.npcs.add(new NPC(key, position.x, position.y));
-
-                case Modules.EntityType.Mob:
-                    return this.mobs.add(new Mob(this.world, key, position.x, position.y));
-            }
+            this.collections.forEachCollection((collection) => {
+                collection.tryLoad(position, key);
+            });
         });
 
-        log.info(`Spawned ${this.allEntities.length} entities!`);
+        log.info(`Spawned ${this.collections.allEntities.length} entities!`);
 
         // Spawns the static chests throughout the world.
 
@@ -100,11 +51,11 @@ export default class Entities {
         //     this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
         // });
 
-        log.info(`Spawned ${this.chests.length} static chests!`);
+        log.info(`Spawned ${this.collections.chests.length} static chests!`);
     }
 
     public spawnMob(key: string, x: number, y: number): Mob {
-        return <Mob>this.mobs.spawn({
+        return <Mob>this.collections.mobs.spawn({
             world: this.world,
             key,
             x,
@@ -117,7 +68,7 @@ export default class Entities {
      * @param mob Mob we are removing.
      */
     public removeMob(mob: Mob): void {
-        this.mobs.remove(mob);
+        this.collections.mobs.remove(mob);
     }
 
     /**
@@ -126,7 +77,7 @@ export default class Entities {
      * @param mob Mob instance we are adding.
      */
     public addMob(mob: Mob): void {
-        this.mobs.add(mob);
+        this.collections.mobs.add(mob);
     }
 
     /**
@@ -150,7 +101,7 @@ export default class Entities {
         ability = -1,
         abilityLevel = -1
     ): Item {
-        return <Item>this.items.spawn({
+        return <Item>this.collections.items.spawn({
             key,
             x,
             y,
@@ -167,7 +118,7 @@ export default class Entities {
      * @param item Item we are removing.
      */
     public removeItem(item: Item): void {
-        this.items.remove(item);
+        this.collections.items.remove(item);
     }
 
     public spawnChest(
@@ -177,7 +128,7 @@ export default class Entities {
         isStatic = false,
         achievement?: number
     ): Chest {
-        return <Chest>this.chests.spawn({ items, x, y, isStatic, achievement });
+        return <Chest>this.collections.chests.spawn({ items, x, y, isStatic, achievement });
     }
 
     /**
@@ -187,7 +138,7 @@ export default class Entities {
      */
 
     public removeChest(chest: Chest): void {
-        this.chests.remove(chest);
+        this.collections.chests.remove(chest);
     }
 
     /**
@@ -198,7 +149,7 @@ export default class Entities {
      * @returns The projectile object that was created.
      */
     public spawnProjectile(owner: Character, target: Character, hit: Hit): Projectile {
-        return <Projectile>this.projectiles.spawn({ owner, target, hit });
+        return <Projectile>this.collections.projectiles.spawn({ owner, target, hit });
     }
 
     /**
@@ -206,7 +157,7 @@ export default class Entities {
      * @param player Player we are adding to our dictionary.
      */
     public addPlayer(player: Player): void {
-        this.players.add(player);
+        this.collections.players.add(player);
     }
 
     /**
@@ -214,7 +165,7 @@ export default class Entities {
      * @param player Player we are removing.
      */
     public removePlayer(player: Player): void {
-        this.players.remove(player);
+        this.collections.players.remove(player);
     }
 
     /**
@@ -222,7 +173,7 @@ export default class Entities {
      * callback to the nearby regions the entity is in.
      */
     public remove(entity: Entity): void {
-        this.allEntities.remove(entity);
+        this.collections.allEntities.remove(entity);
     }
 
     /**
@@ -235,7 +186,7 @@ export default class Entities {
      * @return players List of player entities
      */
     public get listOfPlayers(): { [instance: string]: Player } {
-        return this.players.getAll();
+        return this.collections.players.getAll();
     }
 
     /**
@@ -244,7 +195,7 @@ export default class Entities {
      * @returns Returns an entity or undefined.
      */
     public get(instance: string): Entity {
-        return this.allEntities.get(instance);
+        return this.collections.allEntities.get(instance);
     }
 
     /**
@@ -252,9 +203,8 @@ export default class Entities {
      * @param username The username of the player to find.
      * @returns A playerobject if found, otherwise undefined.
      */
-
     public getPlayer(username: string): Player | undefined {
-        return this.players.get(username);
+        return this.collections.players.get(username);
     }
 
     /**
@@ -262,30 +212,15 @@ export default class Entities {
      * usernames in a string array.
      * @returns A string array of all usernames.
      */
-
     public getPlayerUsernames(): string[] {
-        return this.players.getUsernames();
-    }
-
-    /**
-     * Compares the string against npcs and mobs to find the entity type.
-     * @param entityString The string of the entity
-     * @returns Entity type id from Modules.
-     */
-
-    private getEntityType(entityString: string): number {
-        if (entityString in itemData) return Modules.EntityType.Item;
-        if (entityString in npcData) return Modules.EntityType.NPC;
-        if (entityString in mobData) return Modules.EntityType.Mob;
-
-        return -1;
+        return this.collections.players.getUsernames();
     }
 
     public forEachEntity(callback: (entity: Entity) => void): void {
-        this.allEntities.forEachEntity(callback);
+        this.collections.allEntities.forEachEntity(callback);
     }
 
     public forEachPlayer(callback: (player: Player) => void): void {
-        this.players.forEachEntity(callback);
+        this.collections.players.forEachEntity(callback);
     }
 }
