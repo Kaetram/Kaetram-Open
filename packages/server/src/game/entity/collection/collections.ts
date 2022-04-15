@@ -9,6 +9,7 @@ import ProjectileCollection from '@kaetram/server/src/game/entity/collection/pro
 import Collection from '@kaetram/server/src/game/entity/collection/collection';
 import _ from 'lodash';
 import log from '@kaetram/common/util/log';
+import Entity from '../entity';
 
 /**
  * A class for collections of entities of a certain type in the game.
@@ -21,7 +22,7 @@ export default class Collections {
     public readonly chests: ChestCollection;
     public readonly npcs: NpcCollection;
     public readonly projectiles: ProjectileCollection;
-    private readonly all: Collection<any>[] = [];
+    private readonly all: Collection<Entity>[] = [];
 
     public constructor(public world: World) {
         this.allEntities = new AllCollection(this);
@@ -34,9 +35,9 @@ export default class Collections {
     }
 
     /**
-     * Register a collection for easy iteration
+     * Register a collection for easy iteration.
      */
-    public register<T extends Collection<any>>(collection: T): T {
+    public register<T extends Collection<Entity>>(collection: T): T {
         log.debug(`Registering entity collection of type ${collection.constructor.name}`);
         if (!this.all.includes(collection)) {
             if (this !== collection.collections) {
@@ -51,9 +52,9 @@ export default class Collections {
     }
 
     /**
-     * Perform a callback for each registered collection
+     * Iterates through each colleciton and returns a callback for it.
      */
-    forEachCollection(callback: (collection: Collection<any>) => void) {
+    public forEachCollection(callback: (collection: Collection<Entity>) => void): void {
         _.each(this.all, callback);
     }
 }
