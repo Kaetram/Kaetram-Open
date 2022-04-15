@@ -8,7 +8,7 @@ import itemData from '@kaetram/server/data/items.json';
  * A class for collections of entities of a certain type in the game.
  */
 export default class ItemCollection extends Collection<Item> {
-    override tryLoad(position: Position, key: string): Item | undefined {
+    public override tryLoad(position: Position, key: string): Item | undefined {
         if (!(key in itemData)) return undefined;
         return this.spawn({
             key,
@@ -18,7 +18,7 @@ export default class ItemCollection extends Collection<Item> {
         });
     }
 
-    createEntity(params: {
+    public createEntity(params: {
         key: string;
         x: number;
         y: number;
@@ -51,7 +51,7 @@ export default class ItemCollection extends Collection<Item> {
         return new Item(key, x, y, dropped, count, ability, abilityLevel);
     }
 
-    override onAdd(entity: Item): void {
+    public override onAdd(entity: Item): void {
         // Not the prettiest way of doing it honestly...
         entity.onDespawn(() => this.remove(entity));
         if (entity.dropped) {
@@ -64,11 +64,17 @@ export default class ItemCollection extends Collection<Item> {
         } else entity.onRespawn(() => this.add(entity));
     }
 
-    override shouldRemove(entity: Item) {
-        if (!entity.dropped) {
-            entity.respawn();
-            return false;
-        }
+    /**
+     * Override for checking if we should remove an entity.
+     * @param entity The entity we are removing.
+     * @returns Condiitonal on whether or not we should remove the entity.
+     */
+
+    public override shouldRemove(entity: Item): boolean {
+        if (entity.dropped) return true;
+
+        entity.respawn();
+
         return true;
     }
 }

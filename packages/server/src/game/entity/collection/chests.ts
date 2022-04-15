@@ -6,7 +6,7 @@ import Player from '@kaetram/server/src/game/entity/character/player/player';
  * A class for collections of entities of a certain type in the game.
  */
 export default class ChestCollection extends Collection<Chest> {
-    createEntity(params: {
+    public createEntity(params: {
         items: string[];
         x: number;
         y: number;
@@ -57,7 +57,7 @@ export default class ChestCollection extends Collection<Chest> {
         return chest;
     }
 
-    override shouldRemove(entity: Chest) {
+    public override shouldRemove(entity: Chest) {
         if (entity.static) {
             entity.respawn();
             return false;
