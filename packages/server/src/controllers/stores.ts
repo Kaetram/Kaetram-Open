@@ -44,7 +44,6 @@ export default class Stores {
     public constructor(private world: World) {
         // Load stores from the JSON.
         _.each(storeData, this.load.bind(this));
-        //_.each(shopData, (store: StoreInfo, key: string) => (this.stores[key] = store));
 
         // Set up an interval for refreshing the store data.
         setInterval(this.update.bind(this), this.updateFrequency);
@@ -196,14 +195,14 @@ export default class Stores {
             items: SerializedStoreItem[] = [];
 
         // Extract all the items from the store.
-        _.each(store.items, (item: Item) => {
+        _.each(store.items, (item: Item) =>
             items.push({
                 key: item.key,
                 name: item.name,
                 count: item.count,
                 price: item.price
-            });
-        });
+            })
+        );
 
         return {
             items,
