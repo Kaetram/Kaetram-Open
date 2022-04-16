@@ -122,11 +122,10 @@ export enum Pointer {
 
 export enum Store {
     Open,
+    Close,
     Buy,
     Sell,
-    Refresh,
-    Select,
-    Remove
+    Refresh
 }
 
 export enum TeamWar {

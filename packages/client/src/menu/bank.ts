@@ -9,7 +9,7 @@ import type Slot from './container/slot';
 import { SlotData } from '@kaetram/common/types/slot';
 import MenuController from '../controllers/menu';
 
-import Utils from '@kaetram/common/util/utils';
+import Utils from '../utils/util';
 
 export default class Bank {
     // player = this.game.player;
