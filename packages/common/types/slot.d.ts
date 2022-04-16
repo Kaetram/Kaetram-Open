@@ -15,4 +15,5 @@ export interface SlotData {
 
     edible?: boolean;
     equippable?: boolean;
+    price?: number;
 }

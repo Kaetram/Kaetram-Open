@@ -1,23 +1,25 @@
 export default class Slot {
-    public key: string | null = null;
+    public key = 'null';
     public count = -1;
     public name = '';
 
-    public ability: number | undefined = -1;
-    public abilityLevel: number | undefined = -1;
-    public edible? = false;
-    public equippable? = false;
+    public ability = -1;
+    public abilityLevel = -1;
+    public edible = false;
+    public equippable = false;
+    public price = 0;
 
     public constructor(public index: number) {}
 
     public load(
-        key: string | null,
+        key = 'null',
         count: number,
         ability = -1,
         abilityLevel = -1,
         edible = false,
         equippable = false,
-        name = ''
+        name = '',
+        price = 0
     ): void {
         this.key = key;
         this.count = count;
@@ -27,10 +29,11 @@ export default class Slot {
 
         this.edible = edible;
         this.equippable = equippable;
+        this.price = price;
     }
 
     public empty(): void {
-        this.key = null;
+        this.key = 'null';
         this.count = -1;
         this.name = '';
         this.ability = -1;
@@ -38,6 +41,7 @@ export default class Slot {
 
         this.edible = false;
         this.equippable = false;
+        this.price = 0;
     }
 
     public isEmpty(): boolean {
@@ -47,8 +51,4 @@ export default class Slot {
     public setCount(count: number): void {
         this.count = count;
     }
-
-    // setString(string: string): void {
-    //     this.string = string;
-    // }
 }
