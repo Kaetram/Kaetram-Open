@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { SerializedStoreItem } from '@kaetram/common/types/stores';
 import { SerializedStoreInfo } from './../../../common/types/stores.d';
 import $ from 'jquery';
@@ -10,7 +12,8 @@ import type { ShopData } from '@kaetram/common/types/info';
 import type { ShopSelectData } from '@kaetram/common/types/messages';
 import type MenuController from '../controllers/menu';
 import type Game from '../game';
-import _ from 'lodash';
+
+import Utils from '@kaetram/common/util/utils';
 
 export default class Shop {
     private body = $('#shop');
@@ -78,7 +81,7 @@ export default class Shop {
         });
 
         this.sellSlotReturn.css({
-            backgroundImage: this.container.getImageFormat(info.currency),
+            backgroundImage: Utils.getImageURL(info.currency),
             backgroundSize: this.sellSlot.css('background-size')
         });
 
@@ -127,13 +130,14 @@ export default class Shop {
 
         this.container = new Container(items.length);
 
-        for (let i = 0; i < items.length; i++)
-            this.container.update(i, {
-                index: i,
-                key: items[i].key,
-                count: items[i].count,
-                name: items[i].name
-            });
+        _.each(items, (item, index) =>
+            this.container.add({
+                index,
+                key: item.key,
+                count: item.count,
+                name: item.name
+            })
+        );
 
         this.load();
     }
@@ -147,9 +151,9 @@ export default class Shop {
                 name = $(`<div id="shopItemName${slot.index}" class="shop-item-name"></div>`),
                 buy = $(`<div id="shopItemBuy${slot.index}" class="shop-item-buy"></div>`);
 
-            image.css('background-image', this.container.getImageFormat(slot.key));
+            image.css('background-image', Utils.getImageURL(slot.key));
             count.text(slot.count);
-            price.text('??????');
+            price.text(slot.price);
             name.text(slot.name);
             buy.html('Buy');
 
