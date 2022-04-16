@@ -29,14 +29,13 @@ export default class ChestCollection extends Collection<Chest> {
         isStatic = false,
         achievement?: number
     ): Chest {
-        let chest = new Chest(x, y, achievement);
-
-        chest.addItems(items);
+        let chest = new Chest(x, y, achievement, items);
 
         if (isStatic) {
             chest.static = isStatic;
             chest.onRespawn(() => this.add(chest));
         }
+
         chest.onOpen((player?: Player) => {
             this.remove(chest);
 
@@ -45,7 +44,7 @@ export default class ChestCollection extends Collection<Chest> {
             if (!item) return;
 
             this.collections.items.spawn({
-                key: item.string,
+                key: item.key,
                 x: chest.x,
                 y: chest.y,
                 dropped: true,

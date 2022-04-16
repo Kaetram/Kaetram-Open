@@ -73,6 +73,7 @@ export default abstract class Collection<EntityType extends Entity> {
         this.collections.allEntities.remove(entity);
         if (this.shouldRemove(entity)) {
             this.onRemove(entity);
+
             delete this.entities[entity.instance];
         }
     }
@@ -89,32 +90,12 @@ export default abstract class Collection<EntityType extends Entity> {
     ): EntityType | undefined;
 
     /**
-     * load is called when the entity needs to be loaded into the collection
-     * You should override this method whenever you want to perform additional logic on this event.
-     * @param entity Entity we are adding.
-     */
-
-    protected onAdd(entity: EntityType): void {
-        // Nothing extra to do here
-    }
-
-    /**
      * By default we always remove entities when the remove method is called.
      * @param entity Entity we are evaluating to be removed.
      */
 
     protected shouldRemove(entity: EntityType): boolean {
         return true;
-    }
-
-    /**
-     * onRemove is called when the entity is removed for this collection
-     * You should override this method whenever you want to perform additional logic on this event.
-     * @param entity Entity we are removing.
-     */
-
-    protected onRemove(entity: EntityType): void {
-        // Nothing extra to do here
     }
 
     /**
@@ -147,6 +128,14 @@ export default abstract class Collection<EntityType extends Entity> {
     }
 
     /**
+     * Gets a copied list of all entities in the collection
+     */
+
+    public getAll(): { [instance: string]: EntityType } {
+        return { ...this.entities };
+    }
+
+    /**
      * Gets a list of all user names in the collection
      * @return list of usernames
      */
@@ -164,10 +153,22 @@ export default abstract class Collection<EntityType extends Entity> {
     }
 
     /**
-     * Gets a copied list of all entities in the collection
+     * load is called when the entity needs to be loaded into the collection
+     * You should override this method whenever you want to perform additional logic on this event.
+     * @param entity Entity we are adding.
      */
 
-    public getAll(): { [instance: string]: EntityType } {
-        return { ...this.entities };
+    protected onAdd(entity: EntityType): void {
+        // Nothing extra to do here
+    }
+
+    /**
+     * onRemove is called when the entity is removed for this collection
+     * You should override this method whenever you want to perform additional logic on this event.
+     * @param entity Entity we are removing.
+     */
+
+    protected onRemove(entity: EntityType): void {
+        // Nothing extra to do here
     }
 }

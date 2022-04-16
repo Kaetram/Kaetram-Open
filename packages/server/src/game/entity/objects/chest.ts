@@ -4,41 +4,62 @@ import Entity from '../entity';
 import type Player from '../character/player/player';
 import { Modules } from '@kaetram/common/network';
 
+type ItemDrop = { key: string; count: number };
 type OpenCallback = (player?: Player) => void;
 
 export default class Chest extends Entity {
-    private respawnDuration = 25_000;
+    // If the chest should respawn.
     public static = false;
 
-    private items: string[] = [];
+    private respawnDuration = 25_000;
 
     private openCallback?: OpenCallback;
     private respawnCallback?(): void;
 
-    public constructor(x: number, y: number, public achievement?: number) {
+    public constructor(
+        x: number,
+        y: number,
+        public achievement?: number,
+        private items: string[] = []
+    ) {
         super(Utils.createInstance(Modules.EntityType.Chest), 'chest', x, y);
     }
 
-    public addItems(items: string[]): void {
-        this.items = items;
-    }
+    /**
+     * Creates a chest callback.
+     * @param player Optional parameter to be passed along with the callback.
+     */
 
     public openChest(player?: Player): void {
         this.openCallback?.(player);
     }
 
+    /**
+     * Calls a respawn timeout.
+     */
+
     public respawn(): void {
-        setTimeout(() => {
-            this.respawnCallback?.();
-        }, this.respawnDuration);
+        setTimeout(this.respawnCallback!, this.respawnDuration);
     }
 
-    public getItem(): { string: string; count: number } | null {
+    /**
+     * Grabs an item from the chest randomly. If a specific count
+     * and probability are provided, it picks a random item, then rolls
+     * against the specified probability to determine if the item should
+     * be dropped.
+     * @returns Item information if probability roll is successful, otherwise null.
+     */
+
+    public getItem(): ItemDrop | null {
+        if (this.items.length === 0) return null;
+
+        // Picks a random item from the list of items.
         let random = Utils.randomInt(0, this.items.length - 1),
             item = this.items[random],
             count = 1,
             probability = 100;
 
+        // If the item has specified count and probability, we use that to determine drop rate.
         if (item.includes(':')) {
             let itemData = item.split(':');
 
@@ -53,17 +74,27 @@ export default class Chest extends Entity {
          */
         if (!item) return null;
 
+        // Roll against the probability factor.
         if (Utils.randomInt(0, 100) > probability) return null;
 
         return {
-            string: item,
+            key: item,
             count
         };
     }
 
+    /**
+     * Callback for when the chest entity has been opened/toggled.
+     * @param callback Contains the player object that opened the chest.
+     */
+
     public onOpen(callback: OpenCallback): void {
         this.openCallback = callback;
     }
+
+    /**
+     * Callback for when the timeout for respawning the chest has been reached.
+     */
 
     public onRespawn(callback: () => void): void {
         this.respawnCallback = callback;

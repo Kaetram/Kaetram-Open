@@ -35,13 +35,15 @@ export default class Map {
     private collisions: number[] = map.collisions || [];
     private entities: { [tileId: number]: string } = map.entities;
 
-    public high: number[] = map.high || [];
     public lights!: ProcessedArea[];
     public plateau!: { [index: number]: number };
     public objects!: number[];
     public cursors!: { [tileId: number]: string };
     public doors!: { [index: number]: ProcessedDoor };
     public warps: ProcessedArea[] = map.areas.warps || [];
+
+    // Static chest areas, named as singular to prevent confusion with `chests` area.
+    public chest: ProcessedArea[] = map.areas.chest || [];
 
     private areas!: { [name: string]: Areas };
 
