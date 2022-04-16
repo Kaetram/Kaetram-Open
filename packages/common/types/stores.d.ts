@@ -23,6 +23,7 @@ export interface SerializedStoreItem {
 }
 
 export interface SerializedStoreInfo {
-    items: SerializedStoreItem[];
-    currency: string;
+    key: string; // Store's key
+    currency: string; // Store's currency
+    items: SerializedStoreItem[]; // Serialized store items.
 }

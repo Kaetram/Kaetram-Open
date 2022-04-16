@@ -1,19 +1,19 @@
 import _ from 'lodash';
+import $ from 'jquery';
 
 import { SerializedStoreItem } from '@kaetram/common/types/stores';
 import { SerializedStoreInfo } from './../../../common/types/stores.d';
-import $ from 'jquery';
 
 import { Opcodes, Packets } from '@kaetram/common/network';
 
 import Container from './container/container';
 
-import type { ShopData } from '@kaetram/common/types/info';
 import type { ShopSelectData } from '@kaetram/common/types/messages';
 import type MenuController from '../controllers/menu';
 import type Game from '../game';
 
-import Utils from '@kaetram/common/util/utils';
+import Utils from '../utils/util';
+import Slot from './container/slot';
 
 export default class Shop {
     private body = $('#shop');
@@ -34,7 +34,14 @@ export default class Shop {
     private confirmSell = $('#confirm-sell');
 
     private container: Container = new Container();
-    private openShop = -1;
+
+    // Identification/key of the currently opened store.
+    private key = '';
+    // Currency of the current store, defaults to gold.
+    private currency = 'gold';
+
+    // Temporary item selected for when user tries to sell.
+    private selectedItem = '';
 
     private close: JQuery;
 
@@ -52,22 +59,28 @@ export default class Shop {
     private buy(event: JQuery.ClickEvent): void {
         let id = event.currentTarget.id.slice(11);
 
-        this.game.socket.send(Packets.Store, [Opcodes.Store.Buy, this.openShop, id, 1]);
+        this.game.socket.send(Packets.Store, {
+            opcode: Opcodes.Store.Buy,
+            key: this.key,
+            index: id,
+            count: 1
+        });
     }
 
     private sell(): void {
         // The server will handle the selected item and verifications.
-        this.game.socket.send(Packets.Store, [Opcodes.Store.Sell, this.openShop]);
+        this.game.socket.send(Packets.Store, {
+            opcode: Opcodes.Store.Sell,
+            key: this.key
+        });
     }
 
-    private select(event: JQuery.ClickEvent): void {
-        let id = event.currentTarget.id.slice(17);
-
-        this.game.socket.send(Packets.Store, [Opcodes.Store.Select, this.openShop, id]);
+    private select(item: Slot): void {
+        console.log(item);
     }
 
     private remove(): void {
-        this.game.socket.send(Packets.Store, [Opcodes.Store.Remove]);
+        this.selectedItem = '';
     }
 
     public move(info: ShopSelectData): void {
@@ -128,14 +141,15 @@ export default class Shop {
     public update(items: SerializedStoreItem[]): void {
         this.reset();
 
-        this.container = new Container(items.length);
+        this.container = new Container();
 
         _.each(items, (item, index) =>
             this.container.add({
                 index,
                 key: item.key,
                 count: item.count,
-                name: item.name
+                name: item.name,
+                price: item.price
             })
         );
 
@@ -153,7 +167,7 @@ export default class Shop {
 
             image.css('background-image', Utils.getImageURL(slot.key));
             count.text(slot.count);
-            price.text(slot.price);
+            price.text(`${slot.price} ${this.currency.slice(0, 1).toUpperCase()}`);
             name.text(slot.name);
             buy.html('Buy');
 
@@ -168,18 +182,29 @@ export default class Shop {
             this.getShopList().append(listItem);
         });
 
-        let inventoryItems = this.menu.bank.getInventoryList(),
-            inventorySize = this.menu.inventory.getSize();
+        let inventoryContainer = this.menu.inventory.container;
 
-        for (let j = 0; j < inventorySize; j++) {
-            let item = $(inventoryItems[j]).clone(),
-                slot = item.find(`#bankInventorySlot${j}`);
+        for (let j = 0; j < inventoryContainer.size; j++) {
+            let item = inventoryContainer.slots[j],
+                slot = $(`<div id="shopInventorySlot${j}" class="bank-slot"></div>`),
+                count = $(`<div id="shopInventoryCount${j}" class="item-count"></div>`),
+                image = $(`<div id="shopInventoryImage${j}" class="bank-image"></div>`),
+                element = $('<li></li>').append(slot.append(image).append(count));
 
-            slot.attr('id', `shopInventorySlot${j}`);
+            slot.css({
+                marginRight: `${3 * this.getScale()}px`,
+                marginBottom: `${6 * this.getScale()}px`
+            });
 
-            slot.on('click', (event) => this.select(event));
+            count.css('margin-top', `${-1 * this.getScale()}px`);
 
-            this.getInventoryList().append(slot);
+            if (item.key) image.css('background-image', Utils.getImageURL(item.key));
+
+            if (item.count) count.text(item.count);
+
+            slot.on('click', () => this.select(item));
+
+            this.getInventoryList().append(element);
         }
     }
 
@@ -191,13 +216,16 @@ export default class Shop {
     }
 
     public open(store: SerializedStoreInfo): void {
+        this.key = store.key;
+        this.currency = store.currency;
+
         this.body.fadeIn('slow');
 
         this.update(store.items);
     }
 
     public hide(): void {
-        this.openShop = -1;
+        this.key = '';
 
         this.sellSlot.css('background-image', '');
         this.sellSlotText.text('');
@@ -219,16 +247,12 @@ export default class Shop {
         this.confirmSell?.off('click');
     }
 
-    // getScale(): number {
-    //     return this.game.renderer.getScale();
-    // }
+    private getScale(): number {
+        return this.game.app.getUIScale();
+    }
 
     public isVisible(): boolean {
         return this.body.css('display') === 'block';
-    }
-
-    public isShopOpen(shopId: number): boolean {
-        return this.isVisible() && this.openShop === shopId;
     }
 
     private getShopList(): JQuery<HTMLUListElement> {

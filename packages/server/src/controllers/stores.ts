@@ -81,6 +81,10 @@ export default class Stores {
             items: Item[] = [];
 
         _.each(store.items, (item: StoreItem) => {
+            // Skip if an item already exists with the same key.
+            if (_.some(items, { key: item.key }))
+                return log.warning(`Duplicate item key found in store: '${key}'.`);
+
             let storeItem = new Item(item.key, -1, -1, false, item.count);
 
             // Assign price if provided, otherwise use default item price.
@@ -205,6 +209,7 @@ export default class Stores {
         );
 
         return {
+            key,
             items,
             currency: store.currency
         };
