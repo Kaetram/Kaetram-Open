@@ -35,3 +35,10 @@ export interface ProjectilePacket {
     instance: string;
     target: string;
 }
+
+export interface StorePacket {
+    opcode: Opcodes.Store;
+    key: string; // The shop's key.
+    index?: number; // The index of the item to buy.
+    count?: number; // The amount of items to buy.
+}

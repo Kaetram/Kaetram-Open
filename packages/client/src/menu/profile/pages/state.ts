@@ -7,7 +7,7 @@ import Page from '../page';
 
 import type Game from '../../../game';
 
-import Utils from '@kaetram/common/util/utils';
+import Utils from '../../../utils/util';
 
 export default class State extends Page {
     private player;
