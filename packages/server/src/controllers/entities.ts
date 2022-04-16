@@ -1,9 +1,9 @@
+import _ from 'lodash';
+
 import log from '@kaetram/common/util/log';
 
 import type World from '../game/world';
-import Regions from '../game/map/regions';
 import Map from '../game/map/map';
-import Grids from '../game/map/grids';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
 
 import Character from '../game/entity/character/character';
@@ -18,16 +18,14 @@ import Hit from '../game/entity/character/combat/hit';
 
 export default class Entities {
     private map: Map;
-    private regions: Regions;
-    private grids: Grids;
 
     public readonly collections: Collections;
 
     public constructor(private world: World) {
-        this.collections = new Collections(this.world);
         this.map = world.map;
-        this.regions = world.map.regions;
-        this.grids = world.map.grids;
+
+        this.collections = new Collections(this.world);
+
         this.load();
     }
 
@@ -47,40 +45,11 @@ export default class Entities {
 
         // Spawns the static chests throughout the world.
 
-        //TODO - Redo chests
-        // _.each(this.map.chests, (info) => {
-        //     this.spawnChest(info.items!.split(','), info.x, info.y, true, info.achievement);
-        // });
+        _.each(this.map.chest, (info) => {
+            this.spawnChest(info.items?.split(',') || [], info.x, info.y, true, info.achievement);
+        });
 
         log.info(`Spawned ${this.collections.chests.length} static chests!`);
-    }
-
-    public spawnMob(key: string, x: number, y: number): Mob {
-        return <Mob>this.collections.mobs.spawn({
-            world: this.world,
-            key,
-            x,
-            y
-        });
-    }
-
-    /**
-     * Removes the mob from our mob dictionary.
-     * @param mob Mob we are removing.
-     */
-
-    public removeMob(mob: Mob): void {
-        this.collections.mobs.remove(mob);
-    }
-
-    /**
-     * Adds the mob instance to its dictionary and its
-     * chest area if existent.
-     * @param mob Mob instance we are adding.
-     */
-
-    public addMob(mob: Mob): void {
-        this.collections.mobs.add(mob);
     }
 
     /**
@@ -116,15 +85,24 @@ export default class Entities {
         });
     }
 
-    /**
-     * Removes an item from the items dictionary and only
-     * respawns it if it's a statically spawned item.
-     * @param item Item we are removing.
-     */
-
-    public removeItem(item: Item): void {
-        this.collections.items.remove(item);
+    public spawnMob(key: string, x: number, y: number): Mob {
+        return <Mob>this.collections.mobs.spawn({
+            world: this.world,
+            key,
+            x,
+            y
+        });
     }
+
+    /**
+     * Spawns a chest in the world at the given position.
+     * @param items The items that the chest might drop.
+     * @param x The x grid coordinate of the chest spawn.
+     * @param y The y grid coordinate of the chest spawn.
+     * @param isStatic If the chest respawns when it is opened.
+     * @param achievement Achievement ID that the chest is tied to.
+     * @returns The chest object we just created.
+     */
 
     public spawnChest(
         items: string[],
@@ -134,16 +112,6 @@ export default class Entities {
         achievement?: number
     ): Chest {
         return <Chest>this.collections.chests.spawn({ items, x, y, isStatic, achievement });
-    }
-
-    /**
-     * Removes a chest or respawns it if it's a statically
-     * spawned chest.
-     * @param chest Chest we are removing.
-     */
-
-    public removeChest(chest: Chest): void {
-        this.collections.chests.remove(chest);
     }
 
     /**
@@ -168,12 +136,13 @@ export default class Entities {
     }
 
     /**
-     * Removes the player and clears out its packets and instance.
-     * @param player Player we are removing.
+     * Adds the mob instance to its dictionary and its
+     * chest area if existent.
+     * @param mob Mob instance we are adding.
      */
 
-    public removePlayer(player: Player): void {
-        this.collections.players.remove(player);
+    public addMob(mob: Mob): void {
+        this.collections.mobs.add(mob);
     }
 
     /**
@@ -183,6 +152,44 @@ export default class Entities {
 
     public remove(entity: Entity): void {
         this.collections.allEntities.remove(entity);
+    }
+
+    /**
+     * Removes the player and clears out its packets and instance.
+     * @param player Player we are removing.
+     */
+
+    public removePlayer(player: Player): void {
+        this.collections.players.remove(player);
+    }
+
+    /**
+     * Removes a chest or respawns it if it's a statically
+     * spawned chest.
+     * @param chest Chest we are removing.
+     */
+
+    public removeChest(chest: Chest): void {
+        this.collections.chests.remove(chest);
+    }
+
+    /**
+     * Removes an item from the items dictionary and only
+     * respawns it if it's a statically spawned item.
+     * @param item Item we are removing.
+     */
+
+    public removeItem(item: Item): void {
+        this.collections.items.remove(item);
+    }
+
+    /**
+     * Removes the mob from our mob dictionary.
+     * @param mob Mob we are removing.
+     */
+
+    public removeMob(mob: Mob): void {
+        this.collections.mobs.remove(mob);
     }
 
     /**
