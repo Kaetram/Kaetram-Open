@@ -27,10 +27,4 @@ export default abstract class Page {
     public resize(): void {
         // Not implemented
     }
-
-    public getImageFormat(name: string): string {
-        let image = `/img/sprites/item-${name}.png`;
-
-        return `url("${image}")`;
-    }
 }

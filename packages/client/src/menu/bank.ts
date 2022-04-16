@@ -9,6 +9,8 @@ import type Slot from './container/slot';
 import { SlotData } from '@kaetram/common/types/slot';
 import MenuController from '../controllers/menu';
 
+import Utils from '@kaetram/common/util/utils';
+
 export default class Bank {
     // player = this.game.player;
 
@@ -107,7 +109,7 @@ export default class Bank {
                 marginLeft: '0'
             });
 
-            image.css('background-image', this.container.getImageFormat(slot.key));
+            image.css('background-image', Utils.getImageURL(slot.key));
         }
 
         for (let [j, element] of [...inventoryList].entries()) {
@@ -157,7 +159,7 @@ export default class Bank {
         let bankSlot = item.find(`#bank-slot${info.index}`),
             cssSlot = bankSlot.find(`#bank-image${info.index}`);
 
-        cssSlot.css('background-image', this.container.getImageFormat(info.key));
+        cssSlot.css('background-image', Utils.getImageURL(info.key));
 
         if (this.scale < 3) cssSlot.css('background-size', '600%');
 
@@ -174,7 +176,7 @@ export default class Bank {
         let slot = item.find(`#bankInventorySlot${info.index}`),
             image = slot.find(`#inventoryImage${info.index}`);
 
-        image.css('background-image', this.container.getImageFormat(info.key));
+        image.css('background-image', Utils.getImageURL(info.key));
 
         if (info.count > 1) slot.find(`#inventory-item-count${info.index}`).text(info.count);
     }

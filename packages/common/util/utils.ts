@@ -233,5 +233,16 @@ export default {
 
     getUrl(host: string, port: number, path: string): string {
         return config.ssl ? `https://${host}/${path}` : `http://${host}:${port}/${path}`;
+    },
+
+    /**
+     * Converts an item's key into an image URL for the client.
+     * It defaults to `null` if parameter is not specified.
+     * @param key The item's key.
+     * @returns The CSS image URL format for the item's key.
+     */
+
+    getImageURL(key = 'null'): string {
+        return `url("/img/sprites/item-${key}.png")`;
     }
 };
