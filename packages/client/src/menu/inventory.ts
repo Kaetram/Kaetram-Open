@@ -10,6 +10,8 @@ import type Slot from './container/slot';
 import MenuController from '../controllers/menu';
 import { SlotData } from '@kaetram/common/types/slot';
 
+import Utils from '@kaetram/common/util/utils';
+
 export default class Inventory {
     private actions;
 
@@ -79,7 +81,7 @@ export default class Inventory {
 
         let cssSlot = item.find(`#slot${info.index}`);
 
-        cssSlot.css('background-image', this.container.getImageFormat(slot.key));
+        cssSlot.css('background-image', Utils.getImageURL(slot.key));
 
         cssSlot.css('background-size', '600%');
 
@@ -258,7 +260,7 @@ export default class Inventory {
             if (!slot) continue;
 
             if (Detect.isMobile()) item.css('background-size', '600%');
-            else item.css('background-image', this.container.getImageFormat(slot.key));
+            else item.css('background-image', Utils.getImageURL(slot.key));
         }
     }
 
