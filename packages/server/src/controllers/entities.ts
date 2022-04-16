@@ -6,6 +6,7 @@ import type World from '../game/world';
 import Map from '../game/map/map';
 import Collections from '@kaetram/server/src/game/entity/collection/collections';
 
+import Hit from '../game/entity/character/combat/hit';
 import Character from '../game/entity/character/character';
 import Mob from '../game/entity/character/mob/mob';
 import Chest from '../game/entity/objects/chest';
@@ -14,7 +15,6 @@ import Projectile from '../game/entity/objects/projectile';
 
 import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
-import Hit from '../game/entity/character/combat/hit';
 
 export default class Entities {
     private map: Map;

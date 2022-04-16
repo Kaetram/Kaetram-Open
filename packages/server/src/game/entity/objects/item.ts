@@ -62,6 +62,9 @@ export default class Item extends Entity {
             return;
         }
 
+        // Count cannot be less than 1 if the key is not null.
+        if (!!key && this.count < 1) this.count = 1;
+
         // Set all the item data (set defaults if value doesn't exist).
         this.itemType = this.data.type;
         this.name = this.data.name;

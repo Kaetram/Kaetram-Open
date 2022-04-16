@@ -10,7 +10,7 @@ import type Slot from './container/slot';
 import MenuController from '../controllers/menu';
 import { SlotData } from '@kaetram/common/types/slot';
 
-import Utils from '@kaetram/common/util/utils';
+import Utils from '../utils/util';
 
 export default class Inventory {
     private actions;
