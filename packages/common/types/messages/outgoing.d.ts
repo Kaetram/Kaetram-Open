@@ -27,6 +27,7 @@ export type CombatCallback = (opcode: Opcodes.Combat, info: CombatPacket) => voi
 
 export interface StorePacket {
     opcode?: Opcodes.Store;
+    key: string;
     currency: string;
     items: SerializedStoreItem[];
 }

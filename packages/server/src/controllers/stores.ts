@@ -56,20 +56,6 @@ export default class Stores {
     }
 
     /**
-     * Update function called at a `this.`updateFrequency` interval.
-     */
-
-    private update(): void {
-        _.each(this.stores, (store: StoreInfo) => {
-            if (!this.canRefresh(store)) return;
-
-            this.stockItems(store);
-
-            store.lastUpdate = Date.now();
-        });
-    }
-
-    /**
      * Loads a store by converting the JSON data into a `StoreInfo` object.
      * We create an instance of every object we are trying to load.
      * @param store Raw store data pulled from the JSON.
@@ -106,6 +92,21 @@ export default class Stores {
     }
 
     /**
+     * Update function called at a `this.`updateFrequency` interval.
+     */
+
+    private update(): void {
+        _.each(this.stores, (store: StoreInfo, key: string) => {
+            if (!this.canRefresh(store)) return;
+
+            this.stockItems(store);
+            this.updatePlayers(key);
+
+            store.lastUpdate = Date.now();
+        });
+    }
+
+    /**
      * Iterates through all the items in the store and increments
      * them by one.
      * @param store The store we are incrementing item counts of.
@@ -120,12 +121,39 @@ export default class Stores {
         });
     }
 
+    /**
+     * Iterates through all the players in the world and finds
+     * which ones have a specific shop open. If they do, we send
+     * an update packet to refresh the store's stock.
+     * @param key The key of the store we are checking/updating.
+     */
+
+    private updatePlayers(key: string): void {
+        this.world.entities.forEachPlayer((player: Player) => {
+            if (player.storeOpen !== key) return;
+
+            // Update packet to players with the store open.
+            player.send(new StorePacket(Opcodes.Store.Update, this.serialize(key)));
+        });
+    }
+
+    /**
+     * Opens a shop for a player by first checking if a store is available
+     * from a specified NPC. Sends a packet to the client and updates the
+     * player's currently open store variable. This variable resets to an
+     * empty string as soon as the player moves.
+     * @param player The player we are opening the store for.
+     * @param npc The NPC we are grabbing store data from.
+     */
+
     public open(player: Player, npc: NPC): void {
         let store = this.getStore(npc);
 
         if (!store) return log.debug(`[${player.username}] Tried to open a non-existent store.`);
 
         player.send(new StorePacket(Opcodes.Store.Open, this.serialize(npc.store)));
+
+        player.storeOpen = npc.store;
     }
 
     /**
@@ -133,39 +161,62 @@ export default class Stores {
      * decrements the item count in the store by the count specified, and
      * sends the data to all the players accessing the store.
      * @param player The player that is purchasing the item.
-     * @param id The store that the item is being purchased from.
-     * @param key The key of the item being purchased.
+     * @param storeKey The key of the store the item is being purchased from.
+     * @param itemKey The key of the item being purchased.
      * @param count The amount of the item being purchased.
      */
 
-    public purchase(player: Player, id: number, key: string, count: number): void {
-        let store = this.stores[id];
+    public purchase(player: Player, storeKey: string, itemKey: string, count = 1): void {
+        if (player.storeOpen !== storeKey)
+            return log.warning(
+                `[${player.username}] Tried to purchase from a store that isn't open.`
+            );
+
+        let store = this.stores[storeKey];
 
         // Check if store exists.
         if (!store)
             return log.error(
-                `Player ${player.username} tried to purchase from a non-existent store with ID: ${id}.`
+                `Player ${player.username} tried to purchase from a non-existent store with ID: ${storeKey}.`
             );
 
-        let item = _.find(store.items, { key });
+        let item = _.find(store.items, { key: itemKey });
 
         // Check if item exists
         if (!item)
             return log.error(
-                `Player ${player.username} tried to purchase an item that doesn't exist in store ID: ${id}.`
+                `Player ${player.username} tried to purchase an item that doesn't exist in store: ${storeKey}.`
             );
 
-        let currency = player.inventory.getIndex(store.currency, item.price);
+        // Prevent buying more than store has stock. Default to max stock.
+        count = item.count < count ? item.count : count;
+
+        // Find total price of item by multiplying count against price.
+        let currency = player.inventory.getIndex(store.currency, item.price * count);
 
         if (currency === -1)
             return player.notify(`You don't have enough ${store.currency} to purchase this item.`);
+
+        // Check against item stackability or if there is space in the inventory.
+        if (!player.inventory.canHold(item) || !player.inventory.hasSpace())
+            return player.notify(`You don't have enough inventory space to purchase this item.`);
+
+        // Clone the item we are adding
+        let itemToAdd = _.clone(item);
+
+        itemToAdd.count = count;
+
+        // Decrement the item count by the amount we are buying.
+        item.count -= count;
+
+        // Add the item to the player's inventory.
+        player.inventory.add(itemToAdd);
     }
 
     /**
      * Checks if the store can refresh the items or not. Essentially
      * checks for whether or not the refresh time has passed since the
-     * last update commenced. If this is the first update, we default
-     * to 0.
+     * last update commenced. If this is the first update, we default to 0.
      * @param store The store we are checking.
      * @returns If the difference in time between now and last update is greater than refresh time.
      */
