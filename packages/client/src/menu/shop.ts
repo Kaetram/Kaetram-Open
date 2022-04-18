@@ -37,6 +37,7 @@ export default class Shop {
 
     // Identification/key of the currently opened store.
     private key = '';
+
     // Currency of the current store, defaults to gold.
     private currency = 'gold';
 
@@ -129,19 +130,18 @@ export default class Shop {
      * This is just a temporary fix, in reality, we do not want anyone to actually see the shop
      * do a full refresh when they buy an item or someone else buys an item.
      */
+
     public resize(): void {
         this.getInventoryList().empty();
         this.getShopList().empty();
 
         this.load();
-
-        //this.update(this.data);
     }
 
     public update(items: SerializedStoreItem[]): void {
-        this.reset();
-
         this.container = new Container();
+
+        this.reset();
 
         _.each(items, (item, index) =>
             this.container.add({
@@ -209,8 +209,6 @@ export default class Shop {
     }
 
     private reset(): void {
-        this.container = new Container();
-
         this.getShopList().empty();
         this.getInventoryList().empty();
     }

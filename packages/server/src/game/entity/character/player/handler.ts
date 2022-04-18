@@ -145,6 +145,8 @@ export default class Handler {
         this.detectAreas(x, y);
 
         this.detectClipping(x, y);
+
+        this.player.storeOpen = '';
     }
 
     /**

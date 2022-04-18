@@ -146,6 +146,8 @@ export default class Player extends Character {
     public lightsLoaded: number[] = [];
 
     public npcTalk = '';
+    // Currently open store of the player.
+    public storeOpen = '';
 
     public movementStart!: number;
     public pingTime!: number;

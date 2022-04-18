@@ -943,8 +943,12 @@ export default class Connection {
         this.messages.onStore((opcode, info) => {
             let { shop } = this.menu;
 
+            console.log(opcode);
+            console.log(info);
+
             switch (opcode) {
                 case Opcodes.Store.Open:
+                case Opcodes.Store.Update:
                     return shop.open(info);
             }
 
