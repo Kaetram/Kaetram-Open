@@ -125,7 +125,7 @@ export enum Store {
     Close,
     Buy,
     Sell,
-    Refresh
+    Update
 }
 
 export enum TeamWar {
