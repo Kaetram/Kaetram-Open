@@ -167,20 +167,10 @@ export default class Stores {
      */
 
     public purchase(player: Player, storeKey: string, itemKey: string, count = 1): void {
-        if (player.storeOpen !== storeKey)
-            return log.warning(
-                `[${player.username}] Tried to purchase from a store that isn't open.`
-            );
+        if (!this.verifyStore(player, storeKey)) return;
 
-        let store = this.stores[storeKey];
-
-        // Check if store exists.
-        if (!store)
-            return log.error(
-                `Player ${player.username} tried to purchase from a non-existent store with ID: ${storeKey}.`
-            );
-
-        let item = _.find(store.items, { key: itemKey });
+        let store = this.stores[storeKey],
+            item = _.find(store.items, { key: itemKey });
 
         // Check if item exists
         if (!item)
@@ -211,6 +201,58 @@ export default class Stores {
 
         // Add the item to the player's inventory.
         player.inventory.add(itemToAdd);
+
+        // Sync up new store data to all players.
+        this.updatePlayers(storeKey);
+    }
+
+    /**
+     * Sells an item to the store. Certain stores are allowed to accept
+     * items they do not originally have in stock. In that case we add
+     * the specific item to the stock.
+     * @param player The player that is selling the item.
+     * @param storeKey The store the player is selling to.
+     * @param itemKey The item the player is selling.
+     * @param count The amount of the item being sold.
+     */
+
+    public sell(player: Player, storeKey: string, itemKey: string, count = 1): void {
+        if (!this.verifyStore(player, storeKey)) return;
+
+        let store = this.stores[storeKey];
+    }
+
+    /**
+     * When selecting an item in the inventory, we just check the price of the item
+     * in the player's inventory and return the result back. If the item is in the store
+     * then we refer to that price instead.
+     * @param player The player we are selecting an item for sale of.
+     * @param storeKey The store that the action takes place in.
+     * @param itemKey The key of the item attempted to be sold.
+     */
+
+    public select(player: Player, storeKey: string, itemKey: string, count = 1): void {
+        if (!this.verifyStore(player, storeKey)) return;
+
+        let store = this.stores[storeKey],
+            item = _.find(store.items, { key: itemKey });
+
+        // Check if item exists
+        if (!item)
+            item = player.inventory.getItem(
+                player.inventory.get(player.inventory.getIndex(itemKey))
+            );
+
+        player.send(
+            new StorePacket(Opcodes.Store.Select, {
+                item: {
+                    key: item.key,
+                    name: item.name,
+                    count: item.count,
+                    price: Math.ceil(item.price / 2)
+                }
+            })
+        );
     }
 
     /**
@@ -223,6 +265,57 @@ export default class Stores {
 
     private canRefresh(store: StoreInfo): boolean {
         return Date.now() - (store.lastUpdate || 0) > store.refresh;
+    }
+
+    /**
+     * Created to prevent repeated code in `purchase,` `sell,` and `select`.
+     * Checks if the player has the current store open (prevent cheating),
+     * and if the store exists in our list of stores.
+     * @param player Player we are checking for.
+     * @param storeKey The key of the store we are checking.
+     * @returns True if the store passes the checks.
+     */
+
+    private verifyStore(player: Player, storeKey: string): boolean {
+        if (player.storeOpen !== storeKey) {
+            log.warning(`[${player.username}] Tried to act on a store that isn't open.`);
+            return false;
+        }
+
+        let store = this.stores[storeKey];
+
+        // Check if store exists.
+        if (!store) {
+            log.warning(
+                `Player ${player.username} tried to refresh a non-existent store with ID: ${storeKey}.`
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Each store may have a different price for an item. This function
+     * is incomplete since an item may have a default price which we
+     * could utilize instead. That will not be added until later.
+     * @param storeKey The key of the store we are checking.
+     * @param itemKey The key of the item we are grabbing the price of.
+     * @returns The price of the item otherwise defaults to value of 1.
+     */
+
+    public getPrice(storeKey: string, itemKey: string): number {
+        let store = this.stores[storeKey];
+
+        // This should absolutely not happen.
+        if (!store) return -1;
+
+        let item = _.find(store.items, { key: itemKey });
+
+        if (!item) return 1;
+
+        return item.price;
     }
 
     /**
