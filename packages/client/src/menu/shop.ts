@@ -57,14 +57,12 @@ export default class Shop {
         this.confirmSell.on('click', () => this.sell());
     }
 
-    private buy(event: JQuery.ClickEvent): void {
-        let id = event.currentTarget.id.slice(11);
-
+    private buy(item: Slot, count = 1): void {
         this.game.socket.send(Packets.Store, {
             opcode: Opcodes.Store.Buy,
-            key: this.key,
-            index: id,
-            count: 1
+            storeKey: this.key,
+            itemKey: item.key,
+            count
         });
     }
 
@@ -72,41 +70,58 @@ export default class Shop {
         // The server will handle the selected item and verifications.
         this.game.socket.send(Packets.Store, {
             opcode: Opcodes.Store.Sell,
-            key: this.key
+            storeKey: this.key
         });
     }
 
+    /**
+     * Selects an item in order to get the price and check
+     * if the item exists in the store already. The rest is
+     * handled client-sided after the response is received.
+     * @param item The slot we are checking.
+     */
+
     private select(item: Slot): void {
-        console.log(item);
+        this.game.socket.send(Packets.Store, {
+            opcode: Opcodes.Store.Select,
+            storeKey: this.key,
+            itemKey: item.key
+        });
     }
 
     private remove(): void {
         this.selectedItem = '';
     }
 
-    public move(info: ShopSelectData): void {
-        let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${info.slotId}`),
-            slotImage = inventorySlot.find(`#inventoryImage${info.slotId}`),
-            slotText = inventorySlot.find(`#inventory-item-count${info.slotId}`);
+    public move(item: SerializedStoreItem): void {
+        // Refresh everything.
+        this.resize();
 
-        this.sellSlot.css({
-            backgroundImage: slotImage.css('background-image'),
-            backgroundSize: slotImage.css('background-size')
-        });
+        console.log('moving');
+        console.log(item);
 
-        this.sellSlotReturn.css({
-            backgroundImage: Utils.getImageURL(info.currency),
-            backgroundSize: this.sellSlot.css('background-size')
-        });
+        // let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${slot.index}`),
+        //     slotImage = inventorySlot.find(`#inventoryImage${slot.index}`),
+        //     slotText = inventorySlot.find(`#inventory-item-count${slot.index}`);
 
-        let quantity: number = Number(slotText.text()) || 1;
+        // this.sellSlot.css({
+        //     backgroundImage: slotImage.css('background-image'),
+        //     backgroundSize: slotImage.css('background-size')
+        // });
 
-        this.sellSlotText.text(slotText.text());
+        // this.sellSlotReturn.css({
+        //     backgroundImage: Utils.getImageURL(this.currency),
+        //     backgroundSize: this.sellSlot.css('background-size')
+        // });
 
-        this.sellSlotReturnText.text(info.price * quantity);
+        // let quantity: number = Number(slotText.text()) || 1;
 
-        slotImage.css('background-image', '');
-        slotText.text('');
+        // this.sellSlotText.text(slotText.text());
+
+        // this.sellSlotReturnText.text(slot.price * quantity);
+
+        // slotImage.css('background-image', '');
+        // slotText.text('');
     }
 
     public moveBack(index: number): void {
@@ -171,7 +186,7 @@ export default class Shop {
             name.text(slot.name);
             buy.html('Buy');
 
-            buy.on('click', (event) => this.buy(event));
+            buy.on('click', () => this.buy(slot));
 
             let listItem = $('<li></li>');
 
@@ -196,11 +211,11 @@ export default class Shop {
                 marginBottom: `${6 * this.getScale()}px`
             });
 
-            count.css('margin-top', `${-1 * this.getScale()}px`);
+            count.css('margin-top', `${1 * this.getScale()}px`);
 
             if (item.key) image.css('background-image', Utils.getImageURL(item.key));
 
-            if (item.count) count.text(item.count);
+            if (item.count > 1) count.text(item.count);
 
             slot.on('click', () => this.select(item));
 

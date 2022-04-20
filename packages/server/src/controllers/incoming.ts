@@ -15,7 +15,8 @@ import type {
     LoginPacket,
     MovementPacket,
     ProjectilePacket,
-    ReadyPacket
+    ReadyPacket,
+    StorePacket
 } from '@kaetram/common/types/messages/incoming';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { SlotType } from '@kaetram/common/types/slot';
@@ -744,7 +745,22 @@ export default class Incoming {
         this.player.warp?.warp(id);
     }
 
-    private handleStore(message: [Opcodes.Store, number, ...unknown[]]): void {
+    private handleStore(data: StorePacket): void {
+        log.debug(`Received store packet: ${data.opcode}`);
+
+        switch (data.opcode) {
+            case Opcodes.Store.Buy:
+                return this.world.stores.purchase(
+                    this.player,
+                    data.storeKey,
+                    data.itemKey,
+                    data.count
+                );
+
+            case Opcodes.Store.Select:
+                return this.world.stores.select(this.player, data.storeKey, data.itemKey);
+        }
+
         // let [opcode, npcId] = message;
         // switch (opcode) {
         //     case Opcodes.Shop.Buy: {

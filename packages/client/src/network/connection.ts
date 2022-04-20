@@ -32,6 +32,7 @@ import type { EntityData } from '../controllers/entities';
 import type Character from '../entity/character/character';
 import type Player from '../entity/character/player/player';
 import type Game from '../game';
+import { SerializedStoreInfo, SerializedStoreItem } from '@kaetram/common/types/stores';
 export default class Connection {
     private app;
     private audio;
@@ -949,7 +950,10 @@ export default class Connection {
             switch (opcode) {
                 case Opcodes.Store.Open:
                 case Opcodes.Store.Update:
-                    return shop.open(info);
+                    return shop.open(info as SerializedStoreInfo);
+
+                case Opcodes.Store.Select:
+                    return shop.move(info.item!);
             }
 
             // let { shop } = this.menu;
