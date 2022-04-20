@@ -1,4 +1,6 @@
 import { HitData } from '../info';
+import { SerializedStoreItem } from '../stores';
+
 import type { Modules, Opcodes } from '../../network';
 
 /**
@@ -26,10 +28,11 @@ export interface CombatPacket {
 export type CombatCallback = (opcode: Opcodes.Combat, info: CombatPacket) => void;
 
 export interface StorePacket {
-    opcode?: Opcodes.Store;
+    opcode: Opcodes.Store;
     key: string;
-    currency: string;
-    items: SerializedStoreItem[];
+    currency?: string;
+    item?: SerializedStoreItem; // Used for selecting items.
+    items?: SerializedStoreItem[]; // Used for batch data.
 }
 
 export type StoreCallback = (opcode: Opcodes.Store, info: StorePacket) => void;
