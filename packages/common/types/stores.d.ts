@@ -20,6 +20,7 @@ export interface SerializedStoreItem {
     name: string;
     count: number;
     price: number;
+    index?: number;
 }
 
 export interface SerializedStoreInfo {

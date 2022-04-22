@@ -178,6 +178,8 @@ export default class Stores {
                 `Player ${player.username} tried to purchase an item that doesn't exist in store: ${storeKey}.`
             );
 
+        if (item.count < 1) return player.notify(`This item is currently out of stock.`);
+
         // Prevent buying more than store has stock. Default to max stock.
         count = item.count < count ? item.count : count;
 
@@ -186,10 +188,6 @@ export default class Stores {
 
         if (currency === -1)
             return player.notify(`You don't have enough ${store.currency} to purchase this item.`);
-
-        // Check against item stackability or if there is space in the inventory.
-        if (!player.inventory.canHold(item) || !player.inventory.hasSpace())
-            return player.notify(`You don't have enough inventory space to purchase this item.`);
 
         // Clone the item we are adding
         let itemToAdd = _.clone(item);
@@ -200,7 +198,10 @@ export default class Stores {
         item.count -= count;
 
         // Add the item to the player's inventory.
-        player.inventory.add(itemToAdd);
+        if (!player.inventory.add(itemToAdd))
+            return player.notify(`You don't have enough inventory space to purchase this item.`);
+
+        player.inventory.remove(currency, item.price * count);
 
         // Sync up new store data to all players.
         this.updatePlayers(storeKey);
@@ -216,10 +217,31 @@ export default class Stores {
      * @param count The amount of the item being sold.
      */
 
-    public sell(player: Player, storeKey: string, itemKey: string, count = 1): void {
+    public sell(player: Player, storeKey: string, itemKey: string, count = 1, index: number): void {
         if (!this.verifyStore(player, storeKey)) return;
 
-        let store = this.stores[storeKey];
+        let store = this.stores[storeKey],
+            item = player.inventory.getItem(player.inventory.get(index));
+
+        if (item.key !== itemKey)
+            return log.warning(`Player ${player.username} tried to sell an invalid item.`);
+
+        // Check if store already contains the item.
+        let storeItem = _.find(store.items, { key: itemKey }),
+            price = storeItem ? storeItem.price : item.price;
+
+        player.inventory.remove(index, count);
+
+        // Attempt to add currency type and amount to the player's inventory.
+        if (!player.inventory.add(this.getCurrency(store.currency, Math.ceil((price * count) / 2))))
+            return player.notify(`You don't have enough inventory space to sell this item.`);
+
+        // Increment item amount in the store otherwise add item to store.
+        if (storeItem) storeItem.count += count;
+        else store.items.push(item);
+
+        // Sync up new store data to all players.
+        this.updatePlayers(storeKey);
     }
 
     /**
@@ -229,27 +251,35 @@ export default class Stores {
      * @param player The player we are selecting an item for sale of.
      * @param storeKey The store that the action takes place in.
      * @param itemKey The key of the item attempted to be sold.
+     * @param index The selected inventory slot index from the client (used for verification).
      */
 
-    public select(player: Player, storeKey: string, itemKey: string, count = 1): void {
-        if (!this.verifyStore(player, storeKey)) return;
+    public select(
+        player: Player,
+        storeKey: string,
+        itemKey: string,
+        count = 1,
+        index: number
+    ): void {
+        if (!this.verifyStore(player, storeKey) || !index) return;
 
         let store = this.stores[storeKey],
             item = _.find(store.items, { key: itemKey });
 
         // Check if item exists
-        if (!item)
-            item = player.inventory.getItem(
-                player.inventory.get(player.inventory.getIndex(itemKey))
-            );
+        if (!item) item = player.inventory.getItem(player.inventory.get(index));
+
+        if (item.key !== itemKey)
+            return log.warning(`[${player.username}] Invalid item index selection.`);
 
         player.send(
             new StorePacket(Opcodes.Store.Select, {
                 item: {
                     key: item.key,
                     name: item.name,
-                    count: item.count,
-                    price: Math.ceil(item.price / 2)
+                    count,
+                    price: Math.ceil(item.price / 2),
+                    index
                 }
             })
         );
@@ -328,6 +358,14 @@ export default class Stores {
         if (!(npc.store in this.stores)) return undefined;
 
         return this.stores[npc.store];
+    }
+
+    /**
+     * @returns A current Item object with the store's currency and amount provided.
+     */
+
+    public getCurrency(key: string, count: number): Item {
+        return new Item(key, -1, -1, false, count);
     }
 
     /**
