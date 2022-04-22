@@ -16,6 +16,16 @@ export default class Container {
     }
 
     /**
+     * Finds an item in the container based on its key.
+     * @param key The key to look for.
+     * @returns Slot if found or undefined otherwise.
+     */
+
+    public get(key: string): Slot | undefined {
+        return this.slots.find((slot) => slot.key === key);
+    }
+
+    /**
      * Sometimes we may need to use the container differently. Such as in the
      * case of stores, we add items to the container whenever needed instead
      * of creating predefined container sizes.

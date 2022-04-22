@@ -42,7 +42,7 @@ export default class Shop {
     private currency = 'gold';
 
     // Temporary item selected for when user tries to sell.
-    private selectedItem = '';
+    private selectedItem: Slot | undefined;
 
     private close: JQuery;
 
@@ -90,38 +90,43 @@ export default class Shop {
     }
 
     private remove(): void {
-        this.selectedItem = '';
+        this.moveBack(this.selectedItem!.index);
+        this.resize();
+
+        this.selectedItem = undefined;
     }
 
     public move(item: SerializedStoreItem): void {
         // Refresh everything.
         this.resize();
 
-        console.log('moving');
-        console.log(item);
+        let inventoryItem = this.menu.inventory.container.get(item.key);
 
-        // let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${slot.index}`),
-        //     slotImage = inventorySlot.find(`#inventoryImage${slot.index}`),
-        //     slotText = inventorySlot.find(`#inventory-item-count${slot.index}`);
+        if (!inventoryItem) return;
 
-        // this.sellSlot.css({
-        //     backgroundImage: slotImage.css('background-image'),
-        //     backgroundSize: slotImage.css('background-size')
-        // });
+        let inventorySlot = this.getInventoryList().find(
+                `#shopInventorySlot${inventoryItem.index}`
+            ),
+            slotImage = inventorySlot.find(`#shopInventoryImage${inventoryItem.index}`),
+            slotCount = inventorySlot.find(`#shopInventoryCount${inventoryItem.index}`);
 
-        // this.sellSlotReturn.css({
-        //     backgroundImage: Utils.getImageURL(this.currency),
-        //     backgroundSize: this.sellSlot.css('background-size')
-        // });
+        this.sellSlot.css({
+            backgroundImage: slotImage.css('background-image'),
+            backgroundSize: slotImage.css('background-size')
+        });
 
-        // let quantity: number = Number(slotText.text()) || 1;
+        this.sellSlotReturn.css({
+            backgroundImage: Utils.getImageURL(this.currency),
+            backgroundSize: this.sellSlot.css('background-size')
+        });
 
-        // this.sellSlotText.text(slotText.text());
+        this.sellSlotText.text(slotCount.text());
+        this.sellSlotReturnText.text(item.price * item.count);
 
-        // this.sellSlotReturnText.text(slot.price * quantity);
+        slotImage.css('background-image', '');
+        slotCount.text('');
 
-        // slotImage.css('background-image', '');
-        // slotText.text('');
+        this.selectedItem = inventoryItem;
     }
 
     public moveBack(index: number): void {
