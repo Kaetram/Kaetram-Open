@@ -4,7 +4,7 @@ import { SerializedStoreItem } from '../stores';
 import type { Modules, Opcodes } from '../../network';
 
 /**
- * Packet interfaces of data being sent from the server to the client.ou
+ * Packet interfaces of data being sent from the server to the client.
  */
 
 export interface MovementPacket {
