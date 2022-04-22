@@ -41,4 +41,5 @@ export interface StorePacket {
     storeKey: string; // The shop's key.
     itemKey: string; // Item key we are trying to buy/sell
     count?: number; // How many of the item we are trying to buy/sell
+    index?: number; // The index of the slot in the inventory.
 }

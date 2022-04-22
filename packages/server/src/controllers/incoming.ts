@@ -758,7 +758,22 @@ export default class Incoming {
                 );
 
             case Opcodes.Store.Select:
-                return this.world.stores.select(this.player, data.storeKey, data.itemKey);
+                return this.world.stores.select(
+                    this.player,
+                    data.storeKey,
+                    data.itemKey,
+                    data.count,
+                    data.index!
+                );
+
+            case Opcodes.Store.Sell:
+                return this.world.stores.sell(
+                    this.player,
+                    data.storeKey,
+                    data.itemKey,
+                    data.count,
+                    data.index!
+                );
         }
 
         // let [opcode, npcId] = message;
