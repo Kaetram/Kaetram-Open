@@ -42,7 +42,7 @@ export default class Shop {
     private currency = 'gold';
 
     // Temporary item selected for when user tries to sell.
-    private selectedItem: Slot | undefined;
+    private selectedItem: SerializedStoreItem | undefined;
 
     private close: JQuery;
 
@@ -67,11 +67,18 @@ export default class Shop {
     }
 
     private sell(): void {
+        if (!this.selectedItem) return;
+
         // The server will handle the selected item and verifications.
         this.game.socket.send(Packets.Store, {
             opcode: Opcodes.Store.Sell,
-            storeKey: this.key
+            storeKey: this.key,
+            itemKey: this.selectedItem.key,
+            count: this.selectedItem.count,
+            index: this.selectedItem.index
         });
+
+        this.remove();
     }
 
     /**
@@ -81,16 +88,17 @@ export default class Shop {
      * @param item The slot we are checking.
      */
 
-    private select(item: Slot): void {
+    private select(item: Slot, index: number): void {
         this.game.socket.send(Packets.Store, {
             opcode: Opcodes.Store.Select,
             storeKey: this.key,
-            itemKey: item.key
+            itemKey: item.key,
+            index
         });
     }
 
     private remove(): void {
-        this.moveBack(this.selectedItem!.index);
+        this.moveBack(this.selectedItem!.index!);
         this.resize();
 
         this.selectedItem = undefined;
@@ -100,15 +108,9 @@ export default class Shop {
         // Refresh everything.
         this.resize();
 
-        let inventoryItem = this.menu.inventory.container.get(item.key);
-
-        if (!inventoryItem) return;
-
-        let inventorySlot = this.getInventoryList().find(
-                `#shopInventorySlot${inventoryItem.index}`
-            ),
-            slotImage = inventorySlot.find(`#shopInventoryImage${inventoryItem.index}`),
-            slotCount = inventorySlot.find(`#shopInventoryCount${inventoryItem.index}`);
+        let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${item.index}`),
+            slotImage = inventorySlot.find(`#shopInventoryImage${item.index}`),
+            slotCount = inventorySlot.find(`#shopInventoryCount${item.index}`);
 
         this.sellSlot.css({
             backgroundImage: slotImage.css('background-image'),
@@ -126,10 +128,12 @@ export default class Shop {
         slotImage.css('background-image', '');
         slotCount.text('');
 
-        this.selectedItem = inventoryItem;
+        this.selectedItem = item;
     }
 
     public moveBack(index: number): void {
+        if (!index) return;
+
         let inventorySlot = this.getInventoryList().find(`#shopInventorySlot${index}`);
 
         inventorySlot
@@ -222,7 +226,7 @@ export default class Shop {
 
             if (item.count > 1) count.text(item.count);
 
-            slot.on('click', () => this.select(item));
+            slot.on('click', () => this.select(item, j));
 
             this.getInventoryList().append(element);
         }
