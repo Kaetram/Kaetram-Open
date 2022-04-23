@@ -19,7 +19,7 @@ export default class Item extends Entity {
     private itemType = 'object'; // weapon, armour, pendant, etc.
     public stackable = false;
     public edible = false;
-    public maxStackSize = 1;
+    public maxStackSize = Modules.Constants.MAX_STACK;
     public plugin = '';
     public price = 1;
     public storeCount = -1;
