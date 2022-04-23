@@ -19,6 +19,7 @@ import type Game from '../game';
 import type Map from '../map/map';
 import type Splat from './infos/splat';
 import { FlippedTile } from '../map/map';
+import { HighLayerIndexes } from '@kaetram/common/network/modules';
 
 interface RendererTile {
     relativeTileId: number;
@@ -332,9 +333,9 @@ export default class Renderer {
 
         this.updateDrawingView();
 
-        this.forEachVisibleTile((id, index) => {
+        this.forEachVisibleTile((id, index, layerIndex = 0) => {
             let isHighTile = this.map.isHighTile(id),
-                context = isHighTile ? this.foreContext : this.backContext;
+                context = isHighTile || HighLayerIndexes.includes(layerIndex) ? this.foreContext : this.backContext;
 
             // Only do the lighting logic if there is an overlay.
             if (this.game.overlays.getFog()) {
@@ -1111,7 +1112,7 @@ export default class Renderer {
     }
 
     private forEachVisibleTile(
-        callback: (data: number, index: number) => void,
+        callback: (data: number, index: number, layerIndex?: number) => void,
         offset?: number
     ): void {
         if (!this.map || !this.map.mapLoaded) return;
@@ -1119,8 +1120,13 @@ export default class Renderer {
         this.forEachVisibleIndex((index) => {
             let indexData = this.map.data[index];
 
-            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
-            else if (this.map.data[index]) callback(this.map.data[index], index);
+            if (Array.isArray(indexData)) {
+                let layerIndex = 0;
+                for (let data of indexData) {
+                    callback(data, index, layerIndex);
+                    layerIndex++;
+                }
+            } else if (this.map.data[index]) callback(this.map.data[index], index);
         }, offset);
     }
 

@@ -26,7 +26,7 @@ import Camera from './renderer/camera';
 import Overlay from './renderer/overlay';
 import Renderer from './renderer/renderer';
 import Updater from './renderer/updater';
-import { agent, supportsWebGL } from './utils/detect';
+import { agent } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
 import Storage from './utils/storage';
 

@@ -296,6 +296,8 @@ export const enum Constants {
     TUTORIAL_SPAWN_POINT = '375,40' // 'x,y' values
 }
 
+export let HighLayerIndexes: number[] = [];
+
 export enum APIConstants {
     UNHANDLED_HTTP_METHOD,
     NOT_FOUND_ERROR,
