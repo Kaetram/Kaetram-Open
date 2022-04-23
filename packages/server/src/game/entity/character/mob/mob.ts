@@ -97,7 +97,7 @@ export default class Mob extends Character {
         new MobHandler(this);
 
         // The roaming interval
-        setInterval(this.roamingCallback!, Modules.Constants.ROAMING_FREQUENCY);
+        setInterval(this.roamingCallback!, Modules.MobDefaults.ROAM_FREQUENCY);
     }
 
     /**
