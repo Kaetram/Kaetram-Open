@@ -10,6 +10,8 @@ import NPC from '../game/entity/npc/npc';
 import Item from '../game/entity/objects/item';
 import Player from '../game/entity/character/player/player';
 
+import StoreEn from '@kaetram/common/text/store-en';
+
 import { Opcodes } from '@kaetram/common/network';
 import { Store as StorePacket } from '../network/packets';
 import type {
@@ -70,7 +72,7 @@ export default class Stores {
         _.each(store.items, (item: StoreItem) => {
             // Skip if an item already exists with the same key.
             if (_.some(items, { key: item.key }))
-                return log.warning(`Duplicate item key found in store: '${key}'.`);
+                return log.warning(`${StoreEn.WARNING_DUPLICATE}'${key}'.`);
 
             let storeItem = new Item(item.key, -1, -1, false, item.count);
 
@@ -150,7 +152,7 @@ export default class Stores {
     public open(player: Player, npc: NPC): void {
         let store = this.getStore(npc);
 
-        if (!store) return log.debug(`[${player.username}] Tried to open a non-existent store.`);
+        if (!store) return log.debug(`[${player.username}] ${StoreEn.INVALID_STORE}.`);
 
         player.send(new StorePacket(Opcodes.Store.Open, this.serialize(npc.store)));
 
@@ -175,11 +177,9 @@ export default class Stores {
 
         // Check if item exists
         if (!item)
-            return log.error(
-                `Player ${player.username} tried to purchase an item that doesn't exist in store: ${storeKey}.`
-            );
+            return log.error(`${player.username} ${StoreEn.PURCHASE_INVALID_STORE}${storeKey}.`);
 
-        if (item.count < 1) return player.notify(`This item is currently out of stock.`);
+        if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
 
         // Prevent buying more than store has stock. Default to max stock.
         count = item.count < count ? item.count : count;
@@ -187,8 +187,7 @@ export default class Stores {
         // Find total price of item by multiplying count against price.
         let currency = player.inventory.getIndex(store.currency, item.price * count);
 
-        if (currency === -1)
-            return player.notify(`You don't have enough ${store.currency} to purchase this item.`);
+        if (currency === -1) return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
 
         // Clone the item we are adding
         let itemToAdd = _.clone(item);
@@ -196,8 +195,7 @@ export default class Stores {
         itemToAdd.count = count;
 
         // Add the item to the player's inventory.
-        if (!player.inventory.add(itemToAdd))
-            return player.notify(`You don't have enough inventory space to purchase this item.`);
+        if (!player.inventory.add(itemToAdd)) return player.notify(StoreEn.NOT_ENOUGH_SPACE);
 
         // Decrement the item count by the amount we are buying.
         item.count -= count;
@@ -231,7 +229,7 @@ export default class Stores {
             item = player.inventory.getItem(player.inventory.get(index));
 
         if (item.key !== itemKey)
-            return log.warning(`Player ${player.username} tried to sell an invalid item.`);
+            return log.warning(`${player.username} ${StoreEn.SELL_INVALID_ITEM}`);
 
         // Check if store already contains the item.
         let storeItem = _.find(store.items, { key: itemKey }),
@@ -241,7 +239,7 @@ export default class Stores {
 
         // Attempt to add currency type and amount to the player's inventory.
         if (!player.inventory.add(this.getCurrency(store.currency, Math.ceil((price * count) / 2))))
-            return player.notify(`You don't have enough inventory space to sell this item.`);
+            return player.notify(StoreEn.NOT_ENOUGH_SPACE);
 
         // Increment item amount in the store otherwise add item to store.
         if (storeItem) storeItem.count += count;
@@ -276,10 +274,10 @@ export default class Stores {
         // Check if item exists
         if (!item) item = player.inventory.getItem(player.inventory.get(index));
 
-        if (item.key === store.currency) return player.notify(`You cannot sell this item.`);
+        if (item.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
 
         if (item.key !== itemKey)
-            return log.warning(`[${player.username}] Invalid item index selection.`);
+            return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
 
         player.send(
             new StorePacket(Opcodes.Store.Select, {
@@ -317,7 +315,7 @@ export default class Stores {
 
     private verifyStore(player: Player, storeKey: string): boolean {
         if (player.storeOpen !== storeKey) {
-            log.warning(`[${player.username}] Tried to act on a store that isn't open.`);
+            log.warning(`[${player.username}] ${StoreEn.ACTION_STORE_NOT_OPEN}`);
             return false;
         }
 
