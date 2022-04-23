@@ -47,7 +47,8 @@ export default class ProcessMap {
             high: [],
             objects: [],
             areas: {},
-            cursors: {}
+            cursors: {},
+            trees: {}
         };
 
         this.parseTilesets();
@@ -165,6 +166,11 @@ export default class ProcessMap {
             case 'cursor':
                 cursors[tileId] = value;
                 break;
+
+            case 'tree':
+            case 'stump':
+            case 'cutstump':
+                return this.parseTreeProperty(name, tileId, value);
         }
     }
 
@@ -199,7 +205,7 @@ export default class ProcessMap {
      *
      * Subsequently, any tile indexes that are colliding are added to the collision
      * array.
-     * @param data The raw data for each tile layer.
+     * @param mapData The raw data for each tile layer.
      */
 
     private parseTileLayerData(mapData: number[]): void {
@@ -275,7 +281,6 @@ export default class ProcessMap {
     /**
      * We parse through pre-defined object layers and add them
      * to the map data.
-     *
      * @param layer An object layer from Tiled map.
      */
 
@@ -293,8 +298,9 @@ export default class ProcessMap {
     }
 
     /**
+     * Takes data from Tiled properties and stores it into the areas of the map.
      * @param areaName The name of the area we are storing objects in.
-     * @param info The raw data received from Tiled.
+     * @param object The raw layer object data from Tiled.
      */
 
     private parseObject(areaName: string, object: LayerObject) {
@@ -316,6 +322,37 @@ export default class ProcessMap {
 
             this.map.areas[areaName][index][name as never] = value;
         });
+    }
+
+    /**
+     * Takes tree property data and stores it into the map trees property.
+     * If a tree already exists within said property, it appends data to it.
+     * Tree data is split into `data,` `stump,` and `cutStump.`
+     * @param name The name of the property.
+     */
+
+    private parseTreeProperty(name: string, tileId: number, value: never): void {
+        if (!(value in this.map.trees))
+            this.map.trees[value] = {
+                data: [],
+                stump: [],
+                cutStump: []
+            };
+
+        // Organize tree data into their respective arrays.
+        switch (name) {
+            case 'tree':
+                this.map.trees[value].data.push(tileId);
+                return;
+
+            case 'stump':
+                this.map.trees[value].stump.push(tileId);
+                return;
+
+            case 'cutstump':
+                this.map.trees[value].cutStump.push(tileId);
+                return;
+        }
     }
 
     /**
@@ -462,7 +499,8 @@ export default class ProcessMap {
             high,
             objects,
             cursors,
-            entities
+            entities,
+            trees
         } = this.map;
 
         return JSON.stringify({
@@ -477,7 +515,8 @@ export default class ProcessMap {
             high,
             objects,
             cursors,
-            entities
+            entities,
+            trees
         });
     }
 
