@@ -13,6 +13,10 @@ export interface StoreData {
     currency: string; // The currency used to buy items.
 }
 
+export interface RawStore {
+    [key: string]: StoreData;
+}
+
 //////////////////////////////////////////
 
 export interface SerializedStoreItem {

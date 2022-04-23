@@ -69,6 +69,8 @@ export default class Shop {
     private sell(): void {
         if (!this.selectedItem) return;
 
+        this.clearSellSlot();
+
         // The server will handle the selected item and verifications.
         this.game.socket.send(Packets.Store, {
             opcode: Opcodes.Store.Sell,
@@ -77,8 +79,6 @@ export default class Shop {
             count: this.selectedItem.count,
             index: this.selectedItem.index
         });
-
-        this.remove();
     }
 
     /**
@@ -141,7 +141,9 @@ export default class Shop {
             .css('background-image', this.sellSlot.css('background-image'));
 
         inventorySlot.find(`#inventory-item-count${index}`).text(this.sellSlotText.text());
+    }
 
+    public clearSellSlot(): void {
         this.sellSlot.css('background-image', '');
         this.sellSlotText.text('');
         this.sellSlotReturn.css('background-image', '');
