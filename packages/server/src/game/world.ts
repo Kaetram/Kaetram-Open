@@ -6,7 +6,6 @@ import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
 import Entities from '../controllers/entities';
-import GlobalObjects from '../controllers/globalobjects';
 import Stores from '../controllers/stores';
 import Grids from './map/grids';
 import Map from './map/map';
@@ -42,7 +41,6 @@ export default class World {
     public network!: Network;
     public discord!: Discord;
     public trees!: Trees;
-    public globalObjects!: GlobalObjects;
 
     private maxPlayers = config.maxPlayers;
 
@@ -55,7 +53,6 @@ export default class World {
         this.discord = new Discord();
         this.entities = new Entities(this);
         this.network = new Network(this);
-        this.globalObjects = new GlobalObjects(this);
 
         this.discord.onMessage(this.globalMessage.bind(this));
 
