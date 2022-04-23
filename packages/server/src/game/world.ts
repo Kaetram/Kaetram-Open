@@ -23,6 +23,7 @@ import type Connection from '../network/connection';
 import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
 import type Entity from './entity/entity';
+import Trees from './globals/trees';
 
 export interface PacketData {
     packet: Packet;
@@ -40,6 +41,7 @@ export default class World {
     public entities!: Entities;
     public network!: Network;
     public discord!: Discord;
+    public trees!: Trees;
     public globalObjects!: GlobalObjects;
 
     private maxPlayers = config.maxPlayers;
