@@ -46,7 +46,6 @@ import Equipments from './equipments';
 import Quests from './quests';
 import Regions from '../../../map/regions';
 import Entities from '@kaetram/server/src/controllers/entities';
-import GlobalObjects from '@kaetram/server/src/controllers/globalobjects';
 import { EntityData } from '../../entity';
 import { EquipmentData } from '@kaetram/common/types/equipment';
 import Container from './containers/container';
@@ -85,7 +84,6 @@ export default class Player extends Character {
     public map: Map;
     private regions: Regions;
     private entities: Entities;
-    private globalObjects: GlobalObjects;
 
     public incoming: Incoming;
 
@@ -184,7 +182,6 @@ export default class Player extends Character {
         this.map = world.map;
         this.regions = world.map.regions;
         this.entities = world.entities;
-        this.globalObjects = world.globalObjects;
 
         this.incoming = new Incoming(this);
         this.equipment = new Equipments(this);
@@ -455,31 +452,7 @@ export default class Player extends Character {
      * in order to organize data more neatly.
      */
     public handleObject(id: string): void {
-        let info = this.globalObjects.getInfo(id);
-
-        if (!info) return;
-
-        switch (info.type) {
-            case 'sign': {
-                let data = this.globalObjects.getSignData(id);
-
-                if (!data) return;
-
-                let text = this.globalObjects.talk(data.object, this);
-
-                this.send(
-                    new Bubble({
-                        id,
-                        text,
-                        duration: 5000,
-                        isObject: true,
-                        info: data.info
-                    })
-                );
-
-                break;
-            }
-        }
+        //
     }
 
     public handleBankOpen(): void {
