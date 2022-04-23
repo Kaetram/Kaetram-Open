@@ -9,7 +9,12 @@ import AreasIndex from './areas';
 import Grids from './grids';
 import Regions from './regions';
 
-import type { ProcessedArea, ProcessedDoor, ProcessedMap } from '@kaetram/common/types/map';
+import type {
+    ProcessedArea,
+    ProcessedDoor,
+    ProcessedMap,
+    ProcessedTree
+} from '@kaetram/common/types/map';
 import type World from '../world';
 import type Areas from './areas/areas';
 
@@ -41,6 +46,7 @@ export default class Map {
     public cursors!: { [tileId: number]: string };
     public doors!: { [index: number]: ProcessedDoor };
     public warps: ProcessedArea[] = map.areas.warps || [];
+    public trees: { [key: string]: ProcessedTree } = map.trees || [];
 
     // Static chest areas, named as singular to prevent confusion with `chests` area.
     public chest: ProcessedArea[] = map.areas.chest || [];
