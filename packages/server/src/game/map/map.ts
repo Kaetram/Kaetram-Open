@@ -155,7 +155,7 @@ export default class Map {
      */
 
     public isFlipped(tileId: number): boolean {
-        return tileId > Modules.Constants.DIAGONAL_FLAG;
+        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
     }
 
     /**
@@ -322,14 +322,14 @@ export default class Map {
      */
 
     public getFlippedTile(tileId: number): ParsedTile {
-        let h = !!(tileId & Modules.Constants.HORIZONTAL_FLAG),
-            v = !!(tileId & Modules.Constants.VERTICAL_FLAG),
-            d = !!(tileId & Modules.Constants.DIAGONAL_FLAG);
+        let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
+            v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
+            d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
 
         tileId &= ~(
-            Modules.Constants.DIAGONAL_FLAG |
-            Modules.Constants.VERTICAL_FLAG |
-            Modules.Constants.HORIZONTAL_FLAG
+            Modules.MapFlags.DIAGONAL_FLAG |
+            Modules.MapFlags.VERTICAL_FLAG |
+            Modules.MapFlags.HORIZONTAL_FLAG
         );
 
         return {

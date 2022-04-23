@@ -12,7 +12,7 @@ import Player from '../game/entity/character/player/player';
 
 import StoreEn from '@kaetram/common/text/store-en';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Opcodes, Modules } from '@kaetram/common/network';
 import { Store as StorePacket } from '../network/packets';
 import type {
     SerializedStoreInfo,
@@ -42,7 +42,7 @@ interface Store {
 export default class Stores {
     private stores: Store = {}; // Key is a string representing the store's name in `stores.json`.
 
-    private updateFrequency = 20_000; // Update every 20 seconds
+    private updateFrequency: number = Modules.Constants.STORE_UPDATE_FREQUENCY;
 
     public constructor(private world: World) {
         // Load stores from the JSON.
