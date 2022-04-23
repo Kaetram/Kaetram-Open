@@ -206,6 +206,7 @@ export default class Player extends Character {
      */
 
     public load(data: PlayerInfo): void {
+        this.name = data.username;
         this.rights = data.rights;
         this.experience = data.experience;
         this.ban = data.ban;
